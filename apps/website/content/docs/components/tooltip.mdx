@@ -13,13 +13,22 @@ description: '요소에 대한 추가 정보를 제공하는 툴팁 컴포넌트
 ```
 </Demo>
 
+<Box marginTop="16px">
+<Badge colorPalette="warning">주의!</Badge>
+
+- **반드시 Button, IconButton 등과 같은 상호작용이 가능한 요소와 함께 사용하세요.** Tooltip은 상호작용 가능한 요소의 동작에 대한 추가 정보를 제공하는 작은 팝업입니다. 상호작용이 불가능한 요소에 사용하거나, 단순히 정보를 제공하기 위한 용도로 사용하려면 `Popover` 컴포넌트를 고려해보세요.
+
+- **Tooltip에 중요한 정보를 포함하지 마세요.** Tooltip은 보조적인 정보를 제공하기 위한 용도로 설계되었으며, 중요한 정보는 포함하지 않는 것이 좋습니다. 중요한 정보는 항상 페이지의 주요 콘텐츠에 포함시켜야 합니다.
+
+</Box>
+
 ## Property
 
 ---
 
 ### Positioning
 
-Tooltip의 표시 위치를 설정할 수 있습니다.
+Tooltip의 표시 위치를 설정합니다.
 
 <Demo name="tooltip/tooltip-positioning">
 ```json doc-gen:file
@@ -32,7 +41,7 @@ Tooltip의 표시 위치를 설정할 수 있습니다.
 
 ### Alignment
 
-Tooltip의 정렬 위치를 조정할 수 있습니다.
+Tooltip의 정렬 위치를 설정합니다.
 
 <Demo name="tooltip/tooltip-alignment">
 ```json doc-gen:file
@@ -45,7 +54,7 @@ Tooltip의 정렬 위치를 조정할 수 있습니다.
 
 ### Delay
 
-Tooltip이 표시되는 지연 시간을 조정할 수 있습니다.
+`Tooltip.Trigger`의 `delay` prop으로 Tooltip이 표시되기까지의 지연 시간을 설정합니다.
 
 <Demo name="tooltip/tooltip-delay">
 ```json doc-gen:file
@@ -92,30 +101,24 @@ Tooltip의 거리와 정렬 오프셋을 조정할 수 있습니다.
 
 ### Tooltip.Root
 
-Tooltip의 루트 컨테이너 컴포넌트입니다. 위치 관련 props와 Base UI Tooltip.Root의 모든 props를 지원합니다.
-
-<ComponentPropsTable file="tooltip" section="props" />
+<ComponentPropsTable componentName="tooltip-root" />
 
 ### Tooltip.Trigger
 
-Tooltip을 트리거하는 컴포넌트입니다.
-
-<ComponentPropsTable file="tooltip" section="triggerProps" />
-
-### Tooltip.Portal
-
-Tooltip 콘텐츠를 DOM 트리의 다른 위치로 렌더링하는 컴포넌트입니다.
-
-<ComponentPropsTable file="tooltip" section="portalPrimitiveProps" />
-
-### Tooltip.PositionerPrimitive
-
-Tooltip의 위치를 설정하는 컴포넌트입니다.
-
-<ComponentPropsTable file="tooltip" section="positionerPrimitiveProps" />
+<ComponentPropsTable componentName="tooltip-trigger" />
 
 ### Tooltip.Popup
 
-Tooltip의 실제 콘텐츠를 포함하는 컴포넌트입니다. 내장된 Portal, Positioner, Popup, Arrow를 포함하며, 자동으로 화살표가 포함되어 위치에 따라 화살표 방향이 조정됩니다.
+<ComponentPropsTable componentName="tooltip-popup" />
 
-<ComponentPropsTable file="tooltip" section="popupProps" />
+#### Tooltip.PortalPrimitive
+
+<ComponentPropsTable componentName="tooltip-portal-primitive" />
+
+#### Tooltip.PositionerPrimitive
+
+<ComponentPropsTable componentName="tooltip-positioner-primitive" />
+
+#### Tooltip.PopupPrimitive
+
+<ComponentPropsTable componentName="tooltip-popup-primitive" />

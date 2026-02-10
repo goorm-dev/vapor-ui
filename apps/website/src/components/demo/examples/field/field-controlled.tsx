@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Box, Button, Field, Form, Text, TextInput, VStack } from '@vapor-ui/core';
+import { Button, Field, Form, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldControlled() {
     const [firstName, setFirstName] = useState('');
@@ -18,14 +18,14 @@ export default function FieldControlled() {
         <Form onSubmit={handleSubmit}>
             <VStack gap="$200" width="300px">
                 <Field.Root name="firstName">
-                    <Box render={<Field.Label />} flexDirection="column">
+                    <Field.Label flexDirection="column">
                         이름
                         <TextInput
                             value={firstName}
                             onValueChange={(value) => setFirstName(value)}
                             placeholder="이름을 입력하세요"
                         />
-                    </Box>
+                    </Field.Label>
 
                     <Text typography="body3" foreground="hint-200">
                         현재 값: {firstName || '(비어있음)'}
@@ -33,14 +33,14 @@ export default function FieldControlled() {
                 </Field.Root>
 
                 <Field.Root name="lastName">
-                    <Box render={<Field.Label />} flexDirection="column">
+                    <Field.Label flexDirection="column">
                         성
                         <TextInput
                             value={lastName}
                             onValueChange={(value) => setLastName(value)}
                             placeholder="성을 입력하세요"
                         />
-                    </Box>
+                    </Field.Label>
 
                     <Text typography="body3" foreground="hint-200">
                         현재 값: {lastName || '(비어있음)'}
@@ -48,7 +48,7 @@ export default function FieldControlled() {
                 </Field.Root>
 
                 <Field.Root name="email" validationMode="onChange">
-                    <Box render={<Field.Label />} flexDirection="column">
+                    <Field.Label flexDirection="column">
                         이메일
                         <TextInput
                             type="email"
@@ -57,7 +57,7 @@ export default function FieldControlled() {
                             onValueChange={(value) => setEmail(value)}
                             placeholder="이메일을 입력하세요"
                         />
-                    </Box>
+                    </Field.Label>
 
                     <Text typography="body3" foreground="hint-200">
                         현재 값: {email || '(비어있음)'}

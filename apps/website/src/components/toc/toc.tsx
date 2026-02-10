@@ -28,13 +28,13 @@ export const TOC = ({ toc, containerRef, className }: TOCProps) => {
         <div className={clsx('sticky top-[62px] w-[200px] shrink-0 not-prose', className)}>
             <Base.AnchorProvider toc={toc}>
                 <Base.ScrollProvider containerRef={containerRef}>
-                    <nav className="flex flex-col gap-[var(--vapor-size-space-100)]">
+                    <nav className="flex flex-col gap-v-100">
                         <Text
                             typography="subtitle1"
                             foreground="normal-200"
                             render={<h4>On this page</h4>}
                         />
-                        <ul className="flex flex-col items-start gap-[var(--vapor-size-space-050)]">
+                        <ul className="flex flex-col items-start gap-v-50">
                             {toc.map((item) => (
                                 <li key={item.url}>
                                     <Text
@@ -43,7 +43,7 @@ export const TOC = ({ toc, containerRef, className }: TOCProps) => {
                                         render={
                                             <Base.TOCItem
                                                 href={item.url}
-                                                className="block h-[var(--vapor-size-dimension-400)] leading-[var(--vapor-size-dimension-400)] hover:text-gray-900 data-[active=true]:text-[var(--vapor-color-foreground-primary-100)] data-[active=true]:font-medium transition-colors"
+                                                className="block h-v-400 leading-v-400 hover:text-gray-900 data-[active=true]:text-v-primary-100 data-[active=true]:font-medium transition-colors"
                                                 style={{
                                                     paddingLeft: `${(item.depth - TOC_CONSTANTS.MIN_DEPTH) * TOC_CONSTANTS.INDENT_SIZE + TOC_CONSTANTS.BASE_PADDING}px`,
                                                 }}

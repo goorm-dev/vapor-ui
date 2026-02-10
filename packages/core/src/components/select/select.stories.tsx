@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Select } from '.';
 import { Box } from '../box';
 import { Grid } from '../grid';
+import { Toast } from '../toast';
 
 type SelectProps = Select.Root.Props &
     Pick<Select.PositionerPrimitive.Props, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
@@ -76,34 +77,50 @@ const languages = {
 
 export const ObjectItems: StoryObj<typeof Select.Root> = {
     render: (args) => {
+        const toastManager = Toast.createToastManager();
+
+        const handleSubmit = (e: React.FormEvent) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.currentTarget as HTMLFormElement);
+            const stringifiedFormData = new URLSearchParams(formData as never).toString();
+
+            const [_name, value] = stringifiedFormData.split('=');
+
+            const description = value ? `Selected Language: ${value}` : 'No data selected';
+
+            toastManager.add({
+                title: 'Form Submitted',
+                description,
+            });
+        };
+
         return (
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
+            <Toast.Provider toastManager={toastManager}>
+                <form onSubmit={handleSubmit}>
+                    <Select.Root
+                        name="language"
+                        placeholder="Select Font"
+                        items={languages}
+                        {...args}
+                    >
+                        <Select.Trigger />
 
-                    const formData = new FormData(e.currentTarget);
-                    const stringifiedFormData = new URLSearchParams(formData as never).toString();
+                        <Select.Popup>
+                            <Select.Group>
+                                <Select.GroupLabel>Font</Select.GroupLabel>
+                                {Object.entries(languages).map(([value, label]) => (
+                                    <Select.Item key={value} value={value}>
+                                        {label}
+                                    </Select.Item>
+                                ))}
+                            </Select.Group>
+                        </Select.Popup>
+                    </Select.Root>
 
-                    console.log(stringifiedFormData);
-                }}
-            >
-                <Select.Root placeholder="Select Font" items={languages} {...args}>
-                    <Select.Trigger />
-
-                    <Select.Popup>
-                        <Select.Group>
-                            <Select.GroupLabel>Font</Select.GroupLabel>
-                            {Object.entries(languages).map(([value, label]) => (
-                                <Select.Item key={value} value={value}>
-                                    {label}
-                                </Select.Item>
-                            ))}
-                        </Select.Group>
-                    </Select.Popup>
-                </Select.Root>
-
-                <button>submit</button>
-            </form>
+                    <button>submit</button>
+                </form>
+            </Toast.Provider>
         );
     },
 };

@@ -1,3 +1,4 @@
+import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -6,7 +7,7 @@ import { vars } from '~/styles/themes.css';
 
 export const overlay = layerStyle('components', {
     position: 'fixed',
-    zIndex: 50,
+
     inset: 0,
 
     transition: 'opacity 0.15s cubic-bezier(.45,1.005,0,1.005)',
@@ -21,23 +22,34 @@ export const overlay = layerStyle('components', {
     },
 });
 
+const SPACING = '2rem';
+
 export const popup = recipe({
     base: layerStyle('components', {
         position: 'fixed',
+
         top: '50%',
         left: '50%',
-        zIndex: 50,
 
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
 
         transform: 'translate(-50%,-50%)',
-        transition: 'all 0.15s',
+        transitionDuration: '0.15s',
 
+        transitionProperty: 'transform, opacity',
         borderRadius: vars.size.borderRadius[300],
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
-        backgroundColor: vars.color.background.overlay[100], // TODO: Use constant z-index value
+
+        backgroundColor: vars.color.background.overlay[100],
+        maxWidth: calc.subtract('100vw', calc.multiply(SPACING, 2)),
+        maxHeight: '80vh', // TODO: Use constant z-index value
+
+        '@supports': {
+            '(max-width: 100svw)': { maxWidth: calc.subtract('100svw', calc.multiply(SPACING, 2)) },
+            '(max-height: 80svh)': { maxHeight: '80svh' },
+        },
 
         selectors: {
             '&[data-starting-style], &[data-ending-style]': {
@@ -76,6 +88,7 @@ export const description = layerStyle('components', {
 export const header = layerStyle('components', {
     display: 'flex',
     alignItems: 'center',
+    flexShrink: 0,
     gap: vars.size.space['150'],
     paddingBlock: 0,
     paddingInline: vars.size.space['300'],
@@ -87,12 +100,6 @@ export const body = layerStyle('components', {
     paddingBlock: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
-    '@supports': {
-        '(max-height: 80svh)': {
-            maxHeight: '80svh',
-        },
-    },
-    maxHeight: '80vh',
     overflowY: 'auto',
 });
 

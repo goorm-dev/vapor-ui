@@ -2,53 +2,83 @@ import fs from 'fs';
 import { markdownTable } from 'markdown-table';
 import path from 'path';
 
-interface PropItem {
-    prop: string;
-    type: string;
-    default: string | number | null;
+interface PropDef {
+    name: string;
+    type: string[] | string;
+    required: boolean;
     description: string;
+    defaultValue?: string | number | boolean | null;
 }
 
-/**
- * Replace <PropsTable file="..." section="..." /> tags inside MDX content
- * with static markdown tables, so LLM can parse component docs without runtime.
- *
- * @param text MDX source string
- * @returns string with PropsTable tags replaced by markdown tables
- */
+interface ComponentDoc {
+    props: PropDef[];
+}
+
 export const replaceComponentDoc = (text: string) => {
-    // Replace PropsTable tags
     return text.replace(
-        /<ComponentPropsTable\s+file="([^"]+)"(?:\s+section="([^"]+)")?\s*\/>/g,
-        (_, file: string, section: string | undefined) => {
+        /<ComponentPropsTable\s+componentName="([^"]+)"\s*\/>/g,
+        (_, componentName: string) => {
             try {
-                const jsonPath = path.join(process.cwd(), 'public', 'components', `${file}.json`);
-                const jsonRaw = fs.readFileSync(jsonPath, 'utf-8');
-                const json = JSON.parse(jsonRaw);
-                const items = json[section || 'props'] || [];
-                if (!Array.isArray(items) || items.length === 0) {
-                    return `> ⚠️ props information not found for \`${file}\` (${section || 'props'})`;
+                const jsonPath = path.join(
+                    process.cwd(),
+                    'public',
+                    'components/generated',
+                    `${componentName}.json`,
+                );
+
+                if (!fs.existsSync(jsonPath)) {
+                    return `> ⚠️ Spec file not found: \`${componentName}.json\``;
                 }
 
-                const propItems: PropItem[] = items;
+                const jsonRaw = fs.readFileSync(jsonPath, 'utf-8');
+                const json: ComponentDoc = JSON.parse(jsonRaw);
+                const items = json.props || [];
 
-                const escapePipes = (value: string | number | null | undefined) =>
-                    String(value ?? '').replace(/\|/g, '\\|');
+                if (!Array.isArray(items) || items.length === 0) {
+                    return `> ⚠️ Props not found in \`${componentName}.json\``;
+                }
+
+                const escapeContent = (value: string | number | boolean | null | undefined) => {
+                    let str = String(value ?? '');
+
+                    str = str.replace(/\|/g, '\\|');
+                    str = str.replace(/</g, '&lt;');
+                    str = str.replace(/>/g, '&gt;');
+                    str = str.replace(/\n/g, '<br/>');
+
+                    return str;
+                };
 
                 const table = markdownTable([
-                    ['prop', 'type', 'default', 'description'],
-                    ...propItems.map(({ prop, type, default: def, description }) => [
-                        `\`${escapePipes(prop)}\``,
-                        `\`${escapePipes(type)}\``,
-                        def !== null && def !== undefined ? `\`${escapePipes(def)}\`` : '',
-                        escapePipes(description),
-                    ]),
+                    ['Prop', 'Type', 'Default', 'Description'],
+                    ...items.map((item) => {
+                        const name = item.required
+                            ? `**${escapeContent(item.name)}**`
+                            : `\`${escapeContent(item.name)}\``;
+
+                        let typeStr = '';
+                        if (Array.isArray(item.type)) {
+                            typeStr = item.type
+                                .map((t) => `\`${String(t).replace(/\|/g, '\\|')}\``)
+                                .join(', ');
+                        } else {
+                            typeStr = `\`${String(item.type).replace(/\|/g, '\\|')}\``;
+                        }
+
+                        const defaultVal =
+                            item.defaultValue !== undefined && item.defaultValue !== null
+                                ? `\`${escapeContent(item.defaultValue)}\``
+                                : '-';
+
+                        const description = escapeContent(item.description);
+
+                        return [name, typeStr, defaultVal, description];
+                    }),
                 ]);
 
-                // Surround the table with blank lines to ensure proper Markdown rendering
                 return `\n${table}\n`;
             } catch (err) {
-                return `> ⚠️ error reading props for \`${file}\` (${section || 'props'}): ${(err as Error).message}`;
+                return `> ⚠️ Error rendering props for \`${componentName}\`: ${(err as Error).message}`;
             }
         },
     );

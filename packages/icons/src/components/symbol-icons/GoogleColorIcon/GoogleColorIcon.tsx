@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const GoogleColorIcon: IconType = (props) => (
+const GoogleColorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             d="M14.537 6.69434H14V6.66668H8V9.33334H11.7677C11.218 10.8857 9.741 12 8 12C5.791 12 3.99999 10.209 3.99999 8.00001C3.99999 5.79101 5.791 4.00001 8 4.00001C9.01966 4.00001 9.94733 4.38468 10.6537 5.01301L12.5393 3.12734C11.3487 2.01768 9.75599 1.33334 8 1.33334C4.31833 1.33334 1.33333 4.31834 1.33333 8.00001C1.33333 11.6817 4.31833 14.6667 8 14.6667C11.6817 14.6667 14.6667 11.6817 14.6667 8.00001C14.6667 7.55301 14.6207 7.11668 14.537 6.69434Z"

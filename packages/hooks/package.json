@@ -1,20 +1,26 @@
 {
     "name": "@vapor-ui/hooks",
+    "version": "1.0.0-beta.6",
     "description": "A collection of React hooks for the Vapor Design System.",
-    "version": "1.0.0-beta.5",
     "keywords": [
         "react",
         "hooks",
         "custom-hooks",
         "vapor-ui"
     ],
-    "author": "Vapor Team <vapor.ui@goorm.io>",
-    "license": "MIT",
     "homepage": "https://github.com/goorm-dev/vapor-ui",
+    "bugs": {
+        "url": "https://github.com/goorm-dev/vapor-ui/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "directory": "packages/hooks"
+    },
+    "license": "MIT",
+    "author": "Vapor Team <vapor.ui@goorm.io>",
+    "sideEffects": false,
     "type": "module",
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
-    "types": "./dist/types/index.d.ts",
     "exports": {
         ".": {
             "import": {
@@ -27,39 +33,33 @@
             }
         }
     },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/types/index.d.ts",
     "files": [
         "dist"
     ],
-    "sideEffects": false,
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git",
-        "directory": "packages/hooks"
-    },
-    "publishConfig": {
-        "access": "public"
-    },
-    "bugs": {
-        "url": "https://github.com/goorm-dev/vapor-ui/issues"
-    },
     "scripts": {
         "build": "tsup",
-        "lint": "eslint ./src",
+        "clean": "rimraf dist .turbo node_modules",
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
-        "clean": "rimraf dist .turbo node_modules",
+        "lint": "eslint ./src",
         "typecheck": "tsc --noEmit"
-    },
-    "peerDependencies": {
-        "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "@types/react": "^17.0.1",
+        "@types/react": "^18.3.27",
         "eslint": "^9.1.0",
-        "react": "^17.0.0",
+        "react": "^18.3.1",
         "tsup": "^8.4.0",
         "typescript": "^5.9.2"
+    },
+    "peerDependencies": {
+        "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }

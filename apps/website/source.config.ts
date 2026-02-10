@@ -23,6 +23,19 @@ export const blocks = defineDocs({
     },
 });
 
+const themeSchema = z.object({
+    title: z.string(),
+    description: z.string().optional(),
+});
+
+export const theme = defineDocs({
+    dir: 'content/theme',
+    docs: {
+        async: true,
+        schema: themeSchema,
+    },
+});
+
 export default defineConfig({
     mdxOptions: {
         remarkNpmOptions: {
@@ -38,7 +51,7 @@ export default defineConfig({
             inline: 'tailing-curly-colon',
             themes: {
                 light: 'github-light',
-                dark: 'slack-dark',
+                dark: 'github-dark',
             },
         },
     },

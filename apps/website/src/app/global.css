@@ -1,54 +1,105 @@
-@layer tw-theme, tw-base, vapor, tw-utilities, base;
+@layer tw-theme, tw-base, base, vapor, tw-utilities;
 
-@import '@vapor-ui/core/tailwind.css';
+@import url(https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css);
 
 @import 'tailwindcss/preflight' layer(tw-base);
 @import 'tailwindcss/theme' layer(tw-theme);
 @import 'tailwindcss/utilities' layer(tw-utilities);
 
+@import '@vapor-ui/core/tailwind.css';
+
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
+/* ==========================================================================
+   CSS Custom Properties (Design Tokens)
+   ========================================================================== */
+
 :root {
+    /* Breakpoints */
     --breakpoint-sm: 768px;
     --breakpoint-md: 992px;
     --breakpoint-lg: 1200px;
     --breakpoint-xl: 1440px;
     --breakpoint-xxl: 1441px;
 
-    /* Fumadocs Theme Variables */
-    --color-fd-background: var(--vapor-color-background-canvas);
-    --color-fd-primary: var(--vapor-color-foreground-primary-100);
-    --color-fd-border: var(--vapor-color-border-normal);
-    /* To respond immediately to side effects, the existing code is left as a comment. */
-    /* --color-fd-accent: var(--vapor-color-background-secondary-100); */
-    /* --color-fd-accent-foreground: var(--vapor-color-foreground-secondary-100); */
-    --color-fd-muted: var(--vapor-color-background-secondary-200);
-    --color-fd-muted-foreground: var(--vapor-color-foreground-secondary-100);
-    --color-fd-foreground: var(--vapor-color-foreground-secondary-100);
+    /* Fumadocs Theme - Background Colors */
+    --color-fd-background: var(--vapor-color-background-canvas-100);
+    --color-fd-card: var(--vapor-color-background-canvas-100);
+    --color-fd-popover: var(--vapor-color-background-overlay-100);
+    --color-fd-primary: var(--vapor-color-background-primary-200);
     --color-fd-secondary: var(--vapor-color-background-secondary-200);
-    --color-fd-secondary-foreground: var(--vapor-color-foreground-secondary-100);
-    --color-fd-card: var(--vapor-color-background-surface-100);
-    --color-fd-card-foreground: var(--vapor-color-foreground-secondary-100);
-    --color-fd-popover-foreground: var(--vapor-color-foreground-secondary-100);
-    --color-fd-popover: var(--vapor-color-background-surface-100);
-    --color-fd-primary-foreground: var(--vapor-color-foreground-primary-100);
-    --color-fd-foreground: var(--vapor-color-foreground-normal-100);
+    --color-fd-muted: var(--vapor-color-background-secondary-200);
+
+    /* Fumadocs Theme - Foreground Colors */
+    --color-fd-foreground: var(--vapor-color-foreground-normal-200);
+    --color-fd-card-foreground: var(--vapor-color-foreground-normal-200);
+    --color-fd-popover-foreground: var(--vapor-color-foreground-normal-200);
+    --color-fd-primary-foreground: var(--vapor-color-foreground-inverse);
+    --color-fd-secondary-foreground: var(--vapor-color-secondary-100);
+    --color-fd-muted-foreground: var(--vapor-color-foreground-normal-100);
+
+    /* Fumadocs Theme - Border */
+    --color-fd-border: var(--vapor-color-border-normal);
+
+    /* Fumadocs Layout */
     --fd-nav-height: 64px;
+    --fd-tocnav-height: 64px;
 }
+
+@layer tw-utilities {
+    .border {
+        border-color: var(--vapor-color-border-normal);
+        border-style: var(--tw-border-style);
+        border-width: 1px;
+    }
+}
+
+@theme {
+    --font-mono: var(--vapor-typography-fontFamily-code);
+}
+
+/* ==========================================================================
+   Base Styles
+   ========================================================================== */
+
+/* Prevent layout shift from scrollbar appearance */
+html {
+    scrollbar-gutter: stable;
+}
+
+body > main {
+    isolation: isolate;
+}
+
+/* Fallback for older browsers that don't support scrollbar-gutter */
+@supports not (scrollbar-gutter: stable) {
+    html {
+        overflow-y: scroll;
+    }
+}
+
+/* ==========================================================================
+   Component Overrides
+   ========================================================================== */
 
 a[data-active='true'] {
     color: var(--vapor-color-foreground-primary-100);
 }
 
-/* Prevent layout shift from scrollbar appearance */
-html {
-    scrollbar-gutter: stable; /* Modern browsers - reserves space for scrollbar */
+code,
+code * {
+    font-family: var(--font-mono);
 }
 
-/* Fallback for older browsers */
-@supports not (scrollbar-gutter: stable) {
-    html {
-        overflow-y: scroll; /* Always show scrollbar space */
+#nd-subnav {
+    > div {
+        @apply px-8;
+    }
+}
+
+#nd-sidebar {
+    > [data-fd-if-empty] {
+        @apply hidden;
     }
 }

@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const FilterIcon: IconType = (props) => (
+const FilterIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M7.33322 13.3334C7.14434 13.3334 6.986 13.2695 6.85822 13.1417C6.73045 13.014 6.66656 12.8556 6.66656 12.6667V8.66675L2.79989 3.73341C2.63322 3.51119 2.60822 3.27786 2.72489 3.03341C2.84156 2.78897 3.04434 2.66675 3.33322 2.66675H12.6666C12.9554 2.66675 13.1582 2.78897 13.2749 3.03341C13.3916 3.27786 13.3666 3.51119 13.1999 3.73341L9.33322 8.66675V12.6667C9.33322 12.8556 9.26934 13.014 9.14156 13.1417C9.01378 13.2695 8.85545 13.3334 8.66656 13.3334H7.33322Z" />
     </IconBase>

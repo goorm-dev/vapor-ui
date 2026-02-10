@@ -496,7 +496,6 @@ export { default as UnderlineOutlineIcon } from './UnderlineOutlineIcon';
 export { default as BlockOutlineIcon } from './BlockOutlineIcon';
 export { default as IndentIncreaseOutlineIcon } from './IndentIncreaseOutlineIcon';
 export { default as CodeBlockOutlineIcon } from './CodeBlockOutlineIcon';
-export { default as HeadingOutlineIcon } from './HeadingOutlineIcon';
 export { default as HardBreakOutlineIcon } from './HardBreakOutlineIcon';
 export { default as AlignJustifyOutlineIcon } from './AlignJustifyOutlineIcon';
 export { default as IndentDecreaseOutlineIcon } from './IndentDecreaseOutlineIcon';
@@ -546,3 +545,9 @@ export { default as ContainerStopOutlineIcon } from './ContainerStopOutlineIcon'
 export { default as LinearScaleOutlineIcon } from './LinearScaleOutlineIcon';
 export { default as DocktoBottomOutlineIcon } from './DocktoBottomOutlineIcon';
 export { default as SideNavOutlineIcon } from './SideNavOutlineIcon';
+export { default as StrikeOutlineIcon } from './StrikeOutlineIcon';
+export { default as ChecklistOutlineIcon } from './ChecklistOutlineIcon';
+export { default as Heading3OutlineIcon } from './Heading3OutlineIcon';
+export { default as Heading2OutlineIcon } from './Heading2OutlineIcon';
+export { default as Heading1OutlineIcon } from './Heading1OutlineIcon';
+export { default as Heading4OutlineIcon } from './Heading4OutlineIcon';

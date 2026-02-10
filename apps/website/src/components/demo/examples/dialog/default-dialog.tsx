@@ -7,7 +7,6 @@ export default function DefaultDialog() {
             <Dialog.Popup>
                 <Dialog.Header>
                     <Dialog.Title>알림</Dialog.Title>
-                    <Dialog.Close aria-label="Close" />
                 </Dialog.Header>
                 <Dialog.Body>
                     <Dialog.Description>
@@ -15,7 +14,7 @@ export default function DefaultDialog() {
                     </Dialog.Description>
                 </Dialog.Body>
                 <Dialog.Footer style={{ marginLeft: 'auto' }}>
-                    <Button colorPalette="primary">확인</Button>
+                    <Dialog.Close render={<Button colorPalette="primary">확인</Button>} />
                 </Dialog.Footer>
             </Dialog.Popup>
         </Dialog.Root>

@@ -1,9 +1,7 @@
 {
     "name": "@vapor-ui/icons",
+    "version": "1.0.0",
     "description": "A set of React components for icons in the Vapor Design System.",
-    "version": "1.0.0-beta.5",
-    "author": "Vapor Team <vapor.ui@goorm.io>",
-    "type": "module",
     "keywords": [
         "react",
         "icon",
@@ -11,22 +9,18 @@
         "design-system",
         "vapor-ui"
     ],
-    "license": "MIT",
     "homepage": "https://github.com/goorm-dev/vapor-ui",
+    "bugs": {
+        "url": "https://github.com/goorm-dev/vapor-ui/issues"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/goorm-dev/vapor-ui.git",
         "directory": "packages/icons"
     },
-    "publishConfig": {
-        "access": "public"
-    },
-    "bugs": {
-        "url": "https://github.com/goorm-dev/vapor-ui/issues"
-    },
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
-    "types": "./dist/types/index.d.ts",
+    "license": "MIT",
+    "author": "Vapor Team <vapor.ui@goorm.io>",
+    "type": "module",
     "exports": {
         ".": {
             "import": {
@@ -39,34 +33,40 @@
             }
         }
     },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/types/index.d.ts",
     "files": [
         "dist"
     ],
     "scripts": {
         "build": "rimraf dist && tsup",
-        "lint": "eslint ./src",
+        "clean": "rimraf dist .turbo node_modules",
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
-        "clean": "rimraf dist .turbo node_modules",
+        "lint": "eslint ./src",
         "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "clsx": "^2.1.1"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/react": "^18.3.27",
+        "@types/react-dom": "^18.3.7",
+        "eslint": "^9.1.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "rimraf": "^6.0.1",
+        "tsup": "^8.4.0",
+        "typescript": "^5.9.2"
     },
     "peerDependencies": {
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
         "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
     },
-    "devDependencies": {
-        "@repo/eslint-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
-        "@types/react": "^17.0.1",
-        "@types/react-dom": "^17.0.1",
-        "eslint": "^9.1.0",
-        "react": "^17.0.1",
-        "react-dom": "^17.0.1",
-        "rimraf": "^6.0.1",
-        "tsup": "^8.4.0",
-        "typescript": "^5.9.2"
-    },
-    "dependencies": {
-        "clsx": "^2.1.1"
+    "publishConfig": {
+        "access": "public"
     }
 }

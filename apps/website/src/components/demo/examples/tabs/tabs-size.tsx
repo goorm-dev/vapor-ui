@@ -1,47 +1,59 @@
-import { Tabs, VStack } from '@vapor-ui/core';
+import { HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 
 export default function TabsSize() {
     return (
-        <VStack gap="$400">
-            <Tabs.Root defaultValue="tab1" size="sm">
-                <h4 className="text-sm font-medium mb-2">Small</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
+        <VStack gap="$200">
+            <HStack gap="$150" alignItems="start">
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    sm
+                </Text>
+                <Tabs.Root defaultValue="tab1" size="sm">
+                    <Tabs.List>
+                        <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                        <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                        <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                    </Tabs.List>
+                </Tabs.Root>
+            </HStack>
 
-            <Tabs.Root defaultValue="tab1" size="md">
-                <h4 className="text-sm font-medium mb-2">Medium</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
+            <HStack gap="$150" alignItems="start">
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    md
+                </Text>
+                <Tabs.Root defaultValue="tab1" size="md">
+                    <Tabs.List>
+                        <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                        <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                        <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                    </Tabs.List>
+                </Tabs.Root>
+            </HStack>
 
-            <Tabs.Root defaultValue="tab1" size="lg">
-                <h4 className="text-sm font-medium mb-2">Large</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
+            <HStack gap="$150" alignItems="start">
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    lg
+                </Text>
+                <Tabs.Root defaultValue="tab1" size="lg">
+                    <Tabs.List>
+                        <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                        <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                        <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                    </Tabs.List>
+                </Tabs.Root>
+            </HStack>
 
-            <Tabs.Root defaultValue="tab1" size="xl">
-                <h4 className="text-sm font-medium mb-2">Extra Large</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
+            <HStack gap="$150" alignItems="start">
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    xl
+                </Text>
+                <Tabs.Root defaultValue="tab1" size="xl">
+                    <Tabs.List>
+                        <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                        <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                        <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                    </Tabs.List>
+                </Tabs.Root>
+            </HStack>
         </VStack>
     );
 }

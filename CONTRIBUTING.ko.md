@@ -19,8 +19,6 @@ Vapor UI에 기여해주셔서 감사합니다! 여러분의 기여는 우리의
 
 Vapor UI에 대한 질문이 있으시면 [해당 문서](https://vapor-ui.goorm.io)를 확인해주세요. 또한 다음과 같은 방법도 이용할 수 있습니다:
 
-- 실시간 토론을 위해 [Discord 커뮤니티](https://discord.gg/PMqxs3xaHC)에 참여하세요.
-
 ## 기여하는 방법
 
 Vapor UI에 기여하는 방법은 여러 가지가 있습니다:
@@ -80,16 +78,22 @@ git checkout -b fix/button-loading-state
 pnpm test
 ```
 
-4. 변경사항이 사용자에게 영향을 미치는 경우 changeset을 추가하세요:
+4. UI가 변경되었다면 스냅샷을 업데이트 하세요:
+
+```bash
+pnpm test:regressions -- --update-snapshots
+```
+
+5. 변경사항이 사용자에게 영향을 미치는 경우 changeset을 추가하세요:
 
 ```bash
 pnpm changeset
 ```
 
-5. [Conventional Commits](https://www.conventionalcommits.org/)를 사용하여 변경사항을 커밋하세요:
+6. [Conventional Commits](https://www.conventionalcommits.org/)를 사용하여 변경사항을 커밋하세요:
 
 ```bash
 git commit -m "fix(Button): correct loading state styling"
 ```
 
-6. 변경사항을 푸시하고 Pull Request를 생성하세요
+7. 변경사항을 푸시하고 Pull Request를 생성하세요

@@ -1,11 +1,10 @@
-// @ts-nocheck
 import { Callout as MyAlert } from '@vapor-ui/core';
-import { CheckIcon } from '@vapor-ui/icons';
+import { HeartIcon } from '@vapor-ui/icons';
 
 export const Component = () => (
-    <MyAlert.Root color="success">
+    <MyAlert.Root colorPalette="success">
         <MyAlert.Icon>
-            <CheckIcon />
+            <HeartIcon />
         </MyAlert.Icon>
         Success operation completed
     </MyAlert.Root>

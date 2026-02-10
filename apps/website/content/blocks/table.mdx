@@ -1,0 +1,110 @@
+---
+title: Table
+description: 데이터의 구조화된 표현을 제공하는 데 사용됩니다.
+previewImageUrl: /images/table-preview.svg
+---
+
+이 문서는 대량의 데이터를 다루는 Data Table의 구현 예시를 안내합니다.
+
+Data Table은 데이터를 효율적으로 시각화하고 관리하는 강력한 도구이지만, 내부적으로 복잡한 상태 관리와 로직을 필요로 합니다. 이러한 기능을 컴포넌트 내부에 강결합하면 유지보수가 어렵고 확장성이 떨어지는 문제가 발생할 수 있습니다.
+
+이에 따라 Vapor UI의 Table 컴포넌트는 순수한 뷰(View) 역할에 집중하여 기본적인 구조와 스타일을 제공합니다. 이 문서에서는 `@tanstack/react-table`과 같은 Headless UI 라이브러리를 활용하여 다양한 기능을 유연하게 구현하는 방법을 예시로 제공합니다.
+
+### Basic
+
+<Demo name="table/default-table" showResponsiveToggle>
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/table/default-table.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Checkbox
+
+<Demo name="table/checkbox" showResponsiveToggle>
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/table/checkbox.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Ordering
+
+<Demo name="table/ordering" showResponsiveToggle>
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/table/ordering.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Sticky
+
+<Demo name="table/sticky" showResponsiveToggle>
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/table/sticky.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Collapsed
+
+<Demo name="table/collapsed" showResponsiveToggle>
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/table/collapsed.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Sort
+
+<Demo name="table/sort" showResponsiveToggle>
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/table/sort.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Scroll
+
+<Demo name="table/scroll" showResponsiveToggle>
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/table/scroll.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Filter
+
+<Demo name="table/filter" showResponsiveToggle>
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/table/filter.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Pagination
+
+<Demo name="table/pagination" showResponsiveToggle>
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/table/pagination.tsx",
+    "codeblock": true
+}
+```
+</Demo>

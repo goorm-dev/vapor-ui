@@ -100,8 +100,8 @@ function runTransform({
 
 const TRANSFORMER_INQUIRER_CHOICES = [
     {
-        name: 'internal/icons: Migrate @goorm-dev/vapor-icons to @vapor-ui/icons',
-        value: 'internal/icons/migrate-icons-import',
+        name: 'v1/migrate: Migrate to @vapor-ui/core v1.0.0',
+        value: 'v1/migrate',
     },
 ];
 const run = async () => {
