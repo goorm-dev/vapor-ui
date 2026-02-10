@@ -23,15 +23,38 @@ export interface BaseUiTypeMap {
 }
 
 /**
- * base-ui 타입의 텍스트에서 정규화된 경로를 추출합니다.
- * 예: import(".../@base-ui/.../CollapsibleRoot").CollapsibleRoot.ChangeEventDetails
- *   → "CollapsibleRoot.ChangeEventDetails"
+ * Type 객체에서 base-ui 모듈의 qualified path를 AST 기반으로 추출합니다.
+ * getText() + regex 대신 Symbol.getFullyQualifiedName()을 사용하여
+ * greedy 매칭 위험 없이 정확한 경로를 반환합니다.
+ *
+ * @example
+ * // Type of import("@base-ui/react/collapsible").CollapsibleRoot.ChangeEventDetails
+ * // → "CollapsibleRoot.ChangeEventDetails"
+ *
+ * @returns base-ui 타입이 아니거나 symbol이 없으면 null
  */
-function normalizeBaseUiTypePath(typeText: string): string | null {
-    // import("...").XXX.YYY.ZZZ 패턴에서 마지막 부분 추출
-    const match = typeText.match(/\)\s*\.\s*(.+)$/);
-    if (!match) return null;
-    return match[1].trim();
+function getBaseUiQualifiedPath(type: Type): string | null {
+    for (const symbol of [type.getSymbol(), type.getAliasSymbol()]) {
+        if (!symbol) continue;
+
+        const fqn = symbol.getFullyQualifiedName();
+
+        // FQN 포맷: "module/path".Namespace.Type
+        if (!fqn.startsWith('"')) continue;
+
+        const closingQuote = fqn.indexOf('"', 1);
+        if (closingQuote === -1) continue;
+
+        // @base-ui 모듈에서 선언된 타입만 처리
+        const modulePath = fqn.substring(1, closingQuote);
+        if (!modulePath.includes('@base-ui')) continue;
+
+        // "module/path".Namespace.Type → Namespace.Type
+        if (closingQuote + 2 > fqn.length) continue;
+        return fqn.substring(closingQuote + 2);
+    }
+
+    return null;
 }
 
 /**
@@ -58,18 +81,13 @@ function collectNestedTypes(
         const propType = prop.getTypeAtLocation(importSpecifier);
         const vaporPath = `${basePath}.${propName}`;
 
-        // 타입 텍스트 가져오기
-        const typeText = propType.getText();
-
-        // base-ui 타입인 경우에만 맵에 추가
-        if (typeText.includes('@base-ui')) {
-            const normalizedPath = normalizeBaseUiTypePath(typeText);
-            if (normalizedPath) {
-                map[normalizedPath] = {
-                    type: propType,
-                    vaporPath,
-                };
-            }
+        // AST 기반으로 base-ui qualified path 추출
+        const normalizedPath = getBaseUiQualifiedPath(propType);
+        if (normalizedPath) {
+            map[normalizedPath] = {
+                type: propType,
+                vaporPath,
+            };
         }
 
         // 더 깊은 레벨 탐색 (ChangeEventDetails, Props 등)
@@ -104,16 +122,13 @@ export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
             const alias = namedImport.getAliasNode()?.getText() ?? namedImport.getName();
             const importType = namedImport.getType();
 
-            // 최상위 타입 등록
-            const topLevelTypeText = importType.getText();
-            if (topLevelTypeText.includes('@base-ui')) {
-                const normalizedPath = normalizeBaseUiTypePath(topLevelTypeText);
-                if (normalizedPath) {
-                    map[normalizedPath] = {
-                        type: importType,
-                        vaporPath: alias,
-                    };
-                }
+            // 최상위 타입 등록 (AST 기반)
+            const normalizedPath = getBaseUiQualifiedPath(importType);
+            if (normalizedPath) {
+                map[normalizedPath] = {
+                    type: importType,
+                    vaporPath: alias,
+                };
             }
 
             // 하위 properties 재귀 수집
@@ -129,20 +144,14 @@ export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
 }
 
 /**
- * 타입 텍스트에서 base-ui 타입을 찾아 vapor-ui 경로로 변환합니다.
+ * Type 객체에서 base-ui 타입을 찾아 vapor-ui 경로로 변환합니다.
+ * AST 기반으로 동작하여 getText() + regex 의존을 제거합니다.
  */
-export function resolveBaseUiType(typeText: string, map: BaseUiTypeMap): string | null {
-    if (!typeText.includes('@base-ui')) return null;
-
-    const normalizedPath = normalizeBaseUiTypePath(typeText);
+export function resolveBaseUiType(type: Type, map: BaseUiTypeMap): string | null {
+    const normalizedPath = getBaseUiQualifiedPath(type);
     if (!normalizedPath) return null;
 
-    const entry = map[normalizedPath];
-    if (entry) {
-        return entry.vaporPath;
-    }
-
-    return null;
+    return map[normalizedPath]?.vaporPath ?? null;
 }
 
 /**
@@ -178,24 +187,19 @@ export function collectNamespaceTypeAliases(sourceFile: SourceFile, map: BaseUiT
         for (const typeAlias of typeAliases) {
             const aliasName = typeAlias.getName();
             const aliasType = typeAlias.getType();
-            const typeText = aliasType.getText();
 
             // base-ui 타입을 참조하는 경우에만 매핑 추가
-            // 1. typeText에 import 경로가 포함된 경우
+            // 1. AST에서 base-ui qualified path를 추출할 수 있는 경우
             // 2. 또는 type alias의 원본 타입이 @base-ui 패키지에서 선언된 경우
-            const hasImportPath = typeText.includes('@base-ui');
-            const isBaseUiAlias = !hasImportPath && isBaseUiTypeAlias(typeAlias);
+            const normalizedPath = getBaseUiQualifiedPath(aliasType);
+            const isBaseUiAlias = !normalizedPath && isBaseUiTypeAlias(typeAlias);
 
-            if (hasImportPath || isBaseUiAlias) {
+            if (normalizedPath || isBaseUiAlias) {
                 // ComponentNameRoot → ComponentName.Root 형태로 변환
                 const vaporPath = formatVaporTypePath(nsName, aliasName, componentPrefix);
 
-                if (hasImportPath) {
-                    // import 경로가 있는 경우 정규화된 경로를 키로 사용
-                    const normalizedPath = normalizeBaseUiTypePath(typeText);
-                    if (normalizedPath) {
-                        map[normalizedPath] = { type: aliasType, vaporPath };
-                    }
+                if (normalizedPath) {
+                    map[normalizedPath] = { type: aliasType, vaporPath };
                 }
 
                 // 항상 타입 이름으로도 키 추가 (fallback용)

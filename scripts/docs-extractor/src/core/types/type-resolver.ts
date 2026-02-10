@@ -57,29 +57,6 @@ function simplifyReactElementType(type: Type): string | null {
 }
 
 /**
- * 타입의 원본 alias 텍스트를 가져옵니다.
- * type alias가 있으면 declaration에서 원본 타입 텍스트를 추출합니다.
- */
-function getOriginalTypeText(type: Type): string | null {
-    const aliasSymbol = type.getAliasSymbol();
-    if (aliasSymbol) {
-        const declarations = aliasSymbol.getDeclarations();
-
-        if (declarations.length > 0) {
-            const decl = declarations[0];
-            const filePath = decl.getSourceFile().getFilePath();
-
-            // base-ui 파일에 선언된 타입인 경우
-            if (filePath.includes('@base-ui')) {
-                // import("...").Namespace.TypeName 형태로 반환
-                return type.getText();
-            }
-        }
-    }
-    return null;
-}
-
-/**
  * 함수 타입을 파싱하여 파라미터와 반환 타입을 재귀적으로 변환합니다.
  */
 function resolveFunctionType(
@@ -113,10 +90,9 @@ function resolveFunctionType(
 
         const paramType = param.getTypeAtLocation(node);
 
-        // 먼저 원본 타입이 base-ui alias인지 확인
-        const originalText = getOriginalTypeText(paramType);
-        if (originalText && baseUiMap) {
-            const vaporPath = resolveBaseUiType(originalText, baseUiMap);
+        // base-ui 타입인지 AST 기반으로 확인
+        if (baseUiMap) {
+            const vaporPath = resolveBaseUiType(paramType, baseUiMap);
             if (vaporPath) {
                 return `${paramName}: ${vaporPath}`;
             }
@@ -245,10 +221,10 @@ const functionTypeResolver: TypeResolverPlugin = {
 
 const baseUiTypeResolver: TypeResolverPlugin = {
     name: 'base-ui-type',
-    resolve: ({ rawText, baseUiMap }) => {
+    resolve: ({ type, rawText, baseUiMap }) => {
         if (!rawText.includes('@base-ui')) return null;
         if (baseUiMap) {
-            const vaporPath = resolveBaseUiType(rawText, baseUiMap);
+            const vaporPath = resolveBaseUiType(type, baseUiMap);
             if (vaporPath) return vaporPath;
         }
         return simplifyNodeModulesImports(rawText);
