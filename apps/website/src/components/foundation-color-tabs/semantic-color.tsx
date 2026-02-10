@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import { Box, Text } from '@vapor-ui/core';
 
 import { SemanticColorData } from '~/constants/colors';
@@ -17,7 +19,7 @@ export const SemanticColor = () => {
     return (
         <Box paddingY="$400">
             {SemanticColorData.map(
-                (colorGroup): JSX.Element => (
+                (colorGroup): ReactElement => (
                     <Box key={colorGroup.title} marginBottom="$600">
                         <Text typography="heading5">
                             {sectionTitles[colorGroup.title] || colorGroup.title}

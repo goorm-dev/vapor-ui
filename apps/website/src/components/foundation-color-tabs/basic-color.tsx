@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import { Box, Text } from '@vapor-ui/core';
 
 import { BasicColorData } from '~/constants/colors';
@@ -8,7 +10,7 @@ import { ColorPalette } from '../color-swatch';
 export const BasicColor = () => {
     return (
         <Box paddingY="$400">
-            {BasicColorData.map((colorGroup): JSX.Element => {
+            {BasicColorData.map((colorGroup): ReactElement => {
                 const sectionTitle =
                     colorGroup.title === 'base'
                         ? 'Base Colors'
