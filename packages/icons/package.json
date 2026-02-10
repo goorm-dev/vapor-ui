@@ -53,14 +53,14 @@
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "@types/react": "^18.3.27",
-        "@types/react-dom": "^18.3.7",
-        "eslint": "^9.1.0",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
+        "@types/react": "catalog:",
+        "@types/react-dom": "catalog:",
+        "eslint": "catalog:",
+        "react": "catalog:",
+        "react-dom": "catalog:",
         "rimraf": "^6.0.1",
         "tsup": "^8.4.0",
-        "typescript": "^5.9.2"
+        "typescript": "catalog:"
     },
     "peerDependencies": {
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",

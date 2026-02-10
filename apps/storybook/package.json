@@ -12,8 +12,8 @@
         "lint": "eslint ./.storybook"
     },
     "dependencies": {
-        "react": "^19.2.3",
-        "react-dom": "^19.2.3"
+        "react": "catalog:react19",
+        "react-dom": "catalog:react19"
     },
     "devDependencies": {
         "@eslint/js": "^9.36.0",
@@ -23,13 +23,13 @@
         "@storybook/addon-docs": "^9.1.9",
         "@storybook/builder-vite": "^9.1.9",
         "@storybook/react-vite": "^9.1.9",
-        "@types/react": "^19.2.9",
-        "@types/react-dom": "^19.2.3",
+        "@types/react": "catalog:react19",
+        "@types/react-dom": "catalog:react19",
         "@vanilla-extract/vite-plugin": "^5.1.4",
         "@vitejs/plugin-react": "^5.0.3",
-        "eslint": "^9.36.0",
+        "eslint": "catalog:",
         "globals": "^16.4.0",
-        "prettier": "^3.2.5",
+        "prettier": "catalog:",
         "storybook": "^9.1.17",
         "typescript": "~5.8.3",
         "typescript-eslint": "^8.44.0",
