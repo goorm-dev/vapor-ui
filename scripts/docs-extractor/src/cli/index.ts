@@ -71,6 +71,7 @@ const cli = meow(
     --config               Config file path (default: docs-extractor.config.ts)
     --no-config            Ignore config file
     --lang, -l             Output language (ko, en, all)
+    --verbose, -v          Enable verbose output
 
   Examples
     $ ts-api-extractor ./packages/core
@@ -128,6 +129,11 @@ const cli = meow(
                 type: 'string',
                 shortFlag: 'l',
             },
+            verbose: {
+                type: 'boolean',
+                shortFlag: 'v',
+                default: false,
+            },
         },
     },
 );
@@ -172,6 +178,7 @@ export async function run() {
         config: cli.flags.config,
         noConfig: cli.flags.noConfig,
         lang: cli.flags.lang,
+        verbose: cli.flags.verbose,
     };
 
     const resolved = await resolveOptions(rawOptions, {
@@ -199,7 +206,7 @@ export async function run() {
         // Get component-specific config
         const componentConfig = getComponentConfig(config, filePath);
         const extractOptions = buildComponentExtractOptions(
-            resolved.extractOptions,
+            { ...resolved.extractOptions, verbose: resolved.verbose },
             componentConfig,
             sprinklesMeta,
         );

@@ -17,6 +17,7 @@ export interface ExtractOptions {
     includeHtmlWhitelist?: Set<string>;
     include?: string[];
     sprinklesMeta?: SprinklesMeta;
+    verbose?: boolean;
 }
 
 /** Sprinkles CSS file pattern */

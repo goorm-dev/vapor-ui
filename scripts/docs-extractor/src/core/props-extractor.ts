@@ -45,80 +45,110 @@ export function extractProps(
 
     const namespaces = getExportedNamespaces(sourceFile);
 
+    if (options.verbose) {
+        console.error(
+            `[verbose] Found ${namespaces.length} namespaces in ${sourceFile.getFilePath()}`,
+        );
+    }
+
     for (const namespace of namespaces) {
-        const namespaceName = namespace.getName();
-        const exportedInterfaceProps = findExportedInterfaceProps(namespace);
+        try {
+            const namespaceName = namespace.getName();
+            const exportedInterfaceProps = findExportedInterfaceProps(namespace);
 
-        if (!exportedInterfaceProps) continue;
+            if (!exportedInterfaceProps) continue;
 
-        const description = getComponentDescription(sourceFile, namespaceName);
-        const allSymbols = exportedInterfaceProps.getType().getProperties();
+            const description = getComponentDescription(sourceFile, namespaceName);
+            const allSymbols = exportedInterfaceProps.getType().getProperties();
 
-        // Prop names declared in the Props interface (filters out internal variable defaults)
-        const declaredPropNames = new Set(allSymbols.map((symbol) => symbol.getName()));
+            // Prop names declared in the Props interface (filters out internal variable defaults)
+            const declaredPropNames = new Set(allSymbols.map((symbol) => symbol.getName()));
 
-        // Extract default values per namespace (supports compound components)
-        // Collects both recipe defaults and destructuring defaults
-        const defaultValues = getDefaultValuesForNamespace(
-            sourceFile,
-            namespaceName,
-            declaredPropNames,
-        );
-        const includeSet = new Set(options.include ?? []);
+            // Extract default values per namespace (supports compound components)
+            // Collects both recipe defaults and destructuring defaults
+            const defaultValues = getDefaultValuesForNamespace(
+                sourceFile,
+                namespaceName,
+                declaredPropNames,
+            );
+            const includeSet = new Set(options.include ?? []);
 
-        const filteredSymbols = allSymbols.filter((symbol) =>
-            shouldIncludeSymbol(symbol, options, includeSet),
-        );
+            const filteredSymbols = allSymbols.filter((symbol) =>
+                shouldIncludeSymbol(symbol, options, includeSet),
+            );
 
-        const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
-            const name = symbol.getName();
-            const declNode = symbol.getDeclarations()[0] ?? exportedInterfaceProps;
+            if (options.verbose) {
+                console.error(
+                    `[verbose] ${namespaceName}: ${allSymbols.length} symbols → ${filteredSymbols.length} after filtering`,
+                );
+            }
 
-            // Use displayTypeName for sprinkles props
-            let typeArray: string[];
-            if (options.sprinklesMeta && isSprinklesPropFromMeta(name, options.sprinklesMeta)) {
-                const displayType = getSprinklesDisplayType(name, options.sprinklesMeta);
-                if (displayType) {
-                    typeArray = [displayType];
+            const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
+                const name = symbol.getName();
+                const declNode = symbol.getDeclarations()[0] ?? exportedInterfaceProps;
+
+                // Use displayTypeName for sprinkles props
+                let typeArray: string[];
+                if (options.sprinklesMeta && isSprinklesPropFromMeta(name, options.sprinklesMeta)) {
+                    const displayType = getSprinklesDisplayType(name, options.sprinklesMeta);
+                    if (displayType) {
+                        typeArray = [displayType];
+                    } else {
+                        const typeResult = cleanType(
+                            resolveType(
+                                symbol.getTypeAtLocation(declNode),
+                                baseUiMap,
+                                declNode,
+                                options.verbose,
+                            ),
+                        );
+                        typeArray = toTypeArray(typeResult);
+                    }
                 } else {
                     const typeResult = cleanType(
-                        resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode),
+                        resolveType(
+                            symbol.getTypeAtLocation(declNode),
+                            baseUiMap,
+                            declNode,
+                            options.verbose,
+                        ),
                     );
                     typeArray = toTypeArray(typeResult);
                 }
-            } else {
-                const typeResult = cleanType(
-                    resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode),
-                );
-                typeArray = toTypeArray(typeResult);
-            }
 
-            const defaultValue = defaultValues[name] ?? getJsDocDefault(symbol);
+                const defaultValue = defaultValues[name] ?? getJsDocDefault(symbol);
 
-            const source = getPropSource(symbol);
-            const required = !symbol.isOptional();
+                const source = getPropSource(symbol);
+                const required = !symbol.isOptional();
 
-            return {
-                name,
-                type: typeArray,
-                required,
-                description: getPropDescription(symbol),
-                defaultValue,
-                _source: source,
-                _category: getPropCategory(name, required, source),
-            };
-        });
+                return {
+                    name,
+                    type: typeArray,
+                    required,
+                    description: getPropDescription(symbol),
+                    defaultValue,
+                    _source: source,
+                    _category: getPropCategory(name, required, source),
+                };
+            });
 
-        const sortedProps = sortProps(propsWithSource);
-        const defaultElement = getDefaultElement(sourceFile, namespaceName);
+            const sortedProps = sortProps(propsWithSource);
+            const defaultElement = getDefaultElement(sourceFile, namespaceName);
 
-        props.push({
-            name: namespaceName,
-            displayName: namespaceName,
-            description: description || undefined,
-            props: sortedProps,
-            defaultElement,
-        });
+            props.push({
+                name: namespaceName,
+                displayName: namespaceName,
+                description: description || undefined,
+                props: sortedProps,
+                defaultElement,
+            });
+        } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            console.warn(
+                `[docs-extractor] Failed to extract props for ${namespace.getName()}: ${message}`,
+            );
+            continue;
+        }
     }
 
     return { props };

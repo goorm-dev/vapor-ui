@@ -4,6 +4,7 @@
  * ImportDeclaration에서 base-ui 컴포넌트의 타입 정보를 추출하여
  * vapor-ui 타입 경로로 매핑합니다.
  */
+import fs from 'node:fs';
 import {
     type ImportSpecifier,
     type ModuleDeclaration,
@@ -96,16 +97,23 @@ function collectNestedTypes(
 }
 
 // 파일 경로 기반 캐시 (동일 파일에 대한 중복 분석 방지)
-const baseUiTypeMapCache = new Map<string, BaseUiTypeMap>();
+interface CacheEntry {
+    map: BaseUiTypeMap;
+    mtime: number;
+}
+
+const baseUiTypeMapCache = new Map<string, CacheEntry>();
 
 /**
  * 소스 파일에서 base-ui import를 찾아 타입 맵을 빌드합니다.
  * 동일 파일에 대한 결과를 캐싱하여 중복 분석을 방지합니다.
+ * mtime 기반으로 파일 변경 시 캐시를 무효화합니다.
  */
 export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
     const filePath = sourceFile.getFilePath();
+    const mtime = fs.statSync(filePath).mtimeMs;
     const cached = baseUiTypeMapCache.get(filePath);
-    if (cached) return cached;
+    if (cached && cached.mtime === mtime) return cached.map;
 
     const map: BaseUiTypeMap = {};
 
@@ -139,7 +147,7 @@ export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
     // namespace에서 re-export된 type alias 수집 (기존 맵을 덮어씀)
     collectNamespaceTypeAliases(sourceFile, map);
 
-    baseUiTypeMapCache.set(filePath, map);
+    baseUiTypeMapCache.set(filePath, { map, mtime });
     return map;
 }
 
@@ -262,7 +270,11 @@ export function findComponentPrefix(namespaces: ModuleDeclaration[]): string | n
     const last = sorted[sorted.length - 1];
 
     let commonLen = 0;
-    while (commonLen < first.length && commonLen < last.length && first[commonLen] === last[commonLen]) {
+    while (
+        commonLen < first.length &&
+        commonLen < last.length &&
+        first[commonLen] === last[commonLen]
+    ) {
         commonLen++;
     }
 
@@ -274,7 +286,9 @@ export function findComponentPrefix(namespaces: ModuleDeclaration[]): string | n
     const allValidBoundary = sorted.every(
         (name) =>
             name.length === prefix.length ||
-            (name.length > prefix.length && name[prefix.length] >= 'A' && name[prefix.length] <= 'Z'),
+            (name.length > prefix.length &&
+                name[prefix.length] >= 'A' &&
+                name[prefix.length] <= 'Z'),
     );
 
     if (allValidBoundary) return prefix;
@@ -295,7 +309,11 @@ export function formatVaporTypePath(
     typeName: string,
     componentPrefix: string | null,
 ): string {
-    if (componentPrefix && nsName.startsWith(componentPrefix) && nsName.length > componentPrefix.length) {
+    if (
+        componentPrefix &&
+        nsName.startsWith(componentPrefix) &&
+        nsName.length > componentPrefix.length
+    ) {
         const partName = nsName.slice(componentPrefix.length);
         return `${componentPrefix}.${partName}.${typeName}`;
     }

@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { findComponentFiles, findFileByComponentName, findTsconfig } from '~/core/discovery';
+import type { ExtractOptions } from '~/core/props-extractor';
+
 // Dynamic import to avoid loading @inquirer/prompts in CI environments
 async function getPrompts() {
     try {
@@ -12,9 +15,6 @@ async function getPrompts() {
         );
     }
 }
-
-import { findComponentFiles, findFileByComponentName, findTsconfig } from '~/core/discovery';
-import type { ExtractOptions } from '~/core/props-extractor';
 
 // ============================================================
 // Error Classes
@@ -45,6 +45,7 @@ export interface RawCliOptions {
     config?: string;
     noConfig?: boolean;
     lang?: string;
+    verbose?: boolean;
 }
 
 /** 프롬프트/검증 후 확정된 옵션 */
@@ -54,6 +55,7 @@ export interface ResolvedCliOptions {
     targetFiles: string[];
     extractOptions: ExtractOptions;
     outputMode: OutputMode;
+    verbose: boolean;
 }
 
 export type OutputMode = { type: 'stdout' } | { type: 'directory'; path: string };
@@ -254,5 +256,6 @@ export async function resolveOptions(
         targetFiles,
         extractOptions: buildExtractOptions(raw, configOptions?.filterSprinkles),
         outputMode: resolveOutputMode(raw.outputDir),
+        verbose: raw.verbose ?? false,
     };
 }

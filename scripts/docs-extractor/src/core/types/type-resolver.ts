@@ -216,7 +216,8 @@ const reactElementResolver: TypeResolverPlugin = {
 
 const functionTypeResolver: TypeResolverPlugin = {
     name: 'function-type',
-    resolve: ({ type, baseUiMap, contextNode }) => resolveFunctionType(type, baseUiMap, contextNode),
+    resolve: ({ type, baseUiMap, contextNode }) =>
+        resolveFunctionType(type, baseUiMap, contextNode),
 };
 
 const baseUiTypeResolver: TypeResolverPlugin = {
@@ -252,13 +253,27 @@ const DEFAULT_RESOLVER_CHAIN: TypeResolverPlugin[] = [
     importPathResolver,
 ];
 
-export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap, contextNode?: Node): string {
+export function resolveType(
+    type: Type,
+    baseUiMap?: BaseUiTypeMap,
+    contextNode?: Node,
+    verbose?: boolean,
+): string {
     const rawText = contextNode ? type.getText(contextNode, TYPE_FORMAT_FLAGS) : type.getText();
     const ctx: TypeResolverContext = { type, rawText, baseUiMap, contextNode };
 
     for (const plugin of DEFAULT_RESOLVER_CHAIN) {
         const result = plugin.resolve(ctx);
-        if (result !== null) return result;
+        if (result !== null) {
+            if (verbose) {
+                console.error(`[verbose] resolveType: "${rawText}" → resolved by ${plugin.name}`);
+            }
+            return result;
+        }
+    }
+
+    if (verbose) {
+        console.error(`[verbose] resolveType: "${rawText}" → fallback (no plugin matched)`);
     }
 
     // Fallback: ForwardRef/ReactElement generic 정리
