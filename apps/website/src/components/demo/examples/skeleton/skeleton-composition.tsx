@@ -2,7 +2,13 @@ import { Box, HStack, Skeleton, VStack } from '@vapor-ui/core';
 
 export default function SkeletonComposition() {
     return (
-        <Box padding="$200" border="1px solid" borderColor="$normal" borderRadius="$100" maxWidth="320px">
+        <Box
+            padding="$200"
+            border="1px solid"
+            borderColor="$normal"
+            borderRadius="$100"
+            maxWidth="320px"
+        >
             <HStack gap="$150" alignItems="center">
                 <Skeleton shape="rounded" width="40px" height="40px" />
                 <VStack gap="$075">
