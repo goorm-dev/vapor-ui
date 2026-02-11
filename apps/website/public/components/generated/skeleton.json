@@ -1,13 +1,13 @@
 {
     "name": "Skeleton",
     "displayName": "Skeleton",
-    "description": "콘텐츠가 로딩 중임을 나타내는 placeholder 요소입니다. '<div>` 요소를 렌더링합니다.",
+    "description": "콘텐츠가 로딩 중임을 나타내는 placeholder 요소입니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "animation",
             "type": ["none", "shimmer", "pulse"],
             "required": false,
-            "description": "skeleton의 애니메이션 스타일을 제어합니다.",
+            "description": "skeleton의 애니메이션 스타일을 제어합니다.\n\n- `shimmer`: 빛이 스치는 효과\n- `pulse`: 깜빡이는 효과\n- `none`: 애니메이션 비활성화",
             "defaultValue": "shimmer"
         },
         {
