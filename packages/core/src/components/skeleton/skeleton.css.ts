@@ -41,7 +41,7 @@ export const root = recipe({
                 borderRadius: '9999px',
             }),
             square: layerStyle('components', {
-                borderRadius: '0.5rem',
+                borderRadius: vars.size.borderRadius['300'],
             }),
         },
 
@@ -64,7 +64,7 @@ export const root = recipe({
                 backgroundPosition: 'left -6.25rem top 0',
                 backgroundSize: '6.25rem 100%',
                 backgroundRepeat: 'no-repeat',
-                animation: `${shimmerKeyframes} 1s ease infinite`,
+                animation: `${shimmerKeyframes} 1s ease-in-out infinite`,
             }),
             pulse: layerStyle('components', {
                 animation: `${pulseKeyframes} 1.2s ease-in-out infinite`,
