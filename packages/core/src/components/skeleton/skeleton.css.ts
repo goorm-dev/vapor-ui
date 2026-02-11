@@ -14,6 +14,9 @@ const pulseKeyframes = keyframes({
     '50%': { opacity: 0.5 },
 });
 
+/**
+ * Style variants for the Skeleton component.
+ */
 export const root = recipe({
     base: layerStyle('components', {
         display: 'block',

@@ -11,7 +11,7 @@ import type { SkeletonVariants } from './skeleton.css';
 import * as styles from './skeleton.css';
 
 /**
- * A placeholder element that indicates content is loading.
+ * A placeholder element that indicates content is loading. Renders a `<div>` element.
  */
 export const Skeleton = forwardRef<HTMLDivElement, Skeleton.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
