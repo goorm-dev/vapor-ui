@@ -35,12 +35,9 @@ export type Styles = {
     $css?: CssProps;
 };
 
-export type VComponentProps<ElementType extends React.ElementType> = Omit<
-    useRender.ComponentProps<ElementType>,
-    OmitColorProp<ElementType>
-> &
+export type VComponentProps<ElementType extends React.ElementType> = Styles &
     DeprecatedSprinkles &
-    Styles;
+    Omit<useRender.ComponentProps<ElementType>, OmitColorProp<ElementType>>;
 
 /**
  * Deprecated CSS utility props. Use `$css` prop instead.

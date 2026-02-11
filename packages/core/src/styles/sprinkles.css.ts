@@ -659,17 +659,17 @@ const sprinkleProperties = defineProperties({
 const deprecatedSprinkleProperties = defineProperties({
     '@layer': layers.utilities,
 
-    defaultCondition: 'desktop',
+    defaultCondition: 'lg',
     conditions: {
-        mobile: {
+        sm: {
             '@media': `screen and (max-width: 767px)`,
             // '@media': `screen and (max-width: env(--mobile))`,
         },
-        tablet: {
+        md: {
             '@media': `screen and (max-width: 1024px)`,
             // '@media': `screen and (max-width: env(--tablet))`,
         },
-        desktop: {},
+        lg: {},
     },
 
     dynamicProperties: {
