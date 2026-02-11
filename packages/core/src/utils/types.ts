@@ -1,3 +1,5 @@
+import type { ComponentPropsWithoutRef } from 'react';
+
 import type { useRender } from '@base-ui/react/use-render';
 
 import type {
@@ -9,6 +11,9 @@ import type {
 export type AnyProp = any;
 
 export type Assign<T, U> = Omit<T, keyof U> & U;
+
+type OmitColorProp<ElementType extends React.ElementType> =
+    string extends ComponentPropsWithoutRef<ElementType>['color'] ? 'color' : never;
 
 type CssProps = Sprinkles;
 
@@ -30,9 +35,12 @@ export type Styles = {
     $css?: CssProps;
 };
 
-export type VComponentProps<ElementType extends React.ElementType> = DeprecatedSprinkles &
-    Styles &
-    Omit<useRender.ComponentProps<ElementType>, 'color'>;
+export type VComponentProps<ElementType extends React.ElementType> = Omit<
+    useRender.ComponentProps<ElementType>,
+    OmitColorProp<ElementType>
+> &
+    DeprecatedSprinkles &
+    Styles;
 
 /**
  * Deprecated CSS utility props. Use `$css` prop instead.
