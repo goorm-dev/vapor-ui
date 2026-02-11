@@ -1,0 +1,31 @@
+{
+    "name": "@vapor-ui/translate-docs",
+    "version": "0.0.1",
+    "private": true,
+    "description": "AI-powered incremental translation for component documentation",
+    "type": "module",
+    "scripts": {
+        "translate": "tsx src/index.ts",
+        "translate:all": "tsx src/index.ts --all",
+        "translate:changed": "tsx src/index.ts --changed",
+        "create-glossary": "tsx src/create-glossary.ts",
+        "format": "prettier --write \"./**/*.{ts,md}\"",
+        "format:check": "prettier --check \"./**/*.{ts,md}\"",
+        "lint": "eslint ./src",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "glob": "^10.3.0"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@types/node": "^20.10.0",
+        "eslint": "^9.39.2",
+        "prettier": "^3.8.1",
+        "tsx": "^4.0.0",
+        "typescript": "^5.3.0"
+    },
+    "engines": {
+        "node": ">=20.19"
+    }
+}

@@ -2,3 +2,4 @@ packages:
     - apps/*
     - packages/*
     - scripts/docs-extractor
+    - scripts/translate-docs

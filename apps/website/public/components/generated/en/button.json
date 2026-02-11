@@ -1,34 +1,34 @@
 {
     "name": "Button",
     "displayName": "Button",
-    "description": "누르면 동작이 트리거되는 클릭 가능한 요소입니다.",
+    "description": "A clickable element that triggers an action when pressed.",
     "props": [
         {
             "name": "colorPalette",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "required": false,
-            "description": "button에 적용되는 색 구성표를 정의합니다.",
+            "description": "Defines the color scheme applied to the button.",
             "defaultValue": "primary"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "description": "높이, 패딩 및 간격을 포함한 버튼 치수를 제어합니다.",
+            "description": "Controls the button dimensions including height, padding, and gap.",
             "defaultValue": "md"
         },
         {
             "name": "variant",
             "type": ["outline", "fill", "ghost"],
             "required": false,
-            "description": "버튼의 시각적 스타일을 결정합니다.",
+            "description": "Determines the visual style of the button.",
             "defaultValue": "fill"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "component의 HTML element를 다른 태그로 교체하거나 다른 component와 조합할 수 있습니다.\n\nReactElement 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ],
     "defaultElement": "button"

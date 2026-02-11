@@ -34,6 +34,9 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill' },
     variants: {
+        /**
+         * Controls the button dimensions including height, padding, and gap.
+         */
         size: {
             sm: [
                 typography({ style: 'subtitle1' }),
@@ -69,6 +72,9 @@ export const root = recipe({
             ],
         },
 
+        /**
+         * Defines the color scheme applied to the button.
+         */
         colorPalette: {
             primary: layerStyle('components', {
                 vars: {
@@ -125,7 +131,9 @@ export const root = recipe({
                 },
             }),
         },
-
+        /**
+         * Determines the visual style of the button.
+         */
         variant: {
             fill: layerStyle('components', {
                 backgroundColor: bg,
