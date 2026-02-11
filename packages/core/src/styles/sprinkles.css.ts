@@ -646,7 +646,91 @@ const sprinkleProperties = defineProperties({
         // CSS Pointer Events
         touchAction: true,
     },
+
+    // deprecated
+    shorthands: {
+        paddingX: ['paddingLeft', 'paddingRight'],
+        paddingY: ['paddingTop', 'paddingBottom'],
+        marginX: ['marginLeft', 'marginRight'],
+        marginY: ['marginTop', 'marginBottom'],
+    },
+});
+
+const deprecatedSprinkleProperties = defineProperties({
+    '@layer': layers.utilities,
+
+    defaultCondition: 'desktop',
+    conditions: {
+        mobile: {
+            '@media': `screen and (max-width: 767px)`,
+            // '@media': `screen and (max-width: env(--mobile))`,
+        },
+        tablet: {
+            '@media': `screen and (max-width: 1024px)`,
+            // '@media': `screen and (max-width: env(--tablet))`,
+        },
+        desktop: {},
+    },
+
+    dynamicProperties: {
+        // Layout
+        position: true,
+        display: true,
+
+        // Flexbox
+        alignItems: true,
+        justifyContent: true,
+        flexDirection: true,
+        gap: spaceTokens,
+
+        // Alignment
+        alignContent: true,
+
+        // Spacing
+        padding: spaceTokens,
+        paddingTop: spaceTokens,
+        paddingBottom: spaceTokens,
+        paddingLeft: spaceTokens,
+        paddingRight: spaceTokens,
+        margin: marginTokens,
+        marginTop: marginTokens,
+        marginBottom: marginTokens,
+        marginLeft: marginTokens,
+        marginRight: marginTokens,
+
+        // Dimensions
+        width: dimensionTokens,
+        height: dimensionTokens,
+        minWidth: dimensionTokens,
+        minHeight: dimensionTokens,
+        maxWidth: dimensionTokens,
+        maxHeight: dimensionTokens,
+
+        // Visual
+        border: true,
+        borderColor: borderColorTokens,
+        borderRadius: borderRadiusTokens,
+        backgroundColor: backgroundColorTokens,
+        color: colorTokens,
+        opacity: true,
+
+        // Behavior
+        pointerEvents: true,
+        overflow: true,
+        textAlign: true,
+    },
+
+    shorthands: {
+        paddingX: ['paddingLeft', 'paddingRight'],
+        paddingY: ['paddingTop', 'paddingBottom'],
+        marginX: ['marginLeft', 'marginRight'],
+        marginY: ['marginTop', 'marginBottom'],
+    },
 });
 
 export const sprinkles = createRainbowSprinkles(sprinkleProperties);
 export type Sprinkles = Parameters<typeof sprinkles>[0];
+
+// deprecated
+export const deprecatedSprinkles = createRainbowSprinkles(deprecatedSprinkleProperties);
+export type DeprecatedSprinkles = Parameters<typeof deprecatedSprinkles>[0];
