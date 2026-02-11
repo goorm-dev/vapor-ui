@@ -198,7 +198,7 @@ describe('useMutationObserverRef', () => {
             callback.mockClear();
 
             testRef!.setAttribute('data-test', 'changed');
-            
+
             await waitFor(() => {
                 expect(callback).not.toHaveBeenCalled();
             });
