@@ -165,6 +165,7 @@ describe('useMutationObserverRef', () => {
     it('should return cleanup function that disconnects observer (React 19+ support)', async () => {
         const callback = vi.fn();
         let cleanupFn: (() => void) | undefined;
+        let testRef: HTMLDivElement | null = null;
 
         function TestComponent() {
             const ref = useMutationObserverRef<HTMLDivElement>({
@@ -175,6 +176,7 @@ describe('useMutationObserverRef', () => {
             return (
                 <div
                     ref={(node) => {
+                        testRef = node;
                         const cleanup = ref(node);
                         // Store cleanup function if returned (React 19+)
                         if (typeof cleanup === 'function') {
@@ -193,7 +195,13 @@ describe('useMutationObserverRef', () => {
         // If cleanup function was returned, it should work
         if (cleanupFn) {
             cleanupFn();
-            expect(callback).not.toHaveBeenCalled();
+            callback.mockClear();
+
+            testRef!.setAttribute('data-test', 'changed');
+            
+            await waitFor(() => {
+                expect(callback).not.toHaveBeenCalled();
+            });
         }
 
         unmount();
