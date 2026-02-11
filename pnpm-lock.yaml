@@ -281,7 +281,7 @@ importers:
         specifier: ^3.0.4
         version: 3.0.4
       next:
-        specifier: ^15.5.7
+        specifier: 15.5.9
         version: 15.5.9(@babel/core@7.28.4)(@playwright/test@1.56.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.93.1)
       react:
         specifier: ^18.3.1
@@ -589,7 +589,7 @@ importers:
         version: 6.2.3(rollup@4.52.5)(typescript@5.9.2)
       rollup-plugin-esbuild:
         specifier: ^6.2.1
-        version: 6.2.1(esbuild@0.25.11)(rollup@4.52.5)
+        version: 6.2.1(esbuild@0.27.2)(rollup@4.52.5)
       rollup-plugin-node-externals:
         specifier: ^8.1.1
         version: 8.1.1(rollup@4.52.5)
@@ -5371,16 +5371,18 @@ packages:
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@11.0.3:
     resolution: {integrity: sha512-2Nim7dha1KVkaiF4q6Dj+ngPPMdfvLJEOpZk/jKiUAkqKebpGAWQXAq9z1xu9HKu5lWfqw/FASuccEjyznjPaA==}
     engines: {node: 20 || >=22}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
@@ -7419,6 +7421,7 @@ packages:
   tar@7.4.4:
     resolution: {integrity: sha512-O1z7ajPkjTgEgmTGz0v9X4eqeEXTDREPTO77pVC1Nbs86feBU1Zhdg+edzavPmYW1olxkwsqA2v4uOw6E8LeDg==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   term-size@2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
@@ -15580,11 +15583,11 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.27.1
 
-  rollup-plugin-esbuild@6.2.1(esbuild@0.25.11)(rollup@4.52.5):
+  rollup-plugin-esbuild@6.2.1(esbuild@0.27.2)(rollup@4.52.5):
     dependencies:
       debug: 4.4.3
       es-module-lexer: 1.7.0
-      esbuild: 0.25.11
+      esbuild: 0.27.2
       get-tsconfig: 4.10.1
       rollup: 4.52.5
       unplugin-utils: 0.2.5
