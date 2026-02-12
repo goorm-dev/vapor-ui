@@ -49,7 +49,7 @@
         "@changesets/get-github-info": "^0.7.0",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "@types/node": "^22.15.4",
-        "@types/react": "^18.3.27",
+        "@types/react": "^18.3.28",
         "@types/react-dom": "^18.3.7",
         "dotenv": "^17.2.3",
         "husky": "^9.1.7",
