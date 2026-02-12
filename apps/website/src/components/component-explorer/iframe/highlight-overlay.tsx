@@ -15,6 +15,7 @@ interface OverlayRect {
 }
 
 const PADDING = 4; // space-100 = 4px
+const LABEL_HEIGHT = 28; // -top-7 = 7 * 4px
 
 export function HighlightOverlay() {
     const { highlightedPart } = useHighlightReceiver();
@@ -79,6 +80,7 @@ export function HighlightOverlay() {
 
     // Use last known rect when hiding to maintain position during fade out
     const currentRect = overlayRect || lastRectRef.current;
+    const isLabelOverflowing = currentRect.top - PADDING < LABEL_HEIGHT;
 
     return (
         <div
@@ -103,7 +105,8 @@ export function HighlightOverlay() {
         >
             <span
                 className={clsx(
-                    'absolute -top-7 left-0',
+                    'absolute',
+                    isLabelOverflowing ? 'top-1 left-1' : '-top-7 left-0',
                     'px-2.5 py-1 text-[11px] font-semibold tracking-[0.01em]',
                     'font-mono text-v-white',
                     'bg-v-blue-500/95 rounded-md backdrop-blur-sm',
