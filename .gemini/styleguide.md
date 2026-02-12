@@ -552,8 +552,8 @@ const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(component
 return useRender({
     ref,
     state: { disabled },
-    render: render || <button />,
-    props: {
+    defaultTagName: "button",
+    render: render,
         className: clsx(styles.root(variantsProps), className),
         ...otherProps,
     },
