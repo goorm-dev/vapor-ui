@@ -93,7 +93,10 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         <div className="rounded-xl overflow-hidden border border-v-normal-200 bg-v-canvas-100 shadow-lg shadow-v-normal-900/5">
             <div className="flex min-h-[420px]">
                 {isLoading ? (
-                    <div className="w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center">
+                    <div
+                        className="w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center"
+                        role="status"
+                    >
                         <div className="flex flex-col items-center gap-3">
                             <div className="w-8 h-8 border-2 border-v-normal-200 border-t-v-primary-500 rounded-full animate-spin" />
                             <Text typography="body3" foreground="normal-100" className="opacity-60">
@@ -102,9 +105,15 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                         </div>
                     </div>
                 ) : error ? (
-                    <div className="w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center">
+                    <div
+                        className="w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center"
+                        role="alert"
+                    >
                         <div className="flex flex-col items-center gap-4 text-center px-4">
-                            <ErrorCircleOutlineIcon className="w-10 h-10 text-v-danger-500" />
+                            <ErrorCircleOutlineIcon
+                                className="w-10 h-10 text-v-danger-500"
+                                aria-hidden="true"
+                            />
                             <div className="flex flex-col gap-2">
                                 <Text
                                     typography="body2"
@@ -142,7 +151,10 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                 )}
                 <div className="flex-1 relative bg-v-canvas border-l border-v-normal-200">
                     {!iframeLoaded && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-v-canvas/90 backdrop-blur-sm z-10">
+                        <div
+                            className="absolute inset-0 flex items-center justify-center bg-v-canvas/90 backdrop-blur-sm z-10"
+                            role="status"
+                        >
                             <div className="flex flex-col items-center gap-3">
                                 <div className="relative">
                                     <div className="w-10 h-10 border-2 border-v-normal-200 rounded-full" />

@@ -38,7 +38,7 @@ export function AnatomyPanel({
     const handleMouseLeave = useCallback(() => onPartHover(null), [onPartHover]);
 
     return (
-        <nav
+        <section
             aria-label="Component anatomy"
             className="w-56 flex-shrink-0 border-r border-v-normal-200 bg-v-canvas-100 max-h-[420px] overflow-y-auto overscroll-contain"
         >
@@ -100,6 +100,6 @@ export function AnatomyPanel({
                     </div>
                 </div>
             )}
-        </nav>
+        </section>
     );
 }

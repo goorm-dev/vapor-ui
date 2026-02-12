@@ -28,7 +28,6 @@ export const PartButton = memo(function PartButton({
         <Button
             variant="ghost"
             colorPalette={isHovered ? 'primary' : 'secondary'}
-            aria-pressed={isHovered}
             className={clsx(
                 'group relative !w-full !justify-start !px-3 !py-2 !h-auto !rounded-md',
                 'transition-colors duration-150 ease-out',
