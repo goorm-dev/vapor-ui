@@ -113,17 +113,22 @@
 
 ## 3.1. 모듈 (Import & Export)
 
-- **절대 경로 사용**: `tsconfig.json`의 `paths`에 정의된 `~/*` 별칭 사용. 상대 경로 지양.
+- **절대 경로 사용**: 같은 디렉터리 내 파일은 `./` 상대 경로 허용. 그 외 모든 경우 `tsconfig.json`의 `paths`에 정의된 `~/*` 별칭 사용.
 
     ```tsx
-    // Good
+    // Good - 같은 디렉터리 내 sibling import
+    import * as styles from './button.css';
+    import { buttonVariants } from './button.variants';
+
+    // Good - 다른 디렉터리는 절대 경로
     import { resolveStyles } from '~/utils/resolve-styles';
     import { vars } from '~/styles/themes.css';
     import { createContext } from '~/libs/create-context';
     import type { VComponentProps } from '~/utils/types';
 
-    // Bad
+    // Bad - 상위 디렉터리 접근 시 상대 경로
     import { resolveStyles } from '../../../utils/resolve-styles';
+    import { shared } from '../shared';
     ```
 
 - **외부 패키지 Import**: Base UI 컴포넌트는 개별 엔트리포인트에서 named import. namespace import는 스타일 파일에 사용.
