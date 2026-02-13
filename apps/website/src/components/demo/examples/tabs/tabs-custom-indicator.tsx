@@ -11,13 +11,13 @@ export default function TabsCustomIndicator() {
                     />
                 }
             >
-                <Tabs.Button value="home" width="5rem">
+                <Tabs.Button value="home" $css={{ width: '5rem' }}>
                     홈
                 </Tabs.Button>
-                <Tabs.Button value="about" width="5rem">
+                <Tabs.Button value="about" $css={{ width: '5rem' }}>
                     소개
                 </Tabs.Button>
-                <Tabs.Button value="services" width="5rem">
+                <Tabs.Button value="services" $css={{ width: '5rem' }}>
                     서비스
                 </Tabs.Button>
             </Tabs.List>

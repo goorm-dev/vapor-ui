@@ -10,11 +10,13 @@ export default function DefaultCollapsible() {
             </Collapsible.Trigger>
             <Collapsible.Panel>
                 <VStack
-                    gap="$050"
-                    backgroundColor="$blue-050"
-                    paddingY="$150"
-                    paddingLeft="$300"
-                    marginTop="$050"
+                    $css={{
+                        gap: '$050',
+                        backgroundColor: '$basic-blue-050',
+                        paddingBlock: '$150',
+                        paddingLeft: '$300',
+                        marginTop: '$050',
+                    }}
                     className="rounded-md"
                 >
                     <Text foreground="normal-200">Account</Text>

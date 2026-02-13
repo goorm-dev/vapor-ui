@@ -97,8 +97,8 @@ export default function FilterForm() {
     };
 
     return (
-        <VStack width="17.625rem" render={<Form ref={formRef} onReset={handleReset} />}>
-            <HStack justifyContent="space-between">
+        <VStack $css={{ width: '17.625rem' }} render={<Form ref={formRef} onReset={handleReset} />}>
+            <HStack $css={{ justifyContent: 'space-between' }}>
                 <Text typography="heading5">Filter</Text>
                 <Button type="reset" size="sm" variant="ghost" colorPalette="secondary">
                     <RefreshOutlineIcon />
@@ -108,14 +108,16 @@ export default function FilterForm() {
 
             <Box
                 render={<hr />}
-                border="none"
-                marginY="$150"
-                height="1px"
-                width="100%"
-                backgroundColor="$gray-300"
+                $css={{
+                    border: 'none',
+                    marginBlock: '$150',
+                    height: '1px',
+                    width: '100%',
+                    backgroundColor: '$basic-gray-300',
+                }}
             />
 
-            <VStack gap="$300">
+            <VStack $css={{ gap: '$300' }}>
                 <Collapsible.Root>
                     <Collapsible.Trigger className="collapsible-trigger">
                         <Text typography="heading6">View</Text>
@@ -124,7 +126,7 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
                             <RadioGroup.Root
                                 value={getFieldValues('view')}
                                 onValueChange={(value: unknown) =>
@@ -153,7 +155,7 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
                             <Field.Item>
                                 <Checkbox.Root
                                     id="filter-feedback"
@@ -238,7 +240,7 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
                             <Field.Item>
                                 <Checkbox.Root
                                     id="filter-goorm-dev/vapor-core"
@@ -284,7 +286,7 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
                             <Field.Item>
                                 <Checkbox.Root
                                     id="filter-active"
@@ -324,7 +326,7 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
                             <Field.Item>
                                 <Checkbox.Root
                                     id="filter-ui"
