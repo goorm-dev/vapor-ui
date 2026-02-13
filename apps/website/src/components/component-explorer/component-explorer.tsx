@@ -17,6 +17,7 @@ interface ComponentExplorerProps {
 export function ComponentExplorer({ name, componentName }: ComponentExplorerProps) {
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
     const [hoveredPart, setHoveredPart] = React.useState<string | null>(null);
+    const [pinnedPart, setPinnedPart] = React.useState<string | null>(null);
     const [parts, setParts] = React.useState<Part[]>([]);
     const [anatomyData, setAnatomyData] = React.useState<AnatomyData | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -75,13 +76,19 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         }
     }, [name, resolvedTheme]);
 
-    const handlePartHover = React.useCallback(
-        (partName: string | null) => {
-            setHoveredPart(partName);
-            highlightPart(partName);
-        },
-        [highlightPart],
-    );
+    const activePart = hoveredPart ?? pinnedPart;
+
+    React.useEffect(() => {
+        highlightPart(activePart);
+    }, [activePart, highlightPart]);
+
+    const handlePartHover = React.useCallback((partName: string | null) => {
+        setHoveredPart(partName);
+    }, []);
+
+    const handlePartClick = React.useCallback((partName: string) => {
+        setPinnedPart((prev) => (prev === partName ? null : partName));
+    }, []);
 
     const handleIframeLoad = React.useCallback(() => {
         setIframeLoaded(true);
@@ -145,7 +152,9 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                         componentName={displayName}
                         parts={parts}
                         hoveredPart={hoveredPart}
+                        pinnedPart={pinnedPart}
                         onPartHover={handlePartHover}
+                        onPartClick={handlePartClick}
                         showPrimitives
                     />
                 )}

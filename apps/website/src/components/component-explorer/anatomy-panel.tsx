@@ -11,7 +11,9 @@ interface AnatomyPanelProps {
     componentName: string;
     parts: Part[];
     hoveredPart: string | null;
+    pinnedPart: string | null;
     onPartHover: (partName: string | null) => void;
+    onPartClick: (partName: string) => void;
     showPrimitives?: boolean;
 }
 
@@ -19,7 +21,9 @@ export function AnatomyPanel({
     componentName,
     parts,
     hoveredPart,
+    pinnedPart,
     onPartHover,
+    onPartClick,
     showPrimitives = false,
 }: AnatomyPanelProps) {
     const { filteredParts, mainParts, primitiveParts } = useMemo(() => {
@@ -36,6 +40,10 @@ export function AnatomyPanel({
         [onPartHover],
     );
     const handleMouseLeave = useCallback(() => onPartHover(null), [onPartHover]);
+    const handleClick = useCallback(
+        (partName: string) => () => onPartClick(partName),
+        [onPartClick],
+    );
 
     return (
         <section
@@ -66,6 +74,8 @@ export function AnatomyPanel({
                             partName={part.name}
                             displayName={componentName}
                             isHovered={hoveredPart === part.name}
+                            isPinned={pinnedPart === part.name}
+                            onClick={handleClick(part.name)}
                             onMouseEnter={handleMouseEnter(part.name)}
                             onMouseLeave={handleMouseLeave}
                         />
@@ -92,6 +102,8 @@ export function AnatomyPanel({
                                     partName={part.name}
                                     displayName={componentName}
                                     isHovered={hoveredPart === part.name}
+                                    isPinned={pinnedPart === part.name}
+                                    onClick={handleClick(part.name)}
                                     onMouseEnter={handleMouseEnter(part.name)}
                                     onMouseLeave={handleMouseLeave}
                                 />

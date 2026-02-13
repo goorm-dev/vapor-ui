@@ -9,6 +9,8 @@ interface PartButtonProps {
     partName: string;
     displayName: string;
     isHovered: boolean;
+    isPinned?: boolean;
+    onClick?: () => void;
     onMouseEnter: () => void;
     onMouseLeave: () => void;
     onFocus?: () => void;
@@ -19,20 +21,25 @@ export const PartButton = memo(function PartButton({
     partName,
     displayName,
     isHovered,
+    isPinned = false,
+    onClick,
     onMouseEnter,
     onMouseLeave,
     onFocus,
     onBlur,
 }: PartButtonProps) {
+    const isActive = isHovered || isPinned;
+
     return (
         <Button
             variant="ghost"
-            colorPalette={isHovered ? 'primary' : 'secondary'}
+            colorPalette={isActive ? 'primary' : 'secondary'}
+            onClick={onClick}
             className={clsx(
                 'group relative !w-full !justify-start !px-3 !py-2 !h-auto !rounded-md',
                 'transition-colors duration-150 ease-out',
                 'motion-reduce:transition-none',
-                isHovered && '!bg-v-primary-100',
+                isActive && '!bg-v-primary-100',
             )}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
@@ -44,14 +51,14 @@ export const PartButton = memo(function PartButton({
                 <div className="flex-1 min-w-0 truncate text-left">
                     <Text
                         typography="body3"
-                        foreground={isHovered ? 'primary-100' : 'normal-100'}
+                        foreground={isActive ? 'primary-100' : 'normal-100'}
                         className="transition-colors duration-150 opacity-60"
                     >
                         {displayName}.
                     </Text>
                     <Text
                         typography="body3"
-                        foreground={isHovered ? 'primary-100' : 'normal-100'}
+                        foreground={isActive ? 'primary-100' : 'normal-100'}
                         className="font-mono font-medium transition-colors duration-150"
                     >
                         {partName}
@@ -63,7 +70,7 @@ export const PartButton = memo(function PartButton({
             <div
                 className={clsx(
                     'absolute left-0 top-1/2 -translate-y-1/2 w-0.5 rounded-full bg-v-primary-500 transition-all duration-150',
-                    isHovered ? 'h-5' : 'h-0',
+                    isActive ? 'h-5' : 'h-0',
                 )}
             />
         </Button>
