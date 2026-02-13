@@ -24,7 +24,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
     const [error, setError] = React.useState<string | null>(null);
     const [retryCount, setRetryCount] = React.useState(0);
     const [iframeLoaded, setIframeLoaded] = React.useState(false);
-    const { highlightPart } = useExplorerCommunication(iframeRef);
+    const { highlightPart, availableParts } = useExplorerCommunication(iframeRef);
     const { resolvedTheme } = useTheme();
 
     React.useEffect(() => {
@@ -149,6 +149,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                     </div>
                 ) : (
                     <AnatomyPanel
+                        availableParts={availableParts}
                         componentName={displayName}
                         parts={parts}
                         hoveredPart={hoveredPart}

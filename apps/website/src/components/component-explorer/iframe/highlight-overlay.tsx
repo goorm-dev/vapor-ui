@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { throttle } from 'lodash-es';
 
+import { EXPLORER_MESSAGES } from '../types';
 import { useHighlightReceiver } from './use-highlight-receiver';
 
 interface OverlayRect {
@@ -76,6 +77,39 @@ export function HighlightOverlay() {
             window.removeEventListener('resize', throttleFindAndHighlight);
         };
     }, [highlightedPart, findAndHighlight]);
+
+    useEffect(() => {
+        const scanAndNotify = throttle(() => {
+            const elements = document.querySelectorAll('[data-part], [data-vapor-part]');
+            const parts = Array.from(elements)
+                .map((el) => el.getAttribute('data-part') || el.getAttribute('data-vapor-part'))
+                .filter(Boolean) as string[];
+            const uniqueParts = Array.from(new Set(parts));
+
+            window.parent.postMessage(
+                {
+                    type: EXPLORER_MESSAGES.AVAILABLE_PARTS,
+                    payload: { parts: uniqueParts },
+                },
+                window.location.origin,
+            );
+        }, 500);
+
+        scanAndNotify();
+
+        const observer = new MutationObserver(scanAndNotify);
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['data-part', 'data-vapor-part'],
+        });
+
+        return () => {
+            observer.disconnect();
+            scanAndNotify.cancel();
+        };
+    }, []);
 
     // Use last known rect when hiding to maintain position during fade out
     const currentRect = overlayRect || lastRectRef.current;

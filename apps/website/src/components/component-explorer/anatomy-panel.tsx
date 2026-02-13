@@ -15,6 +15,7 @@ interface AnatomyPanelProps {
     onPartHover: (partName: string | null) => void;
     onPartClick: (partName: string) => void;
     showPrimitives?: boolean;
+    availableParts: string[] | null;
 }
 
 export function AnatomyPanel({
@@ -25,15 +26,21 @@ export function AnatomyPanel({
     onPartHover,
     onPartClick,
     showPrimitives = false,
+    availableParts,
 }: AnatomyPanelProps) {
     const { filteredParts, mainParts, primitiveParts } = useMemo(() => {
-        const filtered = showPrimitives ? parts : parts.filter((part) => !part.isPrimitive);
+        let filtered = showPrimitives ? parts : parts.filter((part) => !part.isPrimitive);
+
+        if (availableParts !== null) {
+            filtered = filtered.filter((part) => availableParts.includes(part.name));
+        }
+
         return {
             filteredParts: filtered,
             mainParts: filtered.filter((p) => !p.isPrimitive),
             primitiveParts: filtered.filter((p) => p.isPrimitive),
         };
-    }, [parts, showPrimitives]);
+    }, [parts, showPrimitives, availableParts]);
 
     const handlePartHover = useCallback((partName: string) => onPartHover(partName), [onPartHover]);
     const handleMouseLeave = useCallback(() => onPartHover(null), [onPartHover]);
