@@ -1,0 +1,16 @@
+{
+  "componentName": "Switch",
+  "displayNamePrefix": "Switch",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "SwitchRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "ThumbPrimitive",
+      "fullName": "SwitchThumbPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

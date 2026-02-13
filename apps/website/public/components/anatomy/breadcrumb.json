@@ -1,0 +1,51 @@
+{
+  "componentName": "Breadcrumb",
+  "displayNamePrefix": "Breadcrumb",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "BreadcrumbRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Item",
+      "fullName": "BreadcrumbItem",
+      "isPrimitive": false
+    },
+    {
+      "name": "Separator",
+      "fullName": "BreadcrumbSeparator",
+      "isPrimitive": false
+    },
+    {
+      "name": "Ellipsis",
+      "fullName": "BreadcrumbEllipsis",
+      "isPrimitive": false
+    },
+    {
+      "name": "RootPrimitive",
+      "fullName": "BreadcrumbRootPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ListPrimitive",
+      "fullName": "BreadcrumbListPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ItemPrimitive",
+      "fullName": "BreadcrumbItemPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "LinkPrimitive",
+      "fullName": "BreadcrumbLinkPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "EllipsisPrimitive",
+      "fullName": "BreadcrumbEllipsisPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

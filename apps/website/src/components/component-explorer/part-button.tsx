@@ -1,0 +1,102 @@
+'use client';
+
+import { memo, useCallback } from 'react';
+
+import { Button, Text } from '@vapor-ui/core';
+import clsx from 'clsx';
+
+interface PartButtonProps {
+    partName: string;
+    displayName: string;
+    isHovered: boolean;
+    isPinned?: boolean;
+    onClick?: (partName: string) => void;
+    onMouseEnter: (partName: string) => void;
+    onMouseLeave: () => void;
+    onFocus?: () => void;
+    onBlur?: () => void;
+}
+
+export const PartButton = memo(function PartButton({
+    partName,
+    displayName,
+    isHovered,
+    isPinned = false,
+    onClick,
+    onMouseEnter,
+    onMouseLeave,
+    onFocus,
+    onBlur,
+}: PartButtonProps) {
+    const isActive = isHovered || isPinned;
+
+    const handleClick = useCallback(() => {
+        onClick?.(partName);
+    }, [onClick, partName]);
+
+    const handleMouseEnter = useCallback(() => {
+        onMouseEnter(partName);
+    }, [onMouseEnter, partName]);
+
+    const handleFocus = useCallback(() => {
+        if (onFocus) {
+            onFocus();
+        } else {
+            onMouseEnter(partName);
+        }
+    }, [onFocus, onMouseEnter, partName]);
+
+    const handleBlur = useCallback(() => {
+        if (onBlur) {
+            onBlur();
+        } else {
+            onMouseLeave();
+        }
+    }, [onBlur, onMouseLeave]);
+
+    return (
+        <Button
+            variant="ghost"
+            colorPalette={isActive ? 'primary' : 'secondary'}
+            onClick={handleClick}
+            className={clsx(
+                'group relative !w-full !justify-start !px-3 !py-2 !h-auto !rounded-md',
+                'transition-colors duration-150 ease-out',
+                'motion-reduce:transition-none',
+                isActive && '!bg-v-primary-100',
+            )}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+        >
+            <div className="flex items-center gap-2 w-full">
+                {/* Part name */}
+                <div className="flex-1 min-w-0 truncate text-left">
+                    <Text
+                        typography="body3"
+                        foreground={isActive ? 'primary-100' : 'normal-100'}
+                        className="transition-colors duration-150 opacity-60"
+                    >
+                        {displayName}.
+                    </Text>
+                    <Text
+                        typography="body3"
+                        foreground={isActive ? 'primary-100' : 'normal-100'}
+                        className="font-mono font-medium transition-colors duration-150"
+                    >
+                        {partName}
+                    </Text>
+                </div>
+            </div>
+
+            {/* Left border indicator */}
+            <div
+                className={clsx(
+                    'absolute left-0 top-1/2 -translate-y-1/2 w-0.5 rounded-full bg-v-primary-500 transition-all duration-150',
+                    isActive ? 'h-5' : 'h-0',
+                )}
+            />
+        </Button>
+    );
+});

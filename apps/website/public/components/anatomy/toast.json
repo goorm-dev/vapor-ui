@@ -1,0 +1,61 @@
+{
+  "componentName": "Toast",
+  "displayNamePrefix": "Toast",
+  "parts": [
+    {
+      "name": "Provider",
+      "fullName": "ToastProvider",
+      "isPrimitive": false
+    },
+    {
+      "name": "ProviderPrimitive",
+      "fullName": "ToastProviderPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "ToastPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ViewportPrimitive",
+      "fullName": "ToastViewportPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "RootPrimitive",
+      "fullName": "ToastRootPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ContentPrimitive",
+      "fullName": "ToastContentPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "TitlePrimitive",
+      "fullName": "ToastTitlePrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "DescriptionPrimitive",
+      "fullName": "ToastDescriptionPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ActionPrimitive",
+      "fullName": "ToastActionPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ClosePrimitive",
+      "fullName": "ToastClosePrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "IconPrimitive",
+      "fullName": "ToastIconPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

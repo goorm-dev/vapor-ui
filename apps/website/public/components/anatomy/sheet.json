@@ -1,0 +1,71 @@
+{
+  "componentName": "Sheet",
+  "displayNamePrefix": "Sheet",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "SheetRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "SheetTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "Close",
+      "fullName": "SheetClose",
+      "isPrimitive": false
+    },
+    {
+      "name": "Title",
+      "fullName": "SheetTitle",
+      "isPrimitive": false
+    },
+    {
+      "name": "Description",
+      "fullName": "SheetDescription",
+      "isPrimitive": false
+    },
+    {
+      "name": "Popup",
+      "fullName": "SheetPopup",
+      "isPrimitive": false
+    },
+    {
+      "name": "Header",
+      "fullName": "SheetHeader",
+      "isPrimitive": false
+    },
+    {
+      "name": "Body",
+      "fullName": "SheetBody",
+      "isPrimitive": false
+    },
+    {
+      "name": "Footer",
+      "fullName": "SheetFooter",
+      "isPrimitive": false
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "SheetPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "OverlayPrimitive",
+      "fullName": "SheetOverlayPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PopupPrimitive",
+      "fullName": "SheetPopupPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PositionerPrimitive",
+      "fullName": "SheetPositionerPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

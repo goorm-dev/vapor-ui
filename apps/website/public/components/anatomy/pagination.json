@@ -1,0 +1,61 @@
+{
+  "componentName": "Pagination",
+  "displayNamePrefix": "Pagination",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "PaginationRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Items",
+      "fullName": "PaginationItems",
+      "isPrimitive": false
+    },
+    {
+      "name": "Previous",
+      "fullName": "PaginationPrevious",
+      "isPrimitive": false
+    },
+    {
+      "name": "Next",
+      "fullName": "PaginationNext",
+      "isPrimitive": false
+    },
+    {
+      "name": "RootPrimitive",
+      "fullName": "PaginationRootPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ListPrimitive",
+      "fullName": "PaginationListPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ItemPrimitive",
+      "fullName": "PaginationItemPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ButtonPrimitive",
+      "fullName": "PaginationButtonPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PreviousPrimitive",
+      "fullName": "PaginationPreviousPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "NextPrimitive",
+      "fullName": "PaginationNextPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "EllipsisPrimitive",
+      "fullName": "PaginationEllipsisPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

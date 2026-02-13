@@ -1,0 +1,111 @@
+{
+  "componentName": "Menu",
+  "displayNamePrefix": "Menu",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "MenuRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "MenuTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "MenuPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PositionerPrimitive",
+      "fullName": "MenuPositionerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PopupPrimitive",
+      "fullName": "MenuPopupPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "Popup",
+      "fullName": "MenuPopup",
+      "isPrimitive": false
+    },
+    {
+      "name": "Group",
+      "fullName": "MenuGroup",
+      "isPrimitive": false
+    },
+    {
+      "name": "GroupLabel",
+      "fullName": "MenuGroupLabel",
+      "isPrimitive": false
+    },
+    {
+      "name": "Item",
+      "fullName": "MenuItem",
+      "isPrimitive": false
+    },
+    {
+      "name": "Separator",
+      "fullName": "MenuSeparator",
+      "isPrimitive": false
+    },
+    {
+      "name": "SubmenuRoot",
+      "fullName": "MenuSubmenuRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "SubmenuTriggerItem",
+      "fullName": "MenuSubmenuTriggerItem",
+      "isPrimitive": false
+    },
+    {
+      "name": "SubmenuPopupPrimitive",
+      "fullName": "MenuSubmenuPopupPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "SubmenuPopup",
+      "fullName": "MenuSubmenuPopup",
+      "isPrimitive": false
+    },
+    {
+      "name": "CheckboxItem",
+      "fullName": "MenuCheckboxItem",
+      "isPrimitive": false
+    },
+    {
+      "name": "CheckboxItemPrimitive",
+      "fullName": "MenuCheckboxItemPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "CheckboxItemIndicatorPrimitive",
+      "fullName": "MenuCheckboxItemIndicatorPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "RadioGroup",
+      "fullName": "MenuRadioGroup",
+      "isPrimitive": false
+    },
+    {
+      "name": "RadioItem",
+      "fullName": "MenuRadioItem",
+      "isPrimitive": false
+    },
+    {
+      "name": "RadioItemPrimitive",
+      "fullName": "MenuRadioItemPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "RadioItemIndicatorPrimitive",
+      "fullName": "MenuRadioItemIndicatorPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

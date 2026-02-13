@@ -1,0 +1,16 @@
+{
+  "componentName": "RadioGroup",
+  "displayNamePrefix": "RadioGroup",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "RadioGroupRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Label",
+      "fullName": "RadioGroupLabel",
+      "isPrimitive": false
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "componentName": "Select",
+  "displayNamePrefix": "Select",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "SelectRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "SelectTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "Popup",
+      "fullName": "SelectPopup",
+      "isPrimitive": false
+    },
+    {
+      "name": "Item",
+      "fullName": "SelectItem",
+      "isPrimitive": false
+    },
+    {
+      "name": "Group",
+      "fullName": "SelectGroup",
+      "isPrimitive": false
+    },
+    {
+      "name": "GroupLabel",
+      "fullName": "SelectGroupLabel",
+      "isPrimitive": false
+    },
+    {
+      "name": "Separator",
+      "fullName": "SelectSeparator",
+      "isPrimitive": false
+    },
+    {
+      "name": "ValuePrimitive",
+      "fullName": "SelectValuePrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PlaceholderPrimitive",
+      "fullName": "SelectPlaceholderPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "TriggerPrimitive",
+      "fullName": "SelectTriggerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "TriggerIconPrimitive",
+      "fullName": "SelectTriggerIconPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "SelectPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PositionerPrimitive",
+      "fullName": "SelectPositionerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PopupPrimitive",
+      "fullName": "SelectPopupPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ItemPrimitive",
+      "fullName": "SelectItemPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ItemIndicatorPrimitive",
+      "fullName": "SelectItemIndicatorPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

@@ -8,6 +8,7 @@ interface PreviewPageProps {
     searchParams: Promise<{
         path?: string;
         theme?: string;
+        explorer?: string;
     }>;
 }
 
@@ -49,10 +50,11 @@ export default async function Page({ searchParams }: PreviewPageProps) {
     const resolvedSearchParams = await searchParams;
     const componentPath = resolvedSearchParams.path;
     const theme = resolvedSearchParams.theme || 'light';
+    const explorer = resolvedSearchParams.explorer === 'true';
 
     if (!isValidComponentPath(componentPath)) {
         return <ComponentError componentPath={componentPath} error="Invalid component path" />;
     }
 
-    return <PreviewWrapper theme={theme} componentPath={componentPath} />;
+    return <PreviewWrapper theme={theme} componentPath={componentPath} explorer={explorer} />;
 }
