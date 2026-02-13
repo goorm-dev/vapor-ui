@@ -1,5 +1,11 @@
 # @vapor-ui/icons
 
+## 1.0.1
+
+### Skeleton
+
+- Check the center alignment of the IntelliSenseEventIcon ([#481](https://github.com/goorm-dev/vapor-ui/pull/481)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
 ## 1.0.0
 
 ### Etc.
