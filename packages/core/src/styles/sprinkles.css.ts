@@ -647,15 +647,39 @@ const sprinkleProperties = defineProperties({
         // CSS Pointer Events
         touchAction: true,
     },
-
-    // deprecated
-    shorthands: {
-        paddingX: ['paddingLeft', 'paddingRight'],
-        paddingY: ['paddingTop', 'paddingBottom'],
-        marginX: ['marginLeft', 'marginRight'],
-        marginY: ['marginTop', 'marginBottom'],
-    },
 });
+
+export const sprinkles = createRainbowSprinkles(sprinkleProperties);
+export type Sprinkles = Parameters<typeof sprinkles>[0];
+
+/**
+ * SECTION - deprecated
+ */
+type RemovePrefix<T, Prefix extends string> = {
+    [K in keyof T as K extends `${Prefix}${infer Rest1}`
+        ? Rest1 extends `basic-${infer Rest2}`
+            ? Rest2
+            : Rest1
+        : K extends `basic-${infer Rest}`
+          ? Rest
+          : K]: T[K];
+};
+
+function removePrefixFromKeys<T extends Record<string, unknown>, P extends string>(
+    tokens: T,
+    prefix: P,
+): RemovePrefix<T, P> {
+    return Object.fromEntries(
+        Object.entries(tokens).map(([key, value]) => [
+            key.replace(prefix, '').replace('basic-', ''),
+            value,
+        ]),
+    ) as RemovePrefix<T, P>;
+}
+
+const deprecatedBgColorTokens = removePrefixFromKeys(backgroundColorTokens, 'bg-');
+const deprecatedFgColorTokens = removePrefixFromKeys(colorTokens, 'fg-');
+const deprecatedBorderColorTokens = removePrefixFromKeys(borderColorTokens, 'border-');
 
 const deprecatedSprinkleProperties = defineProperties({
     '@layer': layers.utilities,
@@ -709,10 +733,10 @@ const deprecatedSprinkleProperties = defineProperties({
 
         // Visual
         border: true,
-        borderColor: borderColorTokens,
+        borderColor: deprecatedBorderColorTokens,
         borderRadius: borderRadiusTokens,
-        backgroundColor: backgroundColorTokens,
-        color: colorTokens,
+        backgroundColor: deprecatedBgColorTokens,
+        color: deprecatedFgColorTokens,
         opacity: true,
 
         // Behavior
@@ -729,9 +753,5 @@ const deprecatedSprinkleProperties = defineProperties({
     },
 });
 
-export const sprinkles = createRainbowSprinkles(sprinkleProperties);
-export type Sprinkles = Parameters<typeof sprinkles>[0];
-
-// deprecated
 export const deprecatedSprinkles = createRainbowSprinkles(deprecatedSprinkleProperties);
 export type DeprecatedSprinkles = Parameters<typeof deprecatedSprinkles>[0];
