@@ -5,6 +5,12 @@ description: '@vapor-ui/icons 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/icons
 
+## 1.0.1
+
+### Skeleton
+
+- Check the center alignment of the IntelliSenseEventIcon ([#481](https://github.com/goorm-dev/vapor-ui/pull/481)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
 ## 1.0.0
 
 ### Etc.
