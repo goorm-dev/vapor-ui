@@ -16,24 +16,24 @@ export default {
 type Story = StoryObj<typeof Skeleton>;
 
 export const Default: Story = {
-    render: (args) => <Skeleton {...args} width={'200px'} />,
+    render: (args) => <Skeleton {...args} $css={{ width: '200px' }} />,
 };
 
 export const TestBed: Story = {
     render: () => (
-        <VStack gap="$300">
-            <VStack gap="$100">
+        <VStack $css={{ gap: '$300' }}>
+            <VStack $css={{ gap: '$100' }}>
                 <h3>Shape</h3>
-                <HStack gap="$200" alignItems="center">
-                    <Skeleton shape="rounded" width="200px" />
-                    <Skeleton shape="square" width="200px" />
-                    <Skeleton shape="rounded" width="40px" height="40px" />
+                <HStack $css={{ gap: '$200', alignItems: 'center' }}>
+                    <Skeleton shape="rounded" $css={{ width: '200px' }} />
+                    <Skeleton shape="square" $css={{ width: '200px' }} />
+                    <Skeleton shape="rounded" $css={{ width: '40px', height: '40px' }} />
                 </HStack>
             </VStack>
 
-            <VStack gap="$100">
+            <VStack $css={{ gap: '$100' }}>
                 <h3>Size</h3>
-                <VStack gap="$075">
+                <VStack $css={{ gap: '$075' }}>
                     <Skeleton size="sm" />
                     <Skeleton size="md" />
                     <Skeleton size="lg" />
@@ -41,35 +41,37 @@ export const TestBed: Story = {
                 </VStack>
             </VStack>
 
-            <VStack gap="$100">
+            <VStack $css={{ gap: '$100' }}>
                 <h3>Animation</h3>
-                <VStack gap="$075">
+                <VStack $css={{ gap: '$075' }}>
                     <Skeleton animation="shimmer" />
                     <Skeleton animation="pulse" />
                     <Skeleton animation="none" />
                 </VStack>
             </VStack>
 
-            <VStack gap="$100">
+            <VStack $css={{ gap: '$100' }}>
                 <h3>Composition Example - Profile Card</h3>
                 <Box
-                    padding="$200"
-                    border="1px solid"
-                    borderColor="$normal"
-                    borderRadius="$100"
-                    maxWidth="320px"
+                    $css={{
+                        padding: '$200',
+                        border: '1px solid',
+                        borderColor: '$border-normal',
+                        borderRadius: '$100',
+                        maxWidth: '320px',
+                    }}
                 >
-                    <HStack gap="$150" alignItems="center">
-                        <Skeleton shape="rounded" width="40px" height="40px" />
-                        <VStack gap="$075">
-                            <Skeleton shape="rounded" size="sm" width="60%" />
-                            <Skeleton shape="rounded" size="sm" width="40%" />
+                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                        <Skeleton shape="rounded" $css={{ width: '40px', height: '40px' }} />
+                        <VStack $css={{ gap: '$075' }}>
+                            <Skeleton shape="rounded" size="sm" $css={{ width: '60%' }} />
+                            <Skeleton shape="rounded" size="sm" $css={{ width: '40%' }} />
                         </VStack>
                     </HStack>
-                    <VStack gap="$075" marginTop="$200">
+                    <VStack $css={{ gap: '$075', marginTop: '$200' }}>
                         <Skeleton shape="square" size="sm" />
-                        <Skeleton shape="square" size="sm" width="90%" />
-                        <Skeleton shape="square" size="sm" width="75%" />
+                        <Skeleton shape="square" size="sm" $css={{ width: '90%' }} />
+                        <Skeleton shape="square" size="sm" $css={{ width: '75%' }} />
                     </VStack>
                 </Box>
             </VStack>
