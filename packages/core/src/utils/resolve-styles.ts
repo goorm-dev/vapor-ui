@@ -1,4 +1,5 @@
-import { deprecatedSprinkles, sprinkles } from '~/styles/sprinkles.css';
+import { deprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
+import { sprinkles } from '~/styles/sprinkles.css';
 
 import { createSplitProps } from './create-split-props';
 import { mergeProps } from './merge-props';
