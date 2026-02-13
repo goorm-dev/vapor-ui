@@ -223,20 +223,18 @@ export const PaginationPreviousPrimitive = forwardRef<
         props: { 'aria-hidden': 'true', className: styles.icon },
     });
 
-    const defaultProps: useRender.ElementProps<'button'> = {
-        'aria-label': 'Previous Page',
-        disabled,
-        className: clsx(styles.button({ size }), className),
-        onClick,
-        children,
-        ...componentProps,
-    };
-
     return useRender({
         ref,
         render: render || <button />,
         state: { disabled },
-        props: defaultProps,
+        props: {
+            'aria-label': 'Previous Page',
+            disabled,
+            className: clsx(styles.button({ size }), className),
+            onClick,
+            children,
+            ...componentProps,
+        },
     });
 });
 PaginationPreviousPrimitive.displayName = 'Pagination.PreviousPrimitive';
@@ -292,20 +290,18 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             props: { 'aria-hidden': 'true', className: styles.icon },
         });
 
-        const defaultProps: useRender.ElementProps<'button'> = {
-            'aria-label': 'Next Page',
-            disabled,
-            className: clsx(styles.button({ size }), className),
-            onClick,
-            children,
-            ...componentProps,
-        };
-
         return useRender({
             ref,
             render: render || <button />,
             state: { disabled },
-            props: defaultProps,
+            props: {
+                'aria-label': 'Next Page',
+                disabled,
+                className: clsx(styles.button({ size }), className),
+                onClick,
+                children,
+                ...componentProps,
+            },
         });
     },
 );
@@ -341,19 +337,17 @@ export const PaginationEllipsisPrimitive = forwardRef<
         props: { width: 'max(16px, 50%)', height: 'max(16px, 50%)' },
     });
 
-    const defaultProps: useRender.ElementProps<'span'> = {
-        role: 'presentation',
-        'aria-hidden': 'true',
-        className: clsx(styles.ellipsis({ size }), className),
-        children,
-        ...componentProps,
-    };
-
     return useRender({
         ref,
         render: render || <span />,
         state: { disabled },
-        props: defaultProps,
+        props: {
+            role: 'presentation',
+            'aria-hidden': 'true',
+            className: clsx(styles.ellipsis({ size }), className),
+            children,
+            ...componentProps,
+        },
     });
 });
 PaginationEllipsisPrimitive.displayName = 'Pagination.EllipsisPrimitive';

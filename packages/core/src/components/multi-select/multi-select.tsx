@@ -414,8 +414,7 @@ MultiSelectSeparator.displayName = 'MultiSelect.Separator';
 export namespace MultiSelectRoot {
     type RootPrimitiveProps<Value> = ComponentPropsWithoutRef<typeof BaseSelect.Root<Value, true>>;
     export interface Props<Value>
-        extends Omit<RootPrimitiveProps<Value>, 'multiple'>,
-            MultiSelectSharedProps {}
+        extends Omit<RootPrimitiveProps<Value>, 'multiple'>, MultiSelectSharedProps {}
 
     export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
