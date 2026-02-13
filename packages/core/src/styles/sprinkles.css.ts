@@ -225,14 +225,15 @@ const borderColorTokens = {
 const sprinkleProperties = defineProperties({
     '@layer': layers.utilities,
 
-    defaultCondition: 'lg',
+    defaultCondition: 'default',
     conditions: {
         // breakpoints
         // '@media': `screen and (max-width: env(--mobile))`,
         sm: { '@media': `screen and (max-width: 767px)` },
         // '@media': `screen and (max-width: env(--tablet))`,
         md: { '@media': `screen and (max-width: 1024px)` },
-        lg: {},
+        lg: { '@media': `screen and (min-width: 1025px)` },
+        default: {},
 
         // states
         _before: { selector: '&::before' },
