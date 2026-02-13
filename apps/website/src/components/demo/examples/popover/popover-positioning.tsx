@@ -4,12 +4,12 @@ import { Button, HStack, Popover, Text, VStack } from '@vapor-ui/core';
 
 export default function PopoverPositioning() {
     return (
-        <HStack gap="$400">
-            <VStack gap="$150">
+        <HStack $css={{ gap: '$400' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     Side
                 </Text>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         top
                     </Text>
@@ -27,7 +27,7 @@ export default function PopoverPositioning() {
                         </Popover.Popup>
                     </Popover.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         right
                     </Text>
@@ -45,7 +45,7 @@ export default function PopoverPositioning() {
                         </Popover.Popup>
                     </Popover.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         bottom
                     </Text>
@@ -63,7 +63,7 @@ export default function PopoverPositioning() {
                         </Popover.Popup>
                     </Popover.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         left
                     </Text>
@@ -83,11 +83,11 @@ export default function PopoverPositioning() {
                 </HStack>
             </VStack>
 
-            <VStack gap="$150">
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     Alignment
                 </Text>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         start
                     </Text>
@@ -105,7 +105,7 @@ export default function PopoverPositioning() {
                         </Popover.Popup>
                     </Popover.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         center
                     </Text>
@@ -123,7 +123,7 @@ export default function PopoverPositioning() {
                         </Popover.Popup>
                     </Popover.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         end
                     </Text>

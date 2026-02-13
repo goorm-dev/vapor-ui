@@ -1,6 +1,6 @@
 'use client';
 
-import type { CSSProperties, ComponentProps, ReactElement } from 'react';
+import type { CSSProperties, ComponentProps, ComponentPropsWithRef, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
@@ -248,7 +248,7 @@ const ArrowIcon = (props: ComponentProps<'svg'>) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace PopoverRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BasePopover.Root>;
+    type RootPrimitiveProps = ComponentPropsWithRef<typeof BasePopover.Root>;
     export interface Props extends RootPrimitiveProps {}
 
     export type ChangeEventDetails = BasePopover.Root.ChangeEventDetails;

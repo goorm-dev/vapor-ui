@@ -2,12 +2,12 @@ import { Button, HStack, Text, Tooltip, VStack } from '@vapor-ui/core';
 
 export default function TooltipAlignment() {
     return (
-        <HStack gap="$400">
-            <VStack gap="$150">
+        <HStack $css={{ gap: '$400' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     Bottom Alignment
                 </Text>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         start
                     </Text>
@@ -22,7 +22,7 @@ export default function TooltipAlignment() {
                         </Tooltip.Popup>
                     </Tooltip.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         center
                     </Text>
@@ -37,7 +37,7 @@ export default function TooltipAlignment() {
                         </Tooltip.Popup>
                     </Tooltip.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         end
                     </Text>
@@ -54,11 +54,11 @@ export default function TooltipAlignment() {
                 </HStack>
             </VStack>
 
-            <VStack gap="$150">
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     Right Alignment
                 </Text>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         start
                     </Text>
@@ -73,7 +73,7 @@ export default function TooltipAlignment() {
                         </Tooltip.Popup>
                     </Tooltip.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         center
                     </Text>
@@ -88,7 +88,7 @@ export default function TooltipAlignment() {
                         </Tooltip.Popup>
                     </Tooltip.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-16" typography="body3" foreground="hint-100">
                         end
                     </Text>

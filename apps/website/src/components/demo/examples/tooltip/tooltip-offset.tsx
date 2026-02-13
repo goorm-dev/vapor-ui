@@ -2,12 +2,12 @@ import { Button, HStack, Text, Tooltip, VStack } from '@vapor-ui/core';
 
 export default function TooltipOffset() {
     return (
-        <HStack gap="$400">
-            <VStack gap="$150">
+        <HStack $css={{ gap: '$400' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     Side Offset
                 </Text>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-12" typography="body3" foreground="hint-100">
                         0px
                     </Text>
@@ -20,7 +20,7 @@ export default function TooltipOffset() {
                         </Tooltip.Popup>
                     </Tooltip.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-12" typography="body3" foreground="hint-100">
                         10px
                     </Text>
@@ -33,7 +33,7 @@ export default function TooltipOffset() {
                         </Tooltip.Popup>
                     </Tooltip.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-12" typography="body3" foreground="hint-100">
                         20px
                     </Text>
@@ -48,11 +48,11 @@ export default function TooltipOffset() {
                 </HStack>
             </VStack>
 
-            <VStack gap="$150">
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     Align Offset
                 </Text>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-12" typography="body3" foreground="hint-100">
                         -20px
                     </Text>
@@ -65,7 +65,7 @@ export default function TooltipOffset() {
                         </Tooltip.Popup>
                     </Tooltip.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-12" typography="body3" foreground="hint-100">
                         0px
                     </Text>
@@ -78,7 +78,7 @@ export default function TooltipOffset() {
                         </Tooltip.Popup>
                     </Tooltip.Root>
                 </HStack>
-                <HStack gap="$150" alignItems="center">
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                     <Text className="w-12" typography="body3" foreground="hint-100">
                         +20px
                     </Text>

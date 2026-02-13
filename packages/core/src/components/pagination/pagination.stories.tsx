@@ -35,7 +35,7 @@ export const Items: StoryObj<typeof Pagination.Root> = {
     args: { totalPages: 25, siblingCount: 2, boundaryCount: 1, defaultPage: 7 },
     render: (args) => {
         return (
-            <VStack gap="$100">
+            <VStack $css={{ gap: '$100' }}>
                 <Pagination.Root {...args}>
                     <Pagination.Previous />
                     <Pagination.Items />
@@ -113,7 +113,7 @@ export const TestBed: StoryObj<typeof Pagination.Root> = {
     args: { totalPages: 25, siblingCount: 2, boundaryCount: 1, defaultPage: 7 },
     render: (args) => {
         return (
-            <VStack gap="$100">
+            <VStack $css={{ gap: '$100' }}>
                 <Pagination.Root {...args}>
                     <Pagination.Previous disabled />
 

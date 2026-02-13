@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactElement, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
@@ -377,7 +377,7 @@ SelectSeparator.displayName = 'Select.Separator';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace SelectRoot {
-    type RootPrimitiveProps = Omit<VComponentProps<typeof BaseSelect.Root>, 'multiple'>;
+    type RootPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof BaseSelect.Root>, 'multiple'>;
     export interface Props extends RootPrimitiveProps, SelectSharedProps {}
 
     export type Actions = BaseSelect.Root.Actions;
