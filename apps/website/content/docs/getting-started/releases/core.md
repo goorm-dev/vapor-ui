@@ -7,19 +7,17 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 ## 1.1.0
 
-### Core
+### General changes
 
-- expand utility props and scoping it $css ([#476](https://github.com/goorm-dev/vapor-ui/pull/476)) - Thanks [@noahchoii](https://github.com/noahchoii)!
-
-### Etc.
-
-- Change useMutationObserver hook to use only ref ([#332](https://github.com/goorm-dev/vapor-ui/pull/332)) - Thanks [@SimYunSup](https://github.com/SimYunSup)!
+- expand utility props and scoping it `$css` ([#476](https://github.com/goorm-dev/vapor-ui/pull/476)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ### Skeleton
 
-- New Skeleton component ([#481](https://github.com/goorm-dev/vapor-ui/pull/481)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+- Add new `Skeleton` component ([#481](https://github.com/goorm-dev/vapor-ui/pull/481)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-    You can see more details about the Skeleton component in the [Skeleton documentation](https://vapor-ui.goorm.io/docs/components/skeleton).
+### Etc.
+
+- Change `useMutationObserver` hook to use only ref ([#332](https://github.com/goorm-dev/vapor-ui/pull/332)) - Thanks [@SimYunSup](https://github.com/SimYunSup)!
 
 ### Updated Dependencies
 
