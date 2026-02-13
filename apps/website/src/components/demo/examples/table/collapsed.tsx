@@ -245,16 +245,14 @@ export interface ColumnCollapsedColumnInstance {
     toggleCollapsed: () => void;
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 declare module '@tanstack/react-table' {
     interface TableState extends ColumnCollapsedTableState {}
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface TableOptionsResolved<TData extends RowData> extends ColumnCollapsedOptions {}
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Column<TData extends RowData, TValue = unknown>
         extends ColumnCollapsedColumnInstance {}
 }
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const ColumnCollapsedFeature: TableFeature<unknown> = {
     getInitialState: (state): ColumnCollapsedTableState => {
