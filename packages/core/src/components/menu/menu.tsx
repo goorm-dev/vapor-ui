@@ -193,7 +193,7 @@ MenuGroupLabel.displayName = 'Menu.GroupLabel';
  * -----------------------------------------------------------------------------------------------*/
 
 type SubmenuContext = {
-    triggerRef?: RefObject<HTMLElement>;
+    triggerRef?: RefObject<HTMLElement | null>;
     disabled?: boolean;
 };
 
