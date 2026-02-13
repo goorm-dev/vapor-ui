@@ -232,7 +232,7 @@ const sprinkleProperties = defineProperties({
         sm: { '@media': `screen and (max-width: 767px)` },
         // '@media': `screen and (max-width: env(--tablet))`,
         md: { '@media': `screen and (max-width: 1024px)` },
-        lg: { '@media': `screen and (min-width: 1025px)` },
+        lg: {},
         default: {},
 
         // states
