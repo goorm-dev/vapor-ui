@@ -3,10 +3,10 @@ import { Box, HStack, Skeleton, VStack } from '@vapor-ui/core';
 export default function SkeletonComposition() {
     return (
         <Box
-            border="1px solid"
-            borderColor="$normal"
-            borderRadius="$100"
             $css={{
+                border: '1px solid',
+                borderColor: '$border-normal',
+                borderRadius: '$100',
                 padding: '$200',
                 maxWidth: '320px',
             }}
