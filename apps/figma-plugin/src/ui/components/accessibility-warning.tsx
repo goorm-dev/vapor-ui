@@ -90,15 +90,15 @@ export const AccessibilityWarning = ({
 
     return (
         <Box className="p-3 bg-v-orange-050 border border-v-orange-200 rounded-lg">
-            <VStack gap="$100">
-                <HStack gap="$100" alignItems="center">
+            <VStack $css={{ gap: '$100' }}>
+                <HStack $css={{ gap: '$100', alignItems: 'center' }}>
                     <WarningOutlineIcon className="w-4 h-4 text-v-orange-600 flex-shrink-0" />
                     <Text typography="subtitle2" foreground="warning-100">
                         접근성 경고
                     </Text>
                 </HStack>
 
-                <VStack gap="$050">
+                <VStack $css={{ gap: '$050' }}>
                     <Text typography="body3" foreground="hint-200">
                         <Text typography="body3" foreground="normal-100">
                             {primaryColorName}
@@ -121,13 +121,13 @@ export const AccessibilityWarning = ({
                 </VStack>
 
                 <Box className="mt-1 pl-2 border-l-2 border-v-orange-300">
-                    <VStack gap="$100">
+                    <VStack $css={{ gap: '$100' }}>
                         <Text typography="body4" foreground="hint-100">
                             권장 사항
                         </Text>
                         {suggestions.map((suggestion, index) => (
-                            <VStack key={index} gap="$000">
-                                <HStack gap="$050" alignItems="flex-start">
+                            <VStack key={index} $css={{ gap: '$000' }}>
+                                <HStack $css={{ gap: '$050', alignItems: 'flex-start' }}>
                                     <Text typography="body3" foreground="warning-100">
                                         •
                                     </Text>
@@ -145,13 +145,13 @@ export const AccessibilityWarning = ({
                     </VStack>
                 </Box>
 
-                <HStack gap="$100" className="mt-2">
+                <HStack $css={{ gap: '$100' }} className="mt-2">
                     <Box className="flex-1 flex items-center gap-2 p-2 bg-white rounded border border-v-gray-200">
                         <Box
                             className="w-6 h-6 rounded border border-v-gray-300"
                             style={{ backgroundColor: primaryBackgroundHex }}
                         />
-                        <VStack gap="$000">
+                        <VStack $css={{ gap: '$000' }}>
                             <Text typography="body4" foreground="hint-100">
                                 Primary ({primaryMappedStep})
                             </Text>
@@ -165,7 +165,7 @@ export const AccessibilityWarning = ({
                             className="w-6 h-6 rounded border border-v-gray-300"
                             style={{ backgroundColor: canvasBackgroundHex }}
                         />
-                        <VStack gap="$000">
+                        <VStack $css={{ gap: '$000' }}>
                             <Text typography="body4" foreground="hint-100">
                                 Background
                             </Text>

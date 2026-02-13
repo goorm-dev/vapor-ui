@@ -8,8 +8,8 @@ export default function SwitchControlled() {
     const [checked, setChecked] = useState(false);
 
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Switch.Root checked={checked} onCheckedChange={setChecked} />
                 <Text typography="body3">State: {checked ? 'On' : 'Off'}</Text>
             </HStack>

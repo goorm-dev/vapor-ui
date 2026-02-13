@@ -19,9 +19,9 @@ export default function Collapsed() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
-                header: () => <Box textAlign="center">ID</Box>,
+                header: () => <Box $css={{ textAlign: 'center' }}>ID</Box>,
                 accessorKey: 'id',
-                cell: ({ row }) => <Box textAlign="center">{row.index + 1}</Box>,
+                cell: ({ row }) => <Box $css={{ textAlign: 'center' }}>{row.index + 1}</Box>,
             },
 
             {
@@ -32,15 +32,15 @@ export default function Collapsed() {
                         : ChevronDoubleLeftOutlineIcon;
 
                     return (
-                        <HStack justifyContent="space-between" alignItems="center">
+                        <HStack $css={{ justifyContent: 'space-between', alignItems: 'center' }}>
                             {isCollapsed ? '' : 'Name'}
 
                             <IconButton
                                 aria-label="Toggle Name column"
                                 size="sm"
-                                color="secondary"
                                 variant="ghost"
                                 onClick={() => column.toggleCollapsed()}
+                                color="secondary"
                             >
                                 <IconElement />
                             </IconButton>
@@ -53,9 +53,11 @@ export default function Collapsed() {
 
                     return (
                         <Box
-                            display={isCollapsed ? 'block' : 'flex'}
-                            width={isCollapsed ? '32px' : '240px'}
-                            overflow="hidden"
+                            $css={{
+                                display: isCollapsed ? 'block' : 'flex',
+                                width: isCollapsed ? '32px' : '240px',
+                                overflow: 'hidden',
+                            }}
                             style={{
                                 whiteSpace: 'nowrap',
                                 textOverflow: 'ellipsis',
@@ -113,9 +115,9 @@ export default function Collapsed() {
     });
 
     return (
-        <Card.Root width="100%">
-            <Card.Body overflow="auto" padding="$000">
-                <Table.Root width="100%">
+        <Card.Root $css={{ width: '100%' }}>
+            <Card.Body $css={{ overflow: 'auto', padding: '$000' }}>
+                <Table.Root $css={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
                         <Table.Column width="10%" />
@@ -130,7 +132,7 @@ export default function Collapsed() {
                                         ref={(thElem) =>
                                             columnSizingHandler(thElem, table, header.column)
                                         }
-                                        backgroundColor="$gray-050"
+                                        $css={{ backgroundColor: '$basic-gray-050' }}
                                         style={{ ...getCommonPinningStyles(header.column) }}
                                     >
                                         {flexRender(

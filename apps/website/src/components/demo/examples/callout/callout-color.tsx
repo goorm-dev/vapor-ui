@@ -2,8 +2,8 @@ import { Callout, Text, VStack } from '@vapor-ui/core';
 
 export default function CalloutColor() {
     return (
-        <VStack gap="$150" className="w-full max-w-xl">
-            <VStack gap="$050">
+        <VStack $css={{ gap: '$150' }} className="w-full max-w-xl">
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     primary
                 </Text>
@@ -11,7 +11,7 @@ export default function CalloutColor() {
                     Your changes have been saved successfully.
                 </Callout.Root>
             </VStack>
-            <VStack gap="$050">
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     success
                 </Text>
@@ -19,7 +19,7 @@ export default function CalloutColor() {
                     Your changes have been saved successfully.
                 </Callout.Root>
             </VStack>
-            <VStack gap="$050">
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     warning
                 </Text>
@@ -27,7 +27,7 @@ export default function CalloutColor() {
                     Your changes have been saved successfully.
                 </Callout.Root>
             </VStack>
-            <VStack gap="$050">
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     danger
                 </Text>
@@ -35,7 +35,7 @@ export default function CalloutColor() {
                     Your changes have been saved successfully.
                 </Callout.Root>
             </VStack>
-            <VStack gap="$050">
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     hint
                 </Text>
@@ -43,7 +43,7 @@ export default function CalloutColor() {
                     Your changes have been saved successfully.
                 </Callout.Root>
             </VStack>
-            <VStack gap="$050">
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     contrast
                 </Text>

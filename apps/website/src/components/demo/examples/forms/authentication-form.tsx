@@ -26,16 +26,18 @@ export default function AuthenticationForm() {
 
     return (
         <VStack
-            gap="$400"
-            width="100%"
-            padding="$300"
-            borderRadius="$300"
-            border="1px solid var(--vapor-color-border-normal)"
             render={<Form onSubmit={(e) => e.preventDefault()} />}
+            $css={{
+                gap: '$400',
+                width: '100%',
+                padding: '$300',
+                borderRadius: '$300',
+                border: '1px solid var(--vapor-color-border-normal)',
+            }}
         >
-            <VStack gap="$200">
+            <VStack $css={{ gap: '$200' }}>
                 <Field.Root>
-                    <Field.Label htmlFor="auth-phone" flexDirection="column">
+                    <Field.Label htmlFor="auth-phone" $css={{ flexDirection: 'column' }}>
                         <Text typography="subtitle2" foreground="normal-200">
                             핸드폰 번호
                         </Text>
@@ -76,7 +78,7 @@ export default function AuthenticationForm() {
                 </Field.Root>
 
                 <Field.Root>
-                    <Field.Label flexDirection="column">
+                    <Field.Label $css={{ flexDirection: 'column' }}>
                         <Text typography="subtitle2" foreground="normal-200">
                             인증번호
                         </Text>

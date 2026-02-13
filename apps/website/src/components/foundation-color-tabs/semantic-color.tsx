@@ -17,10 +17,10 @@ export const SemanticColor = () => {
     };
 
     return (
-        <Box paddingY="$400">
+        <Box $css={{ paddingBlock: '$400' }}>
             {SemanticColorData.map(
                 (colorGroup): ReactElement => (
-                    <Box key={colorGroup.title} marginBottom="$600">
+                    <Box key={colorGroup.title} $css={{ marginBottom: '$600' }}>
                         <Text typography="heading5">
                             {sectionTitles[colorGroup.title] || colorGroup.title}
                         </Text>

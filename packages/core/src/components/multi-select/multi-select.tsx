@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactElement } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
@@ -412,7 +412,7 @@ MultiSelectSeparator.displayName = 'MultiSelect.Separator';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace MultiSelectRoot {
-    type RootPrimitiveProps<Value> = VComponentProps<typeof BaseSelect.Root<Value, true>>;
+    type RootPrimitiveProps<Value> = ComponentPropsWithoutRef<typeof BaseSelect.Root<Value, true>>;
     export interface Props<Value>
         extends Omit<RootPrimitiveProps<Value>, 'multiple'>, MultiSelectSharedProps {}
 

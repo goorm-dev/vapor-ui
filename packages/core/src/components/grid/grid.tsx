@@ -44,7 +44,7 @@ export const GridRoot = forwardRef<HTMLDivElement, GridRoot.Props>((props, ref) 
     return (
         <Box
             ref={ref}
-            display={inline ? 'inline-grid' : 'grid'}
+            $css={{ display: inline ? 'inline-grid' : 'grid' }}
             style={{ ...cssVariables, ...style }}
             className={clsx(styles.root(variants), className)}
             {...otherProps}
