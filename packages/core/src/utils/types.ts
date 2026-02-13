@@ -2,10 +2,8 @@ import type { ComponentPropsWithoutRef } from 'react';
 
 import type { useRender } from '@base-ui/react/use-render';
 
-import type {
-    DeprecatedSprinkles as OriginalDeprecatedSprinkles,
-    Sprinkles,
-} from '~/styles/sprinkles.css';
+import type { DeprecatedSprinkles as OriginalDeprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
+import type { Sprinkles } from '~/styles/sprinkles.css';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyProp = any;
