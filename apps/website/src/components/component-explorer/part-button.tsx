@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 
 import { Button, Text } from '@vapor-ui/core';
 import clsx from 'clsx';
@@ -10,8 +10,8 @@ interface PartButtonProps {
     displayName: string;
     isHovered: boolean;
     isPinned?: boolean;
-    onClick?: () => void;
-    onMouseEnter: () => void;
+    onClick?: (partName: string) => void;
+    onMouseEnter: (partName: string) => void;
     onMouseLeave: () => void;
     onFocus?: () => void;
     onBlur?: () => void;
@@ -30,21 +30,45 @@ export const PartButton = memo(function PartButton({
 }: PartButtonProps) {
     const isActive = isHovered || isPinned;
 
+    const handleClick = useCallback(() => {
+        onClick?.(partName);
+    }, [onClick, partName]);
+
+    const handleMouseEnter = useCallback(() => {
+        onMouseEnter(partName);
+    }, [onMouseEnter, partName]);
+
+    const handleFocus = useCallback(() => {
+        if (onFocus) {
+            onFocus();
+        } else {
+            onMouseEnter(partName);
+        }
+    }, [onFocus, onMouseEnter, partName]);
+
+    const handleBlur = useCallback(() => {
+        if (onBlur) {
+            onBlur();
+        } else {
+            onMouseLeave();
+        }
+    }, [onBlur, onMouseLeave]);
+
     return (
         <Button
             variant="ghost"
             colorPalette={isActive ? 'primary' : 'secondary'}
-            onClick={onClick}
+            onClick={handleClick}
             className={clsx(
                 'group relative !w-full !justify-start !px-3 !py-2 !h-auto !rounded-md',
                 'transition-colors duration-150 ease-out',
                 'motion-reduce:transition-none',
                 isActive && '!bg-v-primary-100',
             )}
-            onMouseEnter={onMouseEnter}
+            onMouseEnter={handleMouseEnter}
             onMouseLeave={onMouseLeave}
-            onFocus={onFocus || onMouseEnter}
-            onBlur={onBlur || onMouseLeave}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
         >
             <div className="flex items-center gap-2 w-full">
                 {/* Part name */}

@@ -35,15 +35,9 @@ export function AnatomyPanel({
         };
     }, [parts, showPrimitives]);
 
-    const handleMouseEnter = useCallback(
-        (partName: string) => () => onPartHover(partName),
-        [onPartHover],
-    );
+    const handlePartHover = useCallback((partName: string) => onPartHover(partName), [onPartHover]);
     const handleMouseLeave = useCallback(() => onPartHover(null), [onPartHover]);
-    const handleClick = useCallback(
-        (partName: string) => () => onPartClick(partName),
-        [onPartClick],
-    );
+    const handlePartClick = useCallback((partName: string) => onPartClick(partName), [onPartClick]);
 
     return (
         <section
@@ -75,8 +69,8 @@ export function AnatomyPanel({
                             displayName={componentName}
                             isHovered={hoveredPart === part.name}
                             isPinned={pinnedPart === part.name}
-                            onClick={handleClick(part.name)}
-                            onMouseEnter={handleMouseEnter(part.name)}
+                            onClick={handlePartClick}
+                            onMouseEnter={handlePartHover}
                             onMouseLeave={handleMouseLeave}
                         />
                     </div>
@@ -103,8 +97,8 @@ export function AnatomyPanel({
                                     displayName={componentName}
                                     isHovered={hoveredPart === part.name}
                                     isPinned={pinnedPart === part.name}
-                                    onClick={handleClick(part.name)}
-                                    onMouseEnter={handleMouseEnter(part.name)}
+                                    onClick={handlePartClick}
+                                    onMouseEnter={handlePartHover}
                                     onMouseLeave={handleMouseLeave}
                                 />
                             </div>
