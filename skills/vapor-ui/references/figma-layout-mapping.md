@@ -80,7 +80,7 @@
 When `layoutGrids` is present:
 
 ```tsx
-<Grid.Root templateColumns="repeat(N, 1fr)" gap="$XXX">
+<Grid.Root templateColumns="repeat(N, 1fr)" $css={{ gap: '$XXX' }}>
     <Grid.Item colSpan="X">...</Grid.Item>
 </Grid.Root>
 ```
