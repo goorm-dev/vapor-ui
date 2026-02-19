@@ -2,6 +2,7 @@
     "name": "eslint-plugin-vapor",
     "version": "1.0.0",
     "description": "ESLint configuration for Vapor UI projects",
+    "license": "MIT",
     "type": "module",
     "exports": {
         ".": {
