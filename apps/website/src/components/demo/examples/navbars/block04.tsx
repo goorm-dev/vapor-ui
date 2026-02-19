@@ -8,10 +8,12 @@ import { ChevronDownOutlineIcon, CloseOutlineIcon, MenuOutlineIcon } from '@vapo
 export default function Block4() {
     return (
         <HStack
-            width="100%"
-            justifyContent="space-between"
-            paddingX={{ desktop: '$400', mobile: '$200' }}
-            paddingY={{ desktop: '$100', mobile: '$050' }}
+            $css={{
+                width: '100%',
+                justifyContent: 'space-between',
+                paddingInline: { lg: '$400', sm: '$200' },
+                paddingBlock: { lg: '$100', sm: '$050' },
+            }}
         >
             <LogoSvg className="logo" />
 
@@ -29,7 +31,7 @@ export default function Block4() {
                 </NavigationMenu.List>
             </NavigationMenu.Root>
 
-            <HStack gap="$100">
+            <HStack $css={{ gap: '$100' }}>
                 <Button variant="ghost">Log in</Button>
                 <Button>Sign up</Button>
 
@@ -49,10 +51,16 @@ export default function Block4() {
 
                     <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="top" />}>
                         <Sheet.Header>
-                            <HStack gap="$200" justifyContent="space-between" width="100%">
+                            <HStack
+                                $css={{
+                                    gap: '$200',
+                                    justifyContent: 'space-between',
+                                    width: '100%',
+                                }}
+                            >
                                 <LogoSvg className="logo" />
 
-                                <HStack gap="$100">
+                                <HStack $css={{ gap: '$100' }}>
                                     <Button variant="ghost">Log in</Button>
                                     <Button>Sign up</Button>
                                     <Sheet.Close

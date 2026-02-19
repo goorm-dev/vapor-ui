@@ -43,7 +43,7 @@
         "@types/node": "^20.0.0",
         "@vapor-ui/core": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
-        "eslint": "^9.37.0",
+        "eslint": "catalog:",
         "jest": "^30.2.0",
         "rimraf": "^6.0.1",
         "ts-jest": "^29.1.0",

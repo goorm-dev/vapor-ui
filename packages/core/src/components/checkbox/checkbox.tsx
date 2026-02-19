@@ -44,19 +44,17 @@ export const CheckboxRoot = forwardRef<HTMLSpanElement, CheckboxRoot.Props>((pro
         render: createRender(childrenProp, <CheckboxIndicatorPrimitive />),
     });
 
-    const defaultProps: useRender.ElementProps<typeof BaseCheckbox.Root> = {
-        'aria-invalid': invalid,
-        indeterminate,
-        className: clsx(styles.root({ invalid, size }), className),
-        children,
-        ...otherProps,
-    };
-
     const root = useRender({
         ref,
         state: { invalid },
         render: <BaseCheckbox.Root />,
-        props: defaultProps,
+        props: {
+            'aria-invalid': invalid,
+            indeterminate,
+            className: clsx(styles.root({ invalid, size }), className),
+            children,
+            ...otherProps,
+        },
     });
 
     return <CheckboxProvider value={{ size, indeterminate }}>{root}</CheckboxProvider>;

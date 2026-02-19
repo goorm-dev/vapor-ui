@@ -36,7 +36,7 @@ export const Checked: Story = {
 
 export const TestBed: Story = {
     render: () => (
-        <VStack gap="$400">
+        <VStack $css={{ gap: '$400' }}>
             <RadioGroup.Root defaultValue="checked" name="radio-card-group">
                 <RadioCard value="default">default</RadioCard>
                 <RadioCard value="checked">checked</RadioCard>

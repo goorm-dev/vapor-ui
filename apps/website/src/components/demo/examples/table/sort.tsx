@@ -18,7 +18,9 @@ export default function Sort() {
                 id: 'index',
                 header: 'ID',
                 accessorFn: (_, index) => index + 1,
-                cell: ({ getValue }) => <Box textAlign="center">{String(getValue() ?? '.')}</Box>,
+                cell: ({ getValue }) => (
+                    <Box $css={{ textAlign: 'center' }}>{String(getValue() ?? '.')}</Box>
+                ),
             },
 
             {
@@ -67,21 +69,25 @@ export default function Sort() {
     });
 
     return (
-        <Card.Root width="100%">
-            <Card.Body padding="$000">
-                <Table.Root width="100%">
+        <Card.Root $css={{ width: '100%' }}>
+            <Card.Body $css={{ padding: '$000' }}>
+                <Table.Root $css={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
                     </Table.ColumnGroup>
-                    <Table.Header borderRadius="inherit">
+                    <Table.Header $css={{ borderRadius: 'inherit' }}>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <Table.Row key={headerGroup.id} backgroundColor="$gray-050">
+                            <Table.Row
+                                key={headerGroup.id}
+                                $css={{ backgroundColor: '$basic-gray-050' }}
+                            >
                                 {headerGroup.headers.map((header) => (
                                     <Table.Heading key={header.id}>
                                         <HStack
-                                            justifyContent={
-                                                header.id === 'index' ? 'center' : 'flex-start'
-                                            }
+                                            $css={{
+                                                justifyContent:
+                                                    header.id === 'index' ? 'center' : 'flex-start',
+                                            }}
                                         >
                                             {flexRender(
                                                 header.column.columnDef.header,
@@ -90,10 +96,10 @@ export default function Sort() {
 
                                             <IconButton
                                                 aria-label={`${header.id} sort`}
-                                                color="secondary"
                                                 variant="ghost"
                                                 size="sm"
                                                 onClick={header.column.getToggleSortingHandler()}
+                                                color="secondary"
                                             >
                                                 <ControlCommonIcon />
                                             </IconButton>

@@ -79,7 +79,7 @@ Textarea.displayName = 'Textarea';
 /* -----------------------------------------------------------------------------------------------*/
 
 interface AutoResizeOptions extends Pick<Textarea.Props, 'value' | 'autoResize'> {
-    ref: React.RefObject<HTMLTextAreaElement>;
+    ref: React.RefObject<HTMLTextAreaElement | null>;
 }
 
 export function useAutoResize({ ref, value, autoResize }: AutoResizeOptions) {

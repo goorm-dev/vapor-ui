@@ -4,8 +4,8 @@ import { Button, HStack, Popover, Text, VStack } from '@vapor-ui/core';
 
 export default function PopoverOffset() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-28" typography="body3" foreground="hint-100">
                     default
                 </Text>
@@ -21,7 +21,7 @@ export default function PopoverOffset() {
                     </Popover.Popup>
                 </Popover.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-28" typography="body3" foreground="hint-100">
                     sideOffset 16
                 </Text>
@@ -39,7 +39,7 @@ export default function PopoverOffset() {
                     </Popover.Popup>
                 </Popover.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-28" typography="body3" foreground="hint-100">
                     alignOffset 100
                 </Text>
@@ -57,7 +57,7 @@ export default function PopoverOffset() {
                     </Popover.Popup>
                 </Popover.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-28" typography="body3" foreground="hint-100">
                     combined
                 </Text>

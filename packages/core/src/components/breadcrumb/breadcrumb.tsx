@@ -163,18 +163,16 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
             props: { width: '100%', height: '100%' },
         });
 
-        const defaultProps: useRender.ElementProps<'li'> = {
-            role: 'presentation',
-            'aria-hidden': 'true',
-            className: clsx(styles.icon({ size }), className),
-            children,
-            ...componentProps,
-        };
-
         return useRender({
             ref,
             render: render || <li />,
-            props: defaultProps,
+            props: {
+                role: 'presentation',
+                'aria-hidden': 'true',
+                className: clsx(styles.icon({ size }), className),
+                children,
+                ...componentProps,
+            },
         });
     },
 );
@@ -197,18 +195,16 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
         props: { width: '100%', height: '100%' },
     });
 
-    const defaultProps: useRender.ElementProps<'span'> = {
-        role: 'presentation',
-        'aria-hidden': 'true',
-        className: clsx(styles.icon({ size }), className),
-        children,
-        ...componentProps,
-    };
-
     return useRender({
         ref,
         render: render || <span />,
-        props: defaultProps,
+        props: {
+            role: 'presentation',
+            'aria-hidden': 'true',
+            className: clsx(styles.icon({ size }), className),
+            children,
+            ...componentProps,
+        },
     });
 });
 BreadcrumbEllipsisPrimitive.displayName = 'Breadcrumb.EllipsisPrimitive';

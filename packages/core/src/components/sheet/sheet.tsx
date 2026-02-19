@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactElement, RefObject } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement, RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
@@ -280,7 +280,7 @@ SheetDescription.displayName = 'Sheet.Description';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace SheetRoot {
-    type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
+    type RootPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Dialog.Root>, 'size'>;
     export interface Props extends RootPrimitiveProps {}
 
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
