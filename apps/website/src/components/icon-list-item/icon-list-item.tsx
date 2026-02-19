@@ -1,18 +1,13 @@
 'use client';
 
-import { type FunctionComponent, useState } from 'react';
+import { type FunctionComponent, memo, useCallback, useState } from 'react';
 
-import { Badge, Text } from '@vapor-ui/core';
+import { Text } from '@vapor-ui/core';
 import type { IconProps } from '@vapor-ui/icons';
-import { CheckCircleIcon, CopyIcon } from '@vapor-ui/icons';
+import { CheckCircleIcon, CopyOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
-import styles from './icon-list-item.module.scss';
-
 export const getIconImportStatement = (iconName: string): string => {
-    // 파일 경로와 확장자를 지정합니다.
-
-    // import 문을 생성하여 문자열로 반환합니다.
     return `import { ${iconName} } from '@vapor-ui/icons';`;
 };
 
@@ -32,67 +27,83 @@ export type IconListItemProps = {
     className?: string;
 };
 
-const IconListItem = ({ icon: Icon, iconName }: IconListItemProps) => {
-    const [isHovered, setIsHovered] = useState(false);
+const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconListItemProps) {
     const [isCopied, setIsCopied] = useState(false);
 
-    const copyIconImportStatement = async () => {
+    const copyIconImportStatement = useCallback(async () => {
         const importStatement = getIconImportStatement(iconName);
         const result = await copyToClipboard(importStatement);
 
         setIsCopied(result);
         if (result) {
-            setTimeout(() => setIsCopied(false), 600);
+            setTimeout(() => setIsCopied(false), 1500);
         }
-    };
-
-    const handleMouseEnter = () => {
-        setIsHovered(true);
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovered(false);
-        setIsCopied(false);
-    };
+    }, [iconName]);
 
     return (
-        <div
-            tabIndex={0}
-            role="button"
-            className={clsx(styles.iconListItem)}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+        <button
+            type="button"
+            className={clsx(
+                'group relative flex flex-col items-center justify-center gap-1.5',
+                'w-full h-28 min-w-0 p-3 rounded-lg border cursor-pointer',
+                'transition-[border-color,background-color] duration-150 ease-out motion-reduce:transition-none',
+                'focus-visible:outline-2 focus-visible:[outline-offset:-2px] focus-visible:outline-[var(--vapor-color-foreground-normal-200)]',
+                isCopied
+                    ? 'border-v-success bg-v-success-100'
+                    : 'border-transparent bg-v-overlay-100 hover:border-v-normal',
+            )}
+            onClick={copyIconImportStatement}
+            aria-label={`${iconName} 아이콘 import 문 복사`}
+            aria-pressed={isCopied}
         >
-            <span className={styles.iconContainer}>
-                <Icon size="40" color="var(--vapor-color-foreground-secondary-200)" />
+            {/* 아이콘 */}
+            <span
+                aria-hidden="true"
+                className={clsx(
+                    'flex items-center justify-center transition-all duration-150 motion-reduce:transition-none',
+                    isCopied
+                        ? 'text-v-success-100 scale-105 motion-reduce:scale-100'
+                        : 'text-v-secondary-200 group-hover:text-v-primary-100 group-hover:scale-105 motion-reduce:group-hover:scale-100',
+                )}
+            >
+                <Icon size="32" />
             </span>
-            <Text typography="body3" foreground="normal-200" className={styles.text}>
+
+            {/* 아이콘 이름 */}
+            <Text
+                typography="body3"
+                aria-hidden="true"
+                className={clsx(
+                    'w-full text-center transition-colors duration-150 motion-reduce:transition-none',
+                    'line-clamp-2 break-all text-[11px] leading-tight',
+                    isCopied
+                        ? 'text-v-success-100'
+                        : 'text-v-secondary-200 group-hover:text-v-primary-100',
+                )}
+            >
                 {iconName}
             </Text>
-            {isHovered && <div className={styles.dim}></div>}
-            {isHovered && (
-                <Badge
-                    size="lg"
-                    className={clsx(styles.badge, {
-                        [styles[`badge_copied`]]: isCopied,
-                    })}
-                    render={<button className={styles.button} onClick={copyIconImportStatement} />}
-                >
-                    {isCopied ? (
-                        <CheckCircleIcon size="16" color="var(--vapor-color-foreground-success)" />
-                    ) : (
-                        <CopyIcon size="16" color="var(--vapor-color-foreground-contrast)" />
-                    )}
-                    <Text
-                        foreground={isCopied ? 'success-100' : 'contrast-100'}
-                        typography="subtitle1"
-                    >
-                        {isCopied ? '코드 복사됨' : '코드 복사'}
-                    </Text>
-                </Badge>
-            )}
-        </div>
+
+            {/* 복사 인디케이터 */}
+            <span
+                aria-hidden="true"
+                className={clsx(
+                    'absolute top-1.5 right-1.5 flex items-center justify-center p-0.5 rounded',
+                    'transition-all duration-150 motion-reduce:transition-none',
+                    isCopied
+                        ? 'opacity-100 bg-v-success-200 text-v-inverse'
+                        : 'opacity-0 bg-v-secondary-100 text-v-secondary-200 group-hover:opacity-100',
+                )}
+            >
+                {isCopied ? <CheckCircleIcon size="12" /> : <CopyOutlineIcon size="12" />}
+            </span>
+
+            {/* 복사됨 알림 (스크린 리더용 Live Region) */}
+            <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+                {isCopied ? `${iconName} import 문이 클립보드에 복사되었습니다` : ''}
+            </span>
+        </button>
     );
-};
+});
 
 export default IconListItem;

@@ -1,8 +1,42 @@
 ---
 title: Icons
-description: |
-    @vapor-ui/icons 라이브러리에서 제공하는 아이콘입니다. 
-    아이콘을 클릭해 import 문을 복사할 수 있습니다.
+description: Vapor UI 아이콘 라이브러리. 아이콘을 클릭하면 import 문이 복사됩니다.
 ---
+
+## 설치
+
+```package-install
+@vapor-ui/icons
+```
+
+## 사용법
+
+```tsx
+import { CheckCircleIcon, SearchOutlineIcon } from '@vapor-ui/icons';
+
+function Example() {
+    return (
+        <>
+            <CheckCircleIcon size="24" />
+            <SearchOutlineIcon size="20" color="gray" />
+        </>
+    );
+}
+```
+
+### Props
+
+| Prop    | Type               | Default          | Description      |
+| ------- | ------------------ | ---------------- | ---------------- |
+| `size`  | `string \| number` | `"24"`           | 아이콘 크기 (px) |
+| `color` | `string`           | `"currentColor"` | 아이콘 색상      |
+
+## 아이콘 스타일
+
+<IconStyleGuide />
+
+<Callout>아이콘을 클릭하면 import 문이 자동으로 복사됩니다.</Callout>
+
+## 아이콘 목록
 
 <IconList />
