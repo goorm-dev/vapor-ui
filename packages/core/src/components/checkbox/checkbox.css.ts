@@ -40,7 +40,9 @@ export const root = recipe({
                 },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': { boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.danger}` },
+                '&[data-invalid]': {
+                    boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.danger}`,
+                },
             },
         }),
     ],
