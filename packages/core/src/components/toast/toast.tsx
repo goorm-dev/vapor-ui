@@ -51,8 +51,8 @@ const ToastList = () => {
                 {toasts.map((toast) => (
                     <ToastRootPrimitive key={toast.id} toast={toast}>
                         <ToastContentPrimitive>
-                            <HStack gap="$075">
-                                <Box marginY="3px">
+                            <HStack $css={{ gap: '$075' }}>
+                                <Box $css={{ marginBlock: '3px' }}>
                                     <ToastIconPrimitive />
                                 </Box>
                                 <VStack>
@@ -60,7 +60,7 @@ const ToastList = () => {
                                     <ToastDescriptionPrimitive />
                                 </VStack>
                             </HStack>
-                            <HStack gap="$100" alignItems="center">
+                            <HStack $css={{ gap: '$100', alignItems: 'center' }}>
                                 <ToastActionPrimitive />
                                 <ToastClosePrimitive />
                             </HStack>
@@ -89,9 +89,11 @@ export const ToastProviderPrimitive = ({
  * Toast.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const ToastPortalPrimitive = (props: ToastPortalPrimitive.Props) => {
-    return <BaseToast.Portal {...props} />;
-};
+export const ToastPortalPrimitive = forwardRef<HTMLDivElement, ToastPortalPrimitive.Props>(
+    (props, ref) => {
+        return <BaseToast.Portal ref={ref} {...props} />;
+    },
+);
 ToastPortalPrimitive.displayName = 'Toast.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -275,7 +277,7 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         const render = renderProp ?? (
             <IconButton
                 aria-label="Close Toast"
-                color="$inverse"
+                $css={{ color: '$fg-inverse' }}
                 colorPalette="secondary"
                 variant="ghost"
             />
@@ -318,13 +320,16 @@ type BasePromiseOptions = Omit<BaseToastManager['promise'], 'loading' | 'success
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export interface ToastManagerAddOptions<Data extends object>
-    extends Omit<ToastObjectType<Data>, 'id' | 'animation' | 'height' | 'ref' | 'limited'> {
+export interface ToastManagerAddOptions<Data extends object> extends Omit<
+    ToastObjectType<Data>,
+    'id' | 'animation' | 'height' | 'ref' | 'limited'
+> {
     id?: string;
 }
 
-export interface ToastManagerUpdateOptions<Data extends object>
-    extends Partial<ToastManagerAddOptions<Data>> {}
+export interface ToastManagerUpdateOptions<Data extends object> extends Partial<
+    ToastManagerAddOptions<Data>
+> {}
 
 export interface ToastManagerPromiseOptions<Value, Data extends object> extends BasePromiseOptions {
     loading: string | ToastManagerUpdateOptions<Data>;

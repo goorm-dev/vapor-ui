@@ -87,7 +87,7 @@ export const WithRadioCard: Story = {
 
 export const TestBed: Story = {
     render: (args) => (
-        <HStack gap="$400">
+        <HStack $css={{ gap: '$400' }}>
             <RadioGroup.Root {...args} defaultValue="3">
                 <RadioGroup.Label>Options</RadioGroup.Label>
                 <Radio.Root id="radio-1" value="1" />

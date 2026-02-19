@@ -25,7 +25,7 @@ const SectionScaling = () => {
             <PanelSectionWrapper.Title>Scaling</PanelSectionWrapper.Title>
             <PanelSectionWrapper.Contents>
                 <RadioGroup.Root defaultValue="1" size="md" onValueChange={handleValueChange}>
-                    <HStack gap="$100">
+                    <HStack $css={{ gap: '$100' }}>
                         {SCALE_OPTIONS.map(({ value, label }) => (
                             <RadioCard key={value} value={String(value)}>
                                 {label}

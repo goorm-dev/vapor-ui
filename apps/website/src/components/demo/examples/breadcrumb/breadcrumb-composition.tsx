@@ -3,8 +3,8 @@ import { ChevronRightOutlineIcon, HomeIcon } from '@vapor-ui/icons';
 
 export default function BreadcrumbComposition() {
     return (
-        <VStack gap="$300">
-            <VStack gap="$100">
+        <VStack $css={{ gap: '$300' }}>
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     Basic
                 </Text>
@@ -16,7 +16,7 @@ export default function BreadcrumbComposition() {
                     <Breadcrumb.Item current>Details</Breadcrumb.Item>
                 </Breadcrumb.Root>
             </VStack>
-            <VStack gap="$100">
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     Custom Separator
                 </Text>
@@ -32,7 +32,7 @@ export default function BreadcrumbComposition() {
                     <Breadcrumb.Item current>Details</Breadcrumb.Item>
                 </Breadcrumb.Root>
             </VStack>
-            <VStack gap="$100">
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     With Icon
                 </Text>

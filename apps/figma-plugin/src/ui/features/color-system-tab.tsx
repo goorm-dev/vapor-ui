@@ -230,12 +230,12 @@ export const ColorSystemTab = () => {
     };
 
     return (
-        <VStack gap="$300">
-            <VStack gap="$200">
+        <VStack $css={{ gap: '$300' }}>
+            <VStack $css={{ gap: '$200' }}>
                 <Section>
                     <Section.Title title="Primary Color" />
                     <Section.Description description="브랜드의 핵심 색상을 지정해요. 기본값은 Vapor의 파란색(blue)이에요." />
-                    <VStack gap="$100">
+                    <VStack $css={{ gap: '$100' }}>
                         <LabeledInput
                             label="Color Name"
                             value={primaryColorName}
@@ -254,7 +254,7 @@ export const ColorSystemTab = () => {
                 <Section>
                     <Section.Title title="Background Color" />
                     <Section.Description description="모든 색상 팔레트의 기준이 되는 배경색을 지정해요. 기본값은 흰색(gray)이에요." />
-                    <VStack gap="$100">
+                    <VStack $css={{ gap: '$100' }}>
                         <LabeledInput
                             label="Color Name"
                             value={backgroundName}
@@ -307,7 +307,7 @@ export const ColorSystemTab = () => {
                             <ChevronDownOutlineIcon className="transition-transform group-data-[panel-open]:rotate-180" />
                         </Collapsible.Trigger>
                         <Collapsible.Panel>
-                            <VStack gap="$100">
+                            <VStack $css={{ gap: '$100' }}>
                                 <Section.Description description="디자인 시스템의 10가지 기본 색상 팔레트(red, blue, green 등)를 생성하는 키 컬러에요.\n각 색상은 Background Color 대비 명암비를 준수하며, 인지적으로 균일한 050~900 단계로 생성돼요." />
 
                                 {Object.entries(keyColors).map(([colorName, colorValue]) => (
@@ -336,7 +336,7 @@ export const ColorSystemTab = () => {
                             <ChevronDownOutlineIcon className="transition-transform group-data-[panel-open]:rotate-180" />
                         </Collapsible.Trigger>
                         <Collapsible.Panel>
-                            <VStack gap="$100">
+                            <VStack $css={{ gap: '$100' }}>
                                 <Section.Description description="각 색상 단계(050~900)가 배경색 대비 가져야 할 명암비 값이에요. 기본값은 WCAG 접근성 기준을 준수해요.\n500(4.5:1)은 WCAG AA, 700(8.5:1)은 WCAG AAA 기준을 충족하는 값이에요." />
 
                                 {Object.entries(contrastRatios)
@@ -374,7 +374,7 @@ export const ColorSystemTab = () => {
             {generatedTheme && semanticTokens && (
                 <>
                     <div className="border-t border-gray-300" />
-                    <VStack gap="$200">
+                    <VStack $css={{ gap: '$200' }}>
                         {/* 접근성 경고 */}
                         {accessibilityInfo && (
                             <AccessibilityWarning
@@ -410,7 +410,7 @@ export const ColorSystemTab = () => {
                             </div>
                         </Box>
 
-                        <HStack gap="$200">
+                        <HStack $css={{ gap: '$200' }}>
                             <Button
                                 onClick={handleCreateFigmaVariables}
                                 variant="outline"

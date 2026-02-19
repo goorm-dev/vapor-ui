@@ -27,7 +27,7 @@ interface SectionProps {
 export const Section = ({ children, isTop = false }: SectionProps) => {
     return (
         <VStack
-            gap="$100"
+            $css={{ gap: '$100' }}
             className={`flex-1 ${isTop ? 'pt-3 border-t border-v-normal' : ''}`}
             render={<section />}
         >

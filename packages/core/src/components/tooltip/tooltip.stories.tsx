@@ -31,7 +31,14 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
     render: ({ side, align, sideOffset, alignOffset, ...args }) => {
         return (
             <>
-                <HStack gap="20px" margin="100px" justifyContent="center" alignItems="center">
+                <HStack
+                    $css={{
+                        gap: '20px',
+                        margin: '100px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
                     <Tooltip.Root {...args}>
                         <Tooltip.Trigger
                             delay={0}
@@ -52,7 +59,14 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                     </Tooltip.Root>
                 </HStack>
 
-                <HStack gap="20px" margin="100px" justifyContent="center" alignItems="center">
+                <HStack
+                    $css={{
+                        gap: '20px',
+                        margin: '100px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
                     <Tooltip.Root>
                         <Tooltip.Trigger
                             delay={0}
@@ -99,7 +113,14 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                     </Tooltip.Root>
                 </HStack>
 
-                <VStack gap="20px" margin="100px" justifyContent="center" alignItems="center">
+                <VStack
+                    $css={{
+                        gap: '20px',
+                        margin: '100px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
                     <Text>Wait for 0.5s </Text>
 
                     <Tooltip.Root>
@@ -123,13 +144,22 @@ export const TestBed: StoryObj = {
         return (
             <>
                 <VStack
-                    margin="$800"
-                    gap="$400"
-                    justifyContent="center"
-                    alignItems="center"
-                    border="1px solid"
+                    $css={{
+                        margin: '$800',
+                        gap: '$400',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        border: '1px solid',
+                    }}
                 >
-                    <HStack margin="$800" gap="$400" justifyContent="center" alignItems="center">
+                    <HStack
+                        $css={{
+                            margin: '$800',
+                            gap: '$400',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
                         <Tooltip.Root open>
                             <Tooltip.Trigger delay={0} render={<Button>Left Tooltip</Button>} />
                             <Tooltip.Popup
@@ -166,13 +196,22 @@ export const TestBed: StoryObj = {
                 </VStack>
 
                 <VStack
-                    margin="$800"
-                    gap="$400"
-                    justifyContent="center"
-                    alignItems="center"
-                    border="1px solid"
+                    $css={{
+                        margin: '$800',
+                        gap: '$400',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        border: '1px solid',
+                    }}
                 >
-                    <HStack margin="$800" gap="$400" justifyContent="center" alignItems="center">
+                    <HStack
+                        $css={{
+                            margin: '$800',
+                            gap: '$400',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
                         <Tooltip.Root open>
                             <Tooltip.Trigger
                                 delay={0}
@@ -209,7 +248,13 @@ export const TestBed: StoryObj = {
                     </HStack>
                 </VStack>
 
-                <HStack margin="$800" padding="$200" border="1px solid black">
+                <HStack
+                    $css={{
+                        margin: '$800',
+                        padding: '$200',
+                        border: '1px solid black',
+                    }}
+                >
                     <Tooltip.Root open>
                         <Tooltip.Trigger delay={0} render={<Button>Left Collision</Button>} />
                         <Tooltip.Popup

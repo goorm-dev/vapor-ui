@@ -83,7 +83,7 @@ const App = () => {
     };
 
     return (
-        <HStack gap="$400" alignItems="center">
+        <HStack $css={{ gap: '$400', alignItems: 'center' }}>
             <Button onClick={addToast}>Add Toast</Button>
 
             <Button onClick={updateToast}>Update Toast</Button>

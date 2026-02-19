@@ -1,5 +1,23 @@
 # @vapor-ui/core
 
+## 1.1.0
+
+### General changes
+
+- expand utility props and scoping it `$css` ([#476](https://github.com/goorm-dev/vapor-ui/pull/476)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Etc.
+
+- Change `useMutationObserver` hook to use only ref ([#332](https://github.com/goorm-dev/vapor-ui/pull/332)) - Thanks [@SimYunSup](https://github.com/SimYunSup)!
+
+### Skeleton
+
+- Add new `Skeleton` component ([#481](https://github.com/goorm-dev/vapor-ui/pull/481)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.0.1
+
 ## 1.0.0
 
 ### Checkbox / Switch / Radio

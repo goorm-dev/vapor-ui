@@ -1,6 +1,6 @@
 'use client';
 
-import type { CSSProperties, ComponentProps, ReactElement } from 'react';
+import type { CSSProperties, ComponentProps, ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
@@ -225,7 +225,7 @@ const ArrowIcon = (props: ComponentProps<'svg'>) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace TooltipRoot {
-    export interface Props extends VComponentProps<typeof BaseTooltip.Root> {}
+    export interface Props extends ComponentPropsWithoutRef<typeof BaseTooltip.Root> {}
 
     export type Actions = BaseTooltip.Root.Actions;
     export type ChangeEventDetails = BaseTooltip.Root.ChangeEventDetails;
