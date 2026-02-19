@@ -1,5 +1,6 @@
 export const AnthropicIcon = () => (
     <svg
+        aria-hidden="true"
         fill="currentColor"
         fillRule="evenodd"
         height={16}
@@ -13,6 +14,7 @@ export const AnthropicIcon = () => (
 
 export const OpenAIIcon = () => (
     <svg
+        aria-hidden="true"
         fill="currentColor"
         fillRule="evenodd"
         height={16}

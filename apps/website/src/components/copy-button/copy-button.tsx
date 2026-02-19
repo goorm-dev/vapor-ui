@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { Button, HStack, IconButton, Menu } from '@vapor-ui/core';
 import {
@@ -20,7 +20,7 @@ import {
 
 import { AnthropicIcon, OpenAIIcon } from './copy-button.icons';
 
-const markdownIcon = <CopyAsMarkdownOutlineIcon width={16} height={16} />;
+const markdownIcon = <CopyAsMarkdownOutlineIcon aria-hidden="true" width={16} height={16} />;
 const anthropicIcon = <AnthropicIcon />;
 const openAIIcon = <OpenAIIcon />;
 
@@ -66,6 +66,7 @@ const trackCopyButtonEvent = (action: CopyButtonAction, markdownUrl: string) => 
     track(eventName);
 };
 
+
 export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
     const [checked, onCopy] = useCopyButton(() => handleCopyContent());
     const [isLoading, setIsLoading] = useState(false);
@@ -95,35 +96,36 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
         }
     };
 
+    const handleMenuItemClick = useCallback(
+        (action: CopyButtonAction, handler: () => void) => {
+            if (!isValidMarkdownUrl(markdownUrl)) return;
+            trackCopyButtonEvent(action, markdownUrl);
+            handler();
+        },
+        [markdownUrl],
+    );
+
     const menuItems = useMemo(
         () => [
             {
                 label: '마크다운으로 보기',
                 icon: markdownIcon,
-                onClick: () => {
-                    if (isValidMarkdownUrl(markdownUrl)) {
-                        trackCopyButtonEvent(COPY_BUTTON_ACTIONS.VIEW_MARKDOWN, markdownUrl);
-                        window.open(markdownUrl, '_blank');
-                    }
-                },
+                action: COPY_BUTTON_ACTIONS.VIEW_MARKDOWN,
+                handler: () => window.open(markdownUrl, '_blank'),
                 isExternal: true,
             },
             {
                 label: 'Claude에게 질문하기',
                 icon: anthropicIcon,
-                onClick: () => {
-                    trackCopyButtonEvent(COPY_BUTTON_ACTIONS.ASK_CLAUDE, markdownUrl);
-                    openLLMChat('claude', markdownUrl);
-                },
+                action: COPY_BUTTON_ACTIONS.ASK_CLAUDE,
+                handler: () => openLLMChat('claude', markdownUrl),
                 isExternal: true,
             },
             {
                 label: 'ChatGPT에게 질문하기',
                 icon: openAIIcon,
-                onClick: () => {
-                    trackCopyButtonEvent(COPY_BUTTON_ACTIONS.ASK_CHATGPT, markdownUrl);
-                    openLLMChat('chatgpt', markdownUrl);
-                },
+                action: COPY_BUTTON_ACTIONS.ASK_CHATGPT,
+                handler: () => openLLMChat('chatgpt', markdownUrl),
                 isExternal: true,
             },
         ],
@@ -132,41 +134,58 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
 
     return (
         <HStack
-            gap="0"
-            className="rounded-md shadow-[inset_0_0_0_1px_var(--vapor-color-border-secondary)] w-fit"
+            role="group"
+            aria-label="마크다운 도구"
+            className="rounded-md shadow-[inset_0_0_0_1px_var(--vapor-color-border-secondary)] w-fit gap-0"
         >
+            <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+                {checked ? '복사 완료' : ''}
+            </span>
             <Button
                 colorPalette="secondary"
                 variant="ghost"
                 onClick={onCopy}
                 disabled={isLoading}
+                aria-busy={isLoading}
                 className="rounded-r-none"
             >
-                {checked ? <ConfirmOutlineIcon /> : <CopyAsMarkdownOutlineIcon />}
+                {checked ? (
+                    <ConfirmOutlineIcon aria-hidden="true" />
+                ) : (
+                    <CopyAsMarkdownOutlineIcon aria-hidden="true" />
+                )}
                 마크다운 복사
             </Button>
-            <span className="w-px bg-v-gray-200 self-stretch" />
+            <span aria-hidden="true" className="w-px bg-v-gray-200 self-stretch" />
             <Menu.Root>
                 <Menu.Trigger
                     render={
                         <IconButton
                             colorPalette="secondary"
                             variant="ghost"
-                            aria-label="더보기"
+                            aria-label="더 많은 도구"
                             disabled={isLoading}
                             className="rounded-l-none"
                         />
                     }
                 >
-                    <ChevronDownOutlineIcon />
+                    <ChevronDownOutlineIcon aria-hidden="true" />
                 </Menu.Trigger>
                 <Menu.Popup className="min-w-[200px]">
-                    {menuItems.map((item) => (
-                        <Menu.Item key={item.label} onClick={item.onClick}>
-                            {item.icon}
-                            {item.label}
-                            {item.isExternal && (
-                                <OpenInNewOutlineIcon width={16} height={16} className="ml-auto" />
+                    {menuItems.map(({ label, action, handler, icon, isExternal }) => (
+                        <Menu.Item key={label} onClick={() => handleMenuItemClick(action, handler)}>
+                            {icon}
+                            {label}
+                            {isExternal && (
+                                <>
+                                    <span className="sr-only">(새 탭에서 열림)</span>
+                                    <OpenInNewOutlineIcon
+                                        aria-hidden="true"
+                                        width={16}
+                                        height={16}
+                                        className="ml-auto"
+                                    />
+                                </>
                             )}
                         </Menu.Item>
                     ))}
