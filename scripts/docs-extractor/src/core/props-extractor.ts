@@ -51,12 +51,7 @@ function resolvePropertyType(
     }
 
     const typeResult = cleanType(
-        resolveType(
-            symbol.getTypeAtLocation(declNode),
-            baseUiMap,
-            declNode,
-            options.verbose,
-        ),
+        resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode, options.verbose),
     );
     return toTypeArray(typeResult);
 }

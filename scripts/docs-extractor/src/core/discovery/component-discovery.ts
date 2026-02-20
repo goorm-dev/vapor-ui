@@ -4,7 +4,12 @@
  * Discovers component namespaces and extracts metadata
  * (JSDoc descriptions, default HTML elements, Props interfaces) from source files.
  */
-import { type ModuleDeclaration, ModuleDeclarationKind, type SourceFile, SyntaxKind } from 'ts-morph';
+import {
+    type ModuleDeclaration,
+    ModuleDeclarationKind,
+    type SourceFile,
+    SyntaxKind,
+} from 'ts-morph';
 
 function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: string) {
     return sourceFile
