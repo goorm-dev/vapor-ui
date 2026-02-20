@@ -4,8 +4,8 @@ import { Box, Card, Flex, Grid, HStack, Text } from '@vapor-ui/core';
 import {
     CheckCircleIcon,
     CheckCircleOutlineIcon,
-    SlackColorIcon,
-    SlackIcon,
+    FigmaColorIcon,
+    FigmaIcon,
 } from '@vapor-ui/icons';
 
 const STYLE_CARDS = [
@@ -30,7 +30,7 @@ const STYLE_CARDS = [
         title: 'Symbol',
         description: '브랜드 원본 색상을 유지하는 아이콘. 서비스 로고나 국기 등에 사용합니다.',
         usage: '소셜 로그인, 브랜드 표시, 국가 선택',
-        icon: SlackColorIcon,
+        icon: FigmaColorIcon,
         naming: '*ColorIcon',
     },
     {
@@ -38,7 +38,7 @@ const STYLE_CARDS = [
         title: 'Symbol Black',
         description: '단색으로 표현된 브랜드 아이콘. 색상 통일이 필요한 UI에 적합합니다.',
         usage: '푸터 링크, 단색 UI, 프린트용',
-        icon: SlackIcon,
+        icon: FigmaIcon,
         naming: '*Icon (symbol)',
     },
 ] as const;
@@ -104,11 +104,7 @@ const IconStyleGuide = () => {
                         </Card.Body>
 
                         <Card.Footer>
-                            <Text
-                                typography="body3"
-                                foreground="secondary-200"
-                                className="text-[11px]"
-                            >
+                            <Text typography="body3" foreground="secondary-200">
                                 용도: {card.usage}
                             </Text>
                         </Card.Footer>

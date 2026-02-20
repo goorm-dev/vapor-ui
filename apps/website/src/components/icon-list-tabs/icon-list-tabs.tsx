@@ -1,6 +1,14 @@
 'use client';
 
-import React, { useCallback, useMemo } from 'react';
+import {
+    type KeyboardEvent,
+    type ReactNode,
+    memo,
+    useCallback,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
 import { Badge, Box, Flex, Grid, IconButton, Tabs, Text, TextInput, VStack } from '@vapor-ui/core';
 import { CloseOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
@@ -28,7 +36,7 @@ const ICON_COUNTS = Object.fromEntries(
 
 const IconList = () => {
     const { search, setSearch, filtered, isSearching, totalCount } = useIconSearch(VAPOR_ICONS);
-    const searchInputRef = React.useRef<HTMLInputElement>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
     // 검색 결과를 카테고리별로 그룹화
     const groupedResults = useMemo(() => {
@@ -46,23 +54,17 @@ const IconList = () => {
 
     // 검색 결과가 있는 첫 번째 카테고리
     const firstCategoryWithResults = useMemo(() => {
-        if (!groupedResults) return 'basic';
-        for (const category of ICON_LIST) {
-            if (groupedResults[category]?.length) {
-                return category;
-            }
-        }
-        return 'basic';
+        return ICON_LIST.find((category) => groupedResults?.[category]?.length) ?? null;
     }, [groupedResults]);
 
-    const [defaultTab, setDefaultTab] = React.useState('basic');
-    const [searchTab, setSearchTab] = React.useState('basic');
+    const [defaultTab, setDefaultTab] = useState('basic');
+    const [searchTab, setSearchTab] = useState('basic');
 
-    React.useEffect(() => {
-        if (firstCategoryWithResults) {
-            setSearchTab(firstCategoryWithResults);
-        }
-    }, [firstCategoryWithResults]);
+    const activeSearchTab = isSearching
+        ? groupedResults?.[searchTab]?.length
+            ? searchTab
+            : firstCategoryWithResults
+        : searchTab;
 
     const handleClearSearch = useCallback(() => {
         setSearch('');
@@ -70,7 +72,7 @@ const IconList = () => {
     }, [setSearch]);
 
     const handleKeyDown = useCallback(
-        (e: React.KeyboardEvent) => {
+        (e: KeyboardEvent) => {
             if (e.key === 'Escape' && search) {
                 handleClearSearch();
             }
@@ -80,30 +82,15 @@ const IconList = () => {
 
     return (
         <VStack $css={{ gap: '$250' }}>
-            {/* 검색 영역 */}
+            {/* Search area */}
             <Box
                 $css={{
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 20,
+                    position: 'relative',
                     paddingBlock: '$150',
                     backgroundColor: '$bg-canvas-100',
                 }}
             >
                 <Box $css={{ position: 'relative' }}>
-                    <Flex
-                        $css={{
-                            position: 'absolute',
-                            left: '$175',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            color: '$fg-success-200',
-                            pointerEvents: 'none',
-                            zIndex: 10,
-                        }}
-                    >
-                        <SearchOutlineIcon size="18" aria-hidden="true" />
-                    </Flex>
                     <TextInput
                         ref={searchInputRef}
                         placeholder={`${totalCount.toLocaleString()}개의 아이콘 검색...`}
@@ -114,6 +101,18 @@ const IconList = () => {
                         aria-label="아이콘 검색"
                         $css={{ width: '100%', paddingLeft: '$500' }}
                     />
+                    <Flex
+                        $css={{
+                            position: 'absolute',
+                            left: '$175',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: '$fg-success-200',
+                            pointerEvents: 'none',
+                        }}
+                    >
+                        <SearchOutlineIcon size="18" aria-hidden="true" />
+                    </Flex>
                     {search && (
                         <Box
                             $css={{
@@ -138,20 +137,20 @@ const IconList = () => {
                 </Box>
             </Box>
 
-            {/* 검색 결과 수 공지 (스크린 리더용) */}
+            {/* Search results count announcement (for screen readers) */}
             <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
                 {isSearching && filtered && filtered.length > 0
                     ? `"${search}" 검색 결과 ${filtered.length.toLocaleString()}개`
                     : ''}
             </span>
 
-            {/* 검색 결과 */}
+            {/* Search results */}
             {isSearching ? (
                 filtered?.length === 0 ? (
                     <EmptyState search={search} />
                 ) : (
                     <Tabs.Root
-                        value={searchTab}
+                        value={activeSearchTab}
                         onValueChange={setSearchTab}
                         variant="line"
                         size="md"
@@ -184,32 +183,12 @@ const IconList = () => {
 
                         {ICON_LIST.map((iconType) => {
                             const icons = groupedResults?.[iconType] ?? [];
-                            const isActive = searchTab === iconType;
                             return (
-                                <Tabs.Panel
-                                    key={iconType}
-                                    value={iconType}
-                                    keepMounted
-                                    $css={
-                                        isActive
-                                            ? { contentVisibility: 'visible' }
-                                            : {
-                                                  contentVisibility: 'hidden',
-                                                  display: 'block',
-                                                  height: 0,
-                                                  overflow: 'hidden',
-                                              }
-                                    }
-                                >
+                                <Tabs.Panel key={iconType} value={iconType} keepMounted>
                                     <Box $css={{ paddingTop: '$200' }}>
                                         <IconGrid>
                                             {icons.map(({ name, icon }) => (
-                                                <Box
-                                                    key={name}
-                                                    role="listitem"
-                                                    $css={{ contentVisibility: 'auto' }}
-                                                    style={{ containIntrinsicSize: '7rem' }}
-                                                >
+                                                <Box key={name} role="listitem">
                                                     <IconListItem icon={icon} iconName={name} />
                                                 </Box>
                                             ))}
@@ -221,7 +200,7 @@ const IconList = () => {
                     </Tabs.Root>
                 )
             ) : (
-                /* 기본 탭 컨텐츠 */
+                /* Default tab content */
                 <Tabs.Root
                     value={defaultTab}
                     onValueChange={setDefaultTab}
@@ -248,32 +227,12 @@ const IconList = () => {
                     </Tabs.List>
 
                     {ICON_LIST.map((iconType) => {
-                        const isActive = defaultTab === iconType;
                         return (
-                            <Tabs.Panel
-                                key={iconType}
-                                value={iconType}
-                                keepMounted
-                                $css={
-                                    isActive
-                                        ? { contentVisibility: 'visible' }
-                                        : {
-                                              contentVisibility: 'hidden',
-                                              display: 'block',
-                                              height: 0,
-                                              overflow: 'hidden',
-                                          }
-                                }
-                            >
+                            <Tabs.Panel key={iconType} value={iconType} keepMounted>
                                 <Box $css={{ paddingTop: '$200' }}>
                                     <IconGrid>
                                         {ICON_KEYS[iconType].map((iconKey) => (
-                                            <Box
-                                                key={iconKey}
-                                                role="listitem"
-                                                $css={{ contentVisibility: 'auto' }}
-                                                style={{ containIntrinsicSize: '7rem' }}
-                                            >
+                                            <Box key={iconKey} role="listitem">
                                                 <IconListItem
                                                     icon={VAPOR_ICONS[iconType][iconKey]}
                                                     iconName={iconKey}
@@ -291,16 +250,16 @@ const IconList = () => {
     );
 };
 
-const IconGrid = React.memo(function IconGrid({ children }: { children: React.ReactNode }) {
+const IconGrid = memo(function IconGrid({ children }: { children: ReactNode }) {
     return (
-        <div
-            style={{
+        <Box
+            $css={{
                 maxHeight: '32rem',
                 overflowY: 'auto',
-                padding: '4px',
-                borderRadius: 'var(--vapor-size-radius-400)',
-                backgroundColor: 'var(--vapor-color-bg-secondary-100)',
-                border: '1px solid var(--vapor-color-border-normal)',
+                padding: '$100',
+                borderRadius: '$400',
+                backgroundColor: '$bg-secondary-100',
+                border: '1px solid $border-normal',
             }}
         >
             <Grid.Root
@@ -314,12 +273,12 @@ const IconGrid = React.memo(function IconGrid({ children }: { children: React.Re
             >
                 {children}
             </Grid.Root>
-        </div>
+        </Box>
     );
 });
 
 /* 빈 상태 */
-const EmptyState = React.memo(function EmptyState({ search }: { search: string }) {
+const EmptyState = memo(function EmptyState({ search }: { search: string }) {
     return (
         <VStack
             role="status"
