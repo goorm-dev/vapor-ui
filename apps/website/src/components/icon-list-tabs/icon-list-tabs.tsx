@@ -39,7 +39,7 @@ const IconList = () => {
         useIconSearch(VAPOR_ICONS);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
-    // 검색 결과를 카테고리별로 그룹화
+    // Categorized search results for tab panels
     const groupedResults = useMemo(() => {
         if (!filtered) return null;
 
@@ -53,7 +53,7 @@ const IconList = () => {
         return groups;
     }, [filtered]);
 
-    // 검색 결과가 있는 첫 번째 카테고리
+    // First category with search results
     const firstCategoryWithResults = useMemo(() => {
         return ICON_LIST.find((category) => groupedResults?.[category]?.length) ?? null;
     }, [groupedResults]);
@@ -278,7 +278,6 @@ const IconGrid = memo(function IconGrid({ children }: { children: ReactNode }) {
     );
 });
 
-/* 빈 상태 */
 const EmptyState = memo(function EmptyState({ search }: { search: string }) {
     return (
         <VStack
