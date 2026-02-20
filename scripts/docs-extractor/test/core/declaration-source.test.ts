@@ -4,7 +4,7 @@ import {
     DeclarationSourceType,
     getDeclarationSourceType,
     isExternalDeclaration,
-} from '~/core/types';
+} from '~/core/shared/declaration-source';
 
 describe('getDeclarationSourceType', () => {
     describe('React types', () => {

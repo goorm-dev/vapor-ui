@@ -1,5 +1,5 @@
 import { run } from '~/cli';
-import { CliError } from '~/cli/options';
+import { CliError } from '~/cli/errors';
 
 async function main() {
     try {

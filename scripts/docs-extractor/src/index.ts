@@ -1,24 +1,24 @@
-// Scanner
+// === Core Extractor ===
+export { extractProps } from './core/props-extractor';
+export type { ExtractOptions } from './core/props-extractor';
+
+// === Data Types ===
+export type { Property, PropsInfo, FilePropsResult } from './types/props';
+
+// === Project & Discovery ===
 export {
+    createProject,
+    addSourceFiles,
+    getExportedNodes,
+    getNamespaces,
+    findTsconfig,
     findComponentFiles,
     findFileByComponentName,
     normalizeComponentName,
     type ScannerOptions,
 } from './core/discovery';
 
-// Project
-export { createProject, addSourceFiles, getExportedNodes, getNamespaces } from './core/discovery';
-
-// Config
-export { findTsconfig } from './core/discovery';
-
-// Extractor
-export { extractProps } from './core/props-extractor';
-
-// Types
-export type { Property, PropsInfo, FilePropsResult } from './types/props';
-
-// Config System (NEW)
+// === Configuration ===
 export {
     defineConfig,
     loadConfig,
@@ -32,7 +32,7 @@ export {
     type LoadConfigResult,
 } from './config';
 
-// Sprinkles Analyzer (NEW)
+// === Sprinkles ===
 export {
     loadSprinklesMeta,
     isTokenBasedSprinklesProp,
@@ -45,7 +45,7 @@ export {
     type PropDefinition,
 } from './core/defaults';
 
-// i18n (NEW)
+// === i18n ===
 export {
     resolveOutputPath,
     resolveAllLanguagePaths,
@@ -53,7 +53,7 @@ export {
     type PathResolverOptions,
 } from './i18n/path-resolver';
 
-// Output (NEW)
+// === Output ===
 export {
     writeJsonFile,
     writeMultipleFiles,

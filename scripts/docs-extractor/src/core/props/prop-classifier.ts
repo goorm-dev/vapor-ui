@@ -8,7 +8,7 @@ import type { Symbol } from 'ts-morph';
 
 import type { Property } from '~/types/props';
 
-import { getSymbolSourcePath } from '../types/declaration-source';
+import { getSymbolSourcePath } from '../shared/declaration-source';
 
 export type PropSource = 'base-ui' | 'custom' | 'variants';
 

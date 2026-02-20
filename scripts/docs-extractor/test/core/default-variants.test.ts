@@ -1,13 +1,13 @@
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
+import { getDefaultValuesForNamespace } from '~/core/defaults';
 import {
     findRecipeUsageInComponent,
-    getDefaultValuesForNamespace,
     parseRecipeDefaultVariants,
-} from '~/core/defaults';
+} from '~/core/defaults/default-variants';
+import { findCssImports } from '~/core/defaults/style-imports';
 import { addSourceFiles, createProject } from '~/core/discovery';
-import { findCssImports } from '~/core/defaults';
 
 const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 

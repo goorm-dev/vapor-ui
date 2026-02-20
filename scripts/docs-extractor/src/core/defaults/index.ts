@@ -1,19 +1,7 @@
-// Default Variants
-export {
-    getDefaultValuesForNamespace,
-    getRecipeNameFromVariantsType,
-    findRecipeUsageInComponent,
-    parseRecipeDefaultVariants,
-    type DefaultValues,
-} from './default-variants';
+// Default Variants (public API)
+export { getDefaultValuesForNamespace, type DefaultValues } from './default-variants';
 
-// Destructuring Defaults
-export { extractDestructuringDefaults } from './destructuring-defaults';
-
-// Style Imports
-export { findCssImports, findVariantsTypeImports, type CssImport, type VariantsTypeImport } from './style-imports';
-
-// Sprinkles Analyzer
+// Sprinkles Analyzer (public API)
 export {
     loadSprinklesMeta,
     isTokenBasedSprinklesProp,

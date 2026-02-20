@@ -7,7 +7,7 @@
 import { type Symbol, ts } from 'ts-morph';
 
 import type { SprinklesMeta } from '../defaults/sprinkles-analyzer';
-import { getSymbolSourcePath, isSymbolFromExternalSource } from '../types/declaration-source';
+import { getSymbolSourcePath, isSymbolFromExternalSource } from '../shared/declaration-source';
 import { isHtmlAttribute } from './html-attributes';
 
 export interface ExtractOptions {

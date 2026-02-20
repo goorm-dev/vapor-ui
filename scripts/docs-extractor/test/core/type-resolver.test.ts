@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { simplifyNodeModulesImports } from '~/core/types';
+import { simplifyNodeModulesImports } from '~/core/types/type-resolver';
 
 describe('simplifyNodeModulesImports', () => {
     describe('basic import path removal', () => {

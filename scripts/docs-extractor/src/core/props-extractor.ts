@@ -4,7 +4,7 @@
  * Coordinates component discovery, prop filtering, classification, and type resolution
  * to produce the final extraction result for each component in a source file.
  */
-import type { SourceFile } from 'ts-morph';
+import type { Node, SourceFile, Symbol } from 'ts-morph';
 
 import type { FilePropsResult, PropsInfo } from '~/types/props';
 
@@ -30,9 +30,36 @@ import {
     sortProps,
     toTypeArray,
 } from './props';
-import { buildBaseUiTypeMap, cleanType, resolveType } from './types';
+import { type BaseUiTypeMap, buildBaseUiTypeMap, cleanType, resolveType } from './types';
 
 export type { ExtractOptions } from './props';
+
+function resolvePropertyType(
+    symbol: Symbol,
+    declNode: Node,
+    baseUiMap: BaseUiTypeMap,
+    options: ExtractOptions,
+): string[] {
+    if (options.sprinklesMeta) {
+        const name = symbol.getName();
+        if (isSprinklesPropFromMeta(name, options.sprinklesMeta)) {
+            const displayType = getSprinklesDisplayType(name, options.sprinklesMeta);
+            if (displayType) {
+                return [displayType];
+            }
+        }
+    }
+
+    const typeResult = cleanType(
+        resolveType(
+            symbol.getTypeAtLocation(declNode),
+            baseUiMap,
+            declNode,
+            options.verbose,
+        ),
+    );
+    return toTypeArray(typeResult);
+}
 
 export function extractProps(
     sourceFile: SourceFile,
@@ -87,34 +114,7 @@ export function extractProps(
                 const name = symbol.getName();
                 const declNode = symbol.getDeclarations()[0] ?? exportedInterfaceProps;
 
-                // Use displayTypeName for sprinkles props
-                let typeArray: string[];
-                if (options.sprinklesMeta && isSprinklesPropFromMeta(name, options.sprinklesMeta)) {
-                    const displayType = getSprinklesDisplayType(name, options.sprinklesMeta);
-                    if (displayType) {
-                        typeArray = [displayType];
-                    } else {
-                        const typeResult = cleanType(
-                            resolveType(
-                                symbol.getTypeAtLocation(declNode),
-                                baseUiMap,
-                                declNode,
-                                options.verbose,
-                            ),
-                        );
-                        typeArray = toTypeArray(typeResult);
-                    }
-                } else {
-                    const typeResult = cleanType(
-                        resolveType(
-                            symbol.getTypeAtLocation(declNode),
-                            baseUiMap,
-                            declNode,
-                            options.verbose,
-                        ),
-                    );
-                    typeArray = toTypeArray(typeResult);
-                }
+                const typeArray = resolvePropertyType(symbol, declNode, baseUiMap, options);
 
                 const defaultValue = defaultValues[name] ?? getJsDocDefault(symbol);
 

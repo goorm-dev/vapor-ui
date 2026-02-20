@@ -1,142 +1,24 @@
-import meow from 'meow';
 import path from 'node:path';
 
 import { getComponentConfig, loadConfig } from '~/config';
 import type { ExtractorConfig } from '~/config';
-import { type SprinklesMeta, loadSprinklesMeta } from '~/core/defaults';
+import { loadSprinklesMeta } from '~/core/defaults';
 import { addSourceFiles, createProject } from '~/core/discovery';
-import { type ExtractOptions, extractProps } from '~/core/props-extractor';
+import { extractProps } from '~/core/props-extractor';
 import { getTargetLanguages } from '~/i18n/path-resolver';
 import { formatFileName } from '~/output/formatter';
 import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from '~/output/writer';
 
-import type { RawCliOptions } from './options.js';
+import { cli } from './cli-definition.js';
+import { buildComponentExtractOptions } from './options-builder.js';
 import { resolveOptions } from './options.js';
-
-/**
- * Build component-specific extract options based on config
- */
-function buildComponentExtractOptions(
-    baseOptions: ExtractOptions,
-    componentConfig: ExtractorConfig['components'][string] | undefined,
-    sprinklesMeta: SprinklesMeta | null,
-): ExtractOptions {
-    const options: ExtractOptions = {
-        ...baseOptions,
-        sprinklesMeta: sprinklesMeta ?? undefined,
-    };
-
-    if (!componentConfig) {
-        return options;
-    }
-
-    // sprinklesAll: include all sprinkles props
-    if (componentConfig.sprinklesAll) {
-        options.filterSprinkles = false;
-    }
-
-    // sprinkles: include specific sprinkles props
-    if (componentConfig.sprinkles?.length) {
-        options.include = [...(options.include ?? []), ...componentConfig.sprinkles];
-    }
-
-    // component-specific include
-    if (componentConfig.include?.length) {
-        options.include = [...(options.include ?? []), ...componentConfig.include];
-    }
-
-    return options;
-}
+import type { RawCliOptions } from './types.js';
 
 function logProgress(message: string, hasFileOutput: boolean) {
     if (hasFileOutput) {
         console.error(message);
     }
 }
-
-const cli = meow(
-    `
-  Usage
-    $ ts-api-extractor [path]
-
-  Options
-    --tsconfig, -c         Path to tsconfig.json (default: auto-detect)
-    --exclude, -e          Additional exclude patterns (added to defaults)
-    --no-exclude-defaults  Disable default exclude patterns (.stories.tsx, .css.ts)
-    --component, -n        Component name to process (e.g., Button, TextInput)
-    --output-dir, -d       Output directory for per-component files
-    --all, -a              Include all props (node_modules + sprinkles + html)
-    --include              Include specific props (can be used multiple times)
-    --include-html         Include specific HTML attributes (e.g., --include-html className style)
-    --config               Config file path (default: docs-extractor.config.ts)
-    --no-config            Ignore config file
-    --lang, -l             Output language (ko, en, all)
-    --verbose, -v          Enable verbose output
-
-  Examples
-    $ ts-api-extractor ./packages/core
-    $ ts-api-extractor ./packages/core --component Tabs
-    $ ts-api-extractor ./packages/core --component Tabs --output-dir ./output
-    $ ts-api-extractor ./packages/core --lang en
-    $ ts-api-extractor ./packages/core --lang all
-    $ ts-api-extractor  # Interactive mode: prompts for path and components
-`,
-    {
-        importMeta: import.meta,
-        flags: {
-            tsconfig: {
-                type: 'string',
-                shortFlag: 'c',
-            },
-            exclude: {
-                type: 'string',
-                shortFlag: 'e',
-                isMultiple: true,
-            },
-            excludeDefaults: {
-                type: 'boolean',
-                default: true,
-            },
-            component: {
-                type: 'string',
-                shortFlag: 'n',
-            },
-            outputDir: {
-                type: 'string',
-                shortFlag: 'd',
-            },
-            all: {
-                type: 'boolean',
-                shortFlag: 'a',
-                default: false,
-            },
-            include: {
-                type: 'string',
-                isMultiple: true,
-            },
-            includeHtml: {
-                type: 'string',
-                isMultiple: true,
-            },
-            config: {
-                type: 'string',
-            },
-            noConfig: {
-                type: 'boolean',
-                default: false,
-            },
-            lang: {
-                type: 'string',
-                shortFlag: 'l',
-            },
-            verbose: {
-                type: 'boolean',
-                shortFlag: 'v',
-                default: false,
-            },
-        },
-    },
-);
 
 const [inputPath] = cli.input;
 
