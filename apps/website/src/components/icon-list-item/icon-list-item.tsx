@@ -1,10 +1,9 @@
 'use client';
 
-import { type FunctionComponent, memo, useCallback, useState } from 'react';
+import { type FunctionComponent, memo, useState } from 'react';
 
 import { Text } from '@vapor-ui/core';
-import type { IconProps } from '@vapor-ui/icons';
-import { CheckCircleIcon, CopyOutlineIcon } from '@vapor-ui/icons';
+import { CheckCircleIcon, CopyOutlineIcon, type IconProps } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 export const getIconImportStatement = (iconName: string): string => {
@@ -30,7 +29,7 @@ export type IconListItemProps = {
 const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconListItemProps) {
     const [isCopied, setIsCopied] = useState(false);
 
-    const copyIconImportStatement = useCallback(async () => {
+    const copyIconImportStatement = async () => {
         const importStatement = getIconImportStatement(iconName);
         const result = await copyToClipboard(importStatement);
 
@@ -38,7 +37,7 @@ const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconLi
         if (result) {
             setTimeout(() => setIsCopied(false), 1500);
         }
-    }, [iconName]);
+    };
 
     return (
         <button
@@ -56,7 +55,7 @@ const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconLi
             aria-label={`${iconName} 아이콘 import 문 복사`}
             aria-pressed={isCopied}
         >
-            {/* 아이콘 */}
+            {/* Icon */}
             <span
                 aria-hidden="true"
                 className={clsx(
@@ -69,13 +68,13 @@ const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconLi
                 <Icon size="32" />
             </span>
 
-            {/* 아이콘 이름 */}
+            {/* Icon name */}
             <Text
                 typography="body3"
                 aria-hidden="true"
                 className={clsx(
                     'w-full text-center transition-colors duration-150 motion-reduce:transition-none',
-                    'line-clamp-2 break-all text-[11px] leading-tight',
+                    'line-clamp-2 break-all ',
                     isCopied
                         ? 'text-v-success-100'
                         : 'text-v-secondary-200 group-hover:text-v-primary-100',
@@ -84,7 +83,7 @@ const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconLi
                 {iconName}
             </Text>
 
-            {/* 복사 인디케이터 */}
+            {/* Copy indicator */}
             <span
                 aria-hidden="true"
                 className={clsx(
@@ -98,7 +97,7 @@ const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconLi
                 {isCopied ? <CheckCircleIcon size="12" /> : <CopyOutlineIcon size="12" />}
             </span>
 
-            {/* 복사됨 알림 (스크린 리더용 Live Region) */}
+            {/* Copy notification (for screen readers) */}
             <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
                 {isCopied ? `${iconName} import 문이 클립보드에 복사되었습니다` : ''}
             </span>

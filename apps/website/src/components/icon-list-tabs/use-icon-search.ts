@@ -32,7 +32,7 @@ export const useIconSearch = (icons: IconsByCategory) => {
         const fuseInstance = new Fuse(entries, {
             keys: ['name'],
             threshold: 0.3,
-            includeScore: true,
+            includeScore: false,
             ignoreLocation: true,
             minMatchCharLength: 1,
         });
@@ -51,7 +51,7 @@ export const useIconSearch = (icons: IconsByCategory) => {
             if (!filtered) return 0;
             return filtered.filter((item) => item.category === category).length;
         },
-        [filtered]
+        [filtered],
     );
 
     return {

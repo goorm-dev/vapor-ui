@@ -23,7 +23,7 @@ const CATEGORY_LABELS: Record<string, string> = {
     outline: 'Outline',
     symbol: 'Symbol',
     'symbol-black': 'Symbol Black',
-};
+} as const;
 
 // 아이콘 키 사전 계산 (rerender 시 Object.keys 호출 방지)
 const ICON_KEYS = Object.fromEntries(
@@ -35,7 +35,8 @@ const ICON_COUNTS = Object.fromEntries(
 ) as Record<(typeof ICON_LIST)[number], number>;
 
 const IconList = () => {
-    const { search, setSearch, filtered, isSearching, totalCount } = useIconSearch(VAPOR_ICONS);
+    const { search, setSearch, filtered, isSearching, totalCount, getCategoryCount } =
+        useIconSearch(VAPOR_ICONS);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     // 검색 결과를 카테고리별로 그룹화
@@ -158,7 +159,7 @@ const IconList = () => {
                     >
                         <Tabs.List>
                             {ICON_LIST.map((iconType) => {
-                                const count = groupedResults?.[iconType]?.length ?? 0;
+                                const count = getCategoryCount(iconType);
                                 return (
                                     <Tabs.Button
                                         key={iconType}
