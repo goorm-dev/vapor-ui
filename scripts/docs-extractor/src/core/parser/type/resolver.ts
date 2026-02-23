@@ -215,6 +215,27 @@ const functionTypeResolver: TypeResolverPlugin = {
         resolveFunctionType(type, baseUiMap, contextNode),
 };
 
+/**
+ * Handle union types that contain a function member, e.g. `string | ((state: State) => string)`.
+ * Each union member is resolved individually so that the function member's parameters
+ * (which may reference base-ui state types) are correctly translated.
+ */
+const unionWithFnTypeResolver: TypeResolverPlugin = {
+    name: 'union-with-fn',
+    resolve: ({ type, baseUiMap, contextNode }) => {
+        if (!type.isUnion()) return null;
+        const unionTypes = type.getUnionTypes();
+        if (!unionTypes.some((t) => t.getCallSignatures().length > 0)) return null;
+        return unionTypes
+            .map((t) => {
+                const resolved = resolveType(t, baseUiMap, contextNode);
+                // Wrap function members in parens to keep union syntax unambiguous
+                return t.getCallSignatures().length > 0 ? `(${resolved})` : resolved;
+            })
+            .join(' | ');
+    },
+};
+
 const baseUiTypeResolver: TypeResolverPlugin = {
     name: 'base-ui-type',
     resolve: ({ type, rawText, baseUiMap }) => {
@@ -244,6 +265,7 @@ const DEFAULT_RESOLVER_CHAIN: TypeResolverPlugin[] = [
     primitiveResolver,
     reactElementResolver,
     functionTypeResolver,
+    unionWithFnTypeResolver,
     baseUiTypeResolver,
     importPathResolver,
 ];
@@ -272,7 +294,20 @@ export function resolveType(
     }
 
     // Fallback: Clean up ForwardRef/ReactElement generics
-    return simplifyReactElementGeneric(simplifyForwardRefType(rawText));
+    let result = simplifyReactElementGeneric(simplifyForwardRefType(rawText));
+
+    // Replace flat base-ui type names (e.g. CollapsibleRootState) with vapor-ui paths.
+    // Handles intersection types like `CSSProperties & ((state: CollapsibleRootState) => ...)`
+    // that bypass the plugin chain but still contain base-ui state type names.
+    if (baseUiMap) {
+        for (const [key, entry] of Object.entries(baseUiMap)) {
+            if (!key.includes('.') && result.includes(key)) {
+                result = result.replace(new RegExp(`\\b${key}\\b`, 'g'), entry.vaporPath);
+            }
+        }
+    }
+
+    return result;
 }
 
 export function simplifyNodeModulesImports(typeText: string): string {
