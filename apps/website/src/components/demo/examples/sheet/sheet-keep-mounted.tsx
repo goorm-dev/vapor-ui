@@ -5,8 +5,8 @@ import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 export default function SheetKeepMounted() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     normal
                 </Text>
@@ -26,14 +26,14 @@ export default function SheetKeepMounted() {
                                 이 Sheet는 닫힐 때 DOM에서 제거됩니다. 다시 열 때마다 내용이 새로
                                 생성됩니다.
                             </Sheet.Description>
-                            <Box marginTop="$100">
+                            <Box $css={{ marginTop: '$100' }}>
                                 <TextInput placeholder="입력해보세요..." />
                             </Box>
                         </Sheet.Body>
                     </Sheet.Popup>
                 </Sheet.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     keepMounted
                 </Text>
@@ -55,7 +55,7 @@ export default function SheetKeepMounted() {
                                 이 Sheet는 닫혀도 DOM에 유지됩니다. 입력한 내용이 보존되는 것을
                                 확인해보세요.
                             </Sheet.Description>
-                            <Box marginTop="$100">
+                            <Box $css={{ marginTop: '$100' }}>
                                 <TextInput placeholder="상태 보존 테스트..." />
                             </Box>
                         </Sheet.Body>

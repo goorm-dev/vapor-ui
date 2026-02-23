@@ -3,8 +3,8 @@ import { HeartIcon } from '@vapor-ui/icons';
 
 export default function IconButtonShape() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     square
                 </Text>
@@ -12,7 +12,7 @@ export default function IconButtonShape() {
                     <HeartIcon />
                 </IconButton>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     circle
                 </Text>

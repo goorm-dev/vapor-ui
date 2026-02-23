@@ -15,7 +15,7 @@ const TOC_CONSTANTS = {
 
 interface TOCProps {
     toc?: TableOfContents;
-    containerRef: RefObject<HTMLElement>;
+    containerRef: RefObject<HTMLElement | null>;
     className?: string;
 }
 

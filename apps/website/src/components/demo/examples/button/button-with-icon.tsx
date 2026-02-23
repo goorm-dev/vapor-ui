@@ -3,7 +3,7 @@ import { CheckCircleIcon, ChevronRightOutlineIcon } from '@vapor-ui/icons';
 
 export default function ButtonWithIcon() {
     return (
-        <HStack gap="$100">
+        <HStack $css={{ gap: '$100' }}>
             <Button>
                 <CheckCircleIcon />
                 Complete

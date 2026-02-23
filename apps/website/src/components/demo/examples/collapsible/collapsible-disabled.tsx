@@ -3,8 +3,8 @@ import { ChevronRightOutlineIcon } from '@vapor-ui/icons';
 
 export default function CollapsibleDisabled() {
     return (
-        <VStack gap="$200">
-            <VStack gap="$100">
+        <VStack $css={{ gap: '$200' }}>
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     enabled
                 </Text>
@@ -25,7 +25,7 @@ export default function CollapsibleDisabled() {
                 </Collapsible.Root>
             </VStack>
 
-            <VStack gap="$100">
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     disabled
                 </Text>

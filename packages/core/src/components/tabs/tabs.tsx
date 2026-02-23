@@ -156,8 +156,10 @@ export namespace TabsRoot {
 export namespace TabsListPrimitive {
     type BaseProps = VComponentProps<typeof BaseTabs.List>;
 
-    export interface Props
-        extends Assign<BaseProps, Omit<TabsContext, 'loopFocus' | 'activateOnFocus'>> {}
+    export interface Props extends Assign<
+        BaseProps,
+        Omit<TabsContext, 'loopFocus' | 'activateOnFocus'>
+    > {}
 }
 
 export namespace TabsIndicatorPrimitive {

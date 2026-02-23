@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactElement } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
@@ -231,7 +231,7 @@ DialogFooter.displayName = 'Dialog.Footer';
 
 export namespace DialogRoot {
     type DialogPrimitiveProps = Omit<
-        VComponentProps<typeof BaseDialog.Root>,
+        ComponentPropsWithoutRef<typeof BaseDialog.Root>,
         'disablePointerDismissal'
     >;
     export interface Props extends DialogPrimitiveProps, DialogSharedProps {

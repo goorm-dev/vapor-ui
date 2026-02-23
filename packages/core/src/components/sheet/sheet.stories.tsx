@@ -22,7 +22,7 @@ export const Default: SheetStory = {
     },
     render: ({ open, defaultOpen, side, ...args }) => {
         return (
-            <VStack height="1000vh">
+            <VStack $css={{ height: '1000vh' }}>
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>
                     <Sheet.Popup
@@ -31,9 +31,12 @@ export const Default: SheetStory = {
                     >
                         <Box
                             aria-label="Close sheet"
-                            position="absolute"
-                            display="flex"
-                            style={{ top: '1rem', right: '1rem' }}
+                            $css={{
+                                position: 'absolute',
+                                display: 'flex',
+                                top: '1rem',
+                                right: '1rem',
+                            }}
                             render={<Sheet.Close />}
                         >
                             <CloseOutlineIcon />
@@ -54,9 +57,12 @@ export const Default: SheetStory = {
                     <Sheet.Popup>
                         <Box
                             aria-label="Close sheet"
-                            position="absolute"
-                            display="flex"
-                            style={{ top: '1rem', right: '1rem' }}
+                            $css={{
+                                position: 'absolute',
+                                display: 'flex',
+                                top: '1rem',
+                                right: '1rem',
+                            }}
                             render={<Sheet.Close />}
                         >
                             <CloseOutlineIcon />
@@ -86,9 +92,12 @@ export const TestBed: StoryObj<Sheet.Root.Props> = {
                     <Sheet.Popup>
                         <Box
                             aria-label="Close sheet"
-                            position="absolute"
-                            display="flex"
-                            style={{ top: '1rem', right: '1rem' }}
+                            $css={{
+                                position: 'absolute',
+                                display: 'flex',
+                                top: '1rem',
+                                right: '1rem',
+                            }}
                             render={<Sheet.Close />}
                         >
                             <CloseOutlineIcon />
