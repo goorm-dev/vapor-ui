@@ -4,7 +4,6 @@ import path from 'node:path';
 import { buildExtractOptions, config } from '~/config';
 import { findComponentFiles, findFileByComponentName } from '~/core/parser/component/scanner';
 import type { ExtractOptions } from '~/core/parser/types';
-import { findTsconfig } from '~/core/project/config';
 
 // ============================================================
 // Types
@@ -103,14 +102,7 @@ export async function resolveOptions(flags: {
     const absolutePath = resolvePath();
 
     const cwd = process.cwd();
-    const tsconfigPath = config.tsconfig
-        ? path.resolve(cwd, config.tsconfig)
-        : findTsconfig(absolutePath);
-
-    if (!tsconfigPath) {
-        throw new CliError('tsconfig.json not found');
-    }
-
+    const tsconfigPath = path.resolve(cwd, config.tsconfig);
     const scannedComponents = await scanComponents(absolutePath);
     const targetFiles = resolveComponentFiles(scannedComponents, flags.component);
 
