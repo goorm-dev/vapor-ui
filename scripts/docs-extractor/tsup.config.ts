@@ -30,9 +30,9 @@ export default defineConfig([
                 '~': path.resolve(__dirname, './src'),
             };
         },
-        entry: ['src/bin/cli.ts'],
+        entry: ['src/cli/index.ts'],
         dts: false,
-        outDir: 'dist/bin',
+        outDir: 'dist/cli',
         banner: {
             js: '#!/usr/bin/env node',
         },

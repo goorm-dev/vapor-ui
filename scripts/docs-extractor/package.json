@@ -13,17 +13,15 @@
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "bin": {
-        "ts-api-extractor": "./dist/bin/cli.js"
+        "ts-api-extractor": "./dist/cli/index.js"
     },
     "files": [
         "dist"
     ],
     "scripts": {
-        "prebuild": "tsx scripts/generate-sprinkles-meta.ts",
         "build": "tsup",
         "dev": "tsup --watch",
         "format": "prettier --write \"./**/*.{ts,md,mjs}\"",
-        "generate:sprinkles": "tsx scripts/generate-sprinkles-meta.ts",
         "lint": "eslint ./src",
         "test": "vitest",
         "test:coverage": "vitest run --coverage",
@@ -31,7 +29,6 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@inquirer/prompts": "^7.9.0",
         "glob": "^10.3.0",
         "jiti": "^2.6.1",
         "meow": "^14.0.0",

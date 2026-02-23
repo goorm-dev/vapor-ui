@@ -1,0 +1,57 @@
+/**
+ * Prop filtering module
+ *
+ * Determines which props to include/exclude from extraction output.
+ */
+import type { Symbol } from 'ts-morph';
+
+import type { ExtractOptions } from '~/core/parser/types';
+
+import {
+    isSymbolFromBaseUi,
+    isSymbolFromExternalSource,
+    isSymbolFromSprinkles,
+} from '../type/declaration-source';
+
+/**
+ * Props from base-ui that should be excluded from extraction.
+ * These are internal implementation props, not component API.
+ */
+const BASE_UI_EXCLUDED_PROPS = new Set(['className', 'render']);
+
+/**
+ * Check if prop name is an HTML attribute pattern (data-*, aria-*).
+ */
+function isHtmlAttribute(name: string): boolean {
+    return name.startsWith('data-') || name.startsWith('aria-');
+}
+
+export function isExcludedBaseUiProp(symbol: Symbol): boolean {
+    const name = symbol.getName();
+    return BASE_UI_EXCLUDED_PROPS.has(name) && isSymbolFromBaseUi(symbol);
+}
+
+export function shouldIncludeSymbol(
+    symbol: Symbol,
+    options: ExtractOptions,
+    includeSet: Set<string>,
+): boolean {
+    const name = symbol.getName();
+
+    if (includeSet.has(name)) return true;
+
+    if (options.includeHtmlWhitelist?.has(name)) return true;
+
+    // Exclude React/DOM/external library types (based on declaration source)
+    if (options.filterExternal && isSymbolFromExternalSource(symbol)) return false;
+
+    if (options.filterHtml !== false && isHtmlAttribute(name)) return false;
+
+    // Exclude sprinkles props (style props defined in sprinkles.css.ts)
+    if (options.filterSprinkles !== false && isSymbolFromSprinkles(symbol)) return false;
+
+    // Exclude internal base-ui props (className, style, render)
+    if (isExcludedBaseUiProp(symbol)) return false;
+
+    return true;
+}

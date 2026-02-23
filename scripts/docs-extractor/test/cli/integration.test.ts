@@ -3,9 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-const CLI_PATH = path.resolve(__dirname, '../../dist/bin/cli.js');
+const CLI_PATH = path.resolve(__dirname, '../../dist/cli/index.js');
 const FIXTURES_PATH = path.resolve(__dirname, '../fixtures');
 const TMP_OUTPUT_PATH = path.resolve(__dirname, '../tmp-output');
+const TEST_CONFIG_PATH = path.resolve(FIXTURES_PATH, 'test-config.ts');
 
 describe('CLI Integration', () => {
     beforeEach(() => {
@@ -34,14 +35,14 @@ describe('CLI Integration', () => {
         expect(outputFiles.length).toBeGreaterThanOrEqual(0);
     });
 
-    it('should output to correct directory with --output-dir option', () => {
+    it('should output to correct directory via config', () => {
         const fixturesComponentPath = path.join(FIXTURES_PATH, 'components');
 
         if (!fs.existsSync(fixturesComponentPath)) {
             return;
         }
 
-        execSync(`node ${CLI_PATH} ${fixturesComponentPath} --output-dir ${TMP_OUTPUT_PATH}`, {
+        execSync(`node ${CLI_PATH} ${fixturesComponentPath} --config ${TEST_CONFIG_PATH}`, {
             encoding: 'utf-8',
             cwd: path.resolve(__dirname, '../..'),
         });
@@ -58,7 +59,7 @@ describe('CLI Integration', () => {
 
         try {
             execSync(
-                `node ${CLI_PATH} ${fixturesComponentPath} --output-dir ${TMP_OUTPUT_PATH} --component TestButton`,
+                `node ${CLI_PATH} ${fixturesComponentPath} --config ${TEST_CONFIG_PATH} --component TestButton`,
                 {
                     encoding: 'utf-8',
                     cwd: path.resolve(__dirname, '../..'),
@@ -80,13 +81,10 @@ describe('CLI Integration', () => {
         }
 
         try {
-            execSync(
-                `node ${CLI_PATH} ${fixturesComponentPath} --output-dir ${TMP_OUTPUT_PATH} --no-config`,
-                {
-                    encoding: 'utf-8',
-                    cwd: path.resolve(__dirname, '../..'),
-                },
-            );
+            execSync(`node ${CLI_PATH} ${fixturesComponentPath} --no-config`, {
+                encoding: 'utf-8',
+                cwd: path.resolve(__dirname, '../..'),
+            });
         } catch {
             // May fail due to missing fixtures
         }

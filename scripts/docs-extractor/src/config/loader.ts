@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { CONFIG_FILE_NAMES, DEFAULT_CONFIG } from './defaults';
-import type { ExtractorConfig } from './schema';
+import type { ExtractorConfig, ExtractorConfigInput } from './schema';
 import { ExtractorConfigSchema } from './schema';
 
 export interface LoadConfigOptions {
@@ -65,7 +65,7 @@ export async function loadConfig(options: LoadConfigOptions = {}): Promise<LoadC
     }
 }
 
-export function defineConfig(config: Partial<ExtractorConfig>): ExtractorConfig {
+export function defineConfig(config: ExtractorConfigInput): ExtractorConfig {
     return ExtractorConfigSchema.parse(config);
 }
 

@@ -1,80 +1,47 @@
 import path from 'node:path';
 
+import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from '~/cli/writer';
 import { getComponentConfig, loadConfig } from '~/config';
-import type { ExtractorConfig } from '~/config';
-import { loadSprinklesMeta } from '~/core/defaults';
-import { addSourceFiles, createProject } from '~/core/discovery';
-import { extractProps } from '~/core/props-extractor';
-import { getTargetLanguages } from '~/i18n/path-resolver';
-import { formatFileName } from '~/output/formatter';
-import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from '~/output/writer';
+import { extractProps } from '~/core/parser/orchestrator';
+import { addSourceFiles, createProject } from '~/core/project/factory';
+import { formatFileName } from '~/core/serializer/filename';
 
-import { cli } from './cli-definition.js';
-import { buildComponentExtractOptions } from './options-builder.js';
-import { resolveOptions } from './options.js';
-import type { RawCliOptions } from './types.js';
+import { cli } from './definition.js';
+import {
+    CliError,
+    type RawCliOptions,
+    buildComponentExtractOptions,
+    resolveOptions,
+} from './options.js';
 
-function logProgress(message: string, hasFileOutput: boolean) {
-    if (hasFileOutput) {
-        console.error(message);
-    }
+function logProgress(message: string) {
+    console.error(message);
 }
 
-const [inputPath] = cli.input;
-
-export async function run() {
-    // Load configuration
-    let config: ExtractorConfig;
-    let configSource: 'file' | 'default';
-
-    try {
-        const result = await loadConfig({
-            configPath: cli.flags.config,
-            noConfig: cli.flags.noConfig,
-        });
-        config = result.config;
-        configSource = result.source;
-    } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.error(`Failed to load configuration: ${message}`);
-        process.exit(1);
-    }
+async function run() {
+    const { config, source: configSource } = await loadConfig({
+        configPath: cli.flags.config,
+        noConfig: cli.flags.noConfig,
+    });
 
     if (configSource === 'file') {
-        console.error('Using config file');
+        logProgress('Using config file');
     }
 
-    // Use config outputDir if CLI option not provided
-    const outputDir = cli.flags.outputDir ?? config.global.outputDir;
+    const [inputPath] = cli.input;
 
     const rawOptions: RawCliOptions = {
         path: inputPath,
-        tsconfig: cli.flags.tsconfig,
-        exclude: cli.flags.exclude ?? [],
-        excludeDefaults: cli.flags.excludeDefaults,
         component: cli.flags.component,
-        outputDir,
         all: cli.flags.all,
-        include: cli.flags.include,
-        includeHtml: cli.flags.includeHtml,
         config: cli.flags.config,
         noConfig: cli.flags.noConfig,
-        lang: cli.flags.lang,
         verbose: cli.flags.verbose,
     };
 
-    const resolved = await resolveOptions(rawOptions, {
-        filterSprinkles: config.global.filterSprinkles,
-    });
+    const resolved = await resolveOptions(rawOptions, config);
 
-    const hasFileOutput = resolved.outputMode.type !== 'stdout';
-
-    logProgress('Parsing components...', hasFileOutput);
-
-    // Load sprinkles metadata if available
-    const sprinklesMeta = config.sprinkles?.metaPath
-        ? loadSprinklesMeta(config.sprinkles.metaPath)
-        : null;
+    logProgress('Parsing components...');
 
     const project = createProject(resolved.tsconfigPath);
     const sourceFiles = addSourceFiles(project, resolved.targetFiles);
@@ -83,50 +50,39 @@ export async function run() {
     const results = sourceFiles.map((file, index) => {
         const filePath = file.getFilePath();
         const componentName = path.basename(filePath, '.tsx');
-        logProgress(`Processing ${componentName} (${index + 1}/${total})`, hasFileOutput);
+        logProgress(`Processing ${componentName} (${index + 1}/${total})`);
 
-        // Get component-specific config
         const componentConfig = getComponentConfig(config, filePath);
         const extractOptions = buildComponentExtractOptions(
             { ...resolved.extractOptions, verbose: resolved.verbose },
             componentConfig,
-            sprinklesMeta,
         );
 
         return extractProps(file, extractOptions);
     });
 
     const allProps = results.flatMap((r) => r.props);
-    logProgress(`Done! Extracted ${allProps.length} components.`, hasFileOutput);
+    logProgress(`Done! Extracted ${allProps.length} components.`);
 
-    if (resolved.outputMode.type === 'directory') {
-        // Determine output directory based on config and CLI options
-        const baseOutputDir = resolved.outputMode.path;
+    for (const lang of config.global.languages) {
+        const langOutputDir = path.join(resolved.outputDir, lang);
+        ensureDirectory(langOutputDir);
 
-        // Get target languages
-        const targetLanguages = getTargetLanguages(cli.flags.lang, {
-            outputDir: baseOutputDir,
-            languages: config.global.languages,
-            defaultLanguage: config.global.defaultLanguage,
-        });
+        const writtenFiles = writeMultipleFiles(allProps, langOutputDir, (prop) =>
+            formatFileName(prop.name),
+        );
 
-        // Write files for each language
-        for (const lang of targetLanguages) {
-            const langOutputDir = path.join(baseOutputDir, lang);
-            ensureDirectory(langOutputDir);
-
-            const writtenFiles = writeMultipleFiles(allProps, langOutputDir, (prop) =>
-                formatFileName(prop.name),
-            );
-
-            for (const file of writtenFiles) {
-                console.log(`Written to ${file}`);
-            }
-
-            formatWithPrettier(writtenFiles);
+        for (const file of writtenFiles) {
+            console.log(`Written to ${file}`);
         }
-    } else {
-        const output = allProps.length === 1 ? allProps[0] : allProps;
-        console.log(JSON.stringify(output, null, 2));
+
+        formatWithPrettier(writtenFiles);
     }
 }
+
+run().catch((error) => {
+    const prefix = error instanceof CliError ? 'Error' : 'Unexpected error';
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`${prefix}: ${message}`);
+    process.exit(1);
+});

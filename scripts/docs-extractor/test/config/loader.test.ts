@@ -32,13 +32,7 @@ describe('loadConfig', () => {
         expect(result.config.global.languages).toEqual(['ko']);
         expect(result.config.global.defaultLanguage).toBe('ko');
         expect(result.config.global.filterExternal).toBe(true);
-        expect(result.config.global.filterSprinkles).toBe(true);
         expect(result.config.global.filterHtml).toBe(true);
-    });
-
-    it('should have default values for sprinkles config', async () => {
-        const result = await loadConfig({ noConfig: true });
-        expect(result.config.sprinkles.metaPath).toBe('./generated/sprinkles-meta.json');
     });
 });
 
@@ -48,13 +42,13 @@ describe('getComponentConfig', () => {
             ...DEFAULT_CONFIG,
             components: {
                 'button/button.tsx': {
-                    sprinkles: ['padding', 'margin'],
+                    include: ['customProp'],
                 },
             },
         };
 
         const result = getComponentConfig(config, '/some/path/button/button.tsx');
-        expect(result).toEqual({ sprinkles: ['padding', 'margin'] });
+        expect(result).toEqual({ include: ['customProp'] });
     });
 
     it('should return undefined for non-matching paths', () => {
@@ -62,7 +56,7 @@ describe('getComponentConfig', () => {
             ...DEFAULT_CONFIG,
             components: {
                 'button/button.tsx': {
-                    sprinkles: ['padding'],
+                    include: ['padding'],
                 },
             },
         };
@@ -76,12 +70,12 @@ describe('getComponentConfig', () => {
             ...DEFAULT_CONFIG,
             components: {
                 'components/button.tsx': {
-                    sprinklesAll: true,
+                    exclude: ['internalProp'],
                 },
             },
         };
 
         const result = getComponentConfig(config, '/project/src/components/button.tsx');
-        expect(result).toEqual({ sprinklesAll: true });
+        expect(result).toEqual({ exclude: ['internalProp'] });
     });
 });

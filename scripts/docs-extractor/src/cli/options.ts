@@ -1,23 +1,108 @@
+import fs from 'node:fs';
 import path from 'node:path';
 
-import { findComponentFiles, findFileByComponentName, findTsconfig } from '~/core/discovery';
-
-import { CliError } from './errors.js';
-import { buildExtractOptions } from './options-builder.js';
-import { resolveComponentSelection, resolvePath } from './prompts.js';
-import type {
-    OutputMode,
-    RawCliOptions,
-    ResolvedCliOptions,
-    ScannedComponent,
-    ValidationResult,
-} from './types.js';
+import type { ExtractorConfig } from '~/config';
+import { findComponentFiles, findFileByComponentName } from '~/core/parser/component/scanner';
+import type { ExtractOptions } from '~/core/parser/types';
+import { findTsconfig } from '~/core/project/config';
 
 // ============================================================
-// Step 2: Directory Scan (Source of Truth)
+// Types
 // ============================================================
 
-export async function scanComponents(
+/** meow에서 파싱된 raw 옵션 */
+export interface RawCliOptions {
+    path?: string;
+    component?: string;
+    all: boolean;
+    config?: string;
+    noConfig?: boolean;
+    verbose?: boolean;
+}
+
+/** 검증 후 확정된 옵션 */
+export interface ResolvedCliOptions {
+    absolutePath: string;
+    tsconfigPath: string;
+    targetFiles: string[];
+    extractOptions: ExtractOptions;
+    outputDir: string;
+    verbose: boolean;
+}
+
+/** 스캔된 컴포넌트 파일 정보 */
+interface ScannedComponent {
+    filePath: string;
+    componentName: string;
+}
+
+// ============================================================
+// Error
+// ============================================================
+
+export class CliError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'CliError';
+    }
+}
+
+// ============================================================
+// Options Builder (Pure Functions)
+// ============================================================
+
+export function buildExtractOptions(all: boolean, config: ExtractorConfig): ExtractOptions {
+    const { global } = config;
+
+    return {
+        filterExternal: !all && global.filterExternal,
+        filterHtml: !all && global.filterHtml,
+        filterSprinkles: !all && global.filterSprinkles,
+        includeHtmlWhitelist: global.includeHtml?.length ? new Set(global.includeHtml) : undefined,
+    };
+}
+
+export function buildComponentExtractOptions(
+    baseOptions: ExtractOptions,
+    componentConfig: ExtractorConfig['components'][string] | undefined,
+): ExtractOptions {
+    if (!componentConfig) {
+        return baseOptions;
+    }
+
+    const options: ExtractOptions = { ...baseOptions };
+
+    if (componentConfig.include?.length) {
+        options.include = [...(options.include ?? []), ...componentConfig.include];
+    }
+
+    return options;
+}
+
+// ============================================================
+// Path Resolution
+// ============================================================
+
+function resolvePath(inputPath: string | undefined): string {
+    if (!inputPath) {
+        throw new CliError('Path is required. Usage: ts-api-extractor <path>');
+    }
+
+    const cwd = process.cwd();
+    const absolutePath = path.resolve(cwd, inputPath);
+
+    if (!fs.existsSync(absolutePath)) {
+        throw new CliError(`Path does not exist: ${absolutePath}`);
+    }
+
+    return absolutePath;
+}
+
+// ============================================================
+// Component Scanning & Validation
+// ============================================================
+
+async function scanComponents(
     absolutePath: string,
     options: { exclude: string[]; skipDefaultExcludes: boolean },
 ): Promise<ScannedComponent[]> {
@@ -36,79 +121,61 @@ export async function scanComponents(
     }));
 }
 
-// ============================================================
-// Validation
-// ============================================================
+function resolveComponentFiles(
+    scannedComponents: ScannedComponent[],
+    componentName: string | undefined,
+): string[] {
+    // No component specified → process all
+    if (!componentName) {
+        return scannedComponents.map((c) => c.filePath);
+    }
 
-export function validateComponent(
-    scanned: ScannedComponent[],
-    requested: string,
-): ValidationResult {
-    const available = scanned.map((c) => c.componentName);
+    // Validate specified component exists
     const file = findFileByComponentName(
-        scanned.map((c) => c.filePath),
-        requested,
+        scannedComponents.map((c) => c.filePath),
+        componentName,
     );
 
-    if (file) {
-        return { valid: true, file };
+    if (!file) {
+        const available = scannedComponents.map((c) => c.componentName).join(', ');
+        throw new CliError(`Component '${componentName}' not found.\nAvailable: ${available}`);
     }
 
-    return { valid: false, available };
+    return [file];
 }
 
 // ============================================================
-// Output Mode Resolution
+// Main Resolver
 // ============================================================
-
-function resolveOutputMode(outputDir?: string): OutputMode {
-    if (outputDir) {
-        const cwd = process.cwd();
-        return { type: 'directory', path: path.resolve(cwd, outputDir) };
-    }
-    return { type: 'stdout' };
-}
-
-// ============================================================
-// Main Orchestrator
-// ============================================================
-
-export interface ResolveOptionsConfig {
-    filterSprinkles?: boolean;
-}
 
 export async function resolveOptions(
     raw: RawCliOptions,
-    configOptions?: ResolveOptionsConfig,
+    config: ExtractorConfig,
 ): Promise<ResolvedCliOptions> {
-    // Step 1: Resolve path (CLI > prompt)
-    const absolutePath = await resolvePath(raw.path);
+    const absolutePath = resolvePath(raw.path);
 
-    // Resolve tsconfig
     const cwd = process.cwd();
-    const tsconfigPath = raw.tsconfig
-        ? path.resolve(cwd, raw.tsconfig)
+    const tsconfigPath = config.global.tsconfig
+        ? path.resolve(cwd, config.global.tsconfig)
         : findTsconfig(absolutePath);
 
     if (!tsconfigPath) {
         throw new CliError('tsconfig.json not found');
     }
 
-    // Step 2: Scan directory (Source of Truth)
     const scannedComponents = await scanComponents(absolutePath, {
-        exclude: raw.exclude,
-        skipDefaultExcludes: !raw.excludeDefaults,
+        exclude: config.global.exclude,
+        skipDefaultExcludes: !config.global.excludeDefaults,
     });
 
-    // Step 3: Resolve component selection (CLI > checkbox prompt)
-    const targetFiles = await resolveComponentSelection(scannedComponents, raw.component);
+    const targetFiles = resolveComponentFiles(scannedComponents, raw.component);
 
     return {
         absolutePath,
         tsconfigPath,
         targetFiles,
-        extractOptions: buildExtractOptions(raw, configOptions?.filterSprinkles),
-        outputMode: resolveOutputMode(raw.outputDir),
+        extractOptions: buildExtractOptions(raw.all, config),
+        outputDir: path.resolve(cwd, config.global.outputDir),
         verbose: raw.verbose ?? false,
     };
 }

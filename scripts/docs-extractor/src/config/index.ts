@@ -9,11 +9,10 @@ export {
 export {
     ExtractorConfigSchema,
     GlobalConfigSchema,
-    SprinklesConfigSchema,
     ComponentConfigSchema,
     type ExtractorConfig,
+    type ExtractorConfigInput,
     type GlobalConfig,
-    type SprinklesConfig,
     type ComponentConfig,
 } from './schema';
 export { DEFAULT_CONFIG, CONFIG_FILE_NAMES } from './defaults';
