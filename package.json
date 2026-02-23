@@ -47,8 +47,8 @@
     "devDependencies": {
         "@changesets/cli": "^2.28.1",
         "@changesets/get-github-info": "^0.7.0",
-        "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@types/node": "^22.15.4",
+        "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+        "@types/node": "^24.10.13",
         "dotenv": "^17.2.3",
         "husky": "^9.1.7",
         "lodash-es": "^4.17.21",
@@ -61,6 +61,6 @@
     },
     "packageManager": "pnpm@10.5.1",
     "engines": {
-        "node": ">=20.19"
+        "node": ">=24.13.1"
     }
 }
