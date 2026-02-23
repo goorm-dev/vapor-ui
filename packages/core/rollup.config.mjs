@@ -154,7 +154,7 @@ const identifiers = ({ hash, filePath, debugId }) => {
     const prefix = componentName === 'sprinkles' ? 'v' : componentName;
     const id = debugId ? kebabCase(debugId).replace('_', '-') : '';
 
-    return `${prefix}${id ? `-${id}` : ''}${hash}`;
+    return `${prefix}${id ? `-${id}` : ''}-${hash}`;
 };
 
 const commonPlugins = [
