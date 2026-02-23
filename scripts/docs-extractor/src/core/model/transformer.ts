@@ -41,15 +41,31 @@ function getCategory(name: string, required: boolean, source: PropSource): PropC
 // Type Normalization
 // ============================================================
 
+/**
+ * Check if a type part is simple (should be split) vs complex (keep as single string)
+ */
+function isSimpleType(part: string): boolean {
+    // String literals: "circle", 'square'
+    if (/^["'].*["']$/.test(part)) return true;
+
+    // Numbers: 123
+    if (/^\d+$/.test(part)) return true;
+
+    // Simple identifiers: circle, $primary-100, null, number, string
+    // Allows: letters, numbers, $, -, _ (no complex type chars)
+    if (/^[\w$-]+$/.test(part)) return true;
+
+    return false;
+}
+
 function parseTypeString(typeString: string): string[] {
     // Union type을 배열로 분리: "a" | "b" | "c" → ["a", "b", "c"]
     // 단순 타입은 그대로: "string" → ["string"]
 
-    // 이미 | 로 분리된 리터럴 유니온인 경우
     if (typeString.includes(' | ')) {
         const parts = typeString.split(' | ').map((s) => s.trim());
-        // 모든 part가 문자열 리터럴인 경우만 분리
-        if (parts.every((p) => /^["'].*["']$/.test(p) || /^\d+$/.test(p))) {
+        // 모든 part가 단순 타입인 경우만 분리
+        if (parts.every(isSimpleType)) {
             return parts;
         }
     }

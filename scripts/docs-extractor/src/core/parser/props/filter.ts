@@ -20,10 +20,61 @@ import {
 const BASE_UI_EXCLUDED_PROPS = new Set(['className', 'render']);
 
 /**
+ * Deprecated sprinkles CSS props defined in VComponentProps.
+ * These are declared in types.ts, not sprinkles.css.ts, so need explicit filtering.
+ */
+const DEPRECATED_CSS_PROPS = new Set([
+    '$css',
+    'position',
+    'display',
+    'alignItems',
+    'justifyContent',
+    'flexDirection',
+    'gap',
+    'alignContent',
+    'padding',
+    'paddingTop',
+    'paddingBottom',
+    'paddingLeft',
+    'paddingRight',
+    'paddingX',
+    'paddingY',
+    'margin',
+    'marginTop',
+    'marginBottom',
+    'marginLeft',
+    'marginRight',
+    'marginX',
+    'marginY',
+    'width',
+    'height',
+    'minWidth',
+    'minHeight',
+    'maxWidth',
+    'maxHeight',
+    'border',
+    'borderColor',
+    'borderRadius',
+    'backgroundColor',
+    'color',
+    'opacity',
+    'pointerEvents',
+    'overflow',
+    'textAlign',
+]);
+
+/**
  * Check if prop name is an HTML attribute pattern (data-*, aria-*).
  */
 function isHtmlAttribute(name: string): boolean {
     return name.startsWith('data-') || name.startsWith('aria-');
+}
+
+/**
+ * Check if prop is a deprecated CSS/sprinkles prop.
+ */
+function isDeprecatedCssProp(name: string): boolean {
+    return DEPRECATED_CSS_PROPS.has(name);
 }
 
 export function isExcludedBaseUiProp(symbol: Symbol): boolean {
@@ -50,7 +101,10 @@ export function shouldIncludeSymbol(
     // Exclude sprinkles props (style props defined in sprinkles.css.ts)
     if (options.filterSprinkles !== false && isSymbolFromSprinkles(symbol)) return false;
 
-    // Exclude internal base-ui props (className, style, render)
+    // Exclude deprecated CSS props ($css, margin, padding, etc.)
+    if (options.filterSprinkles !== false && isDeprecatedCssProp(name)) return false;
+
+    // Exclude internal base-ui props (className, render)
     if (isExcludedBaseUiProp(symbol)) return false;
 
     return true;

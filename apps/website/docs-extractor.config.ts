@@ -7,6 +7,5 @@ export default defineConfig({
         defaultLanguage: 'en',
         filterExternal: true,
         filterHtml: true,
-        includeHtml: ['className', 'style'],
     },
 });

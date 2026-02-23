@@ -148,4 +148,43 @@ describe('shouldIncludeSymbol', () => {
             expect(shouldIncludeSymbol(symbol, { filterSprinkles: false }, new Set())).toBe(true);
         });
     });
+
+    describe('deprecated CSS props filtering', () => {
+        it('should exclude $css prop by default', () => {
+            const symbol = createMockSymbol('$css', '/project/src/utils/types.ts');
+
+            expect(shouldIncludeSymbol(symbol, defaultOptions, new Set())).toBe(false);
+        });
+
+        it('should exclude deprecated margin prop by default', () => {
+            const symbol = createMockSymbol('margin', '/project/src/utils/types.ts');
+
+            expect(shouldIncludeSymbol(symbol, defaultOptions, new Set())).toBe(false);
+        });
+
+        it('should exclude deprecated padding prop by default', () => {
+            const symbol = createMockSymbol('padding', '/project/src/utils/types.ts');
+
+            expect(shouldIncludeSymbol(symbol, defaultOptions, new Set())).toBe(false);
+        });
+
+        it('should exclude deprecated display prop by default', () => {
+            const symbol = createMockSymbol('display', '/project/src/utils/types.ts');
+
+            expect(shouldIncludeSymbol(symbol, defaultOptions, new Set())).toBe(false);
+        });
+
+        it('should include deprecated CSS props when filterSprinkles is false', () => {
+            const symbol = createMockSymbol('margin', '/project/src/utils/types.ts');
+
+            expect(shouldIncludeSymbol(symbol, { filterSprinkles: false }, new Set())).toBe(true);
+        });
+
+        it('should include $css prop via include set', () => {
+            const symbol = createMockSymbol('$css', '/project/src/utils/types.ts');
+            const includeSet = new Set(['$css']);
+
+            expect(shouldIncludeSymbol(symbol, defaultOptions, includeSet)).toBe(true);
+        });
+    });
 });
