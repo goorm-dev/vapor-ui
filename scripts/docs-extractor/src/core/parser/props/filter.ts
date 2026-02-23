@@ -7,17 +7,7 @@ import type { Symbol } from 'ts-morph';
 
 import type { ExtractOptions } from '~/core/parser/types';
 
-import {
-    isSymbolFromBaseUi,
-    isSymbolFromExternalSource,
-    isSymbolFromSprinkles,
-} from '../type/declaration-source';
-
-/**
- * Props from base-ui that should be excluded from extraction.
- * These are internal implementation props, not component API.
- */
-const BASE_UI_EXCLUDED_PROPS = new Set(['className', 'render']);
+import { isSymbolFromExternalSource, isSymbolFromSprinkles } from '../type/declaration-source';
 
 /**
  * Deprecated sprinkles CSS props defined in VComponentProps.
@@ -77,11 +67,6 @@ function isDeprecatedCssProp(name: string): boolean {
     return DEPRECATED_CSS_PROPS.has(name);
 }
 
-export function isExcludedBaseUiProp(symbol: Symbol): boolean {
-    const name = symbol.getName();
-    return BASE_UI_EXCLUDED_PROPS.has(name) && isSymbolFromBaseUi(symbol);
-}
-
 export function shouldIncludeSymbol(
     symbol: Symbol,
     options: ExtractOptions,
@@ -103,9 +88,6 @@ export function shouldIncludeSymbol(
 
     // Exclude deprecated CSS props ($css, margin, padding, etc.)
     if (options.filterSprinkles !== false && isDeprecatedCssProp(name)) return false;
-
-    // Exclude internal base-ui props (className, render)
-    if (isExcludedBaseUiProp(symbol)) return false;
 
     return true;
 }
