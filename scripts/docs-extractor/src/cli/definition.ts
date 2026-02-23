@@ -3,7 +3,7 @@ import meow from 'meow';
 export const cli = meow(
     `
   Usage
-    $ ts-api-extractor <path>
+    $ ts-api-extractor
 
   Options
     --component, -n   Component name to process (default: all components)
@@ -11,9 +11,9 @@ export const cli = meow(
     --verbose, -v     Enable verbose output
 
   Examples
-    $ ts-api-extractor ./packages/core
-    $ ts-api-extractor ./packages/core --component Tabs
-    $ ts-api-extractor ./packages/core -n Button -a
+    $ ts-api-extractor
+    $ ts-api-extractor --component Tabs
+    $ ts-api-extractor -n Button -a
 `,
     {
         importMeta: import.meta,

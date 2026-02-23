@@ -6,6 +6,7 @@
 import type { ExtractOptions } from '~/core/parser/types';
 
 export interface ExtractorConfig {
+    inputPath: string;
     tsconfig?: string;
     exclude: string[];
     excludeDefaults: boolean;
@@ -19,6 +20,7 @@ export interface ExtractorConfig {
 }
 
 export const config: ExtractorConfig = {
+    inputPath: '../../packages/core',
     exclude: [],
     excludeDefaults: true,
     outputDir: '../../apps/website/public/components/generated',

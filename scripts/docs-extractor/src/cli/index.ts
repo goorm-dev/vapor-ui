@@ -5,18 +5,16 @@ import { extractProps } from '~/core/parser/orchestrator';
 import { addSourceFiles, createProject } from '~/core/project/factory';
 import { formatFileName } from '~/core/serializer/filename';
 
-import { cli } from './definition.js';
-import { CliError, resolveOptions } from './options.js';
-import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from './writer.js';
+import { cli } from './definition';
+import { CliError, resolveOptions } from './options';
+import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from './writer';
 
 function logProgress(message: string) {
     console.error(message);
 }
 
 async function run() {
-    const [inputPath] = cli.input;
-
-    const resolved = await resolveOptions(inputPath, {
+    const resolved = await resolveOptions({
         component: cli.flags.component,
         all: cli.flags.all,
         verbose: cli.flags.verbose,

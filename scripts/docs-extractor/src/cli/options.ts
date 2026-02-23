@@ -34,13 +34,9 @@ export class CliError extends Error {
 // Path Resolution
 // ============================================================
 
-function resolvePath(inputPath: string | undefined): string {
-    if (!inputPath) {
-        throw new CliError('Path is required. Usage: ts-api-extractor <path>');
-    }
-
+function resolvePath(): string {
     const cwd = process.cwd();
-    const absolutePath = path.resolve(cwd, inputPath);
+    const absolutePath = path.resolve(cwd, config.inputPath);
 
     if (!fs.existsSync(absolutePath)) {
         throw new CliError(`Path does not exist: ${absolutePath}`);
@@ -99,11 +95,12 @@ function resolveComponentFiles(
 // Main Resolver
 // ============================================================
 
-export async function resolveOptions(
-    inputPath: string | undefined,
-    flags: { component?: string; all: boolean; verbose: boolean },
-): Promise<ResolvedCliOptions> {
-    const absolutePath = resolvePath(inputPath);
+export async function resolveOptions(flags: {
+    component?: string;
+    all: boolean;
+    verbose: boolean;
+}): Promise<ResolvedCliOptions> {
+    const absolutePath = resolvePath();
 
     const cwd = process.cwd();
     const tsconfigPath = config.tsconfig
