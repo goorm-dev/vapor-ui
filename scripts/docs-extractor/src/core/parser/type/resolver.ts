@@ -56,7 +56,16 @@ function resolveFunctionType(
     baseUiMap?: BaseUiTypeMap,
     contextNode?: Node,
 ): string | null {
-    const callSignatures = type.getCallSignatures();
+    let callSignatures = type.getCallSignatures();
+
+    // Handle optional function types: (fn) => void | undefined (NOT string | fn)
+    if (callSignatures.length === 0 && type.isUnion()) {
+        const nonNullish = type.getUnionTypes().filter((t) => !t.isUndefined() && !t.isNull());
+        if (nonNullish.length === 1 && nonNullish[0].getCallSignatures().length > 0) {
+            callSignatures = nonNullish[0].getCallSignatures();
+        }
+    }
+
     if (callSignatures.length === 0) return null;
 
     const signature = callSignatures[0];
@@ -70,7 +79,14 @@ function resolveFunctionType(
 
         const node = declarations[0] ?? param.getValueDeclaration();
         if (!node) {
-            const paramTypeText = param.getTypeAtLocation(signature.getDeclaration()!).getText();
+            const paramType = param.getTypeAtLocation(signature.getDeclaration()!);
+
+            if (baseUiMap) {
+                const vaporPath = resolveBaseUiType(paramType, baseUiMap);
+                if (vaporPath) return `${paramName}: ${vaporPath}`;
+            }
+
+            const paramTypeText = paramType.getText();
             if (paramTypeText.includes('@base-ui')) {
                 return `${paramName}: ${extractSimplifiedTypeName(paramTypeText)}`;
             }

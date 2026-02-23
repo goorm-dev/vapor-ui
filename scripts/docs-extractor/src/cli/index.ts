@@ -1,13 +1,49 @@
+import meow from 'meow';
 import path from 'node:path';
+import { Project } from 'ts-morph';
 
 import { config, getComponentExtractOptions } from '~/config';
 import { extractProps } from '~/core/parser/orchestrator';
-import { addSourceFiles, createProject } from '~/core/project/factory';
 import { formatFileName } from '~/core/serializer/filename';
 
-import { cli } from './definition';
 import { CliError, resolveOptions } from './options';
 import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from './writer';
+
+const cli = meow(
+    `
+  Usage
+    $ ts-api-extractor
+
+  Options
+    --component, -n   Component name to process (default: all components)
+    --all, -a         Include all props (node_modules + sprinkles + html)
+    --verbose, -v     Enable verbose output
+
+  Examples
+    $ ts-api-extractor
+    $ ts-api-extractor --component Tabs
+    $ ts-api-extractor -n Button -a
+`,
+    {
+        importMeta: import.meta,
+        flags: {
+            component: {
+                type: 'string',
+                shortFlag: 'n',
+            },
+            all: {
+                type: 'boolean',
+                shortFlag: 'a',
+                default: false,
+            },
+            verbose: {
+                type: 'boolean',
+                shortFlag: 'v',
+                default: false,
+            },
+        },
+    },
+);
 
 function logProgress(message: string) {
     console.error(message);
@@ -22,14 +58,13 @@ async function run() {
 
     logProgress('Parsing components...');
 
-    const project = createProject(resolved.tsconfigPath);
-    const sourceFiles = addSourceFiles(project, resolved.targetFiles);
+    const project = new Project({ tsConfigFilePath: resolved.tsconfigPath });
+    const sourceFiles = project.addSourceFilesAtPaths(resolved.targetFiles);
 
-    const total = sourceFiles.length;
-    const results = sourceFiles.map((file, index) => {
+    const results = sourceFiles.map((file) => {
         const filePath = file.getFilePath();
         const componentName = path.basename(filePath, '.tsx');
-        logProgress(`Processing ${componentName} (${index + 1}/${total})`);
+        logProgress(`Processing ${componentName}`);
 
         const extractOptions = getComponentExtractOptions(
             { ...resolved.extractOptions, verbose: resolved.verbose },
@@ -49,10 +84,6 @@ async function run() {
         const writtenFiles = writeMultipleFiles(allProps, langOutputDir, (prop) =>
             formatFileName(prop.name),
         );
-
-        for (const file of writtenFiles) {
-            console.log(`Written to ${file}`);
-        }
 
         formatWithPrettier(writtenFiles);
     }

@@ -48,12 +48,10 @@ function resolvePath(): string {
 // Component Scanning
 // ============================================================
 
-interface ScannedComponent {
-    filePath: string;
-    componentName: string;
-}
-
-async function scanComponents(absolutePath: string): Promise<ScannedComponent[]> {
+async function resolveTargetFiles(
+    absolutePath: string,
+    componentName: string | undefined,
+): Promise<string[]> {
     const files = await findComponentFiles(absolutePath, {
         exclude: config.exclude,
         skipDefaultExcludes: !config.excludeDefaults,
@@ -63,27 +61,14 @@ async function scanComponents(absolutePath: string): Promise<ScannedComponent[]>
         throw new CliError('No .tsx files found in the specified path');
     }
 
-    return files.map((filePath) => ({
-        filePath,
-        componentName: path.basename(filePath, '.tsx'),
-    }));
-}
-
-function resolveComponentFiles(
-    scannedComponents: ScannedComponent[],
-    componentName: string | undefined,
-): string[] {
     if (!componentName) {
-        return scannedComponents.map((c) => c.filePath);
+        return files;
     }
 
-    const file = findFileByComponentName(
-        scannedComponents.map((c) => c.filePath),
-        componentName,
-    );
+    const file = findFileByComponentName(files, componentName);
 
     if (!file) {
-        const available = scannedComponents.map((c) => c.componentName).join(', ');
+        const available = files.map((f) => path.basename(f, '.tsx')).join(', ');
         throw new CliError(`Component '${componentName}' not found.\nAvailable: ${available}`);
     }
 
@@ -103,8 +88,7 @@ export async function resolveOptions(flags: {
 
     const cwd = process.cwd();
     const tsconfigPath = path.resolve(cwd, config.tsconfig);
-    const scannedComponents = await scanComponents(absolutePath);
-    const targetFiles = resolveComponentFiles(scannedComponents, flags.component);
+    const targetFiles = await resolveTargetFiles(absolutePath, flags.component);
 
     return {
         absolutePath,

@@ -83,7 +83,7 @@ function collectNestedTypes(
 // File path based cache
 interface CacheEntry {
     map: BaseUiTypeMap;
-    mtime: number;
+    lastModifiedTime: number;
 }
 
 const baseUiTypeMapCache = new Map<string, CacheEntry>();
@@ -93,9 +93,9 @@ const baseUiTypeMapCache = new Map<string, CacheEntry>();
  */
 export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
     const filePath = sourceFile.getFilePath();
-    const mtime = fs.statSync(filePath).mtimeMs;
+    const lastModifiedTime = fs.statSync(filePath).mtimeMs;
     const cached = baseUiTypeMapCache.get(filePath);
-    if (cached && cached.mtime === mtime) return cached.map;
+    if (cached && cached.lastModifiedTime === lastModifiedTime) return cached.map;
 
     const map: BaseUiTypeMap = {};
 
@@ -129,7 +129,7 @@ export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
     // Collect re-exported type aliases from namespaces
     collectNamespaceTypeAliases(sourceFile, map);
 
-    baseUiTypeMapCache.set(filePath, { map, mtime });
+    baseUiTypeMapCache.set(filePath, { map, lastModifiedTime });
     return map;
 }
 
@@ -185,6 +185,13 @@ export function collectNamespaceTypeAliases(sourceFile: SourceFile, map: BaseUiT
 
                 // Always add key by type name for fallback
                 map[`${nsName}.${aliasName}`] = { type: aliasType, vaporPath };
+
+                // Add base-ui flat symbol name (e.g. CollapsibleRootChangeEventDetails)
+                const flatName =
+                    aliasType.getSymbol()?.getName() ?? aliasType.getAliasSymbol()?.getName();
+                if (flatName && flatName !== aliasName && !map[flatName]) {
+                    map[flatName] = { type: aliasType, vaporPath };
+                }
             }
         }
     }
