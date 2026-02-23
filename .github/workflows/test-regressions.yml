@@ -31,7 +31,7 @@ jobs:
         runs-on: macos-latest
         steps:
             - name: Git clone the repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
 
             - name: Install Dependencies
               uses: ./.github/composite/install
@@ -55,7 +55,7 @@ jobs:
 
         steps:
             - name: Git clone the repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   fetch-depth: 0
 
@@ -70,7 +70,7 @@ jobs:
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               with:
                   name: blob-report-${{ matrix.shard.name }}
                   path: packages/core/blob-report
@@ -81,13 +81,13 @@ jobs:
         needs: [test]
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
 
             - name: Install Dependencies
               uses: ./.github/composite/install
 
             - name: Download blob reports from GitHub Actions Artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v7
               with:
                   path: all-blob-reports
                   pattern: blob-report-*
@@ -97,7 +97,7 @@ jobs:
               run: pnpm core exec playwright merge-reports -c ./playwright.merge.ts ../../all-blob-reports
 
             - name: Configure AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@v6
               with:
                   role-to-assume: ${{ env.AWS_IAM_ROLE_NAME }}
                   role-session-name: ${{ env.AWS_IAM_ROLE_SESSION_NAME }}

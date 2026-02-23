@@ -50,13 +50,13 @@
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/culori": "^4.0.0",
-        "@types/node": "^22.15.3",
+        "@types/node": "^24.10.13",
         "eslint": "catalog:",
         "rimraf": "^6.0.1",
         "tsup": "^8.3.6",
         "tsx": "^4.19.2",
         "typescript": "catalog:",
-        "vitest": "^3.2.4"
+        "vitest": "^4.0.18"
     },
     "publishConfig": {
         "access": "public"
