@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type { ExtractorConfig } from '~/config';
+import { buildExtractOptions, config } from '~/config';
 import { findComponentFiles, findFileByComponentName } from '~/core/parser/component/scanner';
 import type { ExtractOptions } from '~/core/parser/types';
 import { findTsconfig } from '~/core/project/config';
@@ -10,17 +10,6 @@ import { findTsconfig } from '~/core/project/config';
 // Types
 // ============================================================
 
-/** meow에서 파싱된 raw 옵션 */
-export interface RawCliOptions {
-    path?: string;
-    component?: string;
-    all: boolean;
-    config?: string;
-    noConfig?: boolean;
-    verbose?: boolean;
-}
-
-/** 검증 후 확정된 옵션 */
 export interface ResolvedCliOptions {
     absolutePath: string;
     tsconfigPath: string;
@@ -28,12 +17,6 @@ export interface ResolvedCliOptions {
     extractOptions: ExtractOptions;
     outputDir: string;
     verbose: boolean;
-}
-
-/** 스캔된 컴포넌트 파일 정보 */
-interface ScannedComponent {
-    filePath: string;
-    componentName: string;
 }
 
 // ============================================================
@@ -45,38 +28,6 @@ export class CliError extends Error {
         super(message);
         this.name = 'CliError';
     }
-}
-
-// ============================================================
-// Options Builder (Pure Functions)
-// ============================================================
-
-export function buildExtractOptions(all: boolean, config: ExtractorConfig): ExtractOptions {
-    const { global } = config;
-
-    return {
-        filterExternal: !all && global.filterExternal,
-        filterHtml: !all && global.filterHtml,
-        filterSprinkles: !all && global.filterSprinkles,
-        includeHtmlWhitelist: global.includeHtml?.length ? new Set(global.includeHtml) : undefined,
-    };
-}
-
-export function buildComponentExtractOptions(
-    baseOptions: ExtractOptions,
-    componentConfig: ExtractorConfig['components'][string] | undefined,
-): ExtractOptions {
-    if (!componentConfig) {
-        return baseOptions;
-    }
-
-    const options: ExtractOptions = { ...baseOptions };
-
-    if (componentConfig.include?.length) {
-        options.include = [...(options.include ?? []), ...componentConfig.include];
-    }
-
-    return options;
 }
 
 // ============================================================
@@ -99,16 +50,18 @@ function resolvePath(inputPath: string | undefined): string {
 }
 
 // ============================================================
-// Component Scanning & Validation
+// Component Scanning
 // ============================================================
 
-async function scanComponents(
-    absolutePath: string,
-    options: { exclude: string[]; skipDefaultExcludes: boolean },
-): Promise<ScannedComponent[]> {
+interface ScannedComponent {
+    filePath: string;
+    componentName: string;
+}
+
+async function scanComponents(absolutePath: string): Promise<ScannedComponent[]> {
     const files = await findComponentFiles(absolutePath, {
-        exclude: options.exclude,
-        skipDefaultExcludes: options.skipDefaultExcludes,
+        exclude: config.exclude,
+        skipDefaultExcludes: !config.excludeDefaults,
     });
 
     if (files.length === 0) {
@@ -125,12 +78,10 @@ function resolveComponentFiles(
     scannedComponents: ScannedComponent[],
     componentName: string | undefined,
 ): string[] {
-    // No component specified → process all
     if (!componentName) {
         return scannedComponents.map((c) => c.filePath);
     }
 
-    // Validate specified component exists
     const file = findFileByComponentName(
         scannedComponents.map((c) => c.filePath),
         componentName,
@@ -149,33 +100,29 @@ function resolveComponentFiles(
 // ============================================================
 
 export async function resolveOptions(
-    raw: RawCliOptions,
-    config: ExtractorConfig,
+    inputPath: string | undefined,
+    flags: { component?: string; all: boolean; verbose: boolean },
 ): Promise<ResolvedCliOptions> {
-    const absolutePath = resolvePath(raw.path);
+    const absolutePath = resolvePath(inputPath);
 
     const cwd = process.cwd();
-    const tsconfigPath = config.global.tsconfig
-        ? path.resolve(cwd, config.global.tsconfig)
+    const tsconfigPath = config.tsconfig
+        ? path.resolve(cwd, config.tsconfig)
         : findTsconfig(absolutePath);
 
     if (!tsconfigPath) {
         throw new CliError('tsconfig.json not found');
     }
 
-    const scannedComponents = await scanComponents(absolutePath, {
-        exclude: config.global.exclude,
-        skipDefaultExcludes: !config.global.excludeDefaults,
-    });
-
-    const targetFiles = resolveComponentFiles(scannedComponents, raw.component);
+    const scannedComponents = await scanComponents(absolutePath);
+    const targetFiles = resolveComponentFiles(scannedComponents, flags.component);
 
     return {
         absolutePath,
         tsconfigPath,
         targetFiles,
-        extractOptions: buildExtractOptions(raw.all, config),
-        outputDir: path.resolve(cwd, config.global.outputDir),
-        verbose: raw.verbose ?? false,
+        extractOptions: buildExtractOptions(flags.all),
+        outputDir: path.resolve(cwd, config.outputDir),
+        verbose: flags.verbose,
     };
 }

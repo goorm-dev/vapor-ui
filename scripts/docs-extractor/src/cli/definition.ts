@@ -8,8 +8,6 @@ export const cli = meow(
   Options
     --component, -n   Component name to process (default: all components)
     --all, -a         Include all props (node_modules + sprinkles + html)
-    --config          Config file path (default: docs-extractor.config.ts)
-    --no-config       Ignore config file
     --verbose, -v     Enable verbose output
 
   Examples
@@ -27,13 +25,6 @@ export const cli = meow(
             all: {
                 type: 'boolean',
                 shortFlag: 'a',
-                default: false,
-            },
-            config: {
-                type: 'string',
-            },
-            noConfig: {
-                type: 'boolean',
                 default: false,
             },
             verbose: {

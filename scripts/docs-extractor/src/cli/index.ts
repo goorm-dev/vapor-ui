@@ -1,45 +1,26 @@
 import path from 'node:path';
 
-import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from '~/cli/writer';
-import { getComponentConfig, loadConfig } from '~/config';
+import { config, getComponentExtractOptions } from '~/config';
 import { extractProps } from '~/core/parser/orchestrator';
 import { addSourceFiles, createProject } from '~/core/project/factory';
 import { formatFileName } from '~/core/serializer/filename';
 
 import { cli } from './definition.js';
-import {
-    CliError,
-    type RawCliOptions,
-    buildComponentExtractOptions,
-    resolveOptions,
-} from './options.js';
+import { CliError, resolveOptions } from './options.js';
+import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from './writer.js';
 
 function logProgress(message: string) {
     console.error(message);
 }
 
 async function run() {
-    const { config, source: configSource } = await loadConfig({
-        configPath: cli.flags.config,
-        noConfig: cli.flags.noConfig,
-    });
-
-    if (configSource === 'file') {
-        logProgress('Using config file');
-    }
-
     const [inputPath] = cli.input;
 
-    const rawOptions: RawCliOptions = {
-        path: inputPath,
+    const resolved = await resolveOptions(inputPath, {
         component: cli.flags.component,
         all: cli.flags.all,
-        config: cli.flags.config,
-        noConfig: cli.flags.noConfig,
         verbose: cli.flags.verbose,
-    };
-
-    const resolved = await resolveOptions(rawOptions, config);
+    });
 
     logProgress('Parsing components...');
 
@@ -52,10 +33,9 @@ async function run() {
         const componentName = path.basename(filePath, '.tsx');
         logProgress(`Processing ${componentName} (${index + 1}/${total})`);
 
-        const componentConfig = getComponentConfig(config, filePath);
-        const extractOptions = buildComponentExtractOptions(
+        const extractOptions = getComponentExtractOptions(
             { ...resolved.extractOptions, verbose: resolved.verbose },
-            componentConfig,
+            filePath,
         );
 
         return extractProps(file, extractOptions);
@@ -64,7 +44,7 @@ async function run() {
     const allProps = results.flatMap((r) => r.props);
     logProgress(`Done! Extracted ${allProps.length} components.`);
 
-    for (const lang of config.global.languages) {
+    for (const lang of config.languages) {
         const langOutputDir = path.join(resolved.outputDir, lang);
         ensureDirectory(langOutputDir);
 

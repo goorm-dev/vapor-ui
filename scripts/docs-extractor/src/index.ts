@@ -5,5 +5,4 @@
  * Primary usage is via CLI: `ts-api-extractor <path>`
  */
 
-// Configuration (for docs-extractor.config.ts)
-export { defineConfig, type ExtractorConfig } from './config';
+export { config, type ExtractorConfig } from './config';
