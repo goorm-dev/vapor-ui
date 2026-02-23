@@ -58,8 +58,8 @@
         "eslint": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
-        "rimraf": "^6.0.1",
-        "tsup": "^8.4.0",
+        "rimraf": "^6.1.3",
+        "tsup": "^8.5.1",
         "typescript": "catalog:"
     },
     "peerDependencies": {
