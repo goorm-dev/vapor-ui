@@ -7,9 +7,6 @@ import { Badge, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 
 import { InfoPopover } from '~/components/info';
 
-// TODO: When i18n routing is implemented, derive language from URL path or context
-const DEFAULT_LANGUAGE = 'en';
-
 interface PropDefinition {
     name: string;
     type: string | string[];
@@ -39,9 +36,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
     React.useEffect(() => {
         const loadComponentData = async () => {
             try {
-                const response = await fetch(
-                    `/components/generated/${DEFAULT_LANGUAGE}/${componentName}.json`,
-                );
+                const response = await fetch(`/components/generated/${componentName}.json`);
                 if (!response.ok) {
                     throw new Error(`Failed to load component data for ${componentName}`);
                 }
