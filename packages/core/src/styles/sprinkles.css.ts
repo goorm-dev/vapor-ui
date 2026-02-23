@@ -510,7 +510,7 @@ const sprinkleProperties = defineProperties({
         maskType: true,
 
         // CSS Miscellaneous
-        all: true, // avoid!
+        // all: true, // avoid!
         textRendering: true,
 
         // CSS Motion Path
