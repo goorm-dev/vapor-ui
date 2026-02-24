@@ -22,6 +22,7 @@ export default defineConfig({
                 'src/cli/**',
                 'src/output/writer.ts',
                 'src/types/**',
+                'src/**/types.ts',
             ],
 
             thresholds: {

@@ -25,7 +25,7 @@ export const config: ExtractorConfig = {
     exclude: [],
     excludeDefaults: true,
     outputDir: '../../apps/website/public/components/generated',
-    languages: ['ko', 'en'],
+    languages: ['en'],
     filterExternal: true,
     filterHtml: true,
     filterSprinkles: true,
