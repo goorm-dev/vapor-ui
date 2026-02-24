@@ -7,7 +7,7 @@ import { type Node, type Type, TypeFormatFlags } from 'ts-morph';
 
 import type { BaseUiTypeMap } from '~/core/parser/types';
 
-import { extractSimplifiedTypeName, resolveBaseUiType } from './base-ui-mapper';
+import { resolveBaseUiType } from './base-ui-mapper';
 
 /**
  * TypeFormatFlags combination
@@ -82,42 +82,19 @@ function resolveFunctionType(
             const paramType = param.getTypeAtLocation(signature.getDeclaration()!);
 
             if (baseUiMap) {
-                const vaporPath = resolveBaseUiType(paramType, baseUiMap);
+                const vaporPath = resolveMappedBaseUiType(paramType, baseUiMap);
                 if (vaporPath) return `${paramName}: ${vaporPath}`;
             }
 
-            const paramTypeText = paramType.getText();
-            if (paramTypeText.includes('@base-ui')) {
-                return `${paramName}: ${extractSimplifiedTypeName(paramTypeText)}`;
-            }
-            return `${paramName}: ${paramTypeText}`;
+            return `${paramName}: ${paramType.getText()}`;
         }
 
         const paramType = param.getTypeAtLocation(node);
 
-        // Check if base-ui type using AST
         if (baseUiMap) {
-            const vaporPath = resolveBaseUiType(paramType, baseUiMap);
+            const vaporPath = resolveMappedBaseUiType(paramType, baseUiMap);
             if (vaporPath) {
                 return `${paramName}: ${vaporPath}`;
-            }
-        }
-
-        // Try mapping from parameter declaration if no alias
-        if (baseUiMap && !paramType.getAliasSymbol()) {
-            const paramDecls = param.getDeclarations();
-            if (paramDecls.length > 0) {
-                const declText = paramDecls[0].getText();
-                const typeMatch = declText.match(/:\s*(\w+)$/);
-                if (typeMatch) {
-                    const typeName = typeMatch[1];
-                    const matchingKey = Object.keys(baseUiMap).find((key) =>
-                        key.endsWith(`.${typeName}`),
-                    );
-                    if (matchingKey) {
-                        return `${paramName}: ${baseUiMap[matchingKey].vaporPath}`;
-                    }
-                }
             }
         }
 
@@ -238,13 +215,9 @@ const unionWithFnTypeResolver: TypeResolverPlugin = {
 
 const baseUiTypeResolver: TypeResolverPlugin = {
     name: 'base-ui-type',
-    resolve: ({ type, rawText, baseUiMap }) => {
-        if (!rawText.includes('@base-ui')) return null;
-        if (baseUiMap) {
-            const vaporPath = resolveBaseUiType(type, baseUiMap);
-            if (vaporPath) return vaporPath;
-        }
-        return simplifyNodeModulesImports(rawText);
+    resolve: ({ type, baseUiMap }) => {
+        if (!baseUiMap) return null;
+        return resolveMappedBaseUiType(type, baseUiMap);
     },
 };
 
@@ -270,6 +243,22 @@ const DEFAULT_RESOLVER_CHAIN: TypeResolverPlugin[] = [
     importPathResolver,
 ];
 
+function resolveMappedBaseUiType(type: Type, baseUiMap: BaseUiTypeMap): string | null {
+    const directPath = resolveBaseUiType(type, baseUiMap);
+    if (directPath) return directPath;
+
+    for (const symbol of [type.getSymbol(), type.getAliasSymbol()]) {
+        if (!symbol) continue;
+
+        const symbolName = symbol.getName();
+        if (baseUiMap[symbolName]) {
+            return baseUiMap[symbolName].vaporPath;
+        }
+    }
+
+    return null;
+}
+
 export function resolveType(
     type: Type,
     baseUiMap?: BaseUiTypeMap,
@@ -294,18 +283,7 @@ export function resolveType(
     }
 
     // Fallback: Clean up ForwardRef/ReactElement generics
-    let result = simplifyReactElementGeneric(simplifyForwardRefType(rawText));
-
-    // Replace flat base-ui type names (e.g. CollapsibleRootState) with vapor-ui paths.
-    // Handles intersection types like `CSSProperties & ((state: CollapsibleRootState) => ...)`
-    // that bypass the plugin chain but still contain base-ui state type names.
-    if (baseUiMap) {
-        for (const [key, entry] of Object.entries(baseUiMap)) {
-            if (!key.includes('.') && result.includes(key)) {
-                result = result.replace(new RegExp(`\\b${key}\\b`, 'g'), entry.vaporPath);
-            }
-        }
-    }
+    const result = simplifyReactElementGeneric(simplifyForwardRefType(rawText));
 
     return result;
 }

@@ -8,15 +8,8 @@
  * we scan vapor-ui's own namespace type aliases instead, which explicitly re-declare
  * base-ui types (e.g. `type State = BaseCollapsible.Root.State`).
  */
-import fs from 'node:fs';
 import path from 'node:path';
-import {
-    type ModuleDeclaration,
-    type SourceFile,
-    SyntaxKind,
-    type Type,
-    type TypeAliasDeclaration,
-} from 'ts-morph';
+import { type SourceFile, SyntaxKind, type Type, type TypeAliasDeclaration } from 'ts-morph';
 
 import type { BaseUiTypeMap } from '~/core/parser/types';
 
@@ -27,6 +20,11 @@ function getBaseUiQualifiedPath(type: Type): string | null {
     for (const symbol of [type.getSymbol(), type.getAliasSymbol()]) {
         if (!symbol) continue;
 
+        const hasBaseUiDeclaration = symbol
+            .getDeclarations()
+            .some((decl) => decl.getSourceFile().getFilePath().includes('@base-ui'));
+        if (!hasBaseUiDeclaration) continue;
+
         const fqn = symbol.getFullyQualifiedName();
 
         // FQN format: "module/path".Namespace.Type
@@ -34,10 +32,6 @@ function getBaseUiQualifiedPath(type: Type): string | null {
 
         const closingQuote = fqn.indexOf('"', 1);
         if (closingQuote === -1) continue;
-
-        // Only process types declared in @base-ui module
-        const modulePath = fqn.substring(1, closingQuote);
-        if (!modulePath.includes('@base-ui')) continue;
 
         // "module/path".Namespace.Type → Namespace.Type
         if (closingQuote + 2 > fqn.length) continue;
@@ -47,27 +41,26 @@ function getBaseUiQualifiedPath(type: Type): string | null {
     return null;
 }
 
+function isDeclaredInBaseUi(type: Type): boolean {
+    const symbol = type.getSymbol() ?? type.getAliasSymbol();
+    if (symbol) {
+        for (const decl of symbol.getDeclarations()) {
+            if (decl.getSourceFile().getFilePath().includes('@base-ui')) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 /**
  * Check if type alias references @base-ui package type.
  */
 function isBaseUiTypeAlias(typeAlias: TypeAliasDeclaration): boolean {
     const aliasType = typeAlias.getType();
 
-    const symbol = aliasType.getSymbol() ?? aliasType.getAliasSymbol();
-    if (symbol) {
-        for (const decl of symbol.getDeclarations()) {
-            if (decl.getSourceFile().getFilePath().includes('@base-ui')) return true;
-        }
-    }
-
-    if (aliasType.isUnion()) {
-        return aliasType.getUnionTypes().some((t) => t.getText().includes('@base-ui'));
-    }
-    if (aliasType.isIntersection()) {
-        return aliasType.getIntersectionTypes().some((t) => t.getText().includes('@base-ui'));
-    }
-
-    return false;
+    return isDeclaredInBaseUi(aliasType);
 }
 
 // ============================================================
@@ -117,71 +110,6 @@ function buildBarrelNameMap(sourceFile: SourceFile): Record<string, string> {
     return nameMap;
 }
 
-/**
- * Find common component prefix from namespace list.
- * Fallback heuristic when barrel files are absent.
- */
-function findComponentPrefix(namespaces: ModuleDeclaration[]): string | null {
-    const nsNames = namespaces.map((ns) => ns.getName());
-    if (nsNames.length < 2) return null;
-
-    // Extract prefix from shortest *Root namespace
-    const rootNames = nsNames.filter((n) => n.endsWith('Root'));
-    if (rootNames.length > 0) {
-        rootNames.sort((a, b) => a.length - b.length);
-        return rootNames[0].slice(0, -'Root'.length);
-    }
-
-    // Common prefix (for cases without Root)
-    const pascalNames = nsNames.filter((n) => /^[A-Z]/.test(n));
-    if (pascalNames.length < 2) return null;
-
-    const sorted = [...pascalNames].sort();
-    const first = sorted[0];
-    const last = sorted[sorted.length - 1];
-
-    let commonLen = 0;
-    while (
-        commonLen < first.length &&
-        commonLen < last.length &&
-        first[commonLen] === last[commonLen]
-    ) {
-        commonLen++;
-    }
-
-    if (commonLen <= 1) return null;
-
-    const prefix = first.substring(0, commonLen);
-    const allValidBoundary = sorted.every(
-        (name) =>
-            name.length === prefix.length ||
-            (name.length > prefix.length &&
-                name[prefix.length] >= 'A' &&
-                name[prefix.length] <= 'Z'),
-    );
-
-    return allValidBoundary ? prefix : null;
-}
-
-/**
- * Convert internal namespace name to public vapor-ui path.
- */
-function formatVaporTypePath(
-    nsName: string,
-    typeName: string,
-    componentPrefix: string | null,
-): string {
-    if (
-        componentPrefix &&
-        nsName.startsWith(componentPrefix) &&
-        nsName.length > componentPrefix.length
-    ) {
-        const partName = nsName.slice(componentPrefix.length);
-        return `${componentPrefix}.${partName}.${typeName}`;
-    }
-    return `${nsName}.${typeName}`;
-}
-
 // ============================================================
 // Namespace type alias collection
 // ============================================================
@@ -190,8 +118,8 @@ function formatVaporTypePath(
  * Collect exported type aliases from vapor-ui namespaces and add to base-ui type map.
  *
  * Scans vapor-ui's own namespace declarations (e.g. `namespace CollapsibleRoot`)
- * for type aliases that reference @base-ui types. Uses barrelNameMap for accurate
- * public path computation, falling back to prefix heuristic when barrel files are absent.
+ * for type aliases that reference @base-ui types. Uses barrelNameMap as the
+ * authoritative source of public name mapping.
  */
 function collectNamespaceTypeAliases(
     sourceFile: SourceFile,
@@ -202,11 +130,11 @@ function collectNamespaceTypeAliases(
         .getDescendantsOfKind(SyntaxKind.ModuleDeclaration)
         .filter((mod) => mod.isExported());
 
-    const componentPrefix =
-        Object.keys(barrelNameMap).length === 0 ? findComponentPrefix(namespaces) : null;
-
     for (const ns of namespaces) {
         const nsName = ns.getName();
+        const publicNsPath = barrelNameMap[nsName];
+        if (!publicNsPath) continue;
+
         const typeAliases = ns.getTypeAliases().filter((ta) => ta.isExported());
 
         for (const typeAlias of typeAliases) {
@@ -217,10 +145,7 @@ function collectNamespaceTypeAliases(
             const isBaseUiAlias = !normalizedPath && isBaseUiTypeAlias(typeAlias);
 
             if (normalizedPath || isBaseUiAlias) {
-                const publicNsPath = barrelNameMap[nsName];
-                const vaporPath = publicNsPath
-                    ? `${publicNsPath}.${aliasName}`
-                    : formatVaporTypePath(nsName, aliasName, componentPrefix);
+                const vaporPath = `${publicNsPath}.${aliasName}`;
 
                 if (normalizedPath) {
                     map[normalizedPath] = { type: aliasType, vaporPath };
@@ -244,14 +169,6 @@ function collectNamespaceTypeAliases(
 // Public API
 // ============================================================
 
-// File path based cache
-interface CacheEntry {
-    map: BaseUiTypeMap;
-    lastModifiedTime: number;
-}
-
-const baseUiTypeMapCache = new Map<string, CacheEntry>();
-
 /**
  * Build type map from base-ui imports in source file.
  *
@@ -259,17 +176,11 @@ const baseUiTypeMapCache = new Map<string, CacheEntry>();
  * mapping them to public vapor-ui paths using barrel file resolution.
  */
 export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
-    const filePath = sourceFile.getFilePath();
-    const lastModifiedTime = fs.statSync(filePath).mtimeMs;
-    const cached = baseUiTypeMapCache.get(filePath);
-    if (cached && cached.lastModifiedTime === lastModifiedTime) return cached.map;
-
     const map: BaseUiTypeMap = {};
 
     const barrelNameMap = buildBarrelNameMap(sourceFile);
     collectNamespaceTypeAliases(sourceFile, map, barrelNameMap);
 
-    baseUiTypeMapCache.set(filePath, { map, lastModifiedTime });
     return map;
 }
 
@@ -281,12 +192,4 @@ export function resolveBaseUiType(type: Type, map: BaseUiTypeMap): string | null
     if (!normalizedPath) return null;
 
     return map[normalizedPath]?.vaporPath ?? null;
-}
-
-/**
- * Fallback: Extract last type name from base-ui type path.
- */
-export function extractSimplifiedTypeName(typeText: string): string {
-    const match = typeText.match(/\.(\w+)$/);
-    return match ? match[1] : typeText;
 }
