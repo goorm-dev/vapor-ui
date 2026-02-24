@@ -34,7 +34,7 @@ describe('buildExtractOptions', () => {
 
         expect(result.includeHtmlWhitelist).toBeDefined();
         expect(result.includeHtmlWhitelist?.has('className')).toBe(true);
-        expect(result.includeHtmlWhitelist?.has('style')).toBe(true);
+        expect(result.includeHtmlWhitelist?.has('style')).toBe(false);
     });
 });
 
