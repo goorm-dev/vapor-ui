@@ -1,19 +1,21 @@
 /**
- * Model Transformer - Raw → Domain Model 변환
+ * Model transformer: Parsed → Domain Model
  *
- * Parser에서 추출한 Raw 데이터를 정규화된 도메인 모델로 변환합니다.
- * 분류, 정렬, validation 등의 비즈니스 로직이 여기서 적용됩니다.
+ * Converts parser output into normalized domain models.
+ * Classification, sorting, and related domain rules are applied here.
  */
 import { CATEGORY_ORDER, COMPOSITION_PROPS, STATE_PROP_PATTERNS } from '~/core/model/constants';
-import type { RawComponent, RawProp } from '~/core/parser/types';
+import type { ParsedComponent, ParsedProp } from '~/core/parser/types';
 
-import type { ComponentModel, PropCategory, PropModel, PropSource } from './types';
+import type { ComponentModel, PropCategory, PropModel } from './types';
 
 // ============================================================
 // Source & Category Classification
 // ============================================================
 
-function getSourceFromPath(filePath?: string): PropSource {
+type SourceKind = 'base-ui' | 'custom' | 'variants';
+
+function getSourceFromPath(filePath?: string): SourceKind {
     if (!filePath) return 'custom';
     if (filePath.includes('@base-ui')) return 'base-ui';
     if (filePath.endsWith('.css.ts')) return 'variants';
@@ -28,7 +30,7 @@ function isCompositionProp(name: string): boolean {
     return COMPOSITION_PROPS.has(name);
 }
 
-function getCategory(name: string, required: boolean, source: PropSource): PropCategory {
+function getCategory(name: string, required: boolean, source: SourceKind): PropCategory {
     if (required) return 'required';
     if (isCompositionProp(name)) return 'composition';
     if (source === 'variants') return 'variants';
@@ -77,29 +79,28 @@ function parseTypeString(typeString: string): string[] {
 // Transformers
 // ============================================================
 
-export function rawPropToModel(raw: RawProp): PropModel {
-    const source = getSourceFromPath(raw.declarationFilePath);
-    const required = !raw.isOptional;
+export function parsedPropToModel(parsedProp: ParsedProp): PropModel {
+    const source = getSourceFromPath(parsedProp.declarationFilePath);
+    const required = !parsedProp.isOptional;
 
     return {
-        name: raw.name,
-        types: parseTypeString(raw.typeString),
+        name: parsedProp.name,
+        types: parseTypeString(parsedProp.typeString),
         required,
-        description: raw.description,
-        defaultValue: raw.defaultValue,
-        source,
-        category: getCategory(raw.name, required, source),
+        description: parsedProp.description,
+        defaultValue: parsedProp.defaultValue,
+        category: getCategory(parsedProp.name, required, source),
     };
 }
 
-export function rawComponentToModel(raw: RawComponent): ComponentModel {
-    const propModels = raw.props.map(rawPropToModel);
+export function parsedComponentToModel(parsedComponent: ParsedComponent): ComponentModel {
+    const propModels = parsedComponent.props.map(parsedPropToModel);
     const sortedProps = sortPropModels(propModels);
 
     return {
-        name: raw.name,
-        displayName: raw.name,
-        description: raw.description,
+        name: parsedComponent.name,
+        displayName: parsedComponent.name,
+        description: parsedComponent.description,
         props: sortedProps,
     };
 }

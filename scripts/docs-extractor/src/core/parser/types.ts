@@ -1,7 +1,7 @@
 /**
  * Parser Layer Types
  *
- * Parser에서 사용하는 입력/출력 타입들입니다.
+ * Input and output types used by the parser layer.
  */
 import type { Type } from 'ts-morph';
 
@@ -10,7 +10,7 @@ import type { Type } from 'ts-morph';
 // ============================================================
 
 /**
- * Props 추출 옵션
+ * Props extraction options.
  */
 export interface ExtractOptions {
     filterExternal?: boolean;
@@ -22,7 +22,7 @@ export interface ExtractOptions {
 }
 
 /**
- * Base-UI 타입 엔트리 - vapor-ui 경로 매핑 정보
+ * Base-UI type entry with vapor-ui path mapping info.
  */
 export interface BaseUiTypeEntry {
     type: Type;
@@ -30,20 +30,20 @@ export interface BaseUiTypeEntry {
 }
 
 /**
- * Base-UI 타입 맵 - normalized path를 키로 사용
+ * Base-UI type map keyed by normalized paths.
  */
 export interface BaseUiTypeMap {
     [normalizedPath: string]: BaseUiTypeEntry;
 }
 
 // ============================================================
-// Parser Output Types (Raw)
+// Parser Output Types (Parsed)
 // ============================================================
 
 /**
- * AST Symbol에서 추출한 raw prop 정보
+ * Parsed prop data extracted from AST symbols.
  */
-export interface RawProp {
+export interface ParsedProp {
     name: string;
     typeString: string;
     isOptional: boolean;
@@ -53,18 +53,18 @@ export interface RawProp {
 }
 
 /**
- * Namespace에서 추출한 raw 컴포넌트 정보
+ * Parsed component data extracted from a namespace.
  */
-export interface RawComponent {
+export interface ParsedComponent {
     name: string;
     description?: string;
-    props: RawProp[];
+    props: ParsedProp[];
 }
 
 /**
- * 파일에서 추출한 raw 결과
+ * Parsed result for a file.
  */
-export interface RawFileResult {
+export interface ParsedFileResult {
     filePath: string;
-    components: RawComponent[];
+    components: ParsedComponent[];
 }

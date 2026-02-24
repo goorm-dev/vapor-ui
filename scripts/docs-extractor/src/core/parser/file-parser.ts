@@ -2,13 +2,13 @@
  * Props extraction orchestrator
  *
  * Coordinates the 3-layer architecture:
- * 1. Parser: AST → RawComponent[]
- * 2. Model: RawComponent[] → ComponentModel[]
+ * 1. Parser: AST → ParsedComponent[]
+ * 2. Model: ParsedComponent[] → ComponentModel[]
  * 3. Serializer: ComponentModel[] → PropsInfoJson[]
  */
 import type { ModuleDeclaration, Node, SourceFile, Symbol } from 'ts-morph';
 
-import { rawComponentToModel } from '~/core/model/transformer';
+import { parsedComponentToModel } from '~/core/model/transformer';
 import type { ComponentModel } from '~/core/model/types';
 import type { BaseUiTypeMap } from '~/core/parser/types';
 import type { ExtractOptions } from '~/core/parser/types';
@@ -24,25 +24,25 @@ import { buildBaseUiTypeMap } from './type/base-ui-mapper';
 import { cleanType } from './type/cleaner';
 import { getSymbolSourcePath } from './type/declaration-source';
 import { resolveType } from './type/resolver';
-import type { RawComponent, RawProp } from './types';
+import type { ParsedComponent, ParsedProp } from './types';
 
 // ============================================================
-// Parser Layer: AST → Raw
+// Parser Layer: AST → Parsed
 // ============================================================
 
-function extractRawProp(
+function extractParsedProp(
     symbol: Symbol,
     declNode: Node,
     baseUiMap: BaseUiTypeMap,
     defaultValues: Record<string, string>,
     verbose?: boolean,
-): RawProp {
+): ParsedProp {
     const name = symbol.getName();
     const typeResult = cleanType(
         resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode, verbose),
     );
 
-    // Type array를 문자열로 (Model에서 다시 파싱)
+    // Convert type arrays to a string (re-parsed in the model layer).
     const typeString =
         typeResult.values && typeResult.values.length > 0
             ? typeResult.values.join(' | ')
@@ -58,13 +58,13 @@ function extractRawProp(
     };
 }
 
-function extractRawComponent(
+function extractParsedComponent(
     sourceFile: SourceFile,
     namespace: ModuleDeclaration,
     baseUiMap: BaseUiTypeMap,
     options: ExtractOptions,
     includeSet: Set<string>,
-): RawComponent | null {
+): ParsedComponent | null {
     const namespaceName = namespace.getName();
 
     const exportedInterfaceProps = findExportedInterfaceProps(namespace);
@@ -89,9 +89,9 @@ function extractRawComponent(
         );
     }
 
-    const props: RawProp[] = filteredSymbols.map((symbol) => {
+    const props: ParsedProp[] = filteredSymbols.map((symbol) => {
         const declNode = symbol.getDeclarations()[0] ?? exportedInterfaceProps;
-        return extractRawProp(symbol, declNode, baseUiMap, defaultValues, options.verbose);
+        return extractParsedProp(symbol, declNode, baseUiMap, defaultValues, options.verbose);
     });
 
     return {
@@ -101,10 +101,10 @@ function extractRawComponent(
     };
 }
 
-function parseFile(sourceFile: SourceFile, options: ExtractOptions): RawComponent[] {
+function parseFile(sourceFile: SourceFile, options: ExtractOptions): ParsedComponent[] {
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
     const namespaces = getExportedNamespaces(sourceFile);
-    const rawComponents: RawComponent[] = [];
+    const parsedComponents: ParsedComponent[] = [];
     const includeSet = new Set(options.include ?? []);
 
     if (options.verbose) {
@@ -115,8 +115,14 @@ function parseFile(sourceFile: SourceFile, options: ExtractOptions): RawComponen
 
     for (const namespace of namespaces) {
         try {
-            const raw = extractRawComponent(sourceFile, namespace, baseUiMap, options, includeSet);
-            if (raw) rawComponents.push(raw);
+            const parsed = extractParsedComponent(
+                sourceFile,
+                namespace,
+                baseUiMap,
+                options,
+                includeSet,
+            );
+            if (parsed) parsedComponents.push(parsed);
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             console.warn(
@@ -125,7 +131,7 @@ function parseFile(sourceFile: SourceFile, options: ExtractOptions): RawComponen
         }
     }
 
-    return rawComponents;
+    return parsedComponents;
 }
 
 // ============================================================
@@ -133,8 +139,8 @@ function parseFile(sourceFile: SourceFile, options: ExtractOptions): RawComponen
 // ============================================================
 
 export interface ExtractResult {
-    /** Raw parser output */
-    raw: RawComponent[];
+    /** Parsed parser output */
+    parsed: ParsedComponent[];
     /** Domain models */
     models: ComponentModel[];
     /** JSON-ready output */
@@ -145,16 +151,16 @@ export interface ExtractResult {
  * Extract props from a source file through the 3-layer pipeline
  */
 export function extractProps(sourceFile: SourceFile, options: ExtractOptions = {}): ExtractResult {
-    // Layer 1: Parser (AST → Raw)
-    const raw = parseFile(sourceFile, options);
+    // Layer 1: Parser (AST → Parsed)
+    const parsed = parseFile(sourceFile, options);
 
-    // Layer 2: Model (Raw → Domain)
-    const models = raw.map(rawComponentToModel);
+    // Layer 2: Model (Parsed → Domain)
+    const models = parsed.map(parsedComponentToModel);
 
     // Layer 3: Serializer (Domain → JSON)
     const props = models.map(componentModelToJson);
 
-    return { raw, models, props };
+    return { parsed, models, props };
 }
 
 /**

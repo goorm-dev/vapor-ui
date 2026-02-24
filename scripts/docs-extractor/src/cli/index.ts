@@ -3,7 +3,7 @@ import path from 'node:path';
 import { Project } from 'ts-morph';
 
 import { config, getComponentExtractOptions } from '~/config';
-import { extractProps } from '~/core/parser/orchestrator';
+import { extractProps } from '~/core/parser/file-parser';
 import { formatFileName } from '~/core/serializer/filename';
 
 import { CliError, resolveOptions } from './options';
