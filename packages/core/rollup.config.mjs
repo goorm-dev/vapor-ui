@@ -165,8 +165,6 @@ const identifiers = ({ hash, filePath, debugId }) => {
     const cleanId = debugId ? debugId.replace('-default', '').replace('_', '-') : '';
     const id = kebabCase(cleanId);
 
-    console.log(id);
-
     return `${prefix}${id ? `-${id}` : ''}-${hash}`;
 };
 
