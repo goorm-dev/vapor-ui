@@ -34,7 +34,7 @@
         "fumadocs-mdx": "11.10.1",
         "fumadocs-typescript": "4.0.8",
         "fumadocs-ui": "15.7.13",
-        "lodash-es": "^4.17.21",
+        "lodash-es": "^4.17.23",
         "markdown-table": "^3.0.4",
         "next": "15.5.9",
         "react": "catalog:",
