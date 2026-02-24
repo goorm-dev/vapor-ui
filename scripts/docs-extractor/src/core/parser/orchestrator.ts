@@ -6,7 +6,7 @@
  * 2. Model: RawComponent[] → ComponentModel[]
  * 3. Serializer: ComponentModel[] → PropsInfoJson[]
  */
-import type { Node, SourceFile, Symbol } from 'ts-morph';
+import type { ModuleDeclaration, Node, SourceFile, Symbol } from 'ts-morph';
 
 import { rawComponentToModel } from '~/core/model/transformer';
 import type { ComponentModel } from '~/core/model/types';
@@ -60,27 +60,24 @@ function extractRawProp(
 
 function extractRawComponent(
     sourceFile: SourceFile,
-    namespaceName: string,
+    namespace: ModuleDeclaration,
     baseUiMap: BaseUiTypeMap,
     options: ExtractOptions,
+    includeSet: Set<string>,
 ): RawComponent | null {
-    const namespace = getExportedNamespaces(sourceFile).find(
-        (ns) => ns.getName() === namespaceName,
-    );
-    if (!namespace) return null;
+    const namespaceName = namespace.getName();
 
     const exportedInterfaceProps = findExportedInterfaceProps(namespace);
     if (!exportedInterfaceProps) return null;
 
     const allSymbols = exportedInterfaceProps.getType().getProperties();
-    const declaredPropNames = new Set(allSymbols.map((s) => s.getName()));
+    const declaredPropNames = new Set(allSymbols.map((symbol) => symbol.getName()));
 
     const defaultValues = getDefaultValuesForNamespace(
         sourceFile,
         namespaceName,
         declaredPropNames,
     );
-    const includeSet = new Set(options.include ?? []);
 
     const filteredSymbols = allSymbols.filter((symbol) =>
         shouldIncludeSymbol(symbol, options, includeSet),
@@ -108,6 +105,7 @@ function parseFile(sourceFile: SourceFile, options: ExtractOptions): RawComponen
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
     const namespaces = getExportedNamespaces(sourceFile);
     const rawComponents: RawComponent[] = [];
+    const includeSet = new Set(options.include ?? []);
 
     if (options.verbose) {
         console.error(
@@ -117,7 +115,7 @@ function parseFile(sourceFile: SourceFile, options: ExtractOptions): RawComponen
 
     for (const namespace of namespaces) {
         try {
-            const raw = extractRawComponent(sourceFile, namespace.getName(), baseUiMap, options);
+            const raw = extractRawComponent(sourceFile, namespace, baseUiMap, options, includeSet);
             if (raw) rawComponents.push(raw);
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
