@@ -2,8 +2,9 @@
 
 import { forwardRef, useCallback, useEffect, useRef } from 'react';
 
-import { Field as BaseField, useRender } from '@base-ui-components/react';
-import { useControlled } from '@base-ui-components/utils/useControlled';
+import { Field as BaseField } from '@base-ui/react/field';
+import { useRender } from '@base-ui/react/use-render';
+import { useControlled } from '@base-ui/utils/useControlled';
 import clsx from 'clsx';
 
 import { useInputGroup } from '~/components/input-group/input-group';
@@ -78,7 +79,7 @@ Textarea.displayName = 'Textarea';
 /* -----------------------------------------------------------------------------------------------*/
 
 interface AutoResizeOptions extends Pick<Textarea.Props, 'value' | 'autoResize'> {
-    ref: React.RefObject<HTMLTextAreaElement>;
+    ref: React.RefObject<HTMLTextAreaElement | null>;
 }
 
 export function useAutoResize({ ref, value, autoResize }: AutoResizeOptions) {

@@ -1,18 +1,33 @@
-import { IconButton } from '@vapor-ui/core';
+import { HStack, IconButton, Text, VStack } from '@vapor-ui/core';
 import { HeartIcon } from '@vapor-ui/icons';
 
 export default function IconButtonVariant() {
     return (
-        <div className="flex items-center gap-4">
-            <IconButton variant="fill" aria-label="채움 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton variant="outline" aria-label="테두리 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton variant="ghost" aria-label="투명 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    fill
+                </Text>
+                <IconButton variant="fill" aria-label="Like">
+                    <HeartIcon />
+                </IconButton>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    outline
+                </Text>
+                <IconButton variant="outline" aria-label="Like">
+                    <HeartIcon />
+                </IconButton>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    ghost
+                </Text>
+                <IconButton variant="ghost" aria-label="Like">
+                    <HeartIcon />
+                </IconButton>
+            </HStack>
+        </VStack>
     );
 }

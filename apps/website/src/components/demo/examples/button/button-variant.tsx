@@ -1,11 +1,26 @@
-import { Button } from '@vapor-ui/core';
+import { Button, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function ButtonVariant() {
     return (
-        <div className="flex items-center gap-2">
-            <Button variant="fill">Fill</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    fill
+                </Text>
+                <Button variant="fill">Save</Button>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    outline
+                </Text>
+                <Button variant="outline">Save</Button>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    ghost
+                </Text>
+                <Button variant="ghost">Save</Button>
+            </HStack>
+        </VStack>
     );
 }

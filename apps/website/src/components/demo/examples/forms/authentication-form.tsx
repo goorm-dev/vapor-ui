@@ -2,7 +2,7 @@ import { Children, cloneElement, isValidElement, useState } from 'react';
 
 import './authentication-form.css';
 
-import { Box, Button, Field, Form, Select, Text, TextInput, VStack } from '@vapor-ui/core';
+import { Button, Field, Form, Select, Text, TextInput, VStack } from '@vapor-ui/core';
 
 const codes = {
     '+82': '🇰🇷 +82',
@@ -26,16 +26,18 @@ export default function AuthenticationForm() {
 
     return (
         <VStack
-            gap="$400"
-            width="400px"
-            padding="$300"
-            borderRadius="$300"
-            border="1px solid var(--vapor-color-border-normal)"
             render={<Form onSubmit={(e) => e.preventDefault()} />}
+            $css={{
+                gap: '$400',
+                width: '100%',
+                padding: '$300',
+                borderRadius: '$300',
+                border: '1px solid var(--vapor-color-border-normal)',
+            }}
         >
-            <VStack gap="$200">
+            <VStack $css={{ gap: '$200' }}>
                 <Field.Root>
-                    <Box render={<Field.Label htmlFor="auth-phone" />} flexDirection="column">
+                    <Field.Label htmlFor="auth-phone" $css={{ flexDirection: 'column' }}>
                         <Text typography="subtitle2" foreground="normal-200">
                             핸드폰 번호
                         </Text>
@@ -67,7 +69,7 @@ export default function AuthenticationForm() {
                                 </Button>
                             </Group>
                         </Select.Root>
-                    </Box>
+                    </Field.Label>
 
                     <Field.Error match="valueMissing">핸드폰 번호를 입력해주세요.</Field.Error>
                     <Field.Error match="patternMismatch">
@@ -76,12 +78,12 @@ export default function AuthenticationForm() {
                 </Field.Root>
 
                 <Field.Root>
-                    <Box render={<Field.Label />} flexDirection="column">
+                    <Field.Label $css={{ flexDirection: 'column' }}>
                         <Text typography="subtitle2" foreground="normal-200">
                             인증번호
                         </Text>
                         <TextInput id="auth-verification-code" size="lg" required />
-                    </Box>
+                    </Field.Label>
                     <Field.Error match="valueMissing">인증번호를 입력해주세요.</Field.Error>
                 </Field.Root>
             </VStack>
@@ -100,8 +102,9 @@ const Group = ({ attached = false, children: childrenProp }: GroupProps) => {
     const children = Children.map(childrenProp, (child, index) => {
         if (!isValidElement(child)) return;
 
-        return cloneElement(child as React.ReactElement, {
-            style: { '--group-index': index, ...child.props.style },
+        const childProps = child.props as { style?: React.CSSProperties };
+        return cloneElement(child as React.ReactElement<{ style?: React.CSSProperties }>, {
+            style: { '--group-index': index, ...childProps.style } as React.CSSProperties,
             ...(index === 0 ? { 'data-first-item': '' } : {}),
             ...(index === Children.count(childrenProp) - 1 ? { 'data-last-item': '' } : {}),
         });

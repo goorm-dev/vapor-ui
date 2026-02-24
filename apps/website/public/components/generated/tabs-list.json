@@ -1,7 +1,7 @@
 {
     "name": "List",
     "displayName": "Tabs.List",
-    "description": "Tab 버튼들을 포함하는 컨테이너입니다. `<div>` 요소로 렌더링됩니다.",
+    "description": "Tab 버튼들을 포함하는 컨테이너입니다. 내부적으로 `Tabs.IndicatorPrimitive`를 포함합니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
@@ -38,6 +38,12 @@
             "type": ["false", "true"],
             "required": false,
             "description": "컴포넌트가 사용자 상호작용을 무시할지 여부입니다."
+        },
+        {
+            "name": "indicatorElement",
+            "type": ["ReactElement<typeof Tabs.IndicatorPrimitive>"],
+            "required": false,
+            "description": "커스텀 인디케이터 요소입니다. 기본값은 `<Tabs.IndicatorPrimitive />`입니다."
         }
     ]
 }

@@ -1,139 +1,263 @@
-import { Box } from '@vapor-ui/core';
+import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function BoxLayout() {
     return (
-        <div className="flex flex-col gap-6">
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Flex Direction</h4>
-                <div className="flex flex-col gap-4">
-                    <Box
-                        display="flex"
-                        flexDirection="row"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$blue-300" borderRadius="$100">
-                            1
+        <VStack $css={{ gap: '$300' }}>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    flexDirection
+                </Text>
+                <VStack $css={{ gap: '$200' }}>
+                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                        <Text className="w-24" typography="body3" foreground="hint-100">
+                            row
+                        </Text>
+                        <Box
+                            $css={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: '$200',
+                                padding: '$300',
+                                backgroundColor: '$basic-gray-100',
+                                borderRadius: '$200',
+                            }}
+                        >
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-blue-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                1
+                            </Box>
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-blue-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                2
+                            </Box>
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-blue-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                3
+                            </Box>
                         </Box>
-                        <Box padding="$200" backgroundColor="$blue-300" borderRadius="$100">
-                            2
+                    </HStack>
+                    <HStack $css={{ gap: '$150', alignItems: 'start' }}>
+                        <Text className="w-24" typography="body3" foreground="hint-100">
+                            column
+                        </Text>
+                        <Box
+                            $css={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '$200',
+                                padding: '$300',
+                                backgroundColor: '$basic-gray-100',
+                                borderRadius: '$200',
+                            }}
+                        >
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-green-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                A
+                            </Box>
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-green-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                B
+                            </Box>
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-green-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                C
+                            </Box>
                         </Box>
-                        <Box padding="$200" backgroundColor="$blue-300" borderRadius="$100">
-                            3
-                        </Box>
-                    </Box>
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$green-300" borderRadius="$100">
-                            A
-                        </Box>
-                        <Box padding="$200" backgroundColor="$green-300" borderRadius="$100">
-                            B
-                        </Box>
-                        <Box padding="$200" backgroundColor="$green-300" borderRadius="$100">
-                            C
-                        </Box>
-                    </Box>
-                </div>
-            </div>
+                    </HStack>
+                </VStack>
+            </VStack>
 
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Justify Content</h4>
-                <div className="flex flex-col gap-2">
-                    <Box
-                        display="flex"
-                        justifyContent="flex-start"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Start
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    justifyContent
+                </Text>
+                <VStack $css={{ gap: '$200' }}>
+                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                        <Text className="w-24" typography="body3" foreground="hint-100">
+                            flex-start
+                        </Text>
+                        <Box
+                            $css={{
+                                display: 'flex',
+                                justifyContent: 'flex-start',
+                                gap: '$200',
+                                padding: '$300',
+                                backgroundColor: '$basic-gray-100',
+                                borderRadius: '$200',
+                                width: '$2400',
+                            }}
+                        >
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-grape-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                Start
+                            </Box>
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-grape-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                Items
+                            </Box>
                         </Box>
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Items
+                    </HStack>
+                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                        <Text className="w-24" typography="body3" foreground="hint-100">
+                            center
+                        </Text>
+                        <Box
+                            $css={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                gap: '$200',
+                                padding: '$300',
+                                backgroundColor: '$basic-gray-100',
+                                borderRadius: '$200',
+                                width: '$2400',
+                            }}
+                        >
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-grape-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                Center
+                            </Box>
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-grape-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                Items
+                            </Box>
                         </Box>
-                    </Box>
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Center
+                    </HStack>
+                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                        <Text className="w-24" typography="body3" foreground="hint-100">
+                            space-between
+                        </Text>
+                        <Box
+                            $css={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                gap: '$200',
+                                padding: '$300',
+                                backgroundColor: '$basic-gray-100',
+                                borderRadius: '$200',
+                                width: '$2400',
+                            }}
+                        >
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-grape-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                Space
+                            </Box>
+                            <Box
+                                $css={{
+                                    padding: '$200',
+                                    backgroundColor: '$basic-grape-300',
+                                    borderRadius: '$100',
+                                }}
+                            >
+                                Between
+                            </Box>
                         </Box>
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Items
-                        </Box>
-                    </Box>
-                    <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Space
-                        </Box>
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Between
-                        </Box>
-                    </Box>
-                </div>
-            </div>
+                    </HStack>
+                </VStack>
+            </VStack>
 
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Align Items</h4>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    alignItems
+                </Text>
                 <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-around"
-                    gap="$200"
-                    padding="$300"
-                    backgroundColor="$gray-100"
-                    borderRadius="$200"
-                    height="$800"
+                    $css={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-around',
+                        gap: '$200',
+                        padding: '$300',
+                        backgroundColor: '$basic-gray-100',
+                        borderRadius: '$200',
+                        height: '$800',
+                    }}
                 >
                     <Box
-                        padding="$200"
-                        backgroundColor="$orange-300"
-                        borderRadius="$100"
-                        height="$500"
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-orange-300',
+                            borderRadius: '$100',
+                            height: '$500',
+                        }}
                     >
                         Small
                     </Box>
                     <Box
-                        padding="$200"
-                        backgroundColor="$orange-300"
-                        borderRadius="$100"
-                        height="$600"
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-orange-300',
+                            borderRadius: '$100',
+                            height: '$600',
+                        }}
                     >
                         Medium
                     </Box>
                     <Box
-                        padding="$200"
-                        backgroundColor="$orange-300"
-                        borderRadius="$100"
-                        height="$700"
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-orange-300',
+                            borderRadius: '$100',
+                            height: '$700',
+                        }}
                     >
                         Aligned
                     </Box>
                 </Box>
-            </div>
-        </div>
+            </VStack>
+        </VStack>
     );
 }

@@ -1,14 +1,18 @@
+'use client';
+
 import { useState } from 'react';
 
-import { Switch } from '@vapor-ui/core';
+import { HStack, Switch, Text, VStack } from '@vapor-ui/core';
 
 export default function SwitchControlled() {
     const [checked, setChecked] = useState(false);
 
     return (
-        <div className="space-y-4">
-            <Switch.Root checked={checked} onCheckedChange={setChecked} />
-            <p>Current state: {checked ? 'On' : 'Off'}</p>
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Switch.Root checked={checked} onCheckedChange={setChecked} />
+                <Text typography="body3">State: {checked ? 'On' : 'Off'}</Text>
+            </HStack>
+        </VStack>
     );
 }

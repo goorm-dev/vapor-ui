@@ -1,12 +1,32 @@
-import { Textarea } from '@vapor-ui/core';
+import { HStack, Text, Textarea, VStack } from '@vapor-ui/core';
 
 export default function TextareaSize() {
     return (
-        <div className="space-y-4">
-            <Textarea size="sm" placeholder="Small size" />
-            <Textarea size="md" placeholder="Medium size" />
-            <Textarea size="lg" placeholder="Large size" />
-            <Textarea size="xl" placeholder="Extra large size" />
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    sm
+                </Text>
+                <Textarea size="sm" placeholder="Small" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    md
+                </Text>
+                <Textarea size="md" placeholder="Medium" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    lg
+                </Text>
+                <Textarea size="lg" placeholder="Large" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    xl
+                </Text>
+                <Textarea size="xl" placeholder="Extra Large" />
+            </HStack>
+        </VStack>
     );
 }

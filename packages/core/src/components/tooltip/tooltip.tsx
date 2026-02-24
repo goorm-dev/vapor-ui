@@ -1,13 +1,13 @@
 'use client';
 
-import type { CSSProperties, ComponentProps, ReactElement } from 'react';
+import type { CSSProperties, ComponentProps, ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useRender } from '@base-ui-components/react';
-import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
+import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
-import { useMutationObserver } from '~/hooks/use-mutation-observer';
+import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
@@ -15,8 +15,6 @@ import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './tooltip.css';
-
-/* -----------------------------------------------------------------------------------------------*/
 
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Root
@@ -112,7 +110,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
             if (initialAlign) setAlign(initialAlign);
         }, []);
 
-        const arrowRef = useMutationObserver<HTMLDivElement>({
+        const arrowRef = useMutationObserverRef<HTMLDivElement>({
             callback: (mutations) => {
                 mutations.forEach((mutation) => {
                     const { attributeName, target: mutationTarget } = mutation;
@@ -227,7 +225,9 @@ const ArrowIcon = (props: ComponentProps<'svg'>) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace TooltipRoot {
-    export interface Props extends VComponentProps<typeof BaseTooltip.Root> {}
+    export interface Props extends ComponentPropsWithoutRef<typeof BaseTooltip.Root> {}
+
+    export type Actions = BaseTooltip.Root.Actions;
     export type ChangeEventDetails = BaseTooltip.Root.ChangeEventDetails;
 }
 

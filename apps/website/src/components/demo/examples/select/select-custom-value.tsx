@@ -1,4 +1,4 @@
-import { Box, Select } from '@vapor-ui/core';
+import { Select, Text, VStack } from '@vapor-ui/core';
 
 const fonts = {
     sans: 'Sans-serif',
@@ -14,9 +14,11 @@ const renderValue = (value: string) => {
 
 export default function SelectCustomValue() {
     return (
-        <Box width="400px">
+        <VStack $css={{ gap: '$050', width: '400px' }}>
+            <Text typography="body3" foreground="hint-100">
+                커스텀 값 표시
+            </Text>
             <Select.Root placeholder="폰트 선택" items={fonts}>
-                <h4 className="text-sm font-medium mb-2">커스텀 값 표시</h4>
                 <Select.Trigger>
                     <Select.ValuePrimitive>{renderValue}</Select.ValuePrimitive>
                     <Select.TriggerIconPrimitive />
@@ -29,6 +31,6 @@ export default function SelectCustomValue() {
                     ))}
                 </Select.Popup>
             </Select.Root>
-        </Box>
+        </VStack>
     );
 }

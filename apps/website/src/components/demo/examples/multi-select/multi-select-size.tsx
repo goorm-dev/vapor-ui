@@ -1,4 +1,4 @@
-import { Flex, MultiSelect } from '@vapor-ui/core';
+import { HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
 
 const options = [
     { label: '옵션 1', value: 'option1' },
@@ -8,50 +8,46 @@ const options = [
 
 export default function MultiSelectSize() {
     return (
-        <Flex gap="$200" className="flex-wrap" width="400px">
-            <MultiSelect.Root placeholder="Small" size="sm" items={options}>
-                <MultiSelect.Trigger />
-                <MultiSelect.Popup>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Popup>
-            </MultiSelect.Root>
-
-            <MultiSelect.Root placeholder="Medium" size="md" items={options}>
-                <MultiSelect.Trigger />
-                <MultiSelect.Popup>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Popup>
-            </MultiSelect.Root>
-
-            <MultiSelect.Root placeholder="Large" size="lg" items={options}>
-                <MultiSelect.Trigger />
-                <MultiSelect.Popup>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Popup>
-            </MultiSelect.Root>
-
-            <MultiSelect.Root placeholder="Extra Large" size="xl" items={options}>
-                <MultiSelect.Trigger />
-                <MultiSelect.Popup>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Popup>
-            </MultiSelect.Root>
-        </Flex>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-8" typography="body3" foreground="hint-100">
+                    sm
+                </Text>
+                <MultiSelectTemplate placeholder="Small" size="sm" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-8" typography="body3" foreground="hint-100">
+                    md
+                </Text>
+                <MultiSelectTemplate placeholder="Medium" size="md" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-8" typography="body3" foreground="hint-100">
+                    lg
+                </Text>
+                <MultiSelectTemplate placeholder="Large" size="lg" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-8" typography="body3" foreground="hint-100">
+                    xl
+                </Text>
+                <MultiSelectTemplate placeholder="Extra Large" size="xl" />
+            </HStack>
+        </VStack>
     );
 }
+
+const MultiSelectTemplate = (props: MultiSelect.Root.Props<string>) => {
+    return (
+        <MultiSelect.Root {...props} items={options}>
+            <MultiSelect.Trigger />
+            <MultiSelect.Popup>
+                {options.map((option) => (
+                    <MultiSelect.Item key={option.value} value={option.value}>
+                        {option.label}
+                    </MultiSelect.Item>
+                ))}
+            </MultiSelect.Popup>
+        </MultiSelect.Root>
+    );
+};

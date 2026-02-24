@@ -1,8 +1,8 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react';
-import { Toast as BaseToast } from '@base-ui-components/react/toast';
+import { Toast as BaseToast, type ToastManager as BaseToastManager } from '@base-ui/react/toast';
+import { useRender } from '@base-ui/react/use-render';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -27,11 +27,11 @@ export const useToastManager = BaseToast.useToastManager as () => UseToastManage
  * ToastProvider
  * -----------------------------------------------------------------------------------------------*/
 
-export const ToastProvider = (props: ToastProvider.Props) => {
+export const ToastProvider = ({ toastManager, ...props }: ToastProvider.Props) => {
     const { timeout = 4000, children, ...componentProps } = props;
 
     return (
-        <ToastProviderPrimitive timeout={timeout} {...componentProps}>
+        <ToastProviderPrimitive timeout={timeout} toastManager={toastManager} {...componentProps}>
             {children}
             <ToastList />
         </ToastProviderPrimitive>
@@ -51,8 +51,8 @@ const ToastList = () => {
                 {toasts.map((toast) => (
                     <ToastRootPrimitive key={toast.id} toast={toast}>
                         <ToastContentPrimitive>
-                            <HStack gap="$075">
-                                <Box marginY="3px">
+                            <HStack $css={{ gap: '$075' }}>
+                                <Box $css={{ marginBlock: '3px' }}>
                                     <ToastIconPrimitive />
                                 </Box>
                                 <VStack>
@@ -60,7 +60,7 @@ const ToastList = () => {
                                     <ToastDescriptionPrimitive />
                                 </VStack>
                             </HStack>
-                            <HStack gap="$100" alignItems="center">
+                            <HStack $css={{ gap: '$100', alignItems: 'center' }}>
                                 <ToastActionPrimitive />
                                 <ToastClosePrimitive />
                             </HStack>
@@ -81,10 +81,7 @@ export const ToastProviderPrimitive = ({
     ...props
 }: ToastProviderPrimitive.Props) => {
     return (
-        <BaseToast.Provider
-            toastManager={toastManager as unknown as BaseToast.createToastManager.ToastManager}
-            {...props}
-        />
+        <BaseToast.Provider toastManager={toastManager as unknown as BaseToastManager} {...props} />
     );
 };
 
@@ -92,9 +89,11 @@ export const ToastProviderPrimitive = ({
  * Toast.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const ToastPortalPrimitive = (props: ToastPortalPrimitive.Props) => {
-    return <BaseToast.Portal {...props} />;
-};
+export const ToastPortalPrimitive = forwardRef<HTMLDivElement, ToastPortalPrimitive.Props>(
+    (props, ref) => {
+        return <BaseToast.Portal ref={ref} {...props} />;
+    },
+);
 ToastPortalPrimitive.displayName = 'Toast.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -278,7 +277,7 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         const render = renderProp ?? (
             <IconButton
                 aria-label="Close Toast"
-                color="$inverse"
+                $css={{ color: '$fg-inverse' }}
                 colorPalette="secondary"
                 variant="ghost"
             />
@@ -317,18 +316,20 @@ type ToastObject<Data extends object> = Omit<BaseToastObject<Data>, 'type' | 'ac
 
 type ToastObjectType<Data extends object> = ToastObject<Data> & ToastProps;
 
-type BaseToastManager = BaseToast.createToastManager.ToastManager;
 type BasePromiseOptions = Omit<BaseToastManager['promise'], 'loading' | 'success' | 'error'>;
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export interface ToastManagerAddOptions<Data extends object>
-    extends Omit<ToastObjectType<Data>, 'id' | 'animation' | 'height' | 'ref' | 'limited'> {
+export interface ToastManagerAddOptions<Data extends object> extends Omit<
+    ToastObjectType<Data>,
+    'id' | 'animation' | 'height' | 'ref' | 'limited'
+> {
     id?: string;
 }
 
-export interface ToastManagerUpdateOptions<Data extends object>
-    extends Partial<ToastManagerAddOptions<Data>> {}
+export interface ToastManagerUpdateOptions<Data extends object> extends Partial<
+    ToastManagerAddOptions<Data>
+> {}
 
 export interface ToastManagerPromiseOptions<Value, Data extends object> extends BasePromiseOptions {
     loading: string | ToastManagerUpdateOptions<Data>;
@@ -343,8 +344,15 @@ export interface ToastManagerPromiseOptions<Value, Data extends object> extends 
 }
 
 export interface ToastManager extends BaseToastManager {
-    add: <Data extends object>(options: ToastManagerUpdateOptions<Data>) => string;
+    ' subscribe': (
+        listener: (data: {
+            action: 'add' | 'close' | 'update' | 'promise';
+            options: unknown;
+        }) => void,
+    ) => () => void;
+    add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
     update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
+    close: (id: string) => void;
     promise: <Value, Data extends object>(
         promise: Promise<Value>,
         options: ToastManagerPromiseOptions<Value, Data>,
@@ -370,11 +378,13 @@ export namespace ToastProviderPrimitive {
 }
 
 export namespace ToastProvider {
-    export interface Props extends BaseToast.Provider.Props {}
+    export interface Props extends Omit<BaseToast.Provider.Props, 'toastManager'> {
+        toastManager?: ToastManager;
+    }
 }
 
 export namespace ToastPortalPrimitive {
-    type PortalPrimitiveProps = BaseToast.Portal.Props;
+    type PortalPrimitiveProps = VComponentProps<typeof BaseToast.Portal>;
     export interface Props extends PortalPrimitiveProps {}
 }
 

@@ -4,4 +4,5 @@ export {
     FieldDescription as Description,
     FieldError as Error,
     FieldSuccess as Success,
+    FieldItem as Item,
 } from './field';

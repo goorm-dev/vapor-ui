@@ -4,9 +4,9 @@ import type { ComponentPropsWithoutRef, MouseEvent } from 'react';
 import type { Fragment } from 'react';
 import { forwardRef, useMemo } from 'react';
 
-import { useRender } from '@base-ui-components/react';
-import { useControlled } from '@base-ui-components/utils/useControlled';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useRender } from '@base-ui/react/use-render';
+import { useControlled } from '@base-ui/utils/useControlled';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import {
     ChevronLeftOutlineIcon,
     ChevronRightOutlineIcon,
@@ -79,9 +79,9 @@ export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPri
             state: 'page',
         });
 
-        const onPageChange = useEventCallback(onPageChangeProp);
+        const onPageChange = useStableCallback(onPageChangeProp);
 
-        const setPage = useEventCallback(
+        const setPage = useStableCallback(
             (newPage: number, eventDetails: PaginationRootPrimitive.ChangeEventDetails) => {
                 onPageChange?.(newPage, eventDetails);
 
@@ -166,7 +166,7 @@ export const PaginationButtonPrimitive = forwardRef<
 >(({ page, render, disabled: disabledProp, className, ...props }, ref) => {
     const { page: contextPage, setPage, size, disabled: contextDisabled } = usePaginationContext();
 
-    const handleClick = useEventCallback((event: MouseEvent) => {
+    const handleClick = useStableCallback((event: MouseEvent) => {
         const details = createChangeEventDetails('item-press', event.nativeEvent);
 
         setPage(page, details);
@@ -211,7 +211,7 @@ export const PaginationPreviousPrimitive = forwardRef<
 
     const disabled = disabledProp || contextDisabled || page <= 1;
 
-    const onClick = useEventCallback((event: MouseEvent) => {
+    const onClick = useStableCallback((event: MouseEvent) => {
         if (disabled) return;
 
         const details = createChangeEventDetails('item-press', event.nativeEvent);
@@ -223,20 +223,18 @@ export const PaginationPreviousPrimitive = forwardRef<
         props: { 'aria-hidden': 'true', className: styles.icon },
     });
 
-    const defaultProps: useRender.ElementProps<'button'> = {
-        'aria-label': 'Previous Page',
-        disabled,
-        className: clsx(styles.button({ size }), className),
-        onClick,
-        children,
-        ...componentProps,
-    };
-
     return useRender({
         ref,
         render: render || <button />,
         state: { disabled },
-        props: defaultProps,
+        props: {
+            'aria-label': 'Previous Page',
+            disabled,
+            className: clsx(styles.button({ size }), className),
+            onClick,
+            children,
+            ...componentProps,
+        },
     });
 });
 PaginationPreviousPrimitive.displayName = 'Pagination.PreviousPrimitive';
@@ -280,7 +278,7 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
 
         const disabled = disabledProp || contextDisabled || page >= totalPages;
 
-        const onClick = useEventCallback((event: MouseEvent) => {
+        const onClick = useStableCallback((event: MouseEvent) => {
             if (disabled) return;
 
             const details = createChangeEventDetails('item-press', event.nativeEvent);
@@ -292,20 +290,18 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             props: { 'aria-hidden': 'true', className: styles.icon },
         });
 
-        const defaultProps: useRender.ElementProps<'button'> = {
-            'aria-label': 'Next Page',
-            disabled,
-            className: clsx(styles.button({ size }), className),
-            onClick,
-            children,
-            ...componentProps,
-        };
-
         return useRender({
             ref,
             render: render || <button />,
             state: { disabled },
-            props: defaultProps,
+            props: {
+                'aria-label': 'Next Page',
+                disabled,
+                className: clsx(styles.button({ size }), className),
+                onClick,
+                children,
+                ...componentProps,
+            },
         });
     },
 );
@@ -341,19 +337,17 @@ export const PaginationEllipsisPrimitive = forwardRef<
         props: { width: 'max(16px, 50%)', height: 'max(16px, 50%)' },
     });
 
-    const defaultProps: useRender.ElementProps<'span'> = {
-        role: 'presentation',
-        'aria-hidden': 'true',
-        className: clsx(styles.ellipsis({ size }), className),
-        children,
-        ...componentProps,
-    };
-
     return useRender({
         ref,
         render: render || <span />,
         state: { disabled },
-        props: defaultProps,
+        props: {
+            role: 'presentation',
+            'aria-hidden': 'true',
+            className: clsx(styles.ellipsis({ size }), className),
+            children,
+            ...componentProps,
+        },
     });
 });
 PaginationEllipsisPrimitive.displayName = 'Pagination.EllipsisPrimitive';

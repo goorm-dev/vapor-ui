@@ -1,11 +1,26 @@
-import { Badge } from '@vapor-ui/core';
+import { Badge, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function BadgeSize() {
     return (
-        <div className="flex flex-wrap items-center gap-2">
-            <Badge size="sm">Small</Badge>
-            <Badge size="md">Medium</Badge>
-            <Badge size="lg">Large</Badge>
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    sm
+                </Text>
+                <Badge size="sm">New</Badge>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    md
+                </Text>
+                <Badge size="md">New</Badge>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    lg
+                </Text>
+                <Badge size="lg">New</Badge>
+            </HStack>
+        </VStack>
     );
 }

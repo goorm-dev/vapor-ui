@@ -3,11 +3,12 @@
 import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
-import { NavigationMenu as BaseNavigationMenu, useRender } from '@base-ui-components/react';
+import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
+import { useRender } from '@base-ui/react/use-render';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
-import { useMutationObserver } from '~/hooks/use-mutation-observer';
+import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
@@ -102,7 +103,7 @@ NavigationMenuItem.displayName = 'NavigationMenu.Item';
 export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLink.Props>(
     (props, ref) => {
         const {
-            selected,
+            current,
             href,
             disabled: disabledProp,
             className,
@@ -112,16 +113,17 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
 
         const disabled = disabledProp ?? contextDisabled;
         const dataAttrs = createDataAttributes({
-            selected,
             disabled,
+            current,
         });
 
         return (
             <BaseNavigationMenu.Link
                 ref={ref}
                 href={disabled ? undefined : href}
-                aria-current={selected ? 'page' : undefined}
+                aria-current={current ? 'page' : undefined}
                 aria-disabled={disabled ? 'true' : undefined}
+                active={current}
                 className={clsx(styles.link({ size }), className)}
                 {...dataAttrs}
                 {...componentProps}
@@ -291,7 +293,7 @@ export const NavigationMenuPopupPrimitive = forwardRef<
         if (initialAlign) setAlign(initialAlign);
     }, []);
 
-    const arrowRef = useMutationObserver<HTMLDivElement>({
+    const arrowRef = useMutationObserverRef<HTMLDivElement>({
         callback: (mutations) => {
             mutations.forEach((mutation) => {
                 const { attributeName, target: mutationTarget } = mutation;
@@ -431,10 +433,9 @@ NavigationMenuViewport.displayName = 'NavigationMenu.Viewport';
 
 export namespace NavigationMenuRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
+    export interface Props extends RootPrimitiveProps, NavigationMenuSharedProps {}
 
-    export interface Props extends RootPrimitiveProps, NavigationMenuSharedProps {
-        'aria-label': string;
-    }
+    export type Actions = BaseNavigationMenu.Root.Actions;
     export type ChangeEventDetails = BaseNavigationMenu.Root.ChangeEventDetails;
 }
 
@@ -449,7 +450,7 @@ export namespace NavigationMenuItem {
 export namespace NavigationMenuLink {
     type LinkPrimitiveProps = Omit<VComponentProps<typeof BaseNavigationMenu.Link>, 'active'>;
     export interface Props extends LinkPrimitiveProps {
-        selected?: boolean;
+        current?: boolean;
         disabled?: boolean;
     }
 }

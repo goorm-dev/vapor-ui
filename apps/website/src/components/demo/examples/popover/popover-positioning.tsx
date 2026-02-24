@@ -1,13 +1,18 @@
 'use client';
 
-import { Button, Popover } from '@vapor-ui/core';
+import { Button, HStack, Popover, Text, VStack } from '@vapor-ui/core';
 
 export default function PopoverPositioning() {
     return (
-        <div className="grid grid-cols-2 gap-8 p-20">
-            <div className="space-y-6">
-                <h3 className="text-sm font-medium text-foreground-hint">방향 설정</h3>
-                <div className="grid grid-cols-2 gap-4">
+        <HStack $css={{ gap: '$400' }}>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    Side
+                </Text>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        top
+                    </Text>
                     <Popover.Root>
                         <Popover.Trigger render={<Button variant="outline" />}>
                             상단 팝오버
@@ -21,7 +26,11 @@ export default function PopoverPositioning() {
                             </Popover.Description>
                         </Popover.Popup>
                     </Popover.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        right
+                    </Text>
                     <Popover.Root>
                         <Popover.Trigger render={<Button variant="outline" />}>
                             우측 팝오버
@@ -35,7 +44,11 @@ export default function PopoverPositioning() {
                             </Popover.Description>
                         </Popover.Popup>
                     </Popover.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        bottom
+                    </Text>
                     <Popover.Root>
                         <Popover.Trigger render={<Button variant="outline" />}>
                             하단 팝오버
@@ -49,7 +62,11 @@ export default function PopoverPositioning() {
                             </Popover.Description>
                         </Popover.Popup>
                     </Popover.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        left
+                    </Text>
                     <Popover.Root>
                         <Popover.Trigger render={<Button variant="outline" />}>
                             좌측 팝오버
@@ -63,12 +80,17 @@ export default function PopoverPositioning() {
                             </Popover.Description>
                         </Popover.Popup>
                     </Popover.Root>
-                </div>
-            </div>
+                </HStack>
+            </VStack>
 
-            <div className="space-y-6">
-                <h3 className="text-sm font-medium text-foreground-hint">정렬 설정</h3>
-                <div className="space-y-4">
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    Alignment
+                </Text>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        start
+                    </Text>
                     <Popover.Root>
                         <Popover.Trigger render={<Button variant="outline" />}>
                             시작점 정렬
@@ -82,7 +104,11 @@ export default function PopoverPositioning() {
                             </Popover.Description>
                         </Popover.Popup>
                     </Popover.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        center
+                    </Text>
                     <Popover.Root>
                         <Popover.Trigger render={<Button variant="outline" />}>
                             중앙 정렬
@@ -96,7 +122,11 @@ export default function PopoverPositioning() {
                             </Popover.Description>
                         </Popover.Popup>
                     </Popover.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        end
+                    </Text>
                     <Popover.Root>
                         <Popover.Trigger render={<Button variant="outline" />}>
                             끝점 정렬
@@ -110,8 +140,8 @@ export default function PopoverPositioning() {
                             </Popover.Description>
                         </Popover.Popup>
                     </Popover.Root>
-                </div>
-            </div>
-        </div>
+                </HStack>
+            </VStack>
+        </HStack>
     );
 }

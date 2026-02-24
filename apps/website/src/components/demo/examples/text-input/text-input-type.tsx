@@ -1,11 +1,26 @@
-import { TextInput } from '@vapor-ui/core';
+import { HStack, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function TextInputType() {
     return (
-        <div className="space-y-4 flex flex-col">
-            <TextInput type="text" placeholder="type='text'" />
-            <TextInput type="email" placeholder="type='email'" />
-            <TextInput type="password" placeholder="type='password'" />
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    text
+                </Text>
+                <TextInput type="text" placeholder="Enter text" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    email
+                </Text>
+                <TextInput type="email" placeholder="Enter email" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    password
+                </Text>
+                <TextInput type="password" placeholder="Enter password" />
+            </HStack>
+        </VStack>
     );
 }

@@ -1,12 +1,32 @@
-import { TextInput } from '@vapor-ui/core';
+import { HStack, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function TextInputStates() {
     return (
-        <div className="space-y-4 flex flex-col">
-            <TextInput placeholder="Default state" />
-            <TextInput disabled placeholder="Disabled state" />
-            <TextInput invalid placeholder="Invalid state" />
-            <TextInput readOnly value="Read only value" />
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    default
+                </Text>
+                <TextInput placeholder="Enter text" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    disabled
+                </Text>
+                <TextInput disabled placeholder="Disabled" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    invalid
+                </Text>
+                <TextInput invalid placeholder="Invalid" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    readOnly
+                </Text>
+                <TextInput readOnly value="Read only value" />
+            </HStack>
+        </VStack>
     );
 }

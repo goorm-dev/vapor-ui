@@ -1,27 +1,33 @@
-import { Tabs, VStack } from '@vapor-ui/core';
+import { HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 
 export default function TabsVariant() {
     return (
-        <VStack gap="$400">
-            <Tabs.Root defaultValue="home" variant="line">
-                <h4 className="text-sm font-medium mb-4">Line 변형</h4>
-                <Tabs.List className={'max-w-[400px] w-full mx-auto'}>
-                    <Tabs.Trigger value="home">홈</Tabs.Trigger>
-                    <Tabs.Trigger value="about">소개</Tabs.Trigger>
-                    <Tabs.Trigger value="services">서비스</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
+        <VStack $css={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
+                <Text className="w-12" typography="body3" foreground="hint-100">
+                    line
+                </Text>
+                <Tabs.Root defaultValue="home" variant="line">
+                    <Tabs.List>
+                        <Tabs.Button value="home">Home</Tabs.Button>
+                        <Tabs.Button value="about">About</Tabs.Button>
+                        <Tabs.Button value="services">Services</Tabs.Button>
+                    </Tabs.List>
+                </Tabs.Root>
+            </HStack>
 
-            <Tabs.Root defaultValue="home" variant="fill">
-                <h4 className="text-sm font-medium mb-4">fill 변형</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="home">홈</Tabs.Trigger>
-                    <Tabs.Trigger value="about">소개</Tabs.Trigger>
-                    <Tabs.Trigger value="services">서비스</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
+                <Text className="w-12" typography="body3" foreground="hint-100">
+                    fill
+                </Text>
+                <Tabs.Root defaultValue="home" variant="fill">
+                    <Tabs.List>
+                        <Tabs.Button value="home">Home</Tabs.Button>
+                        <Tabs.Button value="about">About</Tabs.Button>
+                        <Tabs.Button value="services">Services</Tabs.Button>
+                    </Tabs.List>
+                </Tabs.Root>
+            </HStack>
         </VStack>
     );
 }

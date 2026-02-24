@@ -1,4 +1,4 @@
-import { Badge, Flex, Grid, MultiSelect, Text, VStack } from '@vapor-ui/core';
+import { Badge, Flex, HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
 
 const languages = {
     javascript: 'JavaScript',
@@ -18,7 +18,7 @@ const renderRestValue = (value: string[]) => {
     const remainingCount = value.length - 2;
 
     return (
-        <Flex gap="$050" className="flex-wrap">
+        <Flex className="flex-wrap" $css={{ gap: '$050' }}>
             {displayValues.map((val) => (
                 <Badge key={val} size="sm">
                     {languages[val as keyof typeof languages]}
@@ -43,9 +43,11 @@ const renderStringValue = (value: string[]) => {
 
 export default function MultiSelectCustomValue() {
     return (
-        <Grid.Root templateColumns="1fr 1fr" gap="$300">
-            <VStack gap="$100" width="250px">
-                <Text typography="body2">커스텀 값 표시 (최대 2개 + 더보기)</Text>
+        <HStack $css={{ gap: '$300' }}>
+            <VStack $css={{ gap: '$050', width: '250px' }}>
+                <Text typography="body3" foreground="hint-100">
+                    커스텀 값 표시 (최대 2개 + 더보기)
+                </Text>
                 <MultiSelect.Root items={languages} placeholder="언어 선택">
                     <MultiSelect.Trigger>
                         <MultiSelect.ValuePrimitive>{renderRestValue}</MultiSelect.ValuePrimitive>
@@ -61,8 +63,10 @@ export default function MultiSelectCustomValue() {
                 </MultiSelect.Root>
             </VStack>
 
-            <VStack gap="$100" width="250px">
-                <Text typography="body2">문자열 형태 표시</Text>
+            <VStack $css={{ gap: '$050', width: '250px' }}>
+                <Text typography="body3" foreground="hint-100">
+                    문자열 형태 표시
+                </Text>
                 <MultiSelect.Root items={languages} placeholder="언어 선택">
                     <MultiSelect.Trigger>
                         <MultiSelect.ValuePrimitive>{renderStringValue}</MultiSelect.ValuePrimitive>
@@ -77,6 +81,6 @@ export default function MultiSelectCustomValue() {
                     </MultiSelect.Popup>
                 </MultiSelect.Root>
             </VStack>
-        </Grid.Root>
+        </HStack>
     );
 }

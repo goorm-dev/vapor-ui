@@ -1,20 +1,26 @@
-import { Checkbox, Flex } from '@vapor-ui/core';
+import { Checkbox, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function CheckboxReadOnly() {
     return (
-        <Flex gap="$000" flexDirection="column">
-            <label className="flex items-center gap-2">
-                <Checkbox.Root readOnly defaultChecked />
-                읽기 전용 (체크됨)
-            </label>
-            <label className="flex items-center gap-2">
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-32" typography="body3" foreground="hint-100">
+                    unchecked
+                </Text>
                 <Checkbox.Root readOnly />
-                읽기 전용 (체크 안됨)
-            </label>
-            <label className="flex items-center gap-2">
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-32" typography="body3" foreground="hint-100">
+                    checked
+                </Text>
+                <Checkbox.Root readOnly defaultChecked />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-32" typography="body3" foreground="hint-100">
+                    indeterminate
+                </Text>
                 <Checkbox.Root readOnly indeterminate />
-                읽기 전용 (혼합 상태)
-            </label>
-        </Flex>
+            </HStack>
+        </VStack>
     );
 }

@@ -1,3 +1,15 @@
 packages:
     - apps/*
     - packages/*
+
+# Unified React 19 for entire monorepo
+# Libraries (packages/*) maintain peerDependencies for React 17/18/19 compatibility
+catalog:
+    react: ^19.2.4
+    react-dom: ^19.2.4
+    '@types/react': ^19.2.10
+    '@types/react-dom': ^19.2.3
+    '@types/node': ^22.19.11
+    typescript: ^5.9.3
+    eslint: ^9.39.3
+    prettier: ^3.8.1

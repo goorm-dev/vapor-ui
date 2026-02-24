@@ -1,11 +1,14 @@
-import type { Sprinkles } from '~/styles/sprinkles.css';
+import { deprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
 import { sprinkles } from '~/styles/sprinkles.css';
 
 import { createSplitProps } from './create-split-props';
 import { mergeProps } from './merge-props';
+import type { DeprecatedSprinkles, Styles } from './types';
 
 export const resolveStyles = <T extends object>(props: T) => {
-    const [layoutProps, otherProps] = createSplitProps<Sprinkles>()(props, [
+    const [{ $css }, _otherProps] = createSplitProps<Styles>()(props, ['$css']);
+
+    const [layoutProps, otherProps] = createSplitProps<DeprecatedSprinkles>()(_otherProps, [
         'position',
         'display',
 
@@ -58,7 +61,16 @@ export const resolveStyles = <T extends object>(props: T) => {
         'marginY',
     ]);
 
-    const { className, style } = sprinkles(layoutProps);
+    const { className, style } = sprinkles({ ...$css });
+    const { className: deprecatedClassName, style: deprecatedStyle } = deprecatedSprinkles({
+        ...layoutProps,
+        ...$css,
+    });
 
-    return mergeProps({ className, style } as T, otherProps);
+    const mergedProps = mergeProps(
+        { className: deprecatedClassName, style: deprecatedStyle },
+        { className, style },
+    );
+
+    return mergeProps(mergedProps as T, otherProps);
 };

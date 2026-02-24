@@ -1,20 +1,22 @@
-import { Avatar } from '@vapor-ui/core';
+import { Avatar, HStack, Text, VStack } from '@vapor-ui/core';
+
+import { VAPOR_LOGO_URL } from '~/constants/image-urls';
 
 export default function AvatarShape() {
     return (
-        <div className="flex flex-wrap items-center gap-4">
-            <Avatar.Root
-                size="lg"
-                shape="circle"
-                alt="Circle Avatar"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-            <Avatar.Root
-                size="lg"
-                shape="square"
-                alt="Square Avatar"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-14" typography="body3" foreground="hint-100">
+                    square
+                </Text>
+                <Avatar.Root shape="square" alt="Vapor" src={VAPOR_LOGO_URL} />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-14" typography="body3" foreground="hint-100">
+                    circle
+                </Text>
+                <Avatar.Root shape="circle" alt="Vapor" src={VAPOR_LOGO_URL} />
+            </HStack>
+        </VStack>
     );
 }

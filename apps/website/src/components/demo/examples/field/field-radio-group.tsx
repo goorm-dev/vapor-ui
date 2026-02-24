@@ -1,30 +1,35 @@
 'use client';
 
-import { Box, Field, Radio, RadioGroup } from '@vapor-ui/core';
+import { Field, Radio, RadioGroup, VStack } from '@vapor-ui/core';
 
 export default function FieldRadioGroup() {
     return (
         <Field.Root name="gender">
-            <RadioGroup.Root>
-                <RadioGroup.Label>성별</RadioGroup.Label>
+            <VStack $css={{ gap: '$300' }}>
+                <RadioGroup.Root>
+                    <VStack $css={{ gap: '$100' }}>
+                        <RadioGroup.Label>성별</RadioGroup.Label>
+                        <VStack $css={{ gap: '$050' }}>
+                            <Field.Item $css={{ alignItems: 'center' }}>
+                                <Radio.Root value="male" />
+                                <Field.Label>남성</Field.Label>
+                            </Field.Item>
 
-                <Box render={<Field.Label />} alignItems="center">
-                    <Radio.Root value="male" />
-                    남성
-                </Box>
+                            <Field.Item $css={{ alignItems: 'center' }}>
+                                <Radio.Root value="female" />
+                                <Field.Label>여성</Field.Label>
+                            </Field.Item>
 
-                <Box render={<Field.Label />} alignItems="center">
-                    <Radio.Root value="female" />
-                    여성
-                </Box>
+                            <Field.Item $css={{ alignItems: 'center' }}>
+                                <Radio.Root value="other" />
+                                <Field.Label>기타</Field.Label>
+                            </Field.Item>
+                        </VStack>
+                    </VStack>
+                </RadioGroup.Root>
 
-                <Box render={<Field.Label />} alignItems="center">
-                    <Radio.Root value="other" />
-                    기타
-                </Box>
-            </RadioGroup.Root>
-
-            <Field.Description>개인정보 보호를 위해 선택사항입니다.</Field.Description>
+                <Field.Description>개인정보 보호를 위해 선택사항입니다.</Field.Description>
+            </VStack>
         </Field.Root>
     );
 }

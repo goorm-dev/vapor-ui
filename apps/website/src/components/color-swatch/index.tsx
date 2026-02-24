@@ -126,9 +126,9 @@ export function ColorSwatch({ className, foreground, name, value, variable }: Co
     const displayName = varName.join(' ');
 
     return (
-        <VStack alignItems="center" gap="$100" className={className}>
+        <VStack $css={{ alignItems: 'center', gap: '$100' }} className={className}>
             <button
-                className="border-border focus:ring-accent group relative size-20 ring-offset-[var(--vapor-color-gray-000)] rounded-lg border shadow-sm transition-[transform,outline,scale] hover:scale-105 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+                className="border-border focus:ring-accent group relative size-20 ring-offset-v-gray-0 rounded-lg border shadow-sm transition-[transform,outline,scale] hover:scale-105 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
                 type="button"
                 style={{ backgroundColor: `var(${prefixedVariable})` }}
                 onClick={onClick}
@@ -157,7 +157,7 @@ export function ColorSwatch({ className, foreground, name, value, variable }: Co
                 </div>
             </button>
 
-            <VStack textAlign="center" maxWidth="max-content">
+            <VStack $css={{ textAlign: 'center', maxWidth: 'max-content' }}>
                 <Text typography="subtitle2">{prefix}</Text>
                 {displayName && <Text typography="subtitle2">{displayName}</Text>}
             </VStack>

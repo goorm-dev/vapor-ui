@@ -1,18 +1,35 @@
 'use client';
 
-import { Field, Text, TextInput } from '@vapor-ui/core';
+import { Field, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldDisabled() {
     return (
-        <Field.Root name="disabled" disabled>
-            <Field.Label flexDirection="column">
-                <Text typography="subtitle2" foreground="secondary-100">
-                    비활성 필드
+        <VStack className="w-72" $css={{ gap: '$200' }}>
+            <VStack $css={{ gap: '$100' }}>
+                <Text typography="body3" foreground="hint-100">
+                    enabled
                 </Text>
-                <TextInput value="이 필드는 수정할 수 없습니다" />
-            </Field.Label>
+                <Field.Root name="email">
+                    <Field.Label className="flex flex-col gap-1">
+                        Email
+                        <TextInput placeholder="you@example.com" />
+                    </Field.Label>
+                    <Field.Description>Enter your email address.</Field.Description>
+                </Field.Root>
+            </VStack>
 
-            <Field.Description>이 필드는 현재 비활성화되어 수정할 수 없습니다.</Field.Description>
-        </Field.Root>
+            <VStack $css={{ gap: '$100' }}>
+                <Text typography="body3" foreground="hint-100">
+                    disabled
+                </Text>
+                <Field.Root name="email-disabled" disabled>
+                    <Field.Label className="flex flex-col gap-1">
+                        Email
+                        <TextInput placeholder="you@example.com" />
+                    </Field.Label>
+                    <Field.Description>Enter your email address.</Field.Description>
+                </Field.Root>
+            </VStack>
+        </VStack>
     );
 }

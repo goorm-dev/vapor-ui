@@ -1,6 +1,4 @@
-// tabs.css.ts
 import { createVar } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -23,8 +21,8 @@ const listBorderBottom = createVar();
 const listBorderRight = createVar();
 const listBorder = createVar();
 
-const triggerVerticalBorderRadius = createVar();
-const triggerHorizontalBorderRadius = createVar();
+const buttonVerticalBorderRadius = createVar();
+const buttonHorizontalBorderRadius = createVar();
 
 const indicatorVerticalWidth = createVar();
 const indicatorHorizontalHeight = createVar();
@@ -90,7 +88,7 @@ export const list = recipe({
     },
 });
 
-export const trigger = recipe({
+export const button = recipe({
     base: [
         foregrounds({ color: 'normal-100' }),
         interaction({ scale: 'light' }),
@@ -102,18 +100,26 @@ export const trigger = recipe({
             justifyContent: 'center',
             gap: vars.size.space['075'],
             zIndex: 1,
+
             selectors: {
-                '&[data-selected]': {
+                '&[data-disabled]': {
+                    opacity: 0.32,
+                    pointerEvents: 'none',
+                },
+                '&[data-active]': {
                     color: vars.color.foreground.primary['100'],
                 },
             },
         }),
     ],
 
-    defaultVariants: { size: 'md', disabled: false, variant: 'line', orientation: 'horizontal' },
+    defaultVariants: { size: 'md', variant: 'line', orientation: 'horizontal' },
     variants: {
         size: {
-            sm: [layerStyle('components', { height: vars.size.space['300'] })],
+            sm: [
+                typography({ style: 'subtitle2' }),
+                layerStyle('components', { height: vars.size.space['300'] }),
+            ],
             md: [layerStyle('components', { height: vars.size.space['400'] })],
             lg: [layerStyle('components', { height: vars.size.space['500'] })],
             xl: [
@@ -123,30 +129,32 @@ export const trigger = recipe({
         },
         orientation: {
             horizontal: layerStyle('components', {
-                borderRadius: triggerHorizontalBorderRadius,
+                borderRadius: buttonHorizontalBorderRadius,
                 paddingInline: vars.size.space['050'],
             }),
             vertical: layerStyle('components', {
-                borderRadius: triggerVerticalBorderRadius,
+                borderRadius: buttonVerticalBorderRadius,
                 paddingInline: vars.size.space[200],
             }),
         },
         variant: {
             line: layerStyle('components', {
                 vars: {
-                    [triggerHorizontalBorderRadius]: `${vars.size.borderRadius[300]} ${vars.size.borderRadius[300]} 0 0`,
-                    [triggerVerticalBorderRadius]: `${vars.size.borderRadius[300]} 0 0 ${vars.size.borderRadius[300]}`,
+                    [buttonHorizontalBorderRadius]: `${vars.size.borderRadius[300]} ${vars.size.borderRadius[300]} 0 0`,
+                    [buttonVerticalBorderRadius]: `${vars.size.borderRadius[300]} 0 0 ${vars.size.borderRadius[300]}`,
                 },
             }),
             fill: layerStyle('components', {
                 vars: {
-                    [triggerHorizontalBorderRadius]: vars.size.borderRadius[300],
-                    [triggerVerticalBorderRadius]: vars.size.borderRadius[300],
+                    [buttonHorizontalBorderRadius]: vars.size.borderRadius[300],
+                    [buttonVerticalBorderRadius]: vars.size.borderRadius[300],
+                },
+                selectors: {
+                    '&[data-active]': {
+                        color: vars.color.foreground.primary['100'],
+                    },
                 },
             }),
-        },
-        disabled: {
-            true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
         },
     },
 });
@@ -163,13 +171,15 @@ export const indicator = recipe({
     variants: {
         orientation: {
             horizontal: layerStyle('components', {
+                left: 0,
                 bottom: indicatorBottomPosition,
                 transform: `translateX(var(${EXTERNAL_VARS.activeTabLeft}))`,
-                width: calc.add(`var(${EXTERNAL_VARS.activeTabWidth})`, '0.06rem'),
+                width: `var(${EXTERNAL_VARS.activeTabWidth})`,
                 height: indicatorHorizontalHeight,
                 transitionProperty: 'transform, width',
             }),
             vertical: layerStyle('components', {
+                top: 0,
                 right: indicatorRightPosition,
                 transform: `translateY(var(${EXTERNAL_VARS.activeTabTop}))`,
                 height: `var(${EXTERNAL_VARS.activeTabHeight})`,
@@ -202,4 +212,4 @@ export const indicator = recipe({
 });
 
 export type ListVariants = NonNullable<RecipeVariants<typeof list>>;
-export type TriggerVariants = NonNullable<RecipeVariants<typeof trigger>>;
+export type ButtonVariants = NonNullable<RecipeVariants<typeof button>>;

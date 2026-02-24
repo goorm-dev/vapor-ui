@@ -1,9 +1,10 @@
 'use client';
 
-import type { ReactElement, RefObject } from 'react';
+import type { ComponentPropsWithRef, ReactElement, RefObject } from 'react';
 import { forwardRef, useRef } from 'react';
 
-import { Menu as BaseMenu, useRender } from '@base-ui-components/react';
+import { Menu as BaseMenu } from '@base-ui/react/menu';
+import { useRender } from '@base-ui/react/use-render';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -192,7 +193,7 @@ MenuGroupLabel.displayName = 'Menu.GroupLabel';
  * -----------------------------------------------------------------------------------------------*/
 
 type SubmenuContext = {
-    triggerRef?: RefObject<HTMLElement>;
+    triggerRef?: RefObject<HTMLElement | null>;
     disabled?: boolean;
 };
 
@@ -449,8 +450,10 @@ MenuRadioItem.displayName = 'Menu.RadioItem';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace MenuRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseMenu.Root>;
+    type RootPrimitiveProps = ComponentPropsWithRef<typeof BaseMenu.Root>;
     export interface Props extends RootPrimitiveProps {}
+
+    export type Actions = BaseMenu.Root.Actions;
     export type ChangeEventDetails = BaseMenu.Root.ChangeEventDetails;
 }
 

@@ -1,11 +1,16 @@
-import { Button, Tooltip } from '@vapor-ui/core';
+import { Button, HStack, Text, Tooltip, VStack } from '@vapor-ui/core';
 
 export default function TooltipOffset() {
     return (
-        <div className="space-y-8">
-            <div>
-                <h4 className="text-sm font-medium mb-4">Side Offset (거리 조정)</h4>
-                <div className="flex gap-4">
+        <HStack $css={{ gap: '$400' }}>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    Side Offset
+                </Text>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-12" typography="body3" foreground="hint-100">
+                        0px
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>0px</Button>} />
                         <Tooltip.Popup
@@ -14,7 +19,11 @@ export default function TooltipOffset() {
                             거리 0px
                         </Tooltip.Popup>
                     </Tooltip.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-12" typography="body3" foreground="hint-100">
+                        10px
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>10px</Button>} />
                         <Tooltip.Popup
@@ -23,7 +32,11 @@ export default function TooltipOffset() {
                             거리 10px
                         </Tooltip.Popup>
                     </Tooltip.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-12" typography="body3" foreground="hint-100">
+                        20px
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>20px</Button>} />
                         <Tooltip.Popup
@@ -32,12 +45,17 @@ export default function TooltipOffset() {
                             거리 20px
                         </Tooltip.Popup>
                     </Tooltip.Root>
-                </div>
-            </div>
+                </HStack>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-4">Align Offset (정렬 오프셋)</h4>
-                <div className="flex gap-4">
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    Align Offset
+                </Text>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-12" typography="body3" foreground="hint-100">
+                        -20px
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>-20px</Button>} />
                         <Tooltip.Popup
@@ -46,7 +64,11 @@ export default function TooltipOffset() {
                             정렬 오프셋 -20px
                         </Tooltip.Popup>
                     </Tooltip.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-12" typography="body3" foreground="hint-100">
+                        0px
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>0px</Button>} />
                         <Tooltip.Popup
@@ -55,7 +77,11 @@ export default function TooltipOffset() {
                             정렬 오프셋 0px
                         </Tooltip.Popup>
                     </Tooltip.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-12" typography="body3" foreground="hint-100">
+                        +20px
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>+20px</Button>} />
                         <Tooltip.Popup
@@ -64,8 +90,8 @@ export default function TooltipOffset() {
                             정렬 오프셋 +20px
                         </Tooltip.Popup>
                     </Tooltip.Root>
-                </div>
-            </div>
-        </div>
+                </HStack>
+            </VStack>
+        </HStack>
     );
 }

@@ -1,10 +1,12 @@
-import { Radio } from '@vapor-ui/core';
+import { HStack, Radio, Text } from '@vapor-ui/core';
 
 export default function DefaultRadio() {
     return (
-        <label className="flex items-center gap-2 cursor-pointer">
-            <Radio.Root value="option1" />
-            Option 1
-        </label>
+        <Text render={<label />} typography="body2">
+            <HStack $css={{ gap: '$100', alignItems: 'center' }}>
+                <Radio.Root value="option1" />
+                Option 1
+            </HStack>
+        </Text>
     );
 }

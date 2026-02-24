@@ -1,17 +1,19 @@
-import { NavigationMenu } from '@vapor-ui/core';
+import { HStack, NavigationMenu, Text, VStack } from '@vapor-ui/core';
 
 export default function NavigationMenuDirection() {
     return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Horizontal</h4>
+        <HStack $css={{ gap: '$400', alignItems: 'start' }}>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    horizontal
+                </Text>
                 <NavigationMenu.Root direction="horizontal" aria-label="Horizontal navigation">
                     <NavigationMenu.List>
                         <NavigationMenu.Item>
                             <NavigationMenu.Link href="#">Home</NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" selected>
+                            <NavigationMenu.Link href="#" current>
                                 About
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
@@ -20,17 +22,19 @@ export default function NavigationMenuDirection() {
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
                 </NavigationMenu.Root>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Vertical</h4>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    vertical
+                </Text>
                 <NavigationMenu.Root direction="vertical" aria-label="Vertical navigation">
                     <NavigationMenu.List>
                         <NavigationMenu.Item>
                             <NavigationMenu.Link href="#">Home</NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" selected>
+                            <NavigationMenu.Link href="#" current>
                                 About
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
@@ -39,7 +43,7 @@ export default function NavigationMenuDirection() {
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
                 </NavigationMenu.Root>
-            </div>
-        </div>
+            </VStack>
+        </HStack>
     );
 }

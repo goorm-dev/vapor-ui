@@ -24,13 +24,13 @@ const ResponsiveTitle = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const BlocksPageHeader = () => (
-    <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start">
-        <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start w-full">
+    <div className="flex flex-col gap-v-150 items-start">
+        <div className="flex flex-col gap-v-150 items-start w-full">
             <Badge colorPalette="hint" shape="pill" size="lg">
                 UI Blocks
             </Badge>
         </div>
-        <div className="flex flex-col gap-[var(--vapor-size-space-200)] items-start">
+        <div className="flex flex-col gap-v-200 items-start">
             <ResponsiveTitle>
                 Build pages faster
                 <br />

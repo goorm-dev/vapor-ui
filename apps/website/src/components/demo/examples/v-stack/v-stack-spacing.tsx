@@ -1,34 +1,112 @@
-import { VStack } from '@vapor-ui/core';
+import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function VStackSpacing() {
     return (
-        <div className="flex gap-8">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Gap $100</h4>
-                <VStack gap="$100">
-                    <div className="bg-red-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-red-100 p-2 rounded text-sm">B</div>
-                    <div className="bg-red-100 p-2 rounded text-sm">C</div>
+        <HStack $css={{ gap: '$400', alignItems: 'start' }}>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    $100
+                </Text>
+                <VStack $css={{ gap: '$100' }}>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-red-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        A
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-red-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        B
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-red-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        C
+                    </Box>
                 </VStack>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Gap $400</h4>
-                <VStack gap="$400">
-                    <div className="bg-orange-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-orange-100 p-2 rounded text-sm">B</div>
-                    <div className="bg-orange-100 p-2 rounded text-sm">C</div>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    $400
+                </Text>
+                <VStack $css={{ gap: '$400' }}>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-orange-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        A
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-orange-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        B
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-orange-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        C
+                    </Box>
                 </VStack>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Gap $800</h4>
-                <VStack gap="$800">
-                    <div className="bg-teal-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-teal-100 p-2 rounded text-sm">B</div>
-                    <div className="bg-teal-100 p-2 rounded text-sm">C</div>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    $800
+                </Text>
+                <VStack $css={{ gap: '$800' }}>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-teal-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        A
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-teal-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        B
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-teal-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        C
+                    </Box>
                 </VStack>
-            </div>
-        </div>
+            </VStack>
+        </HStack>
     );
 }

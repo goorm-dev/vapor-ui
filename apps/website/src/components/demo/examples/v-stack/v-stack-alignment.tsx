@@ -1,34 +1,139 @@
-import { VStack } from '@vapor-ui/core';
+import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function VStackAlignment() {
     return (
-        <div className="flex gap-8">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Align Start</h4>
-                <VStack gap="2" alignItems="start" className="w-32 bg-gray-50 p-2 rounded">
-                    <div className="bg-blue-100 p-2 rounded text-sm">Short</div>
-                    <div className="bg-blue-200 p-2 rounded text-sm">Medium Width</div>
-                    <div className="bg-blue-300 p-2 rounded text-sm">Tiny</div>
+        <HStack $css={{ gap: '$400', alignItems: 'start' }}>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    start
+                </Text>
+                <VStack
+                    $css={{
+                        gap: '$100',
+                        alignItems: 'start',
+                        width: '$1600',
+                        backgroundColor: '$basic-gray-100',
+                        padding: '$200',
+                        borderRadius: '$200',
+                    }}
+                >
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-blue-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Short
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-blue-200',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Medium Width
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-blue-300',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Tiny
+                    </Box>
                 </VStack>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Align Center</h4>
-                <VStack gap="2" alignItems="center" className="w-32 bg-gray-50 p-2 rounded">
-                    <div className="bg-green-100 p-2 rounded text-sm">Short</div>
-                    <div className="bg-green-200 p-2 rounded text-sm">Medium Width</div>
-                    <div className="bg-green-300 p-2 rounded text-sm">Tiny</div>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    center
+                </Text>
+                <VStack
+                    $css={{
+                        gap: '$100',
+                        alignItems: 'center',
+                        width: '$1600',
+                        backgroundColor: '$basic-gray-100',
+                        padding: '$200',
+                        borderRadius: '$200',
+                    }}
+                >
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-green-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Short
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-green-200',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Medium Width
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-green-300',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Tiny
+                    </Box>
                 </VStack>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Align End</h4>
-                <VStack gap="2" alignItems="end" className="w-32 bg-gray-50 p-2 rounded">
-                    <div className="bg-purple-100 p-2 rounded text-sm">Short</div>
-                    <div className="bg-purple-200 p-2 rounded text-sm">Medium Width</div>
-                    <div className="bg-purple-300 p-2 rounded text-sm">Tiny</div>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    end
+                </Text>
+                <VStack
+                    $css={{
+                        gap: '$100',
+                        alignItems: 'end',
+                        width: '$1600',
+                        backgroundColor: '$basic-gray-100',
+                        padding: '$200',
+                        borderRadius: '$200',
+                    }}
+                >
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-purple-100',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Short
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-purple-200',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Medium Width
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-purple-300',
+                            padding: '$200',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Tiny
+                    </Box>
                 </VStack>
-            </div>
-        </div>
+            </VStack>
+        </HStack>
     );
 }

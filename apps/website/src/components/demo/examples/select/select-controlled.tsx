@@ -2,27 +2,40 @@
 
 import { useState } from 'react';
 
-import { Button, HStack, Select, Text } from '@vapor-ui/core';
+import { Button, HStack, Select, Text, VStack } from '@vapor-ui/core';
+
+const fonts = [
+    { label: 'Sans-serif', value: 'sans-serif' },
+    { label: 'Serif', value: 'serif' },
+    { label: 'Monospace', value: 'mono' },
+    { label: 'Cursive', value: 'cursive' },
+];
 
 export default function SelectControlled() {
-    const [value, setValue] = useState<string>('');
+    const [value, setValue] = useState<string>(fonts[0].value);
 
     const handleValueChange = (newValue: unknown) => {
         setValue(newValue as string);
     };
 
     return (
-        <div className="space-y-4">
-            <Select.Root placeholder="폰트 선택" value={value} onValueChange={handleValueChange}>
+        <VStack $css={{ gap: '$200' }}>
+            <Select.Root
+                placeholder="폰트 선택"
+                items={fonts}
+                value={value}
+                onValueChange={handleValueChange}
+            >
                 <Select.Trigger />
 
                 <Select.Popup>
                     <Select.Group>
                         <Select.GroupLabel>폰트</Select.GroupLabel>
-                        <Select.Item value="sans">Sans-serif</Select.Item>
-                        <Select.Item value="serif">Serif</Select.Item>
-                        <Select.Item value="mono">Monospace</Select.Item>
-                        <Select.Item value="cursive">Cursive</Select.Item>
+                        {fonts.map((font) => (
+                            <Select.Item key={font.value} value={font.value}>
+                                {font.label}
+                            </Select.Item>
+                        ))}
                     </Select.Group>
                 </Select.Popup>
             </Select.Root>
@@ -31,7 +44,7 @@ export default function SelectControlled() {
                 선택된 값: <code className="bg-gray-100 px-1 rounded">{value || '없음'}</code>
             </Text>
 
-            <HStack gap="$100">
+            <HStack $css={{ gap: '$100' }}>
                 <Button colorPalette="primary" onClick={() => setValue('serif')}>
                     Serif 선택
                 </Button>
@@ -39,6 +52,6 @@ export default function SelectControlled() {
                     선택 해제
                 </Button>
             </HStack>
-        </div>
+        </VStack>
     );
 }

@@ -1,14 +1,24 @@
-import { Switch } from '@vapor-ui/core';
+import { HStack, Switch, Text, VStack } from '@vapor-ui/core';
 
 export default function SwitchReadOnly() {
     return (
-        <div className="space-y-3">
-            <Switch.Root readOnly defaultChecked>
-                <Switch.ThumbPrimitive />
-            </Switch.Root>
-            <Switch.Root readOnly>
-                <Switch.ThumbPrimitive />
-            </Switch.Root>
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    checked
+                </Text>
+                <Switch.Root readOnly defaultChecked>
+                    <Switch.ThumbPrimitive />
+                </Switch.Root>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    unchecked
+                </Text>
+                <Switch.Root readOnly>
+                    <Switch.ThumbPrimitive />
+                </Switch.Root>
+            </HStack>
+        </VStack>
     );
 }

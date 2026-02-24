@@ -13,10 +13,6 @@ export default {
         invalid: { control: 'boolean' },
         readOnly: { control: 'boolean' },
         required: { control: 'boolean' },
-        size: {
-            control: 'inline-radio',
-            options: ['md', 'lg'],
-        },
     },
 };
 
@@ -40,7 +36,7 @@ export const Checked: Story = {
 
 export const TestBed: Story = {
     render: () => (
-        <VStack gap="$400">
+        <VStack $css={{ gap: '$400' }}>
             <RadioGroup.Root defaultValue="checked" name="radio-card-group">
                 <RadioCard value="default">default</RadioCard>
                 <RadioCard value="checked">checked</RadioCard>
@@ -59,22 +55,18 @@ export const TestBed: Story = {
             </RadioGroup.Root>
 
             <RadioGroup.Root defaultValue="checked" name="radio-card-group">
-                <RadioCard size="lg" value="default">
-                    default
-                </RadioCard>
-                <RadioCard size="lg" value="checked">
-                    checked
-                </RadioCard>
-                <RadioCard size="lg" invalid value="invalid">
+                <RadioCard value="default">default</RadioCard>
+                <RadioCard value="checked">checked</RadioCard>
+                <RadioCard invalid value="invalid">
                     invalid
                 </RadioCard>
-                <RadioCard size="lg" disabled value="disabled">
+                <RadioCard disabled value="disabled">
                     disabled
                 </RadioCard>
-                <RadioCard size="lg" required value="required">
+                <RadioCard required value="required">
                     required
                 </RadioCard>
-                <RadioCard size="lg" readOnly value="readOnly">
+                <RadioCard readOnly value="readOnly">
                     readOnly
                 </RadioCard>
             </RadioGroup.Root>

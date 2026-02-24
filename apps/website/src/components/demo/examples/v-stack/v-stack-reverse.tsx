@@ -1,25 +1,77 @@
-import { VStack } from '@vapor-ui/core';
+import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function VStackReverse() {
     return (
-        <div className="flex gap-8">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Normal Stack</h4>
-                <VStack gap="3">
-                    <div className="bg-green-100 p-3 rounded text-center">First</div>
-                    <div className="bg-green-200 p-3 rounded text-center">Second</div>
-                    <div className="bg-green-300 p-3 rounded text-center">Third</div>
+        <HStack $css={{ gap: '$400', alignItems: 'start' }}>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    normal
+                </Text>
+                <VStack $css={{ gap: '$150' }}>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-green-100',
+                            padding: '$300',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        First
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-green-200',
+                            padding: '$300',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Second
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-green-300',
+                            padding: '$300',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Third
+                    </Box>
                 </VStack>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Reverse Stack</h4>
-                <VStack reverse gap="3">
-                    <div className="bg-purple-100 p-3 rounded text-center">First</div>
-                    <div className="bg-purple-200 p-3 rounded text-center">Second</div>
-                    <div className="bg-purple-300 p-3 rounded text-center">Third</div>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    reverse
+                </Text>
+                <VStack reverse $css={{ gap: '$150' }}>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-purple-100',
+                            padding: '$300',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        First
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-purple-200',
+                            padding: '$300',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Second
+                    </Box>
+                    <Box
+                        $css={{
+                            backgroundColor: '$basic-purple-300',
+                            padding: '$300',
+                            borderRadius: '$200',
+                        }}
+                    >
+                        Third
+                    </Box>
                 </VStack>
-            </div>
-        </div>
+            </VStack>
+        </HStack>
     );
 }

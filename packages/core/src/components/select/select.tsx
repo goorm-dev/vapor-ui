@@ -1,9 +1,10 @@
 'use client';
 
-import type { ReactElement, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
-import { Select as BaseSelect, useRender } from '@base-ui-components/react';
+import { Select as BaseSelect } from '@base-ui/react/select';
+import { useRender } from '@base-ui/react/use-render';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -376,8 +377,10 @@ SelectSeparator.displayName = 'Select.Separator';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace SelectRoot {
-    type RootPrimitiveProps = Omit<VComponentProps<typeof BaseSelect.Root>, 'multiple'>;
+    type RootPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof BaseSelect.Root>, 'multiple'>;
     export interface Props extends RootPrimitiveProps, SelectSharedProps {}
+
+    export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 

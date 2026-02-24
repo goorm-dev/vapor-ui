@@ -1,0 +1,107 @@
+---
+title: ThemeProvider
+description: Light/Dark 모드 전환과 시스템 테마 동기화를 자동으로 처리하는 React Provider입니다.
+---
+
+## Quick Start
+
+애플리케이션 최상위를 `ThemeProvider`로 감싸면 테마 시스템이 활성화됩니다:
+
+```tsx title="app/layout.tsx"
+import { ThemeProvider } from '@vapor-ui/core';
+
+export default function RootLayout({ children }) {
+    return (
+        <html lang="ko" suppressHydrationWarning>
+            <body>
+                <ThemeProvider defaultTheme="system">
+                    {children}
+                </ThemeProvider>
+            </body>
+        </html>
+    );
+}
+```
+
+> **SSR 팁**: `suppressHydrationWarning`을 `<html>` 태그에 추가하면 서버-클라이언트 테마 차이로 인한 하이드레이션 경고를 방지할 수 있습니다.
+
+## useTheme Hook
+
+`useTheme` 훅으로 테마를 읽고 변경할 수 있습니다:
+
+```tsx title="components/theme-toggle.tsx"
+'use client';
+
+import { useTheme } from '@vapor-ui/core';
+
+function ThemeToggle() {
+    const { resolvedTheme, setTheme, mounted } = useTheme();
+
+    if (!mounted) return null;
+
+    return (
+        <button onClick={() => 
+            setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
+        }>
+            {resolvedTheme === 'light' ? 'Dark' : 'Light'}
+        </button>
+    );
+}
+```
+
+### Hook Reference
+
+| Key | Type | Description |
+| :-- | :-- | :-- |
+| theme | `'light' \| 'dark' \| 'system'` | 현재 설정된 테마 |
+| setTheme | `(theme) => void` | 테마 변경 함수 (localStorage 자동 저장) |
+| themes | `('light' \| 'dark' \| 'system')[]` | 사용 가능한 테마 목록 |
+| resolvedTheme | `'light' \| 'dark'` | 실제 적용된 테마 (`system`일 때 시스템 테마 반영) |
+| systemTheme | `'light' \| 'dark'` | 현재 시스템 테마 |
+| forcedTheme | `'light' \| 'dark'` | 강제 적용된 테마 |
+| resetTheme | `() => void` | 테마 초기화 및 localStorage 제거 |
+| mounted | `boolean` | 클라이언트 마운트 여부 (SSR 대응) |
+
+## Provider Options
+
+| Prop | Default | Description |
+| :-- | :-- | :-- |
+| defaultTheme | `'system'` | 초기 테마 (`'light'`, `'dark'`, `'system'`) |
+| storageKey | `'vapor-ui-theme'` | localStorage 키 |
+| forcedTheme | - | 강제 테마 적용 (최우선) |
+| enableColorScheme | `true` | CSS `color-scheme` 자동 설정 |
+| disableTransitionOnChange | `false` | 테마 전환 시 CSS 트랜지션 비활성화 |
+| nonce | - | CSP nonce 값 |
+
+## ThemeScope
+
+특정 영역에만 다른 테마를 강제로 적용할 수 있습니다:
+
+```tsx
+import { ThemeScope } from '@vapor-ui/core';
+
+<ThemeScope forcedTheme="dark">
+    <Card>다크 테마가 강제 적용된 영역</Card>
+</ThemeScope>
+```
+
+### ThemeScope Options
+
+| Prop | Type | Description |
+| :-- | :-- | :-- |
+| forcedTheme | `'light' \| 'dark'` | 강제 적용할 테마 |
+| children | `ReactNode` | 테마가 적용될 자식 요소 |
+
+### Portal과 함께 사용
+
+Dialog, Popover 같은 Portal 컴포넌트가 `ThemeScope`의 테마를 상속받으려면 컨테이너를 지정하세요:
+
+```tsx
+<ThemeScope forcedTheme="dark">
+    <section ref={sectionRef}>
+        <Dialog.Content portalProps={{ container: sectionRef.current }}>
+            {/* 이 Portal은 다크 테마를 상속받음 */}
+        </Dialog.Content>
+    </section>
+</ThemeScope>
+```

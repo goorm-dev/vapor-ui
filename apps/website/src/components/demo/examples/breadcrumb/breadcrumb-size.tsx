@@ -1,51 +1,64 @@
-import { Breadcrumb } from '@vapor-ui/core';
+import { Breadcrumb, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function BreadcrumbSize() {
     return (
-        <div className="flex flex-col gap-4">
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Small</h4>
+        <VStack $css={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    sm
+                </Text>
                 <Breadcrumb.Root size="sm">
                     <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
                     <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
+                    <Breadcrumb.Separator />
                     <Breadcrumb.Item href="#" current>
-                        Current
+                        Details
                     </Breadcrumb.Item>
                 </Breadcrumb.Root>
-            </div>
-
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Medium</h4>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    md
+                </Text>
                 <Breadcrumb.Root size="md">
                     <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
                     <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
+                    <Breadcrumb.Separator />
                     <Breadcrumb.Item href="#" current>
-                        Current
+                        Details
                     </Breadcrumb.Item>
                 </Breadcrumb.Root>
-            </div>
-
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Large</h4>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    lg
+                </Text>
                 <Breadcrumb.Root size="lg">
                     <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
                     <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
+                    <Breadcrumb.Separator />
                     <Breadcrumb.Item href="#" current>
-                        Current
+                        Details
                     </Breadcrumb.Item>
                 </Breadcrumb.Root>
-            </div>
-
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Extra Large</h4>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    xl
+                </Text>
                 <Breadcrumb.Root size="xl">
                     <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
                     <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
+                    <Breadcrumb.Separator />
                     <Breadcrumb.Item href="#" current>
-                        Current
+                        Details
                     </Breadcrumb.Item>
                 </Breadcrumb.Root>
-            </div>
-        </div>
+            </HStack>
+        </VStack>
     );
 }

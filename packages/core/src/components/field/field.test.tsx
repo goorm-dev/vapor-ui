@@ -152,16 +152,12 @@ describe('Field', () => {
 
         it('should associate radio labels with inputs', async () => {
             const rendered = render(<FieldWithRadioGroupTest />);
-            const radioGroupInput = rendered.container.querySelector(
-                'input[name="gender"]',
-            ) as HTMLInputElement;
+            const maleRadio = rendered.getByRole('radio', { name: 'Male' });
+            const label = rendered.getByText('Male');
 
-            const maleLabel = rendered.getByText('Male');
-            const maleRadio = rendered.getByTestId('male');
-
-            await userEvent.click(maleLabel);
+            // Field.Item을 통해 각 Radio가 고유한 aria-labelledby를 가짐
+            await userEvent.click(label);
             expect(maleRadio).toBeChecked();
-            expect(radioGroupInput).toHaveValue('male');
         });
     });
 
@@ -170,7 +166,7 @@ describe('Field', () => {
             const rendered = render(<FieldWithCheckboxTest disabled />);
             const checkbox = rendered.getByRole('checkbox');
 
-            expect(checkbox).toBeDisabled();
+            expect(checkbox).toHaveAttribute('aria-disabled', 'true');
 
             await userEvent.click(checkbox);
 
@@ -182,7 +178,7 @@ describe('Field', () => {
             const radios = rendered.getAllByRole('radio');
 
             radios.forEach((radio) => {
-                expect(radio).toBeDisabled();
+                expect(radio).toHaveAttribute('aria-disabled', 'true');
             });
 
             await userEvent.click(radios[0]);
@@ -194,7 +190,7 @@ describe('Field', () => {
             const rendered = render(<FieldWithSwitchTest disabled />);
             const switchElement = rendered.getByRole('switch');
 
-            expect(switchElement).toBeDisabled();
+            expect(switchElement).toHaveAttribute('aria-disabled', 'true');
 
             await userEvent.click(switchElement);
 
@@ -459,14 +455,21 @@ const FieldWithRadioGroupTest = ({
             <legend>Select your gender</legend>
             <RadioGroup.Root required name="gender" defaultValue="other">
                 <Field.Description>Please select your gender for registration</Field.Description>
-                <Radio.Root value="male" id="male" data-testid="male" />
-                <Field.Label htmlFor="male">Male</Field.Label>
 
-                <Radio.Root value="female" id="female" />
-                <Field.Label htmlFor="female">Female</Field.Label>
+                <Field.Item>
+                    <Radio.Root value="male" />
+                    <Field.Label>Male</Field.Label>
+                </Field.Item>
 
-                <Radio.Root value="other" id="other" />
-                <Field.Label htmlFor="other">Other</Field.Label>
+                <Field.Item>
+                    <Radio.Root value="female" />
+                    <Field.Label>Female</Field.Label>
+                </Field.Item>
+
+                <Field.Item>
+                    <Radio.Root value="other" />
+                    <Field.Label>Other</Field.Label>
+                </Field.Item>
 
                 <Field.Error match="valueMissing">Please select your gender</Field.Error>
                 <Field.Success>✓ Gender selected</Field.Success>
@@ -484,7 +487,7 @@ const FieldWithTextInputTest = ({
 }) => {
     return (
         <Field.Root name="email" validationMode={validationMode} disabled={disabled}>
-            <Box render={<Field.Label />} flexDirection="column">
+            <Box render={<Field.Label />} $css={{ flexDirection: 'column' }}>
                 Email Address
                 <TextInput type="email" placeholder="your.email@example.com" required />
             </Box>

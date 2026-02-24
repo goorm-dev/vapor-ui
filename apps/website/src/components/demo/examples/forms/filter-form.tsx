@@ -97,8 +97,8 @@ export default function FilterForm() {
     };
 
     return (
-        <VStack width="17.625rem" render={<Form ref={formRef} onReset={handleReset} />}>
-            <HStack justifyContent="space-between">
+        <VStack $css={{ width: '17.625rem' }} render={<Form ref={formRef} onReset={handleReset} />}>
+            <HStack $css={{ justifyContent: 'space-between' }}>
                 <Text typography="heading5">Filter</Text>
                 <Button type="reset" size="sm" variant="ghost" colorPalette="secondary">
                     <RefreshOutlineIcon />
@@ -108,14 +108,16 @@ export default function FilterForm() {
 
             <Box
                 render={<hr />}
-                border="none"
-                marginY="$150"
-                height="1px"
-                width="100%"
-                backgroundColor="$gray-300"
+                $css={{
+                    border: 'none',
+                    marginBlock: '$150',
+                    height: '1px',
+                    width: '100%',
+                    backgroundColor: '$basic-gray-300',
+                }}
             />
 
-            <VStack gap="$300">
+            <VStack $css={{ gap: '$300' }}>
                 <Collapsible.Root>
                     <Collapsible.Trigger className="collapsible-trigger">
                         <Text typography="heading6">View</Text>
@@ -124,21 +126,21 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
                             <RadioGroup.Root
                                 value={getFieldValues('view')}
                                 onValueChange={(value: unknown) =>
                                     handleRadioChange('view', value as string)
                                 }
                             >
-                                <Box render={<Field.Label />} alignItems="center">
+                                <Field.Item>
                                     <Radio.Root id="filter-recent" value="recent" />
-                                    Recent
-                                </Box>
-                                <Box render={<Field.Label />} alignItems="center">
+                                    <Field.Label>Recent</Field.Label>
+                                </Field.Item>
+                                <Field.Item>
                                     <Radio.Root id="filter-popular" value="popular" />
-                                    Most Popular
-                                </Box>
+                                    <Field.Label>Most Popular</Field.Label>
+                                </Field.Item>
                             </RadioGroup.Root>
                         </Field.Root>
                     </Collapsible.Panel>
@@ -153,80 +155,80 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
-                            <Box render={<Field.Label />} alignItems="center">
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-feedback"
                                     checked={getFieldValues('sort').feedback}
                                     onCheckedChange={handleCheckboxChange('sort', 'feedback')}
                                 />
-                                Feedback
-                            </Box>
+                                <Field.Label>Feedback</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-buttons"
                                     checked={getFieldValues('sort').buttons}
                                     onCheckedChange={handleCheckboxChange('sort', 'buttons')}
                                 />
-                                Buttons
-                            </Box>
+                                <Field.Label>Buttons</Field.Label>
+                            </Field.Item>
                         </Field.Root>
 
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-data-display"
                                     checked={getFieldValues('sort')['data-display']}
                                     onCheckedChange={handleCheckboxChange('sort', 'data-display')}
                                 />
-                                Data Display
-                            </Box>
+                                <Field.Label>Data Display</Field.Label>
+                            </Field.Item>
                         </Field.Root>
 
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-overlay"
                                     checked={getFieldValues('sort').overlay}
                                     onCheckedChange={handleCheckboxChange('sort', 'overlay')}
                                 />
-                                Overlay
-                            </Box>
+                                <Field.Label>Overlay</Field.Label>
+                            </Field.Item>
                         </Field.Root>
 
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-inputs"
                                     checked={getFieldValues('sort').inputs}
                                     onCheckedChange={handleCheckboxChange('sort', 'inputs')}
                                 />
-                                Inputs
-                            </Box>
+                                <Field.Label>Inputs</Field.Label>
+                            </Field.Item>
                         </Field.Root>
 
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-navigation"
                                     checked={getFieldValues('sort').navigation}
                                     onCheckedChange={handleCheckboxChange('sort', 'navigation')}
                                 />
-                                Navigation
-                            </Box>
+                                <Field.Label>Navigation</Field.Label>
+                            </Field.Item>
                         </Field.Root>
 
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-utils"
                                     checked={getFieldValues('sort').utils}
                                     onCheckedChange={handleCheckboxChange('sort', 'utils')}
                                 />
-                                Utils
-                            </Box>
+                                <Field.Label>Utils</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                     </Collapsible.Panel>
                 </Collapsible.Root>
@@ -238,8 +240,8 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
-                            <Box render={<Field.Label />} alignItems="center">
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-goorm-dev/vapor-core"
                                     checked={getFieldValues('packs')['goorm-dev/vapor-core']}
@@ -248,11 +250,11 @@ export default function FilterForm() {
                                         'goorm-dev/vapor-core',
                                     )}
                                 />
-                                goorm-dev/vapor-core
-                            </Box>
+                                <Field.Label>goorm-dev/vapor-core</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-goorm-dev/vapor-component"
                                     checked={getFieldValues('packs')['goorm-dev/vapor-component']}
@@ -261,18 +263,18 @@ export default function FilterForm() {
                                         'goorm-dev/vapor-component',
                                     )}
                                 />
-                                goorm-dev/vapor-component
-                            </Box>
+                                <Field.Label>goorm-dev/vapor-component</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-vapor-ui/core"
                                     checked={getFieldValues('packs')['vapor-ui/core']}
                                     onCheckedChange={handleCheckboxChange('packs', 'vapor-ui/core')}
                                 />
-                                vapor-ui/core
-                            </Box>
+                                <Field.Label>vapor-ui/core</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                     </Collapsible.Panel>
                 </Collapsible.Root>
@@ -284,35 +286,35 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
-                            <Box render={<Field.Label />} alignItems="center">
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-active"
                                     checked={getFieldValues('status').active}
                                     onCheckedChange={handleCheckboxChange('status', 'active')}
                                 />
-                                Active
-                            </Box>
+                                <Field.Label>Active</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-inactive"
                                     checked={getFieldValues('status').inactive}
                                     onCheckedChange={handleCheckboxChange('status', 'inactive')}
                                 />
-                                Inactive
-                            </Box>
+                                <Field.Label>Inactive</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-draft"
                                     checked={getFieldValues('status').draft}
                                     onCheckedChange={handleCheckboxChange('status', 'draft')}
                                 />
-                                Draft
-                            </Box>
+                                <Field.Label>Draft</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                     </Collapsible.Panel>
                 </Collapsible.Root>
@@ -324,35 +326,35 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<Box marginTop="$150" />}>
-                            <Box render={<Field.Label />} alignItems="center">
+                        <Field.Root render={<Box $css={{ marginTop: '$150' }} />}>
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-ui"
                                     checked={getFieldValues('tag').ui}
                                     onCheckedChange={handleCheckboxChange('tag', 'ui')}
                                 />
-                                UI
-                            </Box>
+                                <Field.Label>UI</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-open-source"
                                     checked={getFieldValues('tag')['open-source']}
                                     onCheckedChange={handleCheckboxChange('tag', 'open-source')}
                                 />
-                                Open Source
-                            </Box>
+                                <Field.Label>Open Source</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                         <Field.Root>
-                            <Box render={<Field.Label />} alignItems="center">
+                            <Field.Item>
                                 <Checkbox.Root
                                     id="filter-performance"
                                     checked={getFieldValues('tag').performance}
                                     onCheckedChange={handleCheckboxChange('tag', 'performance')}
                                 />
-                                Performance
-                            </Box>
+                                <Field.Label>Performance</Field.Label>
+                            </Field.Item>
                         </Field.Root>
                     </Collapsible.Panel>
                 </Collapsible.Root>

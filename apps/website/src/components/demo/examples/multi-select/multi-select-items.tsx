@@ -1,4 +1,4 @@
-import { HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
+import { MultiSelect, Text, VStack } from '@vapor-ui/core';
 
 const fonts = [
     { label: 'Sans-serif', value: 'sans' },
@@ -17,10 +17,12 @@ const languages = {
 
 export default function MultiSelectItems() {
     return (
-        <HStack gap="$500">
-            <VStack gap="$100" width="300px">
+        <VStack $css={{ gap: '$300', width: '300px' }}>
+            <VStack $css={{ gap: '$050' }}>
+                <Text typography="body3" foreground="hint-100">
+                    배열 형태의 아이템
+                </Text>
                 <MultiSelect.Root placeholder="폰트 선택" items={fonts}>
-                    <Text typography="body2">배열 형태의 아이템</Text>
                     <MultiSelect.Trigger />
                     <MultiSelect.Popup>
                         {fonts.map((font) => (
@@ -32,9 +34,11 @@ export default function MultiSelectItems() {
                 </MultiSelect.Root>
             </VStack>
 
-            <VStack gap="$100" width="300px">
+            <VStack $css={{ gap: '$050' }}>
+                <Text typography="body3" foreground="hint-100">
+                    객체 형태의 아이템
+                </Text>
                 <MultiSelect.Root placeholder="언어 선택" items={languages}>
-                    <Text typography="body2">객체 형태의 아이템</Text>
                     <MultiSelect.Trigger />
                     <MultiSelect.Popup>
                         {Object.entries(languages).map(([value, label]) => (
@@ -45,6 +49,6 @@ export default function MultiSelectItems() {
                     </MultiSelect.Popup>
                 </MultiSelect.Root>
             </VStack>
-        </HStack>
+        </VStack>
     );
 }

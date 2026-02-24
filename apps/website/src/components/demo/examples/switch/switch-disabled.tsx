@@ -1,10 +1,20 @@
-import { Switch } from '@vapor-ui/core';
+import { HStack, Switch, Text, VStack } from '@vapor-ui/core';
 
 export default function SwitchDisabled() {
     return (
-        <div className="space-y-3">
-            <Switch.Root disabled />
-            <Switch.Root disabled defaultChecked />
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    unchecked
+                </Text>
+                <Switch.Root disabled />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    checked
+                </Text>
+                <Switch.Root disabled defaultChecked />
+            </HStack>
+        </VStack>
     );
 }

@@ -1,31 +1,34 @@
-import { Breadcrumb } from '@vapor-ui/core';
+import { Breadcrumb, Text, VStack } from '@vapor-ui/core';
 
 export default function BreadcrumbCurrent() {
     return (
-        <div className="flex flex-col gap-4">
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Normal Links</h4>
-                <Breadcrumb.Root size="md">
+        <VStack $css={{ gap: '$200' }}>
+            <VStack $css={{ gap: '$100' }}>
+                <Text typography="body3" foreground="hint-100">
+                    Normal Links
+                </Text>
+                <Breadcrumb.Root>
                     <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
                     <Breadcrumb.Separator />
                     <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
                     <Breadcrumb.Separator />
-                    <Breadcrumb.Item href="#">Category</Breadcrumb.Item>
+                    <Breadcrumb.Item href="#">Details</Breadcrumb.Item>
                 </Breadcrumb.Root>
-            </div>
-
-            <div>
-                <h4 className="mb-2 text-sm font-medium">With Current Page</h4>
-                <Breadcrumb.Root size="md">
+            </VStack>
+            <VStack $css={{ gap: '$100' }}>
+                <Text typography="body3" foreground="hint-100">
+                    With Current Page
+                </Text>
+                <Breadcrumb.Root>
                     <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
                     <Breadcrumb.Separator />
                     <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
                     <Breadcrumb.Separator />
                     <Breadcrumb.Item href="#" current>
-                        Current Page
+                        Details
                     </Breadcrumb.Item>
                 </Breadcrumb.Root>
-            </div>
-        </div>
+            </VStack>
+        </VStack>
     );
 }

@@ -3,7 +3,7 @@ import './sheet-form.css';
 import type { FormEvent } from 'react';
 import { useCallback, useState } from 'react';
 
-import { Box, Button, Checkbox, Field, Form, Sheet, Tabs, VStack } from '@vapor-ui/core';
+import { Button, Checkbox, Field, Form, Sheet, Tabs, VStack } from '@vapor-ui/core';
 import { RefreshOutlineIcon } from '@vapor-ui/icons';
 
 type FormData = typeof FORM_SCHEME;
@@ -83,13 +83,15 @@ export default function SheetForm() {
 
     return (
         <VStack
-            gap="$250"
-            width="400px"
-            padding="$300"
-            borderRadius="$300"
-            border="1px solid #eee"
             className="sheet-form"
             render={<Form id="sheet-form" onReset={handleReset} />}
+            $css={{
+                gap: '$250',
+                width: '100%',
+                padding: '$300',
+                borderRadius: '$300',
+                border: '1px solid #eee',
+            }}
         >
             <Sheet.Root>
                 <Sheet.Trigger render={<Button />}>Open Filter</Sheet.Trigger>
@@ -104,17 +106,16 @@ export default function SheetForm() {
                     <Sheet.Body className="body">
                         <Tabs.Root defaultValue={'sort'} className={'tabs'}>
                             <Tabs.List className={'tabs-list'}>
-                                <Tabs.Trigger value="sort">Sort</Tabs.Trigger>
-                                <Tabs.Trigger value="package">Package</Tabs.Trigger>
-                                <Tabs.Trigger value="status">Status</Tabs.Trigger>
-                                <Tabs.Trigger value="tag">Tag</Tabs.Trigger>
-                                <Tabs.Indicator />
+                                <Tabs.Button value="sort">Sort</Tabs.Button>
+                                <Tabs.Button value="package">Package</Tabs.Button>
+                                <Tabs.Button value="status">Status</Tabs.Button>
+                                <Tabs.Button value="tag">Tag</Tabs.Button>
                             </Tabs.List>
                             <Tabs.Panel value="sort" className={'tabs-panel'}>
-                                <VStack gap="$100">
+                                <VStack $css={{ gap: '$100' }}>
                                     {/* Sort */}
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-feedback"
                                                 size="lg"
@@ -124,12 +125,12 @@ export default function SheetForm() {
                                                     'feedback',
                                                 )}
                                             />
-                                            Feedback
-                                        </Box>
+                                            <Field.Label>Feedback</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
 
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-buttons"
                                                 size="lg"
@@ -139,12 +140,12 @@ export default function SheetForm() {
                                                     'buttons',
                                                 )}
                                             />
-                                            Buttons
-                                        </Box>
+                                            <Field.Label>Buttons</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
 
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-data-display"
                                                 size="lg"
@@ -154,11 +155,11 @@ export default function SheetForm() {
                                                     'data-display',
                                                 )}
                                             />
-                                            Data Display
-                                        </Box>
+                                            <Field.Label>Data Display</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-overlay"
                                                 size="lg"
@@ -168,11 +169,11 @@ export default function SheetForm() {
                                                     'overlay',
                                                 )}
                                             />
-                                            Overlay
-                                        </Box>
+                                            <Field.Label>Overlay</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-inputs"
                                                 size="lg"
@@ -182,11 +183,11 @@ export default function SheetForm() {
                                                     'inputs',
                                                 )}
                                             />
-                                            Inputs
-                                        </Box>
+                                            <Field.Label>Inputs</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-navigation"
                                                 size="lg"
@@ -196,11 +197,11 @@ export default function SheetForm() {
                                                     'navigation',
                                                 )}
                                             />
-                                            Navigation
-                                        </Box>
+                                            <Field.Label>Navigation</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-utils"
                                                 size="lg"
@@ -210,16 +211,16 @@ export default function SheetForm() {
                                                     'utils',
                                                 )}
                                             />
-                                            Utils
-                                        </Box>
+                                            <Field.Label>Utils</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                 </VStack>
                             </Tabs.Panel>
                             {/* Package */}
                             <Tabs.Panel value="package" className={'tabs-panel'}>
-                                <VStack gap="$100">
+                                <VStack $css={{ gap: '$100' }}>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-goorm-dev/vapor-core"
                                                 size="lg"
@@ -231,11 +232,11 @@ export default function SheetForm() {
                                                     'goorm-dev/vapor-core',
                                                 )}
                                             />
-                                            goorm-dev/vapor-core
-                                        </Box>
+                                            <Field.Label>goorm-dev/vapor-core</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-goorm-dev/vapor-component"
                                                 size="lg"
@@ -249,11 +250,11 @@ export default function SheetForm() {
                                                     'goorm-dev/vapor-component',
                                                 )}
                                             />
-                                            goorm-dev/vapor-component
-                                        </Box>
+                                            <Field.Label>goorm-dev/vapor-component</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-vapor-ui/core"
                                                 size="lg"
@@ -263,16 +264,16 @@ export default function SheetForm() {
                                                     'vapor-ui/core',
                                                 )}
                                             />
-                                            vapor-ui/core
-                                        </Box>
+                                            <Field.Label>vapor-ui/core</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                 </VStack>
                             </Tabs.Panel>
                             {/* Status */}
                             <Tabs.Panel value="status" className={'tabs-panel'}>
-                                <VStack gap="$100">
+                                <VStack $css={{ gap: '$100' }}>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-active"
                                                 size="lg"
@@ -282,11 +283,11 @@ export default function SheetForm() {
                                                     'active',
                                                 )}
                                             />
-                                            Active
-                                        </Box>
+                                            <Field.Label>Active</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-inactive"
                                                 size="lg"
@@ -296,11 +297,11 @@ export default function SheetForm() {
                                                     'inactive',
                                                 )}
                                             />
-                                            Inactive
-                                        </Box>
+                                            <Field.Label>Inactive</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-draft"
                                                 size="lg"
@@ -310,28 +311,28 @@ export default function SheetForm() {
                                                     'draft',
                                                 )}
                                             />
-                                            Draft
-                                        </Box>
+                                            <Field.Label>Draft</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                 </VStack>
                             </Tabs.Panel>
                             {/* Tag */}
                             <Tabs.Panel value="tag" className={'tabs-panel'}>
-                                <VStack gap="$100">
+                                <VStack $css={{ gap: '$100' }}>
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-ui"
                                                 size="lg"
                                                 checked={getFieldValues('tag').ui}
                                                 onCheckedChange={handleCheckboxChange('tag', 'ui')}
                                             />
-                                            UI
-                                        </Box>
+                                            <Field.Label>UI</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
 
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-open-source"
                                                 size="lg"
@@ -341,12 +342,12 @@ export default function SheetForm() {
                                                     'open-source',
                                                 )}
                                             />
-                                            Open Source
-                                        </Box>
+                                            <Field.Label>Open Source</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
 
                                     <Field.Root>
-                                        <Box render={<Field.Label />} alignItems="center">
+                                        <Field.Item>
                                             <Checkbox.Root
                                                 id="sheet-performance"
                                                 size="lg"
@@ -356,8 +357,8 @@ export default function SheetForm() {
                                                     'performance',
                                                 )}
                                             />
-                                            Performance
-                                        </Box>
+                                            <Field.Label>Performance</Field.Label>
+                                        </Field.Item>
                                     </Field.Root>
                                 </VStack>
                             </Tabs.Panel>

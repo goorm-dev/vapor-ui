@@ -1,16 +1,22 @@
-import { Radio, RadioGroup } from '@vapor-ui/core';
+import { HStack, Radio, RadioGroup, Text, VStack } from '@vapor-ui/core';
 
 export default function RadioReadOnly() {
     return (
         <RadioGroup.Root name="readonly-fruits" defaultValue="apple">
-            <label className="flex items-center gap-2">
-                <Radio.Root value="apple" readOnly />
-                읽기 전용 (선택됨)
-            </label>
-            <label className="flex items-center gap-2">
-                <Radio.Root value="orange" readOnly />
-                읽기 전용 (선택 안됨)
-            </label>
+            <VStack $css={{ gap: '$100' }}>
+                <Text render={<label />} typography="body2">
+                    <HStack $css={{ gap: '$100', alignItems: 'center' }}>
+                        <Radio.Root value="apple" readOnly />
+                        Read Only (Selected)
+                    </HStack>
+                </Text>
+                <Text render={<label />} typography="body2">
+                    <HStack $css={{ gap: '$100', alignItems: 'center' }}>
+                        <Radio.Root value="orange" readOnly />
+                        Read Only (Unselected)
+                    </HStack>
+                </Text>
+            </VStack>
         </RadioGroup.Root>
     );
 }

@@ -1,9 +1,9 @@
-import { Callout } from '@vapor-ui/core';
+import { Callout, VStack } from '@vapor-ui/core';
 import { CheckCircleIcon, HeartIcon, InfoCircleOutlineIcon } from '@vapor-ui/icons';
 
 export default function CalloutWithIcon() {
     return (
-        <div className="flex w-full max-w-xl flex-col gap-2">
+        <VStack $css={{ gap: '$100' }} className="w-full max-w-xl">
             <Callout.Root colorPalette="success">
                 <Callout.Icon>
                     <CheckCircleIcon />
@@ -22,6 +22,6 @@ export default function CalloutWithIcon() {
                 </Callout.Icon>
                 New notification available
             </Callout.Root>
-        </div>
+        </VStack>
     );
 }

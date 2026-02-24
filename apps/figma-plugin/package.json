@@ -23,8 +23,8 @@
         "@vapor-ui/css-generator": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
         "culori": "^4.0.2",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1"
+        "react": "catalog:",
+        "react-dom": "catalog:"
     },
     "devDependencies": {
         "@figma/plugin-typings": "^1.121.0",
@@ -32,14 +32,14 @@
         "@repo/typescript-config": "workspace:*",
         "@tailwindcss/vite": "^4.1.18",
         "@types/culori": "^4.0.1",
-        "@types/react": "^18.3.23",
-        "@types/react-dom": "^18.3.7",
         "@vitejs/plugin-react": "^5.1.2",
         "concurrently": "^8.2.2",
-        "eslint": "^9.39.2",
         "tailwindcss": "^4.1.18",
-        "typescript": "^5.9.3",
-        "vite": "^7.1.2",
+        "@types/react": "catalog:",
+        "@types/react-dom": "catalog:",
+        "eslint": "catalog:",
+        "typescript": "catalog:",
+        "vite": "^7.1.11",
         "vite-plugin-singlefile": "^2.3.0"
     }
 }

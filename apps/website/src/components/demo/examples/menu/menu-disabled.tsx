@@ -1,30 +1,39 @@
 'use client';
 
-import { Button, Menu } from '@vapor-ui/core';
+import { Button, HStack, Menu, Text, VStack } from '@vapor-ui/core';
 
 export default function MenuDisabled() {
     return (
-        <div className="flex flex-wrap gap-4">
-            <Menu.Root>
-                <Menu.Trigger render={<Button>일반 메뉴</Button>} />
-                <Menu.Popup>
-                    <Menu.Item>활성 아이템 1</Menu.Item>
-                    <Menu.Item disabled>비활성 아이템</Menu.Item>
-                    <Menu.Item>활성 아이템 2</Menu.Item>
-                    <Menu.Separator />
-                    <Menu.Item disabled>비활성 아이템 2</Menu.Item>
-                    <Menu.Item>활성 아이템 3</Menu.Item>
-                </Menu.Popup>
-            </Menu.Root>
-
-            <Menu.Root disabled>
-                <Menu.Trigger render={<Button>비활성 메뉴</Button>} />
-                <Menu.Popup>
-                    <Menu.Item>아이템 1</Menu.Item>
-                    <Menu.Item>아이템 2</Menu.Item>
-                    <Menu.Item>아이템 3</Menu.Item>
-                </Menu.Popup>
-            </Menu.Root>
-        </div>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-28" typography="body3" foreground="hint-100">
+                    disabled item
+                </Text>
+                <Menu.Root>
+                    <Menu.Trigger render={<Button>일반 메뉴</Button>} />
+                    <Menu.Popup>
+                        <Menu.Item>활성 아이템 1</Menu.Item>
+                        <Menu.Item disabled>비활성 아이템</Menu.Item>
+                        <Menu.Item>활성 아이템 2</Menu.Item>
+                        <Menu.Separator />
+                        <Menu.Item disabled>비활성 아이템 2</Menu.Item>
+                        <Menu.Item>활성 아이템 3</Menu.Item>
+                    </Menu.Popup>
+                </Menu.Root>
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-28" typography="body3" foreground="hint-100">
+                    disabled menu
+                </Text>
+                <Menu.Root disabled>
+                    <Menu.Trigger render={<Button>비활성 메뉴</Button>} />
+                    <Menu.Popup>
+                        <Menu.Item>아이템 1</Menu.Item>
+                        <Menu.Item>아이템 2</Menu.Item>
+                        <Menu.Item>아이템 3</Menu.Item>
+                    </Menu.Popup>
+                </Menu.Root>
+            </HStack>
+        </VStack>
     );
 }

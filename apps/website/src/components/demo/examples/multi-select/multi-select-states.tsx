@@ -1,4 +1,4 @@
-import { MultiSelect, VStack } from '@vapor-ui/core';
+import { HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
 
 const options = [
     { label: '옵션 1', value: 'option1' },
@@ -8,11 +8,31 @@ const options = [
 
 export default function MultiSelectStates() {
     return (
-        <VStack gap="$200" width="400px">
-            <MultiSelectTemplate placeholder="기본 상태" />
-            <MultiSelectTemplate placeholder="비활성화" disabled />
-            <MultiSelectTemplate placeholder="읽기 전용" readOnly />
-            <MultiSelectTemplate placeholder="오류 상태" invalid />
+        <VStack $css={{ gap: '$150', width: '400px' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    default
+                </Text>
+                <MultiSelectTemplate placeholder="기본 상태" />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    disabled
+                </Text>
+                <MultiSelectTemplate placeholder="비활성화" disabled />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    readOnly
+                </Text>
+                <MultiSelectTemplate placeholder="읽기 전용" readOnly />
+            </HStack>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    invalid
+                </Text>
+                <MultiSelectTemplate placeholder="오류 상태" invalid />
+            </HStack>
         </VStack>
     );
 }

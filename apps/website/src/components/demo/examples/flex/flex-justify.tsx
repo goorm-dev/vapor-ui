@@ -1,145 +1,165 @@
-import { Flex } from '@vapor-ui/core';
+import { Box, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function FlexJustify() {
     return (
-        <div className="flex flex-col gap-4">
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Flex Start</h4>
+        <VStack $css={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-24" typography="body3" foreground="hint-100">
+                    flex-start
+                </Text>
                 <Flex
-                    justifyContent="flex-start"
-                    gap="$200"
-                    padding="$300"
-                    backgroundColor="gray-100"
-                    borderRadius="$200"
+                    $css={{
+                        justifyContent: 'flex-start',
+                        gap: '$200',
+                        padding: '$300',
+                        backgroundColor: '$basic-gray-100',
+                        borderRadius: '$200',
+                        width: '$2400',
+                    }}
                 >
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#3b82f6',
-                            borderRadius: '4px',
-                            color: 'white',
+                    <Box
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-blue-400',
+                            borderRadius: '$100',
+                            color: '$fg-contrast-100',
                         }}
                     >
                         A
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#10b981',
-                            borderRadius: '4px',
-                            color: 'white',
+                    </Box>
+                    <Box
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-green-400',
+                            borderRadius: '$100',
+                            color: '$fg-contrast-100',
                         }}
                     >
                         B
-                    </div>
+                    </Box>
                 </Flex>
-            </div>
+            </HStack>
 
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Center</h4>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-24" typography="body3" foreground="hint-100">
+                    center
+                </Text>
                 <Flex
-                    justifyContent="center"
-                    gap="$200"
-                    padding="$300"
-                    backgroundColor="gray-100"
-                    borderRadius="$200"
+                    $css={{
+                        justifyContent: 'center',
+                        gap: '$200',
+                        padding: '$300',
+                        backgroundColor: '$basic-gray-100',
+                        borderRadius: '$200',
+                        width: '$2400',
+                    }}
                 >
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#3b82f6',
-                            borderRadius: '4px',
-                            color: 'white',
+                    <Box
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-blue-400',
+                            borderRadius: '$100',
+                            color: '$fg-contrast-100',
                         }}
                     >
                         A
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#10b981',
-                            borderRadius: '4px',
-                            color: 'white',
+                    </Box>
+                    <Box
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-green-400',
+                            borderRadius: '$100',
+                            color: '$fg-contrast-100',
                         }}
                     >
                         B
-                    </div>
+                    </Box>
                 </Flex>
-            </div>
+            </HStack>
 
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Flex End</h4>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-24" typography="body3" foreground="hint-100">
+                    flex-end
+                </Text>
                 <Flex
-                    justifyContent="flex-end"
-                    gap="$200"
-                    padding="$300"
-                    backgroundColor="gray-100"
-                    borderRadius="$200"
+                    $css={{
+                        justifyContent: 'flex-end',
+                        gap: '$200',
+                        padding: '$300',
+                        backgroundColor: '$basic-gray-100',
+                        borderRadius: '$200',
+                        width: '$2400',
+                    }}
                 >
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#3b82f6',
-                            borderRadius: '4px',
-                            color: 'white',
+                    <Box
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-blue-400',
+                            borderRadius: '$100',
+                            color: '$fg-contrast-100',
                         }}
                     >
                         A
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#10b981',
-                            borderRadius: '4px',
-                            color: 'white',
+                    </Box>
+                    <Box
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-green-400',
+                            borderRadius: '$100',
+                            color: '$fg-contrast-100',
                         }}
                     >
                         B
-                    </div>
+                    </Box>
                 </Flex>
-            </div>
+            </HStack>
 
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Space Between</h4>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                <Text className="w-24" typography="body3" foreground="hint-100">
+                    space-between
+                </Text>
                 <Flex
-                    justifyContent="space-between"
-                    gap="$200"
-                    padding="$300"
-                    backgroundColor="gray-100"
-                    borderRadius="$200"
+                    $css={{
+                        justifyContent: 'space-between',
+                        gap: '$200',
+                        padding: '$300',
+                        backgroundColor: '$basic-gray-100',
+                        borderRadius: '$200',
+                        width: '$2400',
+                    }}
                 >
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#3b82f6',
-                            borderRadius: '4px',
-                            color: 'white',
+                    <Box
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-blue-400',
+                            borderRadius: '$100',
+                            color: '$fg-contrast-100',
                         }}
                     >
                         A
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#10b981',
-                            borderRadius: '4px',
-                            color: 'white',
+                    </Box>
+                    <Box
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-green-400',
+                            borderRadius: '$100',
+                            color: '$fg-contrast-100',
                         }}
                     >
                         B
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#f59e0b',
-                            borderRadius: '4px',
-                            color: 'white',
+                    </Box>
+                    <Box
+                        $css={{
+                            padding: '$200',
+                            backgroundColor: '$basic-orange-400',
+                            borderRadius: '$100',
+                            color: '$fg-contrast-100',
                         }}
                     >
                         C
-                    </div>
+                    </Box>
                 </Flex>
-            </div>
-        </div>
+            </HStack>
+        </VStack>
     );
 }

@@ -1,11 +1,16 @@
-import { Button, Tooltip } from '@vapor-ui/core';
+import { Button, HStack, Text, Tooltip, VStack } from '@vapor-ui/core';
 
 export default function TooltipAlignment() {
     return (
-        <div className="space-y-8">
-            <div>
-                <h4 className="text-sm font-medium mb-4">하단 정렬</h4>
-                <div className="flex gap-4">
+        <HStack $css={{ gap: '$400' }}>
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    Bottom Alignment
+                </Text>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        start
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>시작</Button>} />
                         <Tooltip.Popup
@@ -16,7 +21,11 @@ export default function TooltipAlignment() {
                             시작 위치에 정렬된 툴팁
                         </Tooltip.Popup>
                     </Tooltip.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        center
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
                         <Tooltip.Popup
@@ -27,7 +36,11 @@ export default function TooltipAlignment() {
                             중앙에 정렬된 툴팁
                         </Tooltip.Popup>
                     </Tooltip.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        end
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>끝</Button>} />
                         <Tooltip.Popup
@@ -38,12 +51,17 @@ export default function TooltipAlignment() {
                             끝 위치에 정렬된 툴팁
                         </Tooltip.Popup>
                     </Tooltip.Root>
-                </div>
-            </div>
+                </HStack>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-4">우측 정렬</h4>
-                <div className="flex flex-col gap-4">
+            <VStack $css={{ gap: '$150' }}>
+                <Text typography="body3" foreground="hint-100">
+                    Right Alignment
+                </Text>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        start
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>시작</Button>} />
                         <Tooltip.Popup
@@ -54,7 +72,11 @@ export default function TooltipAlignment() {
                             상단 시작 위치
                         </Tooltip.Popup>
                     </Tooltip.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        center
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
                         <Tooltip.Popup
@@ -65,7 +87,11 @@ export default function TooltipAlignment() {
                             중앙 위치
                         </Tooltip.Popup>
                     </Tooltip.Root>
-
+                </HStack>
+                <HStack $css={{ gap: '$150', alignItems: 'center' }}>
+                    <Text className="w-16" typography="body3" foreground="hint-100">
+                        end
+                    </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>끝</Button>} />
                         <Tooltip.Popup
@@ -76,8 +102,8 @@ export default function TooltipAlignment() {
                             하단 끝 위치
                         </Tooltip.Popup>
                     </Tooltip.Root>
-                </div>
-            </div>
-        </div>
+                </HStack>
+            </VStack>
+        </HStack>
     );
 }

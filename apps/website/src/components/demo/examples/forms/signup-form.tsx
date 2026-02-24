@@ -30,21 +30,23 @@ export default function SignupForm() {
 
     return (
         <VStack
-            gap="$250"
-            width="400px"
-            padding="$300"
-            borderRadius="$300"
-            border="1px solid var(--vapor-color-border-normal)"
             className="login"
             render={<Form onSubmit={(event) => event.preventDefault()} />}
+            $css={{
+                gap: '$250',
+                width: '100%',
+                padding: '$300',
+                borderRadius: '$300',
+                border: '1px solid var(--vapor-color-border-normal)',
+            }}
         >
-            <VStack gap="$400">
-                <VStack gap="$200">
+            <VStack $css={{ gap: '$400' }}>
+                <VStack $css={{ gap: '$200' }}>
                     <Field.Root>
                         <Box
                             render={<Field.Label />}
-                            flexDirection="column"
                             className="input-label"
+                            $css={{ flexDirection: 'column' }}
                         >
                             이메일
                             <TextInput id="signup-email" size="lg" required type="email" />
@@ -58,8 +60,8 @@ export default function SignupForm() {
                     <Field.Root>
                         <Box
                             render={<Field.Label />}
-                            flexDirection="column"
                             className="input-label"
+                            $css={{ flexDirection: 'column' }}
                         >
                             비밀번호
                             <TextInput
@@ -83,8 +85,8 @@ export default function SignupForm() {
                     <Field.Root>
                         <Box
                             render={<Field.Label />}
-                            flexDirection="column"
                             className="input-label"
+                            $css={{ flexDirection: 'column' }}
                         >
                             비밀번호 확인
                             <TextInput
@@ -105,8 +107,8 @@ export default function SignupForm() {
                     <Field.Root>
                         <Box
                             render={<Field.Label />}
-                            flexDirection="column"
                             className="input-label"
+                            $css={{ flexDirection: 'column' }}
                         >
                             이름
                             <TextInput id="signup-name" size="lg" required />
@@ -118,8 +120,8 @@ export default function SignupForm() {
                         <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
                             <Box
                                 render={<Field.Label htmlFor="signup-jobs" />}
-                                flexDirection="column"
                                 className="input-label"
+                                $css={{ flexDirection: 'column' }}
                             >
                                 직업
                                 <Select.Trigger id="signup-jobs" />
@@ -136,24 +138,30 @@ export default function SignupForm() {
                     </Field.Root>
                 </VStack>
 
-                <VStack gap="$300">
-                    <VStack justifyContent="space-between" gap="$050">
+                <VStack $css={{ gap: '$300' }}>
+                    <VStack $css={{ justifyContent: 'space-between', gap: '$050' }}>
                         <Field.Root>
                             <Box
                                 render={<Field.Label />}
-                                alignItems="center"
                                 className="checkbox-label"
+                                $css={{ alignItems: 'center' }}
                             >
                                 <Checkbox.Root id="signup-agree-all" />
                                 필수 약관에 모두 동의
                             </Box>
                         </Field.Root>
                         <Field.Root>
-                            <HStack width="100%" justifyContent="space-between" alignItems="center">
+                            <HStack
+                                $css={{
+                                    width: '100%',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
                                 <Box
                                     render={<Field.Label />}
-                                    alignItems="center"
                                     className="checkbox-label"
+                                    $css={{ alignItems: 'center' }}
                                 >
                                     <Checkbox.Root id="signup-terms-of-service" />
                                     이용 약관 동의
@@ -170,11 +178,17 @@ export default function SignupForm() {
                             </HStack>
                         </Field.Root>
                         <Field.Root>
-                            <HStack width="100%" justifyContent="space-between" alignItems="center">
+                            <HStack
+                                $css={{
+                                    width: '100%',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
                                 <Box
                                     render={<Field.Label />}
-                                    alignItems="center"
                                     className="checkbox-label"
+                                    $css={{ alignItems: 'center' }}
                                 >
                                     <Checkbox.Root id="signup-personal-info-collection" />
                                     개인 정보 수집 이용 동의
@@ -196,7 +210,7 @@ export default function SignupForm() {
                 </VStack>
             </VStack>
 
-            <HStack justifyContent={'center'}>
+            <HStack $css={{ justifyContent: 'center' }}>
                 <Text typography="body2">이미 계정이 있으세요?</Text>
                 <Button type="button" size="sm" variant="ghost">
                     로그인

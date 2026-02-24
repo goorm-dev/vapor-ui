@@ -1,7 +1,7 @@
 {
     "name": "Link",
     "displayName": "NavigationMenu.Link",
-    "description": "네비게이션 메뉴 내의 링크 컴포넌트입니다. 다른 페이지나 섹션으로 이동하는 데 사용되며, 선택 및 비활성화 상태를 지원합니다. `<a>` 요소로 렌더링됩니다.",
+    "description": "네비게이션 메뉴 내의 링크 컴포넌트입니다. 다른 페이지나 섹션으로 이동하는 데 사용되며, 현재 페이지 및 비활성화 상태를 지원합니다. `<a>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
@@ -10,12 +10,13 @@
             "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
-            "name": "disabled",
+            "name": "current",
             "type": ["false", "true"],
-            "required": false
+            "required": false,
+            "description": "현재 페이지임을 나타냅니다. true일 경우 aria-current='page'가 설정됩니다."
         },
         {
-            "name": "selected",
+            "name": "disabled",
             "type": ["false", "true"],
             "required": false
         },

@@ -1,5 +1,7 @@
 @layer tw-theme, tw-base, base, vapor, tw-utilities;
 
+@import url(https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css);
+
 @import 'tailwindcss/preflight' layer(tw-base);
 @import 'tailwindcss/theme' layer(tw-theme);
 @import 'tailwindcss/utilities' layer(tw-utilities);
@@ -45,6 +47,18 @@
     --fd-tocnav-height: 64px;
 }
 
+@layer tw-utilities {
+    .border {
+        border-color: var(--vapor-color-border-normal);
+        border-style: var(--tw-border-style);
+        border-width: 1px;
+    }
+}
+
+@theme {
+    --font-mono: var(--vapor-typography-fontFamily-code);
+}
+
 /* ==========================================================================
    Base Styles
    ========================================================================== */
@@ -52,6 +66,10 @@
 /* Prevent layout shift from scrollbar appearance */
 html {
     scrollbar-gutter: stable;
+}
+
+body > main {
+    isolation: isolate;
 }
 
 /* Fallback for older browsers that don't support scrollbar-gutter */
@@ -68,6 +86,20 @@ html {
 a[data-active='true'] {
     color: var(--vapor-color-foreground-primary-100);
 }
-button {
-    border-color: var(--vapor-color-border-normal);
+
+code,
+code * {
+    font-family: var(--font-mono);
+}
+
+#nd-subnav {
+    > div {
+        @apply px-8;
+    }
+}
+
+#nd-sidebar {
+    > [data-fd-if-empty] {
+        @apply hidden;
+    }
 }
