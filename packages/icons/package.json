@@ -58,7 +58,7 @@
         "eslint": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
-        "rimraf": "^6.0.1",
+        "rimraf": "^6.1.3",
         "tsup": "^8.4.0",
         "typescript": "catalog:"
     },
