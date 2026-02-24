@@ -3,7 +3,10 @@
  */
 import { Project } from 'ts-morph';
 
-import { findCssImports, findVariantsTypeImports } from '~/core/parser/defaults/style-import-parser';
+import {
+    findCssImports,
+    findVariantsTypeImports,
+} from '~/core/parser/defaults/style-import-parser';
 
 describe('findCssImports', () => {
     let project: Project;
@@ -97,10 +100,7 @@ describe('findVariantsTypeImports', () => {
     });
 
     it('빈 파일', () => {
-        const source = project.createSourceFile(
-            '/components/empty/empty.tsx',
-            ``,
-        );
+        const source = project.createSourceFile('/components/empty/empty.tsx', ``);
 
         const result = findVariantsTypeImports(source);
 

@@ -28,23 +28,23 @@ describe('getDeclarationSourceType', () => {
 
     describe('REACT_TYPES', () => {
         it('@types/react 경로', () => {
-            expect(
-                getDeclarationSourceType('/node_modules/@types/react/index.d.ts'),
-            ).toBe(DeclarationSourceType.REACT_TYPES);
+            expect(getDeclarationSourceType('/node_modules/@types/react/index.d.ts')).toBe(
+                DeclarationSourceType.REACT_TYPES,
+            );
         });
 
         it('@types/react-dom 경로', () => {
-            expect(
-                getDeclarationSourceType('/node_modules/@types/react-dom/index.d.ts'),
-            ).toBe(DeclarationSourceType.REACT_TYPES);
+            expect(getDeclarationSourceType('/node_modules/@types/react-dom/index.d.ts')).toBe(
+                DeclarationSourceType.REACT_TYPES,
+            );
         });
     });
 
     describe('DOM_TYPES', () => {
         it('typescript/lib 경로', () => {
-            expect(
-                getDeclarationSourceType('/node_modules/typescript/lib/lib.dom.d.ts'),
-            ).toBe(DeclarationSourceType.DOM_TYPES);
+            expect(getDeclarationSourceType('/node_modules/typescript/lib/lib.dom.d.ts')).toBe(
+                DeclarationSourceType.DOM_TYPES,
+            );
         });
     });
 
@@ -57,22 +57,24 @@ describe('getDeclarationSourceType', () => {
 
         it('@base-ui 중첩 경로', () => {
             expect(
-                getDeclarationSourceType('/node_modules/@base-ui/react/collapsible/root/index.d.ts'),
+                getDeclarationSourceType(
+                    '/node_modules/@base-ui/react/collapsible/root/index.d.ts',
+                ),
             ).toBe(DeclarationSourceType.BASE_UI);
         });
     });
 
     describe('EXTERNAL', () => {
         it('기타 node_modules 패키지', () => {
-            expect(
-                getDeclarationSourceType('/node_modules/lodash/index.d.ts'),
-            ).toBe(DeclarationSourceType.EXTERNAL);
+            expect(getDeclarationSourceType('/node_modules/lodash/index.d.ts')).toBe(
+                DeclarationSourceType.EXTERNAL,
+            );
         });
 
         it('@scope 패키지', () => {
-            expect(
-                getDeclarationSourceType('/node_modules/@emotion/react/index.d.ts'),
-            ).toBe(DeclarationSourceType.EXTERNAL);
+            expect(getDeclarationSourceType('/node_modules/@emotion/react/index.d.ts')).toBe(
+                DeclarationSourceType.EXTERNAL,
+            );
         });
     });
 });

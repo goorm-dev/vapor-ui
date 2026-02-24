@@ -136,10 +136,7 @@ describe('findNamespaceImportName', () => {
     });
 
     it('default import는 무시', () => {
-        const source = project.createSourceFile(
-            'test.ts',
-            `import styles from './button.css';`,
-        );
+        const source = project.createSourceFile('test.ts', `import styles from './button.css';`);
 
         const result = findNamespaceImportName(source, './button.css');
 

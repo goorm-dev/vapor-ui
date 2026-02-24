@@ -29,7 +29,7 @@ export const config: ExtractorConfig = {
     filterExternal: true,
     filterHtml: true,
     filterSprinkles: true,
-    includeHtml: ['className', 'style'],
+    includeHtml: ['className'],
     components: {},
 };
 
