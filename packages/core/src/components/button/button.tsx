@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
+import { Button as BaseButton } from '@base-ui/react/button';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
@@ -11,29 +11,25 @@ import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
 export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
-    const { render, className, ...componentProps } = resolveStyles(props);
+    const { className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(componentProps, [
         'colorPalette',
         'size',
         'variant',
     ]);
 
-    const { disabled } = otherProps;
-
-    return useRender({
-        ref,
-        state: { disabled },
-        render: render || <button />,
-        props: {
-            className: clsx(styles.root(variantsProps), className),
-            ...otherProps,
-        },
-    });
+    return (
+        <BaseButton
+            ref={ref}
+            className={clsx(styles.root(variantsProps), className)}
+            {...otherProps}
+        />
+    );
 });
 Button.displayName = 'Button';
 
 export namespace Button {
-    type ButtonPrimitiveProps = VComponentProps<'button'>;
+    type ButtonPrimitiveProps = VComponentProps<typeof BaseButton>;
 
     export interface Props extends ButtonPrimitiveProps, ButtonVariants {}
 }
