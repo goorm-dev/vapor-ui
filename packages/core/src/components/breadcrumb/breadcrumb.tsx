@@ -158,8 +158,9 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
 
         const { size } = useBreadcrumbContext();
 
+        const childrenRender = createRender(childrenProp, <SlashOutlineIcon />);
         const children = useRender({
-            render: createRender(childrenProp, <SlashOutlineIcon />),
+            render: childrenRender,
             props: { width: '100%', height: '100%' },
         });
 
@@ -190,8 +191,9 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
 
     const { size } = useBreadcrumbContext();
 
+    const childrenRender = createRender(childrenProp, <MoreCommonOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <MoreCommonOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 

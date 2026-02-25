@@ -183,8 +183,9 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
 
     const { size } = useMultiSelectContext();
 
+    const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
@@ -220,9 +221,14 @@ MultiSelectTrigger.displayName = 'MultiSelect.Trigger';
  * MultiSelect.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectPortalPrimitive = (props: MultiSelectPortalPrimitive.Props) => {
-    return <BaseSelect.Portal {...props} />;
-};
+export const MultiSelectPortalPrimitive = forwardRef<
+    HTMLDivElement,
+    MultiSelectPortalPrimitive.Props
+>((props, ref) => {
+    const componentProps = resolveStyles(props);
+
+    return <BaseSelect.Portal ref={ref} {...componentProps} />;
+});
 MultiSelectPortalPrimitive.displayName = 'MultiSelect.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -280,13 +286,18 @@ export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Prop
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MultiSelectPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(
+            positionerElement,
+            <MultiSelectPositionerPrimitive />,
+        );
         const positioner = useRender({
-            render: createRender(positionerElement, <MultiSelectPositionerPrimitive />),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <MultiSelectPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <MultiSelectPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -324,8 +335,9 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
+    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
