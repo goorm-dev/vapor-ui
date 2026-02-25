@@ -123,9 +123,7 @@ export const MultiSelectValuePrimitive = forwardRef<
     const children = (value: Array<string>) => {
         return typeof childrenProp === 'function'
             ? childrenProp(value)
-            : (childrenProp ?? renderValue(value) ?? (
-                  <MultiSelectPlaceholderPrimitive>{placeholder}</MultiSelectPlaceholderPrimitive>
-              ));
+            : (childrenProp ?? renderValue(value) ?? placeholder);
     };
 
     return (

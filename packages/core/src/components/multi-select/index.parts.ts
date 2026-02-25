@@ -9,7 +9,6 @@ export {
 
     // Primitives
     MultiSelectValuePrimitive as ValuePrimitive,
-    MultiSelectPlaceholderPrimitive as PlaceholderPrimitive,
     MultiSelectTriggerPrimitive as TriggerPrimitive,
     MultiSelectTriggerIconPrimitive as TriggerIconPrimitive,
     MultiSelectPopupPrimitive as PopupPrimitive,
@@ -17,4 +16,9 @@ export {
     MultiSelectPositionerPrimitive as PositionerPrimitive,
     MultiSelectItemPrimitive as ItemPrimitive,
     MultiSelectItemIndicatorPrimitive as ItemIndicatorPrimitive,
+
+    /**
+     * @deprecated The `MultiSelect.PlaceholderPrimitive` component is deprecated and will be removed in a future release. Please use the `placeholder` prop on `MultiSelect.Root` instead and `data-placeholder` attribute for styling.
+     */
+    MultiSelectPlaceholderPrimitive as PlaceholderPrimitive,
 } from './multi-select';
