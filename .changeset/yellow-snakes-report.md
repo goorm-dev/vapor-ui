@@ -1,5 +1,5 @@
 ---
-'@vapor-ui/core': patch
+'@vapor-ui/core': minor
 ---
 
-Add `@base-ui/react` headless to the `Button` component
+add `@base-ui/react` headless to the `Button` component
