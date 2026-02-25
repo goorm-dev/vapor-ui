@@ -80,7 +80,7 @@ TabsListPrimitive.displayName = 'Tabs.ListPrimitive';
  * Tabs.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsIndicatorPrimitive = forwardRef<HTMLDivElement, TabsIndicatorPrimitive.Props>(
+export const TabsIndicatorPrimitive = forwardRef<HTMLSpanElement, TabsIndicatorPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
         const { orientation, variant } = useTabsContext();
@@ -116,7 +116,7 @@ TabsList.displayName = 'Tabs.List';
  * Tabs.Button
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsButton = forwardRef<HTMLButtonElement, TabsButton.Props>((props, ref) => {
+export const TabsButton = forwardRef<HTMLElement, TabsButton.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: rootDisabled, size, orientation, variant } = useTabsContext();
 

@@ -50,9 +50,14 @@ FloatingBarClose.displayName = 'FloatingBar.Close';
  * FloatingBar.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const FloatingBarPortalPrimitive = (props: FloatingBarPortalPrimitive.Props) => (
-    <Popover.Portal {...props} />
-);
+export const FloatingBarPortalPrimitive = forwardRef<
+    HTMLDivElement,
+    FloatingBarPortalPrimitive.Props
+>((props, ref) => {
+    const componentProps = resolveStyles(props);
+
+    return <Popover.Portal ref={ref} {...componentProps} />;
+});
 FloatingBarPortalPrimitive.displayName = 'FloatingBar.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------

@@ -20,7 +20,8 @@ export const Badge = forwardRef<HTMLSpanElement, Badge.Props>((props, ref) => {
 
     return useRender({
         ref,
-        render: render || <span />,
+        render,
+        defaultTagName: 'span',
         props: {
             className: clsx(styles.root(variantsProps), className),
             ...otherProps,

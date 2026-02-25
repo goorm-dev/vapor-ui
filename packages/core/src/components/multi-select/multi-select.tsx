@@ -176,7 +176,7 @@ MultiSelectPlaceholderPrimitive.displayName = 'MultiSelect.PlaceholderPrimitive'
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectTriggerIconPrimitive = forwardRef<
-    HTMLDivElement,
+    HTMLSpanElement,
     MultiSelectTriggerIconPrimitive.Props
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
@@ -299,7 +299,7 @@ MultiSelectPopup.displayName = 'MultiSelect.Popup';
  * MultiSelect.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectItemPrimitive = forwardRef<HTMLDivElement, MultiSelectItemPrimitive.Props>(
+export const MultiSelectItemPrimitive = forwardRef<HTMLElement, MultiSelectItemPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
 
@@ -345,7 +345,7 @@ MultiSelectItemIndicatorPrimitive.displayName = 'MultiSelect.ItemIndicatorPrimit
  * MultiSelect.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectItem = forwardRef<HTMLDivElement, MultiSelectItemPrimitive.Props>(
+export const MultiSelectItem = forwardRef<HTMLElement, MultiSelectItemPrimitive.Props>(
     (props, ref) => {
         const { children, ...componentProps } = resolveStyles(props);
 

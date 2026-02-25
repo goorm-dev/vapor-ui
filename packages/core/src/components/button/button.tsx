@@ -23,7 +23,8 @@ export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) =
     return useRender({
         ref,
         state: { disabled },
-        render: render || <button />,
+        render,
+        defaultTagName: 'button',
         props: {
             className: clsx(styles.root(variantsProps), className),
             ...otherProps,

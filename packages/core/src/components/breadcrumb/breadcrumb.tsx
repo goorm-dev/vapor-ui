@@ -36,7 +36,8 @@ export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPri
 
         const element = useRender({
             ref,
-            render: render || <nav />,
+            render,
+            defaultTagName: 'nav',
             props: {
                 'aria-label': 'Breadcrumb',
                 ...otherProps,
@@ -58,7 +59,8 @@ export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbLi
 
         return useRender({
             ref,
-            render: render || <ol />,
+            render,
+            defaultTagName: 'ol',
             props: {
                 className: clsx(styles.list, className),
                 ...componentProps,
@@ -93,7 +95,8 @@ export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemP
 
         return useRender({
             ref,
-            render: render || <li />,
+            render,
+            defaultTagName: 'li',
             props: {
                 className: clsx(styles.item, className),
                 ...componentProps,
@@ -110,13 +113,12 @@ BreadcrumbItemPrimitive.displayName = 'Breadcrumb.ItemPrimitive';
 export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         const { render, current, className, ...componentProps } = resolveStyles(props);
-        const Component = current ? 'span' : 'a';
-
         const { size } = useBreadcrumbContext();
 
         return useRender({
             ref,
-            render: render || <Component />,
+            render,
+            defaultTagName: 'a',
             props: {
                 role: current ? 'link' : undefined,
                 'aria-disabled': current ? 'true' : undefined,
@@ -165,7 +167,8 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
 
         return useRender({
             ref,
-            render: render || <li />,
+            render,
+            defaultTagName: 'li',
             props: {
                 role: 'presentation',
                 'aria-hidden': 'true',
@@ -197,7 +200,8 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
 
     return useRender({
         ref,
-        render: render || <span />,
+        render,
+        defaultTagName: 'span',
         props: {
             role: 'presentation',
             'aria-hidden': 'true',

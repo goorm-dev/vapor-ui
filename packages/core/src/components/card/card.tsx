@@ -19,7 +19,8 @@ export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>((props, ref) 
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.root, className),
             ...componentProps,
@@ -37,7 +38,8 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>((props, r
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.header, className),
             ...componentProps,
@@ -55,7 +57,8 @@ export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>((props, ref) 
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.body, className),
             ...componentProps,
@@ -73,7 +76,8 @@ export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>((props, r
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.footer, className),
             ...componentProps,

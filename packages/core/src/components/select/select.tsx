@@ -147,7 +147,7 @@ SelectPlaceholderPrimitive.displayName = 'Select.PlaceholderPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 export const SelectTriggerIconPrimitive = forwardRef<
-    HTMLDivElement,
+    HTMLSpanElement,
     SelectTriggerIconPrimitive.Props
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
@@ -271,7 +271,7 @@ SelectPopup.displayName = 'Select.Popup';
  * Select.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectItemPrimitive = forwardRef<HTMLDivElement, SelectItemPrimitive.Props>(
+export const SelectItemPrimitive = forwardRef<HTMLElement, SelectItemPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
 
@@ -316,7 +316,7 @@ SelectItemIndicatorPrimitive.displayName = 'Select.ItemIndicatorPrimitive';
  * Select.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectItem = forwardRef<HTMLDivElement, SelectItem.Props>((props, ref) => {
+export const SelectItem = forwardRef<HTMLElement, SelectItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
     return (
