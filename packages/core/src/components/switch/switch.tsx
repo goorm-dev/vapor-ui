@@ -73,7 +73,7 @@ export const SwitchThumbPrimitive = forwardRef<HTMLDivElement, SwitchThumbPrimit
         return (
             <BaseSwitch.Thumb
                 ref={ref}
-                className={styles.indicator({ size })}
+                className={clsx(styles.indicator({ size }), className)}
                 {...componentProps}
             />
         );
