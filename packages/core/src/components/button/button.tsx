@@ -10,7 +10,7 @@ import type { VComponentProps } from '~/utils/types';
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
-export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
+export const Button = forwardRef<HTMLElement, Button.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(componentProps, [
         'colorPalette',
