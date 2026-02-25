@@ -17,8 +17,6 @@ export {
     SelectItemPrimitive as ItemPrimitive,
     SelectItemIndicatorPrimitive as ItemIndicatorPrimitive,
 
-    /**
-     * @deprecated The `Select.PlaceholderPrimitive` component is deprecated and will be removed in a future release. Please use the `placeholder` prop on `Select.Root` instead and `data-placeholder` attribute for styling.
-     */
+    /** @deprecated */
     SelectPlaceholderPrimitive as PlaceholderPrimitive,
 } from './select';

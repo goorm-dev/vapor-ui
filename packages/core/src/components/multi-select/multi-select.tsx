@@ -152,6 +152,9 @@ const badgeSizeMap: Record<
  * Select.PlaceholderPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * @deprecated The `MultiSelect.PlaceholderPrimitive` component is deprecated and will be removed in a future release. Please use the `placeholder` prop on `MultiSelect.Root` instead and `data-placeholder` attribute for styling.
+ */
 export const MultiSelectPlaceholderPrimitive = forwardRef<
     HTMLSpanElement,
     MultiSelectPlaceholderPrimitive.Props

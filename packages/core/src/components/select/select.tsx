@@ -123,6 +123,9 @@ SelectValuePrimitive.displayName = 'Select.ValuePrimitive';
  * Select.PlaceholderPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * @deprecated The `Select.PlaceholderPrimitive` component is deprecated and will be removed in a future release. Please use the `placeholder` prop on `Select.Root` instead and `data-placeholder` attribute for styling.
+ */
 export const SelectPlaceholderPrimitive = forwardRef<
     HTMLSpanElement,
     SelectPlaceholderPrimitive.Props
