@@ -64,7 +64,6 @@ export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPri
             siblingCount = 2,
             boundaryCount = 1,
             disabled = false,
-            className,
             ...componentProps
         } = props;
 

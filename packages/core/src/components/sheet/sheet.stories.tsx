@@ -20,7 +20,7 @@ export const Default: SheetStory = {
             options: ['top', 'right', 'bottom', 'left'],
         },
     },
-    render: ({ open, defaultOpen, side, ...args }) => {
+    render: ({ side, ...args }) => {
         return (
             <VStack $css={{ height: '1000vh' }}>
                 <Sheet.Root {...args}>

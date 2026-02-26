@@ -29,7 +29,7 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
 
 export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     (props, ref) => {
-        const { render, className, ...componentProps } = resolveStyles(props);
+        const { render, ...componentProps } = resolveStyles(props);
         const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(componentProps, [
             'size',
         ]);

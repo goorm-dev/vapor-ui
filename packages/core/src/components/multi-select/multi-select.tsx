@@ -158,7 +158,7 @@ export const MultiSelectPlaceholderPrimitive = forwardRef<
     HTMLSpanElement,
     MultiSelectPlaceholderPrimitive.Props
 >((props, ref) => {
-    const { render, className, ...componentProps } = resolveStyles(props);
+    const { className, ...componentProps } = resolveStyles(props);
     const { size } = useMultiSelectContext();
 
     return (
