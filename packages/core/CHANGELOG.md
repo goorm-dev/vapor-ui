@@ -1,5 +1,17 @@
 # @vapor-ui/core
 
+## 1.2.0
+
+### Button
+
+- add `@base-ui/react` headless to the `Button` component ([#501](https://github.com/goorm-dev/vapor-ui/pull/501)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Css
+
+- remove duplication from deprecated sprinkles ([#494](https://github.com/goorm-dev/vapor-ui/pull/494)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- split sprinkles className and hash with `-` ([#495](https://github.com/goorm-dev/vapor-ui/pull/495)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
 ## 1.1.0
 
 ### General changes
