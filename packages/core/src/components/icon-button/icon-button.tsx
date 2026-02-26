@@ -12,7 +12,7 @@ import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
-export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props, ref) => {
+export const IconButton = forwardRef<HTMLElement, IconButton.Props>((props, ref) => {
     const {
         'aria-label': ariaLabel,
         className,
