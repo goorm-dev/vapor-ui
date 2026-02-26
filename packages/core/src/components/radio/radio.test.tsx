@@ -1,3 +1,5 @@
+import { createRef } from 'react';
+
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -18,27 +20,25 @@ describe('<Radio.Root />', () => {
     });
 
     it('allows `null` value', async () => {
-        const name = 'test-radio-group';
+        const groupInputRef = createRef<HTMLInputElement>();
         const rendered = render(
-            <RadioGroup.Root name={name}>
+            <RadioGroup.Root inputRef={groupInputRef}>
                 <Radio.Root value={null} data-testid="radio-null" />
                 <Radio.Root value="a" data-testid="radio-a" />
             </RadioGroup.Root>,
         );
 
-        const input =
-            rendered.container.querySelector<HTMLInputElement>(`input:not([type="radio"])`);
-        expect(input).toBeInTheDocument();
-
         const radioNull = rendered.getByTestId('radio-null');
         const radioA = rendered.getByTestId('radio-a');
+        const inputNull = radioNull.nextElementSibling as HTMLInputElement;
+        const inputA = radioA.nextElementSibling as HTMLInputElement;
 
         await userEvent.click(radioNull);
         expect(radioNull).toBeChecked();
-        expect(input).toHaveValue('');
+        expect(groupInputRef.current).toBe(inputNull);
 
         await userEvent.click(radioA);
         expect(radioNull).not.toBeChecked();
-        expect(input).toHaveValue('a');
+        expect(groupInputRef.current).toBe(inputA);
     });
 });

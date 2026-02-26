@@ -1,4 +1,4 @@
-import { act } from 'react';
+import { act, createRef } from 'react';
 
 import { Radio } from '@base-ui/react/radio';
 import { render } from '@testing-library/react';
@@ -101,15 +101,17 @@ describe('RadioGroup', () => {
 
     it('should propagate the name attribute to the input', async () => {
         const name = 'test-radio-group';
-        const rendered = render(<RadioGroupTest defaultValue={'option1'} name={name} />);
-
-        const input = rendered.container.querySelector<HTMLInputElement>(`input[name="${name}"]`);
-        expect(input).toBeInTheDocument();
+        const groupInputRef = createRef<HTMLInputElement>();
+        const rendered = render(
+            <RadioGroupTest defaultValue={'option1'} name={name} inputRef={groupInputRef} />,
+        );
 
         const [_, radio2] = rendered.getAllByRole('radio');
+        const input2 = radio2.nextElementSibling as HTMLInputElement;
+
         await userEvent.click(radio2);
 
-        expect(input).toHaveValue('option2');
+        expect(groupInputRef.current).toBe(input2);
     });
 
     it('should include the radio value in the form submission', async ({ skip }) => {
