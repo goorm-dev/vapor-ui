@@ -6,6 +6,7 @@
         "installation",
         "releases",
         "llms-txt",
+        "agent-skills",
         "tailwindcss-v4",
         "eslint",
         "codemod"
