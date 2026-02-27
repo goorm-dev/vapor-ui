@@ -94,7 +94,8 @@ export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPri
 
         const element = useRender({
             ref,
-            render: render || <nav />,
+            render,
+            defaultTagName: 'nav',
             props: {
                 'aria-label': 'Pagination',
                 ...otherProps,
@@ -127,7 +128,8 @@ export const PaginationListPrimitive = forwardRef<HTMLOListElement, PaginationLi
     ({ render, className, ...props }, ref) => {
         return useRender({
             ref,
-            render: render || <ol />,
+            render,
+            defaultTagName: 'ol',
             props: {
                 className: clsx(styles.list, className),
                 ...props,
@@ -145,7 +147,8 @@ export const PaginationItemPrimitive = forwardRef<HTMLLIElement, PaginationItemP
     ({ render, className, ...props }, ref) => {
         return useRender({
             ref,
-            render: render || <li />,
+            render,
+            defaultTagName: 'li',
             props: {
                 className: clsx(styles.item, className),
                 ...props,
@@ -176,7 +179,8 @@ export const PaginationButtonPrimitive = forwardRef<
 
     return useRender({
         ref,
-        render: render || <button />,
+        render,
+        defaultTagName: 'button',
         state: { current, disabled },
         props: {
             'aria-label': `Page ${page}`,
@@ -225,7 +229,8 @@ export const PaginationPreviousPrimitive = forwardRef<
 
     return useRender({
         ref,
-        render: render || <button />,
+        render,
+        defaultTagName: 'button',
         state: { disabled },
         props: {
             'aria-label': 'Previous Page',
@@ -293,7 +298,8 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
 
         return useRender({
             ref,
-            render: render || <button />,
+            render,
+            defaultTagName: 'button',
             state: { disabled },
             props: {
                 'aria-label': 'Next Page',
@@ -341,7 +347,8 @@ export const PaginationEllipsisPrimitive = forwardRef<
 
     return useRender({
         ref,
-        render: render || <span />,
+        render,
+        defaultTagName: 'span',
         state: { disabled },
         props: {
             role: 'presentation',

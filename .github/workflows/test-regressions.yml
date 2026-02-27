@@ -1,4 +1,4 @@
-name: 'Visual Regression'
+name: "Visual Regression"
 
 on:
     workflow_dispatch:
@@ -18,7 +18,7 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    REPORT_PATH: ''
+    REPORT_PATH: ""
     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
     TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
@@ -95,6 +95,13 @@ jobs:
 
             - name: Merge into HTML Report
               run: pnpm core exec playwright merge-reports -c ./playwright.merge.ts ../../all-blob-reports
+
+            - name: Upload HTML report
+              uses: actions/upload-artifact@v4
+              with:
+                  name: html-report--attempt-${{ github.run_attempt }}
+                  path: packages/core/__tests__/report
+                  retention-days: 14
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v4

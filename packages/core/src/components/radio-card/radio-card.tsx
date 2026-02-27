@@ -14,7 +14,7 @@ import { useRadioGroupContext } from '../radio-group';
 import type { RadioCardVariants } from './radio-card.css';
 import * as styles from './radio-card.css';
 
-export const RadioCard = forwardRef<HTMLButtonElement, RadioCard.Props>((props, ref) => {
+export const RadioCard = forwardRef<HTMLElement, RadioCard.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const { invalid: contextInvalid } = useRadioGroupContext();
 

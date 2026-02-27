@@ -54,7 +54,8 @@ export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((
 
     const element = useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.root, className),
             ...componentProps,
@@ -92,7 +93,8 @@ export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.P
 
         return useRender({
             ref,
-            render: render || <span />,
+            render,
+            defaultTagName: 'span',
             props: {
                 className: clsx(styles.counter, className),
                 children,

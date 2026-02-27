@@ -67,7 +67,7 @@ FloatingBarPortalPrimitive.displayName = 'FloatingBar.PortalPrimitive';
 /**
  * Fixed position styles for the FloatingBar
  */
-const positions = { top: 'initial', left: '50%', transform: 'translateX(-50%)' };
+const positions = { top: 'initial', opacity: 1, left: '50%', transform: 'translateX(-50%)' };
 
 export const FloatingBarPositionerPrimitive = forwardRef<
     HTMLDivElement,

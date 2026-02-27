@@ -20,7 +20,8 @@ export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
 
     return useRender({
         ref,
-        render: render || <span />,
+        render,
+        defaultTagName: 'span',
         props: {
             className: clsx(
                 typography({ style: typographyStyle }),

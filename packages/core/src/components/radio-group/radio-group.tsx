@@ -81,7 +81,8 @@ export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props
 
     return useRender({
         ref,
-        render: render || <span />,
+        render,
+        defaultTagName: 'span',
         state: { invalid },
         props: { id, className: clsx(styles.label, className), ...componentProps },
     });

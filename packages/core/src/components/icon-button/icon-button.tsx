@@ -13,12 +13,7 @@ import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
 export const IconButton = forwardRef<HTMLElement, IconButton.Props>((props, ref) => {
-    const {
-        'aria-label': ariaLabel,
-        className,
-        children: childrenProp,
-        ...componentProps
-    } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(componentProps, [
         'shape',
@@ -34,12 +29,7 @@ export const IconButton = forwardRef<HTMLElement, IconButton.Props>((props, ref)
     });
 
     return (
-        <Button
-            ref={ref}
-            aria-label={ariaLabel}
-            className={clsx(styles.root(variantProps), className)}
-            {...otherProps}
-        >
+        <Button ref={ref} className={clsx(styles.root(variantProps), className)} {...otherProps}>
             {children}
         </Button>
     );
