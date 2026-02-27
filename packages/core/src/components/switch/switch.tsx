@@ -40,8 +40,9 @@ export const SwitchRoot = forwardRef<HTMLElement, SwitchRoot.Props>((props, ref)
     const { required } = otherProps;
     const dataAttrs = createDataAttributes({ invalid });
 
+    const childrenRender = createRender(childrenProp, <SwitchThumbPrimitive />);
     const children = useRender({
-        render: createRender(childrenProp, <SwitchThumbPrimitive />),
+        render: childrenRender,
     });
 
     return (

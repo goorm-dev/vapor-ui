@@ -154,8 +154,9 @@ export const SelectTriggerIconPrimitive = forwardRef<
 
     const { size } = useSelectContext();
 
+    const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+        render: childrenRender,
     });
 
     return (
@@ -190,9 +191,14 @@ SelectTrigger.displayName = 'Select.Trigger';
  * Select.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectPortalPrimitive = (props: SelectPortalPrimitive.Props) => {
-    return <BaseSelect.Portal {...props} />;
-};
+export const SelectPortalPrimitive = forwardRef<HTMLDivElement, SelectPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <BaseSelect.Portal ref={ref} {...componentProps} />;
+    },
+);
+SelectPortalPrimitive.displayName = 'Select.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.PositionerPrimitive
@@ -252,13 +258,15 @@ export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <SelectPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(positionerElement, <SelectPositionerPrimitive />);
         const positioner = useRender({
-            render: createRender(positionerElement, <SelectPositionerPrimitive />),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <SelectPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <SelectPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -296,8 +304,9 @@ export const SelectItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
+    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        render: childrenRender,
     });
 
     return (

@@ -64,6 +64,7 @@ export const MenuPortalPrimitive = forwardRef<HTMLDivElement, MenuPortalPrimitiv
         return <BaseMenu.Portal ref={ref} {...componentProps} />;
     },
 );
+MenuPortalPrimitive.displayName = 'Menu.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.PositionerPrimitive
@@ -113,13 +114,15 @@ export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(positionerElement, <MenuPositionerPrimitive />);
         const positioner = useRender({
-            render: createRender(positionerElement, <MenuPositionerPrimitive />),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <MenuPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <MenuPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -282,16 +285,18 @@ export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Prop
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(
+            positionerElement,
+            <MenuPositionerPrimitive side="right" sideOffset={0} />,
+        );
         const positioner = useRender({
-            render: createRender(
-                positionerElement,
-                <MenuPositionerPrimitive side="right" sideOffset={0} />,
-            ),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <MenuPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <MenuPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -340,8 +345,9 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
+    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
@@ -418,8 +424,9 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
+    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 

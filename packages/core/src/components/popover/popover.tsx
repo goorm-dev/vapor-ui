@@ -51,9 +51,13 @@ PopoverClose.displayName = 'Popover.Close';
  * Popover.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const PopoverPortalPrimitive = (props: PopoverPortalPrimitive.Props) => {
-    return <BasePopover.Portal {...props} />;
-};
+export const PopoverPortalPrimitive = forwardRef<HTMLDivElement, PopoverPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <BasePopover.Portal ref={ref} {...componentProps} />;
+    },
+);
 PopoverPortalPrimitive.displayName = 'Popover.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -160,13 +164,15 @@ export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <PopoverPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(positionerElement, <PopoverPositionerPrimitive />);
         const positioner = useRender({
-            render: createRender(positionerElement, <PopoverPositionerPrimitive />),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <PopoverPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement ?? <PopoverPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 

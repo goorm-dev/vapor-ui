@@ -1,7 +1,8 @@
 // @ts-check
+import { importX } from 'eslint-plugin-import-x';
+
 import { rules } from './libs/import-rule.js';
 import { settings } from './libs/import-setting.js';
-import { importX } from 'eslint-plugin-import-x';
 
 /**
  * @description https://github.com/typescript-eslint/typescript-eslint/issues/10935 If this issue closed, we can remove any type.

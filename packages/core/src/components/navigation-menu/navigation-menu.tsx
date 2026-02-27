@@ -168,8 +168,9 @@ export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
+    const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+        render: childrenRender,
     });
 
     return (
@@ -226,9 +227,14 @@ NavigationMenuContent.displayName = 'NavigationMenu.Content';
  * NavigationMenu.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const NavigationMenuPortalPrimitive = (props: NavigationMenuPortalPrimitive.Props) => {
-    return <BaseNavigationMenu.Portal {...props} />;
-};
+export const NavigationMenuPortalPrimitive = forwardRef<
+    HTMLDivElement,
+    NavigationMenuPortalPrimitive.Props
+>((props, ref) => {
+    const componentProps = resolveStyles(props);
+
+    return <BaseNavigationMenu.Portal ref={ref} {...componentProps} />;
+});
 NavigationMenuPortalPrimitive.displayName = 'NavigationMenu.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -408,18 +414,24 @@ export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuV
     ({ portalElement, positionerElement, popupElement, ...props }, ref) => {
         const viewport = <NavigationMenuViewportPrimitive ref={ref} {...props} />;
 
+        const popupRender = createRender(popupElement, <NavigationMenuPopupPrimitive />);
         const popup = useRender({
-            render: createRender(popupElement, <NavigationMenuPopupPrimitive />),
+            render: popupRender,
             props: { children: viewport },
         });
 
+        const positionerRender = createRender(
+            positionerElement,
+            <NavigationMenuPositionerPrimitive />,
+        );
         const positioner = useRender({
-            render: createRender(positionerElement, <NavigationMenuPositionerPrimitive />),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <NavigationMenuPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <NavigationMenuPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 
