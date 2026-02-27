@@ -1,8 +1,9 @@
 // @ts-check
+import storybook from 'eslint-plugin-storybook';
+
 import * as imports from './import.js';
 import * as base from './index.js';
 import * as react from './react.js';
-import storybook from 'eslint-plugin-storybook';
 
 /** @type {import("eslint").Linter.Config[]} */
 export const configs = [

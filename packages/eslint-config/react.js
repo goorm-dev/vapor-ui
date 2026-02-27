@@ -1,9 +1,10 @@
-import { rules as rulesJsxA11y } from './libs/a11y-jsx-rule.js';
-import { rules as rulesReact } from './libs/react-rule.js';
-import { settings } from './libs/react-setting.js';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+
+import { rules as rulesJsxA11y } from './libs/a11y-jsx-rule.js';
+import { rules as rulesReact } from './libs/react-rule.js';
+import { settings } from './libs/react-setting.js';
 
 /** @type {Record<string, import('eslint').ESLint.Plugin>} */
 export const plugins = {
