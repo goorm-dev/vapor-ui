@@ -67,6 +67,10 @@ export const value = recipe({
             flexWrap: 'wrap',
             alignItems: 'center',
             gap: vars.size.space['050'],
+
+            selectors: {
+                '&[data-placeholder]': { color: vars.color.foreground.hint[100] },
+            },
         }),
     ],
 
@@ -105,6 +109,9 @@ export const value = recipe({
     },
 });
 
+/**
+ * @deprecated Use `data-placeholder` attribute on `MultiSelect.Value` instead.
+ */
 export const placeholder = recipe({
     base: [foregrounds({ color: 'hint-100' })],
 
