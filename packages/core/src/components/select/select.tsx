@@ -191,9 +191,13 @@ SelectTrigger.displayName = 'Select.Trigger';
  * Select.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectPortalPrimitive = (props: SelectPortalPrimitive.Props) => {
-    return <BaseSelect.Portal {...props} />;
-};
+export const SelectPortalPrimitive = forwardRef<HTMLDivElement, SelectPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <BaseSelect.Portal ref={ref} {...componentProps} />;
+    },
+);
 SelectPortalPrimitive.displayName = 'Select.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------

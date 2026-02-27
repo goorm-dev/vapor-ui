@@ -1,7 +1,8 @@
 // @ts-check
+import globals from 'globals';
+
 import { ecmaVersion } from './libs/constants.js';
 import rules from './libs/core-rule.js';
-import globals from 'globals';
 
 export { rules };
 
