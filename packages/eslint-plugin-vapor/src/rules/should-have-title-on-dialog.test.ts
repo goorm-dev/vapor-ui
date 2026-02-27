@@ -2,8 +2,11 @@ import { RuleTester } from 'eslint';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
-import { hasDialogTitle, isDialogTitle } from './should-have-title-on-dialog';
-import { shouldHaveTitleOnDialogRule } from './should-have-title-on-dialog';
+import {
+    hasDialogTitle,
+    isDialogTitle,
+    shouldHaveTitleOnDialogRule,
+} from './should-have-title-on-dialog';
 
 const ruleTester = new RuleTester({
     languageOptions: {
