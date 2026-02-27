@@ -130,7 +130,7 @@ export const SelectPlaceholderPrimitive = forwardRef<
     HTMLSpanElement,
     SelectPlaceholderPrimitive.Props
 >((props, ref) => {
-    const { render, className, ...componentProps } = resolveStyles(props);
+    const { className, ...componentProps } = resolveStyles(props);
 
     return (
         <BaseSelect.Value

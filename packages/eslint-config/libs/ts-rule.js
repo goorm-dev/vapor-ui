@@ -43,7 +43,7 @@ export const rules = {
         ERROR,
         {
             args: 'after-used',
-            ignoreRestSiblings: true,
+            ignoreRestSiblings: false,
             argsIgnorePattern: '^_',
             caughtErrorsIgnorePattern: '^_',
             destructuredArrayIgnorePattern: '^_',
