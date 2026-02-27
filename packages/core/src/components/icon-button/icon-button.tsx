@@ -24,8 +24,9 @@ export const IconButton = forwardRef<HTMLElement, IconButton.Props>((props, ref)
         'shape',
     ]);
 
+    const childrenRender = createRender(childrenProp);
     const children = useRender({
-        render: createRender(childrenProp),
+        render: childrenRender,
         props: {
             'aria-hidden': 'true',
             className: styles.icon,

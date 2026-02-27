@@ -217,8 +217,9 @@ export const PaginationPreviousPrimitive = forwardRef<
         setPage(page - 1, details);
     });
 
+    const childrenRender = createRender(childrenProp, <ChevronLeftOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ChevronLeftOutlineIcon />),
+        render: childrenRender,
         props: { 'aria-hidden': 'true', className: styles.icon },
     });
 
@@ -284,8 +285,9 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             setPage(page + 1, details);
         });
 
+        const childrenRender = createRender(childrenProp, <ChevronRightOutlineIcon />);
         const children = useRender({
-            render: createRender(childrenProp, <ChevronRightOutlineIcon />),
+            render: childrenRender,
             props: { 'aria-hidden': 'true', className: styles.icon },
         });
 
@@ -331,8 +333,9 @@ export const PaginationEllipsisPrimitive = forwardRef<
 
     const { size, disabled } = usePaginationContext();
 
+    const childrenRender = createRender(childrenProp, <MoreCommonOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <MoreCommonOutlineIcon />),
+        render: childrenRender,
         props: { width: 'max(16px, 50%)', height: 'max(16px, 50%)' },
     });
 
