@@ -1,7 +1,6 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, MouseEvent } from 'react';
-import type { Fragment } from 'react';
+import type { ComponentPropsWithoutRef, Fragment, MouseEvent } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import { useRender } from '@base-ui/react/use-render';

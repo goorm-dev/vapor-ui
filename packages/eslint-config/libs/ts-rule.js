@@ -2,7 +2,14 @@ import { ERROR, OFF } from './constants.js';
 
 /** @type {Partial<import('eslint').Linter.RulesRecord>} */
 export const rules = {
-    'no-duplicate-imports': OFF,
+    // 'no-duplicate-imports': OFF,
+    'no-duplicate-imports': [
+        ERROR,
+        {
+            includeExports: true,
+            allowSeparateTypeImports: true,
+        },
+    ],
     'no-undef': OFF,
     'no-redeclare': OFF,
 
