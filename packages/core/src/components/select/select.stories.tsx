@@ -160,7 +160,16 @@ export const TestBed = {
                 templateRows="repeat(auto-fit, minmax(150px, 1fr))"
             >
                 <Grid.Item>
+                    <Select.Root size="sm" placeholder="Placeholder">
+                        <Select.Trigger />
+                    </Select.Root>
                     <Select.Root placeholder="Placeholder">
+                        <Select.Trigger />
+                    </Select.Root>
+                    <Select.Root size="lg" placeholder="Placeholder">
+                        <Select.Trigger />
+                    </Select.Root>
+                    <Select.Root size="xl" placeholder="Placeholder">
                         <Select.Trigger />
                     </Select.Root>
                 </Grid.Item>
