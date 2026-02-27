@@ -1,6 +1,7 @@
+import next from '@next/eslint-plugin-next';
+
 import * as base from './index.js';
 import * as react from './react.js';
-import next from '@next/eslint-plugin-next';
 
 /** @type {Record<string, import('eslint').ESLint.Plugin>} */
 const plugins = {
