@@ -223,18 +223,11 @@ export const TestBed = {
                 templateRows="repeat(auto-fit, minmax(150px, 1fr))"
             >
                 <Grid.Item>
-                    <MultiSelect.Root size="sm" placeholder="Placeholder">
-                        <MultiSelect.Trigger />
-                    </MultiSelect.Root>
-                    <MultiSelect.Root placeholder="Placeholder">
-                        <MultiSelect.Trigger />
-                    </MultiSelect.Root>
-                    <MultiSelect.Root size="lg" placeholder="Placeholder">
-                        <MultiSelect.Trigger />
-                    </MultiSelect.Root>
-                    <MultiSelect.Root size="xl" placeholder="Placeholder">
-                        <MultiSelect.Trigger />
-                    </MultiSelect.Root>
+                    {(['sm', 'md', 'lg', 'xl'] as const).map((size) => (
+                        <MultiSelect.Root key={size} size={size} placeholder="Placeholder">
+                            <MultiSelect.Trigger />
+                        </MultiSelect.Root>
+                    ))}
                 </Grid.Item>
 
                 <Grid.Item>
