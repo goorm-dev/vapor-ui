@@ -1,0 +1,66 @@
+{
+  "componentName": "Dialog",
+  "displayNamePrefix": "Dialog",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "DialogRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "DialogTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "DialogPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "OverlayPrimitive",
+      "fullName": "DialogOverlayPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PopupPrimitive",
+      "fullName": "DialogPopupPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "Popup",
+      "fullName": "DialogPopup",
+      "isPrimitive": false
+    },
+    {
+      "name": "Title",
+      "fullName": "DialogTitle",
+      "isPrimitive": false
+    },
+    {
+      "name": "Description",
+      "fullName": "DialogDescription",
+      "isPrimitive": false
+    },
+    {
+      "name": "Close",
+      "fullName": "DialogClose",
+      "isPrimitive": false
+    },
+    {
+      "name": "Header",
+      "fullName": "DialogHeader",
+      "isPrimitive": false
+    },
+    {
+      "name": "Body",
+      "fullName": "DialogBody",
+      "isPrimitive": false
+    },
+    {
+      "name": "Footer",
+      "fullName": "DialogFooter",
+      "isPrimitive": false
+    }
+  ]
+}

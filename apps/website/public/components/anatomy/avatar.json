@@ -1,0 +1,21 @@
+{
+  "componentName": "Avatar",
+  "displayNamePrefix": "Avatar",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "AvatarRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "ImagePrimitive",
+      "fullName": "AvatarImagePrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "FallbackPrimitive",
+      "fullName": "AvatarFallbackPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

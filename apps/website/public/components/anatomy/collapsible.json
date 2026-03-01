@@ -1,0 +1,21 @@
+{
+  "componentName": "Collapsible",
+  "displayNamePrefix": "Collapsible",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "CollapsibleRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "CollapsibleTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "Panel",
+      "fullName": "CollapsiblePanel",
+      "isPrimitive": false
+    }
+  ]
+}

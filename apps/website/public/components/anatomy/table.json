@@ -1,0 +1,51 @@
+{
+  "componentName": "Table",
+  "displayNamePrefix": "Table",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "TableRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Header",
+      "fullName": "TableHeader",
+      "isPrimitive": false
+    },
+    {
+      "name": "Body",
+      "fullName": "TableBody",
+      "isPrimitive": false
+    },
+    {
+      "name": "Footer",
+      "fullName": "TableFooter",
+      "isPrimitive": false
+    },
+    {
+      "name": "Heading",
+      "fullName": "TableHeading",
+      "isPrimitive": false
+    },
+    {
+      "name": "Row",
+      "fullName": "TableRow",
+      "isPrimitive": false
+    },
+    {
+      "name": "Cell",
+      "fullName": "TableCell",
+      "isPrimitive": false
+    },
+    {
+      "name": "ColumnGroup",
+      "fullName": "TableColumnGroup",
+      "isPrimitive": false
+    },
+    {
+      "name": "Column",
+      "fullName": "TableColumn",
+      "isPrimitive": false
+    }
+  ]
+}

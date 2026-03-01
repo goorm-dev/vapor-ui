@@ -1,0 +1,41 @@
+{
+  "componentName": "FloatingBar",
+  "displayNamePrefix": "FloatingBar",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "FloatingBarRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "FloatingBarTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "Popup",
+      "fullName": "FloatingBarPopup",
+      "isPrimitive": false
+    },
+    {
+      "name": "Close",
+      "fullName": "FloatingBarClose",
+      "isPrimitive": false
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "FloatingBarPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PositionerPrimitive",
+      "fullName": "FloatingBarPositionerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PopupPrimitive",
+      "fullName": "FloatingBarPopupPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

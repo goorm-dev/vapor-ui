@@ -1,0 +1,16 @@
+{
+  "componentName": "Callout",
+  "displayNamePrefix": "Callout",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "CalloutRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Icon",
+      "fullName": "CalloutIcon",
+      "isPrimitive": false
+    }
+  ]
+}

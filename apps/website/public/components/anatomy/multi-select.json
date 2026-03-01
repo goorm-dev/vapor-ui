@@ -1,0 +1,86 @@
+{
+  "componentName": "MultiSelect",
+  "displayNamePrefix": "MultiSelect",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "MultiSelectRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "MultiSelectTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "Popup",
+      "fullName": "MultiSelectPopup",
+      "isPrimitive": false
+    },
+    {
+      "name": "Group",
+      "fullName": "MultiSelectGroup",
+      "isPrimitive": false
+    },
+    {
+      "name": "GroupLabel",
+      "fullName": "MultiSelectGroupLabel",
+      "isPrimitive": false
+    },
+    {
+      "name": "Item",
+      "fullName": "MultiSelectItem",
+      "isPrimitive": false
+    },
+    {
+      "name": "Separator",
+      "fullName": "MultiSelectSeparator",
+      "isPrimitive": false
+    },
+    {
+      "name": "ValuePrimitive",
+      "fullName": "MultiSelectValuePrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PlaceholderPrimitive",
+      "fullName": "MultiSelectPlaceholderPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "TriggerPrimitive",
+      "fullName": "MultiSelectTriggerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "TriggerIconPrimitive",
+      "fullName": "MultiSelectTriggerIconPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PopupPrimitive",
+      "fullName": "MultiSelectPopupPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "MultiSelectPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PositionerPrimitive",
+      "fullName": "MultiSelectPositionerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ItemPrimitive",
+      "fullName": "MultiSelectItemPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ItemIndicatorPrimitive",
+      "fullName": "MultiSelectItemIndicatorPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}
