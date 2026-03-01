@@ -6,9 +6,13 @@
 
 ---
 
-- **Package Manager**: PNPM v9+
+- **Package Manager**: PNPM (workspace 기반 모노레포)
 - **Node.js**: v18+
-- **Linting & Formatting**: ESLint, Prettier 사용 (IDE 연동 및 Git Hook 설정 권장)
+- **UI Primitives**: `@base-ui/react` (Accessible unstyled components)
+- **Styling**: Vanilla Extract (`@vanilla-extract/css`, `@vanilla-extract/recipes`)
+- **Testing**: Vitest + React Testing Library + vitest-axe
+- **Storybook**: Storybook 9 (`@storybook/react-vite`)
+- **Linting & Formatting**: ESLint, Prettier
 
 # 2. Git & 버전 관리
 
@@ -37,7 +41,6 @@
 ### **2.2.1. 주요 Commit Types & SemVer 영향:**
 
 - **`feat`**: 새로운 기능 추가 (컴포넌트, prop 등). **`MINOR` 버전 상승.**
-
     - 예시:
 
         ```bash
@@ -50,7 +53,6 @@
         ```
 
 - **`fix`**: 버그 수정. **`PATCH` 버전 상승.**
-
     - 예시:
 
         ```bash
@@ -63,7 +65,6 @@
         ```
 
 - **`BREAKING CHANGE`**: API 호환성이 깨지는 변경. `type` 뒤에 `!`를 붙이거나, 푸터에 `BREAKING CHANGE:` 명시. **`MAJOR` 버전 상승.**
-
     - 예시:
       (v1.4.2 -> v2.0.0)
 
@@ -112,17 +113,37 @@
 
 ## 3.1. 모듈 (Import & Export)
 
-- **절대 경로 사용**: 2-depth 이상 상대 경로 대신 `tsconfig.json`의 `paths` 활용.
+- **절대 경로 사용**: 같은 디렉터리 내 파일은 `./` 상대 경로 허용. 그 외 모든 경우 `tsconfig.json`의 `paths`에 정의된 `~/*` 별칭 사용.
+
     ```tsx
-    // Good
-    import { Button } from '@components/button';
+    // Good - 같은 디렉터리 내 sibling import
+    import * as styles from './button.css';
+    import { buttonVariants } from './button.variants';
+
+    // Good - 다른 디렉터리는 절대 경로
+    import { resolveStyles } from '~/utils/resolve-styles';
+    import { vars } from '~/styles/themes.css';
+    import { createContext } from '~/libs/create-context';
+    import type { VComponentProps } from '~/utils/types';
+
+    // Bad - 상위 디렉터리 접근 시 상대 경로
+    import { resolveStyles } from '../../../utils/resolve-styles';
+    import { shared } from '../shared';
     ```
-- **외부 패키지 Namespace**: `as` 키워드로 명확한 네임스페이스 사용.
+
+- **외부 패키지 Import**: Base UI 컴포넌트는 개별 엔트리포인트에서 named import. namespace import는 스타일 파일에 사용.
+
     ```tsx
-    import * as RadixCheckbox from '@radix-ui/react-checkbox';
+    // Base UI 컴포넌트
+    import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
+    import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+    import { useRender } from '@base-ui/react/use-render';
+
+    // 스타일 파일
+    import * as styles from './button.css';
     ```
+
 - **Named Exports 지향**: `default export` 보다 `named export` 사용.
-    - 컴파운드 컴포넌트 export 방식은 [6.2.1. Export 방식](https://www.notion.so/1e74e6997fb0803794e2e0bb33ca4b74?pvs=21) 참조
     ```tsx
     export const MyComponent = () => {
         /* ... */
@@ -131,38 +152,36 @@
         /* ... */
     };
     ```
-- **Props 타입 Export**: 컴포넌트명 포함.
-    - 컴파운드 컴포넌트 타입 그룹화는 [6.2.2. 타입 그룹화](https://www.notion.so/1e74e6997fb0803794e2e0bb33ca4b74?pvs=21) 참조
+- **Props 타입 Export**: namespace를 통해 export.
     ```tsx
-    export type ButtonProps = {
-        /* ... */
-    };
+    export namespace Button {
+        export interface Props extends ButtonPrimitiveProps, ButtonVariants {}
+    }
     ```
 
 ## 3.2. 네이밍 컨벤션
 
 - **`camelCase`**: 변수, 함수 (예: `userName`, `calculatePrice`)
-- **`PascalCase`**: 클래스, 인터페이스, 타입, Enum (예: `UserProfile`, `ColorPalette`)
+- **`PascalCase`**: 컴포넌트, 인터페이스, 타입, Enum (예: `UserProfile`, `ColorPalette`)
 - **`CONSTANT_CASE`**: 상수 (예: `MAX_USERS`, `API_URL`)
-- **`kebab-case`**: 파일, 디렉터리명 (예: `user-profile.tsx`)
+- **`kebab-case`**: 파일, 디렉터리명 (예: `text-input.tsx`, `button.css.ts`)
 
 ## 3.3. 문자열, 공백, 세미콜론
 
-- **문자열**: 템플릿 리터럴 ( ```` ) 우선 사용. 단순 문자열은 작은따옴표 (`'`).
+- **문자열**: 템플릿 리터럴 ( `` ` `` ) 우선 사용. 단순 문자열은 작은따옴표 (`'`).
 - **들여쓰기**: 스페이스 4칸.
 - **세미콜론**: 문장 끝에 항상 사용.
-- prettierc (Github link)
 
 ## 3.4. 조건문 및 함수 구조
 
 - **Early Return**: 중첩 깊이가 3 depth 이상인 경우 early return 패턴을 적용하여 가독성을 향상시킵니다.
+
     ```tsx
     // Bad - 3 depth 이상 중첩
     function processUser(user: User) {
         if (user) {
             if (user.isActive) {
                 if (user.permissions.canEdit) {
-                    // 로직 처리
                     return editUser(user);
                 }
             }
@@ -175,7 +194,7 @@
         if (!user) return null;
         if (!user.isActive) return null;
         if (!user.permissions.canEdit) return null;
-        
+
         return editUser(user);
     }
     ```
@@ -186,32 +205,56 @@
 
 ## 4.1. React 컴포넌트 Props & 타입
 
-- **`React.FC` 사용 지양**: 화살표 함수로 컴포넌트 정의, Props 타입 명시.
+- **`React.FC` 사용 지양**: `forwardRef`와 화살표 함수로 컴포넌트 정의.
+- **Props는 namespace 내부에 `interface`로 정의**: 컴포넌트와 동일한 이름의 namespace 안에 `Props` interface를 선언.
+- **기본 Props 타입**: `VComponentProps<ElementType>`을 기본으로 사용. 이는 `Sprinkles`(레이아웃 style props)와 `useRender.ComponentProps`를 조합한 타입.
 
     ```tsx
-    type MyComponentProps = {
-        title: string;
-        isVisible?: boolean;
-    };
+    import { forwardRef } from 'react';
 
-    const MyComponent = ({ title, isVisible = true }: MyComponentProps) => {
+    import type { VComponentProps } from '~/utils/types';
+
+    // 컴포넌트 정의
+    export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
         // ...
-    };
+    });
+    Button.displayName = 'Button';
+
+    // Props는 컴포넌트와 동일한 이름의 namespace 안에 정의
+    export namespace Button {
+        type ButtonPrimitiveProps = VComponentProps<'button'>;
+
+        export interface Props extends ButtonPrimitiveProps, ButtonVariants {}
+    }
+    ```
+
+- **Base UI 기반 컴포넌트의 Props 타입**:
+
+    ```tsx
+    import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+
+    export namespace DialogTrigger {
+        export interface Props extends VComponentProps<typeof BaseDialog.Trigger> {}
+    }
     ```
 
 ## 4.2. Type vs. Interface
 
-- **`interface`**: 컴포넌트 Props, 객체 구조 정의 시. `extends` 가능.
-- **`type`**: Union, Intersection 등 복합 타입, 유틸리티 타입 정의 시.
+- **`interface`**: 컴포넌트 Props 정의 시 (namespace 내부). `extends` 가능.
+- **`type`**: 내부 헬퍼 타입, Union, Intersection 등 복합 타입 정의 시.
 
     ```tsx
-    // Props 정의
-    export interface ModalProps {
-        isOpen: boolean;
-        onClose: () => void;
+    // namespace 내부 Props 정의 (interface)
+    export namespace CheckboxRoot {
+        type RootPrimitiveProps = VComponentProps<typeof BaseCheckbox.Root>;
+        export interface Props extends RootPrimitiveProps, CheckboxSharedProps {}
     }
 
-    // 복합 타입
+    // 내부 헬퍼 타입 (type)
+    type CheckboxVariants = RootVariants;
+    type CheckboxSharedProps = CheckboxVariants & Pick<BaseCheckbox.Root.Props, 'indeterminate'>;
+
+    // Union 타입
     export type AlignVariant = 'start' | 'center' | 'end';
     ```
 
@@ -231,13 +274,6 @@
 - **대안**: `as const` 활용 객체 (Tree-shaking 유리, 명확한 값).
 
     ```tsx
-    // Enum
-    enum Status {
-        Pending,
-        Success,
-        Failed,
-    }
-
     // as const (권장)
     export const AlertVariant = {
         Info: 'info',
@@ -261,11 +297,11 @@
 
 ## 5.1. 네이밍 (파일명, 디렉터리명)
 
-- 모든 파일/디렉터리: `kebab-case` (예: `button-group.tsx`, `validation-utils.ts`).
+- 모든 파일/디렉터리: `kebab-case` (예: `button.tsx`, `text-input.tsx`, `button.css.ts`).
 
 ## 5.2. 단수형 vs. 복수형
 
-- **컴포넌트**: 단수형 (예: `Button.tsx`). 목록 형태는 복수형 가능 (예: `Tabs.tsx`).
+- **컴포넌트**: 단수형 (예: `button.tsx`). 목록 형태는 복수형 가능 (예: `tabs.tsx`).
 - **유틸리티/훅 모음**: 복수형 디렉터리 (예: `hooks/`, `utils/`).
 
 ## 5.3. 컴포넌트 폴더 (Colocation)
@@ -277,67 +313,110 @@
 ```bash
 src/
 └── components/
-└── text-input/
-  ├── index.ts                 # Entry point (exports)
-  ├── text-input.tsx           # Component implementation
-  ├── text-input.css.ts        # Vanilla Extract styles
-  ├── text-input.stories.tsx   # Storybook stories
-  └── text-input.test.tsx      # Unit/Integration tests
+    └── text-input/
+        ├── index.ts                 # Entry point (exports)
+        ├── text-input.tsx           # Component implementation
+        ├── text-input.css.ts        # Vanilla Extract styles
+        ├── text-input.stories.tsx   # Storybook stories
+        └── text-input.test.tsx      # Unit/Integration tests
 ```
 
-### **5.3.1 서브컴포넌트 전략**
+**Compound 컴포넌트 구조 예시 (`dialog` 컴포넌트):**
 
-- 합성 컴포넌트의 서브 컴포넌트는 주 컴포넌트 파일 내 정의 후 `Root.Sub` 형태로 export.
+```bash
+src/
+└── components/
+    └── dialog/
+        ├── index.ts                 # export * as Dialog from './index.parts'
+        ├── index.parts.ts           # Sub-component re-exports (Root, Trigger, ...)
+        ├── dialog.tsx               # All sub-components implementation
+        ├── dialog.css.ts            # Vanilla Extract styles
+        ├── dialog.stories.tsx       # Storybook stories
+        └── dialog.test.tsx          # Unit/Integration tests
+```
 
-### **5.3.2. 엔트리포인트 전략**
+### **5.3.1. 엔트리포인트 전략**
 
-- **개별 컴포넌트 엔트리포인트 (`src/components/[component]/index.ts`)**:
-    - **목적**: 각 컴포넌트 모듈의 공개 API를 정의합니다.
-    - **Export 규칙**:
-        - 컴포넌트 관련 모든 named export (함수, 상수, 실제 컴포넌트 등)는 해당 컴포넌트 이름의 네임스페이스로 묶어 export 합니다.
-            ```tsx
-            // 예시: src/components/button/index.ts
-            export * as Button from './button'; // ./button.tsx (또는 .ts) 파일의 모든 것을 Button 네임스페이스로 export
-            ```
-        - 컴포넌트 관련 모든 타입은 직접 export 합니다.
-            ```tsx
-            // 예시: src/components/button/index.ts
-            export type * from './button'; // ./button.tsx (또는 .ts) 파일의 모든 타입을 export
-            ```
-    - **결과**: 사용자는 `Button.Root`, `Button.Icon` 등으로 컴포넌트 요소에 접근하고, `ButtonRootProps` 등으로 타입에 접근합니다.
-- **컴포넌트 그룹 엔트리포인트 (`src/components/index.ts`)**:
-    - 이 파일은 더 이상 사용하지 않으며, 프로젝트에 존재한다면 삭제합니다.
-- **라이브러리 루트 엔트리포인트 (`src/index.ts`)**:
-    - **목적**: 라이브러리 전체의 공개 API를 단일 진입점을 통해 제공합니다.
-    - **Export 규칙**: 각 개별 컴포넌트의 엔트리포인트(`src/components/[component]/index.ts`)에서 export 된 모든 것(네임스페이스 및 타입)을 그대로 re-export 합니다.
-        ```tsx
-        // 예시: src/index.ts
-        export * from './components/button'; // Button 네임스페이스 및 Button 관련 타입들이 export됨
-        export * from './components/card';
-        // ... other components
-        ```
-- **라이브러리 사용 예시**:
+#### 단일 컴포넌트 (`index.ts`)
 
-    ```tsx
-    import { Button, Card } from '@vapor-ui/core';
-    // Button과 Card는 각각 네임스페이스(모듈 객체)
-    import type { ButtonProps, CardContentProps } from '@vapor-ui/core';
+Compound 패턴이 아닌 단일 컴포넌트는 직접 re-export:
 
-    function App() {
-        return (
-            <>
-                <Button.Root variant="primary">
-                    <Button.Label>클릭하세요</Button.Label>
-                </Button.Root>
+```tsx
+// src/components/button/index.ts
+export * from './button';
+```
 
-                <Card.Root>
-                    <Card.Header>제목</Card.Header>
-                    <Card.Content>내용</Card.Content>
-                </Card.Root>
-            </>
-        );
-    }
-    ```
+#### Compound 컴포넌트 (`index.ts` + `index.parts.ts`)
+
+Compound 컴포넌트는 `index.parts.ts`를 통해 namespace로 묶어 export:
+
+```tsx
+// src/components/dialog/index.parts.ts
+export {
+    DialogRoot as Root,
+    DialogTrigger as Trigger,
+    DialogPopup as Popup,
+    DialogClose as Close,
+    DialogTitle as Title,
+    DialogDescription as Description,
+    DialogHeader as Header,
+    DialogBody as Body,
+    DialogFooter as Footer,
+} from './dialog';
+
+// src/components/dialog/index.ts
+export * as Dialog from './index.parts';
+```
+
+#### 라이브러리 루트 엔트리포인트 (`src/index.ts`)
+
+각 개별 컴포넌트의 엔트리포인트에서 export된 것을 그대로 re-export:
+
+```tsx
+// src/index.ts
+export * from './components/button';
+export * from './components/dialog';
+export * from './components/checkbox';
+// ...
+```
+
+#### 라이브러리 사용 예시
+
+```tsx
+import { Button, Dialog, Checkbox } from '@vapor-ui/core';
+// 또는 개별 import
+import { Button } from '@vapor-ui/core/button';
+
+function App() {
+    return (
+        <>
+            {/* 단일 컴포넌트 - 직접 사용 */}
+            <Button colorPalette="primary" variant="fill">
+                클릭하세요
+            </Button>
+
+            {/* Compound 컴포넌트 - namespace 접근 */}
+            <Dialog.Root>
+                <Dialog.Trigger>열기</Dialog.Trigger>
+                <Dialog.Popup>
+                    <Dialog.Header>
+                        <Dialog.Title>제목</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>내용</Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.Close>닫기</Dialog.Close>
+                    </Dialog.Footer>
+                </Dialog.Popup>
+            </Dialog.Root>
+
+            {/* Compound 컴포넌트 - Checkbox */}
+            <Checkbox.Root>
+                <Checkbox.IndicatorPrimitive />
+            </Checkbox.Root>
+        </>
+    );
+}
+```
 
 # 6. React 컴포넌트
 
@@ -345,11 +424,12 @@ src/
 
 ## 6.1. 접근성 (WAI-ARIA)
 
-- WAI-ARIA 패턴 준수. Radix UI Primitives 기반 개발 권장.
+- WAI-ARIA 패턴 준수. `@base-ui/react` Primitives 기반 개발.
 
 ## 6.2. Compound Pattern
 
-- 하위 요소 조합으로 유연성 증대. (예: `Menu.Root`, `Menu.Item`, `Menu.Trigger`)
+- 하위 요소 조합으로 유연성 증대. (예: `Dialog.Root`, `Dialog.Trigger`, `Dialog.Popup`)
+- Compound 컴포넌트의 서브 컴포넌트는 같은 파일 내에서 정의한 뒤 `index.parts.ts`를 통해 export.
 
 ## 6.3. 제어/비제어 컴포넌트
 
@@ -357,39 +437,69 @@ src/
 
 ## 6.4. Trigger 패턴 (Overlay)
 
-- Overlay형 컴포넌트는 `{Component}.Trigger`와 `{Component}.Content` 명확히 구분.
+- Overlay형 컴포넌트는 `{Component}.Trigger`와 `{Component}.Popup` 명확히 구분.
 
 ## 6.5. Props 최소화 & 타입
 
-- `React.ComponentPropsWithoutRef<ElementType>` 활용. 컴포넌트 고유 Props만 명시.
+- `VComponentProps<ElementType>`를 기본 Props 타입으로 사용. HTML 표준 속성 + Sprinkles(레이아웃) Props 자동 지원.
+- Base UI 컴포넌트 래핑 시 `VComponentProps<typeof BaseComponent>` 사용.
+
+    ```tsx
+    // HTML 요소 기반
+    export namespace Box {
+        export interface Props extends VComponentProps<'div'> {}
+    }
+
+    // Base UI 컴포넌트 기반
+    export namespace DialogTrigger {
+        export interface Props extends VComponentProps<typeof BaseDialog.Trigger> {}
+    }
+    ```
 
 ## 6.6. 아이콘 처리
 
-- `children` 주입 또는 명명된 아이콘 컴포넌트 직접 사용 권장.
+- `@vapor-ui/icons` 패키지에서 아이콘 컴포넌트 import.
+- `children`으로 주입하거나, 컴포넌트 내부에서 직접 사용.
+
+    ```tsx
+    import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
+    ```
 
 ## 6.7. Ref 전달
 
-- `React.forwardRef` 사용, `ref` 전달 지원.
+- `forwardRef`를 사용하여 `ref` 전달. HTML 요소 타입을 첫 번째 제네릭으로 명시.
 
-## 6.8. asChild 패턴
+    ```tsx
+    export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
+        // ...
+    });
+    ```
 
-- `asChild={true}` 시 자식 요소에 props 병합 렌더링. 기본값 `false`.
+## 6.8. render prop 패턴 (Polymorphic)
+
+- `@base-ui/react`의 `render` prop을 사용한 다형성(polymorphic) 렌더링. `asChild` 패턴이 아님.
+- `render` prop에 다른 HTML 요소나 React 컴포넌트를 전달하여 렌더링 요소 변경 가능.
+
+    ```tsx
+    // a 태그로 렌더링
+    <Button render={<a href="/link">Link Button</a>} />
+
+    // 기본 렌더링 (button 태그)
+    <Button>Click me</Button>
+    ```
 
 ## 6.9. ARIA Props
 
 - ARIA 표준 속성(`aria-*`) 명칭 그대로 사용. 내부 관리 ARIA는 추상화된 Props로 제공.
 
-## 6.10. 개발자 전용 Props
-
-- 개발 편의성 Props(예: `Button`의 `stretch`)는 Storybook 등에 명확히 문서화.
-
-## 6.11. 입력 컴포넌트
+## 6.10. 입력 컴포넌트
 
 - HTML `<input>` 타입별 독립 컴포넌트 제공 (예: `TextInput`, `Checkbox`).
 
-## 6.12. 함수 매개변수
+## 6.11. 함수 매개변수
 
 - **매개변수 개수**: 함수 매개변수가 3개 이상인 경우 객체 형태로 전달합니다.
+
     ```tsx
     // Bad - 3개 이상의 개별 매개변수
     function createUser(name: string, email: string, age: number, department: string) {
@@ -409,183 +519,168 @@ src/
     }
     ```
 
-## 6.13. Props 처리
+## 6.12. Props 처리
 
-### **6.13.1. Props 병합 (Merge)**
+### **6.12.1. resolveStyles 유틸리티**
 
-### **6.13.2. Props 타입 정의**
+모든 컴포넌트에서 `resolveStyles`를 사용하여 Sprinkles(레이아웃) Props를 분리:
 
-- **일반 HTML 요소 Props**:
-    - `React.ComponentPropsWithoutRef<ElementType>` 또는
-    - `React.ComponentPropsWithRef<ElementType>`를 활용하여 HTML 표준 속성을 지원합니다.
-- **Radix UI 컴포넌트 Props**:
+```tsx
+export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+    // componentProps에서 레이아웃 관련 props가 제거되고 className/style로 변환됨
+});
+```
 
-    - 개별 Props 타입을 일일이 import 하는 대신, `React.ComponentPropsWithoutRef<typeof RadixComponent>`와 같은 유틸리티 타입을 사용하여 추출합니다.
-    - 이는 타입 선언을 간결하게 하고, Radix UI 업데이트 시 Props 변경에 유연하게 대응할 수 있도록 합니다.
-    - **예시 (`Dialog` 컴포넌트에서 Radix Props 사용):**
+### **6.12.2. createSplitProps 유틸리티**
 
-        ```tsx
-        import type { ComponentPropsWithoutRef } from 'react';
+Variant props를 나머지 props에서 분리:
 
-        import { Root as RadixDialogRoot } from '@radix-ui/react-dialog';
+```tsx
+const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(componentProps, [
+    'colorPalette',
+    'size',
+    'variant',
+]);
+```
 
-        // Radix Dialog의 Root 컴포넌트 Props 타입을 가져옴
-        type RadixDialogRootProps = ComponentPropsWithoutRef<typeof RadixDialogRoot>;
+### **6.12.3. useRender 패턴**
 
-        interface CustomDialogRootProps extends RadixDialogRootProps {
-            // Vapor Design System에서 추가하는 custom props
-            customFeature?: boolean;
-        }
+`@base-ui/react`의 `useRender`를 사용하여 렌더링:
 
-        const DialogRoot = forwardRef<
-            React.ElementRef<typeof RadixDialogRoot>,
-            CustomDialogRootProps
-        >(({ customFeature, ...radixProps }, ref) => {
-            return <RadixDialogRoot ref={ref} {...radixProps} />;
-        });
-        ```
+```tsx
+return useRender({
+    ref,
+    state: { disabled },
+    defaultTagName: "button",
+    render: render,
+        className: clsx(styles.root(variantsProps), className),
+        ...otherProps,
+    },
+});
+```
 
-### **6.13.3. `defaultProps` 사용 지양**
+### **6.12.4. `defaultProps` 사용 지양**
 
-- 클래스형 컴포넌트의 `defaultProps` 또는 함수형 컴포넌트의 `Component.defaultProps = { ... }` 방식은 사용하지 않습니다.
-- **대안**: 함수 매개변수의 기본값 문법을 사용합니다.
-
-    ```elm
-    interface MyComponentProps {
-      title?: string;
-      count?: number;
-    }
-
-    const MyComponent = ({ title = 'Default Title', count = 0 }: MyComponentProps) => {
-      // ...
-    };
-
-    ```
-
-## 6.14. 컴파운드 컴포넌트 (Compound Pattern)
-
-여러 하위 요소를 조합하여 유연한 UI 구성을 지원하는 Compound Pattern을 적극 활용합니다.
-
-### **6.14.1. Export 방식**
-
-컴파운드 컴포넌트 사용 시 `Dialog.Trigger`와 같이 직관적인 API를 제공하기 위해, 주 컴포넌트 객체에 하위 컴포넌트들을 할당하여 export 합니다.
-
-1. **컴포넌트 구현 파일 (`[componentName].tsx`)**:
-
-    - 주 컴포넌트(Root)와 하위 컴포넌트들을 각각 선언합니다 (선언부에서 `export` 사용 안 함).
-    - 주 컴포넌트 변수에 `Object.assign`을 사용하여 하위 컴포넌트들을 속성으로 할당합니다.
-    - 최종적으로 할당된 주 컴포넌트 객체와 필요한 타입들을 `export` 합니다.
+- 함수 매개변수의 기본값 문법을 사용.
 
     ```tsx
-    // 예시: src/components/dialog/dialog.tsx
-    import React, { forwardRef } from "react";
-    // ... 기타 import ...
-
-    // 1. Root 및 서브 컴포넌트들 선언 (export 키워드 없이)
-    const DialogRoot = forwardRef<HTMLDivElement, DialogRootProps>(
-      (props, ref) => {
-        /* ... */
-      }
-    );
-    DialogRoot.displayName = "Dialog.Root"; // displayName 설정 권장
-
-    const DialogTrigger = forwardRef<HTMLButtonElement, DialogTriggerProps>(
-      (props, ref) => {
-        /* ... */
-      }
-    );
-    DialogTrigger.displayName = "Dialog.Trigger";
-
-    const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
-      (props, ref) => {
-        /* ... */
-      }
-    );
-    DialogContent.displayName = "Dialog.Content";
-
-    // ... 기타 Portal, Overlay, Title, Description, Close 등 선언 ...
-
-    // 2. Object.assign으로 주 컴포넌트에 하위 컴포넌트 할당
-    export const Dialog = Object.assign(DialogRoot, {
-      Trigger: DialogTrigger,
-      Content: DialogContent,
-      // Portal: DialogPortal,
-      // Overlay: DialogOverlay,
-      // Title: DialogTitle,
-      // Description: DialogDescription,
-      // Close: DialogClose,
-    });
-
-    // 3. 관련 타입들 export
-    export type {
-      DialogRootProps,
-      DialogTriggerProps,
-      DialogContentProps,
-      // ... 기타 타입들
+    const DialogRoot = ({
+        size,
+        closeOnClickOverlay = true,
+        children,
+        ...props
+    }: DialogRoot.Props) => {
+        // ...
     };
     ```
 
-2. **개별 컴포넌트 엔트리포인트 (`[componentName]/index.ts`)**: 이전 [3.1.1. 엔트리포인트 전략](https://www.notion.so/1e74e6997fb0803794e2e0bb33ca4b74?pvs=21)을 따릅니다.
+## 6.13. Compound 컴포넌트 구현
 
-    ```tsx
-    // 예시: src/components/dialog/index.ts
-    export * from './dialog'; // dialog.tsx에서 export한 Dialog 객체 및 모든 타입이 export 됨
-    ```
+### **6.13.1. 구현 파일 (`[componentName].tsx`)**
 
-3. **사용**:
+서브 컴포넌트를 하나의 파일에서 선언하고 각각 export. `Object.assign` 사용하지 않음.
 
-    ```tsx
-    import { Dialog } from '@vapor-ui/core';
+```tsx
+// dialog.tsx
 
-    <Dialog>
-        {' '}
-        {/* Dialog 자체가 Dialog.Root와 동일하게 동작 */}
-        <Dialog.Trigger>...</Dialog.Trigger>
-        <Dialog.Content>...</Dialog.Content>
-    </Dialog>;
-    ```
+// Context 생성
+const [DialogProvider, useDialogContext] = createContext<DialogContext>({
+    name: 'Dialog',
+    hookName: 'useDialogContext',
+    providerName: 'DialogProvider',
+});
 
-### **6.14.2. 타입 그룹화**
+// 서브 컴포넌트들 각각 export
+export const DialogRoot = ({ size, children, ...props }: DialogRoot.Props) => {
+    return (
+        <DialogProvider value={{ size }}>
+            <BaseDialog.Root {...props}>{children}</BaseDialog.Root>
+        </DialogProvider>
+    );
+};
 
-- 컴파운드 컴포넌트의 여러 Props 타입을 그룹화하여 관리할 수 있습니다.
-- 다음 두 가지 방식 중 프로젝트 일관성을 고려하여 선택합니다.
+export const DialogTrigger = forwardRef<HTMLButtonElement, DialogTrigger.Props>((props, ref) => {
+    const componentProps = resolveStyles(props);
+    return <BaseDialog.Trigger ref={ref} {...componentProps} />;
+});
+DialogTrigger.displayName = 'Dialog.Trigger';
 
-1. **Namespace 사용**:
+// ... 기타 서브 컴포넌트 ...
 
-    ```tsx
-    // 예시: src/components/dialog/dialog.tsx (타입 정의 부분)
+// namespace로 Props 타입 정의
+export namespace DialogRoot {
+    export interface Props extends /* ... */ {}
+}
+export namespace DialogTrigger {
+    export interface Props extends VComponentProps<typeof BaseDialog.Trigger> {}
+}
+```
 
-    export namespace DialogComponentProps {
-        // 'DialogProps' 보다는 충돌 방지를 위해 'DialogComponentProps' 등 사용
-        export type Root = DialogRootProps;
-        export type Trigger = DialogTriggerProps;
-        export type Content = DialogContentProps;
-    }
+### **6.13.2. Re-export 파일 (`index.parts.ts`)**
 
-    // 사용 예시
-    // import type { DialogComponentProps } from '@vapor-ui/core';
-    // type MyDialogRootProps = DialogComponentProps.Root;
-    ```
+서브 컴포넌트들을 짧은 이름으로 re-export:
 
-2. **객체 타입 사용 (권장)**:
+```tsx
+// dialog/index.parts.ts
+export {
+    DialogRoot as Root,
+    DialogTrigger as Trigger,
+    DialogPopup as Popup,
+    DialogClose as Close,
+    // ...
+} from './dialog';
+```
 
-    ```tsx
-    // 예시: src/components/dialog/dialog.tsx (타입 정의 부분)
-    // 개별 Props 타입은 이미 export DialogRootProps 등으로 export 되고 있음
-    // 필요하다면, 다음과 같이 그룹화된 타입을 추가로 export 가능
-    export type AllDialogProps = {
-        Root: DialogRootProps;
-        Trigger: DialogTriggerProps;
-        Content: DialogContentProps;
-    };
+### **6.13.3. 엔트리포인트 (`index.ts`)**
 
-    // 사용 예시
-    // import type { AllDialogProps } from '@vapor-ui/core';
-    // type MyDialogTriggerProps = AllDialogProps['Trigger'];
-    ```
+namespace로 묶어 export:
 
-    - 일반적으로는 개별 Props 타입을 직접 import (`import type { DialogRootProps }`) 하는 것이 더 명시적이고 간결할 수 있습니다.
-    - 타입 그룹화는 매우 많은 하위 컴포넌트와 Props가 있을 경우 고려합니다.
+```tsx
+// dialog/index.ts
+export * as Dialog from './index.parts';
+```
+
+### **6.13.4. displayName 설정**
+
+모든 서브 컴포넌트에 `displayName`을 설정하되, `{ParentName}.{SubName}` 형식 사용:
+
+```tsx
+DialogRoot.displayName = 'Dialog.Root'; // (Root는 생략할 수도 있음)
+DialogTrigger.displayName = 'Dialog.Trigger';
+DialogPopup.displayName = 'Dialog.Popup';
+```
+
+## 6.14. Context 패턴
+
+Compound 컴포넌트 간 상태 공유 시 `~/libs/create-context` 사용:
+
+```tsx
+import { createContext } from '~/libs/create-context';
+
+const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps>({
+    name: 'Checkbox',
+    hookName: 'useCheckbox',
+    providerName: 'CheckboxProvider',
+});
+
+// Provider에서 값 제공
+return <CheckboxProvider value={{ size, indeterminate }}>{root}</CheckboxProvider>;
+
+// 자식 컴포넌트에서 값 사용
+const { size, indeterminate } = useCheckboxContext();
+```
+
+## 6.15. Data Attributes
+
+`createDataAttributes` 유틸리티로 data 속성 생성:
+
+```tsx
+import { createDataAttributes } from '~/utils/data-attributes';
+
+const dataAttrs = createDataAttributes({ invalid });
+// invalid가 true이면 { 'data-invalid': '' } 생성
+```
 
 # 7. 스타일링 (Vanilla Extract)
 
@@ -596,138 +691,149 @@ src/
 - 정적 스타일 규칙 정의.
 
     ```tsx
-    // button.css.ts
+    // dialog.css.ts
     import { style } from '@vanilla-extract/css';
 
-    import { vars } from '../theme.css';
+    import { layerStyle } from '~/styles/mixins/layer-style.css';
+    import { vars } from '~/styles/themes.css';
 
-    // 예시: 테마 변수 파일
-
-    export const container = style({
-        padding: vars.spacing.large,
-        backgroundColor: vars.colors.backgroundPrimary,
-    });
+    export const overlay = style([
+        layerStyle('components', {
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: vars.color.background.overlay,
+        }),
+    ]);
     ```
 
 ## 7.2. `recipe` 함수 (Variants)
 
-- 컴포넌트 상태/형태별 스타일 정의. `base`, `variants`, `defaultVariants` (필수), `compoundVariants` 활용.
+- 컴포넌트 상태/형태별 스타일 정의. `base`, `variants`, `defaultVariants` 활용.
+- `layerStyle()`, `interaction()`, `typography()` 등 스타일 믹스인 함수 활용.
 
     ```tsx
     // button.css.ts
-    import { RecipeVariants, recipe } from '@vanilla-extract/recipes';
+    import { createVar } from '@vanilla-extract/css';
+    import type { RecipeVariants } from '@vanilla-extract/recipes';
+    import { recipe } from '@vanilla-extract/recipes';
 
-    import { vars } from '../theme.css';
+    import { interaction } from '~/styles/mixins/interactions.css';
+    import { layerStyle } from '~/styles/mixins/layer-style.css';
+    import { typography } from '~/styles/mixins/typography.css';
+    import { vars } from '~/styles/themes.css';
 
-    export const buttonRecipe = recipe({
-        base: {
-            /* 기본 스타일 ... */
-            borderRadius: vars.borderRadius.medium,
-            fontWeight: 'bold',
-        },
+    const fg = createVar();
+    const bg = createVar();
+
+    export const root = recipe({
+        base: [
+            interaction(),
+            layerStyle('components', {
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: 'none',
+                borderRadius: vars.size.borderRadius['300'],
+            }),
+        ],
+
+        defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill' },
+
         variants: {
-            variant: {
-                primary: {
-                    backgroundColor: vars.colors.primary,
-                    color: vars.colors.white,
-                },
-                secondary: {
-                    backgroundColor: vars.colors.secondary,
-                    color: vars.colors.text,
-                },
-            },
             size: {
-                small: { padding: `${vars.spacing.small} ${vars.spacing.medium}` },
-                large: { padding: `${vars.spacing.medium} ${vars.spacing.large}` },
+                sm: [
+                    typography({ style: 'subtitle1' }),
+                    layerStyle('components', {
+                        gap: vars.size.space['050'],
+                        paddingInline: vars.size.space['100'],
+                        height: vars.size.dimension['300'],
+                    }),
+                ],
+                md: [
+                    /* ... */
+                ],
+                lg: [
+                    /* ... */
+                ],
+                xl: [
+                    /* ... */
+                ],
             },
-        },
-        defaultVariants: {
-            variant: 'primary',
-            size: 'large',
+            colorPalette: {
+                primary: layerStyle('components', {
+                    vars: {
+                        [fg]: vars.color.foreground.inverse,
+                        [bg]: vars.color.background.primary[200],
+                    },
+                }),
+                secondary: layerStyle('components', {
+                    /* ... */
+                }),
+                // ...
+            },
+            variant: {
+                fill: layerStyle('components', { backgroundColor: bg, color: fg }),
+                outline: layerStyle('components', {
+                    /* ... */
+                }),
+                ghost: layerStyle('components', {
+                    /* ... */
+                }),
+            },
         },
     });
-    export type ButtonVariants = RecipeVariants<typeof buttonRecipe>;
+
+    export type ButtonVariants = NonNullable<RecipeVariants<typeof root>>;
     ```
 
 ### **7.2.1. Variants 타입 선언**
 
-- Vanilla Extract의 `recipe` 함수로 생성된 여러 Variants 타입을 단일 타입으로 병합하여 사용합니다.
-- **방식**: 여러 `recipe`의 `typeof styles.xxx`를 Union 타입으로 묶어 `MergeRecipeVariants`와 같은 유틸리티 타입을 사용합니다. (해당 유틸리티 타입은 프로젝트 내에 정의되어 있어야 합니다.)
+- `RecipeVariants<typeof recipeName>`으로 추출하고, `NonNullable`로 감싸서 사용.
 
     ```tsx
-    // 예시: ~/libs/recipe.ts 또는 프로젝트 공통 유틸리티
-    import type { RecipeVariants as OriginalRecipeVariants } from '@vanilla-extract/recipes';
+    import type { RecipeVariants } from '@vanilla-extract/recipes';
 
-    // 여러 RecipeVariants 타입을 병합하기 위한 유틸리티 타입
-    // 주의: 이 유틸리티 타입은 단순 예시이며, 실제 사용 시에는
-    // 복잡한 RecipeVariants 구조를 올바르게 병합하도록 견고하게 작성해야 합니다.
-    // 간단한 경우, 각 recipe의 variants 속성들만 Pick & Intersect 하는 방식도 고려할 수 있습니다.
-    // 현재로서는 각 컴포넌트가 자신의 RecipeVariants를 직접 사용하거나,
-    // 필요한 경우 props 레벨에서 개별적으로 합치는 것이 더 안전할 수 있습니다.
-    // 아래는 개념적 예시입니다.
-    export type MergeRecipeVariants<T extends ReadonlyArray<(...args: any) => any>> = T extends [
-        infer Head,
-        ...infer Tail,
-    ]
-        ? Head extends (...args: any) => infer R
-            ? R extends { variants: infer V }
-                ? V &
-                      (Tail extends ReadonlyArray<(...args: any) => any>
-                          ? MergeRecipeVariants<Tail>
-                          : {})
-                : {}
-            : {}
-        : {};
-
-    // 또는 더 간단한 접근 (Recipe의 variants 객체 타입을 직접 받는 경우)
-    // export type MergeRecipeVariantObjects<T> = T extends { variants: infer V } ? V : {};
-    // type CombinedVariants = MergeRecipeVariantObjects<typeof styles.root> & MergeRecipeVariantObjects<typeof styles.control>;
+    export type ButtonVariants = NonNullable<RecipeVariants<typeof root>>;
     ```
 
-- **컴포넌트 내 사용 예시 (`Checkbox` 컴포넌트):**
+- 컴포넌트 Props와 조합 시 namespace 내부에서 extends:
 
     ```tsx
-    // checkbox.types.ts 또는 checkbox.tsx
-    // import type { MergeRecipeVariants } from '~/libs/recipe'; // 유틸리티 타입 경로
-    // styles.root, styles.control, styles.label 등이 recipe로 정의됨 가정
-    import type { RecipeVariants as OriginalRecipeVariants } from '@vanilla-extract/recipes';
-
-    import * as styles from './checkbox.css';
-
-    // Vanilla Extract 원본 타입
-
-    // 개별 Variants 타입 정의 (기존 방식도 유효)
-    type CheckboxRootVariants = OriginalRecipeVariants<typeof styles.rootRecipe>; // styles.rootRecipe 가정
-    type CheckboxControlVariants = OriginalRecipeVariants<typeof styles.controlRecipe>;
-    type CheckboxLabelVariants = OriginalRecipeVariants<typeof styles.labelRecipe>;
-
-    // 유틸리티 타입을 사용한 병합 시도 (주의: 유틸리티 타입의 정확성에 따라 결과가 달라짐)
-    // type CheckboxCombinedVariants = MergeRecipeVariants<[
-    //     typeof styles.rootRecipe,
-    //     typeof styles.controlRecipe,
-    //     typeof styles.labelRecipe
-    // ]>;
-
-    // 컴포넌트 Props에서 필요한 Variants만 선택적으로 조합하여 사용
-    interface CheckboxProps extends CheckboxRootVariants, CheckboxLabelVariants {
-        // ... other props
-        // 예: control의 variant는 내부적으로 결정되거나 다른 prop으로 받을 수 있음
+    export namespace Button {
+        type ButtonPrimitiveProps = VComponentProps<'button'>;
+        export interface Props extends ButtonPrimitiveProps, ButtonVariants {}
     }
     ```
 
-- **고려 사항**:
-    - `MergeRecipeVariants`와 같은 복잡한 유틸리티 타입은 유지보수가 어려울 수 있으며, 타입 추론에 한계가 있을 수 있습니다.
-    - 스토리북의 `argTypes` 자동 추출 도구(예: `react-docgen-typescript`)와의 호환성 문제가 발생할 수 있습니다. 복잡한 유틸리티 타입은 `argTypes`가 정확히 추론되지 않을 가능성이 있습니다.
-    - **권장**: 매우 많은 `recipe`를 병합해야 하는 특수한 경우가 아니라면, 각 `recipe`의 Variants 타입을 개별적으로 사용하거나, 컴포넌트 Props 레벨에서 필요한 Variants 타입들을 명시적으로 `&` (Intersection) 하는 것이 더 명확하고 안전할 수 있습니다.
+## 7.3. CSS 변수 (Variables) & 테마 토큰
 
-## 7.3. CSS 변수 (Variables)
+- 디자인 토큰은 `vars` 객체를 통해 참조. 하드코딩 지양.
+- 토큰 경로는 계층 구조를 따름:
 
-- 디자인 토큰(색상, 폰트 등)은 CSS 변수로 정의, `vars` 객체 통해 참조. (하드코딩 지양)
+    ```tsx
+    // 색상 토큰
+    vars.color.background.primary[200];
+    vars.color.foreground.inverse;
+    vars.color.border.primary;
+    vars.color.white;
 
-## 7.4. 반응형 디자인
+    // 크기 토큰
+    vars.size.space['100']; // spacing
+    vars.size.dimension['400']; // height/width
+    vars.size.borderRadius['300'];
 
-- `style`, `recipe` 함수 내 `@media` 사용. 모바일 우선 권장.
-- Vanilla Extract `sprinkles` 패키지 활용 고려.
+    // 컴포넌트 내부 CSS 변수
+    const fg = createVar();
+    const bg = createVar();
+    ```
+
+## 7.4. 스타일 믹스인
+
+프로젝트에서 제공하는 스타일 믹스인 함수를 활용:
+
+- **`layerStyle(layer, styles)`**: CSS Cascade Layer에 스타일 배치.
+- **`interaction()`**: hover, active, focus 등 인터랙션 스타일.
+- **`typography({ style })`**: 타이포그래피 프리셋 적용.
 
 ## 7.5. 클래스명 관리 (`clsx`)
 
@@ -736,12 +842,48 @@ src/
     ```tsx
     import clsx from 'clsx';
 
-    // 사용: className={clsx(buttonRecipe({ variant, size }), customClassName)}
+    className={clsx(styles.root(variantsProps), className)}
     ```
 
 # 8. 테스팅
 
 ---
+
+## 8.1. 테스트 환경
+
+- **테스트 프레임워크**: Vitest (`globals: true` 설정으로 `describe`, `it`, `expect` 등 전역 사용)
+- **DOM 환경**: happy-dom
+- **테스트 유틸리티**: React Testing Library (`@testing-library/react`), `@testing-library/user-event`
+- **접근성 테스트**: vitest-axe
+
+## 8.2. 테스트 패턴
+
+```tsx
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { axe } from 'vitest-axe';
+
+import { Button } from './button';
+
+describe('Button', () => {
+    it('should have no a11y violations', async () => {
+        const rendered = render(<Button>Test</Button>);
+        const result = await axe(rendered.container);
+        expect(result).toHaveNoViolations();
+    });
+
+    it('should be clickable', async () => {
+        const handleClickMock = vi.fn();
+        const rendered = render(<Button onClick={handleClickMock}>Test</Button>);
+        await userEvent.click(rendered.getByText('Test'));
+        expect(handleClickMock).toHaveBeenCalledTimes(1);
+    });
+});
+```
+
+## 8.3. 테스트 파일 위치
+
+- 컴포넌트 폴더 내 co-locate: `button/button.test.tsx`
 
 # 9. 문서화
 
@@ -749,14 +891,44 @@ src/
 
 ## 9.1 Storybook
 
-- `Docs`: storybook `autodocs` 로 자동 생성됨
-- `Test Bed`: 시각적 회귀 테스트 용도
+- Storybook 9 (`@storybook/react-vite`) 사용.
+- `Meta<typeof Component>`와 `StoryObj<typeof Component>`로 타입 지정.
+- `Docs`: storybook `autodocs`로 자동 생성.
+- `TestBed`: 시각적 회귀 테스트 용도의 스토리 별도 작성.
 
-## 9.2 Vapor Docs(apps/website)
+    ```tsx
+    import type { Meta, StoryObj } from '@storybook/react-vite';
+    import { Button } from './button';
 
-- `use case` : 서브컴포넌트 컴포넌트들의 조합 / 특정 variant의 나열
+    export default {
+        title: 'Button',
+        argTypes: {
+            colorPalette: {
+                control: 'inline-radio',
+                options: ['primary', 'secondary', 'success', 'warning', 'danger', 'contrast'],
+            },
+            size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
+            variant: { control: 'inline-radio', options: ['fill', 'outline', 'ghost'] },
+            disabled: { control: 'boolean' },
+        },
+    } as Meta<typeof Button>;
+
+    type Story = StoryObj<typeof Button>;
+
+    export const Default: Story = {
+        render: (args) => <Button {...args}>Button</Button>,
+    };
+
+    export const TestBed: Story = {
+        render: () => (/* 시각적 회귀 테스트 케이스 */),
+    };
+    ```
+
+## 9.2 Vapor Docs (apps/website)
+
+- `use case`: 서브컴포넌트 조합 / 특정 variant의 나열.
 - 타이틀에는 이모지를 사용하지 않는다.
-- 단일 문자열 값 표기 시 ‘ 작은따옴표는 생략한다.  
-  예: `string` → ✅ `string` / ❌ `'string'`
-- Union Type 표기 시 `a` `b` `c` 식으로 공백 구분으로 작성한다.  
+- 단일 문자열 값 표기 시 작은따옴표는 생략한다.
+  예: `string` (O) / `'string'` (X)
+- Union Type 표기 시 공백 구분으로 작성한다.
   예: `small` `medium` `large`
