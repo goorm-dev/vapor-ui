@@ -59,7 +59,7 @@ export const ToolDetailSheetClient = ({
                                 {description}
                             </Text>
                         </Sheet.Description>
-                        <CopyButton markdownUrl={markdownUrl} size="sm" />
+                        <CopyButton markdownUrl={markdownUrl} />
                     </div>
                 </Sheet.Header>
 

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { BlockPageBody } from '~/components/block-page-body';
 import { BlockPageHeader } from '~/components/block-page-header';
+import { SITE_URL } from '~/constants/domain';
 import { blockSource } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
 
@@ -23,6 +24,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
                 title={title}
                 description={description}
                 previewImageUrl={previewImageUrl}
+                markdownUrl={`${SITE_URL}${page.url}.mdx`}
             />
             <BlockPageBody toc={toc}>
                 <MDX components={getMDXComponents({})} />

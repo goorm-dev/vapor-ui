@@ -34,7 +34,7 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
             <DocsPageHeader
                 title={page.data.title}
                 description={page.data.description}
-                markdownUrl={`${page.url}.mdx`}
+                markdownUrl={`https://vapor-ui.goorm.io${page.url}.mdx`}
             />
             <DocsBody className="px-0 flex flex-col">
                 <MDX components={getMDXComponents({})} />

@@ -58,6 +58,9 @@ const config = {
         });
         return config;
     },
+    experimental: {
+        optimizePackageImports: ['@vapor-ui/icons', '@vapor-ui/core'],
+    },
 };
 
 export default withMDX(config);
