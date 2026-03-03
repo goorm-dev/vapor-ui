@@ -57,7 +57,7 @@ const submitForm = async (event: FormEvent<HTMLFormElement>) => {
 
 export const TestBed: Story = {
     render: (args) => {
-        const { required, ...fieldArgs } = args;
+        const fieldArgs = args;
         const [errors] = useState({});
 
         return (
@@ -157,6 +157,7 @@ export const TestBed: Story = {
                     </Field.Root>
                     <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
                         <Field.Label
+                            nativeLabel={false}
                             render={<Text typography="subtitle2" foreground="normal-200" />}
                         >
                             이름

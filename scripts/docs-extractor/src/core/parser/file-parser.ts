@@ -10,8 +10,7 @@ import type { ModuleDeclaration, Node, SourceFile, Symbol } from 'ts-morph';
 
 import { parsedComponentToModel } from '~/core/model/transformer';
 import type { ComponentModel } from '~/core/model/types';
-import type { BaseUiTypeMap } from '~/core/parser/types';
-import type { ExtractOptions } from '~/core/parser/types';
+import type { BaseUiTypeMap, ExtractOptions } from '~/core/parser/types';
 import { componentModelToJson } from '~/core/serializer/to-json';
 import type { PropsInfoJson } from '~/core/serializer/types';
 

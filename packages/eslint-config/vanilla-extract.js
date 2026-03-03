@@ -1,6 +1,7 @@
 // @ts-check
-import { WARN } from './libs/constants.js';
 import vanillaExtract from '@antebudimir/eslint-plugin-vanilla-extract';
+
+import { WARN } from './libs/constants.js';
 
 /** @type {Record<string, import('eslint').ESLint.Plugin>} */
 // @ts-ignore

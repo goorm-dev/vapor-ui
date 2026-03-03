@@ -37,8 +37,9 @@ export const RadioRoot = forwardRef<HTMLSpanElement, RadioRoot.Props>((props, re
 
     const dataAttrs = createDataAttributes({ invalid });
 
+    const childrenRender = createRender(childrenProp, <RadioIndicatorPrimitive />);
     const children = useRender({
-        render: createRender(childrenProp, <RadioIndicatorPrimitive />),
+        render: childrenRender,
     });
 
     return (

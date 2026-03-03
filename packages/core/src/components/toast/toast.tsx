@@ -91,7 +91,9 @@ export const ToastProviderPrimitive = ({
 
 export const ToastPortalPrimitive = forwardRef<HTMLDivElement, ToastPortalPrimitive.Props>(
     (props, ref) => {
-        return <BaseToast.Portal ref={ref} {...props} />;
+        const componentProps = resolveStyles(props);
+
+        return <BaseToast.Portal ref={ref} {...componentProps} />;
     },
 );
 ToastPortalPrimitive.displayName = 'Toast.PortalPrimitive';
@@ -268,8 +270,9 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         } = resolveStyles(props);
         const { close = true } = useToastContext();
 
+        const childrenRender = createRender(childrenProp, <CloseOutlineIcon />);
         const children = useRender({
-            render: createRender(childrenProp, <CloseOutlineIcon />),
+            render: childrenRender,
         });
 
         if (!close) return null;

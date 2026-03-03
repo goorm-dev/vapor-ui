@@ -25,6 +25,7 @@ export const Default: Story = {
             <Button {...args}>Button</Button>
             <Button
                 {...args}
+                nativeButton={false}
                 render={<a href="https://vapor-ui.goorm.io">Link Button(Polymorphic)</a>}
             />
         </HStack>

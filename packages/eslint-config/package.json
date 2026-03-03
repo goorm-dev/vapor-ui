@@ -14,6 +14,9 @@
         "./import": "./import.js"
     },
     "main": "./index.js",
+    "scripts": {
+        "format": "prettier . --write"
+    },
     "devDependencies": {
         "@antebudimir/eslint-plugin-vanilla-extract": "^1.11.0",
         "@eslint/compat": "^1.3.2",
