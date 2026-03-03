@@ -358,7 +358,7 @@ importers:
         version: 19.2.3(@types/react@19.2.10)
       '@vapor-ui/ts-api-extractor':
         specifier: workspace:*
-        version: link:../../scripts/docs-extractor
+        version: link:../../scripts/ts-api-extractor
       eslint:
         specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.1)
@@ -804,7 +804,7 @@ importers:
 
   packages/typescript-config: {}
 
-  scripts/docs-extractor:
+  scripts/ts-api-extractor:
     dependencies:
       glob:
         specifier: ^10.3.0

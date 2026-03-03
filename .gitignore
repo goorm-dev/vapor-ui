@@ -21,8 +21,8 @@ coverage
 .next/
 out/
 # keep source adapters under docs-extractor trackable
-!scripts/docs-extractor/src/adapters/out/
-!scripts/docs-extractor/src/adapters/out/**
+!scripts/ts-api-extractor/src/adapters/out/
+!scripts/ts-api-extractor/src/adapters/out/**
 build
 dist
 

@@ -1,7 +1,7 @@
 packages:
     - apps/*
     - packages/*
-    - scripts/docs-extractor
+    - scripts/ts-api-extractor
 
 # Unified React 19 for entire monorepo
 # Libraries (packages/*) maintain peerDependencies for React 17/18/19 compatibility

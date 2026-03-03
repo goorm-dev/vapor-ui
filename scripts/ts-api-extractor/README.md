@@ -81,7 +81,7 @@ export default defineConfig({
 ## 아키텍처
 
 ```
-scripts/docs-extractor/
+scripts/ts-api-extractor/
 ├── src/
 │   ├── bin/cli.ts              # CLI 엔트리포인트
 │   ├── cli/                    # CLI 로직, Interactive prompts
