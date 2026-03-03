@@ -6,7 +6,7 @@
 import path from 'node:path';
 import { type ImportSpecifier, type SourceFile, SyntaxKind } from 'ts-morph';
 
-import { findImportPaths } from '~/core/parser/utils';
+import { findImportPaths } from '~/adapters/out/ts-morph/parsers/utils';
 
 const RECIPE_VARIANTS_TYPE_NAME = 'RecipeVariants';
 const VANILLA_EXTRACT_RECIPES_PATH = '@vanilla-extract/recipes';

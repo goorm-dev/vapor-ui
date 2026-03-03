@@ -1,7 +1,7 @@
 /**
  * Filename utilities unit tests
  */
-import { formatFileName, toKebabCase } from '~/core/serializer/filename';
+import { formatFileName, toKebabCase } from '~/application/utils/filename';
 
 describe('toKebabCase', () => {
     it('PascalCase → kebab-case', () => {

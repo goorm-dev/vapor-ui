@@ -6,7 +6,7 @@ import { Project } from 'ts-morph';
 import {
     findCssImports,
     findVariantsTypeImports,
-} from '~/core/parser/defaults/style-import-parser';
+} from '~/adapters/out/ts-morph/parsers/defaults/style-import-parser';
 
 describe('findCssImports', () => {
     let project: Project;

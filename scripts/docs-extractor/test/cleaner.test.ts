@@ -8,7 +8,7 @@ import {
     containsStateCallback,
     simplifyStateCallback,
     splitTopLevelUnion,
-} from '~/core/parser/type/cleaner';
+} from '~/adapters/out/ts-morph/parsers/type/cleaner';
 
 describe('containsStateCallback', () => {
     it('State 콜백 포함 시 true', () => {

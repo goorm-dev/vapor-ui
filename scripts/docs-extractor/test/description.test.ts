@@ -3,7 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import { getPropDescription } from '~/core/parser/props/description';
+import { getPropDescription } from '~/adapters/out/ts-morph/parsers/props/description';
 
 describe('getPropDescription', () => {
     let project: Project;

@@ -6,8 +6,8 @@
  * - category classification
  * - type string parsing
  */
-import { parsedComponentToModel, parsedPropToModel } from '~/core/model/transformer';
-import type { ParsedProp } from '~/core/parser/types';
+import type { ParsedProp } from '~/adapters/out/ts-morph/parsers/types';
+import { parsedComponentToModel, parsedPropToModel } from '~/domain/services/build-component-model';
 
 describe('parsedPropToModel', () => {
     describe('required 계산', () => {

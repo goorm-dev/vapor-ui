@@ -13,8 +13,8 @@ import {
     simplifyForwardRefType,
     simplifyNodeModulesImports,
     simplifyReactElementGeneric,
-} from '~/core/parser/type/resolver';
-import type { BaseUiTypeMap } from '~/core/parser/types';
+} from '~/adapters/out/ts-morph/parsers/type/resolver';
+import type { BaseUiTypeMap } from '~/adapters/out/ts-morph/parsers/types';
 
 // ============================================================
 // String Simplification Utilities

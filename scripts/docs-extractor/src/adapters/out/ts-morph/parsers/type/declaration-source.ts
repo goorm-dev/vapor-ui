@@ -5,7 +5,7 @@
  */
 import type { Symbol } from 'ts-morph';
 
-import { DeclarationSourceType } from '~/core/parser/constants';
+import { DeclarationSourceType } from '~/adapters/out/ts-morph/parsers/constants';
 
 const REACT_TYPES_PATTERNS = ['node_modules/@types/react', 'node_modules/@types/react-dom'];
 

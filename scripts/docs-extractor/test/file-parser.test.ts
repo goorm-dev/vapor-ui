@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { ModuleKind, ModuleResolutionKind, Project, ScriptTarget } from 'ts-morph';
 
-import { extractProps, extractPropsLegacy } from '~/core/parser/file-parser';
+import { extractProps, extractPropsLegacy } from '~/adapters/out/ts-morph/parsers/file-parser';
 
 function createProject(): Project {
     return new Project({

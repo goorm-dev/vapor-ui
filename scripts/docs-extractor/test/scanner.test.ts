@@ -1,7 +1,10 @@
 /**
  * Component scanner unit tests
  */
-import { findFileByComponentName, normalizeComponentName } from '~/core/parser/component/scanner';
+import {
+    findFileByComponentName,
+    normalizeComponentName,
+} from '~/adapters/out/ts-morph/parsers/component/scanner';
 
 describe('normalizeComponentName', () => {
     it('소문자로 변환', () => {

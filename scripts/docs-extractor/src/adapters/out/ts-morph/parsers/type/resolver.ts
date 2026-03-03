@@ -5,7 +5,7 @@
  */
 import { type Node, type Type, TypeFormatFlags } from 'ts-morph';
 
-import type { BaseUiTypeMap } from '~/core/parser/types';
+import type { BaseUiTypeMap } from '~/adapters/out/ts-morph/parsers/types';
 
 import { resolveBaseUiType } from './base-ui-mapper';
 

@@ -5,9 +5,9 @@ import { FsOutputWriterAdapter } from '~/adapters/out/fs/fs-output-writer.adapte
 import { ConsoleLoggerAdapter } from '~/adapters/out/logger/console-logger.adapter';
 import { TsMorphParserAdapter } from '~/adapters/out/ts-morph/ts-morph-parser.adapter';
 import { ExtractComponentMetadataUseCase } from '~/application/use-cases/extract-component-metadata.usecase';
+import { formatFileName } from '~/application/utils/filename';
 import { CliError, resolveOptions } from '~/cli/options';
 import { getComponentExtractOptions } from '~/config';
-import { formatFileName } from '~/core/serializer/filename';
 
 export async function runCli(): Promise<void> {
     const cli = meow(

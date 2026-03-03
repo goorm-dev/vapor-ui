@@ -3,8 +3,8 @@
  */
 import { Project } from 'ts-morph';
 
-import { shouldIncludeSymbol } from '~/core/parser/props/filter';
-import type { ExtractOptions } from '~/core/parser/types';
+import { shouldIncludeSymbol } from '~/adapters/out/ts-morph/parsers/props/filter';
+import type { ExtractOptions } from '~/adapters/out/ts-morph/parsers/types';
 
 function mockSymbol(name: string) {
     return {

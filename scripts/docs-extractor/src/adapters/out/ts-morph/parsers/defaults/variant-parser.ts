@@ -5,7 +5,7 @@
  */
 import { type SourceFile, SyntaxKind } from 'ts-morph';
 
-import { findNamespaceImportName } from '~/core/parser/utils';
+import { findNamespaceImportName } from '~/adapters/out/ts-morph/parsers/utils';
 
 import { extractDestructuringDefaults } from './destructuring-parser';
 import { findCssImports, findVariantsTypeImports } from './style-import-parser';

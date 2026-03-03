@@ -6,7 +6,7 @@ import { Project } from 'ts-morph';
 import {
     findExportedInterfaceProps,
     getExportedNamespaces,
-} from '~/core/parser/component/namespace-parser';
+} from '~/adapters/out/ts-morph/parsers/component/namespace-parser';
 
 describe('getExportedNamespaces', () => {
     let project: Project;

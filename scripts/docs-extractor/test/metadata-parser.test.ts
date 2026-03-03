@@ -3,7 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import { getComponentDescription } from '~/core/parser/component/metadata-parser';
+import { getComponentDescription } from '~/adapters/out/ts-morph/parsers/component/metadata-parser';
 
 describe('getComponentDescription', () => {
     let project: Project;

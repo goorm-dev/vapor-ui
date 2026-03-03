@@ -6,9 +6,9 @@
  */
 import type { ModuleDeclaration, Node, SourceFile, Symbol } from 'ts-morph';
 
+import type { BaseUiTypeMap, ExtractOptions } from '~/adapters/out/ts-morph/parsers/types';
 import type { PropsInfoJson } from '~/application/dto/component-json';
 import { componentModelToJson } from '~/application/mappers/component-model-to-json.mapper';
-import type { BaseUiTypeMap, ExtractOptions } from '~/core/parser/types';
 import type { ComponentModel } from '~/domain/models/component';
 import type { ParsedComponent, ParsedProp } from '~/domain/models/parsed';
 import { parsedComponentToModel } from '~/domain/services/build-component-model';

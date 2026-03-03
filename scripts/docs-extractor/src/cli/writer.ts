@@ -2,7 +2,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type { PropsInfoJson } from '~/core/serializer/types';
+import type { PropsInfoJson } from '~/application/dto/component-json';
 
 export interface WriteOptions {
     format?: boolean;

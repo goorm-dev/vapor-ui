@@ -5,7 +5,7 @@
  */
 import type { Symbol } from 'ts-morph';
 
-import type { ExtractOptions } from '~/core/parser/types';
+import type { ExtractOptions } from '~/adapters/out/ts-morph/parsers/types';
 
 import { isSymbolFromExternalSource, isSymbolFromSprinkles } from '../type/declaration-source';
 
