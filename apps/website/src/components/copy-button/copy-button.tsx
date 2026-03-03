@@ -66,7 +66,6 @@ const trackCopyButtonEvent = (action: CopyButtonAction, markdownUrl: string) => 
     track(eventName);
 };
 
-
 export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
     const [checked, onCopy] = useCopyButton(() => handleCopyContent());
     const [isLoading, setIsLoading] = useState(false);
