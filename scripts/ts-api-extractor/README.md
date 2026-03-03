@@ -1,156 +1,230 @@
 # @vapor-ui/ts-api-extractor
 
-TypeScript AST 기반 컴포넌트 Props 추출 도구. vapor-ui 컴포넌트의 Props 타입 정보를 추출하여 문서화용 JSON 파일을 생성합니다.
+> **Internal Package** - This is a private package (`private: true`) for internal use only. Not published to npm.
 
-## 위치 선택 이유
+An internal CLI tool that extracts Vapor UI component metadata from TypeScript AST and generates JSON output for API documentation.
 
-이 패키지는 `packages/` 대신 `scripts/` 디렉토리에 위치합니다:
+## Overview
 
-- **단일 목적 내부 도구**: vapor-ui 문서 생성만을 위한 도구
-- **외부 배포 불필요**: npm publish 예정 없음 (`private: true`)
-- **pnpm-workspace.yaml에 명시**: workspace 패키지로 정상 동작
+This package automatically generates JSON documentation for `packages/core` components. The primary consumer is `apps/website`, which uses the extracted metadata to render component API references.
 
-## 설치
+**Key characteristics:**
 
-프로젝트 내부 도구이므로 별도 설치가 필요 없습니다.
+- Location: `scripts/ts-api-extractor`
+- Architecture: Application + Domain + Adapters (hexagonal)
+- Primary usage: `pnpm --filter website extract`
 
-## 사용법
+## Quick Start
 
-### 기본 실행
+Run from the monorepo root:
 
 ```bash
-# 전체 컴포넌트 추출
-pnpm --filter @vapor-ui/ts-api-extractor exec ts-api-extractor ./packages/core/src/components
+# Build the extractor package
+pnpm --filter @vapor-ui/ts-api-extractor build
 
-# 특정 컴포넌트만 추출
-pnpm --filter @vapor-ui/ts-api-extractor exec ts-api-extractor ./packages/core/src/components --component Button
+# Run extraction from website (uses apps/website/docs-extractor.config.mjs)
+pnpm --filter website extract
 
-# 출력 디렉토리 지정
-pnpm --filter @vapor-ui/ts-api-extractor exec ts-api-extractor ./packages/core/src/components --output-dir ./output
+# Extract a specific component only
+pnpm --filter website extract --component Button
 ```
 
-### CLI 옵션
+Run package tests:
 
-| 옵션             | 단축 | 설명                                              |
-| ---------------- | ---- | ------------------------------------------------- |
-| `--tsconfig`     | `-c` | tsconfig.json 경로 (기본: 자동 감지)              |
-| `--exclude`      | `-e` | 제외 패턴 (여러 번 사용 가능)                     |
-| `--component`    | `-n` | 특정 컴포넌트만 추출                              |
-| `--output-dir`   | `-d` | 출력 디렉토리                                     |
-| `--all`          | `-a` | 모든 props 포함 (node_modules + sprinkles + html) |
-| `--include`      |      | 특정 props 포함                                   |
-| `--include-html` |      | HTML 속성 화이트리스트                            |
-| `--config`       |      | 설정 파일 경로                                    |
-| `--no-config`    |      | 설정 파일 무시                                    |
-| `--lang`         | `-l` | 출력 언어 (ko, en, all)                           |
+```bash
+pnpm --filter @vapor-ui/ts-api-extractor typecheck
+pnpm --filter @vapor-ui/ts-api-extractor lint
+pnpm --filter @vapor-ui/ts-api-extractor test:run
+```
 
-## 설정 파일
+## CLI Reference
 
-`docs-extractor.config.ts` 파일로 추출 동작을 커스터마이징할 수 있습니다.
+| Option        | Short | Description                                       |
+| ------------- | ----- | ------------------------------------------------- |
+| `--component` | `-n`  | Extract a specific component file only            |
+| `--all`       | `-a`  | Bypass all filters (external/html/sprinkles)      |
+| `--verbose`   | `-v`  | Enable verbose logging                            |
+| `--config`    | -     | Specify a config file path                        |
+| `--no-config` | -     | Disable config file loading                       |
 
-```typescript
+## Configuration
+
+### Config File Names
+
+The CLI searches for these filenames (in order):
+
+- `docs-extractor.config.mjs`
+- `docs-extractor.config.js`
+- `docs-extractor.config.cjs`
+- `docs-extractor.config.ts`
+
+> Note: The package directory was renamed to `ts-api-extractor`, but config filenames remain `docs-extractor.config.*` for backward compatibility.
+
+### Config Priority
+
+1. CLI flags (highest)
+2. File specified via `--config`
+3. Default config file in current working directory
+4. `src/config/defaults.ts` (lowest)
+
+### Config Schema
+
+```ts
 import { defineConfig } from '@vapor-ui/ts-api-extractor';
 
 export default defineConfig({
-    global: {
-        outputDir: './output',
-        languages: ['ko', 'en'],
-        defaultLanguage: 'ko',
-        filterExternal: true, // React/DOM 타입 제외
-        filterSprinkles: true, // Sprinkles props 제외
-        filterHtml: true, // HTML 속성 제외
-        includeHtml: ['className', 'style'], // 허용할 HTML 속성
-    },
-    sprinkles: {
-        metaPath: './generated/sprinkles-meta.json',
-        include: ['padding', 'margin', 'gap'],
-    },
+    inputPath: '../../packages/core',
+    tsconfig: '../../packages/core/tsconfig.json',
+    exclude: [],
+    excludeDefaults: true,
+    outputDir: './public/components/generated',
+    languages: ['en'],
+    filterExternal: true,
+    filterHtml: true,
+    filterSprinkles: true,
+    includeHtml: ['className'],
     components: {
-        'box/box.tsx': {
-            sprinklesAll: true, // Box는 모든 sprinkles 포함
-        },
-        'flex/flex.tsx': {
-            sprinkles: ['gap', 'alignItems', 'justifyContent'],
+        'button/button.tsx': {
+            include: ['data-testid'],
         },
     },
 });
 ```
 
-설정 파일 예시는 `docs-extractor.config.example.ts`를 참고하세요.
+## Output Schema
 
-## 아키텍처
-
-```
-scripts/ts-api-extractor/
-├── src/
-│   ├── bin/cli.ts              # CLI 엔트리포인트
-│   ├── cli/                    # CLI 로직, Interactive prompts
-│   ├── config/                 # Zod 기반 설정 시스템
-│   │   ├── loader.ts           # 설정 파일 로딩 및 검증
-│   │   ├── schema.ts           # Zod 스키마 정의
-│   │   └── defaults.ts         # 기본값 (defineConfig로 오버라이드 가능)
-│   ├── core/                   # Props 추출 핵심 로직
-│   │   ├── props-extractor.ts  # Props 추출
-│   │   ├── type-resolver.ts    # 타입 변환
-│   │   ├── type-cleaner.ts     # 타입 정제
-│   │   └── ...
-│   ├── output/                 # JSON 출력
-│   └── i18n/                   # 다국어 경로 처리
-├── generated/                  # 빌드 시 생성되는 메타데이터 (아래 참조)
-│   └── sprinkles-meta.json
-└── dist/                       # 빌드 산출물
-```
-
-### generated/ 폴더
-
-`generated/sprinkles-meta.json`은 `pnpm build` 시 `prebuild` 스크립트에서 자동 생성됩니다:
-
-- **목적**: Sprinkles CSS props의 메타데이터 (토큰 사용 여부, CSS 속성 매핑 등)
-- **생성 시점**: 빌드 전 (`scripts/generate-sprinkles-meta.ts` 실행)
-- **사용처**: Props 추출 시 sprinkles props 필터링에 활용
-- **위치 이유**: 빌드 산출물이므로 소스 코드(`src/`)와 분리, `.gitignore`에 포함됨
-
-## 출력 형식
-
-추출된 JSON 파일 구조:
+Each component generates a JSON file (`<kebab-case>.json`):
 
 ```json
 {
     "name": "Button",
     "displayName": "Button",
-    "description": "버튼 컴포넌트",
+    "description": "...",
     "props": [
         {
             "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
+            "type": ["sm", "md", "lg"],
             "required": false,
-            "description": "버튼 크기",
+            "description": "...",
             "defaultValue": "md"
         }
-    ],
-    "defaultElement": "button"
+    ]
 }
 ```
 
-## 개발
+## Component Recognition
 
-```bash
-# 빌드
-pnpm --filter @vapor-ui/ts-api-extractor build
+Components are recognized based on this pattern:
 
-# 개발 모드 (watch)
-pnpm --filter @vapor-ui/ts-api-extractor dev
+- File contains `export namespace <ComponentName>`
+- Namespace contains `export interface Props`
 
-# 테스트
-pnpm --filter @vapor-ui/ts-api-extractor test
+Files not matching this pattern are excluded from extraction.
 
-# 테스트 (커버리지 포함)
-pnpm --filter @vapor-ui/ts-api-extractor test:coverage
+## Prop Processing
 
-# 타입 체크
-pnpm --filter @vapor-ui/ts-api-extractor typecheck
+### Type Resolution
+
+- Parses ts-morph types to strings
+- Resolver plugin chain handles React/Base UI/function/union types
+- Cleaner stage normalizes unions and abbreviates render callbacks
+
+### Default Value Extraction
+
+Default values are merged from multiple sources:
+
+- Component parameter destructuring defaults
+- `recipe(...).defaultVariants` in `.css.ts` files
+- Recipe back-tracking via `RecipeVariants` type imports
+
+### Prop Filtering
+
+Props are filtered based on configuration:
+
+| Filter            | Description                                      |
+| ----------------- | ------------------------------------------------ |
+| `filterExternal`  | Excludes external types (React/DOM/node_modules) |
+| `filterHtml`      | Excludes HTML attributes (`data-*`, `aria-*`)    |
+| `filterSprinkles` | Excludes sprinkles/deprecated CSS props          |
+| `include`         | Overrides filters for specific props             |
+| `includeHtml`     | Overrides HTML filter for specific attributes    |
+
+## Extraction Pipeline
+
+1. Parse CLI flags (`--component`, `--all`, `--config`, `--no-config`, `--verbose`)
+2. Load and merge config (defaults + file config + flags)
+3. Scan target component files
+4. Initialize ts-morph project
+5. Parse AST per file (`namespace` + `export interface Props`)
+6. Resolve types, extract defaults, filter props
+7. Transform to domain model and sort
+8. Convert to JSON
+9. Write files per language directory and run prettier
+
+## Architecture
+
+This package follows hexagonal architecture (ports and adapters):
+
+```text
+scripts/ts-api-extractor/
+├── src/
+│   ├── adapters/
+│   │   ├── in/cli/          # meow-based CLI input adapter
+│   │   └── out/
+│   │       ├── ts-morph/    # Source scanning and AST parsing
+│   │       ├── fs/          # File output adapter
+│   │       ├── formatter/   # Prettier formatting adapter
+│   │       └── logger/      # Console logger adapter
+│   ├── application/
+│   │   ├── dto/             # Data transfer objects
+│   │   ├── ports/           # Abstract interfaces (parser/writer/logger/formatter)
+│   │   ├── use-cases/       # extract-component-metadata.usecase.ts
+│   │   └── mappers/         # Domain to JSON DTO transformation
+│   ├── domain/
+│   │   ├── models/          # Parsed/Model types
+│   │   ├── rules/           # Classification, sorting, type normalization
+│   │   └── services/        # build-component-model.ts (Parsed -> Domain)
+│   ├── config/
+│   └── cli/
+├── test/
+└── dist/
 ```
 
-## 라이선스
+## Quality Standards
+
+| Check      | Command       | Tool    |
+| ---------- | ------------- | ------- |
+| Type check | `tsc --noEmit`| tsc     |
+| Lint       | `eslint`      | eslint  |
+| Test       | `vitest`      | vitest  |
+| Build      | `tsup`        | tsup    |
+
+## Troubleshooting
+
+### `Path does not exist`
+
+- Verify `inputPath` is correct relative to current working directory
+- Check for typos in `--config` path
+
+### `No .tsx files found`
+
+- Review `exclude` and `excludeDefaults` settings
+- Confirm target files have `.tsx` extension
+
+### `Component '<name>' not found`
+
+- Verify filename matches component name after normalization (case-insensitive, hyphens removed)
+
+### `module not found` when running from website
+
+- Run `pnpm install` after directory renames or workspace changes
+
+## Future Extensions
+
+- External plugin injection for Resolver/Filter/Defaults
+- Additional output formats (MD, YAML)
+- Multi-config/profile support in CLI
+
+## License
 
 Internal use only.
