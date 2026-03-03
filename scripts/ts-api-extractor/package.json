@@ -1,0 +1,53 @@
+{
+    "name": "@vapor-ui/ts-api-extractor",
+    "version": "0.0.1",
+    "private": true,
+    "description": "TypeScript AST-based API extractor for documentation generation",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "bin": {
+        "ts-api-extractor": "./dist/cli/index.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "format": "prettier --write \"./**/*.{ts,md,mjs}\"",
+        "lint": "eslint ./src",
+        "test": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "test:run": "vitest run",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "glob": "^10.3.0",
+        "meow": "^14.0.0",
+        "ts-morph": "^22.0.0"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@types/node": "^20.10.0",
+        "@vitest/coverage-v8": "^2.0.0",
+        "eslint": "^9.39.2",
+        "prettier": "^3.8.1",
+        "tsup": "^8.0.0",
+        "tsx": "^4.0.0",
+        "typescript": "^5.3.0",
+        "vitest": "^2.0.0"
+    },
+    "peerDependencies": {
+        "typescript": ">=5.0.0"
+    },
+    "engines": {
+        "node": ">=20.19"
+    }
+}
