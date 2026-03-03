@@ -15,7 +15,7 @@
     },
     "main": "./index.js",
     "scripts": {
-        "format": "prettier . --write"
+        "format": "pnpm -w exec prettier packages/eslint-config --write"
     },
     "devDependencies": {
         "@antebudimir/eslint-plugin-vanilla-extract": "^1.11.0",
