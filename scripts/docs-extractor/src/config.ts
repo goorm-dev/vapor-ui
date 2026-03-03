@@ -1,55 +1,42 @@
+import type { ExtractOptions } from '~/application/dto/extract-options';
+import { defaultExtractorConfig } from '~/config/defaults';
+import { defineConfig } from '~/config/define-config';
+import { type LoadConfigOptions, loadExtractorConfig } from '~/config/loader';
+import type { ExtractorConfig } from '~/config/schema';
+
+export { defineConfig, loadExtractorConfig, type LoadConfigOptions };
+export type { ExtractorConfig };
+
 /**
- * Extractor configuration
- *
- * Hardcoded config for vapor-ui/core extraction.
+ * Backward-compatible default config export.
+ * Use loadExtractorConfig() for runtime config resolution.
  */
-import type { ExtractOptions } from '~/core/parser/types';
+export const config: ExtractorConfig = defaultExtractorConfig;
 
-export interface ExtractorConfig {
-    inputPath: string;
-    tsconfig: string;
-    exclude: string[];
-    excludeDefaults: boolean;
-    outputDir: string;
-    languages: string[];
-    filterExternal: boolean;
-    filterHtml: boolean;
-    filterSprinkles: boolean;
-    includeHtml?: string[];
-    components: Record<string, { include?: string[] }>;
-}
-
-export const config: ExtractorConfig = {
-    inputPath: '../../packages/core',
-    tsconfig: '../../packages/core/tsconfig.json',
-    exclude: [],
-    excludeDefaults: true,
-    outputDir: '../../apps/website/public/components/generated',
-    languages: ['en'],
-    filterExternal: true,
-    filterHtml: true,
-    filterSprinkles: true,
-    includeHtml: ['className'],
-    components: {},
-};
-
-export function buildExtractOptions(all: boolean): ExtractOptions {
+export function buildExtractOptions(
+    all: boolean,
+    configValue: ExtractorConfig = config,
+): ExtractOptions {
     return {
-        filterExternal: !all && config.filterExternal,
-        filterHtml: !all && config.filterHtml,
-        filterSprinkles: !all && config.filterSprinkles,
-        includeHtmlWhitelist: config.includeHtml?.length ? new Set(config.includeHtml) : undefined,
+        filterExternal: !all && configValue.filterExternal,
+        filterHtml: !all && configValue.filterHtml,
+        filterSprinkles: !all && configValue.filterSprinkles,
+        includeHtmlWhitelist: configValue.includeHtml?.length
+            ? new Set(configValue.includeHtml)
+            : undefined,
     };
 }
 
 export function getComponentExtractOptions(
     baseOptions: ExtractOptions,
     filePath: string,
+    configValue: ExtractorConfig = config,
 ): ExtractOptions {
     const normalizedPath = filePath.replace(/\\/g, '/');
 
-    for (const [pattern, componentConfig] of Object.entries(config.components)) {
+    for (const [pattern, componentConfig] of Object.entries(configValue.components)) {
         const normalizedPattern = pattern.replace(/\\/g, '/');
+
         if (
             normalizedPath.endsWith(normalizedPattern) ||
             normalizedPath.includes(normalizedPattern)
@@ -64,4 +51,10 @@ export function getComponentExtractOptions(
     }
 
     return baseOptions;
+}
+
+export async function resolveConfigForCli(
+    options: LoadConfigOptions = {},
+): Promise<ExtractorConfig> {
+    return loadExtractorConfig(options);
 }

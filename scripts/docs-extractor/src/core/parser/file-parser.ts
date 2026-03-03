@@ -1,18 +1,17 @@
 /**
- * Props extraction orchestrator
+ * Props extraction parser module
  *
- * Coordinates the 3-layer architecture:
- * 1. Parser: AST → ParsedComponent[]
- * 2. Model: ParsedComponent[] → ComponentModel[]
- * 3. Serializer: ComponentModel[] → PropsInfoJson[]
+ * Parser layer extracts ParsedComponent[] from a source file.
+ * Legacy extractProps() remains for backward compatibility.
  */
 import type { ModuleDeclaration, Node, SourceFile, Symbol } from 'ts-morph';
 
-import { parsedComponentToModel } from '~/core/model/transformer';
-import type { ComponentModel } from '~/core/model/types';
+import type { PropsInfoJson } from '~/application/dto/component-json';
+import { componentModelToJson } from '~/application/mappers/component-model-to-json.mapper';
 import type { BaseUiTypeMap, ExtractOptions } from '~/core/parser/types';
-import { componentModelToJson } from '~/core/serializer/to-json';
-import type { PropsInfoJson } from '~/core/serializer/types';
+import type { ComponentModel } from '~/domain/models/component';
+import type { ParsedComponent, ParsedProp } from '~/domain/models/parsed';
+import { parsedComponentToModel } from '~/domain/services/build-component-model';
 
 import { getComponentDescription } from './component/metadata-parser';
 import { findExportedInterfaceProps, getExportedNamespaces } from './component/namespace-parser';
@@ -23,11 +22,6 @@ import { buildBaseUiTypeMap } from './type/base-ui-mapper';
 import { cleanType } from './type/cleaner';
 import { getSymbolSourcePath } from './type/declaration-source';
 import { resolveType } from './type/resolver';
-import type { ParsedComponent, ParsedProp } from './types';
-
-// ============================================================
-// Parser Layer: AST → Parsed
-// ============================================================
 
 function extractParsedProp(
     symbol: Symbol,
@@ -41,7 +35,6 @@ function extractParsedProp(
         resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode, verbose),
     );
 
-    // Convert type arrays to a string (re-parsed in the model layer).
     const typeString =
         typeResult.values && typeResult.values.length > 0
             ? typeResult.values.join(' | ')
@@ -100,7 +93,10 @@ function extractParsedComponent(
     };
 }
 
-function parseFile(sourceFile: SourceFile, options: ExtractOptions): ParsedComponent[] {
+export function parseSourceFile(
+    sourceFile: SourceFile,
+    options: ExtractOptions = {},
+): ParsedComponent[] {
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
     const namespaces = getExportedNamespaces(sourceFile);
     const parsedComponents: ParsedComponent[] = [];
@@ -133,39 +129,19 @@ function parseFile(sourceFile: SourceFile, options: ExtractOptions): ParsedCompo
     return parsedComponents;
 }
 
-// ============================================================
-// Public API
-// ============================================================
-
 export interface ExtractResult {
-    /** Parsed parser output */
     parsed: ParsedComponent[];
-    /** Domain models */
     models: ComponentModel[];
-    /** JSON-ready output */
     props: PropsInfoJson[];
 }
 
-/**
- * Extract props from a source file through the 3-layer pipeline
- */
 export function extractProps(sourceFile: SourceFile, options: ExtractOptions = {}): ExtractResult {
-    // Layer 1: Parser (AST → Parsed)
-    const parsed = parseFile(sourceFile, options);
-
-    // Layer 2: Model (Parsed → Domain)
+    const parsed = parseSourceFile(sourceFile, options);
     const models = parsed.map(parsedComponentToModel);
-
-    // Layer 3: Serializer (Domain → JSON)
     const props = models.map(componentModelToJson);
-
     return { parsed, models, props };
 }
 
-/**
- * Legacy compatibility: Returns only the JSON props
- * @deprecated Use extractProps().props instead
- */
 export function extractPropsLegacy(
     sourceFile: SourceFile,
     options: ExtractOptions = {},
