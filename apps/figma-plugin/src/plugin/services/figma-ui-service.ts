@@ -1,8 +1,7 @@
 import type { PaletteChip } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
-import { formatFamilyTitle } from '~/plugin/utils/color';
-import { hexToFigmaColor } from '~/plugin/utils/color';
+import { formatFamilyTitle, hexToFigmaColor } from '~/plugin/utils/color';
 
 // ============================================================================
 // Constants & Types

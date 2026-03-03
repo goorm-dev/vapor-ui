@@ -4,13 +4,13 @@ import {
     type ContrastRatios,
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_KEY_COLORS,
+    getColorLightness,
     type SemanticResult,
     type ThemeOptions,
     type ThemeResult,
     generatePrimitiveColorPalette,
     getSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
-import { getColorLightness } from '@vapor-ui/color-generator';
 import { Box, Button, Collapsible, HStack, VStack } from '@vapor-ui/core';
 import { generateColorCSS } from '@vapor-ui/css-generator';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
