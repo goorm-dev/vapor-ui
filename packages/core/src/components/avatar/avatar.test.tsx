@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
 import { Avatar } from '.';
@@ -52,14 +52,16 @@ describe('Avatar', () => {
         expect(fallback).toBeInTheDocument();
     });
 
-    it('should not render the image initially', () => {
+    it('should render both image and fallback initially', () => {
         const src = 'https://cdn.mos.cms.futurecdn.net/yuenhhyDC6DR5rv6KQNxu5.png';
         const alt = 'Avatar Image';
 
         const rendered = render(<AvatarTest src={src} alt={alt} />);
         const image = rendered.queryByRole('img');
+        const fallback = rendered.queryByText(alt.charAt(0).toUpperCase());
 
-        expect(image).not.toBeInTheDocument();
+        expect(image).toBeInTheDocument();
+        expect(fallback).toBeInTheDocument();
     });
 
     it('should render the image after it has loaded', async () => {
@@ -70,6 +72,10 @@ describe('Avatar', () => {
         const image = await rendered.findByRole('img');
 
         expect(image).toBeInTheDocument();
+
+        await waitFor(() => {
+            expect(rendered.queryByText(alt.charAt(0).toUpperCase())).not.toBeInTheDocument();
+        });
     });
 
     it('should have alternative text on the image', async () => {
@@ -86,20 +92,34 @@ describe('Avatar', () => {
         const src = 'https://cdn.mos.cms.futurecdn.net/yuenhhyDC6DR5rv6KQNxu5.png';
         const src2 = 'https://cdn.kinocheck.com/i/c6b9vau1yd.jpg';
         const alt = 'Avatar Image';
+        const fallbackText = alt.charAt(0).toUpperCase();
         let image: HTMLElement | null = null;
 
         const rendered = render(<AvatarTest src={src} alt={alt} />);
 
+        expect(rendered.queryByRole('img')).toBeInTheDocument();
+        expect(rendered.queryByText(fallbackText)).toBeInTheDocument();
+
         image = await rendered.findByRole('img');
         expect(image).toBeInTheDocument();
+        await waitFor(() => {
+            expect(rendered.queryByText(fallbackText)).not.toBeInTheDocument();
+        });
 
         /** change image source */
         rendered.rerender(<AvatarTest src={src2} alt={alt} />);
+
+        expect(rendered.queryByRole('img')).toBeInTheDocument();
+        expect(rendered.queryByText(fallbackText)).toBeInTheDocument();
+
         image = rendered.queryByRole('img');
-        expect(image).not.toBeInTheDocument();
+        expect(image).toBeInTheDocument();
 
         image = await rendered.findByRole('img');
         expect(image).toBeInTheDocument();
+        await waitFor(() => {
+            expect(rendered.queryByText(fallbackText)).not.toBeInTheDocument();
+        });
     });
 });
 

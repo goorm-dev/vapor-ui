@@ -39,7 +39,7 @@ const [NavigationMenuProvider, useNavigationMenuContext] = createContext<Navigat
 
 export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Props>(
     (props, ref) => {
-        const { 'aria-label': ariaLabel, className, ...componentProps } = resolveStyles(props);
+        const { className, ...componentProps } = resolveStyles(props);
         const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(
             componentProps,
             ['direction', 'size', 'disabled'],
@@ -51,7 +51,6 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
             <NavigationMenuProvider value={variantProps}>
                 <BaseNavigationMenu.Root
                     ref={ref}
-                    aria-label={ariaLabel}
                     orientation={direction}
                     className={className}
                     {...otherProps}
@@ -66,7 +65,7 @@ NavigationMenuRoot.displayName = 'NavigationMenu.Root';
  * NavigationMenu.List
  * -----------------------------------------------------------------------------------------------*/
 
-export const NavigationMenuList = forwardRef<HTMLDivElement, NavigationMenuList.Props>(
+export const NavigationMenuList = forwardRef<HTMLUListElement, NavigationMenuList.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
         const { direction } = useNavigationMenuContext();
@@ -87,7 +86,7 @@ NavigationMenuList.displayName = 'NavigationMenu.List';
  * NavigationMenu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.Props>(
+export const NavigationMenuItem = forwardRef<HTMLLIElement, NavigationMenuItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
 
@@ -164,7 +163,7 @@ NavigationMenuTriggerPrimitive.displayName = 'NavigationMenu.TriggerPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
-    HTMLDivElement,
+    HTMLSpanElement,
     NavigationMenuTriggerIndicatorPrimitive.Props
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
