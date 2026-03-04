@@ -1,9 +1,12 @@
+import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
+
+const borderColor = createVar('border-color');
 
 export const root = recipe({
     base: [
@@ -17,8 +20,7 @@ export const root = recipe({
             justifyContent: 'center',
             gap: vars.size.space[100],
 
-            border: '0.0625rem solid',
-            borderColor: vars.color.border.normal,
+            boxShadow: `inset 0 0 0 1px ${borderColor}`,
 
             backgroundColor: vars.color.background.canvas[100],
             padding: vars.size.space['000'],
@@ -38,8 +40,10 @@ export const root = recipe({
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': { borderColor: vars.color.border.danger },
+                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
             },
+
+            vars: { [borderColor]: vars.color.border.normal },
         }),
     ],
 

@@ -1,5 +1,4 @@
 import { createVar } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -7,7 +6,7 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-const borderWidth = createVar('border-width');
+const borderColor = createVar('border-color');
 
 export const root = recipe({
     base: [
@@ -21,7 +20,7 @@ export const root = recipe({
             justifyContent: 'center',
             gap: vars.size.space[100],
 
-            border: `${borderWidth} solid ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 0.0625rem ${borderColor}`,
             borderRadius: 9999,
 
             backgroundColor: vars.color.background.canvas[100],
@@ -30,7 +29,10 @@ export const root = recipe({
             padding: vars.size.space['000'],
 
             selectors: {
-                '&[data-checked]': { backgroundColor: vars.color.background.primary[200] },
+                '&[data-checked]': {
+                    backgroundColor: vars.color.background.primary[200],
+                    boxShadow: 'none',
+                },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
                 '&[data-disabled]::before': { opacity: 0 },
@@ -39,12 +41,10 @@ export const root = recipe({
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': { borderColor: vars.color.border.danger },
+                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
             },
 
-            vars: {
-                [borderWidth]: '0.0625rem',
-            },
+            vars: { [borderColor]: vars.color.border.normal },
         }),
     ],
 
@@ -74,8 +74,8 @@ export const indicator = layerStyle('components', {
     border: 'none',
     borderRadius: '9999px',
     backgroundColor: vars.color.white,
-    width: calc.subtract('50%', borderWidth),
-    height: calc.subtract('50%', borderWidth),
+    width: '50%',
+    height: '50%',
     selectors: {
         '&[data-readonly]': {
             backgroundColor: vars.color.foreground.hint[100],
