@@ -40,8 +40,9 @@ export const SwitchRoot = forwardRef<HTMLSpanElement, SwitchRoot.Props>((props, 
     const { required } = otherProps;
     const dataAttrs = createDataAttributes({ invalid });
 
+    const childrenRender = createRender(childrenProp, <SwitchThumbPrimitive />);
     const children = useRender({
-        render: createRender(childrenProp, <SwitchThumbPrimitive />),
+        render: childrenRender,
     });
 
     return (
@@ -73,7 +74,7 @@ export const SwitchThumbPrimitive = forwardRef<HTMLDivElement, SwitchThumbPrimit
         return (
             <BaseSwitch.Thumb
                 ref={ref}
-                className={styles.indicator({ size })}
+                className={clsx(styles.indicator({ size }), className)}
                 {...componentProps}
             />
         );

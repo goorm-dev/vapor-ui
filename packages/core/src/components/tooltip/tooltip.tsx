@@ -39,9 +39,13 @@ TooltipTrigger.displayName = 'Tooltip.Trigger';
  * Tooltip.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const TooltipPortalPrimitive = (props: TooltipPortalPrimitive.Props) => {
-    return <BaseTooltip.Portal {...props} />;
-};
+export const TooltipPortalPrimitive = forwardRef<HTMLDivElement, TooltipPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <BaseTooltip.Portal ref={ref} {...componentProps} />;
+    },
+);
 TooltipPortalPrimitive.displayName = 'Tooltip.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -156,13 +160,15 @@ export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <TooltipPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(positionerElement, <TooltipPositionerPrimitive />);
         const positioner = useRender({
-            render: createRender(positionerElement, <TooltipPositionerPrimitive />),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <TooltipPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <TooltipPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 

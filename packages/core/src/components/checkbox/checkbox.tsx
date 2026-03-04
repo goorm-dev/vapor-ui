@@ -40,8 +40,9 @@ export const CheckboxRoot = forwardRef<HTMLSpanElement, CheckboxRoot.Props>((pro
 
     const { size, invalid, indeterminate } = variantProps;
 
+    const childrenRender = createRender(childrenProp, <CheckboxIndicatorPrimitive />);
     const children = useRender({
-        render: createRender(childrenProp, <CheckboxIndicatorPrimitive />),
+        render: childrenRender,
     });
 
     const root = useRender({
@@ -75,8 +76,9 @@ export const CheckboxIndicatorPrimitive = forwardRef<
     const dataAttrs = createDataAttributes({ invalid });
 
     const Icon = indeterminate ? DashIcon : CheckIcon;
+    const childrenRender = createRender(childrenProp, <Icon />);
     const children = useRender({
-        render: createRender(childrenProp, <Icon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 

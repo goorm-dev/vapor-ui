@@ -50,9 +50,14 @@ FloatingBarClose.displayName = 'FloatingBar.Close';
  * FloatingBar.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const FloatingBarPortalPrimitive = (props: FloatingBarPortalPrimitive.Props) => (
-    <Popover.Portal {...props} />
-);
+export const FloatingBarPortalPrimitive = forwardRef<
+    HTMLDivElement,
+    FloatingBarPortalPrimitive.Props
+>((props, ref) => {
+    const componentProps = resolveStyles(props);
+
+    return <Popover.Portal ref={ref} {...componentProps} />;
+});
 FloatingBarPortalPrimitive.displayName = 'FloatingBar.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -107,13 +112,15 @@ export const FloatingBarPopup = forwardRef<HTMLDivElement, FloatingBarPopup.Prop
 
     const popup = <FloatingBarPopupPrimitive ref={ref} {...componentProps} />;
 
+    const positionerRender = createRender(<FloatingBarPositionerPrimitive />);
     const positioner = useRender({
-        render: createRender(<FloatingBarPositionerPrimitive />),
+        render: positionerRender,
         props: { children: popup },
     });
 
+    const portalRender = createRender(portalElement, <FloatingBarPortalPrimitive />);
     const portal = useRender({
-        render: createRender(portalElement, <FloatingBarPortalPrimitive />),
+        render: portalRender,
         props: { children: positioner },
     });
 
