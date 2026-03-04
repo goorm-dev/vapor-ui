@@ -1,6 +1,7 @@
 'use client';
 
-import { type ReactElement, forwardRef } from 'react';
+import type { ReactElement } from 'react';
+import { forwardRef } from 'react';
 
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import clsx from 'clsx';
