@@ -14,6 +14,35 @@ interface ComponentExplorerProps {
     componentName: string;
 }
 
+const PROPS_TARGET_OVERRIDES: Record<string, Record<string, string[]>> = {
+    'floating-bar': {
+        PortalPrimitive: ['floating-bar-portal'],
+        PositionerPrimitive: ['floating-bar-positioner'],
+        PopupPrimitive: ['floating-bar-popup'],
+    },
+};
+
+function toKebabCase(value: string) {
+    return value
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+        .toLowerCase();
+}
+
+function getPropsTargetCandidates(componentName: string, partName: string) {
+    const defaultCandidates = [`${componentName}-${toKebabCase(partName)}`];
+
+    if (partName.endsWith('Primitive')) {
+        defaultCandidates.push(
+            `${componentName}-${toKebabCase(partName.replace(/Primitive$/, ''))}`,
+        );
+    }
+
+    const overrideCandidates = PROPS_TARGET_OVERRIDES[componentName]?.[partName] ?? [];
+
+    return Array.from(new Set([...overrideCandidates, ...defaultCandidates]));
+}
+
 export function ComponentExplorer({ name, componentName }: ComponentExplorerProps) {
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
     const [hoveredPart, setHoveredPart] = React.useState<string | null>(null);
@@ -24,6 +53,10 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
     const [error, setError] = React.useState<string | null>(null);
     const [retryCount, setRetryCount] = React.useState(0);
     const [iframeLoaded, setIframeLoaded] = React.useState(false);
+    const [propsTargetComponentName, setPropsTargetComponentName] = React.useState<string | null>(
+        null,
+    );
+    const [liveAnnouncement, setLiveAnnouncement] = React.useState('');
     const { highlightPart, availableParts } = useExplorerCommunication(iframeRef);
     const { resolvedTheme } = useTheme();
 
@@ -64,6 +97,13 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         };
     }, [componentName, retryCount]);
 
+    React.useEffect(() => {
+        setPinnedPart(null);
+        setHoveredPart(null);
+        setPropsTargetComponentName(null);
+        setLiveAnnouncement('');
+    }, [componentName]);
+
     const handleRetry = React.useCallback(() => {
         setRetryCount((prev) => prev + 1);
     }, []);
@@ -86,22 +126,89 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         setHoveredPart(partName);
     }, []);
 
-    const handlePartClick = React.useCallback((partName: string) => {
-        setPinnedPart((prev) => (prev === partName ? null : partName));
+    const displayName = anatomyData?.displayNamePrefix || componentName;
+
+    const handlePartClick = React.useCallback(
+        (partName: string) => {
+            setPinnedPart((prev) => {
+                const nextPinnedPart = prev === partName ? null : partName;
+                setLiveAnnouncement(
+                    nextPinnedPart
+                        ? `${displayName}.${nextPinnedPart} 선택됨`
+                        : '파트 선택이 해제되었습니다.',
+                );
+                return nextPinnedPart;
+            });
+        },
+        [displayName],
+    );
+
+    const handleClearSelection = React.useCallback(() => {
+        setPinnedPart(null);
+        setHoveredPart(null);
+        setLiveAnnouncement('파트 선택이 해제되었습니다.');
     }, []);
 
     const handleIframeLoad = React.useCallback(() => {
         setIframeLoaded(true);
     }, []);
 
-    const displayName = anatomyData?.displayNamePrefix || componentName;
+    const hasPrimitivePart = parts.some((part) => part.isPrimitive);
+
+    React.useEffect(() => {
+        if (!pinnedPart || typeof document === 'undefined') {
+            setPropsTargetComponentName(null);
+            return;
+        }
+
+        const candidates = getPropsTargetCandidates(componentName, pinnedPart);
+        const matched = candidates.find((candidate) =>
+            Boolean(document.querySelector(`[data-component-props="${candidate}"]`)),
+        );
+
+        setPropsTargetComponentName(matched ?? null);
+    }, [componentName, pinnedPart]);
+
+    const handleMoveToProps = React.useCallback(() => {
+        if (!pinnedPart || typeof document === 'undefined') return;
+
+        const candidates = getPropsTargetCandidates(componentName, pinnedPart);
+        const targetComponentName =
+            candidates.find((candidate) =>
+                Boolean(document.querySelector(`[data-component-props="${candidate}"]`)),
+            ) ?? null;
+
+        if (!targetComponentName) {
+            setLiveAnnouncement(`${displayName}.${pinnedPart} Props Table을 찾을 수 없습니다.`);
+            return;
+        }
+
+        const target = document.querySelector<HTMLElement>(
+            `[data-component-props="${targetComponentName}"]`,
+        );
+
+        if (!target) {
+            setLiveAnnouncement(`${displayName}.${pinnedPart} Props Table을 찾을 수 없습니다.`);
+            return;
+        }
+
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setLiveAnnouncement(`${displayName}.${pinnedPart} Props Table로 이동했습니다.`);
+    }, [componentName, displayName, pinnedPart]);
+
+    if (!isLoading && !error && !hasPrimitivePart) {
+        return null;
+    }
 
     return (
         <div className="rounded-xl overflow-hidden border border-v-normal-200 bg-v-canvas-100 shadow-lg shadow-v-normal-900/5">
-            <div className="flex min-h-[420px]">
+            <p className="sr-only" role="status" aria-live="polite">
+                {liveAnnouncement}
+            </p>
+            <div className="flex flex-col md:flex-row min-h-[320px] md:min-h-[420px]">
                 {isLoading ? (
                     <div
-                        className="w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center"
+                        className="w-full md:w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center"
                         role="status"
                     >
                         <div className="flex flex-col items-center gap-3">
@@ -113,7 +220,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                     </div>
                 ) : error ? (
                     <div
-                        className="w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center"
+                        className="w-full md:w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center"
                         role="alert"
                     >
                         <div className="flex flex-col items-center gap-4 text-center px-4">
@@ -157,9 +264,13 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                         onPartHover={handlePartHover}
                         onPartClick={handlePartClick}
                         showPrimitives
+                        selectedPart={pinnedPart}
+                        canMoveToProps={Boolean(propsTargetComponentName)}
+                        onMoveToProps={handleMoveToProps}
+                        onClearSelection={handleClearSelection}
                     />
                 )}
-                <div className="flex-1 relative bg-v-canvas border-l border-v-normal-200">
+                <div className="flex-1 relative bg-v-canvas border-t md:border-t-0 md:border-l border-v-normal-200 min-h-[320px] md:min-h-0">
                     {!iframeLoaded && (
                         <div
                             className="absolute inset-0 flex items-center justify-center bg-v-canvas/90 backdrop-blur-sm z-10"
@@ -182,10 +293,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                     )}
                     <iframe
                         ref={iframeRef}
-                        width="100%"
-                        height="100%"
-                        className="border-0 block"
-                        style={{ minHeight: '420px' }}
+                        className="border-0 block w-full h-[320px] md:h-full min-h-[320px] md:min-h-[420px]"
                         title={`Component Explorer - ${componentName}`}
                         sandbox="allow-scripts allow-same-origin"
                         onLoad={handleIframeLoad}

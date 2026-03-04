@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback } from 'react';
+import { memo, type KeyboardEvent, useCallback } from 'react';
 
 import { Button, Text } from '@vapor-ui/core';
 import clsx from 'clsx';
@@ -15,6 +15,7 @@ interface PartButtonProps {
     onMouseLeave: () => void;
     onFocus?: () => void;
     onBlur?: () => void;
+    onKeyDown?: (event: KeyboardEvent<HTMLButtonElement>) => void;
 }
 
 export const PartButton = memo(function PartButton({
@@ -27,6 +28,7 @@ export const PartButton = memo(function PartButton({
     onMouseLeave,
     onFocus,
     onBlur,
+    onKeyDown,
 }: PartButtonProps) {
     const isActive = isHovered || isPinned;
 
@@ -59,8 +61,11 @@ export const PartButton = memo(function PartButton({
             variant="ghost"
             colorPalette={isActive ? 'primary' : 'secondary'}
             onClick={handleClick}
+            aria-pressed={isPinned}
+            aria-label={`${displayName}.${partName} part`}
+            data-explorer-part-button="true"
             className={clsx(
-                'group relative !w-full !justify-start !px-3 !py-2 !h-auto !rounded-md',
+                'group relative !w-full !justify-start !px-3 !py-2 !h-auto !min-h-11 !rounded-md',
                 'transition-colors duration-150 ease-out',
                 'motion-reduce:transition-none',
                 isActive && '!bg-v-primary-100',
@@ -69,6 +74,7 @@ export const PartButton = memo(function PartButton({
             onMouseLeave={onMouseLeave}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            onKeyDown={onKeyDown}
         >
             <div className="flex items-center gap-2 w-full">
                 {/* Part name */}
