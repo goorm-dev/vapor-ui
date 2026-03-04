@@ -5,7 +5,8 @@ import clsx from 'clsx';
 
 import type { Foregrounds } from '~/styles/mixins/foreground.css';
 import { foregrounds } from '~/styles/mixins/foreground.css';
-import { type Typography, typography } from '~/styles/mixins/typography.css';
+import type { Typography } from '~/styles/mixins/typography.css';
+import { typography } from '~/styles/mixins/typography.css';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 

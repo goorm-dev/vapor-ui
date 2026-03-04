@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'react';
 import { useMemo, useState } from 'react';
 
-import { makeStateUpdater } from '@tanstack/react-table';
 import type {
     Column,
     ColumnDef,
@@ -11,9 +10,16 @@ import type {
     Table as TanstackTable,
     Updater,
 } from '@tanstack/react-table';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import {
+    flexRender,
+    getCoreRowModel,
+    makeStateUpdater,
+    useReactTable,
+} from '@tanstack/react-table';
 import { Badge, Box, Card, HStack, IconButton, Table } from '@vapor-ui/core';
 import { ChevronDoubleLeftOutlineIcon, ChevronDoubleRightOutlineIcon } from '@vapor-ui/icons';
+
+// asdf
 
 export default function Collapsed() {
     const columns = useMemo<ColumnDef<Data>[]>(

@@ -23,7 +23,6 @@ export const RadioCard = forwardRef<HTMLButtonElement, RadioCard.Props>((props, 
     ]);
 
     const { invalid: invalidProp } = variantProps;
-
     const invalid = invalidProp || contextInvalid;
 
     const dataAttrs = createDataAttributes({ invalid });

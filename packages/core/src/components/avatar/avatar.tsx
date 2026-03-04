@@ -52,12 +52,14 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
     const { shape, size } = variantProps;
     const contextValue = useMemo(() => variantProps, [variantProps]);
 
+    const imageRender = createRender(imageElement, <AvatarImagePrimitive />);
     const image = useRender({
-        render: createRender(imageElement, <AvatarImagePrimitive />),
+        render: imageRender,
     });
 
+    const fallbackRender = createRender(fallbackElement, <AvatarFallbackPrimitive />);
     const fallback = useRender({
-        render: createRender(fallbackElement, <AvatarFallbackPrimitive />),
+        render: fallbackRender,
         props: { children },
     });
 

@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { Toast as BaseToast, type ToastManager as BaseToastManager } from '@base-ui/react/toast';
+import type { ToastManager as BaseToastManager } from '@base-ui/react/toast';
+import { Toast as BaseToast } from '@base-ui/react/toast';
 import { useRender } from '@base-ui/react/use-render';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
@@ -91,7 +92,9 @@ export const ToastProviderPrimitive = ({
 
 export const ToastPortalPrimitive = forwardRef<HTMLDivElement, ToastPortalPrimitive.Props>(
     (props, ref) => {
-        return <BaseToast.Portal ref={ref} {...props} />;
+        const componentProps = resolveStyles(props);
+
+        return <BaseToast.Portal ref={ref} {...componentProps} />;
     },
 );
 ToastPortalPrimitive.displayName = 'Toast.PortalPrimitive';
@@ -268,8 +271,9 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         } = resolveStyles(props);
         const { close = true } = useToastContext();
 
+        const childrenRender = createRender(childrenProp, <CloseOutlineIcon />);
         const children = useRender({
-            render: createRender(childrenProp, <CloseOutlineIcon />),
+            render: childrenRender,
         });
 
         if (!close) return null;
