@@ -69,6 +69,7 @@ export const RadioIndicatorPrimitive = forwardRef<HTMLDivElement, RadioIndicator
 
         return (
             <BaseRadio.Indicator
+                keepMounted
                 ref={ref}
                 className={clsx(styles.indicator, className)}
                 {...dataAttrs}

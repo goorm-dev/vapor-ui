@@ -111,7 +111,7 @@ const CheckIcon = ({ className, ...props }: IconProps) => {
             className={clsx(styles.icon, className)}
             {...props}
         >
-            <polyline points="2 9 8 14 15 4" />
+            <polyline points="2 9 7 14 15 5" />
         </svg>
     );
 };

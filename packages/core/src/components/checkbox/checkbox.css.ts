@@ -20,7 +20,9 @@ export const root = recipe({
 
             boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
             backgroundColor: vars.color.background.canvas[100],
-            transition: 'all 0.2s',
+
+            transitionProperty: 'background-color, box-shadow',
+            transitionDuration: '0.2s',
 
             padding: vars.size.space['000'],
             overflow: 'hidden',
@@ -30,9 +32,6 @@ export const root = recipe({
                     boxShadow: 'none',
                     backgroundColor: vars.color.background.primary[200],
                 },
-
-                // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
-                // '&::before': { borderRadius: '0' },
 
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
@@ -107,10 +106,6 @@ export const icon = layerStyle('components', {
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
 
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-
     // selectors: {
     //     [`${indicator}[data-checked] > &`]: {
     //         strokeDashoffset: '44px',
@@ -120,6 +115,10 @@ export const icon = layerStyle('components', {
     //         stroke: vars.color.foreground.hint['100'],
     //     },
     // },
+});
+
+globalStyle(`${indicator}[data-checked] > svg`, {
+    transition: 'all 0.2s',
 });
 
 globalStyle(`${indicator}[data-checked] > ${icon}`, {

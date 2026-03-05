@@ -21,6 +21,9 @@ export const root = recipe({
             boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.normal}`,
             backgroundColor: vars.color.background.canvas[100],
 
+            transitionProperty: 'background-color, box-shadow',
+            transitionDuration: '0.2s',
+
             cursor: 'pointer',
 
             padding: vars.size.space['000'],
@@ -67,15 +70,16 @@ export const root = recipe({
 
 export const indicator = layerStyle('components', {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    transitionProperty: 'background-color, box-shadow, scale',
+    transitionDuration: '0.2s',
+    inset: 0,
+    scale: 0,
     border: 'none',
     borderRadius: '9999px',
     backgroundColor: vars.color.white,
-    width: '50%',
-    height: '50%',
+
     selectors: {
+        '&[data-checked]': { scale: 0.5 },
         '&[data-readonly]': {
             backgroundColor: vars.color.foreground.hint[100],
         },
