@@ -1,5 +1,37 @@
 # @vapor-ui/core
 
+## 1.2.0
+
+### All
+
+- add `forwardRef` to `Portal` elements ([#499](https://github.com/goorm-dev/vapor-ui/pull/499)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- bump @base-ui/react v1.2.0 ([#497](https://github.com/goorm-dev/vapor-ui/pull/497)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Button
+
+- add `@base-ui/react` headless to the `Button` component ([#501](https://github.com/goorm-dev/vapor-ui/pull/501)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Checkbox
+
+- fix: improve checkbox border styles and interaction overlay sizing ([#354](https://github.com/goorm-dev/vapor-ui/pull/354)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Css
+
+- remove css all property ([#493](https://github.com/goorm-dev/vapor-ui/pull/493)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- remove duplication from deprecated sprinkles ([#494](https://github.com/goorm-dev/vapor-ui/pull/494)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- split sprinkles className and hash with `-` ([#495](https://github.com/goorm-dev/vapor-ui/pull/495)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Selects
+
+- deprecate `Select.PlaceholderPrimitive` component ([#500](https://github.com/goorm-dev/vapor-ui/pull/500)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Switch
+
+- composite missing `className` prop ([#498](https://github.com/goorm-dev/vapor-ui/pull/498)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
 ## 1.1.0
 
 ### General changes
