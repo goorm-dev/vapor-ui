@@ -7,7 +7,7 @@
 ---
 
 - **Package Manager**: PNPM (workspace 기반 모노레포)
-- **Node.js**: v18+
+- **Node.js**: `>=20.19` (`.nvmrc`, `package.json` engines 기준)
 - **UI Primitives**: `@base-ui/react` (Accessible unstyled components)
 - **Styling**: Vanilla Extract (`@vanilla-extract/css`, `@vanilla-extract/recipes`)
 - **Testing**: Vitest + React Testing Library + vitest-axe
@@ -132,7 +132,6 @@
 
     // Bad - 상위 디렉터리로 올라가는 relative import
     import { resolveStyles } from '../../../utils/resolve-styles';
-    import { shared } from '../shared';
     ```
 
 - **외부 패키지 Import**: Base UI 컴포넌트는 개별 엔트리포인트에서 named import. namespace import는 스타일 파일에 사용.
@@ -148,6 +147,7 @@
     ```
 
 - **Named Exports 지향**: `default export` 보다 `named export` 사용.
+  - 예외: Storybook `meta` 객체는 프레임워크 관례에 따라 `default export`를 허용합니다.
     ```tsx
     export const MyComponent = () => {
         /* ... */
@@ -264,13 +264,16 @@
 
 ## 4.3. Null & Undefined
 
-- **`undefined`**: "아직 할당되지 않음" 또는 "존재하지 않는 속성" 의미로 일관되게 사용.
-- **`null`**: 외부 API 연동 등 제한적 상황 외 사용 지양.
+- **`undefined`**: "아직 할당되지 않음" 또는 "존재하지 않는 속성(optional)" 의미로 사용.
+- **`null`**: "의도적으로 비어 있음"을 명시할 때 사용.
+  - 예: `ref` 초기값, 외부 API 계약, sentinel 값 표현.
+- 기본 정책은 `undefined` 우선이며, `null`은 의미가 분명한 경우에만 사용.
 - Optional Chaining (`?.`), Nullish Coalescing (`??`) 적극 활용.
 
 ## 4.4. 배열 타입
 
-- `T[]` 형태 사용. (예: `string[]`, `User[]`)
+- `T[]` 형태를 우선 사용. (예: `string[]`, `User[]`)
+- 고차 제네릭/가독성 이슈가 있는 경우 `Array<T>` 사용 가능.
 
 ## 4.5. Enum
 
@@ -310,7 +313,7 @@
 
 ## 5.3. 컴포넌트 폴더 (Colocation)
 
-관련 코드(구현, 스타일, 스토리, 테스트)는 해당 컴포넌트 폴더 내 함께 위치.
+관련 코드(구현, 스타일, 스토리, 테스트)는 해당 컴포넌트 폴더 내 함께 위치하는 것을 권장.
 
 **구조 예시 (`text-input` 컴포넌트):**
 
@@ -464,6 +467,8 @@ function App() {
 
 - `@vapor-ui/icons` 패키지에서 아이콘 컴포넌트 import.
 - `children`으로 주입하거나, 컴포넌트 내부에서 직접 사용.
+- 패키지에 아이콘이 없거나 구조(화살표/캐럿) 아이콘이 필요한 경우, 컴포넌트 내부 `inline SVG`를 사용할 수 있습니다.
+  - 재사용 가능성이 높으면 `@vapor-ui/icons`에 추가하는 것을 권장합니다.
 
     ```tsx
     import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
@@ -527,7 +532,9 @@ function App() {
 
 ### **6.12.1. resolveStyles 유틸리티**
 
-모든 컴포넌트에서 `resolveStyles`를 사용하여 Sprinkles(레이아웃) Props를 분리:
+Sprinkles(레이아웃) Props를 받는 컴포넌트는 `resolveStyles`를 사용해 스타일 props를 분리:
+
+- 예외: 단순 래퍼/재-export 컴포넌트 또는 스타일 props를 직접 다루지 않는 Provider/Hook 유틸 컴포넌트는 생략 가능.
 
 ```tsx
 export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
@@ -556,13 +563,15 @@ const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(component
 return useRender({
     ref,
     state: { disabled },
-    defaultTagName: "button",
-    render: render,
+    render: render || <button />,
+    props: {
         className: clsx(styles.root(variantsProps), className),
         ...otherProps,
     },
 });
 ```
+
+- `Fragment`/nullable children 조합이 필요한 경우 `createRender` 유틸리티를 사용합니다.
 
 ### **6.12.4. `defaultProps` 사용 지양**
 
