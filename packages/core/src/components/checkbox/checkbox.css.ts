@@ -32,7 +32,6 @@ export const root = recipe({
                 '&[data-checked], &[data-indeterminate]': {
                     boxShadow: 'none',
                     backgroundColor: vars.color.background.primary[200],
-                    boxShadow: 'none',
                 },
 
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
