@@ -113,20 +113,24 @@
 
 ## 3.1. 모듈 (Import & Export)
 
-- **절대 경로 사용**: 같은 디렉터리 내 파일은 `./` 상대 경로 허용. 그 외 모든 경우 `tsconfig.json`의 `paths`에 정의된 `~/*` 별칭 사용.
+- **경계 기반 import 규칙**:
+    - 같은 모듈 스코프 내부 import는 상대 경로 허용: `./`, `./subdir/*`
+    - 상위 디렉터리로 올라가는 상대 경로는 금지: `../*`, `../../*`
+    - 모듈 경계를 넘는 import는 `tsconfig.json`의 `paths`에 정의된 `~/*` 별칭 사용
 
     ```tsx
-    // Good - 같은 디렉터리 내 sibling import
+    // Good - 같은 모듈 스코프 내부 relative import
     import * as styles from './button.css';
     import { buttonVariants } from './button.variants';
+    import { getButtonTone } from './utils/get-button-tone';
 
-    // Good - 다른 디렉터리는 절대 경로
+    // Good - 모듈 경계를 넘는 경우 alias import
     import { resolveStyles } from '~/utils/resolve-styles';
     import { vars } from '~/styles/themes.css';
     import { createContext } from '~/libs/create-context';
     import type { VComponentProps } from '~/utils/types';
 
-    // Bad - 상위 디렉터리 접근 시 상대 경로
+    // Bad - 상위 디렉터리로 올라가는 relative import
     import { resolveStyles } from '../../../utils/resolve-styles';
     import { shared } from '../shared';
     ```
