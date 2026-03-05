@@ -27,7 +27,7 @@ type BaseProps = TextInputVariants & {
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>((props, ref) => {
+export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) => {
     const {
         value: valueProp,
         onValueChange,
