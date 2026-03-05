@@ -39,7 +39,7 @@ const IconList = () => {
         categoryCounts[searchTab] > 0 ? searchTab : (firstCategoryWithResults ?? searchTab);
 
     return (
-        <VStack $css={{ gap: '$250' }}>
+        <VStack className="not-prose" $css={{ gap: '$250' }}>
             <IconSearchBar
                 search={search}
                 totalCount={totalCount}

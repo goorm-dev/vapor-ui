@@ -142,8 +142,6 @@ const IconGrid = ({ items }: IconGridProps) => {
                 templateColumns="repeat(auto-fill, minmax(8.5rem, 1fr))"
                 $css={{
                     gap: '$150',
-                    listStyle: 'none',
-                    margin: 0,
                     padding: '$200',
                 }}
             >
