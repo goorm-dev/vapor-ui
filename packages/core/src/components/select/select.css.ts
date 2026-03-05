@@ -62,7 +62,15 @@ export const trigger = recipe({
 });
 
 export const value = recipe({
-    base: [foregrounds({ color: 'normal-200' }), { whiteSpace: 'nowrap' }],
+    base: [
+        foregrounds({ color: 'normal-200' }),
+        layerStyle('components', {
+            whiteSpace: 'nowrap',
+            selectors: {
+                '&[data-placeholder]': { color: vars.color.foreground.hint[100] },
+            },
+        }),
+    ],
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -75,6 +83,9 @@ export const value = recipe({
     },
 });
 
+/**
+ * @deprecated Use `data-placeholder` attribute on `Select.Value` instead.
+ */
 export const placeholder = style([foregrounds({ color: 'hint-100' })]);
 
 export const icon = layerStyle('components', { display: 'flex', flexShrink: 0 });
