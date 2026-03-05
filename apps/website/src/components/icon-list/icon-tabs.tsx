@@ -26,7 +26,11 @@ type IconTabButtonProps = {
 
 const IconTabButton = memo(({ iconType, count, disableEmptyTabs }: IconTabButtonProps) => {
     return (
-        <Tabs.Button value={iconType} disabled={disableEmptyTabs && count === 0}>
+        <Tabs.Button
+            value={iconType}
+            disabled={disableEmptyTabs && count === 0}
+            $css={{ flexShrink: 0 }}
+        >
             {CATEGORY_LABELS[iconType]}
             <Badge
                 colorPalette="hint"
@@ -78,16 +82,33 @@ const IconTabs = ({
             size="md"
             activateOnFocus={false}
         >
-            <Tabs.List>
-                {ICON_LIST.map((iconType) => (
-                    <IconTabButton
-                        key={iconType}
-                        iconType={iconType}
-                        count={counts[iconType]}
-                        disableEmptyTabs={disableEmptyTabs}
-                    />
-                ))}
-            </Tabs.List>
+            <Box
+                $css={{
+                    overflowX: 'auto',
+                    overflowY: 'hidden',
+                    WebkitOverflowScrolling: 'touch',
+                    paddingBottom: '2px',
+                    marginBottom: '-2px',
+                }}
+            >
+                <Tabs.List
+                    $css={{
+                        width: 'max-content',
+                        minWidth: '100%',
+                        flexWrap: 'nowrap',
+                        whiteSpace: 'nowrap',
+                    }}
+                >
+                    {ICON_LIST.map((iconType) => (
+                        <IconTabButton
+                            key={iconType}
+                            iconType={iconType}
+                            count={counts[iconType]}
+                            disableEmptyTabs={disableEmptyTabs}
+                        />
+                    ))}
+                </Tabs.List>
+            </Box>
             <IconTabPanel key={value} iconType={value} items={activeItems} />
         </Tabs.Root>
     );
