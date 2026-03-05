@@ -86,7 +86,6 @@ const IconTabs = ({
                 $css={{
                     overflowX: 'auto',
                     overflowY: 'hidden',
-                    WebkitOverflowScrolling: 'touch',
                     paddingBottom: '2px',
                     marginBottom: '-2px',
                 }}
