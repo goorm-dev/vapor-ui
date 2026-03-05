@@ -4,21 +4,28 @@ import { useMemo, useRef, useState } from 'react';
 
 import { VStack } from '@vapor-ui/core';
 
+import IconEmptyState from './icon-empty-state';
 import {
-    type IconCategory,
     ICON_COUNTS,
     ICON_ITEMS,
     ICON_LIST,
+    type IconCategory,
     VAPOR_ICONS,
 } from './icon-list.constants';
-import IconEmptyState from './icon-empty-state';
 import IconSearchBar from './icon-search-bar';
 import IconTabs from './icon-tabs';
 import { useIconSearch } from './use-icon-search';
 
 const IconList = () => {
-    const { search, setSearch, isSearching, totalCount, filteredCount, filteredItemsByCategory, categoryCounts } =
-        useIconSearch(VAPOR_ICONS);
+    const {
+        search,
+        setSearch,
+        isSearching,
+        totalCount,
+        filteredCount,
+        filteredItemsByCategory,
+        categoryCounts,
+    } = useIconSearch(VAPOR_ICONS);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     const [defaultTab, setDefaultTab] = useState<IconCategory>('basic');

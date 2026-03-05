@@ -1,8 +1,13 @@
 import { Badge, Box, Tabs } from '@vapor-ui/core';
 
-import { CATEGORY_LABELS, type IconCategory, type IconItem, ICON_LIST } from './icon-list.constants';
 import IconGrid from './icon-grid';
 import IconListItem from './icon-list-item';
+import {
+    CATEGORY_LABELS,
+    ICON_LIST,
+    type IconCategory,
+    type IconItem,
+} from './icon-list.constants';
 
 type IconTabsProps = {
     value: IconCategory;

@@ -6,7 +6,7 @@ import type { FunctionComponent } from 'react';
 import type { IconProps } from '@vapor-ui/icons';
 import Fuse from 'fuse.js';
 
-import { type IconCategory, type IconItem, ICON_LIST } from './icon-list.constants';
+import { ICON_LIST, type IconCategory, type IconItem } from './icon-list.constants';
 
 type IconEntry = IconItem & {
     category: IconCategory;
