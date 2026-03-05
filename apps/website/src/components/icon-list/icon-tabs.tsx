@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import type { ReactNode } from 'react';
 
 import { Badge, Box, Tabs } from '@vapor-ui/core';
 
@@ -9,13 +10,14 @@ import {
     type IconCategory,
     type IconItem,
 } from './icon-list.constants';
+import { useIconTabsState } from './use-icon-tabs-state';
 
 type IconTabsProps = {
-    value: IconCategory;
-    onValueChange: (value: string) => void;
+    defaultValue?: IconCategory;
     counts: Record<IconCategory, number>;
     itemsByCategory: Record<IconCategory, IconItem[]>;
     disableEmptyTabs?: boolean;
+    emptyState?: ReactNode;
 };
 
 type IconTabButtonProps = {
@@ -51,14 +53,13 @@ IconTabButton.displayName = 'IconTabButton';
 type IconTabPanelProps = {
     iconType: IconCategory;
     items: IconItem[];
+    emptyState?: ReactNode;
 };
 
-const IconTabPanel = memo(({ iconType, items }: IconTabPanelProps) => {
+const IconTabPanel = memo(({ iconType, items, emptyState }: IconTabPanelProps) => {
     return (
         <Tabs.Panel value={iconType}>
-            <Box $css={{ paddingTop: '$200' }}>
-                <IconGrid items={items} />
-            </Box>
+            <Box $css={{ paddingTop: '$200' }}>{emptyState ?? <IconGrid items={items} />}</Box>
         </Tabs.Panel>
     );
 });
@@ -66,18 +67,22 @@ const IconTabPanel = memo(({ iconType, items }: IconTabPanelProps) => {
 IconTabPanel.displayName = 'IconTabPanel';
 
 const IconTabs = ({
-    value,
-    onValueChange,
+    defaultValue = 'basic',
     counts,
     itemsByCategory,
     disableEmptyTabs = false,
+    emptyState,
 }: IconTabsProps) => {
-    const activeItems = itemsByCategory[value];
+    const { activeTab, setActiveTab, indicatorKey } = useIconTabsState({
+        defaultValue,
+        counts,
+        disableEmptyTabs,
+    });
 
     return (
         <Tabs.Root
-            value={value}
-            onValueChange={onValueChange}
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value as IconCategory)}
             variant="line"
             size="md"
             activateOnFocus={false}
@@ -91,6 +96,7 @@ const IconTabs = ({
                 }}
             >
                 <Tabs.List
+                    indicatorElement={<Tabs.IndicatorPrimitive key={indicatorKey} />}
                     $css={{
                         width: 'max-content',
                         minWidth: '100%',
@@ -108,7 +114,11 @@ const IconTabs = ({
                     ))}
                 </Tabs.List>
             </Box>
-            <IconTabPanel key={value} iconType={value} items={activeItems} />
+            <IconTabPanel
+                iconType={activeTab}
+                items={itemsByCategory[activeTab]}
+                emptyState={emptyState}
+            />
         </Tabs.Root>
     );
 };
