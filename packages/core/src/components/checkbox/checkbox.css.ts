@@ -18,7 +18,8 @@ export const root = recipe({
             justifyContent: 'center',
             gap: vars.size.space[100],
 
-            boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.normal}`,
+
             backgroundColor: vars.color.background.canvas[100],
 
             transitionProperty: 'background-color, box-shadow',
@@ -31,6 +32,7 @@ export const root = recipe({
                 '&[data-checked], &[data-indeterminate]': {
                     boxShadow: 'none',
                     backgroundColor: vars.color.background.primary[200],
+                    boxShadow: 'none',
                 },
 
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },

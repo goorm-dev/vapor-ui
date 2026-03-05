@@ -20,7 +20,7 @@ import * as styles from './textarea.css';
  * Textarea
  * -----------------------------------------------------------------------------------------------*/
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>((props, ref) => {
+export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => {
     const {
         render,
         value: valueProp,

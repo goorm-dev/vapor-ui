@@ -30,7 +30,7 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const CheckboxRoot = forwardRef<HTMLSpanElement, CheckboxRoot.Props>((props, ref) => {
+export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(componentProps, [
         'size',
@@ -67,7 +67,7 @@ CheckboxRoot.displayName = 'Checkbox.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const CheckboxIndicatorPrimitive = forwardRef<
-    HTMLDivElement,
+    HTMLSpanElement,
     CheckboxIndicatorPrimitive.Props
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);

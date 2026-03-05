@@ -22,7 +22,7 @@ import * as styles from './radio.css';
 
 type RadioVariants = RootVariants;
 
-export const RadioRoot = forwardRef<HTMLSpanElement, RadioRoot.Props>((props, ref) => {
+export const RadioRoot = forwardRef<HTMLElement, RadioRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
@@ -60,7 +60,7 @@ RadioRoot.displayName = 'Radio.Root';
  * Radio.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const RadioIndicatorPrimitive = forwardRef<HTMLDivElement, RadioIndicatorPrimitive.Props>(
+export const RadioIndicatorPrimitive = forwardRef<HTMLSpanElement, RadioIndicatorPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
 
