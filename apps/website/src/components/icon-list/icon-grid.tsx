@@ -137,16 +137,19 @@ const IconGrid = ({ items }: IconGridProps) => {
         >
             <Grid.Root
                 ref={gridRef}
-                role="list"
+                render={<ul />}
                 aria-label="아이콘 목록"
                 templateColumns="repeat(auto-fill, minmax(8.5rem, 1fr))"
                 $css={{
                     gap: '$150',
+                    listStyle: 'none',
+                    margin: 0,
                     padding: '$200',
                 }}
             >
                 {visibleRange.topSpacerHeight > 0 ? (
                     <Box
+                        render={<li />}
                         aria-hidden="true"
                         style={{
                             height: `${visibleRange.topSpacerHeight}px`,
@@ -157,8 +160,8 @@ const IconGrid = ({ items }: IconGridProps) => {
 
                 {visibleItems.map(({ name, icon }, index) => (
                     <Box
+                        render={<li />}
                         key={name}
-                        role="listitem"
                         ref={index === 0 ? setMeasureElement : undefined}
                     >
                         <IconListItem icon={icon} iconName={name} />
@@ -167,6 +170,7 @@ const IconGrid = ({ items }: IconGridProps) => {
 
                 {visibleRange.bottomSpacerHeight > 0 ? (
                     <Box
+                        render={<li />}
                         aria-hidden="true"
                         style={{
                             height: `${visibleRange.bottomSpacerHeight}px`,
