@@ -1,12 +1,10 @@
-import { createVar } from '@vanilla-extract/css';
+import { globalStyle } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
-
-const borderColor = createVar('border-color');
 
 export const root = recipe({
     base: [
@@ -20,30 +18,34 @@ export const root = recipe({
             justifyContent: 'center',
             gap: vars.size.space[100],
 
-            boxShadow: `inset 0 0 0 1px ${borderColor}`,
-
+            boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
             backgroundColor: vars.color.background.canvas[100],
+            transition: 'all 0.2s',
+
             padding: vars.size.space['000'],
             overflow: 'hidden',
 
             selectors: {
                 '&[data-checked], &[data-indeterminate]': {
+                    boxShadow: 'none',
                     backgroundColor: vars.color.background.primary[200],
                 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
-                '&::before': { borderRadius: '0' },
-
-                '&[data-disabled]::before': { opacity: 0 },
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+                // '&::before': { borderRadius: '0' },
 
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
-            },
+                '&[data-invalid]': { boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}` },
+                '&[data-invalid][data-checked], &[data-invalid][data-indeterminate]': {
+                    boxShadow: 'none',
+                    backgroundColor: vars.color.background.danger[200],
+                },
 
-            vars: { [borderColor]: vars.color.border.normal },
+                '&[data-disabled]::before': { opacity: 0 },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+            },
         }),
     ],
 
@@ -93,6 +95,39 @@ export const indicator = recipe({
             }),
         },
     },
+});
+
+export const icon = layerStyle('components', {
+    transition: 'all 0.2s',
+    fill: 'none',
+    stroke: vars.color.white,
+    strokeWidth: '4px',
+    strokeDasharray: '22',
+    strokeDashoffset: '66px',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    // selectors: {
+    //     [`${indicator}[data-checked] > &`]: {
+    //         strokeDashoffset: '44px',
+    //     },
+
+    //     [`${indicator}[data-readonly] > &`]: {
+    //         stroke: vars.color.foreground.hint['100'],
+    //     },
+    // },
+});
+
+globalStyle(`${indicator}[data-checked] > ${icon}`, {
+    strokeDashoffset: '44px',
+});
+
+globalStyle(`${indicator}[data-readonly] > ${icon}`, {
+    stroke: vars.color.foreground.hint['100'],
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
