@@ -24,16 +24,6 @@ const createEmptyCategoryItems = (): Record<IconCategory, IconItem[]> => {
     );
 };
 
-const createEmptyCategoryCounts = (): Record<IconCategory, number> => {
-    return ICON_LIST.reduce(
-        (accumulator, category) => {
-            accumulator[category] = 0;
-            return accumulator;
-        },
-        {} as Record<IconCategory, number>,
-    );
-};
-
 export const useIconSearch = (icons: IconsByCategory) => {
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
@@ -60,14 +50,12 @@ export const useIconSearch = (icons: IconsByCategory) => {
     }, [icons]);
 
     const filtered = useMemo(() => {
-        if (!deferredSearch.trim()) return null;
+        if (!deferredSearch.trim()) return [];
 
         return fuse.search(deferredSearch).map(({ item }) => item);
     }, [deferredSearch, fuse]);
 
     const filteredItemsByCategory = useMemo(() => {
-        if (!filtered) return null;
-
         const grouped = createEmptyCategoryItems();
         for (const { category, name, icon } of filtered) {
             grouped[category].push({ name, icon });
@@ -77,8 +65,6 @@ export const useIconSearch = (icons: IconsByCategory) => {
     }, [filtered]);
 
     const categoryCounts = useMemo(() => {
-        if (!filteredItemsByCategory) return createEmptyCategoryCounts();
-
         return Object.fromEntries(
             ICON_LIST.map((category) => [category, filteredItemsByCategory[category].length]),
         ) as Record<IconCategory, number>;
@@ -89,7 +75,7 @@ export const useIconSearch = (icons: IconsByCategory) => {
         setSearch,
         isSearching: !!deferredSearch.trim(),
         totalCount: allIcons.length,
-        filteredCount: filtered?.length ?? 0,
+        filteredCount: filtered.length,
         filteredItemsByCategory,
         categoryCounts,
     };

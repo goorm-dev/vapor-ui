@@ -1,17 +1,11 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { VStack } from '@vapor-ui/core';
 
 import IconEmptyState from './icon-empty-state';
-import {
-    ICON_COUNTS,
-    ICON_ITEMS,
-    ICON_LIST,
-    type IconCategory,
-    VAPOR_ICONS,
-} from './icon-list.constants';
+import { ICON_COUNTS, ICON_ITEMS, VAPOR_ICONS } from './icon-list.constants';
 import IconSearchBar from './icon-search-bar';
 import IconTabs from './icon-tabs';
 import { useIconSearch } from './use-icon-search';
@@ -28,16 +22,6 @@ const IconList = () => {
     } = useIconSearch(VAPOR_ICONS);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
-    const [defaultTab, setDefaultTab] = useState<IconCategory>('basic');
-    const [searchTab, setSearchTab] = useState<IconCategory>('basic');
-
-    const firstCategoryWithResults = useMemo(() => {
-        return ICON_LIST.find((category) => categoryCounts[category] > 0) ?? null;
-    }, [categoryCounts]);
-
-    const activeSearchTab =
-        categoryCounts[searchTab] > 0 ? searchTab : (firstCategoryWithResults ?? searchTab);
-
     return (
         <VStack className="not-prose" $css={{ gap: '$250' }}>
             <IconSearchBar
@@ -53,26 +37,17 @@ const IconList = () => {
                     : ''}
             </span>
 
-            {isSearching ? (
-                filteredCount === 0 || !filteredItemsByCategory ? (
-                    <IconEmptyState search={search} />
-                ) : (
-                    <IconTabs
-                        value={activeSearchTab}
-                        onValueChange={(value) => setSearchTab(value as IconCategory)}
-                        counts={categoryCounts}
-                        itemsByCategory={filteredItemsByCategory}
-                        disableEmptyTabs
-                    />
-                )
-            ) : (
-                <IconTabs
-                    value={defaultTab}
-                    onValueChange={(value) => setDefaultTab(value as IconCategory)}
-                    counts={ICON_COUNTS}
-                    itemsByCategory={ICON_ITEMS}
-                />
-            )}
+            <IconTabs
+                defaultValue="basic"
+                counts={isSearching ? categoryCounts : ICON_COUNTS}
+                itemsByCategory={isSearching ? filteredItemsByCategory : ICON_ITEMS}
+                disableEmptyTabs={isSearching}
+                emptyState={
+                    isSearching && filteredCount === 0 ? (
+                        <IconEmptyState search={search} />
+                    ) : undefined
+                }
+            />
         </VStack>
     );
 };
