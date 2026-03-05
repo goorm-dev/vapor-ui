@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import { Badge, Box, Tabs } from '@vapor-ui/core';
 
 import IconGrid from './icon-grid';
@@ -17,6 +19,55 @@ type IconTabsProps = {
     disableEmptyTabs?: boolean;
 };
 
+type IconTabButtonProps = {
+    iconType: IconCategory;
+    count: number;
+    disableEmptyTabs: boolean;
+};
+
+const IconTabButton = memo(({ iconType, count, disableEmptyTabs }: IconTabButtonProps) => {
+    return (
+        <Tabs.Button value={iconType} disabled={disableEmptyTabs && count === 0}>
+            {CATEGORY_LABELS[iconType]}
+            <Badge
+                colorPalette="hint"
+                size="sm"
+                $css={{
+                    marginLeft: '$100',
+                    fontVariantNumeric: 'tabular-nums',
+                }}
+            >
+                {count}
+            </Badge>
+        </Tabs.Button>
+    );
+});
+
+IconTabButton.displayName = 'IconTabButton';
+
+type IconTabPanelProps = {
+    iconType: IconCategory;
+    items: IconItem[];
+};
+
+const IconTabPanel = memo(({ iconType, items }: IconTabPanelProps) => {
+    return (
+        <Tabs.Panel value={iconType}>
+            <Box $css={{ paddingTop: '$200' }}>
+                <IconGrid>
+                    {items.map(({ name, icon }) => (
+                        <Box key={name} role="listitem">
+                            <IconListItem icon={icon} iconName={name} />
+                        </Box>
+                    ))}
+                </IconGrid>
+            </Box>
+        </Tabs.Panel>
+    );
+});
+
+IconTabPanel.displayName = 'IconTabPanel';
+
 const IconTabs = ({
     value,
     onValueChange,
@@ -24,6 +75,8 @@ const IconTabs = ({
     itemsByCategory,
     disableEmptyTabs = false,
 }: IconTabsProps) => {
+    const activeItems = itemsByCategory[value];
+
     return (
         <Tabs.Root
             value={value}
@@ -34,39 +87,16 @@ const IconTabs = ({
         >
             <Tabs.List>
                 {ICON_LIST.map((iconType) => (
-                    <Tabs.Button
+                    <IconTabButton
                         key={iconType}
-                        value={iconType}
-                        disabled={disableEmptyTabs && counts[iconType] === 0}
-                    >
-                        {CATEGORY_LABELS[iconType]}
-                        <Badge
-                            colorPalette="hint"
-                            size="sm"
-                            $css={{
-                                marginLeft: '$100',
-                                fontVariantNumeric: 'tabular-nums',
-                            }}
-                        >
-                            {counts[iconType]}
-                        </Badge>
-                    </Tabs.Button>
+                        iconType={iconType}
+                        count={counts[iconType]}
+                        disableEmptyTabs={disableEmptyTabs}
+                    />
                 ))}
             </Tabs.List>
 
-            {ICON_LIST.map((iconType) => (
-                <Tabs.Panel key={iconType} value={iconType} keepMounted>
-                    <Box $css={{ paddingTop: '$200' }}>
-                        <IconGrid>
-                            {itemsByCategory[iconType].map(({ name, icon }) => (
-                                <Box key={name} role="listitem">
-                                    <IconListItem icon={icon} iconName={name} />
-                                </Box>
-                            ))}
-                        </IconGrid>
-                    </Box>
-                </Tabs.Panel>
-            ))}
+            <IconTabPanel key={value} iconType={value} items={activeItems} />
         </Tabs.Root>
     );
 };
