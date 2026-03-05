@@ -3,7 +3,6 @@ import { memo } from 'react';
 import { Badge, Box, Tabs } from '@vapor-ui/core';
 
 import IconGrid from './icon-grid';
-import IconListItem from './icon-list-item';
 import {
     CATEGORY_LABELS,
     ICON_LIST,
@@ -54,13 +53,7 @@ const IconTabPanel = memo(({ iconType, items }: IconTabPanelProps) => {
     return (
         <Tabs.Panel value={iconType}>
             <Box $css={{ paddingTop: '$200' }}>
-                <IconGrid>
-                    {items.map(({ name, icon }) => (
-                        <Box key={name} role="listitem">
-                            <IconListItem icon={icon} iconName={name} />
-                        </Box>
-                    ))}
-                </IconGrid>
+                <IconGrid items={items} />
             </Box>
         </Tabs.Panel>
     );
@@ -95,7 +88,6 @@ const IconTabs = ({
                     />
                 ))}
             </Tabs.List>
-
             <IconTabPanel key={value} iconType={value} items={activeItems} />
         </Tabs.Root>
     );
