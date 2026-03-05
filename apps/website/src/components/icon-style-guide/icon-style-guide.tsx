@@ -46,15 +46,21 @@ const STYLE_CARDS = [
 const IconStyleGuide = () => {
     return (
         <Grid.Root
-            role="list"
+            render={<ul />}
             aria-label="아이콘 스타일 가이드"
             templateColumns="repeat(auto-fit, minmax(280px, 1fr))"
-            $css={{ gap: '$150', marginBlock: '$300' }}
+            $css={{
+                gap: '$150',
+                marginBlock: '$300',
+                listStyle: 'none',
+                margin: 0,
+                padding: 0,
+            }}
         >
             {STYLE_CARDS.map((card) => {
                 const Icon = card.icon;
                 return (
-                    <Card.Root key={card.id} role="listitem" $css={{ overflow: 'hidden' }}>
+                    <Card.Root key={card.id} render={<li />} $css={{ overflow: 'hidden' }}>
                         {/* 아이콘 프리뷰 영역 */}
                         <Flex
                             aria-hidden="true"
