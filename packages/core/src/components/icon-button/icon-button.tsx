@@ -12,20 +12,16 @@ import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
-export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props, ref) => {
-    const {
-        'aria-label': ariaLabel,
-        className,
-        children: childrenProp,
-        ...componentProps
-    } = resolveStyles(props);
+export const IconButton = forwardRef<HTMLElement, IconButton.Props>((props, ref) => {
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(componentProps, [
         'shape',
     ]);
 
+    const childrenRender = createRender(childrenProp);
     const children = useRender({
-        render: createRender(childrenProp),
+        render: childrenRender,
         props: {
             'aria-hidden': 'true',
             className: styles.icon,
@@ -33,12 +29,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
     });
 
     return (
-        <Button
-            ref={ref}
-            aria-label={ariaLabel}
-            className={clsx(styles.root(variantProps), className)}
-            {...otherProps}
-        >
+        <Button ref={ref} className={clsx(styles.root(variantProps), className)} {...otherProps}>
             {children}
         </Button>
     );

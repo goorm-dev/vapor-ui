@@ -57,7 +57,14 @@ MenuTrigger.displayName = 'Menu.Trigger';
  * Menu.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuPortalPrimitive = BaseMenu.Portal;
+export const MenuPortalPrimitive = forwardRef<HTMLDivElement, MenuPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <BaseMenu.Portal ref={ref} {...componentProps} />;
+    },
+);
+MenuPortalPrimitive.displayName = 'Menu.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.PositionerPrimitive
@@ -107,13 +114,15 @@ export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(positionerElement, <MenuPositionerPrimitive />);
         const positioner = useRender({
-            render: createRender(positionerElement, <MenuPositionerPrimitive />),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <MenuPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <MenuPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -126,7 +135,7 @@ MenuPopup.displayName = 'Menu.Popup';
  * Menu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) => {
+export const MenuItem = forwardRef<HTMLElement, MenuItem.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
 
@@ -225,7 +234,7 @@ MenuSubmenuRoot.displayName = 'Menu.SubmenuRoot';
  * Menu.SubmenuTriggerItem
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuSubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTriggerItem.Props>(
+export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTriggerItem.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
         const { triggerRef } = useSubmenuContext();
@@ -276,16 +285,18 @@ export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Prop
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(
+            positionerElement,
+            <MenuPositionerPrimitive side="right" sideOffset={0} />,
+        );
         const positioner = useRender({
-            render: createRender(
-                positionerElement,
-                <MenuPositionerPrimitive side="right" sideOffset={0} />,
-            ),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <MenuPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <MenuPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -298,7 +309,7 @@ MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
  * Menu.CheckboxItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuCheckboxItemPrimitive = forwardRef<HTMLDivElement, MenuCheckboxItem.Props>(
+export const MenuCheckboxItemPrimitive = forwardRef<HTMLElement, MenuCheckboxItem.Props>(
     (props, ref) => {
         const {
             disabled: disabledProp,
@@ -334,8 +345,9 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
+    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
@@ -355,7 +367,7 @@ MenuCheckboxItemIndicatorPrimitive.displayName = 'Menu.CheckboxItemIndicatorPrim
  * Menu.CheckboxItem
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuCheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItem.Props>((props, ref) => {
+export const MenuCheckboxItem = forwardRef<HTMLElement, MenuCheckboxItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
     return (
@@ -383,7 +395,7 @@ MenuRadioGroup.displayName = 'Menu.RadioGroup';
  * Menu.RadioItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuRadioItemPrimitive = forwardRef<HTMLDivElement, MenuRadioItemPrimitive.Props>(
+export const MenuRadioItemPrimitive = forwardRef<HTMLElement, MenuRadioItemPrimitive.Props>(
     (props, ref) => {
         const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
 
@@ -412,8 +424,9 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
+    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
@@ -432,7 +445,7 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
  * Menu.RadioItem
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuRadioItem = forwardRef<HTMLDivElement, MenuRadioItem.Props>((props, ref) => {
+export const MenuRadioItem = forwardRef<HTMLElement, MenuRadioItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
     return (

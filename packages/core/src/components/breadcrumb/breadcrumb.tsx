@@ -29,14 +29,15 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
 
 export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     (props, ref) => {
-        const { render, className, ...componentProps } = resolveStyles(props);
+        const { render, ...componentProps } = resolveStyles(props);
         const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(componentProps, [
             'size',
         ]);
 
         const element = useRender({
             ref,
-            render: render || <nav />,
+            render,
+            defaultTagName: 'nav',
             props: {
                 'aria-label': 'Breadcrumb',
                 ...otherProps,
@@ -58,7 +59,8 @@ export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbLi
 
         return useRender({
             ref,
-            render: render || <ol />,
+            render,
+            defaultTagName: 'ol',
             props: {
                 className: clsx(styles.list, className),
                 ...componentProps,
@@ -93,7 +95,8 @@ export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemP
 
         return useRender({
             ref,
-            render: render || <li />,
+            render,
+            defaultTagName: 'li',
             props: {
                 className: clsx(styles.item, className),
                 ...componentProps,
@@ -110,13 +113,12 @@ BreadcrumbItemPrimitive.displayName = 'Breadcrumb.ItemPrimitive';
 export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         const { render, current, className, ...componentProps } = resolveStyles(props);
-        const Component = current ? 'span' : 'a';
-
         const { size } = useBreadcrumbContext();
 
         return useRender({
             ref,
-            render: render || <Component />,
+            render,
+            defaultTagName: 'a',
             props: {
                 role: current ? 'link' : undefined,
                 'aria-disabled': current ? 'true' : undefined,
@@ -158,14 +160,16 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
 
         const { size } = useBreadcrumbContext();
 
+        const childrenRender = createRender(childrenProp, <SlashOutlineIcon />);
         const children = useRender({
-            render: createRender(childrenProp, <SlashOutlineIcon />),
+            render: childrenRender,
             props: { width: '100%', height: '100%' },
         });
 
         return useRender({
             ref,
-            render: render || <li />,
+            render,
+            defaultTagName: 'li',
             props: {
                 role: 'presentation',
                 'aria-hidden': 'true',
@@ -190,14 +194,16 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
 
     const { size } = useBreadcrumbContext();
 
+    const childrenRender = createRender(childrenProp, <MoreCommonOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <MoreCommonOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
     return useRender({
         ref,
-        render: render || <span />,
+        render,
+        defaultTagName: 'span',
         props: {
             role: 'presentation',
             'aria-hidden': 'true',

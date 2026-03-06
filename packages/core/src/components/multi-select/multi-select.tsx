@@ -123,9 +123,7 @@ export const MultiSelectValuePrimitive = forwardRef<
     const children = (value: Array<string>) => {
         return typeof childrenProp === 'function'
             ? childrenProp(value)
-            : (childrenProp ?? renderValue(value) ?? (
-                  <MultiSelectPlaceholderPrimitive>{placeholder}</MultiSelectPlaceholderPrimitive>
-              ));
+            : (childrenProp ?? renderValue(value) ?? placeholder);
     };
 
     return (
@@ -154,11 +152,14 @@ const badgeSizeMap: Record<
  * Select.PlaceholderPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * @deprecated The `MultiSelect.PlaceholderPrimitive` component is deprecated and will be removed in a future release. Please use the `placeholder` prop on `MultiSelect.Root` instead and `data-placeholder` attribute for styling.
+ */
 export const MultiSelectPlaceholderPrimitive = forwardRef<
     HTMLSpanElement,
     MultiSelectPlaceholderPrimitive.Props
 >((props, ref) => {
-    const { render, className, ...componentProps } = resolveStyles(props);
+    const { className, ...componentProps } = resolveStyles(props);
     const { size } = useMultiSelectContext();
 
     return (
@@ -176,15 +177,16 @@ MultiSelectPlaceholderPrimitive.displayName = 'MultiSelect.PlaceholderPrimitive'
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectTriggerIconPrimitive = forwardRef<
-    HTMLDivElement,
+    HTMLSpanElement,
     MultiSelectTriggerIconPrimitive.Props
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const { size } = useMultiSelectContext();
 
+    const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
@@ -220,9 +222,14 @@ MultiSelectTrigger.displayName = 'MultiSelect.Trigger';
  * MultiSelect.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectPortalPrimitive = (props: MultiSelectPortalPrimitive.Props) => {
-    return <BaseSelect.Portal {...props} />;
-};
+export const MultiSelectPortalPrimitive = forwardRef<
+    HTMLDivElement,
+    MultiSelectPortalPrimitive.Props
+>((props, ref) => {
+    const componentProps = resolveStyles(props);
+
+    return <BaseSelect.Portal ref={ref} {...componentProps} />;
+});
 MultiSelectPortalPrimitive.displayName = 'MultiSelect.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -280,13 +287,18 @@ export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Prop
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MultiSelectPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(
+            positionerElement,
+            <MultiSelectPositionerPrimitive />,
+        );
         const positioner = useRender({
-            render: createRender(positionerElement, <MultiSelectPositionerPrimitive />),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const portalRender = createRender(portalElement, <MultiSelectPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <MultiSelectPortalPrimitive />),
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -299,7 +311,7 @@ MultiSelectPopup.displayName = 'MultiSelect.Popup';
  * MultiSelect.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectItemPrimitive = forwardRef<HTMLDivElement, MultiSelectItemPrimitive.Props>(
+export const MultiSelectItemPrimitive = forwardRef<HTMLElement, MultiSelectItemPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
 
@@ -324,8 +336,9 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
+    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
     const children = useRender({
-        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
@@ -345,7 +358,7 @@ MultiSelectItemIndicatorPrimitive.displayName = 'MultiSelect.ItemIndicatorPrimit
  * MultiSelect.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectItem = forwardRef<HTMLDivElement, MultiSelectItemPrimitive.Props>(
+export const MultiSelectItem = forwardRef<HTMLElement, MultiSelectItemPrimitive.Props>(
     (props, ref) => {
         const { children, ...componentProps } = resolveStyles(props);
 

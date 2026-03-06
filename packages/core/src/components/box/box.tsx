@@ -10,7 +10,8 @@ export const Box = forwardRef<HTMLDivElement, Box.Props>((props, ref) => {
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: componentProps,
     });
 });

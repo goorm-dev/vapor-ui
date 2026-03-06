@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import type {
+    ContrastRatios,
+    SemanticResult,
+    ThemeOptions,
+    ThemeResult,
+} from '@vapor-ui/color-generator';
 import {
-    type ContrastRatios,
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_KEY_COLORS,
-    type SemanticResult,
-    type ThemeOptions,
-    type ThemeResult,
     generatePrimitiveColorPalette,
+    getColorLightness,
     getSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
-import { getColorLightness } from '@vapor-ui/color-generator';
 import { Box, Button, Collapsible, HStack, VStack } from '@vapor-ui/core';
 import { generateColorCSS } from '@vapor-ui/css-generator';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';

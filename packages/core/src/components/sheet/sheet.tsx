@@ -121,9 +121,13 @@ SheetOverlayPrimitive.displayName = 'Sheet.OverlayPrimitive';
  * Sheet.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetPortalPrimitive = (props: SheetPortalPrimitive.Props) => {
-    return <Dialog.PortalPrimitive {...props} />;
-};
+export const SheetPortalPrimitive = forwardRef<HTMLDivElement, SheetPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <Dialog.PortalPrimitive ref={ref} {...componentProps} />;
+    },
+);
 SheetPortalPrimitive.displayName = 'Sheet.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -200,17 +204,20 @@ export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
         const popup = <SheetPopupPrimitive ref={ref} {...props} />;
 
+        const positionerRender = createRender(positionerElement, <SheetPositionerPrimitive />);
         const positioner = useRender({
-            render: createRender(positionerElement, <SheetPositionerPrimitive />),
+            render: positionerRender,
             props: { children: popup },
         });
 
+        const overlayRender = createRender(overlayElement, <SheetOverlayPrimitive />);
         const overlay = useRender({
-            render: createRender(overlayElement, <SheetOverlayPrimitive />),
+            render: overlayRender,
         });
 
+        const portalRender = createRender(portalElement, <SheetPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <SheetPortalPrimitive />),
+            render: portalRender,
             props: {
                 children: (
                     <>

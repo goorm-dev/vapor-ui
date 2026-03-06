@@ -49,7 +49,14 @@ export const DialogRoot = ({
  * Dialog.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const DialogPortalPrimitive = BaseDialog.Portal;
+export const DialogPortalPrimitive = forwardRef<HTMLDivElement, DialogPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <BaseDialog.Portal ref={ref} {...componentProps} />;
+    },
+);
+DialogPortalPrimitive.displayName = 'Dialog.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Dialog.OverlayPrimitive
@@ -98,12 +105,14 @@ export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>(
     ({ portalElement, overlayElement, ...props }, ref) => {
         const popup = <DialogPopupPrimitive ref={ref} {...props} />;
 
+        const overlayRender = createRender(overlayElement, <DialogOverlayPrimitive />);
         const overlay = useRender({
-            render: createRender(overlayElement ?? <DialogOverlayPrimitive />),
+            render: overlayRender,
         });
 
+        const portalRender = createRender(portalElement, <DialogPortalPrimitive />);
         const portal = useRender({
-            render: createRender(portalElement, <DialogPortalPrimitive />),
+            render: portalRender,
             props: {
                 children: (
                     <>
@@ -182,7 +191,8 @@ export const DialogHeader = forwardRef<HTMLDivElement, DialogHeader.Props>((prop
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.header, className),
             ...componentProps,
@@ -200,7 +210,8 @@ export const DialogBody = forwardRef<HTMLDivElement, DialogBody.Props>((props, r
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.body, className),
             ...componentProps,
@@ -218,7 +229,8 @@ export const DialogFooter = forwardRef<HTMLDivElement, DialogFooter.Props>((prop
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.footer, className),
             ...componentProps,

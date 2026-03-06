@@ -22,7 +22,8 @@ export const CalloutRoot = forwardRef<HTMLDivElement, CalloutRoot.Props>((props,
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.root(variantProps), className),
             ...otherProps,
@@ -40,7 +41,8 @@ export const CalloutIcon = forwardRef<HTMLDivElement, CalloutIcon.Props>((props,
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.icon, className),
             ...componentProps,
