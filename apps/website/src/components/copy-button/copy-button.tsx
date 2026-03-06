@@ -137,7 +137,13 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
             aria-label="마크다운 도구"
             className="rounded-md shadow-[inset_0_0_0_1px_var(--vapor-color-border-secondary)] w-fit gap-0"
         >
-            <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+            <span
+                role="status"
+                aria-relevant="removals text"
+                aria-live="polite"
+                aria-atomic="true"
+                className="sr-only"
+            >
                 {checked ? '복사 완료' : ''}
             </span>
             <Button
