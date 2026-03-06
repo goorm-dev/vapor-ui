@@ -52,14 +52,24 @@ IconTabButton.displayName = 'IconTabButton';
 
 type IconTabPanelProps = {
     iconType: IconCategory;
+    activeTab: IconCategory;
     items: IconItem[];
     emptyState?: ReactNode;
 };
 
-const IconTabPanel = memo(({ iconType, items, emptyState }: IconTabPanelProps) => {
+const IconTabPanel = memo(({ iconType, activeTab, items, emptyState }: IconTabPanelProps) => {
+    const isActive = activeTab === iconType;
+
     return (
         <Tabs.Panel value={iconType}>
-            <Box $css={{ paddingTop: '$200' }}>{emptyState ?? <IconGrid items={items} />}</Box>
+            <Box
+                $css={{
+                    paddingTop: '$200',
+                    display: isActive ? 'block' : 'none',
+                }}
+            >
+                {isActive ? (emptyState ?? <IconGrid items={items} />) : null}
+            </Box>
         </Tabs.Panel>
     );
 });
@@ -114,11 +124,15 @@ const IconTabs = ({
                     ))}
                 </Tabs.List>
             </Box>
-            <IconTabPanel
-                iconType={activeTab}
-                items={itemsByCategory[activeTab]}
-                emptyState={emptyState}
-            />
+            {ICON_LIST.map((iconType) => (
+                <IconTabPanel
+                    key={iconType}
+                    iconType={iconType}
+                    activeTab={activeTab}
+                    items={itemsByCategory[iconType]}
+                    emptyState={activeTab === iconType ? emptyState : undefined}
+                />
+            ))}
         </Tabs.Root>
     );
 };
