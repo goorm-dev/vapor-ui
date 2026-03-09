@@ -8,7 +8,7 @@ import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Box } from '../box';
 import type { RootVariants } from './grid.css';
@@ -79,14 +79,13 @@ GridItem.displayName = 'Grid.Item';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace GridRoot {
-    type GridPrimitiveProps = VComponentProps<typeof Box>;
-
-    export interface Props extends GridPrimitiveProps, GridVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<typeof Box, State> & GridVariants;
 }
 
 export namespace GridItem {
-    type GridItemPrimitiveProps = VComponentProps<typeof Box>;
     type GridItemVariants = { rowSpan?: string; colSpan?: string };
 
-    export interface Props extends GridItemPrimitiveProps, GridItemVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<typeof Box, State> & GridItemVariants;
 }

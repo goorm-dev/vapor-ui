@@ -33,9 +33,9 @@ export type Styles = {
     $css?: CssProps;
 };
 
-export type VComponentProps<ElementType extends React.ElementType> = Styles &
+export type VaporUIComponentProps<ElementType extends React.ElementType, State> = Styles &
     DeprecatedSprinkles &
-    Omit<useRender.ComponentProps<ElementType>, OmitColorProp<ElementType>>;
+    Omit<useRender.ComponentProps<ElementType, State>, OmitColorProp<ElementType>>;
 
 /**
  * Deprecated CSS utility props. Use `$css` prop instead.

@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
@@ -37,7 +37,6 @@ export const IconButton = forwardRef<HTMLElement, IconButton.Props>((props, ref)
 IconButton.displayName = 'IconButton';
 
 export namespace IconButton {
-    type IconButtonPrimitiveProps = VComponentProps<typeof Button>;
-
-    export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {}
+    export type State = Button.State;
+    export type Props = VaporUIComponentProps<typeof Button, State> & IconButtonVariants;
 }

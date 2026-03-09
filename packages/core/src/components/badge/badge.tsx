@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
@@ -31,7 +31,6 @@ export const Badge = forwardRef<HTMLSpanElement, Badge.Props>((props, ref) => {
 Badge.displayName = 'Badge';
 
 export namespace Badge {
-    type BadgePrimitiveProps = VComponentProps<'span'>;
-
-    export interface Props extends BadgePrimitiveProps, BadgeVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State> & BadgeVariants;
 }

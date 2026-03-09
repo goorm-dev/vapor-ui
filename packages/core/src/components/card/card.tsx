@@ -6,7 +6,7 @@ import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './card.css';
 
@@ -89,25 +89,25 @@ CardFooter.displayName = 'Card.Footer';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace CardRoot {
-    type RootPrimitiveProps = VComponentProps<'div'>;
+    type RootPrimitiveProps = VaporUIComponentProps<'div'>;
 
     export interface Props extends RootPrimitiveProps {}
 }
 
 export namespace CardHeader {
-    type HeaderPrimitiveProps = VComponentProps<'div'>;
+    type HeaderPrimitiveProps = VaporUIComponentProps<'div'>;
 
     export interface Props extends HeaderPrimitiveProps {}
 }
 
 export namespace CardBody {
-    type BodyPrimitiveProps = VComponentProps<'div'>;
+    type BodyPrimitiveProps = VaporUIComponentProps<'div'>;
 
     export interface Props extends BodyPrimitiveProps {}
 }
 
 export namespace CardFooter {
-    type FooterPrimitiveProps = VComponentProps<'div'>;
+    type FooterPrimitiveProps = VaporUIComponentProps<'div'>;
 
     export interface Props extends FooterPrimitiveProps {}
 }

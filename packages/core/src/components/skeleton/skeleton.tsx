@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { SkeletonVariants } from './skeleton.css';
 import * as styles from './skeleton.css';
@@ -34,7 +34,6 @@ export const Skeleton = forwardRef<HTMLDivElement, Skeleton.Props>((props, ref) 
 Skeleton.displayName = 'Skeleton';
 
 export namespace Skeleton {
-    type SkeletonPrimitiveProps = VComponentProps<'div'>;
-
-    export interface Props extends SkeletonPrimitiveProps, SkeletonVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State> & SkeletonVariants;
 }

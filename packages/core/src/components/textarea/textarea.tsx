@@ -11,7 +11,7 @@ import { useInputGroup } from '~/components/input-group/input-group';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { TextareaVariants } from './textarea.css';
 import * as styles from './textarea.css';
@@ -108,13 +108,16 @@ export function useAutoResize({ ref, value, autoResize }: AutoResizeOptions) {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace Textarea {
-    type TextareaPrimitiveProps = VComponentProps<'textarea'>;
-
-    export interface Props extends Assign<TextareaPrimitiveProps, TextareaVariants> {
+    type TextareaFieldProps = {
         value?: string;
         defaultValue?: string;
         onValueChange?: (value: string, event: Textarea.ChangeEventDetails) => void;
-    }
+    };
+
+    export type State = {};
+    export type Props = VaporUIComponentProps<'textarea', State> &
+        TextareaVariants &
+        TextareaFieldProps;
 
     export type ChangeEventDetails = BaseField.Control.ChangeEventDetails;
 }

@@ -13,7 +13,7 @@ import { vars } from '~/styles/themes.css';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
@@ -210,24 +210,29 @@ type AvatarVariants = RootVariants & FallbackVariants;
 type AvatarContext = AvatarVariants & ImageProps & Pick<BaseAvatar.Fallback.Props, 'delay'>;
 
 export namespace AvatarRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
     type SubElementProps = {
         imageElement?: ReactElement<AvatarImagePrimitive.Props>;
         fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
     };
 
-    export interface Props extends Assign<RootPrimitiveProps, AvatarContext>, SubElementProps {}
-    export interface State extends BaseAvatar.Root.State {}
+    export type State = BaseAvatar.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseAvatar.Root, State> &
+        AvatarContext &
+        SubElementProps;
 }
 
 export namespace AvatarImagePrimitive {
-    type ImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
-
-    export interface Props extends Omit<ImagePrimitiveProps, keyof AvatarContext> {}
+    export type State = BaseAvatar.Image.State;
+    export type Props = Omit<
+        VaporUIComponentProps<typeof BaseAvatar.Image, State>,
+        keyof AvatarContext
+    >;
 }
 
 export namespace AvatarFallbackPrimitive {
-    type FallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
-
-    export interface Props extends Omit<FallbackPrimitiveProps, keyof AvatarContext> {}
+    export type State = BaseAvatar.Fallback.State;
+    export type Props = Omit<
+        VaporUIComponentProps<typeof BaseAvatar.Fallback, State>,
+        keyof AvatarContext
+    >;
 }

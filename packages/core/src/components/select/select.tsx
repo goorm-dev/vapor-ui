@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
@@ -13,7 +13,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './select.css';
 import type { TriggerVariants } from './select.css';
@@ -23,7 +23,7 @@ type SelectSharedProps = SelectVariants & {
     placeholder?: ReactNode;
 };
 
-type SelectContext = SelectSharedProps & Pick<SelectRoot.Props, 'items' | 'required'>;
+type SelectContext = SelectSharedProps & Pick<SelectRoot.Props<unknown>, 'items' | 'required'>;
 
 const [SelectProvider, useSelectContext] = createContext<SelectContext>({
     name: 'SelectContext',
@@ -35,7 +35,7 @@ const [SelectProvider, useSelectContext] = createContext<SelectContext>({
  * Select.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectRoot = (props: SelectRoot.Props) => {
+export const SelectRoot = <Value,>(props: SelectRoot.Props<Value>) => {
     const [sharedProps, otherProps] = createSplitProps<SelectSharedProps>()(props, [
         'placeholder',
         'size',
@@ -386,85 +386,90 @@ SelectSeparator.displayName = 'Select.Separator';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace SelectRoot {
-    type RootPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof BaseSelect.Root>, 'multiple'>;
-    export interface Props extends RootPrimitiveProps, SelectSharedProps {}
+    export type State = BaseSelect.Root.State;
+    export type Props<Value> = Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> &
+        SelectSharedProps;
 
     export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 
 export namespace SelectTriggerPrimitive {
-    type TriggerPrimitiveProps = VComponentProps<typeof BaseSelect.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = BaseSelect.Trigger.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Trigger, State>;
 }
 
 export namespace SelectTrigger {
-    export interface Props extends SelectTriggerPrimitive.Props {}
+    export type State = SelectTriggerPrimitive.State;
+    export type Props = SelectTriggerPrimitive.Props;
 }
 
 export namespace SelectValuePrimitive {
-    type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
-    export interface Props extends ValuePrimitiveProps {}
+    export type State = BaseSelect.Value.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Value, State>;
 }
 
 export namespace SelectPlaceholderPrimitive {
-    type PlaceholderPrimitiveProps = VComponentProps<'span'>;
-    export interface Props extends PlaceholderPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }
 
 export namespace SelectTriggerIconPrimitive {
-    type TriggerIconPrimitiveProps = VComponentProps<typeof BaseSelect.Icon>;
-    export interface Props extends TriggerIconPrimitiveProps {}
+    export type State = BaseSelect.Icon.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Icon, State>;
 }
 
 export namespace SelectPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseSelect.Portal>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = BaseSelect.Portal.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Portal, State>;
 }
 
 export namespace SelectPositionerPrimitive {
-    type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
-    export interface Props extends PositionerPrimitiveProps {}
+    export type State = BaseSelect.Positioner.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Positioner, State>;
 }
 
 export namespace SelectPopupPrimitive {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseSelect.Popup>;
-    export interface Props extends PopupPrimitiveProps {}
+    export type State = BaseSelect.Popup.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Popup, State>;
 }
 
 export namespace SelectPopup {
-    type ContentPrimitiveProps = VComponentProps<typeof SelectPopupPrimitive>;
-    export interface Props extends ContentPrimitiveProps {
+    type SubElementProps = {
         portalElement?: ReactElement<SelectPortalPrimitive.Props>;
         positionerElement?: ReactElement<SelectPositionerPrimitive.Props>;
-    }
+    };
+
+    export type State = SelectPopupPrimitive.State;
+    export type Props = SelectPopupPrimitive.Props & SubElementProps;
 }
 
 export namespace SelectItemPrimitive {
-    type ItemPrimitiveProps = VComponentProps<typeof BaseSelect.Item>;
-    export interface Props extends ItemPrimitiveProps {}
+    export type State = BaseSelect.Item.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Item, State>;
 }
 
 export namespace SelectItem {
-    export interface Props extends SelectItemPrimitive.Props {}
+    export type State = SelectItemPrimitive.State;
+    export type Props = SelectItemPrimitive.Props;
 }
 
 export namespace SelectItemIndicatorPrimitive {
-    type ItemIndicatorPrimitiveProps = VComponentProps<typeof BaseSelect.ItemIndicator>;
-    export interface Props extends ItemIndicatorPrimitiveProps {}
+    export type State = BaseSelect.ItemIndicator.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.ItemIndicator, State>;
 }
 
 export namespace SelectGroup {
-    type GroupPrimitiveProps = VComponentProps<typeof BaseSelect.Group>;
-    export interface Props extends GroupPrimitiveProps {}
+    export type State = BaseSelect.Group.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Group, State>;
 }
 
 export namespace SelectGroupLabel {
-    type GroupLabelPrimitiveProps = VComponentProps<typeof BaseSelect.GroupLabel>;
-    export interface Props extends GroupLabelPrimitiveProps {}
+    export type State = BaseSelect.GroupLabel.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.GroupLabel, State>;
 }
 
 export namespace SelectSeparator {
-    type SeparatorPrimitiveProps = VComponentProps<typeof BaseSelect.Separator>;
-    export interface Props extends SeparatorPrimitiveProps {}
+    export type State = BaseSelect.Separator.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Separator, State>;
 }

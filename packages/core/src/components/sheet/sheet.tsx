@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactElement, RefObject } from 'react';
+import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
@@ -18,7 +18,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Dialog } from '../dialog';
 import * as styles from './sheet.css';
@@ -287,73 +287,75 @@ SheetDescription.displayName = 'Sheet.Description';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace SheetRoot {
-    type RootPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Dialog.Root>, 'size'>;
-    export interface Props extends RootPrimitiveProps {}
+    export type State = {};
+    export type Props = Omit<Dialog.Root.Props, 'size'>;
 
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
     export type Actions = BaseDialog.Root.Actions;
 }
 
 export namespace SheetTrigger {
-    type TriggerPrimitiveProps = VComponentProps<typeof Dialog.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = Dialog.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Trigger, State>;
 }
 
 export namespace SheetClose {
-    type ClosePrimitiveProps = VComponentProps<typeof Dialog.Close>;
-    export interface Props extends ClosePrimitiveProps {}
+    export type State = Dialog.Close.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Close, State>;
 }
 
 export namespace SheetOverlayPrimitive {
-    type OverlayPrimitiveProps = VComponentProps<typeof Dialog.OverlayPrimitive>;
-    export interface Props extends OverlayPrimitiveProps {}
+    export type State = Dialog.OverlayPrimitive.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.OverlayPrimitive, State>;
 }
 
 export namespace SheetPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof Dialog.PortalPrimitive>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = Dialog.PortalPrimitive.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.PortalPrimitive, State>;
 }
 
 export namespace SheetPositionerPrimitive {
-    type PositionerPrimitiveProps = VComponentProps<'div'>;
-    export interface Props extends PositionerPrimitiveProps, PositionerType {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State> & PositionerType;
 }
 
 export namespace SheetPopupPrimitive {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseDialog.Popup>;
-    export interface Props extends PopupPrimitiveProps {}
+    export type State = BaseDialog.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State>;
 }
 
 export namespace SheetPopup {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseDialog.Popup>;
-    export interface Props extends PopupPrimitiveProps {
+    type SubElementProps = {
         portalElement?: ReactElement<SheetPortalPrimitive.Props>;
         overlayElement?: ReactElement<SheetOverlayPrimitive.Props>;
         positionerElement?: ReactElement<SheetPositionerPrimitive.Props>;
-    }
+    };
+
+    export type State = SheetPopupPrimitive.State;
+    export type Props = SheetPopupPrimitive.Props & SubElementProps;
 }
 
 export namespace SheetHeader {
-    type HeaderPrimitiveProps = VComponentProps<typeof Dialog.Header>;
-    export interface Props extends HeaderPrimitiveProps {}
+    export type State = Dialog.Header.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Header, State>;
 }
 
 export namespace SheetBody {
-    type BodyPrimitiveProps = VComponentProps<typeof Dialog.Body>;
-    export interface Props extends BodyPrimitiveProps {}
+    export type State = Dialog.Body.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Body, State>;
 }
 
 export namespace SheetFooter {
-    type FooterPrimitiveProps = VComponentProps<typeof Dialog.Footer>;
-    export interface Props extends FooterPrimitiveProps {}
+    export type State = Dialog.Footer.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Footer, State>;
 }
 
 export namespace SheetTitle {
-    type TitlePrimitiveProps = VComponentProps<typeof Dialog.Title>;
-    export interface Props extends TitlePrimitiveProps {}
+    export type State = Dialog.Title.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Title, State>;
 }
 
 export namespace SheetDescription {
-    type DescriptionPrimitiveProps = VComponentProps<typeof Dialog.Description>;
-    export interface Props extends DescriptionPrimitiveProps {}
+    export type State = Dialog.Description.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Description, State>;
 }
