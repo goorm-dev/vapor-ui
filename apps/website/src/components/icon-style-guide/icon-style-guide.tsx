@@ -53,7 +53,6 @@ const IconStyleGuide = () => {
                 gap: '$150',
                 marginBlock: '$300',
                 listStyle: 'none',
-                margin: 0,
                 padding: 0,
             }}
         >

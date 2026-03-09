@@ -1,6 +1,6 @@
 'use client';
 
-import { type FunctionComponent, memo, useState } from 'react';
+import { type FunctionComponent, memo, useEffect, useRef, useState } from 'react';
 
 import { Text } from '@vapor-ui/core';
 import { CheckCircleIcon, CopyOutlineIcon, type IconProps } from '@vapor-ui/icons';
@@ -26,8 +26,21 @@ export type IconListItemProps = {
     className?: string;
 };
 
-const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconListItemProps) {
+const IconListItem = memo(function IconListItem({
+    icon: Icon,
+    iconName,
+    className,
+}: IconListItemProps) {
     const [isCopied, setIsCopied] = useState(false);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
 
     const copyIconImportStatement = async () => {
         const importStatement = getIconImportStatement(iconName);
@@ -35,7 +48,14 @@ const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconLi
 
         setIsCopied(result);
         if (result) {
-            setTimeout(() => setIsCopied(false), 1500);
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+
+            timeoutRef.current = setTimeout(() => {
+                setIsCopied(false);
+                timeoutRef.current = null;
+            }, 1500);
         }
     };
 
@@ -50,6 +70,7 @@ const IconListItem = memo(function IconListItem({ icon: Icon, iconName }: IconLi
                 isCopied
                     ? 'border-v-success bg-v-success-100'
                     : 'border-transparent bg-v-overlay-100 hover:border-v-normal',
+                className,
             )}
             onClick={copyIconImportStatement}
             aria-label={`${iconName} 아이콘 import 문 복사`}

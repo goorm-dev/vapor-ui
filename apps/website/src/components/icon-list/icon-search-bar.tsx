@@ -47,7 +47,7 @@ const IconSearchBar = ({ search, totalCount, inputRef, setSearch }: IconSearchBa
                         left: '$175',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: '$fg-success-200',
+                        color: '$fg-secondary-200',
                         pointerEvents: 'none',
                     }}
                 >
