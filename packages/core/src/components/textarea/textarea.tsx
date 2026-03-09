@@ -11,7 +11,7 @@ import { useInputGroup } from '~/components/input-group/input-group';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VaporUIComponentProps } from '~/utils/types';
+import type { Assign, VaporUIComponentProps } from '~/utils/types';
 
 import type { TextareaVariants } from './textarea.css';
 import * as styles from './textarea.css';
@@ -115,9 +115,10 @@ export namespace Textarea {
     };
 
     export type State = {};
-    export type Props = VaporUIComponentProps<'textarea', State> &
-        TextareaVariants &
-        TextareaFieldProps;
+    export type Props = Assign<
+        VaporUIComponentProps<'textarea', State>,
+        TextareaFieldProps & TextareaVariants
+    >;
 
     export type ChangeEventDetails = BaseField.Control.ChangeEventDetails;
 }

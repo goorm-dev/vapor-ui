@@ -15,14 +15,6 @@ import type { Assign, VaporUIComponentProps } from '~/utils/types';
 import type { RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
 
-type TextInputVariants = RootVariants;
-type BaseProps = TextInputVariants & {
-    type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
-    value?: string;
-    defaultValue?: string;
-    onValueChange?: (value: string, event: TextInput.ChangeEventDetails) => void;
-};
-
 /* -------------------------------------------------------------------------------------------------
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
@@ -77,6 +69,14 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
 TextInput.displayName = 'TextInput';
 
 /* -----------------------------------------------------------------------------------------------*/
+
+type TextInputVariants = RootVariants;
+type BaseProps = TextInputVariants & {
+    type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string, event: TextInput.ChangeEventDetails) => void;
+};
 
 export namespace TextInput {
     export type State = BaseInput.State;

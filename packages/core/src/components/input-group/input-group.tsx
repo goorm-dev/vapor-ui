@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VaporUIComponentProps } from '~/utils/types';
+import type { Assign, VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './input-group.css';
 
@@ -153,5 +153,5 @@ export namespace InputGroupCounter {
     };
 
     export type State = {};
-    export type Props = VaporUIComponentProps<'span', State> & ChildrenProps;
+    export type Props = Assign<VaporUIComponentProps<'span', State>, ChildrenProps>;
 }

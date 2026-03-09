@@ -387,7 +387,7 @@ SelectSeparator.displayName = 'Select.Separator';
 
 export namespace SelectRoot {
     export type State = BaseSelect.Root.State;
-    export type Props<Value> = Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> &
+    export type Props<Value = unknown> = Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> &
         SelectSharedProps;
 
     export type Actions = BaseSelect.Root.Actions;

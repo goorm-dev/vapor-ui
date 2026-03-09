@@ -89,25 +89,21 @@ CardFooter.displayName = 'Card.Footer';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace CardRoot {
-    type RootPrimitiveProps = VaporUIComponentProps<'div'>;
-
-    export interface Props extends RootPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace CardHeader {
-    type HeaderPrimitiveProps = VaporUIComponentProps<'div'>;
-
-    export interface Props extends HeaderPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace CardBody {
-    type BodyPrimitiveProps = VaporUIComponentProps<'div'>;
-
-    export interface Props extends BodyPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace CardFooter {
-    type FooterPrimitiveProps = VaporUIComponentProps<'div'>;
-
-    export interface Props extends FooterPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }

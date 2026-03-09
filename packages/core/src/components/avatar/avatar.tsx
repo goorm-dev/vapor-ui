@@ -13,7 +13,7 @@ import { vars } from '~/styles/themes.css';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VaporUIComponentProps } from '~/utils/types';
+import type { Assign, VaporUIComponentProps } from '~/utils/types';
 
 import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
@@ -216,9 +216,10 @@ export namespace AvatarRoot {
     };
 
     export type State = BaseAvatar.Root.State;
-    export type Props = VaporUIComponentProps<typeof BaseAvatar.Root, State> &
-        AvatarContext &
-        SubElementProps;
+    export type Props = Assign<
+        VaporUIComponentProps<typeof BaseAvatar.Root, State>,
+        AvatarContext & SubElementProps
+    >;
 }
 
 export namespace AvatarImagePrimitive {

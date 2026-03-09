@@ -6,7 +6,7 @@ import { Field as BaseField } from '@base-ui/react/field';
 import clsx from 'clsx';
 
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VaporUIComponentProps } from '~/utils/types';
+import type { Assign, VaporUIComponentProps } from '~/utils/types';
 
 import type { LabelVariants } from './field.css';
 import * as styles from './field.css';
@@ -133,15 +133,20 @@ export namespace FieldError {
     type ErrorMatchProps = { match?: boolean | keyof ErrorValidityState };
 
     export type State = BaseField.Error.State;
-    // TODO: match prop 오버라이드 잘 되는지 확인
-    export type Props = VaporUIComponentProps<typeof BaseField.Error, State> & ErrorMatchProps;
+    export type Props = Assign<
+        VaporUIComponentProps<typeof BaseField.Error, State>,
+        ErrorMatchProps
+    >;
 }
 
 export namespace FieldSuccess {
     type SuccessMatchProps = { match?: boolean | 'valid' };
 
     export type State = BaseField.Error.State;
-    export type Props = VaporUIComponentProps<typeof BaseField.Error, State> & SuccessMatchProps;
+    export type Props = Assign<
+        VaporUIComponentProps<typeof BaseField.Error, State>,
+        SuccessMatchProps
+    >;
 }
 
 export namespace FieldItem {
