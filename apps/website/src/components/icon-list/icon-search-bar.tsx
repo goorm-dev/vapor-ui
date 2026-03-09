@@ -1,4 +1,5 @@
-import type { KeyboardEvent, RefObject } from 'react';
+import { useRef } from 'react';
+import type { KeyboardEvent } from 'react';
 
 import { Box, Flex, IconButton, TextInput } from '@vapor-ui/core';
 import { CloseOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
@@ -6,11 +7,12 @@ import { CloseOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
 type IconSearchBarProps = {
     search: string;
     totalCount: number;
-    inputRef: RefObject<HTMLInputElement | null>;
     setSearch: (value: string) => void;
 };
 
-const IconSearchBar = ({ search, totalCount, inputRef, setSearch }: IconSearchBarProps) => {
+const IconSearchBar = ({ search, totalCount, setSearch }: IconSearchBarProps) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
     const clearSearch = () => {
         setSearch('');
         inputRef.current?.focus();

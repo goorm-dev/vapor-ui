@@ -1,7 +1,5 @@
 'use client';
 
-import { useRef } from 'react';
-
 import { VStack } from '@vapor-ui/core';
 
 import IconEmptyState from './icon-empty-state';
@@ -20,16 +18,10 @@ const IconList = () => {
         filteredItemsByCategory,
         categoryCounts,
     } = useIconSearch(VAPOR_ICONS);
-    const searchInputRef = useRef<HTMLInputElement>(null);
 
     return (
         <VStack className="not-prose" $css={{ gap: '$250' }}>
-            <IconSearchBar
-                search={search}
-                totalCount={totalCount}
-                inputRef={searchInputRef}
-                setSearch={setSearch}
-            />
+            <IconSearchBar search={search} totalCount={totalCount} setSearch={setSearch} />
 
             <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
                 {isSearching && filteredCount > 0
