@@ -70,7 +70,12 @@ export const CheckboxIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     CheckboxIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const {
+        keepMounted = true,
+        className,
+        children: childrenProp,
+        ...componentProps
+    } = resolveStyles(props);
 
     const { size, invalid, indeterminate } = useCheckboxContext();
     const dataAttrs = createDataAttributes({ invalid });
@@ -84,8 +89,8 @@ export const CheckboxIndicatorPrimitive = forwardRef<
 
     return (
         <BaseCheckbox.Indicator
-            keepMounted
             ref={ref}
+            keepMounted={keepMounted}
             className={clsx(styles.indicator({ size }), className)}
             {...dataAttrs}
             {...componentProps}

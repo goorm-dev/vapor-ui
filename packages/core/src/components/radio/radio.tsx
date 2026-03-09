@@ -62,15 +62,15 @@ RadioRoot.displayName = 'Radio.Root';
 
 export const RadioIndicatorPrimitive = forwardRef<HTMLSpanElement, RadioIndicatorPrimitive.Props>(
     (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
+        const { keepMounted = true, className, ...componentProps } = resolveStyles(props);
 
         const { invalid } = useRadioGroupContext();
         const dataAttrs = createDataAttributes({ invalid });
 
         return (
             <BaseRadio.Indicator
-                keepMounted
                 ref={ref}
+                keepMounted={keepMounted}
                 className={clsx(styles.indicator, className)}
                 {...dataAttrs}
                 {...componentProps}
