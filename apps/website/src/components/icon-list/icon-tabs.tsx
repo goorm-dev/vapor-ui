@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import type { ReactNode } from 'react';
 
 import { Badge, Box, Tabs } from '@vapor-ui/core';
@@ -26,7 +25,7 @@ type IconTabButtonProps = {
     disableEmptyTabs: boolean;
 };
 
-const IconTabButton = memo(({ iconType, count, disableEmptyTabs }: IconTabButtonProps) => {
+const IconTabButton = ({ iconType, count, disableEmptyTabs }: IconTabButtonProps) => {
     return (
         <Tabs.Button
             value={iconType}
@@ -46,9 +45,7 @@ const IconTabButton = memo(({ iconType, count, disableEmptyTabs }: IconTabButton
             </Badge>
         </Tabs.Button>
     );
-});
-
-IconTabButton.displayName = 'IconTabButton';
+};
 
 type IconTabPanelProps = {
     iconType: IconCategory;
@@ -57,7 +54,7 @@ type IconTabPanelProps = {
     emptyState?: ReactNode;
 };
 
-const IconTabPanel = memo(({ iconType, activeTab, items, emptyState }: IconTabPanelProps) => {
+const IconTabPanel = ({ iconType, activeTab, items, emptyState }: IconTabPanelProps) => {
     const isActive = activeTab === iconType;
 
     return (
@@ -72,9 +69,7 @@ const IconTabPanel = memo(({ iconType, activeTab, items, emptyState }: IconTabPa
             </Box>
         </Tabs.Panel>
     );
-});
-
-IconTabPanel.displayName = 'IconTabPanel';
+};
 
 const IconTabs = ({
     defaultValue = 'basic',
