@@ -1,5 +1,7 @@
+import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins';
 import { fileGenerator, remarkDocGen } from 'fumadocs-docgen';
 import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
+import lastModified from 'fumadocs-mdx/plugins/last-modified';
 import { z } from 'zod';
 
 export const docs = defineDocs({
@@ -37,6 +39,7 @@ export const theme = defineDocs({
 });
 
 export default defineConfig({
+    plugins: [lastModified()],
     mdxOptions: {
         remarkNpmOptions: {
             persist: {
@@ -45,6 +48,7 @@ export default defineConfig({
         },
         remarkPlugins: [[remarkDocGen, { generators: [fileGenerator({})] }]],
         rehypeCodeOptions: {
+            ...rehypeCodeDefaultOptions,
             lazy: true,
             experimentalJSEngine: true,
             langs: ['ts', 'js', 'html', 'tsx', 'mdx'],

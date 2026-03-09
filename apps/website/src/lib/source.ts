@@ -1,7 +1,6 @@
 import type { InferPageType } from 'fumadocs-core/source';
 import { loader } from 'fumadocs-core/source';
-
-import { blocks, docs, theme } from '~/.source';
+import { blocks, docs, theme } from 'fumadocs-mdx/collections/server';
 
 export const source = loader({
     baseUrl: '/docs',
