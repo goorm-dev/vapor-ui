@@ -131,33 +131,34 @@ FloatingBarPopup.displayName = 'FloatingBar.Popup';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace FloatingBarRoot {
+    export type State = Popover.Root.State;
     export type Props = Popover.Root.Props;
     export type Actions = Popover.Root.Actions;
     export type ChangeEventDetails = Popover.Root.ChangeEventDetails;
 }
 
 export namespace FloatingBarTrigger {
-    export type State = Popover.Trigger.Props;
+    export type State = Popover.Trigger.State;
     export type Props = VaporUIComponentProps<typeof Popover.Trigger, State>;
 }
 
 export namespace FloatingBarClose {
-    export type State = Popover.Close.Props;
+    export type State = Popover.Close.State;
     export type Props = VaporUIComponentProps<typeof Popover.Close, State>;
 }
 
 export namespace FloatingBarPortalPrimitive {
-    export type State = Popover.Portal.Props;
+    export type State = Popover.Portal.State;
     export type Props = VaporUIComponentProps<typeof Popover.Portal, State>;
 }
 
 export namespace FloatingBarPositionerPrimitive {
-    export type State = Popover.Positioner.Props;
+    export type State = Popover.Positioner.State;
     export type Props = VaporUIComponentProps<typeof Popover.Positioner, State>;
 }
 
 export namespace FloatingBarPopupPrimitive {
-    export type State = Popover.Popup.Props;
+    export type State = Popover.Popup.State;
     export type Props = VaporUIComponentProps<typeof Popover.Popup, State>;
 }
 
@@ -166,6 +167,6 @@ export namespace FloatingBarPopup {
         portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
     };
 
-    export type State = Popover.Popup.Props;
+    export type State = Popover.Popup.State;
     export type Props = FloatingBarPopupPrimitive.Props & SubElementProps;
 }

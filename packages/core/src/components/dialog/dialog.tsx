@@ -242,6 +242,7 @@ DialogFooter.displayName = 'Dialog.Footer';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace DialogRoot {
+    export type State = {};
     export type Props = Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> &
         DialogSharedProps & { closeOnClickOverlay?: boolean };
 

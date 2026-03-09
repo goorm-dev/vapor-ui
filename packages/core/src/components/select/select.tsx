@@ -395,7 +395,7 @@ export namespace SelectRoot {
 }
 
 export namespace SelectTriggerPrimitive {
-    export type State = BaseSelect.Trigger.Props;
+    export type State = BaseSelect.Trigger.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.Trigger, State>;
 }
 
@@ -405,7 +405,7 @@ export namespace SelectTrigger {
 }
 
 export namespace SelectValuePrimitive {
-    export type State = BaseSelect.Value.Props;
+    export type State = BaseSelect.Value.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.Value, State>;
 }
 
@@ -415,22 +415,22 @@ export namespace SelectPlaceholderPrimitive {
 }
 
 export namespace SelectTriggerIconPrimitive {
-    export type State = BaseSelect.Icon.Props;
+    export type State = BaseSelect.Icon.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.Icon, State>;
 }
 
 export namespace SelectPortalPrimitive {
-    export type State = BaseSelect.Portal.Props;
+    export type State = BaseSelect.Portal.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.Portal, State>;
 }
 
 export namespace SelectPositionerPrimitive {
-    export type State = BaseSelect.Positioner.Props;
+    export type State = BaseSelect.Positioner.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.Positioner, State>;
 }
 
 export namespace SelectPopupPrimitive {
-    export type State = BaseSelect.Popup.Props;
+    export type State = BaseSelect.Popup.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.Popup, State>;
 }
 
@@ -445,7 +445,7 @@ export namespace SelectPopup {
 }
 
 export namespace SelectItemPrimitive {
-    export type State = BaseSelect.Item.Props;
+    export type State = BaseSelect.Item.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.Item, State>;
 }
 
@@ -455,21 +455,21 @@ export namespace SelectItem {
 }
 
 export namespace SelectItemIndicatorPrimitive {
-    export type State = BaseSelect.ItemIndicator.Props;
+    export type State = BaseSelect.ItemIndicator.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.ItemIndicator, State>;
 }
 
 export namespace SelectGroup {
-    export type State = BaseSelect.Group.Props;
+    export type State = BaseSelect.Group.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.Group, State>;
 }
 
 export namespace SelectGroupLabel {
-    export type State = BaseSelect.GroupLabel.Props;
+    export type State = BaseSelect.GroupLabel.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.GroupLabel, State>;
 }
 
 export namespace SelectSeparator {
-    export type State = BaseSelect.Separator.Props;
+    export type State = BaseSelect.Separator.State;
     export type Props = VaporUIComponentProps<typeof BaseSelect.Separator, State>;
 }

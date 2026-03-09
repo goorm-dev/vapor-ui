@@ -463,6 +463,7 @@ MenuRadioItem.displayName = 'Menu.RadioItem';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace MenuRoot {
+    export type State = {};
     export type Props = BaseMenu.Root.Props;
 
     export type Actions = BaseMenu.Root.Actions;
@@ -470,7 +471,7 @@ export namespace MenuRoot {
 }
 
 export namespace MenuTrigger {
-    export type State = BaseMenu.Trigger.Props;
+    export type State = BaseMenu.Trigger.State;
     export type Props = VaporUIComponentProps<typeof BaseMenu.Trigger, State>;
 }
 
