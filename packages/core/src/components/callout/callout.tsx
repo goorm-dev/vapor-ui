@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { CalloutVariants } from './callout.css';
 import * as styles from './callout.css';
@@ -56,11 +56,11 @@ CalloutIcon.displayName = 'CalloutIcon';
  * -----------------------------------------------------------------------------------------------*/
 
 export namespace CalloutRoot {
-    type RootPrimitiveProps = VComponentProps<'div'>;
-    export interface Props extends RootPrimitiveProps, CalloutVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State> & CalloutVariants;
 }
 
 export namespace CalloutIcon {
-    type IconPrimitiveProps = VComponentProps<'div'>;
-    export interface Props extends IconPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }

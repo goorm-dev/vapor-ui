@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './floating-bar.css';
 
@@ -132,35 +132,40 @@ FloatingBarPopup.displayName = 'FloatingBar.Popup';
 
 export namespace FloatingBarRoot {
     export type Props = Popover.Root.Props;
-
     export type Actions = Popover.Root.Actions;
     export type ChangeEventDetails = Popover.Root.ChangeEventDetails;
 }
 
 export namespace FloatingBarTrigger {
-    export interface Props extends VComponentProps<typeof Popover.Trigger> {}
+    export type State = Popover.Trigger.Props;
+    export type Props = VaporUIComponentProps<typeof Popover.Trigger, State>;
 }
 
 export namespace FloatingBarClose {
-    export interface Props extends VComponentProps<typeof Popover.Close> {}
+    export type State = Popover.Close.Props;
+    export type Props = VaporUIComponentProps<typeof Popover.Close, State>;
 }
 
 export namespace FloatingBarPortalPrimitive {
-    export interface Props extends VComponentProps<typeof Popover.Portal> {}
+    export type State = Popover.Portal.Props;
+    export type Props = VaporUIComponentProps<typeof Popover.Portal, State>;
 }
 
 export namespace FloatingBarPositionerPrimitive {
-    export interface Props extends VComponentProps<typeof Popover.Positioner> {}
+    export type State = Popover.Positioner.Props;
+    export type Props = VaporUIComponentProps<typeof Popover.Positioner, State>;
 }
 
 export namespace FloatingBarPopupPrimitive {
-    export interface Props extends VComponentProps<typeof Popover.Popup> {}
+    export type State = Popover.Popup.Props;
+    export type Props = VaporUIComponentProps<typeof Popover.Popup, State>;
 }
 
 export namespace FloatingBarPopup {
-    export type PopupProps = FloatingBarPopupPrimitive.Props;
-
-    export interface Props extends PopupProps {
+    type SubElementProps = {
         portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
-    }
+    };
+
+    export type State = Popover.Popup.Props;
+    export type Props = FloatingBarPopupPrimitive.Props & SubElementProps;
 }

@@ -12,7 +12,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './checkbox.css';
 import * as styles from './checkbox.css';
@@ -125,14 +125,12 @@ const DashIcon = (props: IconProps) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace CheckboxRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseCheckbox.Root>;
-
-    export interface Props extends RootPrimitiveProps, CheckboxSharedProps {}
+    export type State = BaseCheckbox.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseCheckbox.Root, State> & CheckboxVariants;
     export type ChangeEventDetails = BaseCheckbox.Root.ChangeEventDetails;
 }
 
 export namespace CheckboxIndicatorPrimitive {
-    type IndicatorPrimitiveProps = VComponentProps<typeof BaseCheckbox.Indicator>;
-
-    export interface Props extends IndicatorPrimitiveProps {}
+    export type State = BaseCheckbox.Indicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseCheckbox.Indicator, State>;
 }

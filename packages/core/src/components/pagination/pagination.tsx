@@ -19,7 +19,7 @@ import { createChangeEventDetails } from '~/utils/create-event-details';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './pagination.css';
 import type { ButtonVariants } from './pagination.css';
@@ -529,8 +529,8 @@ interface PaginationContext extends PaginationVariants {
     disabled: boolean;
 }
 
-type RootPrimitiveProps = VComponentProps<'nav'>;
-export interface PaginationRootProps extends RootPrimitiveProps, PaginationVariants {
+type PaginationRootBaseProps = VaporUIComponentProps<'nav', {}> & PaginationVariants;
+type PaginationRootSharedProps = {
     totalPages: number;
     page?: number;
     defaultPage?: number;
@@ -539,82 +539,89 @@ export interface PaginationRootProps extends RootPrimitiveProps, PaginationVaria
     siblingCount?: number;
     boundaryCount?: number;
     disabled?: boolean;
-}
+};
+
+export type PaginationRootProps = PaginationRootBaseProps & PaginationRootSharedProps;
 
 type PaginationRootChangeEventReason = 'item-press';
 type PaginationRootChangeEventDetails = MakeChangeEventDetails<PaginationRoot.ChangeEventReason>;
 
-export namespace PaginationRoot {
+export namespace PaginationRootPrimitive {
+    // TODO: disabled state
+    export type State = {};
     export type Props = PaginationRootProps;
 
     export type ChangeEventReason = PaginationRootChangeEventReason;
     export type ChangeEventDetails = PaginationRootChangeEventDetails;
 }
 
-export namespace PaginationRootPrimitive {
-    export type Props = PaginationRootProps;
+export namespace PaginationRoot {
+    export type State = PaginationRootPrimitive.State;
+    export type Props = PaginationRootPrimitive.Props;
 
     export type ChangeEventReason = PaginationRootChangeEventReason;
     export type ChangeEventDetails = PaginationRootChangeEventDetails;
 }
 
 export namespace PaginationListPrimitive {
-    type ListPrimitiveProps = VComponentProps<'ol'>;
-    export interface Props extends ListPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'ol', State>;
 }
 
 export namespace PaginationItemPrimitive {
-    type ItemPrimitiveProps = VComponentProps<'li'>;
-    export interface Props extends ItemPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'li', State>;
 }
 
-type ButtonPrimitiveProps = VComponentProps<'button'>;
-export interface PaginationButtonProps extends ButtonPrimitiveProps {
-    page: number;
-}
+type PaginationButtonPrimitiveProps = VaporUIComponentProps<'button', {}>;
+export type PaginationButtonProps = PaginationButtonPrimitiveProps & { page: number };
 
 export namespace PaginationButtonPrimitive {
+    export type State = {};
     export type Props = PaginationButtonProps;
 }
 
 export namespace PaginationButton {
+    export type State = PaginationButtonPrimitive.State;
     export type Props = PaginationButtonPrimitive.Props;
 }
 
 export namespace PaginationPreviousPrimitive {
-    type PreviousPrimitiveProps = VComponentProps<'button'>;
-
-    export interface Props extends PreviousPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'button', State>;
 }
 
 export namespace PaginationPrevious {
-    export interface Props extends PaginationPreviousPrimitive.Props {}
+    export type State = PaginationPreviousPrimitive.State;
+    export type Props = PaginationPreviousPrimitive.Props;
 }
 
 export namespace PaginationNextPrimitive {
-    type NextPrimitiveProps = VComponentProps<'button'>;
-
-    export interface Props extends NextPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'button', State>;
 }
 
 export namespace PaginationNext {
-    export interface Props extends PaginationNextPrimitive.Props {}
+    export type State = PaginationNextPrimitive.State;
+    export type Props = PaginationNextPrimitive.Props;
 }
 
 export namespace PaginationItems {
     type ItemsPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Fragment>, 'children'>;
-
-    export interface Props extends ItemsPrimitiveProps {
+    type ItemsRenderProps = {
         children?: React.ReactNode | ((pages: PageType[]) => React.ReactNode);
-    }
+    };
+
+    export type State = {};
+    export type Props = ItemsPrimitiveProps & ItemsRenderProps;
 }
 
 export namespace PaginationEllipsisPrimitive {
-    type EllipsisPrimitiveProps = VComponentProps<'span'>;
-
-    export interface Props extends EllipsisPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }
 
 export namespace PaginationEllipsis {
-    export interface Props extends PaginationEllipsisPrimitive.Props {}
+    export type State = PaginationEllipsisPrimitive.State;
+    export type Props = PaginationEllipsisPrimitive.Props;
 }

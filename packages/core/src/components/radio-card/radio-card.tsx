@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
 import type { RadioCardVariants } from './radio-card.css';
@@ -40,6 +40,6 @@ export const RadioCard = forwardRef<HTMLElement, RadioCard.Props>((props, ref) =
 RadioCard.displayName = 'RadioCard';
 
 export namespace RadioCard {
-    type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
-    export interface Props extends RootPrimitiveProps, RadioCardVariants {}
+    export type State = BaseRadio.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseRadio.Root, State> & RadioCardVariants;
 }

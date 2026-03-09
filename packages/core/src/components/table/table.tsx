@@ -4,7 +4,7 @@ import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './table.css';
 
@@ -169,37 +169,46 @@ TableColumn.displayName = 'Table.Column';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace TableRoot {
-    export interface Props extends VComponentProps<'table'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'table', State>;
 }
 
 export namespace TableHeader {
-    export interface Props extends VComponentProps<'thead'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'thead', State>;
 }
 
 export namespace TableBody {
-    export interface Props extends VComponentProps<'tbody'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'tbody', State>;
 }
 
 export namespace TableFooter {
-    export interface Props extends VComponentProps<'tfoot'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'tfoot', State>;
 }
 
 export namespace TableRow {
-    export interface Props extends VComponentProps<'tr'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'tr', State>;
 }
 
 export namespace TableHeading {
-    export interface Props extends VComponentProps<'th'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'th', State>;
 }
 
 export namespace TableCell {
-    export interface Props extends VComponentProps<'td'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'td', State>;
 }
 
 export namespace TableColumnGroup {
-    export interface Props extends VComponentProps<'colgroup'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'colgroup', State>;
 }
 
 export namespace TableColumn {
-    export interface Props extends VComponentProps<'col'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'col', State>;
 }

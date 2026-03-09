@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './input-group.css';
 
@@ -142,14 +142,16 @@ export function useInputGroup({ value, maxLength }: UseInputGroupOptions) {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace InputGroupRoot {
-    export interface Props extends VComponentProps<'div'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace InputGroupCounter {
-    type PrimitiveCounterProps = Omit<VComponentProps<'span'>, 'children'>;
-    type CounterRenderProps = { count: number; maxLength?: number; value: string };
+    type RenderProps = { count: number; maxLength?: number; value: string };
+    type ChildrenProps = {
+        children?: React.ReactNode | ((props: RenderProps) => React.ReactNode);
+    };
 
-    export interface Props extends PrimitiveCounterProps {
-        children?: React.ReactNode | ((props: CounterRenderProps) => React.ReactNode);
-    }
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State> & ChildrenProps;
 }

@@ -10,7 +10,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
 import type { RootVariants } from './radio.css';
@@ -82,12 +82,11 @@ RadioIndicatorPrimitive.displayName = 'Radio.IndicatorPrimitive';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace RadioRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
-    export interface Props extends RootPrimitiveProps, RadioVariants {}
+    export type State = BaseRadio.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseRadio.Root, State> & RadioVariants;
 }
 
 export namespace RadioIndicatorPrimitive {
-    type IndicatorPrimitiveProps = VComponentProps<typeof BaseRadio.Indicator>;
-
-    export interface Props extends IndicatorPrimitiveProps {}
+    export type State = BaseRadio.Indicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseRadio.Indicator, State>;
 }

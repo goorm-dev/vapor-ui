@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentPropsWithRef, ReactElement, RefObject } from 'react';
+import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useRef } from 'react';
 
 import { Menu as BaseMenu } from '@base-ui/react/menu';
@@ -12,7 +12,7 @@ import { createContext } from '~/libs/create-context';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './menu.css';
 
@@ -463,119 +463,123 @@ MenuRadioItem.displayName = 'Menu.RadioItem';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace MenuRoot {
-    type RootPrimitiveProps = ComponentPropsWithRef<typeof BaseMenu.Root>;
-    export interface Props extends RootPrimitiveProps {}
+    export type Props = BaseMenu.Root.Props;
 
     export type Actions = BaseMenu.Root.Actions;
     export type ChangeEventDetails = BaseMenu.Root.ChangeEventDetails;
 }
 
 export namespace MenuTrigger {
-    type TriggerPrimitiveProps = VComponentProps<typeof BaseMenu.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = BaseMenu.Trigger.Props;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Trigger, State>;
 }
 
 export namespace MenuPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseMenu.Portal>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = BaseMenu.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Portal, State>;
 }
 
 export namespace MenuPositionerPrimitive {
-    type PositionerPrimitiveProps = VComponentProps<typeof BaseMenu.Positioner>;
-    export interface Props extends PositionerPrimitiveProps {}
+    export type State = BaseMenu.Positioner.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Positioner, State>;
 }
 
 export namespace MenuPopupPrimitive {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
-    export interface Props extends PopupPrimitiveProps {}
+    export type State = BaseMenu.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
 }
 
 export namespace MenuPopup {
-    export interface Props extends MenuPopupPrimitive.Props {
+    type SubElementProps = {
         portalElement?: ReactElement<MenuPortalPrimitive.Props>;
         positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
-    }
+    };
+
+    export type State = MenuPopupPrimitive.State;
+    export type Props = MenuPopupPrimitive.Props & SubElementProps;
 }
 
 export namespace MenuItem {
-    type ItemPrimitiveProps = VComponentProps<typeof BaseMenu.Item>;
-    export interface Props extends ItemPrimitiveProps {}
+    export type State = BaseMenu.Item.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Item, State>;
 }
 
 export namespace MenuSeparator {
-    type SeparatorPrimitiveProps = VComponentProps<typeof BaseMenu.Separator>;
-    export interface Props extends SeparatorPrimitiveProps {}
+    export type State = BaseMenu.Separator.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Separator, State>;
 }
 
 export namespace MenuGroup {
-    type GroupPrimitiveProps = VComponentProps<typeof BaseMenu.Group>;
-    export interface Props extends GroupPrimitiveProps {}
+    export type State = BaseMenu.Group.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Group, State>;
 }
 
 export namespace MenuGroupLabel {
-    type GroupLabelPrimitiveProps = VComponentProps<typeof BaseMenu.GroupLabel>;
-    export interface Props extends GroupLabelPrimitiveProps {}
+    export type State = BaseMenu.GroupLabel.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.GroupLabel, State>;
 }
 
 export namespace MenuSubmenuRoot {
-    type SubmenuRootPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuRoot>;
-    export interface Props extends SubmenuRootPrimitiveProps {
-        closeParentOnEsc?: boolean;
-    }
-    export type OpenEventDetails = BaseMenu.SubmenuRoot.ChangeEventDetails;
+    export type State = BaseMenu.SubmenuRoot.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.SubmenuRoot, State> & {};
+
+    export type OpenEventDetails = BaseMenu.SubmenuRoot.ChangeEventReason;
 }
 
 export namespace MenuSubmenuTriggerItem {
-    type SubmenuTriggerItemPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuTrigger>;
-    export interface Props extends SubmenuTriggerItemPrimitiveProps {}
+    export type State = BaseMenu.SubmenuTrigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.SubmenuTrigger, State>;
 }
 
 export namespace MenuSubmenuPopupPrimitive {
-    type SubmenuPopupPrimitivePrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
-    export interface Props extends SubmenuPopupPrimitivePrimitiveProps {}
+    export type State = BaseMenu.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
 }
 
 export namespace MenuSubmenuPopup {
-    export interface Props extends MenuSubmenuPopupPrimitive.Props {
+    type SubElementProps = {
         portalElement?: ReactElement<MenuPortalPrimitive.Props>;
         positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
-    }
+    };
+
+    export type State = MenuSubmenuPopupPrimitive.State;
+    export type Props = MenuSubmenuPopupPrimitive.Props & SubElementProps;
 }
 
 export namespace MenuCheckboxItemPrimitive {
-    type CheckboxPrimitiveProps = VComponentProps<typeof BaseMenu.CheckboxItem>;
-    export interface Props extends CheckboxPrimitiveProps {}
+    export type State = BaseMenu.CheckboxItem.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.CheckboxItem, State>;
     export type ChangeEventDetails = BaseMenu.CheckboxItem.ChangeEventDetails;
 }
 
 export namespace MenuCheckboxItemIndicatorPrimitive {
-    type CheckboxIndicatorPrimitiveProps = VComponentProps<typeof BaseMenu.CheckboxItemIndicator>;
-    export interface Props extends CheckboxIndicatorPrimitiveProps {}
+    export type State = BaseMenu.CheckboxItemIndicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.CheckboxItemIndicator, State>;
 }
 
 export namespace MenuCheckboxItem {
-    export interface Props extends MenuCheckboxItemPrimitive.Props {}
+    export type State = MenuCheckboxItemPrimitive.State;
+    export type Props = MenuCheckboxItemPrimitive.Props;
     export type ChangeEventDetails = MenuCheckboxItemPrimitive.ChangeEventDetails;
 }
 
 export namespace MenuRadioGroup {
-    type RadioGroupPrimitiveProps = VComponentProps<typeof BaseMenu.RadioGroup>;
-    export interface Props extends RadioGroupPrimitiveProps {}
+    export type State = BaseMenu.RadioGroup.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.RadioGroup, State>;
     export type ChangeEventDetails = BaseMenu.RadioGroup.ChangeEventDetails;
 }
 
 export namespace MenuRadioItemPrimitive {
-    type RadioItemPrimitiveProps = VComponentProps<typeof BaseMenu.RadioItem>;
-    export interface Props extends RadioItemPrimitiveProps {
-        closeOnClick?: boolean;
-    }
+    export type State = BaseMenu.RadioItem.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.RadioItem, State> & {};
 }
 
 export namespace MenuRadioItemIndicatorPrimitive {
-    type RadioItemPrimitiveProps = VComponentProps<typeof BaseMenu.RadioItemIndicator>;
-    export interface Props extends RadioItemPrimitiveProps {}
+    export type State = BaseMenu.RadioItemIndicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.RadioItemIndicator, State>;
 }
 
 export namespace MenuRadioItem {
-    export interface Props extends MenuRadioItemPrimitive.Props {}
+    export type State = MenuRadioItemPrimitive.State;
+    export type Props = MenuRadioItemPrimitive.Props;
 }

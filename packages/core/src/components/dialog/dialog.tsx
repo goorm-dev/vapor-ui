@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './dialog.css';
 import type { DialogPopupVariants } from './dialog.css';
@@ -242,61 +242,69 @@ DialogFooter.displayName = 'Dialog.Footer';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace DialogRoot {
-    type DialogPrimitiveProps = Omit<
-        ComponentPropsWithoutRef<typeof BaseDialog.Root>,
-        'disablePointerDismissal'
-    >;
-    export interface Props extends DialogPrimitiveProps, DialogSharedProps {
-        closeOnClickOverlay?: boolean;
-    }
+    export type Props = Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> &
+        DialogSharedProps & { closeOnClickOverlay?: boolean };
 
     export type Actions = BaseDialog.Root.Actions;
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
 }
 
 export namespace DialogPortalPrimitive {
-    export interface Props extends VComponentProps<typeof BaseDialog.Portal> {}
+    export type State = BaseDialog.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Portal, State>;
 }
 
 export namespace DialogOverlayPrimitive {
-    export interface Props extends VComponentProps<typeof BaseDialog.Backdrop> {}
+    export type State = BaseDialog.Backdrop.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Backdrop, State>;
 }
 
 export namespace DialogPopupPrimitive {
-    export interface Props extends VComponentProps<typeof BaseDialog.Popup> {}
+    export type State = BaseDialog.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State>;
 }
 
 export namespace DialogPopup {
-    export interface Props extends DialogPopupPrimitive.Props {
+    type SubElementProps = {
         portalElement?: ReactElement<DialogPortalPrimitive.Props>;
         overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
-    }
+    };
+
+    export type State = DialogPopupPrimitive.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State> & SubElementProps;
 }
 
 export namespace DialogTrigger {
-    export interface Props extends VComponentProps<typeof BaseDialog.Trigger> {}
+    export type State = BaseDialog.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Trigger, State>;
 }
 
 export namespace DialogClose {
-    export interface Props extends VComponentProps<typeof BaseDialog.Close> {}
+    export type State = BaseDialog.Close.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Close, State>;
 }
 
 export namespace DialogTitle {
-    export interface Props extends VComponentProps<typeof BaseDialog.Title> {}
+    export type State = BaseDialog.Title.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Title, State>;
 }
 
 export namespace DialogDescription {
-    export interface Props extends VComponentProps<typeof BaseDialog.Description> {}
+    export type State = BaseDialog.Description.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Description, State>;
 }
 
 export namespace DialogHeader {
-    export interface Props extends VComponentProps<'div'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace DialogBody {
-    export interface Props extends VComponentProps<'div'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace DialogFooter {
-    export interface Props extends VComponentProps<'div'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }

@@ -10,7 +10,7 @@ import { useInputGroup } from '~/components/input-group';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VComponentProps } from '~/utils/types';
+import type { Assign, VaporUIComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
@@ -79,8 +79,7 @@ TextInput.displayName = 'TextInput';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace TextInput {
-    type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
-
-    export interface Props extends Assign<TextInputPrimitiveProps, BaseProps> {}
+    export type State = BaseInput.State;
+    export type Props = Assign<VaporUIComponentProps<typeof BaseInput, State>, BaseProps>;
     export type ChangeEventDetails = BaseInput.ChangeEventDetails;
 }

@@ -8,7 +8,7 @@ import { foregrounds } from '~/styles/mixins/foreground.css';
 import type { Typography } from '~/styles/mixins/typography.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
     const {
@@ -36,10 +36,11 @@ export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
 Text.displayName = 'Text';
 
 export namespace Text {
-    type TextPrimitiveProps = VComponentProps<'span'>;
-
-    export interface Props extends TextPrimitiveProps {
+    type TextVariants = {
         foreground?: Foregrounds['color'];
         typography?: Typography['style'];
-    }
+    };
+
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State> & TextVariants;
 }

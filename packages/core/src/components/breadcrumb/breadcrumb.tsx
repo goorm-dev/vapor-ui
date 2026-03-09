@@ -10,14 +10,15 @@ import { createContext } from '~/libs/create-context';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './breadcrumb.css';
 import type { BreadcrumbItemVariants } from './breadcrumb.css';
 
-type BreadcrumbVariants = Omit<BreadcrumbItemVariants, 'current'>;
+type BreadcrumbVariants = BreadcrumbItemVariants;
+type BreadcrumbContext = Omit<BreadcrumbVariants, 'current'>;
 
-const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVariants>({
+const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbContext>({
     name: 'Breadcrumb',
     hookName: 'useBreadcrumbContext',
     providerName: 'BreadcrumbProvider',
@@ -30,7 +31,7 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
 export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     (props, ref) => {
         const { render, ...componentProps } = resolveStyles(props);
-        const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(componentProps, [
+        const [variantProps, otherProps] = createSplitProps<BreadcrumbContext>()(componentProps, [
             'size',
         ]);
 
@@ -233,51 +234,46 @@ BreadcrumbEllipsis.displayName = 'Breadcrumb.Ellipsis';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace BreadcrumbRootPrimitive {
-    type RootPrimitiveProps = VComponentProps<'nav'>;
-
-    export interface Props extends RootPrimitiveProps, BreadcrumbVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'nav', State> & BreadcrumbContext;
 }
 
 export namespace BreadcrumbListPrimitive {
-    type ListPrimitiveProps = VComponentProps<'ol'>;
-
-    export interface Props extends ListPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'ol', State>;
 }
 
 export namespace BreadcrumbRoot {
-    export interface Props extends BreadcrumbRootPrimitive.Props {}
+    export type State = BreadcrumbRootPrimitive.State;
+    export type Props = BreadcrumbRootPrimitive.Props;
 }
 
 export namespace BreadcrumbItemPrimitive {
-    type ItemPrimitiveProps = VComponentProps<'li'>;
-
-    export interface Props extends ItemPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'li', State>;
 }
 
 export namespace BreadcrumbLinkPrimitive {
-    type LinkPrimitiveProps = VComponentProps<'a'>;
-
-    export interface Props extends LinkPrimitiveProps {
-        current?: boolean;
-    }
+    export type State = {};
+    export type Props = VaporUIComponentProps<'a', State> & BreadcrumbVariants;
 }
 
 export namespace BreadcrumbItem {
-    export interface Props extends BreadcrumbLinkPrimitive.Props {}
+    export type State = BreadcrumbLinkPrimitive.State;
+    export type Props = BreadcrumbLinkPrimitive.Props;
 }
 
 export namespace BreadcrumbSeparator {
-    type SeparatorPrimitiveProps = VComponentProps<'li'>;
-
-    export interface Props extends SeparatorPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'li', State>;
 }
 
 export namespace BreadcrumbEllipsisPrimitive {
-    type EllipsisPrimitiveProps = VComponentProps<'span'>;
-
-    export interface Props extends EllipsisPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }
 
 export namespace BreadcrumbEllipsis {
-    export interface Props extends BreadcrumbEllipsisPrimitive.Props {}
+    export type State = BreadcrumbEllipsisPrimitive.State;
+    export type Props = BreadcrumbEllipsisPrimitive.Props;
 }

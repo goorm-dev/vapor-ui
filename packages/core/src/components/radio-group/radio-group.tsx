@@ -12,7 +12,7 @@ import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './radio-group.css';
 import * as styles from './radio-group.css';
@@ -92,10 +92,12 @@ RadioGroupLabel.displayName = 'RadioGroup.Label';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace RadioGroupRoot {
-    export interface Props extends VComponentProps<typeof BaseRadioGroup>, RadioGroupSharedProps {}
+    export type State = BaseRadioGroup.State;
+    export type Props = VaporUIComponentProps<typeof BaseRadioGroup, State> & RadioGroupSharedProps;
     export type ChangeEventDetails = BaseRadioGroup.ChangeEventDetails;
 }
 
 export namespace RadioGroupLabel {
-    export interface Props extends VComponentProps<'span'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }

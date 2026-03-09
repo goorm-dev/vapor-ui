@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
@@ -13,7 +13,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Badge } from '../badge';
 import type { TriggerVariants } from './multi-select.css';
@@ -25,7 +25,7 @@ type MultiSelectSharedProps = MultiSelectVariants & {
 };
 
 type MultiSelectContext = MultiSelectSharedProps &
-    Pick<BaseSelect.Root.Props<unknown>, 'items' | 'required'>;
+    Pick<MultiSelectRoot.Props<unknown>, 'items' | 'required'>;
 
 const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectContext>({
     name: 'MultiSelectContext',
@@ -425,86 +425,90 @@ MultiSelectSeparator.displayName = 'MultiSelect.Separator';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace MultiSelectRoot {
-    type RootPrimitiveProps<Value> = ComponentPropsWithoutRef<typeof BaseSelect.Root<Value, true>>;
-    export interface Props<Value>
-        extends Omit<RootPrimitiveProps<Value>, 'multiple'>, MultiSelectSharedProps {}
+    export type State = BaseSelect.Root.State;
+    export type Props<Value> = Omit<BaseSelect.Root.Props<Value, true>, 'multiple'> &
+        MultiSelectSharedProps;
 
     export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 
 export namespace MultiSelectTriggerPrimitive {
-    type TriggerPrimitiveProps = VComponentProps<typeof BaseSelect.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = BaseSelect.Trigger.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Trigger, State>;
 }
 
 export namespace MultiSelectTrigger {
-    export interface Props extends MultiSelectTriggerPrimitive.Props {}
+    export type State = MultiSelectTriggerPrimitive.State;
+    export type Props = MultiSelectTriggerPrimitive.Props;
 }
 
 export namespace MultiSelectValuePrimitive {
-    type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
-    export interface Props extends ValuePrimitiveProps {}
+    export type State = BaseSelect.Value.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Value, State>;
 }
 
 export namespace MultiSelectPlaceholderPrimitive {
-    type PlaceholderPrimitiveProps = VComponentProps<'span'>;
-    export interface Props extends PlaceholderPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }
 
 export namespace MultiSelectTriggerIconPrimitive {
-    type TriggerIconPrimitiveProps = VComponentProps<typeof BaseSelect.Icon>;
-    export interface Props extends TriggerIconPrimitiveProps {}
+    export type State = BaseSelect.Icon.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Icon, State>;
 }
 
 export namespace MultiSelectPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseSelect.Portal>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = BaseSelect.Portal.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Portal, State>;
 }
 
 export namespace MultiSelectPositionerPrimitive {
-    type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
-    export interface Props extends PositionerPrimitiveProps {}
+    export type State = BaseSelect.Positioner.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Positioner, State>;
 }
 
 export namespace MultiSelectPopupPrimitive {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseSelect.Popup>;
-    export interface Props extends PopupPrimitiveProps {}
+    export type State = BaseSelect.Popup.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Popup, State>;
 }
 
 export namespace MultiSelectPopup {
-    type PopupPrimitiveProps = VComponentProps<typeof MultiSelectPopupPrimitive>;
-    export interface Props extends PopupPrimitiveProps {
+    type SubElementProps = {
         portalElement?: ReactElement<MultiSelectPortalPrimitive.Props>;
         positionerElement?: ReactElement<MultiSelectPositionerPrimitive.Props>;
-    }
+    };
+
+    export type State = BaseSelect.Popup.State;
+    export type Props = MultiSelectPopupPrimitive.Props & SubElementProps;
 }
 
 export namespace MultiSelectItemPrimitive {
-    type ItemPrimitiveProps = VComponentProps<typeof BaseSelect.Item>;
-    export interface Props extends ItemPrimitiveProps {}
+    export type State = BaseSelect.Item.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Item, State>;
 }
 
 export namespace MultiSelectItem {
-    export interface Props extends MultiSelectItemPrimitive.Props {}
+    export type State = MultiSelectItemPrimitive.State;
+    export type Props = MultiSelectItemPrimitive.Props;
 }
 
 export namespace MultiSelectItemIndicatorPrimitive {
-    type ItemIndicatorPrimitiveProps = VComponentProps<typeof BaseSelect.ItemIndicator>;
-    export interface Props extends ItemIndicatorPrimitiveProps {}
+    export type State = BaseSelect.ItemIndicator.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.ItemIndicator, State>;
 }
 
 export namespace MultiSelectGroup {
-    type GroupPrimitiveProps = VComponentProps<typeof BaseSelect.Group>;
-    export interface Props extends GroupPrimitiveProps {}
+    export type State = BaseSelect.Group.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Group, State>;
 }
 
 export namespace MultiSelectGroupLabel {
-    type GroupLabelPrimitiveProps = VComponentProps<typeof BaseSelect.GroupLabel>;
-    export interface Props extends GroupLabelPrimitiveProps {}
+    export type State = BaseSelect.GroupLabel.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.GroupLabel, State>;
 }
 
 export namespace MultiSelectSeparator {
-    type SeparatorPrimitiveProps = VComponentProps<typeof BaseSelect.Separator>;
-    export interface Props extends SeparatorPrimitiveProps {}
+    export type State = BaseSelect.Separator.Props;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Separator, State>;
 }

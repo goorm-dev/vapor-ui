@@ -16,7 +16,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { LinkVariants, ListVariants } from './navigation-menu.css';
 import * as styles from './navigation-menu.css';
@@ -443,73 +443,79 @@ NavigationMenuViewport.displayName = 'NavigationMenu.Viewport';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace NavigationMenuRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
-    export interface Props extends RootPrimitiveProps, NavigationMenuSharedProps {}
+    export type State = BaseNavigationMenu.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Root, State> &
+        NavigationMenuSharedProps;
 
     export type Actions = BaseNavigationMenu.Root.Actions;
     export type ChangeEventDetails = BaseNavigationMenu.Root.ChangeEventDetails;
 }
 
 export namespace NavigationMenuList {
-    export interface Props extends VComponentProps<typeof BaseNavigationMenu.List> {}
+    export type State = BaseNavigationMenu.List.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.List, State>;
 }
 
 export namespace NavigationMenuItem {
-    export interface Props extends VComponentProps<typeof BaseNavigationMenu.Item> {}
+    export type State = BaseNavigationMenu.Item.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Item, State>;
 }
 
 export namespace NavigationMenuLink {
-    type LinkPrimitiveProps = Omit<VComponentProps<typeof BaseNavigationMenu.Link>, 'active'>;
-    export interface Props extends LinkPrimitiveProps {
-        current?: boolean;
-        disabled?: boolean;
-    }
+    export type State = BaseNavigationMenu.Link.State;
+    export type Props = Omit<
+        VaporUIComponentProps<typeof BaseNavigationMenu.Link, State>,
+        'active'
+    > & { current?: boolean; disabled?: boolean };
 }
 
 export namespace NavigationMenuTriggerPrimitive {
-    type TriggerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = BaseNavigationMenu.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Trigger, State>;
 }
 
 export namespace NavigationMenuTrigger {
-    export interface Props extends NavigationMenuTriggerPrimitive.Props {}
+    export type State = NavigationMenuTriggerPrimitive.State;
+    export type Props = NavigationMenuTriggerPrimitive.Props;
 }
 
 export namespace NavigationMenuTriggerIndicatorPrimitive {
-    type TriggerIndicatorPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Icon>;
-    export interface Props extends TriggerIndicatorPrimitiveProps {}
+    export type State = BaseNavigationMenu.Icon.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Icon, State>;
 }
 
 export namespace NavigationMenuContent {
-    type PanelPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Content>;
-    export interface Props extends PanelPrimitiveProps {}
+    export type State = BaseNavigationMenu.Content.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Content, State>;
 }
 
 export namespace NavigationMenuPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Portal>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = BaseNavigationMenu.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Portal, State>;
 }
 
 export namespace NavigationMenuPositionerPrimitive {
-    type PositionerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Positioner>;
-    export interface Props extends PositionerPrimitiveProps {}
+    export type State = BaseNavigationMenu.Positioner.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Positioner, State>;
 }
 
 export namespace NavigationMenuPopupPrimitive {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Popup>;
-    export interface Props extends PopupPrimitiveProps {}
+    export type State = BaseNavigationMenu.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Popup, State>;
 }
 
 export namespace NavigationMenuViewportPrimitive {
-    type ViewportPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Viewport>;
-    export interface Props extends ViewportPrimitiveProps {}
+    export type State = BaseNavigationMenu.Viewport.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Viewport, State>;
 }
 
 export namespace NavigationMenuViewport {
-    type ContentPrimitiveProps = VComponentProps<typeof NavigationMenuViewportPrimitive>;
-    export interface Props extends ContentPrimitiveProps {
+    type SubElementProps = {
         portalElement?: ReactElement<NavigationMenuPortalPrimitive.Props>;
         positionerElement?: ReactElement<NavigationMenuPositionerPrimitive.Props>;
         popupElement?: ReactElement<NavigationMenuPopupPrimitive.Props>;
-    }
+    };
+
+    export type State = NavigationMenuViewportPrimitive.State;
+    export type Props = NavigationMenuViewportPrimitive.Props & SubElementProps;
 }

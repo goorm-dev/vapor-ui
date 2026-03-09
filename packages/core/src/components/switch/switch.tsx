@@ -11,7 +11,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { ControlVariants } from './switch.css';
 import * as styles from './switch.css';
@@ -85,12 +85,12 @@ SwitchThumbPrimitive.displayName = 'Switch.ThumbPrimitive';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace SwitchRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
-    export interface Props extends RootPrimitiveProps, SwitchSharedProps {}
+    export type State = BaseSwitch.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseSwitch.Root, State> & SwitchSharedProps;
     export type ChangeEventDetails = BaseSwitch.Root.ChangeEventDetails;
 }
 
 export namespace SwitchThumbPrimitive {
-    type ThumbPrimitiveProps = VComponentProps<typeof BaseSwitch.Thumb>;
-    export interface Props extends ThumbPrimitiveProps {}
+    export type State = BaseSwitch.Thumb.State;
+    export type Props = VaporUIComponentProps<typeof BaseSwitch.Thumb, State>;
 }

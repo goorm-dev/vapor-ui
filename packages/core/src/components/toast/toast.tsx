@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { AnyProp, VComponentProps } from '~/utils/types';
+import type { AnyProp, VaporUIComponentProps } from '~/utils/types';
 
 import { Box } from '../box';
 import { Button } from '../button';
@@ -376,62 +376,63 @@ export namespace useToastManager {
 }
 
 export namespace ToastProviderPrimitive {
-    export interface Props extends BaseToast.Provider.Props {
-        toastManager?: ToastManager;
-    }
+    type ToastProviderSharedProps = { toastManager?: ToastManager };
+
+    export type Props = BaseToast.Provider.Props & ToastProviderSharedProps;
 }
 
 export namespace ToastProvider {
-    export interface Props extends Omit<BaseToast.Provider.Props, 'toastManager'> {
-        toastManager?: ToastManager;
-    }
+    type ToastProviderSharedProps = { toastManager?: ToastManager };
+
+    export type Props = Omit<BaseToast.Provider.Props, 'toastManager'> & ToastProviderSharedProps;
 }
 
 export namespace ToastPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseToast.Portal>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = BaseToast.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Portal, State>;
 }
 
 export namespace ToastViewportPrimitive {
-    type ViewportPrimitiveProps = VComponentProps<typeof BaseToast.Viewport>;
-    export interface Props extends ViewportPrimitiveProps {}
+    export type State = BaseToast.Viewport.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Viewport, State>;
 }
 
 export namespace ToastRootPrimitive {
-    type RootPrimitiveProps = VComponentProps<typeof BaseToast.Root>;
-    export interface Props extends Omit<RootPrimitiveProps, 'toast'> {
-        toast: ToastObjectType<AnyProp>;
-    }
+    type ToastObjectProps = { toast: ToastObjectType<AnyProp> };
+
+    export type State = BaseToast.Root.State;
+    export type Props = Omit<VaporUIComponentProps<typeof BaseToast.Root, State>, 'toast'> &
+        ToastObjectProps;
 
     export interface ToastObject<Data extends object = AnyProp> extends ToastObjectType<Data> {}
 }
 
 export namespace ToastContentPrimitive {
-    type ContentPrimitiveProps = VComponentProps<typeof BaseToast.Content>;
-    export interface Props extends ContentPrimitiveProps {}
+    export type State = BaseToast.Content.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Content, State>;
 }
 
 export namespace ToastTitlePrimitive {
-    type TitlePrimitiveProps = VComponentProps<typeof BaseToast.Title>;
-    export interface Props extends TitlePrimitiveProps {}
+    export type State = BaseToast.Title.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Title, State>;
 }
 
 export namespace ToastDescriptionPrimitive {
-    type DescriptionPrimitiveProps = VComponentProps<typeof BaseToast.Description>;
-    export interface Props extends DescriptionPrimitiveProps {}
+    export type State = BaseToast.Description.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Description, State>;
 }
 
 export namespace ToastIconPrimitive {
-    type IconPrimitiveProps = VComponentProps<'span'>;
-    export interface Props extends IconPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }
 
 export namespace ToastActionPrimitive {
-    type ActionPrimitiveProps = VComponentProps<typeof BaseToast.Action>;
-    export interface Props extends ActionPrimitiveProps {}
+    export type State = BaseToast.Action.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Action, State>;
 }
 
 export namespace ToastClosePrimitive {
-    type ClosePrimitiveProps = VComponentProps<typeof BaseToast.Close>;
-    export interface Props extends ClosePrimitiveProps {}
+    export type State = BaseToast.Close.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Close, State>;
 }

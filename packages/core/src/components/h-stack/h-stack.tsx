@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
 import { createSplitProps } from '~/utils/create-split-props';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Flex } from '../flex';
 
@@ -17,7 +17,6 @@ export const HStack = forwardRef<HTMLDivElement, HStack.Props>((props, ref) => {
 HStack.displayName = 'HStack';
 
 export namespace HStack {
-    type HStackPrimitiveProps = VComponentProps<typeof Flex>;
-
-    export interface Props extends HStackPrimitiveProps, HStackVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<typeof Flex, State> & HStackVariants;
 }
