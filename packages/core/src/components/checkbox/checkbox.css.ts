@@ -1,4 +1,3 @@
-import { globalStyle } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -107,27 +106,15 @@ export const icon = layerStyle('components', {
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
 
-    // selectors: {
-    //     [`${indicator}[data-checked] > &`]: {
-    //         strokeDashoffset: '44px',
-    //     },
+    selectors: {
+        [`${indicator.classNames.base}[data-checked] > &`]: {
+            strokeDashoffset: '44px',
+        },
 
-    //     [`${indicator}[data-readonly] > &`]: {
-    //         stroke: vars.color.foreground.hint['100'],
-    //     },
-    // },
-});
-
-globalStyle(`${indicator}[data-checked] > svg`, {
-    transition: 'all 0.2s',
-});
-
-globalStyle(`${indicator}[data-checked] > ${icon}`, {
-    strokeDashoffset: '44px',
-});
-
-globalStyle(`${indicator}[data-readonly] > ${icon}`, {
-    stroke: vars.color.foreground.hint['100'],
+        [`${indicator.classNames.base}[data-readonly] > &`]: {
+            stroke: vars.color.foreground.hint['100'],
+        },
+    },
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
