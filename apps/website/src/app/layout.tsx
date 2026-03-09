@@ -9,8 +9,8 @@ import { Inter } from 'next/font/google';
 import Script from 'next/script';
 
 import DefaultSearchDialog from '~/components/search/search';
-import { AppToastProvider } from '~/providers';
 import { ThemeSync } from '~/components/theme-sync';
+import { AppToastProvider } from '~/providers';
 
 const inter = Inter({
     subsets: ['latin'],
