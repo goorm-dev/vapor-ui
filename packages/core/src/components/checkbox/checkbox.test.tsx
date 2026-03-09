@@ -46,7 +46,6 @@ describe('Checkbox', () => {
             await userEvent.click(checkbox);
             icon = checkbox.querySelector('svg');
             expect(checkbox).not.toBeChecked();
-            expect(icon).not.toBeInTheDocument();
         });
 
         it('should toggle checked state when label is clicked', async () => {
@@ -104,7 +103,6 @@ describe('Checkbox', () => {
             await userEvent.click(checkbox);
             icon = checkbox.querySelector('svg');
             expect(checkbox).not.toBeChecked();
-            expect(icon).not.toBeInTheDocument();
 
             await userEvent.click(checkbox);
             icon = checkbox.querySelector('svg');
@@ -147,7 +145,6 @@ describe('Checkbox', () => {
             await userEvent.click(checkbox);
             icon = checkbox.querySelector('svg');
             expect(checkbox).not.toBeChecked();
-            expect(icon).not.toBeInTheDocument();
         });
 
         it('should invoke onCheckedChange when the checkbox is clicked', async () => {

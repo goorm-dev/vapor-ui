@@ -67,17 +67,17 @@ export const interaction = recipe({
                 },
             }),
             form: layerStyle('components', {
-                transition: 'border-color 150ms cubic-bezier(.4,0,.2,1)',
+                transition: 'box-shadow 150ms cubic-bezier(.4,0,.2,1)',
 
                 selectors: {
-                    '&:focus': { borderColor: vars.color.border.primary },
+                    '&:focus': { boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.primary}` },
                 },
 
                 '@media': {
                     '(hover: hover)': {
                         selectors: {
                             '&:hover:not(:focus)': {
-                                borderColor: `color-mix(in srgb, ${vars.color.gray[900]} 32%, transparent)`,
+                                boxShadow: `inset 0 0 0 0.0625rem color-mix(in srgb, ${vars.color.gray[900]} 32%, transparent)`,
                             },
                         },
                     },
