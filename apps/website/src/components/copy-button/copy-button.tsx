@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button, HStack, IconButton, Menu } from '@vapor-ui/core';
 import {
@@ -10,13 +10,13 @@ import {
     OpenInNewOutlineIcon,
 } from '@vapor-ui/icons';
 import { track } from '@vercel/analytics';
-import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 
 import {
     COPY_BUTTON_ACTIONS,
     type CopyButtonAction,
     createCopyButtonEventName,
 } from '~/constants/analytics';
+import { appToastManager } from '~/providers';
 
 import { AnthropicIcon, OpenAIIcon } from './copy-button.icons';
 
@@ -26,6 +26,7 @@ const openAIIcon = <OpenAIIcon />;
 
 const cache = new Map<string, string>();
 
+const CHECKED_RESET_DELAY = 1500;
 const TRUSTED_DOMAINS = ['vapor-ui.goorm.io', 'localhost'] as const;
 
 const isValidMarkdownUrl = (url: string): boolean => {
@@ -36,6 +37,28 @@ const isValidMarkdownUrl = (url: string): boolean => {
         );
     } catch {
         return false;
+    }
+};
+
+const showErrorToast = (title: string, description: string) => {
+    appToastManager.add({
+        title,
+        description,
+        colorPalette: 'danger',
+        priority: 'high',
+    });
+};
+
+const assertValidMarkdownUrl = (url: string) => {
+    if (!isValidMarkdownUrl(url)) {
+        throw new Error('문서 링크가 올바르지 않아 작업을 완료할 수 없습니다.');
+    }
+};
+
+const openWindowOrThrow = (url: string) => {
+    const opened = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!opened) {
+        throw new Error('새 탭을 열지 못했습니다. 팝업 차단 설정을 확인해 주세요.');
     }
 };
 
@@ -51,14 +74,11 @@ const LLM_URLS = {
 const LLM_PROMPT_MESSAGE = ' 문서를 읽고 질문에 답해줘.';
 
 const openLLMChat = (llmType: keyof typeof LLM_URLS, docUrl: string) => {
-    if (!isValidMarkdownUrl(docUrl)) {
-        console.error('Invalid doc URL:', docUrl);
-        return;
-    }
+    assertValidMarkdownUrl(docUrl);
 
     const prompt = encodeURIComponent(`${docUrl}${LLM_PROMPT_MESSAGE}`);
     const url = `${LLM_URLS[llmType]}?q=${prompt}`;
-    window.open(url, '_blank');
+    openWindowOrThrow(url);
 };
 
 const trackCopyButtonEvent = (action: CopyButtonAction, markdownUrl: string) => {
@@ -67,41 +87,91 @@ const trackCopyButtonEvent = (action: CopyButtonAction, markdownUrl: string) => 
 };
 
 export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
-    const [checked, onCopy] = useCopyButton(() => handleCopyContent());
+    const checkedTimeoutRef = useRef<number | null>(null);
+    const [checked, setChecked] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleCopyContent = async () => {
+    useEffect(() => {
+        return () => {
+            if (checkedTimeoutRef.current) {
+                window.clearTimeout(checkedTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    const markCopied = useCallback(() => {
+        if (checkedTimeoutRef.current) {
+            window.clearTimeout(checkedTimeoutRef.current);
+        }
+
+        setChecked(true);
+        checkedTimeoutRef.current = window.setTimeout(() => {
+            setChecked(false);
+        }, CHECKED_RESET_DELAY);
+    }, []);
+
+    const showCopyErrorToast = useCallback((error: unknown) => {
+        const description =
+            error instanceof Error && error.message
+                ? error.message
+                : '마크다운을 복사하지 못했습니다. 잠시 후 다시 시도해 주세요.';
+
+        showErrorToast('복사 실패', description);
+    }, []);
+
+    const showLinkErrorToast = useCallback((error: unknown) => {
+        const description =
+            error instanceof Error && error.message
+                ? error.message
+                : '링크를 열지 못했습니다. 잠시 후 다시 시도해 주세요.';
+
+        showErrorToast('링크 열기 실패', description);
+    }, []);
+
+    const handleCopyContent = useCallback(async () => {
         trackCopyButtonEvent(COPY_BUTTON_ACTIONS.COPY_MARKDOWN, markdownUrl);
 
-        const cached = cache.get(markdownUrl);
-        if (cached) {
-            await navigator.clipboard.writeText(cached);
-            return;
-        }
-
-        if (!isValidMarkdownUrl(markdownUrl)) {
-            console.error('Invalid markdown URL:', markdownUrl);
-            return;
-        }
-
-        setIsLoading(true);
         try {
+            assertValidMarkdownUrl(markdownUrl);
+
+            const cached = cache.get(markdownUrl);
+            if (cached) {
+                await navigator.clipboard.writeText(cached);
+                markCopied();
+                return;
+            }
+
+            setIsLoading(true);
+
             const res = await fetch(markdownUrl);
+            if (res.ok) {
+                throw new Error('문서를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+            }
+
             const content = await res.text();
             cache.set(markdownUrl, content);
             await navigator.clipboard.writeText(content);
+            markCopied();
+        } catch (error) {
+            console.error('Failed to copy markdown:', error);
+            showCopyErrorToast(error);
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [markCopied, markdownUrl, showCopyErrorToast]);
 
     const handleMenuItemClick = useCallback(
         (action: CopyButtonAction, handler: () => void) => {
-            if (!isValidMarkdownUrl(markdownUrl)) return;
-            trackCopyButtonEvent(action, markdownUrl);
-            handler();
+            try {
+                assertValidMarkdownUrl(markdownUrl);
+                trackCopyButtonEvent(action, markdownUrl);
+                handler();
+            } catch (error) {
+                console.error('Failed to open copy button action:', error);
+                showLinkErrorToast(error);
+            }
         },
-        [markdownUrl],
+        [markdownUrl, showLinkErrorToast],
     );
 
     const menuItems = useMemo(
@@ -110,7 +180,7 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
                 label: '마크다운으로 보기',
                 icon: markdownIcon,
                 action: COPY_BUTTON_ACTIONS.VIEW_MARKDOWN,
-                handler: () => window.open(markdownUrl, '_blank'),
+                handler: () => openWindowOrThrow(markdownUrl),
                 isExternal: true,
             },
             {
@@ -149,7 +219,7 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
             <Button
                 colorPalette="secondary"
                 variant="ghost"
-                onClick={onCopy}
+                onClick={handleCopyContent}
                 disabled={isLoading}
                 aria-busy={isLoading}
                 className="rounded-r-none"
