@@ -162,11 +162,14 @@ export namespace FloatingBarPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof Popover.Popup, State>;
 }
 
-export namespace FloatingBarPopup {
-    type SubElementProps = {
-        portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
-    };
+interface FloatingBarPopupProps extends FloatingBarPopupPrimitive.Props {
+    /**
+     * A Custom element for FloatingBar.PortalPrimitive. If not provided, the default FloatingBar.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
+}
 
+export namespace FloatingBarPopup {
     export type State = Popover.Popup.State;
-    export type Props = FloatingBarPopupPrimitive.Props & SubElementProps;
+    export type Props = FloatingBarPopupProps;
 }

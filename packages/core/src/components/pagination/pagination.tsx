@@ -91,10 +91,13 @@ export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPri
             },
         );
 
+        const state: PaginationRootPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
+
         const element = useRender({
             ref,
             render,
             defaultTagName: 'nav',
+            state,
             props: {
                 'aria-label': 'Pagination',
                 ...otherProps,
@@ -176,11 +179,16 @@ export const PaginationButtonPrimitive = forwardRef<
     const disabled = disabledProp || contextDisabled;
     const current = page === contextPage;
 
+    const state: PaginationButtonPrimitive.State = useMemo(
+        () => ({ disabled, current }),
+        [disabled, current],
+    );
+
     return useRender({
         ref,
         render,
         defaultTagName: 'button',
-        state: { current, disabled },
+        state,
         props: {
             'aria-label': `Page ${page}`,
             'aria-current': current ? 'page' : undefined,
@@ -226,11 +234,13 @@ export const PaginationPreviousPrimitive = forwardRef<
         props: { 'aria-hidden': 'true', className: styles.icon },
     });
 
+    const state: PaginationPreviousPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
+
     return useRender({
         ref,
         render,
         defaultTagName: 'button',
-        state: { disabled },
+        state,
         props: {
             'aria-label': 'Previous Page',
             disabled,
@@ -295,11 +305,13 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             props: { 'aria-hidden': 'true', className: styles.icon },
         });
 
+        const state: PaginationNextPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
+
         return useRender({
             ref,
             render,
             defaultTagName: 'button',
-            state: { disabled },
+            state,
             props: {
                 'aria-label': 'Next Page',
                 disabled,
@@ -344,11 +356,13 @@ export const PaginationEllipsisPrimitive = forwardRef<
         props: { width: 'max(16px, 50%)', height: 'max(16px, 50%)' },
     });
 
+    const state: PaginationEllipsisPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
+
     return useRender({
         ref,
         render,
         defaultTagName: 'span',
-        state: { disabled },
+        state,
         props: {
             role: 'presentation',
             'aria-hidden': 'true',
@@ -529,38 +543,64 @@ interface PaginationContext extends PaginationVariants {
     disabled: boolean;
 }
 
-type PaginationRootBaseProps = VaporUIComponentProps<'nav', {}> & PaginationVariants;
-type PaginationRootSharedProps = {
+interface PaginationRootPrimitiveProps
+    extends PaginationVariants, VaporUIComponentProps<'nav', PaginationRootPrimitive.State> {
+    /**
+     * The total number of pages.
+     */
     totalPages: number;
+    /**
+     * The selected page of the paginations. Use when controlled.
+     */
     page?: number;
+    /**
+     * The default selected page of the paginations. Use when uncontrolled.
+     */
     defaultPage?: number;
+    /**
+     * Event handler called when the selected page of the pagination changes.
+     */
     onPageChange?: (page: number, eventDetails: PaginationRootPrimitive.ChangeEventDetails) => void;
 
+    /**
+     * The number of page items to show on each side of the current page item.
+     * @default 2
+     */
     siblingCount?: number;
+    /**
+     * The number of page items to show for the start and end pages.
+     * @default 1
+     */
     boundaryCount?: number;
+    /**
+     * Whether the component should ignore user interaction.
+     * @default false
+     */
     disabled?: boolean;
-};
+}
 
-export type PaginationRootProps = PaginationRootBaseProps & PaginationRootSharedProps;
-
-type PaginationRootChangeEventReason = 'item-press';
-type PaginationRootChangeEventDetails = MakeChangeEventDetails<PaginationRoot.ChangeEventReason>;
+interface PaginationRootPrimitiveState {
+    [key: string]: unknown;
+    /**
+     * Whether the component should ignore user interaction.
+     */
+    disabled: boolean;
+}
 
 export namespace PaginationRootPrimitive {
-    // TODO: disabled state
-    export type State = {};
-    export type Props = PaginationRootProps;
+    export type State = PaginationRootPrimitiveState;
+    export type Props = PaginationRootPrimitiveProps;
 
-    export type ChangeEventReason = PaginationRootChangeEventReason;
-    export type ChangeEventDetails = PaginationRootChangeEventDetails;
+    export type ChangeEventReason = 'item-press';
+    export type ChangeEventDetails = MakeChangeEventDetails<PaginationRoot.ChangeEventReason>;
 }
 
 export namespace PaginationRoot {
     export type State = PaginationRootPrimitive.State;
     export type Props = PaginationRootPrimitive.Props;
 
-    export type ChangeEventReason = PaginationRootChangeEventReason;
-    export type ChangeEventDetails = PaginationRootChangeEventDetails;
+    export type ChangeEventReason = PaginationRootPrimitive.ChangeEventReason;
+    export type ChangeEventDetails = PaginationRootPrimitive.ChangeEventDetails;
 }
 
 export namespace PaginationListPrimitive {
@@ -573,12 +613,31 @@ export namespace PaginationItemPrimitive {
     export type Props = VaporUIComponentProps<'li', State>;
 }
 
-type PaginationButtonPrimitiveProps = VaporUIComponentProps<'button', {}>;
-export type PaginationButtonProps = PaginationButtonPrimitiveProps & { page: number };
+interface PaginationButtonPrimitiveState {
+    [key: string]: unknown;
+    /**
+     * Whether the button is the currently active page.
+     */
+    current: boolean;
+    /**
+     * Whether the component should ignore user interaction.
+     */
+    disabled: boolean;
+}
+
+interface PaginationButtonPrimitiveProps extends VaporUIComponentProps<
+    'button',
+    PaginationButtonPrimitive.State
+> {
+    /**
+     * The controlled page number of the items that should be displayed.
+     */
+    page: number;
+}
 
 export namespace PaginationButtonPrimitive {
-    export type State = {};
-    export type Props = PaginationButtonProps;
+    export type State = PaginationButtonPrimitiveState;
+    export type Props = PaginationButtonPrimitiveProps;
 }
 
 export namespace PaginationButton {
@@ -586,8 +645,16 @@ export namespace PaginationButton {
     export type Props = PaginationButtonPrimitive.Props;
 }
 
+interface PaginationPreviousPrimitiveState {
+    [key: string]: unknown;
+    /**
+     * Whether the component should ignore user interaction.
+     */
+    disabled: boolean;
+}
+
 export namespace PaginationPreviousPrimitive {
-    export type State = {};
+    export type State = PaginationPreviousPrimitiveState;
     export type Props = VaporUIComponentProps<'button', State>;
 }
 
@@ -596,8 +663,16 @@ export namespace PaginationPrevious {
     export type Props = PaginationPreviousPrimitive.Props;
 }
 
+interface PaginationNextPrimitiveState {
+    [key: string]: unknown;
+    /**
+     * Whether the component should ignore user interaction.
+     */
+    disabled: boolean;
+}
+
 export namespace PaginationNextPrimitive {
-    export type State = {};
+    export type State = PaginationNextPrimitiveState;
     export type Props = VaporUIComponentProps<'button', State>;
 }
 
@@ -606,14 +681,16 @@ export namespace PaginationNext {
     export type Props = PaginationNextPrimitive.Props;
 }
 
-export namespace PaginationItems {
-    type ItemsPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Fragment>, 'children'>;
-    type ItemsRenderProps = {
-        children?: React.ReactNode | ((pages: PageType[]) => React.ReactNode);
-    };
+interface PaginationItemsPrimitiveProps extends Omit<
+    ComponentPropsWithoutRef<typeof Fragment>,
+    'children'
+> {
+    children?: React.ReactNode | ((pages: PageType[]) => React.ReactNode);
+}
 
+export namespace PaginationItems {
     export type State = {};
-    export type Props = ItemsPrimitiveProps & ItemsRenderProps;
+    export type Props = PaginationItemsPrimitiveProps;
 }
 
 export namespace PaginationEllipsisPrimitive {

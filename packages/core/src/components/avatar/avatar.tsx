@@ -209,17 +209,23 @@ type ImageProps = Omit<BaseAvatar.Image.Props, keyof BaseAvatar.Root.Props>;
 type AvatarVariants = RootVariants & FallbackVariants;
 type AvatarContext = AvatarVariants & ImageProps & Pick<BaseAvatar.Fallback.Props, 'delay'>;
 
-export namespace AvatarRoot {
-    type SubElementProps = {
-        imageElement?: ReactElement<AvatarImagePrimitive.Props>;
-        fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
-    };
+interface AvatarRootProps extends Assign<
+    VaporUIComponentProps<typeof BaseAvatar.Root, AvatarRoot.State>,
+    AvatarContext
+> {
+    /**
+     * A Custom element for Avatar.ImagePrimitive. If not provided, the default Avatar.ImagePrimitive will be rendered.
+     */
+    imageElement?: ReactElement<AvatarImagePrimitive.Props>;
+    /**
+     * A Custom element for Avatar.FallbackPrimitive. If not provided, the default Avatar.FallbackPrimitive will be rendered.
+     */
+    fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
+}
 
+export namespace AvatarRoot {
     export type State = BaseAvatar.Root.State;
-    export type Props = Assign<
-        VaporUIComponentProps<typeof BaseAvatar.Root, State>,
-        AvatarContext & SubElementProps
-    >;
+    export type Props = AvatarRootProps;
 }
 
 export namespace AvatarImagePrimitive {

@@ -490,14 +490,21 @@ export namespace MenuPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
 }
 
-export namespace MenuPopup {
-    type SubElementProps = {
-        portalElement?: ReactElement<MenuPortalPrimitive.Props>;
-        positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
-    };
+interface MenuPopupProps extends MenuPopupPrimitive.Props {
+    /**
+     * A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<MenuPortalPrimitive.Props>;
 
+    /**
+     * A Custom element for Menu.PositionerPrimitive. If not provided, the default Menu.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
+}
+
+export namespace MenuPopup {
     export type State = MenuPopupPrimitive.State;
-    export type Props = MenuPopupPrimitive.Props & SubElementProps;
+    export type Props = MenuPopupProps;
 }
 
 export namespace MenuItem {
@@ -537,14 +544,21 @@ export namespace MenuSubmenuPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
 }
 
-export namespace MenuSubmenuPopup {
-    type SubElementProps = {
-        portalElement?: ReactElement<MenuPortalPrimitive.Props>;
-        positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
-    };
+interface MenuSubmenuPopupProps extends MenuSubmenuPopupPrimitive.Props {
+    /**
+     * A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<MenuPortalPrimitive.Props>;
 
+    /**
+     * A Custom element for Menu.PositionerPrimitive. If not provided, the default Menu.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
+}
+
+export namespace MenuSubmenuPopup {
     export type State = MenuSubmenuPopupPrimitive.State;
-    export type Props = MenuSubmenuPopupPrimitive.Props & SubElementProps;
+    export type Props = MenuSubmenuPopupProps;
 }
 
 export namespace MenuCheckboxItemPrimitive {

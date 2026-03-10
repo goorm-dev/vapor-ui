@@ -16,9 +16,7 @@ import * as styles from './dialog.css';
 import type { DialogPopupVariants } from './dialog.css';
 
 type DialogVariants = DialogPopupVariants;
-type DialogSharedProps = DialogVariants;
-
-type DialogContext = DialogSharedProps;
+type DialogContext = DialogVariants;
 
 const [DialogProvider, useDialogContext] = createContext<DialogContext>({
     name: 'Dialog',
@@ -241,10 +239,23 @@ DialogFooter.displayName = 'Dialog.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/
 
+interface DialogRootProps
+    extends
+        DialogVariants,
+        Omit<
+            VaporUIComponentProps<typeof BaseDialog.Root, DialogRoot.State>,
+            'disablePointerDismissal'
+        > {
+    /**
+     * Determines whether the dialog should close on outside clicks.
+     * @default false
+     */
+    closeOnClickOverlay?: boolean;
+}
+
 export namespace DialogRoot {
     export type State = {};
-    export type Props = Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> &
-        DialogSharedProps & { closeOnClickOverlay?: boolean };
+    export type Props = DialogRootProps;
 
     export type Actions = BaseDialog.Root.Actions;
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
@@ -265,14 +276,20 @@ export namespace DialogPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State>;
 }
 
-export namespace DialogPopup {
-    type SubElementProps = {
-        portalElement?: ReactElement<DialogPortalPrimitive.Props>;
-        overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
-    };
+interface DialogPopupProps extends DialogPopupPrimitive.Props {
+    /**
+     * A Custom element for Dialog.PortalPrimitive. If not provided, the default Dialog.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<DialogPortalPrimitive.Props>;
+    /**
+     * A Custom element for Dialog.OverlayPrimitive. If not provided, the default Dialog.OverlayPrimitive will be rendered.
+     */
+    overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
+}
 
+export namespace DialogPopup {
     export type State = DialogPopupPrimitive.State;
-    export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State> & SubElementProps;
+    export type Props = DialogPopupProps;
 }
 
 export namespace DialogTrigger {

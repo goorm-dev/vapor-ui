@@ -269,12 +269,18 @@ export namespace TooltipPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseTooltip.Popup, State>;
 }
 
-export namespace TooltipPopup {
-    type SubElementProps = {
-        portalElement?: ReactElement<TooltipPortalPrimitive.Props>;
-        positionerElement?: ReactElement<TooltipPositionerPrimitive.Props>;
-    };
+interface TooltipPopupProps extends TooltipPopupPrimitive.Props {
+    /**
+     * A custom element for Tooltip.PortalPrimitive. If not provided, the default Tooltip.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<TooltipPortalPrimitive.Props>;
+    /**
+     * A custom element for Tooltip.PositionerPrimitive. If not provided, the default Tooltip.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<TooltipPositionerPrimitive.Props>;
+}
 
+export namespace TooltipPopup {
     export type State = TooltipPopupPrimitive.State;
-    export type Props = TooltipPopupPrimitive.Props & SubElementProps;
+    export type Props = TooltipPopupProps;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
 import { useRender } from '@base-ui/react/use-render';
@@ -11,7 +11,7 @@ import { useInputGroup } from '~/components/input-group/input-group';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VaporUIComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { TextareaVariants } from './textarea.css';
 import * as styles from './textarea.css';
@@ -37,8 +37,8 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         'autoResize',
     ]);
 
-    const { invalid, autoResize } = variantProps;
-    const { disabled, readOnly, required, maxLength } = otherProps;
+    const { invalid = false, autoResize } = variantProps;
+    const { disabled = false, readOnly = false, required = false, maxLength } = otherProps;
 
     const [value, setValue] = useControlled({
         controlled: valueProp,
@@ -61,9 +61,14 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         setValue(newValue);
     };
 
+    const state: Textarea.State = useMemo(
+        () => ({ disabled, readOnly, required, invalid }),
+        [disabled, readOnly, required, invalid],
+    );
+
     return useRender({
         ref: composedRef,
-        state: { disabled, readOnly, required, invalid },
+        state,
         render: render || <BaseField.Control render={<textarea />} />,
         props: {
             ...(isControlled ? { value } : { defaultValue }),
@@ -107,18 +112,45 @@ export function useAutoResize({ ref, value, autoResize }: AutoResizeOptions) {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export namespace Textarea {
-    type TextareaFieldProps = {
-        value?: string;
-        defaultValue?: string;
-        onValueChange?: (value: string, event: Textarea.ChangeEventDetails) => void;
-    };
+interface TextareaState {
+    [key: string]: unknown;
+    /**
+     * Whether the component should ignore user interaction.
+     */
+    disabled: boolean;
+    /**
+     * Whether the user should be unable to edit the textarea.
+     */
+    readOnly: boolean;
+    /**
+     * Whether the user must fill out the textarea before submitting a form.
+     */
+    required: boolean;
+    /**
+     * Whether the component is in an error state.
+     */
+    invalid: boolean;
+}
 
-    export type State = {};
-    export type Props = Assign<
-        VaporUIComponentProps<'textarea', State>,
-        TextareaFieldProps & TextareaVariants
-    >;
+interface TextareaFieldProps
+    extends VaporUIComponentProps<'textarea', TextareaState>, TextareaVariants {
+    /**
+     * The value of the textarea. Use when controlled.
+     */
+    value?: string;
+    /**
+     * The default value of the textarea. Use when uncontrolled.
+     */
+    defaultValue?: string;
+    /**
+     * Event handler called when the value of the textarea changes.
+     */
+    onValueChange?: (value: string, event: Textarea.ChangeEventDetails) => void;
+}
+
+export namespace Textarea {
+    export type State = TextareaState;
+    export type Props = TextareaFieldProps;
 
     export type ChangeEventDetails = BaseField.Control.ChangeEventDetails;
 }

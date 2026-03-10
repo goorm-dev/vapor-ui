@@ -6,7 +6,7 @@ import { Field as BaseField } from '@base-ui/react/field';
 import clsx from 'clsx';
 
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VaporUIComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { LabelVariants } from './field.css';
 import * as styles from './field.css';
@@ -128,25 +128,40 @@ export namespace FieldDescription {
     export type Props = VaporUIComponentProps<typeof BaseField.Description, State>;
 }
 
-export namespace FieldError {
-    type ErrorValidityState = Omit<BaseField.ValidityData['state'], 'valid'>;
-    type ErrorMatchProps = { match?: boolean | keyof ErrorValidityState };
+interface FieldErrorProps extends Omit<
+    VaporUIComponentProps<typeof BaseField.Error, FieldError.State>,
+    'match'
+> {
+    /**
+     * Determines whether to show the error message according to the field’s
+     * [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).
+     * @links https://github.com/mui/base-ui/blob/62e28c641db6d90647936ff0367d2b27641b7830/packages/react/src/field/error/FieldError.tsx#L137
+     * @default false
+     */
+    match?: boolean | keyof Omit<BaseField.ValidityData['state'], 'valid'>;
+}
 
+export namespace FieldError {
     export type State = BaseField.Error.State;
-    export type Props = Assign<
-        VaporUIComponentProps<typeof BaseField.Error, State>,
-        ErrorMatchProps
-    >;
+    export type Props = FieldErrorProps;
+}
+
+interface FieldSuccessProps extends Omit<
+    VaporUIComponentProps<typeof BaseField.Error, FieldSuccess.State>,
+    'match'
+> {
+    /**
+     * Determines whether to show the success message according to the field’s
+     * [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).
+     * @links https://github.com/mui/base-ui/blob/62e28c641db6d90647936ff0367d2b27641b7830/packages/react/src/field/error/FieldError.tsx#L137
+     * @default false
+     */
+    match?: boolean | 'valid';
 }
 
 export namespace FieldSuccess {
-    type SuccessMatchProps = { match?: boolean | 'valid' };
-
     export type State = BaseField.Error.State;
-    export type Props = Assign<
-        VaporUIComponentProps<typeof BaseField.Error, State>,
-        SuccessMatchProps
-    >;
+    export type Props = FieldSuccessProps;
 }
 
 export namespace FieldItem {

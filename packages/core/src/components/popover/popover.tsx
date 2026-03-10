@@ -286,14 +286,20 @@ export namespace PopoverPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BasePopover.Popup, State>;
 }
 
-export namespace PopoverPopup {
-    type SubElementProps = {
-        portalElement?: ReactElement<PopoverPortalPrimitive.Props>;
-        positionerElement?: ReactElement<PopoverPositionerPrimitive.Props>;
-    };
+interface PopoverPopupProps extends PopoverPopupPrimitive.Props {
+    /**
+     * A Custom element for Popover.PortalPrimitive. If not provided, the default Popover.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<PopoverPortalPrimitive.Props>;
+    /**
+     * A Custom element for Popover.PositionerPrimitive. If not provided, the default Popover.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<PopoverPositionerPrimitive.Props>;
+}
 
+export namespace PopoverPopup {
     export type State = PopoverPopupPrimitive.State;
-    export type Props = PopoverPopupPrimitive.Props & SubElementProps;
+    export type Props = PopoverPopupProps;
 }
 
 export namespace PopoverTitle {

@@ -375,16 +375,21 @@ export namespace useToastManager {
     >;
 }
 
-export namespace ToastProviderPrimitive {
-    type ToastProviderSharedProps = { toastManager?: ToastManager };
+interface ToastProviderPrimitiveProps extends BaseToast.Provider.Props {
+    /**
+     * A global manager for toasts to use outside of a React component.
+     */
+    toastManager?: ToastManager;
+}
 
-    export type Props = BaseToast.Provider.Props & ToastProviderSharedProps;
+export namespace ToastProviderPrimitive {
+    export type State = {};
+    export type Props = ToastProviderPrimitiveProps;
 }
 
 export namespace ToastProvider {
-    type ToastProviderSharedProps = { toastManager?: ToastManager };
-
-    export type Props = Omit<BaseToast.Provider.Props, 'toastManager'> & ToastProviderSharedProps;
+    export type State = ToastProviderPrimitive.State;
+    export type Props = ToastProviderPrimitive.Props;
 }
 
 export namespace ToastPortalPrimitive {
@@ -397,14 +402,18 @@ export namespace ToastViewportPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseToast.Viewport, State>;
 }
 
+interface ToastRootPrimitiveProps extends Omit<
+    VaporUIComponentProps<typeof BaseToast.Root, ToastRootPrimitive.State>,
+    'toast'
+> {
+    toast: ToastObjectType<AnyProp>;
+}
+
 export namespace ToastRootPrimitive {
-    type ToastObjectProps = { toast: ToastObjectType<AnyProp> };
-
     export type State = BaseToast.Root.State;
-    export type Props = Omit<VaporUIComponentProps<typeof BaseToast.Root, State>, 'toast'> &
-        ToastObjectProps;
+    export type Props = ToastRootPrimitiveProps;
 
-    export interface ToastObject<Data extends object = AnyProp> extends ToastObjectType<Data> {}
+    export type ToastObject<Data extends object = AnyProp> = ToastObjectType<Data>;
 }
 
 export namespace ToastContentPrimitive {

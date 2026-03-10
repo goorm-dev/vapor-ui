@@ -324,15 +324,24 @@ export namespace SheetPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State>;
 }
 
-export namespace SheetPopup {
-    type SubElementProps = {
-        portalElement?: ReactElement<SheetPortalPrimitive.Props>;
-        overlayElement?: ReactElement<SheetOverlayPrimitive.Props>;
-        positionerElement?: ReactElement<SheetPositionerPrimitive.Props>;
-    };
+interface SheetPopupProps extends SheetPopupPrimitive.Props {
+    /**
+     * A Custom element for Sheet.PortalPrimitive. If not provided, the default Sheet.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<SheetPortalPrimitive.Props>;
+    /**
+     * A Custom element for Sheet.OverlayPrimitive. If not provided, the default Sheet.OverlayPrimitive will be rendered.
+     */
+    overlayElement?: ReactElement<SheetOverlayPrimitive.Props>;
+    /**
+     * A Custom element for Sheet.PositionerPrimitive. If not provided, the default Sheet.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<SheetPositionerPrimitive.Props>;
+}
 
+export namespace SheetPopup {
     export type State = SheetPopupPrimitive.State;
-    export type Props = SheetPopupPrimitive.Props & SubElementProps;
+    export type Props = SheetPopupProps;
 }
 
 export namespace SheetHeader {

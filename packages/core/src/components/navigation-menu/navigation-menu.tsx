@@ -461,12 +461,36 @@ export namespace NavigationMenuItem {
     export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Item, State>;
 }
 
+interface NavigationMenuLinkState extends Omit<BaseNavigationMenu.Link.State, 'active'> {
+    /**
+     * Whether the link is the currently active page.
+     */
+    current: boolean;
+    /**
+     * Whether the component should ignore user interaction.
+     */
+    disabled: boolean;
+}
+
+interface NavigationMenuLinkProps extends Omit<
+    VaporUIComponentProps<typeof BaseNavigationMenu.Link, NavigationMenuLink.State>,
+    'active'
+> {
+    /**
+     * Whether the link is the currently active page.
+     * @default false
+     */
+    current?: boolean;
+    /**
+     * Whether the component should ignore user interaction.
+     * @default false
+     */
+    disabled?: boolean;
+}
+
 export namespace NavigationMenuLink {
-    export type State = BaseNavigationMenu.Link.State;
-    export type Props = Omit<
-        VaporUIComponentProps<typeof BaseNavigationMenu.Link, State>,
-        'active'
-    > & { current?: boolean; disabled?: boolean };
+    export type State = NavigationMenuLinkState;
+    export type Props = NavigationMenuLinkProps;
 }
 
 export namespace NavigationMenuTriggerPrimitive {
@@ -509,13 +533,22 @@ export namespace NavigationMenuViewportPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Viewport, State>;
 }
 
-export namespace NavigationMenuViewport {
-    type SubElementProps = {
-        portalElement?: ReactElement<NavigationMenuPortalPrimitive.Props>;
-        positionerElement?: ReactElement<NavigationMenuPositionerPrimitive.Props>;
-        popupElement?: ReactElement<NavigationMenuPopupPrimitive.Props>;
-    };
+interface NavigationMenuViewportProps extends NavigationMenuViewportPrimitive.Props {
+    /**
+     * A Custom element for NavigationMenu.PortalPrimitive. If not provided, the default NavigationMenu.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<NavigationMenuPortalPrimitive.Props>;
+    /**
+     * A Custom element for NavigationMenu.PositionerPrimitive. If not provided, the default NavigationMenu.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<NavigationMenuPositionerPrimitive.Props>;
+    /**
+     * A Custom element for NavigationMenu.PopupPrimitive. If not provided, the default NavigationMenu.PopupPrimitive will be rendered.
+     */
+    popupElement?: ReactElement<NavigationMenuPopupPrimitive.Props>;
+}
 
+export namespace NavigationMenuViewport {
     export type State = NavigationMenuViewportPrimitive.State;
-    export type Props = NavigationMenuViewportPrimitive.Props & SubElementProps;
+    export type Props = NavigationMenuViewportProps;
 }

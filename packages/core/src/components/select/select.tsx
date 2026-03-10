@@ -18,13 +18,6 @@ import type { VaporUIComponentProps } from '~/utils/types';
 import * as styles from './select.css';
 import type { TriggerVariants } from './select.css';
 
-type SelectVariants = TriggerVariants;
-type SelectSharedProps = SelectVariants & {
-    placeholder?: ReactNode;
-};
-
-type SelectContext = SelectSharedProps & Pick<SelectRoot.Props<unknown>, 'items' | 'required'>;
-
 const [SelectProvider, useSelectContext] = createContext<SelectContext>({
     name: 'SelectContext',
     providerName: 'SelectProvider',
@@ -36,17 +29,19 @@ const [SelectProvider, useSelectContext] = createContext<SelectContext>({
  * -----------------------------------------------------------------------------------------------*/
 
 export const SelectRoot = <Value,>(props: SelectRoot.Props<Value>) => {
-    const [sharedProps, otherProps] = createSplitProps<SelectSharedProps>()(props, [
+    const [contextProps, otherProps] = createSplitProps<SelectContext>()(props, [
         'placeholder',
         'size',
         'invalid',
+        'items',
+        'required',
     ]);
 
-    const { items, required } = otherProps;
+    const { items, required } = contextProps;
 
     return (
-        <SelectProvider value={{ items, required, ...sharedProps }}>
-            <BaseSelect.Root {...otherProps} multiple={false} />
+        <SelectProvider value={contextProps}>
+            <BaseSelect.Root items={items} required={required} {...otherProps} multiple={false} />
         </SelectProvider>
     );
 };
@@ -385,10 +380,22 @@ SelectSeparator.displayName = 'Select.Separator';
 
 /* -----------------------------------------------------------------------------------------------*/
 
+type SelectVariants = TriggerVariants;
+type SelectContext = Pick<SelectRoot.Props<unknown>, 'items' | 'required' | 'placeholder'> &
+    SelectVariants;
+
+interface SelectRootProps<Value = unknown>
+    extends SelectVariants, Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> {
+    /**
+     * The placeholder value to display when no value is selected.
+     * This is overridden by `children` of Select.Value if specified, or by a null item's label in `items`.
+     */
+    placeholder?: ReactNode;
+}
+
 export namespace SelectRoot {
     export type State = BaseSelect.Root.State;
-    export type Props<Value = unknown> = Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> &
-        SelectSharedProps;
+    export type Props<Value = unknown> = SelectRootProps<Value>;
 
     export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
@@ -406,7 +413,7 @@ export namespace SelectTrigger {
 
 export namespace SelectValuePrimitive {
     export type State = BaseSelect.Value.State;
-    export type Props = VaporUIComponentProps<typeof BaseSelect.Value, State>;
+    export type Props = Omit<VaporUIComponentProps<typeof BaseSelect.Value, State>, 'placeholder'>;
 }
 
 export namespace SelectPlaceholderPrimitive {
@@ -434,14 +441,20 @@ export namespace SelectPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseSelect.Popup, State>;
 }
 
-export namespace SelectPopup {
-    type SubElementProps = {
-        portalElement?: ReactElement<SelectPortalPrimitive.Props>;
-        positionerElement?: ReactElement<SelectPositionerPrimitive.Props>;
-    };
+interface SelectPopupProps extends SelectPopupPrimitive.Props {
+    /**
+     * A Custom element for Select.PortalPrimitive. If not provided, the default Select.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<SelectPortalPrimitive.Props>;
+    /**
+     * A Custom element for Select.PositionerPrimitive. If not provided, the default Select.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<SelectPositionerPrimitive.Props>;
+}
 
+export namespace SelectPopup {
     export type State = SelectPopupPrimitive.State;
-    export type Props = SelectPopupPrimitive.Props & SubElementProps;
+    export type Props = SelectPopupProps;
 }
 
 export namespace SelectItemPrimitive {

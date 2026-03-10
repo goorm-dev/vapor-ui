@@ -10,7 +10,7 @@ import { useInputGroup } from '~/components/input-group';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VaporUIComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
@@ -71,15 +71,32 @@ TextInput.displayName = 'TextInput';
 /* -----------------------------------------------------------------------------------------------*/
 
 type TextInputVariants = RootVariants;
-type BaseProps = TextInputVariants & {
+
+interface TextInputProps
+    extends
+        Omit<VaporUIComponentProps<typeof BaseInput, TextInput.State>, 'size'>,
+        TextInputVariants {
+    /**
+     * The type of the input element. It determines the kind of data that can be entered.
+     * @default 'text'
+     */
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
+    /**
+     * The value of the input. Use when controlled.
+     */
     value?: string;
+    /**
+     * The default value of the input. Use when uncontrolled.
+     */
     defaultValue?: string;
+    /**
+     * Event handler called when the selected value of the input changes.
+     */
     onValueChange?: (value: string, event: TextInput.ChangeEventDetails) => void;
-};
+}
 
 export namespace TextInput {
     export type State = BaseInput.State;
-    export type Props = Assign<VaporUIComponentProps<typeof BaseInput, State>, BaseProps>;
+    export type Props = TextInputProps;
     export type ChangeEventDetails = BaseInput.ChangeEventDetails;
 }

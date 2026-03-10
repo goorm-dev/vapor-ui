@@ -473,14 +473,20 @@ export namespace MultiSelectPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseSelect.Popup, State>;
 }
 
-export namespace MultiSelectPopup {
-    type SubElementProps = {
-        portalElement?: ReactElement<MultiSelectPortalPrimitive.Props>;
-        positionerElement?: ReactElement<MultiSelectPositionerPrimitive.Props>;
-    };
+interface MultiSelectPopupProps extends MultiSelectPopupPrimitive.Props {
+    /**
+     * A Custom element for MultiSelect.PortalPrimitive. If not provided, the default MultiSelect.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<MultiSelectPortalPrimitive.Props>;
+    /**
+     * A Custom element for MultiSelect.PositionerPrimitive. If not provided, the default MultiSelect.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<MultiSelectPositionerPrimitive.Props>;
+}
 
+export namespace MultiSelectPopup {
     export type State = BaseSelect.Popup.State;
-    export type Props = MultiSelectPopupPrimitive.Props & SubElementProps;
+    export type Props = MultiSelectPopupProps;
 }
 
 export namespace MultiSelectItemPrimitive {
