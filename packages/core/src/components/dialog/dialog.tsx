@@ -240,12 +240,7 @@ DialogFooter.displayName = 'Dialog.Footer';
 /* -----------------------------------------------------------------------------------------------*/
 
 interface DialogRootProps
-    extends
-        DialogVariants,
-        Omit<
-            VaporUIComponentProps<typeof BaseDialog.Root, DialogRoot.State>,
-            'disablePointerDismissal'
-        > {
+    extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
      * Determines whether the dialog should close on outside clicks.
      * @default false
