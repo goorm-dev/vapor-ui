@@ -83,7 +83,7 @@ Textarea.displayName = 'Textarea';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface AutoResizeOptions extends Pick<Textarea.Props, 'value' | 'autoResize'> {
+export interface AutoResizeOptions extends Pick<Textarea.Props, 'value' | 'autoResize'> {
     ref: React.RefObject<HTMLTextAreaElement | null>;
 }
 
@@ -112,7 +112,7 @@ export function useAutoResize({ ref, value, autoResize }: AutoResizeOptions) {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface TextareaState {
+export interface TextareaState {
     [key: string]: unknown;
     /**
      * Whether the component should ignore user interaction.
@@ -132,7 +132,7 @@ interface TextareaState {
     invalid: boolean;
 }
 
-interface TextareaFieldProps
+export interface TextareaFieldProps
     extends VaporUIComponentProps<'textarea', TextareaState>, TextareaVariants {
     /**
      * The value of the textarea. Use when controlled.

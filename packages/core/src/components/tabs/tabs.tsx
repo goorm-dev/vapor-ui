@@ -167,7 +167,7 @@ export namespace TabsIndicatorPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseTabs.Indicator, State>;
 }
 
-interface TabsListProps extends TabsListPrimitive.Props {
+export interface TabsListProps extends TabsListPrimitive.Props {
     /**
      * A Custom element for Tabs.IndicatorPrimitive. If not provided, the default Tabs.IndicatorPrimitive will be rendered.
      */

@@ -298,7 +298,7 @@ ToastClosePrimitive.displayName = 'Toast.ClosePrimitive';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface UseToastManager {
+export interface UseToastManager {
     toasts: ToastObjectType<AnyProp>[];
     add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
     update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
@@ -375,7 +375,7 @@ export namespace useToastManager {
     >;
 }
 
-interface ToastProviderPrimitiveProps extends BaseToast.Provider.Props {
+export interface ToastProviderPrimitiveProps extends BaseToast.Provider.Props {
     /**
      * A global manager for toasts to use outside of a React component.
      */
@@ -402,7 +402,7 @@ export namespace ToastViewportPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseToast.Viewport, State>;
 }
 
-interface ToastRootPrimitiveProps extends Omit<
+export interface ToastRootPrimitiveProps extends Omit<
     VaporUIComponentProps<typeof BaseToast.Root, ToastRootPrimitive.State>,
     'toast'
 > {

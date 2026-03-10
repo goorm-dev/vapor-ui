@@ -239,7 +239,7 @@ DialogFooter.displayName = 'Dialog.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface DialogRootProps
+export interface DialogRootProps
     extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
      * Determines whether the dialog should close on outside clicks.
@@ -271,7 +271,7 @@ export namespace DialogPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State>;
 }
 
-interface DialogPopupProps extends DialogPopupPrimitive.Props {
+export interface DialogPopupProps extends DialogPopupPrimitive.Props {
     /**
      * A Custom element for Dialog.PortalPrimitive. If not provided, the default Dialog.PortalPrimitive will be rendered.
      */

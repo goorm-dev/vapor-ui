@@ -269,7 +269,7 @@ export namespace TooltipPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseTooltip.Popup, State>;
 }
 
-interface TooltipPopupProps extends TooltipPopupPrimitive.Props {
+export interface TooltipPopupProps extends TooltipPopupPrimitive.Props {
     /**
      * A custom element for Tooltip.PortalPrimitive. If not provided, the default Tooltip.PortalPrimitive will be rendered.
      */

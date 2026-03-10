@@ -461,7 +461,7 @@ export namespace NavigationMenuItem {
     export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Item, State>;
 }
 
-interface NavigationMenuLinkState extends Omit<BaseNavigationMenu.Link.State, 'active'> {
+export interface NavigationMenuLinkState extends Omit<BaseNavigationMenu.Link.State, 'active'> {
     /**
      * Whether the link is the currently active page.
      */
@@ -472,7 +472,7 @@ interface NavigationMenuLinkState extends Omit<BaseNavigationMenu.Link.State, 'a
     disabled: boolean;
 }
 
-interface NavigationMenuLinkProps extends Omit<
+export interface NavigationMenuLinkProps extends Omit<
     VaporUIComponentProps<typeof BaseNavigationMenu.Link, NavigationMenuLink.State>,
     'active'
 > {
@@ -533,7 +533,7 @@ export namespace NavigationMenuViewportPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Viewport, State>;
 }
 
-interface NavigationMenuViewportProps extends NavigationMenuViewportPrimitive.Props {
+export interface NavigationMenuViewportProps extends NavigationMenuViewportPrimitive.Props {
     /**
      * A Custom element for NavigationMenu.PortalPrimitive. If not provided, the default NavigationMenu.PortalPrimitive will be rendered.
      */

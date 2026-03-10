@@ -384,7 +384,7 @@ type SelectVariants = TriggerVariants;
 type SelectContext = Pick<SelectRoot.Props<unknown>, 'items' | 'required' | 'placeholder'> &
     SelectVariants;
 
-interface SelectRootProps<Value = unknown>
+export interface SelectRootProps<Value = unknown>
     extends SelectVariants, Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> {
     /**
      * The placeholder value to display when no value is selected.
@@ -441,7 +441,7 @@ export namespace SelectPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseSelect.Popup, State>;
 }
 
-interface SelectPopupProps extends SelectPopupPrimitive.Props {
+export interface SelectPopupProps extends SelectPopupPrimitive.Props {
     /**
      * A Custom element for Select.PortalPrimitive. If not provided, the default Select.PortalPrimitive will be rendered.
      */

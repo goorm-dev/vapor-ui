@@ -490,7 +490,7 @@ export namespace MenuPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
 }
 
-interface MenuPopupProps extends MenuPopupPrimitive.Props {
+export interface MenuPopupProps extends MenuPopupPrimitive.Props {
     /**
      * A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered.
      */
@@ -544,7 +544,7 @@ export namespace MenuSubmenuPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
 }
 
-interface MenuSubmenuPopupProps extends MenuSubmenuPopupPrimitive.Props {
+export interface MenuSubmenuPopupProps extends MenuSubmenuPopupPrimitive.Props {
     /**
      * A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered.
      */

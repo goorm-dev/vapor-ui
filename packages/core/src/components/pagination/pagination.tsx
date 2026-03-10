@@ -534,7 +534,7 @@ export function createPaginationRange({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface PaginationContext extends PaginationVariants {
+export interface PaginationContext extends PaginationVariants {
     totalPages: number;
     page: number;
     setPage: (page: number, eventDetails: PaginationRootPrimitive.ChangeEventDetails) => void;
@@ -543,7 +543,7 @@ interface PaginationContext extends PaginationVariants {
     disabled: boolean;
 }
 
-interface PaginationRootPrimitiveProps
+export interface PaginationRootPrimitiveProps
     extends PaginationVariants, VaporUIComponentProps<'nav', PaginationRootPrimitive.State> {
     /**
      * The total number of pages.
@@ -579,7 +579,7 @@ interface PaginationRootPrimitiveProps
     disabled?: boolean;
 }
 
-interface PaginationRootPrimitiveState {
+export interface PaginationRootPrimitiveState {
     [key: string]: unknown;
     /**
      * Whether the component should ignore user interaction.
@@ -613,7 +613,7 @@ export namespace PaginationItemPrimitive {
     export type Props = VaporUIComponentProps<'li', State>;
 }
 
-interface PaginationButtonPrimitiveState {
+export interface PaginationButtonPrimitiveState {
     [key: string]: unknown;
     /**
      * Whether the button is the currently active page.
@@ -625,7 +625,7 @@ interface PaginationButtonPrimitiveState {
     disabled: boolean;
 }
 
-interface PaginationButtonPrimitiveProps extends VaporUIComponentProps<
+export interface PaginationButtonPrimitiveProps extends VaporUIComponentProps<
     'button',
     PaginationButtonPrimitive.State
 > {
@@ -645,7 +645,7 @@ export namespace PaginationButton {
     export type Props = PaginationButtonPrimitive.Props;
 }
 
-interface PaginationPreviousPrimitiveState {
+export interface PaginationPreviousPrimitiveState {
     [key: string]: unknown;
     /**
      * Whether the component should ignore user interaction.
@@ -663,7 +663,7 @@ export namespace PaginationPrevious {
     export type Props = PaginationPreviousPrimitive.Props;
 }
 
-interface PaginationNextPrimitiveState {
+export interface PaginationNextPrimitiveState {
     [key: string]: unknown;
     /**
      * Whether the component should ignore user interaction.
@@ -681,7 +681,7 @@ export namespace PaginationNext {
     export type Props = PaginationNextPrimitive.Props;
 }
 
-interface PaginationItemsPrimitiveProps extends Omit<
+export interface PaginationItemsPrimitiveProps extends Omit<
     ComponentPropsWithoutRef<typeof Fragment>,
     'children'
 > {

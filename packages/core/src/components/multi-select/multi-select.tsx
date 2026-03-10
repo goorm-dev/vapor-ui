@@ -473,7 +473,7 @@ export namespace MultiSelectPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseSelect.Popup, State>;
 }
 
-interface MultiSelectPopupProps extends MultiSelectPopupPrimitive.Props {
+export interface MultiSelectPopupProps extends MultiSelectPopupPrimitive.Props {
     /**
      * A Custom element for MultiSelect.PortalPrimitive. If not provided, the default MultiSelect.PortalPrimitive will be rendered.
      */

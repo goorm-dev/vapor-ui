@@ -324,7 +324,7 @@ export namespace SheetPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State>;
 }
 
-interface SheetPopupProps extends SheetPopupPrimitive.Props {
+export interface SheetPopupProps extends SheetPopupPrimitive.Props {
     /**
      * A Custom element for Sheet.PortalPrimitive. If not provided, the default Sheet.PortalPrimitive will be rendered.
      */

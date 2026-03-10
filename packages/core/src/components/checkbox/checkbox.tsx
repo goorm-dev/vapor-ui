@@ -99,7 +99,7 @@ CheckboxIndicatorPrimitive.displayName = 'Checkbox.IndicatorPrimitive';
  * Icons
  * -----------------------------------------------------------------------------------------------*/
 
-interface IconProps extends ComponentProps<'svg'> {}
+export interface IconProps extends ComponentProps<'svg'> {}
 
 const CheckIcon = (props: IconProps) => {
     return (

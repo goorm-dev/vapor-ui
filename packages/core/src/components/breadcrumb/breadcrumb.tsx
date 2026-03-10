@@ -255,7 +255,7 @@ export namespace BreadcrumbItemPrimitive {
     export type Props = VaporUIComponentProps<'li', State>;
 }
 
-interface BreadcrumbLinkPrimitiveState {
+export interface BreadcrumbLinkPrimitiveState {
     [key: string]: unknown;
     /**
      * Whether the link is the currently active page.

@@ -209,7 +209,7 @@ type ImageProps = Omit<BaseAvatar.Image.Props, keyof BaseAvatar.Root.Props>;
 type AvatarVariants = RootVariants & FallbackVariants;
 type AvatarContext = AvatarVariants & ImageProps & Pick<BaseAvatar.Fallback.Props, 'delay'>;
 
-interface AvatarRootProps extends Assign<
+export interface AvatarRootProps extends Assign<
     VaporUIComponentProps<typeof BaseAvatar.Root, AvatarRoot.State>,
     AvatarContext
 > {

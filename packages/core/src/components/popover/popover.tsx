@@ -286,7 +286,7 @@ export namespace PopoverPopupPrimitive {
     export type Props = VaporUIComponentProps<typeof BasePopover.Popup, State>;
 }
 
-interface PopoverPopupProps extends PopoverPopupPrimitive.Props {
+export interface PopoverPopupProps extends PopoverPopupPrimitive.Props {
     /**
      * A Custom element for Popover.PortalPrimitive. If not provided, the default Popover.PortalPrimitive will be rendered.
      */

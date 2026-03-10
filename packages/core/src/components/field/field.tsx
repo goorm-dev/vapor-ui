@@ -128,7 +128,7 @@ export namespace FieldDescription {
     export type Props = VaporUIComponentProps<typeof BaseField.Description, State>;
 }
 
-interface FieldErrorProps extends Omit<
+export interface FieldErrorProps extends Omit<
     VaporUIComponentProps<typeof BaseField.Error, FieldError.State>,
     'match'
 > {
@@ -146,7 +146,7 @@ export namespace FieldError {
     export type Props = FieldErrorProps;
 }
 
-interface FieldSuccessProps extends Omit<
+export interface FieldSuccessProps extends Omit<
     VaporUIComponentProps<typeof BaseField.Error, FieldSuccess.State>,
     'match'
 > {
