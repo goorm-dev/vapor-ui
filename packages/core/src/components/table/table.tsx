@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 
 import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
@@ -18,7 +19,7 @@ export const TableRoot = forwardRef<HTMLTableElement, TableRoot.Props>((props, r
         render,
         defaultTagName: 'table',
         props: {
-            className: [styles.table, className],
+            className: cn(styles.table, className),
             ...componentProps,
         },
     });
@@ -85,7 +86,7 @@ export const TableRow = forwardRef<HTMLTableRowElement, TableRow.Props>((props, 
         render,
         defaultTagName: 'tr',
         props: {
-            className: [styles.row, className],
+            className: cn(styles.row, className),
             ...componentProps,
         },
     });
@@ -104,7 +105,7 @@ export const TableHeading = forwardRef<HTMLTableCellElement, TableHeading.Props>
         render,
         defaultTagName: 'th',
         props: {
-            className: [styles.heading, className],
+            className: cn(styles.heading, className),
             ...componentProps,
         },
     });
@@ -123,7 +124,7 @@ export const TableCell = forwardRef<HTMLTableCellElement, TableCell.Props>((prop
         render,
         defaultTagName: 'td',
         props: {
-            className: [styles.cell, className],
+            className: cn(styles.cell, className),
             ...componentProps,
         },
     });
