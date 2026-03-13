@@ -86,7 +86,7 @@ export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props
         state: { invalid },
         props: {
             id,
-            className: [styles.label, className],
+            className: cn(styles.label, className),
             ...componentProps,
         },
     });

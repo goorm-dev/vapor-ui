@@ -52,7 +52,7 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
         props: {
             'aria-invalid': invalid,
             indeterminate,
-            className: [styles.root({ invalid, size }), className],
+            className: cn(styles.root({ invalid, size }), className),
             children,
             ...otherProps,
         },

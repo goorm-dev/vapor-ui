@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 
 import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -23,7 +24,7 @@ export const CalloutRoot = forwardRef<HTMLDivElement, CalloutRoot.Props>((props,
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.root(variantProps), className],
+            className: cn(styles.root(variantProps), className),
             ...otherProps,
         },
     });
@@ -42,7 +43,7 @@ export const CalloutIcon = forwardRef<HTMLDivElement, CalloutIcon.Props>((props,
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.icon, className],
+            className: cn(styles.icon, className),
             ...componentProps,
         },
     });

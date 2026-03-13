@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 
 import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -24,7 +25,7 @@ export const Skeleton = forwardRef<HTMLDivElement, Skeleton.Props>((props, ref) 
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.root(variantsProps), className],
+            className: cn(styles.root(variantsProps), className),
             ...otherProps,
         },
     });

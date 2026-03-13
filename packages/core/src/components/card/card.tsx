@@ -3,6 +3,7 @@
 import { forwardRef } from 'react';
 
 import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
@@ -20,7 +21,7 @@ export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>((props, ref) 
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.root, className],
+            className: cn(styles.root, className),
             ...componentProps,
         },
     });
@@ -39,7 +40,7 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>((props, r
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.header, className],
+            className: cn(styles.header, className),
             ...componentProps,
         },
     });
@@ -58,7 +59,7 @@ export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>((props, ref) 
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.body, className],
+            className: cn(styles.body, className),
             ...componentProps,
         },
     });
@@ -77,7 +78,7 @@ export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>((props, r
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.footer, className],
+            className: cn(styles.footer, className),
             ...componentProps,
         },
     });

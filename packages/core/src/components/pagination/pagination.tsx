@@ -13,6 +13,7 @@ import {
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import type { MakeChangeEventDetails } from '~/utils/create-event-details';
 import { createChangeEventDetails } from '~/utils/create-event-details';
 import { createRender } from '~/utils/create-renderer';
@@ -132,7 +133,7 @@ export const PaginationListPrimitive = forwardRef<HTMLOListElement, PaginationLi
             render,
             defaultTagName: 'ol',
             props: {
-                className: [styles.list, className],
+                className: cn(styles.list, className),
                 ...props,
             },
         });
@@ -151,7 +152,7 @@ export const PaginationItemPrimitive = forwardRef<HTMLLIElement, PaginationItemP
             render,
             defaultTagName: 'li',
             props: {
-                className: [styles.item, className],
+                className: cn(styles.item, className),
                 ...props,
             },
         });
@@ -193,7 +194,7 @@ export const PaginationButtonPrimitive = forwardRef<
             'aria-current': current ? 'page' : undefined,
             disabled,
             onClick: handleClick,
-            className: [styles.button({ size }), className],
+            className: cn(styles.button({ size }), className),
             ...props,
         },
     });
@@ -243,7 +244,7 @@ export const PaginationPreviousPrimitive = forwardRef<
         props: {
             'aria-label': 'Previous Page',
             disabled,
-            className: [styles.button({ size }), className],
+            className: cn(styles.button({ size }), className),
             onClick,
             children,
             ...componentProps,
@@ -314,7 +315,7 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             props: {
                 'aria-label': 'Next Page',
                 disabled,
-                className: [styles.button({ size }), className],
+                className: cn(styles.button({ size }), className),
                 onClick,
                 children,
                 ...componentProps,
@@ -365,7 +366,7 @@ export const PaginationEllipsisPrimitive = forwardRef<
         props: {
             role: 'presentation',
             'aria-hidden': 'true',
-            className: [styles.ellipsis({ size }), className],
+            className: cn(styles.ellipsis({ size }), className),
             children,
             ...componentProps,
         },

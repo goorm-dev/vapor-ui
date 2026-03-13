@@ -4,6 +4,7 @@ import { forwardRef, useEffect, useMemo, useState } from 'react';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VaporUIComponentProps } from '~/utils/types';
 
@@ -55,7 +56,7 @@ export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.root, className],
+            className: cn(styles.root, className),
             ...componentProps,
         },
     });
@@ -94,7 +95,7 @@ export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.P
             render,
             defaultTagName: 'span',
             props: {
-                className: [styles.counter, className],
+                className: cn(styles.counter, className),
                 children,
                 ...componentProps,
             },

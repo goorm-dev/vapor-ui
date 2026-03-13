@@ -192,7 +192,7 @@ export const DialogHeader = forwardRef<HTMLDivElement, DialogHeader.Props>((prop
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.header, className],
+            className: cn(styles.header, className),
             ...componentProps,
         },
     });
@@ -211,7 +211,7 @@ export const DialogBody = forwardRef<HTMLDivElement, DialogBody.Props>((props, r
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.body, className],
+            className: cn(styles.body, className),
             ...componentProps,
         },
     });
@@ -230,7 +230,7 @@ export const DialogFooter = forwardRef<HTMLDivElement, DialogFooter.Props>((prop
         render,
         defaultTagName: 'div',
         props: {
-            className: [styles.footer, className],
+            className: cn(styles.footer, className),
             ...componentProps,
         },
     });

@@ -5,6 +5,7 @@ import type { Foregrounds } from '~/styles/mixins/foreground.css';
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import type { Typography } from '~/styles/mixins/typography.css';
 import { typography } from '~/styles/mixins/typography.css';
+import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
@@ -22,11 +23,11 @@ export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
         render,
         defaultTagName: 'span',
         props: {
-            className: [
+            className: cn(
                 typography({ style: typographyStyle }),
                 foregrounds({ color: foreground }),
                 className,
-            ],
+            ),
             ...componentProps,
         },
     });

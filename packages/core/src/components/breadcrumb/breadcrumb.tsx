@@ -6,6 +6,7 @@ import { MoreCommonOutlineIcon, SlashOutlineIcon } from '@vapor-ui/icons';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -62,7 +63,7 @@ export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbLi
             render,
             defaultTagName: 'ol',
             props: {
-                className: [styles.list, className],
+                className: cn(styles.list, className),
                 ...componentProps,
             },
         });
@@ -98,7 +99,7 @@ export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemP
             render,
             defaultTagName: 'li',
             props: {
-                className: [styles.item, className],
+                className: cn(styles.item, className),
                 ...componentProps,
             },
         });
@@ -126,7 +127,7 @@ export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbL
                 role: current ? 'link' : undefined,
                 'aria-disabled': current ? 'true' : undefined,
                 'aria-current': current ? 'page' : undefined,
-                className: [styles.link({ size, current }), className],
+                className: cn(styles.link({ size, current }), className),
                 ...componentProps,
             },
         });
@@ -174,7 +175,7 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
             props: {
                 role: 'presentation',
                 'aria-hidden': 'true',
-                className: [styles.icon({ size }), className],
+                className: cn(styles.icon({ size }), className),
                 children,
                 ...componentProps,
             },
@@ -208,7 +209,7 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
         props: {
             role: 'presentation',
             'aria-hidden': 'true',
-            className: [styles.icon({ size }), className],
+            className: cn(styles.icon({ size }), className),
             children,
             ...componentProps,
         },
