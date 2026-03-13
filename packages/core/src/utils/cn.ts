@@ -4,6 +4,10 @@ import type { ClassValue } from 'clsx';
 type StateResolver<State extends object> = (state: State) => ClassValue;
 type ClassNameArg<State extends object> = ClassValue | StateResolver<State>;
 
+export function cn(...classNames: ClassValue[]): string;
+export function cn<State extends object>(
+    ...classNames: ClassNameArg<State>[]
+): string | ((state: State) => string);
 export function cn<State extends object>(...classNames: ClassNameArg<State>[]) {
     const hasStateResolver = classNames.some((value) => typeof value === 'function');
 
