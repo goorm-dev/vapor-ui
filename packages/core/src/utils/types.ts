@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from 'react';
+import type { CSSProperties, ComponentPropsWithoutRef } from 'react';
 
 import type { useRender } from '@base-ui/react/use-render';
 
@@ -35,7 +35,16 @@ export type Styles = {
 
 export type VaporUIComponentProps<ElementType extends React.ElementType, State> = Styles &
     DeprecatedSprinkles &
-    Omit<useRender.ComponentProps<ElementType, State>, OmitColorProp<ElementType>>;
+    Omit<
+        useRender.ComponentProps<ElementType, State>,
+        OmitColorProp<ElementType> | 'className' | 'style'
+    > & {
+        className?: string | ((state: State) => string | undefined) | undefined;
+        style?:
+            | CSSProperties
+            | (CSSProperties & ((state: State) => React.CSSProperties | undefined))
+            | undefined;
+    };
 
 /**
  * Deprecated CSS utility props. Use `$css` prop instead.

@@ -1,8 +1,9 @@
+import { mergeProps } from '@base-ui/react';
+
 import { deprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
 import { sprinkles } from '~/styles/sprinkles.css';
 
 import { createSplitProps } from './create-split-props';
-import { mergeProps } from './merge-props';
 import type { DeprecatedSprinkles, Styles } from './types';
 
 export const resolveStyles = <T extends object>(props: T) => {
@@ -68,5 +69,5 @@ export const resolveStyles = <T extends object>(props: T) => {
         { className, style },
     );
 
-    return mergeProps(mergedProps as T, otherProps);
+    return mergeProps(mergedProps, otherProps) as T;
 };
