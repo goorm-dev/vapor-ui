@@ -310,6 +310,17 @@ export namespace SheetPortalPrimitive {
     export type Props = VaporUIComponentProps<typeof Dialog.PortalPrimitive, State>;
 }
 
+export interface SheetPositionerPrimitiveState {
+    /** The side of the sheet relative to the viewport. */
+    side?: 'top' | 'right' | 'bottom' | 'left';
+
+    /** Whether the sheet is open. */
+    open: boolean;
+
+    /** Whether the sheet is closed. */
+    closed: boolean;
+}
+
 export namespace SheetPositionerPrimitive {
     export type State = {};
     export type Props = VaporUIComponentProps<'div', State> & PositionerType;

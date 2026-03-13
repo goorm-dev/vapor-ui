@@ -101,7 +101,14 @@ export namespace RadioGroupRoot {
     export type ChangeEventDetails = BaseRadioGroup.ChangeEventDetails;
 }
 
+export interface RadioGroupLabelState {
+    /**
+     * Whether the component is in an error state.
+     */
+    invalid?: boolean;
+}
+
 export namespace RadioGroupLabel {
-    export type State = {};
+    export type State = RadioGroupLabelState;
     export type Props = VaporUIComponentProps<'span', State>;
 }

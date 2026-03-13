@@ -124,8 +124,15 @@ const DashIcon = (props: IconProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+export interface CheckboxRootState extends BaseCheckbox.Root.State {
+    /**
+     * Whether the component is in an error state.
+     */
+    invalid?: boolean;
+}
+
 export namespace CheckboxRoot {
-    export type State = BaseCheckbox.Root.State;
+    export type State = CheckboxRootState;
     export type Props = VaporUIComponentProps<typeof BaseCheckbox.Root, State> & CheckboxVariants;
     export type ChangeEventDetails = BaseCheckbox.Root.ChangeEventDetails;
 }
