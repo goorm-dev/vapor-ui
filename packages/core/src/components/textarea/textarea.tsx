@@ -3,11 +3,11 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
-import clsx from 'clsx';
 
 import { useInputGroup } from '~/components/input-group/input-group';
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -66,7 +66,7 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         [disabled, readOnly, required, invalid],
     );
 
-    return useRender({
+    return useRenderElement({
         ref: composedRef,
         state,
         render: render || <BaseField.Control render={<textarea />} />,
@@ -74,7 +74,7 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
             ...(isControlled ? { value } : { defaultValue }),
             'aria-invalid': invalid,
             onValueChange: handleValueChange,
-            className: clsx(styles.textarea(variantProps), className),
+            className: cn(styles.textarea(variantProps), className),
             ...otherProps,
         },
     });

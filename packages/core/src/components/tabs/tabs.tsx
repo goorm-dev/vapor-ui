@@ -4,9 +4,9 @@ import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
-import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -42,7 +42,7 @@ export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) 
             <BaseTabs.Root
                 ref={ref}
                 orientation={orientation}
-                className={clsx(styles.root({ orientation }), className)}
+                className={cn(styles.root({ orientation }), className)}
                 {...otherProps}
             />
         </TabsProvider>
@@ -64,7 +64,7 @@ export const TabsListPrimitive = forwardRef<HTMLDivElement, TabsListPrimitive.Pr
                 ref={ref}
                 loopFocus={loopFocus}
                 activateOnFocus={activateOnFocus}
-                className={clsx(styles.list({ variant, orientation }), className)}
+                className={cn(styles.list({ variant, orientation }), className)}
                 {...componentProps}
             />
         );
@@ -84,7 +84,7 @@ export const TabsIndicatorPrimitive = forwardRef<HTMLSpanElement, TabsIndicatorP
         return (
             <BaseTabs.Indicator
                 ref={ref}
-                className={clsx(styles.indicator({ orientation, variant }), className)}
+                className={cn(styles.indicator({ orientation, variant }), className)}
                 {...componentProps}
             />
         );
@@ -122,7 +122,7 @@ export const TabsButton = forwardRef<HTMLElement, TabsButton.Props>((props, ref)
         <BaseTabs.Tab
             ref={ref}
             disabled={disabled}
-            className={clsx(styles.button({ size, variant, orientation }), className)}
+            className={cn(styles.button({ size, variant, orientation }), className)}
             {...componentProps}
         />
     );

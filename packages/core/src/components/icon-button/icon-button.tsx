@@ -1,8 +1,7 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -20,7 +19,7 @@ export const IconButton = forwardRef<HTMLElement, IconButton.Props>((props, ref)
     ]);
 
     const childrenRender = createRender(childrenProp);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: {
             'aria-hidden': 'true',
@@ -29,7 +28,7 @@ export const IconButton = forwardRef<HTMLElement, IconButton.Props>((props, ref)
     });
 
     return (
-        <Button ref={ref} className={clsx(styles.root(variantProps), className)} {...otherProps}>
+        <Button ref={ref} className={cn(styles.root(variantProps), className)} {...otherProps}>
             {children}
         </Button>
     );

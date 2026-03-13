@@ -3,7 +3,6 @@
 import type { ComponentPropsWithoutRef, Fragment, MouseEvent } from 'react';
 import { forwardRef, useMemo } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import {
@@ -11,8 +10,8 @@ import {
     ChevronRightOutlineIcon,
     MoreCommonOutlineIcon,
 } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import type { MakeChangeEventDetails } from '~/utils/create-event-details';
 import { createChangeEventDetails } from '~/utils/create-event-details';
@@ -93,7 +92,7 @@ export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPri
 
         const state: PaginationRootPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
 
-        const element = useRender({
+        const element = useRenderElement({
             ref,
             render,
             defaultTagName: 'nav',
@@ -128,12 +127,12 @@ PaginationRootPrimitive.displayName = 'PaginationRootPrimitive.Root';
 
 export const PaginationListPrimitive = forwardRef<HTMLOListElement, PaginationListPrimitive.Props>(
     ({ render, className, ...props }, ref) => {
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'ol',
             props: {
-                className: clsx(styles.list, className),
+                className: [styles.list, className],
                 ...props,
             },
         });
@@ -147,12 +146,12 @@ PaginationListPrimitive.displayName = 'Pagination.ListPrimitive';
 
 export const PaginationItemPrimitive = forwardRef<HTMLLIElement, PaginationItemPrimitive.Props>(
     ({ render, className, ...props }, ref) => {
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'li',
             props: {
-                className: clsx(styles.item, className),
+                className: [styles.item, className],
                 ...props,
             },
         });
@@ -184,7 +183,7 @@ export const PaginationButtonPrimitive = forwardRef<
         [disabled, current],
     );
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'button',
@@ -194,7 +193,7 @@ export const PaginationButtonPrimitive = forwardRef<
             'aria-current': current ? 'page' : undefined,
             disabled,
             onClick: handleClick,
-            className: clsx(styles.button({ size }), className),
+            className: [styles.button({ size }), className],
             ...props,
         },
     });
@@ -229,14 +228,14 @@ export const PaginationPreviousPrimitive = forwardRef<
     });
 
     const childrenRender = createRender(childrenProp, <ChevronLeftOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: { 'aria-hidden': 'true', className: styles.icon },
     });
 
     const state: PaginationPreviousPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'button',
@@ -244,7 +243,7 @@ export const PaginationPreviousPrimitive = forwardRef<
         props: {
             'aria-label': 'Previous Page',
             disabled,
-            className: clsx(styles.button({ size }), className),
+            className: [styles.button({ size }), className],
             onClick,
             children,
             ...componentProps,
@@ -300,14 +299,14 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
         });
 
         const childrenRender = createRender(childrenProp, <ChevronRightOutlineIcon />);
-        const children = useRender({
+        const children = useRenderElement({
             render: childrenRender,
             props: { 'aria-hidden': 'true', className: styles.icon },
         });
 
         const state: PaginationNextPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
 
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'button',
@@ -315,7 +314,7 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             props: {
                 'aria-label': 'Next Page',
                 disabled,
-                className: clsx(styles.button({ size }), className),
+                className: [styles.button({ size }), className],
                 onClick,
                 children,
                 ...componentProps,
@@ -351,14 +350,14 @@ export const PaginationEllipsisPrimitive = forwardRef<
     const { size, disabled } = usePaginationContext();
 
     const childrenRender = createRender(childrenProp, <MoreCommonOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: { width: 'max(16px, 50%)', height: 'max(16px, 50%)' },
     });
 
     const state: PaginationEllipsisPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'span',
@@ -366,7 +365,7 @@ export const PaginationEllipsisPrimitive = forwardRef<
         props: {
             role: 'presentation',
             'aria-hidden': 'true',
-            className: clsx(styles.ellipsis({ size }), className),
+            className: [styles.ellipsis({ size }), className],
             children,
             ...componentProps,
         },

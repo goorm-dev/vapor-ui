@@ -16,7 +16,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
  * -----------------------------------------------------------------------------------------------*/
 type Theme = 'light' | 'dark' | 'system';
 type ResolvedTheme = 'light' | 'dark';
-export interface ThemeConfig {
+interface ThemeConfig {
     /**
      * Theme behavior:
      * - 'light': Always use light theme (ignores system changes)
@@ -57,7 +57,7 @@ export interface ThemeConfig {
     nonce?: string;
 }
 
-export interface UseThemeProps {
+interface UseThemeProps {
     /** Current active theme ('light' | 'dark' | 'system') */
     theme?: Theme;
 
@@ -83,7 +83,7 @@ export interface UseThemeProps {
     mounted?: boolean;
 }
 
-export interface ThemeProviderProps extends ThemeConfig {
+interface ThemeProviderProps extends ThemeConfig {
     children: React.ReactNode;
 }
 
@@ -294,7 +294,7 @@ const useTheme = (): UseThemeProps => {
 /* -------------------------------------------------------------------------------------------------
  * Local Theme Scope
  * -----------------------------------------------------------------------------------------------*/
-export interface ThemeScopeProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ThemeScopeProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
     /**
      * The theme to force upon this scope, ignoring the global theme.

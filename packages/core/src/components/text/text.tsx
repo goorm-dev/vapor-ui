@@ -1,8 +1,6 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
 import type { Foregrounds } from '~/styles/mixins/foreground.css';
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import type { Typography } from '~/styles/mixins/typography.css';
@@ -19,16 +17,16 @@ export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
         ...componentProps
     } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'span',
         props: {
-            className: clsx(
+            className: [
                 typography({ style: typographyStyle }),
                 foregrounds({ color: foreground }),
                 className,
-            ),
+            ],
             ...componentProps,
         },
     });

@@ -3,8 +3,8 @@
 import { forwardRef } from 'react';
 
 import { Radio as BaseRadio } from '@base-ui/react/radio';
-import clsx from 'clsx';
 
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -31,7 +31,7 @@ export const RadioCard = forwardRef<HTMLElement, RadioCard.Props>((props, ref) =
         <BaseRadio.Root
             ref={ref}
             aria-invalid={invalid}
-            className={clsx(styles.root({ invalid }), className)}
+            className={cn(styles.root({ invalid }), className)}
             {...dataAttrs}
             {...otherProps}
         />

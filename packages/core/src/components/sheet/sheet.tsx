@@ -4,15 +4,15 @@ import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import clsx from 'clsx';
 
 import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
+import { useRenderElement } from '~/hooks/use-render-element';
 import type { TransitionStatus } from '~/hooks/use-transition-status';
 import { useTransitionStatus } from '~/hooks/use-transition-status';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -153,7 +153,7 @@ export const SheetPositionerPrimitive = forwardRef<HTMLDivElement, SheetPosition
 
         const { open: contextOpen = false, mounted } = useSheetRootContext();
 
-        const element = useRender({
+        const element = useRenderElement({
             ref,
             render: render || <div />,
             state: { open: contextOpen, closed: !contextOpen, side },
@@ -187,7 +187,7 @@ export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitiv
         return (
             <BaseDialog.Popup
                 ref={composedRef}
-                className={clsx(styles.popup, className)}
+                className={cn(styles.popup, className)}
                 {...dataAttr}
                 {...componentProps}
             />
@@ -205,18 +205,18 @@ export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
         const popup = <SheetPopupPrimitive ref={ref} {...props} />;
 
         const positionerRender = createRender(positionerElement, <SheetPositionerPrimitive />);
-        const positioner = useRender({
+        const positioner = useRenderElement({
             render: positionerRender,
             props: { children: popup },
         });
 
         const overlayRender = createRender(overlayElement, <SheetOverlayPrimitive />);
-        const overlay = useRender({
+        const overlay = useRenderElement({
             render: overlayRender,
         });
 
         const portalRender = createRender(portalElement, <SheetPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: {
                 children: (
@@ -240,9 +240,7 @@ SheetPopup.displayName = 'Sheet.Popup';
 export const SheetHeader = forwardRef<HTMLDivElement, SheetHeader.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return (
-        <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...componentProps} />
-    );
+    return <Dialog.Header ref={ref} className={cn(styles.header, className)} {...componentProps} />;
 });
 SheetHeader.displayName = 'Sheet.Header';
 
@@ -253,7 +251,7 @@ SheetHeader.displayName = 'Sheet.Header';
 export const SheetBody = forwardRef<HTMLDivElement, SheetBody.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...componentProps} />;
+    return <Dialog.Body ref={ref} className={cn(styles.body, className)} {...componentProps} />;
 });
 SheetBody.displayName = 'Sheet.Body';
 
@@ -264,9 +262,7 @@ SheetBody.displayName = 'Sheet.Body';
 export const SheetFooter = forwardRef<HTMLDivElement, SheetFooter.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return (
-        <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...componentProps} />
-    );
+    return <Dialog.Footer ref={ref} className={cn(styles.footer, className)} {...componentProps} />;
 });
 SheetFooter.displayName = 'Sheet.Footer';
 

@@ -3,8 +3,8 @@
 import { forwardRef } from 'react';
 
 import { Collapsible as BaseCollapsible } from '@base-ui/react/collapsible';
-import clsx from 'clsx';
 
+import { cn } from '~/utils/cn';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -53,7 +53,7 @@ export const CollapsiblePanel = forwardRef<HTMLDivElement, CollapsiblePanel.Prop
     return (
         <BaseCollapsible.Panel
             ref={ref}
-            className={clsx(styles.panel, className)}
+            className={cn(styles.panel, className)}
             {...componentProps}
         />
     );

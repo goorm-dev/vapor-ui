@@ -2,9 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
@@ -17,12 +15,12 @@ import * as styles from './card.css';
 export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.root, className),
+            className: [styles.root, className],
             ...componentProps,
         },
     });
@@ -36,12 +34,12 @@ CardRoot.displayName = 'Card.Root';
 export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.header, className),
+            className: [styles.header, className],
             ...componentProps,
         },
     });
@@ -55,12 +53,12 @@ CardHeader.displayName = 'Card.Header';
 export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.body, className),
+            className: [styles.body, className],
             ...componentProps,
         },
     });
@@ -74,12 +72,12 @@ CardBody.displayName = 'Card.Body';
 export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.footer, className),
+            className: [styles.footer, className],
             ...componentProps,
         },
     });

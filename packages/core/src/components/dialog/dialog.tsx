@@ -4,10 +4,10 @@ import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -67,7 +67,7 @@ export const DialogOverlayPrimitive = forwardRef<HTMLDivElement, DialogOverlayPr
         return (
             <BaseDialog.Backdrop
                 ref={ref}
-                className={clsx(styles.overlay, className)}
+                className={cn(styles.overlay, className)}
                 {...componentProps}
             />
         );
@@ -87,7 +87,7 @@ export const DialogPopupPrimitive = forwardRef<HTMLDivElement, DialogPopupPrimit
         return (
             <BaseDialog.Popup
                 ref={ref}
-                className={clsx(styles.popup({ size }), className)}
+                className={cn(styles.popup({ size }), className)}
                 {...componentProps}
             />
         );
@@ -104,12 +104,12 @@ export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>(
         const popup = <DialogPopupPrimitive ref={ref} {...props} />;
 
         const overlayRender = createRender(overlayElement, <DialogOverlayPrimitive />);
-        const overlay = useRender({
+        const overlay = useRenderElement({
             render: overlayRender,
         });
 
         const portalRender = createRender(portalElement, <DialogPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: {
                 children: (
@@ -156,7 +156,7 @@ export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitle.Props>((pr
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
-        <BaseDialog.Title ref={ref} className={clsx(styles.title, className)} {...componentProps} />
+        <BaseDialog.Title ref={ref} className={cn(styles.title, className)} {...componentProps} />
     );
 });
 DialogTitle.displayName = 'Dialog.Title';
@@ -172,7 +172,7 @@ export const DialogDescription = forwardRef<HTMLParagraphElement, DialogDescript
         return (
             <BaseDialog.Description
                 ref={ref}
-                className={clsx(styles.description, className)}
+                className={cn(styles.description, className)}
                 {...componentProps}
             />
         );
@@ -187,12 +187,12 @@ DialogDescription.displayName = 'Dialog.Description';
 export const DialogHeader = forwardRef<HTMLDivElement, DialogHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.header, className),
+            className: [styles.header, className],
             ...componentProps,
         },
     });
@@ -206,12 +206,12 @@ DialogHeader.displayName = 'Dialog.Header';
 export const DialogBody = forwardRef<HTMLDivElement, DialogBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.body, className),
+            className: [styles.body, className],
             ...componentProps,
         },
     });
@@ -225,12 +225,12 @@ DialogBody.displayName = 'Dialog.Body';
 export const DialogFooter = forwardRef<HTMLDivElement, DialogFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.footer, className),
+            className: [styles.footer, className],
             ...componentProps,
         },
     });

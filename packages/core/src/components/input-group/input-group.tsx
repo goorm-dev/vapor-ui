@@ -2,9 +2,7 @@
 
 import { forwardRef, useEffect, useMemo, useState } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VaporUIComponentProps } from '~/utils/types';
@@ -52,12 +50,12 @@ export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((
         [value, maxLength],
     );
 
-    const element = useRender({
+    const element = useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.root, className),
+            className: [styles.root, className],
             ...componentProps,
         },
     });
@@ -91,12 +89,12 @@ export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.P
                 ? childrenProp({ count: value.length, maxLength, value })
                 : childrenProp || content;
 
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'span',
             props: {
-                className: clsx(styles.counter, className),
+                className: [styles.counter, className],
                 children,
                 ...componentProps,
             },

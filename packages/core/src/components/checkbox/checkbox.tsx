@@ -4,10 +4,10 @@ import type { ComponentProps } from 'react';
 import { forwardRef } from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -41,18 +41,18 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
     const { size, invalid, indeterminate } = variantProps;
 
     const childrenRender = createRender(childrenProp, <CheckboxIndicatorPrimitive />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
     });
 
-    const root = useRender({
+    const root = useRenderElement({
         ref,
         state: { invalid },
         render: <BaseCheckbox.Root />,
         props: {
             'aria-invalid': invalid,
             indeterminate,
-            className: clsx(styles.root({ invalid, size }), className),
+            className: [styles.root({ invalid, size }), className],
             children,
             ...otherProps,
         },
@@ -77,7 +77,7 @@ export const CheckboxIndicatorPrimitive = forwardRef<
 
     const Icon = indeterminate ? DashIcon : CheckIcon;
     const childrenRender = createRender(childrenProp, <Icon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
@@ -85,7 +85,7 @@ export const CheckboxIndicatorPrimitive = forwardRef<
     return (
         <BaseCheckbox.Indicator
             ref={ref}
-            className={clsx(styles.indicator({ size }), className)}
+            className={cn(styles.indicator({ size }), className)}
             {...dataAttrs}
             {...componentProps}
         >

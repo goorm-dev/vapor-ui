@@ -3,9 +3,9 @@
 import { forwardRef } from 'react';
 
 import { Radio as BaseRadio } from '@base-ui/react/radio';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -38,7 +38,7 @@ export const RadioRoot = forwardRef<HTMLElement, RadioRoot.Props>((props, ref) =
     const dataAttrs = createDataAttributes({ invalid });
 
     const childrenRender = createRender(childrenProp, <RadioIndicatorPrimitive />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
     });
 
@@ -46,7 +46,7 @@ export const RadioRoot = forwardRef<HTMLElement, RadioRoot.Props>((props, ref) =
         <BaseRadio.Root
             ref={ref}
             aria-invalid={invalid}
-            className={clsx(styles.root({ size, invalid }), className)}
+            className={cn(styles.root({ size, invalid }), className)}
             {...dataAttrs}
             {...otherProps}
         >
@@ -70,7 +70,7 @@ export const RadioIndicatorPrimitive = forwardRef<HTMLSpanElement, RadioIndicato
         return (
             <BaseRadio.Indicator
                 ref={ref}
-                className={clsx(styles.indicator, className)}
+                className={cn(styles.indicator, className)}
                 {...dataAttrs}
                 {...componentProps}
             />

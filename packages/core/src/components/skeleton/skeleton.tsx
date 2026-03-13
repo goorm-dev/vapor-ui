@@ -1,8 +1,6 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -21,12 +19,12 @@ export const Skeleton = forwardRef<HTMLDivElement, Skeleton.Props>((props, ref) 
         'animation',
     ]);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.root(variantsProps), className),
+            className: [styles.root(variantsProps), className],
             ...otherProps,
         },
     });

@@ -2,9 +2,9 @@ import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { Popover } from '@base-ui/react/popover';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -80,7 +80,7 @@ export const FloatingBarPositionerPrimitive = forwardRef<
             ref={ref}
             positionMethod="fixed"
             style={{ ...positions, ...style }}
-            className={clsx(styles.positioner, className)}
+            className={cn(styles.positioner, className)}
             {...componentProps}
         />
     );
@@ -97,9 +97,7 @@ export const FloatingBarPopupPrimitive = forwardRef<
 >((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return (
-        <Popover.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
-    );
+    return <Popover.Popup ref={ref} className={cn(styles.popup, className)} {...componentProps} />;
 });
 FloatingBarPopupPrimitive.displayName = 'FloatingBar.PopupPrimitive';
 
@@ -113,13 +111,13 @@ export const FloatingBarPopup = forwardRef<HTMLDivElement, FloatingBarPopup.Prop
     const popup = <FloatingBarPopupPrimitive ref={ref} {...componentProps} />;
 
     const positionerRender = createRender(<FloatingBarPositionerPrimitive />);
-    const positioner = useRender({
+    const positioner = useRenderElement({
         render: positionerRender,
         props: { children: popup },
     });
 
     const portalRender = createRender(portalElement, <FloatingBarPortalPrimitive />);
-    const portal = useRender({
+    const portal = useRenderElement({
         render: portalRender,
         props: { children: positioner },
     });

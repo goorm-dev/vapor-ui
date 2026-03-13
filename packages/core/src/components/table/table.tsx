@@ -1,8 +1,6 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
@@ -15,12 +13,12 @@ import * as styles from './table.css';
 export const TableRoot = forwardRef<HTMLTableElement, TableRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'table',
         props: {
-            className: clsx(styles.table, className),
+            className: [styles.table, className],
             ...componentProps,
         },
     });
@@ -34,7 +32,7 @@ TableRoot.displayName = 'Table.Root';
 export const TableHeader = forwardRef<HTMLTableSectionElement, TableHeader.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'thead',
@@ -50,7 +48,7 @@ TableHeader.displayName = 'Table.Header';
 export const TableBody = forwardRef<HTMLTableSectionElement, TableBody.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'tbody',
@@ -66,7 +64,7 @@ TableBody.displayName = 'Table.Body';
 export const TableFooter = forwardRef<HTMLTableSectionElement, TableFooter.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'tfoot',
@@ -82,12 +80,12 @@ TableFooter.displayName = 'Table.Footer';
 export const TableRow = forwardRef<HTMLTableRowElement, TableRow.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'tr',
         props: {
-            className: clsx(styles.row, className),
+            className: [styles.row, className],
             ...componentProps,
         },
     });
@@ -101,12 +99,12 @@ TableRow.displayName = 'Table.Row';
 export const TableHeading = forwardRef<HTMLTableCellElement, TableHeading.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'th',
         props: {
-            className: clsx(styles.heading, className),
+            className: [styles.heading, className],
             ...componentProps,
         },
     });
@@ -120,12 +118,12 @@ TableHeading.displayName = 'Table.Heading';
 export const TableCell = forwardRef<HTMLTableCellElement, TableCell.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'td',
         props: {
-            className: clsx(styles.cell, className),
+            className: [styles.cell, className],
             ...componentProps,
         },
     });
@@ -140,7 +138,7 @@ export const TableColumnGroup = forwardRef<HTMLTableColElement, TableColumnGroup
     (props, ref) => {
         const { render, ...componentProps } = resolveStyles(props);
 
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'colgroup',
@@ -157,7 +155,7 @@ TableColumnGroup.displayName = 'Table.ColumnGroup';
 export const TableColumn = forwardRef<HTMLTableColElement, TableColumn.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'col',

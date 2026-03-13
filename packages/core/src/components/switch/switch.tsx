@@ -3,10 +3,10 @@
 import { forwardRef } from 'react';
 
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -41,7 +41,7 @@ export const SwitchRoot = forwardRef<HTMLElement, SwitchRoot.Props>((props, ref)
     const dataAttrs = createDataAttributes({ invalid });
 
     const childrenRender = createRender(childrenProp, <SwitchThumbPrimitive />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
     });
 
@@ -51,7 +51,7 @@ export const SwitchRoot = forwardRef<HTMLElement, SwitchRoot.Props>((props, ref)
                 ref={ref}
                 aria-required={required}
                 aria-invalid={invalid}
-                className={clsx(styles.control({ size }), className)}
+                className={cn(styles.control({ size }), className)}
                 {...dataAttrs}
                 {...otherProps}
             >
@@ -74,7 +74,7 @@ export const SwitchThumbPrimitive = forwardRef<HTMLSpanElement, SwitchThumbPrimi
         return (
             <BaseSwitch.Thumb
                 ref={ref}
-                className={clsx(styles.indicator({ size }), className)}
+                className={cn(styles.indicator({ size }), className)}
                 {...componentProps}
             />
         );

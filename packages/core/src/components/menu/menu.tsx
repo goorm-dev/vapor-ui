@@ -4,11 +4,11 @@ import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useRef } from 'react';
 
 import { Menu as BaseMenu } from '@base-ui/react/menu';
-import { useRender } from '@base-ui/react/use-render';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -96,11 +96,7 @@ export const MenuPopupPrimitive = forwardRef<HTMLDivElement, MenuPopupPrimitive.
         const { className, ...componentProps } = resolveStyles(props);
 
         return (
-            <BaseMenu.Popup
-                ref={ref}
-                className={clsx(styles.popup, className)}
-                {...componentProps}
-            />
+            <BaseMenu.Popup ref={ref} className={cn(styles.popup, className)} {...componentProps} />
         );
     },
 );
@@ -115,13 +111,13 @@ export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
         const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
         const positionerRender = createRender(positionerElement, <MenuPositionerPrimitive />);
-        const positioner = useRender({
+        const positioner = useRenderElement({
             render: positionerRender,
             props: { children: popup },
         });
 
         const portalRender = createRender(portalElement, <MenuPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: { children: positioner },
         });
@@ -145,7 +141,7 @@ export const MenuItem = forwardRef<HTMLElement, MenuItem.Props>((props, ref) => 
         <BaseMenu.Item
             ref={ref}
             disabled={disabled}
-            className={clsx(styles.item, className)}
+            className={cn(styles.item, className)}
             {...componentProps}
         />
     );
@@ -162,7 +158,7 @@ export const MenuSeparator = forwardRef<HTMLDivElement, MenuSeparator.Props>((pr
     return (
         <BaseMenu.Separator
             ref={ref}
-            className={clsx(styles.separator, className)}
+            className={cn(styles.separator, className)}
             {...componentProps}
         />
     );
@@ -190,7 +186,7 @@ export const MenuGroupLabel = forwardRef<HTMLDivElement, MenuGroupLabel.Props>((
     return (
         <BaseMenu.GroupLabel
             ref={ref}
-            className={clsx(styles.groupLabel, className)}
+            className={cn(styles.groupLabel, className)}
             {...componentProps}
         />
     );
@@ -243,7 +239,7 @@ export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTrigger
         return (
             <BaseMenu.SubmenuTrigger
                 ref={composedRef}
-                className={clsx(styles.subTrigger, className)}
+                className={cn(styles.subTrigger, className)}
                 {...componentProps}
             >
                 {children}
@@ -270,7 +266,7 @@ export const MenuSubmenuPopupPrimitive = forwardRef<
         <BaseMenu.Popup
             ref={ref}
             finalFocus={triggerRef}
-            className={clsx(styles.subPopup, className)}
+            className={cn(styles.subPopup, className)}
             {...componentProps}
         />
     );
@@ -289,13 +285,13 @@ export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Prop
             positionerElement,
             <MenuPositionerPrimitive side="right" sideOffset={0} />,
         );
-        const positioner = useRender({
+        const positioner = useRenderElement({
             render: positionerRender,
             props: { children: popup },
         });
 
         const portalRender = createRender(portalElement, <MenuPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: { children: positioner },
         });
@@ -325,7 +321,7 @@ export const MenuCheckboxItemPrimitive = forwardRef<HTMLElement, MenuCheckboxIte
             <BaseMenu.CheckboxItem
                 ref={ref}
                 disabled={disabled}
-                className={clsx(styles.item, className)}
+                className={cn(styles.item, className)}
                 {...componentProps}
             >
                 {children}
@@ -346,7 +342,7 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
@@ -354,7 +350,7 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     return (
         <BaseMenu.CheckboxItemIndicator
             ref={ref}
-            className={clsx(styles.indicator, className)}
+            className={cn(styles.indicator, className)}
             {...componentProps}
         >
             {children}
@@ -406,7 +402,7 @@ export const MenuRadioItemPrimitive = forwardRef<HTMLElement, MenuRadioItemPrimi
             <BaseMenu.RadioItem
                 ref={ref}
                 disabled={disabled}
-                className={clsx(styles.item, className)}
+                className={cn(styles.item, className)}
                 {...componentProps}
             />
         );
@@ -425,7 +421,7 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
@@ -433,7 +429,7 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
     return (
         <BaseMenu.RadioItemIndicator
             ref={ref}
-            className={clsx(styles.indicator, className)}
+            className={cn(styles.indicator, className)}
             {...componentProps}
         >
             {children}

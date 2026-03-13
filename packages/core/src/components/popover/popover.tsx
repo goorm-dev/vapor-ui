@@ -4,11 +4,11 @@ import type { CSSProperties, ComponentProps, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
+import { useRenderElement } from '~/hooks/use-render-element';
 import { vars } from '~/styles/themes.css';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -136,7 +136,7 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
         return (
             <BasePopover.Popup
                 ref={composedRef}
-                className={clsx(styles.popup, className)}
+                className={cn(styles.popup, className)}
                 {...componentProps}
             >
                 <BasePopover.Arrow ref={arrowRef} style={position} className={styles.arrow}>
@@ -165,13 +165,13 @@ export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>(
         const popup = <PopoverPopupPrimitive ref={ref} {...props} />;
 
         const positionerRender = createRender(positionerElement, <PopoverPositionerPrimitive />);
-        const positioner = useRender({
+        const positioner = useRenderElement({
             render: positionerRender,
             props: { children: popup },
         });
 
         const portalRender = createRender(portalElement, <PopoverPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: { children: positioner },
         });

@@ -3,11 +3,11 @@ import { forwardRef } from 'react';
 
 import type { ToastManager as BaseToastManager } from '@base-ui/react/toast';
 import { Toast as BaseToast } from '@base-ui/react/toast';
-import { useRender } from '@base-ui/react/use-render';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { AnyProp, VaporUIComponentProps } from '~/utils/types';
@@ -110,7 +110,7 @@ export const ToastViewportPrimitive = forwardRef<HTMLDivElement, ToastViewportPr
         return (
             <BaseToast.Viewport
                 ref={ref}
-                className={clsx(styles.viewport, className)}
+                className={cn(styles.viewport, className)}
                 {...componentProps}
             />
         );
@@ -145,7 +145,7 @@ export const ToastRootPrimitive = forwardRef<HTMLDivElement, ToastRootPrimitive.
                     ref={ref}
                     toast={toast as BaseToast.Root.ToastObject}
                     swipeDirection={swipeDirection}
-                    className={clsx(styles.root({ colorPalette }), className)}
+                    className={cn(styles.root({ colorPalette }), className)}
                     {...componentProps}
                 />
             </ToastContextProvider>
@@ -165,7 +165,7 @@ export const ToastContentPrimitive = forwardRef<HTMLDivElement, ToastContentPrim
         return (
             <BaseToast.Content
                 ref={ref}
-                className={clsx(styles.content, className)}
+                className={cn(styles.content, className)}
                 {...componentProps}
             />
         );
@@ -184,7 +184,7 @@ export const ToastTitlePrimitive = forwardRef<HTMLHeadingElement, ToastTitlePrim
         return (
             <BaseToast.Title
                 ref={ref}
-                className={clsx(styles.title, className)}
+                className={cn(styles.title, className)}
                 {...componentProps}
             />
         );
@@ -205,7 +205,7 @@ export const ToastDescriptionPrimitive = forwardRef<
     return (
         <BaseToast.Description
             ref={ref}
-            className={clsx(styles.description, className)}
+            className={cn(styles.description, className)}
             {...componentProps}
         />
     );
@@ -227,7 +227,7 @@ export const ToastIconPrimitive = forwardRef<SVGSVGElement, ToastIconPrimitive.P
         const componentProps = resolveStyles(props);
         const { icon, colorPalette } = useToastContext();
 
-        return useRender({
+        return useRenderElement({
             ref,
             render: icon ?? TOAST_ICONS[colorPalette || ''],
             props: { ...componentProps },
@@ -272,7 +272,7 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         const { close = true } = useToastContext();
 
         const childrenRender = createRender(childrenProp, <CloseOutlineIcon />);
-        const children = useRender({
+        const children = useRenderElement({
             render: childrenRender,
         });
 

@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
 
 import { Button as BaseButton } from '@base-ui/react/button';
-import clsx from 'clsx';
 
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -21,7 +21,7 @@ export const Button = forwardRef<HTMLElement, Button.Props>((props, ref) => {
     return (
         <BaseButton
             ref={ref}
-            className={clsx(styles.root(variantsProps), className)}
+            className={cn(styles.root(variantsProps), className)}
             {...otherProps}
         />
     );

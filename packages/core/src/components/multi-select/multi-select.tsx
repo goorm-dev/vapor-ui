@@ -4,11 +4,11 @@ import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
-import { useRender } from '@base-ui/react/use-render';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -79,7 +79,7 @@ export const MultiSelectTriggerPrimitive = forwardRef<
             nativeButton={nativeButton}
             aria-invalid={invalid || undefined}
             aria-required={required || undefined}
-            className={clsx(styles.trigger({ size, invalid }), className)}
+            className={cn(styles.trigger({ size, invalid }), className)}
             {...dataAttrs}
             {...componentProps}
         />
@@ -129,7 +129,7 @@ export const MultiSelectValuePrimitive = forwardRef<
     return (
         <BaseSelect.Value
             ref={ref}
-            className={clsx(styles.value({ size }), className)}
+            className={cn(styles.value({ size }), className)}
             {...componentProps}
         >
             {children}
@@ -165,7 +165,7 @@ export const MultiSelectPlaceholderPrimitive = forwardRef<
     return (
         <BaseSelect.Value
             ref={ref}
-            className={clsx(styles.placeholder({ size }), className)}
+            className={cn(styles.placeholder({ size }), className)}
             {...componentProps}
         />
     );
@@ -185,7 +185,7 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
     const { size } = useMultiSelectContext();
 
     const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
@@ -193,7 +193,7 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
     return (
         <BaseSelect.Icon
             ref={ref}
-            className={clsx(styles.triggerIcon({ size }), className)}
+            className={cn(styles.triggerIcon({ size }), className)}
             {...componentProps}
         >
             {children}
@@ -256,7 +256,7 @@ export const MultiSelectPositionerPrimitive = forwardRef<
             align={align}
             sideOffset={sideOffset}
             alignItemWithTrigger={alignItemWithTrigger}
-            className={clsx(styles.positioner, className)}
+            className={cn(styles.positioner, className)}
             {...componentProps}
         />
     );
@@ -274,7 +274,7 @@ export const MultiSelectPopupPrimitive = forwardRef<
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
-        <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
+        <BaseSelect.Popup ref={ref} className={cn(styles.popup, className)} {...componentProps} />
     );
 });
 MultiSelectPopupPrimitive.displayName = 'MultiSelect.PopupPrimitive';
@@ -291,13 +291,13 @@ export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Prop
             positionerElement,
             <MultiSelectPositionerPrimitive />,
         );
-        const positioner = useRender({
+        const positioner = useRenderElement({
             render: positionerRender,
             props: { children: popup },
         });
 
         const portalRender = createRender(portalElement, <MultiSelectPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: { children: positioner },
         });
@@ -316,11 +316,7 @@ export const MultiSelectItemPrimitive = forwardRef<HTMLElement, MultiSelectItemP
         const { className, ...componentProps } = resolveStyles(props);
 
         return (
-            <BaseSelect.Item
-                ref={ref}
-                className={clsx(styles.item, className)}
-                {...componentProps}
-            />
+            <BaseSelect.Item ref={ref} className={cn(styles.item, className)} {...componentProps} />
         );
     },
 );
@@ -337,7 +333,7 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
@@ -345,7 +341,7 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
     return (
         <BaseSelect.ItemIndicator
             ref={ref}
-            className={clsx(styles.itemIndicator, className)}
+            className={cn(styles.itemIndicator, className)}
             {...componentProps}
         >
             {children}
@@ -395,7 +391,7 @@ export const MultiSelectGroupLabel = forwardRef<HTMLDivElement, MultiSelectGroup
         return (
             <BaseSelect.GroupLabel
                 ref={ref}
-                className={clsx(styles.groupLabel, className)}
+                className={cn(styles.groupLabel, className)}
                 {...componentProps}
             />
         );
@@ -414,7 +410,7 @@ export const MultiSelectSeparator = forwardRef<HTMLDivElement, MultiSelectSepara
         return (
             <BaseSelect.Separator
                 ref={ref}
-                className={clsx(styles.separator, className)}
+                className={cn(styles.separator, className)}
                 {...componentProps}
             />
         );

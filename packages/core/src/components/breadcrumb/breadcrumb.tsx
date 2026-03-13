@@ -2,10 +2,9 @@
 
 import { forwardRef, useMemo } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
 import { MoreCommonOutlineIcon, SlashOutlineIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -35,7 +34,7 @@ export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPri
             'size',
         ]);
 
-        const element = useRender({
+        const element = useRenderElement({
             ref,
             render,
             defaultTagName: 'nav',
@@ -58,12 +57,12 @@ export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbLi
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
 
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'ol',
             props: {
-                className: clsx(styles.list, className),
+                className: [styles.list, className],
                 ...componentProps,
             },
         });
@@ -94,12 +93,12 @@ export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemP
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
 
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'li',
             props: {
-                className: clsx(styles.item, className),
+                className: [styles.item, className],
                 ...componentProps,
             },
         });
@@ -118,7 +117,7 @@ export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbL
 
         const state: BreadcrumbLinkPrimitive.State = useMemo(() => ({ current }), [current]);
 
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             state,
@@ -127,7 +126,7 @@ export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbL
                 role: current ? 'link' : undefined,
                 'aria-disabled': current ? 'true' : undefined,
                 'aria-current': current ? 'page' : undefined,
-                className: clsx(styles.link({ size, current }), className),
+                className: [styles.link({ size, current }), className],
                 ...componentProps,
             },
         });
@@ -163,19 +162,19 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
         const { size } = useBreadcrumbContext();
 
         const childrenRender = createRender(childrenProp, <SlashOutlineIcon />);
-        const children = useRender({
+        const children = useRenderElement({
             render: childrenRender,
             props: { width: '100%', height: '100%' },
         });
 
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'li',
             props: {
                 role: 'presentation',
                 'aria-hidden': 'true',
-                className: clsx(styles.icon({ size }), className),
+                className: [styles.icon({ size }), className],
                 children,
                 ...componentProps,
             },
@@ -197,19 +196,19 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
     const { size } = useBreadcrumbContext();
 
     const childrenRender = createRender(childrenProp, <MoreCommonOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'span',
         props: {
             role: 'presentation',
             'aria-hidden': 'true',
-            className: clsx(styles.icon({ size }), className),
+            className: [styles.icon({ size }), className],
             children,
             ...componentProps,
         },

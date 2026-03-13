@@ -4,12 +4,12 @@ import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
-import { useRender } from '@base-ui/react/use-render';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -53,12 +53,12 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
     const contextValue = useMemo(() => variantProps, [variantProps]);
 
     const imageRender = createRender(imageElement, <AvatarImagePrimitive />);
-    const image = useRender({
+    const image = useRenderElement({
         render: imageRender,
     });
 
     const fallbackRender = createRender(fallbackElement, <AvatarFallbackPrimitive />);
-    const fallback = useRender({
+    const fallback = useRenderElement({
         render: fallbackRender,
         props: { children },
     });
@@ -67,7 +67,7 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
         <AvatarProvider value={contextValue}>
             <BaseAvatar.Root
                 ref={ref}
-                className={clsx(styles.root({ shape, size }), className)}
+                className={cn(styles.root({ shape, size }), className)}
                 {...otherProps}
             >
                 {image}
@@ -106,7 +106,7 @@ export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrim
         return (
             <BaseAvatar.Image
                 ref={ref}
-                className={clsx(styles.image, className)}
+                className={cn(styles.image, className)}
                 {...imageProps}
                 {...componentProps}
             />
@@ -135,7 +135,7 @@ export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbac
                 ref={ref}
                 delay={delay}
                 style={mergedStyle}
-                className={clsx(styles.fallback({ size }), className)}
+                className={cn(styles.fallback({ size }), className)}
                 {...componentProps}
             >
                 {children ?? getAvatarInitials(alt)}

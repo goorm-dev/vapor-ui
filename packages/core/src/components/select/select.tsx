@@ -4,11 +4,11 @@ import type { ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
-import { useRender } from '@base-ui/react/use-render';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -70,7 +70,7 @@ export const SelectTriggerPrimitive = forwardRef<HTMLButtonElement, SelectTrigge
                 nativeButton={nativeButton}
                 aria-required={required || undefined}
                 aria-invalid={invalid || undefined}
-                className={clsx(styles.trigger({ size, invalid }), className)}
+                className={cn(styles.trigger({ size, invalid }), className)}
                 {...dataAttrs}
                 {...componentProps}
             />
@@ -104,7 +104,7 @@ export const SelectValuePrimitive = forwardRef<HTMLSpanElement, SelectValuePrimi
         return (
             <BaseSelect.Value
                 ref={ref}
-                className={clsx(styles.value({ size }), className)}
+                className={cn(styles.value({ size }), className)}
                 {...componentProps}
             >
                 {children}
@@ -130,7 +130,7 @@ export const SelectPlaceholderPrimitive = forwardRef<
     return (
         <BaseSelect.Value
             ref={ref}
-            className={clsx(styles.placeholder, className)}
+            className={cn(styles.placeholder, className)}
             {...componentProps}
         />
     );
@@ -150,14 +150,14 @@ export const SelectTriggerIconPrimitive = forwardRef<
     const { size } = useSelectContext();
 
     const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
     });
 
     return (
         <BaseSelect.Icon
             ref={ref}
-            className={clsx(styles.triggerIcon({ size }), className)}
+            className={cn(styles.triggerIcon({ size }), className)}
             {...componentProps}
         >
             {children}
@@ -219,7 +219,7 @@ export const SelectPositionerPrimitive = forwardRef<
             align={align}
             sideOffset={sideOffset}
             alignItemWithTrigger={alignItemWithTrigger}
-            className={clsx(styles.positioner, className)}
+            className={cn(styles.positioner, className)}
             {...componentProps}
         />
     );
@@ -237,7 +237,7 @@ export const SelectPopupPrimitive = forwardRef<HTMLDivElement, SelectPopupPrimit
         return (
             <BaseSelect.Popup
                 ref={ref}
-                className={clsx(styles.popup, className)}
+                className={cn(styles.popup, className)}
                 {...componentProps}
             />
         );
@@ -254,13 +254,13 @@ export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
         const popup = <SelectPopupPrimitive ref={ref} {...props} />;
 
         const positionerRender = createRender(positionerElement, <SelectPositionerPrimitive />);
-        const positioner = useRender({
+        const positioner = useRenderElement({
             render: positionerRender,
             props: { children: popup },
         });
 
         const portalRender = createRender(portalElement, <SelectPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: { children: positioner },
         });
@@ -279,11 +279,7 @@ export const SelectItemPrimitive = forwardRef<HTMLElement, SelectItemPrimitive.P
         const { className, ...componentProps } = resolveStyles(props);
 
         return (
-            <BaseSelect.Item
-                ref={ref}
-                className={clsx(styles.item, className)}
-                {...componentProps}
-            />
+            <BaseSelect.Item ref={ref} className={cn(styles.item, className)} {...componentProps} />
         );
     },
 );
@@ -300,14 +296,14 @@ export const SelectItemIndicatorPrimitive = forwardRef<
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
     });
 
     return (
         <BaseSelect.ItemIndicator
             ref={ref}
-            className={clsx(styles.itemIndicator, className)}
+            className={cn(styles.itemIndicator, className)}
             {...componentProps}
         >
             {children}
@@ -354,7 +350,7 @@ export const SelectGroupLabel = forwardRef<HTMLDivElement, SelectGroupLabel.Prop
     return (
         <BaseSelect.GroupLabel
             ref={ref}
-            className={clsx(styles.groupLabel, className)}
+            className={cn(styles.groupLabel, className)}
             {...componentProps}
         />
     );
@@ -371,7 +367,7 @@ export const SelectSeparator = forwardRef<HTMLDivElement, SelectSeparator.Props>
     return (
         <BaseSelect.Separator
             ref={ref}
-            className={clsx(styles.separator, className)}
+            className={cn(styles.separator, className)}
             {...componentProps}
         />
     );

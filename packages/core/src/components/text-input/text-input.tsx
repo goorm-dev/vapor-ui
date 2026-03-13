@@ -4,9 +4,9 @@ import { forwardRef, useRef } from 'react';
 
 import { Input as BaseInput } from '@base-ui/react/input';
 import { useControlled } from '@base-ui/utils/useControlled';
-import clsx from 'clsx';
 
 import { useInputGroup } from '~/components/input-group';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -60,7 +60,7 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
             {...(isControlled ? { value } : { defaultValue })}
             aria-invalid={invalid}
             onValueChange={handleChange}
-            className={clsx(styles.root({ invalid, size }), className)}
+            className={cn(styles.root({ invalid, size }), className)}
             {...dataAttrs}
             {...otherProps}
         />

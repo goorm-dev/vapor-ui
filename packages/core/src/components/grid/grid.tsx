@@ -4,8 +4,8 @@ import type { CSSProperties } from 'react';
 import { forwardRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-import clsx from 'clsx';
 
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -46,7 +46,7 @@ export const GridRoot = forwardRef<HTMLDivElement, GridRoot.Props>((props, ref) 
             ref={ref}
             $css={{ display: inline ? 'inline-grid' : 'grid' }}
             style={{ ...cssVariables, ...style }}
-            className={clsx(styles.root(variants), className)}
+            className={cn(styles.root(variants), className)}
             {...otherProps}
         />
     );
@@ -69,7 +69,7 @@ export const GridItem = forwardRef<HTMLDivElement, GridItem.Props>((props, ref) 
         <Box
             ref={ref}
             style={{ ...cssVariables, ...style }}
-            className={clsx(styles.item, className)}
+            className={cn(styles.item, className)}
             {...componentProps}
         />
     );
