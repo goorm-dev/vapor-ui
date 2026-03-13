@@ -1,14 +1,13 @@
 import clsx from 'clsx';
-import type { ClassValue } from 'clsx';
 
-type StateResolver<State extends object> = (state: State) => ClassValue;
-type ClassNameArg<State extends object> = ClassValue | StateResolver<State>;
+import type { ClassNameParams } from './stateful-props';
+import { resolveClassName } from './stateful-props';
 
-export function cn(...classNames: ClassValue[]): string;
+export function cn(...classNames: string[]): string;
 export function cn<State extends object>(
-    ...classNames: ClassNameArg<State>[]
+    ...classNames: ClassNameParams<State>[]
 ): string | ((state: State) => string);
-export function cn<State extends object>(...classNames: ClassNameArg<State>[]) {
+export function cn<State extends object>(...classNames: ClassNameParams<State>[]) {
     const hasStateResolver = classNames.some((value) => typeof value === 'function');
 
     if (!hasStateResolver) {
@@ -16,9 +15,5 @@ export function cn<State extends object>(...classNames: ClassNameArg<State>[]) {
     }
 
     return (state: State) =>
-        clsx(
-            ...classNames.map((className) =>
-                typeof className === 'function' ? className(state) : className,
-            ),
-        );
+        clsx(...classNames.map((className) => resolveClassName(className, state)));
 }

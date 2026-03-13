@@ -1,5 +1,8 @@
 import { useRender } from '@base-ui/react';
 
+import { resolveClassName, resolveStyle } from '~/utils/stateful-props';
+import type { ClassNameParams, StyleParams } from '~/utils/stateful-props';
+
 type Params<
     State extends Record<string, unknown>,
     RenderedElementType extends Element,
@@ -14,11 +17,17 @@ export const useRenderElement = <
     params: Params<State, RenderedElementType, Enabled>,
 ): useRender.ReturnValue<Enabled> => {
     const { state, props = {} } = params;
+    const resolvedState = (state ?? {}) as State;
 
     const { className: classNameProp, style: styleProp, ...otherProps } = props;
 
-    const className = classNameProp ? resolveClassName(classNameProp, state) : undefined;
-    const style = styleProp ? resolveStyle(styleProp, state) : undefined;
+    const className = isClassNameParam<State>(classNameProp)
+        ? resolveClassName(classNameProp, resolvedState)
+        : undefined;
+
+    const style = isStyleParam<State>(styleProp)
+        ? resolveStyle(styleProp, resolvedState)
+        : undefined;
 
     return useRender({
         ...params,
@@ -26,20 +35,10 @@ export const useRenderElement = <
     });
 };
 
-function resolveClassName<State>(classNames: unknown, state: State) {
-    if (!classNames) return undefined;
-
-    const values = Array.isArray(classNames) ? classNames : [classNames];
-    const resolved = values
-        .map((value) => {
-            if (typeof value === 'function') return value(state as State);
-            return value;
-        })
-        .filter(Boolean);
-
-    return resolved.join(' ').trim();
+function isClassNameParam<State>(value: unknown): value is ClassNameParams<State> {
+    return typeof value === 'string' || typeof value === 'function';
 }
 
-function resolveStyle<State>(style: unknown, state: State) {
-    return typeof style === 'function' ? style(state) : style;
+function isStyleParam<State>(value: unknown): value is StyleParams<State> {
+    return typeof value === 'object' || typeof value === 'function';
 }
