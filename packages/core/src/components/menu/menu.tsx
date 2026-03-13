@@ -527,7 +527,7 @@ export namespace MenuSubmenuRoot {
     export type State = BaseMenu.SubmenuRoot.State;
     export type Props = VaporUIComponentProps<typeof BaseMenu.SubmenuRoot, State> & {};
 
-    export type OpenEventDetails = BaseMenu.SubmenuRoot.ChangeEventReason;
+    export type OpenEventDetails = BaseMenu.SubmenuRoot.ChangeEventDetails;
 }
 
 export namespace MenuSubmenuTriggerItem {
