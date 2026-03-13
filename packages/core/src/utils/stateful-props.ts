@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 
 import { mergeProps } from '@base-ui/react';
+import type { ClassValue } from 'clsx';
 import clsx from 'clsx';
 
 export type StyleParams<State> =
@@ -16,7 +17,10 @@ export const resolveStyle = <State>(style: StyleParams<State>, state: State) => 
     return style;
 };
 
-export type ClassNameParams<State> = string | ((state: State) => string | undefined) | undefined;
+export type ClassNameParams<State> =
+    | ClassValue
+    | ((state: State) => ClassValue | undefined)
+    | undefined;
 
 export const resolveClassName = <State>(className: ClassNameParams<State>, state: State) => {
     if (typeof className === 'function') {
