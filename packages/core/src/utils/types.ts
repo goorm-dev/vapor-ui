@@ -1,9 +1,11 @@
-import type { CSSProperties, ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 
 import type { useRender } from '@base-ui/react/use-render';
 
 import type { DeprecatedSprinkles as OriginalDeprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
 import type { Sprinkles } from '~/styles/sprinkles.css';
+
+import type { ClassNameParams, StyleParams } from './stateful-props';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyProp = any;
@@ -39,11 +41,8 @@ export type VaporUIComponentProps<ElementType extends React.ElementType, State> 
         useRender.ComponentProps<ElementType, State>,
         OmitColorProp<ElementType> | 'className' | 'style'
     > & {
-        className?: string | ((state: State) => string | undefined) | undefined;
-        style?:
-            | CSSProperties
-            | (CSSProperties & ((state: State) => React.CSSProperties | undefined))
-            | undefined;
+        className?: ClassNameParams<State>;
+        style?: StyleParams<State>;
     };
 
 /**

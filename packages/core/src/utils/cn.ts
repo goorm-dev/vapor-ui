@@ -1,13 +1,12 @@
-import type { ClassValue } from 'clsx';
 import clsx from 'clsx';
 
 import type { ClassNameParams } from './stateful-props';
 import { resolveClassName } from './stateful-props';
 
-export function cn(...classNames: ClassValue[]): string;
+export function cn(...classNames: string[]): string;
 export function cn<State extends object>(
     ...classNames: ClassNameParams<State>[]
-): string | ((state: State) => string);
+): string | ((state: State) => string | undefined);
 export function cn<State extends object>(...classNames: ClassNameParams<State>[]) {
     const hasStateResolver = classNames.some((value) => typeof value === 'function');
 

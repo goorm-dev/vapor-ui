@@ -37,11 +37,8 @@ describe('useRenderElement', () => {
                 state: { active: true, disabled: false },
                 props: {
                     'data-testid': 'target',
-                    className: cn(
-                        'base',
-                        (state: TestState) => (state.active ? 'from-fn' : undefined),
-                        false,
-                        null,
+                    className: cn('base', (state: TestState) =>
+                        state.active ? 'from-fn' : undefined,
                     ),
                 },
             });
