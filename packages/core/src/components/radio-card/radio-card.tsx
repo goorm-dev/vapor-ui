@@ -3,12 +3,12 @@
 import { forwardRef } from 'react';
 
 import { Radio as BaseRadio } from '@base-ui/react/radio';
-import clsx from 'clsx';
 
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
 import type { RadioCardVariants } from './radio-card.css';
@@ -31,7 +31,7 @@ export const RadioCard = forwardRef<HTMLElement, RadioCard.Props>((props, ref) =
         <BaseRadio.Root
             ref={ref}
             aria-invalid={invalid}
-            className={clsx(styles.root({ invalid }), className)}
+            className={cn(styles.root({ invalid }), className)}
             {...dataAttrs}
             {...otherProps}
         />
@@ -40,6 +40,6 @@ export const RadioCard = forwardRef<HTMLElement, RadioCard.Props>((props, ref) =
 RadioCard.displayName = 'RadioCard';
 
 export namespace RadioCard {
-    type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
-    export interface Props extends RootPrimitiveProps, RadioCardVariants {}
+    export type State = BaseRadio.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseRadio.Root, State> & RadioCardVariants;
 }

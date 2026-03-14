@@ -4,16 +4,16 @@ import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
-import { useRender } from '@base-ui/react/use-render';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VComponentProps } from '~/utils/types';
+import type { Assign, VaporUIComponentProps } from '~/utils/types';
 
 import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
@@ -53,12 +53,12 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
     const contextValue = useMemo(() => variantProps, [variantProps]);
 
     const imageRender = createRender(imageElement, <AvatarImagePrimitive />);
-    const image = useRender({
+    const image = useRenderElement({
         render: imageRender,
     });
 
     const fallbackRender = createRender(fallbackElement, <AvatarFallbackPrimitive />);
-    const fallback = useRender({
+    const fallback = useRenderElement({
         render: fallbackRender,
         props: { children },
     });
@@ -67,7 +67,7 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
         <AvatarProvider value={contextValue}>
             <BaseAvatar.Root
                 ref={ref}
-                className={clsx(styles.root({ shape, size }), className)}
+                className={cn(styles.root({ shape, size }), className)}
                 {...otherProps}
             >
                 {image}
@@ -106,7 +106,7 @@ export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrim
         return (
             <BaseAvatar.Image
                 ref={ref}
-                className={clsx(styles.image, className)}
+                className={cn(styles.image, className)}
                 {...imageProps}
                 {...componentProps}
             />
@@ -135,7 +135,7 @@ export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbac
                 ref={ref}
                 delay={delay}
                 style={mergedStyle}
-                className={clsx(styles.fallback({ size }), className)}
+                className={cn(styles.fallback({ size }), className)}
                 {...componentProps}
             >
                 {children ?? getAvatarInitials(alt)}
@@ -209,25 +209,37 @@ type ImageProps = Omit<BaseAvatar.Image.Props, keyof BaseAvatar.Root.Props>;
 type AvatarVariants = RootVariants & FallbackVariants;
 type AvatarContext = AvatarVariants & ImageProps & Pick<BaseAvatar.Fallback.Props, 'delay'>;
 
-export namespace AvatarRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
-    type SubElementProps = {
-        imageElement?: ReactElement<AvatarImagePrimitive.Props>;
-        fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
-    };
+export interface AvatarRootProps extends Assign<
+    VaporUIComponentProps<typeof BaseAvatar.Root, AvatarRoot.State>,
+    AvatarContext
+> {
+    /**
+     * A Custom element for Avatar.ImagePrimitive. If not provided, the default Avatar.ImagePrimitive will be rendered.
+     */
+    imageElement?: ReactElement<AvatarImagePrimitive.Props>;
+    /**
+     * A Custom element for Avatar.FallbackPrimitive. If not provided, the default Avatar.FallbackPrimitive will be rendered.
+     */
+    fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
+}
 
-    export interface Props extends Assign<RootPrimitiveProps, AvatarContext>, SubElementProps {}
-    export interface State extends BaseAvatar.Root.State {}
+export namespace AvatarRoot {
+    export type State = BaseAvatar.Root.State;
+    export type Props = AvatarRootProps;
 }
 
 export namespace AvatarImagePrimitive {
-    type ImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
-
-    export interface Props extends Omit<ImagePrimitiveProps, keyof AvatarContext> {}
+    export type State = BaseAvatar.Image.State;
+    export type Props = Omit<
+        VaporUIComponentProps<typeof BaseAvatar.Image, State>,
+        keyof AvatarContext
+    >;
 }
 
 export namespace AvatarFallbackPrimitive {
-    type FallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
-
-    export interface Props extends Omit<FallbackPrimitiveProps, keyof AvatarContext> {}
+    export type State = BaseAvatar.Fallback.State;
+    export type Props = Omit<
+        VaporUIComponentProps<typeof BaseAvatar.Fallback, State>,
+        keyof AvatarContext
+    >;
 }

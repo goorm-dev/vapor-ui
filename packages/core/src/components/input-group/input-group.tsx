@@ -2,12 +2,11 @@
 
 import { forwardRef, useEffect, useMemo, useState } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { Assign, VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './input-group.css';
 
@@ -52,12 +51,12 @@ export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((
         [value, maxLength],
     );
 
-    const element = useRender({
+    const element = useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.root, className),
+            className: cn(styles.root, className),
             ...componentProps,
         },
     });
@@ -91,12 +90,12 @@ export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.P
                 ? childrenProp({ count: value.length, maxLength, value })
                 : childrenProp || content;
 
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'span',
             props: {
-                className: clsx(styles.counter, className),
+                className: cn(styles.counter, className),
                 children,
                 ...componentProps,
             },
@@ -142,14 +141,16 @@ export function useInputGroup({ value, maxLength }: UseInputGroupOptions) {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace InputGroupRoot {
-    export interface Props extends VComponentProps<'div'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace InputGroupCounter {
-    type PrimitiveCounterProps = Omit<VComponentProps<'span'>, 'children'>;
-    type CounterRenderProps = { count: number; maxLength?: number; value: string };
+    type RenderProps = { count: number; maxLength?: number; value: string };
+    type ChildrenProps = {
+        children?: React.ReactNode | ((props: RenderProps) => React.ReactNode);
+    };
 
-    export interface Props extends PrimitiveCounterProps {
-        children?: React.ReactNode | ((props: CounterRenderProps) => React.ReactNode);
-    }
+    export type State = {};
+    export type Props = Assign<VaporUIComponentProps<'span', State>, ChildrenProps>;
 }

@@ -1,24 +1,24 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactElement, RefObject } from 'react';
+import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import clsx from 'clsx';
 
 import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
+import { useRenderElement } from '~/hooks/use-render-element';
 import type { TransitionStatus } from '~/hooks/use-transition-status';
 import { useTransitionStatus } from '~/hooks/use-transition-status';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Dialog } from '../dialog';
 import * as styles from './sheet.css';
@@ -153,7 +153,7 @@ export const SheetPositionerPrimitive = forwardRef<HTMLDivElement, SheetPosition
 
         const { open: contextOpen = false, mounted } = useSheetRootContext();
 
-        const element = useRender({
+        const element = useRenderElement({
             ref,
             render: render || <div />,
             state: { open: contextOpen, closed: !contextOpen, side },
@@ -187,7 +187,7 @@ export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitiv
         return (
             <BaseDialog.Popup
                 ref={composedRef}
-                className={clsx(styles.popup, className)}
+                className={cn(styles.popup, className)}
                 {...dataAttr}
                 {...componentProps}
             />
@@ -205,18 +205,18 @@ export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
         const popup = <SheetPopupPrimitive ref={ref} {...props} />;
 
         const positionerRender = createRender(positionerElement, <SheetPositionerPrimitive />);
-        const positioner = useRender({
+        const positioner = useRenderElement({
             render: positionerRender,
             props: { children: popup },
         });
 
         const overlayRender = createRender(overlayElement, <SheetOverlayPrimitive />);
-        const overlay = useRender({
+        const overlay = useRenderElement({
             render: overlayRender,
         });
 
         const portalRender = createRender(portalElement, <SheetPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: {
                 children: (
@@ -240,9 +240,7 @@ SheetPopup.displayName = 'Sheet.Popup';
 export const SheetHeader = forwardRef<HTMLDivElement, SheetHeader.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return (
-        <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...componentProps} />
-    );
+    return <Dialog.Header ref={ref} className={cn(styles.header, className)} {...componentProps} />;
 });
 SheetHeader.displayName = 'Sheet.Header';
 
@@ -253,7 +251,7 @@ SheetHeader.displayName = 'Sheet.Header';
 export const SheetBody = forwardRef<HTMLDivElement, SheetBody.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...componentProps} />;
+    return <Dialog.Body ref={ref} className={cn(styles.body, className)} {...componentProps} />;
 });
 SheetBody.displayName = 'Sheet.Body';
 
@@ -264,9 +262,7 @@ SheetBody.displayName = 'Sheet.Body';
 export const SheetFooter = forwardRef<HTMLDivElement, SheetFooter.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return (
-        <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...componentProps} />
-    );
+    return <Dialog.Footer ref={ref} className={cn(styles.footer, className)} {...componentProps} />;
 });
 SheetFooter.displayName = 'Sheet.Footer';
 
@@ -287,73 +283,95 @@ SheetDescription.displayName = 'Sheet.Description';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace SheetRoot {
-    type RootPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Dialog.Root>, 'size'>;
-    export interface Props extends RootPrimitiveProps {}
+    export type State = {};
+    export type Props = Omit<Dialog.Root.Props, 'size'>;
 
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
     export type Actions = BaseDialog.Root.Actions;
 }
 
 export namespace SheetTrigger {
-    type TriggerPrimitiveProps = VComponentProps<typeof Dialog.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = Dialog.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Trigger, State>;
 }
 
 export namespace SheetClose {
-    type ClosePrimitiveProps = VComponentProps<typeof Dialog.Close>;
-    export interface Props extends ClosePrimitiveProps {}
+    export type State = Dialog.Close.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Close, State>;
 }
 
 export namespace SheetOverlayPrimitive {
-    type OverlayPrimitiveProps = VComponentProps<typeof Dialog.OverlayPrimitive>;
-    export interface Props extends OverlayPrimitiveProps {}
+    export type State = Dialog.OverlayPrimitive.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.OverlayPrimitive, State>;
 }
 
 export namespace SheetPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof Dialog.PortalPrimitive>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = Dialog.PortalPrimitive.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.PortalPrimitive, State>;
+}
+
+export interface SheetPositionerPrimitiveState {
+    /** The side of the sheet relative to the viewport. */
+    side?: 'top' | 'right' | 'bottom' | 'left';
+
+    /** Whether the sheet is open. */
+    open: boolean;
+
+    /** Whether the sheet is closed. */
+    closed: boolean;
 }
 
 export namespace SheetPositionerPrimitive {
-    type PositionerPrimitiveProps = VComponentProps<'div'>;
-    export interface Props extends PositionerPrimitiveProps, PositionerType {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State> & PositionerType;
 }
 
 export namespace SheetPopupPrimitive {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseDialog.Popup>;
-    export interface Props extends PopupPrimitiveProps {}
+    export type State = BaseDialog.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State>;
+}
+
+export interface SheetPopupProps extends SheetPopupPrimitive.Props {
+    /**
+     * A Custom element for Sheet.PortalPrimitive. If not provided, the default Sheet.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<SheetPortalPrimitive.Props>;
+    /**
+     * A Custom element for Sheet.OverlayPrimitive. If not provided, the default Sheet.OverlayPrimitive will be rendered.
+     */
+    overlayElement?: ReactElement<SheetOverlayPrimitive.Props>;
+    /**
+     * A Custom element for Sheet.PositionerPrimitive. If not provided, the default Sheet.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<SheetPositionerPrimitive.Props>;
 }
 
 export namespace SheetPopup {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseDialog.Popup>;
-    export interface Props extends PopupPrimitiveProps {
-        portalElement?: ReactElement<SheetPortalPrimitive.Props>;
-        overlayElement?: ReactElement<SheetOverlayPrimitive.Props>;
-        positionerElement?: ReactElement<SheetPositionerPrimitive.Props>;
-    }
+    export type State = SheetPopupPrimitive.State;
+    export type Props = SheetPopupProps;
 }
 
 export namespace SheetHeader {
-    type HeaderPrimitiveProps = VComponentProps<typeof Dialog.Header>;
-    export interface Props extends HeaderPrimitiveProps {}
+    export type State = Dialog.Header.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Header, State>;
 }
 
 export namespace SheetBody {
-    type BodyPrimitiveProps = VComponentProps<typeof Dialog.Body>;
-    export interface Props extends BodyPrimitiveProps {}
+    export type State = Dialog.Body.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Body, State>;
 }
 
 export namespace SheetFooter {
-    type FooterPrimitiveProps = VComponentProps<typeof Dialog.Footer>;
-    export interface Props extends FooterPrimitiveProps {}
+    export type State = Dialog.Footer.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Footer, State>;
 }
 
 export namespace SheetTitle {
-    type TitlePrimitiveProps = VComponentProps<typeof Dialog.Title>;
-    export interface Props extends TitlePrimitiveProps {}
+    export type State = Dialog.Title.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Title, State>;
 }
 
 export namespace SheetDescription {
-    type DescriptionPrimitiveProps = VComponentProps<typeof Dialog.Description>;
-    export interface Props extends DescriptionPrimitiveProps {}
+    export type State = Dialog.Description.State;
+    export type Props = VaporUIComponentProps<typeof Dialog.Description, State>;
 }

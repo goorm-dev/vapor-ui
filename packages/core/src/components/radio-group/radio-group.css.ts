@@ -1,3 +1,4 @@
+import { style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -22,6 +23,9 @@ export const root = recipe({
     },
 });
 
-export const label = [foregrounds({ color: 'normal-100' }), typography({ style: 'subtitle2' })];
+export const label = style([
+    foregrounds({ color: 'normal-100' }),
+    typography({ style: 'subtitle2' }),
+]);
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

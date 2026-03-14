@@ -1,29 +1,22 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
-import { useRender } from '@base-ui/react/use-render';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './select.css';
 import type { TriggerVariants } from './select.css';
-
-type SelectVariants = TriggerVariants;
-type SelectSharedProps = SelectVariants & {
-    placeholder?: ReactNode;
-};
-
-type SelectContext = SelectSharedProps & Pick<SelectRoot.Props, 'items' | 'required'>;
 
 const [SelectProvider, useSelectContext] = createContext<SelectContext>({
     name: 'SelectContext',
@@ -35,18 +28,20 @@ const [SelectProvider, useSelectContext] = createContext<SelectContext>({
  * Select.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectRoot = (props: SelectRoot.Props) => {
-    const [sharedProps, otherProps] = createSplitProps<SelectSharedProps>()(props, [
+export const SelectRoot = <Value,>(props: SelectRoot.Props<Value>) => {
+    const [contextProps, otherProps] = createSplitProps<SelectContext>()(props, [
         'placeholder',
         'size',
         'invalid',
+        'items',
+        'required',
     ]);
 
-    const { items, required } = otherProps;
+    const { items, required } = contextProps;
 
     return (
-        <SelectProvider value={{ items, required, ...sharedProps }}>
-            <BaseSelect.Root {...otherProps} multiple={false} />
+        <SelectProvider value={contextProps}>
+            <BaseSelect.Root items={items} required={required} {...otherProps} multiple={false} />
         </SelectProvider>
     );
 };
@@ -75,7 +70,7 @@ export const SelectTriggerPrimitive = forwardRef<HTMLButtonElement, SelectTrigge
                 nativeButton={nativeButton}
                 aria-required={required || undefined}
                 aria-invalid={invalid || undefined}
-                className={clsx(styles.trigger({ size, invalid }), className)}
+                className={cn(styles.trigger({ size, invalid }), className)}
                 {...dataAttrs}
                 {...componentProps}
             />
@@ -109,7 +104,7 @@ export const SelectValuePrimitive = forwardRef<HTMLSpanElement, SelectValuePrimi
         return (
             <BaseSelect.Value
                 ref={ref}
-                className={clsx(styles.value({ size }), className)}
+                className={cn(styles.value({ size }), className)}
                 {...componentProps}
             >
                 {children}
@@ -135,7 +130,7 @@ export const SelectPlaceholderPrimitive = forwardRef<
     return (
         <BaseSelect.Value
             ref={ref}
-            className={clsx(styles.placeholder, className)}
+            className={cn(styles.placeholder, className)}
             {...componentProps}
         />
     );
@@ -155,14 +150,14 @@ export const SelectTriggerIconPrimitive = forwardRef<
     const { size } = useSelectContext();
 
     const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
     });
 
     return (
         <BaseSelect.Icon
             ref={ref}
-            className={clsx(styles.triggerIcon({ size }), className)}
+            className={cn(styles.triggerIcon({ size }), className)}
             {...componentProps}
         >
             {children}
@@ -224,7 +219,7 @@ export const SelectPositionerPrimitive = forwardRef<
             align={align}
             sideOffset={sideOffset}
             alignItemWithTrigger={alignItemWithTrigger}
-            className={clsx(styles.positioner, className)}
+            className={cn(styles.positioner, className)}
             {...componentProps}
         />
     );
@@ -242,7 +237,7 @@ export const SelectPopupPrimitive = forwardRef<HTMLDivElement, SelectPopupPrimit
         return (
             <BaseSelect.Popup
                 ref={ref}
-                className={clsx(styles.popup, className)}
+                className={cn(styles.popup, className)}
                 {...componentProps}
             />
         );
@@ -259,13 +254,13 @@ export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
         const popup = <SelectPopupPrimitive ref={ref} {...props} />;
 
         const positionerRender = createRender(positionerElement, <SelectPositionerPrimitive />);
-        const positioner = useRender({
+        const positioner = useRenderElement({
             render: positionerRender,
             props: { children: popup },
         });
 
         const portalRender = createRender(portalElement, <SelectPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: { children: positioner },
         });
@@ -284,11 +279,7 @@ export const SelectItemPrimitive = forwardRef<HTMLElement, SelectItemPrimitive.P
         const { className, ...componentProps } = resolveStyles(props);
 
         return (
-            <BaseSelect.Item
-                ref={ref}
-                className={clsx(styles.item, className)}
-                {...componentProps}
-            />
+            <BaseSelect.Item ref={ref} className={cn(styles.item, className)} {...componentProps} />
         );
     },
 );
@@ -305,14 +296,14 @@ export const SelectItemIndicatorPrimitive = forwardRef<
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
     });
 
     return (
         <BaseSelect.ItemIndicator
             ref={ref}
-            className={clsx(styles.itemIndicator, className)}
+            className={cn(styles.itemIndicator, className)}
             {...componentProps}
         >
             {children}
@@ -359,7 +350,7 @@ export const SelectGroupLabel = forwardRef<HTMLDivElement, SelectGroupLabel.Prop
     return (
         <BaseSelect.GroupLabel
             ref={ref}
-            className={clsx(styles.groupLabel, className)}
+            className={cn(styles.groupLabel, className)}
             {...componentProps}
         />
     );
@@ -376,7 +367,7 @@ export const SelectSeparator = forwardRef<HTMLDivElement, SelectSeparator.Props>
     return (
         <BaseSelect.Separator
             ref={ref}
-            className={clsx(styles.separator, className)}
+            className={cn(styles.separator, className)}
             {...componentProps}
         />
     );
@@ -385,86 +376,109 @@ SelectSeparator.displayName = 'Select.Separator';
 
 /* -----------------------------------------------------------------------------------------------*/
 
+type SelectVariants = TriggerVariants;
+type SelectContext = Pick<SelectRoot.Props<unknown>, 'items' | 'required' | 'placeholder'> &
+    SelectVariants;
+
+export interface SelectRootProps<Value = unknown>
+    extends SelectVariants, Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> {
+    /**
+     * The placeholder value to display when no value is selected.
+     * This is overridden by `children` of Select.Value if specified, or by a null item's label in `items`.
+     */
+    placeholder?: ReactNode;
+}
+
 export namespace SelectRoot {
-    type RootPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof BaseSelect.Root>, 'multiple'>;
-    export interface Props extends RootPrimitiveProps, SelectSharedProps {}
+    export type State = BaseSelect.Root.State;
+    export type Props<Value = unknown> = SelectRootProps<Value>;
 
     export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 
 export namespace SelectTriggerPrimitive {
-    type TriggerPrimitiveProps = VComponentProps<typeof BaseSelect.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = BaseSelect.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Trigger, State>;
 }
 
 export namespace SelectTrigger {
-    export interface Props extends SelectTriggerPrimitive.Props {}
+    export type State = SelectTriggerPrimitive.State;
+    export type Props = SelectTriggerPrimitive.Props;
 }
 
 export namespace SelectValuePrimitive {
-    type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
-    export interface Props extends ValuePrimitiveProps {}
+    export type State = BaseSelect.Value.State;
+    export type Props = Omit<VaporUIComponentProps<typeof BaseSelect.Value, State>, 'placeholder'>;
 }
 
 export namespace SelectPlaceholderPrimitive {
-    type PlaceholderPrimitiveProps = VComponentProps<'span'>;
-    export interface Props extends PlaceholderPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }
 
 export namespace SelectTriggerIconPrimitive {
-    type TriggerIconPrimitiveProps = VComponentProps<typeof BaseSelect.Icon>;
-    export interface Props extends TriggerIconPrimitiveProps {}
+    export type State = BaseSelect.Icon.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Icon, State>;
 }
 
 export namespace SelectPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseSelect.Portal>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = BaseSelect.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Portal, State>;
 }
 
 export namespace SelectPositionerPrimitive {
-    type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
-    export interface Props extends PositionerPrimitiveProps {}
+    export type State = BaseSelect.Positioner.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Positioner, State>;
 }
 
 export namespace SelectPopupPrimitive {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseSelect.Popup>;
-    export interface Props extends PopupPrimitiveProps {}
+    export type State = BaseSelect.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Popup, State>;
+}
+
+export interface SelectPopupProps extends SelectPopupPrimitive.Props {
+    /**
+     * A Custom element for Select.PortalPrimitive. If not provided, the default Select.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<SelectPortalPrimitive.Props>;
+    /**
+     * A Custom element for Select.PositionerPrimitive. If not provided, the default Select.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<SelectPositionerPrimitive.Props>;
 }
 
 export namespace SelectPopup {
-    type ContentPrimitiveProps = VComponentProps<typeof SelectPopupPrimitive>;
-    export interface Props extends ContentPrimitiveProps {
-        portalElement?: ReactElement<SelectPortalPrimitive.Props>;
-        positionerElement?: ReactElement<SelectPositionerPrimitive.Props>;
-    }
+    export type State = SelectPopupPrimitive.State;
+    export type Props = SelectPopupProps;
 }
 
 export namespace SelectItemPrimitive {
-    type ItemPrimitiveProps = VComponentProps<typeof BaseSelect.Item>;
-    export interface Props extends ItemPrimitiveProps {}
+    export type State = BaseSelect.Item.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Item, State>;
 }
 
 export namespace SelectItem {
-    export interface Props extends SelectItemPrimitive.Props {}
+    export type State = SelectItemPrimitive.State;
+    export type Props = SelectItemPrimitive.Props;
 }
 
 export namespace SelectItemIndicatorPrimitive {
-    type ItemIndicatorPrimitiveProps = VComponentProps<typeof BaseSelect.ItemIndicator>;
-    export interface Props extends ItemIndicatorPrimitiveProps {}
+    export type State = BaseSelect.ItemIndicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.ItemIndicator, State>;
 }
 
 export namespace SelectGroup {
-    type GroupPrimitiveProps = VComponentProps<typeof BaseSelect.Group>;
-    export interface Props extends GroupPrimitiveProps {}
+    export type State = BaseSelect.Group.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Group, State>;
 }
 
 export namespace SelectGroupLabel {
-    type GroupLabelPrimitiveProps = VComponentProps<typeof BaseSelect.GroupLabel>;
-    export interface Props extends GroupLabelPrimitiveProps {}
+    export type State = BaseSelect.GroupLabel.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.GroupLabel, State>;
 }
 
 export namespace SelectSeparator {
-    type SeparatorPrimitiveProps = VComponentProps<typeof BaseSelect.Separator>;
-    export interface Props extends SeparatorPrimitiveProps {}
+    export type State = BaseSelect.Separator.State;
+    export type Props = VaporUIComponentProps<typeof BaseSelect.Separator, State>;
 }
