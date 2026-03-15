@@ -1,9 +1,7 @@
-import { style } from '@vanilla-extract/css';
-
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const popup = style({
+export const popup = componentStyle({
     outline: 'none',
     border: `1px solid ${vars.color.border.normal}`,
 
@@ -18,7 +16,7 @@ export const popup = style({
     minWidth: '12.5rem',
 });
 
-export const arrow = layerStyle('components', {
+export const arrow = componentStyle({
     display: 'flex',
     color: vars.color.background.overlay[100], // It's background-color, but since it's an SVG, it's specified as color.
 

@@ -1,10 +1,10 @@
 import type { CSSProperties } from '@vanilla-extract/css';
 import { createGlobalVar } from '@vanilla-extract/css';
 
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const overlay = layerStyle('components', {
+export const overlay = componentStyle({
     position: 'fixed',
     inset: 0,
 
@@ -62,7 +62,7 @@ const sideSelectors = Object.entries(sideConfig).reduce(
     {} as Record<string, CSSProperties>,
 );
 
-export const popup = layerStyle('components', {
+export const popup = componentStyle({
     position: 'fixed',
 
     display: 'flex',
@@ -95,14 +95,14 @@ export const popup = layerStyle('components', {
     },
 });
 
-export const header = layerStyle('components', {
+export const header = componentStyle({
     paddingTop: vars.size.space[250],
     paddingBottom: vars.size.space[100],
     paddingInline: vars.size.space[150],
     height: 'unset',
 });
 
-export const body = layerStyle('components', {
+export const body = componentStyle({
     flex: 1,
     paddingInline: vars.size.space[150],
     paddingBlock: vars.size.space[100],
@@ -110,7 +110,7 @@ export const body = layerStyle('components', {
     maxHeight: 'unset',
 });
 
-export const footer = layerStyle('components', {
+export const footer = componentStyle({
     paddingInline: vars.size.space[150],
     paddingBlock: vars.size.space[100],
 });

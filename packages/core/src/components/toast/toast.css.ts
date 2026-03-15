@@ -1,10 +1,9 @@
-import { createGlobalVar, fallbackVar, style } from '@vanilla-extract/css';
+import { createGlobalVar, fallbackVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
@@ -26,7 +25,7 @@ const outers = {
     offsetY: 'var(--toast-offset-y)',
 };
 
-export const viewport = layerStyle('components', {
+export const viewport = componentStyle({
     position: 'fixed',
     zIndex: 1,
     top: '1rem',
@@ -47,8 +46,8 @@ export const viewport = layerStyle('components', {
     },
 });
 
-export const root = recipe({
-    base: layerStyle('components', {
+export const root = componentRecipe({
+    base: {
         position: 'absolute',
         zIndex: calc.subtract('1000', outers.index),
         top: 0,
@@ -113,25 +112,25 @@ export const root = recipe({
                 content: '""',
             },
         },
-    }),
+    },
 
     defaultVariants: { colorPalette: 'info' },
     variants: {
         colorPalette: {
-            danger: layerStyle('components', {
+            danger: {
                 backgroundColor: vars.color.background.danger[200],
-            }),
-            success: layerStyle('components', {
+            },
+            success: {
                 backgroundColor: vars.color.background.success[200],
-            }),
-            info: layerStyle('components', {
+            },
+            info: {
                 backgroundColor: vars.color.background.contrast[200],
-            }),
+            },
         },
     },
 });
 
-export const content = layerStyle('components', {
+export const content = componentStyle({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -145,7 +144,14 @@ export const content = layerStyle('components', {
     },
 });
 
-export const title = style([foregrounds({ color: 'white' }), typography({ style: 'subtitle1' })]);
-export const description = style([foregrounds({ color: 'white' }), typography({ style: 'body2' })]);
+export const title = componentStyle([
+    foregrounds({ color: 'white' }),
+    typography({ style: 'subtitle1' }),
+]);
+
+export const description = componentStyle([
+    foregrounds({ color: 'white' }),
+    typography({ style: 'body2' }),
+]);
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

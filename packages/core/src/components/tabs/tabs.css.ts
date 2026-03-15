@@ -1,10 +1,9 @@
 import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
@@ -29,71 +28,71 @@ const indicatorHorizontalHeight = createVar();
 const indicatorBottomPosition = createVar();
 const indicatorRightPosition = createVar();
 
-export const root = recipe({
-    base: layerStyle('components', { display: 'flex' }),
+export const root = componentRecipe({
+    base: { display: 'flex' },
     defaultVariants: { orientation: 'horizontal' },
     variants: {
         orientation: {
-            horizontal: layerStyle('components', {
+            horizontal: {
                 flexDirection: 'column',
-            }),
-            vertical: layerStyle('components', {
+            },
+            vertical: {
                 flexDirection: 'row',
                 height: '100%',
-            }),
+            },
         },
     },
 });
 
-export const list = recipe({
-    base: layerStyle('components', {
+export const list = componentRecipe({
+    base: {
         position: 'relative',
         gap: vars.size.space[100],
         borderBottom: listBorderBottom,
         borderRight: listBorderRight,
         isolation: 'isolate', // NOTE: Creates a new stacking context to manage z-index only within the Tabs component.
-    }),
+    },
 
     defaultVariants: { variant: 'line', orientation: 'horizontal' },
     variants: {
         orientation: {
-            horizontal: layerStyle('components', {
+            horizontal: {
                 display: 'flex',
                 vars: {
                     [listBorderBottom]: listBorder,
                     [listBorderRight]: 'none',
                 },
-            }),
-            vertical: layerStyle('components', {
+            },
+            vertical: {
                 display: 'inline-flex',
                 flexDirection: 'column',
                 vars: {
                     [listBorderBottom]: 'none',
                     [listBorderRight]: listBorder,
                 },
-            }),
+            },
         },
         variant: {
-            line: layerStyle('components', {
+            line: {
                 vars: {
                     [listBorder]: `${BORDER_WIDTH} solid ${vars.color.border.normal}`,
                 },
-            }),
-            fill: layerStyle('components', {
+            },
+            fill: {
                 vars: {
                     [listBorder]: 'none',
                 },
-            }),
+            },
         },
     },
 });
 
-export const button = recipe({
+export const button = componentRecipe({
     base: [
         foregrounds({ color: 'normal-100' }),
         interaction({ scale: 'light' }),
         typography({ style: 'subtitle1' }),
-        layerStyle('components', {
+        {
             position: 'relative',
             display: 'flex',
             alignItems: 'center',
@@ -110,41 +109,35 @@ export const button = recipe({
                     color: vars.color.foreground.primary['100'],
                 },
             },
-        }),
+        },
     ],
 
     defaultVariants: { size: 'md', variant: 'line', orientation: 'horizontal' },
     variants: {
         size: {
-            sm: [
-                typography({ style: 'subtitle2' }),
-                layerStyle('components', { height: vars.size.space['300'] }),
-            ],
-            md: [layerStyle('components', { height: vars.size.space['400'] })],
-            lg: [layerStyle('components', { height: vars.size.space['500'] })],
-            xl: [
-                typography({ style: 'heading6' }),
-                layerStyle('components', { height: vars.size.space['600'] }),
-            ],
+            sm: [typography({ style: 'subtitle2' }), { height: vars.size.space['300'] }],
+            md: [{ height: vars.size.space['400'] }],
+            lg: [{ height: vars.size.space['500'] }],
+            xl: [typography({ style: 'heading6' }), { height: vars.size.space['600'] }],
         },
         orientation: {
-            horizontal: layerStyle('components', {
+            horizontal: {
                 borderRadius: buttonHorizontalBorderRadius,
                 paddingInline: vars.size.space['050'],
-            }),
-            vertical: layerStyle('components', {
+            },
+            vertical: {
                 borderRadius: buttonVerticalBorderRadius,
                 paddingInline: vars.size.space[200],
-            }),
+            },
         },
         variant: {
-            line: layerStyle('components', {
+            line: {
                 vars: {
                     [buttonHorizontalBorderRadius]: `${vars.size.borderRadius[300]} ${vars.size.borderRadius[300]} 0 0`,
                     [buttonVerticalBorderRadius]: `${vars.size.borderRadius[300]} 0 0 ${vars.size.borderRadius[300]}`,
                 },
-            }),
-            fill: layerStyle('components', {
+            },
+            fill: {
                 vars: {
                     [buttonHorizontalBorderRadius]: vars.size.borderRadius[300],
                     [buttonVerticalBorderRadius]: vars.size.borderRadius[300],
@@ -154,41 +147,41 @@ export const button = recipe({
                         color: vars.color.foreground.primary['100'],
                     },
                 },
-            }),
+            },
         },
     },
 });
 
-export const indicator = recipe({
-    base: layerStyle('components', {
+export const indicator = componentRecipe({
+    base: {
         position: 'absolute',
         transitionDuration: '100ms',
         transitionTimingFunction: 'ease-in-out',
         zIndex: 0,
-    }),
+    },
 
     defaultVariants: { orientation: 'horizontal', variant: 'line' },
     variants: {
         orientation: {
-            horizontal: layerStyle('components', {
+            horizontal: {
                 left: 0,
                 bottom: indicatorBottomPosition,
                 transform: `translateX(var(${EXTERNAL_VARS.activeTabLeft}))`,
                 width: `var(${EXTERNAL_VARS.activeTabWidth})`,
                 height: indicatorHorizontalHeight,
                 transitionProperty: 'transform, width',
-            }),
-            vertical: layerStyle('components', {
+            },
+            vertical: {
                 top: 0,
                 right: indicatorRightPosition,
                 transform: `translateY(var(${EXTERNAL_VARS.activeTabTop}))`,
                 height: `var(${EXTERNAL_VARS.activeTabHeight})`,
                 width: indicatorVerticalWidth,
                 transitionProperty: 'transform, height',
-            }),
+            },
         },
         variant: {
-            line: layerStyle('components', {
+            line: {
                 backgroundColor: vars.color.border.primary,
                 vars: {
                     [indicatorBottomPosition]: `-${BORDER_WIDTH}`,
@@ -196,8 +189,8 @@ export const indicator = recipe({
                     [indicatorHorizontalHeight]: `${BORDER_WIDTH}`,
                     [indicatorVerticalWidth]: `${BORDER_WIDTH}`,
                 },
-            }),
-            fill: layerStyle('components', {
+            },
+            fill: {
                 backgroundColor: vars.color.background.primary['100'],
                 borderRadius: vars.size.borderRadius[300],
                 vars: {
@@ -206,7 +199,7 @@ export const indicator = recipe({
                     [indicatorHorizontalHeight]: '100%',
                     [indicatorVerticalWidth]: `100%`,
                 },
-            }),
+            },
         },
     },
 });

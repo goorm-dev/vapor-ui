@@ -1,26 +1,23 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 
-export const root = recipe({
-    base: [
-        layerStyle('components', {
-            aspectRatio: '1 / 1',
-            padding: 0,
-            verticalAlign: 'top',
-        }),
-    ],
+export const root = componentRecipe({
+    base: {
+        aspectRatio: '1 / 1',
+        padding: 0,
+        verticalAlign: 'top',
+    },
     defaultVariants: { shape: 'square' },
     variants: {
         shape: {
             square: {},
-            circle: layerStyle('components', { borderRadius: '9999px' }),
+            circle: { borderRadius: '9999px' },
         },
     },
 });
 
-export const icon = layerStyle('components', {
+export const icon = componentStyle({
     selectors: {
         [`${root.classNames.base} > &:is(svg)`]: {
             width: 'max(16px, 50%)',

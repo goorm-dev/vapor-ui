@@ -1,21 +1,20 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-export const list = layerStyle('components', {
+export const list = componentStyle({
     display: 'inline-flex',
     alignItems: 'center',
 });
 
-export const item = layerStyle('components', {
+export const item = componentStyle({
     display: 'inline-flex',
     alignItems: 'center',
 });
 
-export const link = recipe({
+export const link = componentRecipe({
     defaultVariants: { size: 'md', current: false },
     variants: {
         size: {
@@ -27,7 +26,7 @@ export const link = recipe({
 
         current: {
             false: [
-                layerStyle('components', {
+                {
                     color: vars.color.foreground.hint[100],
 
                     // NOTE: When the link interaction style is declared multiple times, consider separating it.
@@ -42,22 +41,22 @@ export const link = recipe({
                         textDecoration: 'underline',
                         textDecorationColor: vars.color.foreground.primary[100],
                     },
-                }),
+                },
             ],
-            true: layerStyle('components', {
+            true: {
                 color: vars.color.foreground.primary[100],
-            }),
+            },
         },
     },
 });
 
-export const icon = recipe({
-    base: layerStyle('components', {
+export const icon = componentRecipe({
+    base: {
         color: vars.color.foreground.hint[100],
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-    }),
+    },
 
     defaultVariants: { size: 'md' },
     variants: {

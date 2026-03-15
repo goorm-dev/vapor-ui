@@ -1,14 +1,13 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = recipe({
+export const root = componentRecipe({
     base: [
         interaction(),
-        layerStyle('components', {
+        {
             position: 'relative',
 
             display: 'flex',
@@ -44,7 +43,7 @@ export const root = recipe({
                     boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.danger}`,
                 },
             },
-        }),
+        },
     ],
 
     defaultVariants: { invalid: false, size: 'md' },
@@ -53,22 +52,22 @@ export const root = recipe({
         invalid: { true: {}, false: {} },
 
         size: {
-            md: layerStyle('components', {
+            md: {
                 borderRadius: vars.size.borderRadius[100],
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 borderRadius: vars.size.borderRadius[200],
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
-            }),
+            },
         },
     },
 });
 
-export const indicator = recipe({
-    base: layerStyle('components', {
+export const indicator = componentRecipe({
+    base: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -78,19 +77,19 @@ export const indicator = recipe({
                 color: vars.color.foreground.hint['100'],
             },
         },
-    }),
+    },
 
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('components', {
+            md: {
                 width: vars.size.dimension[100],
                 height: vars.size.dimension[100],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 width: vars.size.dimension[150],
                 height: vars.size.dimension[150],
-            }),
+            },
         },
     },
 });

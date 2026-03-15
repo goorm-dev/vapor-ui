@@ -1,18 +1,17 @@
 import { createVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
 const borderWidth = createVar('border-width');
 
-export const root = recipe({
+export const root = componentRecipe({
     base: [
         interaction(),
-        layerStyle('components', {
+        {
             position: 'relative',
 
             display: 'flex',
@@ -45,7 +44,7 @@ export const root = recipe({
             vars: {
                 [borderWidth]: '0.0625rem',
             },
-        }),
+        },
     ],
 
     defaultVariants: { invalid: false, size: 'md' },
@@ -54,19 +53,19 @@ export const root = recipe({
         invalid: { true: {}, false: {} },
 
         size: {
-            md: layerStyle('components', {
+            md: {
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
-            }),
+            },
         },
     },
 });
 
-export const indicator = layerStyle('components', {
+export const indicator = componentStyle({
     position: 'absolute',
     top: '50%',
     left: '50%',

@@ -1,16 +1,15 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-export const textarea = recipe({
+export const textarea = componentRecipe({
     base: [
         interaction({ type: 'form' }),
 
-        layerStyle('components', {
+        {
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.overlay[100],
@@ -23,7 +22,7 @@ export const textarea = recipe({
                 '&[data-invalid]': { borderColor: vars.color.border.danger },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
             },
-        }),
+        },
     ],
 
     defaultVariants: { invalid: false, size: 'md', autoResize: false },
