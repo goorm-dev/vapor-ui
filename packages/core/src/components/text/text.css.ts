@@ -5,6 +5,7 @@ import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { typographyVariants } from '~/styles/mixins/typography.css';
 
 export const root = componentRecipe({
+    base: {},
     variants: {
         typography: typographyVariants,
         foreground: foregroundVariants,

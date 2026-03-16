@@ -16,12 +16,7 @@ export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
         render,
         defaultTagName: 'span',
         props: {
-            className: cn(
-                styles.root({ typography, foreground }),
-                className,
-                // typography({ style: typographyStyle }),
-                // foregrounds({ color: foreground }),
-            ),
+            className: cn(styles.root({ typography, foreground }), className),
             ...componentProps,
         },
     });
@@ -29,11 +24,6 @@ export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
 Text.displayName = 'Text';
 
 export namespace Text {
-    // type TextVariants = {
-    //     foreground?: Foregrounds['color'];
-    //     typography?: Typography['style'];
-    // };
-
     export type State = {};
     export type Props = VaporUIComponentProps<'span', State> & TextVariants;
 }
