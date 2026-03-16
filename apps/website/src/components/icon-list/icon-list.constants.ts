@@ -7,8 +7,20 @@ import { SYMBOL_ICONS } from '~/constants/icon';
 
 export const ICON_LIST = ['basic', 'outline', 'symbol', 'symbol-black'] as const;
 
-type VaporIconsType = {
-    [key in (typeof ICON_LIST)[number]]: { [key: string]: FunctionComponent<IconProps> };
+export type IconCategory = (typeof ICON_LIST)[number];
+
+export type IconItem = {
+    name: string;
+    icon: FunctionComponent<IconProps>;
+};
+
+type VaporIconsType = Record<IconCategory, Record<string, FunctionComponent<IconProps>>>;
+
+export const CATEGORY_LABELS: Record<IconCategory, string> = {
+    basic: 'Basic',
+    outline: 'Outline',
+    symbol: 'Symbol',
+    'symbol-black': 'Symbol Black',
 };
 
 // Create a Set of SymbolIcons constructor references for fast lookup
@@ -20,8 +32,8 @@ const iconComponentToNameMap = new Map(
 );
 
 // Build symbol and symbol-black categories from SYMBOL_ICONS array to preserve order
-const symbolIcons: { [key: string]: FunctionComponent<IconProps> } = {};
-const symbolBlackIcons: { [key: string]: FunctionComponent<IconProps> } = {};
+const symbolIcons: Record<string, FunctionComponent<IconProps>> = {};
+const symbolBlackIcons: Record<string, FunctionComponent<IconProps>> = {};
 
 for (const icon of SYMBOL_ICONS) {
     const iconName = iconComponentToNameMap.get(icon);
@@ -35,8 +47,8 @@ for (const icon of SYMBOL_ICONS) {
 }
 
 // Build basic and outline categories from allIcons
-const basicIcons: { [key: string]: FunctionComponent<IconProps> } = {};
-const outlineIcons: { [key: string]: FunctionComponent<IconProps> } = {};
+const basicIcons: Record<string, FunctionComponent<IconProps>> = {};
+const outlineIcons: Record<string, FunctionComponent<IconProps>> = {};
 
 for (const [key, value] of Object.entries(allIcons)) {
     if (typeof value !== 'function') continue;
@@ -55,3 +67,14 @@ export const VAPOR_ICONS: VaporIconsType = {
     symbol: symbolIcons,
     'symbol-black': symbolBlackIcons,
 };
+
+export const ICON_ITEMS: Record<IconCategory, IconItem[]> = Object.fromEntries(
+    ICON_LIST.map((category) => [
+        category,
+        Object.entries(VAPOR_ICONS[category]).map(([name, icon]) => ({ name, icon })),
+    ]),
+) as Record<IconCategory, IconItem[]>;
+
+export const ICON_COUNTS: Record<IconCategory, number> = Object.fromEntries(
+    ICON_LIST.map((category) => [category, ICON_ITEMS[category].length]),
+) as Record<IconCategory, number>;
