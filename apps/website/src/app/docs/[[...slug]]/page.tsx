@@ -1,7 +1,7 @@
-import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
+import { CustomDocsPage, DocsBody } from '~/components/fumadocs/docs-page';
 import { SITE_URL } from '~/constants/domain';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
@@ -18,20 +18,16 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     const page = source.getPage(slug);
     if (!page) notFound();
 
-    const { body: MDX, toc, lastModified } = await page.data.load();
-    const isRoot = slug.length === 0;
+    const { body: MDX, toc } = await page.data.load();
     return (
-        <DocsPage
+        <CustomDocsPage
             toc={toc}
             full={page.data.full}
             tableOfContent={{
                 style: 'clerk',
                 single: false,
             }}
-            lastUpdate={lastModified}
-            article={{
-                className: isRoot ? 'gap-v-800' : '',
-            }}
+            breadcrumb={{ enabled: false }}
         >
             <DocsPageHeader
                 title={page.data.title}
@@ -41,9 +37,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
             <DocsBody>
                 <MDX components={getMDXComponents({})} />
             </DocsBody>
-
-            <div role="none" />
-        </DocsPage>
+        </CustomDocsPage>
     );
 }
 

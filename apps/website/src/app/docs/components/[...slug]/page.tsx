@@ -1,7 +1,8 @@
-import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import { DocsBody } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
+import { CustomDocsPage } from '~/components/fumadocs/docs-page';
 import { getComponentOgImageUrl } from '~/constants/image-urls';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
@@ -13,19 +14,15 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
     const page = source.getPage(['components', ...slug]);
 
     if (!page) notFound();
-    const { body: MDX, toc, lastModified } = await page.data.load();
+    const { body: MDX, toc } = await page.data.load();
 
     return (
-        <DocsPage
+        <CustomDocsPage
             toc={toc}
             full={page.data.full}
             tableOfContent={{
                 style: 'clerk',
                 single: false,
-            }}
-            lastUpdate={lastModified}
-            article={{
-                className: 'gap-v-500',
             }}
             breadcrumb={{
                 enabled: false,
@@ -39,7 +36,7 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
             <DocsBody className="px-0 flex flex-col">
                 <MDX components={getMDXComponents({})} />
             </DocsBody>
-        </DocsPage>
+        </CustomDocsPage>
     );
 };
 
