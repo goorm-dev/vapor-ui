@@ -147,7 +147,10 @@ export const SiteNavBar = () => {
             }`}
         >
             {/* Logo */}
-            <Link href="/" className="inline-flex items-center gap-2.5 font-semibold text-v-logo">
+            <Link
+                href="/"
+                className="w-[var(--fd-sidebar-width)] inline-flex items-center gap-2.5 font-semibold text-v-logo"
+            >
                 <LogoVapor
                     width={68}
                     height={24}

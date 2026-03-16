@@ -92,12 +92,6 @@ code * {
     font-family: var(--font-mono);
 }
 
-#nd-subnav {
-    > div {
-        @apply px-8;
-    }
-}
-
 #nd-sidebar {
     > [data-fd-if-empty] {
         @apply hidden;

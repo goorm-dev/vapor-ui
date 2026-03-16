@@ -1,5 +1,5 @@
 import { FigmaColorIcon, GithubIcon } from '@vapor-ui/icons';
-import type { IconItemType } from 'fumadocs-ui/layouts/links';
+import type { IconItemType } from 'fumadocs-ui/layouts/shared';
 
 export const externalLinks = [
     {
