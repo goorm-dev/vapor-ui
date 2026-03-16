@@ -133,10 +133,10 @@ describe('RadioGroup', () => {
             >
                 <RadioGroup.Root name="radio-group-test">
                     <label htmlFor="a">a</label>
-                    <Radio.Root id="a" value="a" />
+                    <Radio.Root nativeButton render={<button />} id="a" value="a" />
 
                     <label htmlFor="b">b</label>
-                    <Radio.Root id="b" value="b" />
+                    <Radio.Root nativeButton render={<button />} id="b" value="b" />
                 </RadioGroup.Root>
 
                 <button type="submit">Submit</button>
@@ -159,13 +159,13 @@ describe('RadioGroup', () => {
     it('should change the checked state using the arrow keys', async () => {
         const rendered = render(
             <RadioGroup.Root>
-                <Radio.Root id="option1" value="option1" />
+                <Radio.Root nativeButton render={<button />} id="option1" value="option1" />
                 <label htmlFor="option1">option1</label>
 
-                <Radio.Root id="option2" value="option2" />
+                <Radio.Root nativeButton render={<button />} id="option2" value="option2" />
                 <label htmlFor="option2">option2</label>
 
-                <Radio.Root id="option3" value="option3" />
+                <Radio.Root nativeButton render={<button />} id="option3" value="option3" />
                 <label htmlFor="option3"> option3</label>
             </RadioGroup.Root>,
         );
@@ -196,13 +196,19 @@ describe('RadioGroup', () => {
     it('should not include disabled items during keyboard navigation', async () => {
         const rendered = render(
             <RadioGroup.Root>
-                <Radio.Root id="option1" value="option1" />
+                <Radio.Root nativeButton render={<button />} id="option1" value="option1" />
                 <label htmlFor="option1">option1</label>
 
-                <Radio.Root id="option2" value="option2" disabled />
+                <Radio.Root
+                    nativeButton
+                    render={<button />}
+                    id="option2"
+                    value="option2"
+                    disabled
+                />
                 <label htmlFor="option2">option2</label>
 
-                <Radio.Root id="option3" value="option3" />
+                <Radio.Root nativeButton render={<button />} id="option3" value="option3" />
                 <label htmlFor="option3">option3</label>
             </RadioGroup.Root>,
         );
