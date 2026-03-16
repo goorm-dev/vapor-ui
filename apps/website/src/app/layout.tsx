@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 import { ThemeProvider } from '@vapor-ui/core/theme-provider';
 import { Analytics } from '@vercel/analytics/next';
-import { RootProvider } from 'fumadocs-ui/provider';
+import { RootProvider } from 'fumadocs-ui/provider/next';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 
