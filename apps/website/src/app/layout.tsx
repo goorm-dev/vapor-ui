@@ -10,6 +10,7 @@ import Script from 'next/script';
 
 import DefaultSearchDialog from '~/components/search/search';
 import { ThemeSync } from '~/components/theme-sync';
+import { AppToastProvider } from '~/providers';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -41,8 +42,10 @@ export default function Layout({ children }: { children: ReactNode }) {
                     theme={{ enabled: false }}
                 >
                     <ThemeProvider defaultTheme="system" storageKey="vapor-ui-docs">
-                        <ThemeSync />
-                        {children}
+                        <AppToastProvider>
+                            <ThemeSync />
+                            {children}
+                        </AppToastProvider>
                     </ThemeProvider>
                 </RootProvider>
                 <Analytics />
