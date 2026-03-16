@@ -50,7 +50,7 @@ export default defineConfig({
         rehypeCodeOptions: {
             ...rehypeCodeDefaultOptions,
             lazy: true,
-            experimentalJSEngine: true,
+            engine: 'js',
             langs: ['ts', 'js', 'html', 'tsx', 'mdx'],
             inline: 'tailing-curly-colon',
             themes: {
