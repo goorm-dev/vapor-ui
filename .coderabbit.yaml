@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: "en-US"
+enable_free_tier: false
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "packages/core/CLAUDE.md"
+      - "apps/website/CLAUDE.md"
+
+reviews:
+  request_changes_workflow: true
+  suggested_reviewers: false
+  poem: false
+  high_level_summary: true
+  pre_merge_checks:
+    docstrings:
+      mode: "off"
+  path_filters:
+    - "!**/dist/**"
+    - "!**/build/**"
+    - "!**/coverage/**"
+    - "!**/storybook-static/**"
+    - "!**/.next/**"
+    - "!**/.turbo/**"
+    - "!**/.gemini/**"
+    - "!**/__tests__/report/**"
+    - "!**/__tests__/results/**"
+    - "!**/*.min.*"
+    - "!pnpm-lock.yaml"
+
+chat:
+  integrations:
+    jira:
+      usage: "disabled"
+    linear:
+      usage: "disabled"
