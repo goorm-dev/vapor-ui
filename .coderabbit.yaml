@@ -12,6 +12,53 @@ knowledge_base:
 
 reviews:
   request_changes_workflow: true
+  auto_title_instructions: |-
+    ### 2.2.1. Primary Commit Types & SemVer Guidance
+
+    - **Important**: In this repository, package version bumps are decided by **Changesets** in `.changeset/*.md`, not inferred automatically from commit types alone.
+    - Commit types should communicate change intent clearly.
+    - When a package release is needed, the changeset level (`patch`, `minor`, `major`) must match the actual impact of the change.
+
+    - **`feat`**: Add a new feature, such as a component or prop. This will often pair with a **`minor` changeset** when it introduces new user-facing capability.
+
+      Example:
+
+      ```bash
+      feat(Avatar): add new Avatar component
+      feat(Button): implement iconPosition prop for icon placement
+      ```
+
+    - **`fix`**: Fix a bug. This will often pair with a **`patch` changeset** when it corrects behavior without introducing a breaking API change.
+
+      Example:
+
+      ```bash
+      fix(Input): correct placeholder color in disabled state
+      fix(Modal): resolve issue where modal content is not scrollable
+      ```
+
+    - **`BREAKING CHANGE`**: Introduce an API-breaking change. Add `!` after the type or specify `BREAKING CHANGE:` in the footer. This should pair with a **`major` changeset**.
+
+      Example:
+
+      ```text
+      feat(Button)!: change 'kind' prop to 'variant' for clarity
+
+      BREAKING CHANGE: Button component's `kind` prop has been renamed to `variant`.
+      Migrate `kind="primary"` to `variant="solid"`.
+      Migrate `kind="secondary"` to `variant="outline"`.
+      ```
+
+    ### 2.2.2. Other Commit Types
+
+    - `docs`: Documentation changes.
+    - `style`: Code style changes without logic changes.
+    - `refactor`: Refactoring without behavioral changes.
+    - `test`: Add or update tests.
+    - `perf`: Performance improvements.
+    - `chore`: Maintenance work such as build or package configuration.
+
+    - These commit types do **not** imply "no release". If the change affects published package behavior or API, add an appropriate changeset even when the commit type is `chore`, `refactor`, or another non-`feat`/`fix` type.
   suggested_reviewers: false
   poem: false
   high_level_summary: true
