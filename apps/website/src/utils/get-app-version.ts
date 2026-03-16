@@ -1,18 +1,8 @@
-import { readFile } from 'fs/promises';
-import path from 'path';
+import corePackage from '../../../../packages/core/package.json' with { type: 'json' };
 
-const rootDir = process.cwd();
+// The docs site represents the published Vapor UI package version, which tracks @vapor-ui/core.
+export const appVersion = corePackage.version;
 
 export async function getAppVersion() {
-    try {
-        const packagePath = path.resolve(rootDir, 'package.json');
-
-        const data = await readFile(packagePath, 'utf-8');
-        const pkg = JSON.parse(data);
-
-        return pkg.version;
-    } catch (error) {
-        console.error('Failed to read package.json:', error);
-        return '0.0.0';
-    }
+    return appVersion;
 }
