@@ -11,20 +11,6 @@ export const docs = defineDocs({
     },
 });
 
-const blocksSchema = z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    previewImageUrl: z.string().optional(),
-});
-
-export const blocks = defineDocs({
-    dir: 'content/blocks',
-    docs: {
-        async: true,
-        schema: blocksSchema,
-    },
-});
-
 const themeSchema = z.object({
     title: z.string(),
     description: z.string().optional(),

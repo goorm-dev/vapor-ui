@@ -1,15 +1,10 @@
 import type { InferPageType } from 'fumadocs-core/source';
 import { loader } from 'fumadocs-core/source';
-import { blocks, docs, theme } from 'fumadocs-mdx/collections/server';
+import { docs, theme } from 'fumadocs-mdx/collections/server';
 
 export const source = loader({
     baseUrl: '/docs',
     source: docs.toFumadocsSource(),
-});
-
-export const blockSource = loader({
-    baseUrl: '/blocks',
-    source: blocks.toFumadocsSource(),
 });
 
 export const themeSource = loader({

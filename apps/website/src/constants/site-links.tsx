@@ -1,7 +1,7 @@
 import { FigmaColorIcon, GithubIcon } from '@vapor-ui/icons';
 import type { IconItemType } from 'fumadocs-ui/layouts/shared';
 
-export const externalLinks = [
+export const navLinks = [
     {
         icon: <FigmaColorIcon size={20} />,
         text: 'Figma',
@@ -17,18 +17,3 @@ export const externalLinks = [
         type: 'icon',
     },
 ] satisfies IconItemType[];
-
-export const docsLinks = [
-    {
-        text: 'Theme',
-        url: '/theme',
-        label: 'Theme Customization',
-    },
-    {
-        text: 'Blocks',
-        url: '/blocks',
-        label: 'UI Blocks',
-    },
-];
-
-export const navLinks = [...docsLinks, ...externalLinks];
