@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 This coding convention applies to files under `apps/website/**`.
-It is an English translation and adaptation of [`.gemini/styleguide.md`](../../.gemini/styleguide.md), updated to match the current website code and the public API exposed by `@vapor-ui/core`.
+It is updated to match the current website code and the public API exposed by `@vapor-ui/core`.
 
 # 0. Review Response Style
 
@@ -44,8 +44,11 @@ It is an English translation and adaptation of [`.gemini/styleguide.md`](../../.
 
 ## 3.1. Modules (Import & Export)
 
-- Prefer path aliases over deep relative imports when aliases are available.
-- Prefer named exports over `default export` unless the framework or local file pattern clearly requires otherwise.
+- Prefer `~/` aliases for `src/*` imports when they improve readability.
+- Relative imports are still common and acceptable for nearby files, route-local modules, and static asset imports.
+- Follow the existing local export pattern instead of enforcing one style everywhere.
+- `default export` is common in App Router entry files, demo/example components, and several website-only components.
+- Named exports are still common for barrels, utilities, and shared APIs that benefit from explicit discoverability.
 - When writing docs examples for Vapor UI components, use the **current public API** from `@vapor-ui/core`.
 
   ```tsx
@@ -133,6 +136,7 @@ It is an English translation and adaptation of [`.gemini/styleguide.md`](../../.
 - When consuming `@vapor-ui/core`, follow the composition API the component exposes.
 - In the current codebase, this primarily means compound namespaces and `render`-based composition for Vapor UI components.
 - Use `asChild` only when the specific component or external library explicitly supports it.
+- App-specific website UI may intentionally compose with other libraries such as base-ui or Fumadocs when Vapor UI is not the source of that behavior.
 
 ## 6.4. UI Consistency
 
@@ -166,7 +170,7 @@ It is an English translation and adaptation of [`.gemini/styleguide.md`](../../.
 
 - Use the website for use-case documentation, subcomponent composition examples, and variant showcases.
 - Do not use emojis in titles.
-- When displaying a single string value, omit surrounding single quotes.
+- When displaying a single string value in prose, tables, or inline examples, omit surrounding single quotes unless a syntax format requires them.
   Example: `string`
 - When displaying union types, separate values with spaces using inline code.
   Example: `small` `medium` `large`
