@@ -34,22 +34,19 @@ export function ThemePageClient({ activeToolId, sheetContent }: ThemePageClientP
 
     return (
         <main>
-            <div className="pt-[62px]">
-                {/* <div className="flex flex-col w-(--fd-page-width) gap-[100px] max-lg:pt-v-900 max-lg:px-v-400 max-lg:gap-v-900 max-sm:py-v-800 max-sm:gap-v-400"> */}
-                <div className="flex flex-col px-4 md:px-6 mx-auto max-w-(--fd-layout-width)">
-                    <PageHeader />
+            <div className="flex flex-col px-4 py-12 md:px-6 mx-auto max-w-(--fd-layout-width)">
+                <PageHeader />
 
-                    <div className="flex flex-col gap-v-900">
-                        {THEME_SECTIONS.map((section) => (
-                            <ToolSection
-                                key={section.id}
-                                title={section.title}
-                                description={section.description}
-                                tools={section.tools}
-                                activeToolId={activeToolId}
-                            />
-                        ))}
-                    </div>
+                <div className="flex flex-col gap-v-900">
+                    {THEME_SECTIONS.map((section) => (
+                        <ToolSection
+                            key={section.id}
+                            title={section.title}
+                            description={section.description}
+                            tools={section.tools}
+                            activeToolId={activeToolId}
+                        />
+                    ))}
                 </div>
             </div>
 
