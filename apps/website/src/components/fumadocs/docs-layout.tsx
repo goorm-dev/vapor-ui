@@ -324,7 +324,7 @@ function DocsNavbar({
                         className={clsx(
                             'my-auto w-full max-md:hidden',
                             navMode === 'top'
-                                ? 'max-w-[240px] xl:max-w-sm rounded-xl ps-2.5'
+                                ? 'max-w-[280px] xl:max-w-sm rounded-xl ps-2.5'
                                 : 'max-w-[240px]',
                         )}
                     />

@@ -92,6 +92,14 @@ code * {
     font-family: var(--font-mono);
 }
 
+#nd-home-layout > #nd-nav > nav {
+    border-bottom: none;
+
+    > div {
+        @apply md:px-6;
+    }
+}
+
 #nd-sidebar {
     > [data-fd-if-empty] {
         @apply hidden;

@@ -113,7 +113,7 @@ export function LayoutBody({ children, className, style, ...props }: ComponentPr
     const navMode = context?.navMode ?? 'auto';
 
     const pageCol =
-        'calc(var(--fd-layout-width,88rem) - var(--fd-sidebar-col) - var(--fd-toc-width))';
+        'calc(var(--fd-layout-width,87.5rem) - var(--fd-sidebar-col) - var(--fd-toc-width))';
 
     return (
         <div

@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
 import { THEME_SECTIONS } from '~/constants/theme-tools';
 
 import { PageHeader, ToolDetailSheetClient, ToolSection } from './_components';
@@ -35,9 +34,9 @@ export function ThemePageClient({ activeToolId, sheetContent }: ThemePageClientP
 
     return (
         <main>
-            <SiteNavBar />
             <div className="pt-[62px]">
-                <div className="flex flex-col py-[100px] px-[146px] gap-[100px] max-lg:pt-v-900 max-lg:px-v-400 max-lg:gap-v-900 max-sm:py-v-800 max-sm:gap-v-400">
+                {/* <div className="flex flex-col w-(--fd-page-width) gap-[100px] max-lg:pt-v-900 max-lg:px-v-400 max-lg:gap-v-900 max-sm:py-v-800 max-sm:gap-v-400"> */}
+                <div className="flex flex-col px-4 md:px-6 mx-auto max-w-(--fd-layout-width)">
                     <PageHeader />
 
                     <div className="flex flex-col gap-v-900">
