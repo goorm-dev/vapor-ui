@@ -125,7 +125,7 @@ export const CustomDocsLayout = (props: DocsLayoutProps) => {
                       <div
                           className={clsx(
                               'text-fd-muted-foreground hidden flex-row items-center border-t p-4 pt-2',
-                              iconLinks.length > 0 && 'max-lg:flex',
+                              iconLinks.length > 0 && 'max-md:flex',
                               className,
                           )}
                           {...props}
@@ -217,7 +217,7 @@ export const CustomDocsLayout = (props: DocsLayoutProps) => {
                         className={clsx(
                             'hidden flex-row items-center justify-end',
                             themeSwitch.enabled !== false && 'flex',
-                            iconLinks.length > 0 && 'max-lg:flex',
+                            iconLinks.length > 0 && 'max-md:flex',
                         )}
                     >
                         {iconLinks.map((item, i) => (
@@ -296,7 +296,7 @@ function DocsNavbar({
             id="nd-subnav"
             className={clsx(
                 'data-[transparent=false]:bg-fd-background/80 layout:[--fd-header-height:--spacing(23)] sticky top-(--fd-docs-row-1) z-100 flex flex-col backdrop-blur-sm transition-colors [grid-area:header]',
-                showLayoutTabs && 'md:layout:[--fd-header-height:--spacing(24)]',
+                showLayoutTabs && 'md:layout:[--fd-header-height:--spacing(25)]',
             )}
         >
             <div className="flex h-14 gap-2 border-b px-4 md:px-6" data-header-body="">
@@ -322,9 +322,9 @@ function DocsNavbar({
                     <LargeSearchToggle
                         hideIfDisabled
                         className={clsx(
-                            'my-auto w-full max-lg:hidden',
+                            'my-auto w-full max-md:hidden',
                             navMode === 'top'
-                                ? 'lg:max-w-[300px] xl:max-w-sm rounded-xl ps-2.5'
+                                ? 'max-w-[240px] xl:max-w-sm rounded-xl ps-2.5'
                                 : 'max-w-[240px]',
                         )}
                     />
@@ -338,7 +338,7 @@ function DocsNavbar({
                             <NavbarLinkItem
                                 key={i}
                                 item={item}
-                                className="px-3 font-medium max-lg:hidden"
+                                className="px-3 font-medium max-md:hidden"
                             />
                         ))}
 
@@ -356,7 +356,7 @@ function DocsNavbar({
                                     <LinkItem
                                         aria-label={item.label}
                                         item={item}
-                                        className={clsx('text-fd-muted-foreground max-lg:hidden')}
+                                        className={clsx('text-fd-muted-foreground max-md:hidden')}
                                     >
                                         {item.icon}
                                     </LinkItem>
@@ -364,7 +364,7 @@ function DocsNavbar({
                             />
                         ))}
 
-                    <div className="flex items-center lg:hidden">
+                    <div className="flex items-center md:hidden">
                         <SearchToggle hideIfDisabled className="p-2" />
 
                         <SidebarTrigger
@@ -380,7 +380,7 @@ function DocsNavbar({
                         </SidebarTrigger>
                     </div>
 
-                    <div className="flex items-center gap-2 max-lg:hidden">
+                    <div className="flex items-center gap-2 max-md:hidden">
                         {themeSwitch.enabled !== false &&
                             (themeSwitch.component ?? <ThemeToggle />)}
                     </div>

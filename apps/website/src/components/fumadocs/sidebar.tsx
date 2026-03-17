@@ -52,7 +52,7 @@ export function SidebarContent({
                 <div
                     data-sidebar-placeholder=""
                     className={clsx(
-                        'md:layout:[--fd-sidebar-width:268px] pointer-events-none sticky z-20 [grid-area:sidebar] *:pointer-events-auto max-md:hidden',
+                        'md:layout:[--fd-sidebar-width:240px] pointer-events-none sticky z-20 [grid-area:sidebar] *:pointer-events-auto max-md:hidden',
                         navMode === 'auto'
                             ? 'top-(--fd-docs-row-1) h-[calc(var(--fd-docs-height)-var(--fd-docs-row-1))]'
                             : 'top-(--fd-docs-row-2) h-[calc(var(--fd-docs-height)-var(--fd-docs-row-2))]',
@@ -162,6 +162,9 @@ export function SidebarFolderTrigger({
     ...props
 }: ComponentProps<typeof Base.SidebarFolderTrigger>) {
     const { collapsible, depth } = Base.useFolder()!;
+
+    console.log(collapsible);
+    console.log(depth);
 
     return (
         <Base.SidebarFolderTrigger

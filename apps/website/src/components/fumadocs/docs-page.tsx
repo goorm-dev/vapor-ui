@@ -147,7 +147,7 @@ export function CustomDocsPage({
             {!!tocEnabled &&
                 (tocReplace ?? (
                     <div
-                        className="xl:layout:[--fd-toc-width:268px] sticky top-(--fd-docs-row-3) flex h-[calc(var(--fd-docs-height)-var(--fd-docs-row-1))] w-(--fd-toc-width) flex-col pe-4 pt-6 pb-2 [grid-area:toc] max-xl:hidden"
+                        className="xl:layout:[--fd-toc-width:240px] sticky top-(--fd-docs-row-3) flex h-[calc(var(--fd-docs-height)-var(--fd-docs-row-1))] w-(--fd-toc-width) flex-col pe-4 pt-6 pb-2 [grid-area:toc] max-xl:hidden"
                         id="nd-toc"
                     >
                         {tocOptions.header}
