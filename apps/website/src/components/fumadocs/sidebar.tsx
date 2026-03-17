@@ -4,6 +4,7 @@ import type { ComponentProps } from 'react';
 import { useContext, useRef } from 'react';
 import type * as React from 'react';
 
+import { ArrowUpOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 import * as Base from 'fumadocs-ui/components/sidebar/base';
 import { createLinkItemRenderer } from 'fumadocs-ui/components/sidebar/link-item';
@@ -25,6 +26,13 @@ export function mergeRefs<T>(...refs: (React.Ref<T> | undefined)[]): React.RefCa
 
 function getItemOffset(depth: number) {
     return `calc(${2 + 3 * depth} * var(--spacing))`;
+}
+
+function shouldShowExternalIndicator(href: unknown, external?: boolean) {
+    if (external) return true;
+    if (typeof href !== 'string') return false;
+
+    return href.startsWith('/theme');
 }
 
 export const {
@@ -116,7 +124,7 @@ export function SidebarSeparator({ children, className, style, ...props }: Compo
 
     return (
         <Base.SidebarSeparator
-            className={clsx('[&_svg]:size-4 [&_svg]:shrink-0', className)}
+            className={clsx('font-semibold [&_svg]:size-4 [&_svg]:shrink-0', className)}
             style={{
                 paddingInlineStart: getItemOffset(depth),
                 ...style,
@@ -128,6 +136,26 @@ export function SidebarSeparator({ children, className, style, ...props }: Compo
     );
 }
 
+// const LinkOutlineIcon = (props: ComponentProps<'svg'>) => {
+//     return (
+//         <svg
+//             width="15"
+//             height="15"
+//             viewBox="0 0 15 15"
+//             fill="none"
+//             xmlns="http://www.w3.org/2000/svg"
+//             {...props}
+//         >
+//             <path
+//                 d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
+//                 fill="currentColor"
+//                 fill-rule="evenodd"
+//                 clip-rule="evenodd"
+//             ></path>
+//         </svg>
+//     );
+// };
+
 export function SidebarItem({
     children,
     className,
@@ -135,6 +163,7 @@ export function SidebarItem({
     ...props
 }: ComponentProps<typeof Base.SidebarItem>) {
     const depth = Base.useFolderDepth();
+    const isExternalLink = shouldShowExternalIndicator(props.href, props.external);
 
     return (
         <Base.SidebarItem
@@ -152,6 +181,9 @@ export function SidebarItem({
             {...props}
         >
             {children}
+            {isExternalLink && (
+                <ArrowUpOutlineIcon aria-hidden="true" className="size-3.5 scale-110 rotate-45" />
+            )}
         </Base.SidebarItem>
     );
 }
@@ -162,9 +194,6 @@ export function SidebarFolderTrigger({
     ...props
 }: ComponentProps<typeof Base.SidebarFolderTrigger>) {
     const { collapsible, depth } = Base.useFolder()!;
-
-    console.log(collapsible);
-    console.log(depth);
 
     return (
         <Base.SidebarFolderTrigger
@@ -196,7 +225,7 @@ export function SidebarFolderLink({
     return (
         <Base.SidebarFolderLink
             className={clsx(
-                'w-full text-fd-muted-foreground relative flex flex-row items-center gap-2 rounded-lg p-2 text-start [&_svg]:size-4 [&_svg]:shrink-0',
+                'w-full text-fd-muted-foreground relative flex flex-row items-center gap rounded-lg p-2 text-start [&_svg]:size-4 [&_svg]:shrink-0',
                 'hover:bg-fd-accent/50 hover:text-fd-accent-foreground/80 data-[active=true]:bg-fd-primary/10 data-[active=true]:text-fd-primary transition-colors hover:transition-none data-[active=true]:hover:transition-colors',
                 depth > 1
                     ? 'data-[active=true]:before:bg-fd-primary data-[active=true]:before:absolute data-[active=true]:before:inset-y-2.5 data-[active=true]:before:start-2.5 data-[active=true]:before:w-px data-[active=true]:before:content-[""]'

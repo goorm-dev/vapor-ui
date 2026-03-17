@@ -9,7 +9,7 @@ import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
 import { usePathname } from 'next/navigation';
 
-import { externalLinks } from '~/constants/site-links';
+import { navLinks } from '~/constants/site-links';
 
 import LogoVapor from '../../../public/icons/logo-vapor.svg';
 import { ThemeToggle } from '../theme-toggle';
@@ -92,7 +92,7 @@ const MobileNavigation = () => {
                     {/* Mobile Menu Items */}
                     <ul className="flex flex-col gap-4 p-6">
                         {/* External Links */}
-                        {externalLinks.map((item, i) => (
+                        {navLinks.map((item, i) => (
                             <li key={i} className="flex h-10 px-6 items-center justify-between">
                                 <Text
                                     className="flex items-center gap-2 text-base"

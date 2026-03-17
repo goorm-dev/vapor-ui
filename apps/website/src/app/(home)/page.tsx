@@ -288,6 +288,7 @@ export default function HomePage() {
                             size="lg"
                             colorPalette="secondary"
                             className={'w-full md:w-auto'}
+                            nativeButton={false}
                             render={
                                 <Link href="/docs">
                                     Docs 보러 가기

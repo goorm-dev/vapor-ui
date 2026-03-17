@@ -7,14 +7,6 @@ import { VersionSelector } from '~/components/version-selector';
 import { navLinks } from '~/constants/site-links';
 import { source } from '~/lib/source';
 
-const tabs = [
-    { title: 'Getting Started', url: '/docs' },
-    { title: 'Components', url: '/docs/components' },
-    { title: 'Style', url: '/docs/foundations' },
-    { title: 'Blocks', url: '/blocks' },
-    { title: 'Theme', url: '/theme' },
-];
-
 export default function Layout({ children }: { children: ReactNode }) {
     return (
         <CustomDocsLayout
@@ -30,7 +22,19 @@ export default function Layout({ children }: { children: ReactNode }) {
             containerProps={{ className: 'isolate' }}
             tree={source.pageTree}
             sidebar={{
-                tabs,
+                tabs: {
+                    transform: (tab) => {
+                        return {
+                            ...tab,
+                            title: (
+                                <div className="flex items-center gap-2">
+                                    {tab.icon}
+                                    <span>{tab.title}</span>
+                                </div>
+                            ),
+                        };
+                    },
+                },
             }}
             links={navLinks}
         >

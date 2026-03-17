@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from 'react';
 
-import { EditOutlineIcon, TextOutlineIcon } from '@vapor-ui/icons';
+import { AlignCenterOutlineIcon, EditOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 import type { AnchorProviderProps, TOCItemType } from 'fumadocs-core/toc';
 import * as TocClerk from 'fumadocs-ui/components/toc/clerk';
@@ -155,7 +155,7 @@ export function CustomDocsPage({
                             className="text-fd-muted-foreground inline-flex items-center gap-1.5 text-sm"
                             id="toc-title"
                         >
-                            <TextOutlineIcon className="size-4" />
+                            <AlignCenterOutlineIcon className="size-4" />
                             <I18nLabel label="toc" />
                         </h3>
                         <TOCScrollArea>
