@@ -13,6 +13,7 @@ import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
+import { mergeStatefulProps } from '~/utils/stateful-props';
 import type { Assign, VaporUIComponentProps } from '~/utils/types';
 
 import type { FallbackVariants, RootVariants } from './avatar.css';
@@ -125,10 +126,10 @@ export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbac
         const { size, alt, delay } = useAvatarContext();
         const background = getRandomColor(alt ?? '');
 
-        const mergedStyle = {
-            ...assignInlineVars({ [styles.fallbackBgVar]: background }),
-            ...style,
-        };
+        const { style: mergedStyle } = mergeStatefulProps(
+            { style: assignInlineVars({ [styles.fallbackBgVar]: background }) },
+            { style },
+        );
 
         return (
             <BaseAvatar.Fallback
