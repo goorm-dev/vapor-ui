@@ -26,14 +26,12 @@ export const resolveClassName = <State>(className: ClassNameParams<State>, state
     return className;
 };
 
-type StatefulProps<State> = {
-    className?: ClassNameParams<State>;
-    style?: StyleParams<State>;
-};
+type InputProps = { className?: string; style?: React.CSSProperties };
+type ExternalProps<State> = { className?: ClassNameParams<State>; style?: StyleParams<State> };
 
 export const mergeStatefulProps = <State>(
-    inputProps: StatefulProps<State>,
-    externalProps: StatefulProps<State>,
+    inputProps: InputProps,
+    externalProps: ExternalProps<State>,
 ) => {
     const { className: inputClassName, style: inputStyle } = inputProps;
     const { className: externalClassName, style: externalStyle } = externalProps;
@@ -52,5 +50,5 @@ export const mergeStatefulProps = <State>(
         ...mergeProps(inputProps, externalProps),
         className,
         style,
-    } as StatefulProps<State>;
+    } as ExternalProps<State>;
 };
