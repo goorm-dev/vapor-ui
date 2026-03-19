@@ -150,7 +150,7 @@ export interface FieldSuccessProps extends Omit<
      * Determines whether to show the success message according to the field’s
      * [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).
      * @links https://github.com/mui/base-ui/blob/62e28c641db6d90647936ff0367d2b27641b7830/packages/react/src/field/error/FieldError.tsx#L137
-     * @default false
+     * @default 'valid'
      */
     match?: boolean | 'valid';
 }
