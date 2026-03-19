@@ -88,7 +88,7 @@ export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.P
         const children =
             typeof childrenProp === 'function'
                 ? childrenProp({ count: value.length, maxLength, value })
-                : childrenProp || content;
+                : (childrenProp ?? content);
 
         return useRenderElement({
             ref,
