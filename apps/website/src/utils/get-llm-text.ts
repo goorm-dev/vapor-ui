@@ -10,8 +10,6 @@ import { replaceComponentDoc } from '~/utils/get-component-doc';
 import { replaceFoundationDoc } from '~/utils/get-foundation-doc';
 import { replaceIconDoc } from '~/utils/get-icon-doc';
 
-import { getAppVersion } from './get-app-version';
-
 const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 
 type ContentType = 'docs' | 'blocks' | 'theme';
@@ -41,16 +39,12 @@ export async function getLLMText(
         const rawContent = await page.data.getText('raw');
         const content = processContent(rawContent, contentType);
         const sourceUrl = getSourceUrl(contentType, page.path);
-        const appVersion = await getAppVersion();
         const processed = await processor.process({
             path: page.data.info.fullPath,
             value: content,
         });
 
-        return `---
-version: ${appVersion}
----
-# ${page.data.title}
+        return `# ${page.data.title}
 URL: ${page.url}
 Source: ${sourceUrl}
 
