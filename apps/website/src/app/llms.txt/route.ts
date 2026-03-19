@@ -7,13 +7,15 @@ export const revalidate = false;
 
 function processPages<T extends Page<PageData>>(pages: T[], sectionTitle: string) {
     const scanned: string[] = [];
-    scanned.push(`# ${sectionTitle}`);
     const map = new Map<string, string[]>();
+
+    scanned.push(`# ${sectionTitle}`);
 
     for (const page of pages) {
         const dir = page.slugs[0] || 'index';
         const list = map.get(dir) ?? [];
-        list.push(`- [${page.data.title}](${page.url}.mdx): ${page.data.description}`);
+
+        list.push(`- [${page.data.title}](${page.url}.mdx): ${page.data.description || ''}`);
         map.set(dir, list);
     }
 
