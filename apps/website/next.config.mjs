@@ -8,13 +8,13 @@ const config = {
     async redirects() {
         return [
             {
-                source: '/playground',
-                destination: '/theme/playground',
+                source: '/docs',
+                destination: '/docs/getting-started',
                 permanent: true,
             },
             {
-                source: '/docs/getting-started/theming',
-                destination: '/theme/theme-provider',
+                source: '/docs/releases',
+                destination: '/docs/releases/core',
                 permanent: true,
             },
         ];

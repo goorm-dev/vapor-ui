@@ -1,0 +1,14 @@
+{
+    "title": "Releases",
+    "description": "Vapor UI의 최신 릴리즈 정보를 확인하세요.",
+    "root": true,
+    "pages": [
+        "---Packages---",
+        "core",
+        "icons",
+        "color-generator",
+        "css-generator",
+        "eslint-plugin-vapor",
+        "codemod"
+    ]
+}

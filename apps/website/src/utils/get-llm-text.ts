@@ -36,10 +36,11 @@ export async function getLLMText(
     contentType: ContentType = 'docs',
 ): Promise<string> {
     try {
-        const content = processContent(page.data.content ?? '', contentType);
+        const rawContent = await page.data.getText('raw');
+        const content = processContent(rawContent, contentType);
         const sourceUrl = getSourceUrl(contentType, page.path);
         const processed = await processor.process({
-            path: page.data._file.absolutePath,
+            path: page.data.info.fullPath,
             value: content,
         });
 

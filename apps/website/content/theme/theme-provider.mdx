@@ -14,9 +14,7 @@ export default function RootLayout({ children }) {
     return (
         <html lang="ko" suppressHydrationWarning>
             <body>
-                <ThemeProvider defaultTheme="system">
-                    {children}
-                </ThemeProvider>
+                <ThemeProvider defaultTheme="system">{children}</ThemeProvider>
             </body>
         </html>
     );
@@ -40,9 +38,7 @@ function ThemeToggle() {
     if (!mounted) return null;
 
     return (
-        <button onClick={() => 
-            setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
-        }>
+        <button onClick={() => setTheme(resolvedTheme === 'light' ? 'dark' : 'light')}>
             {resolvedTheme === 'light' ? 'Dark' : 'Light'}
         </button>
     );
@@ -51,27 +47,27 @@ function ThemeToggle() {
 
 ### Hook Reference
 
-| Key | Type | Description |
-| :-- | :-- | :-- |
-| theme | `'light' \| 'dark' \| 'system'` | 현재 설정된 테마 |
-| setTheme | `(theme) => void` | 테마 변경 함수 (localStorage 자동 저장) |
-| themes | `('light' \| 'dark' \| 'system')[]` | 사용 가능한 테마 목록 |
-| resolvedTheme | `'light' \| 'dark'` | 실제 적용된 테마 (`system`일 때 시스템 테마 반영) |
-| systemTheme | `'light' \| 'dark'` | 현재 시스템 테마 |
-| forcedTheme | `'light' \| 'dark'` | 강제 적용된 테마 |
-| resetTheme | `() => void` | 테마 초기화 및 localStorage 제거 |
-| mounted | `boolean` | 클라이언트 마운트 여부 (SSR 대응) |
+| Key           | Type                                | Description                                       |
+| :------------ | :---------------------------------- | :------------------------------------------------ |
+| theme         | `'light' \| 'dark' \| 'system'`     | 현재 설정된 테마                                  |
+| setTheme      | `(theme) => void`                   | 테마 변경 함수 (localStorage 자동 저장)           |
+| themes        | `('light' \| 'dark' \| 'system')[]` | 사용 가능한 테마 목록                             |
+| resolvedTheme | `'light' \| 'dark'`                 | 실제 적용된 테마 (`system`일 때 시스템 테마 반영) |
+| systemTheme   | `'light' \| 'dark'`                 | 현재 시스템 테마                                  |
+| forcedTheme   | `'light' \| 'dark'`                 | 강제 적용된 테마                                  |
+| resetTheme    | `() => void`                        | 테마 초기화 및 localStorage 제거                  |
+| mounted       | `boolean`                           | 클라이언트 마운트 여부 (SSR 대응)                 |
 
 ## Provider Options
 
-| Prop | Default | Description |
-| :-- | :-- | :-- |
-| defaultTheme | `'system'` | 초기 테마 (`'light'`, `'dark'`, `'system'`) |
-| storageKey | `'vapor-ui-theme'` | localStorage 키 |
-| forcedTheme | - | 강제 테마 적용 (최우선) |
-| enableColorScheme | `true` | CSS `color-scheme` 자동 설정 |
-| disableTransitionOnChange | `false` | 테마 전환 시 CSS 트랜지션 비활성화 |
-| nonce | - | CSP nonce 값 |
+| Prop                      | Default            | Description                                 |
+| :------------------------ | :----------------- | :------------------------------------------ |
+| defaultTheme              | `'system'`         | 초기 테마 (`'light'`, `'dark'`, `'system'`) |
+| storageKey                | `'vapor-ui-theme'` | localStorage 키                             |
+| forcedTheme               | -                  | 강제 테마 적용 (최우선)                     |
+| enableColorScheme         | `true`             | CSS `color-scheme` 자동 설정                |
+| disableTransitionOnChange | `false`            | 테마 전환 시 CSS 트랜지션 비활성화          |
+| nonce                     | -                  | CSP nonce 값                                |
 
 ## ThemeScope
 
@@ -82,15 +78,15 @@ import { ThemeScope } from '@vapor-ui/core';
 
 <ThemeScope forcedTheme="dark">
     <Card>다크 테마가 강제 적용된 영역</Card>
-</ThemeScope>
+</ThemeScope>;
 ```
 
 ### ThemeScope Options
 
-| Prop | Type | Description |
-| :-- | :-- | :-- |
-| forcedTheme | `'light' \| 'dark'` | 강제 적용할 테마 |
-| children | `ReactNode` | 테마가 적용될 자식 요소 |
+| Prop        | Type                | Description             |
+| :---------- | :------------------ | :---------------------- |
+| forcedTheme | `'light' \| 'dark'` | 강제 적용할 테마        |
+| children    | `ReactNode`         | 테마가 적용될 자식 요소 |
 
 ### Portal과 함께 사용
 
