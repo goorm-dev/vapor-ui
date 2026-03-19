@@ -171,7 +171,7 @@ export interface TabsListProps extends TabsListPrimitive.Props {
     /**
      * A Custom element for Tabs.IndicatorPrimitive. If not provided, the default Tabs.IndicatorPrimitive will be rendered.
      */
-    indicatorElement?: ReactElement<typeof TabsIndicatorPrimitive>;
+    indicatorElement?: ReactElement<TabsIndicatorPrimitive.Props>;
 }
 
 export namespace TabsList {
