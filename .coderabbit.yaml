@@ -13,7 +13,7 @@ knowledge_base:
 reviews:
   request_changes_workflow: true
   auto_title_instructions: |-
-    ### 2.2.1. Primary Commit Types & SemVer Guidance
+    # Primary Commit Types & SemVer Guidance
 
     - **Important**: In this repository, package version bumps are decided by **Changesets** in `.changeset/*.md`, not inferred automatically from commit types alone.
     - Commit types should communicate change intent clearly.
@@ -49,8 +49,9 @@ reviews:
       Migrate `kind="secondary"` to `variant="outline"`.
       ```
 
-    ### 2.2.2. Other Commit Types
-
+    # Other Commit Types
+    - `all` : affecting the entire package or multiple packages.
+    - `etc.` : any other minor changes that don't fit the above categories but still require a changeset.
     - `docs`: Documentation changes.
     - `style`: Code style changes without logic changes.
     - `refactor`: Refactoring without behavioral changes.
