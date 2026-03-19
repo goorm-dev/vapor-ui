@@ -4,16 +4,8 @@ import { getLLMText } from '~/utils/get-llm-text';
 export const revalidate = false;
 
 export async function GET() {
-    const scan = [
-        {
-            type: 'docs' as const,
-            pages: source.getPages(),
-        },
-    ].map(async ({ type, pages }) => {
-        return Promise.all(pages.map((page) => getLLMText(page, type)) ?? []);
-    });
+    const pages = source.getPages();
+    const scanned = await Promise.all(pages.map((page) => getLLMText(page, 'docs')));
 
-    const scanned = await Promise.all(scan);
-
-    return new Response(scanned.flat().join('\n\n'));
+    return new Response(scanned.join('\n\n'));
 }
