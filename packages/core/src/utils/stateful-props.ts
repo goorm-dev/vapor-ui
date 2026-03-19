@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 export type StyleParams<State> =
     | CSSProperties
-    | (CSSProperties & ((state: State) => React.CSSProperties | undefined))
+    | ((state: State) => CSSProperties | undefined)
     | undefined;
 
 export const resolveStyle = <State>(style: StyleParams<State>, state: State) => {

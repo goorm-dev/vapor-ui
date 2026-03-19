@@ -37,10 +37,7 @@ export type Styles = {
 
 export type VaporUIComponentProps<ElementType extends React.ElementType, State> = Styles &
     DeprecatedSprinkles &
-    Omit<
-        useRender.ComponentProps<ElementType, State>,
-        OmitColorProp<ElementType> | 'className' | 'style'
-    > & {
+    Omit<useRender.ComponentProps<ElementType, State>, OmitColorProp<ElementType> | 'className'> & {
         className?: ClassNameParams<State>;
         style?: StyleParams<State>;
     };
