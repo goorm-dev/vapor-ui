@@ -1,6 +1,6 @@
 {
     "name": "website",
-    "version": "1.0.0-beta.6",
+    "version": "1.0.0",
     "private": true,
     "scripts": {
         "build": "next build",
@@ -33,7 +33,7 @@
         "fumadocs-docgen": "3.0.8",
         "fumadocs-mdx": "14.2.9",
         "fumadocs-typescript": "5.1.5",
-        "fumadocs-ui": "npm:@fumadocs/base-ui@latest",
+        "fumadocs-ui": "npm:@fumadocs/base-ui@16.6.17",
         "fuse.js": "^7.1.0",
         "lodash-es": "^4.17.23",
         "markdown-table": "^3.0.4",

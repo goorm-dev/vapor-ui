@@ -4,7 +4,7 @@ import { createSearchAPI } from 'fumadocs-core/search/server';
 import { source } from '~/lib/source';
 
 export const { GET } = createSearchAPI('advanced', {
-    indexes: () => {
+    indexes: async () => {
         const items = source.getPages().map(async (page) => {
             const { url, data } = page;
             const { title = '', description, getText } = data;
@@ -13,6 +13,7 @@ export const { GET } = createSearchAPI('advanced', {
             return { id: url, url, title, description, structuredData: structure(raw) };
         });
 
-        return Promise.all(items);
+        const settled = await Promise.allSettled(items);
+        return settled.filter((item) => item.status === 'fulfilled').map((item) => item.value);
     },
 });

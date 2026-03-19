@@ -4,7 +4,7 @@
     "root": true,
     "pages": [
         "---Overview---",
-        "index.mdx",
+        "index",
         "(overview)/introduction",
         "(overview)/principles",
         "(overview)/installation",
