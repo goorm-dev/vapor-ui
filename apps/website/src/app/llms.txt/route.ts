@@ -1,5 +1,4 @@
 import { blockSource, source } from '~/lib/source';
-import { getAppVersion } from '~/utils/get-app-version';
 
 export const revalidate = false;
 
@@ -27,9 +26,6 @@ function processPages<
 
 export async function GET() {
     const result: string[] = [];
-    const appVersion = await getAppVersion();
-
-    result.push(`---\nversion: ${appVersion}\n---\n`);
 
     // Process docs
     const docsPages = source.getPages();
