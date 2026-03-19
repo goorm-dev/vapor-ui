@@ -2,7 +2,7 @@
 
 import { type ReactNode, useRef } from 'react';
 
-import type { TableOfContents } from 'fumadocs-core/server';
+import type { TableOfContents } from 'fumadocs-core/toc';
 
 import { TOC } from '../toc';
 

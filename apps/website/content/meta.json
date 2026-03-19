@@ -1,5 +1,6 @@
 {
     "title": "Documentation",
+    "root": true,
     "description": "Vapor UI Documentation",
-    "pages": ["getting-started", "components", "releases"]
+    "pages": ["docs"]
 }

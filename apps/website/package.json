@@ -1,6 +1,6 @@
 {
     "name": "website",
-    "version": "1.0.0-beta.6",
+    "version": "1.0.0",
     "private": true,
     "scripts": {
         "build": "next build",
@@ -29,15 +29,15 @@
         "@vercel/analytics": "^1.6.1",
         "clsx": "^2.1.1",
         "color-convert": "^3.1.2",
-        "fumadocs-core": "15.7.13",
-        "fumadocs-docgen": "3.0.1",
-        "fumadocs-mdx": "11.10.1",
-        "fumadocs-typescript": "4.0.8",
-        "fumadocs-ui": "15.7.13",
+        "fumadocs-core": "16.6.17",
+        "fumadocs-docgen": "3.0.8",
+        "fumadocs-mdx": "14.2.9",
+        "fumadocs-typescript": "5.1.5",
+        "fumadocs-ui": "npm:@fumadocs/base-ui@16.6.17",
         "fuse.js": "^7.1.0",
         "lodash-es": "^4.17.23",
         "markdown-table": "^3.0.4",
-        "next": "15.5.10",
+        "next": "16.1.6",
         "react": "catalog:",
         "react-dom": "catalog:",
         "react-error-boundary": "^6.0.0",
@@ -50,7 +50,7 @@
         "zod": "^4.1.11"
     },
     "devDependencies": {
-        "@fumadocs/mdx-remote": "1.4.0",
+        "@fumadocs/mdx-remote": "1.4.6",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@svgr/webpack": "^8.1.0",
