@@ -356,7 +356,7 @@ export interface ToastManager extends BaseToastManager {
     ) => () => void;
     add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
     update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
-    close: (id: string) => void;
+    close: (id?: string) => void;
     promise: <Value, Data extends object>(
         promise: Promise<Value>,
         options: ToastManagerPromiseOptions<Value, Data>,
