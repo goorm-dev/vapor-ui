@@ -3,7 +3,7 @@
  *
  * Determines where symbols are declared (project, base-ui, react, dom, external).
  */
-import type { Symbol } from 'ts-morph';
+import type { Symbol as TsSymbol } from 'ts-morph';
 
 import { DeclarationSourceType } from '~/adapters/out/ts-morph/parsers/constants';
 
@@ -51,23 +51,23 @@ export function isExternalDeclaration(filePath: string | undefined): boolean {
     );
 }
 
-export function getSymbolSourcePath(symbol: Symbol): string | undefined {
+export function getSymbolSourcePath(symbol: TsSymbol): string | undefined {
     const declarations = symbol.getDeclarations();
     if (!declarations.length) return undefined;
     return declarations[0].getSourceFile().getFilePath();
 }
 
-export function isSymbolFromExternalSource(symbol: Symbol): boolean {
+export function isSymbolFromExternalSource(symbol: TsSymbol): boolean {
     const filePath = getSymbolSourcePath(symbol);
     return isExternalDeclaration(filePath);
 }
 
-export function isSymbolFromSprinkles(symbol: Symbol): boolean {
+export function isSymbolFromSprinkles(symbol: TsSymbol): boolean {
     const filePath = getSymbolSourcePath(symbol);
     return filePath?.includes(SPRINKLES_PATTERN) ?? false;
 }
 
-export function isSymbolFromBaseUi(symbol: Symbol): boolean {
+export function isSymbolFromBaseUi(symbol: TsSymbol): boolean {
     const filePath = getSymbolSourcePath(symbol);
     return filePath?.includes(BASE_UI_PATTERN) ?? false;
 }

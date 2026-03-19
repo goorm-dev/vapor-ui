@@ -4,7 +4,7 @@
  * Parser layer extracts ParsedComponent[] from a source file.
  * Legacy extractProps() remains for backward compatibility.
  */
-import type { ModuleDeclaration, Node, SourceFile, Symbol } from 'ts-morph';
+import type { ModuleDeclaration, Node, SourceFile, Symbol as TsSymbol } from 'ts-morph';
 
 import type { BaseUiTypeMap, ExtractOptions } from '~/adapters/out/ts-morph/parsers/types';
 import type { PropsInfoJson } from '~/application/dto/component-json';
@@ -24,7 +24,7 @@ import { getSymbolSourcePath } from './type/declaration-source';
 import { resolveType } from './type/resolver';
 
 function extractParsedProp(
-    symbol: Symbol,
+    symbol: TsSymbol,
     declNode: Node,
     baseUiMap: BaseUiTypeMap,
     defaultValues: Record<string, string>,

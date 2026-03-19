@@ -6,8 +6,8 @@ function isSimpleType(part: string): boolean {
 }
 
 export function normalizeTypeStrings(typeString: string): string[] {
-    if (typeString.includes(' | ')) {
-        const parts = typeString.split(' | ').map((s) => s.trim());
+    if (typeString.includes('|')) {
+        const parts = typeString.split(/\s*\|\s*/).map((s) => s.trim());
         if (parts.every(isSimpleType)) {
             return parts;
         }

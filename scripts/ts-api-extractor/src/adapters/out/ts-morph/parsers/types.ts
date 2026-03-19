@@ -52,19 +52,3 @@ export interface ParsedProp {
     declarationFilePath?: string;
 }
 
-/**
- * Parsed component data extracted from a namespace.
- */
-export interface ParsedComponent {
-    name: string;
-    description?: string;
-    props: ParsedProp[];
-}
-
-/**
- * Parsed result for a file.
- */
-export interface ParsedFileResult {
-    filePath: string;
-    components: ParsedComponent[];
-}

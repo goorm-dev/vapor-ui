@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -46,7 +46,7 @@ export function writeMultipleFiles(
 export function formatWithPrettier(filePaths: string[]): void {
     if (filePaths.length === 0) return;
     try {
-        execSync(`npx prettier --write ${filePaths.join(' ')}`, { stdio: 'inherit' });
+        execFileSync('npx', ['prettier', '--write', ...filePaths], { stdio: 'inherit' });
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         console.warn(`Prettier formatting skipped: ${message}`);

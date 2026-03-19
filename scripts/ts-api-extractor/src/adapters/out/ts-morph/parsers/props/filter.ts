@@ -3,7 +3,7 @@
  *
  * Determines which props to include/exclude from extraction output.
  */
-import type { Symbol } from 'ts-morph';
+import type { Symbol as TsSymbol } from 'ts-morph';
 
 import type { ExtractOptions } from '~/adapters/out/ts-morph/parsers/types';
 
@@ -68,7 +68,7 @@ function isDeprecatedCssProp(name: string): boolean {
 }
 
 export function shouldIncludeSymbol(
-    symbol: Symbol,
+    symbol: TsSymbol,
     options: ExtractOptions,
     includeSet: Set<string>,
 ): boolean {

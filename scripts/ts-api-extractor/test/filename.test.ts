@@ -21,7 +21,7 @@ describe('toKebabCase', () => {
     });
 
     it('연속 대문자', () => {
-        expect(toKebabCase('HTMLElement')).toBe('htmlelement');
+        expect(toKebabCase('HTMLElement')).toBe('html-element');
     });
 
     it('빈 문자열', () => {

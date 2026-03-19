@@ -7,8 +7,8 @@ export function propModelToJson(model: PropModel): PropertyJson {
         name: model.name,
         type: model.types,
         required: model.required,
-        ...(model.description && { description: model.description }),
-        ...(model.defaultValue && { defaultValue: model.defaultValue }),
+        ...(model.description !== undefined && { description: model.description }),
+        ...(model.defaultValue !== undefined && { defaultValue: model.defaultValue }),
     };
 }
 
@@ -16,7 +16,7 @@ export function componentModelToJson(model: ComponentModel): PropsInfoJson {
     return {
         name: model.name,
         displayName: model.displayName,
-        ...(model.description && { description: model.description }),
+        ...(model.description !== undefined && { description: model.description }),
         props: model.props.map(propModelToJson),
     };
 }
