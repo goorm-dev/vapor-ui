@@ -28,6 +28,7 @@ export function SearchToggle({
             aria-label="Open Search"
             data-search=""
             type="button"
+            {...props}
             className={clsx(
                 buttonVariants({
                     color,

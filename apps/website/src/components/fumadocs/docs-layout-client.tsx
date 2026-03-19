@@ -99,7 +99,7 @@ export function LayoutContextProvider({
 
 export function LayoutHeader(props: ComponentProps<'header'>) {
     const context = useContext(LayoutContext);
-    const isNavTransparent = context?.isNavTransparent ?? !open;
+    const isNavTransparent = context?.isNavTransparent ?? false;
 
     return (
         <header data-transparent={isNavTransparent} {...props}>
