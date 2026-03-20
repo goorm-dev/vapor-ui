@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Text, useTheme } from '@vapor-ui/core';
 
@@ -21,23 +21,23 @@ function toDisplayName(value: string) {
 }
 
 export function ComponentExplorer({ name, componentName }: ComponentExplorerProps) {
-    const iframeRef = React.useRef<HTMLIFrameElement>(null);
-    const [hoveredPart, setHoveredPart] = React.useState<string | null>(null);
-    const [selectedPart, setSelectedPart] = React.useState<string | null>(null);
-    const [iframeLoaded, setIframeLoaded] = React.useState(false);
-    const [iframeError, setIframeError] = React.useState(false);
-    const [liveAnnouncement, setLiveAnnouncement] = React.useState('');
+    const iframeRef = useRef<HTMLIFrameElement>(null);
+    const [hoveredPart, setHoveredPart] = useState<string | null>(null);
+    const [selectedPart, setSelectedPart] = useState<string | null>(null);
+    const [iframeLoaded, setIframeLoaded] = useState(false);
+    const [iframeError, setIframeError] = useState(false);
+    const [liveAnnouncement, setLiveAnnouncement] = useState('');
     const { highlightPart, availableParts, resetAvailableParts } =
         useExplorerCommunication(iframeRef);
     const { resolvedTheme } = useTheme();
 
-    React.useEffect(() => {
+    useEffect(() => {
         setSelectedPart(null);
         setHoveredPart(null);
         setLiveAnnouncement('');
     }, [componentName]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (iframeRef.current) {
             resetAvailableParts();
             setIframeLoaded(false);
@@ -46,7 +46,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         }
     }, [name, resetAvailableParts, resolvedTheme]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!availableParts) return;
 
         setSelectedPart((prev) => (prev && !availableParts.includes(prev) ? null : prev));
@@ -55,17 +55,17 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
 
     const activePart = hoveredPart ?? selectedPart;
 
-    React.useEffect(() => {
+    useEffect(() => {
         highlightPart(activePart);
     }, [activePart, highlightPart]);
 
-    const handlePartHover = React.useCallback((partName: string | null) => {
+    const handlePartHover = useCallback((partName: string | null) => {
         setHoveredPart(partName);
     }, []);
 
-    const displayName = React.useMemo(() => toDisplayName(componentName), [componentName]);
+    const displayName = useMemo(() => toDisplayName(componentName), [componentName]);
 
-    const handlePartSelect = React.useCallback(
+    const handlePartSelect = useCallback(
         (value: unknown) => {
             const partName = typeof value === 'string' && value.length > 0 ? value : null;
             setSelectedPart(partName || null);
@@ -76,23 +76,23 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         [displayName],
     );
 
-    const handleClearSelection = React.useCallback(() => {
+    const handleClearSelection = useCallback(() => {
         setSelectedPart(null);
         setHoveredPart(null);
         setLiveAnnouncement('파트 선택이 해제되었습니다.');
     }, []);
 
-    const handleIframeLoad = React.useCallback(() => {
+    const handleIframeLoad = useCallback(() => {
         setIframeLoaded(true);
         setIframeError(false);
     }, []);
 
-    const handleIframeError = React.useCallback(() => {
+    const handleIframeError = useCallback(() => {
         setIframeLoaded(false);
         setIframeError(true);
     }, []);
 
-    const handleRetry = React.useCallback(() => {
+    const handleRetry = useCallback(() => {
         setIframeError(false);
         setIframeLoaded(false);
         if (iframeRef.current) {
@@ -164,7 +164,6 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                         ref={iframeRef}
                         className="border-0 block w-full h-[320px] md:h-full min-h-[320px] md:min-h-[420px]"
                         title={`Component Explorer - ${componentName}`}
-                        sandbox="allow-scripts allow-same-origin"
                         onLoad={handleIframeLoad}
                         onError={handleIframeError}
                     />

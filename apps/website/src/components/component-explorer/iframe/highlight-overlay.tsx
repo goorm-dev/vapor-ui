@@ -83,7 +83,7 @@ export function HighlightOverlay() {
         const scanAndNotify = throttle(() => {
             const elements = document.querySelectorAll('[data-part]');
             const parts = Array.from(elements)
-                .map((el) => el.getAttribute('data-part'))
+                .map((element) => element.getAttribute('data-part'))
                 .filter(Boolean) as string[];
             const uniqueParts = Array.from(new Set(parts));
 
@@ -96,8 +96,6 @@ export function HighlightOverlay() {
             );
         }, 500);
 
-        scanAndNotify();
-
         const observer = new MutationObserver(scanAndNotify);
         observer.observe(document.body, {
             childList: true,
@@ -105,6 +103,8 @@ export function HighlightOverlay() {
             attributes: true,
             attributeFilter: ['data-part'],
         });
+
+        scanAndNotify();
 
         return () => {
             observer.disconnect();
