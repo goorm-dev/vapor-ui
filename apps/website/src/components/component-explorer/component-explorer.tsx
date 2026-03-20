@@ -192,7 +192,11 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
             return;
         }
 
+        if (!target.hasAttribute('tabindex')) {
+            target.setAttribute('tabindex', '-1');
+        }
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.focus();
         setLiveAnnouncement(`${displayName}.${pinnedPart} Props Table로 이동했습니다.`);
     }, [componentName, displayName, pinnedPart]);
 
@@ -247,7 +251,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                             <Button
                                 size="sm"
                                 variant="outline"
-                                color="neutral"
+                                colorPalette="secondary"
                                 onClick={handleRetry}
                             >
                                 Retry

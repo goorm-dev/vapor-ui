@@ -182,7 +182,7 @@ export function AnatomyPanel({
                     <Button
                         size="sm"
                         variant="outline"
-                        color="neutral"
+                        colorPalette="secondary"
                         className="w-full"
                         disabled={!canMoveToProps}
                         onClick={onMoveToProps}

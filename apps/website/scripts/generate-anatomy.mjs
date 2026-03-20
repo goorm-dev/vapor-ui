@@ -16,19 +16,25 @@ function parsePartsFile(filePath) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const parts = [];
 
-    // Match export statements like: ComponentNamePartName as ShortName
-    const exportRegex = /(\w+)\s+as\s+(\w+)/g;
-    let match;
+    // Only match aliases inside export { ... } blocks
+    const exportBlockRegex = /export\s*\{([^}]+)\}/g;
+    let blockMatch;
 
-    while ((match = exportRegex.exec(content)) !== null) {
-        const [, internalName, exportedName] = match;
-        const isPrimitive = exportedName.endsWith('Primitive');
+    while ((blockMatch = exportBlockRegex.exec(content)) !== null) {
+        const block = blockMatch[1];
+        const aliasRegex = /(\w+)\s+as\s+(\w+)/g;
+        let match;
 
-        parts.push({
-            name: exportedName,
-            fullName: internalName,
-            isPrimitive,
-        });
+        while ((match = aliasRegex.exec(block)) !== null) {
+            const [, internalName, exportedName] = match;
+            const isPrimitive = exportedName.endsWith('Primitive');
+
+            parts.push({
+                name: exportedName,
+                fullName: internalName,
+                isPrimitive,
+            });
+        }
     }
 
     return parts;

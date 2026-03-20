@@ -75,14 +75,15 @@ export function HighlightOverlay() {
         return () => {
             window.removeEventListener('scroll', throttleFindAndHighlight, true);
             window.removeEventListener('resize', throttleFindAndHighlight);
+            throttleFindAndHighlight.cancel();
         };
     }, [highlightedPart, findAndHighlight]);
 
     useEffect(() => {
         const scanAndNotify = throttle(() => {
-            const elements = document.querySelectorAll('[data-part], [data-vapor-part]');
+            const elements = document.querySelectorAll('[data-part]');
             const parts = Array.from(elements)
-                .map((el) => el.getAttribute('data-part') || el.getAttribute('data-vapor-part'))
+                .map((el) => el.getAttribute('data-part'))
                 .filter(Boolean) as string[];
             const uniqueParts = Array.from(new Set(parts));
 
@@ -102,7 +103,7 @@ export function HighlightOverlay() {
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ['data-part', 'data-vapor-part'],
+            attributeFilter: ['data-part'],
         });
 
         return () => {

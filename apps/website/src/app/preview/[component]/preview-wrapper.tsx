@@ -32,12 +32,16 @@ export function PreviewWrapper({
     }, [theme]);
 
     if (componentPath) {
+        if (!explorer) {
+            return <DynamicComponent componentPath={componentPath} />;
+        }
+
         return (
             <>
                 <div className="fixed inset-0 flex items-center justify-center p-4">
                     <DynamicComponent componentPath={componentPath} />
                 </div>
-                {explorer && <HighlightOverlay />}
+                <HighlightOverlay />
             </>
         );
     }

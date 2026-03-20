@@ -8,10 +8,12 @@ export function useExplorerCommunication(iframeRef: RefObject<HTMLIFrameElement 
     const [availableParts, setAvailableParts] = useState<string[] | null>(null);
 
     useEffect(() => {
-        const handleMessage = (event: MessageEvent<ExplorerMessage>) => {
+        const handleMessage = (event: MessageEvent<unknown>) => {
             if (event.origin !== window.location.origin) return;
+            if (event.source !== iframeRef.current?.contentWindow) return;
+            if (!event.data || typeof event.data !== 'object' || !('type' in event.data)) return;
 
-            const { data } = event;
+            const data = event.data as ExplorerMessage;
 
             if (data.type === EXPLORER_MESSAGES.AVAILABLE_PARTS) {
                 const message = data as AvailablePartsMessage;
@@ -32,7 +34,7 @@ export function useExplorerCommunication(iframeRef: RefObject<HTMLIFrameElement 
 
         window.addEventListener('message', handleMessage);
         return () => window.removeEventListener('message', handleMessage);
-    }, []);
+    }, [iframeRef]);
 
     const highlightPart = useCallback(
         (partName: string | null) => {
