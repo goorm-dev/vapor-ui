@@ -61,5 +61,9 @@ export function useExplorerCommunication(iframeRef: RefObject<HTMLIFrameElement 
         [iframeRef],
     );
 
-    return { highlightPart, availableParts };
+    const resetAvailableParts = useCallback(() => {
+        setAvailableParts(null);
+    }, []);
+
+    return { highlightPart, availableParts, resetAvailableParts };
 }

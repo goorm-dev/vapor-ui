@@ -23,15 +23,3 @@ export interface AvailablePartsMessage {
 }
 
 export type ExplorerMessage = HighlightPartMessage | ClearHighlightMessage | AvailablePartsMessage;
-
-export interface Part {
-    name: string;
-    fullName: string;
-    isPrimitive: boolean;
-}
-
-export interface AnatomyData {
-    componentName: string;
-    displayNamePrefix: string;
-    parts: Part[];
-}

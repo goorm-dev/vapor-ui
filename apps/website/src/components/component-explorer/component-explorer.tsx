@@ -2,11 +2,9 @@
 
 import * as React from 'react';
 
-import { Button, Text, useTheme } from '@vapor-ui/core';
-import { ErrorCircleOutlineIcon } from '@vapor-ui/icons';
+import { Text, useTheme } from '@vapor-ui/core';
 
 import { AnatomyPanel } from './anatomy-panel';
-import type { AnatomyData, Part } from './types';
 import { useExplorerCommunication } from './use-explorer-communication';
 
 interface ComponentExplorerProps {
@@ -14,56 +12,23 @@ interface ComponentExplorerProps {
     componentName: string;
 }
 
+function toDisplayName(value: string) {
+    return value
+        .split('-')
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
+}
+
 export function ComponentExplorer({ name, componentName }: ComponentExplorerProps) {
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
     const [hoveredPart, setHoveredPart] = React.useState<string | null>(null);
     const [selectedPart, setSelectedPart] = React.useState<string | null>(null);
-    const [parts, setParts] = React.useState<Part[]>([]);
-    const [anatomyData, setAnatomyData] = React.useState<AnatomyData | null>(null);
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [error, setError] = React.useState<string | null>(null);
-    const [retryCount, setRetryCount] = React.useState(0);
     const [iframeLoaded, setIframeLoaded] = React.useState(false);
     const [liveAnnouncement, setLiveAnnouncement] = React.useState('');
-    const { highlightPart, availableParts } = useExplorerCommunication(iframeRef);
+    const { highlightPart, availableParts, resetAvailableParts } =
+        useExplorerCommunication(iframeRef);
     const { resolvedTheme } = useTheme();
-
-    React.useEffect(() => {
-        const abortController = new AbortController();
-
-        setIsLoading(true);
-        setError(null);
-
-        fetch(`/components/anatomy/${componentName}.json`, {
-            signal: abortController.signal,
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}: Failed to load anatomy data`);
-                }
-                return res.json();
-            })
-            .then((data: AnatomyData) => {
-                setAnatomyData(data);
-                setParts(data.parts);
-                setError(null);
-            })
-            .catch((err) => {
-                if (err.name !== 'AbortError') {
-                    console.error(`Failed to load anatomy data for ${componentName}:`, err);
-                    setError(err.message || 'Failed to load anatomy data');
-                }
-            })
-            .finally(() => {
-                if (!abortController.signal.aborted) {
-                    setIsLoading(false);
-                }
-            });
-
-        return () => {
-            abortController.abort();
-        };
-    }, [componentName, retryCount]);
 
     React.useEffect(() => {
         setSelectedPart(null);
@@ -71,17 +36,21 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         setLiveAnnouncement('');
     }, [componentName]);
 
-    const handleRetry = React.useCallback(() => {
-        setRetryCount((prev) => prev + 1);
-    }, []);
-
     React.useEffect(() => {
         if (iframeRef.current) {
+            resetAvailableParts();
             setIframeLoaded(false);
             const theme = resolvedTheme || 'light';
             iframeRef.current.src = `/preview/component?path=${encodeURIComponent(name)}&theme=${theme}&explorer=true`;
         }
-    }, [name, resolvedTheme]);
+    }, [name, resetAvailableParts, resolvedTheme]);
+
+    React.useEffect(() => {
+        if (!availableParts) return;
+
+        setSelectedPart((prev) => (prev && !availableParts.includes(prev) ? null : prev));
+        setHoveredPart((prev) => (prev && !availableParts.includes(prev) ? null : prev));
+    }, [availableParts]);
 
     const activePart = hoveredPart ?? selectedPart;
 
@@ -93,13 +62,15 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         setHoveredPart(partName);
     }, []);
 
-    const displayName = anatomyData?.displayNamePrefix || componentName;
+    const displayName = React.useMemo(() => toDisplayName(componentName), [componentName]);
 
     const handlePartSelect = React.useCallback(
         (value: unknown) => {
-            const partName = value as string;
+            const partName = typeof value === 'string' && value.length > 0 ? value : null;
             setSelectedPart(partName || null);
-            setLiveAnnouncement(`${displayName}.${partName} 선택됨`);
+            setLiveAnnouncement(
+                partName ? `${displayName}.${partName} 선택됨` : '파트 선택이 해제되었습니다.',
+            );
         },
         [displayName],
     );
@@ -114,79 +85,22 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         setIframeLoaded(true);
     }, []);
 
-    const hasPrimitivePart = parts.some((part) => part.isPrimitive);
-
-    if (!isLoading && !error && !hasPrimitivePart) {
-        return null;
-    }
-
     return (
         <div className="rounded-xl overflow-hidden border border-v-normal-200 bg-v-canvas-100 shadow-lg shadow-v-normal-900/5">
             <p className="sr-only" role="status" aria-live="polite">
                 {liveAnnouncement}
             </p>
             <div className="flex flex-col md:flex-row min-h-[320px] md:min-h-[420px]">
-                {isLoading ? (
-                    <div
-                        className="w-full md:w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center"
-                        role="status"
-                    >
-                        <div className="flex flex-col items-center gap-3">
-                            <div className="w-8 h-8 border-2 border-v-normal-200 border-t-v-primary-500 rounded-full animate-spin" />
-                            <Text typography="body3" foreground="normal-100" className="opacity-60">
-                                Loading…
-                            </Text>
-                        </div>
-                    </div>
-                ) : error ? (
-                    <div
-                        className="w-full md:w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center"
-                        role="alert"
-                    >
-                        <div className="flex flex-col items-center gap-4 text-center px-4">
-                            <ErrorCircleOutlineIcon
-                                className="w-10 h-10 text-v-danger-500"
-                                aria-hidden="true"
-                            />
-                            <div className="flex flex-col gap-2">
-                                <Text
-                                    typography="body2"
-                                    foreground="danger-100"
-                                    className="font-semibold"
-                                >
-                                    Failed to load anatomy
-                                </Text>
-                                <Text
-                                    typography="body3"
-                                    foreground="normal-100"
-                                    className="opacity-80"
-                                >
-                                    {error}
-                                </Text>
-                            </div>
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                colorPalette="secondary"
-                                onClick={handleRetry}
-                            >
-                                Retry
-                            </Button>
-                        </div>
-                    </div>
-                ) : (
-                    <AnatomyPanel
-                        availableParts={availableParts}
-                        componentName={displayName}
-                        parts={parts}
-                        hoveredPart={hoveredPart}
-                        selectedPart={selectedPart}
-                        onPartHover={handlePartHover}
-                        onPartSelect={handlePartSelect}
-                        showPrimitives
-                        onClearSelection={handleClearSelection}
-                    />
-                )}
+                <AnatomyPanel
+                    componentName={displayName}
+                    parts={availableParts ?? []}
+                    hoveredPart={hoveredPart}
+                    selectedPart={selectedPart}
+                    onPartHover={handlePartHover}
+                    onPartSelect={handlePartSelect}
+                    showPrimitives
+                    onClearSelection={handleClearSelection}
+                />
                 <div className="flex-1 relative bg-v-canvas border-t md:border-t-0 md:border-l border-v-normal-200 min-h-[320px] md:min-h-0">
                     {!iframeLoaded && (
                         <div

@@ -5,18 +5,20 @@ import { type KeyboardEvent, useCallback, useId, useMemo } from 'react';
 import { RadioGroup, Text } from '@vapor-ui/core';
 
 import { PartButton } from './part-button';
-import type { Part } from './types';
 
 interface AnatomyPanelProps {
     componentName: string;
-    parts: Part[];
+    parts: string[];
     hoveredPart: string | null;
     selectedPart: string | null;
     onPartHover: (partName: string | null) => void;
     onPartSelect: (value: unknown) => void;
     showPrimitives?: boolean;
-    availableParts: string[] | null;
     onClearSelection: () => void;
+}
+
+function isPrimitivePart(partName: string) {
+    return partName.endsWith('Primitive');
 }
 
 export function AnatomyPanel({
@@ -27,24 +29,19 @@ export function AnatomyPanel({
     onPartHover,
     onPartSelect,
     showPrimitives = false,
-    availableParts,
     onClearSelection,
 }: AnatomyPanelProps) {
     const instructionsId = useId();
 
     const { filteredParts, mainParts, primitiveParts } = useMemo(() => {
-        let filtered = showPrimitives ? parts : parts.filter((part) => !part.isPrimitive);
-
-        if (availableParts !== null) {
-            filtered = filtered.filter((part) => availableParts.includes(part.name));
-        }
+        const filtered = showPrimitives ? parts : parts.filter((part) => !isPrimitivePart(part));
 
         return {
             filteredParts: filtered,
-            mainParts: filtered.filter((p) => !p.isPrimitive),
-            primitiveParts: filtered.filter((p) => p.isPrimitive),
+            mainParts: filtered.filter((part) => !isPrimitivePart(part)),
+            primitiveParts: filtered.filter((part) => isPrimitivePart(part)),
         };
-    }, [parts, showPrimitives, availableParts]);
+    }, [parts, showPrimitives]);
 
     const handlePartHover = useCallback((partName: string) => onPartHover(partName), [onPartHover]);
     const handleMouseLeave = useCallback(() => onPartHover(null), [onPartHover]);
@@ -89,12 +86,12 @@ export function AnatomyPanel({
             <div className="flex-1 overflow-y-auto overscroll-contain">
                 {/* Main Parts */}
                 <div className="p-2">
-                    {mainParts.map((part) => (
+                    {mainParts.map((partName) => (
                         <PartButton
-                            key={part.name}
-                            partName={part.name}
+                            key={partName}
+                            partName={partName}
                             displayName={componentName}
-                            isHovered={hoveredPart === part.name}
+                            isHovered={hoveredPart === partName}
                             onMouseEnter={handlePartHover}
                             onMouseLeave={handleMouseLeave}
                         />
@@ -114,12 +111,12 @@ export function AnatomyPanel({
                             </Text>
                         </div>
                         <div className="px-2 pb-2">
-                            {primitiveParts.map((part) => (
+                            {primitiveParts.map((partName) => (
                                 <PartButton
-                                    key={part.name}
-                                    partName={part.name}
+                                    key={partName}
+                                    partName={partName}
                                     displayName={componentName}
-                                    isHovered={hoveredPart === part.name}
+                                    isHovered={hoveredPart === partName}
                                     onMouseEnter={handlePartHover}
                                     onMouseLeave={handleMouseLeave}
                                 />
