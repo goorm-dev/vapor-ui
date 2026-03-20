@@ -1,56 +1,55 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = recipe({
-    base: layerStyle('components', {
+export const root = componentRecipe({
+    base: {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-    }),
+    },
 
     defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
     variants: {
         colorPalette: {
-            primary: layerStyle('components', {
-                color: vars.color.foreground.primary[200],
+            primary: {
                 backgroundColor: vars.color.background.primary[100],
-            }),
-            hint: layerStyle('components', {
-                color: vars.color.foreground.hint[200],
+                color: vars.color.foreground.primary[200],
+            },
+            hint: {
                 backgroundColor: vars.color.background.hint[100],
-            }),
-            danger: layerStyle('components', {
-                color: vars.color.foreground.danger[200],
+                color: vars.color.foreground.hint[200],
+            },
+            danger: {
                 backgroundColor: vars.color.background.danger[100],
-            }),
-            success: layerStyle('components', {
-                color: vars.color.foreground.success[200],
+                color: vars.color.foreground.danger[200],
+            },
+            success: {
                 backgroundColor: vars.color.background.success[100],
-            }),
-            warning: layerStyle('components', {
-                color: vars.color.foreground.warning[200],
+                color: vars.color.foreground.success[200],
+            },
+            warning: {
                 backgroundColor: vars.color.background.warning[100],
-            }),
-            contrast: layerStyle('components', {
-                color: vars.color.foreground.contrast[200],
+                color: vars.color.foreground.warning[200],
+            },
+            contrast: {
                 backgroundColor: vars.color.background.contrast[100],
-            }),
+                color: vars.color.foreground.contrast[200],
+            },
         },
 
         shape: {
-            square: layerStyle('components', {
+            square: {
                 borderRadius: vars.size.borderRadius['300'],
-            }),
-            pill: layerStyle('components', {
+            },
+            pill: {
                 borderRadius: '9999px',
-            }),
+            },
         },
 
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 gap: vars.size.space['025'],
                 padding: `0 ${vars.size.space['075']}`,
                 height: vars.size.dimension[250],
@@ -59,8 +58,8 @@ export const root = recipe({
                 letterSpacing: vars.typography.letterSpacing['000'],
                 fontSize: vars.typography.fontSize['050'],
                 fontWeight: vars.typography.fontWeight['500'],
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 gap: vars.size.space['050'],
                 padding: `0 ${vars.size.space['100']}`,
                 height: vars.size.dimension[300],
@@ -69,8 +68,8 @@ export const root = recipe({
                 letterSpacing: vars.typography.letterSpacing['000'],
                 fontSize: vars.typography.fontSize['050'],
                 fontWeight: vars.typography.fontWeight['500'],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 gap: vars.size.space['075'],
                 padding: `0 ${vars.size.space['150']}`,
                 height: vars.size.dimension[400],
@@ -79,7 +78,7 @@ export const root = recipe({
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight['500'],
-            }),
+            },
         },
     },
 });

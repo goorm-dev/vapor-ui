@@ -1,6 +1,6 @@
-import { style } from '@vanilla-extract/css';
+import { componentStyle } from '~/styles/mixins/layer-style.css';
 
-export const panel = style({
+export const panel = componentStyle({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-end',

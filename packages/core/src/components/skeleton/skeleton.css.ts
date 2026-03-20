@@ -1,8 +1,7 @@
 import { keyframes } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
 const shimmerKeyframes = keyframes({
@@ -17,8 +16,8 @@ const pulseKeyframes = keyframes({
 /**
  * Style variants for the Skeleton component.
  */
-export const root = recipe({
-    base: layerStyle('components', {
+export const root = componentRecipe({
+    base: {
         display: 'block',
         overflow: 'hidden',
         width: '100%',
@@ -29,7 +28,7 @@ export const root = recipe({
                 animation: 'none',
             },
         },
-    }),
+    },
 
     defaultVariants: { shape: 'rounded', size: 'md', animation: 'shimmer' },
     variants: {
@@ -37,41 +36,41 @@ export const root = recipe({
          * Controls the border radius of the skeleton.
          */
         shape: {
-            rounded: layerStyle('components', {
+            rounded: {
                 borderRadius: '9999px',
-            }),
-            square: layerStyle('components', {
+            },
+            square: {
                 borderRadius: vars.size.borderRadius['300'],
-            }),
+            },
         },
 
         /**
          * Controls the height of the skeleton.
          */
         size: {
-            sm: layerStyle('components', { height: vars.size.dimension['200'] }),
-            md: layerStyle('components', { height: vars.size.dimension['300'] }),
-            lg: layerStyle('components', { height: vars.size.dimension['400'] }),
-            xl: layerStyle('components', { height: vars.size.dimension['500'] }),
+            sm: { height: vars.size.dimension['200'] },
+            md: { height: vars.size.dimension['300'] },
+            lg: { height: vars.size.dimension['400'] },
+            xl: { height: vars.size.dimension['500'] },
         },
 
         /**
          * Controls the animation style of the skeleton.
          */
         animation: {
-            shimmer: layerStyle('components', {
+            shimmer: {
                 backgroundImage: `linear-gradient(90deg, ${vars.color.gray['100']}, ${vars.color.gray['050']}, ${vars.color.gray['100']})`,
                 backgroundPosition: 'left -6.25rem top 0',
                 backgroundSize: '6.25rem 100%',
                 backgroundRepeat: 'no-repeat',
                 animation: `${shimmerKeyframes} 1s ease-in-out infinite`,
-            }),
-            pulse: layerStyle('components', {
+            },
+            pulse: {
                 animation: `${pulseKeyframes} 1.2s ease-in-out infinite`,
-            }),
-            none: layerStyle('components', {
+            },
+            none: {
                 animation: 'none',
-            }),
+            },
         },
     },
 });
