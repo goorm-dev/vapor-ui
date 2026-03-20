@@ -94,7 +94,6 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                 <AnatomyPanel
                     componentName={displayName}
                     parts={availableParts ?? []}
-                    hoveredPart={hoveredPart}
                     selectedPart={selectedPart}
                     onPartHover={handlePartHover}
                     onPartSelect={handlePartSelect}
