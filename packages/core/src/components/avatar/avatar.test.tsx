@@ -52,7 +52,7 @@ describe('Avatar', () => {
         expect(fallback).toBeInTheDocument();
     });
 
-    it('should render both image and fallback initially', () => {
+    it('should render only fallback initially', () => {
         const src = 'https://cdn.mos.cms.futurecdn.net/yuenhhyDC6DR5rv6KQNxu5.png';
         const alt = 'Avatar Image';
 
@@ -60,7 +60,7 @@ describe('Avatar', () => {
         const image = rendered.queryByRole('img');
         const fallback = rendered.queryByText(alt.charAt(0).toUpperCase());
 
-        expect(image).toBeInTheDocument();
+        expect(image).not.toBeInTheDocument();
         expect(fallback).toBeInTheDocument();
     });
 
@@ -97,7 +97,7 @@ describe('Avatar', () => {
 
         const rendered = render(<AvatarTest src={src} alt={alt} />);
 
-        expect(rendered.queryByRole('img')).toBeInTheDocument();
+        expect(rendered.queryByRole('img')).not.toBeInTheDocument();
         expect(rendered.queryByText(fallbackText)).toBeInTheDocument();
 
         image = await rendered.findByRole('img');
@@ -109,14 +109,12 @@ describe('Avatar', () => {
         /** change image source */
         rendered.rerender(<AvatarTest src={src2} alt={alt} />);
 
-        expect(rendered.queryByRole('img')).toBeInTheDocument();
+        expect(rendered.queryByRole('img')).not.toBeInTheDocument();
         expect(rendered.queryByText(fallbackText)).toBeInTheDocument();
-
-        image = rendered.queryByRole('img');
-        expect(image).toBeInTheDocument();
 
         image = await rendered.findByRole('img');
         expect(image).toBeInTheDocument();
+
         await waitFor(() => {
             expect(rendered.queryByText(fallbackText)).not.toBeInTheDocument();
         });

@@ -3,9 +3,9 @@ import { Fragment } from 'react';
 import { HStack, Menu, Text } from '@vapor-ui/core';
 import { ChevronDownOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 
-import pkg from '../../../../packages/core/package.json' with { type: 'json' };
+import corePackage from '../../../../packages/core/package.json' with { type: 'json' };
 
-const currentVersion = pkg?.version;
+const currentVersion = corePackage.version;
 const items = [
     { label: `v${currentVersion.split('.').at(0)}`, type: 'latest', value: currentVersion },
     { label: 'beta', type: 'legacy', value: 'beta.x', url: 'https://beta.vapor-ui.goorm.io' },

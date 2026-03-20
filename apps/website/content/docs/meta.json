@@ -1,3 +1,5 @@
 {
-    "pages": ["getting-started", "tools", "frameworks", "tokens", "icons", "layout", "components"]
+    "title": "Documentation",
+    "description": "Vapor UI Documentation",
+    "pages": ["getting-started", "components", "releases"]
 }

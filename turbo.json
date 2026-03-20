@@ -3,7 +3,12 @@
     "ui": "tui",
     "tasks": {
         "website#dev": {
-            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
+            "dependsOn": [
+                "@vapor-ui/core#build",
+                "@vapor-ui/icons#build",
+                "@vapor-ui/css-generator#build",
+                "@vapor-ui/color-generator#build"
+            ],
             "outputs": ["dist/**"]
         },
         "website#start": {
