@@ -1,8 +1,11 @@
+import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
+
+const borderColor = createVar('border-color');
 
 export const root = componentRecipe({
     base: [
@@ -10,7 +13,7 @@ export const root = componentRecipe({
 
         {
             outline: 0,
-            border: `0.0625rem solid ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 0.0625rem ${borderColor}`,
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.canvas[100],
             paddingBlock: vars.size.space['000'],
@@ -20,10 +23,12 @@ export const root = componentRecipe({
             selectors: {
                 '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
-                '&[data-invalid]': { borderColor: vars.color.border.danger },
+                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
+
+            vars: { [borderColor]: vars.color.border.normal },
         },
     ],
 

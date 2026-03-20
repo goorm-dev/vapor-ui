@@ -146,6 +146,7 @@ export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbItem.Props
         </BreadcrumbItemPrimitive>
     );
 });
+BreadcrumbItem.displayName = 'Breadcrumb.Item';
 
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Separator

@@ -322,7 +322,7 @@ export interface SheetPositionerPrimitiveState {
 }
 
 export namespace SheetPositionerPrimitive {
-    export type State = {};
+    export type State = SheetPositionerPrimitiveState;
     export type Props = VaporUIComponentProps<'div', State> & PositionerType;
 }
 

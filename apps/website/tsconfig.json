@@ -13,10 +13,11 @@
         "moduleResolution": "bundler",
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "jsx": "preserve",
+        "jsx": "react-jsx",
         "incremental": true,
         "paths": {
             "~/.source": ["./.source/index.ts"],
+            "fumadocs-mdx/collections/*": ["./.source/*"],
             "~/*": ["./src/*"],
             "~public/*": ["./public/*"]
         },
@@ -26,6 +27,13 @@
             }
         ]
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "global.d.ts"],
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts",
+        "global.d.ts",
+        ".next/dev/types/**/*.ts"
+    ],
     "exclude": ["node_modules"]
 }

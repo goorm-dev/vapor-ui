@@ -12,6 +12,8 @@ Feel free to remove sections that are not relevant to your pull request.
 
 ## Description of Changes
 
+@coderabbitai summary
+
 <!-- Please provide a brief summary of the changes in this PR. -->
 <!-- e.g., Added new Avatar component -->
 <!-- e.g., Updated Color tokens to support dark mode -->

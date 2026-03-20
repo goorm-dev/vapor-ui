@@ -3,9 +3,8 @@
 import { IconButton, NavigationMenu } from '@vapor-ui/core';
 import clsx from 'clsx';
 import Link from 'fumadocs-core/link';
-import { usePathname } from 'next/navigation';
 
-import { docsLinks, externalLinks } from '~/constants/site-links';
+import { navLinks } from '~/constants/site-links';
 
 import { ThemeToggle } from '../theme-toggle';
 
@@ -14,8 +13,6 @@ interface SiteNavigationProps extends Omit<NavigationMenu.Root.Props, 'aria-labe
 }
 
 export const SiteNavigation = ({ leftSlot, className, ...props }: SiteNavigationProps) => {
-    const pathname = usePathname();
-
     return (
         <NavigationMenu.Root
             aria-label="Main"
@@ -25,19 +22,7 @@ export const SiteNavigation = ({ leftSlot, className, ...props }: SiteNavigation
             <NavigationMenu.List className="items-center">
                 <NavigationMenu.Item>{leftSlot}</NavigationMenu.Item>
 
-                {docsLinks.map((link) => {
-                    return (
-                        <NavigationMenu.Item key={link.text}>
-                            <NavigationMenu.Link
-                                href={link.url}
-                                current={pathname.includes(link.url)}
-                                render={<Link>{link.text}</Link>}
-                            />
-                        </NavigationMenu.Item>
-                    );
-                })}
-
-                {externalLinks.map((link) => {
+                {navLinks.map((link) => {
                     return (
                         <NavigationMenu.Item key={link.text}>
                             <IconButton
@@ -45,6 +30,7 @@ export const SiteNavigation = ({ leftSlot, className, ...props }: SiteNavigation
                                 size="md"
                                 colorPalette="secondary"
                                 variant="ghost"
+                                nativeButton={false}
                                 render={<Link href={link.url}>{link.icon}</Link>}
                             />
                         </NavigationMenu.Item>

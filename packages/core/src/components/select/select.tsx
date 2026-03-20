@@ -152,6 +152,7 @@ export const SelectTriggerIconPrimitive = forwardRef<
     const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
     const children = useRenderElement({
         render: childrenRender,
+        props: { width: '100%', height: '100%' },
     });
 
     return (

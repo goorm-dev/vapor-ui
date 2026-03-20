@@ -68,6 +68,12 @@ export const root = componentRecipe({
 
         userSelect: 'none',
 
+        '@media': {
+            '(prefers-reduced-motion: reduce)': {
+                transition: 'none',
+            },
+        },
+
         vars: {
             [inners.gap]: '0.75rem',
             [inners.peek]: '0.5rem',
@@ -137,6 +143,12 @@ export const content = componentStyle({
     gap: vars.size.space[400],
 
     transition: 'opacity 400ms',
+
+    '@media': {
+        '(prefers-reduced-motion: reduce)': {
+            transition: 'none',
+        },
+    },
 
     selectors: {
         '&[data-behind]': { opacity: 0 },

@@ -243,7 +243,7 @@ export interface DialogRootProps
     extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
      * Determines whether the dialog should close on outside clicks.
-     * @default false
+     * @default true
      */
     closeOnClickOverlay?: boolean;
 }

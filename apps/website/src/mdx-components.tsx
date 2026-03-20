@@ -13,7 +13,8 @@ import { ComponentPropsTable } from '~/components/component-props-table';
 import { Demo } from '~/components/demo/demo';
 import FoundationSizeTabs from '~/components/foundation-size-tabs';
 import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
-import IconList from '~/components/icon-list-tabs/icon-list-tabs';
+import IconList from '~/components/icon-list/icon-list';
+import IconStyleGuide from '~/components/icon-style-guide';
 import InstallSelector from '~/components/install-selector/install-selector';
 import PropsTable from '~/components/props-table';
 
@@ -42,6 +43,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         FoundationTypographyTabs,
 
         IconList,
+        IconStyleGuide,
         PropsTable,
         ColorPalette,
         Text,

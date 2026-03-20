@@ -14,7 +14,7 @@ export const trigger = componentRecipe({
             alignItems: 'center',
             justifyContent: 'space-between',
 
-            border: `1px solid ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
 
             width: '100%',

@@ -693,8 +693,16 @@ export namespace PaginationItems {
     export type Props = PaginationItemsPrimitiveProps;
 }
 
+export interface PaginationEllipsisPrimitiveState {
+    [key: string]: unknown;
+    /**
+     * Whether the component should ignore user interaction.
+     */
+    disabled: boolean;
+}
+
 export namespace PaginationEllipsisPrimitive {
-    export type State = {};
+    export type State = PaginationEllipsisPrimitiveState;
     export type Props = VaporUIComponentProps<'span', State>;
 }
 

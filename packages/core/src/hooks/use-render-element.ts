@@ -40,5 +40,5 @@ function isClassNameParam<State>(value: unknown): value is ClassNameParams<State
 }
 
 function isStyleParam<State>(value: unknown): value is StyleParams<State> {
-    return typeof value === 'object' || typeof value === 'function';
+    return (typeof value === 'object' && value !== null) || typeof value === 'function';
 }

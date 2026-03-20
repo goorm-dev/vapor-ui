@@ -1,26 +1,44 @@
 import type { ReactNode } from 'react';
 
-import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
-
-import { docsOptions } from '~/app/layout.config';
-import { SiteNavigation } from '~/components/site-nav-bar/navigation-list';
+import { baseOptions } from '~/app/layout.config';
+import { CustomDocsLayout } from '~/components/fumadocs/docs-layout';
+import { ThemeToggle } from '~/components/theme-toggle';
 import { VersionSelector } from '~/components/version-selector';
+import { navLinks } from '~/constants/site-links';
+import { source } from '~/lib/source';
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (
-        <DocsLayout
-            {...docsOptions}
-            tabMode="sidebar"
+        <CustomDocsLayout
+            {...baseOptions}
+            tabMode="navbar"
             nav={{
-                ...docsOptions.nav,
                 mode: 'top',
-                title: docsOptions.nav?.title,
-                children: <SiteNavigation leftSlot={<VersionSelector />} className="-mr-2" />,
+                title: baseOptions.nav?.title,
             }}
-            sidebar={{ collapsible: false }}
-            themeSwitch={{ enabled: false }}
+            searchToggle={{ enabled: true }}
+            themeSwitch={{ component: <ThemeToggle size="md" /> }}
+            versionSelector={{ component: <VersionSelector /> }}
+            containerProps={{ className: 'isolate' }}
+            tree={source.pageTree}
+            sidebar={{
+                tabs: {
+                    transform: (tab) => {
+                        return {
+                            ...tab,
+                            title: (
+                                <div className="flex items-center gap-2">
+                                    {tab.icon}
+                                    <span>{tab.title}</span>
+                                </div>
+                            ),
+                        };
+                    },
+                },
+            }}
+            links={navLinks}
         >
             {children}
-        </DocsLayout>
+        </CustomDocsLayout>
     );
 }
