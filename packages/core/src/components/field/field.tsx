@@ -29,7 +29,7 @@ FieldRoot.displayName = 'Field.Root';
  * Field.Label
  * -----------------------------------------------------------------------------------------------*/
 
-export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabel.Props>((props, ref) => {
+export const FieldLabel = forwardRef<HTMLElement, FieldLabel.Props>((props, ref) => {
     const { typography, foreground, className, ...componentProps } = resolveStyles(props);
 
     return (

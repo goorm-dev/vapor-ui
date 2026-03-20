@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react';
+import type { SubmitEvent } from 'react';
 import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -41,7 +41,7 @@ const meta: Meta<FieldStoryArgs> = {
 export default meta;
 type Story = StoryObj<FieldStoryArgs>;
 
-const submitForm = async (event: FormEvent<HTMLFormElement>) => {
+const submitForm = async (event: SubmitEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
 
     const datas = formData.keys().reduce<[string, FormDataEntryValue | boolean][]>((acc, key) => {

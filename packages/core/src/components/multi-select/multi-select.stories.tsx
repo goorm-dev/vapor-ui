@@ -64,11 +64,7 @@ export const ObjectItems: StoryObj = {
     render: (args) => {
         const renderValue = (value: Array<Language>) => {
             if (value.length === 0) {
-                return (
-                    <MultiSelect.PlaceholderPrimitive>
-                        Select languages
-                    </MultiSelect.PlaceholderPrimitive>
-                );
+                return 'Select languages';
             }
 
             const values = value.slice(0, 2);
@@ -104,15 +100,7 @@ export const ObjectItems: StoryObj = {
                     <MultiSelect.Root {...args} items={languages}>
                         <MultiSelect.TriggerPrimitive>
                             <MultiSelect.ValuePrimitive>
-                                {(value) =>
-                                    value.length ? (
-                                        value.join(', ')
-                                    ) : (
-                                        <MultiSelect.PlaceholderPrimitive>
-                                            Select languages
-                                        </MultiSelect.PlaceholderPrimitive>
-                                    )
-                                }
+                                {(value) => (value.length ? value.join(', ') : 'Select languages')}
                             </MultiSelect.ValuePrimitive>
                             <MultiSelect.TriggerIconPrimitive />
                         </MultiSelect.TriggerPrimitive>
@@ -134,11 +122,7 @@ export const ArrayItmes: StoryObj = {
     render: (args) => {
         const renderValue = (value: Array<string>) => {
             if (value.length === 0) {
-                return (
-                    <MultiSelect.PlaceholderPrimitive>
-                        Select fonts
-                    </MultiSelect.PlaceholderPrimitive>
-                );
+                return 'Select fonts';
             }
 
             const values = value.slice(0, 2);
@@ -174,15 +158,7 @@ export const ArrayItmes: StoryObj = {
                     <MultiSelect.Root {...args} items={fonts}>
                         <MultiSelect.TriggerPrimitive>
                             <MultiSelect.ValuePrimitive>
-                                {(value) =>
-                                    value.length ? (
-                                        value.join(', ')
-                                    ) : (
-                                        <MultiSelect.PlaceholderPrimitive>
-                                            Select fonts
-                                        </MultiSelect.PlaceholderPrimitive>
-                                    )
-                                }
+                                {(value) => (value.length ? value.join(', ') : 'Select fonts')}
                             </MultiSelect.ValuePrimitive>
 
                             <MultiSelect.TriggerIconPrimitive />
@@ -223,9 +199,11 @@ export const TestBed = {
                 templateRows="repeat(auto-fit, minmax(150px, 1fr))"
             >
                 <Grid.Item>
-                    <MultiSelect.Root placeholder="Placeholder">
-                        <MultiSelect.Trigger />
-                    </MultiSelect.Root>
+                    {(['sm', 'md', 'lg', 'xl'] as const).map((size) => (
+                        <MultiSelect.Root key={size} size={size} placeholder="Placeholder">
+                            <MultiSelect.Trigger />
+                        </MultiSelect.Root>
+                    ))}
                 </Grid.Item>
 
                 <Grid.Item>

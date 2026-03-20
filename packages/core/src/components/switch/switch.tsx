@@ -29,7 +29,7 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const SwitchRoot = forwardRef<HTMLSpanElement, SwitchRoot.Props>((props, ref) => {
+export const SwitchRoot = forwardRef<HTMLElement, SwitchRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
         'size',
@@ -66,7 +66,7 @@ SwitchRoot.displayName = 'Switch.Root';
  * Switch.ThumbPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SwitchThumbPrimitive = forwardRef<HTMLDivElement, SwitchThumbPrimitive.Props>(
+export const SwitchThumbPrimitive = forwardRef<HTMLSpanElement, SwitchThumbPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
         const { size } = useSwitchContext();

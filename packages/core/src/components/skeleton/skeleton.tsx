@@ -23,7 +23,8 @@ export const Skeleton = forwardRef<HTMLDivElement, Skeleton.Props>((props, ref) 
 
     return useRender({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
             className: clsx(styles.root(variantsProps), className),
             ...otherProps,

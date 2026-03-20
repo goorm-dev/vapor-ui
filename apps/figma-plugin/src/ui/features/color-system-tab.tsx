@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import type {
+    ContrastRatios,
+    SemanticResult,
+    ThemeOptions,
+    ThemeResult,
+} from '@vapor-ui/color-generator';
 import {
-    type ContrastRatios,
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_KEY_COLORS,
-    type SemanticResult,
-    type ThemeOptions,
-    type ThemeResult,
     generatePrimitiveColorPalette,
     getColorLightness,
     getSemanticDependentTokens,

@@ -17,7 +17,8 @@ export const TableRoot = forwardRef<HTMLTableElement, TableRoot.Props>((props, r
 
     return useRender({
         ref,
-        render: render || <table />,
+        render,
+        defaultTagName: 'table',
         props: {
             className: clsx(styles.table, className),
             ...componentProps,
@@ -35,7 +36,8 @@ export const TableHeader = forwardRef<HTMLTableSectionElement, TableHeader.Props
 
     return useRender({
         ref,
-        render: render || <thead />,
+        render,
+        defaultTagName: 'thead',
         props: componentProps,
     });
 });
@@ -50,7 +52,8 @@ export const TableBody = forwardRef<HTMLTableSectionElement, TableBody.Props>((p
 
     return useRender({
         ref,
-        render: render || <tbody />,
+        render,
+        defaultTagName: 'tbody',
         props: componentProps,
     });
 });
@@ -65,7 +68,8 @@ export const TableFooter = forwardRef<HTMLTableSectionElement, TableFooter.Props
 
     return useRender({
         ref,
-        render: render || <tfoot />,
+        render,
+        defaultTagName: 'tfoot',
         props: componentProps,
     });
 });
@@ -80,7 +84,8 @@ export const TableRow = forwardRef<HTMLTableRowElement, TableRow.Props>((props, 
 
     return useRender({
         ref,
-        render: render || <tr />,
+        render,
+        defaultTagName: 'tr',
         props: {
             className: clsx(styles.row, className),
             ...componentProps,
@@ -98,7 +103,8 @@ export const TableHeading = forwardRef<HTMLTableCellElement, TableHeading.Props>
 
     return useRender({
         ref,
-        render: render || <th />,
+        render,
+        defaultTagName: 'th',
         props: {
             className: clsx(styles.heading, className),
             ...componentProps,
@@ -116,7 +122,8 @@ export const TableCell = forwardRef<HTMLTableCellElement, TableCell.Props>((prop
 
     return useRender({
         ref,
-        render: render || <td />,
+        render,
+        defaultTagName: 'td',
         props: {
             className: clsx(styles.cell, className),
             ...componentProps,
@@ -135,7 +142,8 @@ export const TableColumnGroup = forwardRef<HTMLTableColElement, TableColumnGroup
 
         return useRender({
             ref,
-            render: render || <colgroup />,
+            render,
+            defaultTagName: 'colgroup',
             props: componentProps,
         });
     },
@@ -151,7 +159,8 @@ export const TableColumn = forwardRef<HTMLTableColElement, TableColumn.Props>((p
 
     return useRender({
         ref,
-        render: render || <col />,
+        render,
+        defaultTagName: 'col',
         props: componentProps,
     });
 });

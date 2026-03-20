@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { Toast as BaseToast, type ToastManager as BaseToastManager } from '@base-ui/react/toast';
+import type { ToastManager as BaseToastManager } from '@base-ui/react/toast';
+import { Toast as BaseToast } from '@base-ui/react/toast';
 import { useRender } from '@base-ui/react/use-render';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
@@ -355,7 +356,7 @@ export interface ToastManager extends BaseToastManager {
     ) => () => void;
     add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
     update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
-    close: (id: string) => void;
+    close: (id?: string) => void;
     promise: <Value, Data extends object>(
         promise: Promise<Value>,
         options: ToastManagerPromiseOptions<Value, Data>,

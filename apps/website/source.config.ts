@@ -1,25 +1,13 @@
+import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins';
 import { fileGenerator, remarkDocGen } from 'fumadocs-docgen';
 import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
+import lastModified from 'fumadocs-mdx/plugins/last-modified';
 import { z } from 'zod';
 
 export const docs = defineDocs({
     dir: 'content/docs',
     docs: {
         async: true,
-    },
-});
-
-const blocksSchema = z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    previewImageUrl: z.string().optional(),
-});
-
-export const blocks = defineDocs({
-    dir: 'content/blocks',
-    docs: {
-        async: true,
-        schema: blocksSchema,
     },
 });
 
@@ -37,6 +25,7 @@ export const theme = defineDocs({
 });
 
 export default defineConfig({
+    plugins: [lastModified()],
     mdxOptions: {
         remarkNpmOptions: {
             persist: {
@@ -45,8 +34,9 @@ export default defineConfig({
         },
         remarkPlugins: [[remarkDocGen, { generators: [fileGenerator({})] }]],
         rehypeCodeOptions: {
+            ...rehypeCodeDefaultOptions,
             lazy: true,
-            experimentalJSEngine: true,
+            engine: 'js',
             langs: ['ts', 'js', 'html', 'tsx', 'mdx'],
             inline: 'tailing-curly-colon',
             themes: {

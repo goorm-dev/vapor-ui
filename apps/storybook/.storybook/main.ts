@@ -1,4 +1,3 @@
-import reactDocgenTypescript from '@joshwooding/vite-plugin-react-docgen-typescript';
 import type { StorybookConfig } from '@storybook/react-vite';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import { createRequire } from 'node:module';
@@ -23,10 +22,7 @@ const config: StorybookConfig = {
     },
 
     typescript: {
-        reactDocgen: process.env.STORYBOOK_SKIP_DOCGEN ? false : 'react-docgen-typescript',
-        reactDocgenTypescriptOptions: {
-            tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
-        },
+        reactDocgen: false,
     },
 
     viteFinal: async (config) => {
@@ -51,7 +47,6 @@ const config: StorybookConfig = {
                         return `${prefix}${debugId ? `-${debugId}` : ''}-${hash}`;
                     },
                 }),
-                reactDocgenTypescript(),
             ],
         });
 
