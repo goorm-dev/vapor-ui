@@ -25,6 +25,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
     const [hoveredPart, setHoveredPart] = React.useState<string | null>(null);
     const [selectedPart, setSelectedPart] = React.useState<string | null>(null);
     const [iframeLoaded, setIframeLoaded] = React.useState(false);
+    const [iframeError, setIframeError] = React.useState(false);
     const [liveAnnouncement, setLiveAnnouncement] = React.useState('');
     const { highlightPart, availableParts, resetAvailableParts } =
         useExplorerCommunication(iframeRef);
@@ -83,6 +84,22 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
 
     const handleIframeLoad = React.useCallback(() => {
         setIframeLoaded(true);
+        setIframeError(false);
+    }, []);
+
+    const handleIframeError = React.useCallback(() => {
+        setIframeLoaded(false);
+        setIframeError(true);
+    }, []);
+
+    const handleRetry = React.useCallback(() => {
+        setIframeError(false);
+        setIframeLoaded(false);
+        if (iframeRef.current) {
+            const { src } = iframeRef.current;
+            iframeRef.current.src = '';
+            iframeRef.current.src = src;
+        }
     }, []);
 
     return (
@@ -107,17 +124,39 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                             role="status"
                         >
                             <div className="flex flex-col items-center gap-3">
-                                <div className="relative">
-                                    <div className="w-10 h-10 border-2 border-v-normal-200 rounded-full" />
-                                    <div className="absolute inset-0 w-10 h-10 border-2 border-transparent border-t-v-primary-500 rounded-full animate-spin" />
-                                </div>
-                                <Text
-                                    typography="body3"
-                                    foreground="normal-100"
-                                    className="opacity-60"
-                                >
-                                    Loading preview…
-                                </Text>
+                                {iframeError ? (
+                                    <>
+                                        <Text
+                                            typography="body3"
+                                            foreground="normal-100"
+                                            className="opacity-60"
+                                        >
+                                            Failed to load preview.
+                                        </Text>
+                                        <button
+                                            type="button"
+                                            onClick={handleRetry}
+                                            aria-label="Retry loading component preview"
+                                            className="px-3 py-1.5 rounded-md text-sm bg-v-primary-500 text-white cursor-pointer focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-v-primary-500"
+                                        >
+                                            Retry
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="relative">
+                                            <div className="w-10 h-10 border-2 border-v-normal-200 rounded-full" />
+                                            <div className="absolute inset-0 w-10 h-10 border-2 border-transparent border-t-v-primary-500 rounded-full animate-spin" />
+                                        </div>
+                                        <Text
+                                            typography="body3"
+                                            foreground="normal-100"
+                                            className="opacity-60"
+                                        >
+                                            Loading preview…
+                                        </Text>
+                                    </>
+                                )}
                             </div>
                         </div>
                     )}
@@ -127,6 +166,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                         title={`Component Explorer - ${componentName}`}
                         sandbox="allow-scripts allow-same-origin"
                         onLoad={handleIframeLoad}
+                        onError={handleIframeError}
                     />
                 </div>
             </div>
