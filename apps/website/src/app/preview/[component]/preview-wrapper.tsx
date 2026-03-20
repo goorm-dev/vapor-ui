@@ -3,6 +3,7 @@
 import * as React from 'react';
 
 import { HighlightOverlay } from '~/components/component-explorer/iframe/highlight-overlay';
+import { useAvailablePartsReporter } from '~/components/component-explorer/iframe/use-available-parts-reporter';
 
 import { DynamicComponent } from './dynamic-component';
 
@@ -19,6 +20,8 @@ export function PreviewWrapper({
     explorer = false,
     children,
 }: PreviewWrapperProps) {
+    useAvailablePartsReporter({ enabled: explorer && Boolean(componentPath) });
+
     // Sync theme changes (e.g., when user switches theme while iframe is open)
     React.useEffect(() => {
         const root = document.documentElement;
