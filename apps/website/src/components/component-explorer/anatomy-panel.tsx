@@ -9,7 +9,6 @@ import { PartButton } from './part-button';
 interface AnatomyPanelProps {
     componentName: string;
     parts: string[];
-    hoveredPart: string | null;
     selectedPart: string | null;
     onPartHover: (partName: string | null) => void;
     onPartSelect: (value: unknown) => void;
@@ -24,7 +23,6 @@ function isPrimitivePart(partName: string) {
 export function AnatomyPanel({
     componentName,
     parts,
-    hoveredPart,
     selectedPart,
     onPartHover,
     onPartSelect,
@@ -91,7 +89,6 @@ export function AnatomyPanel({
                             key={partName}
                             partName={partName}
                             displayName={componentName}
-                            isHovered={hoveredPart === partName}
                             onMouseEnter={handlePartHover}
                             onMouseLeave={handleMouseLeave}
                         />
@@ -116,7 +113,6 @@ export function AnatomyPanel({
                                     key={partName}
                                     partName={partName}
                                     displayName={componentName}
-                                    isHovered={hoveredPart === partName}
                                     onMouseEnter={handlePartHover}
                                     onMouseLeave={handleMouseLeave}
                                 />

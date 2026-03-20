@@ -8,7 +8,6 @@ import clsx from 'clsx';
 interface PartButtonProps {
     partName: string;
     displayName: string;
-    isHovered: boolean;
     onMouseEnter: (partName: string) => void;
     onMouseLeave: () => void;
 }

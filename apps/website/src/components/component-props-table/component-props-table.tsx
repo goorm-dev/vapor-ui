@@ -104,7 +104,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                     }}
                 >
                     <table
-                        className="w-full  border-separate border-spacing-0 overflow-hidden border border-v-normal rounded-v-300"
+                        className="w-full border-separate border-spacing-0 overflow-hidden border border-v-normal rounded-v-300"
                         style={{ tableLayout: 'auto' }}
                     >
                         <thead className="w-full items-start self-stretch rounded-v-300">
