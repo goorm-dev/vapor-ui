@@ -6,6 +6,7 @@ import { typographyVariants } from '~/styles/mixins/typography.css';
 
 export const root = componentRecipe({
     base: {},
+    defaultVariants: { typography: 'body1', foreground: 'normal-200' },
     variants: {
         typography: typographyVariants,
         foreground: foregroundVariants,
