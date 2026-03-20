@@ -6,7 +6,7 @@
  * - category classification
  * - type string parsing
  */
-import type { ParsedProp } from '~/adapters/out/ts-morph/parsers/types';
+import type { ParsedProp } from '~/domain/models/parsed';
 import { parsedComponentToModel, parsedPropToModel } from '~/domain/services/build-component-model';
 
 describe('parsedPropToModel', () => {
