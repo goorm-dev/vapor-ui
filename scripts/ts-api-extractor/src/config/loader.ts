@@ -50,6 +50,7 @@ function resolveConfigFilePath(options: LoadConfigOptions): string | null {
 async function loadConfigModule(filePath: string): Promise<PartialExtractorConfig> {
     const fileUrl = pathToFileURL(filePath).href;
     const loaded = await import(fileUrl);
+    // Supports: export default config, export { config }, or direct module exports
     const value = loaded.default ?? loaded.config ?? loaded;
 
     if (typeof value !== 'object' || value === null) {
@@ -65,7 +66,7 @@ export async function loadExtractorConfig(
     const configFilePath = resolveConfigFilePath(options);
 
     if (!configFilePath) {
-        return { ...defaultExtractorConfig };
+        return structuredClone(defaultExtractorConfig);
     }
 
     const partial = await loadConfigModule(configFilePath);
