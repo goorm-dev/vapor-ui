@@ -147,15 +147,15 @@
     ```
 
 - **Named Exports 지향**: `default export` 보다 `named export` 사용.
-  - 예외: Storybook `meta` 객체는 프레임워크 관례에 따라 `default export`를 허용합니다.
-    ```tsx
-    export const MyComponent = () => {
-        /* ... */
-    };
-    export const utilityFunction = () => {
-        /* ... */
-    };
-    ```
+    - 예외: Storybook `meta` 객체는 프레임워크 관례에 따라 `default export`를 허용합니다.
+        ```tsx
+        export const MyComponent = () => {
+            /* ... */
+        };
+        export const utilityFunction = () => {
+            /* ... */
+        };
+        ```
 - **Props 타입 Export**: namespace를 통해 export.
     ```tsx
     export namespace Button {
@@ -266,7 +266,7 @@
 
 - **`undefined`**: "아직 할당되지 않음" 또는 "존재하지 않는 속성(optional)" 의미로 사용.
 - **`null`**: "의도적으로 비어 있음"을 명시할 때 사용.
-  - 예: `ref` 초기값, 외부 API 계약, sentinel 값 표현.
+    - 예: `ref` 초기값, 외부 API 계약, sentinel 값 표현.
 - 기본 정책은 `undefined` 우선이며, `null`은 의미가 분명한 경우에만 사용.
 - Optional Chaining (`?.`), Nullish Coalescing (`??`) 적극 활용.
 
@@ -468,11 +468,11 @@ function App() {
 - `@vapor-ui/icons` 패키지에서 아이콘 컴포넌트 import.
 - `children`으로 주입하거나, 컴포넌트 내부에서 직접 사용.
 - 패키지에 아이콘이 없거나 구조(화살표/캐럿) 아이콘이 필요한 경우, 컴포넌트 내부 `inline SVG`를 사용할 수 있습니다.
-  - 재사용 가능성이 높으면 `@vapor-ui/icons`에 추가하는 것을 권장합니다.
+    - 재사용 가능성이 높으면 `@vapor-ui/icons`에 추가하는 것을 권장합니다.
 
-    ```tsx
-    import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
-    ```
+        ```tsx
+        import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
+        ```
 
 ## 6.7. Ref 전달
 
@@ -699,30 +699,26 @@ const dataAttrs = createDataAttributes({ invalid });
 
 ---
 
-## 7.1. `style` 함수 (기본)
+## 7.1. `componentStyle` 함수 (기본)
 
 - 정적 스타일 규칙 정의.
 
     ```tsx
     // dialog.css.ts
-    import { style } from '@vanilla-extract/css';
-
-    import { layerStyle } from '~/styles/mixins/layer-style.css';
+    import { componentStyle } from '~/styles/mixins/layer-style.css';
     import { vars } from '~/styles/themes.css';
 
-    export const overlay = style([
-        layerStyle('components', {
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: vars.color.background.overlay,
-        }),
-    ]);
+    export const overlay = componentStyle({
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: vars.color.background.overlay,
+    });
     ```
 
-## 7.2. `recipe` 함수 (Variants)
+## 7.2. `componentRecipe` 함수 (Variants)
 
 - 컴포넌트 상태/형태별 스타일 정의. `base`, `variants`, `defaultVariants` 활용.
-- `layerStyle()`, `interaction()`, `typography()` 등 스타일 믹스인 함수 활용.
+- `interaction()`, `typography()` 등 스타일 믹스인 함수 활용.
 
     ```tsx
     // button.css.ts
@@ -731,23 +727,23 @@ const dataAttrs = createDataAttributes({ invalid });
     import { recipe } from '@vanilla-extract/recipes';
 
     import { interaction } from '~/styles/mixins/interactions.css';
-    import { layerStyle } from '~/styles/mixins/layer-style.css';
+    import { componentRecipe } from '~/styles/mixins/layer-style.css';
     import { typography } from '~/styles/mixins/typography.css';
     import { vars } from '~/styles/themes.css';
 
     const fg = createVar();
     const bg = createVar();
 
-    export const root = recipe({
+    export const root = componentRecipe({
         base: [
             interaction(),
-            layerStyle('components', {
+            {
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 border: 'none',
                 borderRadius: vars.size.borderRadius['300'],
-            }),
+            },
         ],
 
         defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill' },
@@ -756,11 +752,11 @@ const dataAttrs = createDataAttributes({ invalid });
             size: {
                 sm: [
                     typography({ style: 'subtitle1' }),
-                    layerStyle('components', {
+                    {
                         gap: vars.size.space['050'],
                         paddingInline: vars.size.space['100'],
                         height: vars.size.dimension['300'],
-                    }),
+                    },
                 ],
                 md: [
                     /* ... */
@@ -773,25 +769,25 @@ const dataAttrs = createDataAttributes({ invalid });
                 ],
             },
             colorPalette: {
-                primary: layerStyle('components', {
+                primary: {
                     vars: {
                         [fg]: vars.color.foreground.inverse,
                         [bg]: vars.color.background.primary[200],
                     },
-                }),
-                secondary: layerStyle('components', {
+                },
+                secondary: {
                     /* ... */
-                }),
+                },
                 // ...
             },
             variant: {
-                fill: layerStyle('components', { backgroundColor: bg, color: fg }),
-                outline: layerStyle('components', {
+                fill: { backgroundColor: bg, color: fg },
+                outline: {
                     /* ... */
-                }),
-                ghost: layerStyle('components', {
+                },
+                ghost: {
                     /* ... */
-                }),
+                },
             },
         },
     });
@@ -844,7 +840,8 @@ const dataAttrs = createDataAttributes({ invalid });
 
 프로젝트에서 제공하는 스타일 믹스인 함수를 활용:
 
-- **`layerStyle(layer, styles)`**: CSS Cascade Layer에 스타일 배치.
+- **`componentStyle(rule)`**: CSS Cascade Layer에 스타일 배치.
+- **`componentRecipe(options)`**: CSS Cascade Layer에 스타일 변형 배치.
 - **`interaction()`**: hover, active, focus 등 인터랙션 스타일.
 - **`typography({ style })`**: 타이포그래피 프리셋 적용.
 
