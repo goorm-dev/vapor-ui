@@ -1,7 +1,7 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { componentRecipe } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
 export const root = componentRecipe({
@@ -95,7 +95,7 @@ export const indicator = componentRecipe({
     },
 });
 
-export const icon = layerStyle('components', {
+export const icon = componentStyle({
     transition: 'all 0.2s',
     fill: 'none',
     stroke: vars.color.white,

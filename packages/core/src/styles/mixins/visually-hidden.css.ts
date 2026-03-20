@@ -1,6 +1,6 @@
-import { layerStyle } from './layer-style.css';
+import { componentStyle } from './layer-style.css';
 
-export const visuallyHidden = layerStyle('components', {
+export const visuallyHidden = componentStyle({
     position: 'absolute',
     margin: -1,
     border: 0,

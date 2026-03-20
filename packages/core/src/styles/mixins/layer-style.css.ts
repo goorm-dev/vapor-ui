@@ -91,7 +91,7 @@ const normalizeVariants = <Variants extends LayerVariantGroups>(
     return Object.fromEntries(normalizedEntries) as RecipeRuntimeVariants<Variants>;
 };
 
-export const layerStyle = (
+const layerStyle = (
     layer: LayerName, // 'theme' | 'reset' ...
     rule: LayerRecipeStyleRule,
     debugId?: string,
