@@ -33,6 +33,7 @@
         "**/*.tsx",
         ".next/types/**/*.ts",
         "global.d.ts",
+        "docs-extractor.config.mjs",
         ".next/dev/types/**/*.ts"
     ],
     "exclude": ["node_modules"]
