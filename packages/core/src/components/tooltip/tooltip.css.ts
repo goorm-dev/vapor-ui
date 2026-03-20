@@ -1,8 +1,10 @@
+import { style } from '@vanilla-extract/css';
+
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-export const popup = [
+export const popup = style([
     typography({ style: 'body3' }),
     layerStyle('components', {
         paddingBlock: vars.size.space['075'],
@@ -13,7 +15,7 @@ export const popup = [
         color: vars.color.white,
         boxShadow: vars.shadow.md,
     }),
-];
+]);
 
 export const arrow = layerStyle('components', {
     display: 'flex',

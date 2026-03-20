@@ -146,7 +146,7 @@ export const popup = layerStyle('components', {
     },
 });
 
-export const item = [
+export const item = style([
     interaction({ type: 'roving' }),
     typography({ style: 'body2' }),
     layerStyle('components', {
@@ -163,7 +163,7 @@ export const item = [
         paddingInline: vars.size.space['100'],
         height: vars.size.space['400'],
     }),
-];
+]);
 
 export const separator = layerStyle('components', {
     flexShrink: 0,

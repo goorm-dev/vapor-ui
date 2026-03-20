@@ -3,10 +3,10 @@
 import { forwardRef } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
-import clsx from 'clsx';
 
+import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { LabelVariants } from './field.css';
 import * as styles from './field.css';
@@ -18,9 +18,7 @@ import * as styles from './field.css';
 export const FieldRoot = forwardRef<HTMLDivElement, FieldRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return (
-        <BaseField.Root ref={ref} className={clsx(styles.root, className)} {...componentProps} />
-    );
+    return <BaseField.Root ref={ref} className={cn(styles.root, className)} {...componentProps} />;
 });
 
 FieldRoot.displayName = 'Field.Root';
@@ -35,7 +33,7 @@ export const FieldLabel = forwardRef<HTMLElement, FieldLabel.Props>((props, ref)
     return (
         <BaseField.Label
             ref={ref}
-            className={clsx(styles.label({ typography, foreground }), className)}
+            className={cn(styles.label({ typography, foreground }), className)}
             {...componentProps}
         />
     );
@@ -53,7 +51,7 @@ export const FieldDescription = forwardRef<HTMLParagraphElement, FieldDescriptio
         return (
             <BaseField.Description
                 ref={ref}
-                className={clsx(styles.description, className)}
+                className={cn(styles.description, className)}
                 {...componentProps}
             />
         );
@@ -71,7 +69,7 @@ export const FieldError = forwardRef<HTMLDivElement, FieldError.Props>((props, r
     return (
         <BaseField.Error
             ref={ref}
-            className={clsx(styles.error, className)}
+            className={cn(styles.error, className)}
             {...componentProps}
             match={match}
         />
@@ -89,7 +87,7 @@ export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>((prop
     return (
         <BaseField.Error
             ref={ref}
-            className={clsx(styles.success, className)}
+            className={cn(styles.success, className)}
             {...componentProps}
             match={match}
         />
@@ -104,43 +102,65 @@ FieldSuccess.displayName = 'Field.Success';
 export const FieldItem = forwardRef<HTMLDivElement, FieldItem.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return (
-        <BaseField.Item ref={ref} className={clsx(styles.item, className)} {...componentProps} />
-    );
+    return <BaseField.Item ref={ref} className={cn(styles.item, className)} {...componentProps} />;
 });
 FieldItem.displayName = 'Field.Item';
 
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace FieldRoot {
-    export interface Props extends VComponentProps<typeof BaseField.Root> {}
-
+    export type State = BaseField.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseField.Root, State>;
     export type Actions = BaseField.Root.Actions;
 }
 
 export namespace FieldLabel {
-    export interface Props extends VComponentProps<typeof BaseField.Label>, LabelVariants {}
+    export type State = BaseField.Label.State;
+    export type Props = VaporUIComponentProps<typeof BaseField.Label, State> & LabelVariants;
 }
 
 export namespace FieldDescription {
-    export interface Props extends VComponentProps<typeof BaseField.Description> {}
+    export type State = BaseField.Description.State;
+    export type Props = VaporUIComponentProps<typeof BaseField.Description, State>;
+}
+
+export interface FieldErrorProps extends Omit<
+    VaporUIComponentProps<typeof BaseField.Error, FieldError.State>,
+    'match'
+> {
+    /**
+     * Determines whether to show the error message according to the field’s
+     * [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).
+     * @links https://github.com/mui/base-ui/blob/62e28c641db6d90647936ff0367d2b27641b7830/packages/react/src/field/error/FieldError.tsx#L137
+     * @default false
+     */
+    match?: boolean | keyof Omit<BaseField.ValidityData['state'], 'valid'>;
 }
 
 export namespace FieldError {
-    type ErrorValidityState = Omit<BaseField.ValidityData['state'], 'valid'>;
-    type ErrorMatchProps = { match?: boolean | keyof ErrorValidityState };
-    type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
+    export type State = BaseField.Error.State;
+    export type Props = FieldErrorProps;
+}
 
-    export interface Props extends Assign<BaseFieldErrorProps, ErrorMatchProps> {}
+export interface FieldSuccessProps extends Omit<
+    VaporUIComponentProps<typeof BaseField.Error, FieldSuccess.State>,
+    'match'
+> {
+    /**
+     * Determines whether to show the success message according to the field’s
+     * [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).
+     * @links https://github.com/mui/base-ui/blob/62e28c641db6d90647936ff0367d2b27641b7830/packages/react/src/field/error/FieldError.tsx#L137
+     * @default 'valid'
+     */
+    match?: boolean | 'valid';
 }
 
 export namespace FieldSuccess {
-    type PrimitiveSuccessProps = Omit<VComponentProps<typeof BaseField.Error>, 'match'>;
-    export interface Props extends PrimitiveSuccessProps {
-        match?: boolean | 'valid';
-    }
+    export type State = BaseField.Error.State;
+    export type Props = FieldSuccessProps;
 }
 
 export namespace FieldItem {
-    export interface Props extends VComponentProps<typeof BaseField.Item> {}
+    export type State = BaseField.Item.State;
+    export type Props = VaporUIComponentProps<typeof BaseField.Item, State>;
 }

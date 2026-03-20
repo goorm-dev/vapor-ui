@@ -2,11 +2,10 @@
 
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './card.css';
 
@@ -17,12 +16,12 @@ import * as styles from './card.css';
 export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.root, className),
+            className: cn(styles.root, className),
             ...componentProps,
         },
     });
@@ -36,12 +35,12 @@ CardRoot.displayName = 'Card.Root';
 export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.header, className),
+            className: cn(styles.header, className),
             ...componentProps,
         },
     });
@@ -55,12 +54,12 @@ CardHeader.displayName = 'Card.Header';
 export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.body, className),
+            className: cn(styles.body, className),
             ...componentProps,
         },
     });
@@ -74,12 +73,12 @@ CardBody.displayName = 'Card.Body';
 export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'div',
         props: {
-            className: clsx(styles.footer, className),
+            className: cn(styles.footer, className),
             ...componentProps,
         },
     });
@@ -89,25 +88,21 @@ CardFooter.displayName = 'Card.Footer';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace CardRoot {
-    type RootPrimitiveProps = VComponentProps<'div'>;
-
-    export interface Props extends RootPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace CardHeader {
-    type HeaderPrimitiveProps = VComponentProps<'div'>;
-
-    export interface Props extends HeaderPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace CardBody {
-    type BodyPrimitiveProps = VComponentProps<'div'>;
-
-    export interface Props extends BodyPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace CardFooter {
-    type FooterPrimitiveProps = VComponentProps<'div'>;
-
-    export interface Props extends FooterPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }

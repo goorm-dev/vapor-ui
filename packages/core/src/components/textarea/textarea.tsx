@@ -1,17 +1,17 @@
 'use client';
 
-import { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
-import clsx from 'clsx';
 
 import { useInputGroup } from '~/components/input-group/input-group';
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { TextareaVariants } from './textarea.css';
 import * as styles from './textarea.css';
@@ -37,8 +37,8 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         'autoResize',
     ]);
 
-    const { invalid, autoResize } = variantProps;
-    const { disabled, readOnly, required, maxLength } = otherProps;
+    const { invalid = false, autoResize } = variantProps;
+    const { disabled = false, readOnly = false, required = false, maxLength } = otherProps;
 
     const [value, setValue] = useControlled({
         controlled: valueProp,
@@ -61,15 +61,20 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         setValue(newValue);
     };
 
-    return useRender({
+    const state: Textarea.State = useMemo(
+        () => ({ disabled, readOnly, required, invalid }),
+        [disabled, readOnly, required, invalid],
+    );
+
+    return useRenderElement({
         ref: composedRef,
-        state: { disabled, readOnly, required, invalid },
+        state,
         render: render || <BaseField.Control render={<textarea />} />,
         props: {
             ...(isControlled ? { value } : { defaultValue }),
             'aria-invalid': invalid,
             onValueChange: handleValueChange,
-            className: clsx(styles.textarea(variantProps), className),
+            className: cn(styles.textarea(variantProps), className),
             ...otherProps,
         },
     });
@@ -78,7 +83,7 @@ Textarea.displayName = 'Textarea';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface AutoResizeOptions extends Pick<Textarea.Props, 'value' | 'autoResize'> {
+export interface AutoResizeOptions extends Pick<Textarea.Props, 'value' | 'autoResize'> {
     ref: React.RefObject<HTMLTextAreaElement | null>;
 }
 
@@ -107,14 +112,45 @@ export function useAutoResize({ ref, value, autoResize }: AutoResizeOptions) {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export namespace Textarea {
-    type TextareaPrimitiveProps = VComponentProps<'textarea'>;
+export interface TextareaState {
+    [key: string]: unknown;
+    /**
+     * Whether the component should ignore user interaction.
+     */
+    disabled: boolean;
+    /**
+     * Whether the user should be unable to edit the textarea.
+     */
+    readOnly: boolean;
+    /**
+     * Whether the user must fill out the textarea before submitting a form.
+     */
+    required: boolean;
+    /**
+     * Whether the component is in an error state.
+     */
+    invalid: boolean;
+}
 
-    export interface Props extends Assign<TextareaPrimitiveProps, TextareaVariants> {
-        value?: string;
-        defaultValue?: string;
-        onValueChange?: (value: string, event: Textarea.ChangeEventDetails) => void;
-    }
+export interface TextareaFieldProps
+    extends VaporUIComponentProps<'textarea', TextareaState>, TextareaVariants {
+    /**
+     * The value of the textarea. Use when controlled.
+     */
+    value?: string;
+    /**
+     * The default value of the textarea. Use when uncontrolled.
+     */
+    defaultValue?: string;
+    /**
+     * Event handler called when the value of the textarea changes.
+     */
+    onValueChange?: (value: string, event: Textarea.ChangeEventDetails) => void;
+}
+
+export namespace Textarea {
+    export type State = TextareaState;
+    export type Props = TextareaFieldProps;
 
     export type ChangeEventDetails = BaseField.Control.ChangeEventDetails;
 }

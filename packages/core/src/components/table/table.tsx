@@ -1,10 +1,9 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './table.css';
 
@@ -15,12 +14,12 @@ import * as styles from './table.css';
 export const TableRoot = forwardRef<HTMLTableElement, TableRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'table',
         props: {
-            className: clsx(styles.table, className),
+            className: cn(styles.table, className),
             ...componentProps,
         },
     });
@@ -34,7 +33,7 @@ TableRoot.displayName = 'Table.Root';
 export const TableHeader = forwardRef<HTMLTableSectionElement, TableHeader.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'thead',
@@ -50,7 +49,7 @@ TableHeader.displayName = 'Table.Header';
 export const TableBody = forwardRef<HTMLTableSectionElement, TableBody.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'tbody',
@@ -66,7 +65,7 @@ TableBody.displayName = 'Table.Body';
 export const TableFooter = forwardRef<HTMLTableSectionElement, TableFooter.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'tfoot',
@@ -82,12 +81,12 @@ TableFooter.displayName = 'Table.Footer';
 export const TableRow = forwardRef<HTMLTableRowElement, TableRow.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'tr',
         props: {
-            className: clsx(styles.row, className),
+            className: cn(styles.row, className),
             ...componentProps,
         },
     });
@@ -101,12 +100,12 @@ TableRow.displayName = 'Table.Row';
 export const TableHeading = forwardRef<HTMLTableCellElement, TableHeading.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'th',
         props: {
-            className: clsx(styles.heading, className),
+            className: cn(styles.heading, className),
             ...componentProps,
         },
     });
@@ -120,12 +119,12 @@ TableHeading.displayName = 'Table.Heading';
 export const TableCell = forwardRef<HTMLTableCellElement, TableCell.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'td',
         props: {
-            className: clsx(styles.cell, className),
+            className: cn(styles.cell, className),
             ...componentProps,
         },
     });
@@ -140,7 +139,7 @@ export const TableColumnGroup = forwardRef<HTMLTableColElement, TableColumnGroup
     (props, ref) => {
         const { render, ...componentProps } = resolveStyles(props);
 
-        return useRender({
+        return useRenderElement({
             ref,
             render,
             defaultTagName: 'colgroup',
@@ -157,7 +156,7 @@ TableColumnGroup.displayName = 'Table.ColumnGroup';
 export const TableColumn = forwardRef<HTMLTableColElement, TableColumn.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
         render,
         defaultTagName: 'col',
@@ -169,37 +168,46 @@ TableColumn.displayName = 'Table.Column';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace TableRoot {
-    export interface Props extends VComponentProps<'table'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'table', State>;
 }
 
 export namespace TableHeader {
-    export interface Props extends VComponentProps<'thead'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'thead', State>;
 }
 
 export namespace TableBody {
-    export interface Props extends VComponentProps<'tbody'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'tbody', State>;
 }
 
 export namespace TableFooter {
-    export interface Props extends VComponentProps<'tfoot'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'tfoot', State>;
 }
 
 export namespace TableRow {
-    export interface Props extends VComponentProps<'tr'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'tr', State>;
 }
 
 export namespace TableHeading {
-    export interface Props extends VComponentProps<'th'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'th', State>;
 }
 
 export namespace TableCell {
-    export interface Props extends VComponentProps<'td'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'td', State>;
 }
 
 export namespace TableColumnGroup {
-    export interface Props extends VComponentProps<'colgroup'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'colgroup', State>;
 }
 
 export namespace TableColumn {
-    export interface Props extends VComponentProps<'col'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'col', State>;
 }
