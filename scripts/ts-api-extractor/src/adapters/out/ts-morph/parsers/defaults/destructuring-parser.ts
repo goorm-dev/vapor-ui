@@ -32,7 +32,13 @@ export function extractDestructuringDefaults(
         const nameNode = node.getNameNode();
         if (!nameNode.isKind(SyntaxKind.Identifier)) return;
 
-        const name = nameNode.getText();
+        const propertyNameNode = node.getPropertyNameNode();
+        const name =
+            propertyNameNode?.isKind(SyntaxKind.Identifier)
+                ? propertyNameNode.getText()
+                : propertyNameNode?.isKind(SyntaxKind.StringLiteral)
+                  ? propertyNameNode.getLiteralText()
+                  : nameNode.getText();
 
         // Skip if not declared in Props interface
         if (declaredPropNames && !declaredPropNames.has(name)) return;
@@ -40,9 +46,15 @@ export function extractDestructuringDefaults(
         // Skip if already found (first occurrence wins)
         if (name in result) return;
 
-        const rawValue = initNode.getText();
-        // Clean up: remove quotes, keep boolean/number literals as-is
-        result[name] = rawValue.replace(/^['"`]|['"`]$/g, '');
+        if (
+            initNode.isKind(SyntaxKind.StringLiteral) ||
+            initNode.isKind(SyntaxKind.NoSubstitutionTemplateLiteral)
+        ) {
+            result[name] = initNode.getLiteralText();
+            return;
+        }
+
+        result[name] = initNode.getText();
     });
 
     return result;

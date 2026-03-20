@@ -79,7 +79,11 @@ function resolveFunctionType(
 
         const node = declarations[0] ?? param.getValueDeclaration();
         if (!node) {
-            const paramType = param.getTypeAtLocation(signature.getDeclaration()!);
+            const decl = signature.getDeclaration();
+            if (!decl) {
+                return `${paramName}: unknown`;
+            }
+            const paramType = param.getTypeAtLocation(decl);
 
             if (baseUiMap) {
                 const vaporPath = resolveMappedBaseUiType(paramType, baseUiMap);

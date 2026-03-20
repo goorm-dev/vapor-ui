@@ -11,7 +11,7 @@ export function getExportedNamespaces(sourceFile: SourceFile): ModuleDeclaration
         .filter(
             (module) =>
                 module.getDeclarationKind() === ModuleDeclarationKind.Namespace &&
-                module.isExported,
+                module.isExported(),
         );
 }
 

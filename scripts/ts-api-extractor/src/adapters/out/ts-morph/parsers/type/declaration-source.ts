@@ -15,26 +15,31 @@ const BASE_UI_PATTERN = '@base-ui';
 
 const SPRINKLES_PATTERN = 'sprinkles.css';
 
+function normalizeFilePath(filePath: string): string {
+    return filePath.replace(/\\/g, '/');
+}
+
 export function getDeclarationSourceType(filePath: string | undefined): DeclarationSourceType {
     if (!filePath) return DeclarationSourceType.PROJECT;
+    const normalizedPath = normalizeFilePath(filePath);
 
     // React types 확인
-    if (REACT_TYPES_PATTERNS.some((pattern) => filePath.includes(pattern))) {
+    if (REACT_TYPES_PATTERNS.some((pattern) => normalizedPath.includes(pattern))) {
         return DeclarationSourceType.REACT_TYPES;
     }
 
     // DOM types 확인
-    if (DOM_TYPES_PATTERNS.some((pattern) => filePath.includes(pattern))) {
+    if (DOM_TYPES_PATTERNS.some((pattern) => normalizedPath.includes(pattern))) {
         return DeclarationSourceType.DOM_TYPES;
     }
 
     // Base UI 확인
-    if (filePath.includes(BASE_UI_PATTERN)) {
+    if (normalizedPath.includes(BASE_UI_PATTERN)) {
         return DeclarationSourceType.BASE_UI;
     }
 
     // 기타 node_modules
-    if (filePath.includes('node_modules')) {
+    if (normalizedPath.includes('node_modules')) {
         return DeclarationSourceType.EXTERNAL;
     }
 
@@ -58,16 +63,23 @@ export function getSymbolSourcePath(symbol: TsSymbol): string | undefined {
 }
 
 export function isSymbolFromExternalSource(symbol: TsSymbol): boolean {
-    const filePath = getSymbolSourcePath(symbol);
-    return isExternalDeclaration(filePath);
+    return symbol
+        .getDeclarations()
+        .some((decl) => isExternalDeclaration(decl.getSourceFile().getFilePath()));
 }
 
 export function isSymbolFromSprinkles(symbol: TsSymbol): boolean {
-    const filePath = getSymbolSourcePath(symbol);
-    return filePath?.includes(SPRINKLES_PATTERN) ?? false;
+    return symbol
+        .getDeclarations()
+        .some((decl) =>
+            normalizeFilePath(decl.getSourceFile().getFilePath()).includes(SPRINKLES_PATTERN),
+        );
 }
 
 export function isSymbolFromBaseUi(symbol: TsSymbol): boolean {
-    const filePath = getSymbolSourcePath(symbol);
-    return filePath?.includes(BASE_UI_PATTERN) ?? false;
+    return symbol
+        .getDeclarations()
+        .some((decl) =>
+            normalizeFilePath(decl.getSourceFile().getFilePath()).includes(BASE_UI_PATTERN),
+        );
 }

@@ -36,19 +36,3 @@ export interface BaseUiTypeMap {
     [normalizedPath: string]: BaseUiTypeEntry;
 }
 
-// ============================================================
-// Parser Output Types (Parsed)
-// ============================================================
-
-/**
- * Parsed prop data extracted from AST symbols.
- */
-export interface ParsedProp {
-    name: string;
-    typeString: string;
-    isOptional: boolean;
-    description?: string;
-    defaultValue?: string;
-    declarationFilePath?: string;
-}
-

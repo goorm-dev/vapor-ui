@@ -6,6 +6,11 @@ import { defaultExtractorConfig } from '~/config/defaults';
 import type { ExtractorConfig, PartialExtractorConfig } from '~/config/schema';
 import { mergeConfig, validatePartialConfig } from '~/config/schema';
 
+/**
+ * Config file search order. `.ts` is included for convenience but requires
+ * Node.js v22.6.0+ (native TypeScript type-stripping). On Node 20.x–22.5.x,
+ * use `.mjs`, `.js`, or `.cjs` config files instead.
+ */
 const DEFAULT_CONFIG_FILES = [
     'docs-extractor.config.mjs',
     'docs-extractor.config.js',

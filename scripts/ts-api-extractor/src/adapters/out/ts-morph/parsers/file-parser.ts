@@ -2,7 +2,7 @@
  * Props extraction parser module
  *
  * Parser layer extracts ParsedComponent[] from a source file.
- * Legacy extractProps() remains for backward compatibility.
+ * Legacy extractPropsLegacy() remains for backward compatibility.
  */
 import type { ModuleDeclaration, Node, SourceFile, Symbol as TsSymbol } from 'ts-morph';
 

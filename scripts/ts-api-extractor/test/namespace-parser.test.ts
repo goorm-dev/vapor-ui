@@ -69,6 +69,25 @@ describe('getExportedNamespaces', () => {
         expect(result[0].isExported()).toBe(true);
     });
 
+    it('export되지 않은 namespace는 제외', () => {
+        const source = project.createSourceFile(
+            'test.ts',
+            `
+            namespace Internal {
+                export interface Props {}
+            }
+            export namespace Public {
+                export interface Props {}
+            }
+            `,
+        );
+
+        const result = getExportedNamespaces(source);
+
+        expect(result).toHaveLength(1);
+        expect(result[0].getName()).toBe('Public');
+    });
+
     it('namespace 없으면 빈 배열', () => {
         const source = project.createSourceFile(
             'test.ts',
