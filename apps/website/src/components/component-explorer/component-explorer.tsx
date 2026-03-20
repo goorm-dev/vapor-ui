@@ -17,7 +17,7 @@ interface ComponentExplorerProps {
 export function ComponentExplorer({ name, componentName }: ComponentExplorerProps) {
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
     const [hoveredPart, setHoveredPart] = React.useState<string | null>(null);
-    const [pinnedPart, setPinnedPart] = React.useState<string | null>(null);
+    const [selectedPart, setSelectedPart] = React.useState<string | null>(null);
     const [parts, setParts] = React.useState<Part[]>([]);
     const [anatomyData, setAnatomyData] = React.useState<AnatomyData | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -66,7 +66,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
     }, [componentName, retryCount]);
 
     React.useEffect(() => {
-        setPinnedPart(null);
+        setSelectedPart(null);
         setHoveredPart(null);
         setLiveAnnouncement('');
     }, [componentName]);
@@ -83,7 +83,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
         }
     }, [name, resolvedTheme]);
 
-    const activePart = hoveredPart ?? pinnedPart;
+    const activePart = hoveredPart ?? selectedPart;
 
     React.useEffect(() => {
         highlightPart(activePart);
@@ -95,23 +95,17 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
 
     const displayName = anatomyData?.displayNamePrefix || componentName;
 
-    const handlePartClick = React.useCallback(
-        (partName: string) => {
-            setPinnedPart((prev) => {
-                const nextPinnedPart = prev === partName ? null : partName;
-                setLiveAnnouncement(
-                    nextPinnedPart
-                        ? `${displayName}.${nextPinnedPart} 선택됨`
-                        : '파트 선택이 해제되었습니다.',
-                );
-                return nextPinnedPart;
-            });
+    const handlePartSelect = React.useCallback(
+        (value: unknown) => {
+            const partName = value as string;
+            setSelectedPart(partName || null);
+            setLiveAnnouncement(`${displayName}.${partName} 선택됨`);
         },
         [displayName],
     );
 
     const handleClearSelection = React.useCallback(() => {
-        setPinnedPart(null);
+        setSelectedPart(null);
         setHoveredPart(null);
         setLiveAnnouncement('파트 선택이 해제되었습니다.');
     }, []);
@@ -186,9 +180,9 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                         componentName={displayName}
                         parts={parts}
                         hoveredPart={hoveredPart}
-                        pinnedPart={pinnedPart}
+                        selectedPart={selectedPart}
                         onPartHover={handlePartHover}
-                        onPartClick={handlePartClick}
+                        onPartSelect={handlePartSelect}
                         showPrimitives
                         onClearSelection={handleClearSelection}
                     />
