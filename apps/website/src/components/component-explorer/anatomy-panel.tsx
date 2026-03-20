@@ -6,7 +6,7 @@ import { RadioGroup, Text } from '@vapor-ui/core';
 
 import { PartButton } from './part-button';
 
-interface AnatomyPanelProps {
+export interface AnatomyPanelProps {
     componentName: string;
     parts: string[];
     selectedPart: string | null;
