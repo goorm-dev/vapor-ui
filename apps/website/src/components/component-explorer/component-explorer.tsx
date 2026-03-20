@@ -14,35 +14,6 @@ interface ComponentExplorerProps {
     componentName: string;
 }
 
-const PROPS_TARGET_OVERRIDES: Record<string, Record<string, string[]>> = {
-    'floating-bar': {
-        PortalPrimitive: ['floating-bar-portal'],
-        PositionerPrimitive: ['floating-bar-positioner'],
-        PopupPrimitive: ['floating-bar-popup'],
-    },
-};
-
-function toKebabCase(value: string) {
-    return value
-        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-        .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
-        .toLowerCase();
-}
-
-function getPropsTargetCandidates(componentName: string, partName: string) {
-    const defaultCandidates = [`${componentName}-${toKebabCase(partName)}`];
-
-    if (partName.endsWith('Primitive')) {
-        defaultCandidates.push(
-            `${componentName}-${toKebabCase(partName.replace(/Primitive$/, ''))}`,
-        );
-    }
-
-    const overrideCandidates = PROPS_TARGET_OVERRIDES[componentName]?.[partName] ?? [];
-
-    return Array.from(new Set([...overrideCandidates, ...defaultCandidates]));
-}
-
 export function ComponentExplorer({ name, componentName }: ComponentExplorerProps) {
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
     const [hoveredPart, setHoveredPart] = React.useState<string | null>(null);
@@ -53,9 +24,6 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
     const [error, setError] = React.useState<string | null>(null);
     const [retryCount, setRetryCount] = React.useState(0);
     const [iframeLoaded, setIframeLoaded] = React.useState(false);
-    const [propsTargetComponentName, setPropsTargetComponentName] = React.useState<string | null>(
-        null,
-    );
     const [liveAnnouncement, setLiveAnnouncement] = React.useState('');
     const { highlightPart, availableParts } = useExplorerCommunication(iframeRef);
     const { resolvedTheme } = useTheme();
@@ -100,7 +68,6 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
     React.useEffect(() => {
         setPinnedPart(null);
         setHoveredPart(null);
-        setPropsTargetComponentName(null);
         setLiveAnnouncement('');
     }, [componentName]);
 
@@ -154,51 +121,6 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
     }, []);
 
     const hasPrimitivePart = parts.some((part) => part.isPrimitive);
-
-    React.useEffect(() => {
-        if (!pinnedPart || typeof document === 'undefined') {
-            setPropsTargetComponentName(null);
-            return;
-        }
-
-        const candidates = getPropsTargetCandidates(componentName, pinnedPart);
-        const matched = candidates.find((candidate) =>
-            Boolean(document.querySelector(`[data-component-props="${candidate}"]`)),
-        );
-
-        setPropsTargetComponentName(matched ?? null);
-    }, [componentName, pinnedPart]);
-
-    const handleMoveToProps = React.useCallback(() => {
-        if (!pinnedPart || typeof document === 'undefined') return;
-
-        const candidates = getPropsTargetCandidates(componentName, pinnedPart);
-        const targetComponentName =
-            candidates.find((candidate) =>
-                Boolean(document.querySelector(`[data-component-props="${candidate}"]`)),
-            ) ?? null;
-
-        if (!targetComponentName) {
-            setLiveAnnouncement(`${displayName}.${pinnedPart} Props Table을 찾을 수 없습니다.`);
-            return;
-        }
-
-        const target = document.querySelector<HTMLElement>(
-            `[data-component-props="${targetComponentName}"]`,
-        );
-
-        if (!target) {
-            setLiveAnnouncement(`${displayName}.${pinnedPart} Props Table을 찾을 수 없습니다.`);
-            return;
-        }
-
-        if (!target.hasAttribute('tabindex')) {
-            target.setAttribute('tabindex', '-1');
-        }
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        target.focus();
-        setLiveAnnouncement(`${displayName}.${pinnedPart} Props Table로 이동했습니다.`);
-    }, [componentName, displayName, pinnedPart]);
 
     if (!isLoading && !error && !hasPrimitivePart) {
         return null;
@@ -268,9 +190,6 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                         onPartHover={handlePartHover}
                         onPartClick={handlePartClick}
                         showPrimitives
-                        selectedPart={pinnedPart}
-                        canMoveToProps={Boolean(propsTargetComponentName)}
-                        onMoveToProps={handleMoveToProps}
                         onClearSelection={handleClearSelection}
                     />
                 )}

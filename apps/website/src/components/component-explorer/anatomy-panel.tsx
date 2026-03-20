@@ -2,7 +2,7 @@
 
 import { type KeyboardEvent, useCallback, useId, useMemo, useRef } from 'react';
 
-import { Button, Text } from '@vapor-ui/core';
+import { Text } from '@vapor-ui/core';
 
 import { PartButton } from './part-button';
 import type { Part } from './types';
@@ -16,9 +16,6 @@ interface AnatomyPanelProps {
     onPartClick: (partName: string) => void;
     showPrimitives?: boolean;
     availableParts: string[] | null;
-    selectedPart: string | null;
-    canMoveToProps: boolean;
-    onMoveToProps: () => void;
     onClearSelection: () => void;
 }
 
@@ -31,9 +28,6 @@ export function AnatomyPanel({
     onPartClick,
     showPrimitives = false,
     availableParts,
-    selectedPart,
-    canMoveToProps,
-    onMoveToProps,
     onClearSelection,
 }: AnatomyPanelProps) {
     const sectionRef = useRef<HTMLElement | null>(null);
@@ -176,21 +170,6 @@ export function AnatomyPanel({
                     </div>
                 )}
             </div>
-
-            {selectedPart && (
-                <div className="border-t border-v-normal-200 p-2">
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        colorPalette="secondary"
-                        className="w-full"
-                        disabled={!canMoveToProps}
-                        onClick={onMoveToProps}
-                    >
-                        Props Table로 이동
-                    </Button>
-                </div>
-            )}
         </section>
     );
 }
