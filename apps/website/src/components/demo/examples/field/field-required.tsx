@@ -4,9 +4,9 @@ import { Field, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldRequired() {
     return (
-        <VStack gap="$200" width="300px">
+        <VStack $css={{ gap: '$200', width: '300px' }}>
             <Field.Root name="required-field" validationMode="onChange">
-                <Field.Label flexDirection="column">
+                <Field.Label $css={{ flexDirection: 'column' }}>
                     <Text typography="subtitle2" foreground="secondary-100">
                         필수 입력 필드 <Text foreground="danger-100">*</Text>
                     </Text>
@@ -21,7 +21,7 @@ export default function FieldRequired() {
 
             {/* Optional Field */}
             <Field.Root name="optional-field">
-                <Field.Label flexDirection="column">
+                <Field.Label $css={{ flexDirection: 'column' }}>
                     <Text typography="subtitle2" foreground="secondary-100">
                         선택 입력 필드{' '}
                         <Text foreground="hint-100" typography="subtitle2">

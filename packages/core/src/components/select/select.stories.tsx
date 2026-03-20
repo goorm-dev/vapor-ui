@@ -35,7 +35,7 @@ export default {
 
 export const Default: StoryObj<SelectProps> = {
     render: ({ side, align, sideOffset, alignOffset, ...args }) => (
-        <Box margin="200px">
+        <Box $css={{ margin: '200px' }}>
             <Select.Root placeholder="Select Font" {...args}>
                 <Select.Trigger />
 
@@ -155,14 +155,16 @@ export const TestBed = {
     render: () => {
         return (
             <Grid.Root
-                gap="150px"
+                $css={{ gap: '150px' }}
                 templateColumns="repeat(auto-fit, 150px)"
                 templateRows="repeat(auto-fit, minmax(150px, 1fr))"
             >
                 <Grid.Item>
-                    <Select.Root placeholder="Placeholder">
-                        <Select.Trigger />
-                    </Select.Root>
+                    {(['sm', 'md', 'lg', 'xl'] as const).map((size) => (
+                        <Select.Root key={size} size={size} placeholder="Placeholder">
+                            <Select.Trigger />
+                        </Select.Root>
+                    ))}
                 </Grid.Item>
 
                 <Grid.Item>

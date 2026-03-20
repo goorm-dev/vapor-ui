@@ -92,9 +92,11 @@ code * {
     font-family: var(--font-mono);
 }
 
-#nd-subnav {
+#nd-home-layout > #nd-nav > nav {
+    border-bottom: none;
+
     > div {
-        @apply px-8;
+        @apply md:px-6;
     }
 }
 

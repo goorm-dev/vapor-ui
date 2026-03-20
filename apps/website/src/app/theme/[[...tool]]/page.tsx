@@ -1,3 +1,4 @@
+import { SITE_URL } from '~/constants/domain';
 import { themeSource } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
 
@@ -38,7 +39,7 @@ export default async function ThemePage({ params }: PageProps) {
                 // MDX frontmatter에서 직접 가져옴 (Single Source of Truth)
                 title: page.data.title,
                 description: page.data.description ?? '',
-                markdownUrl: `${page.url}.mdx`,
+                markdownUrl: `${SITE_URL}${page.url}.mdx`,
                 children: (
                     <div className="prose prose-sm dark:prose-invert max-w-none">
                         <MDX components={getMDXComponents({})} />

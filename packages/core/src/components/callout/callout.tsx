@@ -1,11 +1,10 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { CalloutVariants } from './callout.css';
 import * as styles from './callout.css';
@@ -20,11 +19,12 @@ export const CalloutRoot = forwardRef<HTMLDivElement, CalloutRoot.Props>((props,
         'colorPalette',
     ]);
 
-    return useRender({
+    return useRenderElement({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
-            className: clsx(styles.root(variantProps), className),
+            className: cn(styles.root(variantProps), className),
             ...otherProps,
         },
     });
@@ -38,11 +38,12 @@ CalloutRoot.displayName = 'CalloutRoot';
 export const CalloutIcon = forwardRef<HTMLDivElement, CalloutIcon.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
-            className: clsx(styles.icon, className),
+            className: cn(styles.icon, className),
             ...componentProps,
         },
     });
@@ -54,11 +55,11 @@ CalloutIcon.displayName = 'CalloutIcon';
  * -----------------------------------------------------------------------------------------------*/
 
 export namespace CalloutRoot {
-    type RootPrimitiveProps = VComponentProps<'div'>;
-    export interface Props extends RootPrimitiveProps, CalloutVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State> & CalloutVariants;
 }
 
 export namespace CalloutIcon {
-    type IconPrimitiveProps = VComponentProps<'div'>;
-    export interface Props extends IconPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }

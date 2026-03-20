@@ -487,7 +487,7 @@ const FieldWithTextInputTest = ({
 }) => {
     return (
         <Field.Root name="email" validationMode={validationMode} disabled={disabled}>
-            <Box render={<Field.Label />} flexDirection="column">
+            <Box render={<Field.Label />} $css={{ flexDirection: 'column' }}>
                 Email Address
                 <TextInput type="email" placeholder="your.email@example.com" required />
             </Box>

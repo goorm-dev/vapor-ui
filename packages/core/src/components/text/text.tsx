@@ -1,13 +1,13 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
 import type { Foregrounds } from '~/styles/mixins/foreground.css';
 import { foregrounds } from '~/styles/mixins/foreground.css';
-import { type Typography, typography } from '~/styles/mixins/typography.css';
+import type { Typography } from '~/styles/mixins/typography.css';
+import { typography } from '~/styles/mixins/typography.css';
+import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
     const {
@@ -18,11 +18,12 @@ export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
         ...componentProps
     } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
-        render: render || <span />,
+        render,
+        defaultTagName: 'span',
         props: {
-            className: clsx(
+            className: cn(
                 typography({ style: typographyStyle }),
                 foregrounds({ color: foreground }),
                 className,
@@ -34,10 +35,11 @@ export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
 Text.displayName = 'Text';
 
 export namespace Text {
-    type TextPrimitiveProps = VComponentProps<'span'>;
-
-    export interface Props extends TextPrimitiveProps {
+    type TextVariants = {
         foreground?: Foregrounds['color'];
         typography?: Typography['style'];
-    }
+    };
+
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State> & TextVariants;
 }

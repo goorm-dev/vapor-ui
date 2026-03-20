@@ -28,10 +28,7 @@ export const ToolDetailSheetClient = ({
 }: ToolDetailSheetClientProps) => {
     return (
         <Sheet.Root open onOpenChange={(open) => !open && onClose()}>
-            <Sheet.Popup
-                positionerElement={<Sheet.PositionerPrimitive side="right" />}
-                className="w-[min(640px,100vw)]"
-            >
+            <Sheet.Popup className="w-[min(640px,100vw)]">
                 {/* Close Button */}
                 <Sheet.Close
                     className="absolute flex"
@@ -59,7 +56,7 @@ export const ToolDetailSheetClient = ({
                                 {description}
                             </Text>
                         </Sheet.Description>
-                        <CopyButton markdownUrl={markdownUrl} size="sm" />
+                        <CopyButton markdownUrl={markdownUrl} />
                     </div>
                 </Sheet.Header>
 

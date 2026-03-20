@@ -4,21 +4,19 @@ import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './dialog.css';
 import type { DialogPopupVariants } from './dialog.css';
 
 type DialogVariants = DialogPopupVariants;
-type DialogSharedProps = DialogVariants;
-
-type DialogContext = DialogSharedProps;
+type DialogContext = DialogVariants;
 
 const [DialogProvider, useDialogContext] = createContext<DialogContext>({
     name: 'Dialog',
@@ -49,7 +47,14 @@ export const DialogRoot = ({
  * Dialog.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const DialogPortalPrimitive = BaseDialog.Portal;
+export const DialogPortalPrimitive = forwardRef<HTMLDivElement, DialogPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <BaseDialog.Portal ref={ref} {...componentProps} />;
+    },
+);
+DialogPortalPrimitive.displayName = 'Dialog.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Dialog.OverlayPrimitive
@@ -62,7 +67,7 @@ export const DialogOverlayPrimitive = forwardRef<HTMLDivElement, DialogOverlayPr
         return (
             <BaseDialog.Backdrop
                 ref={ref}
-                className={clsx(styles.overlay, className)}
+                className={cn(styles.overlay, className)}
                 {...componentProps}
             />
         );
@@ -82,7 +87,7 @@ export const DialogPopupPrimitive = forwardRef<HTMLDivElement, DialogPopupPrimit
         return (
             <BaseDialog.Popup
                 ref={ref}
-                className={clsx(styles.popup({ size }), className)}
+                className={cn(styles.popup({ size }), className)}
                 {...componentProps}
             />
         );
@@ -98,12 +103,14 @@ export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>(
     ({ portalElement, overlayElement, ...props }, ref) => {
         const popup = <DialogPopupPrimitive ref={ref} {...props} />;
 
-        const overlay = useRender({
-            render: createRender(overlayElement ?? <DialogOverlayPrimitive />),
+        const overlayRender = createRender(overlayElement, <DialogOverlayPrimitive />);
+        const overlay = useRenderElement({
+            render: overlayRender,
         });
 
-        const portal = useRender({
-            render: createRender(portalElement, <DialogPortalPrimitive />),
+        const portalRender = createRender(portalElement, <DialogPortalPrimitive />);
+        const portal = useRenderElement({
+            render: portalRender,
             props: {
                 children: (
                     <>
@@ -149,7 +156,7 @@ export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitle.Props>((pr
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
-        <BaseDialog.Title ref={ref} className={clsx(styles.title, className)} {...componentProps} />
+        <BaseDialog.Title ref={ref} className={cn(styles.title, className)} {...componentProps} />
     );
 });
 DialogTitle.displayName = 'Dialog.Title';
@@ -165,7 +172,7 @@ export const DialogDescription = forwardRef<HTMLParagraphElement, DialogDescript
         return (
             <BaseDialog.Description
                 ref={ref}
-                className={clsx(styles.description, className)}
+                className={cn(styles.description, className)}
                 {...componentProps}
             />
         );
@@ -180,11 +187,12 @@ DialogDescription.displayName = 'Dialog.Description';
 export const DialogHeader = forwardRef<HTMLDivElement, DialogHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
-            className: clsx(styles.header, className),
+            className: cn(styles.header, className),
             ...componentProps,
         },
     });
@@ -198,11 +206,12 @@ DialogHeader.displayName = 'Dialog.Header';
 export const DialogBody = forwardRef<HTMLDivElement, DialogBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
-            className: clsx(styles.body, className),
+            className: cn(styles.body, className),
             ...componentProps,
         },
     });
@@ -216,11 +225,12 @@ DialogBody.displayName = 'Dialog.Body';
 export const DialogFooter = forwardRef<HTMLDivElement, DialogFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
-    return useRender({
+    return useRenderElement({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
-            className: clsx(styles.footer, className),
+            className: cn(styles.footer, className),
             ...componentProps,
         },
     });
@@ -229,62 +239,85 @@ DialogFooter.displayName = 'Dialog.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/
 
+export interface DialogRootProps
+    extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
+    /**
+     * Determines whether the dialog should close on outside clicks.
+     * @default true
+     */
+    closeOnClickOverlay?: boolean;
+}
+
 export namespace DialogRoot {
-    type DialogPrimitiveProps = Omit<
-        VComponentProps<typeof BaseDialog.Root>,
-        'disablePointerDismissal'
-    >;
-    export interface Props extends DialogPrimitiveProps, DialogSharedProps {
-        closeOnClickOverlay?: boolean;
-    }
+    export type State = {};
+    export type Props = DialogRootProps;
 
     export type Actions = BaseDialog.Root.Actions;
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
 }
 
 export namespace DialogPortalPrimitive {
-    export interface Props extends VComponentProps<typeof BaseDialog.Portal> {}
+    export type State = BaseDialog.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Portal, State>;
 }
 
 export namespace DialogOverlayPrimitive {
-    export interface Props extends VComponentProps<typeof BaseDialog.Backdrop> {}
+    export type State = BaseDialog.Backdrop.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Backdrop, State>;
 }
 
 export namespace DialogPopupPrimitive {
-    export interface Props extends VComponentProps<typeof BaseDialog.Popup> {}
+    export type State = BaseDialog.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Popup, State>;
+}
+
+export interface DialogPopupProps extends DialogPopupPrimitive.Props {
+    /**
+     * A Custom element for Dialog.PortalPrimitive. If not provided, the default Dialog.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<DialogPortalPrimitive.Props>;
+    /**
+     * A Custom element for Dialog.OverlayPrimitive. If not provided, the default Dialog.OverlayPrimitive will be rendered.
+     */
+    overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
 }
 
 export namespace DialogPopup {
-    export interface Props extends DialogPopupPrimitive.Props {
-        portalElement?: ReactElement<DialogPortalPrimitive.Props>;
-        overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
-    }
+    export type State = DialogPopupPrimitive.State;
+    export type Props = DialogPopupProps;
 }
 
 export namespace DialogTrigger {
-    export interface Props extends VComponentProps<typeof BaseDialog.Trigger> {}
+    export type State = BaseDialog.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Trigger, State>;
 }
 
 export namespace DialogClose {
-    export interface Props extends VComponentProps<typeof BaseDialog.Close> {}
+    export type State = BaseDialog.Close.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Close, State>;
 }
 
 export namespace DialogTitle {
-    export interface Props extends VComponentProps<typeof BaseDialog.Title> {}
+    export type State = BaseDialog.Title.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Title, State>;
 }
 
 export namespace DialogDescription {
-    export interface Props extends VComponentProps<typeof BaseDialog.Description> {}
+    export type State = BaseDialog.Description.State;
+    export type Props = VaporUIComponentProps<typeof BaseDialog.Description, State>;
 }
 
 export namespace DialogHeader {
-    export interface Props extends VComponentProps<'div'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace DialogBody {
-    export interface Props extends VComponentProps<'div'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace DialogFooter {
-    export interface Props extends VComponentProps<'div'> {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }

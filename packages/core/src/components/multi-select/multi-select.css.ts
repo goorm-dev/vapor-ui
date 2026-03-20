@@ -16,7 +16,7 @@ export const trigger = recipe({
             alignItems: 'center',
             justifyContent: 'space-between',
 
-            border: `1px solid ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
 
             width: '100%',
@@ -67,6 +67,10 @@ export const value = recipe({
             flexWrap: 'wrap',
             alignItems: 'center',
             gap: vars.size.space['050'],
+
+            selectors: {
+                '&[data-placeholder]': { color: vars.color.foreground.hint[100] },
+            },
         }),
     ],
 
@@ -105,6 +109,9 @@ export const value = recipe({
     },
 });
 
+/**
+ * @deprecated Use `data-placeholder` attribute on `MultiSelect.Value` instead.
+ */
 export const placeholder = recipe({
     base: [foregrounds({ color: 'hint-100' })],
 
@@ -180,7 +187,7 @@ export const popup = layerStyle('components', {
     },
 });
 
-export const item = [
+export const item = style([
     interaction({ type: 'roving' }),
     typography({ style: 'body2' }),
     layerStyle('components', {
@@ -195,7 +202,7 @@ export const item = [
         paddingInline: vars.size.space['100'],
         height: vars.size.space['400'],
     }),
-];
+]);
 
 export const separator = layerStyle('components', {
     flexShrink: 0,

@@ -40,8 +40,8 @@ export const Default: Story = {
 export const TestBed: Story = {
     render: () => {
         return (
-            <VStack gap="$200">
-                <HStack gap="$100" alignItems="center">
+            <VStack $css={{ gap: '$200' }}>
+                <HStack $css={{ gap: '$100', alignItems: 'center' }}>
                     <Checkbox.Root size="md" />
                     <Checkbox.Root size="md" checked />
                     <Checkbox.Root size="md" indeterminate />
@@ -59,7 +59,7 @@ export const TestBed: Story = {
                     <Checkbox.Root size="md" indeterminate readOnly />
                 </HStack>
 
-                <HStack gap="$100" alignItems="center">
+                <HStack $css={{ gap: '$100', alignItems: 'center' }}>
                     <Checkbox.Root size="lg" />
                     <Checkbox.Root size="lg" checked />
                     <Checkbox.Root size="lg" indeterminate />

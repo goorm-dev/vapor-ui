@@ -1,4 +1,5 @@
-import IconBase, { type IconProps } from '~/components/icon-base';
+import IconBase from '~/components/icon-base';
+import type { IconProps } from '~/components/icon-base';
 
 const MethodIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>

@@ -3,11 +3,11 @@
 import { forwardRef } from 'react';
 
 import { Collapsible as BaseCollapsible } from '@base-ui/react/collapsible';
-import clsx from 'clsx';
 
+import { cn } from '~/utils/cn';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './collapsible.css';
 
@@ -53,7 +53,7 @@ export const CollapsiblePanel = forwardRef<HTMLDivElement, CollapsiblePanel.Prop
     return (
         <BaseCollapsible.Panel
             ref={ref}
-            className={clsx(styles.panel, className)}
+            className={cn(styles.panel, className)}
             {...componentProps}
         />
     );
@@ -63,20 +63,19 @@ CollapsiblePanel.displayName = 'Collapsible.Panel';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace CollapsibleRoot {
-    type PrimitiveRootProps = VComponentProps<typeof BaseCollapsible.Root>;
-
-    export interface Props extends PrimitiveRootProps {}
+    export type State = BaseCollapsible.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseCollapsible.Root, State>;
     export type ChangeEventDetails = BaseCollapsible.Root.ChangeEventDetails;
 }
 
 export namespace CollapsibleTrigger {
-    export type PrimitiveTriggerProps = VComponentProps<typeof BaseCollapsible.Trigger>;
-
-    export interface Props extends PrimitiveTriggerProps {}
+    // FIXME: BaseCollapsible.Trigger.State appears to be missing.
+    // Substituting with Root.State as they are functionally identical.
+    export type State = BaseCollapsible.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseCollapsible.Trigger, State>;
 }
 
 export namespace CollapsiblePanel {
-    export type PrimitivePanelProps = VComponentProps<typeof BaseCollapsible.Panel>;
-
-    export interface Props extends PrimitivePanelProps {}
+    export type State = BaseCollapsible.Panel.State;
+    export type Props = VaporUIComponentProps<typeof BaseCollapsible.Panel, State>;
 }

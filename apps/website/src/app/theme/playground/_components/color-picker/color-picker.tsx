@@ -78,8 +78,8 @@ interface ColorPickerContextValue {
     updateHueValue: (e: React.MouseEvent | MouseEvent) => void;
     setIsDragging: (dragging: boolean) => void;
     setIsHueDragging: (dragging: boolean) => void;
-    saturationRef: React.RefObject<HTMLDivElement>;
-    hueRef: React.RefObject<HTMLDivElement>;
+    saturationRef: React.RefObject<HTMLDivElement | null>;
+    hueRef: React.RefObject<HTMLDivElement | null>;
     onSaturationChange?: (color: string) => void;
     onHueChange?: (color: string) => void;
     updateColorDirectly: (color: string) => void;

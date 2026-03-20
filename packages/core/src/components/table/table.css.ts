@@ -1,3 +1,5 @@
+import { style } from '@vanilla-extract/css';
+
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
@@ -18,14 +20,14 @@ const tableData = layerStyle('components', {
     textAlign: 'start',
 });
 
-export const heading = [
+export const heading = style([
     typography({ style: 'subtitle1' }),
     foregrounds({ color: 'normal-100' }),
     tableData,
-];
+]);
 
-export const cell = [
+export const cell = style([
     typography({ style: 'body2' }),
     foregrounds({ color: 'normal-200' }),
     tableData,
-];
+]);

@@ -42,7 +42,11 @@ export const Controlled: Story = {
 
 export const TestBed: Story = {
     render: (args) => (
-        <Grid.Root templateRows="repeat(3, 1fr)" templateColumns="repeat(3, 1fr)" gap="$300">
+        <Grid.Root
+            templateRows="repeat(3, 1fr)"
+            templateColumns="repeat(3, 1fr)"
+            $css={{ gap: '$300' }}
+        >
             <TextInput placeholder="default" {...args} />
 
             <TextInput placeholder="disabled" {...args} disabled />

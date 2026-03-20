@@ -4,7 +4,7 @@ import { type RefObject } from 'react';
 
 import { Text } from '@vapor-ui/core';
 import clsx from 'clsx';
-import type { TableOfContents } from 'fumadocs-core/server';
+import type { TableOfContents } from 'fumadocs-core/toc';
 import * as Base from 'fumadocs-core/toc';
 
 const TOC_CONSTANTS = {
@@ -15,7 +15,7 @@ const TOC_CONSTANTS = {
 
 interface TOCProps {
     toc?: TableOfContents;
-    containerRef: RefObject<HTMLElement>;
+    containerRef: RefObject<HTMLElement | null>;
     className?: string;
 }
 

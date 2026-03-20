@@ -4,15 +4,15 @@ import type { CSSProperties, ComponentProps, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
+import { useRenderElement } from '~/hooks/use-render-element';
 import { vars } from '~/styles/themes.css';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './popover.css';
 
@@ -51,9 +51,13 @@ PopoverClose.displayName = 'Popover.Close';
  * Popover.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const PopoverPortalPrimitive = (props: PopoverPortalPrimitive.Props) => {
-    return <BasePopover.Portal {...props} />;
-};
+export const PopoverPortalPrimitive = forwardRef<HTMLDivElement, PopoverPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <BasePopover.Portal ref={ref} {...componentProps} />;
+    },
+);
 PopoverPortalPrimitive.displayName = 'Popover.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -132,7 +136,7 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
         return (
             <BasePopover.Popup
                 ref={composedRef}
-                className={clsx(styles.popup, className)}
+                className={cn(styles.popup, className)}
                 {...componentProps}
             >
                 <BasePopover.Arrow ref={arrowRef} style={position} className={styles.arrow}>
@@ -160,13 +164,15 @@ export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <PopoverPopupPrimitive ref={ref} {...props} />;
 
-        const positioner = useRender({
-            render: createRender(positionerElement, <PopoverPositionerPrimitive />),
+        const positionerRender = createRender(positionerElement, <PopoverPositionerPrimitive />);
+        const positioner = useRenderElement({
+            render: positionerRender,
             props: { children: popup },
         });
 
-        const portal = useRender({
-            render: createRender(portalElement ?? <PopoverPortalPrimitive />),
+        const portalRender = createRender(portalElement, <PopoverPortalPrimitive />);
+        const portal = useRenderElement({
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -248,52 +254,60 @@ const ArrowIcon = (props: ComponentProps<'svg'>) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace PopoverRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BasePopover.Root>;
-    export interface Props extends RootPrimitiveProps {}
+    export type State = BasePopover.Root.State;
+    export type Props = BasePopover.Root.Props;
 
-    export type ChangeEventDetails = BasePopover.Root.ChangeEventDetails;
     export type Actions = BasePopover.Root.Actions;
+    export type ChangeEventDetails = BasePopover.Root.ChangeEventDetails;
 }
 
 export namespace PopoverTrigger {
-    export type TriggerPrimitiveProps = VComponentProps<typeof BasePopover.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = BasePopover.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BasePopover.Trigger, State>;
 }
 
 export namespace PopoverClose {
-    type ClosePrimitiveProps = VComponentProps<typeof BasePopover.Close>;
-    export type Props = ClosePrimitiveProps;
+    export type State = BasePopover.Close.State;
+    export type Props = VaporUIComponentProps<typeof BasePopover.Close, State>;
 }
 
 export namespace PopoverPortalPrimitive {
-    export type PrimitivePortalProps = VComponentProps<typeof BasePopover.Portal>;
-    export interface Props extends PrimitivePortalProps {}
+    export type State = BasePopover.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BasePopover.Portal, State>;
 }
 
 export namespace PopoverPositionerPrimitive {
-    export type PrimitivePositionerProps = VComponentProps<typeof BasePopover.Positioner>;
-    export interface Props extends PrimitivePositionerProps {}
+    export type State = BasePopover.Positioner.State;
+    export type Props = VaporUIComponentProps<typeof BasePopover.Positioner, State>;
 }
 
 export namespace PopoverPopupPrimitive {
-    export type PrimitivePopupProps = VComponentProps<typeof BasePopover.Popup>;
-    export interface Props extends PrimitivePopupProps {}
+    export type State = BasePopover.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BasePopover.Popup, State>;
+}
+
+export interface PopoverPopupProps extends PopoverPopupPrimitive.Props {
+    /**
+     * A Custom element for Popover.PortalPrimitive. If not provided, the default Popover.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<PopoverPortalPrimitive.Props>;
+    /**
+     * A Custom element for Popover.PositionerPrimitive. If not provided, the default Popover.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<PopoverPositionerPrimitive.Props>;
 }
 
 export namespace PopoverPopup {
-    export type PrimitivePopupProps = VComponentProps<typeof PopoverPopupPrimitive>;
-    export interface Props extends PrimitivePopupProps {
-        portalElement?: ReactElement<PopoverPortalPrimitive.Props>;
-        positionerElement?: ReactElement<PopoverPositionerPrimitive.Props>;
-    }
+    export type State = PopoverPopupPrimitive.State;
+    export type Props = PopoverPopupProps;
 }
 
 export namespace PopoverTitle {
-    export type PrimitiveTitleProps = VComponentProps<typeof BasePopover.Title>;
-    export interface Props extends PrimitiveTitleProps {}
+    export type State = BasePopover.Title.State;
+    export type Props = VaporUIComponentProps<typeof BasePopover.Title, State>;
 }
 
 export namespace PopoverDescription {
-    export type PrimitiveDescriptionProps = VComponentProps<typeof BasePopover.Description>;
-    export interface Props extends PrimitiveDescriptionProps {}
+    export type State = BasePopover.Description.State;
+    export type Props = VaporUIComponentProps<typeof BasePopover.Description, State>;
 }

@@ -14,7 +14,7 @@ const renderValue = (value: string) => {
 
 export default function SelectCustomValue() {
     return (
-        <VStack gap="$050" width="400px">
+        <VStack $css={{ gap: '$050', width: '400px' }}>
             <Text typography="body3" foreground="hint-100">
                 커스텀 값 표시
             </Text>

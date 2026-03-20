@@ -8,26 +8,26 @@ const options = [
 
 export default function MultiSelectSize() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     sm
                 </Text>
                 <MultiSelectTemplate placeholder="Small" size="sm" />
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     md
                 </Text>
                 <MultiSelectTemplate placeholder="Medium" size="md" />
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     lg
                 </Text>
                 <MultiSelectTemplate placeholder="Large" size="lg" />
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     xl
                 </Text>

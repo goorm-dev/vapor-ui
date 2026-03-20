@@ -1,7 +1,8 @@
 // @ts-check
+import globals from 'globals';
+
 import * as eslintJs from './javascript.js';
 import * as typescript from './typescript.js';
-import globals from 'globals';
 
 export const js = eslintJs.getConfig({ ...globals.node, ...globals.browser });
 export const ts = typescript.config;

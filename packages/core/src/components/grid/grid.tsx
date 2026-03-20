@@ -4,11 +4,11 @@ import type { CSSProperties } from 'react';
 import { forwardRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-import clsx from 'clsx';
 
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Box } from '../box';
 import type { RootVariants } from './grid.css';
@@ -44,9 +44,9 @@ export const GridRoot = forwardRef<HTMLDivElement, GridRoot.Props>((props, ref) 
     return (
         <Box
             ref={ref}
-            display={inline ? 'inline-grid' : 'grid'}
+            $css={{ display: inline ? 'inline-grid' : 'grid' }}
             style={{ ...cssVariables, ...style }}
-            className={clsx(styles.root(variants), className)}
+            className={cn(styles.root(variants), className)}
             {...otherProps}
         />
     );
@@ -69,7 +69,7 @@ export const GridItem = forwardRef<HTMLDivElement, GridItem.Props>((props, ref) 
         <Box
             ref={ref}
             style={{ ...cssVariables, ...style }}
-            className={clsx(styles.item, className)}
+            className={cn(styles.item, className)}
             {...componentProps}
         />
     );
@@ -79,14 +79,13 @@ GridItem.displayName = 'Grid.Item';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace GridRoot {
-    type GridPrimitiveProps = VComponentProps<typeof Box>;
-
-    export interface Props extends GridPrimitiveProps, GridVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<typeof Box, State> & GridVariants;
 }
 
 export namespace GridItem {
-    type GridItemPrimitiveProps = VComponentProps<typeof Box>;
     type GridItemVariants = { rowSpan?: string; colSpan?: string };
 
-    export interface Props extends GridItemPrimitiveProps, GridItemVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<typeof Box, State> & GridItemVariants;
 }

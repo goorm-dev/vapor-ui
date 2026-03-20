@@ -161,7 +161,7 @@ const renderTextElements = (typographies: readonly string[], title: string) => (
 
 const Page = () => {
     return (
-        <div className="px-8 py-16 min-h-screen bg-v-canvas-100">
+        <div className="flex flex-col py-12 px-4 md:px-6 mx-auto max-w-(--fd-layout-width) bg-v-canvas-100 w-full">
             <div className="w-max flex flex-col gap-12 [&>header]:flex [&>header]:flex-col [&>header]:gap-4 [&>section]:flex [&>section]:flex-col [&>section]:gap-v-800">
                 <header>
                     <Text typography="heading1">Theme Playground</Text>
