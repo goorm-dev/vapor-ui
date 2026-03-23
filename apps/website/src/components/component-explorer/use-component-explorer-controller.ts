@@ -6,8 +6,8 @@ import { useTheme } from '@vapor-ui/core';
 
 import { type AnatomyPanelProps } from './anatomy-panel';
 import { useExplorerCommunication } from './use-explorer-communication';
-import { usePreviewIframe } from './use-preview-iframe';
 import { usePartSelection } from './use-part-selection';
+import { usePreviewIframe } from './use-preview-iframe';
 
 interface UseComponentExplorerControllerOptions {
     name: string;

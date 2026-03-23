@@ -35,10 +35,7 @@ export function usePreviewIframe({
         [name, reloadNonce, theme],
     );
 
-    const iframeTitle = useMemo(
-        () => `Component Explorer - ${componentName}`,
-        [componentName],
-    );
+    const iframeTitle = useMemo(() => `Component Explorer - ${componentName}`, [componentName]);
 
     useEffect(() => {
         setIframeLoaded(false);
