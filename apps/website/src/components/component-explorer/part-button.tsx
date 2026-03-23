@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import { RadioCard, Text } from '@vapor-ui/core';
 import clsx from 'clsx';
@@ -12,12 +12,7 @@ interface PartButtonProps {
     onMouseLeave: () => void;
 }
 
-export const PartButton = memo(function PartButton({
-    partName,
-    displayName,
-    onMouseEnter,
-    onMouseLeave,
-}: PartButtonProps) {
+export function PartButton({ partName, displayName, onMouseEnter, onMouseLeave }: PartButtonProps) {
     const handleMouseEnter = useCallback(() => {
         onMouseEnter(partName);
     }, [onMouseEnter, partName]);
@@ -79,4 +74,4 @@ export const PartButton = memo(function PartButton({
             }}
         />
     );
-});
+}

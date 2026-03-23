@@ -1,6 +1,6 @@
 'use client';
 
-import { type KeyboardEvent, useCallback, useId, useMemo } from 'react';
+import { type KeyboardEvent, memo, useCallback, useId, useMemo } from 'react';
 
 import { RadioGroup, Text } from '@vapor-ui/core';
 
@@ -20,7 +20,7 @@ function isPrimitivePart(partName: string) {
     return partName.endsWith('Primitive');
 }
 
-export function AnatomyPanel({
+export const AnatomyPanel = memo(function AnatomyPanel({
     componentName,
     parts,
     selectedPart,
@@ -123,4 +123,4 @@ export function AnatomyPanel({
             </div>
         </RadioGroup.Root>
     );
-}
+});
