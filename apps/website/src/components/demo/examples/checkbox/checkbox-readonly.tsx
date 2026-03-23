@@ -2,20 +2,20 @@ import { Checkbox, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function CheckboxReadOnly() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-32" typography="body3" foreground="hint-100">
                     unchecked
                 </Text>
                 <Checkbox.Root readOnly />
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-32" typography="body3" foreground="hint-100">
                     checked
                 </Text>
                 <Checkbox.Root readOnly defaultChecked />
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-32" typography="body3" foreground="hint-100">
                     indeterminate
                 </Text>

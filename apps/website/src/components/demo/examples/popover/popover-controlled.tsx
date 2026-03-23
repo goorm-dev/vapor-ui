@@ -8,8 +8,8 @@ export default function PopoverControlled() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <VStack gap="$150" alignItems="flex-start">
-            <HStack gap="$100">
+        <VStack $css={{ gap: '$150', alignItems: 'flex-start' }}>
+            <HStack $css={{ gap: '$100' }}>
                 <Button variant="outline" onClick={() => setIsOpen(true)}>
                     팝오버 열기
                 </Button>
@@ -30,7 +30,7 @@ export default function PopoverControlled() {
                         이 팝오버는 외부 상태에 의해 제어됩니다. 위의 버튼으로 열고 닫을 수
                         있습니다.
                     </Popover.Description>
-                    <HStack gap="$100" marginTop="$100">
+                    <HStack $css={{ gap: '$100', marginTop: '$100' }}>
                         <Popover.Close
                             render={<Button size="sm" onClick={() => setIsOpen(false)} />}
                         >

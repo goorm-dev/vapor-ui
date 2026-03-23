@@ -1,84 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-
 import clsx from 'clsx';
-import { throttle } from 'lodash-es';
 
-import { useHighlightReceiver } from './use-highlight-receiver';
-
-interface OverlayRect {
-    top: number;
-    left: number;
-    width: number;
-    height: number;
-}
+import { useHighlightTracking } from './use-highlight-tracking';
 
 const PADDING = 4; // space-100 = 4px
+const LABEL_HEIGHT = 28; // -top-7 = 7 * 4px
 
 export function HighlightOverlay() {
-    const { highlightedPart } = useHighlightReceiver();
-    const [overlayRect, setOverlayRect] = useState<OverlayRect | null>(null);
-    const [isVisible, setIsVisible] = useState(false);
-    const [displayedPart, setDisplayedPart] = useState<string | null>(null);
-    const lastRectRef = useRef<OverlayRect>({ top: 0, left: 0, width: 0, height: 0 });
-
-    const findAndHighlight = useCallback(() => {
-        if (!highlightedPart) {
-            setIsVisible(false);
-            return;
-        }
-
-        const selector = `[data-part="${highlightedPart}"]`;
-        const element = document.querySelector(selector);
-
-        // Dialog가 열려있을 때 Trigger 하이라이트 비활성화
-        if (highlightedPart === 'Trigger') {
-            const dialogPopup = document.querySelector(
-                '[data-part="PopupPrimitive"], [data-part="Popup"]',
-            );
-            if (dialogPopup) {
-                setIsVisible(false);
-                return;
-            }
-        }
-
-        if (element) {
-            const rect = element.getBoundingClientRect();
-            const newRect = {
-                top: rect.top,
-                left: rect.left,
-                width: rect.width,
-                height: rect.height,
-            };
-            lastRectRef.current = newRect;
-            setOverlayRect(newRect);
-            setDisplayedPart(highlightedPart);
-            setIsVisible(true);
-        } else {
-            setIsVisible(false);
-        }
-    }, [highlightedPart]);
-
-    useEffect(() => {
-        findAndHighlight();
-
-        if (!highlightedPart) return;
-
-        const throttleFindAndHighlight = throttle(findAndHighlight, 100);
-
-        // Re-calculate position on scroll/resize
-        window.addEventListener('scroll', throttleFindAndHighlight, true);
-        window.addEventListener('resize', throttleFindAndHighlight);
-
-        return () => {
-            window.removeEventListener('scroll', throttleFindAndHighlight, true);
-            window.removeEventListener('resize', throttleFindAndHighlight);
-        };
-    }, [highlightedPart, findAndHighlight]);
+    const { overlayRect, isVisible, displayedPart, lastRect } = useHighlightTracking();
 
     // Use last known rect when hiding to maintain position during fade out
-    const currentRect = overlayRect || lastRectRef.current;
+    const currentRect = overlayRect || lastRect;
+    const isLabelOverflowing = currentRect.top - PADDING < LABEL_HEIGHT;
 
     return (
         <div
@@ -103,7 +37,8 @@ export function HighlightOverlay() {
         >
             <span
                 className={clsx(
-                    'absolute -top-7 left-0',
+                    'absolute',
+                    isLabelOverflowing ? 'top-1 left-1' : '-top-7 left-0',
                     'px-2.5 py-1 text-[11px] font-semibold tracking-[0.01em]',
                     'font-mono text-v-white',
                     'bg-v-blue-500/95 rounded-md backdrop-blur-sm',

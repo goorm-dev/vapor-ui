@@ -1,22 +1,18 @@
 'use client';
 
-import { type ReactElement, forwardRef } from 'react';
+import type { ReactElement } from 'react';
+import { forwardRef } from 'react';
 
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
-import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './tabs.css';
 import type { ButtonVariants, ListVariants } from './tabs.css';
-
-type TabsVariants = ListVariants & ButtonVariants;
-type TabsSharedProps = Pick<BaseTabs.List.Props, 'activateOnFocus' | 'loopFocus'> &
-    Pick<BaseTabs.Tab.Props, 'disabled'>;
-type TabsContext = TabsVariants & TabsSharedProps;
 
 const [TabsProvider, useTabsContext] = createContext<TabsContext>({
     name: 'TabsContext',
@@ -46,7 +42,7 @@ export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) 
             <BaseTabs.Root
                 ref={ref}
                 orientation={orientation}
-                className={clsx(styles.root({ orientation }), className)}
+                className={cn(styles.root({ orientation }), className)}
                 {...otherProps}
             />
         </TabsProvider>
@@ -68,7 +64,7 @@ export const TabsListPrimitive = forwardRef<HTMLDivElement, TabsListPrimitive.Pr
                 ref={ref}
                 loopFocus={loopFocus}
                 activateOnFocus={activateOnFocus}
-                className={clsx(styles.list({ variant, orientation }), className)}
+                className={cn(styles.list({ variant, orientation }), className)}
                 {...componentProps}
             />
         );
@@ -80,7 +76,7 @@ TabsListPrimitive.displayName = 'Tabs.ListPrimitive';
  * Tabs.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsIndicatorPrimitive = forwardRef<HTMLDivElement, TabsIndicatorPrimitive.Props>(
+export const TabsIndicatorPrimitive = forwardRef<HTMLSpanElement, TabsIndicatorPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
         const { orientation, variant } = useTabsContext();
@@ -88,7 +84,7 @@ export const TabsIndicatorPrimitive = forwardRef<HTMLDivElement, TabsIndicatorPr
         return (
             <BaseTabs.Indicator
                 ref={ref}
-                className={clsx(styles.indicator({ orientation, variant }), className)}
+                className={cn(styles.indicator({ orientation, variant }), className)}
                 {...componentProps}
             />
         );
@@ -116,7 +112,7 @@ TabsList.displayName = 'Tabs.List';
  * Tabs.Button
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsButton = forwardRef<HTMLButtonElement, TabsButton.Props>((props, ref) => {
+export const TabsButton = forwardRef<HTMLElement, TabsButton.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: rootDisabled, size, orientation, variant } = useTabsContext();
 
@@ -126,7 +122,7 @@ export const TabsButton = forwardRef<HTMLButtonElement, TabsButton.Props>((props
         <BaseTabs.Tab
             ref={ref}
             disabled={disabled}
-            className={clsx(styles.button({ size, variant, orientation }), className)}
+            className={cn(styles.button({ size, variant, orientation }), className)}
             {...componentProps}
         />
     );
@@ -146,34 +142,49 @@ TabsPanel.displayName = 'Tabs.Panel';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export namespace TabsRoot {
-    type BaseProps = VComponentProps<typeof BaseTabs.Root>;
+type TabsVariants = ListVariants & ButtonVariants;
+type CommonTabsListProps = Pick<BaseTabs.List.Props, 'activateOnFocus' | 'loopFocus'>;
+type CommonTabsTabProps = Pick<BaseTabs.Tab.Props, 'disabled'>;
+type TabsContext = TabsVariants & CommonTabsListProps & CommonTabsTabProps;
 
-    export interface Props extends BaseProps, TabsVariants, TabsSharedProps {}
+export namespace TabsRoot {
+    export type State = BaseTabs.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseTabs.Root, State> & TabsContext;
+
     export type ChangeEventDetails = BaseTabs.Root.ChangeEventDetails;
 }
 
 export namespace TabsListPrimitive {
-    type BaseProps = VComponentProps<typeof BaseTabs.List>;
-
-    export interface Props
-        extends Assign<BaseProps, Omit<TabsContext, 'loopFocus' | 'activateOnFocus'>> {}
+    export type State = BaseTabs.List.State;
+    export type Props = Omit<
+        VaporUIComponentProps<typeof BaseTabs.List, State>,
+        keyof CommonTabsListProps
+    >;
 }
 
 export namespace TabsIndicatorPrimitive {
-    export interface Props extends VComponentProps<typeof BaseTabs.Indicator> {}
+    export type State = BaseTabs.Indicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseTabs.Indicator, State>;
+}
+
+export interface TabsListProps extends TabsListPrimitive.Props {
+    /**
+     * A Custom element for Tabs.IndicatorPrimitive. If not provided, the default Tabs.IndicatorPrimitive will be rendered.
+     */
+    indicatorElement?: ReactElement<TabsIndicatorPrimitive.Props>;
 }
 
 export namespace TabsList {
-    export interface Props extends TabsListPrimitive.Props {
-        indicatorElement?: ReactElement<typeof TabsIndicatorPrimitive>;
-    }
+    export type State = TabsListPrimitive.State;
+    export type Props = TabsListProps;
 }
 
 export namespace TabsButton {
-    export interface Props extends VComponentProps<typeof BaseTabs.Tab> {}
+    export type State = BaseTabs.Tab.State;
+    export type Props = VaporUIComponentProps<typeof BaseTabs.Tab, State>;
 }
 
 export namespace TabsPanel {
-    export interface Props extends VComponentProps<typeof BaseTabs.Panel> {}
+    export type State = BaseTabs.Panel.State;
+    export type Props = VaporUIComponentProps<typeof BaseTabs.Panel, State>;
 }

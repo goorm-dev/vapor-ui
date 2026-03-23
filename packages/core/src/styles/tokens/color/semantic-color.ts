@@ -124,7 +124,7 @@ export const DARK_SEMANTIC_COLORS = {
             '200': colorRef('red', '500'),
         },
         hint: {
-            '100': colorRef('gray', '100'),
+            '100': colorRef('gray', '200'),
             '200': colorRef('gray', '600'),
         },
         contrast: {

@@ -49,18 +49,20 @@ export default function FloatingBarControlled() {
 
     return (
         <>
-            <Text render={<div />} marginBottom="$200">
+            <Text render={<div />} $css={{ marginBottom: '$200' }}>
                 Select options below to see the FloatingBar.
             </Text>
 
-            <VStack justifyContent="center">
+            <VStack $css={{ justifyContent: 'center' }}>
                 {options.map((option) => (
                     <Field.Root
                         key={option.id}
-                        display="flex"
-                        flexDirection="row"
-                        alignItems="center"
-                        gap="$100"
+                        $css={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: '$100',
+                        }}
                     >
                         <Checkbox.Root
                             checked={selectedItems[option.id]}
@@ -75,7 +77,13 @@ export default function FloatingBarControlled() {
                 <FloatingBar.Popup>
                     <Badge colorPalette="primary">{selectedCount} Selected</Badge>
 
-                    <Box width="1px" backgroundColor="$gray-300" style={{ alignSelf: 'stretch' }} />
+                    <Box
+                        $css={{
+                            width: '1px',
+                            backgroundColor: '$basic-gray-300',
+                            alignSelf: 'stretch',
+                        }}
+                    />
 
                     <Button colorPalette="primary" onClick={handleSelectAll}>
                         Select All

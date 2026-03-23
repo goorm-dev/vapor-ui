@@ -4,19 +4,19 @@ import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'reac
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
-import { useRender } from '@base-ui/react/use-render';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
-import { useMutationObserver } from '~/hooks/use-mutation-observer';
+import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { LinkVariants, ListVariants } from './navigation-menu.css';
 import * as styles from './navigation-menu.css';
@@ -39,7 +39,7 @@ const [NavigationMenuProvider, useNavigationMenuContext] = createContext<Navigat
 
 export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Props>(
     (props, ref) => {
-        const { 'aria-label': ariaLabel, className, ...componentProps } = resolveStyles(props);
+        const { className, ...componentProps } = resolveStyles(props);
         const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(
             componentProps,
             ['direction', 'size', 'disabled'],
@@ -51,7 +51,6 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
             <NavigationMenuProvider value={variantProps}>
                 <BaseNavigationMenu.Root
                     ref={ref}
-                    aria-label={ariaLabel}
                     orientation={direction}
                     className={className}
                     {...otherProps}
@@ -66,7 +65,7 @@ NavigationMenuRoot.displayName = 'NavigationMenu.Root';
  * NavigationMenu.List
  * -----------------------------------------------------------------------------------------------*/
 
-export const NavigationMenuList = forwardRef<HTMLDivElement, NavigationMenuList.Props>(
+export const NavigationMenuList = forwardRef<HTMLUListElement, NavigationMenuList.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
         const { direction } = useNavigationMenuContext();
@@ -75,7 +74,7 @@ export const NavigationMenuList = forwardRef<HTMLDivElement, NavigationMenuList.
             <BaseNavigationMenu.List
                 ref={ref}
                 aria-orientation={undefined}
-                className={clsx(styles.list({ direction }), className)}
+                className={cn(styles.list({ direction }), className)}
                 {...componentProps}
             />
         );
@@ -87,7 +86,7 @@ NavigationMenuList.displayName = 'NavigationMenu.List';
  * NavigationMenu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.Props>(
+export const NavigationMenuItem = forwardRef<HTMLLIElement, NavigationMenuItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
 
@@ -106,7 +105,7 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             current,
             href,
             disabled: disabledProp,
-            className,
+            className: classNameProp,
             ...componentProps
         } = resolveStyles(props);
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
@@ -117,6 +116,13 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             current,
         });
 
+        // NOTE: Preprocessing `classNameProp` below to account for the custom NavigationMenuLink State type.
+        const className =
+            typeof classNameProp === 'function'
+                ? (state: BaseNavigationMenu.Link.State) =>
+                      classNameProp({ ...state, current: state.active, disabled: !!disabled })
+                : classNameProp;
+
         return (
             <BaseNavigationMenu.Link
                 ref={ref}
@@ -124,7 +130,7 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
                 aria-current={current ? 'page' : undefined}
                 aria-disabled={disabled ? 'true' : undefined}
                 active={current}
-                className={clsx(styles.link({ size }), className)}
+                className={cn(styles.link({ size }), className)}
                 {...dataAttrs}
                 {...componentProps}
             />
@@ -151,7 +157,7 @@ export const NavigationMenuTriggerPrimitive = forwardRef<
         <BaseNavigationMenu.Trigger
             ref={ref}
             disabled={disabled}
-            className={clsx(styles.link({ size }), styles.trigger, className)}
+            className={cn(styles.link({ size }), styles.trigger, className)}
             {...dataAttrs}
             {...componentProps}
         />
@@ -164,19 +170,20 @@ NavigationMenuTriggerPrimitive.displayName = 'NavigationMenu.TriggerPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
-    HTMLDivElement,
+    HTMLSpanElement,
     NavigationMenuTriggerIndicatorPrimitive.Props
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-    const children = useRender({
-        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+    const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
+    const children = useRenderElement({
+        render: childrenRender,
     });
 
     return (
         <BaseNavigationMenu.Icon
             ref={ref}
-            className={clsx(styles.icon, className)}
+            className={cn(styles.icon, className)}
             {...componentProps}
         >
             {children}
@@ -215,7 +222,7 @@ export const NavigationMenuContent = forwardRef<HTMLDivElement, NavigationMenuCo
         return (
             <BaseNavigationMenu.Content
                 ref={ref}
-                className={clsx(styles.content, className)}
+                className={cn(styles.content, className)}
                 {...componentProps}
             />
         );
@@ -227,9 +234,14 @@ NavigationMenuContent.displayName = 'NavigationMenu.Content';
  * NavigationMenu.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const NavigationMenuPortalPrimitive = (props: NavigationMenuPortalPrimitive.Props) => {
-    return <BaseNavigationMenu.Portal {...props} />;
-};
+export const NavigationMenuPortalPrimitive = forwardRef<
+    HTMLDivElement,
+    NavigationMenuPortalPrimitive.Props
+>((props, ref) => {
+    const componentProps = resolveStyles(props);
+
+    return <BaseNavigationMenu.Portal ref={ref} {...componentProps} />;
+});
 NavigationMenuPortalPrimitive.displayName = 'NavigationMenu.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -256,7 +268,7 @@ export const NavigationMenuPositionerPrimitive = forwardRef<
             align={align}
             sideOffset={sideOffset}
             collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
-            className={clsx(styles.positioner, className)}
+            className={cn(styles.positioner, className)}
             {...componentProps}
         />
     );
@@ -293,7 +305,7 @@ export const NavigationMenuPopupPrimitive = forwardRef<
         if (initialAlign) setAlign(initialAlign);
     }, []);
 
-    const arrowRef = useMutationObserver<HTMLDivElement>({
+    const arrowRef = useMutationObserverRef<HTMLDivElement>({
         callback: (mutations) => {
             mutations.forEach((mutation) => {
                 const { attributeName, target: mutationTarget } = mutation;
@@ -311,7 +323,7 @@ export const NavigationMenuPopupPrimitive = forwardRef<
     return (
         <BaseNavigationMenu.Popup
             ref={composedRef}
-            className={clsx(styles.popup, className)}
+            className={cn(styles.popup, className)}
             {...componentProps}
         >
             <BaseNavigationMenu.Arrow ref={arrowRef} style={position} className={styles.arrow}>
@@ -394,7 +406,7 @@ export const NavigationMenuViewportPrimitive = forwardRef<
     return (
         <BaseNavigationMenu.Viewport
             ref={ref}
-            className={clsx(styles.viewport, className)}
+            className={cn(styles.viewport, className)}
             {...componentProps}
         />
     );
@@ -409,18 +421,24 @@ export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuV
     ({ portalElement, positionerElement, popupElement, ...props }, ref) => {
         const viewport = <NavigationMenuViewportPrimitive ref={ref} {...props} />;
 
-        const popup = useRender({
-            render: createRender(popupElement, <NavigationMenuPopupPrimitive />),
+        const popupRender = createRender(popupElement, <NavigationMenuPopupPrimitive />);
+        const popup = useRenderElement({
+            render: popupRender,
             props: { children: viewport },
         });
 
-        const positioner = useRender({
-            render: createRender(positionerElement, <NavigationMenuPositionerPrimitive />),
+        const positionerRender = createRender(
+            positionerElement,
+            <NavigationMenuPositionerPrimitive />,
+        );
+        const positioner = useRenderElement({
+            render: positionerRender,
             props: { children: popup },
         });
 
-        const portal = useRender({
-            render: createRender(portalElement, <NavigationMenuPortalPrimitive />),
+        const portalRender = createRender(portalElement, <NavigationMenuPortalPrimitive />);
+        const portal = useRenderElement({
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -432,73 +450,112 @@ NavigationMenuViewport.displayName = 'NavigationMenu.Viewport';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace NavigationMenuRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
-    export interface Props extends RootPrimitiveProps, NavigationMenuSharedProps {}
+    export type State = BaseNavigationMenu.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Root, State> &
+        NavigationMenuSharedProps;
 
     export type Actions = BaseNavigationMenu.Root.Actions;
     export type ChangeEventDetails = BaseNavigationMenu.Root.ChangeEventDetails;
 }
 
 export namespace NavigationMenuList {
-    export interface Props extends VComponentProps<typeof BaseNavigationMenu.List> {}
+    export type State = BaseNavigationMenu.List.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.List, State>;
 }
 
 export namespace NavigationMenuItem {
-    export interface Props extends VComponentProps<typeof BaseNavigationMenu.Item> {}
+    export type State = BaseNavigationMenu.Item.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Item, State>;
+}
+
+export interface NavigationMenuLinkState extends Omit<BaseNavigationMenu.Link.State, 'active'> {
+    /**
+     * Whether the link is the currently active page.
+     */
+    current: boolean;
+    /**
+     * Whether the component should ignore user interaction.
+     */
+    disabled: boolean;
+}
+
+export interface NavigationMenuLinkProps extends Omit<
+    VaporUIComponentProps<typeof BaseNavigationMenu.Link, NavigationMenuLink.State>,
+    'active'
+> {
+    /**
+     * Whether the link is the currently active page.
+     * @default false
+     */
+    current?: boolean;
+    /**
+     * Whether the component should ignore user interaction.
+     * @default false
+     */
+    disabled?: boolean;
 }
 
 export namespace NavigationMenuLink {
-    type LinkPrimitiveProps = Omit<VComponentProps<typeof BaseNavigationMenu.Link>, 'active'>;
-    export interface Props extends LinkPrimitiveProps {
-        current?: boolean;
-        disabled?: boolean;
-    }
+    export type State = NavigationMenuLinkState;
+    export type Props = NavigationMenuLinkProps;
 }
 
 export namespace NavigationMenuTriggerPrimitive {
-    type TriggerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = BaseNavigationMenu.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Trigger, State>;
 }
 
 export namespace NavigationMenuTrigger {
-    export interface Props extends NavigationMenuTriggerPrimitive.Props {}
+    export type State = NavigationMenuTriggerPrimitive.State;
+    export type Props = NavigationMenuTriggerPrimitive.Props;
 }
 
 export namespace NavigationMenuTriggerIndicatorPrimitive {
-    type TriggerIndicatorPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Icon>;
-    export interface Props extends TriggerIndicatorPrimitiveProps {}
+    export type State = BaseNavigationMenu.Icon.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Icon, State>;
 }
 
 export namespace NavigationMenuContent {
-    type PanelPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Content>;
-    export interface Props extends PanelPrimitiveProps {}
+    export type State = BaseNavigationMenu.Content.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Content, State>;
 }
 
 export namespace NavigationMenuPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Portal>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = BaseNavigationMenu.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Portal, State>;
 }
 
 export namespace NavigationMenuPositionerPrimitive {
-    type PositionerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Positioner>;
-    export interface Props extends PositionerPrimitiveProps {}
+    export type State = BaseNavigationMenu.Positioner.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Positioner, State>;
 }
 
 export namespace NavigationMenuPopupPrimitive {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Popup>;
-    export interface Props extends PopupPrimitiveProps {}
+    export type State = BaseNavigationMenu.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Popup, State>;
 }
 
 export namespace NavigationMenuViewportPrimitive {
-    type ViewportPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Viewport>;
-    export interface Props extends ViewportPrimitiveProps {}
+    export type State = BaseNavigationMenu.Viewport.State;
+    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Viewport, State>;
+}
+
+export interface NavigationMenuViewportProps extends NavigationMenuViewportPrimitive.Props {
+    /**
+     * A Custom element for NavigationMenu.PortalPrimitive. If not provided, the default NavigationMenu.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<NavigationMenuPortalPrimitive.Props>;
+    /**
+     * A Custom element for NavigationMenu.PositionerPrimitive. If not provided, the default NavigationMenu.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<NavigationMenuPositionerPrimitive.Props>;
+    /**
+     * A Custom element for NavigationMenu.PopupPrimitive. If not provided, the default NavigationMenu.PopupPrimitive will be rendered.
+     */
+    popupElement?: ReactElement<NavigationMenuPopupPrimitive.Props>;
 }
 
 export namespace NavigationMenuViewport {
-    type ContentPrimitiveProps = VComponentProps<typeof NavigationMenuViewportPrimitive>;
-    export interface Props extends ContentPrimitiveProps {
-        portalElement?: ReactElement<NavigationMenuPortalPrimitive.Props>;
-        positionerElement?: ReactElement<NavigationMenuPositionerPrimitive.Props>;
-        popupElement?: ReactElement<NavigationMenuPopupPrimitive.Props>;
-    }
+    export type State = NavigationMenuViewportPrimitive.State;
+    export type Props = NavigationMenuViewportProps;
 }

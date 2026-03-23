@@ -5,17 +5,21 @@ import { Button, Checkbox, Field, Form, HStack, Text, TextInput, VStack } from '
 export default function LoginForm() {
     return (
         <VStack
-            gap="$250"
-            width="100%"
-            padding="$300"
-            borderRadius="$300"
-            border="1px solid var(--vapor-color-border-normal)"
             className="login"
             render={<Form onSubmit={(event) => event.preventDefault()} />}
+            $css={{
+                gap: '$250',
+                width: '100%',
+                padding: '$300',
+                borderRadius: '$300',
+                border: '1px solid var(--vapor-color-border-normal)',
+            }}
         >
-            <VStack gap="$200">
+            <VStack $css={{ gap: '$200' }}>
                 <Field.Root>
-                    <Field.Label flexDirection="column" justifyContent="space-between">
+                    <Field.Label
+                        $css={{ flexDirection: 'column', justifyContent: 'space-between' }}
+                    >
                         <Text typography="subtitle2" foreground="normal-200">
                             이메일
                         </Text>
@@ -26,7 +30,9 @@ export default function LoginForm() {
                 </Field.Root>
 
                 <Field.Root>
-                    <Field.Label flexDirection="column" justifyContent="space-between">
+                    <Field.Label
+                        $css={{ flexDirection: 'column', justifyContent: 'space-between' }}
+                    >
                         <Text typography="subtitle2" foreground="normal-200">
                             비밀번호
                         </Text>
@@ -45,8 +51,8 @@ export default function LoginForm() {
                     </Field.Error>
                 </Field.Root>
             </VStack>
-            <VStack gap="$100">
-                <HStack justifyContent="space-between">
+            <VStack $css={{ gap: '$100' }}>
+                <HStack $css={{ justifyContent: 'space-between' }}>
                     <Field.Root>
                         <Field.Item>
                             <Checkbox.Root id="login-auto-login" />

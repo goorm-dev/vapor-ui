@@ -65,16 +65,14 @@ export const Controlled: Story = {
         };
 
         return (
-            <VStack width="100%" gap="$100">
+            <VStack $css={{ width: '100%', gap: '$100' }}>
                 (Select tasks to see the FloatingBar in action)
                 <Text typography="heading5">Tasks</Text>
-                <VStack gap="$050">
+                <VStack $css={{ gap: '$050' }}>
                     {tasks.map((task) => (
                         <Field.Root
                             key={task.id}
-                            gap="$100"
-                            flexDirection="row"
-                            alignItems="center"
+                            $css={{ gap: '$100', flexDirection: 'row', alignItems: 'center' }}
                         >
                             <Checkbox.Root
                                 checked={task.checked}
@@ -89,14 +87,16 @@ export const Controlled: Story = {
                 <FloatingBar.Root open={tasks.some((task) => task.checked)}>
                     <FloatingBar.Popup>
                         <HStack
-                            border="1px dashed"
-                            borderColor="$normal"
-                            paddingY="$050"
-                            paddingLeft="$150"
-                            paddingRight="$100"
-                            borderRadius="$200"
-                            alignItems="center"
-                            gap="$050"
+                            $css={{
+                                border: '1px dashed',
+                                borderColor: '$normal',
+                                paddingBlock: '$050',
+                                paddingLeft: '$150',
+                                paddingRight: '$100',
+                                borderRadius: '$200',
+                                alignItems: 'center',
+                                gap: '$050',
+                            }}
                         >
                             <Text style={{ whiteSpace: 'nowrap' }}>
                                 {tasks.filter((task) => task.checked).length} selected
@@ -117,7 +117,7 @@ export const Controlled: Story = {
                             </FloatingBar.Close>
                         </HStack>
 
-                        <HStack gap="$150">
+                        <HStack $css={{ gap: '$150' }}>
                             <FloatingBar.Close
                                 render={<Button colorPalette="secondary" variant="outline" />}
                                 onClick={onDuplicate}
@@ -170,17 +170,14 @@ export const TestBed: Story = {
 
         return (
             <>
-                <Text render={<div />} marginBottom="$200">
+                <Text render={<div />} $css={{ marginBottom: '$200' }}>
                     Select options using the checkboxes below to see the FloatingBar in action.
                 </Text>
 
                 {options.map((option) => (
                     <Field.Root
                         key={option.id}
-                        display="flex"
-                        flexDirection="row"
-                        alignItems="center"
-                        gap="$100"
+                        $css={{ gap: '$100', flexDirection: 'row', alignItems: 'center' }}
                     >
                         <Checkbox.Root
                             checked={selectedItems[option.id]}
@@ -196,9 +193,11 @@ export const TestBed: Story = {
                         <Badge colorPalette="primary">{selectedCount} Selected</Badge>
 
                         <Box
-                            width="1px"
-                            backgroundColor="$gray-300"
-                            style={{ alignSelf: 'stretch' }}
+                            $css={{
+                                width: '1px',
+                                backgroundColor: '$basic-gray-300',
+                                alignSelf: 'stretch',
+                            }}
                         />
 
                         <Button colorPalette="primary" onClick={handleSelectAll}>

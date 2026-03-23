@@ -5,7 +5,7 @@ import { AlignCenterOutlineIcon, BoldOutlineIcon, UnderlineOutlineIcon } from '@
 
 export default function DefaultTooltip() {
     return (
-        <HStack gap="$100">
+        <HStack $css={{ gap: '$100' }}>
             <Tooltip.Root>
                 <Tooltip.Trigger
                     render={

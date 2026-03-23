@@ -3,14 +3,14 @@
 import { forwardRef } from 'react';
 
 import { Radio as BaseRadio } from '@base-ui/react/radio';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
 import type { RootVariants } from './radio.css';
@@ -22,7 +22,7 @@ import * as styles from './radio.css';
 
 type RadioVariants = RootVariants;
 
-export const RadioRoot = forwardRef<HTMLSpanElement, RadioRoot.Props>((props, ref) => {
+export const RadioRoot = forwardRef<HTMLElement, RadioRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
@@ -37,15 +37,16 @@ export const RadioRoot = forwardRef<HTMLSpanElement, RadioRoot.Props>((props, re
 
     const dataAttrs = createDataAttributes({ invalid });
 
-    const children = useRender({
-        render: createRender(childrenProp, <RadioIndicatorPrimitive />),
+    const childrenRender = createRender(childrenProp, <RadioIndicatorPrimitive />);
+    const children = useRenderElement({
+        render: childrenRender,
     });
 
     return (
         <BaseRadio.Root
             ref={ref}
             aria-invalid={invalid}
-            className={clsx(styles.root({ size, invalid }), className)}
+            className={cn(styles.root({ size, invalid }), className)}
             {...dataAttrs}
             {...otherProps}
         >
@@ -59,9 +60,9 @@ RadioRoot.displayName = 'Radio.Root';
  * Radio.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const RadioIndicatorPrimitive = forwardRef<HTMLDivElement, RadioIndicatorPrimitive.Props>(
+export const RadioIndicatorPrimitive = forwardRef<HTMLSpanElement, RadioIndicatorPrimitive.Props>(
     (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
+        const { keepMounted = true, className, ...componentProps } = resolveStyles(props);
 
         const { invalid } = useRadioGroupContext();
         const dataAttrs = createDataAttributes({ invalid });
@@ -69,7 +70,8 @@ export const RadioIndicatorPrimitive = forwardRef<HTMLDivElement, RadioIndicator
         return (
             <BaseRadio.Indicator
                 ref={ref}
-                className={clsx(styles.indicator, className)}
+                keepMounted={keepMounted}
+                className={cn(styles.indicator, className)}
                 {...dataAttrs}
                 {...componentProps}
             />
@@ -81,12 +83,11 @@ RadioIndicatorPrimitive.displayName = 'Radio.IndicatorPrimitive';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace RadioRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
-    export interface Props extends RootPrimitiveProps, RadioVariants {}
+    export type State = BaseRadio.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseRadio.Root, State> & RadioVariants;
 }
 
 export namespace RadioIndicatorPrimitive {
-    type IndicatorPrimitiveProps = VComponentProps<typeof BaseRadio.Indicator>;
-
-    export interface Props extends IndicatorPrimitiveProps {}
+    export type State = BaseRadio.Indicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseRadio.Indicator, State>;
 }

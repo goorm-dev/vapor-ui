@@ -1,17 +1,19 @@
+import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = recipe({
+const borderColor = createVar('border-color');
+
+export const root = componentRecipe({
     base: [
         interaction({ type: 'form' }),
 
-        layerStyle('components', {
+        {
             outline: 0,
-            border: `0.0625rem solid ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 0.0625rem ${borderColor}`,
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.canvas[100],
             paddingBlock: vars.size.space['000'],
@@ -21,11 +23,13 @@ export const root = recipe({
             selectors: {
                 '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
-                '&[data-invalid]': { borderColor: vars.color.border.danger },
+                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
-        }),
+
+            vars: { [borderColor]: vars.color.border.normal },
+        },
     ],
 
     defaultVariants: { invalid: false, size: 'md' },
@@ -34,26 +38,26 @@ export const root = recipe({
         invalid: { true: {}, false: {} },
 
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 paddingInline: vars.size.space[100],
                 height: vars.size.dimension['300'],
                 fontSize: vars.typography.fontSize['050'],
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 paddingInline: vars.size.space[150],
                 height: vars.size.dimension['400'],
                 fontSize: vars.typography.fontSize['075'],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 paddingInline: vars.size.space[200],
                 height: vars.size.dimension['500'],
                 fontSize: vars.typography.fontSize['075'],
-            }),
-            xl: layerStyle('components', {
+            },
+            xl: {
                 paddingInline: vars.size.space[300],
                 height: vars.size.dimension['600'],
                 fontSize: vars.typography.fontSize['100'],
-            }),
+            },
         },
     },
 });

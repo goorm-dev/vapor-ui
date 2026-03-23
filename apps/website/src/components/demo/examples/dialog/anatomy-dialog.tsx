@@ -4,7 +4,7 @@ import { Button, Dialog } from '@vapor-ui/core';
 
 export default function AnatomyDialog() {
     return (
-        <Dialog.Root data-part="Root">
+        <Dialog.Root data-part="Root" defaultOpen>
             <Dialog.Trigger data-part="Trigger" render={<Button />}>
                 Open Dialog
             </Dialog.Trigger>

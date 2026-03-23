@@ -1,14 +1,13 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = recipe({
+export const root = componentRecipe({
     base: [
         interaction(),
-        layerStyle('components', {
+        {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -32,7 +31,7 @@ export const root = recipe({
                     boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}`,
                 },
             },
-        }),
+        },
     ],
 
     defaultVariants: {

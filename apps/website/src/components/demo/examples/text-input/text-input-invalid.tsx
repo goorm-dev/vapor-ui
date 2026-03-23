@@ -2,7 +2,7 @@ import { TextInput, VStack } from '@vapor-ui/core';
 
 export default function TextInputInvalid() {
     return (
-        <VStack gap="$150">
+        <VStack $css={{ gap: '$150' }}>
             <TextInput
                 type="email"
                 invalid

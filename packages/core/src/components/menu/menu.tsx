@@ -4,15 +4,15 @@ import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useRef } from 'react';
 
 import { Menu as BaseMenu } from '@base-ui/react/menu';
-import { useRender } from '@base-ui/react/use-render';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './menu.css';
 
@@ -57,7 +57,14 @@ MenuTrigger.displayName = 'Menu.Trigger';
  * Menu.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuPortalPrimitive = BaseMenu.Portal;
+export const MenuPortalPrimitive = forwardRef<HTMLDivElement, MenuPortalPrimitive.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
+
+        return <BaseMenu.Portal ref={ref} {...componentProps} />;
+    },
+);
+MenuPortalPrimitive.displayName = 'Menu.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.PositionerPrimitive
@@ -89,11 +96,7 @@ export const MenuPopupPrimitive = forwardRef<HTMLDivElement, MenuPopupPrimitive.
         const { className, ...componentProps } = resolveStyles(props);
 
         return (
-            <BaseMenu.Popup
-                ref={ref}
-                className={clsx(styles.popup, className)}
-                {...componentProps}
-            />
+            <BaseMenu.Popup ref={ref} className={cn(styles.popup, className)} {...componentProps} />
         );
     },
 );
@@ -107,13 +110,15 @@ export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
-        const positioner = useRender({
-            render: createRender(positionerElement, <MenuPositionerPrimitive />),
+        const positionerRender = createRender(positionerElement, <MenuPositionerPrimitive />);
+        const positioner = useRenderElement({
+            render: positionerRender,
             props: { children: popup },
         });
 
-        const portal = useRender({
-            render: createRender(portalElement, <MenuPortalPrimitive />),
+        const portalRender = createRender(portalElement, <MenuPortalPrimitive />);
+        const portal = useRenderElement({
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -126,7 +131,7 @@ MenuPopup.displayName = 'Menu.Popup';
  * Menu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) => {
+export const MenuItem = forwardRef<HTMLElement, MenuItem.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
 
@@ -136,7 +141,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) 
         <BaseMenu.Item
             ref={ref}
             disabled={disabled}
-            className={clsx(styles.item, className)}
+            className={cn(styles.item, className)}
             {...componentProps}
         />
     );
@@ -153,7 +158,7 @@ export const MenuSeparator = forwardRef<HTMLDivElement, MenuSeparator.Props>((pr
     return (
         <BaseMenu.Separator
             ref={ref}
-            className={clsx(styles.separator, className)}
+            className={cn(styles.separator, className)}
             {...componentProps}
         />
     );
@@ -181,7 +186,7 @@ export const MenuGroupLabel = forwardRef<HTMLDivElement, MenuGroupLabel.Props>((
     return (
         <BaseMenu.GroupLabel
             ref={ref}
-            className={clsx(styles.groupLabel, className)}
+            className={cn(styles.groupLabel, className)}
             {...componentProps}
         />
     );
@@ -193,7 +198,7 @@ MenuGroupLabel.displayName = 'Menu.GroupLabel';
  * -----------------------------------------------------------------------------------------------*/
 
 type SubmenuContext = {
-    triggerRef?: RefObject<HTMLElement>;
+    triggerRef?: RefObject<HTMLElement | null>;
     disabled?: boolean;
 };
 
@@ -225,7 +230,7 @@ MenuSubmenuRoot.displayName = 'Menu.SubmenuRoot';
  * Menu.SubmenuTriggerItem
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuSubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTriggerItem.Props>(
+export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTriggerItem.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
         const { triggerRef } = useSubmenuContext();
@@ -234,7 +239,7 @@ export const MenuSubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTrig
         return (
             <BaseMenu.SubmenuTrigger
                 ref={composedRef}
-                className={clsx(styles.subTrigger, className)}
+                className={cn(styles.subTrigger, className)}
                 {...componentProps}
             >
                 {children}
@@ -261,7 +266,7 @@ export const MenuSubmenuPopupPrimitive = forwardRef<
         <BaseMenu.Popup
             ref={ref}
             finalFocus={triggerRef}
-            className={clsx(styles.subPopup, className)}
+            className={cn(styles.subPopup, className)}
             {...componentProps}
         />
     );
@@ -276,16 +281,18 @@ export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Prop
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
-        const positioner = useRender({
-            render: createRender(
-                positionerElement,
-                <MenuPositionerPrimitive side="right" sideOffset={0} />,
-            ),
+        const positionerRender = createRender(
+            positionerElement,
+            <MenuPositionerPrimitive side="right" sideOffset={0} />,
+        );
+        const positioner = useRenderElement({
+            render: positionerRender,
             props: { children: popup },
         });
 
-        const portal = useRender({
-            render: createRender(portalElement, <MenuPortalPrimitive />),
+        const portalRender = createRender(portalElement, <MenuPortalPrimitive />);
+        const portal = useRenderElement({
+            render: portalRender,
             props: { children: positioner },
         });
 
@@ -298,7 +305,7 @@ MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
  * Menu.CheckboxItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuCheckboxItemPrimitive = forwardRef<HTMLDivElement, MenuCheckboxItem.Props>(
+export const MenuCheckboxItemPrimitive = forwardRef<HTMLElement, MenuCheckboxItem.Props>(
     (props, ref) => {
         const {
             disabled: disabledProp,
@@ -314,7 +321,7 @@ export const MenuCheckboxItemPrimitive = forwardRef<HTMLDivElement, MenuCheckbox
             <BaseMenu.CheckboxItem
                 ref={ref}
                 disabled={disabled}
-                className={clsx(styles.item, className)}
+                className={cn(styles.item, className)}
                 {...componentProps}
             >
                 {children}
@@ -334,15 +341,16 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-    const children = useRender({
-        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
+    const children = useRenderElement({
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
     return (
         <BaseMenu.CheckboxItemIndicator
             ref={ref}
-            className={clsx(styles.indicator, className)}
+            className={cn(styles.indicator, className)}
             {...componentProps}
         >
             {children}
@@ -355,7 +363,7 @@ MenuCheckboxItemIndicatorPrimitive.displayName = 'Menu.CheckboxItemIndicatorPrim
  * Menu.CheckboxItem
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuCheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItem.Props>((props, ref) => {
+export const MenuCheckboxItem = forwardRef<HTMLElement, MenuCheckboxItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
     return (
@@ -383,7 +391,7 @@ MenuRadioGroup.displayName = 'Menu.RadioGroup';
  * Menu.RadioItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuRadioItemPrimitive = forwardRef<HTMLDivElement, MenuRadioItemPrimitive.Props>(
+export const MenuRadioItemPrimitive = forwardRef<HTMLElement, MenuRadioItemPrimitive.Props>(
     (props, ref) => {
         const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
 
@@ -394,7 +402,7 @@ export const MenuRadioItemPrimitive = forwardRef<HTMLDivElement, MenuRadioItemPr
             <BaseMenu.RadioItem
                 ref={ref}
                 disabled={disabled}
-                className={clsx(styles.item, className)}
+                className={cn(styles.item, className)}
                 {...componentProps}
             />
         );
@@ -412,15 +420,16 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-    const children = useRender({
-        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
+    const children = useRenderElement({
+        render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
 
     return (
         <BaseMenu.RadioItemIndicator
             ref={ref}
-            className={clsx(styles.indicator, className)}
+            className={cn(styles.indicator, className)}
             {...componentProps}
         >
             {children}
@@ -432,7 +441,7 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
  * Menu.RadioItem
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuRadioItem = forwardRef<HTMLDivElement, MenuRadioItem.Props>((props, ref) => {
+export const MenuRadioItem = forwardRef<HTMLElement, MenuRadioItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
     return (
@@ -450,119 +459,138 @@ MenuRadioItem.displayName = 'Menu.RadioItem';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace MenuRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseMenu.Root>;
-    export interface Props extends RootPrimitiveProps {}
+    export type State = {};
+    export type Props = BaseMenu.Root.Props;
 
     export type Actions = BaseMenu.Root.Actions;
     export type ChangeEventDetails = BaseMenu.Root.ChangeEventDetails;
 }
 
 export namespace MenuTrigger {
-    type TriggerPrimitiveProps = VComponentProps<typeof BaseMenu.Trigger>;
-    export interface Props extends TriggerPrimitiveProps {}
+    export type State = BaseMenu.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Trigger, State>;
 }
 
 export namespace MenuPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseMenu.Portal>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = BaseMenu.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Portal, State>;
 }
 
 export namespace MenuPositionerPrimitive {
-    type PositionerPrimitiveProps = VComponentProps<typeof BaseMenu.Positioner>;
-    export interface Props extends PositionerPrimitiveProps {}
+    export type State = BaseMenu.Positioner.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Positioner, State>;
 }
 
 export namespace MenuPopupPrimitive {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
-    export interface Props extends PopupPrimitiveProps {}
+    export type State = BaseMenu.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
+}
+
+export interface MenuPopupProps extends MenuPopupPrimitive.Props {
+    /**
+     * A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<MenuPortalPrimitive.Props>;
+
+    /**
+     * A Custom element for Menu.PositionerPrimitive. If not provided, the default Menu.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
 }
 
 export namespace MenuPopup {
-    export interface Props extends MenuPopupPrimitive.Props {
-        portalElement?: ReactElement<MenuPortalPrimitive.Props>;
-        positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
-    }
+    export type State = MenuPopupPrimitive.State;
+    export type Props = MenuPopupProps;
 }
 
 export namespace MenuItem {
-    type ItemPrimitiveProps = VComponentProps<typeof BaseMenu.Item>;
-    export interface Props extends ItemPrimitiveProps {}
+    export type State = BaseMenu.Item.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Item, State>;
 }
 
 export namespace MenuSeparator {
-    type SeparatorPrimitiveProps = VComponentProps<typeof BaseMenu.Separator>;
-    export interface Props extends SeparatorPrimitiveProps {}
+    export type State = BaseMenu.Separator.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Separator, State>;
 }
 
 export namespace MenuGroup {
-    type GroupPrimitiveProps = VComponentProps<typeof BaseMenu.Group>;
-    export interface Props extends GroupPrimitiveProps {}
+    export type State = BaseMenu.Group.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Group, State>;
 }
 
 export namespace MenuGroupLabel {
-    type GroupLabelPrimitiveProps = VComponentProps<typeof BaseMenu.GroupLabel>;
-    export interface Props extends GroupLabelPrimitiveProps {}
+    export type State = BaseMenu.GroupLabel.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.GroupLabel, State>;
 }
 
 export namespace MenuSubmenuRoot {
-    type SubmenuRootPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuRoot>;
-    export interface Props extends SubmenuRootPrimitiveProps {
-        closeParentOnEsc?: boolean;
-    }
+    export type State = BaseMenu.SubmenuRoot.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.SubmenuRoot, State> & {};
+
     export type OpenEventDetails = BaseMenu.SubmenuRoot.ChangeEventDetails;
 }
 
 export namespace MenuSubmenuTriggerItem {
-    type SubmenuTriggerItemPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuTrigger>;
-    export interface Props extends SubmenuTriggerItemPrimitiveProps {}
+    export type State = BaseMenu.SubmenuTrigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.SubmenuTrigger, State>;
 }
 
 export namespace MenuSubmenuPopupPrimitive {
-    type SubmenuPopupPrimitivePrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
-    export interface Props extends SubmenuPopupPrimitivePrimitiveProps {}
+    export type State = BaseMenu.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
+}
+
+export interface MenuSubmenuPopupProps extends MenuSubmenuPopupPrimitive.Props {
+    /**
+     * A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<MenuPortalPrimitive.Props>;
+
+    /**
+     * A Custom element for Menu.PositionerPrimitive. If not provided, the default Menu.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
 }
 
 export namespace MenuSubmenuPopup {
-    export interface Props extends MenuSubmenuPopupPrimitive.Props {
-        portalElement?: ReactElement<MenuPortalPrimitive.Props>;
-        positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
-    }
+    export type State = MenuSubmenuPopupPrimitive.State;
+    export type Props = MenuSubmenuPopupProps;
 }
 
 export namespace MenuCheckboxItemPrimitive {
-    type CheckboxPrimitiveProps = VComponentProps<typeof BaseMenu.CheckboxItem>;
-    export interface Props extends CheckboxPrimitiveProps {}
+    export type State = BaseMenu.CheckboxItem.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.CheckboxItem, State>;
     export type ChangeEventDetails = BaseMenu.CheckboxItem.ChangeEventDetails;
 }
 
 export namespace MenuCheckboxItemIndicatorPrimitive {
-    type CheckboxIndicatorPrimitiveProps = VComponentProps<typeof BaseMenu.CheckboxItemIndicator>;
-    export interface Props extends CheckboxIndicatorPrimitiveProps {}
+    export type State = BaseMenu.CheckboxItemIndicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.CheckboxItemIndicator, State>;
 }
 
 export namespace MenuCheckboxItem {
-    export interface Props extends MenuCheckboxItemPrimitive.Props {}
+    export type State = MenuCheckboxItemPrimitive.State;
+    export type Props = MenuCheckboxItemPrimitive.Props;
     export type ChangeEventDetails = MenuCheckboxItemPrimitive.ChangeEventDetails;
 }
 
 export namespace MenuRadioGroup {
-    type RadioGroupPrimitiveProps = VComponentProps<typeof BaseMenu.RadioGroup>;
-    export interface Props extends RadioGroupPrimitiveProps {}
+    export type State = BaseMenu.RadioGroup.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.RadioGroup, State>;
     export type ChangeEventDetails = BaseMenu.RadioGroup.ChangeEventDetails;
 }
 
 export namespace MenuRadioItemPrimitive {
-    type RadioItemPrimitiveProps = VComponentProps<typeof BaseMenu.RadioItem>;
-    export interface Props extends RadioItemPrimitiveProps {
-        closeOnClick?: boolean;
-    }
+    export type State = BaseMenu.RadioItem.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.RadioItem, State> & {};
 }
 
 export namespace MenuRadioItemIndicatorPrimitive {
-    type RadioItemPrimitiveProps = VComponentProps<typeof BaseMenu.RadioItemIndicator>;
-    export interface Props extends RadioItemPrimitiveProps {}
+    export type State = BaseMenu.RadioItemIndicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.RadioItemIndicator, State>;
 }
 
 export namespace MenuRadioItem {
-    export interface Props extends MenuRadioItemPrimitive.Props {}
+    export type State = MenuRadioItemPrimitive.State;
+    export type Props = MenuRadioItemPrimitive.Props;
 }

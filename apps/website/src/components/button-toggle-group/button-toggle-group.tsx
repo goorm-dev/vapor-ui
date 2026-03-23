@@ -21,8 +21,8 @@ interface ButtonToggleGroupProps {
 
 // 개선안: 커스텀 훅 분리
 const useMaskPosition = (
-    itemRefs: RefObject<{ [key: string]: HTMLButtonElement | null }>,
-    containerRef: RefObject<HTMLDivElement>,
+    itemRefs: RefObject<{ [key: string]: HTMLButtonElement | null } | null>,
+    containerRef: RefObject<HTMLDivElement | null>,
 ) => {
     const [maskStyle, setMaskStyle] = useState<React.CSSProperties>({});
 

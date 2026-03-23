@@ -12,7 +12,7 @@ export default [
         },
         rules: {
             // Figma plugin specific rules
-            'no-console': 'warn',
+            'no-console': ['warn', { allow: ['warn', 'error'] }],
             '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         },
     },

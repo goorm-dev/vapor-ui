@@ -21,10 +21,11 @@ type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
     render: (args) => (
-        <HStack gap="$200">
+        <HStack $css={{ gap: '$200' }}>
             <Button {...args}>Button</Button>
             <Button
                 {...args}
+                nativeButton={false}
                 render={<a href="https://vapor-ui.goorm.io">Link Button(Polymorphic)</a>}
             />
         </HStack>

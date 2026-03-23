@@ -1,11 +1,10 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
@@ -18,11 +17,12 @@ export const Badge = forwardRef<HTMLSpanElement, Badge.Props>((props, ref) => {
         'shape',
     ]);
 
-    return useRender({
+    return useRenderElement({
         ref,
-        render: render || <span />,
+        render,
+        defaultTagName: 'span',
         props: {
-            className: clsx(styles.root(variantsProps), className),
+            className: cn(styles.root(variantsProps), className),
             ...otherProps,
         },
     });
@@ -30,7 +30,6 @@ export const Badge = forwardRef<HTMLSpanElement, Badge.Props>((props, ref) => {
 Badge.displayName = 'Badge';
 
 export namespace Badge {
-    type BadgePrimitiveProps = VComponentProps<'span'>;
-
-    export interface Props extends BadgePrimitiveProps, BadgeVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State> & BadgeVariants;
 }

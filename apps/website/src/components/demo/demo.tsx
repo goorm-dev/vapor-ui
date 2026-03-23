@@ -69,15 +69,17 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
     return (
         <Card.Header className="p-0 border-b-0 pt-v-50 bg-v-canvas-100 rounded-t-v-300 relative z-10">
             <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                gap="$050"
-                height={'$500'}
-                width="100%"
-                paddingBottom="$050"
+                $css={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: '$050',
+                    height: '$500',
+                    width: '100%',
+                    paddingBottom: '$050',
+                }}
             >
-                <Tabs.List width="100%" paddingX="$300">
+                <Tabs.List $css={{ width: '100%', paddingInline: '$300' }}>
                     {Object.values(TAB_TYPES).map((tab) => (
                         <Tabs.Button key={tab} value={tab}>
                             {tab}

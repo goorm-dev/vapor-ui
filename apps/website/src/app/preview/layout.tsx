@@ -6,6 +6,7 @@ export default function PreviewLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="ko" className="h-full" suppressHydrationWarning>
             <head>
+                <title>Component Preview</title>
                 <script
                     suppressHydrationWarning
                     dangerouslySetInnerHTML={{

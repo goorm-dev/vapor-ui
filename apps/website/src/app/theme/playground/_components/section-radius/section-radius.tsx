@@ -27,7 +27,7 @@ const SectionRadius = () => {
             <PanelSectionWrapper.Title>Border Radius</PanelSectionWrapper.Title>
             <PanelSectionWrapper.Contents>
                 <RadioGroup.Root defaultValue="md" size="md" onValueChange={handleValueChange}>
-                    <HStack gap="$100">
+                    <HStack $css={{ gap: '$100' }}>
                         {RADIUS_OPTIONS.map(({ value, label }) => (
                             <RadioCard key={value} value={value}>
                                 {label}
