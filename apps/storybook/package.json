@@ -24,7 +24,7 @@
         "@storybook/react-vite": "^9.1.20",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
-        "@vanilla-extract/vite-plugin": "^5.2.0",
+        "@vanilla-extract/vite-plugin": "^5.2.1",
         "@vitejs/plugin-react": "^5.0.3",
         "eslint": "catalog:",
         "globals": "^16.4.0",
