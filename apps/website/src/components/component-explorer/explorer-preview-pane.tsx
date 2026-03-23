@@ -11,7 +11,6 @@ export function ExplorerPreviewPane({
     iframeLoaded,
     iframeError,
     handleIframeLoad,
-    handleIframeError,
     handleRetry,
 }: PreviewPaneProps) {
     return (
@@ -64,7 +63,6 @@ export function ExplorerPreviewPane({
                 className="border-0 block w-full h-[320px] md:h-full min-h-[320px] md:min-h-[420px]"
                 title={iframeTitle}
                 onLoad={handleIframeLoad}
-                onError={handleIframeError}
             />
         </div>
     );

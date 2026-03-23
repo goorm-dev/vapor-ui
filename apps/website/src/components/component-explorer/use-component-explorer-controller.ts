@@ -55,8 +55,12 @@ export function useComponentExplorerController({
     }, [previewPaneProps.iframeSrc, resetAvailableParts]);
 
     useEffect(() => {
+        if (!previewPaneProps.iframeLoaded) {
+            return;
+        }
+
         highlightPart(activePart);
-    }, [activePart, highlightPart]);
+    }, [activePart, highlightPart, previewPaneProps.iframeLoaded]);
 
     const panelProps: AnatomyPanelProps = useMemo(
         () => ({

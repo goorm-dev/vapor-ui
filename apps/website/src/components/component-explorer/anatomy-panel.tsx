@@ -108,6 +108,7 @@ export const AnatomyPanel = memo(function AnatomyPanel({
             // Options receive focus via roving tabindex; listbox itself is excluded from tab order
             tabIndex={-1}
             onKeyDown={handleKeyDown}
+            onMouseLeave={handleMouseLeave}
             className="w-full md:w-56 flex-shrink-0 border-b md:border-b-0 md:border-r border-v-normal-200 bg-v-canvas-100 max-h-[320px] md:max-h-[420px] flex flex-col"
         >
             <p id={instructionsId} className="sr-only">
@@ -147,7 +148,6 @@ export const AnatomyPanel = memo(function AnatomyPanel({
                                       : -1
                             }
                             onMouseEnter={handlePartHover}
-                            onMouseLeave={handleMouseLeave}
                             onFocus={onPartFocus}
                             onClick={onPartSelect}
                         />
@@ -183,7 +183,6 @@ export const AnatomyPanel = memo(function AnatomyPanel({
                                               : -1
                                     }
                                     onMouseEnter={handlePartHover}
-                                    onMouseLeave={handleMouseLeave}
                                     onFocus={onPartFocus}
                                     onClick={onPartSelect}
                                 />

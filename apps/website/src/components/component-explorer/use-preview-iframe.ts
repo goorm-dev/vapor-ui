@@ -2,6 +2,10 @@
 
 import { type RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { EXPLORER_MESSAGES } from './types';
+
+const PREVIEW_LOAD_TIMEOUT_MS = 15_000;
+
 export interface PreviewPaneProps {
     iframeRef: RefObject<HTMLIFrameElement | null>;
     iframeSrc: string;
@@ -9,7 +13,6 @@ export interface PreviewPaneProps {
     iframeLoaded: boolean;
     iframeError: boolean;
     handleIframeLoad: () => void;
-    handleIframeError: () => void;
     handleRetry: () => void;
 }
 
@@ -37,19 +40,52 @@ export function usePreviewIframe({
 
     const iframeTitle = useMemo(() => `Component Explorer - ${componentName}`, [componentName]);
 
+    // Reset state when iframe src changes
     useEffect(() => {
         setIframeLoaded(false);
         setIframeError(false);
     }, [iframeSrc]);
 
-    const handleIframeLoad = useCallback(() => {
-        setIframeLoaded(true);
-        setIframeError(false);
-    }, []);
+    // Listen for preview-ready postMessage from iframe content and use a timeout fallback
+    useEffect(() => {
+        let loaded = false;
 
-    const handleIframeError = useCallback(() => {
-        setIframeLoaded(false);
-        setIframeError(true);
+        const handleMessage = (event: MessageEvent<unknown>) => {
+            if (event.origin !== window.location.origin) return;
+            if (event.source !== iframeRef.current?.contentWindow) return;
+            if (
+                !event.data ||
+                typeof event.data !== 'object' ||
+                !('type' in event.data) ||
+                (event.data as { type: string }).type !== EXPLORER_MESSAGES.PREVIEW_READY
+            ) {
+                return;
+            }
+
+            loaded = true;
+            setIframeLoaded(true);
+            setIframeError(false);
+        };
+
+        window.addEventListener('message', handleMessage);
+
+        const timeoutId = setTimeout(() => {
+            if (!loaded) {
+                setIframeError(true);
+            }
+        }, PREVIEW_LOAD_TIMEOUT_MS);
+
+        return () => {
+            window.removeEventListener('message', handleMessage);
+            clearTimeout(timeoutId);
+        };
+    }, [iframeSrc]);
+
+    const handleIframeLoad = useCallback(() => {
+        // The iframe load event fires for both success and failure; it serves
+        // as a basic signal but we rely on the preview-ready postMessage for
+        // confirmation.  If preview-ready already arrived, this is a no-op.
+        // If it hasn't, we keep waiting (the timeout will eventually fire).
     }, []);
 
     const handleRetry = useCallback(() => {
@@ -63,7 +99,6 @@ export function usePreviewIframe({
         iframeLoaded,
         iframeError,
         handleIframeLoad,
-        handleIframeError,
         handleRetry,
     };
 }

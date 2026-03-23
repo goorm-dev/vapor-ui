@@ -11,7 +11,6 @@ interface PartOptionProps {
     isSelected: boolean;
     tabIndex: number;
     onMouseEnter: (partName: string) => void;
-    onMouseLeave: () => void;
     onFocus: (partName: string) => void;
     onClick: (partName: string) => void;
 }
@@ -22,7 +21,6 @@ export const PartOption = memo(function PartOption({
     isSelected,
     tabIndex,
     onMouseEnter,
-    onMouseLeave,
     onFocus,
     onClick,
 }: PartOptionProps) {
@@ -56,7 +54,6 @@ export const PartOption = memo(function PartOption({
             tabIndex={tabIndex}
             data-explorer-part-button="true"
             onMouseEnter={handleMouseEnter}
-            onMouseLeave={onMouseLeave}
             onFocus={handleFocus}
             onClick={handleClick}
             onKeyDown={handleKeyDown}

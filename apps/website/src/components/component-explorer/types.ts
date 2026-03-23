@@ -2,6 +2,7 @@ export const EXPLORER_MESSAGES = {
     HIGHLIGHT_PART: 'EXPLORER_HIGHLIGHT_PART',
     CLEAR_HIGHLIGHT: 'EXPLORER_CLEAR_HIGHLIGHT',
     AVAILABLE_PARTS: 'EXPLORER_AVAILABLE_PARTS',
+    PREVIEW_READY: 'EXPLORER_PREVIEW_READY',
 } as const;
 
 export interface HighlightPartMessage {
@@ -22,4 +23,12 @@ export interface AvailablePartsMessage {
     };
 }
 
-export type ExplorerMessage = HighlightPartMessage | ClearHighlightMessage | AvailablePartsMessage;
+export interface PreviewReadyMessage {
+    type: typeof EXPLORER_MESSAGES.PREVIEW_READY;
+}
+
+export type ExplorerMessage =
+    | HighlightPartMessage
+    | ClearHighlightMessage
+    | AvailablePartsMessage
+    | PreviewReadyMessage;
