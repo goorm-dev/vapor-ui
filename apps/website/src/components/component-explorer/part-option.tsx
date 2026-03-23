@@ -39,7 +39,7 @@ export const PartOption = memo(function PartOption({
     }, [onClick, partName]);
 
     const handleKeyDown = useCallback(
-        (event: KeyboardEvent<HTMLLIElement>) => {
+        (event: KeyboardEvent<HTMLDivElement>) => {
             if (event.key === 'Enter' || event.key === ' ') {
                 onClick(partName);
                 event.preventDefault();
@@ -49,7 +49,7 @@ export const PartOption = memo(function PartOption({
     );
 
     return (
-        <li
+        <div
             role="option"
             id={`part-${partName}`}
             aria-selected={isSelected}
@@ -62,9 +62,9 @@ export const PartOption = memo(function PartOption({
             onKeyDown={handleKeyDown}
             className={clsx(
                 'group relative w-full flex items-center justify-start px-3 py-2 h-auto min-h-11 rounded-md text-left',
-                'cursor-pointer list-none',
+                'cursor-pointer',
                 'before:absolute before:inset-0 before:rounded-[inherit] before:bg-[var(--vapor-color-gray-900)] before:opacity-0 before:transition-opacity before:pointer-events-none',
-                'hover:before:opacity-[0.08] active:before:opacity-[0.16]',
+                'hover:before:opacity-[0.08] focus-visible:before:opacity-[0.08] active:before:opacity-[0.16]',
                 'focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--vapor-color-foreground-normal-200)]',
                 'transition-colors duration-150 ease-out',
                 'motion-reduce:transition-none',
@@ -97,6 +97,6 @@ export const PartOption = memo(function PartOption({
                     isSelected ? 'h-5' : 'h-0',
                 )}
             />
-        </li>
+        </div>
     );
 });
