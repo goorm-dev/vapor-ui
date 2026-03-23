@@ -4,7 +4,7 @@ import { Button, Menu } from '@vapor-ui/core';
 
 export default function AnatomyMenu() {
     return (
-        <Menu.Root data-part="Root">
+        <Menu.Root data-part="Root" defaultOpen>
             <Menu.Trigger data-part="Trigger" render={<Button>Open Menu</Button>} />
             <Menu.PortalPrimitive data-part="PortalPrimitive">
                 <Menu.PositionerPrimitive
