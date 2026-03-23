@@ -1,14 +1,13 @@
 import { createVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '../themes.css';
-import { layerStyle } from './layer-style.css';
+import { componentRecipe } from './layer-style.css';
 
 const ratio = createVar('opacity-ratio');
 
-export const interaction = recipe({
-    base: layerStyle('components', {
+export const interaction = componentRecipe({
+    base: {
         position: 'relative',
 
         vars: { [ratio]: '0.08' },
@@ -34,7 +33,7 @@ export const interaction = recipe({
             '&:focus': { outline: 'none' },
             '&:focus-visible': { outline: 'none' },
         },
-    }),
+    },
 
     defaultVariants: {
         scale: 'normal',
@@ -44,11 +43,11 @@ export const interaction = recipe({
     variants: {
         scale: {
             normal: {},
-            light: layerStyle('components', { vars: { [ratio]: '0.04' } }),
+            light: { vars: { [ratio]: '0.04' } },
         },
 
         type: {
-            default: layerStyle('components', {
+            default: {
                 selectors: {
                     '&:active::before': { opacity: calc.multiply(ratio, 2) },
                     '&:focus-visible': {
@@ -65,8 +64,8 @@ export const interaction = recipe({
                         },
                     },
                 },
-            }),
-            form: layerStyle('components', {
+            },
+            form: {
                 transition: 'box-shadow 150ms cubic-bezier(.4,0,.2,1)',
 
                 selectors: {
@@ -82,7 +81,7 @@ export const interaction = recipe({
                         },
                     },
                 },
-            }),
+            },
             roving: {
                 selectors: {
                     '&[data-highlighted]::before': { opacity: 0.08 },

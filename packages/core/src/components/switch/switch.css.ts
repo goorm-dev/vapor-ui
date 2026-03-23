@@ -1,14 +1,13 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const control = recipe({
+export const control = componentRecipe({
     base: [
         interaction(),
-        layerStyle('components', {
+        {
             position: 'relative',
             display: 'flex',
             alignItems: 'center',
@@ -40,34 +39,34 @@ export const control = recipe({
                     outlineOffset: '-0.125rem',
                 },
             },
-        }),
+        },
     ],
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
         invalid: { true: {}, false: {} },
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 padding: vars.size.space['025'],
                 width: vars.size.dimension['400'],
                 height: vars.size.dimension['225'],
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 padding: vars.size.space['050'],
                 width: vars.size.dimension['500'],
                 height: vars.size.dimension['300'],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 padding: vars.size.space['050'],
                 width: vars.size.dimension['700'],
                 height: vars.size.dimension['400'],
-            }),
+            },
         },
     },
 });
 
-export const indicator = recipe({
-    base: layerStyle('components', {
+export const indicator = componentRecipe({
+    base: {
         display: 'block',
 
         transition: 'transform 0.1s ease',
@@ -90,23 +89,23 @@ export const indicator = recipe({
                 boxShadow: 'none',
             },
         },
-    }),
+    },
 
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 width: vars.size.dimension['175'],
                 height: vars.size.dimension['175'],
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 width: vars.size.dimension['200'],
                 height: vars.size.dimension['200'],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 width: vars.size.dimension['300'],
                 height: vars.size.dimension['300'],
-            }),
+            },
         },
     },
 });

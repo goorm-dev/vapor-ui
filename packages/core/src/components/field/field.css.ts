@@ -1,57 +1,55 @@
-import { style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { foregroundVariants, foregrounds } from '~/styles/mixins/foreground.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography, typographyVariants } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = layerStyle('components', {
+export const root = componentStyle({
     display: 'flex',
     flexDirection: 'column',
     gap: vars.size.space['050'],
 });
 
-export const description = style([
+export const description = componentStyle([
     typography({ style: 'body2' }),
     foregrounds({ color: 'hint-100' }),
-    layerStyle('components', {
+    {
         selectors: {
             '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
         },
-    }),
+    },
 ]);
 
-export const error = style([
+export const error = componentStyle([
     typography({ style: 'body2' }),
     foregrounds({ color: 'danger-100' }),
-    layerStyle('components', {
+    {
         selectors: {
             '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
         },
-    }),
+    },
 ]);
 
-export const success = style([
+export const success = componentStyle([
     typography({ style: 'body2' }),
     foregrounds({ color: 'success-100' }),
-    layerStyle('components', {
+    {
         selectors: {
             '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
         },
-    }),
+    },
 ]);
 
-export const label = recipe({
-    base: layerStyle('components', {
+export const label = componentRecipe({
+    base: {
         display: 'flex',
         gap: vars.size.space['100'],
 
         selectors: {
             '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
         },
-    }),
+    },
 
     defaultVariants: {
         typography: 'body2',
@@ -64,9 +62,7 @@ export const label = recipe({
     },
 });
 
-export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;
-
-export const item = layerStyle('components', {
+export const item = componentStyle({
     display: 'flex',
     alignItems: 'flex-start',
     gap: vars.size.space['100'],
@@ -75,3 +71,5 @@ export const item = layerStyle('components', {
         '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
     },
 });
+
+export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;

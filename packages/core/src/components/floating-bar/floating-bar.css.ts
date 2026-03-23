@@ -1,12 +1,12 @@
 import { createGlobalVar } from '@vanilla-extract/css';
 
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
 const easing = createGlobalVar('easing');
 const animationDuration = createGlobalVar('animation-duration');
 
-export const positioner = layerStyle('components', {
+export const positioner = componentStyle({
     bottom: `calc(env(safe-area-inset-bottom) + ${vars.size.space['250']})`,
 
     transitionProperty: 'top, left, right, bottom, transform',
@@ -19,7 +19,7 @@ export const positioner = layerStyle('components', {
     },
 });
 
-export const popup = layerStyle('components', {
+export const popup = componentStyle({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

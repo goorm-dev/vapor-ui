@@ -1,7 +1,7 @@
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = layerStyle('components', {
+export const root = componentStyle({
     display: 'flex',
     flexDirection: 'column',
 
@@ -11,17 +11,17 @@ export const root = layerStyle('components', {
     backgroundColor: vars.color.background.overlay[100],
 });
 
-export const header = layerStyle('components', {
+export const header = componentStyle({
     borderBottom: `1px solid ${vars.color.border.normal}`,
 
     padding: `${vars.size.space[200]} ${vars.size.space[300]}`,
 });
 
-export const body = layerStyle('components', {
+export const body = componentStyle({
     padding: vars.size.space[300],
 });
 
-export const footer = layerStyle('components', {
+export const footer = componentStyle({
     borderTop: `1px solid ${vars.color.border.normal}`,
 
     padding: `${vars.size.space[200]} ${vars.size.space[300]}`,

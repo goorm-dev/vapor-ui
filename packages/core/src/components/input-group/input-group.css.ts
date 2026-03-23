@@ -1,7 +1,7 @@
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = layerStyle('components', {
+export const root = componentStyle({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -9,7 +9,7 @@ export const root = layerStyle('components', {
     width: '100%',
 });
 
-export const counter = layerStyle('components', {
+export const counter = componentStyle({
     lineHeight: vars.typography.lineHeight['050'],
     letterSpacing: vars.typography.letterSpacing['100'],
     fontSize: vars.typography.fontSize['050'],

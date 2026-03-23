@@ -1,18 +1,17 @@
 import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
 const borderColor = createVar('border-color');
 
-export const root = recipe({
+export const root = componentRecipe({
     base: [
         interaction({ type: 'form' }),
 
-        layerStyle('components', {
+        {
             outline: 0,
             boxShadow: `inset 0 0 0 0.0625rem ${borderColor}`,
             borderRadius: vars.size.borderRadius['300'],
@@ -30,7 +29,7 @@ export const root = recipe({
             },
 
             vars: { [borderColor]: vars.color.border.normal },
-        }),
+        },
     ],
 
     defaultVariants: { invalid: false, size: 'md' },
@@ -39,26 +38,26 @@ export const root = recipe({
         invalid: { true: {}, false: {} },
 
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 paddingInline: vars.size.space[100],
                 height: vars.size.dimension['300'],
                 fontSize: vars.typography.fontSize['050'],
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 paddingInline: vars.size.space[150],
                 height: vars.size.dimension['400'],
                 fontSize: vars.typography.fontSize['075'],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 paddingInline: vars.size.space[200],
                 height: vars.size.dimension['500'],
                 fontSize: vars.typography.fontSize['075'],
-            }),
-            xl: layerStyle('components', {
+            },
+            xl: {
                 paddingInline: vars.size.space[300],
                 height: vars.size.dimension['600'],
                 fontSize: vars.typography.fontSize['100'],
-            }),
+            },
         },
     },
 });

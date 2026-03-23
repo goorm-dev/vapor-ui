@@ -1,14 +1,16 @@
+import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = recipe({
+const borderColor = createVar('border-color');
+
+export const root = componentRecipe({
     base: [
         interaction(),
-        layerStyle('components', {
+        {
             position: 'relative',
 
             display: 'flex',
@@ -18,7 +20,7 @@ export const root = recipe({
             gap: vars.size.space[100],
 
             borderRadius: 9999,
-            boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 0.0625rem ${borderColor}`,
             backgroundColor: vars.color.background.canvas[100],
 
             transitionProperty: 'background-color, box-shadow',
@@ -37,7 +39,7 @@ export const root = recipe({
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': { boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}` },
+                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
                 '&[data-invalid][data-checked]': {
                     boxShadow: 'none',
                     backgroundColor: vars.color.background.danger[200],
@@ -47,7 +49,9 @@ export const root = recipe({
                 '&[data-disabled]::before': { opacity: 0 },
                 '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
             },
-        }),
+
+            vars: { [borderColor]: vars.color.border.normal },
+        },
     ],
 
     defaultVariants: { invalid: false, size: 'md' },
@@ -56,19 +60,19 @@ export const root = recipe({
         invalid: { true: {}, false: {} },
 
         size: {
-            md: layerStyle('components', {
+            md: {
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
-            }),
+            },
         },
     },
 });
 
-export const indicator = layerStyle('components', {
+export const indicator = componentStyle({
     position: 'absolute',
     transitionProperty: 'background-color, box-shadow, scale',
     transitionDuration: '0.2s',

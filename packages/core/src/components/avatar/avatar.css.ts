@@ -1,14 +1,13 @@
 import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
 const radii = createVar('border-radius');
 
-export const root = recipe({
-    base: layerStyle('components', {
+export const root = componentRecipe({
+    base: {
         display: 'inline-flex',
         flexShrink: 0,
         alignItems: 'center',
@@ -18,43 +17,43 @@ export const root = recipe({
         padding: vars.size.space['000'],
         overflow: 'hidden',
         verticalAlign: 'top',
-    }),
+    },
 
     defaultVariants: { size: 'md', shape: 'square' },
     variants: {
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
                 vars: { [radii]: vars.size.borderRadius[200] },
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 width: vars.size.dimension[400],
                 height: vars.size.dimension[400],
                 vars: { [radii]: vars.size.borderRadius[300] },
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 width: vars.size.dimension[500],
                 height: vars.size.dimension[500],
                 vars: { [radii]: vars.size.borderRadius[400] },
-            }),
-            xl: layerStyle('components', {
+            },
+            xl: {
                 width: vars.size.dimension[600],
                 height: vars.size.dimension[600],
                 vars: { [radii]: vars.size.borderRadius[400] },
-            }),
+            },
         },
         shape: {
-            square: layerStyle('components', { borderRadius: radii }),
-            circle: layerStyle('components', { borderRadius: '50%' }),
+            square: { borderRadius: radii },
+            circle: { borderRadius: '50%' },
         },
     },
 });
 
 export const fallbackBgVar = createVar('fallback-background-color');
 
-export const fallback = recipe({
-    base: layerStyle('components', {
+export const fallback = componentRecipe({
+    base: {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -63,40 +62,40 @@ export const fallback = recipe({
 
         backgroundColor: fallbackBgVar,
         color: vars.color.foreground.inverse,
-    }),
+    },
 
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 fontSize: vars.typography.fontSize['050'],
                 lineHeight: vars.typography.lineHeight['050'],
                 fontWeight: vars.typography.fontWeight['500'],
                 letterSpacing: vars.typography.letterSpacing['000'],
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 fontSize: vars.typography.fontSize['075'],
                 lineHeight: vars.typography.lineHeight['075'],
                 fontWeight: vars.typography.fontWeight['500'],
                 letterSpacing: vars.typography.letterSpacing['100'],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 fontSize: vars.typography.fontSize['200'],
                 lineHeight: vars.typography.lineHeight['200'],
                 fontWeight: vars.typography.fontWeight['700'],
                 letterSpacing: vars.typography.letterSpacing['100'],
-            }),
-            xl: layerStyle('components', {
+            },
+            xl: {
                 fontSize: vars.typography.fontSize['300'],
                 lineHeight: vars.typography.lineHeight['300'],
                 fontWeight: vars.typography.fontWeight['700'],
                 letterSpacing: vars.typography.letterSpacing['200'],
-            }),
+            },
         },
     },
 });
 
-export const image = layerStyle('components', {
+export const image = componentStyle({
     display: 'inline',
     objectFit: 'cover',
     width: '100%',

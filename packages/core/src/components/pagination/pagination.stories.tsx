@@ -164,6 +164,22 @@ export const TestBed: StoryObj<typeof Pagination.Root> = {
 
                     <Pagination.Next />
                 </Pagination.Root>
+
+                <Pagination.Root {...args} size="sm" defaultPage={1}>
+                    <Pagination.Previous />
+
+                    <Pagination.Items />
+
+                    <Pagination.Next />
+                </Pagination.Root>
+
+                <Pagination.Root {...args} size="xl" defaultPage={25}>
+                    <Pagination.Previous />
+
+                    <Pagination.Items />
+
+                    <Pagination.Next />
+                </Pagination.Root>
             </VStack>
         );
     },
