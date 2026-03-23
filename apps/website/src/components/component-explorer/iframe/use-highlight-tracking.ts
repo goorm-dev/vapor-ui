@@ -27,11 +27,11 @@ export function useHighlightTracking() {
             return;
         }
 
-        const selector = `[data-part="${highlightedPart}"]`;
+        const selector = `[data-part="${CSS.escape(highlightedPart)}"]`;
         const element = document.querySelector(selector);
 
-        // OverlayPrimitive가 Trigger를 덮고 있을 때 하이라이트 비활성화 (Dialog, Sheet 등)
-        // Menu/Select/Popover는 Overlay가 없으므로 Trigger 하이라이트 유지
+        // Disable highlight when OverlayPrimitive is covering Trigger (Dialog, Sheet, etc.)
+        // Keep Trigger highlight for Menu/Select/Popover since they have no Overlay
         if (highlightedPart === 'Trigger') {
             const overlay = document.querySelector('[data-part="OverlayPrimitive"]');
             if (overlay) {
