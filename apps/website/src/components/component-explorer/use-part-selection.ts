@@ -34,17 +34,37 @@ export function usePartSelection({
         setHoveredPart(partName);
     }, []);
 
-    const handlePartSelect = useCallback(
-        (partName: string) => {
+    const selectPart = useCallback(
+        (partName: string, options?: { announce?: boolean }) => {
+            const { announce = true } = options ?? {};
+
             setSelectedPart((prev) => {
-                const next = prev === partName ? null : partName;
-                setLiveAnnouncement(
-                    next ? `${displayName}.${next} 선택됨` : '파트 선택이 해제되었습니다.',
-                );
-                return next;
+                if (prev === partName) return prev;
+
+                if (announce) {
+                    setLiveAnnouncement(`${displayName}.${partName} 선택됨`);
+                }
+
+                return partName;
             });
         },
         [displayName],
+    );
+
+    const handlePartFocus = useCallback(
+        (partName: string) => {
+            setHoveredPart(partName);
+            selectPart(partName, { announce: false });
+        },
+        [selectPart],
+    );
+
+    const handlePartSelect = useCallback(
+        (partName: string) => {
+            setHoveredPart(partName);
+            selectPart(partName);
+        },
+        [selectPart],
     );
 
     const handleClearSelection = useCallback(() => {
@@ -58,6 +78,7 @@ export function usePartSelection({
         selectedPart,
         liveAnnouncement,
         handlePartHover,
+        handlePartFocus,
         handlePartSelect,
         handleClearSelection,
     };

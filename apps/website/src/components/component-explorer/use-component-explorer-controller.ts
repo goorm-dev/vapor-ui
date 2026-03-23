@@ -41,6 +41,7 @@ export function useComponentExplorerController({
         selectedPart,
         liveAnnouncement,
         handlePartHover,
+        handlePartFocus,
         handlePartSelect,
         handleClearSelection,
     } = usePartSelection({
@@ -63,6 +64,7 @@ export function useComponentExplorerController({
             parts: availableParts ?? [],
             selectedPart,
             onPartHover: handlePartHover,
+            onPartFocus: handlePartFocus,
             onPartSelect: handlePartSelect,
             showPrimitives: true,
             onClearSelection: handleClearSelection,
@@ -71,6 +73,7 @@ export function useComponentExplorerController({
             availableParts,
             displayName,
             handleClearSelection,
+            handlePartFocus,
             handlePartHover,
             handlePartSelect,
             selectedPart,

@@ -11,6 +11,7 @@ export interface AnatomyPanelProps {
     parts: string[];
     selectedPart: string | null;
     onPartHover: (partName: string | null) => void;
+    onPartFocus: (partName: string) => void;
     onPartSelect: (partName: string) => void;
     showPrimitives?: boolean;
     onClearSelection: () => void;
@@ -25,6 +26,7 @@ export const AnatomyPanel = memo(function AnatomyPanel({
     parts,
     selectedPart,
     onPartHover,
+    onPartFocus,
     onPartSelect,
     showPrimitives = false,
     onClearSelection,
@@ -47,6 +49,7 @@ export const AnatomyPanel = memo(function AnatomyPanel({
 
     const handlePartHover = useCallback((partName: string) => onPartHover(partName), [onPartHover]);
     const handleMouseLeave = useCallback(() => onPartHover(null), [onPartHover]);
+    const initialFocusablePart = filteredParts[0] ?? null;
 
     const focusOption = useCallback((partName: string) => {
         const element = listRef.current?.querySelector(`#part-${partName}`);
@@ -89,11 +92,10 @@ export const AnatomyPanel = memo(function AnatomyPanel({
             if (nextIndex !== null) {
                 const nextPart = filteredParts[nextIndex];
                 focusOption(nextPart);
-                onPartHover(nextPart);
                 event.preventDefault();
             }
         },
-        [filteredParts, onClearSelection, onPartHover, focusOption],
+        [filteredParts, onClearSelection, focusOption],
     );
 
     return (
@@ -129,7 +131,7 @@ export const AnatomyPanel = memo(function AnatomyPanel({
             <div className="flex-1 overflow-y-auto overscroll-contain">
                 {/* Main Parts */}
                 <div className="p-2" role="group" aria-label="Parts">
-                    {mainParts.map((partName, index) => (
+                    {mainParts.map((partName) => (
                         <PartOption
                             key={partName}
                             partName={partName}
@@ -140,13 +142,13 @@ export const AnatomyPanel = memo(function AnatomyPanel({
                                     ? selectedPart === partName
                                         ? 0
                                         : -1
-                                    : index === 0
+                                    : initialFocusablePart === partName
                                       ? 0
                                       : -1
                             }
                             onMouseEnter={handlePartHover}
                             onMouseLeave={handleMouseLeave}
-                            onFocus={handlePartHover}
+                            onFocus={onPartFocus}
                             onClick={onPartSelect}
                         />
                     ))}
@@ -171,10 +173,18 @@ export const AnatomyPanel = memo(function AnatomyPanel({
                                     partName={partName}
                                     displayName={componentName}
                                     isSelected={selectedPart === partName}
-                                    tabIndex={selectedPart === partName ? 0 : -1}
+                                    tabIndex={
+                                        selectedPart
+                                            ? selectedPart === partName
+                                                ? 0
+                                                : -1
+                                            : initialFocusablePart === partName
+                                              ? 0
+                                              : -1
+                                    }
                                     onMouseEnter={handlePartHover}
                                     onMouseLeave={handleMouseLeave}
-                                    onFocus={handlePartHover}
+                                    onFocus={onPartFocus}
                                     onClick={onPartSelect}
                                 />
                             ))}
