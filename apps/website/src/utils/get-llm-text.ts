@@ -17,10 +17,6 @@ type ContentType = 'docs' | 'blocks' | 'theme';
 function processContent(content: string, contentType: ContentType): string {
     const baseContent = replaceFoundationDoc(replaceIconDoc(content));
 
-    if (contentType === 'blocks') {
-        return replaceBlockDoc(replaceComponentDoc(baseContent));
-    }
-
     if (contentType === 'theme') {
         return baseContent;
     }
