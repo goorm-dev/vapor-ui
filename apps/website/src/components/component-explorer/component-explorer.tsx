@@ -16,7 +16,7 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
     });
 
     return (
-        <div className="rounded-xl overflow-hidden border border-v-normal-200 bg-v-canvas-100 shadow-lg shadow-v-normal-900/5">
+        <div className="not-prose rounded-xl overflow-hidden border border-v-normal-200 bg-v-canvas-100 shadow-lg shadow-v-normal-900/5">
             <p className="sr-only" role="status" aria-live="polite">
                 {liveAnnouncement}
             </p>

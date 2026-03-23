@@ -35,12 +35,14 @@ export function usePartSelection({
     }, []);
 
     const handlePartSelect = useCallback(
-        (value: unknown) => {
-            const partName = typeof value === 'string' && value.length > 0 ? value : null;
-            setSelectedPart(partName);
-            setLiveAnnouncement(
-                partName ? `${displayName}.${partName} 선택됨` : '파트 선택이 해제되었습니다.',
-            );
+        (partName: string) => {
+            setSelectedPart((prev) => {
+                const next = prev === partName ? null : partName;
+                setLiveAnnouncement(
+                    next ? `${displayName}.${next} 선택됨` : '파트 선택이 해제되었습니다.',
+                );
+                return next;
+            });
         },
         [displayName],
     );
