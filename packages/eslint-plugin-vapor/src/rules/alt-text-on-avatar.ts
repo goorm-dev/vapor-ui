@@ -1,5 +1,6 @@
 import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
+import type { JSXAttribute, JSXOpeningElement, JSXSpreadAttribute } from 'estree-jsx';
 
 import { getSource } from '~/utils/get-source';
 import { isJSXIdentifier, isJSXMemberExpression } from '~/utils/guard';
@@ -57,7 +58,7 @@ export const altTextOnAvatarRule: Rule.RuleModule = {
                 }
             },
 
-            JSXOpeningElement(node) {
+            JSXOpeningElement(node: JSXOpeningElement) {
                 const nodeName = node.name;
                 let isTarget = false;
                 let detectedName = '';
@@ -92,14 +93,14 @@ export const altTextOnAvatarRule: Rule.RuleModule = {
 
                 // 속성 검사
                 const hasSrc = node.attributes.some(
-                    (attr) =>
+                    (attr: JSXAttribute | JSXSpreadAttribute) =>
                         attr.type === 'JSXAttribute' &&
                         attr.name.type === 'JSXIdentifier' && // NamespacedName (예: xml:lang) 방지
                         attr.name.name === 'src',
                 );
 
                 const hasAlt = node.attributes.some(
-                    (attr) =>
+                    (attr: JSXAttribute | JSXSpreadAttribute) =>
                         attr.type === 'JSXAttribute' &&
                         attr.name.type === 'JSXIdentifier' &&
                         attr.name.name === 'alt',
