@@ -17,15 +17,11 @@ type ContentType = 'docs' | 'blocks' | 'theme';
 function processContent(content: string, contentType: ContentType): string {
     const baseContent = replaceFoundationDoc(replaceIconDoc(content));
 
-    if (contentType === 'blocks') {
-        return replaceBlockDoc(replaceComponentDoc(baseContent));
-    }
-
     if (contentType === 'theme') {
         return baseContent;
     }
 
-    return replaceComponentDoc(baseContent);
+    return replaceBlockDoc(replaceComponentDoc(baseContent));
 }
 function getSourceUrl(contentType: ContentType, path: string): string {
     return `https://raw.githubusercontent.com/goorm-dev/vapor-ui/refs/heads/main/apps/website/content/${contentType}/${path}`;
