@@ -52,8 +52,8 @@ export const AnatomyPanel = memo(function AnatomyPanel({
     const initialFocusablePart = filteredParts[0] ?? null;
 
     const focusOption = useCallback((partName: string) => {
-        const element = listRef.current?.querySelector(`#part-${partName}`);
-        if (element instanceof HTMLElement) {
+        const element = listRef.current?.querySelector<HTMLElement>(`[id="part-${partName}"]`);
+        if (element) {
             element.focus();
         }
     }, []);
