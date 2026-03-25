@@ -1,5 +1,6 @@
 import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
+import type { JSXAttribute, JSXOpeningElement, JSXSpreadAttribute } from 'estree-jsx';
 
 import { getSource } from '~/utils/get-source';
 import { isJSXIdentifier, isJSXMemberExpression } from '~/utils/guard';
@@ -62,7 +63,7 @@ export const ariaLabelOnIconButtonRule: Rule.RuleModule = {
                 }
             },
 
-            JSXOpeningElement(node) {
+            JSXOpeningElement(node: JSXOpeningElement) {
                 const nodeName = node.name;
                 let isTarget = false;
 
@@ -88,7 +89,10 @@ export const ariaLabelOnIconButtonRule: Rule.RuleModule = {
                 if (!isTarget) return;
 
                 const hasAriaLabel = node.attributes.some(
-                    (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'aria-label',
+                    (attr: JSXAttribute | JSXSpreadAttribute) =>
+                        attr.type === 'JSXAttribute' &&
+                        attr.name.type === 'JSXIdentifier' &&
+                        attr.name.name === 'aria-label',
                 );
 
                 if (!hasAriaLabel) {
