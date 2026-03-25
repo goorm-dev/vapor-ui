@@ -17,6 +17,7 @@ export default function DefaultSearchDialog(props: SharedProps) {
     const { search, setSearch, query } = useDocsSearch({
         type: 'fetch',
     });
+    const shouldRenderDialog = props.open;
 
     return (
         <SearchDialog
@@ -25,15 +26,19 @@ export default function DefaultSearchDialog(props: SharedProps) {
             isLoading={query.isLoading}
             {...props}
         >
-            <SearchDialogOverlay />
-            <SearchDialogContent>
-                <SearchDialogHeader>
-                    <SearchDialogIcon />
-                    <SearchDialogInput />
-                    <SearchDialogClose />
-                </SearchDialogHeader>
-                <SearchDialogList items={query.data !== 'empty' ? query.data : null} />
-            </SearchDialogContent>
+            {shouldRenderDialog ? (
+                <>
+                    <SearchDialogOverlay />
+                    <SearchDialogContent>
+                        <SearchDialogHeader>
+                            <SearchDialogIcon />
+                            <SearchDialogInput />
+                            <SearchDialogClose />
+                        </SearchDialogHeader>
+                        <SearchDialogList items={query.data !== 'empty' ? query.data : null} />
+                    </SearchDialogContent>
+                </>
+            ) : null}
         </SearchDialog>
     );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentProps, HTMLAttributes, PointerEvent, ReactNode } from 'react';
-import { Fragment, createContext, useContext, useMemo, useRef, useState } from 'react';
+import { Fragment, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
@@ -309,8 +309,17 @@ function NavbarLinkItemMenu({
     const timeoutRef = useRef<number>(null);
     const freezeUntil = useRef<number>(null);
 
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current !== null) {
+                clearTimeout(timeoutRef.current);
+                timeoutRef.current = null;
+            }
+        };
+    }, []);
+
     const delaySetOpen = (value: boolean) => {
-        if (timeoutRef.current) {
+        if (timeoutRef.current !== null) {
             clearTimeout(timeoutRef.current);
             timeoutRef.current = null;
         }
