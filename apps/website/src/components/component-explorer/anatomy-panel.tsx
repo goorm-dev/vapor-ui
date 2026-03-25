@@ -101,7 +101,7 @@ export const AnatomyPanel = memo(function AnatomyPanel({
     return (
         <div
             role="listbox"
-            aria-label="Component anatomy"
+            aria-label="Component structure"
             aria-orientation="vertical"
             aria-describedby={instructionsId}
             ref={listRef}
