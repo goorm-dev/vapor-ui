@@ -126,6 +126,16 @@ For Figma conversion requests:
     - Apply style utility props using design tokens
     - Output production-ready code
 
+7. **Validate output**:
+    - Verify all imported components exist in the detected `@vapor-ui/core` version via `get-component-list.mjs`
+    - Confirm generated JSX uses valid props by cross-checking with `get-component-info.mjs`
+    - Compare visual structure against the Figma screenshot (`get_screenshot` MCP tool) to catch layout mismatches
+
+**Error recovery**:
+- If a 💙-prefixed node doesn't match a known vapor-ui component, fall back to a layout primitive (`Box`, `VStack`, `HStack`) and add a `{/* TODO: verify component mapping */}` comment
+- If `get_design_context` returns an empty or shallow tree, increase `depth` parameter (e.g., 8–10) and retry
+- If Figma URL parsing fails, prompt the user to confirm the `file_key` and `node_id` values manually
+
 ---
 
 ## Examples
