@@ -120,10 +120,13 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
         const [side, setSide] = useState<TooltipPositionerPrimitive.Props['side']>('bottom');
         const [align, setAlign] = useState<TooltipPositionerPrimitive.Props['align']>('center');
 
-        const ctx = useTooltipArrowContext();
+        const { triggerRef, positionerRef } = useTooltipArrowContext() ?? {};
+        // These refs can be null on the first render, so useArrowPosition initially returns {}.
+        // The extractPositions effect below updates side/align from the popup dataset, triggering a
+        // re-render after the trigger/positioner refs have been attached and the arrow can measure.
         const position = useArrowPosition({
-            triggerElement: ctx?.triggerRef.current ?? null,
-            positionerElement: ctx?.positionerRef.current ?? null,
+            triggerElement: triggerRef?.current ?? null,
+            positionerElement: positionerRef?.current ?? null,
             side: side ?? 'top',
             align: align ?? 'center',
             offset: side === 'top' || side === 'bottom' ? 12 : 6,

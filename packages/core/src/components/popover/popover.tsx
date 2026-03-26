@@ -132,10 +132,15 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
         const [side, setSide] = useState<PopoverPositionerPrimitive.Props['side']>('bottom');
         const [align, setAlign] = useState<PopoverPositionerPrimitive.Props['align']>('start');
 
-        const ctx = usePopoverArrowContext();
+        // These refs can be null on the first render, so useArrowPosition initially returns {}.
+        // The extractPositions effect below updates side/align from the popup dataset, triggering a
+        // re-render after the trigger/positioner refs have been attached and the arrow can measure.
+        const { triggerRef, positionerRef } = usePopoverArrowContext() ?? {};
+        // Popover keeps the hook default offset of 12 for every side, unlike Tooltip which uses
+        // 12 for top/bottom and 6 for left/right to match its tighter visual alignment.
         const position = useArrowPosition({
-            triggerElement: ctx?.triggerRef.current ?? null,
-            positionerElement: ctx?.positionerRef.current ?? null,
+            triggerElement: triggerRef?.current ?? null,
+            positionerElement: positionerRef?.current ?? null,
             side: side ?? 'bottom',
             align: align ?? 'center',
         });
