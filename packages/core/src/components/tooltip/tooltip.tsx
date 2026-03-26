@@ -6,9 +6,9 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
 import { useArrowPosition } from '~/hooks/use-arrow-position';
-import { createContext } from '~/libs/create-context';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
+import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
