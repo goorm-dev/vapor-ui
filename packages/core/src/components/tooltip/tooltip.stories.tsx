@@ -290,7 +290,9 @@ export const TestBed: StoryObj = {
                                 render={<Button>Inline End Tooltip</Button>}
                             />
                             <Tooltip.Popup
-                                positionerElement={<Tooltip.PositionerPrimitive side="inline-end" />}
+                                positionerElement={
+                                    <Tooltip.PositionerPrimitive side="inline-end" />
+                                }
                             >
                                 Tooltip content
                             </Tooltip.Popup>
