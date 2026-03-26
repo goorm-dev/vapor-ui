@@ -6,6 +6,8 @@ type Align = 'start' | 'center' | 'end';
 
 const ARROW_SIZE = 8;
 const MIN_PADDING = 12;
+const BLOCK_AXIS_OFFSET = '-11px';
+const INLINE_AXIS_OFFSET = '-7px';
 
 interface UseArrowPositionParams {
     triggerElement: Element | null;
@@ -15,6 +17,23 @@ interface UseArrowPositionParams {
     offset?: number;
 }
 
+export const getArrowSideStyle = (side: Side): CSSProperties => {
+    switch (side) {
+        case 'top':
+            return { bottom: BLOCK_AXIS_OFFSET, transform: 'rotate(-90deg)' };
+        case 'right':
+            return { left: INLINE_AXIS_OFFSET, transform: 'rotate(0deg)' };
+        case 'bottom':
+            return { top: BLOCK_AXIS_OFFSET, transform: 'rotate(90deg)' };
+        case 'left':
+            return { right: INLINE_AXIS_OFFSET, transform: 'rotate(180deg)' };
+        case 'inline-start':
+            return { right: INLINE_AXIS_OFFSET, transform: 'rotate(180deg)' };
+        case 'inline-end':
+            return { left: INLINE_AXIS_OFFSET, transform: 'rotate(0deg)' };
+    }
+};
+
 const computeArrowPosition = (
     triggerRect: DOMRect,
     positionerRect: DOMRect,
@@ -22,9 +41,10 @@ const computeArrowPosition = (
     align: Align,
     offset: number,
 ): CSSProperties => {
-    const isHorizontalSide = side === 'top' || side === 'bottom';
+    // Logical inline sides sit beside the trigger like left/right.
+    const usesHorizontalArrowOffset = side === 'top' || side === 'bottom';
 
-    if (isHorizontalSide) {
+    if (usesHorizontalArrowOffset) {
         const arrowLeft = triggerRect.left - positionerRect.left + offset;
         const maxLeft = positionerRect.width - ARROW_SIZE - MIN_PADDING;
         const clamped = Math.min(Math.max(arrowLeft, MIN_PADDING), maxLeft);
@@ -40,7 +60,7 @@ const computeArrowPosition = (
         return { left: 'unset', right: clampedRight };
     }
 
-    // side === 'left' | 'right'
+    // side === 'left' | 'right' | 'inline-start' | 'inline-end'
     const arrowTop = triggerRect.top - positionerRect.top + offset;
     const maxTop = positionerRect.height - ARROW_SIZE - MIN_PADDING;
     const clamped = Math.min(Math.max(arrowTop, MIN_PADDING), maxTop);

@@ -18,23 +18,4 @@ export const popup = componentStyle([
 export const arrow = componentStyle({
     display: 'flex',
     color: vars.color.background.contrast[200],
-
-    selectors: {
-        '&[data-side="top"]': {
-            bottom: '-11px',
-            transform: 'rotate(-90deg)',
-        },
-        '&[data-side="right"]': {
-            left: '-7px',
-            transform: 'rotate(0deg)',
-        },
-        '&[data-side="bottom"]': {
-            top: '-11px',
-            transform: 'rotate(90deg)',
-        },
-        '&[data-side="left"]': {
-            right: '-7px',
-            transform: 'rotate(180deg)',
-        },
-    },
 });

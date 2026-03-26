@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
-import { useArrowPosition } from '~/hooks/use-arrow-position';
+import { getArrowSideStyle, useArrowPosition } from '~/hooks/use-arrow-position';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
@@ -128,6 +128,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
             align: align ?? 'center',
             offset: side === 'top' || side === 'bottom' ? 12 : 6,
         });
+        const arrowStyle = { ...getArrowSideStyle(side ?? 'top'), ...position };
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);
@@ -163,7 +164,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
                 className={cn(styles.popup, className)}
                 {...componentProps}
             >
-                <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                <BaseTooltip.Arrow ref={arrowRef} style={arrowStyle} className={styles.arrow}>
                     <ArrowIcon />
                 </BaseTooltip.Arrow>
 

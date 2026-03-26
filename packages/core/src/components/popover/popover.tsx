@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
 
-import { useArrowPosition } from '~/hooks/use-arrow-position';
+import { getArrowSideStyle, useArrowPosition } from '~/hooks/use-arrow-position';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
@@ -139,6 +139,7 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
             side: side ?? 'bottom',
             align: align ?? 'center',
         });
+        const arrowStyle = { ...getArrowSideStyle(side ?? 'bottom'), ...position };
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);
@@ -174,7 +175,7 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
                 className={cn(styles.popup, className)}
                 {...componentProps}
             >
-                <BasePopover.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                <BasePopover.Arrow ref={arrowRef} style={arrowStyle} className={styles.arrow}>
                     <ArrowIcon />
                 </BasePopover.Arrow>
 

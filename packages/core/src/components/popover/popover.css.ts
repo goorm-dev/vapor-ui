@@ -22,26 +22,5 @@ export const arrow = componentStyle({
 
     width: vars.size.dimension[100],
     height: vars.size.dimension[200],
-
-    transform: 'rotate(180deg)',
     zIndex: 1,
-
-    selectors: {
-        '&[data-side="top"]': {
-            bottom: '-11px',
-            transform: 'rotate(-90deg)',
-        },
-        '&[data-side="right"]': {
-            left: '-7px',
-            transform: 'rotate(0deg)',
-        },
-        '&[data-side="bottom"]': {
-            top: '-11px',
-            transform: 'rotate(90deg)',
-        },
-        '&[data-side="left"]': {
-            right: '-7px',
-            transform: 'rotate(180deg)',
-        },
-    },
 });
