@@ -1,5 +1,63 @@
 # @vapor-ui/core
 
+## 1.2.0
+
+### All
+
+- add `forwardRef` to `Portal` elements ([#499](https://github.com/goorm-dev/vapor-ui/pull/499)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- bump @base-ui/react v1.2.0 ([#497](https://github.com/goorm-dev/vapor-ui/pull/497)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- support for functional className and style prop across all components ([#517](https://github.com/goorm-dev/vapor-ui/pull/517)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- bump @base-ui/react version ([#519](https://github.com/goorm-dev/vapor-ui/pull/519)) - Thanks [@vapor-ui](https://github.com/vapor-ui)!
+
+- implemente interaction layer corners using `box-shadow` and add animations to `Checkbox`, `Radio ([#515](https://github.com/goorm-dev/vapor-ui/pull/515)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Button
+
+- add `@base-ui/react` headless to the `Button` component ([#501](https://github.com/goorm-dev/vapor-ui/pull/501)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Checkbox
+
+- fix: improve checkbox border styles and interaction overlay sizing ([#354](https://github.com/goorm-dev/vapor-ui/pull/354)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Core
+
+- adjust dark `background.hint.100` to improve surface hierarchy on overlay backgrounds ([#518](https://github.com/goorm-dev/vapor-ui/pull/518)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Css
+
+- remove css all property ([#493](https://github.com/goorm-dev/vapor-ui/pull/493)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- remove duplication from deprecated sprinkles ([#494](https://github.com/goorm-dev/vapor-ui/pull/494)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- split sprinkles className and hash with `-` ([#495](https://github.com/goorm-dev/vapor-ui/pull/495)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Etc.
+
+- add `:active` pseudo-selector to utility CSS properties ([#535](https://github.com/goorm-dev/vapor-ui/pull/535)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Select
+
+- set the width and height of the `Select.TriggerIcon`'s SVG to 100%. ([#504](https://github.com/goorm-dev/vapor-ui/pull/504)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Selects
+
+- deprecate `Select.PlaceholderPrimitive` component ([#500](https://github.com/goorm-dev/vapor-ui/pull/500)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Switch
+
+- composite missing `className` prop ([#498](https://github.com/goorm-dev/vapor-ui/pull/498)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Toast
+
+- respect the user's reduced motion preference in toast animations ([#525](https://github.com/goorm-dev/vapor-ui/pull/525)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.1.0
+
 ## 1.1.0
 
 ### General changes

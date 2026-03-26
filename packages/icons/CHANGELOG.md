@@ -1,5 +1,13 @@
 # @vapor-ui/icons
 
+## 1.1.0
+
+### Etc.
+
+- Add new icons from Figma ([#539](https://github.com/goorm-dev/vapor-ui/pull/539)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **New Basic Icons:** `TriangleOutlineIcon`
+
 ## 1.0.1
 
 ### Etc.
