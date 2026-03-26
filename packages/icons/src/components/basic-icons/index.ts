@@ -551,3 +551,4 @@ export { default as Heading3OutlineIcon } from './Heading3OutlineIcon';
 export { default as Heading2OutlineIcon } from './Heading2OutlineIcon';
 export { default as Heading1OutlineIcon } from './Heading1OutlineIcon';
 export { default as Heading4OutlineIcon } from './Heading4OutlineIcon';
+export { default as TriangleOutlineIcon } from './TriangleOutlineIcon';
