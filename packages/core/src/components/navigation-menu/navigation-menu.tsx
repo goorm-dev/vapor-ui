@@ -1,11 +1,12 @@
 'use client';
 
-import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement, RefObject } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
+import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
@@ -20,6 +21,24 @@ import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { LinkVariants, ListVariants } from './navigation-menu.css';
 import * as styles from './navigation-menu.css';
+
+/* -------------------------------------------------------------------------------------------------
+ * NavigationMenuArrowContext (internal)
+ * -----------------------------------------------------------------------------------------------*/
+
+interface NavigationMenuArrowContextValue {
+    activeTriggerElement: Element | null;
+    setActiveTriggerElement: (element: Element | null) => void;
+    positionerRef: RefObject<HTMLElement | null>;
+}
+
+const [NavigationMenuArrowProvider, useNavigationMenuArrowContext] =
+    createContext<NavigationMenuArrowContextValue>({
+        name: 'NavigationMenuArrowContext',
+        strict: false,
+        hookName: 'useNavigationMenuArrowContext',
+        providerName: 'NavigationMenuRoot',
+    });
 
 type NavigationMenuVariants = ListVariants & LinkVariants;
 type NavigationMenuSharedProps = NavigationMenuVariants & { disabled?: boolean };
@@ -47,15 +66,22 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
 
         const { direction } = variantProps;
 
+        const [activeTriggerElement, setActiveTriggerElement] = useState<Element | null>(null);
+        const positionerRef = useRef<HTMLElement>(null);
+
         return (
-            <NavigationMenuProvider value={variantProps}>
-                <BaseNavigationMenu.Root
-                    ref={ref}
-                    orientation={direction}
-                    className={className}
-                    {...otherProps}
-                />
-            </NavigationMenuProvider>
+            <NavigationMenuArrowProvider
+                value={{ activeTriggerElement, setActiveTriggerElement, positionerRef }}
+            >
+                <NavigationMenuProvider value={variantProps}>
+                    <BaseNavigationMenu.Root
+                        ref={ref}
+                        orientation={direction}
+                        className={className}
+                        {...otherProps}
+                    />
+                </NavigationMenuProvider>
+            </NavigationMenuArrowProvider>
         );
     },
 );
@@ -149,13 +175,36 @@ export const NavigationMenuTriggerPrimitive = forwardRef<
 >((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { size, disabled: contextDisabled } = useNavigationMenuContext();
+    const arrowCtx = useNavigationMenuArrowContext();
+    const setActiveTrigger = arrowCtx?.setActiveTriggerElement;
+
+    const internalRef = useRef<HTMLButtonElement>(null);
+    const composedRef = arrowCtx ? composeRefs(internalRef, ref) : ref;
+
+    useEffect(() => {
+        const node = internalRef.current;
+        if (!node || !setActiveTrigger) return;
+
+        if (node.hasAttribute('data-popup-open')) {
+            setActiveTrigger(node);
+        }
+
+        const observer = new MutationObserver(() => {
+            if (node.hasAttribute('data-popup-open')) {
+                setActiveTrigger(node);
+            }
+        });
+        observer.observe(node, { attributes: true, attributeFilter: ['data-popup-open'] });
+
+        return () => observer.disconnect();
+    }, [setActiveTrigger]);
 
     const disabled = disabledProp ?? contextDisabled;
     const dataAttrs = createDataAttributes({ disabled });
 
     return (
         <BaseNavigationMenu.Trigger
-            ref={ref}
+            ref={composedRef}
             disabled={disabled}
             className={cn(styles.link({ size }), styles.trigger, className)}
             {...dataAttrs}
@@ -260,10 +309,12 @@ export const NavigationMenuPositionerPrimitive = forwardRef<
         className,
         ...componentProps
     } = resolveStyles(props);
+    const arrowCtx = useNavigationMenuArrowContext();
+    const composedRef = arrowCtx ? composeRefs(arrowCtx.positionerRef, ref) : ref;
 
     return (
         <BaseNavigationMenu.Positioner
-            ref={ref}
+            ref={composedRef}
             side={side}
             align={align}
             sideOffset={sideOffset}
@@ -290,7 +341,13 @@ export const NavigationMenuPopupPrimitive = forwardRef<
     const [side, setSide] = useState<NavigationMenuPositionerPrimitive.Props['side']>();
     const [align, setAlign] = useState<NavigationMenuPositionerPrimitive.Props['align']>();
 
-    const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
+    const arrowCtx = useNavigationMenuArrowContext();
+    const position = useArrowPosition({
+        triggerElement: arrowCtx?.activeTriggerElement ?? null,
+        positionerElement: arrowCtx?.positionerRef.current ?? null,
+        side: side ?? 'bottom',
+        align: align ?? 'center',
+    });
 
     const popupRef = useRef<HTMLDivElement>(null);
     const composedRef = composeRefs(popupRef, ref);
@@ -340,32 +397,6 @@ const extractPositions = (dataset: DOMStringMap) => {
     const currentSide = dataset.side as NavigationMenuPositionerPrimitive.Props['side'];
     const currentAlign = dataset.align as NavigationMenuPositionerPrimitive.Props['align'];
     return { side: currentSide, align: currentAlign };
-};
-
-/* -----------------------------------------------------------------------------------------------*/
-
-type ArrowPositionProps = Pick<NavigationMenuPositionerPrimitive.Props, 'side' | 'align'> & {
-    offset?: number;
-};
-
-const getArrowPosition = ({
-    side = 'top',
-    align = 'center',
-    offset = 12,
-}: ArrowPositionProps): CSSProperties => {
-    const positionMap = {
-        'top-start': { left: offset, right: 'unset' },
-        'top-end': { left: 'unset', right: offset },
-        'bottom-start': { left: offset, right: 'unset' },
-        'bottom-end': { left: 'unset', right: offset },
-        'left-start': { top: offset, bottom: 'unset' },
-        'left-end': { top: 'unset', bottom: offset },
-        'right-start': { top: offset, bottom: 'unset' },
-        'right-end': { top: 'unset', bottom: offset },
-    };
-
-    const key = `${side}-${align}` as keyof typeof positionMap;
-    return positionMap[key] || {};
 };
 
 /* -----------------------------------------------------------------------------------------------*/

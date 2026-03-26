@@ -1,10 +1,12 @@
 'use client';
 
-import type { CSSProperties, ComponentProps, ReactElement } from 'react';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import type { ComponentProps, ReactElement, RefObject } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
 
+import { useArrowPosition } from '~/hooks/use-arrow-position';
+import { createContext } from '~/libs/create-context';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { vars } from '~/styles/themes.css';
@@ -17,11 +19,34 @@ import type { VaporUIComponentProps } from '~/utils/types';
 import * as styles from './popover.css';
 
 /* -------------------------------------------------------------------------------------------------
+ * PopoverArrowContext (internal)
+ * -----------------------------------------------------------------------------------------------*/
+
+interface PopoverArrowContextValue {
+    triggerRef: RefObject<Element | null>;
+    positionerRef: RefObject<HTMLElement | null>;
+}
+
+const [PopoverArrowProvider, usePopoverArrowContext] = createContext<PopoverArrowContextValue>({
+    name: 'PopoverArrowContext',
+    strict: false,
+    hookName: 'usePopoverArrowContext',
+    providerName: 'PopoverRoot',
+});
+
+/* -------------------------------------------------------------------------------------------------
  * Popover.Root
  * -----------------------------------------------------------------------------------------------*/
 
 export const PopoverRoot = (props: PopoverRoot.Props) => {
-    return <BasePopover.Root {...props} />;
+    const triggerRef = useRef<Element>(null);
+    const positionerRef = useRef<HTMLElement>(null);
+
+    return (
+        <PopoverArrowProvider value={{ triggerRef, positionerRef }}>
+            <BasePopover.Root {...props} />
+        </PopoverArrowProvider>
+    );
 };
 PopoverRoot.displayName = 'Popover.Root';
 
@@ -31,8 +56,10 @@ PopoverRoot.displayName = 'Popover.Root';
 
 export const PopoverTrigger = forwardRef<HTMLButtonElement, PopoverTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
+    const ctx = usePopoverArrowContext();
+    const composedRef = ctx ? composeRefs(ctx.triggerRef, ref) : ref;
 
-    return <BasePopover.Trigger ref={ref} {...componentProps} />;
+    return <BasePopover.Trigger ref={composedRef} {...componentProps} />;
 });
 PopoverTrigger.displayName = 'Popover.Trigger';
 
@@ -75,10 +102,12 @@ export const PopoverPositionerPrimitive = forwardRef<
         collisionAvoidance,
         ...componentProps
     } = resolveStyles(props);
+    const ctx = usePopoverArrowContext();
+    const composedRef = ctx ? composeRefs(ctx.positionerRef, ref) : ref;
 
     return (
         <BasePopover.Positioner
-            ref={ref}
+            ref={composedRef}
             side={side}
             align={align}
             sideOffset={sideOffset}
@@ -103,7 +132,13 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
         const [side, setSide] = useState<PopoverPositionerPrimitive.Props['side']>('bottom');
         const [align, setAlign] = useState<PopoverPositionerPrimitive.Props['align']>('start');
 
-        const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
+        const ctx = usePopoverArrowContext();
+        const position = useArrowPosition({
+            triggerElement: ctx?.triggerRef.current ?? null,
+            positionerElement: ctx?.positionerRef.current ?? null,
+            side: side ?? 'bottom',
+            align: align ?? 'center',
+        });
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);
@@ -206,32 +241,6 @@ export const PopoverDescription = forwardRef<HTMLParagraphElement, PopoverDescri
     },
 );
 PopoverDescription.displayName = 'Popover.Description';
-
-/* -----------------------------------------------------------------------------------------------*/
-
-type ArrowPositionProps = Pick<PopoverPositionerPrimitive.Props, 'side' | 'align'> & {
-    offset?: number;
-};
-
-const getArrowPosition = ({
-    side = 'top',
-    align = 'center',
-    offset = 12,
-}: ArrowPositionProps): CSSProperties => {
-    const positionMap = {
-        'top-start': { left: offset, right: 'unset' },
-        'top-end': { left: 'unset', right: offset },
-        'bottom-start': { left: offset, right: 'unset' },
-        'bottom-end': { left: 'unset', right: offset },
-        'left-start': { top: offset, bottom: 'unset' },
-        'left-end': { top: 'unset', bottom: offset },
-        'right-start': { top: offset, bottom: 'unset' },
-        'right-end': { top: 'unset', bottom: offset },
-    };
-
-    const key = `${side}-${align}` as keyof typeof positionMap;
-    return positionMap[key] || {};
-};
 
 /* -----------------------------------------------------------------------------------------------*/
 

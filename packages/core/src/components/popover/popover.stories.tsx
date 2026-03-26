@@ -203,7 +203,6 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
                             <Popover.PositionerPrimitive
                                 side="bottom"
                                 align="end"
-                                alignOffset={100}
                                 collisionAvoidance={{ align: 'flip' }}
                             />
                         }
