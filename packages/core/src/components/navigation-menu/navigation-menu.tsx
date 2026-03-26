@@ -175,29 +175,28 @@ export const NavigationMenuTriggerPrimitive = forwardRef<
 >((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { size, disabled: contextDisabled } = useNavigationMenuContext();
-    const arrowCtx = useNavigationMenuArrowContext();
-    const setActiveTrigger = arrowCtx?.setActiveTriggerElement;
+    const { setActiveTriggerElement } = useNavigationMenuArrowContext() ?? {};
 
     const internalRef = useRef<HTMLButtonElement>(null);
-    const composedRef = arrowCtx ? composeRefs(internalRef, ref) : ref;
+    const composedRef = composeRefs(internalRef, ref);
 
     useEffect(() => {
         const node = internalRef.current;
-        if (!node || !setActiveTrigger) return;
+        if (!node || !setActiveTriggerElement) return;
 
         if (node.hasAttribute('data-popup-open')) {
-            setActiveTrigger(node);
+            setActiveTriggerElement(node);
         }
 
         const observer = new MutationObserver(() => {
             if (node.hasAttribute('data-popup-open')) {
-                setActiveTrigger(node);
+                setActiveTriggerElement(node);
             }
         });
         observer.observe(node, { attributes: true, attributeFilter: ['data-popup-open'] });
 
         return () => observer.disconnect();
-    }, [setActiveTrigger]);
+    }, [setActiveTriggerElement]);
 
     const disabled = disabledProp ?? contextDisabled;
     const dataAttrs = createDataAttributes({ disabled });
@@ -309,8 +308,8 @@ export const NavigationMenuPositionerPrimitive = forwardRef<
         className,
         ...componentProps
     } = resolveStyles(props);
-    const arrowCtx = useNavigationMenuArrowContext();
-    const composedRef = arrowCtx ? composeRefs(arrowCtx.positionerRef, ref) : ref;
+    const { positionerRef } = useNavigationMenuArrowContext() ?? {};
+    const composedRef = composeRefs(positionerRef, ref);
 
     return (
         <BaseNavigationMenu.Positioner
@@ -341,10 +340,10 @@ export const NavigationMenuPopupPrimitive = forwardRef<
     const [side, setSide] = useState<NavigationMenuPositionerPrimitive.Props['side']>();
     const [align, setAlign] = useState<NavigationMenuPositionerPrimitive.Props['align']>();
 
-    const arrowCtx = useNavigationMenuArrowContext();
+    const { activeTriggerElement, positionerRef } = useNavigationMenuArrowContext() ?? {};
     const position = useArrowPosition({
-        triggerElement: arrowCtx?.activeTriggerElement ?? null,
-        positionerElement: arrowCtx?.positionerRef.current ?? null,
+        triggerElement: activeTriggerElement ?? null,
+        positionerElement: positionerRef?.current ?? null,
         side: side ?? 'bottom',
         align: align ?? 'center',
     });

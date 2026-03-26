@@ -6,6 +6,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Popover as BasePopover } from '@base-ui/react/popover';
 
 import { getArrowSideStyle, useArrowPosition } from '~/hooks/use-arrow-position';
+import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
@@ -25,6 +26,8 @@ import * as styles from './popover.css';
 interface PopoverArrowContextValue {
     triggerRef: RefObject<Element | null>;
     positionerRef: RefObject<HTMLElement | null>;
+    arrowPadding: number;
+    setArrowPadding: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const [PopoverArrowProvider, usePopoverArrowContext] = createContext<PopoverArrowContextValue>({
@@ -34,6 +37,8 @@ const [PopoverArrowProvider, usePopoverArrowContext] = createContext<PopoverArro
     providerName: 'PopoverRoot',
 });
 
+const DEFAULT_POPOVER_ARROW_PADDING = 12;
+
 /* -------------------------------------------------------------------------------------------------
  * Popover.Root
  * -----------------------------------------------------------------------------------------------*/
@@ -41,9 +46,10 @@ const [PopoverArrowProvider, usePopoverArrowContext] = createContext<PopoverArro
 export const PopoverRoot = (props: PopoverRoot.Props) => {
     const triggerRef = useRef<Element>(null);
     const positionerRef = useRef<HTMLElement>(null);
+    const [arrowPadding, setArrowPadding] = useState(DEFAULT_POPOVER_ARROW_PADDING);
 
     return (
-        <PopoverArrowProvider value={{ triggerRef, positionerRef }}>
+        <PopoverArrowProvider value={{ triggerRef, positionerRef, arrowPadding, setArrowPadding }}>
             <BasePopover.Root {...props} />
         </PopoverArrowProvider>
     );
@@ -56,8 +62,8 @@ PopoverRoot.displayName = 'Popover.Root';
 
 export const PopoverTrigger = forwardRef<HTMLButtonElement, PopoverTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
-    const ctx = usePopoverArrowContext();
-    const composedRef = ctx ? composeRefs(ctx.triggerRef, ref) : ref;
+    const { triggerRef } = usePopoverArrowContext() ?? {};
+    const composedRef = composeRefs(triggerRef, ref);
 
     return <BasePopover.Trigger ref={composedRef} {...componentProps} />;
 });
@@ -99,11 +105,16 @@ export const PopoverPositionerPrimitive = forwardRef<
         side = 'bottom',
         align = 'center',
         sideOffset = 8,
+        arrowPadding = DEFAULT_POPOVER_ARROW_PADDING,
         collisionAvoidance,
         ...componentProps
     } = resolveStyles(props);
-    const ctx = usePopoverArrowContext();
-    const composedRef = ctx ? composeRefs(ctx.positionerRef, ref) : ref;
+    const { positionerRef, setArrowPadding } = usePopoverArrowContext() ?? {};
+    const composedRef = composeRefs(positionerRef, ref);
+
+    useIsoLayoutEffect(() => {
+        setArrowPadding?.(arrowPadding);
+    }, [arrowPadding, setArrowPadding]);
 
     return (
         <BasePopover.Positioner
@@ -111,6 +122,7 @@ export const PopoverPositionerPrimitive = forwardRef<
             side={side}
             align={align}
             sideOffset={sideOffset}
+            arrowPadding={arrowPadding}
             collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
             {...componentProps}
         />
@@ -135,14 +147,15 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
         // These refs can be null on the first render, so useArrowPosition initially returns {}.
         // The extractPositions effect below updates side/align from the popup dataset, triggering a
         // re-render after the trigger/positioner refs have been attached and the arrow can measure.
-        const { triggerRef, positionerRef } = usePopoverArrowContext() ?? {};
-        // Popover keeps the hook default offset of 12 for every side, unlike Tooltip which uses
-        // 12 for top/bottom and 6 for left/right to match its tighter visual alignment.
+        const { triggerRef, positionerRef, arrowPadding } = usePopoverArrowContext() ?? {};
+        // Keep the arrow's start correction and Base UI's arrowPadding in sync. Popover defaults to
+        // 12, but a user-provided PositionerPrimitive.arrowPadding should override both paths.
         const position = useArrowPosition({
             triggerElement: triggerRef?.current ?? null,
             positionerElement: positionerRef?.current ?? null,
             side: side ?? 'bottom',
             align: align ?? 'center',
+            offset: arrowPadding ?? DEFAULT_POPOVER_ARROW_PADDING,
         });
         const arrowStyle = { ...getArrowSideStyle(side ?? 'bottom'), ...position };
 

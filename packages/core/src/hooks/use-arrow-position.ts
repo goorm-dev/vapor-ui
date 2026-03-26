@@ -115,7 +115,7 @@ export const useArrowPosition = ({
     // Recalculate on side/align change (flip)
     useEffect(() => {
         recalculate();
-    }, [recalculate, side, align]);
+    }, [recalculate, side, align, offset]);
 
     // Observe positioner style changes (shift)
     useEffect(() => {

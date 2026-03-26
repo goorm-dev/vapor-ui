@@ -217,6 +217,44 @@ describe('useArrowPosition', () => {
         });
     });
 
+    it('recalculates when offset changes', async () => {
+        const triggerRectRef = {
+            current: createRect({ left: 40, top: 30, width: 20, height: 20 }),
+        };
+        const positionerRectRef = {
+            current: createRect({ left: 10, top: 10, width: 100, height: 100 }),
+        };
+
+        const rendered = render(
+            <TestHarness
+                side="top"
+                align="start"
+                offset={12}
+                triggerRectRef={triggerRectRef}
+                positionerRectRef={positionerRectRef}
+            />,
+        );
+        const arrow = rendered.getByTestId('arrow');
+
+        await waitFor(() => {
+            expect(arrow).toHaveStyle({ left: '42px' });
+        });
+
+        rendered.rerender(
+            <TestHarness
+                side="top"
+                align="start"
+                offset={8}
+                triggerRectRef={triggerRectRef}
+                positionerRectRef={positionerRectRef}
+            />,
+        );
+
+        await waitFor(() => {
+            expect(arrow).toHaveStyle({ left: '38px' });
+        });
+    });
+
     it('clamps computed offsets within the positioner bounds', async () => {
         const triggerRectRef = {
             current: createRect({ left: -20, top: 30, width: 20, height: 20 }),

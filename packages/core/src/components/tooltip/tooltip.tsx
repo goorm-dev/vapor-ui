@@ -6,6 +6,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
 import { getArrowSideStyle, useArrowPosition } from '~/hooks/use-arrow-position';
+import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
@@ -25,6 +26,8 @@ import * as styles from './tooltip.css';
 interface TooltipArrowContextValue {
     triggerRef: RefObject<Element | null>;
     positionerRef: RefObject<HTMLElement | null>;
+    arrowPadding: number;
+    setArrowPadding: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const [TooltipArrowProvider, useTooltipArrowContext] = createContext<TooltipArrowContextValue>({
@@ -34,6 +37,8 @@ const [TooltipArrowProvider, useTooltipArrowContext] = createContext<TooltipArro
     providerName: 'TooltipRoot',
 });
 
+const DEFAULT_TOOLTIP_ARROW_PADDING = 6;
+
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Root
  * -----------------------------------------------------------------------------------------------*/
@@ -41,9 +46,10 @@ const [TooltipArrowProvider, useTooltipArrowContext] = createContext<TooltipArro
 export const TooltipRoot = (props: TooltipRoot.Props) => {
     const triggerRef = useRef<Element>(null);
     const positionerRef = useRef<HTMLElement>(null);
+    const [arrowPadding, setArrowPadding] = useState(DEFAULT_TOOLTIP_ARROW_PADDING);
 
     return (
-        <TooltipArrowProvider value={{ triggerRef, positionerRef }}>
+        <TooltipArrowProvider value={{ triggerRef, positionerRef, arrowPadding, setArrowPadding }}>
             <BaseTooltip.Root {...props} />
         </TooltipArrowProvider>
     );
@@ -55,8 +61,8 @@ export const TooltipRoot = (props: TooltipRoot.Props) => {
 
 export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
-    const ctx = useTooltipArrowContext();
-    const composedRef = ctx ? composeRefs(ctx.triggerRef, ref) : ref;
+    const { triggerRef } = useTooltipArrowContext() ?? {};
+    const composedRef = composeRefs(triggerRef, ref);
 
     return <BaseTooltip.Trigger ref={composedRef} {...componentProps} />;
 });
@@ -87,11 +93,16 @@ export const TooltipPositionerPrimitive = forwardRef<
         side = 'top',
         align = 'center',
         sideOffset = 8,
+        arrowPadding = DEFAULT_TOOLTIP_ARROW_PADDING,
         collisionAvoidance,
         ...componentProps
     } = resolveStyles(props);
-    const ctx = useTooltipArrowContext();
-    const composedRef = ctx ? composeRefs(ctx.positionerRef, ref) : ref;
+    const { positionerRef, setArrowPadding } = useTooltipArrowContext() ?? {};
+    const composedRef = composeRefs(positionerRef, ref);
+
+    useIsoLayoutEffect(() => {
+        setArrowPadding?.(arrowPadding);
+    }, [arrowPadding, setArrowPadding]);
 
     return (
         <BaseTooltip.Positioner
@@ -99,6 +110,7 @@ export const TooltipPositionerPrimitive = forwardRef<
             side={side}
             align={align}
             sideOffset={sideOffset}
+            arrowPadding={arrowPadding}
             collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
             {...componentProps}
         />
@@ -120,7 +132,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
         const [side, setSide] = useState<TooltipPositionerPrimitive.Props['side']>('bottom');
         const [align, setAlign] = useState<TooltipPositionerPrimitive.Props['align']>('center');
 
-        const { triggerRef, positionerRef } = useTooltipArrowContext() ?? {};
+        const { triggerRef, positionerRef, arrowPadding } = useTooltipArrowContext() ?? {};
         // These refs can be null on the first render, so useArrowPosition initially returns {}.
         // The extractPositions effect below updates side/align from the popup dataset, triggering a
         // re-render after the trigger/positioner refs have been attached and the arrow can measure.
@@ -129,7 +141,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
             positionerElement: positionerRef?.current ?? null,
             side: side ?? 'top',
             align: align ?? 'center',
-            offset: side === 'top' || side === 'bottom' ? 12 : 6,
+            offset: arrowPadding ?? DEFAULT_TOOLTIP_ARROW_PADDING,
         });
         const arrowStyle = { ...getArrowSideStyle(side ?? 'top'), ...position };
 
