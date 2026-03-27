@@ -12,7 +12,7 @@ import { replaceIconDoc } from '~/utils/get-icon-doc';
 
 const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 
-type ContentType = 'docs' | 'blocks' | 'theme';
+type ContentType = 'docs' | 'theme';
 
 function processContent(content: string, contentType: ContentType): string {
     const baseContent = replaceFoundationDoc(replaceIconDoc(content));
@@ -23,8 +23,12 @@ function processContent(content: string, contentType: ContentType): string {
 
     return replaceBlockDoc(replaceComponentDoc(baseContent));
 }
-function getSourceUrl(contentType: ContentType, path: string): string {
-    return `https://raw.githubusercontent.com/goorm-dev/vapor-ui/refs/heads/main/apps/website/content/${contentType}/${path}`;
+
+function getSourceUrl(fullPath: string): string {
+    const marker = 'apps/website/content/';
+    const idx = fullPath.indexOf(marker);
+    const relativePath = idx !== -1 ? fullPath.slice(idx) : fullPath;
+    return `https://raw.githubusercontent.com/goorm-dev/vapor-ui/refs/heads/main/${relativePath}`;
 }
 
 export async function getLLMText(
@@ -34,7 +38,7 @@ export async function getLLMText(
     try {
         const rawContent = await page.data.getText('raw');
         const content = processContent(rawContent, contentType);
-        const sourceUrl = getSourceUrl(contentType, page.path);
+        const sourceUrl = getSourceUrl(page.data.info.fullPath);
         const processed = await processor.process({
             path: page.data.info.fullPath,
             value: content,
@@ -49,7 +53,7 @@ ${page.data.description}
 ${processed.value}`;
     } catch (error) {
         console.error(`Error processing page ${page.url}:`, error);
-        const sourceUrl = getSourceUrl(contentType, page.path);
+        const sourceUrl = getSourceUrl(page.data.info.fullPath);
 
         return `# ${page.data.title}
 URL: ${page.url}
