@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const WORKSPACE_ROOT = path.resolve(__dirname, '../../');
 const PACKAGES_DIR = path.join(WORKSPACE_ROOT, 'packages');
-const TARGET_DIR = path.join(WORKSPACE_ROOT, 'apps/website/content/docs/getting-started/releases');
+const TARGET_DIR = path.join(WORKSPACE_ROOT, 'apps/website/content/docs/releases');
 
 function getDirectories(srcPath) {
     if (!fs.existsSync(srcPath)) return [];
