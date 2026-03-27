@@ -6,13 +6,13 @@
 
 - add `forwardRef` to `Portal` elements ([#499](https://github.com/goorm-dev/vapor-ui/pull/499)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-- bump @base-ui/react v1.2.0 ([#497](https://github.com/goorm-dev/vapor-ui/pull/497)) - Thanks [@noahchoii](https://github.com/noahchoii)!
-
 - support for functional className and style prop across all components ([#517](https://github.com/goorm-dev/vapor-ui/pull/517)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-- bump @base-ui/react version ([#519](https://github.com/goorm-dev/vapor-ui/pull/519)) - Thanks [@vapor-ui](https://github.com/vapor-ui)!
-
 - implemente interaction layer corners using `box-shadow` and add animations to `Checkbox`, `Radio ([#515](https://github.com/goorm-dev/vapor-ui/pull/515)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- bump @base-ui/react v1.2.0 ([#497](https://github.com/goorm-dev/vapor-ui/pull/497)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- bump @base-ui/react version ([#519](https://github.com/goorm-dev/vapor-ui/pull/519)) - Thanks [@vapor-ui](https://github.com/vapor-ui)!
 
 ### Button
 
@@ -34,17 +34,13 @@
 
 - split sprinkles className and hash with `-` ([#495](https://github.com/goorm-dev/vapor-ui/pull/495)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Etc.
-
-- add `:active` pseudo-selector to utility CSS properties ([#535](https://github.com/goorm-dev/vapor-ui/pull/535)) - Thanks [@noahchoii](https://github.com/noahchoii)!
-
 ### Select
 
 - set the width and height of the `Select.TriggerIcon`'s SVG to 100%. ([#504](https://github.com/goorm-dev/vapor-ui/pull/504)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ### Selects
 
-- deprecate `Select.PlaceholderPrimitive` component ([#500](https://github.com/goorm-dev/vapor-ui/pull/500)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+- deprecate `Select.PlaceholderPrimitive` component. Use `data-placeholder` for custom styling. ([#500](https://github.com/goorm-dev/vapor-ui/pull/500)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ### Switch
 
@@ -53,6 +49,10 @@
 ### Toast
 
 - respect the user's reduced motion preference in toast animations ([#525](https://github.com/goorm-dev/vapor-ui/pull/525)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Etc.
+
+- add `:active` pseudo-selector to utility CSS properties ([#535](https://github.com/goorm-dev/vapor-ui/pull/535)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ### Updated Dependencies
 
