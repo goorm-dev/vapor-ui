@@ -164,7 +164,7 @@ async function sendSlackNotification(packages) {
             type: 'section',
             text: {
                 type: 'mrkdwn',
-                text: `<https://vapor-ui.goorm.io/docs/getting-started/releases/core|[*${corePackage.name} v${corePackage.version}*]>`,
+                text: `<https://vapor-ui.goorm.io/docs/releases/core|[*${corePackage.name} v${corePackage.version}*]>`,
             },
         });
 
@@ -185,7 +185,7 @@ async function sendSlackNotification(packages) {
 
         for (const pkg of otherPackages) {
             const pkgName = pkg.name.replace('@vapor-ui/', '');
-            const docsUrl = `https://vapor-ui.goorm.io/docs/getting-started/releases/${pkgName}`;
+            const docsUrl = `https://vapor-ui.goorm.io/docs/releases/${pkgName}`;
 
             blocks.push({
                 type: 'section',
