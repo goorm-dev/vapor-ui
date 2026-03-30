@@ -5,7 +5,6 @@ type Side = 'top' | 'bottom' | 'left' | 'right' | 'inline-end' | 'inline-start';
 type Align = 'start' | 'center' | 'end';
 
 const ARROW_SIZE = 8;
-const MIN_PADDING = 12;
 const BLOCK_AXIS_OFFSET = '-11px';
 const INLINE_AXIS_OFFSET = '-7px';
 
@@ -46,32 +45,32 @@ const computeArrowPosition = (
 
     if (usesHorizontalArrowOffset) {
         const arrowLeft = triggerRect.left - positionerRect.left + offset;
-        const maxLeft = positionerRect.width - ARROW_SIZE - MIN_PADDING;
-        const clamped = Math.min(Math.max(arrowLeft, MIN_PADDING), maxLeft);
+        const maxLeft = positionerRect.width - ARROW_SIZE - offset;
+        const clamped = Math.min(Math.max(arrowLeft, offset), maxLeft);
 
         if (align === 'start') {
             return { left: clamped, right: 'unset' };
         }
 
         const arrowRight = positionerRect.right - triggerRect.right + offset;
-        const maxRight = positionerRect.width - ARROW_SIZE - MIN_PADDING;
-        const clampedRight = Math.min(Math.max(arrowRight, MIN_PADDING), maxRight);
+        const maxRight = positionerRect.width - ARROW_SIZE - offset;
+        const clampedRight = Math.min(Math.max(arrowRight, offset), maxRight);
 
         return { left: 'unset', right: clampedRight };
     }
 
     // side === 'left' | 'right' | 'inline-start' | 'inline-end'
     const arrowTop = triggerRect.top - positionerRect.top + offset;
-    const maxTop = positionerRect.height - ARROW_SIZE - MIN_PADDING;
-    const clamped = Math.min(Math.max(arrowTop, MIN_PADDING), maxTop);
+    const maxTop = positionerRect.height - ARROW_SIZE - offset;
+    const clamped = Math.min(Math.max(arrowTop, offset), maxTop);
 
     if (align === 'start') {
         return { top: clamped, bottom: 'unset' };
     }
 
     const arrowBottom = positionerRect.bottom - triggerRect.bottom + offset;
-    const maxBottom = positionerRect.height - ARROW_SIZE - MIN_PADDING;
-    const clampedBottom = Math.min(Math.max(arrowBottom, MIN_PADDING), maxBottom);
+    const maxBottom = positionerRect.height - ARROW_SIZE - offset;
+    const clampedBottom = Math.min(Math.max(arrowBottom, offset), maxBottom);
 
     return { top: 'unset', bottom: clampedBottom };
 };

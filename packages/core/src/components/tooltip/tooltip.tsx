@@ -10,7 +10,6 @@ import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
-import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
@@ -241,11 +240,6 @@ const ArrowIcon = (props: ComponentProps<'svg'>) => {
             fill="none"
             {...props}
         >
-            <path
-                d="M1.17969 8.93457C0.620294 8.43733 0.620294 7.56267 1.17969 7.06543L7.25 1.66992L7.25 14.3301L1.17969 8.93457Z"
-                stroke={vars.color.border.normal}
-                strokeWidth="1"
-            />
             <path
                 d="M1.8858 7.24074C1.42019 7.63984 1.42019 8.36016 1.8858 8.75926L8 14L8 2L1.8858 7.24074Z"
                 fill="currentColor"
