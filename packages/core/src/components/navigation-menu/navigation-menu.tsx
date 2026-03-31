@@ -1,14 +1,15 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactElement, RefObject } from 'react';
+import type { ComponentProps, ReactElement, RefObject } from 'react';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
-import { useArrowPosition } from '~/hooks/use-arrow-position';
+import { getArrowSideStyle, useArrowPosition } from '~/hooks/use-arrow-position';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
+import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
@@ -341,11 +342,13 @@ export const NavigationMenuPopupPrimitive = forwardRef<
     const [align, setAlign] = useState<NavigationMenuPositionerPrimitive.Props['align']>();
 
     const { activeTriggerElement, positionerRef } = useNavigationMenuArrowContext() ?? {};
+    const arrowDimensions = { width: 16, height: 8 };
     const position = useArrowPosition({
         triggerElement: activeTriggerElement ?? null,
         positionerElement: positionerRef?.current ?? null,
         side: side ?? 'bottom',
         align: align ?? 'center',
+        arrowDimensions,
     });
 
     const popupRef = useRef<HTMLDivElement>(null);
@@ -382,7 +385,14 @@ export const NavigationMenuPopupPrimitive = forwardRef<
             className={cn(styles.popup, className)}
             {...componentProps}
         >
-            <BaseNavigationMenu.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+            <BaseNavigationMenu.Arrow
+                ref={arrowRef}
+                style={{
+                    ...getArrowSideStyle(side ?? 'bottom', arrowDimensions),
+                    ...position,
+                }}
+                className={styles.arrow}
+            >
                 <ArrowIcon />
             </BaseNavigationMenu.Arrow>
 
@@ -399,8 +409,8 @@ const extractPositions = (dataset: DOMStringMap) => {
 };
 
 /* -----------------------------------------------------------------------------------------------*/
-
-const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
+const ArrowIcon = (props: ComponentProps<'svg'>) => {
+    const clipId = useVaporId();
     return (
         <svg
             width="16"
@@ -410,19 +420,25 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
             xmlns="http://www.w3.org/2000/svg"
             {...props}
         >
-            <path
-                d="M7.06543 1.17969C7.56267 0.620294 8.43733 0.620294 8.93457 1.17969L14.3301 7.25H1.66992L7.06543 1.17969Z"
-                stroke={vars.color.border.normal}
-                strokeWidth="1"
-            />
-            <path
-                d="M8.75926 1.8858C8.36016 1.42019 7.63984 1.42019 7.24074 1.8858L2 8H14L8.75926 1.8858Z"
-                fill="currentColor"
-            />
+            <g clipPath={`url(#${clipId})`}>
+                <path
+                    d="M7.06543 1.17969C7.56267 0.620294 8.43733 0.620294 8.93457 1.17969L14.3301 7.25H1.66992L7.06543 1.17969Z"
+                    stroke={vars.color.border.normal}
+                    strokeWidth="1.5"
+                />
+                <path
+                    d="M8.75926 1.8858C8.36016 1.42019 7.63984 1.42019 7.24074 1.8858L2 8H14L8.75926 1.8858Z"
+                    fill={vars.color.background.overlay[100]}
+                />
+            </g>
+            <defs>
+                <clipPath id={clipId}>
+                    <rect width="16" height="8" fill="white" />
+                </clipPath>
+            </defs>
         </svg>
     );
 };
-
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.ViewportPrimitive
  * -----------------------------------------------------------------------------------------------*/

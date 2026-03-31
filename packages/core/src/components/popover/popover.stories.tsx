@@ -224,7 +224,7 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
                     >
                         <Popover.Title>Shift Popover</Popover.Title>
                         <Popover.Description>
-                            This is a left popover content. it is shifted inside.
+                            This is a right popover content. it is shifted inside.
                         </Popover.Description>
                     </Popover.Popup>
                 </Popover.Root>

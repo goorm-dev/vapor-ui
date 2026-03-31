@@ -144,20 +144,20 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
         const [side, setSide] = useState<PopoverPositionerPrimitive.Props['side']>('bottom');
         const [align, setAlign] = useState<PopoverPositionerPrimitive.Props['align']>('start');
 
-        // These refs can be null on the first render, so useArrowPosition initially returns {}.
-        // The extractPositions effect below updates side/align from the popup dataset, triggering a
-        // re-render after the trigger/positioner refs have been attached and the arrow can measure.
         const { triggerRef, positionerRef, arrowPadding } = usePopoverArrowContext() ?? {};
-        // Keep the arrow's start correction and Base UI's arrowPadding in sync. Popover defaults to
-        // 12, but a user-provided PositionerPrimitive.arrowPadding should override both paths.
+        const arrowDimensions = { width: 16, height: 8, overlap: 1 };
         const position = useArrowPosition({
             triggerElement: triggerRef?.current ?? null,
             positionerElement: positionerRef?.current ?? null,
             side: side ?? 'bottom',
             align: align ?? 'center',
             offset: arrowPadding ?? DEFAULT_POPOVER_ARROW_PADDING,
+            arrowDimensions,
         });
-        const arrowStyle = { ...getArrowSideStyle(side ?? 'bottom'), ...position };
+        const arrowStyle = {
+            ...getArrowSideStyle(side ?? 'bottom', arrowDimensions),
+            ...position,
+        };
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);
@@ -265,16 +265,30 @@ PopoverDescription.displayName = 'Popover.Description';
 
 const ArrowIcon = (props: ComponentProps<'svg'>) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 16" fill="none" {...props}>
-            <path
-                d="M1.17969 8.93457C0.620294 8.43733 0.620294 7.56267 1.17969 7.06543L7.25 1.66992L7.25 14.3301L1.17969 8.93457Z"
-                stroke={vars.color.border.normal}
-                strokeWidth="1"
-            />
-            <path
-                d="M1.8858 7.24074C1.42019 7.63984 1.42019 8.36016 1.8858 8.75926L8 14L8 2L1.8858 7.24074Z"
-                fill="currentColor"
-            />
+        <svg
+            width="16"
+            height="8"
+            viewBox="0 0 16 8"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
+        >
+            <g clip-path="url(#clip0_41205_285)">
+                <path
+                    d="M7.06543 1.17969C7.56267 0.620294 8.43733 0.620294 8.93457 1.17969L14.3301 7.25H1.66992L7.06543 1.17969Z"
+                    stroke={vars.color.border.normal}
+                    strokeWidth="1.5"
+                />
+                <path
+                    d="M8.75926 1.8858C8.36016 1.42019 7.63984 1.42019 7.24074 1.8858L2 8H14L8.75926 1.8858Z"
+                    fill="white"
+                />
+            </g>
+            <defs>
+                <clipPath id="clip0_41205_285">
+                    <rect width="16" height="8" fill="white" />
+                </clipPath>
+            </defs>
         </svg>
     );
 };

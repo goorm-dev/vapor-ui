@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
+import type { ArrowDimensions } from './use-arrow-position';
 import { getArrowSideStyle, useArrowPosition } from './use-arrow-position';
 
 type TestSide = 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
@@ -44,7 +45,10 @@ interface TestHarnessProps {
     triggerRectRef: { current: DOMRect };
     positionerRectRef: { current: DOMRect };
     offset?: number;
+    arrowDimensions?: ArrowDimensions;
 }
+
+const DEFAULT_TEST_ARROW_DIMENSIONS: ArrowDimensions = { width: 16, height: 8 };
 
 const TestHarness = ({
     side,
@@ -52,6 +56,7 @@ const TestHarness = ({
     triggerRectRef,
     positionerRectRef,
     offset = 12,
+    arrowDimensions = DEFAULT_TEST_ARROW_DIMENSIONS,
 }: TestHarnessProps) => {
     const triggerRef = useRef<HTMLButtonElement>(null);
     const positionerRef = useRef<HTMLDivElement>(null);
@@ -74,6 +79,7 @@ const TestHarness = ({
         side,
         align,
         offset,
+        arrowDimensions,
     });
 
     return (
@@ -89,14 +95,27 @@ const TestHarness = ({
 
 describe('getArrowSideStyle', () => {
     it.each([
-        ['top', { bottom: '-11px', transform: 'rotate(-90deg)' }],
-        ['right', { left: '-7px', transform: 'rotate(0deg)' }],
-        ['bottom', { top: '-11px', transform: 'rotate(90deg)' }],
-        ['left', { right: '-7px', transform: 'rotate(180deg)' }],
-        ['inline-start', { right: '-7px', transform: 'rotate(180deg)' }],
-        ['inline-end', { left: '-7px', transform: 'rotate(0deg)' }],
-    ] as const)('maps %s correctly', (side, expectedStyle) => {
-        expect(getArrowSideStyle(side)).toEqual(expectedStyle);
+        ['top', { width: 16, height: 8 }, { bottom: '-8px', transform: 'rotate(180deg)' }],
+        ['right', { width: 16, height: 8 }, { left: '-12px', transform: 'rotate(-90deg)' }],
+        ['bottom', { width: 16, height: 8 }, { top: '-8px', transform: 'rotate(0deg)' }],
+        ['left', { width: 16, height: 8 }, { right: '-12px', transform: 'rotate(90deg)' }],
+        ['inline-start', { width: 16, height: 8 }, { right: '-12px', transform: 'rotate(90deg)' }],
+        ['inline-end', { width: 16, height: 8 }, { left: '-12px', transform: 'rotate(-90deg)' }],
+    ] as const)('maps %s correctly', (side, dimensions, expectedStyle) => {
+        expect(getArrowSideStyle(side, dimensions)).toEqual(expectedStyle);
+    });
+
+    it('accounts for overlap when computing push-out', () => {
+        const dimensions = { width: 16, height: 8, overlap: 1 };
+
+        expect(getArrowSideStyle('top', dimensions)).toEqual({
+            bottom: '-7px',
+            transform: 'rotate(180deg)',
+        });
+        expect(getArrowSideStyle('left', dimensions)).toEqual({
+            right: '-11px',
+            transform: 'rotate(90deg)',
+        });
     });
 });
 

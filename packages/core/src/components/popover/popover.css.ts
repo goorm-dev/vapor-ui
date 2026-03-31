@@ -20,7 +20,7 @@ export const arrow = componentStyle({
     display: 'flex',
     color: vars.color.background.overlay[100], // It's background-color, but since it's an SVG, it's specified as color.
 
-    width: vars.size.dimension[100],
-    height: vars.size.dimension[200],
+    width: vars.size.dimension[200],
+    height: vars.size.dimension[100],
     zIndex: 1,
 });

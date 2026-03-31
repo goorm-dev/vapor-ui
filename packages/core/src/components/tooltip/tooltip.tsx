@@ -36,7 +36,7 @@ const [TooltipArrowProvider, useTooltipArrowContext] = createContext<TooltipArro
     providerName: 'TooltipRoot',
 });
 
-const DEFAULT_TOOLTIP_ARROW_PADDING = 6;
+const DEFAULT_TOOLTIP_ARROW_PADDING = 8;
 
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Root
@@ -128,21 +128,23 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
 
-        const [side, setSide] = useState<TooltipPositionerPrimitive.Props['side']>('bottom');
+        const [side, setSide] = useState<TooltipPositionerPrimitive.Props['side']>('top');
         const [align, setAlign] = useState<TooltipPositionerPrimitive.Props['align']>('center');
 
         const { triggerRef, positionerRef, arrowPadding } = useTooltipArrowContext() ?? {};
-        // These refs can be null on the first render, so useArrowPosition initially returns {}.
-        // The extractPositions effect below updates side/align from the popup dataset, triggering a
-        // re-render after the trigger/positioner refs have been attached and the arrow can measure.
+        const arrowDimensions = { width: 10, height: 6 };
         const position = useArrowPosition({
             triggerElement: triggerRef?.current ?? null,
             positionerElement: positionerRef?.current ?? null,
             side: side ?? 'top',
             align: align ?? 'center',
             offset: arrowPadding ?? DEFAULT_TOOLTIP_ARROW_PADDING,
+            arrowDimensions,
         });
-        const arrowStyle = { ...getArrowSideStyle(side ?? 'top'), ...position };
+        const arrowStyle = {
+            ...getArrowSideStyle(side ?? 'top', arrowDimensions),
+            ...position,
+        };
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);
@@ -233,15 +235,15 @@ TooltipPopup.displayName = 'Tooltip.Popup';
 const ArrowIcon = (props: ComponentProps<'svg'>) => {
     return (
         <svg
+            width="10"
+            height="6"
+            viewBox="0 0 10 6"
+            fill="var(--color-background-contrast-200)"
             xmlns="http://www.w3.org/2000/svg"
-            width="8"
-            height="16"
-            viewBox="0 0 8 16"
-            fill="none"
             {...props}
         >
             <path
-                d="M1.8858 7.24074C1.42019 7.63984 1.42019 8.36016 1.8858 8.75926L8 14L8 2L1.8858 7.24074Z"
+                d="M10 6L-7.86805e-07 6L4.06574 0.504109C4.56298 -0.168037 5.43702 -0.168037 5.93426 0.504109L10 6Z"
                 fill="currentColor"
             />
         </svg>
