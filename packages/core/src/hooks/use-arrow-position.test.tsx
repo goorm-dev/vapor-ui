@@ -4,7 +4,7 @@ import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import type { ArrowDimensions } from './use-arrow-position';
-import { getArrowSideStyle, useArrowPosition } from './use-arrow-position';
+import { useArrowPosition } from './use-arrow-position';
 
 type TestSide = 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 type TestAlign = 'start' | 'center' | 'end';
@@ -92,32 +92,6 @@ const TestHarness = ({
         </>
     );
 };
-
-describe('getArrowSideStyle', () => {
-    it.each([
-        ['top', { width: 16, height: 8 }, { bottom: '-8px', transform: 'rotate(180deg)' }],
-        ['right', { width: 16, height: 8 }, { left: '-12px', transform: 'rotate(-90deg)' }],
-        ['bottom', { width: 16, height: 8 }, { top: '-8px', transform: 'rotate(0deg)' }],
-        ['left', { width: 16, height: 8 }, { right: '-12px', transform: 'rotate(90deg)' }],
-        ['inline-start', { width: 16, height: 8 }, { right: '-12px', transform: 'rotate(90deg)' }],
-        ['inline-end', { width: 16, height: 8 }, { left: '-12px', transform: 'rotate(-90deg)' }],
-    ] as const)('maps %s correctly', (side, dimensions, expectedStyle) => {
-        expect(getArrowSideStyle(side, dimensions)).toEqual(expectedStyle);
-    });
-
-    it('accounts for overlap when computing push-out', () => {
-        const dimensions = { width: 16, height: 8, overlap: 1 };
-
-        expect(getArrowSideStyle('top', dimensions)).toEqual({
-            bottom: '-7px',
-            transform: 'rotate(180deg)',
-        });
-        expect(getArrowSideStyle('left', dimensions)).toEqual({
-            right: '-11px',
-            transform: 'rotate(90deg)',
-        });
-    });
-});
 
 describe('useArrowPosition', () => {
     it('computes a left offset for top-start placement', async () => {
@@ -329,8 +303,7 @@ describe('useArrowPosition', () => {
         );
 
         await waitFor(() => {
-            const style = arrow.getAttribute('style');
-            expect(style === null || style === '').toBe(true);
+            expect(arrow).toHaveStyle({ bottom: '-8px', transform: 'rotate(180deg)' });
         });
     });
 
