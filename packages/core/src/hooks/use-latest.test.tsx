@@ -72,8 +72,8 @@ describe('useLatest', () => {
                     cleanupSpy();
                     clearInterval(id);
                 };
-            // handlerRef is stable, so this effect should not re-run
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+                // handlerRef is stable, so this effect should not re-run
+                // eslint-disable-next-line react-hooks/exhaustive-deps
             }, []);
 
             return null;
