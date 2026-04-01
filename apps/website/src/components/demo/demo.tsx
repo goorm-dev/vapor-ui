@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { Box, Card, Tabs } from '@vapor-ui/core';
+import { Card, Tabs } from '@vapor-ui/core';
 import { PcOutlineIcon, PhoneIcon, TabletIcon } from '@vapor-ui/icons';
 
 import { DEVICE_TYPES, type DeviceType, TAB_TYPES, type TabType } from '~/constants/code-block';
@@ -67,37 +67,26 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
     const shouldShowDeviceToggle = selectedTab === TAB_TYPES['PREVIEW'] && showResponsiveToggle;
 
     return (
-        <Card.Header className="p-0 border-b-0 pt-v-50 bg-v-canvas-100 rounded-t-v-300 relative z-10">
-            <Box
-                $css={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: '$050',
-                    height: '$500',
-                    width: '100%',
-                    paddingBottom: '$050',
-                }}
-            >
-                <Tabs.List $css={{ width: '100%', paddingInline: '$300' }}>
-                    {Object.values(TAB_TYPES).map((tab) => (
-                        <Tabs.Button key={tab} value={tab}>
-                            {tab}
-                        </Tabs.Button>
-                    ))}
-                </Tabs.List>
-                {shouldShowDeviceToggle && (
-                    <ButtonToggleGroup
-                        items={deviceItems}
-                        defaultValue={DEVICE_TYPES['DESKTOP']}
-                        onValueChange={(value) => {
-                            if (isValidDeviceType(value)) {
-                                onDeviceChange(value);
-                            }
-                        }}
-                    />
-                )}
-            </Box>
+        <Card.Header className="p-0 border-b-0 pt-v-50 bg-v-canvas-100 rounded-t-v-300 relative @container">
+            <Tabs.List $css={{ width: '100%', paddingInline: '$300' }}>
+                {Object.values(TAB_TYPES).map((tab) => (
+                    <Tabs.Button key={tab} value={tab}>
+                        {tab}
+                    </Tabs.Button>
+                ))}
+            </Tabs.List>
+
+            {shouldShowDeviceToggle && (
+                <ButtonToggleGroup
+                    items={deviceItems}
+                    defaultValue={DEVICE_TYPES['DESKTOP']}
+                    onValueChange={(value) => {
+                        if (isValidDeviceType(value)) {
+                            onDeviceChange(value);
+                        }
+                    }}
+                />
+            )}
         </Card.Header>
     );
 };
@@ -140,36 +129,38 @@ const DemoContent = ({
     onDeviceChange,
 }: DemoContentProps) => {
     return (
-        <Card.Root>
-            <Tabs.Root
-                value={selectedTab}
-                onValueChange={onTabChange}
-                className="w-full rounded-v-300"
-                variant="line"
-                size="lg"
-            >
-                <DemoHeader
-                    selectedTab={selectedTab}
-                    showResponsiveToggle={showResponsiveToggle}
-                    onDeviceChange={onDeviceChange}
+        <Card.Root
+            render={
+                <Tabs.Root
+                    value={selectedTab}
+                    onValueChange={onTabChange}
+                    className="w-full rounded-v-300"
+                    variant="line"
+                    size="lg"
                 />
+            }
+        >
+            <DemoHeader
+                selectedTab={selectedTab}
+                showResponsiveToggle={showResponsiveToggle}
+                onDeviceChange={onDeviceChange}
+            />
 
-                <Card.Body className="p-0 bg-v-canvas rounded-b-v-300 overflow-hidden">
-                    <Tabs.Panel value={TAB_TYPES['PREVIEW']} className="rounded-t-none" keepMounted>
-                        <DemoPreviewPanel
-                            name={name}
-                            showResponsiveToggle={showResponsiveToggle}
-                            selectedDevice={selectedDevice}
-                        />
-                    </Tabs.Panel>
-                    <Tabs.Panel
-                        value="Code"
-                        className="flex flex-col gap-v-250 rounded-t-none rounded-b-v-300 bg-v-normal [&>figure]:m-0 [&>figure]:border-0 [&>figure]:rounded-none [&>figure:last-child]:rounded-b-v-300"
-                    >
-                        {children}
-                    </Tabs.Panel>
-                </Card.Body>
-            </Tabs.Root>
+            <Card.Body className="p-0 bg-v-canvas rounded-b-v-300 overflow-hidden">
+                <Tabs.Panel value={TAB_TYPES['PREVIEW']} className="rounded-t-none" keepMounted>
+                    <DemoPreviewPanel
+                        name={name}
+                        showResponsiveToggle={showResponsiveToggle}
+                        selectedDevice={selectedDevice}
+                    />
+                </Tabs.Panel>
+                <Tabs.Panel
+                    value="Code"
+                    className="flex flex-col gap-v-250 rounded-t-none rounded-b-v-300 bg-v-normal [&>figure]:m-0 [&>figure]:border-0 [&>figure]:rounded-none [&>figure:last-child]:rounded-b-v-300"
+                >
+                    {children}
+                </Tabs.Panel>
+            </Card.Body>
         </Card.Root>
     );
 };
