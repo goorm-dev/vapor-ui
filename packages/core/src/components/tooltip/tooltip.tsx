@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
-import { getArrowSideStyle, useArrowPosition } from '~/hooks/use-arrow-position';
+import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
@@ -133,7 +133,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
 
         const { triggerRef, positionerRef, arrowPadding } = useTooltipArrowContext() ?? {};
         const arrowDimensions = { width: 10, height: 6 };
-        const position = useArrowPosition({
+        const arrowStyle = useArrowPosition({
             triggerElement: triggerRef?.current ?? null,
             positionerElement: positionerRef?.current ?? null,
             side: side ?? 'top',
@@ -141,10 +141,6 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
             offset: arrowPadding ?? DEFAULT_TOOLTIP_ARROW_PADDING,
             arrowDimensions,
         });
-        const arrowStyle = {
-            ...getArrowSideStyle(side ?? 'top', arrowDimensions),
-            ...position,
-        };
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);

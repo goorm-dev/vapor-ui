@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
 
-import { getArrowSideStyle, useArrowPosition } from '~/hooks/use-arrow-position';
+import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
@@ -146,7 +146,7 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
 
         const { triggerRef, positionerRef, arrowPadding } = usePopoverArrowContext() ?? {};
         const arrowDimensions = { width: 16, height: 8, overlap: 1 };
-        const position = useArrowPosition({
+        const arrowStyle = useArrowPosition({
             triggerElement: triggerRef?.current ?? null,
             positionerElement: positionerRef?.current ?? null,
             side: side ?? 'bottom',
@@ -154,10 +154,6 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
             offset: arrowPadding ?? DEFAULT_POPOVER_ARROW_PADDING,
             arrowDimensions,
         });
-        const arrowStyle = {
-            ...getArrowSideStyle(side ?? 'bottom', arrowDimensions),
-            ...position,
-        };
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);

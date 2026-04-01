@@ -6,7 +6,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
-import { getArrowSideStyle, useArrowPosition } from '~/hooks/use-arrow-position';
+import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { useVaporId } from '~/hooks/use-vapor-id';
@@ -343,7 +343,7 @@ export const NavigationMenuPopupPrimitive = forwardRef<
 
     const { activeTriggerElement, positionerRef } = useNavigationMenuArrowContext() ?? {};
     const arrowDimensions = { width: 16, height: 8 };
-    const position = useArrowPosition({
+    const arrowStyle = useArrowPosition({
         triggerElement: activeTriggerElement ?? null,
         positionerElement: positionerRef?.current ?? null,
         side: side ?? 'bottom',
@@ -388,8 +388,7 @@ export const NavigationMenuPopupPrimitive = forwardRef<
             <BaseNavigationMenu.Arrow
                 ref={arrowRef}
                 style={{
-                    ...getArrowSideStyle(side ?? 'bottom', arrowDimensions),
-                    ...position,
+                    ...arrowStyle,
                 }}
                 className={styles.arrow}
             >
