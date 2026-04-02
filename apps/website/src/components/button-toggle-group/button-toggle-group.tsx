@@ -74,7 +74,6 @@ export function ButtonToggleGroup({
                     key={item.value}
                     ref={(el) => {
                         itemRefs.current[item.value] = el;
-                        return el;
                     }}
                     item={item}
                     isSelected={selectedValue === item.value}
