@@ -474,7 +474,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   packages/core:
     dependencies:
@@ -574,7 +574,7 @@ importers:
         version: 9.39.2(jiti@2.6.0)
       happy-dom:
         specifier: ^20.0.0
-        version: 20.8.8
+        version: 20.8.9
       postcss:
         specifier: ^8.5.4
         version: 8.5.6
@@ -610,7 +610,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       vitest-axe:
         specifier: ^1.0.0-pre.5
         version: 1.0.0-pre.5(vitest@3.2.4)
@@ -647,7 +647,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   packages/eslint-config:
     dependencies:
@@ -736,7 +736,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   packages/hooks:
     devDependencies:
@@ -5743,8 +5743,8 @@ packages:
     engines: {node: '>=0.4.7'}
     hasBin: true
 
-  happy-dom@20.8.8:
-    resolution: {integrity: sha512-5/F8wxkNxYtsN0bXfMwIyNLZ9WYsoOYPbmoluqVJqv8KBUbcyKZawJ7uYK4WTX8IHBLYv+VXIwfeNDPy1oKMwQ==}
+  happy-dom@20.8.9:
+    resolution: {integrity: sha512-Tz23LR9T9jOGVZm2x1EPdXqwA37G/owYMxRwU0E4miurAtFsPMQ1d2Jc2okUaSjZqAFz2oEn3FLXC5a0a+siyA==}
     engines: {node: '>=20.0.0'}
 
   has-bigints@1.1.0:
@@ -12325,7 +12325,7 @@ snapshots:
       magic-string: 0.30.19
       sirv: 3.0.2
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       ws: 8.18.3
     optionalDependencies:
       playwright: 1.56.1
@@ -12345,7 +12345,7 @@ snapshots:
       magic-string: 0.30.19
       sirv: 3.0.2
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       ws: 8.18.3
     optionalDependencies:
       playwright: 1.56.1
@@ -12370,7 +12370,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     optionalDependencies:
       '@vitest/browser': 3.2.4(playwright@1.56.1)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))(vitest@3.2.4)
     transitivePeerDependencies:
@@ -14222,7 +14222,7 @@ snapshots:
     optionalDependencies:
       uglify-js: 3.19.3
 
-  happy-dom@20.8.8:
+  happy-dom@20.8.9:
     dependencies:
       '@types/node': 22.18.6
       '@types/whatwg-mimetype': 3.0.2
@@ -17666,9 +17666,9 @@ snapshots:
       axe-core: 4.10.3
       chalk: 5.6.2
       lodash-es: 4.17.23
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -17697,7 +17697,7 @@ snapshots:
       '@types/debug': 4.1.12
       '@types/node': 20.19.17
       '@vitest/browser': 3.2.4(playwright@1.56.1)(vite@7.3.1(@types/node@20.19.17)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))(vitest@3.2.4)
-      happy-dom: 20.8.8
+      happy-dom: 20.8.9
     transitivePeerDependencies:
       - jiti
       - less
@@ -17712,7 +17712,7 @@ snapshots:
       - tsx
       - yaml
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.8)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -17741,7 +17741,7 @@ snapshots:
       '@types/debug': 4.1.12
       '@types/node': 22.18.6
       '@vitest/browser': 3.2.4(playwright@1.56.1)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))(vitest@3.2.4)
-      happy-dom: 20.8.8
+      happy-dom: 20.8.9
     transitivePeerDependencies:
       - jiti
       - less
