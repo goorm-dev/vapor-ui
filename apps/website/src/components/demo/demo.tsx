@@ -3,14 +3,13 @@
 import * as React from 'react';
 
 import { Card, Tabs } from '@vapor-ui/core';
-import { PcOutlineIcon, PhoneIcon, TabletIcon } from '@vapor-ui/icons';
 
 import { DEVICE_TYPES, type DeviceType, TAB_TYPES, type TabType } from '~/constants/code-block';
 
-import { ButtonToggleGroup } from '../button-toggle-group';
 import ErrorBoundary from './error-boundary';
 import { IframePreview } from './iframe-preview';
 import { Preview } from './preview';
+import { ResponsiveControl } from './responsive-control';
 
 interface DemoProps {
     name: string;
@@ -128,38 +127,11 @@ const DemoHeader = ({
             </Tabs.List>
 
             {shouldShowDeviceToggle && (
-                <ButtonToggleGroup
-                    items={deviceItems}
-                    defaultValue={selectedDevice}
-                    onValueChange={(value) => {
-                        if (isValidDeviceType(value)) {
-                            onDeviceChange(value);
-                        }
-                    }}
-                />
+                <ResponsiveControl defaultValue={selectedDevice} onValueChange={onDeviceChange} />
             )}
         </>
     );
 };
-
-const isValidDeviceType = (value: string): value is DeviceType => {
-    return Object.values(DEVICE_TYPES).includes(value as DeviceType);
-};
-
-const deviceItems = [
-    {
-        value: DEVICE_TYPES['DESKTOP'],
-        label: <PcOutlineIcon size="16" />,
-    },
-    {
-        value: DEVICE_TYPES['TABLET'],
-        label: <TabletIcon size="16" />,
-    },
-    {
-        value: DEVICE_TYPES['MOBILE'],
-        label: <PhoneIcon size="16" />,
-    },
-];
 
 /* -----------------------------------------------------------------------------------------------*/
 
