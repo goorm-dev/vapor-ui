@@ -4,8 +4,7 @@ import * as React from 'react';
 
 import { Card, Tabs } from '@vapor-ui/core';
 
-import { DEVICE_TYPES, type DeviceType, TAB_TYPES, type TabType } from '~/constants/code-block';
-
+import { DEVICE_TYPES, type DeviceType, TAB_TYPES, type TabType } from './constants';
 import ErrorBoundary from './error-boundary';
 import { IframePreview } from './iframe-preview';
 import { Preview } from './preview';

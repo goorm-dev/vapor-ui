@@ -6,18 +6,18 @@ import { Radio, RadioGroup } from '@base-ui/react';
 import { PcOutlineIcon, PhoneIcon, TabletIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
-import { DEVICE_TYPES } from '~/constants/code-block';
+import { DEVICE_TYPES } from './constants';
 
 /* -----------------------------------------------------------------------------------------------*/
 
 const deviceItems = [
-    { value: DEVICE_TYPES['DESKTOP'], label: 'Desktop', icon: <PcOutlineIcon size="16" /> },
-    { value: DEVICE_TYPES['TABLET'], label: 'Tablet', icon: <TabletIcon size="16" /> },
-    { value: DEVICE_TYPES['MOBILE'], label: 'Mobile', icon: <PhoneIcon size="16" /> },
+    { value: DEVICE_TYPES.DESKTOP, label: 'Desktop', icon: <PcOutlineIcon size="16" /> },
+    { value: DEVICE_TYPES.TABLET, label: 'Tablet', icon: <TabletIcon size="16" /> },
+    { value: DEVICE_TYPES.MOBILE, label: 'Mobile', icon: <PhoneIcon size="16" /> },
 ];
 
-type DeviceType = (typeof deviceItems)[number];
-type DeviceValue = DeviceType['value'];
+type DeviceItem = (typeof deviceItems)[number];
+type DeviceValue = DeviceItem['value'];
 
 /* -----------------------------------------------------------------------------------------------*/
 
@@ -46,7 +46,7 @@ export function ResponsiveControl({
         <RadioGroup
             value={selectedValue}
             onValueChange={handleValueChange}
-            aria-label="Select an option"
+            aria-label="Select preview device."
             className={clsx(
                 'bg-v-gray-100 border border-v-normal rounded-v-300 p-[1px] gap-v-50 absolute right-4 top-1/2 transform-[translateY(-50%)] hidden @md:flex',
                 className,
@@ -62,7 +62,7 @@ export function ResponsiveControl({
 /* -----------------------------------------------------------------------------------------------*/
 
 interface SegmentProps extends Radio.Root.Props {
-    item: DeviceType;
+    item: DeviceItem;
 }
 
 const Segment = ({ item, ...props }: SegmentProps) => {
