@@ -20,14 +20,6 @@ export const Demo = (props: DemoProps) => {
     const { name, children, showResponsiveToggle = false } = props;
     const { selectedDevice, selectedTab, handleTabChange, handleDeviceChange } = useDemoState();
 
-    if (!children) {
-        return (
-            <React.Suspense fallback={null}>
-                <Preview name={name} />
-            </React.Suspense>
-        );
-    }
-
     return (
         <ErrorBoundary>
             <Card.Root

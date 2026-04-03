@@ -14,7 +14,7 @@ const deviceItems = [
     { value: DEVICE_TYPES.DESKTOP, label: 'Desktop', icon: <PcOutlineIcon size="16" /> },
     { value: DEVICE_TYPES.TABLET, label: 'Tablet', icon: <TabletIcon size="16" /> },
     { value: DEVICE_TYPES.MOBILE, label: 'Mobile', icon: <PhoneIcon size="16" /> },
-];
+] as const;
 
 type DeviceItem = (typeof deviceItems)[number];
 type DeviceValue = DeviceItem['value'];
