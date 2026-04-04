@@ -5,7 +5,6 @@
     "pages": [
         "---Overview---",
         "index",
-        "(overview)/introduction",
         "(overview)/principles",
         "(overview)/installation",
         "[playground](/theme/playground)",
