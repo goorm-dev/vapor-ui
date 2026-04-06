@@ -6,7 +6,7 @@
 import type { Symbol as TsSymbol } from 'ts-morph';
 
 import { isSymbolFromExternalSource, isSymbolFromSprinkles } from '~/declaration-source';
-import type { ExtractOptions } from '~/models/extract';
+import type { ParseOptions } from '~/models/extract';
 
 const DEPRECATED_CSS_PROPS = new Set([
     '$css',
@@ -58,17 +58,18 @@ function isDeprecatedCssProp(name: string): boolean {
 
 export function shouldIncludeSymbol(
     symbol: TsSymbol,
-    options: ExtractOptions,
+    options: ParseOptions,
     includeSet: Set<string>,
+    htmlWhitelist: Set<string>,
 ): boolean {
     const name = symbol.getName();
 
     if (includeSet.has(name)) return true;
-    if (options.includeHtmlWhitelist?.has(name)) return true;
+    if (htmlWhitelist.has(name)) return true;
     if (options.filterExternal && isSymbolFromExternalSource(symbol)) return false;
-    if (options.filterHtml !== false && isHtmlAttribute(name)) return false;
-    if (options.filterSprinkles !== false && isSymbolFromSprinkles(symbol)) return false;
-    if (options.filterSprinkles !== false && isDeprecatedCssProp(name)) return false;
+    if (options.filterHtml && isHtmlAttribute(name)) return false;
+    if (options.filterSprinkles && isSymbolFromSprinkles(symbol)) return false;
+    if (options.filterSprinkles && isDeprecatedCssProp(name)) return false;
 
     return true;
 }

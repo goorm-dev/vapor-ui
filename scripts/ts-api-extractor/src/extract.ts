@@ -3,8 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { Project } from 'ts-morph';
 
+import { resolveComponentInclude } from '~/config';
 import { formatFileName } from '~/filename';
-import type { ExtractInput, ExtractOutput } from '~/models/extract';
+import type { ExtractInput, ExtractOutput, ParseOptions } from '~/models/extract';
 import { parseSourceFile } from '~/parse';
 import { componentsToJson, parsedComponentsToModels } from '~/transform';
 import { buildWriteFiles } from '~/write';
@@ -27,6 +28,7 @@ function formatWithPrettier(filePaths: string[]): void {
 }
 
 export function extract(input: ExtractInput): ExtractOutput {
+    const { config } = input;
     const project = new Project({ tsConfigFilePath: input.tsconfigPath });
 
     console.error('Parsing components...');
@@ -44,14 +46,16 @@ export function extract(input: ExtractInput): ExtractOutput {
 
         try {
             console.error(`Processing ${componentName}`);
-            const effectiveOptions = input.resolveExtractOptions
-                ? input.resolveExtractOptions(filePath, input.extractOptions)
-                : input.extractOptions;
-
-            return parseSourceFile(sourceFile, {
-                ...effectiveOptions,
+            const parseOptions: ParseOptions = {
+                filterExternal: input.all ? false : config.filterExternal,
+                filterHtml: input.all ? false : config.filterHtml,
+                filterSprinkles: input.all ? false : config.filterSprinkles,
+                includeHtml: config.includeHtml,
+                include: resolveComponentInclude(filePath, config),
                 verbose: input.verbose,
-            });
+            };
+
+            return parseSourceFile(sourceFile, parseOptions);
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             console.warn(
@@ -66,9 +70,7 @@ export function extract(input: ExtractInput): ExtractOutput {
 
     console.error(`Done! Extracted ${props.length} components.`);
 
-    const writeFiles = buildWriteFiles(props, input.outputDir, input.languages, (prop) =>
-        formatFileName(prop.name),
-    );
+    const writeFiles = buildWriteFiles(props, input.outputDir, (prop) => formatFileName(prop.name));
 
     for (const writeFile of writeFiles) {
         ensureDirectory(path.dirname(writeFile.filePath));

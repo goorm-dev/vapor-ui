@@ -1,14 +1,15 @@
 import type { Type } from 'ts-morph';
 
+import type { ExtractorConfig } from '~/config/schema';
 import type { ComponentModel } from '~/models/component';
 import type { PropsInfoJson } from '~/models/json';
 import type { ParsedComponent } from '~/models/parsed';
 
-export interface ExtractOptions {
-    filterExternal?: boolean;
-    filterHtml?: boolean;
-    filterSprinkles?: boolean;
-    includeHtmlWhitelist?: Set<string>;
+export interface ParseOptions {
+    filterExternal: boolean;
+    filterHtml: boolean;
+    filterSprinkles: boolean;
+    includeHtml?: string[];
     include?: string[];
     verbose?: boolean;
 }
@@ -16,11 +17,10 @@ export interface ExtractOptions {
 export interface ExtractInput {
     tsconfigPath: string;
     targetFiles: string[];
-    extractOptions: ExtractOptions;
+    config: ExtractorConfig;
     outputDir: string;
-    languages: string[];
+    all: boolean;
     verbose: boolean;
-    resolveExtractOptions?: (filePath: string, baseOptions: ExtractOptions) => ExtractOptions;
 }
 
 export interface ExtractOutput {

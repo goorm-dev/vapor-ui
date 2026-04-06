@@ -1,66 +1,49 @@
 /**
  * Config unit tests
  */
-import { buildExtractOptions, config, getComponentExtractOptions } from '~/config';
+import { config, resolveComponentInclude } from '~/config';
 
 describe('config', () => {
     it('기본 설정값 확인', () => {
         expect(config.filterExternal).toBe(true);
         expect(config.filterHtml).toBe(true);
         expect(config.filterSprinkles).toBe(true);
-        expect(config.languages).toContain('en');
     });
 });
 
-describe('buildExtractOptions', () => {
-    it('all: false → 모든 필터 활성화', () => {
-        const result = buildExtractOptions(false);
+describe('resolveComponentInclude', () => {
+    it('매칭되는 컴포넌트 설정 없으면 undefined 반환', () => {
+        const result = resolveComponentInclude('/some/path/button.tsx');
 
-        expect(result.filterExternal).toBe(true);
-        expect(result.filterHtml).toBe(true);
-        expect(result.filterSprinkles).toBe(true);
+        expect(result).toBeUndefined();
     });
 
-    it('all: true → 모든 필터 비활성화', () => {
-        const result = buildExtractOptions(true);
+    it('패턴 매칭 시 include 반환', () => {
+        const testConfig = {
+            ...config,
+            components: { 'button.tsx': { include: ['size', 'variant'] } },
+        };
 
-        expect(result.filterExternal).toBe(false);
-        expect(result.filterHtml).toBe(false);
-        expect(result.filterSprinkles).toBe(false);
-    });
+        const result = resolveComponentInclude('/some/path/button.tsx', testConfig);
 
-    it('includeHtmlWhitelist 설정', () => {
-        const result = buildExtractOptions(false);
-
-        expect(result.includeHtmlWhitelist).toBeDefined();
-        expect(result.includeHtmlWhitelist?.has('className')).toBe(true);
-        expect(result.includeHtmlWhitelist?.has('style')).toBe(false);
-    });
-});
-
-describe('getComponentExtractOptions', () => {
-    it('매칭되는 컴포넌트 설정 없으면 baseOptions 그대로 반환', () => {
-        const baseOptions = { filterExternal: true };
-
-        const result = getComponentExtractOptions(baseOptions, '/some/path/button.tsx');
-
-        expect(result).toEqual(baseOptions);
+        expect(result).toEqual(['size', 'variant']);
     });
 
     it('backslash를 slash로 정규화', () => {
-        const baseOptions = { filterExternal: true };
+        const result = resolveComponentInclude('\\some\\path\\button.tsx');
 
-        // Windows 스타일 경로
-        const result = getComponentExtractOptions(baseOptions, '\\some\\path\\button.tsx');
-
-        expect(result).toEqual(baseOptions);
+        expect(result).toBeUndefined();
     });
 
-    it('빈 컴포넌트 설정', () => {
-        const baseOptions = { filterExternal: true, include: ['size'] };
+    it('부분 문자열 매칭은 경로 경계에서만 허용', () => {
+        const testConfig = {
+            ...config,
+            components: { 'button.tsx': { include: ['size'] } },
+        };
 
-        const result = getComponentExtractOptions(baseOptions, '/path/to/file.tsx');
+        // 'notbutton.tsx' 는 매칭되면 안 됨
+        const result = resolveComponentInclude('/some/path/notbutton.tsx', testConfig);
 
-        expect(result).toEqual(baseOptions);
+        expect(result).toBeUndefined();
     });
 });

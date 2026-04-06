@@ -108,7 +108,12 @@ describe('extractProps', () => {
         const project = createProject();
         const sourceFile = project.addSourceFileAtPath(componentFile);
 
-        const result = extractProps(sourceFile, { include: ['data-testid'] });
+        const result = extractProps(sourceFile, {
+            filterExternal: false,
+            filterHtml: false,
+            filterSprinkles: false,
+            include: ['data-testid'],
+        });
         const jsonProps = result.props[0].props;
 
         expect(jsonProps.some((prop) => prop.name === 'data-testid')).toBe(true);

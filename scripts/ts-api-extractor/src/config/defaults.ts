@@ -14,7 +14,6 @@ export const defaultExtractorConfig: ExtractorConfig = {
     exclude: [],
     excludeDefaults: true,
     outputDir: '../../apps/website/public/components/generated',
-    languages: ['en'],
     filterExternal: true,
     filterHtml: true,
     filterSprinkles: true,

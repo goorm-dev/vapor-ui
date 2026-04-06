@@ -1,7 +1,6 @@
 import meow from 'meow';
 
 import { CliError, resolveOptions } from '~/cli/options';
-import { getComponentExtractOptions } from '~/config';
 import { extract } from '~/extract';
 
 async function runCli(): Promise<void> {
@@ -46,12 +45,10 @@ async function runCli(): Promise<void> {
     extract({
         tsconfigPath: resolved.tsconfigPath,
         targetFiles: resolved.targetFiles,
-        extractOptions: resolved.extractOptions,
+        config: resolved.config,
         outputDir: resolved.outputDir,
-        languages: resolved.languages,
+        all: resolved.all,
         verbose: resolved.verbose,
-        resolveExtractOptions: (filePath, baseOptions) =>
-            getComponentExtractOptions(baseOptions, filePath, resolved.config),
     });
 }
 

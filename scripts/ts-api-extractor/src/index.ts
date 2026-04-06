@@ -5,11 +5,9 @@
  */
 
 export {
-    buildExtractOptions,
     config,
     defineConfig,
-    getComponentExtractOptions,
     loadExtractorConfig,
-    resolveConfigForCli,
+    resolveComponentInclude,
     type ExtractorConfig,
 } from './config';

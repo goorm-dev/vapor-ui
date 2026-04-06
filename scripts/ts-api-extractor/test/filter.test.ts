@@ -4,7 +4,7 @@
 import { Project } from 'ts-morph';
 
 import { shouldIncludeSymbol } from '~/filter';
-import type { ExtractOptions } from '~/models/extract';
+import type { ParseOptions } from '~/models/extract';
 
 function mockSymbol(name: string) {
     return {
@@ -33,15 +33,16 @@ describe('shouldIncludeSymbol', () => {
 
             const result = shouldIncludeSymbol(
                 symbol,
-                { filterExternal: true },
+                { filterExternal: true, filterHtml: false, filterSprinkles: false },
                 new Set(['className']),
+                new Set(),
             );
 
             expect(result).toBe(true);
         });
     });
 
-    describe('includeHtmlWhitelist', () => {
+    describe('includeHtml whitelist', () => {
         it('includes whitelisted html-like props', () => {
             const source = project.createSourceFile(
                 'test.ts',
@@ -50,12 +51,14 @@ describe('shouldIncludeSymbol', () => {
             const prop = source.getInterfaceOrThrow('Props').getPropertyOrThrow('ariaLabel');
             const symbol = prop.getSymbol()!;
 
-            const options: ExtractOptions = {
+            const options: ParseOptions = {
+                filterExternal: false,
                 filterHtml: true,
-                includeHtmlWhitelist: new Set(['ariaLabel']),
+                filterSprinkles: false,
+                includeHtml: ['ariaLabel'],
             };
 
-            const result = shouldIncludeSymbol(symbol, options, new Set());
+            const result = shouldIncludeSymbol(symbol, options, new Set(), new Set(['ariaLabel']));
 
             expect(result).toBe(true);
         });
@@ -69,6 +72,7 @@ describe('shouldIncludeSymbol', () => {
                 symbol,
                 { filterHtml: true, filterExternal: false, filterSprinkles: false },
                 new Set(),
+                new Set(),
             );
 
             expect(result).toBe(false);
@@ -81,6 +85,7 @@ describe('shouldIncludeSymbol', () => {
                 symbol,
                 { filterHtml: true, filterExternal: false, filterSprinkles: false },
                 new Set(),
+                new Set(),
             );
 
             expect(result).toBe(false);
@@ -92,6 +97,7 @@ describe('shouldIncludeSymbol', () => {
             const result = shouldIncludeSymbol(
                 symbol,
                 { filterHtml: false, filterExternal: false, filterSprinkles: false },
+                new Set(),
                 new Set(),
             );
 
@@ -108,7 +114,12 @@ describe('shouldIncludeSymbol', () => {
             const prop = source.getInterfaceOrThrow('Props').getPropertyOrThrow('disabled');
             const symbol = prop.getSymbol()!;
 
-            const result = shouldIncludeSymbol(symbol, {}, new Set());
+            const result = shouldIncludeSymbol(
+                symbol,
+                { filterExternal: false, filterHtml: false, filterSprinkles: false },
+                new Set(),
+                new Set(),
+            );
 
             expect(result).toBe(true);
         });
@@ -126,13 +137,13 @@ describe('shouldIncludeSymbol', () => {
             const sizeProp = source.getInterfaceOrThrow('Props').getPropertyOrThrow('size');
             const symbol = sizeProp.getSymbol()!;
 
-            const options: ExtractOptions = {
+            const options: ParseOptions = {
                 filterExternal: true,
                 filterHtml: true,
                 filterSprinkles: true,
             };
 
-            const result = shouldIncludeSymbol(symbol, options, new Set());
+            const result = shouldIncludeSymbol(symbol, options, new Set(), new Set());
 
             expect(result).toBe(true);
         });

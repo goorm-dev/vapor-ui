@@ -13,7 +13,7 @@ import { getSymbolSourcePath } from '~/declaration-source';
 import { getDefaultValuesForNamespace } from '~/extract-defaults';
 import { shouldIncludeSymbol } from '~/filter';
 import type { ComponentModel } from '~/models/component';
-import type { BaseUiTypeMap, ExtractOptions } from '~/models/extract';
+import type { BaseUiTypeMap, ParseOptions } from '~/models/extract';
 import type { PropsInfoJson } from '~/models/json';
 import type { ParsedComponent, ParsedProp } from '~/models/parsed';
 import { resolveType } from '~/resolve';
@@ -109,8 +109,9 @@ function extractParsedComponent(
     sourceFile: SourceFile,
     namespace: ModuleDeclaration,
     baseUiMap: BaseUiTypeMap,
-    options: ExtractOptions,
+    options: ParseOptions,
     includeSet: Set<string>,
+    htmlWhitelist: Set<string>,
 ): ParsedComponent | null {
     const namespaceName = namespace.getName();
     const exportedProps = findExportedInterfaceProps(namespace);
@@ -125,7 +126,7 @@ function extractParsedComponent(
     );
 
     const filteredSymbols = allSymbols.filter((symbol) =>
-        shouldIncludeSymbol(symbol, options, includeSet),
+        shouldIncludeSymbol(symbol, options, includeSet, htmlWhitelist),
     );
 
     if (options.verbose) {
@@ -146,14 +147,21 @@ function extractParsedComponent(
     };
 }
 
+const DEFAULT_PARSE_OPTIONS: ParseOptions = {
+    filterExternal: false,
+    filterHtml: true,
+    filterSprinkles: true,
+};
+
 export function parseSourceFile(
     sourceFile: SourceFile,
-    options: ExtractOptions = {},
+    options: ParseOptions = DEFAULT_PARSE_OPTIONS,
 ): ParsedComponent[] {
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
     const namespaces = getExportedNamespaces(sourceFile);
     const parsedComponents: ParsedComponent[] = [];
     const includeSet = new Set(options.include ?? []);
+    const htmlWhitelist = new Set(options.includeHtml ?? []);
 
     if (options.verbose) {
         console.error(
@@ -169,6 +177,7 @@ export function parseSourceFile(
                 baseUiMap,
                 options,
                 includeSet,
+                htmlWhitelist,
             );
             if (parsed) {
                 parsedComponents.push(parsed);
@@ -190,7 +199,10 @@ export interface ExtractResult {
     props: PropsInfoJson[];
 }
 
-export function extractProps(sourceFile: SourceFile, options: ExtractOptions = {}): ExtractResult {
+export function extractProps(
+    sourceFile: SourceFile,
+    options: ParseOptions = DEFAULT_PARSE_OPTIONS,
+): ExtractResult {
     const parsed = parseSourceFile(sourceFile, options);
     const models = parsed.map(parsedComponentToModel);
     const props = models.map(componentModelToJson);

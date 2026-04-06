@@ -1,18 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { buildExtractOptions, resolveConfigForCli } from '~/config';
+import { loadExtractorConfig } from '~/config';
 import type { ExtractorConfig } from '~/config/schema';
-import type { ExtractOptions } from '~/models/extract';
 import { findComponentFiles, findFileByComponentName } from '~/scan';
 
 export interface ResolvedCliOptions {
     absolutePath: string;
     tsconfigPath: string;
     targetFiles: string[];
-    extractOptions: ExtractOptions;
+    all: boolean;
     outputDir: string;
-    languages: string[];
     verbose: boolean;
     config: ExtractorConfig;
 }
@@ -70,7 +68,7 @@ export async function resolveOptions(flags: {
     config?: string;
     noConfig?: boolean;
 }): Promise<ResolvedCliOptions> {
-    const loadedConfig = await resolveConfigForCli({
+    const loadedConfig = await loadExtractorConfig({
         configPath: flags.config,
         noConfig: flags.noConfig,
     });
@@ -85,9 +83,8 @@ export async function resolveOptions(flags: {
         absolutePath,
         tsconfigPath,
         targetFiles,
-        extractOptions: buildExtractOptions(flags.all, loadedConfig),
+        all: flags.all,
         outputDir: path.resolve(cwd, loadedConfig.outputDir),
-        languages: loadedConfig.languages,
         verbose: flags.verbose,
         config: loadedConfig,
     };

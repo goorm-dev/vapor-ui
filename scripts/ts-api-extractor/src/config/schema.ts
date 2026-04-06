@@ -8,7 +8,6 @@ export interface ExtractorConfig {
     exclude: string[];
     excludeDefaults: boolean;
     outputDir: string;
-    languages: string[];
     filterExternal: boolean;
     filterHtml: boolean;
     filterSprinkles: boolean;
@@ -39,7 +38,6 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
         throw new Error('Invalid outputDir: expected string');
     }
     if (config.exclude !== undefined) assertStringArray('exclude', config.exclude);
-    if (config.languages !== undefined) assertStringArray('languages', config.languages);
     if (config.includeHtml !== undefined) assertStringArray('includeHtml', config.includeHtml);
 
     if (config.excludeDefaults !== undefined && typeof config.excludeDefaults !== 'boolean') {
@@ -77,7 +75,6 @@ export function mergeConfig(base: ExtractorConfig, patch: PartialExtractorConfig
         ...base,
         ...patch,
         exclude: patch.exclude ?? base.exclude,
-        languages: patch.languages ?? base.languages,
         includeHtml: patch.includeHtml ?? base.includeHtml,
         components: {
             ...base.components,

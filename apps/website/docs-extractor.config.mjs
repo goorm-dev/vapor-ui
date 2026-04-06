@@ -4,7 +4,6 @@ export default defineConfig({
     inputPath: '../../packages/core',
     tsconfig: '../../packages/core/tsconfig.json',
     outputDir: './public/components/generated',
-    languages: ['en'],
     filterExternal: true,
     filterHtml: true,
     filterSprinkles: true,
