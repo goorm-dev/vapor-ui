@@ -1,8 +1,8 @@
-import type { ExtractOptions } from '~/application/dto/extract-options';
 import { defaultExtractorConfig } from '~/config/defaults';
 import { defineConfig } from '~/config/define-config';
 import { type LoadConfigOptions, loadExtractorConfig } from '~/config/loader';
 import type { ExtractorConfig } from '~/config/schema';
+import type { ExtractOptions } from '~/models/extract';
 
 export { defineConfig, loadExtractorConfig, type LoadConfigOptions };
 export type { ExtractorConfig };

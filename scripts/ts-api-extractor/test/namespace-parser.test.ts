@@ -3,10 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import {
-    findExportedInterfaceProps,
-    getExportedNamespaces,
-} from '~/adapters/out/ts-morph/parsers/component/namespace-parser';
+import { findExportedInterfaceProps, getExportedNamespaces } from '~/parse';
 
 describe('getExportedNamespaces', () => {
     let project: Project;
@@ -139,6 +136,25 @@ describe('findExportedInterfaceProps', () => {
                 export interface Props {
                     disabled?: boolean;
                 }
+            }
+            `,
+        );
+
+        const namespace = source.getModuleOrThrow('Button');
+        const result = findExportedInterfaceProps(namespace);
+
+        expect(result).toBeDefined();
+        expect(result?.getName()).toBe('Props');
+    });
+
+    it('Props type alias도 찾기', () => {
+        const source = project.createSourceFile(
+            'test.ts',
+            `
+            type ButtonProps = { disabled?: boolean };
+
+            export namespace Button {
+                export type Props = ButtonProps;
             }
             `,
         );

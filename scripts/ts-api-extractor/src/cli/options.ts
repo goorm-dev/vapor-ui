@@ -1,12 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { TsMorphSourceFileProviderAdapter } from '~/adapters/out/ts-morph/ts-morph-source-file-provider.adapter';
-import type { ExtractOptions } from '~/application/dto/extract-options';
 import { buildExtractOptions, resolveConfigForCli } from '~/config';
 import type { ExtractorConfig } from '~/config/schema';
-
-const sourceProvider = new TsMorphSourceFileProviderAdapter();
+import type { ExtractOptions } from '~/models/extract';
+import { findComponentFiles, findFileByComponentName } from '~/scan';
 
 export interface ResolvedCliOptions {
     absolutePath: string;
@@ -42,7 +40,7 @@ async function resolveTargetFiles(
     componentName: string | undefined,
     config: ExtractorConfig,
 ): Promise<string[]> {
-    const files = await sourceProvider.findComponentFiles(absolutePath, {
+    const files = await findComponentFiles(absolutePath, {
         exclude: config.exclude,
         skipDefaultExcludes: !config.excludeDefaults,
     });
@@ -55,7 +53,7 @@ async function resolveTargetFiles(
         return files;
     }
 
-    const file = sourceProvider.findFileByComponentName(files, componentName);
+    const file = findFileByComponentName(files, componentName);
 
     if (!file) {
         const available = files.map((f) => path.basename(f, '.tsx')).join(', ');

@@ -8,13 +8,13 @@
  */
 import { Project } from 'ts-morph';
 
+import type { BaseUiTypeMap } from '~/models/extract';
 import {
     resolveType,
     simplifyForwardRefType,
     simplifyNodeModulesImports,
     simplifyReactElementGeneric,
-} from '~/adapters/out/ts-morph/parsers/type/resolver';
-import type { BaseUiTypeMap } from '~/adapters/out/ts-morph/parsers/types';
+} from '~/resolve';
 
 // ============================================================
 // String Simplification Utilities

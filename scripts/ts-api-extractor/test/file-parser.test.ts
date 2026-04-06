@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { ModuleKind, ModuleResolutionKind, Project, ScriptTarget } from 'ts-morph';
 
-import { extractProps, extractPropsLegacy } from '~/adapters/out/ts-morph/parsers/file-parser';
+import { extractProps } from '~/parse';
 
 function createProject(): Project {
     return new Project({
@@ -112,19 +112,5 @@ describe('extractProps', () => {
         const jsonProps = result.props[0].props;
 
         expect(jsonProps.some((prop) => prop.name === 'data-testid')).toBe(true);
-    });
-});
-
-describe('extractPropsLegacy', () => {
-    it('returns the same json props payload as extractProps', () => {
-        const root = createFixtureRoot();
-        const { componentFile } = writeFixtureFiles(root);
-        const project = createProject();
-        const sourceFile = project.addSourceFileAtPath(componentFile);
-
-        const modern = extractProps(sourceFile);
-        const legacy = extractPropsLegacy(sourceFile);
-
-        expect(legacy.props).toEqual(modern.props);
     });
 });

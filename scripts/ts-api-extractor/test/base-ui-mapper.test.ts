@@ -6,10 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { ModuleKind, ModuleResolutionKind, Project, ScriptTarget } from 'ts-morph';
 
-import {
-    buildBaseUiTypeMap,
-    resolveBaseUiType,
-} from '~/adapters/out/ts-morph/parsers/type/base-ui-mapper';
+import { buildBaseUiTypeMap, resolveBaseUiType } from '~/resolve/base-ui-mapper';
 
 function createProject(): Project {
     return new Project({

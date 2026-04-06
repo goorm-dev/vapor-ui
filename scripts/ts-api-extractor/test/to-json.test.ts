@@ -1,12 +1,8 @@
 /**
  * JSON serializer unit tests
  */
-import {
-    componentModelToJson,
-    componentsToJson,
-    propModelToJson,
-} from '~/application/mappers/component-model-to-json.mapper';
-import type { ComponentModel, PropModel } from '~/domain/models';
+import type { ComponentModel, PropModel } from '~/models';
+import { componentModelToJson, componentsToJson, propModelToJson } from '~/transform';
 
 describe('propModelToJson', () => {
     it('필수 필드만 변환', () => {

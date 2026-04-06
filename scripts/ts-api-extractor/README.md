@@ -11,7 +11,7 @@ This package automatically generates JSON documentation for `packages/core` comp
 **Key characteristics:**
 
 - Location: `scripts/ts-api-extractor`
-- Architecture: Application + Domain + Adapters (hexagonal)
+- Architecture: function-first extraction pipeline (`scan -> parse -> resolve -> defaults -> filter -> transform -> write`)
 - Primary usage: `pnpm --filter website extract`
 
 ## Quick Start
@@ -39,13 +39,13 @@ pnpm --filter @vapor-ui/ts-api-extractor test:run
 
 ## CLI Reference
 
-| Option        | Short | Description                                       |
-| ------------- | ----- | ------------------------------------------------- |
-| `--component` | `-n`  | Extract a specific component file only            |
-| `--all`       | `-a`  | Bypass all filters (external/html/sprinkles)      |
-| `--verbose`   | `-v`  | Enable verbose logging                            |
-| `--config`    | -     | Specify a config file path                        |
-| `--no-config` | -     | Disable config file loading                       |
+| Option        | Short | Description                                  |
+| ------------- | ----- | -------------------------------------------- |
+| `--component` | `-n`  | Extract a specific component file only       |
+| `--all`       | `-a`  | Bypass all filters (external/html/sprinkles) |
+| `--verbose`   | `-v`  | Enable verbose logging                       |
+| `--config`    | -     | Specify a config file path                   |
+| `--no-config` | -     | Disable config file loading                  |
 
 ## Configuration
 
@@ -154,50 +154,42 @@ Props are filtered based on configuration:
 1. Parse CLI flags (`--component`, `--all`, `--config`, `--no-config`, `--verbose`)
 2. Load and merge config (defaults + file config + flags)
 3. Scan target component files
-4. Initialize ts-morph project
-5. Parse AST per file (`namespace` + `export interface Props`)
-6. Resolve types, extract defaults, filter props
-7. Transform to domain model and sort
-8. Convert to JSON
-9. Write files per language directory and run prettier
+4. Initialize a ts-morph project from the configured `tsconfig`
+5. Parse exported namespaces and `Props` declarations (`interface` or `type`)
+6. Resolve types, extract defaults, and filter props
+7. Transform parsed props into sorted component models
+8. Serialize models to JSON files and format them with Prettier
 
 ## Architecture
 
-This package follows hexagonal architecture (ports and adapters):
+The package is organized around pipeline stages and pure transformation modules:
 
 ```text
 scripts/ts-api-extractor/
 ├── src/
-│   ├── adapters/
-│   │   ├── in/cli/          # meow-based CLI input adapter
-│   │   └── out/
-│   │       ├── ts-morph/    # Source scanning and AST parsing
-│   │       ├── fs/          # File output adapter
-│   │       ├── formatter/   # Prettier formatting adapter
-│   │       └── logger/      # Console logger adapter
-│   ├── application/
-│   │   ├── dto/             # Data transfer objects
-│   │   ├── ports/           # Abstract interfaces (parser/writer/logger/formatter)
-│   │   ├── use-cases/       # extract-component-metadata.usecase.ts
-│   │   └── mappers/         # Domain to JSON DTO transformation
-│   ├── domain/
-│   │   ├── models/          # Parsed/Model types
-│   │   ├── rules/           # Classification, sorting, type normalization
-│   │   └── services/        # build-component-model.ts (Parsed -> Domain)
-│   ├── config/
-│   └── cli/
-├── test/
+│   ├── cli/                 # meow CLI entrypoint + option resolution
+│   ├── config/              # config schema, defaults, loader
+│   ├── models/              # parsed/model/json/extract types
+│   ├── resolve/             # guard-clause type resolver + base-ui mapper
+│   ├── rules/               # categorize, sort, normalize
+│   ├── extract.ts           # orchestrator (project init, IO, prettier)
+│   ├── extract-defaults.ts  # destructuring + recipe default extraction
+│   ├── filter.ts            # prop inclusion rules
+│   ├── parse.ts             # namespace/props parsing
+│   ├── scan.ts              # component file discovery
+│   ├── transform.ts         # parsed -> model -> json
+│   └── write.ts             # serialization + output planning
 └── dist/
 ```
 
 ## Quality Standards
 
-| Check      | Command       | Tool    |
-| ---------- | ------------- | ------- |
-| Type check | `tsc --noEmit`| tsc     |
-| Lint       | `eslint`      | eslint  |
-| Test       | `vitest`      | vitest  |
-| Build      | `tsup`        | tsup    |
+| Check      | Command        | Tool   |
+| ---------- | -------------- | ------ |
+| Type check | `tsc --noEmit` | tsc    |
+| Lint       | `eslint`       | eslint |
+| Test       | `vitest`       | vitest |
+| Build      | `tsup`         | tsup   |
 
 ## Troubleshooting
 

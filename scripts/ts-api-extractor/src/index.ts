@@ -13,7 +13,3 @@ export {
     resolveConfigForCli,
     type ExtractorConfig,
 } from './config';
-
-export { ExtractComponentMetadataUseCase } from '~/application/use-cases/extract-component-metadata.usecase';
-export type { ExtractComponentMetadataInput } from '~/application/dto/extract-input';
-export type { ExtractComponentMetadataOutput } from '~/application/dto/extract-output';

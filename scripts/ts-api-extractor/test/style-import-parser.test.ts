@@ -3,10 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import {
-    findCssImports,
-    findVariantsTypeImports,
-} from '~/adapters/out/ts-morph/parsers/defaults/style-import-parser';
+import { findCssImports, findVariantsTypeImports } from '~/extract-defaults';
 
 describe('findCssImports', () => {
     let project: Project;

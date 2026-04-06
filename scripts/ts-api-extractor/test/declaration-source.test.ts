@@ -1,11 +1,11 @@
 /**
  * Declaration source unit tests
  */
-import { DeclarationSourceType } from '~/adapters/out/ts-morph/parsers/constants';
 import {
+    DeclarationSourceType,
     getDeclarationSourceType,
     isExternalDeclaration,
-} from '~/adapters/out/ts-morph/parsers/type/declaration-source';
+} from '~/declaration-source';
 
 describe('getDeclarationSourceType', () => {
     describe('PROJECT', () => {
