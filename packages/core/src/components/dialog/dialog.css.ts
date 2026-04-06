@@ -1,11 +1,10 @@
 import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const overlay = layerStyle('components', {
+export const overlay = componentStyle({
     position: 'fixed',
 
     inset: 0,
@@ -24,8 +23,8 @@ export const overlay = layerStyle('components', {
 
 const SPACING = '2rem';
 
-export const popup = recipe({
-    base: layerStyle('components', {
+export const popup = componentRecipe({
+    base: {
         position: 'fixed',
 
         top: '50%',
@@ -57,19 +56,19 @@ export const popup = recipe({
                 opacity: 0,
             },
         },
-    }),
+    },
 
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('components', { width: '31.25rem' }),
-            lg: layerStyle('components', { width: '50rem' }),
-            xl: layerStyle('components', { width: '71.25rem' }),
+            md: { width: '31.25rem' },
+            lg: { width: '50rem' },
+            xl: { width: '71.25rem' },
         },
     },
 });
 
-export const title = layerStyle('components', {
+export const title = componentStyle({
     lineHeight: vars.typography.lineHeight['200'],
     letterSpacing: vars.typography.letterSpacing['100'],
     color: vars.color.foreground.normal[200],
@@ -77,7 +76,7 @@ export const title = layerStyle('components', {
     fontWeight: vars.typography.fontWeight['700'],
 });
 
-export const description = layerStyle('components', {
+export const description = componentStyle({
     lineHeight: vars.typography.lineHeight['075'],
     letterSpacing: vars.typography.letterSpacing['100'],
     color: vars.color.foreground.normal[200],
@@ -85,7 +84,7 @@ export const description = layerStyle('components', {
     fontWeight: vars.typography.fontWeight['400'],
 });
 
-export const header = layerStyle('components', {
+export const header = componentStyle({
     display: 'flex',
     alignItems: 'center',
     flexShrink: 0,
@@ -96,14 +95,14 @@ export const header = layerStyle('components', {
     height: vars.size.dimension['700'],
 });
 
-export const body = layerStyle('components', {
+export const body = componentStyle({
     paddingBlock: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
     overflowY: 'auto',
 });
 
-export const footer = layerStyle('components', {
+export const footer = componentStyle({
     display: 'flex',
     alignItems: 'center',
     paddingBlock: vars.size.space['200'],

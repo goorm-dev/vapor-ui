@@ -4,15 +4,15 @@ import type { ComponentProps } from 'react';
 import { forwardRef } from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './checkbox.css';
 import * as styles from './checkbox.css';
@@ -41,18 +41,18 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
     const { size, invalid, indeterminate } = variantProps;
 
     const childrenRender = createRender(childrenProp, <CheckboxIndicatorPrimitive />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
     });
 
-    const root = useRender({
+    const root = useRenderElement({
         ref,
         state: { invalid },
         render: <BaseCheckbox.Root />,
         props: {
             'aria-invalid': invalid,
             indeterminate,
-            className: clsx(styles.root({ invalid, size }), className),
+            className: cn(styles.root({ invalid, size }), className),
             children,
             ...otherProps,
         },
@@ -82,7 +82,7 @@ export const CheckboxIndicatorPrimitive = forwardRef<
 
     const Icon = indeterminate ? DashIcon : CheckIcon;
     const childrenRender = createRender(childrenProp, <Icon />);
-    const children = useRender({
+    const children = useRenderElement({
         render: childrenRender,
         props: { width: '100%', height: '100%' },
     });
@@ -91,7 +91,7 @@ export const CheckboxIndicatorPrimitive = forwardRef<
         <BaseCheckbox.Indicator
             ref={ref}
             keepMounted={keepMounted}
-            className={clsx(styles.indicator({ size }), className)}
+            className={cn(styles.indicator({ size }), className)}
             {...dataAttrs}
             {...componentProps}
         >
@@ -105,7 +105,7 @@ CheckboxIndicatorPrimitive.displayName = 'Checkbox.IndicatorPrimitive';
  * Icons
  * -----------------------------------------------------------------------------------------------*/
 
-interface IconProps extends ComponentProps<'svg'> {}
+export interface IconProps extends ComponentProps<'svg'> {}
 
 const CheckIcon = ({ className, ...props }: IconProps) => {
     return (
@@ -113,7 +113,7 @@ const CheckIcon = ({ className, ...props }: IconProps) => {
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
             viewBox="0 0 17 18"
-            className={clsx(styles.icon, className)}
+            className={cn(styles.icon, className)}
             {...props}
         >
             <polyline points="2 9 7 14 15 5" />
@@ -131,15 +131,20 @@ const DashIcon = (props: IconProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export namespace CheckboxRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseCheckbox.Root>;
+export interface CheckboxRootState extends BaseCheckbox.Root.State {
+    /**
+     * Whether the component is in an error state.
+     */
+    invalid?: boolean;
+}
 
-    export interface Props extends RootPrimitiveProps, CheckboxSharedProps {}
+export namespace CheckboxRoot {
+    export type State = CheckboxRootState;
+    export type Props = VaporUIComponentProps<typeof BaseCheckbox.Root, State> & CheckboxVariants;
     export type ChangeEventDetails = BaseCheckbox.Root.ChangeEventDetails;
 }
 
 export namespace CheckboxIndicatorPrimitive {
-    type IndicatorPrimitiveProps = VComponentProps<typeof BaseCheckbox.Indicator>;
-
-    export interface Props extends IndicatorPrimitiveProps {}
+    export type State = BaseCheckbox.Indicator.State;
+    export type Props = VaporUIComponentProps<typeof BaseCheckbox.Indicator, State>;
 }

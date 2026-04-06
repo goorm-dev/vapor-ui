@@ -5,6 +5,8 @@ import type { useRender } from '@base-ui/react/use-render';
 import type { DeprecatedSprinkles as OriginalDeprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
 import type { Sprinkles } from '~/styles/sprinkles.css';
 
+import type { ClassNameParams, StyleParams } from './stateful-props';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyProp = any;
 
@@ -33,9 +35,12 @@ export type Styles = {
     $css?: CssProps;
 };
 
-export type VComponentProps<ElementType extends React.ElementType> = Styles &
+export type VaporUIComponentProps<ElementType extends React.ElementType, State> = Styles &
     DeprecatedSprinkles &
-    Omit<useRender.ComponentProps<ElementType>, OmitColorProp<ElementType>>;
+    Omit<useRender.ComponentProps<ElementType, State>, OmitColorProp<ElementType> | 'className'> & {
+        className?: ClassNameParams<State>;
+        style?: StyleParams<State>;
+    };
 
 /**
  * Deprecated CSS utility props. Use `$css` prop instead.

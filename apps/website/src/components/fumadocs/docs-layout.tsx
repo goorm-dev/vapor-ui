@@ -295,7 +295,7 @@ function DocsNavbar({
         <LayoutHeader
             id="nd-subnav"
             className={clsx(
-                'data-[transparent=false]:bg-fd-background/80 layout:[--fd-header-height:--spacing(23)] sticky top-(--fd-docs-row-1) z-100 flex flex-col backdrop-blur-sm transition-colors [grid-area:header]',
+                'data-[transparent=false]:bg-fd-background/80 layout:[--fd-header-height:--spacing(23)] sticky top-(--fd-docs-row-1) flex flex-col backdrop-blur-sm transition-colors [grid-area:header] z-[1]',
                 showLayoutTabs && 'md:layout:[--fd-header-height:--spacing(24)]',
             )}
         >

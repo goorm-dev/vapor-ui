@@ -26,10 +26,6 @@ const config = {
                 destination: '/llms.mdx/docs/:path*',
             },
             {
-                source: '/blocks/:path*.mdx',
-                destination: '/llms.mdx/blocks/:path*',
-            },
-            {
                 source: '/theme/:path*.mdx',
                 destination: '/llms.mdx/theme/:path*',
             },

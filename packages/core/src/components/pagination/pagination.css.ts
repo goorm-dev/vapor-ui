@@ -1,25 +1,24 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-export const list = layerStyle('components', {
+export const list = componentStyle({
     display: 'inline-flex',
     alignItems: 'center',
     gap: vars.size.space['025'],
 });
 
-export const item = layerStyle('components', {
+export const item = componentStyle({
     display: 'inline-flex',
     alignItems: 'center',
     flexWrap: 'nowrap',
 });
 
 // Base style shared by all pagination elements
-const baseElement = layerStyle('components', {
+const baseElement = componentStyle({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -35,73 +34,73 @@ const baseElement = layerStyle('components', {
 const sizeVariants = {
     sm: [
         typography({ style: 'subtitle2' }),
-        layerStyle('components', {
+        {
             width: vars.size.dimension[300],
             height: vars.size.dimension[300],
-        }),
+        },
     ],
     md: [
         typography({ style: 'subtitle1' }),
-        layerStyle('components', {
+        {
             width: vars.size.dimension[400],
             height: vars.size.dimension[400],
-        }),
+        },
     ],
     lg: [
         typography({ style: 'subtitle1' }),
-        layerStyle('components', {
+        {
             width: vars.size.dimension[500],
             height: vars.size.dimension[500],
-        }),
+        },
     ],
     xl: [
         typography({ style: 'heading6' }),
-        layerStyle('components', {
+        {
             width: vars.size.dimension[600],
             height: vars.size.dimension[600],
-        }),
+        },
     ],
 };
 
 // Ellipsis component style
-export const ellipsis = recipe({
+export const ellipsis = componentRecipe({
     base: baseElement,
     defaultVariants: { size: 'md' },
     variants: { size: sizeVariants },
 });
 
 // Current page indicator style
-export const currentPage = recipe({
+export const currentPage = componentRecipe({
     base: [
         baseElement,
-        layerStyle('components', {
+        {
             backgroundColor: vars.color.background.primary[100],
             color: vars.color.foreground.primary[200],
-        }),
+        },
     ],
     defaultVariants: { size: 'md' },
     variants: { size: sizeVariants },
 });
 
 // Interactive button style
-export const button = recipe({
+export const button = componentRecipe({
     base: [
         baseElement,
         interaction(),
-        layerStyle('components', {
+        {
             selectors: {
                 '&[data-current]': {
                     backgroundColor: vars.color.background.primary[100],
                     color: vars.color.foreground.primary[200],
                 },
             },
-        }),
+        },
     ],
     defaultVariants: { size: 'md' },
     variants: { size: sizeVariants },
 });
 
-export const icon = layerStyle('components', {
+export const icon = componentStyle({
     selectors: {
         [`${button.classNames.base} > &:is(svg)`]: {
             width: 'max(16px, 50%)',

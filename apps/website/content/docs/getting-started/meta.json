@@ -8,10 +8,10 @@
         "(overview)/introduction",
         "(overview)/principles",
         "(overview)/installation",
-        "[playground](/theme)",
+        "[playground](/theme/playground)",
 
         "---Handbook---",
-        "(handbook)/tokens",
+        "(handbook)/(tokens)",
         "(handbook)/styling",
         "(handbook)/theming",
         "(handbook)/tailwindcss-v4",

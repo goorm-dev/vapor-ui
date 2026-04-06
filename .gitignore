@@ -52,3 +52,6 @@ storybook-static
 
 # AI Outputs
 .claude
+
+# Worktrees
+.worktrees

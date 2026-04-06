@@ -128,7 +128,7 @@ importers:
         version: link:../../packages/typescript-config
       '@tailwindcss/vite':
         specifier: ^4.1.12
-        version: 4.1.13(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+        version: 4.1.13(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       '@types/culori':
         specifier: ^4.0.0
         version: 4.0.1
@@ -140,7 +140,7 @@ importers:
         version: 19.2.3(@types/react@19.2.14)
       '@vitejs/plugin-react':
         specifier: ^5.0.0
-        version: 5.0.3(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+        version: 5.0.3(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -155,10 +155,10 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^7.1.11
-        version: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       vite-plugin-singlefile:
         specifier: ^2.3.0
-        version: 2.3.0(rollup@4.59.0)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+        version: 2.3.0(rollup@4.59.0)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
 
   apps/storybook:
     dependencies:
@@ -180,13 +180,13 @@ importers:
         version: link:../../packages/typescript-config
       '@storybook/addon-docs':
         specifier: ^9.1.9
-        version: 9.1.9(@types/react@19.2.14)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
+        version: 9.1.9(@types/react@19.2.14)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
       '@storybook/builder-vite':
         specifier: ^9.1.9
-        version: 9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+        version: 9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       '@storybook/react-vite':
         specifier: ^9.1.9
-        version: 9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.59.0)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+        version: 9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.59.0)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.8.3)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.14
@@ -194,11 +194,11 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.14)
       '@vanilla-extract/vite-plugin':
-        specifier: ^5.2.0
-        version: 5.2.0(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+        specifier: ^5.2.2
+        version: 5.2.2(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       '@vitejs/plugin-react':
         specifier: ^5.0.3
-        version: 5.0.3(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+        version: 5.0.3(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       eslint:
         specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.1)
@@ -210,7 +210,7 @@ importers:
         version: 3.8.1
       storybook:
         specifier: ^9.1.17
-        version: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+        version: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -219,7 +219,7 @@ importers:
         version: 8.44.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.8.3)
       vite:
         specifier: ^7.1.11
-        version: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   apps/website:
     dependencies:
@@ -477,7 +477,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   packages/core:
     dependencies:
@@ -488,8 +488,8 @@ importers:
         specifier: ^0.2.6
         version: 0.2.6(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@vanilla-extract/css':
-        specifier: ^1.19.1
-        version: 1.19.1
+        specifier: ^1.20.1
+        version: 1.20.1
       '@vanilla-extract/css-utils':
         specifier: ^0.1.6
         version: 0.1.6
@@ -498,10 +498,10 @@ importers:
         version: 2.1.5
       '@vanilla-extract/recipes':
         specifier: ^0.5.7
-        version: 0.5.7(@vanilla-extract/css@1.19.1)
+        version: 0.5.7(@vanilla-extract/css@1.20.1)
       '@vanilla-extract/sprinkles':
         specifier: ^1.6.5
-        version: 1.6.5(@vanilla-extract/css@1.19.1)
+        version: 1.6.5(@vanilla-extract/css@1.20.1)
       '@vapor-ui/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -513,7 +513,7 @@ importers:
         version: 2.1.1
       rainbow-sprinkles:
         specifier: ^1.0.0
-        version: 1.0.0(@vanilla-extract/css@1.19.1)(@vanilla-extract/dynamic@2.1.5)
+        version: 1.0.0(@vanilla-extract/css@1.20.1)(@vanilla-extract/dynamic@2.1.5)
     devDependencies:
       '@playwright/test':
         specifier: ^1.55.1
@@ -558,11 +558,11 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.14)
       '@vanilla-extract/rollup-plugin':
-        specifier: ^1.5.2
+        specifier: ^1.5.3
         version: 1.5.3(rollup@4.59.0)
       '@vanilla-extract/vite-plugin':
-        specifier: ^5.2.0
-        version: 5.2.0(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+        specifier: ^5.2.2
+        version: 5.2.2(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       '@vitest/browser':
         specifier: ^3.2.4
         version: 3.2.4(playwright@1.56.1)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))(vitest@3.2.4)
@@ -577,7 +577,7 @@ importers:
         version: 9.39.2(jiti@2.6.1)
       happy-dom:
         specifier: ^20.0.0
-        version: 20.4.0
+        version: 20.8.9
       postcss:
         specifier: ^8.5.4
         version: 8.5.6
@@ -613,7 +613,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       vitest-axe:
         specifier: ^1.0.0-pre.5
         version: 1.0.0-pre.5(vitest@3.2.4)
@@ -650,7 +650,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   packages/eslint-config:
     dependencies:
@@ -696,7 +696,7 @@ importers:
         version: 5.2.0(eslint@9.36.0(jiti@2.6.1))
       eslint-plugin-storybook:
         specifier: ^9.1.9
-        version: 9.1.13(eslint@9.36.0(jiti@2.6.1))(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.9.3)
+        version: 9.1.13(eslint@9.36.0(jiti@2.6.1))(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.9.3)
       globals:
         specifier: ^16.3.0
         version: 16.4.0
@@ -739,7 +739,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   packages/hooks:
     devDependencies:
@@ -824,7 +824,7 @@ importers:
         version: 20.19.17
       '@vitest/coverage-v8':
         specifier: ^2.0.0
-        version: 2.1.9(vitest@2.1.9(@types/node@20.19.17)(happy-dom@20.4.0)(lightningcss@1.30.1)(sass@1.93.1))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.19.17)(happy-dom@20.8.9)(lightningcss@1.30.1)(sass@1.93.1))
       eslint:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.6.1)
@@ -842,7 +842,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^2.0.0
-        version: 2.1.9(@types/node@20.19.17)(happy-dom@20.4.0)(lightningcss@1.30.1)(sass@1.93.1)
+        version: 2.1.9(@types/node@20.19.17)(happy-dom@20.8.9)(lightningcss@1.30.1)(sass@1.93.1)
 
 packages:
 
@@ -4190,8 +4190,8 @@ packages:
   '@types/node@22.18.6':
     resolution: {integrity: sha512-r8uszLPpeIWbNKtvWRt/DbVi5zbqZyj1PTmhRMqBMvDnaz1QpmSKujUtJLrqGZeoM8v72MfYggDceY4K1itzWQ==}
 
-  '@types/node@25.0.6':
-    resolution: {integrity: sha512-NNu0sjyNxpoiW3YuVFfNz7mxSQ+S4X2G28uqg2s+CzoqoQjLPsWSbsFFyztIAqt2vb8kfEAsJNepMGPTxFDx3Q==}
+  '@types/node@25.5.0':
+    resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
 
   '@types/prismjs@1.26.5':
     resolution: {integrity: sha512-AUZTa7hQ2KY5L7AmtSiqxlhWxb4ina0yd8hNbl4TWuqnv/pFP0nDMb3YrfSBf4hJVGLh2YEIBfKaBW/9UEl6IQ==}
@@ -4391,14 +4391,14 @@ packages:
   '@vanilla-extract/babel-plugin-debug-ids@1.2.2':
     resolution: {integrity: sha512-MeDWGICAF9zA/OZLOKwhoRlsUW+fiMwnfuOAqFVohL31Agj7Q/RBWAYweqjHLgFBCsdnr6XIfwjJnmb2znEWxw==}
 
-  '@vanilla-extract/compiler@0.5.1':
-    resolution: {integrity: sha512-0FyUMZYlgdvgQuv3e5sBii0Xc0f76hOMIiAaqc/KNClss6MkKrY8vib1g542uMC1fUHQ5xhViq/4sZK72GYPyQ==}
+  '@vanilla-extract/compiler@0.7.0':
+    resolution: {integrity: sha512-rZQ40HVmsxfGLjoflwwsaUBLfpbpKDoZC19oiDA0FHq4LdrYtyVbFkc0MfqkNo/qBCvaZfsRezCqk0QQxCqZ8w==}
 
   '@vanilla-extract/css-utils@0.1.6':
     resolution: {integrity: sha512-iICpaHma0s2EEnQDw/JRqudQJwYw1JERyWfIllNQplps226KVphjGb3jyGMiBK5Waw69RD3q4gulgRVQAQmKmA==}
 
-  '@vanilla-extract/css@1.19.1':
-    resolution: {integrity: sha512-RKVi4TD56volJwFh+E9w8tYJ/FyVj58fmkRv+dP+YlYptGavxK2dKj5nNp8Vr1lYZ4CVMrLZvssYjBzA288Khg==}
+  '@vanilla-extract/css@1.20.1':
+    resolution: {integrity: sha512-5I9RNo5uZW9tsBnqrWzJqELegOqTHBrZyDFnES0gR9gJJHBB9dom1N0bwITM9tKwBcfKrTX4a6DHVeQdJ2ubQA==}
 
   '@vanilla-extract/dynamic@2.1.5':
     resolution: {integrity: sha512-QGIFGb1qyXQkbzx6X6i3+3LMc/iv/ZMBttMBL+Wm/DetQd36KsKsFg5CtH3qy+1hCA/5w93mEIIAiL4fkM8ycw==}
@@ -4424,8 +4424,8 @@ packages:
     peerDependencies:
       '@vanilla-extract/css': ^1.0.0
 
-  '@vanilla-extract/vite-plugin@5.2.0':
-    resolution: {integrity: sha512-FM2DP/jJG2BOdK83nZe+w5+2+Qv3oYlckApAOWMTnSG9rWBdBeh4L7PzJKcix9RctvuaRC0ogY1GOnoP99+BsQ==}
+  '@vanilla-extract/vite-plugin@5.2.2':
+    resolution: {integrity: sha512-AUyB4fDR2b/Mo0lcXhhlf6RxnDPYwFMyKKopalJ4BwQNKYzZSoTwHJ1PLPO9SKhpz7lzXc0Z18GHQZOewzl3YA==}
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
 
@@ -5268,6 +5268,10 @@ packages:
     resolution: {integrity: sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==}
     engines: {node: '>=0.12'}
 
+  entities@7.0.1:
+    resolution: {integrity: sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==}
+    engines: {node: '>=0.12'}
+
   error-ex@1.3.4:
     resolution: {integrity: sha512-sqQamAnR14VgCr1A618A3sGrygcpK+HEbenA/HiEAkkUwcZIIB/tgWqHFxWgOyDh4nB4JCRimh79dR5Ywc9MDQ==}
 
@@ -5963,8 +5967,8 @@ packages:
     engines: {node: '>=0.4.7'}
     hasBin: true
 
-  happy-dom@20.4.0:
-    resolution: {integrity: sha512-RDeQm3dT9n0A5f/TszjUmNCLEuPnMGv3Tv4BmNINebz/h17PA6LMBcxJ5FrcqltNBMh9jA/8ufgDdBYUdBt+eg==}
+  happy-dom@20.8.9:
+    resolution: {integrity: sha512-Tz23LR9T9jOGVZm2x1EPdXqwA37G/owYMxRwU0E4miurAtFsPMQ1d2Jc2okUaSjZqAFz2oEn3FLXC5a0a+siyA==}
     engines: {node: '>=20.0.0'}
 
   has-bigints@1.1.0:
@@ -8354,8 +8358,8 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
-  undici-types@7.16.0:
-    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+  undici-types@7.18.2:
+    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
 
   unicode-canonical-property-names-ecmascript@2.0.1:
     resolution: {integrity: sha512-dA8WbNeb2a6oQzAQ55YlT5vQAWGV9WXOsi3SskE3bcCdM0P4SDd+24zS/OCacdRq5BkdsRj9q3Pg6YyQoxIGqg==}
@@ -8728,6 +8732,18 @@ packages:
 
   ws@8.19.0:
     resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
+  ws@8.20.0:
+    resolution: {integrity: sha512-sAt8BhgNbzCtgGbt2OxmpuryO63ZoDk/sqaB/znQm94T4fCEsy/yV+7CdC1kJhOU9lboAEU7R3kquuycDoibVA==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -10730,7 +10746,7 @@ snapshots:
   '@jest/console@30.2.0':
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       chalk: 4.1.2
       jest-message-util: 30.2.0
       jest-util: 30.2.0
@@ -10778,7 +10794,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       jest-mock: 30.2.0
 
   '@jest/expect-utils@29.7.0':
@@ -10800,7 +10816,7 @@ snapshots:
     dependencies:
       '@jest/types': 30.2.0
       '@sinonjs/fake-timers': 13.0.5
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       jest-message-util: 30.2.0
       jest-mock: 30.2.0
       jest-util: 30.2.0
@@ -10818,7 +10834,7 @@ snapshots:
 
   '@jest/pattern@30.0.1':
     dependencies:
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       jest-regex-util: 30.0.1
 
   '@jest/reporters@30.2.0':
@@ -10829,7 +10845,7 @@ snapshots:
       '@jest/transform': 30.2.0
       '@jest/types': 30.2.0
       '@jridgewell/trace-mapping': 0.3.31
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       chalk: 4.1.2
       collect-v8-coverage: 1.0.2
       exit-x: 0.2.2
@@ -10909,7 +10925,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       '@types/yargs': 17.0.35
       chalk: 4.1.2
 
@@ -10923,12 +10939,12 @@ snapshots:
       '@types/yargs': 17.0.35
       chalk: 4.1.2
 
-  '@joshwooding/vite-plugin-react-docgen-typescript@0.6.1(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.6.1(typescript@5.8.3)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
       glob: 10.5.0
       magic-string: 0.30.19
       react-docgen-typescript: 2.4.0(typescript@5.8.3)
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     optionalDependencies:
       typescript: 5.8.3
 
@@ -11748,15 +11764,15 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@storybook/addon-docs@9.1.9(@types/react@19.2.14)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))':
+  '@storybook/addon-docs@9.1.9(@types/react@19.2.14)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))':
     dependencies:
       '@mdx-js/react': 3.1.1(@types/react@19.2.14)(react@19.2.4)
-      '@storybook/csf-plugin': 9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
+      '@storybook/csf-plugin': 9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
       '@storybook/icons': 1.6.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@storybook/react-dom-shim': 9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
+      '@storybook/react-dom-shim': 9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
-      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       ts-dedent: 2.2.0
     transitivePeerDependencies:
       - '@types/react'
@@ -11768,21 +11784,21 @@ snapshots:
       ts-dedent: 2.2.0
       vite: 7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
-  '@storybook/builder-vite@9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
+  '@storybook/builder-vite@9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
-      '@storybook/csf-plugin': 9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
-      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      '@storybook/csf-plugin': 9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
+      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       ts-dedent: 2.2.0
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   '@storybook/csf-plugin@9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))':
     dependencies:
       storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       unplugin: 1.16.1
 
-  '@storybook/csf-plugin@9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))':
+  '@storybook/csf-plugin@9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))':
     dependencies:
-      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       unplugin: 1.16.1
 
   '@storybook/global@5.0.0': {}
@@ -11798,11 +11814,11 @@ snapshots:
       react-dom: 19.2.4(react@19.2.4)
       storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
 
-  '@storybook/react-dom-shim@9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))':
+  '@storybook/react-dom-shim@9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))':
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
-      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
 
   '@storybook/react-vite@9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.59.0)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.9.3)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
@@ -11824,21 +11840,21 @@ snapshots:
       - supports-color
       - typescript
 
-  '@storybook/react-vite@9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.59.0)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
+  '@storybook/react-vite@9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.59.0)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.8.3)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.6.1(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.6.1(typescript@5.8.3)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       '@rollup/pluginutils': 5.3.0(rollup@4.59.0)
-      '@storybook/builder-vite': 9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
-      '@storybook/react': 9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.8.3)
+      '@storybook/builder-vite': 9.1.9(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      '@storybook/react': 9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.8.3)
       find-up: 7.0.0
       magic-string: 0.30.19
       react: 19.2.4
       react-docgen: 8.0.2
       react-dom: 19.2.4(react@19.2.4)
       resolve: 1.22.10
-      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       tsconfig-paths: 4.2.0
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -11854,13 +11870,13 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  '@storybook/react@9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.8.3)':
+  '@storybook/react@9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.8.3)':
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/react-dom-shim': 9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
+      '@storybook/react-dom-shim': 9.1.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
-      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
     optionalDependencies:
       typescript: 5.8.3
 
@@ -12033,12 +12049,12 @@ snapshots:
       postcss: 8.5.6
       tailwindcss: 4.1.13
 
-  '@tailwindcss/vite@4.1.13(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
+  '@tailwindcss/vite@4.1.13(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
       '@tailwindcss/node': 4.1.13
       '@tailwindcss/oxide': 4.1.13
       tailwindcss: 4.1.13
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   '@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
@@ -12246,9 +12262,9 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@25.0.6':
+  '@types/node@25.5.0':
     dependencies:
-      undici-types: 7.16.0
+      undici-types: 7.18.2
     optional: true
 
   '@types/prismjs@1.26.5': {}
@@ -12524,9 +12540,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vanilla-extract/compiler@0.5.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)':
+  '@vanilla-extract/compiler@0.7.0(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)':
     dependencies:
-      '@vanilla-extract/css': 1.19.1
+      '@vanilla-extract/css': 1.20.1
       '@vanilla-extract/integration': 8.0.9
       vite: 7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       vite-node: 3.2.4(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
@@ -12545,12 +12561,12 @@ snapshots:
       - tsx
       - yaml
 
-  '@vanilla-extract/compiler@0.5.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)':
+  '@vanilla-extract/compiler@0.7.0(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)':
     dependencies:
-      '@vanilla-extract/css': 1.19.1
+      '@vanilla-extract/css': 1.20.1
       '@vanilla-extract/integration': 8.0.9
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
-      vite-node: 3.2.4(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite-node: 3.2.4(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -12568,12 +12584,11 @@ snapshots:
 
   '@vanilla-extract/css-utils@0.1.6': {}
 
-  '@vanilla-extract/css@1.19.1':
+  '@vanilla-extract/css@1.20.1':
     dependencies:
       '@emotion/hash': 0.9.2
       '@vanilla-extract/private': 1.0.9
       css-what: 6.2.2
-      cssesc: 3.0.0
       csstype: 3.2.3
       dedent: 1.7.0
       deep-object-diff: 1.1.9
@@ -12594,7 +12609,7 @@ snapshots:
       '@babel/core': 7.28.5
       '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.28.5)
       '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
-      '@vanilla-extract/css': 1.19.1
+      '@vanilla-extract/css': 1.20.1
       dedent: 1.7.0
       esbuild: 0.25.12
       eval: 0.1.8
@@ -12607,9 +12622,9 @@ snapshots:
 
   '@vanilla-extract/private@1.0.9': {}
 
-  '@vanilla-extract/recipes@0.5.7(@vanilla-extract/css@1.19.1)':
+  '@vanilla-extract/recipes@0.5.7(@vanilla-extract/css@1.20.1)':
     dependencies:
-      '@vanilla-extract/css': 1.19.1
+      '@vanilla-extract/css': 1.20.1
 
   '@vanilla-extract/rollup-plugin@1.5.3(rollup@4.59.0)':
     dependencies:
@@ -12620,13 +12635,13 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  '@vanilla-extract/sprinkles@1.6.5(@vanilla-extract/css@1.19.1)':
+  '@vanilla-extract/sprinkles@1.6.5(@vanilla-extract/css@1.20.1)':
     dependencies:
-      '@vanilla-extract/css': 1.19.1
+      '@vanilla-extract/css': 1.20.1
 
-  '@vanilla-extract/vite-plugin@5.2.0(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
+  '@vanilla-extract/vite-plugin@5.2.2(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
-      '@vanilla-extract/compiler': 0.5.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      '@vanilla-extract/compiler': 0.7.0(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       '@vanilla-extract/integration': 8.0.9
       vite: 7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     transitivePeerDependencies:
@@ -12644,11 +12659,11 @@ snapshots:
       - tsx
       - yaml
 
-  '@vanilla-extract/vite-plugin@5.2.0(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
+  '@vanilla-extract/vite-plugin@5.2.2(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
-      '@vanilla-extract/compiler': 0.5.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      '@vanilla-extract/compiler': 0.7.0(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       '@vanilla-extract/integration': 8.0.9
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -12669,7 +12684,7 @@ snapshots:
       next: 16.1.6(@babel/core@7.28.4)(@playwright/test@1.56.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.93.1)
       react: 19.2.4
 
-  '@vitejs/plugin-react@5.0.3(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
+  '@vitejs/plugin-react@5.0.3(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.4)
@@ -12677,7 +12692,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.35
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -12690,7 +12705,7 @@ snapshots:
       magic-string: 0.30.19
       sirv: 3.0.2
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       ws: 8.18.3
     optionalDependencies:
       playwright: 1.56.1
@@ -12710,7 +12725,7 @@ snapshots:
       magic-string: 0.30.19
       sirv: 3.0.2
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       ws: 8.18.3
     optionalDependencies:
       playwright: 1.56.1
@@ -12720,7 +12735,7 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.19.17)(happy-dom@20.4.0)(lightningcss@1.30.1)(sass@1.93.1))':
+  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.19.17)(happy-dom@20.8.9)(lightningcss@1.30.1)(sass@1.93.1))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -12734,7 +12749,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@20.19.17)(happy-dom@20.4.0)(lightningcss@1.30.1)(sass@1.93.1)
+      vitest: 2.1.9(@types/node@20.19.17)(happy-dom@20.8.9)(lightningcss@1.30.1)(sass@1.93.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -12753,7 +12768,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     optionalDependencies:
       '@vitest/browser': 3.2.4(playwright@1.56.1)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))(vitest@3.2.4)
     transitivePeerDependencies:
@@ -12798,13 +12813,13 @@ snapshots:
     optionalDependencies:
       vite: 7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
-  '@vitest/mocker@3.2.4(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
+  '@vitest/mocker@3.2.4(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
       '@vitest/spy': 3.2.4
       estree-walker: 3.0.3
       magic-string: 0.30.19
     optionalDependencies:
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   '@vitest/pretty-format@2.1.9':
     dependencies:
@@ -12834,7 +12849,7 @@ snapshots:
   '@vitest/snapshot@3.2.4':
     dependencies:
       '@vitest/pretty-format': 3.2.4
-      magic-string: 0.30.19
+      magic-string: 0.30.21
       pathe: 2.0.3
 
   '@vitest/spy@2.1.9':
@@ -13600,6 +13615,8 @@ snapshots:
 
   entities@6.0.1: {}
 
+  entities@7.0.1: {}
+
   error-ex@1.3.4:
     dependencies:
       is-arrayish: 0.2.1
@@ -14036,11 +14053,11 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-storybook@9.1.13(eslint@9.36.0(jiti@2.6.1))(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.9.3):
+  eslint-plugin-storybook@9.1.13(eslint@9.36.0(jiti@2.6.1))(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)))(typescript@5.9.3):
     dependencies:
       '@typescript-eslint/utils': 8.44.1(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3)
       eslint: 9.36.0(jiti@2.6.1)
-      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      storybook: 9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -14176,7 +14193,7 @@ snapshots:
       is-glob: 4.0.3
       json-stable-stringify-without-jsonify: 1.0.1
       lodash.merge: 4.6.2
-      minimatch: 3.1.3
+      minimatch: 3.1.5
       natural-compare: 1.4.0
       optionator: 0.9.4
     optionalDependencies:
@@ -14667,14 +14684,14 @@ snapshots:
     optionalDependencies:
       uglify-js: 3.19.3
 
-  happy-dom@20.4.0:
+  happy-dom@20.8.9:
     dependencies:
       '@types/node': 22.18.6
       '@types/whatwg-mimetype': 3.0.2
       '@types/ws': 8.18.1
-      entities: 4.5.0
+      entities: 7.0.1
       whatwg-mimetype: 3.0.0
-      ws: 8.18.3
+      ws: 8.20.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -15098,7 +15115,7 @@ snapshots:
       '@jest/expect': 30.2.0
       '@jest/test-result': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.7.0
@@ -15236,7 +15253,7 @@ snapshots:
       '@jest/environment': 30.2.0
       '@jest/fake-timers': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       jest-mock: 30.2.0
       jest-util: 30.2.0
       jest-validate: 30.2.0
@@ -15246,7 +15263,7 @@ snapshots:
   jest-haste-map@30.2.0:
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -15304,7 +15321,7 @@ snapshots:
   jest-mock@30.2.0:
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       jest-util: 30.2.0
 
   jest-pnp-resolver@1.2.3(jest-resolve@30.2.0):
@@ -15338,7 +15355,7 @@ snapshots:
       '@jest/test-result': 30.2.0
       '@jest/transform': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       chalk: 4.1.2
       emittery: 0.13.1
       exit-x: 0.2.2
@@ -15367,7 +15384,7 @@ snapshots:
       '@jest/test-result': 30.2.0
       '@jest/transform': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       chalk: 4.1.2
       cjs-module-lexer: 2.1.1
       collect-v8-coverage: 1.0.2
@@ -15414,7 +15431,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -15423,7 +15440,7 @@ snapshots:
   jest-util@30.2.0:
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       chalk: 4.1.2
       ci-info: 4.3.1
       graceful-fs: 4.2.11
@@ -15442,7 +15459,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -15451,7 +15468,7 @@ snapshots:
 
   jest-worker@30.2.0:
     dependencies:
-      '@types/node': 22.18.6
+      '@types/node': 20.19.17
       '@ungap/structured-clone': 1.3.0
       jest-util: 30.2.0
       merge-stream: 2.0.0
@@ -16671,9 +16688,9 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  rainbow-sprinkles@1.0.0(@vanilla-extract/css@1.19.1)(@vanilla-extract/dynamic@2.1.5):
+  rainbow-sprinkles@1.0.0(@vanilla-extract/css@1.20.1)(@vanilla-extract/dynamic@2.1.5):
     dependencies:
-      '@vanilla-extract/css': 1.19.1
+      '@vanilla-extract/css': 1.20.1
       '@vanilla-extract/dynamic': 2.1.5
 
   react-docgen-typescript@2.4.0(typescript@5.8.3):
@@ -17348,13 +17365,13 @@ snapshots:
       - utf-8-validate
       - vite
 
-  storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)):
+  storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)):
     dependencies:
       '@storybook/global': 5.0.0
       '@testing-library/jest-dom': 6.9.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
       '@vitest/expect': 3.2.4
-      '@vitest/mocker': 3.2.4(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
+      '@vitest/mocker': 3.2.4(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))
       '@vitest/spy': 3.2.4
       better-opn: 3.0.2
       esbuild: 0.25.12
@@ -17860,7 +17877,7 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici-types@7.16.0:
+  undici-types@7.18.2:
     optional: true
 
   unicode-canonical-property-names-ecmascript@2.0.1: {}
@@ -18090,13 +18107,13 @@ snapshots:
       - tsx
       - yaml
 
-  vite-node@3.2.4(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
+  vite-node@3.2.4(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
     dependencies:
       cac: 6.7.14
       debug: 4.4.3
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -18111,11 +18128,11 @@ snapshots:
       - tsx
       - yaml
 
-  vite-plugin-singlefile@2.3.0(rollup@4.59.0)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)):
+  vite-plugin-singlefile@2.3.0(rollup@4.59.0)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)):
     dependencies:
       micromatch: 4.0.8
       rollup: 4.59.0
-      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   vite@5.4.21(@types/node@20.19.17)(lightningcss@1.30.1)(sass@1.93.1):
     dependencies:
@@ -18160,7 +18177,7 @@ snapshots:
       sass: 1.93.1
       tsx: 4.20.5
 
-  vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
+  vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
     dependencies:
       esbuild: 0.27.3
       fdir: 6.5.0(picomatch@4.0.3)
@@ -18169,7 +18186,7 @@ snapshots:
       rollup: 4.59.0
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 25.0.6
+      '@types/node': 25.5.0
       fsevents: 2.3.3
       jiti: 2.6.1
       lightningcss: 1.30.1
@@ -18182,9 +18199,9 @@ snapshots:
       axe-core: 4.10.3
       chalk: 5.6.2
       lodash-es: 4.17.23
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
-  vitest@2.1.9(@types/node@20.19.17)(happy-dom@20.4.0)(lightningcss@1.30.1)(sass@1.93.1):
+  vitest@2.1.9(@types/node@20.19.17)(happy-dom@20.8.9)(lightningcss@1.30.1)(sass@1.93.1):
     dependencies:
       '@vitest/expect': 2.1.9
       '@vitest/mocker': 2.1.9(vite@5.4.21(@types/node@20.19.17)(lightningcss@1.30.1)(sass@1.93.1))
@@ -18208,7 +18225,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.19.17
-      happy-dom: 20.4.0
+      happy-dom: 20.8.9
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -18220,7 +18237,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -18249,7 +18266,7 @@ snapshots:
       '@types/debug': 4.1.12
       '@types/node': 20.19.17
       '@vitest/browser': 3.2.4(playwright@1.56.1)(vite@7.3.1(@types/node@20.19.17)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))(vitest@3.2.4)
-      happy-dom: 20.4.0
+      happy-dom: 20.8.9
     transitivePeerDependencies:
       - jiti
       - less
@@ -18264,7 +18281,7 @@ snapshots:
       - tsx
       - yaml
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -18293,7 +18310,7 @@ snapshots:
       '@types/debug': 4.1.12
       '@types/node': 22.18.6
       '@vitest/browser': 3.2.4(playwright@1.56.1)(vite@7.3.1(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))(vitest@3.2.4)
-      happy-dom: 20.4.0
+      happy-dom: 20.8.9
     transitivePeerDependencies:
       - jiti
       - less
@@ -18419,6 +18436,8 @@ snapshots:
   ws@8.18.3: {}
 
   ws@8.19.0: {}
+
+  ws@8.20.0: {}
 
   y18n@5.0.8: {}
 

@@ -1,18 +1,18 @@
 'use client';
 
-import type { CSSProperties, ComponentProps, ComponentPropsWithoutRef, ReactElement } from 'react';
+import type { CSSProperties, ComponentProps, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
+import { useRenderElement } from '~/hooks/use-render-element';
 import { vars } from '~/styles/themes.css';
+import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './tooltip.css';
 
@@ -132,7 +132,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
         return (
             <BaseTooltip.Popup
                 ref={composedRef}
-                className={clsx(styles.popup, className)}
+                className={cn(styles.popup, className)}
                 {...componentProps}
             >
                 <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
@@ -147,8 +147,16 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
 TooltipPopupPrimitive.displayName = 'Tooltip.PopupPrimitive';
 
 const extractPositions = (dataset: DOMStringMap) => {
-    const currentSide = dataset.side as VComponentProps<typeof BaseTooltip.Positioner>['side'];
-    const currentAlign = dataset.align as VComponentProps<typeof BaseTooltip.Positioner>['align'];
+    const currentSide = dataset.side as VaporUIComponentProps<
+        typeof BaseTooltip.Positioner,
+        BaseTooltip.Positioner.State
+    >['side'];
+
+    const currentAlign = dataset.align as VaporUIComponentProps<
+        typeof BaseTooltip.Positioner,
+        BaseTooltip.Positioner.State
+    >['align'];
+
     return { side: currentSide, align: currentAlign };
 };
 
@@ -161,13 +169,13 @@ export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
         const popup = <TooltipPopupPrimitive ref={ref} {...props} />;
 
         const positionerRender = createRender(positionerElement, <TooltipPositionerPrimitive />);
-        const positioner = useRender({
+        const positioner = useRenderElement({
             render: positionerRender,
             props: { children: popup },
         });
 
         const portalRender = createRender(portalElement, <TooltipPortalPrimitive />);
-        const portal = useRender({
+        const portal = useRenderElement({
             render: portalRender,
             props: { children: positioner },
         });
@@ -179,7 +187,10 @@ TooltipPopup.displayName = 'Tooltip.Popup';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type ArrowPositionProps = Pick<VComponentProps<typeof BaseTooltip.Positioner>, 'side' | 'align'> & {
+type ArrowPositionProps = Pick<
+    VaporUIComponentProps<typeof BaseTooltip.Positioner, BaseTooltip.Positioner.State>,
+    'side' | 'align'
+> & {
     offset?: number;
 };
 
@@ -231,31 +242,45 @@ const ArrowIcon = (props: ComponentProps<'svg'>) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace TooltipRoot {
-    export interface Props extends ComponentPropsWithoutRef<typeof BaseTooltip.Root> {}
+    export type State = BaseTooltip.Root.State;
+    export type Props = BaseTooltip.Root.Props;
 
     export type Actions = BaseTooltip.Root.Actions;
     export type ChangeEventDetails = BaseTooltip.Root.ChangeEventDetails;
 }
 
 export namespace TooltipTrigger {
-    export interface Props extends VComponentProps<typeof BaseTooltip.Trigger> {}
+    export type State = BaseTooltip.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseTooltip.Trigger, State>;
 }
 
 export namespace TooltipPortalPrimitive {
-    export interface Props extends VComponentProps<typeof BaseTooltip.Portal> {}
+    export type State = BaseTooltip.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseTooltip.Portal, State>;
 }
 
 export namespace TooltipPositionerPrimitive {
-    export interface Props extends VComponentProps<typeof BaseTooltip.Positioner> {}
+    export type State = BaseTooltip.Positioner.State;
+    export type Props = VaporUIComponentProps<typeof BaseTooltip.Positioner, State>;
 }
 
 export namespace TooltipPopupPrimitive {
-    export interface Props extends VComponentProps<typeof BaseTooltip.Popup> {}
+    export type State = BaseTooltip.Popup.State;
+    export type Props = VaporUIComponentProps<typeof BaseTooltip.Popup, State>;
+}
+
+export interface TooltipPopupProps extends TooltipPopupPrimitive.Props {
+    /**
+     * A custom element for Tooltip.PortalPrimitive. If not provided, the default Tooltip.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<TooltipPortalPrimitive.Props>;
+    /**
+     * A custom element for Tooltip.PositionerPrimitive. If not provided, the default Tooltip.PositionerPrimitive will be rendered.
+     */
+    positionerElement?: ReactElement<TooltipPositionerPrimitive.Props>;
 }
 
 export namespace TooltipPopup {
-    export interface Props extends VComponentProps<typeof TooltipPopupPrimitive> {
-        portalElement?: ReactElement<TooltipPortalPrimitive.Props>;
-        positionerElement?: ReactElement<TooltipPositionerPrimitive.Props>;
-    }
+    export type State = TooltipPopupPrimitive.State;
+    export type Props = TooltipPopupProps;
 }

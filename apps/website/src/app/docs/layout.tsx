@@ -27,10 +27,10 @@ export default function Layout({ children }: { children: ReactNode }) {
                         return {
                             ...tab,
                             title: (
-                                <div className="flex items-center gap-2">
+                                <span className="inline-flex items-center gap-2">
                                     {tab.icon}
                                     <span>{tab.title}</span>
-                                </div>
+                                </span>
                             ),
                         };
                     },

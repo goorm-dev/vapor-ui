@@ -4,24 +4,16 @@ import { forwardRef, useRef } from 'react';
 
 import { Input as BaseInput } from '@base-ui/react/input';
 import { useControlled } from '@base-ui/utils/useControlled';
-import clsx from 'clsx';
 
 import { useInputGroup } from '~/components/input-group';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
-
-type TextInputVariants = RootVariants;
-type BaseProps = TextInputVariants & {
-    type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
-    value?: string;
-    defaultValue?: string;
-    onValueChange?: (value: string, event: TextInput.ChangeEventDetails) => void;
-};
 
 /* -------------------------------------------------------------------------------------------------
  * TextInput
@@ -68,7 +60,7 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
             {...(isControlled ? { value } : { defaultValue })}
             aria-invalid={invalid}
             onValueChange={handleChange}
-            className={clsx(styles.root({ invalid, size }), className)}
+            className={cn(styles.root({ invalid, size }), className)}
             {...dataAttrs}
             {...otherProps}
         />
@@ -78,9 +70,33 @@ TextInput.displayName = 'TextInput';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export namespace TextInput {
-    type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
+type TextInputVariants = RootVariants;
 
-    export interface Props extends Assign<TextInputPrimitiveProps, BaseProps> {}
+export interface TextInputProps
+    extends
+        Omit<VaporUIComponentProps<typeof BaseInput, TextInput.State>, 'size'>,
+        TextInputVariants {
+    /**
+     * The type of the input element. It determines the kind of data that can be entered.
+     * @default 'text'
+     */
+    type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
+    /**
+     * The value of the input. Use when controlled.
+     */
+    value?: string;
+    /**
+     * The default value of the input. Use when uncontrolled.
+     */
+    defaultValue?: string;
+    /**
+     * Event handler called when the selected value of the input changes.
+     */
+    onValueChange?: (value: string, event: TextInput.ChangeEventDetails) => void;
+}
+
+export namespace TextInput {
+    export type State = BaseInput.State;
+    export type Props = TextInputProps;
     export type ChangeEventDetails = BaseInput.ChangeEventDetails;
 }
