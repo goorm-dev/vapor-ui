@@ -6,7 +6,7 @@
 import type { Symbol as TsSymbol } from 'ts-morph';
 
 import { isSymbolFromExternalSource, isSymbolFromSprinkles } from '~/declaration-source';
-import type { ParseOptions } from '~/models/extract';
+import type { ParseOptions } from '~/models/internal';
 
 const DEPRECATED_CSS_PROPS = new Set([
     '$css',

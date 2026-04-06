@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import type { PropsInfoJson } from '~/models/json';
+import type { PropsInfoJson } from '~/models/output';
 
 export interface WriteFile {
     filePath: string;

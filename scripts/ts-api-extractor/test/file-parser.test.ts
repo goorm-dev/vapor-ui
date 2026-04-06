@@ -6,7 +6,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { ModuleKind, ModuleResolutionKind, Project, ScriptTarget } from 'ts-morph';
 
-import { extractProps } from '~/parse';
+import { parseSourceFile } from '~/parse';
+import { componentsToJson, parsedComponentsToModels } from '~/transform';
 
 function createProject(): Project {
     return new Project({
@@ -79,20 +80,22 @@ function writeFixtureFiles(root: string) {
     };
 }
 
-describe('extractProps', () => {
+describe('parseSourceFile → transform pipeline', () => {
     it('builds parsed/models/json output from a component source file', () => {
         const root = createFixtureRoot();
         const { componentFile } = writeFixtureFiles(root);
         const project = createProject();
         const sourceFile = project.addSourceFileAtPath(componentFile);
 
-        const result = extractProps(sourceFile);
+        const parsed = parseSourceFile(sourceFile);
+        const models = parsedComponentsToModels(parsed);
+        const props = componentsToJson(models);
 
-        expect(result.parsed).toHaveLength(1);
-        expect(result.models).toHaveLength(1);
-        expect(result.props).toHaveLength(1);
+        expect(parsed).toHaveLength(1);
+        expect(models).toHaveLength(1);
+        expect(props).toHaveLength(1);
 
-        const jsonProps = result.props[0].props;
+        const jsonProps = props[0].props;
         const stateProp = jsonProps.find((prop) => prop.name === 'state');
         const onOpenChangeProp = jsonProps.find((prop) => prop.name === 'onOpenChange');
         const dataTestIdProp = jsonProps.find((prop) => prop.name === 'data-testid');
@@ -108,13 +111,14 @@ describe('extractProps', () => {
         const project = createProject();
         const sourceFile = project.addSourceFileAtPath(componentFile);
 
-        const result = extractProps(sourceFile, {
+        const parsed = parseSourceFile(sourceFile, {
             filterExternal: false,
             filterHtml: false,
             filterSprinkles: false,
             include: ['data-testid'],
         });
-        const jsonProps = result.props[0].props;
+        const props = componentsToJson(parsedComponentsToModels(parsed));
+        const jsonProps = props[0].props;
 
         expect(jsonProps.some((prop) => prop.name === 'data-testid')).toBe(true);
     });

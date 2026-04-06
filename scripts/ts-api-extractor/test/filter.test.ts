@@ -4,7 +4,7 @@
 import { Project } from 'ts-morph';
 
 import { shouldIncludeSymbol } from '~/filter';
-import type { ParseOptions } from '~/models/extract';
+import type { ParseOptions } from '~/models/internal';
 
 function mockSymbol(name: string) {
     return {

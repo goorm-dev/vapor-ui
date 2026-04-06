@@ -1,4 +1,4 @@
-import type { PropCategory } from '~/models/prop';
+import type { PropCategory } from '~/models/internal';
 
 export const CATEGORY_ORDER: Record<PropCategory, number> = {
     required: 0,

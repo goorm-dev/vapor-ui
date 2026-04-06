@@ -1,7 +1,7 @@
 /**
  * JSON serializer unit tests
  */
-import type { ComponentModel, PropModel } from '~/models';
+import type { ComponentModel, PropModel } from '~/models/internal';
 import { componentModelToJson, componentsToJson, propModelToJson } from '~/transform';
 
 describe('propModelToJson', () => {

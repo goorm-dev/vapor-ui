@@ -5,7 +5,8 @@ import { Project } from 'ts-morph';
 
 import { resolveComponentInclude } from '~/config';
 import { formatFileName } from '~/filename';
-import type { ExtractInput, ExtractOutput, ParseOptions } from '~/models/extract';
+import type { ParseOptions } from '~/models/internal';
+import type { ExtractInput, ExtractOutput } from '~/models/output';
 import { parseSourceFile } from '~/parse';
 import { componentsToJson, parsedComponentsToModels } from '~/transform';
 import { buildWriteFiles } from '~/write';

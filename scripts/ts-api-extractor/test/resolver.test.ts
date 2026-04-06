@@ -8,7 +8,7 @@
  */
 import { Project } from 'ts-morph';
 
-import type { BaseUiTypeMap } from '~/models/extract';
+import type { BaseUiTypeMap } from '~/models/internal';
 import {
     resolveType,
     simplifyForwardRefType,

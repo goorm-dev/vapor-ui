@@ -1,7 +1,5 @@
-import type { ComponentModel } from '~/models/component';
-import type { PropertyJson, PropsInfoJson } from '~/models/json';
-import type { ParsedComponent, ParsedProp } from '~/models/parsed';
-import type { PropModel } from '~/models/prop';
+import type { ComponentModel, ParsedComponent, ParsedProp, PropModel } from '~/models/internal';
+import type { PropertyJson, PropsInfoJson } from '~/models/output';
 import { categorizeProp } from '~/rules/categorize-prop';
 import { normalizeTypeStrings } from '~/rules/normalize-types';
 import { sortProps } from '~/rules/sort-props';

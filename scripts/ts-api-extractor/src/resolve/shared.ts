@@ -1,6 +1,6 @@
 import { type Node, type Type, TypeFormatFlags } from 'ts-morph';
 
-import type { BaseUiTypeMap } from '~/models/extract';
+import type { BaseUiTypeMap } from '~/models/internal';
 
 export const TYPE_FORMAT_FLAGS =
     TypeFormatFlags.UseAliasDefinedOutsideCurrentScope |

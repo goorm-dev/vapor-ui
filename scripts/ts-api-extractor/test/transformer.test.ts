@@ -6,7 +6,7 @@
  * - category classification
  * - type string parsing
  */
-import type { ParsedProp } from '~/models/parsed';
+import type { ParsedProp } from '~/models/internal';
 import { parsedComponentToModel, parsedPropToModel } from '~/transform';
 
 describe('parsedPropToModel', () => {

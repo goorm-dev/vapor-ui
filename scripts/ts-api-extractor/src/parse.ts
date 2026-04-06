@@ -11,13 +11,9 @@ import { cleanType } from '~/cleaner';
 import { getSymbolSourcePath } from '~/declaration-source';
 import { getDefaultValuesForNamespace } from '~/extract-defaults';
 import { shouldIncludeSymbol } from '~/filter';
-import type { ComponentModel } from '~/models/component';
-import type { BaseUiTypeMap, ParseOptions } from '~/models/extract';
-import type { PropsInfoJson } from '~/models/json';
-import type { ParsedComponent, ParsedProp } from '~/models/parsed';
+import type { BaseUiTypeMap, ParseOptions, ParsedComponent, ParsedProp } from '~/models/internal';
 import { resolveType } from '~/resolve';
 import { buildBaseUiTypeMap } from '~/resolve/base-ui-mapper';
-import { componentModelToJson, parsedComponentToModel } from '~/transform';
 
 function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: string) {
     return sourceFile
@@ -179,20 +175,4 @@ export function parseSourceFile(
     }
 
     return parsedComponents;
-}
-
-export interface ExtractResult {
-    parsed: ParsedComponent[];
-    models: ComponentModel[];
-    props: PropsInfoJson[];
-}
-
-export function extractProps(
-    sourceFile: SourceFile,
-    options: ParseOptions = DEFAULT_PARSE_OPTIONS,
-): ExtractResult {
-    const parsed = parseSourceFile(sourceFile, options);
-    const models = parsed.map(parsedComponentToModel);
-    const props = models.map(componentModelToJson);
-    return { parsed, models, props };
 }

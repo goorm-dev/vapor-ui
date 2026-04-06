@@ -1,9 +1,36 @@
 import path from 'node:path';
 import { type ImportSpecifier, type SourceFile, SyntaxKind } from 'ts-morph';
 
-import { findImportPaths, findNamespaceImportName } from '~/utils';
-
 export type DefaultValues = Record<string, string>;
+
+// ──────────────────────────────────────────────────────────────
+// Import analysis utilities
+// ──────────────────────────────────────────────────────────────
+
+export function findImportPaths(sourceFile: SourceFile, extension: string): string[] {
+    const seen = new Set<string>();
+
+    for (const importDecl of sourceFile.getImportDeclarations()) {
+        const modulePath = importDecl.getModuleSpecifierValue();
+
+        if (modulePath.endsWith(extension)) {
+            seen.add(modulePath);
+        }
+    }
+
+    return [...seen];
+}
+
+export function findNamespaceImportName(sourceFile: SourceFile, modulePath: string): string | null {
+    for (const importDecl of sourceFile.getImportDeclarations()) {
+        if (importDecl.getModuleSpecifierValue() !== modulePath) continue;
+
+        const namespaceImport = importDecl.getNamespaceImport();
+        if (namespaceImport) return namespaceImport.getText();
+    }
+
+    return null;
+}
 
 export function extractDestructuringDefaults(
     sourceFile: SourceFile,

@@ -1,6 +1,6 @@
 import type { Type } from 'ts-morph';
 
-import type { BaseUiTypeMap } from '~/models/extract';
+import type { BaseUiTypeMap } from '~/models/internal';
 import { resolveBaseUiType } from '~/resolve/base-ui-mapper';
 
 export function isBaseUiType(type: Type, baseUiMap?: BaseUiTypeMap): boolean {
