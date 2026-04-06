@@ -18,9 +18,6 @@ export interface ExtractInput {
     tsconfigPath: string;
     targetFiles: string[];
     config: ExtractorConfig;
-    outputDir: string;
-    all: boolean;
-    verbose: boolean;
 }
 
 export interface ExtractOutput {

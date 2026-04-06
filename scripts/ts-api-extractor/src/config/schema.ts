@@ -13,6 +13,8 @@ export interface ExtractorConfig {
     filterSprinkles: boolean;
     includeHtml?: string[];
     components: Record<string, ComponentExtractConfig>;
+    all: boolean;
+    verbose: boolean;
 }
 
 export type PartialExtractorConfig = Partial<
@@ -51,6 +53,12 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
     }
     if (config.filterSprinkles !== undefined && typeof config.filterSprinkles !== 'boolean') {
         throw new Error('Invalid filterSprinkles: expected boolean');
+    }
+    if (config.all !== undefined && typeof config.all !== 'boolean') {
+        throw new Error('Invalid all: expected boolean');
+    }
+    if (config.verbose !== undefined && typeof config.verbose !== 'boolean') {
+        throw new Error('Invalid verbose: expected boolean');
     }
 
     if (config.components !== undefined) {

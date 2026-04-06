@@ -61,12 +61,12 @@ function writeFixtureFiles(root: string) {
         import type * as BaseCollapsible from './@base-ui/CollapsibleRoot';
 
         export namespace CollapsibleRoot {
-            export interface Props {
+            export type Props = {
                 state?: BaseCollapsible.Root.State;
                 onOpenChange?: (details: BaseCollapsible.Root.ChangeEventDetails) => void;
                 custom?: string;
                 'data-testid'?: string;
-            }
+            };
 
             export type State = BaseCollapsible.Root.State;
             export type ChangeEventDetails = BaseCollapsible.Root.ChangeEventDetails;

@@ -19,4 +19,6 @@ export const defaultExtractorConfig: ExtractorConfig = {
     filterSprinkles: true,
     includeHtml: ['className'],
     components: {},
+    all: false,
+    verbose: false,
 };

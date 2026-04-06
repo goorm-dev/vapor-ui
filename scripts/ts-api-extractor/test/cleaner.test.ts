@@ -96,7 +96,9 @@ describe('cleanType', () => {
     it('ComponentRenderFn 단순화', () => {
         const input = 'ComponentRenderFn<Props, State>';
         const result = cleanType(input);
-        expect(result.type).toBe('ReactElement | ((props: HTMLProps) => ReactElement)');
+        expect(result.type).toBe(
+            'ReactElement | ((props: HTMLProps, state: State) => ReactElement)',
+        );
     });
 
     it('undefined 제거', () => {
@@ -123,10 +125,10 @@ describe('cleanType', () => {
         expect(result.values).toEqual(['string', 'number']);
     });
 
-    it('render prop 타입 정리', () => {
+    it('render prop 타입 정리 — state 유지', () => {
         const input = '(props: HTMLProps<HTMLDivElement>, state: Root.State) => ReactElement';
         const result = cleanType(input);
-        expect(result.type).toBe('(props: HTMLProps) => ReactElement');
+        expect(result.type).toBe('(props: HTMLProps, state: Root.State) => ReactElement');
     });
 
     it('제네릭 State 제거', () => {

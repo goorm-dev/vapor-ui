@@ -5,7 +5,7 @@
  */
 
 const STATE_MARKER = '.State)';
-const GENERIC_STATE_PATTERN = /,\s*[^,<>]*\.State(?:>|\))/g;
+const GENERIC_STATE_PATTERN = /,\s*[^,<>]*\.State>/g;
 
 export interface TypeCleanResult {
     type: string;
@@ -23,7 +23,10 @@ export function simplifyStateCallback(type: string): string {
         .map((part) => {
             if (!part.includes(STATE_MARKER)) return part;
             const match = part.match(/=>\s*(\w+)\)?$/);
-            return match ? match[1] : part;
+            if (!match) return part;
+            // render 함수(ReactElement 반환)는 state를 유지
+            if (match[1] === 'ReactElement') return part;
+            return match[1];
         })
         .join(' | ');
 }
@@ -39,34 +42,45 @@ function removeDuplicateTypes(type: string): string {
 }
 
 function removeGenericState(type: string): string {
-    return type.replace(GENERIC_STATE_PATTERN, (match) => {
-        return match.endsWith('>') ? '>' : ')';
-    });
+    return type.replace(GENERIC_STATE_PATTERN, '>');
+}
+
+function extractStateFromRenderFn(type: string): string | null {
+    const match = type.match(/ComponentRenderFn<(.+)>/s);
+    if (!match) return null;
+
+    const inner = match[1];
+    let depth = 0;
+
+    for (let i = 0; i < inner.length; i++) {
+        const char = inner[i];
+        if (char === '<' || char === '(' || char === '{' || char === '[') depth++;
+        else if (char === '>' || char === ')' || char === '}' || char === ']') depth--;
+        else if (char === ',' && depth === 0) {
+            return inner.substring(i + 1).trim();
+        }
+    }
+
+    return null;
 }
 
 function simplifyRenderType(type: string): TypeCleanResult | null {
     if (!type.includes('ComponentRenderFn')) return null;
+
+    const stateType = extractStateFromRenderFn(type) ?? 'unknown';
+    const fnType = `(props: HTMLProps, state: ${stateType}) => ReactElement`;
+
     return {
-        type: 'ReactElement | ((props: HTMLProps) => ReactElement)',
-        values: ['ReactElement', '(props: HTMLProps) => ReactElement'],
+        type: `ReactElement | (${fnType})`,
+        values: ['ReactElement', fnType],
     };
 }
 
 /**
- * Clean render prop type by removing state parameter.
+ * Normalize HTMLProps generic (e.g. HTMLProps<HTMLDivElement> → HTMLProps).
  */
 function cleanRenderPropType(type: string): string {
-    let cleaned = type.replace(
-        /\(props:\s*HTMLProps(?:<[^>]*>)?,\s*state:\s*[^)]*\)\s*=>\s*ReactElement/g,
-        '(props: HTMLProps) => ReactElement',
-    );
-
-    cleaned = cleaned.replace(
-        /\(props:\s*HTMLProps<[^>]*>\)\s*=>\s*ReactElement/g,
-        '(props: HTMLProps) => ReactElement',
-    );
-
-    return cleaned;
+    return type.replace(/\(props:\s*HTMLProps<[^>]*>/g, '(props: HTMLProps');
 }
 
 /**

@@ -6,12 +6,8 @@ import type { ExtractorConfig } from '~/config/schema';
 import { findComponentFiles, findFileByComponentName } from '~/scan';
 
 export interface ResolvedCliOptions {
-    absolutePath: string;
     tsconfigPath: string;
     targetFiles: string[];
-    all: boolean;
-    outputDir: string;
-    verbose: boolean;
     config: ExtractorConfig;
 }
 
@@ -61,31 +57,26 @@ async function resolveTargetFiles(
     return [file];
 }
 
-export async function resolveOptions(flags: {
+export async function resolveOptions({
+    configPath,
+    component,
+}: {
     component?: string;
-    all: boolean;
-    verbose: boolean;
-    config?: string;
-    noConfig?: boolean;
+    configPath?: string;
 }): Promise<ResolvedCliOptions> {
     const loadedConfig = await loadExtractorConfig({
-        configPath: flags.config,
-        noConfig: flags.noConfig,
+        configPath: configPath,
     });
 
     const absolutePath = resolvePath(loadedConfig);
 
     const cwd = process.cwd();
     const tsconfigPath = path.resolve(cwd, loadedConfig.tsconfig);
-    const targetFiles = await resolveTargetFiles(absolutePath, flags.component, loadedConfig);
+    const targetFiles = await resolveTargetFiles(absolutePath, component, loadedConfig);
 
     return {
-        absolutePath,
         tsconfigPath,
         targetFiles,
-        all: flags.all,
-        outputDir: path.resolve(cwd, loadedConfig.outputDir),
-        verbose: flags.verbose,
         config: loadedConfig,
     };
 }

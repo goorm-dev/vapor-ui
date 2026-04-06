@@ -29,6 +29,7 @@ function formatWithPrettier(filePaths: string[]): void {
 
 export function extract(input: ExtractInput): ExtractOutput {
     const { config } = input;
+    const outputDir = path.resolve(process.cwd(), config.outputDir);
     const project = new Project({ tsConfigFilePath: input.tsconfigPath });
 
     console.error('Parsing components...');
@@ -47,12 +48,12 @@ export function extract(input: ExtractInput): ExtractOutput {
         try {
             console.error(`Processing ${componentName}`);
             const parseOptions: ParseOptions = {
-                filterExternal: input.all ? false : config.filterExternal,
-                filterHtml: input.all ? false : config.filterHtml,
-                filterSprinkles: input.all ? false : config.filterSprinkles,
+                filterExternal: config.all ? false : config.filterExternal,
+                filterHtml: config.all ? false : config.filterHtml,
+                filterSprinkles: config.all ? false : config.filterSprinkles,
                 includeHtml: config.includeHtml,
                 include: resolveComponentInclude(filePath, config),
-                verbose: input.verbose,
+                verbose: config.verbose,
             };
 
             return parseSourceFile(sourceFile, parseOptions);
@@ -70,7 +71,7 @@ export function extract(input: ExtractInput): ExtractOutput {
 
     console.error(`Done! Extracted ${props.length} components.`);
 
-    const writeFiles = buildWriteFiles(props, input.outputDir, (prop) => formatFileName(prop.name));
+    const writeFiles = buildWriteFiles(props, outputDir, (prop) => formatFileName(prop.name));
 
     for (const writeFile of writeFiles) {
         ensureDirectory(path.dirname(writeFile.filePath));

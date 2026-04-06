@@ -1,5 +1,4 @@
 import type {
-    InterfaceDeclaration,
     ModuleDeclaration,
     Node,
     SourceFile,
@@ -19,8 +18,6 @@ import type { ParsedComponent, ParsedProp } from '~/models/parsed';
 import { resolveType } from '~/resolve';
 import { buildBaseUiTypeMap } from '~/resolve/base-ui-mapper';
 import { componentModelToJson, parsedComponentToModel } from '~/transform';
-
-export type PropsDeclaration = InterfaceDeclaration | TypeAliasDeclaration;
 
 function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: string) {
     return sourceFile
@@ -57,16 +54,7 @@ export function getExportedNamespaces(sourceFile: SourceFile): ModuleDeclaration
 
 export function findExportedInterfaceProps(
     namespace: ModuleDeclaration,
-): PropsDeclaration | undefined {
-    const interfaceProps = namespace
-        .getInterfaces()
-        .find(
-            (exportInterface) =>
-                exportInterface.getName() === 'Props' && exportInterface.isExported(),
-        );
-
-    if (interfaceProps) return interfaceProps;
-
+): TypeAliasDeclaration | undefined {
     return namespace
         .getTypeAliases()
         .find((typeAlias) => typeAlias.getName() === 'Props' && typeAlias.isExported());

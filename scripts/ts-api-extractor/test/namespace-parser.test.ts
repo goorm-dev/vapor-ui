@@ -128,26 +128,7 @@ describe('findExportedInterfaceProps', () => {
         });
     });
 
-    it('Props interface 찾기', () => {
-        const source = project.createSourceFile(
-            'test.ts',
-            `
-            export namespace Button {
-                export interface Props {
-                    disabled?: boolean;
-                }
-            }
-            `,
-        );
-
-        const namespace = source.getModuleOrThrow('Button');
-        const result = findExportedInterfaceProps(namespace);
-
-        expect(result).toBeDefined();
-        expect(result?.getName()).toBe('Props');
-    });
-
-    it('Props type alias도 찾기', () => {
+    it('Props type alias 찾기', () => {
         const source = project.createSourceFile(
             'test.ts',
             `
@@ -171,9 +152,7 @@ describe('findExportedInterfaceProps', () => {
             'test.ts',
             `
             export namespace Button {
-                interface Props {
-                    disabled?: boolean;
-                }
+                type Props = { disabled?: boolean };
             }
             `,
         );
@@ -184,14 +163,12 @@ describe('findExportedInterfaceProps', () => {
         expect(result).toBeUndefined();
     });
 
-    it('Props가 아닌 다른 interface는 무시', () => {
+    it('Props가 아닌 다른 type alias는 무시', () => {
         const source = project.createSourceFile(
             'test.ts',
             `
             export namespace Button {
-                export interface State {
-                    open: boolean;
-                }
+                export type State = { open: boolean };
             }
             `,
         );

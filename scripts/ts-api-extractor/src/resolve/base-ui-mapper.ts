@@ -92,9 +92,18 @@ function buildBarrelNameMap(sourceFile: SourceFile): Record<string, string> {
             break;
         }
     }
-    if (!publicName) return {};
+    // Step 2 (standalone): index.ts에 index.parts 패턴이 없으면 namespace 이름을 그대로 public name으로 사용
+    if (!publicName) {
+        const nameMap: Record<string, string> = {};
+        for (const ns of sourceFile.getDescendantsOfKind(SyntaxKind.ModuleDeclaration)) {
+            if (ns.isExported()) {
+                nameMap[ns.getName()] = ns.getName();
+            }
+        }
+        return nameMap;
+    }
 
-    // Step 2: Read index.parts.ts — find "export { InternalName as PartName }"
+    // Step 3 (compound): Read index.parts.ts — find "export { InternalName as PartName }"
     const partsFile = project.addSourceFileAtPathIfExists(path.join(dir, 'index.parts.ts'));
     if (!partsFile) return {};
 
