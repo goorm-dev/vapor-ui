@@ -52,7 +52,7 @@ importers:
         version: 9.1.7
       lodash-es:
         specifier: ^4.17.23
-        version: 4.17.23
+        version: 4.18.1
       picocolors:
         specifier: ^1.1.1
         version: 1.1.1
@@ -288,7 +288,7 @@ importers:
         version: 7.1.0
       lodash-es:
         specifier: ^4.17.23
-        version: 4.17.23
+        version: 4.18.1
       markdown-table:
         specifier: ^3.0.4
         version: 3.0.4
@@ -6431,8 +6431,8 @@ packages:
     resolution: {integrity: sha512-gvVijfZvn7R+2qyPX8mAuKcFGDf6Nc61GdvGafQsHL0sBIxfKzA+usWn4GFC/bk+QdwPUD4kWFJLhElipq+0VA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  lodash-es@4.17.23:
-    resolution: {integrity: sha512-kVI48u3PZr38HdYz98UmfPnXl2DXrpdctLrFLCd3kOx1xUkOmpFPx7gCWWM5MPkL/fD8zb+Ph0QzjGFs4+hHWg==}
+  lodash-es@4.18.1:
+    resolution: {integrity: sha512-J8xewKD/Gk22OZbhpOVSwcs60zhd95ESDwezOFuA3/099925PdHJ7OFHNTGtajL3AlZkykD32HykiMo+BIBI8A==}
 
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
@@ -15190,7 +15190,7 @@ snapshots:
     dependencies:
       p-locate: 6.0.0
 
-  lodash-es@4.17.23: {}
+  lodash-es@4.18.1: {}
 
   lodash.debounce@4.0.8: {}
 
@@ -17665,7 +17665,7 @@ snapshots:
       '@vitest/pretty-format': 3.2.4
       axe-core: 4.10.3
       chalk: 5.6.2
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   vitest@3.2.4(@types/debug@4.1.12)(@types/node@20.19.17)(@vitest/browser@3.2.4)(happy-dom@20.8.9)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
