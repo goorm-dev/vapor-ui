@@ -6,8 +6,8 @@
  * - category classification
  * - type string parsing
  */
-import type { ParsedProp } from '~/models/internal';
-import { parsedComponentToModel, parsedPropToModel } from '~/transform';
+import type { ParsedProp } from '~/models/pipeline';
+import { parsedComponentToModel, parsedPropToModel } from '~/stages/transform';
 
 describe('parsedPropToModel', () => {
     describe('required 계산', () => {
@@ -16,6 +16,7 @@ describe('parsedPropToModel', () => {
                 name: 'onClick',
                 typeString: '() => void',
                 isOptional: false,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -28,6 +29,7 @@ describe('parsedPropToModel', () => {
                 name: 'disabled',
                 typeString: 'boolean',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -42,6 +44,7 @@ describe('parsedPropToModel', () => {
                 name: 'children',
                 typeString: 'ReactNode',
                 isOptional: false,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -54,6 +57,7 @@ describe('parsedPropToModel', () => {
                 name: 'asChild',
                 typeString: 'boolean',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -66,6 +70,7 @@ describe('parsedPropToModel', () => {
                 name: 'render',
                 typeString: '(props: Props) => ReactNode',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -78,7 +83,7 @@ describe('parsedPropToModel', () => {
                 name: 'size',
                 typeString: '"sm" | "md" | "lg"',
                 isOptional: true,
-                declarationFilePath: '/path/to/button.css.ts',
+                source: 'variants',
             };
 
             const result = parsedPropToModel(parsed);
@@ -91,6 +96,7 @@ describe('parsedPropToModel', () => {
                 name: 'value',
                 typeString: 'string',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -103,6 +109,7 @@ describe('parsedPropToModel', () => {
                 name: 'onChange',
                 typeString: '(value: string) => void',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -115,6 +122,7 @@ describe('parsedPropToModel', () => {
                 name: 'onOpenChange',
                 typeString: '(open: boolean) => void',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -127,6 +135,7 @@ describe('parsedPropToModel', () => {
                 name: 'open',
                 typeString: 'boolean',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -139,6 +148,7 @@ describe('parsedPropToModel', () => {
                 name: 'defaultOpen',
                 typeString: 'boolean',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -151,7 +161,7 @@ describe('parsedPropToModel', () => {
                 name: 'keepMounted',
                 typeString: 'boolean',
                 isOptional: true,
-                declarationFilePath: '/node_modules/@base-ui/components/collapsible/root.d.ts',
+                source: 'base-ui',
             };
 
             const result = parsedPropToModel(parsed);
@@ -164,6 +174,7 @@ describe('parsedPropToModel', () => {
                 name: 'className',
                 typeString: 'string',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -178,6 +189,7 @@ describe('parsedPropToModel', () => {
                 name: 'disabled',
                 typeString: 'boolean',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -190,6 +202,7 @@ describe('parsedPropToModel', () => {
                 name: 'size',
                 typeString: '"sm" | "md" | "lg"',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -202,6 +215,7 @@ describe('parsedPropToModel', () => {
                 name: 'render',
                 typeString: '(props: Props) => ReactNode | undefined',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -215,6 +229,7 @@ describe('parsedPropToModel', () => {
                 name: 'columns',
                 typeString: '1 | 2 | 3 | 4',
                 isOptional: true,
+                source: 'project',
             };
 
             const result = parsedPropToModel(parsed);
@@ -229,6 +244,7 @@ describe('parsedPropToModel', () => {
                 name: 'label',
                 typeString: 'string',
                 isOptional: true,
+                source: 'project',
                 description: '버튼에 표시될 텍스트',
             };
 
@@ -242,6 +258,7 @@ describe('parsedPropToModel', () => {
                 name: 'size',
                 typeString: '"sm" | "md" | "lg"',
                 isOptional: true,
+                source: 'project',
                 defaultValue: 'md',
             };
 
@@ -257,16 +274,36 @@ describe('parsedComponentToModel', () => {
         const parsed = {
             name: 'Button',
             props: [
-                { name: 'className', typeString: 'string', isOptional: true },
-                { name: 'children', typeString: 'ReactNode', isOptional: false },
+                {
+                    name: 'className',
+                    typeString: 'string',
+                    isOptional: true,
+                    source: 'project' as const,
+                },
+                {
+                    name: 'children',
+                    typeString: 'ReactNode',
+                    isOptional: false,
+                    source: 'project' as const,
+                },
                 {
                     name: 'size',
                     typeString: '"sm" | "md"',
                     isOptional: true,
-                    declarationFilePath: '/button.css.ts',
+                    source: 'variants' as const,
                 },
-                { name: 'asChild', typeString: 'boolean', isOptional: true },
-                { name: 'onChange', typeString: '() => void', isOptional: true },
+                {
+                    name: 'asChild',
+                    typeString: 'boolean',
+                    isOptional: true,
+                    source: 'project' as const,
+                },
+                {
+                    name: 'onChange',
+                    typeString: '() => void',
+                    isOptional: true,
+                    source: 'project' as const,
+                },
             ],
         };
 
@@ -281,9 +318,24 @@ describe('parsedComponentToModel', () => {
         const parsed = {
             name: 'Panel',
             props: [
-                { name: 'zIndex', typeString: 'number', isOptional: true },
-                { name: 'aria-label', typeString: 'string', isOptional: true },
-                { name: 'className', typeString: 'string', isOptional: true },
+                {
+                    name: 'zIndex',
+                    typeString: 'number',
+                    isOptional: true,
+                    source: 'project' as const,
+                },
+                {
+                    name: 'aria-label',
+                    typeString: 'string',
+                    isOptional: true,
+                    source: 'project' as const,
+                },
+                {
+                    name: 'className',
+                    typeString: 'string',
+                    isOptional: true,
+                    source: 'project' as const,
+                },
             ],
         };
 

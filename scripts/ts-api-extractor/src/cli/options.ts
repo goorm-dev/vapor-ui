@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { loadExtractorConfig } from '~/config';
+import { loadExtractorConfig } from '~/config/loader';
 import type { ExtractorConfig } from '~/config/schema';
-import { findComponentFiles, findFileByComponentName } from '~/scan';
+import { findComponentFiles, findFileByComponentName } from '~/stages/scan';
 
 export interface ResolvedCliOptions {
     tsconfigPath: string;

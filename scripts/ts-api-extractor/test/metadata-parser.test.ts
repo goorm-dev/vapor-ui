@@ -3,7 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import { getComponentDescription } from '~/parse';
+import { getComponentDescription } from '~/stages/parse';
 
 describe('getComponentDescription', () => {
     let project: Project;

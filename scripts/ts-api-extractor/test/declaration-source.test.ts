@@ -5,7 +5,7 @@ import {
     DeclarationSourceType,
     getDeclarationSourceType,
     isExternalDeclaration,
-} from '~/declaration-source';
+} from '~/utils/declaration-source';
 
 describe('getDeclarationSourceType', () => {
     describe('PROJECT', () => {

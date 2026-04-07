@@ -1,4 +1,4 @@
-import type { PropModel } from '~/models/internal';
+import type { PropModel } from '~/models/pipeline';
 import { CATEGORY_ORDER } from '~/rules/categorize-prop';
 
 export function sortProps(props: PropModel[]): PropModel[] {

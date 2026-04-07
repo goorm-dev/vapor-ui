@@ -6,8 +6,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { ModuleKind, ModuleResolutionKind, Project, ScriptTarget } from 'ts-morph';
 
-import { parseSourceFile } from '~/parse';
-import { componentsToJson, parsedComponentsToModels } from '~/transform';
+import type { FilterConfig } from '~/models/config';
+import { filterParsedComponents } from '~/stages/filter';
+import { parseSourceFile } from '~/stages/parse';
+import { componentsToJson } from '~/stages/serialize';
+import { parsedComponentsToModels } from '~/stages/transform';
 
 function createProject(): Project {
     return new Project({
@@ -88,7 +91,12 @@ describe('parseSourceFile → transform pipeline', () => {
         const sourceFile = project.addSourceFileAtPath(componentFile);
 
         const parsed = parseSourceFile(sourceFile);
-        const models = parsedComponentsToModels(parsed);
+        const filtered = filterParsedComponents(parsed, {
+            filterExternal: true,
+            filterHtml: true,
+            filterSprinkles: true,
+        });
+        const models = parsedComponentsToModels(filtered);
         const props = componentsToJson(models);
 
         expect(parsed).toHaveLength(1);
@@ -111,13 +119,15 @@ describe('parseSourceFile → transform pipeline', () => {
         const project = createProject();
         const sourceFile = project.addSourceFileAtPath(componentFile);
 
-        const parsed = parseSourceFile(sourceFile, {
+        const parsed = parseSourceFile(sourceFile);
+        const filterConfig: FilterConfig = {
             filterExternal: false,
             filterHtml: false,
             filterSprinkles: false,
             include: ['data-testid'],
-        });
-        const props = componentsToJson(parsedComponentsToModels(parsed));
+        };
+        const filtered = filterParsedComponents(parsed, filterConfig);
+        const props = componentsToJson(parsedComponentsToModels(filtered));
         const jsonProps = props[0].props;
 
         expect(jsonProps.some((prop) => prop.name === 'data-testid')).toBe(true);

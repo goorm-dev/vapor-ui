@@ -5,6 +5,8 @@
  */
 import type { Symbol as TsSymbol } from 'ts-morph';
 
+import type { PropSource } from '~/models/pipeline';
+
 export enum DeclarationSourceType {
     PROJECT = 'project',
     REACT_TYPES = 'react-types',
@@ -97,4 +99,22 @@ export function isSymbolFromBaseUi(symbol: TsSymbol): boolean {
         .some((decl) =>
             normalizeFilePath(decl.getSourceFile().getFilePath()).includes(BASE_UI_PATTERN),
         );
+}
+
+export function isSprinklesPath(filePath: string | undefined): boolean {
+    if (!filePath) return false;
+    return normalizeFilePath(filePath).includes(SPRINKLES_PATTERN);
+}
+
+export function classifyPropSource(symbol: TsSymbol): PropSource {
+    const filePath = getSymbolSourcePath(symbol);
+    if (!filePath) return 'project';
+    const normalized = normalizeFilePath(filePath);
+    if (REACT_TYPES_PATTERNS.some((p) => normalized.includes(p))) return 'react';
+    if (DOM_TYPES_PATTERNS.some((p) => normalized.includes(p))) return 'dom';
+    if (normalized.includes(BASE_UI_PATTERN)) return 'base-ui';
+    if (normalized.includes(SPRINKLES_PATTERN)) return 'sprinkles';
+    if (normalized.endsWith('.css.ts')) return 'variants';
+    if (normalized.includes('node_modules')) return 'external';
+    return 'project';
 }

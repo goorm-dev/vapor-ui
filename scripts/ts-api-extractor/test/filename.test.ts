@@ -1,7 +1,7 @@
 /**
  * Filename utilities unit tests
  */
-import { formatFileName, toKebabCase } from '~/filename';
+import { formatFileName, toKebabCase } from '~/utils/filename';
 
 describe('toKebabCase', () => {
     it('PascalCase → kebab-case', () => {

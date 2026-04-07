@@ -3,7 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import { findImportPaths, findNamespaceImportName } from '~/extract-defaults';
+import { findImportPaths, findNamespaceImportName } from '~/utils/extract-defaults';
 
 describe('findImportPaths', () => {
     let project: Project;

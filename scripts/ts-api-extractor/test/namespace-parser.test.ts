@@ -3,7 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import { findExportedInterfaceProps, getExportedNamespaces } from '~/parse';
+import { findExportedInterfaceProps, getExportedNamespaces } from '~/stages/parse';
 
 describe('getExportedNamespaces', () => {
     let project: Project;

@@ -3,7 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import { extractDestructuringDefaults } from '~/extract-defaults';
+import { extractDestructuringDefaults } from '~/utils/extract-defaults';
 
 describe('extractDestructuringDefaults', () => {
     let project: Project;

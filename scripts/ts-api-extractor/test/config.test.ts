@@ -1,7 +1,8 @@
 /**
  * Config unit tests
  */
-import { config, resolveComponentInclude } from '~/config';
+import { defaultExtractorConfig as config } from '~/config/defaults';
+import { resolveComponentInclude } from '~/config/resolve';
 
 describe('config', () => {
     it('기본 설정값 확인', () => {

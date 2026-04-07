@@ -7,7 +7,7 @@ import {
     findRecipeUsageInComponent,
     getRecipeNameFromVariantsType,
     parseRecipeDefaultVariants,
-} from '~/extract-defaults';
+} from '~/utils/extract-defaults';
 
 describe('getRecipeNameFromVariantsType', () => {
     let project: Project;

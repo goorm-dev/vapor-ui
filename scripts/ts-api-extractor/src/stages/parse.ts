@@ -7,13 +7,13 @@ import type {
 } from 'ts-morph';
 import { ModuleDeclarationKind, ts } from 'ts-morph';
 
-import { cleanType } from '~/cleaner';
-import { getSymbolSourcePath } from '~/declaration-source';
-import { getDefaultValuesForNamespace } from '~/extract-defaults';
-import { shouldIncludeSymbol } from '~/filter';
-import type { BaseUiTypeMap, ParseOptions, ParsedComponent, ParsedProp } from '~/models/internal';
+import type { ParseConfig } from '~/models/config';
+import type { BaseUiTypeMap, ParsedComponent, ParsedProp } from '~/models/pipeline';
 import { resolveType } from '~/resolve';
 import { buildBaseUiTypeMap } from '~/resolve/base-ui-mapper';
+import { cleanType } from '~/utils/cleaner';
+import { classifyPropSource } from '~/utils/declaration-source';
+import { getDefaultValuesForNamespace } from '~/utils/extract-defaults';
 
 function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: string) {
     return sourceFile
@@ -83,9 +83,9 @@ function extractParsedProp(
         name,
         typeString,
         isOptional: symbol.isOptional(),
+        source: classifyPropSource(symbol),
         description: getPropDescription(symbol),
         defaultValue: defaultValues[name],
-        declarationFilePath: getSymbolSourcePath(symbol),
     };
 }
 
@@ -93,9 +93,7 @@ function extractParsedComponent(
     sourceFile: SourceFile,
     namespace: ModuleDeclaration,
     baseUiMap: BaseUiTypeMap,
-    options: ParseOptions,
-    includeSet: Set<string>,
-    htmlWhitelist: Set<string>,
+    options: ParseConfig,
 ): ParsedComponent | null {
     const namespaceName = namespace.getName();
     const exportedProps = findExportedInterfaceProps(namespace);
@@ -109,17 +107,11 @@ function extractParsedComponent(
         declaredPropNames,
     );
 
-    const filteredSymbols = allSymbols.filter((symbol) =>
-        shouldIncludeSymbol(symbol, options, includeSet, htmlWhitelist),
-    );
-
     if (options.verbose) {
-        console.error(
-            `[verbose] ${namespaceName}: ${allSymbols.length} symbols -> ${filteredSymbols.length} after filtering`,
-        );
+        console.error(`[verbose] ${namespaceName}: ${allSymbols.length} symbols`);
     }
 
-    const props = filteredSymbols.map((symbol) => {
+    const props = allSymbols.map((symbol) => {
         const declNode = symbol.getDeclarations()[0] ?? exportedProps;
         return extractParsedProp(symbol, declNode, baseUiMap, defaultValues, options.verbose);
     });
@@ -131,21 +123,17 @@ function extractParsedComponent(
     };
 }
 
-const DEFAULT_PARSE_OPTIONS: ParseOptions = {
-    filterExternal: false,
-    filterHtml: true,
-    filterSprinkles: true,
+const DEFAULT_PARSE_CONFIG: ParseConfig = {
+    verbose: undefined,
 };
 
 export function parseSourceFile(
     sourceFile: SourceFile,
-    options: ParseOptions = DEFAULT_PARSE_OPTIONS,
+    options: ParseConfig = DEFAULT_PARSE_CONFIG,
 ): ParsedComponent[] {
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
     const namespaces = getExportedNamespaces(sourceFile);
     const parsedComponents: ParsedComponent[] = [];
-    const includeSet = new Set(options.include ?? []);
-    const htmlWhitelist = new Set(options.includeHtml ?? []);
 
     if (options.verbose) {
         console.error(
@@ -155,14 +143,7 @@ export function parseSourceFile(
 
     for (const namespace of namespaces) {
         try {
-            const parsed = extractParsedComponent(
-                sourceFile,
-                namespace,
-                baseUiMap,
-                options,
-                includeSet,
-                htmlWhitelist,
-            );
+            const parsed = extractParsedComponent(sourceFile, namespace, baseUiMap, options);
             if (parsed) {
                 parsedComponents.push(parsed);
             }

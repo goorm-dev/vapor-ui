@@ -1,6 +1,6 @@
 import { type Node, type Type } from 'ts-morph';
 
-import type { BaseUiTypeMap } from '~/models/internal';
+import type { BaseUiTypeMap } from '~/models/pipeline';
 import { isBaseUiType, resolveMappedBaseUiType } from '~/resolve/base-ui-type';
 import { isFunctionType, resolveFunctionType } from '~/resolve/function-type';
 import { isImportedType, resolveImportedType } from '~/resolve/imported-type';

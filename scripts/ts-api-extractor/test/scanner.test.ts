@@ -1,7 +1,7 @@
 /**
  * Component scanner unit tests
  */
-import { findFileByComponentName, normalizeComponentName } from '~/scan';
+import { findFileByComponentName, normalizeComponentName } from '~/stages/scan';
 
 describe('normalizeComponentName', () => {
     it('소문자로 변환', () => {

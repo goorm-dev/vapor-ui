@@ -8,7 +8,7 @@ import {
     containsStateCallback,
     simplifyStateCallback,
     splitTopLevelUnion,
-} from '~/cleaner';
+} from '~/utils/cleaner';
 
 describe('containsStateCallback', () => {
     it('State 콜백 포함 시 true', () => {

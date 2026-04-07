@@ -1,5 +1,5 @@
 import type { ExtractorConfig } from '~/config/schema';
-import type { ComponentModel, ParsedComponent } from '~/models/internal';
+import type { ComponentModel, ParsedComponent } from '~/models/pipeline';
 
 // ──────────────────────────────────────────────────────────────
 // JSON output format

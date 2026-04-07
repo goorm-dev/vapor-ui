@@ -1,4 +1,4 @@
-import type { PropCategory } from '~/models/internal';
+import type { PropCategory, PropSource } from '~/models/pipeline';
 
 export const CATEGORY_ORDER: Record<PropCategory, number> = {
     required: 0,
@@ -20,15 +20,6 @@ export const STATE_PROP_PATTERNS = [
 
 export const COMPOSITION_PROPS = new Set(['asChild', 'render']);
 
-type SourceKind = 'base-ui' | 'custom' | 'variants';
-
-function getSourceFromPath(filePath?: string): SourceKind {
-    if (!filePath) return 'custom';
-    if (filePath.includes('@base-ui')) return 'base-ui';
-    if (filePath.endsWith('.css.ts')) return 'variants';
-    return 'custom';
-}
-
 function isStateProp(name: string): boolean {
     return STATE_PROP_PATTERNS.some((pattern) => pattern.test(name));
 }
@@ -37,13 +28,7 @@ function isCompositionProp(name: string): boolean {
     return COMPOSITION_PROPS.has(name);
 }
 
-export function categorizeProp(
-    name: string,
-    required: boolean,
-    declarationFilePath?: string,
-): PropCategory {
-    const source = getSourceFromPath(declarationFilePath);
-
+export function categorizeProp(name: string, required: boolean, source: PropSource): PropCategory {
     if (required) return 'required';
     if (isCompositionProp(name)) return 'composition';
     if (source === 'variants') return 'variants';
