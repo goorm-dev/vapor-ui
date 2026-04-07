@@ -1,0 +1,135 @@
+/**
+ * File parser integration tests
+ */
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { ModuleKind, ModuleResolutionKind, Project, ScriptTarget } from 'ts-morph';
+
+import type { FilterConfig } from '~/models/config';
+import { filterParsedComponents } from '~/stages/filter';
+import { parseSourceFile } from '~/stages/parse';
+import { componentsToJson } from '~/stages/serialize';
+import { parsedComponentsToModels } from '~/stages/transform';
+
+function createProject(): Project {
+    return new Project({
+        compilerOptions: {
+            target: ScriptTarget.ES2022,
+            module: ModuleKind.ESNext,
+            moduleResolution: ModuleResolutionKind.Bundler,
+            strict: true,
+            skipLibCheck: true,
+        },
+    });
+}
+
+function createFixtureRoot(): string {
+    return fs.mkdtempSync(path.join(os.tmpdir(), 'docs-extractor-file-parser-'));
+}
+
+function writeFixtureFiles(root: string) {
+    const componentDir = path.join(root, 'components', 'collapsible');
+    const baseUiDir = path.join(componentDir, '@base-ui');
+
+    fs.mkdirSync(baseUiDir, { recursive: true });
+
+    fs.writeFileSync(
+        path.join(baseUiDir, 'CollapsibleRoot.d.ts'),
+        `
+        export namespace Root {
+            export interface State {
+                open: boolean;
+            }
+
+            export interface ChangeEventDetails {
+                source: 'keyboard' | 'pointer';
+            }
+        }
+        `,
+    );
+
+    fs.writeFileSync(
+        path.join(componentDir, 'index.ts'),
+        `export * as Collapsible from './index.parts';`,
+    );
+
+    fs.writeFileSync(
+        path.join(componentDir, 'index.parts.ts'),
+        `export { CollapsibleRoot as Root } from './collapsible';`,
+    );
+
+    fs.writeFileSync(
+        path.join(componentDir, 'collapsible.tsx'),
+        `
+        import type * as BaseCollapsible from './@base-ui/CollapsibleRoot';
+
+        export namespace CollapsibleRoot {
+            export type Props = {
+                state?: BaseCollapsible.Root.State;
+                onOpenChange?: (details: BaseCollapsible.Root.ChangeEventDetails) => void;
+                custom?: string;
+                'data-testid'?: string;
+            };
+
+            export type State = BaseCollapsible.Root.State;
+            export type ChangeEventDetails = BaseCollapsible.Root.ChangeEventDetails;
+        }
+        `,
+    );
+
+    return {
+        componentFile: path.join(componentDir, 'collapsible.tsx'),
+    };
+}
+
+describe('parseSourceFile → transform pipeline', () => {
+    it('builds parsed/models/json output from a component source file', () => {
+        const root = createFixtureRoot();
+        const { componentFile } = writeFixtureFiles(root);
+        const project = createProject();
+        const sourceFile = project.addSourceFileAtPath(componentFile);
+
+        const parsed = parseSourceFile(sourceFile);
+        const filtered = filterParsedComponents(parsed, {
+            filterExternal: true,
+            filterHtml: true,
+            filterSprinkles: true,
+        });
+        const models = parsedComponentsToModels(filtered);
+        const props = componentsToJson(models);
+
+        expect(parsed).toHaveLength(1);
+        expect(models).toHaveLength(1);
+        expect(props).toHaveLength(1);
+
+        const jsonProps = props[0].props;
+        const stateProp = jsonProps.find((prop) => prop.name === 'state');
+        const onOpenChangeProp = jsonProps.find((prop) => prop.name === 'onOpenChange');
+        const dataTestIdProp = jsonProps.find((prop) => prop.name === 'data-testid');
+
+        expect(stateProp?.type).toEqual(['BaseCollapsible.Root.State']);
+        expect(onOpenChangeProp?.type[0]).toContain('Collapsible.Root.ChangeEventDetails');
+        expect(dataTestIdProp).toBeUndefined();
+    });
+
+    it('respects include option for html-like props', () => {
+        const root = createFixtureRoot();
+        const { componentFile } = writeFixtureFiles(root);
+        const project = createProject();
+        const sourceFile = project.addSourceFileAtPath(componentFile);
+
+        const parsed = parseSourceFile(sourceFile);
+        const filterConfig: FilterConfig = {
+            filterExternal: false,
+            filterHtml: false,
+            filterSprinkles: false,
+            include: ['data-testid'],
+        };
+        const filtered = filterParsedComponents(parsed, filterConfig);
+        const props = componentsToJson(parsedComponentsToModels(filtered));
+        const jsonProps = props[0].props;
+
+        expect(jsonProps.some((prop) => prop.name === 'data-testid')).toBe(true);
+    });
+});

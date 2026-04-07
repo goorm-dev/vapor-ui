@@ -20,6 +20,9 @@ coverage
 # Build Outputs
 .next/
 out/
+# keep source adapters under ts-api-extractor trackable
+!scripts/ts-api-extractor/src/adapters/out/
+!scripts/ts-api-extractor/src/adapters/out/**
 build
 dist
 
