@@ -22,7 +22,6 @@ export function parsedComponentToModel(parsedComponent: ParsedComponent): Compon
 
     return {
         name: parsedComponent.name,
-        displayName: parsedComponent.name,
         description: parsedComponent.description,
         props: sortProps(propModels),
     };
@@ -45,7 +44,6 @@ export function propModelToJson(model: PropModel): PropertyJson {
 export function componentModelToJson(model: ComponentModel): PropsInfoJson {
     return {
         name: model.name,
-        displayName: model.displayName,
         ...(model.description !== undefined && { description: model.description }),
         props: model.props.map(propModelToJson),
     };

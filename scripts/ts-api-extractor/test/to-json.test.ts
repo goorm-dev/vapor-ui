@@ -82,7 +82,6 @@ describe('componentModelToJson', () => {
     it('기본 컴포넌트 변환', () => {
         const model: ComponentModel = {
             name: 'Button',
-            displayName: 'Button',
             props: [],
         };
 
@@ -90,7 +89,6 @@ describe('componentModelToJson', () => {
 
         expect(result).toEqual({
             name: 'Button',
-            displayName: 'Button',
             props: [],
         });
     });
@@ -98,7 +96,6 @@ describe('componentModelToJson', () => {
     it('description 포함', () => {
         const model: ComponentModel = {
             name: 'Button',
-            displayName: 'Button',
             description: '기본 버튼 컴포넌트',
             props: [],
         };
@@ -111,7 +108,6 @@ describe('componentModelToJson', () => {
     it('props 변환', () => {
         const model: ComponentModel = {
             name: 'Button',
-            displayName: 'Button',
             props: [
                 {
                     name: 'disabled',
@@ -132,8 +128,8 @@ describe('componentModelToJson', () => {
 describe('componentsToJson', () => {
     it('여러 컴포넌트 변환', () => {
         const models: ComponentModel[] = [
-            { name: 'Button', displayName: 'Button', props: [] },
-            { name: 'Input', displayName: 'Input', props: [] },
+            { name: 'Button', props: [] },
+            { name: 'Input', props: [] },
         ];
 
         const result = componentsToJson(models);

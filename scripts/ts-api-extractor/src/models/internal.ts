@@ -36,7 +36,6 @@ export interface PropModel {
 
 export interface ComponentModel {
     name: string;
-    displayName: string;
     description?: string;
     props: PropModel[];
 }

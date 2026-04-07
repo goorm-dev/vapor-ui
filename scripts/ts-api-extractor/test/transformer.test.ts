@@ -294,17 +294,6 @@ describe('parsedComponentToModel', () => {
         expect(propNames).toEqual(['aria-label', 'className', 'zIndex']);
     });
 
-    it('displayName은 name과 동일하게 설정', () => {
-        const parsed = {
-            name: 'CollapsibleRoot',
-            props: [],
-        };
-
-        const result = parsedComponentToModel(parsed);
-
-        expect(result.displayName).toBe('CollapsibleRoot');
-    });
-
     it('description 전달', () => {
         const parsed = {
             name: 'Button',

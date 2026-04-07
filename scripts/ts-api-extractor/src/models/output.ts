@@ -15,7 +15,6 @@ export interface PropertyJson {
 
 export interface PropsInfoJson {
     name: string;
-    displayName: string;
     description?: string;
     props: PropertyJson[];
 }
