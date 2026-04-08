@@ -130,6 +130,9 @@ export const popup = componentStyle({
     borderRadius: vars.size.borderRadius[300],
     boxShadow: vars.shadow.md,
 
+    paddingBlock: vars.size.space[150],
+    paddingInline: vars.size.space[200],
+
     backgroundColor: vars.color.background.overlay[100],
 
     transformOrigin: 'var(--transform-origin)',
@@ -155,9 +158,6 @@ export const popup = componentStyle({
 export const content = componentStyle({
     width: '100%',
     height: '100%',
-
-    paddingBlock: vars.size.space[150],
-    paddingInline: vars.size.space[200],
 
     whiteSpace: 'nowrap',
     transition: `opacity calc(${durationVar} * 0.5) ease, transform ${durationVar} ${easingVar}`,
@@ -195,23 +195,6 @@ export const arrow = componentStyle({
     transition: `left ${durationVar} ${easingVar}`,
 
     selectors: {
-        '&[data-side="top"]': {
-            bottom: '-8px',
-            transform: 'rotate(-180deg)',
-        },
-        '&[data-side="right"]': {
-            left: '-12px',
-            transform: 'rotate(-90deg)',
-        },
-        '&[data-side="bottom"]': {
-            top: '-8px',
-            transform: 'rotate(0deg)',
-        },
-        '&[data-side="left"]': {
-            right: '-12px',
-            transform: 'rotate(90deg)',
-        },
-
         '&[data-starting-style], &[data-ending-style]': {
             opacity: 0,
         },

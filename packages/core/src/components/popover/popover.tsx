@@ -1,12 +1,15 @@
 'use client';
 
-import type { CSSProperties, ComponentProps, ReactElement } from 'react';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import type { ComponentProps, ReactElement, RefObject } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
 
+import { useArrowPosition } from '~/hooks/use-arrow-position';
+import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
+import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
@@ -17,11 +20,39 @@ import type { VaporUIComponentProps } from '~/utils/types';
 import * as styles from './popover.css';
 
 /* -------------------------------------------------------------------------------------------------
+ * PopoverArrowContext (internal)
+ * -----------------------------------------------------------------------------------------------*/
+
+interface PopoverArrowContextValue {
+    triggerRef: RefObject<Element | null>;
+    positionerRef: RefObject<HTMLElement | null>;
+    arrowPadding: number;
+    setArrowPadding: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const [PopoverArrowProvider, usePopoverArrowContext] = createContext<PopoverArrowContextValue>({
+    name: 'PopoverArrowContext',
+    strict: false,
+    hookName: 'usePopoverArrowContext',
+    providerName: 'PopoverRoot',
+});
+
+const DEFAULT_POPOVER_ARROW_PADDING = 12;
+
+/* -------------------------------------------------------------------------------------------------
  * Popover.Root
  * -----------------------------------------------------------------------------------------------*/
 
 export const PopoverRoot = (props: PopoverRoot.Props) => {
-    return <BasePopover.Root {...props} />;
+    const triggerRef = useRef<Element>(null);
+    const positionerRef = useRef<HTMLElement>(null);
+    const [arrowPadding, setArrowPadding] = useState(DEFAULT_POPOVER_ARROW_PADDING);
+
+    return (
+        <PopoverArrowProvider value={{ triggerRef, positionerRef, arrowPadding, setArrowPadding }}>
+            <BasePopover.Root {...props} />
+        </PopoverArrowProvider>
+    );
 };
 PopoverRoot.displayName = 'Popover.Root';
 
@@ -31,8 +62,10 @@ PopoverRoot.displayName = 'Popover.Root';
 
 export const PopoverTrigger = forwardRef<HTMLButtonElement, PopoverTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
+    const { triggerRef } = usePopoverArrowContext() ?? {};
+    const composedRef = composeRefs(triggerRef, ref);
 
-    return <BasePopover.Trigger ref={ref} {...componentProps} />;
+    return <BasePopover.Trigger ref={composedRef} {...componentProps} />;
 });
 PopoverTrigger.displayName = 'Popover.Trigger';
 
@@ -72,16 +105,24 @@ export const PopoverPositionerPrimitive = forwardRef<
         side = 'bottom',
         align = 'center',
         sideOffset = 8,
+        arrowPadding = DEFAULT_POPOVER_ARROW_PADDING,
         collisionAvoidance,
         ...componentProps
     } = resolveStyles(props);
+    const { positionerRef, setArrowPadding } = usePopoverArrowContext() ?? {};
+    const composedRef = composeRefs(positionerRef, ref);
+
+    useIsoLayoutEffect(() => {
+        setArrowPadding?.(arrowPadding);
+    }, [arrowPadding, setArrowPadding]);
 
     return (
         <BasePopover.Positioner
-            ref={ref}
+            ref={composedRef}
             side={side}
             align={align}
             sideOffset={sideOffset}
+            arrowPadding={arrowPadding}
             collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
             {...componentProps}
         />
@@ -103,7 +144,16 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
         const [side, setSide] = useState<PopoverPositionerPrimitive.Props['side']>('bottom');
         const [align, setAlign] = useState<PopoverPositionerPrimitive.Props['align']>('start');
 
-        const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
+        const { triggerRef, positionerRef, arrowPadding } = usePopoverArrowContext() ?? {};
+        const arrowDimensions = { width: 16, height: 8, overlap: 1 };
+        const arrowStyle = useArrowPosition({
+            triggerElement: triggerRef?.current ?? null,
+            positionerElement: positionerRef?.current ?? null,
+            side: side ?? 'bottom',
+            align: align ?? 'center',
+            offset: arrowPadding ?? DEFAULT_POPOVER_ARROW_PADDING,
+            arrowDimensions,
+        });
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);
@@ -139,7 +189,7 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
                 className={cn(styles.popup, className)}
                 {...componentProps}
             >
-                <BasePopover.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                <BasePopover.Arrow ref={arrowRef} style={arrowStyle} className={styles.arrow}>
                     <ArrowIcon />
                 </BasePopover.Arrow>
 
@@ -209,44 +259,32 @@ PopoverDescription.displayName = 'Popover.Description';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type ArrowPositionProps = Pick<PopoverPositionerPrimitive.Props, 'side' | 'align'> & {
-    offset?: number;
-};
-
-const getArrowPosition = ({
-    side = 'top',
-    align = 'center',
-    offset = 12,
-}: ArrowPositionProps): CSSProperties => {
-    const positionMap = {
-        'top-start': { left: offset, right: 'unset' },
-        'top-end': { left: 'unset', right: offset },
-        'bottom-start': { left: offset, right: 'unset' },
-        'bottom-end': { left: 'unset', right: offset },
-        'left-start': { top: offset, bottom: 'unset' },
-        'left-end': { top: 'unset', bottom: offset },
-        'right-start': { top: offset, bottom: 'unset' },
-        'right-end': { top: 'unset', bottom: offset },
-    };
-
-    const key = `${side}-${align}` as keyof typeof positionMap;
-    return positionMap[key] || {};
-};
-
-/* -----------------------------------------------------------------------------------------------*/
-
 const ArrowIcon = (props: ComponentProps<'svg'>) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 16" fill="none" {...props}>
-            <path
-                d="M1.17969 8.93457C0.620294 8.43733 0.620294 7.56267 1.17969 7.06543L7.25 1.66992L7.25 14.3301L1.17969 8.93457Z"
-                stroke={vars.color.border.normal}
-                strokeWidth="1"
-            />
-            <path
-                d="M1.8858 7.24074C1.42019 7.63984 1.42019 8.36016 1.8858 8.75926L8 14L8 2L1.8858 7.24074Z"
-                fill="currentColor"
-            />
+        <svg
+            width="16"
+            height="8"
+            viewBox="0 0 16 8"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
+        >
+            <g clip-path="url(#clip0_41205_285)">
+                <path
+                    d="M7.06543 1.17969C7.56267 0.620294 8.43733 0.620294 8.93457 1.17969L14.3301 7.25H1.66992L7.06543 1.17969Z"
+                    stroke={vars.color.border.normal}
+                    strokeWidth="1.5"
+                />
+                <path
+                    d="M8.75926 1.8858C8.36016 1.42019 7.63984 1.42019 7.24074 1.8858L2 8H14L8.75926 1.8858Z"
+                    fill="white"
+                />
+            </g>
+            <defs>
+                <clipPath id="clip0_41205_285">
+                    <rect width="16" height="8" fill="white" />
+                </clipPath>
+            </defs>
         </svg>
     );
 };
