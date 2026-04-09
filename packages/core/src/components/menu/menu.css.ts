@@ -49,7 +49,7 @@ export const item = componentStyle([
         alignItems: 'center',
         alignSelf: 'stretch',
         justifyContent: 'space-between',
-        gap: vars.size.space['100'],
+        gap: vars.size.space['050'],
 
         border: 'none',
 

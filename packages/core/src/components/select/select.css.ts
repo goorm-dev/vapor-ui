@@ -151,7 +151,7 @@ export const item = componentStyle([
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: vars.size.space['100'],
+        gap: vars.size.space['050'],
 
         borderRadius: vars.size.borderRadius['300'],
 
