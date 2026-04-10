@@ -5,6 +5,16 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
+## 1.2.1
+
+### All
+
+- correct `gap` scale of list components ([#553](https://github.com/goorm-dev/vapor-ui/pull/553)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.2.0
+
 ## 1.2.0
 
 ### All
@@ -63,13 +73,13 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 - expand utility props and scoping it `$css` ([#476](https://github.com/goorm-dev/vapor-ui/pull/476)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Skeleton
-
-- Add new `Skeleton` component ([#481](https://github.com/goorm-dev/vapor-ui/pull/481)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
-
 ### Etc.
 
 - Change `useMutationObserver` hook to use only ref ([#332](https://github.com/goorm-dev/vapor-ui/pull/332)) - Thanks [@SimYunSup](https://github.com/SimYunSup)!
+
+### Skeleton
+
+- Add new `Skeleton` component ([#481](https://github.com/goorm-dev/vapor-ui/pull/481)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 ### Updated Dependencies
 
