@@ -1,16 +1,14 @@
 'use client';
 
-import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
+import type { ReactElement } from 'react';
 
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
-import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import { mergeStatefulProps } from '~/utils/stateful-props';
@@ -53,16 +51,12 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
     const { shape, size } = variantProps;
     const contextValue = useMemo(() => variantProps, [variantProps]);
 
-    const imageRender = createRender(imageElement, <AvatarImagePrimitive />);
-    const image = useRenderElement({
-        render: imageRender,
-    });
-
-    const fallbackRender = createRender(fallbackElement, <AvatarFallbackPrimitive />);
-    const fallback = useRenderElement({
-        render: fallbackRender,
-        props: { children },
-    });
+    const content = children ?? (
+        <>
+            {imageElement ?? <AvatarImagePrimitive />}
+            {fallbackElement ?? <AvatarFallbackPrimitive />}
+        </>
+    );
 
     return (
         <AvatarProvider value={contextValue}>
@@ -71,8 +65,7 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
                 className={cn(styles.root({ shape, size }), className)}
                 {...otherProps}
             >
-                {image}
-                {fallback}
+                {content}
             </BaseAvatar.Root>
         </AvatarProvider>
     );
@@ -215,11 +208,21 @@ export interface AvatarRootProps extends Assign<
     AvatarContext
 > {
     /**
-     * A Custom element for Avatar.ImagePrimitive. If not provided, the default Avatar.ImagePrimitive will be rendered.
+     * @deprecated Use children to compose Avatar.ImagePrimitive directly instead.
+     * @example
+     * <Avatar.Root src="..." alt="...">
+     *     <Avatar.ImagePrimitive />
+     *     <Avatar.FallbackPrimitive />
+     * </Avatar.Root>
      */
     imageElement?: ReactElement<AvatarImagePrimitive.Props>;
     /**
-     * A Custom element for Avatar.FallbackPrimitive. If not provided, the default Avatar.FallbackPrimitive will be rendered.
+     * @deprecated Use children to compose Avatar.FallbackPrimitive directly instead.
+     * @example
+     * <Avatar.Root src="..." alt="...">
+     *     <Avatar.ImagePrimitive />
+     *     <Avatar.FallbackPrimitive />
+     * </Avatar.Root>
      */
     fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
 }
