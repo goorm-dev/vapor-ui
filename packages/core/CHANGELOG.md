@@ -1,5 +1,23 @@
 # @vapor-ui/core
 
+## 1.2.1
+
+### Menu
+
+- correct `gap` scale of list components ([#553](https://github.com/goorm-dev/vapor-ui/pull/553)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Select
+
+- correct `gap` scale of list components ([#553](https://github.com/goorm-dev/vapor-ui/pull/553)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### MultiSelect
+
+- correct `gap` scale of list components ([#553](https://github.com/goorm-dev/vapor-ui/pull/553)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.2.0
+
 ## 1.2.0
 
 ### All
