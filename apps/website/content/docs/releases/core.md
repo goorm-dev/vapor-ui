@@ -7,7 +7,15 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 ## 1.2.1
 
-### All
+### Menu
+
+- correct `gap` scale of list components ([#553](https://github.com/goorm-dev/vapor-ui/pull/553)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Select
+
+- correct `gap` scale of list components ([#553](https://github.com/goorm-dev/vapor-ui/pull/553)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### MultiSelect
 
 - correct `gap` scale of list components ([#553](https://github.com/goorm-dev/vapor-ui/pull/553)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
