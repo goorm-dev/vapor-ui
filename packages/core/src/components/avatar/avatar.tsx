@@ -1,14 +1,16 @@
 'use client';
 
-import { forwardRef, useMemo } from 'react';
 import type { ReactElement } from 'react';
+import { forwardRef, useMemo } from 'react';
 
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import { mergeStatefulProps } from '~/utils/stateful-props';
@@ -51,10 +53,20 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
     const { shape, size } = variantProps;
     const contextValue = useMemo(() => variantProps, [variantProps]);
 
+    const imageRender = createRender(imageElement, <AvatarImagePrimitive />);
+    const image = useRenderElement({
+        render: imageRender,
+    });
+
+    const fallbackRender = createRender(fallbackElement, <AvatarFallbackPrimitive />);
+    const fallback = useRenderElement({
+        render: fallbackRender,
+    });
+
     const content = children ?? (
         <>
-            {imageElement ?? <AvatarImagePrimitive />}
-            {fallbackElement ?? <AvatarFallbackPrimitive />}
+            {image}
+            {fallback}
         </>
     );
 
