@@ -168,6 +168,14 @@ export const TestBed = {
                 </Grid.Item>
 
                 <Grid.Item>
+                    {['invalid', 'disabled', 'readOnly', 'required'].map((state) => (
+                        <Select.Root key={state} {...{ [state]: true }} placeholder="Placeholder">
+                            <Select.Trigger />
+                        </Select.Root>
+                    ))}
+                </Grid.Item>
+
+                <Grid.Item>
                     <Select.Root placeholder="Grouped" defaultOpen>
                         <Select.Trigger />
                         <Select.Popup>
