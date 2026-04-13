@@ -2,7 +2,6 @@ name: "Document"
 
 on:
     workflow_call:
-    workflow_dispatch:
 
 env:
     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -20,4 +19,4 @@ jobs:
               run: npm install -g vercel@latest
 
             - name: Deploy to Production
-              run: vercel deploy --token=${{ env.VERCEL_TOKEN }} --scope=${{ env.VERCEL_ORG_ID }}
+              run: vercel deploy --prod --token=${{ env.VERCEL_TOKEN }} --scope=${{ env.VERCEL_ORG_ID }}
