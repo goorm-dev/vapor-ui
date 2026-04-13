@@ -20,12 +20,12 @@ export const trigger = componentRecipe({
             backgroundColor: vars.color.background.overlay[100],
 
             selectors: {
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+                '&[data-invalid]': { boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}` },
 
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': { boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}` },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
             },
         },
     ],
