@@ -16,7 +16,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Install Vercel CLI
-              run: npm install -g vercel@latest
+              run: npm install -g vercel@^50
 
             - name: Deploy to Production
               run: vercel deploy --prod --token=${{ env.VERCEL_TOKEN }} --scope=${{ env.VERCEL_ORG_ID }}
