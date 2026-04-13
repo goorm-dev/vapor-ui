@@ -32,14 +32,14 @@ export const root = componentRecipe({
                     backgroundColor: vars.color.background.primary[200],
                 },
 
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
-                '&[data-readonly]:active::before': { opacity: 0.08 },
-
                 '&[data-invalid]': { boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}` },
                 '&[data-invalid][data-checked], &[data-invalid][data-indeterminate]': {
                     boxShadow: 'none',
                     backgroundColor: vars.color.background.danger[200],
                 },
+
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-readonly]:active::before': { opacity: 0.08 },
 
                 '&[data-disabled]::before': { opacity: 0 },
                 '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },

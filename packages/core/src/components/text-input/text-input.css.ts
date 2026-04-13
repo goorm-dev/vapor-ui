@@ -21,10 +21,10 @@ export const root = componentRecipe({
             color: vars.color.foreground.normal[200],
 
             selectors: {
-                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
-                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
+                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
 

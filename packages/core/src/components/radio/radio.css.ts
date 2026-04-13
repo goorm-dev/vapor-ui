@@ -36,14 +36,14 @@ export const root = componentRecipe({
                     backgroundColor: vars.color.background.primary[200],
                 },
 
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
-                '&[data-readonly]:active::before': { opacity: 0.08 },
-
                 '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
                 '&[data-invalid][data-checked]': {
                     boxShadow: 'none',
                     backgroundColor: vars.color.background.danger[200],
                 },
+
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-readonly]:active::before': { opacity: 0.08 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
                 '&[data-disabled]::before': { opacity: 0 },

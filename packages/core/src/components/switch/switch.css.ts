@@ -23,7 +23,11 @@ export const control = componentRecipe({
                     backgroundColor: vars.color.background.primary[200],
                 },
 
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+                '&[data-invalid]': {
+                    outline: '0.125rem solid',
+                    outlineColor: vars.color.border.danger,
+                    outlineOffset: '-0.125rem',
+                },
 
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray[200],
@@ -33,11 +37,7 @@ export const control = componentRecipe({
                 },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': {
-                    outline: '0.125rem solid',
-                    outlineColor: vars.color.border.danger,
-                    outlineOffset: '-0.125rem',
-                },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
             },
         },
     ],

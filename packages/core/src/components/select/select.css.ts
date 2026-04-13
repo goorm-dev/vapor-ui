@@ -25,7 +25,7 @@ export const trigger = componentRecipe({
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': { borderColor: vars.color.border.danger },
+                '&[data-invalid]': { boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}` },
             },
         },
     ],

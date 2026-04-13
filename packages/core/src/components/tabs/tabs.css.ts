@@ -101,12 +101,13 @@ export const button = componentRecipe({
             zIndex: 1,
 
             selectors: {
+                '&[data-active]': {
+                    color: vars.color.foreground.primary['100'],
+                },
+
                 '&[data-disabled]': {
                     opacity: 0.32,
                     pointerEvents: 'none',
-                },
-                '&[data-active]': {
-                    color: vars.color.foreground.primary['100'],
                 },
             },
         },
