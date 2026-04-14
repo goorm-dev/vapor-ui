@@ -24,7 +24,7 @@ export const control = componentRecipe({
                     backgroundColor: vars.color.background.primary[200],
                 },
 
-                [when.invalid()]: {
+                [`${when.invalid()}:not(:focus-visible)`]: {
                     outline: '0.125rem solid',
                     outlineColor: vars.color.border.danger,
                     outlineOffset: '0.125rem',
