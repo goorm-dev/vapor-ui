@@ -3,9 +3,10 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { vars } from '~/styles/themes.css';
 
-const borderColor = createVar('border-color');
+const boxShadowColor = createVar('box-shadow-color');
 
 export const root = componentRecipe({
     base: [
@@ -13,7 +14,7 @@ export const root = componentRecipe({
 
         {
             outline: 0,
-            boxShadow: `inset 0 0 0 0.0625rem ${borderColor}`,
+            boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.canvas[100],
             paddingBlock: vars.size.space['000'],
@@ -22,13 +23,13 @@ export const root = componentRecipe({
 
             selectors: {
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
-                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
-                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
+                [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
+                [when.readonly()]: { backgroundColor: vars.color.gray['200'] },
+                [when.disabled()]: { pointerEvents: 'none', opacity: 0.32 },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
 
-            vars: { [borderColor]: vars.color.border.normal },
+            vars: { [boxShadowColor]: vars.color.border.normal },
         },
     ],
 

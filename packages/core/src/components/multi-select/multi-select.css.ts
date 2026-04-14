@@ -1,10 +1,14 @@
+import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
+
+const boxShadowColor = createVar('box-shadow-color');
 
 export const trigger = componentRecipe({
     base: [
@@ -14,7 +18,7 @@ export const trigger = componentRecipe({
             alignItems: 'center',
             justifyContent: 'space-between',
 
-            boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
             borderRadius: vars.size.borderRadius['300'],
 
             width: '100%',
@@ -22,13 +26,15 @@ export const trigger = componentRecipe({
             backgroundColor: vars.color.background.overlay[100],
 
             selectors: {
-                '&[data-invalid]': { boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}` },
+                [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
 
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
-                '&[data-readonly]:active::before': { opacity: 0.08 },
+                [when.readonly()]: { backgroundColor: vars.color.gray['200'] },
+                [`${when.readonly()}:active::before`]: { opacity: 0.08 },
 
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
             },
+
+            vars: { [boxShadowColor]: vars.color.border.normal },
         },
     ],
 

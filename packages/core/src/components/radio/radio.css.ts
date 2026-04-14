@@ -3,9 +3,10 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { vars } from '~/styles/themes.css';
 
-const borderColor = createVar('border-color');
+const boxShadowColor = createVar('box-shadow-color');
 
 export const root = componentRecipe({
     base: [
@@ -20,7 +21,7 @@ export const root = componentRecipe({
             gap: vars.size.space[100],
 
             borderRadius: 9999,
-            boxShadow: `inset 0 0 0 0.0625rem ${borderColor}`,
+            boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
             backgroundColor: vars.color.background.canvas[100],
 
             transitionProperty: 'background-color, box-shadow',
@@ -36,21 +37,21 @@ export const root = componentRecipe({
                     backgroundColor: vars.color.background.primary[200],
                 },
 
-                '&[data-invalid]': { vars: { [borderColor]: vars.color.border.danger } },
-                '&[data-invalid][data-checked]': {
+                [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
+                [when.invalid('&[data-invalid][data-checked]')]: {
                     boxShadow: 'none',
                     backgroundColor: vars.color.background.danger[200],
                 },
 
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
-                '&[data-readonly]:active::before': { opacity: 0.08 },
+                [when.readonly()]: { backgroundColor: vars.color.gray['200'] },
+                [`${when.readonly()}:active::before`]: { opacity: 0.08 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
-                '&[data-disabled]::before': { opacity: 0 },
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+                [`${when.disabled()}::before`]: { opacity: 0 },
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
             },
 
-            vars: { [borderColor]: vars.color.border.normal },
+            vars: { [boxShadowColor]: vars.color.border.normal },
         },
     ],
 
@@ -84,7 +85,7 @@ export const indicator = componentStyle({
 
     selectors: {
         '&[data-checked]': { scale: 0.5 },
-        '&[data-readonly]': {
+        [when.readonly()]: {
             backgroundColor: vars.color.foreground.hint[100],
         },
     },
