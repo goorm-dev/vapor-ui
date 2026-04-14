@@ -21,6 +21,9 @@ export const root = componentRecipe({
 
     defaultVariants: { size: 'md', shape: 'square' },
     variants: {
+        /**
+         * Size of the avatar. Controls the width, height, and border radius. Default: `'md'`
+         */
         size: {
             sm: {
                 width: vars.size.dimension[300],
@@ -43,6 +46,9 @@ export const root = componentRecipe({
                 vars: { [radii]: vars.size.borderRadius[400] },
             },
         },
+        /**
+         * Shape of the avatar border radius. Default: `'square'`
+         */
         shape: {
             square: { borderRadius: radii },
             circle: { borderRadius: '50%' },
@@ -66,6 +72,9 @@ export const fallback = componentRecipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Size of the fallback content. Controls the font size, line height, font weight, and letter spacing. Default: `'md'`
+         */
         size: {
             sm: {
                 fontSize: vars.typography.fontSize['050'],

@@ -27,6 +27,12 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarContext>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Avatar component for displaying a user's profile image with an automatic initial-based fallback. Renders a `<span>` element.
+ *
+ * @forwardedProps {AvatarImagePrimitive} src alt crossOrigin decoding fetchPriority height loading referrerPolicy sizes srcSet width useMap onLoadingStatusChange
+ * @forwardedProps {AvatarFallbackPrimitive} delay
+ */
 export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
     const { imageElement, fallbackElement, className, children, ...componentProps } =
         resolveStyles(props);
@@ -83,6 +89,9 @@ AvatarRoot.displayName = 'Avatar.Root';
  * Avatar.ImagePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Image part of the avatar that renders the profile picture. Renders an `<img>` element.
+ */
 export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -120,6 +129,9 @@ AvatarImagePrimitive.displayName = 'Avatar.ImagePrimitive';
  * Avatar.FallbackPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Fallback part of the avatar shown when the image fails to load or is not provided. Displays initials derived from the `alt` text. Renders a `<span>` element.
+ */
 export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbackPrimitive.Props>(
     (props, ref) => {
         const { className, style, children, ...componentProps } = resolveStyles(props);
