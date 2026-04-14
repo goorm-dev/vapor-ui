@@ -60,6 +60,9 @@ export const popup = componentRecipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Width of the dialog popup. Default: `'md'`
+         */
         size: {
             md: { width: '31.25rem' },
             lg: { width: '50rem' },

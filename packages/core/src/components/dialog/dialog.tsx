@@ -28,6 +28,11 @@ const [DialogProvider, useDialogContext] = createContext<DialogContext>({
  * Dialog
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the Dialog compound component. Manages open state and provides size context to sub-parts. Doesn't render its own HTML element.
+ *
+ * @forwardedProps {DialogPopupPrimitive} size
+ */
 export const DialogRoot = ({
     size,
     closeOnClickOverlay = true,
@@ -47,6 +52,9 @@ export const DialogRoot = ({
  * Dialog.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal container that renders dialog content outside the normal DOM hierarchy. Renders a `<div>` element.
+ */
 export const DialogPortalPrimitive = forwardRef<HTMLDivElement, DialogPortalPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -60,6 +68,9 @@ DialogPortalPrimitive.displayName = 'Dialog.PortalPrimitive';
  * Dialog.OverlayPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Semi-transparent backdrop rendered behind the dialog popup. Renders a `<div>` element.
+ */
 export const DialogOverlayPrimitive = forwardRef<HTMLDivElement, DialogOverlayPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -79,6 +90,9 @@ DialogOverlayPrimitive.displayName = 'Dialog.OverlayPrimitive';
  * Dialog.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The dialog panel itself, centered on screen. Size is controlled by the `size` prop on `Dialog.Root`. Renders a `<div>` element.
+ */
 export const DialogPopupPrimitive = forwardRef<HTMLDivElement, DialogPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -99,6 +113,9 @@ DialogPopupPrimitive.displayName = 'Dialog.PopupPrimitive';
  * Dialog.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Convenience wrapper that composes `Dialog.PortalPrimitive`, `Dialog.OverlayPrimitive`, and `Dialog.PopupPrimitive` into a single element. Use `portalElement` or `overlayElement` to replace individual parts. Renders a `<div>` element.
+ */
 export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>(
     ({ portalElement, overlayElement, ...props }, ref) => {
         const popup = <DialogPopupPrimitive ref={ref} {...props} />;
@@ -130,6 +147,9 @@ DialogPopup.displayName = 'Dialog.Popup';
  * Dialog.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that opens the dialog when activated. Renders a `<button>` element.
+ */
 export const DialogTrigger = forwardRef<HTMLButtonElement, DialogTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -141,6 +161,9 @@ DialogTrigger.displayName = 'Dialog.Trigger';
  * Dialog.Close
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that closes the dialog when activated. Renders a `<button>` element.
+ */
 export const DialogClose = forwardRef<HTMLButtonElement, DialogClose.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -152,6 +175,9 @@ DialogClose.displayName = 'Dialog.Close';
  * Dialog.Title
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Heading element that labels the dialog for assistive technologies. Renders an `<h2>` element.
+ */
 export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitle.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -165,6 +191,9 @@ DialogTitle.displayName = 'Dialog.Title';
  * Dialog.Description
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Paragraph that provides supplementary text for the dialog, linked to the dialog panel for assistive technologies. Renders a `<p>` element.
+ */
 export const DialogDescription = forwardRef<HTMLParagraphElement, DialogDescription.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -184,6 +213,9 @@ DialogDescription.displayName = 'Dialog.Description';
  * Dialog.Header
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Top section of the dialog, typically containing the title and a close button. Renders a `<div>` element.
+ */
 export const DialogHeader = forwardRef<HTMLDivElement, DialogHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -203,6 +235,9 @@ DialogHeader.displayName = 'Dialog.Header';
  * Dialog.Body
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Scrollable main content area of the dialog. Renders a `<div>` element.
+ */
 export const DialogBody = forwardRef<HTMLDivElement, DialogBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -222,6 +257,9 @@ DialogBody.displayName = 'Dialog.Body';
  * Dialog.Footer
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Bottom section of the dialog, typically containing action buttons. Renders a `<div>` element.
+ */
 export const DialogFooter = forwardRef<HTMLDivElement, DialogFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -242,8 +280,7 @@ DialogFooter.displayName = 'Dialog.Footer';
 export interface DialogRootProps
     extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
-     * Determines whether the dialog should close on outside clicks.
-     * @default true
+     * When `true`, clicking the overlay closes the dialog. Default: `true`
      */
     closeOnClickOverlay?: boolean;
 }
@@ -273,11 +310,11 @@ export namespace DialogPopupPrimitive {
 
 export interface DialogPopupProps extends DialogPopupPrimitive.Props {
     /**
-     * A Custom element for Dialog.PortalPrimitive. If not provided, the default Dialog.PortalPrimitive will be rendered.
+     * Replaces the default `Dialog.PortalPrimitive`. Use to customise portal container behavior.
      */
     portalElement?: ReactElement<DialogPortalPrimitive.Props>;
     /**
-     * A Custom element for Dialog.OverlayPrimitive. If not provided, the default Dialog.OverlayPrimitive will be rendered.
+     * Replaces the default `Dialog.OverlayPrimitive`. Use to customise backdrop appearance or behavior.
      */
     overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
 }
