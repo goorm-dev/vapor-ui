@@ -10,6 +10,9 @@ import type { VaporUIComponentProps } from '~/utils/types';
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
+/**
+ * Button component for triggering actions. Use for primary actions such as form submission, dialog triggers, and navigation. Renders a `<button>` element.
+ */
 export const Button = forwardRef<HTMLElement, Button.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(componentProps, [
