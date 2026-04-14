@@ -41,7 +41,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 1. One single line — no line breaks inside the summary
 2. User perspective: what it is → when to use it
 3. No internal terms (`memoized`, `wrapper`, `token-based`, etc.)
-4. End with the rendered HTML element using backticks around the tag: `Renders a \`<button>\` element.`or`Doesn't render its own HTML element.`
+4. End with the rendered HTML element using backticks around the tag: "Renders a `<button>` element.' or 'Doesn't render its own HTML element.".
 
 ## Prop description rules
 
