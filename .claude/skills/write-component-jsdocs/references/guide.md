@@ -142,7 +142,7 @@ The documentation site supports Korean and English, but the source is English. K
 
 **Always leave the first line of every JSDoc block empty.**
 
-Do not write content on the line immediately after `/__`. Even single-line comments must use the multi-line form.
+Do not write content on the line immediately after `/**`. Even single-line comments must use the multi-line form.
 
 ```tsx
 // ❌ content on first line
@@ -369,7 +369,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 /**
- * Button component for user interactions. Use for primary actions such as form submission, dialog triggers, and navigation. Renders a <button> element.
+ * Button component for user interactions. Use for primary actions such as form submission, dialog triggers, and navigation. Renders a `<button>` element.
  */
 export function Button({ label, variant = 'fill', size = 'md', ...props }: ButtonProps) {
     // ...

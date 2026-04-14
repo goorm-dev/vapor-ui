@@ -12,7 +12,7 @@ JSDoc in vapor-ui is **user-facing UI**, not internal code comments. Write it fo
 
 - **Language**: English only. No Korean in JSDoc blocks.
 - **Format**: Always leave the first line of every `/** ... */` block empty.
-- **Placement**: Write on the Props interface/type, not on the component function.
+- **Placement**: Write the component summary above the component function. Write individual prop descriptions inside the Props interface/type, not on the component function.
 
 ## Where to write
 
