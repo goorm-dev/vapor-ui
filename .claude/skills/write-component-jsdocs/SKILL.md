@@ -33,7 +33,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 
 - **Standalone** — no JSDoc on namespace `Props` itself; write variant group docs in `componentRecipe()` in `.css.ts`
 - **Compound Root** (custom props via `interface`) — write on the `interface`, namespace wraps it
-- **Compound Root with context** (`Assign<…, Context>` pattern) — write only on custom props; mark forwarded props with `@forwardedProps`
+- **Compound Root with context** (`Assign<…, Context>` pattern) — write only on custom props; mark forwarded props with `@forwardedProps` above the namespace
 - **Compound sub-part** (`Omit<…, keyof Context>` pattern) — write only on remaining props
 
 ## Component summary rules
@@ -57,15 +57,18 @@ When a compound Root forwards props to sub-parts via Context, declare this so `t
 
 ```tsx
 /**
- * Avatar root component. Renders a <span> element.
- *
  * @forwardedProps {AvatarImagePrimitive} src alt crossOrigin decoding fetchPriority height loading referrerPolicy sizes srcSet width useMap onLoadingStatusChange
  * @forwardedProps {AvatarFallbackPrimitive} delay
  */
-export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>(...)
+export namespace AvatarRoot {
+    export type State = BaseAvatar.Root.State;
+    export type Props = AvatarRootProps;
+}
 ```
 
 Syntax: `@forwardedProps {ComponentName} prop1 prop2 …`
+
+**Placement**: above the **component namespace** (`export namespace …`), not above the component function.
 
 ## Review checklist
 
@@ -79,6 +82,6 @@ See the full checklist in [references/guide.md](references/guide.md#checklist).
 - [ ] No prop name repetition in descriptions
 - [ ] Event handlers describe exact trigger condition
 - [ ] Numeric props include unit and range
-- [ ] Compound Root with context has `@forwardedProps` tags
+- [ ] Compound Root with context has `@forwardedProps` tags above the component namespace
 - [ ] No JSDoc on individual variant values (`sm`, `md`, `fill`, `primary`, etc.)
 - [ ] No JSDoc on `export type XxxVariants`

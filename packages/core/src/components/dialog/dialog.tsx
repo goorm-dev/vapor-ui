@@ -30,8 +30,6 @@ const [DialogProvider, useDialogContext] = createContext<DialogContext>({
 
 /**
  * Root of the Dialog compound component. Manages open state and provides size context to sub-parts. Doesn't render its own HTML element.
- *
- * @forwardedProps {DialogPopupPrimitive} size
  */
 export const DialogRoot = ({
     size,
@@ -285,6 +283,9 @@ export interface DialogRootProps
     closeOnClickOverlay?: boolean;
 }
 
+/**
+ * @forwardedProps {DialogPopupPrimitive} size
+ */
 export namespace DialogRoot {
     export type State = {};
     export type Props = DialogRootProps;

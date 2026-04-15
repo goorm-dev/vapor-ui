@@ -29,9 +29,6 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarContext>({
 
 /**
  * Avatar component for displaying a user's profile image with an automatic initial-based fallback. Renders a `<span>` element.
- *
- * @forwardedProps {AvatarImagePrimitive} src alt crossOrigin decoding fetchPriority height loading referrerPolicy sizes srcSet width useMap onLoadingStatusChange
- * @forwardedProps {AvatarFallbackPrimitive} delay
  */
 export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
     const { imageElement, fallbackElement, className, children, ...componentProps } =
@@ -236,6 +233,10 @@ export interface AvatarRootProps extends Assign<
     fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
 }
 
+/**
+ * @forwardedProps {AvatarImagePrimitive} src alt crossOrigin decoding fetchPriority height loading referrerPolicy sizes srcSet width useMap onLoadingStatusChange
+ * @forwardedProps {AvatarFallbackPrimitive} delay
+ */
 export namespace AvatarRoot {
     export type State = BaseAvatar.Root.State;
     export type Props = AvatarRootProps;
