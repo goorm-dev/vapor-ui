@@ -1,6 +1,6 @@
 ---
 name: write-component-jsdocs
-description: Guide for writing JSDoc comments on vapor-ui components and their props. Use when adding, reviewing, or fixing JSDoc on component tsx files or css.ts variant files. Covers where to place comments based on component pattern — standalone, compound root, compound sub-part — language and format rules, the @forwardedProps custom tag, and a checklist for review. Triggers on requests like add jsdocs, write component docs, document props, jsdoc 작성, or when reviewing a component documentation completeness.
+description: Guide for writing JSDoc comments on vapor-ui components and their props. Use when adding, reviewing, or fixing JSDoc on component tsx files or css.ts variant files. Covers where to place comments based on component pattern — standalone, compound root, compound sub-part — language and format rules, and a checklist for review. Triggers on requests like add jsdocs, write component docs, document props, jsdoc 작성, or when reviewing a component documentation completeness.
 argument-hint: ComponentName — the PascalCase component name to document (e.g. Button, Dialog, Avatar). Required. When provided, locate the component under packages/core/src/components/{kebab-case-name}/ and apply this guide to those files only.
 ---
 
@@ -33,7 +33,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 
 - **Standalone** — no JSDoc on namespace `Props` itself; write variant group docs in `componentRecipe()` in `.css.ts`
 - **Compound Root** (custom props via `interface`) — write on the `interface`, namespace wraps it
-- **Compound Root with context** (`Assign<…, Context>` pattern) — write only on custom props; mark forwarded props with `@forwardedProps` above the namespace
+- **Compound Root with context** (`Assign<…, Context>` pattern) — write only on custom props
 - **Compound sub-part** (`Omit<…, keyof Context>` pattern) — write only on remaining props
 
 ## Component summary rules
@@ -51,25 +51,6 @@ Placement depends on the component pattern. See [references/guide.md](references
 4. For event handlers: specify the exact trigger condition, not just "handler"
 5. Include the default value when relevant: `Default: \`false\``
 
-## `@forwardedProps` tag
-
-When a compound Root forwards props to sub-parts via Context, declare this so `ts-api-extractor` can pick them up:
-
-```tsx
-/**
- * @forwardedProps {AvatarImagePrimitive} src alt crossOrigin decoding fetchPriority height loading referrerPolicy sizes srcSet width useMap onLoadingStatusChange
- * @forwardedProps {AvatarFallbackPrimitive} delay
- */
-export namespace AvatarRoot {
-    export type State = BaseAvatar.Root.State;
-    export type Props = AvatarRootProps;
-}
-```
-
-Syntax: `@forwardedProps {ComponentName} prop1 prop2 …`
-
-**Placement**: above the **component namespace** (`export namespace …`), not above the component function.
-
 ## Review checklist
 
 See the full checklist in [references/guide.md](references/guide.md#checklist).
@@ -82,6 +63,5 @@ See the full checklist in [references/guide.md](references/guide.md#checklist).
 - [ ] No prop name repetition in descriptions
 - [ ] Event handlers describe exact trigger condition
 - [ ] Numeric props include unit and range
-- [ ] Compound Root with context has `@forwardedProps` tags above the component namespace
 - [ ] No JSDoc on individual variant values (`sm`, `md`, `fill`, `primary`, etc.)
 - [ ] No JSDoc on `export type XxxVariants`

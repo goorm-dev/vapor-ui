@@ -283,9 +283,6 @@ export interface DialogRootProps
     closeOnClickOverlay?: boolean;
 }
 
-/**
- * @forwardedProps {DialogPopupPrimitive} size
- */
 export namespace DialogRoot {
     export type State = {};
     export type Props = DialogRootProps;

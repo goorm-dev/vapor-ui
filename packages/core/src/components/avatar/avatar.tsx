@@ -233,10 +233,6 @@ export interface AvatarRootProps extends Assign<
     fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
 }
 
-/**
- * @forwardedProps {AvatarImagePrimitive} src alt crossOrigin decoding fetchPriority height loading referrerPolicy sizes srcSet width useMap onLoadingStatusChange
- * @forwardedProps {AvatarFallbackPrimitive} delay
- */
 export namespace AvatarRoot {
     export type State = BaseAvatar.Root.State;
     export type Props = AvatarRootProps;

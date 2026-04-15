@@ -8,9 +8,8 @@
 4. [Format](#format)
 5. [Component summary](#component-summary)
 6. [Prop descriptions](#prop-descriptions)
-7. [@forwardedProps tag](#forwardedprops-tag)
-8. [Complete example](#complete-example)
-9. [Checklist](#checklist)
+7. [Complete example](#complete-example)
+8. [Checklist](#checklist)
 
 ---
 
@@ -75,7 +74,7 @@ export namespace DialogRoot {
 
 ### Case 3 — Compound Root with Context: Assign pattern
 
-`Assign<VaporUIComponentProps, Context>` pattern. Write JSDoc only on custom props. Mark forwarded props with `@forwardedProps` (see section below).
+`Assign<VaporUIComponentProps, Context>` pattern. Write JSDoc only on custom props.
 
 ```ts
 // avatar.tsx
@@ -306,36 +305,6 @@ onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 
 ---
 
-## `@forwardedProps` Tag
-
-When a compound Root forwards props to sub-parts via Context, `ts-api-extractor` cannot infer which props go where. Use the `@forwardedProps` custom tag to declare this explicitly.
-
-### Syntax
-
-```tsx
-/**
- * @forwardedProps {AvatarImagePrimitive} src alt crossOrigin decoding fetchPriority height loading referrerPolicy sizes srcSet width useMap onLoadingStatusChange
- * @forwardedProps {AvatarFallbackPrimitive} delay
- */
-export namespace AvatarRoot {
-    export type State = BaseAvatar.Root.State;
-    export type Props = AvatarRootProps;
-}
-```
-
-Place the `@forwardedProps` block **above the component namespace** (`export namespace …`), not above the component function.
-
-- `{ComponentName}`: the target sub-part component — braces separate it from the prop list
-- Remaining tokens: prop names forwarded to that component (space-separated)
-- Use multiple tags for multiple targets
-- Follows the `@param {type}` JSDoc convention
-
-### When to use
-
-Required when the Root creates a Context via `createContext` and sub-parts (`Image`, `Fallback`, etc.) consume props from it via `useContext`. Omitting it causes those props to be missing from API extraction.
-
----
-
 ## Complete Example
 
 ```tsx
@@ -415,5 +384,4 @@ export function Button({ label, variant = 'fill', size = 'md', ...props }: Butto
 
 **Compound components**
 
-- [ ] Root components that forward props via Context have `@forwardedProps` tags above the component namespace
-- [ ] Each `@forwardedProps` tag includes the target component name and the full prop list
+- [ ] Compound Root with context (`Assign<…, Context>` pattern): JSDoc written only on custom props, not on context-provided props
