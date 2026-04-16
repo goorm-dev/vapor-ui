@@ -8,6 +8,7 @@ export default function AvatarCustomFallback() {
                     auto initial
                 </Text>
                 <Avatar.Root alt="John Doe">
+                    <Avatar.ImagePrimitive />
                     <Avatar.FallbackPrimitive />
                 </Avatar.Root>
             </HStack>
@@ -16,6 +17,7 @@ export default function AvatarCustomFallback() {
                     custom text
                 </Text>
                 <Avatar.Root alt="John Doe">
+                    <Avatar.ImagePrimitive />
                     <Avatar.FallbackPrimitive>JD</Avatar.FallbackPrimitive>
                 </Avatar.Root>
             </HStack>
