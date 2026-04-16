@@ -43,7 +43,7 @@ describe('Textarea', () => {
         await userEvent.clear(textarea);
         await userEvent.type(textarea, 'new content');
 
-        expect(handleValueChange).toHaveBeenLastCalledWith('new content', expect.any(Object));
+        expect(handleValueChange).toHaveBeenLastCalledWith('new content');
     });
 
     describe('prop: disabled', () => {

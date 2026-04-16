@@ -137,11 +137,11 @@ describe('Switch', () => {
 
             await userEvent.click(control);
             expect(onCheckedChange).toHaveBeenCalledTimes(1);
-            expect(onCheckedChange).toHaveBeenCalledWith(true, expect.any(Object));
+            expect(onCheckedChange).toHaveBeenCalledWith(true);
 
             await userEvent.click(control);
             expect(onCheckedChange).toHaveBeenCalledTimes(2);
-            expect(onCheckedChange).toHaveBeenCalledWith(false, expect.any(Object));
+            expect(onCheckedChange).toHaveBeenCalledWith(false);
         });
 
         it('should not toggle checked state when blocker is active', async () => {

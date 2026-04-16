@@ -544,11 +544,11 @@ describe('<Menu.CheckboxItem>', () => {
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(1);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Object));
+            expect(handleCheckedChange).toHaveBeenCalledWith(true);
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(2);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Object));
+            expect(handleCheckedChange).toHaveBeenCalledWith(false);
         });
 
         // it('should keep the state when closed and reopened', async () => {});
@@ -704,10 +704,10 @@ describe('<Menu.CheckboxItem>', () => {
             const checkitem = rendered.getByRole('menuitemcheckbox');
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Object));
+            expect(handleCheckedChange).toHaveBeenCalledWith(true);
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Object));
+            expect(handleCheckedChange).toHaveBeenCalledWith(false);
         });
     });
 });
@@ -815,11 +815,11 @@ describe('<Menu.RadioGroupItem>', () => {
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(1);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Object));
+            expect(handleCheckedChange).toHaveBeenCalledWith(true);
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(2);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Object));
+            expect(handleCheckedChange).toHaveBeenCalledWith(false);
         });
     });
 
@@ -1010,10 +1010,10 @@ describe('<Menu.RadioGroupItem>', () => {
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
 
             await userEvent.click(radio1);
-            expect(handleCheckedChange).toHaveBeenCalledWith('item1', expect.any(Object));
+            expect(handleCheckedChange).toHaveBeenCalledWith('item1');
 
             await userEvent.click(radio2);
-            expect(handleCheckedChange).toHaveBeenCalledWith('item2', expect.any(Object));
+            expect(handleCheckedChange).toHaveBeenCalledWith('item2');
         });
     });
 });
