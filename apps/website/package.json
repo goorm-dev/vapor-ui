@@ -39,7 +39,7 @@
         "fuse.js": "^7.1.0",
         "lodash-es": "^4.17.23",
         "markdown-table": "^3.0.4",
-        "next": "16.1.6",
+        "next": "16.2.3",
         "react": "catalog:",
         "react-dom": "catalog:",
         "react-error-boundary": "^6.0.0",
