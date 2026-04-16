@@ -1,6 +1,202 @@
 ---
 title: Composition
-description: Vapor UI 컴포넌트는 다양한 구성 패턴을 지원하여 유연한 UI 구성이 가능합니다. 이 섹션에서는 Vapor UI 컴포넌트의 조합 패턴과 활용 방법에 대해 설명합니다.
+description: Primitive 컴포넌트로 Vapor UI 컴포넌트의 내부 구조를 직접 제어하는 방법을 설명합니다.
 ---
 
-준비 중입니다.
+기본 props만으로 해결되지 않는 요구사항을 만날 때, Primitive 컴포넌트로 컴포넌트 내부 구조를 직접 제어할 수 있습니다.
+아래 표에서 상황에 맞는 방법을 선택하세요.
+
+## 커스텀 방법 선택
+
+| 상황 | 방법 |
+|---|---|
+| 렌더링되는 HTML 태그를 바꾸고 싶을 때 | `render` prop |
+| Switch, Checkbox, Radio, Avatar의 내부 파트를 바꾸고 싶을 때 | `children`에 Primitive 전달 |
+| Dialog, Popover 등 팝업 레이어를 바꾸고 싶을 때 | `{name}Element` prop에 Primitive 전달 |
+| 팝업 레이어 구조 전체를 직접 제어하고 싶을 때 | Primitive 컴포넌트 직접 조합 |
+
+---
+
+## render prop으로 HTML 태그 교체
+
+`render` prop은 컴포넌트가 렌더링하는 HTML 태그를 교체합니다.
+시맨틱 마크업이 필요하거나 외부 라이브러리 컴포넌트로 교체할 때 사용합니다.
+
+```tsx
+import { Button, Card, Dialog } from '@vapor-ui/core';
+import Link from 'next/link';
+
+// div → article로 교체
+<Card.Root render={<article />} />
+
+// Next.js Link로 교체
+<Button render={<Link href="/home" />}>홈으로</Button>
+
+// render와 다른 prop을 함께 사용
+<Dialog.Header render={<header />} className="my-header" />
+```
+
+---
+
+## children으로 내부 Primitive 교체
+
+`Switch`, `Checkbox`, `Radio`, `Avatar`는 내부에 Primitive를 기본으로 렌더링합니다.
+`children`에 Primitive를 전달하면 기본 Primitive 대신 그 값으로 교체됩니다.
+아이콘을 변경하거나 Primitive에 직접 className을 적용할 때 사용합니다.
+
+### Switch
+
+`Switch.Root`는 `children`으로 `Switch.ThumbPrimitive`를 교체합니다.
+
+```tsx
+import { Switch } from '@vapor-ui/core';
+import { HeartIcon } from '@vapor-ui/icons';
+
+// children 없이 사용하면 Switch.ThumbPrimitive가 자동으로 렌더링됨
+<Switch.Root />
+
+// Switch.ThumbPrimitive에 직접 props 전달
+<Switch.Root>
+    <Switch.ThumbPrimitive className="my-thumb" />
+</Switch.Root>
+
+// 아이콘을 ThumbPrimitive 안에 삽입
+<Switch.Root>
+    <Switch.ThumbPrimitive>
+        <HeartIcon />
+    </Switch.ThumbPrimitive>
+</Switch.Root>
+```
+
+### Checkbox
+
+`Checkbox.Root`는 `children`으로 `Checkbox.IndicatorPrimitive`를 교체합니다.
+
+```tsx
+import { Checkbox } from '@vapor-ui/core';
+import { CheckCircleIcon } from '@vapor-ui/icons';
+
+// children 없이 사용하면 Checkbox.IndicatorPrimitive가 자동으로 렌더링됨
+<Checkbox.Root />
+
+// 커스텀 아이콘으로 교체
+<Checkbox.Root>
+    <Checkbox.IndicatorPrimitive>
+        <CheckCircleIcon />
+    </Checkbox.IndicatorPrimitive>
+</Checkbox.Root>
+```
+
+### Radio
+
+`Radio.Root`는 `children`으로 `Radio.IndicatorPrimitive`를 교체합니다.
+
+```tsx
+import { Radio } from '@vapor-ui/core';
+
+// children 없이 사용하면 Radio.IndicatorPrimitive가 자동으로 렌더링됨
+<Radio.Root />
+
+// Radio.IndicatorPrimitive에 직접 props 전달
+<Radio.Root>
+    <Radio.IndicatorPrimitive className="my-indicator" />
+</Radio.Root>
+```
+
+### Avatar
+
+`Avatar.Root`는 `children`으로 `Avatar.ImagePrimitive`와 `Avatar.FallbackPrimitive`를 함께 전달해 각 슬롯을 교체합니다.
+이미지 관련 props(`src`, `alt`, `crossOrigin` 등)는 `Avatar.Root`에 직접 전달하면 내부 Primitive로 자동 전달됩니다.
+
+```tsx
+import { Avatar } from '@vapor-ui/core';
+
+// 기본 사용 — src, alt, crossOrigin은 Avatar.Root에 직접 전달
+<Avatar.Root src="..." alt="User" crossOrigin="anonymous" />
+
+// ImagePrimitive에 직접 className을 적용해야 할 때
+<Avatar.Root src="..." alt="User">
+    <Avatar.ImagePrimitive className="my-image" />
+    <Avatar.FallbackPrimitive />
+</Avatar.Root>
+
+// 폴백 텍스트를 직접 지정할 때
+<Avatar.Root alt="User">
+    <Avatar.ImagePrimitive />
+    <Avatar.FallbackPrimitive>JD</Avatar.FallbackPrimitive>
+</Avatar.Root>
+```
+
+---
+
+## `{name}Element` prop으로 팝업 레이어 교체
+
+`Dialog.Popup`, `Popover.Popup`, `Sheet.Popup` 등 팝업 컴포넌트는 Portal, Overlay, Positioner 같은 여러 Primitive를 내부에서 조합해 렌더링합니다.
+`{name}Element` prop에 Primitive ReactElement를 전달하면 해당 슬롯만 교체됩니다.
+prop을 전달하지 않으면 기본 Primitive가 렌더링되므로, 기본 동작은 유지하면서 특정 슬롯의 prop만 조정할 때 사용합니다.
+
+```tsx
+// portalElement — keepMounted 같은 Portal 동작을 제어할 때
+<Dialog.Popup
+    portalElement={<Dialog.PortalPrimitive keepMounted />}
+>
+    ...
+</Dialog.Popup>
+
+// overlayElement — 오버레이 스타일을 직접 제어할 때
+<Dialog.Popup
+    overlayElement={<Dialog.OverlayPrimitive className="my-overlay" />}
+>
+    ...
+</Dialog.Popup>
+
+// positionerElement — Popover, Tooltip 등 위치 제어가 필요할 때
+<Popover.Popup
+    positionerElement={<Popover.PositionerPrimitive sideOffset={8} />}
+>
+    ...
+</Popover.Popup>
+```
+
+교체 가능한 슬롯 prop은 컴포넌트마다 다릅니다. 각 컴포넌트의 슬롯 prop 목록입니다.
+
+| 컴포넌트 | 슬롯 prop |
+|---|---|
+| `Dialog.Popup` | `portalElement`, `overlayElement` |
+| `Popover.Popup` | `portalElement`, `positionerElement` |
+| `Sheet.Popup` | `portalElement`, `overlayElement`, `positionerElement` |
+| `Tooltip.Popup` | `portalElement`, `positionerElement` |
+| `Menu.Popup` | `portalElement`, `positionerElement` |
+| `Menu.SubmenuPopup` | `portalElement`, `positionerElement` |
+| `Select.Popup` | `portalElement`, `positionerElement` |
+| `MultiSelect.Popup` | `portalElement`, `positionerElement` |
+| `NavigationMenu.Viewport` | `portalElement`, `positionerElement`, `popupElement` |
+| `FloatingBar.Root` | `portalElement` |
+| `Tabs.List` | `indicatorElement` |
+
+---
+
+## Primitive 컴포넌트 직접 조합
+
+Portal 바깥에 요소를 배치하거나 레이어 렌더링 순서를 직접 제어해야 할 때 사용합니다.
+`{name}Element` prop 대신 Primitive를 직접 조합하면 레이어 구조 전체를 제어할 수 있습니다.
+
+```tsx
+import { Button, Dialog } from '@vapor-ui/core';
+
+<Dialog.Root>
+    <Dialog.Trigger>열기</Dialog.Trigger>
+    <Dialog.PortalPrimitive>
+        <Dialog.OverlayPrimitive />
+        <Dialog.PopupPrimitive>
+            <Dialog.Header>
+                <Dialog.Title>제목</Dialog.Title>
+            </Dialog.Header>
+            <Dialog.Body>내용</Dialog.Body>
+            <Dialog.Footer>
+                <Dialog.Close render={<Button>닫기</Button>} />
+            </Dialog.Footer>
+        </Dialog.PopupPrimitive>
+    </Dialog.PortalPrimitive>
+</Dialog.Root>
+```
