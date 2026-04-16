@@ -27,16 +27,14 @@ export const control = componentRecipe({
 
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray[200],
-                    outline: '0.0625rem solid',
-                    outlineColor: vars.color.border.normal,
-                    outlineOffset: '-0.0625rem',
+                    border: `0.0625rem solid ${vars.color.border.normal}`,
                 },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': {
+                '&[data-invalid]:not(:focus-visible)': {
                     outline: '0.125rem solid',
                     outlineColor: vars.color.border.danger,
-                    outlineOffset: '-0.125rem',
+                    outlineOffset: '0.125rem',
                 },
             },
         },
