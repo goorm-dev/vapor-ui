@@ -1,4 +1,5 @@
-import { type ComponentProps, forwardRef } from 'react';
+import type { ComponentProps } from 'react';
+import { forwardRef } from 'react';
 
 import { cleanup, render } from '@testing-library/react';
 import user from '@testing-library/user-event';

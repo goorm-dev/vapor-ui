@@ -10,25 +10,20 @@ import { replaceComponentDoc } from '~/utils/get-component-doc';
 import { replaceFoundationDoc } from '~/utils/get-foundation-doc';
 import { replaceIconDoc } from '~/utils/get-icon-doc';
 
-import { getAppVersion } from './get-app-version';
-
 const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 
-type ContentType = 'docs' | 'blocks' | 'theme';
+type ContentType = 'docs' | 'theme';
 
 function processContent(content: string, contentType: ContentType): string {
     const baseContent = replaceFoundationDoc(replaceIconDoc(content));
-
-    if (contentType === 'blocks') {
-        return replaceBlockDoc(replaceComponentDoc(baseContent));
-    }
 
     if (contentType === 'theme') {
         return baseContent;
     }
 
-    return replaceComponentDoc(baseContent);
+    return replaceBlockDoc(replaceComponentDoc(baseContent));
 }
+
 function getSourceUrl(contentType: ContentType, path: string): string {
     return `https://raw.githubusercontent.com/goorm-dev/vapor-ui/refs/heads/main/apps/website/content/${contentType}/${path}`;
 }
@@ -38,18 +33,15 @@ export async function getLLMText(
     contentType: ContentType = 'docs',
 ): Promise<string> {
     try {
-        const content = processContent(page.data.content ?? '', contentType);
+        const rawContent = await page.data.getText('raw');
+        const content = processContent(rawContent, contentType);
         const sourceUrl = getSourceUrl(contentType, page.path);
-        const appVersion = await getAppVersion();
         const processed = await processor.process({
-            path: page.data._file.absolutePath,
+            path: page.data.info.fullPath,
             value: content,
         });
 
-        return `---
-version: ${appVersion}
----
-# ${page.data.title}
+        return `# ${page.data.title}
 URL: ${page.url}
 Source: ${sourceUrl}
 

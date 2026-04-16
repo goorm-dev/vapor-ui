@@ -1,6 +1,7 @@
+import tseslint from 'typescript-eslint';
+
 import { ecmaVersion } from './libs/constants.js';
 import { rules } from './libs/ts-rule.js';
-import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.LanguageOptions} */
 export const languageOptions = {

@@ -1,12 +1,14 @@
-import { type SelectHTMLAttributes } from 'react';
+import type { SelectHTMLAttributes } from 'react';
 
 export interface SelectOption<T = string> {
     value: T;
     label: string;
 }
 
-interface LabeledSelectProps<T = string>
-    extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'value'> {
+interface LabeledSelectProps<T = string> extends Omit<
+    SelectHTMLAttributes<HTMLSelectElement>,
+    'onChange' | 'value'
+> {
     label: string;
     value: T;
     onChange: (value: T) => void;

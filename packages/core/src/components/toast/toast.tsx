@@ -1,15 +1,16 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { Toast as BaseToast, type ToastManager as BaseToastManager } from '@base-ui/react/toast';
-import { useRender } from '@base-ui/react/use-render';
+import type { ToastManager as BaseToastManager } from '@base-ui/react/toast';
+import { Toast as BaseToast } from '@base-ui/react/toast';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { AnyProp, VComponentProps } from '~/utils/types';
+import type { AnyProp, VaporUIComponentProps } from '~/utils/types';
 
 import { Box } from '../box';
 import { Button } from '../button';
@@ -91,7 +92,9 @@ export const ToastProviderPrimitive = ({
 
 export const ToastPortalPrimitive = forwardRef<HTMLDivElement, ToastPortalPrimitive.Props>(
     (props, ref) => {
-        return <BaseToast.Portal ref={ref} {...props} />;
+        const componentProps = resolveStyles(props);
+
+        return <BaseToast.Portal ref={ref} {...componentProps} />;
     },
 );
 ToastPortalPrimitive.displayName = 'Toast.PortalPrimitive';
@@ -107,7 +110,7 @@ export const ToastViewportPrimitive = forwardRef<HTMLDivElement, ToastViewportPr
         return (
             <BaseToast.Viewport
                 ref={ref}
-                className={clsx(styles.viewport, className)}
+                className={cn(styles.viewport, className)}
                 {...componentProps}
             />
         );
@@ -142,7 +145,7 @@ export const ToastRootPrimitive = forwardRef<HTMLDivElement, ToastRootPrimitive.
                     ref={ref}
                     toast={toast as BaseToast.Root.ToastObject}
                     swipeDirection={swipeDirection}
-                    className={clsx(styles.root({ colorPalette }), className)}
+                    className={cn(styles.root({ colorPalette }), className)}
                     {...componentProps}
                 />
             </ToastContextProvider>
@@ -162,7 +165,7 @@ export const ToastContentPrimitive = forwardRef<HTMLDivElement, ToastContentPrim
         return (
             <BaseToast.Content
                 ref={ref}
-                className={clsx(styles.content, className)}
+                className={cn(styles.content, className)}
                 {...componentProps}
             />
         );
@@ -181,7 +184,7 @@ export const ToastTitlePrimitive = forwardRef<HTMLHeadingElement, ToastTitlePrim
         return (
             <BaseToast.Title
                 ref={ref}
-                className={clsx(styles.title, className)}
+                className={cn(styles.title, className)}
                 {...componentProps}
             />
         );
@@ -202,7 +205,7 @@ export const ToastDescriptionPrimitive = forwardRef<
     return (
         <BaseToast.Description
             ref={ref}
-            className={clsx(styles.description, className)}
+            className={cn(styles.description, className)}
             {...componentProps}
         />
     );
@@ -224,7 +227,7 @@ export const ToastIconPrimitive = forwardRef<SVGSVGElement, ToastIconPrimitive.P
         const componentProps = resolveStyles(props);
         const { icon, colorPalette } = useToastContext();
 
-        return useRender({
+        return useRenderElement({
             ref,
             render: icon ?? TOAST_ICONS[colorPalette || ''],
             props: { ...componentProps },
@@ -268,8 +271,9 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         } = resolveStyles(props);
         const { close = true } = useToastContext();
 
-        const children = useRender({
-            render: createRender(childrenProp, <CloseOutlineIcon />),
+        const childrenRender = createRender(childrenProp, <CloseOutlineIcon />);
+        const children = useRenderElement({
+            render: childrenRender,
         });
 
         if (!close) return null;
@@ -294,7 +298,7 @@ ToastClosePrimitive.displayName = 'Toast.ClosePrimitive';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface UseToastManager {
+export interface UseToastManager {
     toasts: ToastObjectType<AnyProp>[];
     add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
     update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
@@ -352,7 +356,7 @@ export interface ToastManager extends BaseToastManager {
     ) => () => void;
     add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
     update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
-    close: (id: string) => void;
+    close: (id?: string) => void;
     promise: <Value, Data extends object>(
         promise: Promise<Value>,
         options: ToastManagerPromiseOptions<Value, Data>,
@@ -371,63 +375,73 @@ export namespace useToastManager {
     >;
 }
 
+export interface ToastProviderPrimitiveProps extends BaseToast.Provider.Props {
+    /**
+     * A global manager for toasts to use outside of a React component.
+     */
+    toastManager?: ToastManager;
+}
+
 export namespace ToastProviderPrimitive {
-    export interface Props extends BaseToast.Provider.Props {
-        toastManager?: ToastManager;
-    }
+    export type State = {};
+    export type Props = ToastProviderPrimitiveProps;
 }
 
 export namespace ToastProvider {
-    export interface Props extends Omit<BaseToast.Provider.Props, 'toastManager'> {
-        toastManager?: ToastManager;
-    }
+    export type State = ToastProviderPrimitive.State;
+    export type Props = ToastProviderPrimitive.Props;
 }
 
 export namespace ToastPortalPrimitive {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseToast.Portal>;
-    export interface Props extends PortalPrimitiveProps {}
+    export type State = BaseToast.Portal.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Portal, State>;
 }
 
 export namespace ToastViewportPrimitive {
-    type ViewportPrimitiveProps = VComponentProps<typeof BaseToast.Viewport>;
-    export interface Props extends ViewportPrimitiveProps {}
+    export type State = BaseToast.Viewport.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Viewport, State>;
+}
+
+export interface ToastRootPrimitiveProps extends Omit<
+    VaporUIComponentProps<typeof BaseToast.Root, ToastRootPrimitive.State>,
+    'toast'
+> {
+    toast: ToastObjectType<AnyProp>;
 }
 
 export namespace ToastRootPrimitive {
-    type RootPrimitiveProps = VComponentProps<typeof BaseToast.Root>;
-    export interface Props extends Omit<RootPrimitiveProps, 'toast'> {
-        toast: ToastObjectType<AnyProp>;
-    }
+    export type State = BaseToast.Root.State;
+    export type Props = ToastRootPrimitiveProps;
 
-    export interface ToastObject<Data extends object = AnyProp> extends ToastObjectType<Data> {}
+    export type ToastObject<Data extends object = AnyProp> = ToastObjectType<Data>;
 }
 
 export namespace ToastContentPrimitive {
-    type ContentPrimitiveProps = VComponentProps<typeof BaseToast.Content>;
-    export interface Props extends ContentPrimitiveProps {}
+    export type State = BaseToast.Content.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Content, State>;
 }
 
 export namespace ToastTitlePrimitive {
-    type TitlePrimitiveProps = VComponentProps<typeof BaseToast.Title>;
-    export interface Props extends TitlePrimitiveProps {}
+    export type State = BaseToast.Title.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Title, State>;
 }
 
 export namespace ToastDescriptionPrimitive {
-    type DescriptionPrimitiveProps = VComponentProps<typeof BaseToast.Description>;
-    export interface Props extends DescriptionPrimitiveProps {}
+    export type State = BaseToast.Description.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Description, State>;
 }
 
 export namespace ToastIconPrimitive {
-    type IconPrimitiveProps = VComponentProps<'span'>;
-    export interface Props extends IconPrimitiveProps {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }
 
 export namespace ToastActionPrimitive {
-    type ActionPrimitiveProps = VComponentProps<typeof BaseToast.Action>;
-    export interface Props extends ActionPrimitiveProps {}
+    export type State = BaseToast.Action.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Action, State>;
 }
 
 export namespace ToastClosePrimitive {
-    type ClosePrimitiveProps = VComponentProps<typeof BaseToast.Close>;
-    export interface Props extends ClosePrimitiveProps {}
+    export type State = BaseToast.Close.State;
+    export type Props = VaporUIComponentProps<typeof BaseToast.Close, State>;
 }

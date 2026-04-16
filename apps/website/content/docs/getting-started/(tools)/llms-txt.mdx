@@ -1,0 +1,44 @@
+---
+title: LLMs.txt
+description: Cursor 등 AI 도구에서 Vapor Design System 문서를 활용하는 방법
+---
+
+이 문서에서는 LLMs.txt 파일의 구성과 AI 도구에서 활용하는 방법을 설명합니다.
+
+## LLMs.txt 개요
+
+LLMs.txt는 LLM(Large Language Model)이 Vapor Design System 문서를 이해하도록 구조화한 텍스트 파일입니다. 컨텍스트 창이 제한된 AI 도구에서 핵심 정보를 빠르게 파악할 수 있습니다.
+
+## 파일 구성
+
+| 파일명        | 설명                                                           |
+| ------------- | -------------------------------------------------------------- |
+| llms.txt      | 전체 라우트 및 카테고리 개요를 포함한 메인 인덱스 파일         |
+| llms-full.txt | 모든 문서(컴포넌트, 가이드, API 등)를 포함한 전체 문서 세트    |
+
+### 인덱스 파일
+
+- [llms.txt](/llms.txt): 각 문서에 대한 요약과 링크를 포함합니다.
+- [llms-full.txt](/llms-full.txt): 모든 내용을 포함하며 큰 컨텍스트 워크플로우에 적합합니다.
+
+### 문서 경로
+
+**가이드**
+- [/docs/getting-started/installation.mdx](/docs/getting-started/installation.mdx): 설치 가이드
+
+**디자인 토큰**
+- [/docs/getting-started/color.mdx](/docs/getting-started/color.mdx): 색상 시스템
+- [/docs/getting-started/size.mdx](/docs/getting-started/size.mdx): 크기 및 여백
+- [/docs/getting-started/typography.mdx](/docs/getting-started/typography.mdx): 타이포그래피 시스템
+
+**테마**
+- [/theme/theme-provider.mdx](/theme/theme-provider.mdx): 테마 설정 가이드
+
+**컴포넌트**
+- [/docs/components/[component-name].mdx](/docs/components/avatar.mdx): 컴포넌트별 사용법과 API (예: Avatar)
+
+## AI 도구에서 사용
+
+Cursor 등 LLM 기반 코드 도구에서 LLMs.txt 파일을 활용하려면 `@Docs` 기능을 사용합니다.
+
+- [Cursor @Docs 문서](https://docs.cursor.com/context/@-symbols/@-docs)

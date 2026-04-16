@@ -1,14 +1,15 @@
+import { mergeProps } from '@base-ui/react';
+
 import { deprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
 import { sprinkles } from '~/styles/sprinkles.css';
 
 import { createSplitProps } from './create-split-props';
-import { mergeProps } from './merge-props';
+import { mergeStatefulProps } from './stateful-props';
 import type { DeprecatedSprinkles, Styles } from './types';
 
 export const resolveStyles = <T extends object>(props: T) => {
-    const [{ $css }, _otherProps] = createSplitProps<Styles>()(props, ['$css']);
-
-    const [layoutProps, otherProps] = createSplitProps<DeprecatedSprinkles>()(_otherProps, [
+    const [layoutProps, _otherProps] = createSplitProps<Styles>()(props, ['$css']);
+    const [deprecatedProps, otherProps] = createSplitProps<DeprecatedSprinkles>()(_otherProps, [
         'position',
         'display',
 
@@ -61,16 +62,13 @@ export const resolveStyles = <T extends object>(props: T) => {
         'marginY',
     ]);
 
-    const { className, style } = sprinkles({ ...$css });
-    const { className: deprecatedClassName, style: deprecatedStyle } = deprecatedSprinkles({
-        ...layoutProps,
-        ...$css,
-    });
+    const { className, style } = sprinkles(layoutProps.$css ?? {});
+    const deprecated = deprecatedSprinkles(deprecatedProps);
 
     const mergedProps = mergeProps(
-        { className: deprecatedClassName, style: deprecatedStyle },
+        { className: deprecated.className, style: deprecated.style },
         { className, style },
     );
 
-    return mergeProps(mergedProps as T, otherProps);
+    return mergeStatefulProps(mergedProps, otherProps) as T;
 };

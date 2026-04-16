@@ -1,11 +1,10 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
-
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { SkeletonVariants } from './skeleton.css';
 import * as styles from './skeleton.css';
@@ -21,11 +20,12 @@ export const Skeleton = forwardRef<HTMLDivElement, Skeleton.Props>((props, ref) 
         'animation',
     ]);
 
-    return useRender({
+    return useRenderElement({
         ref,
-        render: render || <div />,
+        render,
+        defaultTagName: 'div',
         props: {
-            className: clsx(styles.root(variantsProps), className),
+            className: cn(styles.root(variantsProps), className),
             ...otherProps,
         },
     });
@@ -33,7 +33,6 @@ export const Skeleton = forwardRef<HTMLDivElement, Skeleton.Props>((props, ref) 
 Skeleton.displayName = 'Skeleton';
 
 export namespace Skeleton {
-    type SkeletonPrimitiveProps = VComponentProps<'div'>;
-
-    export interface Props extends SkeletonPrimitiveProps, SkeletonVariants {}
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State> & SkeletonVariants;
 }

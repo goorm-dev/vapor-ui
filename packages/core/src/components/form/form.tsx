@@ -1,12 +1,19 @@
+import { forwardRef } from 'react';
+
 import { Form as BaseForm } from '@base-ui/react/form';
 
-import type { VComponentProps } from '~/utils/types';
+import { resolveStyles } from '~/utils/resolve-styles';
+import type { VaporUIComponentProps } from '~/utils/types';
 
-export const Form = BaseForm;
+export const Form = forwardRef<HTMLFormElement, Form.Props>((props, ref) => {
+    const componentProps = resolveStyles(props);
+
+    return <BaseForm ref={ref} {...componentProps} />;
+});
 
 export namespace Form {
-    type FormPrimitiveProps = VComponentProps<typeof BaseForm>;
-    export interface Props extends FormPrimitiveProps {}
+    export type State = BaseForm.State;
+    export type Props = VaporUIComponentProps<typeof BaseForm, State>;
 
     export type Actions = BaseForm.Actions;
     export type SubmitEventDetails = BaseForm.SubmitEventDetails;

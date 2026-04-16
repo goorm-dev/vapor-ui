@@ -11,7 +11,7 @@ const languages = {
 
 const renderRestValue = (value: string[]) => {
     if (!value.length) {
-        return <MultiSelect.PlaceholderPrimitive>언어 선택</MultiSelect.PlaceholderPrimitive>;
+        return '언어 선택';
     }
 
     const displayValues = value.slice(0, 2);
@@ -35,7 +35,7 @@ const renderRestValue = (value: string[]) => {
 
 const renderStringValue = (value: string[]) => {
     if (!value.length) {
-        return <MultiSelect.PlaceholderPrimitive>언어 선택</MultiSelect.PlaceholderPrimitive>;
+        return '언어 선택';
     }
 
     return value.map((v) => languages[v as keyof typeof languages]).join(', ');

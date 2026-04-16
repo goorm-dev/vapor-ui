@@ -1,14 +1,25 @@
 {
     "title": "Getting Started",
+    "description": "빠른 개발과 일관된 디자인을 위한 Vapor UI 디자인 시스템을 살펴보세요.",
+    "root": true,
     "pages": [
-        "overview",
-        "principles",
-        "installation",
-        "releases",
-        "llms-txt",
-        "tailwindcss-v4",
-        "eslint",
-        "codemod"
-    ],
-    "defaultOpen": true
+        "---Overview---",
+        "index",
+        "(overview)/principles",
+        "(overview)/installation",
+        "[playground](/theme/playground)",
+
+        "---Handbook---",
+        "(handbook)/(tokens)",
+        "(handbook)/styling",
+        "(handbook)/theming",
+        "(handbook)/tailwindcss-v4",
+        "(handbook)/composition",
+
+        "---Tools---",
+        "(tools)/ai-skill",
+        "(tools)/llms-txt",
+        "(tools)/eslint",
+        "(tools)/codemod"
+    ]
 }

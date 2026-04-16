@@ -9,7 +9,6 @@ export {
 
     // primitives
     SelectValuePrimitive as ValuePrimitive,
-    SelectPlaceholderPrimitive as PlaceholderPrimitive,
     SelectTriggerPrimitive as TriggerPrimitive,
     SelectTriggerIconPrimitive as TriggerIconPrimitive,
     SelectPortalPrimitive as PortalPrimitive,
@@ -17,4 +16,7 @@ export {
     SelectPopupPrimitive as PopupPrimitive,
     SelectItemPrimitive as ItemPrimitive,
     SelectItemIndicatorPrimitive as ItemIndicatorPrimitive,
+
+    /** @deprecated */
+    SelectPlaceholderPrimitive as PlaceholderPrimitive,
 } from './select';

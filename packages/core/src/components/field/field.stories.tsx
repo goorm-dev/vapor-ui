@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react';
+import type { SubmitEvent } from 'react';
 import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -41,7 +41,7 @@ const meta: Meta<FieldStoryArgs> = {
 export default meta;
 type Story = StoryObj<FieldStoryArgs>;
 
-const submitForm = async (event: FormEvent<HTMLFormElement>) => {
+const submitForm = async (event: SubmitEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
 
     const datas = formData.keys().reduce<[string, FormDataEntryValue | boolean][]>((acc, key) => {
@@ -57,7 +57,7 @@ const submitForm = async (event: FormEvent<HTMLFormElement>) => {
 
 export const TestBed: Story = {
     render: (args) => {
-        const { required, ...fieldArgs } = args;
+        const fieldArgs = args;
         const [errors] = useState({});
 
         return (
@@ -157,6 +157,7 @@ export const TestBed: Story = {
                     </Field.Root>
                     <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
                         <Field.Label
+                            nativeLabel={false}
                             render={<Text typography="subtitle2" foreground="normal-200" />}
                         >
                             이름

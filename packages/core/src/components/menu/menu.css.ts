@@ -1,16 +1,14 @@
-import { style } from '@vanilla-extract/css';
-
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-export const positioner = layerStyle('components', {
+export const positioner = componentStyle({
     position: 'relative',
 });
 
-export const popup = layerStyle('components', {
+export const popup = componentStyle({
     display: 'flex',
     flexDirection: 'column',
 
@@ -39,19 +37,19 @@ export const popup = layerStyle('components', {
 
 export const subPopup = popup;
 
-export const item = style([
+export const item = componentStyle([
     interaction({ type: 'roving' }),
     typography({ style: 'body2' }),
     foregrounds({ color: 'normal-200' }),
 
-    layerStyle('components', {
+    {
         position: 'relative',
 
         display: 'flex',
         alignItems: 'center',
         alignSelf: 'stretch',
         justifyContent: 'space-between',
-        gap: vars.size.space['100'],
+        gap: vars.size.space['050'],
 
         border: 'none',
 
@@ -69,10 +67,10 @@ export const item = style([
                 pointerEvents: 'none',
             },
         },
-    }),
+    },
 ]);
 
-export const separator = layerStyle('components', {
+export const separator = componentStyle({
     flexShrink: 0,
     marginBlock: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
@@ -81,20 +79,20 @@ export const separator = layerStyle('components', {
 
 export const subTrigger = item;
 
-export const groupLabel = style([
+export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
     foregrounds({ color: 'hint-200' }),
-    layerStyle('components', {
+    {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],
         paddingBottom: vars.size.space['050'],
         paddingLeft: vars.size.space['250'],
-    }),
+    },
 ]);
 
-export const indicator = style([
+export const indicator = componentStyle([
     foregrounds({ color: 'normal-200' }),
-    layerStyle('components', {
+    {
         position: 'absolute',
         top: '50%',
         left: vars.size.space['050'],
@@ -104,5 +102,5 @@ export const indicator = style([
         transform: 'translateY(-50%)',
         width: vars.size.dimension['150'],
         height: vars.size.dimension['150'],
-    }),
+    },
 ]);

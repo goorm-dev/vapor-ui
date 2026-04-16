@@ -2,12 +2,12 @@ import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { Popover } from '@base-ui/react/popover';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './floating-bar.css';
 
@@ -50,9 +50,14 @@ FloatingBarClose.displayName = 'FloatingBar.Close';
  * FloatingBar.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const FloatingBarPortalPrimitive = (props: FloatingBarPortalPrimitive.Props) => (
-    <Popover.Portal {...props} />
-);
+export const FloatingBarPortalPrimitive = forwardRef<
+    HTMLDivElement,
+    FloatingBarPortalPrimitive.Props
+>((props, ref) => {
+    const componentProps = resolveStyles(props);
+
+    return <Popover.Portal ref={ref} {...componentProps} />;
+});
 FloatingBarPortalPrimitive.displayName = 'FloatingBar.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -62,7 +67,7 @@ FloatingBarPortalPrimitive.displayName = 'FloatingBar.PortalPrimitive';
 /**
  * Fixed position styles for the FloatingBar
  */
-const positions = { top: 'initial', left: '50%', transform: 'translateX(-50%)' };
+const positions = { top: 'initial', opacity: 1, left: '50%', transform: 'translateX(-50%)' };
 
 export const FloatingBarPositionerPrimitive = forwardRef<
     HTMLDivElement,
@@ -75,7 +80,7 @@ export const FloatingBarPositionerPrimitive = forwardRef<
             ref={ref}
             positionMethod="fixed"
             style={{ ...positions, ...style }}
-            className={clsx(styles.positioner, className)}
+            className={cn(styles.positioner, className)}
             {...componentProps}
         />
     );
@@ -92,9 +97,7 @@ export const FloatingBarPopupPrimitive = forwardRef<
 >((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    return (
-        <Popover.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
-    );
+    return <Popover.Popup ref={ref} className={cn(styles.popup, className)} {...componentProps} />;
 });
 FloatingBarPopupPrimitive.displayName = 'FloatingBar.PopupPrimitive';
 
@@ -107,13 +110,15 @@ export const FloatingBarPopup = forwardRef<HTMLDivElement, FloatingBarPopup.Prop
 
     const popup = <FloatingBarPopupPrimitive ref={ref} {...componentProps} />;
 
-    const positioner = useRender({
-        render: createRender(<FloatingBarPositionerPrimitive />),
+    const positionerRender = createRender(<FloatingBarPositionerPrimitive />);
+    const positioner = useRenderElement({
+        render: positionerRender,
         props: { children: popup },
     });
 
-    const portal = useRender({
-        render: createRender(portalElement, <FloatingBarPortalPrimitive />),
+    const portalRender = createRender(portalElement, <FloatingBarPortalPrimitive />);
+    const portal = useRenderElement({
+        render: portalRender,
         props: { children: positioner },
     });
 
@@ -124,36 +129,45 @@ FloatingBarPopup.displayName = 'FloatingBar.Popup';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace FloatingBarRoot {
+    export type State = Popover.Root.State;
     export type Props = Popover.Root.Props;
-
     export type Actions = Popover.Root.Actions;
     export type ChangeEventDetails = Popover.Root.ChangeEventDetails;
 }
 
 export namespace FloatingBarTrigger {
-    export interface Props extends VComponentProps<typeof Popover.Trigger> {}
+    export type State = Popover.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof Popover.Trigger, State>;
 }
 
 export namespace FloatingBarClose {
-    export interface Props extends VComponentProps<typeof Popover.Close> {}
+    export type State = Popover.Close.State;
+    export type Props = VaporUIComponentProps<typeof Popover.Close, State>;
 }
 
 export namespace FloatingBarPortalPrimitive {
-    export interface Props extends VComponentProps<typeof Popover.Portal> {}
+    export type State = Popover.Portal.State;
+    export type Props = VaporUIComponentProps<typeof Popover.Portal, State>;
 }
 
 export namespace FloatingBarPositionerPrimitive {
-    export interface Props extends VComponentProps<typeof Popover.Positioner> {}
+    export type State = Popover.Positioner.State;
+    export type Props = VaporUIComponentProps<typeof Popover.Positioner, State>;
 }
 
 export namespace FloatingBarPopupPrimitive {
-    export interface Props extends VComponentProps<typeof Popover.Popup> {}
+    export type State = Popover.Popup.State;
+    export type Props = VaporUIComponentProps<typeof Popover.Popup, State>;
+}
+
+export interface FloatingBarPopupProps extends FloatingBarPopupPrimitive.Props {
+    /**
+     * A Custom element for FloatingBar.PortalPrimitive. If not provided, the default FloatingBar.PortalPrimitive will be rendered.
+     */
+    portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
 }
 
 export namespace FloatingBarPopup {
-    export type PopupProps = FloatingBarPopupPrimitive.Props;
-
-    export interface Props extends PopupProps {
-        portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
-    }
+    export type State = Popover.Popup.State;
+    export type Props = FloatingBarPopupProps;
 }

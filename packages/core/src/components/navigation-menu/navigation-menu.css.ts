@@ -1,33 +1,32 @@
 import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const list = recipe({
-    base: layerStyle('components', {
+export const list = componentRecipe({
+    base: {
         display: 'flex',
         gap: vars.size.space[100],
 
         listStyle: 'none',
-    }),
+    },
 
     defaultVariants: { direction: 'horizontal' },
     variants: {
         direction: {
-            horizontal: layerStyle('components', { flexDirection: 'row' }),
-            vertical: layerStyle('components', { flexDirection: 'column' }),
+            horizontal: { flexDirection: 'row' },
+            vertical: { flexDirection: 'column' },
         },
     },
 });
 
-export const link = recipe({
+export const link = componentRecipe({
     base: [
         interaction(),
 
-        layerStyle('components', {
+        {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -48,7 +47,7 @@ export const link = recipe({
 
                 '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
             },
-        }),
+        },
     ],
 
     defaultVariants: {
@@ -56,7 +55,7 @@ export const link = recipe({
     },
     variants: {
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 gap: vars.size.space['075'],
                 paddingInline: vars.size.space[100],
                 height: vars.size.dimension['300'],
@@ -65,8 +64,8 @@ export const link = recipe({
                 letterSpacing: vars.typography.letterSpacing['000'],
                 fontSize: vars.typography.fontSize['050'],
                 fontWeight: vars.typography.fontWeight['500'],
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 gap: vars.size.space['075'],
                 paddingInline: vars.size.space[150],
                 height: vars.size.dimension['400'],
@@ -75,8 +74,8 @@ export const link = recipe({
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight['500'],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 gap: vars.size.space['075'],
                 paddingInline: vars.size.space[200],
                 height: vars.size.dimension['500'],
@@ -85,8 +84,8 @@ export const link = recipe({
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight['500'],
-            }),
-            xl: layerStyle('components', {
+            },
+            xl: {
                 gap: vars.size.space['075'],
                 paddingInline: vars.size.space[300],
                 height: vars.size.dimension['600'],
@@ -95,16 +94,16 @@ export const link = recipe({
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['100'],
                 fontWeight: vars.typography.fontWeight['500'],
-            }),
+            },
         },
     },
 });
 
-export const trigger = layerStyle('components', {
+export const trigger = componentStyle({
     selectors: { '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' } },
 });
 
-export const icon = layerStyle('components', {
+export const icon = componentStyle({
     display: 'flex',
     flexShrink: 0,
 });
@@ -112,7 +111,7 @@ export const icon = layerStyle('components', {
 const durationVar = createVar('duration');
 const easingVar = createVar('easing');
 
-export const positioner = layerStyle('components', {
+export const positioner = componentStyle({
     transitionProperty: 'top, left, right, bottom',
     transitionDuration: durationVar,
     transitionTimingFunction: easingVar,
@@ -125,7 +124,7 @@ export const positioner = layerStyle('components', {
     },
 });
 
-export const popup = layerStyle('components', {
+export const popup = componentStyle({
     outline: `1px solid ${vars.color.border.normal}`,
 
     borderRadius: vars.size.borderRadius[300],
@@ -153,7 +152,7 @@ export const popup = layerStyle('components', {
     },
 });
 
-export const content = layerStyle('components', {
+export const content = componentStyle({
     width: '100%',
     height: '100%',
 
@@ -182,14 +181,14 @@ export const content = layerStyle('components', {
     },
 });
 
-export const viewport = layerStyle('components', {
+export const viewport = componentStyle({
     position: 'relative',
     overflow: 'hidden',
     width: '100%',
     height: '100%',
 });
 
-export const arrow = layerStyle('components', {
+export const arrow = componentStyle({
     display: 'flex',
     color: vars.color.background.overlay[100],
 

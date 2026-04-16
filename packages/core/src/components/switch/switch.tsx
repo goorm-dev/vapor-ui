@@ -3,15 +3,15 @@
 import { forwardRef } from 'react';
 
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
-import { useRender } from '@base-ui/react/use-render';
-import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { ControlVariants } from './switch.css';
 import * as styles from './switch.css';
@@ -29,7 +29,7 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const SwitchRoot = forwardRef<HTMLSpanElement, SwitchRoot.Props>((props, ref) => {
+export const SwitchRoot = forwardRef<HTMLElement, SwitchRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
         'size',
@@ -40,8 +40,9 @@ export const SwitchRoot = forwardRef<HTMLSpanElement, SwitchRoot.Props>((props, 
     const { required } = otherProps;
     const dataAttrs = createDataAttributes({ invalid });
 
-    const children = useRender({
-        render: createRender(childrenProp, <SwitchThumbPrimitive />),
+    const childrenRender = createRender(childrenProp, <SwitchThumbPrimitive />);
+    const children = useRenderElement({
+        render: childrenRender,
     });
 
     return (
@@ -50,7 +51,7 @@ export const SwitchRoot = forwardRef<HTMLSpanElement, SwitchRoot.Props>((props, 
                 ref={ref}
                 aria-required={required}
                 aria-invalid={invalid}
-                className={clsx(styles.control({ size }), className)}
+                className={cn(styles.control({ size }), className)}
                 {...dataAttrs}
                 {...otherProps}
             >
@@ -65,7 +66,7 @@ SwitchRoot.displayName = 'Switch.Root';
  * Switch.ThumbPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SwitchThumbPrimitive = forwardRef<HTMLDivElement, SwitchThumbPrimitive.Props>(
+export const SwitchThumbPrimitive = forwardRef<HTMLSpanElement, SwitchThumbPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
         const { size } = useSwitchContext();
@@ -73,7 +74,7 @@ export const SwitchThumbPrimitive = forwardRef<HTMLDivElement, SwitchThumbPrimit
         return (
             <BaseSwitch.Thumb
                 ref={ref}
-                className={styles.indicator({ size })}
+                className={cn(styles.indicator({ size }), className)}
                 {...componentProps}
             />
         );
@@ -84,12 +85,12 @@ SwitchThumbPrimitive.displayName = 'Switch.ThumbPrimitive';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace SwitchRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
-    export interface Props extends RootPrimitiveProps, SwitchSharedProps {}
+    export type State = BaseSwitch.Root.State;
+    export type Props = VaporUIComponentProps<typeof BaseSwitch.Root, State> & SwitchSharedProps;
     export type ChangeEventDetails = BaseSwitch.Root.ChangeEventDetails;
 }
 
 export namespace SwitchThumbPrimitive {
-    type ThumbPrimitiveProps = VComponentProps<typeof BaseSwitch.Thumb>;
-    export interface Props extends ThumbPrimitiveProps {}
+    export type State = BaseSwitch.Thumb.State;
+    export type Props = VaporUIComponentProps<typeof BaseSwitch.Thumb, State>;
 }

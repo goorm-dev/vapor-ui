@@ -1,22 +1,20 @@
-import { style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
-import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-export const trigger = recipe({
+export const trigger = componentRecipe({
     base: [
         interaction(),
-        layerStyle('components', {
+        {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
 
-            border: `1px solid ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
 
             width: '100%',
@@ -31,43 +29,47 @@ export const trigger = recipe({
 
                 '&[data-invalid]': { borderColor: vars.color.border.danger },
             },
-        }),
+        },
     ],
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 gap: vars.size.space['100'],
                 paddingInline: vars.size.space['100'],
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 gap: vars.size.space['100'],
                 paddingInline: vars.size.space['150'],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 gap: vars.size.space['100'],
                 paddingInline: vars.size.space['200'],
-            }),
-            xl: layerStyle('components', {
+            },
+            xl: {
                 gap: vars.size.space['150'],
                 paddingInline: vars.size.space['300'],
-            }),
+            },
         },
 
         invalid: { true: {}, false: {} },
     },
 });
 
-export const value = recipe({
+export const value = componentRecipe({
     base: [
         foregrounds({ color: 'normal-200' }),
-        layerStyle('components', {
+        {
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'center',
             gap: vars.size.space['050'],
-        }),
+
+            selectors: {
+                '&[data-placeholder]': { color: vars.color.foreground.hint[100] },
+            },
+        },
     ],
 
     defaultVariants: { size: 'md' },
@@ -75,38 +77,41 @@ export const value = recipe({
         size: {
             sm: [
                 typography({ style: 'body3' }),
-                layerStyle('components', {
+                {
                     paddingBlock: vars.size.space['025'],
                     minHeight: vars.size.space['300'],
-                }),
+                },
             ],
             md: [
                 typography({ style: 'body2' }),
-                layerStyle('components', {
+                {
                     paddingBlock: vars.size.space['050'],
                     minHeight: vars.size.space['400'],
-                }),
+                },
             ],
             lg: [
                 typography({ style: 'body2' }),
-                layerStyle('components', {
+                {
                     paddingBlock: vars.size.space['100'],
                     minHeight: vars.size.space['500'],
-                }),
+                },
             ],
             xl: [
                 typography({ style: 'body1' }),
-                layerStyle('components', {
+                {
                     paddingBlock: vars.size.space['100'],
                     minHeight: vars.size.space['600'],
-                }),
+                },
             ],
         },
     },
 });
 
-export const placeholder = recipe({
-    base: [foregrounds({ color: 'hint-100' })],
+/**
+ * @deprecated Use `data-placeholder` attribute on `MultiSelect.Value` instead.
+ */
+export const placeholder = componentRecipe({
+    base: foregrounds({ color: 'hint-100' }),
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -119,45 +124,45 @@ export const placeholder = recipe({
     },
 });
 
-const icon = layerStyle('components', { display: 'flex', flexShrink: 0 });
+const icon = componentStyle({ display: 'flex', flexShrink: 0 });
 
-export const triggerIcon = recipe({
+export const triggerIcon = componentRecipe({
     base: [foregrounds({ color: 'hint-100' }), icon],
 
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            sm: layerStyle('components', {
+            sm: {
                 width: vars.size.dimension['200'],
                 height: vars.size.dimension['200'],
-            }),
-            md: layerStyle('components', {
+            },
+            md: {
                 width: vars.size.dimension['200'],
                 height: vars.size.dimension['200'],
-            }),
-            lg: layerStyle('components', {
+            },
+            lg: {
                 width: vars.size.dimension['250'],
                 height: vars.size.dimension['250'],
-            }),
-            xl: layerStyle('components', {
+            },
+            xl: {
                 width: vars.size.dimension['300'],
                 height: vars.size.dimension['300'],
-            }),
+            },
         },
     },
 });
 
-export const itemIndicator = style([
+export const itemIndicator = componentStyle([
     foregrounds({ color: 'normal-200' }),
     icon,
     { width: vars.size.dimension['200'], height: vars.size.dimension['200'] },
 ]);
 
-export const positioner = layerStyle('components', {
+export const positioner = componentStyle({
     position: 'relative',
 });
 
-export const popup = layerStyle('components', {
+export const popup = componentStyle({
     display: 'flex',
     flexDirection: 'column',
 
@@ -180,39 +185,39 @@ export const popup = layerStyle('components', {
     },
 });
 
-export const item = [
+export const item = componentStyle([
     interaction({ type: 'roving' }),
     typography({ style: 'body2' }),
-    layerStyle('components', {
+    {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: vars.size.space['100'],
+        gap: vars.size.space['050'],
 
         borderRadius: vars.size.borderRadius['300'],
 
         paddingBlock: vars.size.space['050'],
         paddingInline: vars.size.space['100'],
         height: vars.size.space['400'],
-    }),
-];
+    },
+]);
 
-export const separator = layerStyle('components', {
+export const separator = componentStyle({
     flexShrink: 0,
     marginBlock: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
     height: '0.0625rem',
 });
 
-export const groupLabel = style([
+export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
     foregrounds({ color: 'hint-100' }),
-    layerStyle('components', {
+    {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],
         paddingBottom: vars.size.space['050'],
         paddingLeft: vars.size.space['100'],
-    }),
+    },
 ]);
 
 export type TriggerVariants = NonNullable<RecipeVariants<typeof trigger>>;
