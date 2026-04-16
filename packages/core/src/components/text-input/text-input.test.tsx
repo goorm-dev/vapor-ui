@@ -39,7 +39,7 @@ describe('TextInput', () => {
         const input = rendered.getByRole('textbox');
 
         await userEvent.type(input, 'Testing');
-        expect(handleValueChange).toHaveBeenLastCalledWith('Testing', expect.any(Object));
+        expect(handleValueChange).toHaveBeenLastCalledWith('Testing');
     });
 
     it('should be disabled and prevent input', async () => {
