@@ -12,13 +12,13 @@
         "lint": "eslint ./src",
         "typecheck": "tsc --noEmit"
     },
-    "dependencies": {},
     "devDependencies": {
         "@figma/plugin-typings": "^1.117.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "esbuild": "^0.25.11",
         "eslint": "catalog:",
+        "prettier": "catalog:",
         "typescript": "catalog:"
     }
 }
