@@ -3,6 +3,7 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { vars } from '~/styles/themes.css';
 
 export const list = componentRecipe({
@@ -45,7 +46,7 @@ export const link = componentRecipe({
                     color: vars.color.foreground.primary[200],
                 },
 
-                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
+                [when.disabled()]: { pointerEvents: 'none', opacity: 0.32 },
             },
         },
     ],
@@ -100,7 +101,7 @@ export const link = componentRecipe({
 });
 
 export const trigger = componentStyle({
-    selectors: { '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' } },
+    selectors: { [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' } },
 });
 
 export const icon = componentStyle({

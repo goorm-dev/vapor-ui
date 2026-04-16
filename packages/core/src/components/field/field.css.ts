@@ -2,6 +2,7 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { foregroundVariants, foregrounds } from '~/styles/mixins/foreground.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { typography, typographyVariants } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
@@ -16,7 +17,7 @@ export const description = componentStyle([
     foregrounds({ color: 'hint-100' }),
     {
         selectors: {
-            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+            [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
         },
     },
 ]);
@@ -26,7 +27,7 @@ export const error = componentStyle([
     foregrounds({ color: 'danger-100' }),
     {
         selectors: {
-            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+            [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
         },
     },
 ]);
@@ -36,7 +37,7 @@ export const success = componentStyle([
     foregrounds({ color: 'success-100' }),
     {
         selectors: {
-            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+            [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
         },
     },
 ]);
@@ -47,7 +48,7 @@ export const label = componentRecipe({
         gap: vars.size.space['100'],
 
         selectors: {
-            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+            [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
         },
     },
 
@@ -68,7 +69,7 @@ export const item = componentStyle({
     gap: vars.size.space['100'],
 
     selectors: {
-        '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+        [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
     },
 });
 

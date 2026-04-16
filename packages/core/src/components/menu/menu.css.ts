@@ -1,6 +1,7 @@
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
@@ -62,7 +63,7 @@ export const item = componentStyle([
         height: vars.size.dimension['400'],
 
         selectors: {
-            '&[data-disabled]': {
+            [when.disabled()]: {
                 opacity: 0.32,
                 pointerEvents: 'none',
             },

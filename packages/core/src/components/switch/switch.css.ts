@@ -2,6 +2,7 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { vars } from '~/styles/themes.css';
 
 export const control = componentRecipe({
@@ -23,21 +24,19 @@ export const control = componentRecipe({
                     backgroundColor: vars.color.background.primary[200],
                 },
 
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
-
-                '&[data-readonly]': {
-                    backgroundColor: vars.color.gray[200],
-                    outline: '0.0625rem solid',
-                    outlineColor: vars.color.border.normal,
-                    outlineOffset: '-0.0625rem',
-                },
-                '&[data-readonly]:active::before': { opacity: 0.08 },
-
-                '&[data-invalid]': {
+                [`${when.invalid()}:not(:focus-visible)`]: {
                     outline: '0.125rem solid',
                     outlineColor: vars.color.border.danger,
-                    outlineOffset: '-0.125rem',
+                    outlineOffset: '0.125rem',
                 },
+
+                [when.readonly()]: {
+                    backgroundColor: vars.color.gray[200],
+                    boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
+                },
+                [`${when.readonly()}:active::before`]: { opacity: 0.08 },
+
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
             },
         },
     ],
@@ -80,11 +79,11 @@ export const indicator = componentRecipe({
             '&[data-checked]': {
                 transform: 'translateX(100%)',
             },
-            '&[data-readonly][data-unchecked]': {
+            [when.readonly('&[data-readonly][data-unchecked]')]: {
                 backgroundColor: vars.color.gray[400],
                 boxShadow: 'none',
             },
-            '&[data-readonly][data-checked]': {
+            [when.readonly('&[data-readonly][data-checked]')]: {
                 backgroundColor: vars.color.foreground.hint[100],
                 boxShadow: 'none',
             },

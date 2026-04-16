@@ -1,8 +1,12 @@
+import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { vars } from '~/styles/themes.css';
+
+const boxShadowColor = createVar('box-shadow-color');
 
 export const root = componentRecipe({
     base: [
@@ -16,7 +20,7 @@ export const root = componentRecipe({
             justifyContent: 'center',
             gap: vars.size.space[100],
 
-            boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
 
             backgroundColor: vars.color.background.canvas[100],
 
@@ -32,18 +36,18 @@ export const root = componentRecipe({
                     backgroundColor: vars.color.background.primary[200],
                 },
 
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
-                '&[data-readonly]:active::before': { opacity: 0.08 },
+                [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
+                [`${when.invalid('&[data-invalid][data-checked]')}, ${when.invalid('&[data-invalid][data-indeterminate]')}`]:
+                    { boxShadow: 'none', backgroundColor: vars.color.background.danger[200] },
 
-                '&[data-invalid]': { boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}` },
-                '&[data-invalid][data-checked], &[data-invalid][data-indeterminate]': {
-                    boxShadow: 'none',
-                    backgroundColor: vars.color.background.danger[200],
-                },
+                [when.readonly()]: { backgroundColor: vars.color.gray['200'] },
+                [`${when.readonly()}:active::before`]: { opacity: 0.08 },
 
-                '&[data-disabled]::before': { opacity: 0 },
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+                [`${when.disabled()}::before`]: { opacity: 0 },
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
             },
+
+            vars: { [boxShadowColor]: vars.color.border.normal },
         },
     ],
 
@@ -74,7 +78,7 @@ export const indicator = componentRecipe({
         justifyContent: 'center',
         color: vars.color.white,
         selectors: {
-            '&[data-readonly]': {
+            [when.readonly()]: {
                 color: vars.color.foreground.hint['100'],
             },
         },
@@ -110,7 +114,7 @@ export const icon = componentStyle({
             strokeDashoffset: '44px',
         },
 
-        [`${indicator.classNames.base}[data-readonly] > &`]: {
+        [`${indicator.classNames.base}${when.readonly('[data-readonly]')} > &`]: {
             stroke: vars.color.foreground.hint['100'],
         },
     },

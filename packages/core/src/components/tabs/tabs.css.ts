@@ -4,6 +4,7 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
@@ -101,12 +102,13 @@ export const button = componentRecipe({
             zIndex: 1,
 
             selectors: {
-                '&[data-disabled]': {
-                    opacity: 0.32,
-                    pointerEvents: 'none',
-                },
                 '&[data-active]': {
                     color: vars.color.foreground.primary['100'],
+                },
+
+                [when.disabled()]: {
+                    opacity: 0.32,
+                    pointerEvents: 'none',
                 },
             },
         },
