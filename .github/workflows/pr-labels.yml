@@ -38,8 +38,8 @@ jobs:
                   CODEOWNERS_JSON: ${{ steps.codeowners.outputs.codeowners }}
               with:
                   script: |
-                      const WAITING_MAINTAINER = 'status: waiting for maintainer';
-                      const WAITING_AUTHOR = 'status: waiting for author';
+                      const AWAITING_REVIEW = 'status: awaiting review';
+                      const AWAITING_ANSWER = 'status: awaiting answer';
 
                       const repo = context.repo;
                       const codeowners = parseCodeowners(process.env.CODEOWNERS_JSON);
@@ -60,7 +60,7 @@ jobs:
 
                       function determineLabel({ eventName, payload }, codeowners) {
                         if (eventName === 'pull_request_target') {
-                          return { prNumber: payload.pull_request.number, name: WAITING_MAINTAINER };
+                          return { prNumber: payload.pull_request.number, name: AWAITING_REVIEW };
                         }
 
                         const comment = extractComment(eventName, payload);
@@ -100,10 +100,10 @@ jobs:
                         const trimmed = comment.body.trim();
 
                         if (/^\[review\]/i.test(trimmed)) {
-                          return { prNumber: comment.prNumber, name: WAITING_AUTHOR };
+                          return { prNumber: comment.prNumber, name: AWAITING_ANSWER };
                         }
                         if (/^\[answer\]/i.test(trimmed)) {
-                          return { prNumber: comment.prNumber, name: WAITING_MAINTAINER };
+                          return { prNumber: comment.prNumber, name: AWAITING_REVIEW };
                         }
 
                         return null;
