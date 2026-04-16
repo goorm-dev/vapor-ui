@@ -11,6 +11,7 @@ on:
 permissions:
     pull-requests: write
     issues: write
+    contents: read
 
 # Prevent concurrent label updates on the same PR from racing
 concurrency:
@@ -22,126 +23,113 @@ jobs:
         name: Update PR status label
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Extract CODEOWNERS
+              id: codeowners
+              uses: SvanBoxel/codeowners-action@v1
+              with:
+                  path: "./.github/CODEOWNERS"
+
             - name: Update status label based on event
               uses: actions/github-script@v7
+              env:
+                  CODEOWNERS_JSON: ${{ steps.codeowners.outputs.codeowners }}
               with:
                   script: |
-                      const STATUS_PREFIX = 'status:';
-                      const LABEL_WAITING_MAINTAINER = 'status: waiting for maintainer';
-                      const LABEL_WAITING_AUTHOR = 'status: waiting for author';
+                      const WAITING_MAINTAINER = 'status: waiting for maintainer';
+                      const WAITING_AUTHOR = 'status: waiting for author';
 
-                      const LABEL_COLORS = {
-                        [LABEL_WAITING_MAINTAINER]: 'e4e669',
-                        [LABEL_WAITING_AUTHOR]: '0075ca',
-                      };
+                      const repo = context.repo;
+                      const codeowners = parseCodeowners(process.env.CODEOWNERS_JSON);
 
-                      async function ensureLabelExists(labelName) {
-                        try {
-                          await github.rest.issues.getLabel({
-                            owner: context.repo.owner,
-                            repo: context.repo.repo,
-                            name: labelName,
-                          });
-                        } catch (e) {
-                          if (e.status === 404) {
-                            await github.rest.issues.createLabel({
-                              owner: context.repo.owner,
-                              repo: context.repo.repo,
-                              name: labelName,
-                              color: LABEL_COLORS[labelName] ?? 'ededed',
-                            });
-                            console.log(`Created label: "${labelName}"`);
-                          } else {
-                            throw e;
-                          }
-                        }
+                      const label = determineLabel(context, codeowners);
+                      if (!label) return;
+
+                      await replaceStatusLabel(label.prNumber, label.name);
+
+                      // --- Small functions, each doing one thing ---
+
+                      function parseCodeowners(json) {
+                        const map = JSON.parse(json || '{}');
+                        return [...new Set(
+                          Object.values(map).flat().map(o => o.replace(/^@/, ''))
+                        )];
                       }
 
-                      async function setStatusLabel(prNumber, newLabel) {
-                        await ensureLabelExists(newLabel);
-
-                        const { data: currentLabels } = await github.rest.issues.listLabelsOnIssue({
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          issue_number: prNumber,
-                        });
-
-                        for (const label of currentLabels) {
-                          if (label.name.startsWith(STATUS_PREFIX)) {
-                            try {
-                              await github.rest.issues.removeLabel({
-                                owner: context.repo.owner,
-                                repo: context.repo.repo,
-                                issue_number: prNumber,
-                                name: label.name,
-                              });
-                              console.log(`Removed label: "${label.name}"`);
-                            } catch (e) {
-                              console.warn(`Failed to remove label "${label.name}": ${e.message}`);
-                            }
-                          }
+                      function determineLabel({ eventName, payload }, codeowners) {
+                        if (eventName === 'pull_request_target') {
+                          return { prNumber: payload.pull_request.number, name: WAITING_MAINTAINER };
                         }
 
+                        const comment = extractComment(eventName, payload);
+                        if (!comment) return null;
+                        if (comment.isBot) return null;
+                        if (!codeowners.includes(comment.author)) return null;
+
+                        return parseLabelCommand(comment);
+                      }
+
+                      function extractComment(eventName, payload) {
+                        if (payload.comment?.user?.type === 'Bot') {
+                          return { isBot: true };
+                        }
+
+                        if (eventName === 'issue_comment') {
+                          if (!payload.issue.pull_request) return null;
+                          return {
+                            prNumber: payload.issue.number,
+                            body: payload.comment.body,
+                            author: payload.comment.user.login,
+                          };
+                        }
+
+                        if (eventName === 'pull_request_review_comment') {
+                          return {
+                            prNumber: payload.pull_request.number,
+                            body: payload.comment.body,
+                            author: payload.comment.user.login,
+                          };
+                        }
+
+                        return null;
+                      }
+
+                      function parseLabelCommand(comment) {
+                        const trimmed = comment.body.trim();
+
+                        if (/^\[review\]/i.test(trimmed)) {
+                          return { prNumber: comment.prNumber, name: WAITING_AUTHOR };
+                        }
+                        if (/^\[answer\]/i.test(trimmed)) {
+                          return { prNumber: comment.prNumber, name: WAITING_MAINTAINER };
+                        }
+
+                        return null;
+                      }
+
+                      async function replaceStatusLabel(prNumber, newLabel) {
+                        await removeCurrentStatusLabels(prNumber);
+                        await addLabel(prNumber, newLabel);
+                      }
+
+                      async function removeCurrentStatusLabels(prNumber) {
+                        const { data: labels } = await github.rest.issues.listLabelsOnIssue({
+                          ...repo, issue_number: prNumber,
+                        });
+
+                        const removals = labels
+                          .filter(l => l.name.startsWith('status:'))
+                          .map(l => github.rest.issues.removeLabel({
+                            ...repo, issue_number: prNumber, name: l.name,
+                          }));
+
+                        await Promise.all(removals);
+                      }
+
+                      async function addLabel(prNumber, name) {
                         await github.rest.issues.addLabels({
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          issue_number: prNumber,
-                          labels: [newLabel],
+                          ...repo, issue_number: prNumber, labels: [name],
                         });
-
-                        console.log(`Set label "${newLabel}" on PR #${prNumber}`);
-                      }
-
-                      const eventName = context.eventName;
-
-                      // PR opened/reopened → waiting for maintainer
-                      if (eventName === 'pull_request_target') {
-                        const pr = context.payload.pull_request;
-                        await setStatusLabel(pr.number, LABEL_WAITING_MAINTAINER);
-                        return;
-                      }
-
-                      // Bot comments must not trigger label changes
-                      const commentUser = context.payload.comment?.user;
-                      if (commentUser?.type === 'Bot') {
-                        console.log(`Bot comment by "${commentUser.login}". Skipping.`);
-                        return;
-                      }
-
-                      let prNumber, prAuthor, commentBody, commentAuthor;
-
-                      if (eventName === 'issue_comment') {
-                        // issue_comment fires on both issues and PRs — skip plain issues
-                        if (!context.payload.issue.pull_request) {
-                          console.log('Comment is on an issue (not a PR). Skipping.');
-                          return;
-                        }
-                        prNumber = context.payload.issue.number;
-                        prAuthor = context.payload.issue.user.login;
-                        commentBody = context.payload.comment.body;
-                        commentAuthor = context.payload.comment.user.login;
-                      } else if (eventName === 'pull_request_review_comment') {
-                        prNumber = context.payload.pull_request.number;
-                        prAuthor = context.payload.pull_request.user.login;
-                        commentBody = context.payload.comment.body;
-                        commentAuthor = context.payload.comment.user.login;
-                      }
-
-                      if (!commentBody) {
-                        console.log('Could not extract comment body. Skipping.');
-                        return;
-                      }
-
-                      const trimmed = commentBody.trim();
-                      const isReview = /^\[review\]/i.test(trimmed);
-                      const isAnswer = /^\[answer\]/i.test(trimmed);
-
-                      if (isReview && commentAuthor !== prAuthor) {
-                        // Reviewer left a [review] comment → PR author must respond
-                        await setStatusLabel(prNumber, LABEL_WAITING_AUTHOR);
-                      } else if (isAnswer && commentAuthor === prAuthor) {
-                        // PR author left an [answer] comment → maintainer must re-review
-                        await setStatusLabel(prNumber, LABEL_WAITING_MAINTAINER);
-                      } else {
-                        console.log('No matching prefix/author condition. Skipping.');
                       }
