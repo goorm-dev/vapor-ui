@@ -1,18 +1,18 @@
 {
     "name": "Spinner",
-    "description": "Animated loading indicator for representing an in-progress async operation. Renders a `<span>` element.",
+    "description": "콘텐츠 로딩이나 데이터 처리 시 대기 상태를 표시합니다. `<span>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "colorPalette",
             "type": ["primary", "inverse"],
             "required": false,
-            "description": "Controls the stroke color of the spinning arc. Use `inverse` when placing the spinner on a colored or filled background; the stroke color will inherit from the parent element's `color` property."
+            "description": "스피너의 색상을 제어합니다. 다른 요소 안에서 요소의 글자색과 색상을 일치시키려면 `inverse`를 사용하세요."
         },
         {
             "name": "size",
             "type": ["md", "lg", "xl"],
             "required": false,
-            "description": "Controls the overall dimensions of the spinner.",
+            "description": "스피너의 전체 크기를 제어합니다.",
             "defaultValue": "md"
         },
         {
@@ -24,7 +24,7 @@
             "name": "render",
             "type": ["ReactElement | ((props: HTMLProps, state: Spinner.State) => ReactElement)"],
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 인수로 받습니다."
         }
     ]
 }
