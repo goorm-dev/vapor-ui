@@ -43,7 +43,8 @@ export namespace Button {
 export const root = componentRecipe({
     variants: {
         /**
-         * Visual style of the button. Default: `'fill'`
+         * Visual style of the button.
+         * @default 'fill'
          */
         variant: { fill: {}, outline: {}, ghost: {} },
     },
@@ -57,10 +58,11 @@ When custom props are defined via an `interface`, write JSDoc on the **interface
 ```ts
 // dialog.tsx
 export interface DialogRootProps
-    extends DialogVariants,
-        Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
+    extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
-     * Closes the dialog when the overlay is clicked. Default: `true`
+     *
+     * Closes the dialog when the overlay is clicked.
+     * @default true
      */
     closeOnClickOverlay?: boolean;
 }
@@ -78,8 +80,10 @@ export namespace DialogRoot {
 
 ```ts
 // avatar.tsx
-export interface AvatarRootProps
-    extends Assign<VaporUIComponentProps<typeof BaseAvatar.Root, AvatarRoot.State>, AvatarContext> {
+export interface AvatarRootProps extends Assign<
+    VaporUIComponentProps<typeof BaseAvatar.Root, AvatarRoot.State>,
+    AvatarContext
+> {
     /**
      * Custom image element to render inside the avatar.
      */
@@ -266,12 +270,16 @@ Explain what happens when the prop is set — especially when it interacts with 
 
 ```tsx
 /**
- * Disables the button, blocking all interactions and dimming its appearance. Automatically set to `true` when `loading` is `true`. Default: `false`
+ *
+ * Disables the button, blocking all interactions and dimming its appearance. Automatically set to `true` when `loading` is `true`.
+ * @default false
  */
 disabled?: boolean;
 
 /**
- * Shows a spinner and disables the button while `true`. Default: `false`
+ *
+ * Shows a spinner and disables the button while `true`.
+ * @default false
  */
 loading?: boolean;
 ```
