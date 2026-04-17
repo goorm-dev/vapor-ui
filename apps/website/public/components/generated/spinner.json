@@ -1,0 +1,30 @@
+{
+    "name": "Spinner",
+    "description": "Animated loading indicator for representing an in-progress async operation. Renders a `<span>` element.",
+    "props": [
+        {
+            "name": "colorPalette",
+            "type": ["primary", "inverse"],
+            "required": false,
+            "description": "Controls the stroke color of the spinning arc. Use `inverse` when placing the spinner on a colored or filled background; the stroke color will inherit from the parent element's `color` property."
+        },
+        {
+            "name": "size",
+            "type": ["md", "lg", "xl"],
+            "required": false,
+            "description": "Controls the overall dimensions of the spinner.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: Spinner.State) => (string | undefined))"],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement | ((props: HTMLProps, state: Spinner.State) => ReactElement)"],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

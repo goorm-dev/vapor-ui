@@ -1,8 +1,10 @@
-import { keyframes } from '@vanilla-extract/css';
+import { createVar, keyframes } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
+
+const strokeWidth = createVar('--stroke-width');
 
 export const root = componentRecipe({
     base: {
@@ -19,9 +21,21 @@ export const root = componentRecipe({
          * @default 'md'
          */
         size: {
-            md: { width: vars.size.dimension[200], height: vars.size.dimension[200] },
-            lg: { width: vars.size.dimension[250], height: vars.size.dimension[250] },
-            xl: { width: vars.size.dimension[300], height: vars.size.dimension[300] },
+            md: {
+                width: vars.size.dimension[200],
+                height: vars.size.dimension[200],
+                vars: { [strokeWidth]: '2' },
+            },
+            lg: {
+                width: vars.size.dimension[250],
+                height: vars.size.dimension[250],
+                vars: { [strokeWidth]: '2.5' },
+            },
+            xl: {
+                width: vars.size.dimension[300],
+                height: vars.size.dimension[300],
+                vars: { [strokeWidth]: '3' },
+            },
         },
     },
 });
@@ -31,18 +45,11 @@ const rotate = keyframes({
     '100%': { transform: 'rotate(360deg)' },
 });
 
-const { size: rootSize } = root.classNames.variants;
-
 export const icon = componentStyle({
     width: '100%',
     height: '100%',
     animation: `1.8s linear 0s infinite forwards ${rotate}`,
-
-    selectors: {
-        [`${rootSize.md} > &`]: { strokeWidth: 2 },
-        [`${rootSize.lg} > &`]: { strokeWidth: 2.5 },
-        [`${rootSize.xl} > &`]: { strokeWidth: 3 },
-    },
+    strokeWidth: strokeWidth,
 });
 
 const running = keyframes({
@@ -59,7 +66,6 @@ export const indicator = componentRecipe({
             r: calc.subtract('50%', '2px'),
             strokeLinecap: 'round',
             fill: 'none',
-            strokeDashoffset: '0',
             strokeDasharray: '80 100',
             animation: `1.7s cubic-bezier(0.43, 0.14, 0.39, 0.76) 0s infinite forwards ${running}`,
             transformOrigin: 'center',
