@@ -30,7 +30,7 @@
         "globby": "^15.0.0",
         "is-git-clean": "^1.1.0",
         "jscodeshift": "^17.3.0",
-        "meow": "^14.0.0",
+        "meow": "^14.1.0",
         "picocolors": "^1.1.1"
     },
     "devDependencies": {
@@ -44,14 +44,14 @@
         "@vapor-ui/core": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
         "eslint": "catalog:",
-        "jest": "^30.2.0",
+        "jest": "^30.3.0",
         "prettier": "catalog:",
         "rimraf": "^6.1.3",
         "ts-jest": "^29.1.0",
         "tsup": "^8.5.0"
     },
     "engines": {
-        "node": ">=14"
+        "node": ">=14.21.3"
     },
     "publishConfig": {
         "access": "public"
