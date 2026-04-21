@@ -4,9 +4,16 @@ import { Project } from 'ts-morph';
 import { resolveComponentInclude } from '~/config/resolve';
 import type { ExtractorConfig } from '~/config/schema';
 import type { FilterConfig, ParseConfig } from '~/models/config';
-import type { ComponentModel, ParsedComponent } from '~/models/pipeline';
 import type { PropsInfoJson } from '~/models/output';
+import type { ComponentModel, ParsedComponent } from '~/models/pipeline';
 import { filterParsedComponents } from '~/stages/filter';
+import { parseSourceFile } from '~/stages/parse';
+import { componentsToJson } from '~/stages/serialize';
+import { parsedComponentsToModels } from '~/stages/transform';
+import { writePropsFiles } from '~/stages/write';
+import { translatePropsInfo } from '~/translate/pipeline';
+import { buildReport, writeReport } from '~/translate/report';
+import { formatFileName } from '~/utils/filename';
 
 export interface ExtractInput {
     tsconfigPath: string;
@@ -22,13 +29,6 @@ export interface ExtractOutput {
     writtenFiles: string[];
     translatedProps?: PropsInfoJson[];
 }
-import { parseSourceFile } from '~/stages/parse';
-import { componentsToJson } from '~/stages/serialize';
-import { parsedComponentsToModels } from '~/stages/transform';
-import { writePropsFiles } from '~/stages/write';
-import { translatePropsInfo } from '~/translate/pipeline';
-import { buildReport, writeReport } from '~/translate/report';
-import { formatFileName } from '~/utils/filename';
 
 export async function extract(input: ExtractInput): Promise<ExtractOutput> {
     const { config, skipCache = false } = input;
@@ -82,17 +82,28 @@ export async function extract(input: ExtractInput): Promise<ExtractOutput> {
 
     if (config.translation?.enabled) {
         // Save original English output to en/ subfolder
-        writePropsFiles(props, outputDir, (prop) => formatFileName(prop.name), 'en');
+        const enFiles = writePropsFiles(
+            props,
+            outputDir,
+            (prop) => formatFileName(prop.name),
+            'en',
+        );
         // Translate and save to ko/ subfolder (outputDir passed explicitly, no config mutation)
-        const translateResult = await translatePropsInfo(props, config.translation, outputDir, skipCache);
+        const translateResult = await translatePropsInfo(
+            props,
+            config.translation,
+            outputDir,
+            skipCache,
+        );
         translatedProps = translateResult.props;
         writeReport(buildReport(translateResult.componentReports), outputDir);
-        writtenFiles = writePropsFiles(
+        const koFiles = writePropsFiles(
             translatedProps,
             outputDir,
             (prop) => formatFileName(prop.name),
             'ko',
         );
+        writtenFiles = [...enFiles, ...koFiles];
     } else {
         writtenFiles = writePropsFiles(props, outputDir, (prop) => formatFileName(prop.name));
     }

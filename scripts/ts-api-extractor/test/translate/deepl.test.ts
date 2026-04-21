@@ -52,14 +52,14 @@ describe('translateWithDeepl', () => {
         expect(body).not.toHaveProperty('glossary_id');
     });
 
-    it('API 키 없을 때 원문 반환 + warn', async () => {
+    it('API 키 없을 때 undefined 반환 + warn', async () => {
         vi.stubEnv('DEEPL_API_KEY', '');
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
         const texts = ['Hello', 'World'];
         const result = await translateWithDeepl(texts, '');
 
-        expect(result).toEqual(texts);
+        expect(result).toBeUndefined();
         expect(warnSpy).toHaveBeenCalledOnce();
         expect(fetch).not.toHaveBeenCalled();
     });
@@ -78,7 +78,7 @@ describe('translateWithDeepl', () => {
         expect(result).toEqual(['안녕하세요', '세계']);
     });
 
-    it('fetch 실패 시 원문 반환 + warn', async () => {
+    it('fetch 실패 시 undefined 반환 + warn', async () => {
         const mockFetch = vi.mocked(fetch);
         mockFetch.mockRejectedValueOnce(new Error('Network error'));
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
@@ -86,7 +86,7 @@ describe('translateWithDeepl', () => {
         const texts = ['Hello'];
         const result = await translateWithDeepl(texts, '');
 
-        expect(result).toEqual(texts);
+        expect(result).toBeUndefined();
         expect(warnSpy).toHaveBeenCalledOnce();
     });
 });

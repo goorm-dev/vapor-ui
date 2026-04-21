@@ -1,5 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { PropsInfoJson } from '~/models/output';
+import * as cacheModule from '~/translate/cache';
+import * as deeplModule from '~/translate/deepl';
+import * as llmModule from '~/translate/llm-postprocess';
+import * as mqmModule from '~/translate/mqm-validator';
+import { translatePropsInfo } from '~/translate/pipeline';
+import type { TranslationConfig } from '~/translate/types';
+
 vi.mock('~/translate/cache', async (importOriginal) => {
     const actual = await importOriginal<typeof import('~/translate/cache')>();
     return {
@@ -8,14 +16,6 @@ vi.mock('~/translate/cache', async (importOriginal) => {
         saveCache: vi.fn(),
     };
 });
-
-import type { PropsInfoJson } from '~/models/output';
-import * as cacheModule from '~/translate/cache';
-import * as deeplModule from '~/translate/deepl';
-import * as llmModule from '~/translate/llm-postprocess';
-import * as mqmModule from '~/translate/mqm-validator';
-import { translatePropsInfo } from '~/translate/pipeline';
-import type { TranslationConfig } from '~/translate/types';
 
 const baseConfig: TranslationConfig = {
     enabled: true,
@@ -151,6 +151,12 @@ describe('translatePropsInfo', () => {
 
         expect(warnSpy).toHaveBeenCalled();
         expect(result).toBeDefined();
+        expect(result.componentReports[0].failCount).toBeGreaterThan(0);
+        expect(result.componentReports[0].errors).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ severity: 'major', type: 'mistranslation' }),
+            ]),
+        );
     });
 
     // Test case 5: failOnError: true + FAIL → Error throw
@@ -193,7 +199,9 @@ describe('translatePropsInfo', () => {
     it('failOnError: false + FAIL → warn 후 번역 결과 사용', async () => {
         const translatedText = '버튼 컴포넌트.';
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([translatedText]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (_source, draft) => draft);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(
+            async (_source, draft) => draft,
+        );
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
             verdict: 'FAIL',
             errors: [
@@ -238,13 +246,12 @@ describe('translatePropsInfo', () => {
         vi.spyOn(cacheModule, 'loadCache').mockReturnValue(
             new Map([
                 [
-                    cacheModule.makeCacheKey(
-                        'A button component.',
-                        'ko',
-                        'claude-sonnet-4-6',
-                        '',
-                    ),
-                    { source: 'A button component.', translated: cachedText, cachedAt: '2026-01-01T00:00:00.000Z' },
+                    cacheModule.makeCacheKey('A button component.', 'ko', 'claude-sonnet-4-6', ''),
+                    {
+                        source: 'A button component.',
+                        translated: cachedText,
+                        cachedAt: '2026-01-01T00:00:00.000Z',
+                    },
                 ],
                 [
                     cacheModule.makeCacheKey(
@@ -253,7 +260,11 @@ describe('translatePropsInfo', () => {
                         'claude-sonnet-4-6',
                         '',
                     ),
-                    { source: 'Click handler callback.', translated: '캐시된 콜백', cachedAt: '2026-01-01T00:00:00.000Z' },
+                    {
+                        source: 'Click handler callback.',
+                        translated: '캐시된 콜백',
+                        cachedAt: '2026-01-01T00:00:00.000Z',
+                    },
                 ],
             ]),
         );
@@ -270,12 +281,17 @@ describe('translatePropsInfo', () => {
     it('DeepL 결과가 입력보다 짧을 때 → 누락 항목은 원문으로 폴백', async () => {
         // DeepL이 첫 번째 항목만 반환 (두 번째 누락)
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue(['버튼 컴포넌트.']);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (_source, draft) => draft);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(
+            async (_source, draft) => draft,
+        );
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({ verdict: 'PASS', errors: [] });
 
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-        const config = { ...baseConfig, validation: { mqm: { enabled: false, failOnError: false } } };
+        const config = {
+            ...baseConfig,
+            validation: { mqm: { enabled: false, failOnError: false } },
+        };
         const result = await translatePropsInfo(sampleProps, config);
 
         expect(warnSpy).toHaveBeenCalled();
@@ -290,7 +306,10 @@ describe('translatePropsInfo', () => {
         const noDescProps: PropsInfoJson[] = [
             { name: 'Button', props: [{ name: 'disabled', type: ['boolean'], required: false }] },
         ];
-        const config = { ...baseConfig, validation: { mqm: { enabled: false, failOnError: false } } };
+        const config = {
+            ...baseConfig,
+            validation: { mqm: { enabled: false, failOnError: false } },
+        };
         const result = await translatePropsInfo(noDescProps, config);
 
         expect(deeplSpy).not.toHaveBeenCalled();

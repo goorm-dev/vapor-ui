@@ -126,9 +126,7 @@ describe('writeReport', () => {
     });
 
     it('writes .i18n-report.md to outputDir', () => {
-        const report = buildReport([
-            { name: 'Button', totalTexts: 2, failCount: 0, errors: [] },
-        ]);
+        const report = buildReport([{ name: 'Button', totalTexts: 2, failCount: 0, errors: [] }]);
         writeReport(report, tmpDir);
         const filePath = path.join(tmpDir, '.i18n-report.md');
         expect(fs.existsSync(filePath)).toBe(true);
@@ -147,13 +145,14 @@ describe('writeReport', () => {
     it('warns and does not throw when write fails', () => {
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const readonlyDir = path.join(tmpDir, 'readonly');
-        fs.mkdirSync(readonlyDir, { mode: 0o444 });
-
-        const report = buildReport([]);
-        expect(() => writeReport(report, readonlyDir)).not.toThrow();
-        expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('[report]'));
-
-        warnSpy.mockRestore();
-        fs.chmodSync(readonlyDir, 0o755);
+        fs.writeFileSync(readonlyDir, '');
+        try {
+            const report = buildReport([]);
+            expect(() => writeReport(report, readonlyDir)).not.toThrow();
+            expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('[report]'));
+        } finally {
+            warnSpy.mockRestore();
+            fs.rmSync(readonlyDir);
+        }
     });
 });

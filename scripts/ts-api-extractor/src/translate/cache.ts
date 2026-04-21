@@ -31,7 +31,10 @@ export function loadCache(outputDir: string): CacheStore {
     try {
         const raw = JSON.parse(readFileSync(filePath, 'utf-8')) as Record<string, unknown>;
         const valid = Object.entries(raw).filter(
-            ([, v]) => typeof v === 'object' && v !== null && typeof (v as CacheEntry).translated === 'string',
+            ([, v]) =>
+                typeof v === 'object' &&
+                v !== null &&
+                typeof (v as CacheEntry).translated === 'string',
         ) as [string, CacheEntry][];
         return new Map(valid);
     } catch {
@@ -48,6 +51,8 @@ export function saveCache(outputDir: string, store: CacheStore): void {
         writeFileSync(filePath, JSON.stringify(obj, null, 2), 'utf-8');
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        console.warn(`[cache] Failed to save translation cache: ${message}. Continuing without cache.`);
+        console.warn(
+            `[cache] Failed to save translation cache: ${message}. Continuing without cache.`,
+        );
     }
 }

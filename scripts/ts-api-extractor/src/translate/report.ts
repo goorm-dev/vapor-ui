@@ -28,15 +28,22 @@ export function buildReport(components: ComponentReport[]): TranslationReport {
     };
 }
 
+function sanitizeMarkdown(s: string): string {
+    return s
+        .replace(/[\r\n]+/g, ' ')
+        .replace(/[#\-*_>`[\]()+]/g, (c) => `\\${c}`)
+        .trim();
+}
+
 function renderComponentSection(c: ComponentReport): string {
     const status = c.failCount === 0 ? '✅ PASS' : `❌ FAIL (${c.failCount}/${c.totalTexts})`;
     const lines = [`### ${c.name} — ${status}`];
 
     if (c.errors.length > 0) {
         for (const e of c.errors) {
-            const source = e.source.replaceAll('`', '\\`');
-            const translation = e.translation.replaceAll('`', '\\`');
-            const message = e.message.replaceAll('[', '\\[').replaceAll(']', '\\]');
+            const source = sanitizeMarkdown(e.source);
+            const translation = sanitizeMarkdown(e.translation);
+            const message = sanitizeMarkdown(e.message);
             lines.push(
                 `- **[${e.severity.toUpperCase()} ${e.category}/${e.type}]** \`${source}\` → \`${translation}\`: ${message}`,
             );

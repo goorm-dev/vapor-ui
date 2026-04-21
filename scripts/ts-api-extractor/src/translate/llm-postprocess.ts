@@ -38,8 +38,9 @@ export async function postprocessWithLlm(
     }
 
     // Strip markdown code fences if LLM wraps the output
-    return result.content
+    const cleaned = result.content
         .replace(/^```(?:\w+)?\s*/i, '')
         .replace(/\s*```$/, '')
         .trim();
+    return cleaned || deeplDraft;
 }

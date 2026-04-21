@@ -43,18 +43,29 @@ export async function validateWithMqm(
 
     try {
         // Strip markdown code fences
-        let jsonStr = result.content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+        let jsonStr = result.content
+            .replace(/^```(?:json)?\s*/i, '')
+            .replace(/\s*```$/, '')
+            .trim();
         // Extract first {...} block if response isn't clean JSON
         if (!jsonStr.startsWith('{')) {
             const match = jsonStr.match(/\{[\s\S]*\}/);
             if (match) jsonStr = match[0];
         }
         const parsed = JSON.parse(jsonStr) as unknown;
+        const p = parsed as Record<string, unknown>;
         if (
             typeof parsed !== 'object' ||
             parsed === null ||
-            (typeof (parsed as Record<string, unknown>).verdict !== 'string') ||
-            !Array.isArray((parsed as Record<string, unknown>).errors)
+            (p.verdict !== 'PASS' && p.verdict !== 'FAIL') ||
+            !Array.isArray(p.errors) ||
+            !(p.errors as unknown[]).every(
+                (e) =>
+                    typeof e === 'object' &&
+                    e !== null &&
+                    typeof (e as Record<string, unknown>).message === 'string' &&
+                    typeof (e as Record<string, unknown>).severity === 'string',
+            )
         ) {
             console.warn('[mqm-validator] Unexpected JSON shape from LLM. Returning PASS.');
             return passResult();

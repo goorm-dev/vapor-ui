@@ -58,8 +58,16 @@ export async function translatePropsInfo(
 
     if (entries.length === 0) {
         return {
-            props: props.map((component) => ({ ...component, props: component.props.map((prop) => ({ ...prop })) })),
-            componentReports: props.map((component) => ({ name: component.name, totalTexts: 0, failCount: 0, errors: [] })),
+            props: props.map((component) => ({
+                ...component,
+                props: component.props.map((prop) => ({ ...prop })),
+            })),
+            componentReports: props.map((component) => ({
+                name: component.name,
+                totalTexts: 0,
+                failCount: 0,
+                errors: [],
+            })),
         };
     }
 
@@ -104,16 +112,14 @@ export async function translatePropsInfo(
         // (sending English to an LLM asked to "edit Korean" produces garbage)
         const postprocessed = await Promise.all(
             missIndices.map((entryIndex, batchIndex) => {
-                const deeplResult = deeplResults[batchIndex];
+                const deeplResult = deeplResults?.[batchIndex];
                 if (deeplResult === undefined) {
                     console.warn(
                         `[deepl] Missing result at batch index ${batchIndex}, using source text as fallback.`,
                     );
                     return Promise.resolve(entries[entryIndex].text);
                 }
-                return limit(() =>
-                    postprocessWithLlm(entries[entryIndex].text, deeplResult),
-                );
+                return limit(() => postprocessWithLlm(entries[entryIndex].text, deeplResult));
             }),
         );
 
@@ -133,7 +139,8 @@ export async function translatePropsInfo(
                         console.warn(
                             `[mqm-validator] Translation validation FAILED for: "${entry.text.slice(0, 60)}...". Re-running LLM postprocess with error feedback.`,
                         );
-                        const deeplDraft = deeplResults[batchIndex];
+                        mqmErrorsByEntryIdx.set(entryIndex, mqmResult.errors);
+                        const deeplDraft = deeplResults?.[batchIndex];
                         translated = await limit(() =>
                             postprocessWithLlm(
                                 entry.text,
@@ -147,14 +154,13 @@ export async function translatePropsInfo(
                                 validateWithMqm(entry.text, translated, config),
                             );
                             if (recheck.verdict === 'FAIL') {
+                                mqmErrorsByEntryIdx.set(entryIndex, recheck.errors);
                                 throw new Error(
                                     `[mqm-validator] Translation validation FAILED after retry for: "${entry.text.slice(0, 60)}..."`,
                                 );
+                            } else {
+                                mqmErrorsByEntryIdx.delete(entryIndex);
                             }
-                        } else {
-                            // Retry succeeded or failOnError:false — clear the initial errors
-                            // so the report only shows errors for the actual final translation
-                            mqmErrorsByEntryIdx.delete(entryIndex);
                         }
                     }
                 }
@@ -222,14 +228,22 @@ export async function translatePropsInfo(
     const textCountByComponent = new Map<number, number>();
     for (const entry of entries) {
         const componentIndex = entry.componentIndex;
-        textCountByComponent.set(componentIndex, (textCountByComponent.get(componentIndex) ?? 0) + 1);
+        textCountByComponent.set(
+            componentIndex,
+            (textCountByComponent.get(componentIndex) ?? 0) + 1,
+        );
     }
 
     const errorsByComponent = new Map<number, MqmError[]>();
+    const failedTextsByComponent = new Map<number, number>();
     for (const [entryIndex, errors] of mqmErrorsByEntryIdx) {
         const componentIndex = entries[entryIndex].componentIndex;
         const existing = errorsByComponent.get(componentIndex) ?? [];
         errorsByComponent.set(componentIndex, [...existing, ...errors]);
+        failedTextsByComponent.set(
+            componentIndex,
+            (failedTextsByComponent.get(componentIndex) ?? 0) + 1,
+        );
     }
 
     const componentReports: ComponentReport[] = props.map((component, componentIndex) => {
@@ -237,7 +251,7 @@ export async function translatePropsInfo(
         return {
             name: component.name,
             totalTexts: textCountByComponent.get(componentIndex) ?? 0,
-            failCount: errors.length,
+            failCount: failedTextsByComponent.get(componentIndex) ?? 0,
             errors,
         };
     });

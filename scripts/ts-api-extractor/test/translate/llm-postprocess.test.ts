@@ -66,7 +66,14 @@ describe('postprocessWithLlm', () => {
         } as Response);
 
         await postprocessWithLlm('onClick handler', '클릭 핸들러', [
-            { category: 'accuracy', type: 'terminology', severity: 'major', source: 'onClick', translation: '클릭', message: 'must not be translated' },
+            {
+                category: 'accuracy',
+                type: 'terminology',
+                severity: 'major',
+                source: 'onClick',
+                translation: '클릭',
+                message: 'must not be translated',
+            },
         ]);
 
         const [, options] = vi.mocked(fetch).mock.calls[0];

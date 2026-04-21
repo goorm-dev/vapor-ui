@@ -34,7 +34,10 @@ describe('validateWithMqm', () => {
     });
 
     it('mqm.enabled: false → returns PASS immediately, no fetch', async () => {
-        const config = { ...baseConfig, validation: { mqm: { enabled: false, failOnError: false } } };
+        const config = {
+            ...baseConfig,
+            validation: { mqm: { enabled: false, failOnError: false } },
+        };
         const result = await validateWithMqm('hello', '안녕', config);
         expect(result).toEqual({ verdict: 'PASS', errors: [] });
         expect(fetch).not.toHaveBeenCalled();
@@ -82,11 +85,22 @@ describe('validateWithMqm', () => {
     it('valid FAIL response with terminology error → returns FAIL with errors', async () => {
         const failPayload = {
             verdict: 'FAIL',
-            errors: [{ category: 'accuracy', type: 'terminology', severity: 'major', source: 'onClick', translation: '클릭', message: 'identifier must not be translated' }],
+            errors: [
+                {
+                    category: 'accuracy',
+                    type: 'terminology',
+                    severity: 'major',
+                    source: 'onClick',
+                    translation: '클릭',
+                    message: 'identifier must not be translated',
+                },
+            ],
         };
         vi.mocked(fetch).mockResolvedValueOnce({
             ok: true,
-            json: async () => ({ choices: [{ message: { content: JSON.stringify(failPayload) } }] }),
+            json: async () => ({
+                choices: [{ message: { content: JSON.stringify(failPayload) } }],
+            }),
         } as Response);
         const result = await validateWithMqm('onClick handler', '클릭 handler', baseConfig);
         expect(result.verdict).toBe('FAIL');

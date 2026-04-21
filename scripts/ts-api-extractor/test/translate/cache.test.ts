@@ -114,9 +114,15 @@ describe('saveCache / loadCache roundtrip', () => {
     });
 
     it('does not throw when outputDir is unwritable (logs warning instead)', () => {
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-        expect(() => saveCache('/nonexistent-root/no-permission', new Map())).not.toThrow();
-        expect(warnSpy).toHaveBeenCalledOnce();
-        warnSpy.mockRestore();
+        const fakePath = path.join(os.tmpdir(), `cache-test-block-${Date.now()}`);
+        fs.writeFileSync(fakePath, '');
+        try {
+            const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+            expect(() => saveCache(fakePath, new Map())).not.toThrow();
+            expect(warnSpy).toHaveBeenCalledOnce();
+            warnSpy.mockRestore();
+        } finally {
+            fs.rmSync(fakePath);
+        }
     });
 });
