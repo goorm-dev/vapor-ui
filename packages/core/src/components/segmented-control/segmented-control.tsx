@@ -1,7 +1,16 @@
 'use client';
 
+import {
+    Children,
+    forwardRef,
+    isValidElement,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import type { ReactElement } from 'react';
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Radio as BaseRadio } from '@base-ui/react/radio';
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
@@ -53,7 +62,7 @@ export const SegmentedControlRootPrimitive = forwardRef<
         className,
         children,
         value: valueProp,
-        defaultValue,
+        defaultValue: defaultValueProp,
         onValueChange,
         style,
         ...componentProps
@@ -63,6 +72,19 @@ export const SegmentedControlRootPrimitive = forwardRef<
 
     const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
     const [itemMap, setItemMap] = useState<Map<string, HTMLElement>>(() => new Map());
+
+    const defaultValue = useMemo(() => {
+        if (defaultValueProp) return defaultValueProp;
+
+        for (const child of Children.toArray(children)) {
+            if (!isValidElement(child)) continue;
+
+            const { value, disabled } = child.props as { value?: string; disabled?: boolean };
+
+            if (typeof value !== 'string' || disabled) continue;
+            return (child.props as { value: string }).value;
+        }
+    }, [children, defaultValueProp]);
 
     const [value, setValue] = useControlled<string>({
         controlled: valueProp,
@@ -103,13 +125,6 @@ export const SegmentedControlRootPrimitive = forwardRef<
         (selectedValue: string) => itemMap.get(selectedValue),
         [itemMap],
     );
-
-    useEffect(() => {
-        if (value !== undefined || itemMap.size === 0) return;
-
-        const [firstValue] = itemMap.keys();
-        setValue(firstValue);
-    }, [itemMap, value, setValue]);
 
     const handleValueChange = useCallback(
         (selectedValue: string, eventDetails: SegmentedControlRoot.ChangeEventDetails) => {
@@ -209,11 +224,12 @@ SegmentedControlItem.displayName = 'SegmentedControl.Item';
 export const SegmentedControlIconItem = forwardRef<HTMLButtonElement, SegmentedControlItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
+        const { size } = useSegmentedControlContext()!;
 
         return (
             <SegmentedControlItem
                 ref={ref}
-                className={cn(styles.iconItem, className)}
+                className={cn(styles.iconItem({ size }), className)}
                 {...componentProps}
             />
         );

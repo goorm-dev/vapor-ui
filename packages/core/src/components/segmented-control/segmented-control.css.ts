@@ -93,7 +93,7 @@ export const item = componentRecipe({
             md: {
                 gap: vars.size.space['075'],
                 height: vars.size.dimension['400'],
-                paddingInline: vars.size.space['250'],
+                paddingInline: vars.size.space['150'],
             },
             lg: {
                 gap: vars.size.space['100'],
@@ -104,9 +104,20 @@ export const item = componentRecipe({
     },
 });
 
-export const iconItem = componentStyle({
-    padding: 0,
-    aspectRatio: '1 / 1',
+export const iconItem = componentRecipe({
+    base: {
+        padding: 0,
+        aspectRatio: '1 / 1',
+    },
+
+    defaultVariants: { size: 'md' },
+    variants: {
+        size: {
+            sm: { width: vars.size.dimension['300'] },
+            md: { width: vars.size.dimension['400'] },
+            lg: { width: vars.size.dimension['500'] },
+        },
+    },
 });
 
 export const indicator = componentStyle({
