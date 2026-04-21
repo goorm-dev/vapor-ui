@@ -1,22 +1,50 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { DarkIcon, LightIcon } from '@vapor-ui/icons';
 
 import { SegmentedControl } from '.';
 import { Box } from '../box';
+import { Grid } from '../grid';
 import { HStack } from '../h-stack';
+import { Text } from '../text';
 import { VStack } from '../v-stack';
 
 export default {
     title: 'SegmentedControl',
+    components: SegmentedControl.Root,
+    argTypes: {
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        disabled: { control: 'boolean' },
+    },
 } as Meta<typeof SegmentedControl>;
 type Story = StoryObj<typeof SegmentedControl>;
 
 export const Default: Story = {
     render: (args) => (
-        <SegmentedControl.Root {...args}>
-            <SegmentedControl.Item value="1">Item 1</SegmentedControl.Item>
-            <SegmentedControl.Item value="2">Item 2</SegmentedControl.Item>
-            <SegmentedControl.Item value="3">Item 3</SegmentedControl.Item>
-        </SegmentedControl.Root>
+        <Grid.Root $css={{ gap: '$200' }}>
+            <Grid.Item>
+                <Text typography="heading3">Filter</Text>
+                <SegmentedControl.Root {...args}>
+                    <SegmentedControl.Item value="all">전체</SegmentedControl.Item>
+                    <SegmentedControl.Item disabled value="in-progress">
+                        진행 중
+                    </SegmentedControl.Item>
+                    <SegmentedControl.Item value="completed">완료</SegmentedControl.Item>
+                    <SegmentedControl.Item value="upcoming">예정</SegmentedControl.Item>
+                </SegmentedControl.Root>
+            </Grid.Item>
+
+            <Grid.Item>
+                <Text typography="heading3">Mode Switch</Text>
+                <SegmentedControl.Root defaultValue="light" {...args}>
+                    <SegmentedControl.IconOnlyItem value="light">
+                        <LightIcon />
+                    </SegmentedControl.IconOnlyItem>
+                    <SegmentedControl.IconOnlyItem value="dark">
+                        <DarkIcon />
+                    </SegmentedControl.IconOnlyItem>
+                </SegmentedControl.Root>
+            </Grid.Item>
+        </Grid.Root>
     ),
 };
 
