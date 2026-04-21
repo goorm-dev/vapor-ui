@@ -49,7 +49,17 @@ export async function validateWithMqm(
             const match = jsonStr.match(/\{[\s\S]*\}/);
             if (match) jsonStr = match[0];
         }
-        return JSON.parse(jsonStr) as MqmResult;
+        const parsed = JSON.parse(jsonStr) as unknown;
+        if (
+            typeof parsed !== 'object' ||
+            parsed === null ||
+            (typeof (parsed as Record<string, unknown>).verdict !== 'string') ||
+            !Array.isArray((parsed as Record<string, unknown>).errors)
+        ) {
+            console.warn('[mqm-validator] Unexpected JSON shape from LLM. Returning PASS.');
+            return PASS_RESULT;
+        }
+        return parsed as MqmResult;
     } catch {
         console.warn(
             `[mqm-validator] Failed to parse MQM response as JSON. Raw: ${result.content.slice(0, 300)}`,

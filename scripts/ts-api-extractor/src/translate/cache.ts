@@ -29,8 +29,11 @@ export function loadCache(outputDir: string): CacheStore {
     const filePath = join(outputDir, '.translation-cache.json');
     if (!existsSync(filePath)) return new Map();
     try {
-        const raw = JSON.parse(readFileSync(filePath, 'utf-8')) as Record<string, CacheEntry>;
-        return new Map(Object.entries(raw));
+        const raw = JSON.parse(readFileSync(filePath, 'utf-8')) as Record<string, unknown>;
+        const valid = Object.entries(raw).filter(
+            ([, v]) => typeof v === 'object' && v !== null && typeof (v as CacheEntry).translated === 'string',
+        ) as [string, CacheEntry][];
+        return new Map(valid);
     } catch {
         return new Map();
     }
