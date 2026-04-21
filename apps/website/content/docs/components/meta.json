@@ -37,6 +37,7 @@
         "(components)/radio-card.mdx",
         "(components)/radio.mdx",
         "(components)/select.mdx",
+        "(components)/segmented-control.mdx",
         "(components)/sheet.mdx",
         "(components)/skeleton.mdx",
         "(components)/switch.mdx",
