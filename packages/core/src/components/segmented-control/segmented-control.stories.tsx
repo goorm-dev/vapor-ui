@@ -36,12 +36,12 @@ export const Default: Story = {
             <Grid.Item>
                 <Text typography="heading3">Mode Switch</Text>
                 <SegmentedControl.Root defaultValue="light" {...args}>
-                    <SegmentedControl.IconOnlyItem value="light">
+                    <SegmentedControl.IconItem value="light">
                         <LightIcon />
-                    </SegmentedControl.IconOnlyItem>
-                    <SegmentedControl.IconOnlyItem value="dark">
+                    </SegmentedControl.IconItem>
+                    <SegmentedControl.IconItem value="dark">
                         <DarkIcon />
-                    </SegmentedControl.IconOnlyItem>
+                    </SegmentedControl.IconItem>
                 </SegmentedControl.Root>
             </Grid.Item>
         </Grid.Root>

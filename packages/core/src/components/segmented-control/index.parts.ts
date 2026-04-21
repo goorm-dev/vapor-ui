@@ -1,7 +1,7 @@
 export {
     SegmentedControlRoot as Root,
     SegmentedControlItem as Item,
-    SegmentedControlIconOnlyItem as IconOnlyItem,
+    SegmentedControlIconItem as IconItem,
 
     // primitives
     SegmentedControlRootPrimitive as RootPrimitive,

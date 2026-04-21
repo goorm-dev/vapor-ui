@@ -104,7 +104,7 @@ export const item = componentRecipe({
     },
 });
 
-export const iconOnlyItem = componentStyle({
+export const iconItem = componentStyle({
     padding: 0,
     aspectRatio: '1 / 1',
 });
