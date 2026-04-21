@@ -18,7 +18,7 @@ Respond with EXACTLY this JSON shape and nothing else:
 or
 {"verdict":"FAIL","errors":[{"category":"accuracy","type":"terminology","severity":"major","source":"...","translation":"...","message":"..."}]}`;
 
-const PASS_RESULT: MqmResult = { verdict: 'PASS', errors: [] };
+const passResult = (): MqmResult => ({ verdict: 'PASS', errors: [] });
 
 export async function validateWithMqm(
     source: string,
@@ -26,7 +26,7 @@ export async function validateWithMqm(
     config: TranslationConfig,
 ): Promise<MqmResult> {
     if (!config.llm.enabled || !config.validation.mqm.enabled) {
-        return PASS_RESULT;
+        return passResult();
     }
 
     const userPrompt = `[원문 JSDoc]: ${source}\n[번역 JSDoc]: ${translated}`;
@@ -38,7 +38,7 @@ export async function validateWithMqm(
 
     if (!result.content) {
         console.warn(`[mqm-validator] ${result.error}. Returning PASS.`);
-        return PASS_RESULT;
+        return passResult();
     }
 
     try {
@@ -57,13 +57,13 @@ export async function validateWithMqm(
             !Array.isArray((parsed as Record<string, unknown>).errors)
         ) {
             console.warn('[mqm-validator] Unexpected JSON shape from LLM. Returning PASS.');
-            return PASS_RESULT;
+            return passResult();
         }
         return parsed as MqmResult;
     } catch {
         console.warn(
             `[mqm-validator] Failed to parse MQM response as JSON. Raw: ${result.content.slice(0, 300)}`,
         );
-        return PASS_RESULT;
+        return passResult();
     }
 }

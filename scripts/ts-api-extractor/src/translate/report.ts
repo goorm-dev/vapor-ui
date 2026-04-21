@@ -36,8 +36,9 @@ function renderComponentSection(c: ComponentReport): string {
         for (const e of c.errors) {
             const source = e.source.replaceAll('`', '\\`');
             const translation = e.translation.replaceAll('`', '\\`');
+            const message = e.message.replaceAll('[', '\\[').replaceAll(']', '\\]');
             lines.push(
-                `- **[${e.severity.toUpperCase()} ${e.category}/${e.type}]** \`${source}\` → \`${translation}\`: ${e.message}`,
+                `- **[${e.severity.toUpperCase()} ${e.category}/${e.type}]** \`${source}\` → \`${translation}\`: ${message}`,
             );
         }
     }

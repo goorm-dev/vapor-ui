@@ -100,19 +100,19 @@ export async function translatePropsInfo(
         const deeplResults = await translateWithDeepl(missTexts, glossaryId);
 
         // 4. LLM post-process miss entries (concurrency-limited)
+        // If DeepL returned no result for a slot, skip LLM and use the source text as-is
+        // (sending English to an LLM asked to "edit Korean" produces garbage)
         const postprocessed = await Promise.all(
             missIndices.map((entryIndex, batchIndex) => {
                 const deeplResult = deeplResults[batchIndex];
                 if (deeplResult === undefined) {
                     console.warn(
-                        `[deepl] Missing result at batch index ${batchIndex}, falling back to source text.`,
+                        `[deepl] Missing result at batch index ${batchIndex}, using source text as fallback.`,
                     );
+                    return Promise.resolve(entries[entryIndex].text);
                 }
                 return limit(() =>
-                    postprocessWithLlm(
-                        entries[entryIndex].text,
-                        deeplResult ?? entries[entryIndex].text,
-                    ),
+                    postprocessWithLlm(entries[entryIndex].text, deeplResult),
                 );
             }),
         );
@@ -130,14 +130,14 @@ export async function translatePropsInfo(
                     );
 
                     if (mqmResult.verdict === 'FAIL') {
-                        mqmErrorsByEntryIdx.set(entryIndex, mqmResult.errors);
                         console.warn(
                             `[mqm-validator] Translation validation FAILED for: "${entry.text.slice(0, 60)}...". Re-running LLM postprocess with error feedback.`,
                         );
+                        const deeplDraft = deeplResults[batchIndex];
                         translated = await limit(() =>
                             postprocessWithLlm(
                                 entry.text,
-                                deeplResults[batchIndex] ?? entry.text,
+                                deeplDraft ?? entry.text,
                                 mqmResult.errors,
                             ),
                         );
@@ -151,6 +151,10 @@ export async function translatePropsInfo(
                                     `[mqm-validator] Translation validation FAILED after retry for: "${entry.text.slice(0, 60)}..."`,
                                 );
                             }
+                        } else {
+                            // Retry succeeded or failOnError:false — clear the initial errors
+                            // so the report only shows errors for the actual final translation
+                            mqmErrorsByEntryIdx.delete(entryIndex);
                         }
                     }
                 }
@@ -165,7 +169,10 @@ export async function translatePropsInfo(
             const translated = missTranslations[batchIndex];
             finalTranslations[entryIndex] = translated;
 
-            if (useCache) {
+            // Only cache when translation differs from source — fallback entries
+            // (English source used as-is due to DeepL failure) must not be cached
+            // because a future run would reuse the wrong language as a "translation"
+            if (useCache && translated !== entries[entryIndex].text) {
                 const key = makeCacheKey(
                     entries[entryIndex].text,
                     config.targetLocale,
@@ -230,7 +237,7 @@ export async function translatePropsInfo(
         return {
             name: component.name,
             totalTexts: textCountByComponent.get(componentIndex) ?? 0,
-            failCount: errors.length > 0 ? 1 : 0,
+            failCount: errors.length,
             errors,
         };
     });
