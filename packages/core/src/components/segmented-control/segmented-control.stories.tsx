@@ -1,10 +1,10 @@
+import { useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { DarkIcon, LightIcon } from '@vapor-ui/icons';
+import { DarkIcon, LightIcon, PcIcon } from '@vapor-ui/icons';
 
 import { SegmentedControl } from '.';
-import { Box } from '../box';
 import { Grid } from '../grid';
-import { HStack } from '../h-stack';
 import { Text } from '../text';
 import { VStack } from '../v-stack';
 
@@ -19,96 +19,144 @@ export default {
 type Story = StoryObj<typeof SegmentedControl>;
 
 export const Default: Story = {
-    render: (args) => (
-        <Grid.Root $css={{ gap: '$200' }}>
-            <Grid.Item>
-                <Text typography="heading3">Filter</Text>
-                <SegmentedControl.Root {...args}>
-                    <SegmentedControl.Item value="all">전체</SegmentedControl.Item>
-                    <SegmentedControl.Item disabled value="in-progress">
-                        진행 중
-                    </SegmentedControl.Item>
-                    <SegmentedControl.Item value="completed">완료</SegmentedControl.Item>
-                    <SegmentedControl.Item value="upcoming">예정</SegmentedControl.Item>
-                </SegmentedControl.Root>
-            </Grid.Item>
+    render: (args) => {
+        const [value, setValue] = useState('completed');
 
-            <Grid.Item>
-                <Text typography="heading3">Mode Switch</Text>
-                <SegmentedControl.Root defaultValue="light" {...args}>
+        return (
+            <Grid.Root $css={{ gap: '$200' }}>
+                <Grid.Item>
+                    <Text typography="heading3">Filter</Text>
+                    <SegmentedControl.Root {...args}>
+                        <SegmentedControl.Item value="all">전체</SegmentedControl.Item>
+                        <SegmentedControl.Item disabled value="in-progress">
+                            진행 중
+                        </SegmentedControl.Item>
+                        <SegmentedControl.Item value="completed">완료</SegmentedControl.Item>
+                        <SegmentedControl.Item value="upcoming">예정</SegmentedControl.Item>
+                    </SegmentedControl.Root>
+                </Grid.Item>
+
+                <Grid.Item>
+                    <Text typography="heading3">Mode Switch</Text>
+                    <SegmentedControl.Root defaultValue="light" {...args}>
+                        <SegmentedControl.IconItem value="light">
+                            <LightIcon />
+                        </SegmentedControl.IconItem>
+                        <SegmentedControl.IconItem value="dark">
+                            <DarkIcon />
+                        </SegmentedControl.IconItem>
+                    </SegmentedControl.Root>
+                </Grid.Item>
+
+                <Grid.Item>
+                    <Text typography="heading3">Controlled</Text>
+                    <SegmentedControl.Root value={value} onValueChange={setValue} {...args}>
+                        <SegmentedControl.Item value="all">전체</SegmentedControl.Item>
+                        <SegmentedControl.Item disabled value="in-progress">
+                            진행 중
+                        </SegmentedControl.Item>
+                        <SegmentedControl.Item value="completed">완료</SegmentedControl.Item>
+                        <SegmentedControl.Item value="upcoming">예정</SegmentedControl.Item>
+                    </SegmentedControl.Root>
+                </Grid.Item>
+
+                <Grid.Item>
+                    <Text typography="heading3">Uncontrolled</Text>
+                    <SegmentedControl.Root defaultValue="upcoming" {...args}>
+                        <SegmentedControl.Item value="all">전체</SegmentedControl.Item>
+                        <SegmentedControl.Item disabled value="in-progress">
+                            진행 중
+                        </SegmentedControl.Item>
+                        <SegmentedControl.Item value="completed">완료</SegmentedControl.Item>
+                        <SegmentedControl.Item value="upcoming">예정</SegmentedControl.Item>
+                    </SegmentedControl.Root>
+                </Grid.Item>
+            </Grid.Root>
+        );
+    },
+};
+
+export const TestBed: Story = {
+    render: () => (
+        <VStack>
+            <Text typography="heading3">size: With Item</Text>
+            <VStack $css={{ gap: '$100', marginBottom: '$200' }}>
+                <SegmentedControl.Root size="sm">
+                    <SegmentedControl.Item value="a">AAA</SegmentedControl.Item>
+                    <SegmentedControl.Item value="b">BBB</SegmentedControl.Item>
+                    <SegmentedControl.Item value="c">CCC</SegmentedControl.Item>
+                </SegmentedControl.Root>
+                <SegmentedControl.Root size="md">
+                    <SegmentedControl.Item value="a">AAA</SegmentedControl.Item>
+                    <SegmentedControl.Item value="b">BBB</SegmentedControl.Item>
+                    <SegmentedControl.Item value="c">CCC</SegmentedControl.Item>
+                </SegmentedControl.Root>
+                <SegmentedControl.Root size="lg">
+                    <SegmentedControl.Item value="a">AAA</SegmentedControl.Item>
+                    <SegmentedControl.Item value="b">BBB</SegmentedControl.Item>
+                    <SegmentedControl.Item value="c">CCC</SegmentedControl.Item>
+                </SegmentedControl.Root>
+            </VStack>
+
+            <Text typography="heading3">size: With IconItem</Text>
+            <VStack $css={{ gap: '$100', marginBottom: '$200' }}>
+                <SegmentedControl.Root defaultValue="light" size="sm">
                     <SegmentedControl.IconItem value="light">
                         <LightIcon />
                     </SegmentedControl.IconItem>
                     <SegmentedControl.IconItem value="dark">
                         <DarkIcon />
                     </SegmentedControl.IconItem>
+                    <SegmentedControl.IconItem value="system">
+                        <PcIcon />
+                    </SegmentedControl.IconItem>
                 </SegmentedControl.Root>
-            </Grid.Item>
-        </Grid.Root>
-    ),
-};
-
-export const TestBed: Story = {
-    render: () => (
-        <VStack $css={{ gap: '$300' }}>
-            <VStack $css={{ gap: '$100' }}>
-                <h3>Shape</h3>
-                <HStack $css={{ gap: '$200', alignItems: 'center' }}>
-                    <SegmentedControl.Root>
-                        <SegmentedControl.Item value="1">sadfasdf</SegmentedControl.Item>
-                    </SegmentedControl.Root>
-                    <SegmentedControl.Root>
-                        <SegmentedControl.Item value="2">sadfasdf</SegmentedControl.Item>
-                    </SegmentedControl.Root>
-                    <SegmentedControl.Root>
-                        <SegmentedControl.Item value="3">sadfasdf</SegmentedControl.Item>
-                    </SegmentedControl.Root>
-                </HStack>
+                <SegmentedControl.Root defaultValue="light" size="md">
+                    <SegmentedControl.IconItem value="light">
+                        <LightIcon />
+                    </SegmentedControl.IconItem>
+                    <SegmentedControl.IconItem value="dark">
+                        <DarkIcon />
+                    </SegmentedControl.IconItem>
+                    <SegmentedControl.IconItem value="system">
+                        <PcIcon />
+                    </SegmentedControl.IconItem>
+                </SegmentedControl.Root>
+                <SegmentedControl.Root defaultValue="light" size="lg">
+                    <SegmentedControl.IconItem value="light">
+                        <LightIcon />
+                    </SegmentedControl.IconItem>
+                    <SegmentedControl.IconItem value="dark">
+                        <DarkIcon />
+                    </SegmentedControl.IconItem>
+                    <SegmentedControl.IconItem value="system">
+                        <PcIcon />
+                    </SegmentedControl.IconItem>
+                </SegmentedControl.Root>
             </VStack>
 
-            <VStack $css={{ gap: '$100' }}>
-                <h3>Size</h3>
-                <VStack $css={{ gap: '$075' }}>
-                    <SegmentedControl.Root />
-                    <SegmentedControl.Root />
-                    <SegmentedControl.Root />
-                    <SegmentedControl.Root />
-                </VStack>
+            <Text typography="heading3">disabled: With Item</Text>
+            <VStack $css={{ gap: '$100', marginBottom: '$200' }}>
+                <SegmentedControl.Root disabled defaultValue="light">
+                    <SegmentedControl.Item value="a">AAA</SegmentedControl.Item>
+                    <SegmentedControl.Item value="b">BBB</SegmentedControl.Item>
+                    <SegmentedControl.Item value="c">CCC</SegmentedControl.Item>
+                </SegmentedControl.Root>
             </VStack>
 
-            <VStack $css={{ gap: '$100' }}>
-                <h3>Animation</h3>
-                <VStack $css={{ gap: '$075' }}>
-                    <SegmentedControl.Root />
-                    <SegmentedControl.Root />
-                    <SegmentedControl.Root />
-                </VStack>
-            </VStack>
-
-            <VStack $css={{ gap: '$100' }}>
-                <h3>Composition Example - Profile Card</h3>
-                <Box
-                    $css={{
-                        padding: '$200',
-                        border: '1px solid',
-                        borderColor: '$border-normal',
-                        borderRadius: '$100',
-                        maxWidth: '320px',
-                    }}
-                >
-                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
-                        <SegmentedControl.Root $css={{ width: '40px', height: '40px' }} />
-                        <VStack $css={{ gap: '$075' }}>
-                            <SegmentedControl.Root $css={{ width: '60%' }} />
-                            <SegmentedControl.Root $css={{ width: '40%' }} />
-                        </VStack>
-                    </HStack>
-                    <VStack $css={{ gap: '$075', marginTop: '$200' }}>
-                        <SegmentedControl.Root />
-                        <SegmentedControl.Root $css={{ width: '90%' }} />
-                        <SegmentedControl.Root $css={{ width: '75%' }} />
-                    </VStack>
-                </Box>
+            <Text typography="heading3">disabled: With IconItem</Text>
+            <VStack $css={{ gap: '$100', marginBottom: '$200' }}>
+                <SegmentedControl.Root disabled defaultValue="light">
+                    <SegmentedControl.IconItem value="light">
+                        <LightIcon />
+                    </SegmentedControl.IconItem>
+                    <SegmentedControl.IconItem value="dark">
+                        <DarkIcon />
+                    </SegmentedControl.IconItem>
+                    <SegmentedControl.IconItem value="system">
+                        <PcIcon />
+                    </SegmentedControl.IconItem>
+                </SegmentedControl.Root>
             </VStack>
         </VStack>
     ),
