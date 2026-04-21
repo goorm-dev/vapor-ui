@@ -1,3 +1,7 @@
+import type { TranslationConfig } from '~/translate/types';
+
+export type { TranslationConfig };
+
 export interface ComponentExtractConfig {
     include?: string[];
 }
@@ -15,6 +19,7 @@ export interface ExtractorConfig {
     components: Record<string, ComponentExtractConfig>;
     all: boolean;
     verbose: boolean;
+    translation?: TranslationConfig;
 }
 
 export type PartialExtractorConfig = Partial<

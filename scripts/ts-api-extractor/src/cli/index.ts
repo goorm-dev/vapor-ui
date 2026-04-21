@@ -1,7 +1,15 @@
 import meow from 'meow';
+import path from 'node:path';
 
 import { CliError, resolveOptions } from '~/cli/options';
 import { extract } from '~/extract';
+
+// Load .env.local from cwd (website app root when running via turbo)
+try {
+    process.loadEnvFile(path.resolve(process.cwd(), '.env.local'));
+} catch {
+    // File does not exist — proceed without it
+}
 
 async function runCli(): Promise<void> {
     const cli = meow(
@@ -12,17 +20,23 @@ async function runCli(): Promise<void> {
   Options
     --component, -n   Component name to process (default: all components)
     --config          Config file path
+    --translate       Enable translation pipeline (outputs en/ and ko/ subfolders)
+    --skip-cache      Skip translation cache (do not read or write cache)
 
   Examples
     $ ts-api-extractor
     $ ts-api-extractor --component Tabs
     $ ts-api-extractor --config ./docs-extractor.config.mjs
+    $ ts-api-extractor --translate
+    $ ts-api-extractor --translate --skip-cache
 `,
         {
             importMeta: import.meta,
             flags: {
                 component: { type: 'string', shortFlag: 'n' },
                 config: { type: 'string' },
+                translate: { type: 'boolean', default: false },
+                skipCache: { type: 'boolean', default: false },
             },
         },
     );
@@ -32,10 +46,15 @@ async function runCli(): Promise<void> {
         configPath: cli.flags.config,
     });
 
-    extract({
+    if (cli.flags.translate && resolved.config.translation) {
+        resolved.config.translation.enabled = true;
+    }
+
+    await extract({
         tsconfigPath: resolved.tsconfigPath,
         targetFiles: resolved.targetFiles,
         config: resolved.config,
+        skipCache: cli.flags.skipCache,
     });
 }
 

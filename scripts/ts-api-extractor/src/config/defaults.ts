@@ -21,4 +21,17 @@ export const defaultExtractorConfig: ExtractorConfig = {
     components: {},
     all: false,
     verbose: false,
+    translation: {
+        enabled: false,
+        targetLocale: 'ko',
+        llm: {
+            enabled: true,
+        },
+        validation: {
+            mqm: {
+                enabled: true,
+                failOnError: false,
+            },
+        },
+    },
 };
