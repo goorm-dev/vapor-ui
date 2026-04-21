@@ -335,7 +335,7 @@ export interface SegmentedControlRootProps extends SegmentedControlRootPrimitive
 
 export namespace SegmentedControlRoot {
     export type State = SegmentedControlRootPrimitive.State;
-    export type Props = SegmentedControlRootProps;
+    export type Props = SegmentedControlRootPrimitive.Props;
     export type ChangeEventDetails = SegmentedControlRootPrimitive.ChangeEventDetails;
 }
 
