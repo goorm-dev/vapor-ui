@@ -1,15 +1,6 @@
 'use client';
 
-import {
-    Children,
-    forwardRef,
-    isValidElement,
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 
 import { Radio as BaseRadio } from '@base-ui/react/radio';
@@ -19,6 +10,7 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { useForcedRerendering } from '~/hooks/use-forced-rerendering';
+import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { useResizeNotifier } from '~/hooks/use-resize-notifier';
 import { createContext } from '~/libs/create-context';
@@ -37,7 +29,7 @@ import type { RootVariants } from './segmented-control.css';
 type SegmentedControlContext = RootVariants & {
     rootElement: HTMLElement | null;
     getItemElementBySelectedValue: (value: string) => HTMLElement | undefined;
-    registerItem: (value: string, element: HTMLElement) => void;
+    registerItem: (value: string, element: HTMLElement, disabled: boolean) => void;
     unregisterItem: (value: string) => void;
     registerIndicatorUpdateListener: (listener: () => void) => () => void;
     value: string | undefined;
@@ -58,6 +50,8 @@ export const SegmentedControlRootPrimitive = forwardRef<
     HTMLDivElement,
     SegmentedControlRootPrimitive.Props
 >((props, ref) => {
+    const hasExplicitDefaultValueProp = 'defaultValue' in props;
+
     const {
         className,
         children,
@@ -71,36 +65,29 @@ export const SegmentedControlRootPrimitive = forwardRef<
     const [variantProps, otherProps] = createSplitProps<RootVariants>()(componentProps, ['size']);
 
     const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
-    const [itemMap, setItemMap] = useState<Map<string, HTMLElement>>(() => new Map());
+    const [itemMap, setItemMap] = useState<
+        Map<string, { element: HTMLElement; disabled: boolean }>
+    >(() => new Map());
 
-    const defaultValue = useMemo(() => {
-        if (defaultValueProp) return defaultValueProp;
+    const isControlled = valueProp !== undefined;
 
-        for (const child of Children.toArray(children)) {
-            if (!isValidElement(child)) continue;
-
-            const { value, disabled } = child.props as { value?: string; disabled?: boolean };
-
-            if (typeof value !== 'string' || disabled) continue;
-            return (child.props as { value: string }).value;
-        }
-    }, [children, defaultValueProp]);
-
-    const [value, setValue] = useControlled<string>({
+    const [value, setValue] = useControlled<string | undefined>({
         controlled: valueProp,
-        default: defaultValue,
+        default: defaultValueProp,
         name: 'SegmentedControl',
         state: 'value',
     });
 
-    const maxItemWidth = Math.max(...Array.from(itemMap.values()).map((el) => el.offsetWidth));
+    const maxItemWidth = Math.max(
+        ...Array.from(itemMap.values()).map(({ element }) => element.offsetWidth),
+    );
     const cssVariables = assignInlineVars({ [styles.variables.itemWidth]: `${maxItemWidth}px` });
 
     const { registerListener, observeElement, unobserveElement } = useResizeNotifier(rootElement);
 
     const registerItem = useCallback(
-        (itemValue: string, element: HTMLElement) => {
-            setItemMap((prev) => new Map(prev).set(itemValue, element));
+        (itemValue: string, element: HTMLElement, disabled: boolean) => {
+            setItemMap((prev) => new Map(prev).set(itemValue, { element, disabled }));
             observeElement(element);
         },
         [observeElement],
@@ -109,8 +96,8 @@ export const SegmentedControlRootPrimitive = forwardRef<
     const unregisterItem = useCallback(
         (itemValue: string) => {
             setItemMap((prev) => {
-                const element = prev.get(itemValue);
-                if (element) unobserveElement(element);
+                const item = prev.get(itemValue);
+                if (item) unobserveElement(item.element);
 
                 const next = new Map(prev);
                 next.delete(itemValue);
@@ -122,9 +109,39 @@ export const SegmentedControlRootPrimitive = forwardRef<
     );
 
     const getItemElementBySelectedValue = useCallback(
-        (selectedValue: string) => itemMap.get(selectedValue),
+        (selectedValue: string) => itemMap.get(selectedValue)?.element,
         [itemMap],
     );
+
+    const firstEnabledItemValue = useMemo(() => {
+        for (const [itemValue, { disabled }] of itemMap.entries()) {
+            if (!disabled) return itemValue;
+        }
+        return undefined;
+    }, [itemMap]);
+
+    useIsoLayoutEffect(() => {
+        if (isControlled || itemMap.size === 0) return;
+
+        const selectedItem = value !== undefined ? itemMap.get(value) : undefined;
+        const selectionIsDisabled = selectedItem?.disabled === true;
+        const selectionIsMissing = selectedItem === undefined && value !== undefined;
+        const hasNoSelection = value === undefined;
+
+        if (hasExplicitDefaultValueProp && selectionIsDisabled && value === defaultValueProp)
+            return;
+        if (!hasNoSelection && !selectionIsDisabled && !selectionIsMissing) return;
+
+        setValue(firstEnabledItemValue);
+    }, [
+        defaultValueProp,
+        firstEnabledItemValue,
+        hasExplicitDefaultValueProp,
+        isControlled,
+        itemMap,
+        setValue,
+        value,
+    ]);
 
     const handleValueChange = useCallback(
         (selectedValue: string, eventDetails: SegmentedControlRoot.ChangeEventDetails) => {
@@ -189,7 +206,7 @@ export const SegmentedControlRoot = forwardRef<HTMLDivElement, SegmentedControlR
 
 export const SegmentedControlItem = forwardRef<HTMLButtonElement, SegmentedControlItem.Props>(
     (props, ref) => {
-        const { render, value, className, ...componentProps } = resolveStyles(props);
+        const { render, value, disabled, className, ...componentProps } = resolveStyles(props);
         const { registerItem, unregisterItem, size } = useSegmentedControlContext()!;
 
         const internalRef = useRef<HTMLElement | null>(null);
@@ -199,15 +216,16 @@ export const SegmentedControlItem = forwardRef<HTMLButtonElement, SegmentedContr
             const el = internalRef.current;
             if (!el || value === undefined) return;
 
-            registerItem(value, el);
+            registerItem(value, el, disabled ?? false);
             return () => unregisterItem(value);
-        }, [value, registerItem, unregisterItem]);
+        }, [value, disabled, registerItem, unregisterItem]);
 
         return (
             <BaseRadio.Root
                 ref={composedRef}
                 render={render ?? <button />}
                 value={value}
+                disabled={disabled}
                 nativeButton={true}
                 className={cn(styles.item({ size }), className)}
                 {...componentProps}
