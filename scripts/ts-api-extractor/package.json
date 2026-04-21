@@ -31,6 +31,7 @@
     "dependencies": {
         "glob": "^10.3.0",
         "meow": "^14.0.0",
+        "p-limit": "^7.3.0",
         "ts-morph": "^22.0.0"
     },
     "devDependencies": {
