@@ -206,21 +206,20 @@ SegmentedControlItem.displayName = 'SegmentedControl.Item';
  * SegmentedControl.IconOnlyItem
  * -----------------------------------------------------------------------------------------------*/
 
-export const SegmentedControlIconOnlyItem = forwardRef<
-    HTMLButtonElement,
-    SegmentedControlItem.Props
->((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+export const SegmentedControlIconItem = forwardRef<HTMLButtonElement, SegmentedControlItem.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
 
-    return (
-        <SegmentedControlItem
-            ref={ref}
-            className={cn(styles.iconOnlyItem, className)}
-            {...componentProps}
-        />
-    );
-});
-SegmentedControlIconOnlyItem.displayName = 'SegmentedControl.IconOnlyItem';
+        return (
+            <SegmentedControlItem
+                ref={ref}
+                className={cn(styles.iconItem, className)}
+                {...componentProps}
+            />
+        );
+    },
+);
+SegmentedControlIconItem.displayName = 'SegmentedControl.IconOnlyItem';
 
 /* -------------------------------------------------------------------------------------------------
  * SegmentedControl.Indicator
@@ -339,7 +338,7 @@ export namespace SegmentedControlItem {
     export type Props = SegmentedControlItemProps;
 }
 
-export namespace SegmentedControlIconOnlyItem {
+export namespace SegmentedControlIconItem {
     export type State = SegmentedControlItem.State;
     export type Props = SegmentedControlItem.Props;
 }
