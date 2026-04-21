@@ -84,6 +84,32 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
 }
 
 export function mergeConfig(base: ExtractorConfig, patch: PartialExtractorConfig): ExtractorConfig {
+    const mergedTranslation =
+        patch.translation !== undefined
+            ? {
+                  ...base.translation,
+                  ...patch.translation,
+                  llm:
+                      patch.translation.llm !== undefined
+                          ? { ...base.translation?.llm, ...patch.translation.llm }
+                          : base.translation?.llm,
+                  validation:
+                      patch.translation.validation !== undefined
+                          ? {
+                                ...base.translation?.validation,
+                                ...patch.translation.validation,
+                                mqm:
+                                    patch.translation.validation.mqm !== undefined
+                                        ? {
+                                              ...base.translation?.validation?.mqm,
+                                              ...patch.translation.validation.mqm,
+                                          }
+                                        : base.translation?.validation?.mqm,
+                            }
+                          : base.translation?.validation,
+              }
+            : base.translation;
+
     return {
         ...base,
         ...patch,
@@ -93,5 +119,6 @@ export function mergeConfig(base: ExtractorConfig, patch: PartialExtractorConfig
             ...base.components,
             ...(patch.components ?? {}),
         },
+        translation: mergedTranslation,
     };
 }
