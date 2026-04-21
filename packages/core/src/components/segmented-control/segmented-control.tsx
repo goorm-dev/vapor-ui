@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 
 import { Radio as BaseRadio } from '@base-ui/react/radio';
@@ -56,7 +56,7 @@ export const SegmentedControlRootPrimitive = forwardRef<
         className,
         children,
         value: valueProp,
-        defaultValue: defaultValueProp,
+        defaultValue,
         onValueChange,
         style,
         ...componentProps
@@ -73,7 +73,7 @@ export const SegmentedControlRootPrimitive = forwardRef<
 
     const [value, setValue] = useControlled<string | undefined>({
         controlled: valueProp,
-        default: defaultValueProp,
+        default: defaultValue ?? '',
         name: 'SegmentedControl',
         state: 'value',
     });
@@ -128,13 +128,12 @@ export const SegmentedControlRootPrimitive = forwardRef<
         const selectionIsMissing = selectedItem === undefined && value !== undefined;
         const hasNoSelection = value === undefined;
 
-        if (hasExplicitDefaultValueProp && selectionIsDisabled && value === defaultValueProp)
-            return;
+        if (hasExplicitDefaultValueProp && selectionIsDisabled && value === defaultValue) return;
         if (!hasNoSelection && !selectionIsDisabled && !selectionIsMissing) return;
 
         setValue(firstEnabledItemValue);
     }, [
-        defaultValueProp,
+        defaultValue,
         firstEnabledItemValue,
         hasExplicitDefaultValueProp,
         isControlled,
@@ -212,7 +211,7 @@ export const SegmentedControlItem = forwardRef<HTMLButtonElement, SegmentedContr
         const internalRef = useRef<HTMLElement | null>(null);
         const composedRef = useMergedRefs(internalRef, ref);
 
-        useEffect(() => {
+        useIsoLayoutEffect(() => {
             const el = internalRef.current;
             if (!el || value === undefined) return;
 
