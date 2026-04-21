@@ -1,0 +1,87 @@
+{
+    "name": "SegmentedControlRoot",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg"],
+            "required": false
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "required": false,
+            "description": "The default value of the SegmentedControl. This is used when you want the SegmentedControl to manage its own state. It should be the value of one of the SegmentedControl.Item components."
+        },
+        {
+            "name": "onValueChange",
+            "type": [
+                "(value: string, eventDetails: SegmentedControl.RootPrimitive.ChangeEventDetails) => void"
+            ],
+            "required": false,
+            "description": "Callback fired when the value of the SegmentedControl changes. It receives the new value and the original change event details from the underlying RadioGroup component. This is useful for handling side effects when the user selects a different segment."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": false,
+            "description": "The controlled value of the SegmentedControl. This should be used in conjunction with `onValueChange` to update the value when the user interacts with the SegmentedControl."
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: SegmentedControl.Root.State) => (string | undefined))"],
+            "required": false
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction."
+        },
+        {
+            "name": "form",
+            "type": ["string"],
+            "required": false,
+            "description": "Identifies the form that owns the radio inputs.\nUseful when the radio group is rendered outside the form."
+        },
+        {
+            "name": "inputRef",
+            "type": ["Ref<HTMLInputElement>"],
+            "required": false,
+            "description": "A ref to access the hidden input element."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "Identifies the field when a form is submitted."
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user should be unable to select a different radio button in the group."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user must choose a value before submitting a form."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: SegmentedControl.Root.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: SegmentedControl.Root.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "name": "SegmentedControlItem",
+    "props": [
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": true,
+            "description": "The value of the item. This is used to determine which item is selected. It should be unique within the SegmentedControl."
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: SegmentedControl.Item.State) => (string | undefined))"],
+            "required": false
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction."
+        },
+        {
+            "name": "inputRef",
+            "type": ["Ref<HTMLInputElement>"],
+            "required": false,
+            "description": "A ref to access the hidden input element."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button."
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user should be unable to select the radio button."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user must choose a value before submitting a form."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: SegmentedControl.Item.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: SegmentedControl.Item.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}
