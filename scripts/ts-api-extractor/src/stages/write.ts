@@ -17,9 +17,11 @@ export function buildWriteFiles(
     props: PropsInfoJson[],
     outputDir: string,
     toFileName: (prop: PropsInfoJson) => string,
+    locale?: 'en' | 'ko',
 ): WriteFile[] {
+    const dir = locale ? path.join(outputDir, locale) : outputDir;
     return props.map((prop) => ({
-        filePath: path.join(outputDir, toFileName(prop)),
+        filePath: path.join(dir, toFileName(prop)),
         content: serializePropsInfo(prop),
     }));
 }
@@ -45,8 +47,9 @@ export function writePropsFiles(
     props: PropsInfoJson[],
     outputDir: string,
     toFileName: (prop: PropsInfoJson) => string,
+    locale?: 'en' | 'ko',
 ): string[] {
-    const writeFiles = buildWriteFiles(props, outputDir, toFileName);
+    const writeFiles = buildWriteFiles(props, outputDir, toFileName, locale);
     for (const writeFile of writeFiles) {
         ensureDirectory(path.dirname(writeFile.filePath));
         fs.writeFileSync(writeFile.filePath, writeFile.content);
