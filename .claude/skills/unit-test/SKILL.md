@@ -1,5 +1,5 @@
 ---
-name: unit-test
+name: vapor-unit-test
 description: >
     Write unit tests for React components in the vapor-ui design system (`packages/core/src/components/`).
     Use this skill whenever the user asks to write, add, generate, or create unit tests for a component —
@@ -169,6 +169,18 @@ it('should not change its state when disabled', ...)
 it('does not close when closeOnClickOverlay is false', ...)
 ```
 
+When an attribute name or attribute+value appears in the description, wrap it in backticks:
+
+```tsx
+// attribute name only
+it('should have the `aria-required` attribute on the trigger', ...)
+it('should have the `data-disabled` attribute on the trigger', ...)
+
+// attribute with value
+it('should have `aria-expanded="true"` when open', ...)
+it('should have items with `role="option"` in the listbox', ...)
+```
+
 All `it` callbacks must be `async` when using `userEvent` or `axe`.
 
 ## Accessibility test (always include)
@@ -195,6 +207,18 @@ await userEvent.keyboard('{Escape}');
 await userEvent.keyboard('{Enter}');
 await userEvent.type(input, 'hello');
 ```
+
+When directly calling a DOM method (not via `userEvent`), wrap it with `waitFor` from `@testing-library/react` so React can flush state updates before the next step:
+
+```tsx
+// good — DOM method wrapped in waitFor
+await waitFor(() => trigger.focus());
+
+// bad — direct DOM call without waiting
+trigger.focus();
+```
+
+This matters because `trigger.focus()` is synchronous but the component may need a render cycle to respond. Without `waitFor`, the following `userEvent.keyboard(...)` call may fire before the component is ready.
 
 ## State assertions
 
