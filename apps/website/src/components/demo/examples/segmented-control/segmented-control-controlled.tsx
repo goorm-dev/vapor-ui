@@ -9,7 +9,7 @@ export default function DefaultSegmentedControl() {
     return (
         <VStack $css={{ gap: '$150' }}>
             현재 모드: {mode}
-            <SegmentedControl.Root value={mode} onValueChange={setMode}>
+            <SegmentedControl.Root value={mode} onValueChange={setMode} aria-label="테마 모드 선택">
                 <SegmentedControl.Item value="light">
                     <LightIcon />
                     Light

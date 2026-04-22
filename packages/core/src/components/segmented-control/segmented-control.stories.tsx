@@ -15,8 +15,8 @@ export default {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
         disabled: { control: 'boolean' },
     },
-} as Meta<typeof SegmentedControl>;
-type Story = StoryObj<typeof SegmentedControl>;
+} as Meta<typeof SegmentedControl.Root>;
+type Story = StoryObj<typeof SegmentedControl.Root>;
 
 export const Default: Story = {
     render: (args) => {
@@ -137,7 +137,7 @@ export const TestBed: Story = {
 
             <Text typography="heading3">disabled: With Item</Text>
             <VStack $css={{ gap: '$100', marginBottom: '$200' }}>
-                <SegmentedControl.Root disabled defaultValue="light">
+                <SegmentedControl.Root disabled>
                     <SegmentedControl.Item value="a">AAA</SegmentedControl.Item>
                     <SegmentedControl.Item value="b">BBB</SegmentedControl.Item>
                     <SegmentedControl.Item value="c">CCC</SegmentedControl.Item>

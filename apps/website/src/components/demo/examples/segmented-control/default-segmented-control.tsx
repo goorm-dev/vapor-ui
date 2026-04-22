@@ -2,7 +2,7 @@ import { SegmentedControl } from '@vapor-ui/core';
 
 export default function DefaultSegmentedControl() {
     return (
-        <SegmentedControl.Root>
+        <SegmentedControl.Root aria-label="상태 필터">
             <SegmentedControl.Item value="all">전체</SegmentedControl.Item>
             <SegmentedControl.Item disabled value="in-progress">
                 진행 중

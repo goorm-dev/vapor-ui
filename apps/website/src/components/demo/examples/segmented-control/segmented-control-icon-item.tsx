@@ -4,12 +4,12 @@ import { DarkIcon, LightIcon, PcIcon } from '@vapor-ui/icons';
 export default function DefaultSegmentedControl() {
     return (
         <VStack $css={{ gap: '$150' }}>
-            <SegmentedControl.Root defaultValue="light">
+            <SegmentedControl.Root defaultValue="light" aria-label="테마 모드 선택">
                 <Tooltip.Root>
                     <Tooltip.Trigger
                         delay={150}
                         render={
-                            <SegmentedControl.IconItem value="light">
+                            <SegmentedControl.IconItem value="light" aria-label="라이트 모드">
                                 <LightIcon />
                             </SegmentedControl.IconItem>
                         }
@@ -21,7 +21,7 @@ export default function DefaultSegmentedControl() {
                     <Tooltip.Trigger
                         delay={150}
                         render={
-                            <SegmentedControl.IconItem value="dark">
+                            <SegmentedControl.IconItem value="dark" aria-label="다크 모드">
                                 <DarkIcon />
                             </SegmentedControl.IconItem>
                         }
@@ -33,7 +33,7 @@ export default function DefaultSegmentedControl() {
                     <Tooltip.Trigger
                         delay={150}
                         render={
-                            <SegmentedControl.IconItem value="system">
+                            <SegmentedControl.IconItem value="system" aria-label="시스템 모드">
                                 <PcIcon />
                             </SegmentedControl.IconItem>
                         }

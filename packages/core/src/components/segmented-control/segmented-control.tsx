@@ -79,8 +79,10 @@ export const SegmentedControlRootPrimitive = forwardRef<
     });
 
     const maxItemWidth = Math.max(
+        0,
         ...Array.from(itemMap.values()).map(({ element }) => element.offsetWidth),
     );
+
     const cssVariables = assignInlineVars({ [styles.variables.itemWidth]: `${maxItemWidth}px` });
 
     const { registerListener, observeElement, unobserveElement } = useResizeNotifier(rootElement);
@@ -187,13 +189,13 @@ SegmentedControlRootPrimitive.displayName = 'SegmentedControl.Root';
 
 export const SegmentedControlRoot = forwardRef<HTMLDivElement, SegmentedControlRoot.Props>(
     (props, ref) => {
-        const { children, ...componentProps } = resolveStyles(props);
+        const { indicatorElement, children, ...componentProps } = resolveStyles(props);
 
         return (
             <SegmentedControlRootPrimitive ref={ref} {...componentProps}>
                 {children}
 
-                <SegmentedControlIndicatorPrimitive />
+                {indicatorElement ?? <SegmentedControlIndicatorPrimitive />}
             </SegmentedControlRootPrimitive>
         );
     },
@@ -352,7 +354,7 @@ export interface SegmentedControlRootProps extends SegmentedControlRootPrimitive
 
 export namespace SegmentedControlRoot {
     export type State = SegmentedControlRootPrimitive.State;
-    export type Props = SegmentedControlRootPrimitive.Props;
+    export type Props = SegmentedControlRootProps;
     export type ChangeEventDetails = SegmentedControlRootPrimitive.ChangeEventDetails;
 }
 
