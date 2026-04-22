@@ -314,16 +314,23 @@ const SelectTest = (props: Select.Root.Props) => (
     </Field.Root>
 );
 
-const ControlledSelectTest = ({ value: valueProp, onValueChange, ...props }: Select.Root.Props) => {
+const ControlledSelectTest = ({
+    value: valueProp,
+    onValueChange,
+    ...props
+}: Select.Root.Props<string>) => {
     const [value, setValue] = useState(valueProp);
 
-    const handleValueChange = (newValue: unknown, details: Select.Root.ChangeEventDetails) => {
+    const handleValueChange = (
+        newValue: string | null,
+        details: Select.Root.ChangeEventDetails,
+    ) => {
         onValueChange?.(newValue, details);
         setValue(newValue);
     };
 
     return (
-        <Select.Root
+        <Select.Root<string>
             value={value}
             onValueChange={handleValueChange}
             items={ITEMS_RECORD}

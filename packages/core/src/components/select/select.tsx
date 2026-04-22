@@ -41,7 +41,12 @@ export const SelectRoot = <Value,>(props: SelectRoot.Props<Value>) => {
 
     return (
         <SelectProvider value={contextProps}>
-            <BaseSelect.Root items={items} required={required} {...otherProps} multiple={false} />
+            <BaseSelect.Root<Value, false>
+                items={items}
+                required={required}
+                {...otherProps}
+                multiple={false}
+            />
         </SelectProvider>
     );
 };
@@ -378,10 +383,9 @@ SelectSeparator.displayName = 'Select.Separator';
 /* -----------------------------------------------------------------------------------------------*/
 
 type SelectVariants = TriggerVariants;
-type SelectContext = SelectVariants &
-    Pick<SelectRoot.Props<unknown>, 'items' | 'required' | 'placeholder'>;
+type SelectContext = SelectVariants & Pick<SelectRoot.Props, 'items' | 'required' | 'placeholder'>;
 
-export interface SelectRootProps<Value = unknown>
+export interface SelectRootProps<Value>
     extends SelectVariants, Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> {
     /**
      * The placeholder value to display when no value is selected.
