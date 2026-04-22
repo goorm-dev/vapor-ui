@@ -79,7 +79,6 @@ export const SegmentedControlRootPrimitive = forwardRef<
     });
 
     const maxItemWidth = Math.max(
-        0,
         ...Array.from(itemMap.values()).map(({ element }) => element.offsetWidth),
     );
 
