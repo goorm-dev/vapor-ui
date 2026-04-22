@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
@@ -52,14 +52,14 @@ describe('Select', () => {
     });
 
     describe('ARIA attributes', () => {
-        it('should have aria-expanded="false" when closed', () => {
+        it('should have `aria-expanded="false"` when closed', () => {
             const rendered = render(<SelectTest />);
             const trigger = rendered.getByRole('combobox');
 
             expect(trigger).toHaveAttribute('aria-expanded', 'false');
         });
 
-        it('should have aria-expanded="true" when open', async () => {
+        it('should have `aria-expanded="true"` when open', async () => {
             const rendered = render(<SelectTest />);
             const trigger = rendered.getByRole('combobox');
 
@@ -68,7 +68,7 @@ describe('Select', () => {
             expect(trigger).toHaveAttribute('aria-expanded', 'true');
         });
 
-        it('should have options with role="option" in the listbox', async () => {
+        it('should have options with `role="option"` in the listbox', async () => {
             const rendered = render(<SelectTest />);
             const trigger = rendered.getByRole('combobox');
 
@@ -84,7 +84,7 @@ describe('Select', () => {
             const rendered = render(<SelectTest />);
             const trigger = rendered.getByRole('combobox');
 
-            trigger.focus();
+            await waitFor(() => trigger.focus());
             await userEvent.keyboard('[Space]');
 
             const popup = rendered.getByRole('listbox');
@@ -95,7 +95,7 @@ describe('Select', () => {
             const rendered = render(<SelectTest />);
             const trigger = rendered.getByRole('combobox');
 
-            trigger.focus();
+            await waitFor(() => trigger.focus());
             await userEvent.keyboard('[Enter]');
 
             const popup = rendered.getByRole('listbox');
@@ -120,7 +120,7 @@ describe('Select', () => {
             const rendered = render(<SelectTest />);
             const trigger = rendered.getByRole('combobox');
 
-            trigger.focus();
+            await waitFor(() => trigger.focus());
             await userEvent.keyboard('[Space]');
             await userEvent.keyboard('[ArrowDown]');
 
@@ -195,14 +195,14 @@ describe('Select', () => {
     });
 
     describe('prop: required', () => {
-        it('should have the aria-required attribute on the trigger', () => {
+        it('should have the `aria-required` attribute on the trigger', () => {
             const rendered = render(<SelectTest required />);
             const trigger = rendered.getByRole('combobox');
 
             expect(trigger).toHaveAttribute('aria-required', 'true');
         });
 
-        it('should not have the aria-required attribute when required is not set', () => {
+        it('should not have the `aria-required` attribute when required is not set', () => {
             const rendered = render(<SelectTest />);
             const trigger = rendered.getByRole('combobox');
 
@@ -211,14 +211,14 @@ describe('Select', () => {
     });
 
     describe('prop: invalid', () => {
-        it('should have the aria-invalid attribute on the trigger', () => {
+        it('should have the `aria-invalid` attribute on the trigger', () => {
             const rendered = render(<SelectTest invalid />);
             const trigger = rendered.getByRole('combobox');
 
             expect(trigger).toHaveAttribute('aria-invalid', 'true');
         });
 
-        it('should not have the aria-invalid attribute when invalid is not set', () => {
+        it('should not have the `aria-invalid` attribute when invalid is not set', () => {
             const rendered = render(<SelectTest />);
             const trigger = rendered.getByRole('combobox');
 
@@ -227,7 +227,7 @@ describe('Select', () => {
     });
 
     describe('prop: disabled', () => {
-        it('should have the data-disabled attribute on the trigger', () => {
+        it('should have the `data-disabled` attribute on the trigger', () => {
             const rendered = render(<SelectTest disabled />);
             const trigger = rendered.getByRole('combobox');
 
