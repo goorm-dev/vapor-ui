@@ -378,8 +378,8 @@ SelectSeparator.displayName = 'Select.Separator';
 /* -----------------------------------------------------------------------------------------------*/
 
 type SelectVariants = TriggerVariants;
-type SelectContext = Pick<SelectRoot.Props<unknown>, 'items' | 'required' | 'placeholder'> &
-    SelectVariants;
+type SelectContext = SelectVariants &
+    Pick<SelectRoot.Props<unknown>, 'items' | 'required' | 'placeholder'>;
 
 export interface SelectRootProps<Value = unknown>
     extends SelectVariants, Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> {
