@@ -312,7 +312,68 @@ describe('MultiSelect', () => {
             expect(onValueChange).toHaveBeenCalledWith(['apple', 'banana'], expect.anything());
         });
     });
+
+    describe('generic value type', () => {
+        it('should invoke onValueChange with the typed Fruit[] value', async () => {
+            const onValueChange = vi.fn();
+            const rendered = render(<TypedMultiSelectTest onValueChange={onValueChange} />);
+            const trigger = rendered.getByRole('combobox');
+
+            await userEvent.click(trigger);
+            const appleItem = rendered.getByRole('option', { name: 'Apple' });
+            await userEvent.click(appleItem);
+
+            expect(onValueChange).toHaveBeenCalledWith(['apple'], expect.anything());
+        });
+
+        it('should accept a typed Fruit[] defaultValue prop', () => {
+            const rendered = render(
+                <TypedMultiSelectTest items={ITEMS_ARRAY} defaultValue={['apple', 'banana']} />,
+            );
+
+            expect(rendered.getByText('Apple')).toBeInTheDocument();
+            expect(rendered.getByText('Banana')).toBeInTheDocument();
+        });
+
+        it('should infer Fruit[] as the value parameter type in onValueChange', () => {
+            const handler: NonNullable<MultiSelect.Root.Props<Fruit>['onValueChange']> = (
+                value: Fruit[],
+                _details: MultiSelect.Root.ChangeEventDetails,
+            ) => {
+                expectTypeOf(value).toEqualTypeOf<Fruit[]>();
+            };
+
+            expect(handler).toBeDefined();
+        });
+
+        describe('given a controlled TypedMultiSelect', () => {
+            it('should display the typed controlled values as badges', () => {
+                const rendered = render(<ControlledTypedMultiSelectTest value={['cherry']} />);
+
+                expect(rendered.getByText('Cherry')).toBeInTheDocument();
+            });
+
+            it('should invoke onValueChange with the typed Fruit[] value when a new item is selected', async () => {
+                const onValueChange = vi.fn();
+                const rendered = render(
+                    <ControlledTypedMultiSelectTest
+                        value={['apple']}
+                        onValueChange={onValueChange}
+                    />,
+                );
+                const trigger = rendered.getByRole('combobox');
+
+                await userEvent.click(trigger);
+                const bananaItem = rendered.getByRole('option', { name: 'Banana' });
+                await userEvent.click(bananaItem);
+
+                expect(onValueChange).toHaveBeenCalledWith(['apple', 'banana'], expect.anything());
+            });
+        });
+    });
 });
+
+type Fruit = 'apple' | 'banana' | 'cherry';
 
 const PLACEHOLDER_TEXT = 'Select options';
 
@@ -361,6 +422,56 @@ const ControlledMultiSelectTest = ({
         <Field.Root>
             <Field.Label>Fruit</Field.Label>
             <MultiSelect.Root
+                value={value}
+                onValueChange={handleValueChange}
+                items={ITEMS_RECORD}
+                placeholder={PLACEHOLDER_TEXT}
+                {...props}
+            >
+                <MultiSelect.Trigger />
+                <MultiSelect.Popup>
+                    <MultiSelect.Item value="apple">Apple</MultiSelect.Item>
+                    <MultiSelect.Item value="banana">Banana</MultiSelect.Item>
+                    <MultiSelect.Item value="cherry">Cherry</MultiSelect.Item>
+                </MultiSelect.Popup>
+            </MultiSelect.Root>
+        </Field.Root>
+    );
+};
+
+const TypedMultiSelectTest = (props: MultiSelect.Root.Props<Fruit>) => (
+    <Field.Root>
+        <Field.Label>Fruit</Field.Label>
+        <MultiSelect.Root<Fruit> placeholder={PLACEHOLDER_TEXT} {...props}>
+            <MultiSelect.Trigger />
+            <MultiSelect.Popup>
+                <MultiSelect.Item value="apple">Apple</MultiSelect.Item>
+                <MultiSelect.Item value="banana">Banana</MultiSelect.Item>
+                <MultiSelect.Item value="cherry">Cherry</MultiSelect.Item>
+            </MultiSelect.Popup>
+        </MultiSelect.Root>
+    </Field.Root>
+);
+
+const ControlledTypedMultiSelectTest = ({
+    value: valueProp,
+    onValueChange,
+    ...props
+}: MultiSelect.Root.Props<Fruit>) => {
+    const [value, setValue] = useState<Fruit[]>(valueProp ?? []);
+
+    const handleValueChange = (
+        newValue: Fruit[],
+        details: MultiSelect.Root.ChangeEventDetails,
+    ) => {
+        onValueChange?.(newValue, details);
+        setValue(newValue);
+    };
+
+    return (
+        <Field.Root>
+            <Field.Label>Fruit</Field.Label>
+            <MultiSelect.Root<Fruit>
                 value={value}
                 onValueChange={handleValueChange}
                 items={ITEMS_RECORD}

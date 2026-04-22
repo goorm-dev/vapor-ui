@@ -284,7 +284,62 @@ describe('Select', () => {
             expect(onValueChange).toHaveBeenCalledWith('banana', expect.anything());
         });
     });
+
+    describe('generic value type', () => {
+        it('should invoke onValueChange with the typed Fruit value', async () => {
+            const onValueChange = vi.fn();
+            const rendered = render(<TypedSelectTest onValueChange={onValueChange} />);
+            const trigger = rendered.getByRole('combobox');
+
+            await userEvent.click(trigger);
+            const appleItem = rendered.getByRole('option', { name: 'Apple' });
+            await userEvent.click(appleItem);
+
+            expect(onValueChange).toHaveBeenCalledWith('apple', expect.anything());
+        });
+
+        it('should accept a typed Fruit defaultValue prop', () => {
+            const rendered = render(<TypedSelectTest items={ITEMS_ARRAY} defaultValue="apple" />);
+
+            expect(rendered.getByText('Apple')).toBeInTheDocument();
+        });
+
+        it('should infer Fruit | null as the value parameter type in onValueChange', () => {
+            const handler: NonNullable<Select.Root.Props<Fruit>['onValueChange']> = (
+                value: Fruit | null,
+                _details: Select.Root.ChangeEventDetails,
+            ) => {
+                expectTypeOf(value).toEqualTypeOf<Fruit | null>();
+            };
+
+            expect(handler).toBeDefined();
+        });
+
+        describe('given a controlled TypedSelect', () => {
+            it('should display the typed controlled value', () => {
+                const rendered = render(<ControlledTypedSelectTest value="cherry" />);
+
+                expect(rendered.getByText('Cherry')).toBeInTheDocument();
+            });
+
+            it('should invoke onValueChange with the typed Fruit value when a new item is selected', async () => {
+                const onValueChange = vi.fn();
+                const rendered = render(
+                    <ControlledTypedSelectTest value="apple" onValueChange={onValueChange} />,
+                );
+                const trigger = rendered.getByRole('combobox');
+
+                await userEvent.click(trigger);
+                const bananaItem = rendered.getByRole('option', { name: 'Banana' });
+                await userEvent.click(bananaItem);
+
+                expect(onValueChange).toHaveBeenCalledWith('banana', expect.anything());
+            });
+        });
+    });
 });
+
+type Fruit = 'apple' | 'banana' | 'cherry';
 
 const PLACEHOLDER_TEXT = 'Select an option';
 
@@ -345,5 +400,52 @@ const ControlledSelectTest = ({
                 <Select.Item value="cherry">Cherry</Select.Item>
             </Select.Popup>
         </Select.Root>
+    );
+};
+
+const TypedSelectTest = (props: Select.Root.Props<Fruit>) => (
+    <Field.Root>
+        <Field.Label>Fruit</Field.Label>
+        <Select.Root<Fruit> placeholder={PLACEHOLDER_TEXT} {...props}>
+            <Select.Trigger />
+            <Select.Popup>
+                <Select.Item value="apple">Apple</Select.Item>
+                <Select.Item value="banana">Banana</Select.Item>
+                <Select.Item value="cherry">Cherry</Select.Item>
+            </Select.Popup>
+        </Select.Root>
+    </Field.Root>
+);
+
+const ControlledTypedSelectTest = ({
+    value: valueProp,
+    onValueChange,
+    ...props
+}: Select.Root.Props<Fruit>) => {
+    const [value, setValue] = useState(valueProp);
+
+    const handleValueChange = (newValue: Fruit | null, details: Select.Root.ChangeEventDetails) => {
+        onValueChange?.(newValue, details);
+        setValue(newValue);
+    };
+
+    return (
+        <Field.Root>
+            <Field.Label>Fruit</Field.Label>
+            <Select.Root<Fruit>
+                value={value}
+                onValueChange={handleValueChange}
+                items={ITEMS_RECORD}
+                placeholder={PLACEHOLDER_TEXT}
+                {...props}
+            >
+                <Select.Trigger />
+                <Select.Popup>
+                    <Select.Item value="apple">Apple</Select.Item>
+                    <Select.Item value="banana">Banana</Select.Item>
+                    <Select.Item value="cherry">Cherry</Select.Item>
+                </Select.Popup>
+            </Select.Root>
+        </Field.Root>
     );
 };
