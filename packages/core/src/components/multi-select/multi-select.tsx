@@ -19,14 +19,6 @@ import { Badge } from '../badge';
 import type { TriggerVariants } from './multi-select.css';
 import * as styles from './multi-select.css';
 
-type MultiSelectVariants = TriggerVariants;
-type MultiSelectSharedProps = MultiSelectVariants & {
-    placeholder?: React.ReactNode;
-};
-
-type MultiSelectContext = MultiSelectSharedProps &
-    Pick<MultiSelectRoot.Props<unknown>, 'items' | 'required'>;
-
 const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectContext>({
     name: 'MultiSelectContext',
     providerName: 'MultiSelectProvider',
@@ -38,17 +30,24 @@ const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectCo
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectRoot = <Value,>(props: MultiSelectRoot.Props<Value>) => {
-    const [sharedProps, otherProps] = createSplitProps<MultiSelectSharedProps>()(props, [
+    const [contextProps, otherProps] = createSplitProps<MultiSelectContext>()(props, [
         'placeholder',
         'size',
         'invalid',
+        'items',
+        'required',
     ]);
 
-    const { items, required } = otherProps;
+    const { items, required } = contextProps;
 
     return (
-        <MultiSelectProvider value={{ items, required, ...sharedProps }}>
-            <BaseSelect.Root {...otherProps} multiple />
+        <MultiSelectProvider value={{ ...contextProps }}>
+            <BaseSelect.Root<Value, true>
+                items={items}
+                required={required}
+                {...otherProps}
+                multiple
+            />
         </MultiSelectProvider>
     );
 };
@@ -420,10 +419,22 @@ MultiSelectSeparator.displayName = 'MultiSelect.Separator';
 
 /* -----------------------------------------------------------------------------------------------*/
 
+type MultiSelectVariants = TriggerVariants;
+type MultiSelectContext = MultiSelectVariants &
+    Pick<MultiSelectRoot.Props, 'items' | 'required' | 'placeholder'>;
+
+export interface MultiSelectRootProps<Value>
+    extends MultiSelectVariants, Omit<BaseSelect.Root.Props<Value, true>, 'multiple'> {
+    /**
+     * The placeholder value to display when no value is selected.
+     * This is overridden by `children` of MultiSelect.Value if specified, or by a null item's label in `items`.
+     */
+    placeholder?: React.ReactNode;
+}
+
 export namespace MultiSelectRoot {
     export type State = BaseSelect.Root.State;
-    export type Props<Value = unknown> = Omit<BaseSelect.Root.Props<Value, true>, 'multiple'> &
-        MultiSelectSharedProps;
+    export type Props<Value = unknown> = MultiSelectRootProps<Value>;
 
     export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
