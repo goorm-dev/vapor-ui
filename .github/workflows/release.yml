@@ -10,11 +10,6 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
-env:
-    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-    VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-
 jobs:
     release:
         outputs:
@@ -66,6 +61,10 @@ jobs:
         needs: release
         if: needs.release.outputs.published == 'true'
         runs-on: ubuntu-latest
+        env:
+            VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+            VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+            VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         steps:
             - name: Install Vercel CLI
               run: npm install -g vercel@^50
@@ -78,9 +77,16 @@ jobs:
                   ELAPSED_SECONDS=0
 
                   while [ "$ELAPSED_SECONDS" -lt "$TIMEOUT_SECONDS" ]; do
-                      RESPONSE=$(curl -fsS \
+                      if ! RESPONSE=$(curl -fsS \
+                          --connect-timeout 10 \
+                          --max-time 30 \
                           -H "Authorization: Bearer $VERCEL_TOKEN" \
-                          "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&sha=${{ github.sha }}&target=production&limit=1&teamId=$VERCEL_ORG_ID")
+                          "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&sha=${{ github.sha }}&target=production&limit=1&teamId=$VERCEL_ORG_ID"); then
+                          echo "Failed to query Vercel deployment for ${{ github.sha }}; retrying..."
+                          sleep "$INTERVAL_SECONDS"
+                          ELAPSED_SECONDS=$((ELAPSED_SECONDS + INTERVAL_SECONDS))
+                          continue
+                      fi
 
                       STATE=$(echo "$RESPONSE" | jq -r '.deployments[0].state // empty')
                       DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.deployments[0].uid // empty')
