@@ -9,7 +9,7 @@ const strokeWidth = createVar('--stroke-width');
 export const root = componentRecipe({
     base: {
         display: 'inline-flex',
-        flexShrink: 0,
+        flex: 'none',
         alignItems: 'center',
         justifyContent: 'center',
     },
