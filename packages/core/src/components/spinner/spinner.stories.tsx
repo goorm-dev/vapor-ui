@@ -7,6 +7,7 @@ import { Spinner } from './spinner';
 
 export default {
     title: 'Spinner',
+    component: Spinner,
     argTypes: {
         size: {
             control: { type: 'inline-radio' },
@@ -18,7 +19,7 @@ export default {
             options: ['primary', 'inverse'],
         },
     },
-} as Meta<typeof Spinner>;
+} satisfies Meta<typeof Spinner>;
 type Story = StoryObj<typeof Spinner>;
 
 export const Default: Story = {
