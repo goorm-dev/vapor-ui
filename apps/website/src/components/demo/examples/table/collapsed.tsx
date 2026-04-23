@@ -255,8 +255,10 @@ export interface ColumnCollapsedColumnInstance {
 declare module '@tanstack/react-table' {
     interface TableState extends ColumnCollapsedTableState {}
     interface TableOptionsResolved<TData extends RowData> extends ColumnCollapsedOptions {}
-    interface Column<TData extends RowData, TValue = unknown>
-        extends ColumnCollapsedColumnInstance {}
+    interface Column<
+        TData extends RowData,
+        TValue = unknown,
+    > extends ColumnCollapsedColumnInstance {}
 }
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
