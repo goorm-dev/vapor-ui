@@ -18,7 +18,8 @@
         {
             "name": "className",
             "type": ["string | ((state: Spinner.State) => (string | undefined))"],
-            "required": false
+            "required": false,
+            "description": "CSS 클래스를 요소에 적용하거나, 컴포넌트 상태에 따라 클래스를 반환하는 함수를 받습니다."
         },
         {
             "name": "render",
