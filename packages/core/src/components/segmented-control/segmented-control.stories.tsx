@@ -10,12 +10,12 @@ import { VStack } from '../v-stack';
 
 export default {
     title: 'SegmentedControl',
-    components: SegmentedControl.Root,
+    component: SegmentedControl.Root,
     argTypes: {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
         disabled: { control: 'boolean' },
     },
-} as Meta<typeof SegmentedControl.Root>;
+} satisfies Meta<typeof SegmentedControl.Root>;
 type Story = StoryObj<typeof SegmentedControl.Root>;
 
 export const Default: Story = {
