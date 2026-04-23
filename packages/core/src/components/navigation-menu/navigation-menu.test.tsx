@@ -132,12 +132,12 @@ describe('<NavigationMenu.Root />', () => {
             await userEvent.keyboard('[Enter]');
 
             expect(handleValueChange).toHaveBeenCalled();
-            expect(handleValueChange).toHaveBeenCalledWith(TRIGGER_1, expect.any(Object));
+            expect(handleValueChange).toHaveBeenCalledWith(TRIGGER_1);
 
             act(() => trigger2.focus());
             await userEvent.keyboard('[Enter]');
 
-            expect(handleValueChange).toHaveBeenCalledWith(TRIGGER_2, expect.any(Object));
+            expect(handleValueChange).toHaveBeenCalledWith(TRIGGER_2);
         });
     });
 
