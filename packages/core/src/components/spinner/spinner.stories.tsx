@@ -37,17 +37,17 @@ export const TestBed: Story = {
 
             <HStack $css={{ gap: '$200', alignItems: 'center' }}>
                 <Button>
-                    <Spinner colorPalette="inverse" />
+                    <Spinner colorPalette="inherit" />
                     Loading Button (fill)
                 </Button>
 
                 <Button colorPalette="success" variant="outline">
-                    <Spinner colorPalette="inverse" />
+                    <Spinner colorPalette="inherit" />
                     Loading Button (outline)
                 </Button>
 
                 <Button colorPalette="warning" variant="ghost">
-                    <Spinner colorPalette="inverse" />
+                    <Spinner colorPalette="inherit" />
                     Loading Button (ghost)
                 </Button>
             </HStack>
