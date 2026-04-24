@@ -1,4 +1,4 @@
-name: '[CI] Sync Figma'
+name: '[CI] Sync Icons'
 
 on:
     workflow_dispatch:
