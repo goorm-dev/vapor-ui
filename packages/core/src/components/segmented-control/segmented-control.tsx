@@ -58,7 +58,6 @@ export const SegmentedControlRootPrimitive = forwardRef<
         value: valueProp,
         defaultValue,
         onValueChange,
-        style,
         ...componentProps
     } = resolveStyles(props);
 
@@ -77,12 +76,6 @@ export const SegmentedControlRootPrimitive = forwardRef<
         name: 'SegmentedControl',
         state: 'value',
     });
-
-    const maxItemWidth = Math.max(
-        ...Array.from(itemMap.values()).map(({ element }) => element.offsetWidth),
-    );
-
-    const cssVariables = assignInlineVars({ [styles.variables.itemWidth]: `${maxItemWidth}px` });
 
     const { registerListener, observeElement, unobserveElement } = useResizeNotifier(rootElement);
 
@@ -172,7 +165,6 @@ export const SegmentedControlRootPrimitive = forwardRef<
                 value={value}
                 onValueChange={handleValueChange}
                 className={cn(styles.root(variantProps), className)}
-                style={{ ...cssVariables, ...style }}
                 {...otherProps}
             >
                 {children}

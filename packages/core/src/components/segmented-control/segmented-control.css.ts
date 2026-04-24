@@ -8,7 +8,6 @@ import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
 export const variables = {
-    itemWidth: createVar('item-width'),
     indicatorLeft: createVar('indicator-left'),
     indicatorWidth: createVar('indicator-width'),
 } as const;
@@ -59,12 +58,10 @@ export const item = componentRecipe({
             position: 'relative',
             zIndex: 1,
 
-            display: 'inline-flex',
+            display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            whiteSpace: 'nowrap',
 
-            width: variables.itemWidth,
             height: vars.size.dimension['400'],
             padding: `0 ${vars.size.space['200']}`,
 

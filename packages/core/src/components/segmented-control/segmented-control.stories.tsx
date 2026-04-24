@@ -27,7 +27,7 @@ export const Default: Story = {
                 <Grid.Item>
                     <Text typography="heading3">Filter</Text>
                     <SegmentedControl.Root {...args}>
-                        <SegmentedControl.Item value="all">전체</SegmentedControl.Item>
+                        <SegmentedControl.Item value="all">전체 보기</SegmentedControl.Item>
                         <SegmentedControl.Item disabled value="in-progress">
                             진행 중
                         </SegmentedControl.Item>
