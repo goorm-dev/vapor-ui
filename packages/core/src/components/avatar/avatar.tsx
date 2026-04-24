@@ -64,8 +64,14 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
     const fallbackRender = createRender(fallbackElement, <AvatarFallbackPrimitive />);
     const fallback = useRenderElement({
         render: fallbackRender,
-        props: { children },
     });
+
+    const content = children ?? (
+        <>
+            {image}
+            {fallback}
+        </>
+    );
 
     return (
         <AvatarProvider value={contextValue}>
@@ -74,8 +80,7 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
                 className={cn(styles.root({ shape, size }), className)}
                 {...otherProps}
             >
-                {image}
-                {fallback}
+                {content}
             </BaseAvatar.Root>
         </AvatarProvider>
     );
@@ -224,11 +229,21 @@ export interface AvatarRootProps extends Assign<
     AvatarContext
 > {
     /**
-     * A Custom element for Avatar.ImagePrimitive. If not provided, the default Avatar.ImagePrimitive will be rendered.
+     * @deprecated Use children to compose Avatar.ImagePrimitive directly instead.
+     * @example
+     * <Avatar.Root src="..." alt="...">
+     *     <Avatar.ImagePrimitive />
+     *     <Avatar.FallbackPrimitive />
+     * </Avatar.Root>
      */
     imageElement?: ReactElement<AvatarImagePrimitive.Props>;
     /**
-     * A Custom element for Avatar.FallbackPrimitive. If not provided, the default Avatar.FallbackPrimitive will be rendered.
+     * @deprecated Use children to compose Avatar.FallbackPrimitive directly instead.
+     * @example
+     * <Avatar.Root src="..." alt="...">
+     *     <Avatar.ImagePrimitive />
+     *     <Avatar.FallbackPrimitive />
+     * </Avatar.Root>
      */
     fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
 }
