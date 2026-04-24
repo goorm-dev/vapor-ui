@@ -75,7 +75,7 @@ export const indicator = componentRecipe({
     defaultVariants: { colorPalette: 'primary' },
     variants: {
         /**
-         * Controls the stroke color of the spinning arc. Use `inverse` when placing the spinner on a colored or filled background; the stroke color will inherit from the parent element's `color` property.
+         * Controls the stroke color of the spinning arc. Use `inherit` when placing the spinner on a colored or filled background; the stroke color will inherit from the parent element's `color` property.
          * @default 'primary'
          */
         colorPalette: {
