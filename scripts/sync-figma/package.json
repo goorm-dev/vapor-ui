@@ -1,0 +1,17 @@
+{
+    "name": "@repo/sync-figma",
+    "version": "0.0.1",
+    "private": true,
+    "description": "Internal CLI scripts for syncing assets from Figma",
+    "type": "module",
+    "scripts": {
+        "sync-icons:basic": "TYPE=basic node --env-file-if-exists=.env --experimental-fetch ./src/icons/sync.mjs",
+        "sync-icons:symbol": "TYPE=symbol node --env-file-if-exists=.env --experimental-fetch ./src/icons/sync.mjs"
+    },
+    "dependencies": {
+        "lodash-es": "^4.17.23",
+        "p-limit": "^6.2.0",
+        "picocolors": "^1.1.1",
+        "prettier": "catalog:"
+    }
+}

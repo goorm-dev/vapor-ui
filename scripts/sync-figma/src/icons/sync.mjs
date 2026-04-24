@@ -2,7 +2,7 @@
  * Sync icons from Figma to local React components
  *
  * Usage:
- *   node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs
+ *   node --env-file=.env --experimental-fetch ./scripts/sync-figma/src/icons/sync.mjs
  *
  * Environment variables required:
  *   - FIGMA_TOKEN: Your Figma personal access token
@@ -11,10 +11,12 @@
  * Note: Node.js 20.6+ required for --env-file flag
  */
 import { camelCase, startCase } from 'lodash-es';
+import { createHash } from 'node:crypto';
 import fs, { constants } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import pc from 'picocolors';
+import pLimit from 'p-limit';
 import prettier from 'prettier';
 
 import {
@@ -22,16 +24,18 @@ import {
     FIGMA_ICONS_SYMBOL_COLOR_COUNTRY_NODE_ID,
     FIGMA_ICONS_SYMBOL_COLOR_NODE_ID,
     FIGMA_NODE_TYPES,
-} from './constants/figma.js';
-import { ICON_TYPES } from './constants/index.js';
-import { filterDocumentByNodeType, getIconJsx, getNodesWithUrl } from './libs/figma.js';
+} from './constants.js';
+import { ICON_TYPES } from './iconTypes.js';
+import { filterDocumentByNodeType, getIconJsx, getNodesWithUrl } from '../shared/figmaLib.js';
 import getIconComponent from './templates/icon/IconComponent.js';
 import getIconComponentIndex from './templates/icon/iconComponentIndex.js';
 import getIconsIndex from './templates/icon/iconsIndex.js';
 
 const TYPE = process.env.TYPE;
-const CURRENT_DIRECTORY = process.cwd();
+// pnpm --filter 실행 시 cwd가 패키지 디렉토리로 변경되므로 스크립트 위치 기준으로 루트를 계산
+const CURRENT_DIRECTORY = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../../../');
 const FIGMA_EMOJI_PREFIX_PATTERN = /❤️\s*/g;
+const PRETTIER_OPTIONS = { parser: 'typescript', tabWidth: 4, semi: true, singleQuote: true, printWidth: 100 };
 
 function normalizeIconName(name) {
     return startCase(camelCase(name.replace(FIGMA_EMOJI_PREFIX_PATTERN, ''))).replace(/ /g, '');
@@ -100,72 +104,55 @@ try {
     const parentIconPath = path.join(CURRENT_DIRECTORY, targetPath);
     const newIconNameArr = [];
     const updatedIconNameArr = [];
-    const promiseCreateIcons = componentsWithUrl.map(async ({ name, url, parentId }) => {
-        const iconName = normalizeIconName(name);
-        const saveTargetPath = path.join(parentIconPath, iconName);
-        const iconFilePath = path.resolve(saveTargetPath, `${iconName}.tsx`);
+    const limit = pLimit(10);
+    const md5 = (str) => createHash('md5').update(str).digest('hex');
 
-        let isNewIcon = false;
-        try {
-            await fs.access(saveTargetPath, constants.F_OK);
-            isNewIcon = false;
-        } catch {
-            isNewIcon = true;
-        }
-        const isColorIcon =
-            parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_NODE_ID) ||
-            parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_COUNTRY_NODE_ID);
+    const promiseCreateIcons = componentsWithUrl.map(({ name, url, parentId }) =>
+        limit(async () => {
+            const iconName = normalizeIconName(name);
+            const saveTargetPath = path.join(parentIconPath, iconName);
+            const iconFilePath = path.resolve(saveTargetPath, `${iconName}.tsx`);
 
-        // Fetch icon JSX once
-        const iconJsx = await getIconJsx({ url, isColorIcon });
-        const IconComponent = getIconComponent(iconName, iconJsx);
-
-        if (isNewIcon) {
-            await fs.mkdir(saveTargetPath);
-            newIconNameArr.push(iconName);
-        } else {
-            let isIconFileAccessible = false;
+            let isNewIcon = false;
             try {
-                await fs.access(iconFilePath, constants.F_OK);
-                isIconFileAccessible = true;
+                await fs.access(saveTargetPath, constants.F_OK);
+                isNewIcon = false;
             } catch {
-                isIconFileAccessible = false;
+                isNewIcon = true;
             }
+            const isColorIcon =
+                parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_NODE_ID) ||
+                parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_COUNTRY_NODE_ID);
 
-            if (isIconFileAccessible) {
-                const existingContent = await fs.readFile(iconFilePath, 'utf8');
+            const iconJsx = await getIconJsx({ url, isColorIcon });
+            const IconComponent = getIconComponent(iconName, iconJsx);
+            const formattedComponent = await prettier.format(IconComponent, PRETTIER_OPTIONS);
 
-                // Format both existing and new content for accurate comparison
-                const formattedNew = await prettier.format(IconComponent, {
-                    parser: 'typescript',
-                    tabWidth: 4,
-                    semi: true,
-                    singleQuote: true,
-                    printWidth: 100,
-                });
-                const formattedExisting = await prettier.format(existingContent, {
-                    parser: 'typescript',
-                    tabWidth: 4,
-                    semi: true,
-                    singleQuote: true,
-                    printWidth: 100,
-                });
+            if (isNewIcon) {
+                await fs.mkdir(saveTargetPath, { recursive: true });
+                newIconNameArr.push(iconName);
+            } else {
+                let existingContent = null;
+                try {
+                    existingContent = await fs.readFile(iconFilePath, 'utf8');
+                } catch {
+                    // 파일이 없으면 무조건 덮어씀
+                }
 
-                if (formattedExisting !== formattedNew) {
+                if (existingContent !== null && md5(existingContent) !== md5(formattedComponent)) {
                     updatedIconNameArr.push(iconName);
                 }
             }
-        }
 
-        const iconIndex = getIconComponentIndex(iconName);
+            const iconIndex = getIconComponentIndex(iconName);
+            const formattedIndex = await prettier.format(iconIndex, PRETTIER_OPTIONS);
 
-        const writeIconComponent = fs.writeFile(iconFilePath, IconComponent, { encoding: 'utf8' });
-        const writeIconIndex = fs.writeFile(path.resolve(saveTargetPath, `index.ts`), iconIndex, {
-            encoding: 'utf8',
-        });
-
-        await Promise.all([writeIconComponent, writeIconIndex]);
-    });
+            await Promise.all([
+                fs.writeFile(iconFilePath, formattedComponent, { encoding: 'utf8' }),
+                fs.writeFile(path.resolve(saveTargetPath, `index.ts`), formattedIndex, { encoding: 'utf8' }),
+            ]);
+        }),
+    );
     await Promise.all(promiseCreateIcons);
     console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `React component conversion complete!`);
 
@@ -202,7 +189,8 @@ try {
     // // export to entry file
     console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `Exporting to entry file...`);
     const iconsIndex = getIconsIndex(componentsInfo.nameArr);
-    await fs.writeFile(path.join(CURRENT_DIRECTORY, targetPath, 'index.ts'), iconsIndex, {
+    const formattedIconsIndex = await prettier.format(iconsIndex, PRETTIER_OPTIONS);
+    await fs.writeFile(path.join(CURRENT_DIRECTORY, targetPath, 'index.ts'), formattedIconsIndex, {
         encoding: 'utf8',
     });
 

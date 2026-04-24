@@ -1,5 +1,5 @@
-import { getFileNodes, getImage } from '../apis/figma.js';
-import { makeFlexibleColorIcon, remakeMaskStyle, svgToIconComponent } from '../utils/figma.js';
+import { getFileNodes, getImage } from './figmaApi.js';
+import { makeFlexibleColorIcon, remakeMaskStyle, svgToIconComponent } from './figmaUtils.js';
 
 /**
  * Filter documents from Figma by specific Node Type.
