@@ -2,7 +2,7 @@
  * Sync icons from Figma to local React components
  *
  * Usage:
- *   node --env-file=.env --experimental-fetch ./scripts/sync-figma/src/icons/sync.mjs
+ *   node --env-file=.env ./scripts/sync-figma/src/icons/sync.mjs
  *
  * Environment variables required:
  *   - FIGMA_TOKEN: Your Figma personal access token
@@ -12,13 +12,16 @@
  */
 import { camelCase, startCase } from 'lodash-es';
 import { createHash } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import fs, { constants } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
-import pc from 'picocolors';
+import { fileURLToPath } from 'node:url';
 import pLimit from 'p-limit';
+import pc from 'picocolors';
 import prettier from 'prettier';
 
+import { filterDocumentByNodeType, getIconJsx, getNodesWithUrl } from '../shared/figmaLib.js';
 import {
     FIGMA_ICONS_FILE_KEY,
     FIGMA_ICONS_SYMBOL_COLOR_COUNTRY_NODE_ID,
@@ -26,16 +29,28 @@ import {
     FIGMA_NODE_TYPES,
 } from './constants.js';
 import { ICON_TYPES } from './iconTypes.js';
-import { filterDocumentByNodeType, getIconJsx, getNodesWithUrl } from '../shared/figmaLib.js';
 import getIconComponent from './templates/icon/IconComponent.js';
 import getIconComponentIndex from './templates/icon/iconComponentIndex.js';
 import getIconsIndex from './templates/icon/iconsIndex.js';
 
 const TYPE = process.env.TYPE;
-// pnpm --filter 실행 시 cwd가 패키지 디렉토리로 변경되므로 스크립트 위치 기준으로 루트를 계산
-const CURRENT_DIRECTORY = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../../../');
+
+function findRoot(dir) {
+    if (existsSync(path.join(dir, 'pnpm-workspace.yaml'))) return dir;
+    const parent = path.dirname(dir);
+    if (parent === dir)
+        throw new Error('Could not find project root (pnpm-workspace.yaml not found)');
+    return findRoot(parent);
+}
+const CURRENT_DIRECTORY = findRoot(path.dirname(fileURLToPath(import.meta.url)));
 const FIGMA_EMOJI_PREFIX_PATTERN = /❤️\s*/g;
-const PRETTIER_OPTIONS = { parser: 'typescript', tabWidth: 4, semi: true, singleQuote: true, printWidth: 100 };
+const PRETTIER_OPTIONS = {
+    parser: 'typescript',
+    tabWidth: 4,
+    semi: true,
+    singleQuote: true,
+    printWidth: 100,
+};
 
 function normalizeIconName(name) {
     return startCase(camelCase(name.replace(FIGMA_EMOJI_PREFIX_PATTERN, ''))).replace(/ /g, '');
@@ -128,6 +143,8 @@ try {
             const IconComponent = getIconComponent(iconName, iconJsx);
             const formattedComponent = await prettier.format(IconComponent, PRETTIER_OPTIONS);
 
+            let shouldWrite = isNewIcon;
+
             if (isNewIcon) {
                 await fs.mkdir(saveTargetPath, { recursive: true });
                 newIconNameArr.push(iconName);
@@ -136,21 +153,26 @@ try {
                 try {
                     existingContent = await fs.readFile(iconFilePath, 'utf8');
                 } catch {
-                    // 파일이 없으면 무조건 덮어씀
+                    shouldWrite = true;
                 }
 
                 if (existingContent !== null && md5(existingContent) !== md5(formattedComponent)) {
                     updatedIconNameArr.push(iconName);
+                    shouldWrite = true;
                 }
             }
 
-            const iconIndex = getIconComponentIndex(iconName);
-            const formattedIndex = await prettier.format(iconIndex, PRETTIER_OPTIONS);
+            if (shouldWrite) {
+                const iconIndex = getIconComponentIndex(iconName);
+                const formattedIndex = await prettier.format(iconIndex, PRETTIER_OPTIONS);
 
-            await Promise.all([
-                fs.writeFile(iconFilePath, formattedComponent, { encoding: 'utf8' }),
-                fs.writeFile(path.resolve(saveTargetPath, `index.ts`), formattedIndex, { encoding: 'utf8' }),
-            ]);
+                await Promise.all([
+                    fs.writeFile(iconFilePath, formattedComponent, { encoding: 'utf8' }),
+                    fs.writeFile(path.resolve(saveTargetPath, `index.ts`), formattedIndex, {
+                        encoding: 'utf8',
+                    }),
+                ]);
+            }
         }),
     );
     await Promise.all(promiseCreateIcons);
@@ -212,5 +234,6 @@ try {
     console.log(`FIGMA_SYNC_TOTAL_${TYPE.toUpperCase()}=${componentsInfo.total}`);
 } catch (err) {
     console.error('Unhandled rejection', err);
+    process.exit(1);
 }
 console.log(pc.yellow('---------------------------------------------------'));

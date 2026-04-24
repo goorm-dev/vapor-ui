@@ -11,7 +11,6 @@
  *   - GITHUB_RUN_NUMBER: GitHub Actions 실행 번호
  *   - GITHUB_REF_NAME: 브랜치 이름
  */
-
 import process from 'node:process';
 
 const {

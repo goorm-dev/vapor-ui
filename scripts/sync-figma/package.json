@@ -5,8 +5,10 @@
     "description": "Internal CLI scripts for syncing assets from Figma",
     "type": "module",
     "scripts": {
-        "sync-icons:basic": "TYPE=basic node --env-file-if-exists=.env --experimental-fetch ./src/icons/sync.mjs",
-        "sync-icons:symbol": "TYPE=symbol node --env-file-if-exists=.env --experimental-fetch ./src/icons/sync.mjs"
+        "sync-icons:basic": "TYPE=basic node --env-file-if-exists=.env ./src/icons/sync.mjs",
+        "sync-icons:symbol": "TYPE=symbol node --env-file-if-exists=.env ./src/icons/sync.mjs",
+        "notify:slack": "node ./src/notifySlack.mjs",
+        "format": "prettier --write \"./src/**/*.{js,mjs,md}\""
     },
     "dependencies": {
         "lodash-es": "^4.17.23",

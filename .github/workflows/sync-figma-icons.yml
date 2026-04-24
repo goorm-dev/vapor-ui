@@ -244,7 +244,7 @@ jobs:
             - name: Notify Slack on Failure
               if: failure()
               run: |
-                  WORKFLOW_STATUS=failure node --experimental-fetch ./scripts/sync-figma/notifySlack.mjs
+                  WORKFLOW_STATUS=failure pnpm --filter @repo/sync-figma notify:slack
               env:
                   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
                   GITHUB_REPOSITORY: ${{ github.repository }}
