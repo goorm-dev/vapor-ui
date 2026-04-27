@@ -32,6 +32,7 @@ const statusText = WORKFLOW_STATUS === 'success' ? '성공' : '실패';
 const statusColor = WORKFLOW_STATUS === 'success' ? '#36a64f' : '#ff0000';
 
 const message = {
+    text: `🤖 Figma 아이콘 동기화 워크플로우 ${statusText}`,
     attachments: [
         {
             color: statusColor,
