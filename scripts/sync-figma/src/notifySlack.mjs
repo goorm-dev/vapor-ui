@@ -76,9 +76,7 @@ try {
     });
 
     if (!response.ok) {
-        const body = await response.text();
         console.error(`❌ Slack 알림 전송 실패: ${response.status} ${response.statusText}`);
-        console.error(`응답 본문: ${body}`);
         process.exit(1);
     }
 

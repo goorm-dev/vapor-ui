@@ -22,7 +22,6 @@ jobs:
 
             - name: Sync Basic Icons
               id: sync_basic
-              shell: bash -eo pipefail {0}
               env:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
               run: |
@@ -40,7 +39,6 @@ jobs:
 
             - name: Sync Symbol Icons
               id: sync_symbol
-              shell: bash -eo pipefail {0}
               env:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
               run: |
