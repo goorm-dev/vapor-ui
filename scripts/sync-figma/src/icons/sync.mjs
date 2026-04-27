@@ -33,6 +33,9 @@ import getIconComponent from './templates/icon/IconComponent.js';
 import getIconComponentIndex from './templates/icon/iconComponentIndex.js';
 import getIconsIndex from './templates/icon/iconsIndex.js';
 
+// test for sending logs to workflow and exit with error code to prevent overwriting files during testing1
+process.exit(1);
+
 const TYPE = process.env.TYPE;
 
 function findRoot(dir) {

@@ -4,7 +4,7 @@
  * GitHub Actions 워크플로우 실패 시 Slack 채널로 알림을 전송합니다.
  *
  * 환경 변수:
- *   - SLACK_WEBHOOK_URL: Slack Incoming Webhook URL
+ *   - SLACK_GDS_ALARM_WEBHOOK_URL: Slack Incoming Webhook URL
  *   - WORKFLOW_STATUS: 워크플로우 상태 (success, failure)
  *   - GITHUB_REPOSITORY: GitHub 저장소 (owner/repo)
  *   - GITHUB_RUN_ID: GitHub Actions 실행 ID
@@ -14,7 +14,7 @@
 import process from 'node:process';
 
 const {
-    SLACK_WEBHOOK_URL,
+    SLACK_GDS_ALARM_WEBHOOK_URL,
     WORKFLOW_STATUS,
     GITHUB_REPOSITORY,
     GITHUB_RUN_ID,
@@ -22,8 +22,8 @@ const {
     GITHUB_REF_NAME,
 } = process.env;
 
-if (!SLACK_WEBHOOK_URL) {
-    console.error('❌ 오류: SLACK_WEBHOOK_URL 환경 변수가 설정되지 않았습니다.');
+if (!SLACK_GDS_ALARM_WEBHOOK_URL) {
+    console.error('❌ 오류: SLACK_GDS_ALARM_WEBHOOK_URL 환경 변수가 설정되지 않았습니다.');
     process.exit(1);
 }
 
@@ -66,7 +66,7 @@ const message = {
 };
 
 try {
-    const response = await fetch(SLACK_WEBHOOK_URL, {
+    const response = await fetch(SLACK_GDS_ALARM_WEBHOOK_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
