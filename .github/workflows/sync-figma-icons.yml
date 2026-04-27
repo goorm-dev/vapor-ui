@@ -248,7 +248,7 @@ jobs:
               run: |
                   WORKFLOW_STATUS=failure pnpm --filter @repo/sync-figma notify:slack
               env:
-                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
+                  SLACK_GDS_ALARM_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
                   GITHUB_REPOSITORY: ${{ github.repository }}
                   GITHUB_RUN_ID: ${{ github.run_id }}
                   GITHUB_RUN_NUMBER: ${{ github.run_number }}
