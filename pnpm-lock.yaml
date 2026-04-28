@@ -837,7 +837,7 @@ importers:
   scripts/sync-figma:
     dependencies:
       lodash-es:
-        specifier: ^4.17.23
+        specifier: ^4.18.1
         version: 4.18.1
       p-limit:
         specifier: ^6.2.0
