@@ -26,6 +26,7 @@
         "format:package": "npx sort-package-json \"**/package.json\" --ignore \"**/node_modules\" \"dist\"",
         "hooks": "pnpm --filter @vapor-ui/hooks",
         "icons": "pnpm --filter @vapor-ui/icons",
+        "sync-figma": "pnpm --filter @repo/sync-figma",
         "lint": "turbo run lint",
         "prepare": "husky",
         "release": "turbo run build --filter=./packages/* && changeset publish",

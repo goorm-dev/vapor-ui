@@ -6,14 +6,14 @@
     "type": "module",
     "scripts": {
         "format": "prettier --write \"./src/**/*.{js,mjs,md}\"",
-        "notify:slack": "node ./src/notifySlack.mjs",
-        "sync-icons:basic": "TYPE=basic node --env-file-if-exists=.env ./src/icons/sync.mjs",
-        "sync-icons:symbol": "TYPE=symbol node --env-file-if-exists=.env ./src/icons/sync.mjs"
+        "format:check": "prettier --check \"./src/**/*.{js,mjs,md}\"",
+        "notify:slack": "node ./commands/notify-slack.mjs",
+        "sync-icons:basic": "TYPE=basic node --env-file-if-exists=.env ./commands/sync-icons.mjs",
+        "sync-icons:symbol": "TYPE=symbol node --env-file-if-exists=.env ./commands/sync-icons.mjs"
     },
     "dependencies": {
         "lodash-es": "^4.17.23",
         "p-limit": "^6.2.0",
-        "picocolors": "^1.1.1",
-        "prettier": "catalog:"
+        "picocolors": "^1.1.1"
     }
 }

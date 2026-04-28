@@ -2,13 +2,13 @@
  * Sync icons from Figma to local React components
  *
  * Usage:
- *   node --env-file=.env ./scripts/sync-figma/src/icons/sync.mjs
+ *   node --env-file=.env ./commands/sync-icons.mjs
  *
  * Environment variables required:
  *   - FIGMA_TOKEN: Your Figma personal access token
  *   - TYPE: Icon type to sync ('basic' or 'symbol')
  *
- * Note: Node.js 20.6+ required for --env-file flag
+ * Note: Node 20.6+ required for --env-file flag
  */
 import { camelCase, startCase } from 'lodash-es';
 import { createHash } from 'node:crypto';
@@ -21,17 +21,21 @@ import pLimit from 'p-limit';
 import pc from 'picocolors';
 import prettier from 'prettier';
 
-import { filterDocumentByNodeType, getIconJsx, getNodesWithUrl } from '../shared/figmaLib.js';
 import {
     FIGMA_ICONS_FILE_KEY,
     FIGMA_ICONS_SYMBOL_COLOR_COUNTRY_NODE_ID,
     FIGMA_ICONS_SYMBOL_COLOR_NODE_ID,
     FIGMA_NODE_TYPES,
-} from './constants.js';
-import { ICON_TYPES } from './iconTypes.js';
-import getIconComponent from './templates/icon/IconComponent.js';
-import getIconComponentIndex from './templates/icon/iconComponentIndex.js';
-import getIconsIndex from './templates/icon/iconsIndex.js';
+} from '../src/icons/constants.js';
+import { ICON_TYPES } from '../src/icons/icon-types.js';
+import getIconComponent from '../src/icons/templates/icon/icon-component.js';
+import getIconComponentIndex from '../src/icons/templates/icon/icon-component-index.js';
+import getIconsIndex from '../src/icons/templates/icon/icons-index.js';
+import {
+    filterDocumentByNodeType,
+    getIconJsx,
+    getNodesWithUrl,
+} from '../src/integrations/figma/lib.js';
 
 const TYPE = process.env.TYPE;
 
