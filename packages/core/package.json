@@ -92,7 +92,6 @@
         "eslint": "catalog:",
         "happy-dom": "^20.0.0",
         "postcss": "^8.5.4",
-        "prettier": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
         "rimraf": "^6.1.3",

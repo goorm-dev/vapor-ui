@@ -18,7 +18,6 @@
         "@repo/typescript-config": "workspace:*",
         "esbuild": "^0.25.11",
         "eslint": "catalog:",
-        "prettier": "catalog:",
         "typescript": "catalog:"
     }
 }

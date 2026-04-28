@@ -15,7 +15,8 @@
     },
     "main": "./index.js",
     "scripts": {
-        "format": "prettier . --write"
+        "format": "prettier --write .",
+        "format:check": "prettier --check ."
     },
     "devDependencies": {
         "@antebudimir/eslint-plugin-vanilla-extract": "^1.11.0",
@@ -32,7 +33,6 @@
         "eslint-plugin-react-hooks": "^5.2.0",
         "eslint-plugin-storybook": "^9.1.9",
         "globals": "^16.3.0",
-        "prettier": "catalog:",
         "typescript-eslint": "^8.35.1"
     },
     "peerDependencies": {
