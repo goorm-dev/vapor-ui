@@ -39,6 +39,7 @@
         "(components)/select.mdx",
         "(components)/sheet.mdx",
         "(components)/skeleton.mdx",
+        "(components)/spinner.mdx",
         "(components)/switch.mdx",
         "(components)/table.mdx",
         "(components)/tabs.mdx",
