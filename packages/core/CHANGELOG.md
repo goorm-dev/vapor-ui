@@ -4,26 +4,15 @@
 
 ### Avatar
 
-- **Avatar: Fix double rendering and deprecate `imageElement`/`fallbackElement` props** ([#556](https://github.com/goorm-dev/vapor-ui/pull/556)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+- fix double rendering `FallbackPrimitive` ([#556](https://github.com/goorm-dev/vapor-ui/pull/556)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-    Previously, when `children` were passed to `Avatar.Root`, the internal `image` and `fallback` primitives were still rendered alongside them, causing double rendering. This is now fixed — if `children` are provided, only `children` are rendered.
+- deprecate `imageElement`/`fallbackElement` props ([#556](https://github.com/goorm-dev/vapor-ui/pull/556)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-    **Deprecated APIs:**
-    - `imageElement` — Use `children` to compose `Avatar.ImagePrimitive` directly.
-    - `fallbackElement` — Use `children` to compose `Avatar.FallbackPrimitive` directly.
-
-    **New recommended usage:**
-
-    ```tsx
-    <Avatar.Root src="..." alt="...">
-        <Avatar.ImagePrimitive />
-        <Avatar.FallbackPrimitive />
-    </Avatar.Root>
-    ```
-
-### Etc.
+### Spinner
 
 - add new `Spinner` component ([#567](https://github.com/goorm-dev/vapor-ui/pull/567)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Segmented Control
 
 - add new `SegmentedControl` component ([#569](https://github.com/goorm-dev/vapor-ui/pull/569)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
