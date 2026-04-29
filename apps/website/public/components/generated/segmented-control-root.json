@@ -1,5 +1,6 @@
 {
     "name": "SegmentedControlRoot",
+    "description": "Root component for SegmentedControl. Renders a group of selectable segments with a sliding indicator. Use `SegmentedControlRootPrimitive` when you need to supply a custom indicator element. Renders a `<div>` element.",
     "props": [
         {
             "name": "size",
@@ -30,6 +31,14 @@
             "name": "className",
             "type": ["string | ((state: SegmentedControl.Root.State) => (string | undefined))"],
             "required": false
+        },
+        {
+            "name": "indicatorElement",
+            "type": [
+                "ReactElement<SegmentedControlIndicatorPrimitive.Props, string | JSXElementConstructor<any>>"
+            ],
+            "required": false,
+            "description": "A Custom element for SegmentedControl.IndicatorPrimitive. If not provided, the default SegmentedControl.IndicatorPrimitive will be rendered."
         },
         {
             "name": "disabled",

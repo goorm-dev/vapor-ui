@@ -1,5 +1,6 @@
 {
     "name": "SegmentedControlIndicatorPrimitive",
+    "description": "The sliding selection indicator for SegmentedControl. Automatically positions and sizes itself to highlight the currently selected segment. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

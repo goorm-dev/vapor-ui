@@ -46,6 +46,9 @@ const [SegmentedControlProvider, useSegmentedControlContext] =
  * SegmentedControl.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Primitive root component for SegmentedControl without a built-in indicator. Use when you need full control over indicator rendering by supplying a custom `SegmentedControlIndicatorPrimitive`. Renders a `<div>` element.
+ */
 export const SegmentedControlRootPrimitive = forwardRef<
     HTMLDivElement,
     SegmentedControlRootPrimitive.Props
@@ -178,6 +181,9 @@ SegmentedControlRootPrimitive.displayName = 'SegmentedControl.Root';
  * SegmentedControl.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component for SegmentedControl. Renders a group of selectable segments with a sliding indicator. Use `SegmentedControlRootPrimitive` when you need to supply a custom indicator element. Renders a `<div>` element.
+ */
 export const SegmentedControlRoot = forwardRef<HTMLDivElement, SegmentedControlRoot.Props>(
     (props, ref) => {
         const { indicatorElement, children, ...componentProps } = resolveStyles(props);
@@ -196,6 +202,9 @@ export const SegmentedControlRoot = forwardRef<HTMLDivElement, SegmentedControlR
  * SegmentedControl.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * An individual selectable segment within a SegmentedControl. Use for text-based or mixed content segments. Renders a `<button>` element.
+ */
 export const SegmentedControlItem = forwardRef<HTMLButtonElement, SegmentedControlItem.Props>(
     (props, ref) => {
         const { render, value, disabled, className, ...componentProps } = resolveStyles(props);
@@ -231,6 +240,9 @@ SegmentedControlItem.displayName = 'SegmentedControl.Item';
  * SegmentedControl.IconOnlyItem
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * An icon-only variant of SegmentedControl.Item with square proportions. Use when a segment contains only an icon and no label text. Renders a `<button>` element.
+ */
 export const SegmentedControlIconItem = forwardRef<HTMLButtonElement, SegmentedControlItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -251,6 +263,9 @@ SegmentedControlIconItem.displayName = 'SegmentedControl.IconOnlyItem';
  * SegmentedControl.Indicator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The sliding selection indicator for SegmentedControl. Automatically positions and sizes itself to highlight the currently selected segment. Renders a `<div>` element.
+ */
 export const SegmentedControlIndicatorPrimitive = forwardRef<
     HTMLDivElement,
     SegmentedControlIndicatorPrimitive.Props

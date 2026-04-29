@@ -1,5 +1,6 @@
 {
     "name": "SegmentedControlRootPrimitive",
+    "description": "Primitive root component for SegmentedControl without a built-in indicator. Use when you need full control over indicator rendering by supplying a custom `SegmentedControlIndicatorPrimitive`. Renders a `<div>` element.",
     "props": [
         {
             "name": "size",

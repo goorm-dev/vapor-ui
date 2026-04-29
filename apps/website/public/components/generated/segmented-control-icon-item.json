@@ -1,5 +1,6 @@
 {
     "name": "SegmentedControlIconItem",
+    "description": "An icon-only variant of SegmentedControl.Item with square proportions. Use when a segment contains only an icon and no label text. Renders a `<button>` element.",
     "props": [
         {
             "name": "value",

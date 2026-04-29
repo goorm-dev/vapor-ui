@@ -1,5 +1,6 @@
 {
     "name": "SegmentedControlItem",
+    "description": "An individual selectable segment within a SegmentedControl. Use for text-based or mixed content segments. Renders a `<button>` element.",
     "props": [
         {
             "name": "value",
@@ -9,7 +10,7 @@
         },
         {
             "name": "className",
-            "type": ["string | ((state: SegmentedControl.Item.State) => (string | undefined))"],
+            "type": ["string | ((state: SegmentedControl.IconItem.State) => (string | undefined))"],
             "required": false
         },
         {
@@ -45,7 +46,7 @@
         {
             "name": "style",
             "type": [
-                "React.CSSProperties | ((state: SegmentedControl.Item.State) => (React.CSSProperties | undefined))"
+                "React.CSSProperties | ((state: SegmentedControl.IconItem.State) => (React.CSSProperties | undefined))"
             ],
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
@@ -53,7 +54,7 @@
         {
             "name": "render",
             "type": [
-                "ReactElement | ((props: HTMLProps, state: SegmentedControl.Item.State) => ReactElement)"
+                "ReactElement | ((props: HTMLProps, state: SegmentedControl.IconItem.State) => ReactElement)"
             ],
             "required": false,
             "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
