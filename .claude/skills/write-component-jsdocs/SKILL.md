@@ -67,3 +67,4 @@ See the full checklist in [references/guide.md](references/guide.md#checklist).
 - [ ] Numeric props include unit and range
 - [ ] No JSDoc on individual variant values (`sm`, `md`, `fill`, `primary`, etc.)
 - [ ] No JSDoc on `export type XxxVariants`
+- [ ] Default values use `@default` tag, not inline `Default: \`value\`` text

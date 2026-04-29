@@ -24,10 +24,9 @@ jobs:
               id: sync_basic
               env:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
-                  TYPE: basic
               run: |
                   echo "🚀 Syncing basic icons"
-                  TYPE=basic node --experimental-fetch ./scripts/syncFigmaIcons.mjs | tee basic_sync_output.txt
+                  pnpm --filter @repo/sync-figma sync-icons:basic | tee basic_sync_output.txt
 
                   # Extract sync results from output
                   NEW_BASIC=$(grep "FIGMA_SYNC_NEW_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
@@ -42,10 +41,9 @@ jobs:
               id: sync_symbol
               env:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
-                  TYPE: symbol
               run: |
                   echo "🚀 Syncing symbol icons"
-                  TYPE=symbol node --experimental-fetch ./scripts/syncFigmaIcons.mjs | tee symbol_sync_output.txt
+                  pnpm --filter @repo/sync-figma sync-icons:symbol | tee symbol_sync_output.txt
 
                   # Extract sync results from output
                   NEW_SYMBOL=$(grep "FIGMA_SYNC_NEW_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
@@ -55,10 +53,6 @@ jobs:
                   echo "new_icons=$NEW_SYMBOL" >> $GITHUB_OUTPUT
                   echo "updated_icons=$UPDATED_SYMBOL" >> $GITHUB_OUTPUT
                   echo "deleted_icons=$DELETED_SYMBOL" >> $GITHUB_OUTPUT
-
-            - name: Format generated files
-              run: |
-                  pnpm icons format
 
             - name: Create branch and commit changes
               run: |
@@ -246,3 +240,14 @@ jobs:
                       # Clean up temporary file
                       rm -f pr_body.txt
                   fi
+
+            - name: Notify Slack on Failure
+              if: failure()
+              run: |
+                  WORKFLOW_STATUS=failure pnpm --filter @repo/sync-figma notify:slack
+              env:
+                  SLACK_GDS_ALARM_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
+                  GITHUB_REPOSITORY: ${{ github.repository }}
+                  GITHUB_RUN_ID: ${{ github.run_id }}
+                  GITHUB_RUN_NUMBER: ${{ github.run_number }}
+                  GITHUB_REF_NAME: ${{ github.ref_name }}
