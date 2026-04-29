@@ -217,8 +217,8 @@ export async function translatePropsInfo(
                     validateWithMqm(entry.text, mtOutput, config),
                 );
 
-                // 4b. errors 없으면 MT output 그대로 반환 (mt-only 경로)
-                if (mqmResult.errors.length === 0) {
+                // 4b. verdict PASS면 MT output 그대로 반환 (mt-only 경로)
+                if (mqmResult.verdict === 'PASS') {
                     return {
                         translated: mtOutput,
                         pipeline: 'mt-only' as const,
@@ -227,7 +227,7 @@ export async function translatePropsInfo(
                     };
                 }
 
-                // 4c. errors 있으면 no_edit_spans 계산 후 LLM 재번역
+                // 4c. verdict FAIL이면 no_edit_spans 계산 후 LLM 재번역
                 mqmErrorsByEntryIdx.set(entryIndex, mqmResult.errors);
                 const allowedEditSpans = mqmResult.errors.map((e) => e.mt_span);
 

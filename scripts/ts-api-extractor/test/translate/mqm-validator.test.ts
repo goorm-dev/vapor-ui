@@ -106,6 +106,35 @@ describe('validateWithMqm', () => {
         expect(result.errors).toHaveLength(1);
     });
 
+    it('malformed FAIL error entry → returns PASS + console.warn', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                choices: [
+                    {
+                        message: {
+                            content: JSON.stringify({
+                                verdict: 'FAIL',
+                                errors: [
+                                    {
+                                        category: 'Terminology',
+                                        severity: 'major',
+                                        explanation: 'missing spans',
+                                    },
+                                ],
+                            }),
+                        },
+                    },
+                ],
+            }),
+        } as Response);
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const result = await validateWithMqm('onClick handler', '클릭 handler', baseConfig);
+
+        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(warnSpy).toHaveBeenCalledOnce();
+    });
+
     it('response wrapped in markdown fences → strips fences and parses', async () => {
         vi.mocked(fetch).mockResolvedValueOnce({
             ok: true,

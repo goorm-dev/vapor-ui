@@ -95,17 +95,25 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
 
 export function mergeConfig(base: ExtractorConfig, patch: PartialExtractorConfig): ExtractorConfig {
     const mergedTranslation: ExtractorConfig['translation'] =
-        patch.translation !== undefined || base.translation !== undefined
+        base.translation || patch.translation
             ? {
+                  ...base.translation,
+                  ...patch.translation,
                   enabled: patch.translation?.enabled ?? base.translation?.enabled ?? false,
                   targetLocale:
                       patch.translation?.targetLocale ?? base.translation?.targetLocale ?? 'ko',
                   llm: {
+                      ...base.translation?.llm,
+                      ...patch.translation?.llm,
                       enabled:
                           patch.translation?.llm?.enabled ?? base.translation?.llm?.enabled ?? true,
                   },
                   validation: {
+                      ...base.translation?.validation,
+                      ...patch.translation?.validation,
                       mqm: {
+                          ...base.translation?.validation?.mqm,
+                          ...patch.translation?.validation?.mqm,
                           enabled:
                               patch.translation?.validation?.mqm?.enabled ??
                               base.translation?.validation?.mqm?.enabled ??

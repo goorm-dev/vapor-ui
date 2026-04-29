@@ -232,6 +232,38 @@ describe('translatePropsInfo', () => {
         expect(result.componentReports[0].failCount).toBeGreaterThan(0);
     });
 
+    it('MQM verdict FAIL with empty errors → does not treat as PASS', async () => {
+        const mtText = '버튼 컴포넌트.';
+        const rewrittenText = '버튼 컴포넌트입니다.';
+        vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
+        const postprocessSpy = vi
+            .spyOn(llmModule, 'postprocessWithLlm')
+            .mockResolvedValue(rewrittenText);
+        vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
+            verdict: 'FAIL',
+            errors: [],
+        });
+
+        const config = {
+            ...baseConfig,
+            validation: { mqm: { enabled: true, failOnError: false } },
+        };
+
+        const propsWithDescription: PropsInfoJson[] = [
+            {
+                name: 'Button',
+                description: 'A button component.',
+                props: [],
+            },
+        ];
+
+        const result = await translatePropsInfo(propsWithDescription, config);
+
+        expect(postprocessSpy).toHaveBeenCalled();
+        expect(result.props[0].description).toBe(mtText);
+        expect(result.componentReports[0].failCount).toBe(1);
+    });
+
     // Test case 7: 캐시 히트 → DeepL 호출 없이 캐시 결과 반환
     it('cache hit → translateWithDeepl 호출 없이 캐시 결과 반환', async () => {
         const cachedText = '캐시된 번역';
