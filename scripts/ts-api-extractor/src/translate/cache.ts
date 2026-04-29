@@ -9,6 +9,9 @@ export interface CacheEntry {
     source: string;
     translated: string;
     cachedAt: string;
+    pipeline: 'mt-only' | 'mt-ape';
+    hadErrors: boolean;
+    hadOverEdit: boolean;
 }
 
 export type CacheStore = Map<string, CacheEntry>;
@@ -34,7 +37,8 @@ export function loadCache(outputDir: string): CacheStore {
             ([, v]) =>
                 typeof v === 'object' &&
                 v !== null &&
-                typeof (v as CacheEntry).translated === 'string',
+                typeof (v as CacheEntry).translated === 'string' &&
+                typeof (v as CacheEntry).pipeline === 'string',
         ) as [string, CacheEntry][];
         return new Map(valid);
     } catch {

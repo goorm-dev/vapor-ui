@@ -1,22 +1,16 @@
-export type MqmCategory = 'accuracy' | 'fluency' | 'style';
-
-export type MqmErrorType =
-    | 'mistranslation'
-    | 'omission/addition'
-    | 'terminology'
-    | 'untranslated'
-    | 'grammar'
-    | 'formatting'
-    | 'unnaturalness'
-    | 'formality';
-
 export interface MqmError {
-    category: MqmCategory;
-    type: MqmErrorType;
-    severity: 'minor' | 'major';
-    source: string;
-    translation: string;
-    message: string;
+    category:
+        | 'Accuracy/Mistranslation'
+        | 'Accuracy/Omission'
+        | 'Accuracy/Addition'
+        | 'Fluency/Grammar'
+        | 'Terminology'
+        | 'Style'
+        | 'Locale convention';
+    severity: 'minor' | 'major' | 'critical';
+    source_span: string;
+    mt_span: string;
+    explanation: string;
 }
 
 export interface MqmResult {

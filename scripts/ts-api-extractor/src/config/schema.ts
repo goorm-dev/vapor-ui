@@ -22,9 +22,19 @@ export interface ExtractorConfig {
     translation?: TranslationConfig;
 }
 
+type DeepPartialTranslationConfig = {
+    enabled?: boolean;
+    targetLocale?: TranslationConfig['targetLocale'];
+    llm?: Partial<TranslationConfig['llm']>;
+    validation?: {
+        mqm?: Partial<TranslationConfig['validation']['mqm']>;
+    };
+};
+
 export type PartialExtractorConfig = Partial<
-    Omit<ExtractorConfig, 'components'> & {
+    Omit<ExtractorConfig, 'components' | 'translation'> & {
         components: Record<string, ComponentExtractConfig>;
+        translation: DeepPartialTranslationConfig;
     }
 >;
 

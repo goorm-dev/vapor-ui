@@ -67,12 +67,11 @@ describe('postprocessWithLlm', () => {
 
         await postprocessWithLlm('onClick handler', '클릭 핸들러', [
             {
-                category: 'accuracy',
-                type: 'terminology',
+                category: 'Terminology',
                 severity: 'major',
-                source: 'onClick',
-                translation: '클릭',
-                message: 'must not be translated',
+                source_span: 'onClick',
+                mt_span: '클릭',
+                explanation: 'must not be translated',
             },
         ]);
 
@@ -80,7 +79,7 @@ describe('postprocessWithLlm', () => {
         const body = JSON.parse((options as RequestInit).body as string) as Record<string, unknown>;
         const messages = body.messages as { role: string; content: string }[];
         const userMessage = messages.find((m) => m.role === 'user');
-        expect(userMessage?.content).toContain('errors that MUST be fixed');
+        expect(userMessage?.content).toContain('Errors to fix:');
         expect(userMessage?.content).toContain('onClick');
     });
 

@@ -129,12 +129,11 @@ describe('translatePropsInfo', () => {
             verdict: 'FAIL',
             errors: [
                 {
-                    category: 'accuracy',
-                    type: 'mistranslation',
+                    category: 'Accuracy/Mistranslation',
                     severity: 'major',
-                    source: 'A button component.',
-                    translation: '버튼 컴포넌트.',
-                    message: '의미 왜곡',
+                    source_span: 'A button component.',
+                    mt_span: '버튼 컴포넌트.',
+                    explanation: '의미 왜곡',
                 },
             ],
         });
@@ -154,7 +153,7 @@ describe('translatePropsInfo', () => {
         expect(result.componentReports[0].failCount).toBeGreaterThan(0);
         expect(result.componentReports[0].errors).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ severity: 'major', type: 'mistranslation' }),
+                expect.objectContaining({ severity: 'major', category: 'Accuracy/Mistranslation' }),
             ]),
         );
     });
@@ -167,12 +166,11 @@ describe('translatePropsInfo', () => {
             verdict: 'FAIL',
             errors: [
                 {
-                    category: 'accuracy',
-                    type: 'mistranslation',
+                    category: 'Accuracy/Mistranslation',
                     severity: 'major',
-                    source: 'A button component.',
-                    translation: '버튼 컴포넌트.',
-                    message: '의미 왜곡',
+                    source_span: 'A button component.',
+                    mt_span: '버튼 컴포넌트.',
+                    explanation: '의미 왜곡',
                 },
             ],
         });
@@ -195,28 +193,24 @@ describe('translatePropsInfo', () => {
         );
     });
 
-    // Test case 6: failOnError: false + FAIL → warn 후 번역 결과 사용
-    it('failOnError: false + FAIL → warn 후 번역 결과 사용', async () => {
-        const translatedText = '버튼 컴포넌트.';
-        vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([translatedText]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(
-            async (_source, draft) => draft,
-        );
+    // Test case 6: failOnError: false + FAIL → LLM 재번역 후 결과 사용 (warn 없음)
+    it('failOnError: false + FAIL → LLM 재번역 결과 사용', async () => {
+        const mtText = '버튼 컴포넌트.';
+        const rewrittenText = '버튼 컴포넌트입니다.';
+        vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue(rewrittenText);
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
             verdict: 'FAIL',
             errors: [
                 {
-                    category: 'accuracy',
-                    type: 'mistranslation',
+                    category: 'Accuracy/Mistranslation',
                     severity: 'major',
-                    source: 'A button component.',
-                    translation: translatedText,
-                    message: '의미 왜곡',
+                    source_span: 'A button component.',
+                    mt_span: mtText,
+                    explanation: '의미 왜곡',
                 },
             ],
         });
-
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
         const config = {
             ...baseConfig,
@@ -233,9 +227,9 @@ describe('translatePropsInfo', () => {
 
         const result = await translatePropsInfo(propsWithDescription, config);
 
-        expect(warnSpy).toHaveBeenCalled();
-        // Translation result is used despite FAIL
-        expect(result.props[0].description).toBe(translatedText);
+        // FAIL이어도 throw 없이 LLM 재번역 결과를 사용
+        expect(result.props[0].description).toBe(rewrittenText);
+        expect(result.componentReports[0].failCount).toBeGreaterThan(0);
     });
 
     // Test case 7: 캐시 히트 → DeepL 호출 없이 캐시 결과 반환
@@ -251,6 +245,9 @@ describe('translatePropsInfo', () => {
                         source: 'A button component.',
                         translated: cachedText,
                         cachedAt: '2026-01-01T00:00:00.000Z',
+                        pipeline: 'mt-only' as const,
+                        hadErrors: false,
+                        hadOverEdit: false,
                     },
                 ],
                 [
@@ -264,6 +261,9 @@ describe('translatePropsInfo', () => {
                         source: 'Click handler callback.',
                         translated: '캐시된 콜백',
                         cachedAt: '2026-01-01T00:00:00.000Z',
+                        pipeline: 'mt-only' as const,
+                        hadErrors: false,
+                        hadOverEdit: false,
                     },
                 ],
             ]),

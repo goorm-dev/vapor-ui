@@ -87,12 +87,11 @@ describe('validateWithMqm', () => {
             verdict: 'FAIL',
             errors: [
                 {
-                    category: 'accuracy',
-                    type: 'terminology',
+                    category: 'Terminology',
                     severity: 'major',
-                    source: 'onClick',
-                    translation: '클릭',
-                    message: 'identifier must not be translated',
+                    source_span: 'onClick',
+                    mt_span: '클릭',
+                    explanation: 'identifier must not be translated',
                 },
             ],
         };

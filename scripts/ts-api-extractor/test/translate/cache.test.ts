@@ -59,6 +59,9 @@ describe('loadCache', () => {
             source: 'hello',
             translated: '안녕',
             cachedAt: '2026-01-01T00:00:00.000Z',
+            pipeline: 'mt-only',
+            hadErrors: false,
+            hadOverEdit: false,
         };
         const key = makeCacheKey('hello', 'ko', 'model', '');
         fs.writeFileSync(
@@ -97,6 +100,9 @@ describe('saveCache / loadCache roundtrip', () => {
             source: 'hello',
             translated: '안녕',
             cachedAt: '2026-01-01T00:00:00.000Z',
+            pipeline: 'mt-ape',
+            hadErrors: true,
+            hadOverEdit: false,
         });
 
         saveCache(tmpDir, store);
@@ -106,6 +112,9 @@ describe('saveCache / loadCache roundtrip', () => {
             source: 'hello',
             translated: '안녕',
             cachedAt: '2026-01-01T00:00:00.000Z',
+            pipeline: 'mt-ape',
+            hadErrors: true,
+            hadOverEdit: false,
         });
     });
 

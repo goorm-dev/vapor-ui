@@ -1,22 +1,33 @@
 import { callLlm } from '~/translate/llm-client';
 import type { MqmResult, TranslationConfig } from '~/translate/types';
 
-const SYSTEM_PROMPT = `You are a translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
+const SYSTEM_PROMPT = `You are a UI string translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
 
-Evaluate the Korean translation of a JSDoc comment for these error types:
+Evaluate the Korean translation of a JSDoc comment using MQM criteria. For each error, return the exact substring from the source (source_span) and the exact substring from the translation (mt_span) that contains the error.
 
-Accuracy: mistranslation, omission/addition, terminology (e.g. prop names like onClick must NOT be translated), untranslated
-Fluency: grammar, formatting, unnaturalness
-Style: formality
+Error categories:
+- Accuracy/Mistranslation — meaning is changed or distorted
+- Accuracy/Omission — content from source is missing
+- Accuracy/Addition — content not in source was added
+- Fluency/Grammar — grammatical error in translation
+- Terminology — domain term used incorrectly (e.g. prop names like onClick, component names like Button, JSDoc tags like @param, type expressions like string | number must remain in English — translating them is a Terminology error)
+- Style — unnatural or overly formal/informal expression
+- Locale convention — formatting convention for the target locale violated
+
+Severity:
+- minor: awkward phrasing, style issues only
+- major: meaning broken or identifier translated
+- critical: completely wrong or unintelligible
 
 Rules:
-- camelCase identifiers (onClick, className, etc.), component names (Button, Dialog, etc.), JSDoc tags (@param, @returns), and type expressions (string | number) must remain in English — translating them is a major terminology error.
-- major = meaning broken or identifier translated; minor = awkward phrasing only
+- camelCase identifiers (onClick, className, etc.), component names (Button, Dialog, etc.), JSDoc tags (@param, @returns), and type expressions must remain in English.
+- Markdown code blocks, HTML tags, and placeholders ({count}, {{name}}) must NOT be flagged as errors.
+- If no errors exist, return errors as an empty array.
 
 Respond with EXACTLY this JSON shape and nothing else:
 {"verdict":"PASS","errors":[]}
 or
-{"verdict":"FAIL","errors":[{"category":"accuracy","type":"terminology","severity":"major","source":"...","translation":"...","message":"..."}]}`;
+{"verdict":"FAIL","errors":[{"category":"Terminology","severity":"major","source_span":"onClick","mt_span":"클릭","explanation":"camelCase identifier must not be translated"}]}`;
 
 const passResult = (): MqmResult => ({ verdict: 'PASS', errors: [] });
 
@@ -63,7 +74,7 @@ export async function validateWithMqm(
                 (e) =>
                     typeof e === 'object' &&
                     e !== null &&
-                    typeof (e as Record<string, unknown>).message === 'string' &&
+                    typeof (e as Record<string, unknown>).explanation === 'string' &&
                     typeof (e as Record<string, unknown>).severity === 'string',
             )
         ) {

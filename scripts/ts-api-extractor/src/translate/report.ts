@@ -41,11 +41,11 @@ function renderComponentSection(c: ComponentReport): string {
 
     if (c.errors.length > 0) {
         for (const e of c.errors) {
-            const source = sanitizeMarkdown(e.source);
-            const translation = sanitizeMarkdown(e.translation);
-            const message = sanitizeMarkdown(e.message);
+            const sourceSpan = sanitizeMarkdown(e.source_span);
+            const mtSpan = sanitizeMarkdown(e.mt_span);
+            const explanation = sanitizeMarkdown(e.explanation);
             lines.push(
-                `- **[${e.severity.toUpperCase()} ${e.category}/${e.type}]** \`${source}\` → \`${translation}\`: ${message}`,
+                `- **[${e.severity.toUpperCase()} ${e.category}]** \`${sourceSpan}\` → \`${mtSpan}\`: ${explanation}`,
             );
         }
     }

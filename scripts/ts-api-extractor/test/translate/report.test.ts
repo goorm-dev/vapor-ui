@@ -91,11 +91,10 @@ describe('renderReport', () => {
                     errors: [
                         {
                             severity: 'major',
-                            category: 'accuracy',
-                            type: 'mistranslation',
-                            source: 'Close',
-                            translation: '닫기X',
-                            message: 'Translation contains extraneous character',
+                            category: 'Accuracy/Mistranslation',
+                            source_span: 'Close',
+                            mt_span: '닫기X',
+                            explanation: 'Translation contains extraneous character',
                         },
                     ],
                 },
@@ -103,7 +102,7 @@ describe('renderReport', () => {
         };
         const output = renderReport(report);
         expect(output).toContain('### Dialog — ❌ FAIL (1/4)');
-        expect(output).toContain('[MAJOR accuracy/mistranslation]');
+        expect(output).toContain('[MAJOR Accuracy/Mistranslation]');
         expect(output).toContain('`Close`');
         expect(output).toContain('extraneous character');
     });
