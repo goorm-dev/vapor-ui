@@ -94,6 +94,7 @@ export async function extract(input: ExtractInput): Promise<ExtractOutput> {
             config.translation,
             outputDir,
             skipCache,
+            config.verbose,
         );
         translatedProps = translateResult.props;
         writeReport(buildReport(translateResult.componentReports), outputDir);

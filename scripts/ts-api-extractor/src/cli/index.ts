@@ -22,13 +22,14 @@ async function runCli(): Promise<void> {
     --config          Config file path
     --translate       Enable translation pipeline (outputs en/ and ko/ subfolders)
     --skip-cache      Skip translation cache (do not read or write cache)
+    --verbose, -v     Enable verbose logging
 
   Examples
     $ ts-api-extractor
     $ ts-api-extractor --component Tabs
     $ ts-api-extractor --config ./docs-extractor.config.mjs
     $ ts-api-extractor --translate
-    $ ts-api-extractor --translate --skip-cache
+    $ ts-api-extractor --translate --skip-cache --verbose
 `,
         {
             importMeta: import.meta,
@@ -37,6 +38,7 @@ async function runCli(): Promise<void> {
                 config: { type: 'string' },
                 translate: { type: 'boolean', default: false },
                 skipCache: { type: 'boolean', default: false },
+                verbose: { type: 'boolean', shortFlag: 'v', default: false },
             },
         },
     );
@@ -48,6 +50,9 @@ async function runCli(): Promise<void> {
 
     if (cli.flags.translate && resolved.config.translation) {
         resolved.config.translation.enabled = true;
+    }
+    if (cli.flags.verbose) {
+        resolved.config.verbose = true;
     }
 
     await extract({

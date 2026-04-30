@@ -158,6 +158,42 @@ describe('translatePropsInfo', () => {
         );
     });
 
+    it('verbose=true이면 MQM 실패 판정과 error 상세를 로그로 출력', async () => {
+        vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue(['버튼 컴포넌트.']);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue('버튼 컴포넌트입니다.');
+        vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
+            verdict: 'FAIL',
+            errors: [
+                {
+                    category: 'Accuracy/Mistranslation',
+                    severity: 'major',
+                    source_span: 'A button component.',
+                    mt_span: '버튼 컴포넌트.',
+                    explanation: '의미 왜곡',
+                },
+            ],
+        });
+        const logSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+        const propsWithDescription: PropsInfoJson[] = [
+            {
+                name: 'Button',
+                description: 'A button component.',
+                props: [],
+            },
+        ];
+
+        await translatePropsInfo(propsWithDescription, baseConfig, undefined, false, true);
+
+        expect(logSpy).toHaveBeenCalledWith('[i18n] mqm: Button.description FAIL (1 error)');
+        expect(logSpy).toHaveBeenCalledWith(
+            '[i18n] mqm:error Button.description #1 major Accuracy/Mistranslation',
+        );
+        expect(logSpy).toHaveBeenCalledWith('[i18n]   source_span: "A button component."');
+        expect(logSpy).toHaveBeenCalledWith('[i18n]   mt_span: "버튼 컴포넌트."');
+        expect(logSpy).toHaveBeenCalledWith('[i18n]   explanation: 의미 왜곡');
+    });
+
     // Test case 5: failOnError: true + FAIL → Error throw
     it('failOnError: true + FAIL → Error throw', async () => {
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue(['버튼 컴포넌트.']);
@@ -199,18 +235,20 @@ describe('translatePropsInfo', () => {
         const rewrittenText = '버튼 컴포넌트입니다.';
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
         vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue(rewrittenText);
-        vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
-            verdict: 'FAIL',
-            errors: [
-                {
-                    category: 'Accuracy/Mistranslation',
-                    severity: 'major',
-                    source_span: 'A button component.',
-                    mt_span: mtText,
-                    explanation: '의미 왜곡',
-                },
-            ],
-        });
+        vi.spyOn(mqmModule, 'validateWithMqm')
+            .mockResolvedValueOnce({
+                verdict: 'FAIL',
+                errors: [
+                    {
+                        category: 'Accuracy/Mistranslation',
+                        severity: 'major',
+                        source_span: 'A button component.',
+                        mt_span: mtText,
+                        explanation: '의미 왜곡',
+                    },
+                ],
+            })
+            .mockResolvedValueOnce({ verdict: 'PASS', errors: [] });
 
         const config = {
             ...baseConfig,
@@ -229,7 +267,9 @@ describe('translatePropsInfo', () => {
 
         // FAIL이어도 throw 없이 LLM 재번역 결과를 사용
         expect(result.props[0].description).toBe(rewrittenText);
-        expect(result.componentReports[0].failCount).toBeGreaterThan(0);
+        expect(result.componentReports[0].initial.failCount).toBeGreaterThan(0);
+        expect(result.componentReports[0].final.failCount).toBe(0);
+        expect(result.componentReports[0].failCount).toBe(0);
     });
 
     it('MQM verdict FAIL with empty errors → does not treat as PASS', async () => {

@@ -13,13 +13,29 @@ function makeTmpDir(): string {
 describe('buildReport', () => {
     it('aggregates totalTexts and failCount across components', () => {
         const components: ComponentReport[] = [
-            { name: 'Button', totalTexts: 5, failCount: 1, errors: [] },
-            { name: 'Avatar', totalTexts: 3, failCount: 0, errors: [] },
+            {
+                name: 'Button',
+                totalTexts: 5,
+                failCount: 1,
+                errors: [],
+                initial: { failCount: 2, errors: [] },
+                final: { failCount: 1, errors: [] },
+            },
+            {
+                name: 'Avatar',
+                totalTexts: 3,
+                failCount: 0,
+                errors: [],
+                initial: { failCount: 0, errors: [] },
+                final: { failCount: 0, errors: [] },
+            },
         ];
         const report = buildReport(components);
         expect(report.totalComponents).toBe(2);
         expect(report.totalTexts).toBe(8);
         expect(report.failCount).toBe(1);
+        expect(report.initialFailCount).toBe(2);
+        expect(report.finalFailCount).toBe(1);
         expect(report.components).toBe(components);
     });
 
@@ -28,6 +44,8 @@ describe('buildReport', () => {
         expect(report.totalComponents).toBe(0);
         expect(report.totalTexts).toBe(0);
         expect(report.failCount).toBe(0);
+        expect(report.initialFailCount).toBe(0);
+        expect(report.finalFailCount).toBe(0);
     });
 
     it('sets generatedAt to a valid ISO timestamp', () => {
@@ -47,6 +65,8 @@ describe('renderReport', () => {
             totalComponents: 0,
             totalTexts: 0,
             failCount: 0,
+            initialFailCount: 0,
+            finalFailCount: 0,
             components: [],
         };
         const output = renderReport(report);
@@ -59,7 +79,18 @@ describe('renderReport', () => {
             totalComponents: 1,
             totalTexts: 10,
             failCount: 2,
-            components: [{ name: 'Button', totalTexts: 10, failCount: 2, errors: [] }],
+            initialFailCount: 3,
+            finalFailCount: 2,
+            components: [
+                {
+                    name: 'Button',
+                    totalTexts: 10,
+                    failCount: 2,
+                    errors: [],
+                    initial: { failCount: 3, errors: [] },
+                    final: { failCount: 2, errors: [] },
+                },
+            ],
         };
         const output = renderReport(report);
         expect(output).toContain('Pass rate | 80.0%');
@@ -71,10 +102,23 @@ describe('renderReport', () => {
             totalComponents: 1,
             totalTexts: 3,
             failCount: 0,
-            components: [{ name: 'Avatar', totalTexts: 3, failCount: 0, errors: [] }],
+            initialFailCount: 1,
+            finalFailCount: 0,
+            components: [
+                {
+                    name: 'Avatar',
+                    totalTexts: 3,
+                    failCount: 0,
+                    errors: [],
+                    initial: { failCount: 1, errors: [] },
+                    final: { failCount: 0, errors: [] },
+                },
+            ],
         };
         const output = renderReport(report);
         expect(output).toContain('### Avatar — ✅ PASS');
+        expect(output).toContain('Initial MQM: FAIL (1/3)');
+        expect(output).toContain('Final MQM: PASS');
     });
 
     it('renders FAIL status with error details for component with failures', () => {
@@ -83,6 +127,8 @@ describe('renderReport', () => {
             totalComponents: 1,
             totalTexts: 4,
             failCount: 1,
+            initialFailCount: 2,
+            finalFailCount: 1,
             components: [
                 {
                     name: 'Dialog',
@@ -97,11 +143,37 @@ describe('renderReport', () => {
                             explanation: 'Translation contains extraneous character',
                         },
                     ],
+                    initial: {
+                        failCount: 2,
+                        errors: [
+                            {
+                                severity: 'major',
+                                category: 'Accuracy/Addition',
+                                source_span: 'Open',
+                                mt_span: '열기 열기',
+                                explanation: 'Duplicated phrase',
+                            },
+                        ],
+                    },
+                    final: {
+                        failCount: 1,
+                        errors: [
+                            {
+                                severity: 'major',
+                                category: 'Accuracy/Mistranslation',
+                                source_span: 'Close',
+                                mt_span: '닫기X',
+                                explanation: 'Translation contains extraneous character',
+                            },
+                        ],
+                    },
                 },
             ],
         };
         const output = renderReport(report);
         expect(output).toContain('### Dialog — ❌ FAIL (1/4)');
+        expect(output).toContain('Initial MQM: FAIL (2/4)');
+        expect(output).toContain('Final MQM: FAIL (1/4)');
         expect(output).toContain('[MAJOR Accuracy/Mistranslation]');
         expect(output).toContain('`Close`');
         expect(output).toContain('extraneous character');
@@ -125,7 +197,16 @@ describe('writeReport', () => {
     });
 
     it('writes .i18n-report.md to outputDir', () => {
-        const report = buildReport([{ name: 'Button', totalTexts: 2, failCount: 0, errors: [] }]);
+        const report = buildReport([
+            {
+                name: 'Button',
+                totalTexts: 2,
+                failCount: 0,
+                errors: [],
+                initial: { failCount: 0, errors: [] },
+                final: { failCount: 0, errors: [] },
+            },
+        ]);
         writeReport(report, tmpDir);
         const filePath = path.join(tmpDir, '.i18n-report.md');
         expect(fs.existsSync(filePath)).toBe(true);

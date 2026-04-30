@@ -40,6 +40,35 @@ interface PatchResult {
     hasOverEdit: boolean;
 }
 
+function formatEntryLabel(props: PropsInfoJson[], entry: TextEntry): string {
+    const component = props[entry.componentIndex];
+    const componentName = component?.name ?? `component#${entry.componentIndex}`;
+
+    if (entry.kind === 'component') {
+        return `${componentName}.description`;
+    }
+
+    const propName =
+        entry.propIndex !== undefined
+            ? (component?.props[entry.propIndex]?.name ?? `prop#${entry.propIndex}`)
+            : 'prop';
+
+    return `${componentName}.props.${propName}`;
+}
+
+function formatErrorCount(count: number): string {
+    return `${count} ${count === 1 ? 'error' : 'errors'}`;
+}
+
+function logMqmErrors(log: (message: string) => void, label: string, errors: MqmError[]): void {
+    errors.forEach((error, index) => {
+        log(`mqm:error ${label} #${index + 1} ${error.severity} ${error.category}`);
+        log(`  source_span: ${JSON.stringify(error.source_span)}`);
+        log(`  mt_span: ${JSON.stringify(error.mt_span)}`);
+        log(`  explanation: ${error.explanation}`);
+    });
+}
+
 /** spec 기능 5: allowedEditSpans 밖의 변경을 감지하고 over-editing 시 MT 원본 기반으로 복원 */
 function applySelectivePatch(
     mtOutput: string,
@@ -55,7 +84,10 @@ function applySelectivePatch(
 
     // 단어 단위 diff를 직접 구현 (외부 라이브러리 없이)
     // allowedEditSpans 밖에서 변경된 내용이 있으면 MT 원본으로 폴백
-    const noEditSpans = extractNoEditSpans(mtOutput, allowedEditSpans.map((s) => ({ mt_span: s } as MqmError)));
+    const noEditSpans = extractNoEditSpans(
+        mtOutput,
+        allowedEditSpans.map((s) => ({ mt_span: s }) as MqmError),
+    );
 
     for (const span of noEditSpans) {
         if (span.length > 0 && !rewrittenOutput.includes(span)) {
@@ -66,7 +98,7 @@ function applySelectivePatch(
 
     if (hasOverEdit) {
         // over-editing 발생: MT 원본에서 허용된 구간만 rewrittenOutput의 것으로 교체
-        let result = mtOutput;
+        const result = mtOutput;
         for (const span of allowedEditSpans) {
             // allowedEditSpan에 대응하는 rewritten 결과가 있으면 교체
             // (정확한 대응을 찾기 어려우므로 MT 원본 그대로 반환)
@@ -83,7 +115,14 @@ export async function translatePropsInfo(
     config: TranslationConfig,
     outputDir?: string,
     skipCache = false,
+    verbose = false,
 ): Promise<TranslateResult> {
+    const log = (message: string): void => {
+        if (verbose) {
+            console.error(`[i18n] ${message}`);
+        }
+    };
+
     // 1. 번역 대상 텍스트 수집
     const entries: TextEntry[] = [];
 
@@ -112,6 +151,7 @@ export async function translatePropsInfo(
     }
 
     if (entries.length === 0) {
+        log(`collected 0 translatable texts from ${props.length} components`);
         return {
             props: props.map((component) => ({
                 ...component,
@@ -120,11 +160,15 @@ export async function translatePropsInfo(
             componentReports: props.map((component) => ({
                 name: component.name,
                 totalTexts: 0,
+                initial: { failCount: 0, errors: [] },
+                final: { failCount: 0, errors: [] },
                 failCount: 0,
                 errors: [],
             })),
         };
     }
+
+    log(`collected ${entries.length} translatable texts from ${props.length} components`);
 
     const cacheOutputDir = outputDir ?? '';
     const useCache = !skipCache;
@@ -145,6 +189,7 @@ export async function translatePropsInfo(
     }
     const finalEntries: FinalEntry[] = new Array(entries.length);
     const missIndices: number[] = [];
+    let cacheHits = 0;
 
     for (let entryIndex = 0; entryIndex < entries.length; entryIndex++) {
         const entry = entries[entryIndex];
@@ -158,31 +203,45 @@ export async function translatePropsInfo(
                     hadErrors: hit.hadErrors,
                     hadOverEdit: hit.hadOverEdit,
                 };
+                cacheHits++;
                 continue;
             }
         }
         missIndices.push(entryIndex);
     }
 
-    const mqmErrorsByEntryIdx = new Map<number, MqmError[]>();
+    log(`cache: ${cacheHits} hit, ${missIndices.length} miss`);
+
+    const initialMqmErrorsByEntryIdx = new Map<number, MqmError[]>();
+    const finalMqmErrorsByEntryIdx = new Map<number, MqmError[]>();
+    const initialFailedEntryIndices = new Set<number>();
+    const finalFailedEntryIndices = new Set<number>();
 
     if (missIndices.length > 0) {
         const limit = pLimit(LLM_CONCURRENCY);
 
         // 3. DeepL 1차 번역 (배치)
         const missTexts = missIndices.map((i) => entries[i].text);
+        log(`deepl: translating ${missTexts.length} texts`);
         const deeplResults = await translateWithDeepl(missTexts, glossaryId);
+        log(
+            deeplResults
+                ? `deepl: received ${deeplResults.length} translations`
+                : 'deepl: unavailable, falling back to source text',
+        );
 
         // 4. spec 순서: MQM 평가 먼저 → errors 있으면 LLM 재번역
         const missResults: FinalEntry[] = await Promise.all(
             missIndices.map(async (entryIndex, batchIndex) => {
                 const entry = entries[entryIndex];
                 const mtOutput = deeplResults?.[batchIndex];
+                const label = formatEntryLabel(props, entry);
 
                 if (mtOutput === undefined) {
                     console.warn(
                         `[deepl] Missing result at batch index ${batchIndex}, using source text as fallback.`,
                     );
+                    log(`deepl: missing result for ${label}, using source text`);
                     return {
                         translated: entry.text,
                         pipeline: 'mt-only' as const,
@@ -193,7 +252,9 @@ export async function translatePropsInfo(
 
                 // 4a. MQM 평가 (MT output 기준)
                 if (!config.validation.mqm.enabled) {
+                    log(`mqm: disabled for ${label}`);
                     if (!config.llm.enabled) {
+                        log(`llm: disabled for ${label}, using DeepL output`);
                         return {
                             translated: mtOutput,
                             pipeline: 'mt-only' as const,
@@ -202,6 +263,7 @@ export async function translatePropsInfo(
                         };
                     }
                     // MQM 비활성화: LLM postprocess만 실행 (errors 없이)
+                    log(`llm: postprocessing ${label} without MQM errors`);
                     const rewritten = await limit(() =>
                         postprocessWithLlm(entry.text, mtOutput, [], []),
                     );
@@ -213,9 +275,17 @@ export async function translatePropsInfo(
                     };
                 }
 
-                const mqmResult = await limit(() =>
-                    validateWithMqm(entry.text, mtOutput, config),
+                const mqmResult = await limit(() => validateWithMqm(entry.text, mtOutput, config));
+                log(
+                    `mqm: ${label} ${mqmResult.verdict}${
+                        mqmResult.verdict === 'FAIL'
+                            ? ` (${formatErrorCount(mqmResult.errors.length)})`
+                            : ''
+                    }`,
                 );
+                if (mqmResult.verdict === 'FAIL') {
+                    logMqmErrors(log, label, mqmResult.errors);
+                }
 
                 // 4b. verdict PASS면 MT output 그대로 반환 (mt-only 경로)
                 if (mqmResult.verdict === 'PASS') {
@@ -228,10 +298,14 @@ export async function translatePropsInfo(
                 }
 
                 // 4c. verdict FAIL이면 no_edit_spans 계산 후 LLM 재번역
-                mqmErrorsByEntryIdx.set(entryIndex, mqmResult.errors);
+                initialFailedEntryIndices.add(entryIndex);
+                initialMqmErrorsByEntryIdx.set(entryIndex, mqmResult.errors);
                 const allowedEditSpans = mqmResult.errors.map((e) => e.mt_span);
 
                 if (!config.llm.enabled) {
+                    log(`llm: disabled for ${label}, keeping failed DeepL output`);
+                    finalFailedEntryIndices.add(entryIndex);
+                    finalMqmErrorsByEntryIdx.set(entryIndex, mqmResult.errors);
                     return {
                         translated: mtOutput,
                         pipeline: 'mt-only' as const,
@@ -242,6 +316,7 @@ export async function translatePropsInfo(
 
                 const noEditSpans = extractNoEditSpans(mtOutput, mqmResult.errors);
 
+                log(`llm: postprocessing ${label}`);
                 const rewrittenOutput = await limit(() =>
                     postprocessWithLlm(entry.text, mtOutput, mqmResult.errors, noEditSpans),
                 );
@@ -257,20 +332,27 @@ export async function translatePropsInfo(
                     console.warn(
                         `[pipeline] Over-editing detected for: "${entry.text.slice(0, 60)}...". Falling back to MT output.`,
                     );
+                    log(`llm: over-editing detected for ${label}, using DeepL output`);
                 }
 
-                // failOnError: true이면 재검증
-                if (config.validation.mqm.failOnError) {
-                    const recheck = await limit(() =>
-                        validateWithMqm(entry.text, result, config),
-                    );
-                    if (recheck.verdict === 'FAIL') {
-                        mqmErrorsByEntryIdx.set(entryIndex, recheck.errors);
+                log(`mqm: recheck ${label}`);
+                const recheck = await limit(() => validateWithMqm(entry.text, result, config));
+                log(
+                    `mqm: recheck ${label} ${recheck.verdict}${
+                        recheck.verdict === 'FAIL'
+                            ? ` (${formatErrorCount(recheck.errors.length)})`
+                            : ''
+                    }`,
+                );
+                if (recheck.verdict === 'FAIL') {
+                    logMqmErrors(log, label, recheck.errors);
+                    finalFailedEntryIndices.add(entryIndex);
+                    finalMqmErrorsByEntryIdx.set(entryIndex, recheck.errors);
+
+                    if (config.validation.mqm.failOnError) {
                         throw new Error(
                             `[mqm-validator] Translation validation FAILED after retry for: "${entry.text.slice(0, 60)}..."`,
                         );
-                    } else {
-                        mqmErrorsByEntryIdx.delete(entryIndex);
                     }
                 }
 
@@ -311,6 +393,9 @@ export async function translatePropsInfo(
 
     if (useCache && cacheOutputDir) {
         saveCache(cacheOutputDir, cacheStore);
+        log(`cache: saved ${cacheStore.size} entries`);
+    } else {
+        log(`cache: save skipped (${useCache ? 'no outputDir' : 'skipCache=true'})`);
     }
 
     // 7. 번역된 PropsInfoJson 배열 구성 (불변)
@@ -349,27 +434,50 @@ export async function translatePropsInfo(
         );
     }
 
-    const errorsByComponent = new Map<number, MqmError[]>();
-    const failedTextsByComponent = new Map<number, number>();
-    for (const [entryIndex, errors] of mqmErrorsByEntryIdx) {
-        const componentIndex = entries[entryIndex].componentIndex;
-        const existing = errorsByComponent.get(componentIndex) ?? [];
-        errorsByComponent.set(componentIndex, [...existing, ...errors]);
-        failedTextsByComponent.set(
-            componentIndex,
-            (failedTextsByComponent.get(componentIndex) ?? 0) + 1,
-        );
+    function buildStageByComponent(
+        failedEntryIndices: Set<number>,
+        errorsByEntryIdx: Map<number, MqmError[]>,
+    ): Map<number, { failCount: number; errors: MqmError[] }> {
+        const resultByComponent = new Map<number, { failCount: number; errors: MqmError[] }>();
+
+        for (const entryIndex of failedEntryIndices) {
+            const componentIndex = entries[entryIndex].componentIndex;
+            const current = resultByComponent.get(componentIndex) ?? {
+                failCount: 0,
+                errors: [],
+            };
+            resultByComponent.set(componentIndex, {
+                failCount: current.failCount + 1,
+                errors: [...current.errors, ...(errorsByEntryIdx.get(entryIndex) ?? [])],
+            });
+        }
+
+        return resultByComponent;
     }
 
+    const initialByComponent = buildStageByComponent(
+        initialFailedEntryIndices,
+        initialMqmErrorsByEntryIdx,
+    );
+    const finalByComponent = buildStageByComponent(
+        finalFailedEntryIndices,
+        finalMqmErrorsByEntryIdx,
+    );
+
     const componentReports: ComponentReport[] = props.map((component, componentIndex) => {
-        const errors = errorsByComponent.get(componentIndex) ?? [];
+        const initial = initialByComponent.get(componentIndex) ?? { failCount: 0, errors: [] };
+        const final = finalByComponent.get(componentIndex) ?? { failCount: 0, errors: [] };
         return {
             name: component.name,
             totalTexts: textCountByComponent.get(componentIndex) ?? 0,
-            failCount: failedTextsByComponent.get(componentIndex) ?? 0,
-            errors,
+            initial,
+            final,
+            failCount: final.failCount,
+            errors: final.errors,
         };
     });
+
+    log(`completed ${result.length} components`);
 
     return { props: result, componentReports };
 }
