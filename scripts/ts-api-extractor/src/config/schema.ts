@@ -2,8 +2,6 @@ import { mergeWith } from 'lodash-es';
 
 import type { TranslationConfig } from '~/translate/types';
 
-export type { TranslationConfig };
-
 export interface ComponentExtractConfig {
     include?: string[];
 }
@@ -24,20 +22,12 @@ export interface ExtractorConfig {
     translation: TranslationConfig;
 }
 
-type DeepPartialTranslationConfig = {
-    enabled?: boolean;
-    skipCache?: boolean;
-    targetLocale?: TranslationConfig['targetLocale'];
-    llm?: Partial<TranslationConfig['llm']>;
-    validation?: {
-        mqm?: Partial<TranslationConfig['validation']['mqm']>;
-    };
-};
+type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
 
 export type PartialExtractorConfig = Partial<
     Omit<ExtractorConfig, 'components' | 'translation'> & {
         components: Record<string, ComponentExtractConfig>;
-        translation: DeepPartialTranslationConfig;
+        translation: DeepPartial<TranslationConfig>;
     }
 >;
 
