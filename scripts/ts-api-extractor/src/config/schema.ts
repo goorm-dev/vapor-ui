@@ -1,3 +1,5 @@
+import { mergeWith } from 'lodash-es';
+
 import type { TranslationConfig } from '~/translate/types';
 
 export type { TranslationConfig };
@@ -94,43 +96,15 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
     }
 }
 
-export function mergeConfig(base: ExtractorConfig, patch: PartialExtractorConfig): ExtractorConfig {
-    const mergedTranslation: TranslationConfig = {
-        ...base.translation,
-        ...patch.translation,
-        enabled: patch.translation?.enabled ?? base.translation.enabled,
-        skipCache: patch.translation?.skipCache ?? base.translation.skipCache,
-        targetLocale: patch.translation?.targetLocale ?? base.translation.targetLocale,
-        llm: {
-            ...base.translation.llm,
-            ...patch.translation?.llm,
-            enabled: patch.translation?.llm?.enabled ?? base.translation.llm.enabled,
-        },
-        validation: {
-            ...base.translation.validation,
-            ...patch.translation?.validation,
-            mqm: {
-                ...base.translation.validation.mqm,
-                ...patch.translation?.validation?.mqm,
-                enabled:
-                    patch.translation?.validation?.mqm?.enabled ??
-                    base.translation.validation.mqm.enabled,
-                failOnError:
-                    patch.translation?.validation?.mqm?.failOnError ??
-                    base.translation.validation.mqm.failOnError,
-            },
-        },
-    };
+// Arrays should be replaced (not concatenated/index-merged) so user patches like
+// `exclude: ['foo']` fully override defaults instead of partially merging.
+function replaceArrays(baseValue: unknown, patchValue: unknown): unknown {
+    if (Array.isArray(baseValue) || Array.isArray(patchValue)) {
+        return patchValue ?? baseValue;
+    }
+    return undefined;
+}
 
-    return {
-        ...base,
-        ...patch,
-        exclude: patch.exclude ?? base.exclude,
-        includeHtml: patch.includeHtml ?? base.includeHtml,
-        components: {
-            ...base.components,
-            ...(patch.components ?? {}),
-        },
-        translation: mergedTranslation,
-    };
+export function mergeConfig(base: ExtractorConfig, patch: PartialExtractorConfig): ExtractorConfig {
+    return mergeWith({}, base, patch, replaceArrays) as ExtractorConfig;
 }

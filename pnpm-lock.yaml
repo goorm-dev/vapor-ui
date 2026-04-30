@@ -851,6 +851,9 @@ importers:
       glob:
         specifier: ^10.3.0
         version: 10.5.0
+      lodash-es:
+        specifier: ^4.17.23
+        version: 4.18.1
       meow:
         specifier: ^14.0.0
         version: 14.0.0
@@ -864,6 +867,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
       '@types/node':
         specifier: ^20.10.0
         version: 20.19.17
