@@ -4,7 +4,7 @@ import path from 'node:path';
 import { CliError, applyFlagOverrides, resolveOptions } from '~/cli/options';
 import { extract } from '~/extract';
 
-// Load .env.local from cwd (website app root when running via turbo)
+// Load .env from cwd (website app root when running via turbo)
 try {
     process.loadEnvFile(path.resolve(process.cwd(), '.env'));
 } catch {

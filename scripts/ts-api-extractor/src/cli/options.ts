@@ -18,8 +18,15 @@ export interface CliFlagOverrides {
 }
 
 export function applyFlagOverrides(config: ExtractorConfig, flags: CliFlagOverrides): void {
-    if (flags.translate && config.translation) {
-        config.translation.enabled = true;
+    if (flags.translate) {
+        if (!process.env['DEEPL_API_KEY']) {
+            throw new CliError(
+                'DEEPL_API_KEY is not set. Set it in your .env file or environment to use --translate.',
+            );
+        }
+        if (config.translation) {
+            config.translation.enabled = true;
+        }
     }
     if (flags.skipCache && config.translation) {
         config.translation.skipCache = true;
