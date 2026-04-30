@@ -17,7 +17,7 @@ permissions:
 concurrency:
     group: pr-status-${{ github.event.pull_request.number ||
         github.event.issue.number }}
-    cancel-in-progress: true
+    cancel-in-progress: false
 
 jobs:
     update-status-label:
