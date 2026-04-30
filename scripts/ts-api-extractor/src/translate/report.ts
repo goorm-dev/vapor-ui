@@ -49,31 +49,53 @@ function sanitizeMarkdown(s: string): string {
         .trim();
 }
 
-function renderErrors(errors: MqmError[]): string[] {
+function escapeTableCell(s: string): string {
+    return sanitizeMarkdown(s).replace(/\|/g, '\\|');
+}
+
+function renderErrorRows(errors: MqmError[]): string[] {
     return errors.map((e) => {
-        const sourceSpan = sanitizeMarkdown(e.source_span);
-        const mtSpan = sanitizeMarkdown(e.mt_span);
-        const explanation = sanitizeMarkdown(e.explanation);
-        return `- **[${e.severity.toUpperCase()} ${e.category}]** \`${sourceSpan}\` → \`${mtSpan}\`: ${explanation}`;
+        const sourceSpan = escapeTableCell(e.source_span);
+        const mtSpan = escapeTableCell(e.mt_span);
+        const explanation = escapeTableCell(e.explanation);
+        return `| ${e.severity.toUpperCase()} | ${e.category} | \`${sourceSpan}\` | \`${mtSpan}\` | ${explanation} |`;
     });
 }
 
-function renderStage(label: string, stage: MqmStageReport, totalTexts: number): string[] {
+function renderStageTable(label: string, stage: MqmStageReport, totalTexts: number): string[] {
     const status =
         stage.failCount === 0
             ? `${label}: PASS`
             : `${label}: FAIL (${stage.failCount}/${totalTexts})`;
 
-    return [status, ...renderErrors(stage.errors)];
+    if (stage.errors.length === 0) {
+        return [`### ${status}`];
+    }
+
+    return [
+        `### ${status}`,
+        '',
+        '| Severity | Category | Source | MT | Explanation |',
+        '|---|---|---|---|---|',
+        ...renderErrorRows(stage.errors),
+    ];
 }
 
-function renderComponentSection(c: ComponentReport): string {
-    const status =
-        c.final.failCount === 0 ? '✅ PASS' : `❌ FAIL (${c.final.failCount}/${c.totalTexts})`;
-    const lines = [`### ${c.name} — ${status}`];
+function renderComponentSummary(c: ComponentReport): string {
+    const status = c.final.failCount === 0 ? 'PASS' : 'FAIL';
+    return `| ${c.name} | ${c.initial.failCount}/${c.totalTexts} | ${c.final.failCount}/${c.totalTexts} | ${status} |`;
+}
 
-    lines.push('', ...renderStage('Initial MQM', c.initial, c.totalTexts));
-    lines.push('', ...renderStage('Final MQM', c.final, c.totalTexts));
+function renderComponentDetails(c: ComponentReport, open = false): string {
+    const summary =
+        c.final.failCount === 0
+            ? `${c.name} — Initial FAIL (${c.initial.failCount}/${c.totalTexts}), Final PASS`
+            : `${c.name} — Final FAIL (${c.final.failCount}/${c.totalTexts}), Initial FAIL (${c.initial.failCount}/${c.totalTexts})`;
+    const lines = [`<details${open ? ' open' : ''}>`, `<summary>${summary}</summary>`, ''];
+
+    lines.push(...renderStageTable('Initial MQM', c.initial, c.totalTexts));
+    lines.push('', ...renderStageTable('Final MQM', c.final, c.totalTexts));
+    lines.push('', '</details>');
 
     return lines.join('\n');
 }
@@ -83,6 +105,13 @@ export function renderReport(report: TranslationReport): string {
         report.totalTexts > 0
             ? (((report.totalTexts - report.failCount) / report.totalTexts) * 100).toFixed(1)
             : '100.0';
+    const finalFailures = report.components.filter((component) => component.final.failCount > 0);
+    const recovered = report.components.filter(
+        (component) => component.initial.failCount > 0 && component.final.failCount === 0,
+    );
+    const cleanPasses = report.components.filter(
+        (component) => component.initial.failCount === 0 && component.final.failCount === 0,
+    );
 
     const lines = [
         '# Translation Quality Report (MQM)',
@@ -99,9 +128,35 @@ export function renderReport(report: TranslationReport): string {
         `| Initial MQM failures | ${report.initialFailCount} |`,
         `| Final MQM failures | ${report.finalFailCount} |`,
         '',
-        '## Per-component Results',
+        '## Component Summary',
         '',
-        ...report.components.map(renderComponentSection),
+        '| Component | Initial | Final | Status |',
+        '|---|---:|---:|---|',
+        ...report.components.map(renderComponentSummary),
+        '',
+        '## Final Failures',
+        '',
+        ...(finalFailures.length > 0
+            ? finalFailures.map((component) => renderComponentDetails(component, true))
+            : ['No final MQM failures.']),
+        '',
+        '## Recovered After Postprocess',
+        '',
+        ...(recovered.length > 0
+            ? recovered.map((component) => renderComponentDetails(component))
+            : ['No recovered MQM failures.']),
+        '',
+        '## Passed Without MQM Errors',
+        '',
+        ...(cleanPasses.length > 0
+            ? [
+                  '| Component | Texts |',
+                  '|---|---:|',
+                  ...cleanPasses.map(
+                      (component) => `| ${component.name} | ${component.totalTexts} |`,
+                  ),
+              ]
+            : ['No components passed without MQM errors.']),
         '',
     ];
 

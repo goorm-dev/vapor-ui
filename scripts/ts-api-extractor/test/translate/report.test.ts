@@ -116,9 +116,9 @@ describe('renderReport', () => {
             ],
         };
         const output = renderReport(report);
-        expect(output).toContain('### Avatar — ✅ PASS');
-        expect(output).toContain('Initial MQM: FAIL (1/3)');
-        expect(output).toContain('Final MQM: PASS');
+        expect(output).toContain('| Avatar | 1/3 | 0/3 | PASS |');
+        expect(output).toContain('## Recovered After Postprocess');
+        expect(output).toContain('<summary>Avatar — Initial FAIL (1/3), Final PASS</summary>');
     });
 
     it('renders FAIL status with error details for component with failures', () => {
@@ -171,10 +171,14 @@ describe('renderReport', () => {
             ],
         };
         const output = renderReport(report);
-        expect(output).toContain('### Dialog — ❌ FAIL (1/4)');
-        expect(output).toContain('Initial MQM: FAIL (2/4)');
-        expect(output).toContain('Final MQM: FAIL (1/4)');
-        expect(output).toContain('[MAJOR Accuracy/Mistranslation]');
+        expect(output).toContain('## Component Summary');
+        expect(output).toContain('| Dialog | 2/4 | 1/4 | FAIL |');
+        expect(output).toContain('## Final Failures');
+        expect(output).toContain(
+            '<summary>Dialog — Final FAIL (1/4), Initial FAIL (2/4)</summary>',
+        );
+        expect(output).toContain('| Severity | Category | Source | MT | Explanation |');
+        expect(output).toContain('| MAJOR | Accuracy/Mistranslation |');
         expect(output).toContain('`Close`');
         expect(output).toContain('extraneous character');
     });

@@ -6,7 +6,7 @@ import { extract } from '~/extract';
 
 // Load .env.local from cwd (website app root when running via turbo)
 try {
-    process.loadEnvFile(path.resolve(process.cwd(), '.env.local'));
+    process.loadEnvFile(path.resolve(process.cwd(), '.env'));
 } catch {
     // File does not exist — proceed without it
 }

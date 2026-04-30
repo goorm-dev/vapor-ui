@@ -1,44 +1,68 @@
 import { callLlm } from '~/translate/llm-client';
 import type { MqmError, MqmResult, TranslationConfig } from '~/translate/types';
 
-const SYSTEM_PROMPT = `You are a UI string translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
+const SYSTEM_PROMPT = `You are a design-system documentation translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
 
-Evaluate the Korean translation of a JSDoc comment using MQM criteria. For each error, return the exact substring from the source (source_span) and the exact substring from the translation (mt_span) that contains the error.
+Evaluate the Korean translation of a JSDoc comment using the MQM taxonomy below. For each error, return the exact substring from the source (source_span) and the exact substring from the translation (mt_span) that contains the error.
 
-Error categories:
-- Accuracy/Mistranslation — meaning is changed or distorted
-- Accuracy/Omission — content from source is missing
-- Accuracy/Addition — content not in source was added
-- Fluency/Grammar — grammatical error in translation
-- Terminology — domain term used incorrectly (e.g. prop names like onClick, component names like Button, JSDoc tags like @param, type expressions like string | number must remain in English — translating them is a Terminology error)
-- Style — unnatural or overly formal/informal expression
-- Locale convention — formatting convention for the target locale violated
+Use one of these categories exactly:
+
+Standard dimensions:
+- Terminology/Component name inconsistency — component names are translated or rendered inconsistently across pages
+- Terminology/Token name altered — design token names are translated, altered, or normalized
+- Terminology/Prop name mistranslated — prop names are translated, altered, or mistranslated
+- Accuracy/Mistranslation — source meaning is distorted or communicated differently
+- Accuracy/Omission — important source information is missing
+- Accuracy/Addition — information not present in the source is added
+- Fluency/Unnatural phrasing — grammatically valid but awkward literal phrasing
+- Fluency/Style inconsistency — tone and voice are inconsistent within the docs
+- Fluency/Grammatical error — grammar error in Korean
+
+Design-system specific dimensions:
+- Markup & Code/Code block translated — text inside code blocks or inline code is translated or altered
+- Markup & Code/Link / anchor broken — hrefs, anchors, or link targets are damaged
+- Markup & Code/Markdown structure altered — heading, table, list, emphasis, or inline-code structure is changed
+- Cross-reference/Inter-page inconsistency — the same term is translated differently across pages
+- Cross-reference/See also mismatch — related-document link text no longer matches its target
+- Locale/Number / unit format — number or unit formatting is wrong for Korean docs
+- Locale/Directional text — LTR/RTL directionality is broken
 
 Severity:
-- minor: awkward phrasing, style issues only
-- major: meaning broken or identifier translated
-- critical: completely wrong or unintelligible
+- critical: a developer could implement incorrectly, or a mandatory rule is violated. Examples: prop/type mistranslation, code block translation, broken markdown/code structure.
+- major: seriously harms understanding or trust. Examples: behavior description distorted, important explanation omitted, non-source content added.
+- minor: lowers expression quality but does not block understanding. Examples: awkward literal phrasing, typo, style inconsistency.
 
 Rules:
-- camelCase identifiers (onClick, className, etc.), component names (Button, Dialog, etc.), JSDoc tags (@param, @returns), and type expressions must remain in English.
-- Markdown code blocks, HTML tags, and placeholders ({count}, {{name}}) must NOT be flagged as errors.
+- Component names (Button, Dialog, Breadcrumb), prop names (onClick, className, children), token names, JSDoc tags (@param, @returns), type expressions, Markdown inline code, HTML tags, and placeholders ({count}, {{name}}) must be preserved exactly.
+- Translate "breadcrumb" as "브레드크럼" in Korean prose. Do not translate it as "이동 경로" or invent a phonetic variant.
+- Markdown code blocks, inline code (\`...\`), HTML tags, links, anchors, and placeholders must NOT be flagged as errors when preserved exactly.
+- Write explanation in Korean. Keep category and severity values in English exactly as specified.
 - If no errors exist, return errors as an empty array.
 
 Respond with EXACTLY this JSON shape and nothing else:
 {"verdict":"PASS","errors":[]}
 or
-{"verdict":"FAIL","errors":[{"category":"Terminology","severity":"major","source_span":"onClick","mt_span":"클릭","explanation":"camelCase identifier must not be translated"}]}`;
+{"verdict":"FAIL","errors":[{"category":"Terminology/Prop name mistranslated","severity":"critical","source_span":"onClick","mt_span":"클릭","explanation":"prop 이름은 번역하면 안 됩니다."}]}`;
 
 const passResult = (): MqmResult => ({ verdict: 'PASS', errors: [] });
 
 const MQM_CATEGORIES = new Set<MqmError['category']>([
+    'Terminology/Component name inconsistency',
+    'Terminology/Token name altered',
+    'Terminology/Prop name mistranslated',
     'Accuracy/Mistranslation',
     'Accuracy/Omission',
     'Accuracy/Addition',
-    'Fluency/Grammar',
-    'Terminology',
-    'Style',
-    'Locale convention',
+    'Fluency/Unnatural phrasing',
+    'Fluency/Style inconsistency',
+    'Fluency/Grammatical error',
+    'Markup & Code/Code block translated',
+    'Markup & Code/Link / anchor broken',
+    'Markup & Code/Markdown structure altered',
+    'Cross-reference/Inter-page inconsistency',
+    'Cross-reference/See also mismatch',
+    'Locale/Number / unit format',
+    'Locale/Directional text',
 ]);
 
 const MQM_SEVERITIES = new Set<MqmError['severity']>(['minor', 'major', 'critical']);

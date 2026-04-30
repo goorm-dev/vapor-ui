@@ -82,13 +82,35 @@ describe('validateWithMqm', () => {
         expect(result).toEqual({ verdict: 'PASS', errors: [] });
     });
 
+    it('sends design-system MQM taxonomy in the evaluator prompt', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                choices: [{ message: { content: '{"verdict":"PASS","errors":[]}' } }],
+            }),
+        } as Response);
+
+        await validateWithMqm('breadcrumb item', '브레드크럼 항목', baseConfig);
+
+        const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
+            messages: { role: string; content: string }[];
+        };
+        const systemPrompt = body.messages.find((message) => message.role === 'system')?.content;
+
+        expect(systemPrompt).toContain('Terminology/Component name inconsistency');
+        expect(systemPrompt).toContain('Markup & Code/Markdown structure altered');
+        expect(systemPrompt).toContain('Cross-reference/Inter-page inconsistency');
+        expect(systemPrompt).toContain('Translate "breadcrumb" as "브레드크럼"');
+        expect(systemPrompt).toContain('Write explanation in Korean');
+    });
+
     it('valid FAIL response with terminology error → returns FAIL with errors', async () => {
         const failPayload = {
             verdict: 'FAIL',
             errors: [
                 {
-                    category: 'Terminology',
-                    severity: 'major',
+                    category: 'Terminology/Prop name mistranslated',
+                    severity: 'critical',
                     source_span: 'onClick',
                     mt_span: '클릭',
                     explanation: 'identifier must not be translated',
@@ -117,7 +139,7 @@ describe('validateWithMqm', () => {
                                 verdict: 'FAIL',
                                 errors: [
                                     {
-                                        category: 'Terminology',
+                                        category: 'Terminology/Prop name mistranslated',
                                         severity: 'major',
                                         explanation: 'missing spans',
                                     },

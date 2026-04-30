@@ -67,7 +67,7 @@ describe('postprocessWithLlm', () => {
 
         await postprocessWithLlm('onClick handler', '클릭 핸들러', [
             {
-                category: 'Terminology',
+                category: 'Terminology/Prop name mistranslated',
                 severity: 'major',
                 source_span: 'onClick',
                 mt_span: '클릭',
