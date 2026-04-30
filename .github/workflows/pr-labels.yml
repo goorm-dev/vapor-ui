@@ -75,7 +75,7 @@ jobs:
                         if (comment.isBot) return null;
                         if (!codeowners.includes(comment.author)) return null;
 
-                        return parseLabelCommand(comment);
+                        return parseLabelComment(comment);
                       }
 
                       function extractComment(eventName, payload) {
@@ -103,7 +103,7 @@ jobs:
                         return null;
                       }
 
-                      function parseLabelCommand(comment) {
+                      function parseLabelComment(comment) {
                         const trimmed = comment.body.trim();
 
                         if (/^\[review\]/i.test(trimmed)) {
