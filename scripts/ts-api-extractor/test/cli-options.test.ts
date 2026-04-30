@@ -51,8 +51,10 @@ describe('resolveRunContext', () => {
         mockedFindComponentFiles.mockReset();
         mockedFindFileByComponentName.mockReset();
 
-        // Default: input path exists, file scan returns one file
-        mockedLoadExtractorConfig.mockResolvedValue(makeConfig({ inputPath: '.' }));
+        // Default: input path & tsconfig point to existing files in cwd
+        mockedLoadExtractorConfig.mockResolvedValue(
+            makeConfig({ inputPath: '.', tsconfig: './package.json' }),
+        );
         mockedFindComponentFiles.mockResolvedValue(['/abs/Button.tsx']);
         mockedFindFileByComponentName.mockReturnValue('/abs/Button.tsx');
     });
@@ -137,6 +139,14 @@ describe('resolveRunContext', () => {
             mockedFindComponentFiles.mockResolvedValue([]);
 
             await expect(resolveRunContext({})).rejects.toThrowError(CliError);
+        });
+
+        it('tsconfig 파일이 존재하지 않으면 CliError를 던진다', async () => {
+            mockedLoadExtractorConfig.mockResolvedValue(
+                makeConfig({ inputPath: '.', tsconfig: './does-not-exist.json' }),
+            );
+
+            await expect(resolveRunContext({})).rejects.toThrowError(/tsconfig/i);
         });
     });
 });

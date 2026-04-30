@@ -29,6 +29,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
+        "find-up": "^8.0.0",
         "glob": "^10.3.0",
         "lodash-es": "^4.17.23",
         "meow": "^14.0.0",

@@ -63,6 +63,17 @@ function resolvePath(config: ExtractorConfig): string {
     return absolutePath;
 }
 
+function resolveTsconfigPath(config: ExtractorConfig): string {
+    const cwd = process.cwd();
+    const absolutePath = path.resolve(cwd, config.tsconfig);
+
+    if (!fs.existsSync(absolutePath)) {
+        throw new CliError(`tsconfig file does not exist: ${absolutePath}`);
+    }
+
+    return absolutePath;
+}
+
 async function resolveTargetFiles(
     absolutePath: string,
     componentName: string | undefined,
@@ -97,8 +108,7 @@ export async function resolveRunContext(input: CliInput): Promise<ExtractorRunCo
     const config = mergeFlagOverrides(loaded, input);
 
     const absolutePath = resolvePath(config);
-    const cwd = process.cwd();
-    const tsconfigPath = path.resolve(cwd, config.tsconfig);
+    const tsconfigPath = resolveTsconfigPath(config);
     const targetFiles = await resolveTargetFiles(absolutePath, input.component, config);
 
     return {
