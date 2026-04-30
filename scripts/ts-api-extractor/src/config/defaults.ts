@@ -23,6 +23,7 @@ export const defaultExtractorConfig: ExtractorConfig = {
     verbose: false,
     translation: {
         enabled: false,
+        skipCache: false,
         targetLocale: 'ko',
         llm: {
             enabled: true,

@@ -24,6 +24,7 @@ export interface ExtractorConfig {
 
 type DeepPartialTranslationConfig = {
     enabled?: boolean;
+    skipCache?: boolean;
     targetLocale?: TranslationConfig['targetLocale'];
     llm?: Partial<TranslationConfig['llm']>;
     validation?: {
@@ -100,6 +101,7 @@ export function mergeConfig(base: ExtractorConfig, patch: PartialExtractorConfig
                   ...base.translation,
                   ...patch.translation,
                   enabled: patch.translation?.enabled ?? base.translation?.enabled ?? false,
+                  skipCache: patch.translation?.skipCache ?? base.translation?.skipCache ?? false,
                   targetLocale:
                       patch.translation?.targetLocale ?? base.translation?.targetLocale ?? 'ko',
                   llm: {

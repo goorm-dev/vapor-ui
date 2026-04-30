@@ -29,6 +29,7 @@ export interface MqmResult {
 
 export interface TranslationConfig {
     enabled: boolean;
+    skipCache: boolean;
     targetLocale: 'ko';
     llm: {
         enabled: boolean;

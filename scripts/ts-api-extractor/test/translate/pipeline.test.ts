@@ -19,6 +19,7 @@ vi.mock('~/translate/cache', async (importOriginal) => {
 
 const baseConfig: TranslationConfig = {
     enabled: true,
+    skipCache: false,
     targetLocale: 'ko',
     llm: { enabled: true },
     validation: {
@@ -183,7 +184,7 @@ describe('translatePropsInfo', () => {
             },
         ];
 
-        await translatePropsInfo(propsWithDescription, baseConfig, undefined, false, true);
+        await translatePropsInfo(propsWithDescription, baseConfig, undefined, true);
 
         expect(logSpy).toHaveBeenCalledWith('[i18n] mqm: Button.description FAIL (1 error)');
         expect(logSpy).toHaveBeenCalledWith(

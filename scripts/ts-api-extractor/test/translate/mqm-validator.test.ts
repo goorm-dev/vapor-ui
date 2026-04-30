@@ -5,6 +5,7 @@ import type { TranslationConfig } from '~/translate/types';
 
 const baseConfig: TranslationConfig = {
     enabled: true,
+    skipCache: false,
     targetLocale: 'ko',
     llm: { enabled: true },
     validation: {

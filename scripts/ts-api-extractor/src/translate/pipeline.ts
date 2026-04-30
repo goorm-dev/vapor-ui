@@ -114,9 +114,9 @@ export async function translatePropsInfo(
     props: PropsInfoJson[],
     config: TranslationConfig,
     outputDir?: string,
-    skipCache = false,
     verbose = false,
 ): Promise<TranslateResult> {
+    const skipCache = config.skipCache;
     const log = (message: string): void => {
         if (verbose) {
             console.error(`[i18n] ${message}`);

@@ -19,7 +19,6 @@ export interface ExtractInput {
     tsconfigPath: string;
     targetFiles: string[];
     config: ExtractorConfig;
-    skipCache?: boolean;
 }
 
 export interface ExtractOutput {
@@ -31,7 +30,7 @@ export interface ExtractOutput {
 }
 
 export async function extract(input: ExtractInput): Promise<ExtractOutput> {
-    const { config, skipCache = false } = input;
+    const { config } = input;
     const outputDir = path.resolve(process.cwd(), config.outputDir);
     const project = new Project({ tsConfigFilePath: input.tsconfigPath });
 
@@ -93,7 +92,6 @@ export async function extract(input: ExtractInput): Promise<ExtractOutput> {
             props,
             config.translation,
             outputDir,
-            skipCache,
             config.verbose,
         );
         translatedProps = translateResult.props;

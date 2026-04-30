@@ -11,6 +11,24 @@ export interface ResolvedCliOptions {
     config: ExtractorConfig;
 }
 
+export interface CliFlagOverrides {
+    translate?: boolean;
+    skipCache?: boolean;
+    verbose?: boolean;
+}
+
+export function applyFlagOverrides(config: ExtractorConfig, flags: CliFlagOverrides): void {
+    if (flags.translate && config.translation) {
+        config.translation.enabled = true;
+    }
+    if (flags.skipCache && config.translation) {
+        config.translation.skipCache = true;
+    }
+    if (flags.verbose) {
+        config.verbose = true;
+    }
+}
+
 export class CliError extends Error {
     constructor(message: string) {
         super(message);

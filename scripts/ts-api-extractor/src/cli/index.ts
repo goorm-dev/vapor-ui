@@ -1,7 +1,7 @@
 import meow from 'meow';
 import path from 'node:path';
 
-import { CliError, resolveOptions } from '~/cli/options';
+import { CliError, applyFlagOverrides, resolveOptions } from '~/cli/options';
 import { extract } from '~/extract';
 
 // Load .env.local from cwd (website app root when running via turbo)
@@ -48,18 +48,16 @@ async function runCli(): Promise<void> {
         configPath: cli.flags.config,
     });
 
-    if (cli.flags.translate && resolved.config.translation) {
-        resolved.config.translation.enabled = true;
-    }
-    if (cli.flags.verbose) {
-        resolved.config.verbose = true;
-    }
+    applyFlagOverrides(resolved.config, {
+        translate: cli.flags.translate,
+        skipCache: cli.flags.skipCache,
+        verbose: cli.flags.verbose,
+    });
 
     await extract({
         tsconfigPath: resolved.tsconfigPath,
         targetFiles: resolved.targetFiles,
         config: resolved.config,
-        skipCache: cli.flags.skipCache,
     });
 }
 
