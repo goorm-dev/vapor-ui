@@ -19,7 +19,7 @@ export interface ExtractorConfig {
     components: Record<string, ComponentExtractConfig>;
     all: boolean;
     verbose: boolean;
-    translation?: TranslationConfig;
+    translation: TranslationConfig;
 }
 
 type DeepPartialTranslationConfig = {
@@ -95,39 +95,32 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
 }
 
 export function mergeConfig(base: ExtractorConfig, patch: PartialExtractorConfig): ExtractorConfig {
-    const mergedTranslation: ExtractorConfig['translation'] =
-        base.translation || patch.translation
-            ? {
-                  ...base.translation,
-                  ...patch.translation,
-                  enabled: patch.translation?.enabled ?? base.translation?.enabled ?? false,
-                  skipCache: patch.translation?.skipCache ?? base.translation?.skipCache ?? false,
-                  targetLocale:
-                      patch.translation?.targetLocale ?? base.translation?.targetLocale ?? 'ko',
-                  llm: {
-                      ...base.translation?.llm,
-                      ...patch.translation?.llm,
-                      enabled:
-                          patch.translation?.llm?.enabled ?? base.translation?.llm?.enabled ?? true,
-                  },
-                  validation: {
-                      ...base.translation?.validation,
-                      ...patch.translation?.validation,
-                      mqm: {
-                          ...base.translation?.validation?.mqm,
-                          ...patch.translation?.validation?.mqm,
-                          enabled:
-                              patch.translation?.validation?.mqm?.enabled ??
-                              base.translation?.validation?.mqm?.enabled ??
-                              true,
-                          failOnError:
-                              patch.translation?.validation?.mqm?.failOnError ??
-                              base.translation?.validation?.mqm?.failOnError ??
-                              false,
-                      },
-                  },
-              }
-            : undefined;
+    const mergedTranslation: TranslationConfig = {
+        ...base.translation,
+        ...patch.translation,
+        enabled: patch.translation?.enabled ?? base.translation.enabled,
+        skipCache: patch.translation?.skipCache ?? base.translation.skipCache,
+        targetLocale: patch.translation?.targetLocale ?? base.translation.targetLocale,
+        llm: {
+            ...base.translation.llm,
+            ...patch.translation?.llm,
+            enabled: patch.translation?.llm?.enabled ?? base.translation.llm.enabled,
+        },
+        validation: {
+            ...base.translation.validation,
+            ...patch.translation?.validation,
+            mqm: {
+                ...base.translation.validation.mqm,
+                ...patch.translation?.validation?.mqm,
+                enabled:
+                    patch.translation?.validation?.mqm?.enabled ??
+                    base.translation.validation.mqm.enabled,
+                failOnError:
+                    patch.translation?.validation?.mqm?.failOnError ??
+                    base.translation.validation.mqm.failOnError,
+            },
+        },
+    };
 
     return {
         ...base,

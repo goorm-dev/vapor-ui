@@ -5,35 +5,18 @@ import { loadExtractorConfig } from '~/config/loader';
 import type { ExtractorConfig } from '~/config/schema';
 import { findComponentFiles, findFileByComponentName } from '~/stages/scan';
 
-export interface ResolvedCliOptions {
+export interface ExtractorRunContext {
     tsconfigPath: string;
     targetFiles: string[];
     config: ExtractorConfig;
 }
 
-export interface CliFlagOverrides {
+export interface CliInput {
+    component?: string;
+    configPath?: string;
     translate?: boolean;
     skipCache?: boolean;
     verbose?: boolean;
-}
-
-export function applyFlagOverrides(config: ExtractorConfig, flags: CliFlagOverrides): void {
-    if (flags.translate) {
-        if (!process.env['DEEPL_API_KEY']) {
-            throw new CliError(
-                'DEEPL_API_KEY is not set. Set it in your .env file or environment to use --translate.',
-            );
-        }
-        if (config.translation) {
-            config.translation.enabled = true;
-        }
-    }
-    if (flags.skipCache && config.translation) {
-        config.translation.skipCache = true;
-    }
-    if (flags.verbose) {
-        config.verbose = true;
-    }
 }
 
 export class CliError extends Error {
@@ -41,6 +24,32 @@ export class CliError extends Error {
         super(message);
         this.name = 'CliError';
     }
+}
+
+function mergeFlagOverrides(config: ExtractorConfig, input: CliInput): ExtractorConfig {
+    const next: ExtractorConfig = {
+        ...config,
+        translation: { ...config.translation },
+    };
+
+    if (input.translate) {
+        if (!process.env['DEEPL_API_KEY']) {
+            throw new CliError(
+                'DEEPL_API_KEY is not set. Set it in your .env file or environment to use --translate.',
+            );
+        }
+        next.translation.enabled = true;
+    }
+
+    if (input.skipCache) {
+        next.translation.skipCache = true;
+    }
+
+    if (input.verbose) {
+        next.verbose = true;
+    }
+
+    return next;
 }
 
 function resolvePath(config: ExtractorConfig): string {
@@ -82,26 +91,19 @@ async function resolveTargetFiles(
     return [file];
 }
 
-export async function resolveOptions({
-    configPath,
-    component,
-}: {
-    component?: string;
-    configPath?: string;
-}): Promise<ResolvedCliOptions> {
-    const loadedConfig = await loadExtractorConfig({
-        configPath: configPath,
-    });
+export async function resolveRunContext(input: CliInput): Promise<ExtractorRunContext> {
+    const loaded = await loadExtractorConfig({ configPath: input.configPath });
 
-    const absolutePath = resolvePath(loadedConfig);
+    const config = mergeFlagOverrides(loaded, input);
 
+    const absolutePath = resolvePath(config);
     const cwd = process.cwd();
-    const tsconfigPath = path.resolve(cwd, loadedConfig.tsconfig);
-    const targetFiles = await resolveTargetFiles(absolutePath, component, loadedConfig);
+    const tsconfigPath = path.resolve(cwd, config.tsconfig);
+    const targetFiles = await resolveTargetFiles(absolutePath, input.component, config);
 
     return {
         tsconfigPath,
         targetFiles,
-        config: loadedConfig,
+        config,
     };
 }
