@@ -19,7 +19,7 @@ async function runCli(): Promise<void> {
 
   Options
     --component, -n   Component name to process (default: all components)
-    --config          Config file path
+    --config-path     Config file path
     --translate       Enable translation pipeline (outputs en/ and ko/ subfolders)
     --skip-cache      Skip translation cache (do not read or write cache)
     --verbose, -v     Enable verbose logging
@@ -27,7 +27,7 @@ async function runCli(): Promise<void> {
   Examples
     $ ts-api-extractor
     $ ts-api-extractor --component Tabs
-    $ ts-api-extractor --config ./docs-extractor.config.mjs
+    $ ts-api-extractor --config-path ./docs-extractor.config.mjs
     $ ts-api-extractor --translate
     $ ts-api-extractor --translate --skip-cache --verbose
 `,
@@ -35,7 +35,7 @@ async function runCli(): Promise<void> {
             importMeta: import.meta,
             flags: {
                 component: { type: 'string', shortFlag: 'n' },
-                config: { type: 'string' },
+                configPath: { type: 'string' },
                 translate: { type: 'boolean', default: false },
                 skipCache: { type: 'boolean', default: false },
                 verbose: { type: 'boolean', shortFlag: 'v', default: false },
@@ -45,7 +45,7 @@ async function runCli(): Promise<void> {
 
     const resolved = await resolveRunContext({
         component: cli.flags.component,
-        configPath: cli.flags.config,
+        configPath: cli.flags.configPath,
         translate: cli.flags.translate,
         skipCache: cli.flags.skipCache,
         verbose: cli.flags.verbose,
