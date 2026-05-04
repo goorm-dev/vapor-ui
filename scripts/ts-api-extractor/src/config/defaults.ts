@@ -46,6 +46,8 @@ export const defaultExtractorConfig: ExtractorConfig = {
         targetLocale: 'ko',
         llm: {
             enabled: true,
+            postprocessModel: 'claude-sonnet-4-6',
+            validationModel: 'claude-sonnet-4-6',
         },
         validation: {
             mqm: {

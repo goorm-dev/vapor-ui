@@ -41,13 +41,17 @@ export async function postprocessWithLlm(
     mtOutput: string,
     errors: MqmError[] = [],
     noEditSpans: string[] = [],
+    model?: string,
 ): Promise<string> {
     const userPrompt = buildRewritePrompt(source, mtOutput, errors, noEditSpans);
 
-    const result = await callLlm([
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt },
-    ]);
+    const result = await callLlm(
+        [
+            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'user', content: userPrompt },
+        ],
+        model,
+    );
 
     if (!result.content) {
         console.warn(`[llm-postprocess] ${result.error}. Returning DeepL draft as-is.`);

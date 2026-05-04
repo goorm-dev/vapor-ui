@@ -8,7 +8,7 @@ export interface LlmCallResult {
     error?: string;
 }
 
-export async function callLlm(messages: LlmMessage[]): Promise<LlmCallResult> {
+export async function callLlm(messages: LlmMessage[], model?: string): Promise<LlmCallResult> {
     const baseUrl = process.env['LITELLM_BASE_URL'];
     const apiKey = process.env['LITELLM_API_KEY'];
     if (!baseUrl) {
@@ -30,7 +30,7 @@ export async function callLlm(messages: LlmMessage[]): Promise<LlmCallResult> {
                     Authorization: `Bearer ${apiKey}`,
                 },
                 body: JSON.stringify({
-                    model: process.env['LITELLM_MODEL'] ?? 'claude-sonnet-4-6',
+                    model: model ?? 'claude-sonnet-4-6',
                     messages,
                 }),
                 signal: controller.signal,

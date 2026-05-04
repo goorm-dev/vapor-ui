@@ -95,10 +95,13 @@ export async function validateWithMqm(
 
     const userPrompt = `[원문 JSDoc]: ${source}\n[번역 JSDoc]: ${translated}`;
 
-    const result = await callLlm([
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt },
-    ]);
+    const result = await callLlm(
+        [
+            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'user', content: userPrompt },
+        ],
+        config.llm.validationModel,
+    );
 
     if (!result.content) {
         console.warn(`[mqm-validator] ${result.error}. Returning PASS.`);

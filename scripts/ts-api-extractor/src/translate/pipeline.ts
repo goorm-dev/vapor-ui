@@ -265,7 +265,13 @@ export async function translatePropsInfo(
                     // MQM 비활성화: LLM postprocess만 실행 (errors 없이)
                     log(`llm: postprocessing ${label} without MQM errors`);
                     const rewritten = await limit(() =>
-                        postprocessWithLlm(entry.text, mtOutput, [], []),
+                        postprocessWithLlm(
+                            entry.text,
+                            mtOutput,
+                            [],
+                            [],
+                            config.llm.postprocessModel,
+                        ),
                     );
                     return {
                         translated: rewritten,
@@ -318,7 +324,13 @@ export async function translatePropsInfo(
 
                 log(`llm: postprocessing ${label}`);
                 const rewrittenOutput = await limit(() =>
-                    postprocessWithLlm(entry.text, mtOutput, mqmResult.errors, noEditSpans),
+                    postprocessWithLlm(
+                        entry.text,
+                        mtOutput,
+                        mqmResult.errors,
+                        noEditSpans,
+                        config.llm.postprocessModel,
+                    ),
                 );
 
                 // 5. diff 검증 — over-editing 감지

@@ -33,6 +33,8 @@ export interface TranslationConfig {
     targetLocale: 'ko';
     llm: {
         enabled: boolean;
+        postprocessModel?: string;
+        validationModel?: string;
     };
     validation: {
         mqm: {

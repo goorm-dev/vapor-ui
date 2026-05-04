@@ -9,4 +9,10 @@ export default defineConfig({
     filterSprinkles: true,
     includeHtml: ['className'],
     components: {},
+    translation: {
+        llm: {
+            postprocessModel: 'claude-sonnet-4-6',
+            validationModel: 'claude-opus-4-7',
+        },
+    },
 });
