@@ -28,19 +28,16 @@ describe('defaultExtractorConfig', () => {
     });
 
     it('세 경로 모두 동일한 monorepo root에서 파생된다', () => {
-        const inputRoot = defaultExtractorConfig.inputPath.replace(
-            new RegExp(`${path.sep}packages${path.sep}core$`),
-            '',
-        );
-        const tsconfigRoot = defaultExtractorConfig.tsconfig.replace(
-            new RegExp(`${path.sep}packages${path.sep}core${path.sep}tsconfig\\.json$`),
-            '',
-        );
-        const outputRoot = defaultExtractorConfig.outputDir.replace(
-            new RegExp(
-                `${path.sep}apps${path.sep}website${path.sep}public${path.sep}components${path.sep}generated$`,
-            ),
-            '',
+        // path.resolve with '..' is cross-platform; RegExp with path.sep breaks on Windows
+        const inputRoot = path.resolve(defaultExtractorConfig.inputPath, '..', '..');
+        const tsconfigRoot = path.resolve(defaultExtractorConfig.tsconfig, '..', '..', '..');
+        const outputRoot = path.resolve(
+            defaultExtractorConfig.outputDir,
+            '..',
+            '..',
+            '..',
+            '..',
+            '..',
         );
 
         expect(inputRoot).toBe(tsconfigRoot);
