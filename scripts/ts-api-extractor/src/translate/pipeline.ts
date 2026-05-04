@@ -24,7 +24,7 @@ export interface TranslateResult {
 }
 
 /** spec 기능 3: mt_span을 제거한 나머지 구간을 no_edit_spans로 추출 */
-function extractNoEditSpans(mtOutput: string, errors: MqmError[]): string[] {
+export function extractNoEditSpans(mtOutput: string, errors: MqmError[]): string[] {
     let remaining = mtOutput;
     for (const error of errors) {
         remaining = remaining.replace(error.mt_span, '\x00');
@@ -35,7 +35,7 @@ function extractNoEditSpans(mtOutput: string, errors: MqmError[]): string[] {
         .filter((s) => s.length > 0);
 }
 
-interface PatchResult {
+export interface PatchResult {
     result: string;
     hasOverEdit: boolean;
 }
@@ -70,7 +70,7 @@ function logMqmErrors(log: (message: string) => void, label: string, errors: Mqm
 }
 
 /** spec 기능 5: allowedEditSpans 밖의 변경을 감지하고 over-editing 시 MT 원본 기반으로 복원 */
-function applySelectivePatch(
+export function applySelectivePatch(
     mtOutput: string,
     rewrittenOutput: string,
     allowedEditSpans: string[],

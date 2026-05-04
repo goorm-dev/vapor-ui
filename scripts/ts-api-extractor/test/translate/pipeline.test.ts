@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { PropsInfoJson } from '~/models/output';
+import type * as CacheModule from '~/translate/cache';
 import * as cacheModule from '~/translate/cache';
 import * as deeplModule from '~/translate/deepl';
 import * as llmModule from '~/translate/llm-postprocess';
@@ -9,7 +10,7 @@ import { translatePropsInfo } from '~/translate/pipeline';
 import type { TranslationConfig } from '~/translate/types';
 
 vi.mock('~/translate/cache', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('~/translate/cache')>();
+    const actual = await importOriginal<typeof CacheModule>();
     return {
         ...actual,
         loadCache: vi.fn(() => new Map()),
@@ -112,7 +113,7 @@ describe('translatePropsInfo', () => {
         await translatePropsInfo(sampleProps, baseConfig);
 
         expect(mqmSpy).toHaveBeenCalled();
-        const results = await mqmSpy.mock.results;
+        const results = mqmSpy.mock.results;
         for (const r of results) {
             const mqmResult = await r.value;
             expect(mqmResult.verdict).toBe('PASS');
@@ -388,5 +389,135 @@ describe('translatePropsInfo', () => {
         expect(deeplSpy).not.toHaveBeenCalled();
         expect(result.props[0].name).toBe('Button');
         expect(result.props[0].description).toBeUndefined();
+    });
+
+    // Test case 10: MQM recheck도 FAIL → initial/final 리포트 집계 정확성
+    it('recheck도 FAIL → initial.failCount > 0, final.failCount > 0, failOnError:false면 throw 없음', async () => {
+        const mtText = '버튼 컴포넌트.';
+        const rewrittenText = '버튼입니다.';
+        vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue(rewrittenText);
+
+        const initialError = {
+            category: 'Accuracy/Mistranslation' as const,
+            severity: 'major' as const,
+            source_span: 'A button component.',
+            mt_span: mtText,
+            explanation: '의미 왜곡',
+        };
+        const recheckError = {
+            category: 'Fluency/Unnatural phrasing' as const,
+            severity: 'minor' as const,
+            source_span: 'A button component.',
+            mt_span: rewrittenText,
+            explanation: '어색한 표현',
+        };
+
+        vi.spyOn(mqmModule, 'validateWithMqm')
+            .mockResolvedValueOnce({ verdict: 'FAIL', errors: [initialError] })
+            .mockResolvedValueOnce({ verdict: 'FAIL', errors: [recheckError] });
+
+        const config = {
+            ...baseConfig,
+            validation: { mqm: { enabled: true, failOnError: false } },
+        };
+        const propsWithDescription: PropsInfoJson[] = [
+            { name: 'Button', description: 'A button component.', props: [] },
+        ];
+
+        // recheck FAIL은 throw 없이 결과를 반환해야 함
+        const result = await translatePropsInfo(propsWithDescription, config);
+
+        expect(result.componentReports[0].initial.failCount).toBe(1);
+        expect(result.componentReports[0].final.failCount).toBe(1);
+        expect(result.componentReports[0].failCount).toBe(1);
+        expect(result.componentReports[0].errors).toEqual([recheckError]);
+        // LLM 재번역 결과를 그대로 사용
+        expect(result.props[0].description).toBe(rewrittenText);
+    });
+
+    // Test case 11: recheck FAIL + failOnError:true → Error throw
+    it('recheck FAIL + failOnError:true → Error throw', async () => {
+        const mtText = '버튼 컴포넌트.';
+        vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue('수정된 버튼.');
+        vi.spyOn(mqmModule, 'validateWithMqm')
+            .mockResolvedValueOnce({
+                verdict: 'FAIL',
+                errors: [{ category: 'Accuracy/Mistranslation', severity: 'major', source_span: 'A button.', mt_span: mtText, explanation: '오역' }],
+            })
+            .mockResolvedValueOnce({
+                verdict: 'FAIL',
+                errors: [{ category: 'Fluency/Unnatural phrasing', severity: 'minor', source_span: 'A button.', mt_span: '수정된 버튼.', explanation: '어색함' }],
+            });
+
+        const config = {
+            ...baseConfig,
+            validation: { mqm: { enabled: true, failOnError: true } },
+        };
+        const propsWithDescription: PropsInfoJson[] = [
+            { name: 'Button', description: 'A button.', props: [] },
+        ];
+
+        await expect(translatePropsInfo(propsWithDescription, config)).rejects.toThrow(
+            /Translation validation FAILED/,
+        );
+    });
+
+    // Test case 12: DeepL 실패(원문 반환) 시 캐시에 저장하지 않음
+    it('DeepL 실패로 원문이 반환된 경우 캐시에 저장하지 않음', async () => {
+        vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue(undefined);
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+        const saveCacheSpy = vi.spyOn(cacheModule, 'saveCache').mockImplementation(() => undefined);
+        vi.spyOn(cacheModule, 'loadCache').mockReturnValue(new Map());
+
+        const propsWithDescription: PropsInfoJson[] = [
+            { name: 'Button', description: 'A button component.', props: [] },
+        ];
+        const config = {
+            ...baseConfig,
+            validation: { mqm: { enabled: false, failOnError: false } },
+        };
+
+        await translatePropsInfo(propsWithDescription, config, '/tmp/test-cache');
+
+        // saveCache が呼ばれていても、キャッシュストアは空であること
+        expect(saveCacheSpy).toHaveBeenCalled();
+        const [, savedStore] = saveCacheSpy.mock.calls[0];
+        expect(savedStore.size).toBe(0);
+    });
+
+    // Test case 13: over-editing 감지 → warn 출력 + MT 원본 폴백
+    it('over-editing 감지 시 warn 출력하고 MT 원본으로 폴백', async () => {
+        const mtText = '클릭 handler입니다.';
+        // LLM이 허용되지 않은 "handler"까지 바꿔버림 → over-edit
+        const overEditText = 'onClick 핸들러입니다.';
+        vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue(overEditText);
+        vi.spyOn(mqmModule, 'validateWithMqm')
+            .mockResolvedValueOnce({
+                verdict: 'FAIL',
+                errors: [{
+                    category: 'Terminology/Prop name mistranslated',
+                    severity: 'critical',
+                    source_span: 'onClick',
+                    mt_span: '클릭',
+                    explanation: 'prop 이름은 번역하면 안 됩니다.',
+                }],
+            })
+            .mockResolvedValueOnce({ verdict: 'PASS', errors: [] });
+
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+        const propsWithDescription: PropsInfoJson[] = [
+            { name: 'Button', description: 'onClick handler.', props: [] },
+        ];
+
+        const result = await translatePropsInfo(propsWithDescription, baseConfig);
+
+        expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Over-editing detected'));
+        // over-edit → MT 원본으로 폴백
+        expect(result.props[0].description).toBe(mtText);
     });
 });

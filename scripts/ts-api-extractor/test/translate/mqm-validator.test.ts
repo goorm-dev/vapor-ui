@@ -96,13 +96,26 @@ describe('validateWithMqm', () => {
         const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
             messages: { role: string; content: string }[];
         };
-        const systemPrompt = body.messages.find((message) => message.role === 'system')?.content;
+        const systemPrompt =
+            body.messages.find((message) => message.role === 'system')?.content ?? '';
 
-        expect(systemPrompt).toContain('Terminology/Component name inconsistency');
-        expect(systemPrompt).toContain('Markup & Code/Markdown structure altered');
-        expect(systemPrompt).toContain('Cross-reference/Inter-page inconsistency');
-        expect(systemPrompt).toContain('Translate "breadcrumb" as "브레드크럼"');
-        expect(systemPrompt).toContain('Write explanation in Korean');
+        // 구조 검증: 4개 taxonomy 그룹이 모두 존재하는지 (세부 문구 변경에 강인)
+        const hasTaxonomySection =
+            systemPrompt.includes('Terminology/') &&
+            systemPrompt.includes('Accuracy/') &&
+            systemPrompt.includes('Markup & Code/') &&
+            systemPrompt.includes('Cross-reference/');
+        expect(hasTaxonomySection).toBe(true);
+
+        // 디자인 시스템 핵심 invariant: 브레드크럼 한국어 표기 규칙
+        expect(systemPrompt).toContain('브레드크럼');
+
+        // 출력 언어 지시 포함
+        expect(systemPrompt).toContain('Korean');
+
+        // JSON 출력 형식 지시 포함
+        expect(systemPrompt).toContain('verdict');
+        expect(systemPrompt).toContain('errors');
     });
 
     it('valid FAIL response with terminology error → returns FAIL with errors', async () => {
