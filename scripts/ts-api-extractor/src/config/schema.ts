@@ -69,6 +69,49 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
         throw new Error('Invalid verbose: expected boolean');
     }
 
+    if (config.translation !== undefined) {
+        if (typeof config.translation !== 'object' || config.translation === null) {
+            throw new Error('Invalid translation: expected object');
+        }
+        if (
+            config.translation.enabled !== undefined &&
+            typeof config.translation.enabled !== 'boolean'
+        ) {
+            throw new Error('Invalid translation.enabled: expected boolean');
+        }
+        if (
+            config.translation.targetLocale !== undefined &&
+            config.translation.targetLocale !== 'ko'
+        ) {
+            throw new Error("Invalid translation.targetLocale: expected 'ko'");
+        }
+        if (config.translation.llm !== undefined) {
+            if (typeof config.translation.llm !== 'object' || config.translation.llm === null) {
+                throw new Error('Invalid translation.llm: expected object');
+            }
+            if (
+                config.translation.llm.enabled !== undefined &&
+                typeof config.translation.llm.enabled !== 'boolean'
+            ) {
+                throw new Error('Invalid translation.llm.enabled: expected boolean');
+            }
+        }
+        if (config.translation.validation?.mqm !== undefined) {
+            const mqm = config.translation.validation.mqm;
+            if (typeof mqm !== 'object' || mqm === null) {
+                throw new Error('Invalid translation.validation.mqm: expected object');
+            }
+            if (mqm.enabled !== undefined && typeof mqm.enabled !== 'boolean') {
+                throw new Error('Invalid translation.validation.mqm.enabled: expected boolean');
+            }
+            if (mqm.failOnError !== undefined && typeof mqm.failOnError !== 'boolean') {
+                throw new Error(
+                    'Invalid translation.validation.mqm.failOnError: expected boolean',
+                );
+            }
+        }
+    }
+
     if (config.components !== undefined) {
         if (typeof config.components !== 'object' || config.components === null) {
             throw new Error('Invalid components: expected object');
