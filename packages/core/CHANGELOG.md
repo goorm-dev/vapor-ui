@@ -1,5 +1,21 @@
 # @vapor-ui/core
 
+## 1.3.0
+
+### Avatar
+
+- fix double rendering `FallbackPrimitive` ([#556](https://github.com/goorm-dev/vapor-ui/pull/556)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- deprecate `imageElement`/`fallbackElement` props ([#556](https://github.com/goorm-dev/vapor-ui/pull/556)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Spinner
+
+- add new `Spinner` component ([#567](https://github.com/goorm-dev/vapor-ui/pull/567)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Segmented Control
+
+- add new `SegmentedControl` component ([#569](https://github.com/goorm-dev/vapor-ui/pull/569)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
 ## 1.2.1
 
 ### Menu

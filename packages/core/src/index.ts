@@ -24,6 +24,7 @@ export * from './components/popover';
 export * from './components/radio';
 export * from './components/radio-group';
 export * from './components/select';
+export * from './components/segmented-control';
 export * from './components/sheet';
 export * from './components/skeleton';
 export * from './components/spinner';
