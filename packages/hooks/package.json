@@ -54,7 +54,7 @@
         "eslint": "catalog:",
         "prettier": "catalog:",
         "react": "catalog:",
-        "tsup": "^8.4.0",
+        "tsup": "^8.5.1",
         "typescript": "catalog:"
     },
     "peerDependencies": {
