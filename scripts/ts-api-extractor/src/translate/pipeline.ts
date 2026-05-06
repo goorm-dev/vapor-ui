@@ -4,13 +4,13 @@ import type { PropsInfoJson } from '~/models/output';
 import { loadCache, makeCacheKey, saveCache } from '~/translate/cache';
 import type { CacheStore } from '~/translate/cache';
 import { translateWithDeepl } from '~/translate/deepl';
-import { processOneEntry } from '~/translate/pipeline-process';
 import {
     applyTranslations,
     buildComponentReports,
     collectTextEntries,
     partitionByCache,
-} from '~/translate/pipeline-stages';
+} from '~/translate/entry-transforms';
+import { processOneEntry } from '~/translate/mqm-ape-loop';
 import type { ComponentReport } from '~/translate/report';
 import type { MqmError, TranslationConfig } from '~/translate/types';
 
