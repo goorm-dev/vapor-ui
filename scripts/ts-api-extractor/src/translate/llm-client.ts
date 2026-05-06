@@ -21,7 +21,7 @@ export async function callLlm(messages: LlmMessage[], model?: string): Promise<L
 
     try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 30_000);
+        const timeout = setTimeout(() => controller.abort(), 60_000);
         let response: Response;
         try {
             response = await fetch(`${baseUrl}/chat/completions`, {
