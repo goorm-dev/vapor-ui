@@ -90,7 +90,7 @@ describe('SegmentedControl', () => {
             await userEvent.click(itemB);
 
             expect(onValueChange).toHaveBeenCalledOnce();
-            expect(onValueChange).toHaveBeenCalledWith('b');
+            expect(onValueChange).toHaveBeenCalledWith('b', expect.anything());
         });
 
         it('should not call onValueChange when the already-selected item is clicked', async () => {
