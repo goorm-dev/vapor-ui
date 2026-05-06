@@ -111,9 +111,9 @@ jobs:
               env:
                   DEPLOYMENT_ID: ${{ steps.wait_for_deployment.outputs.deployment_id }}
 
-    notify:
+    notify-success:
         needs: [release, promote-docs]
-        if: always() && needs.release.outputs.published == 'true'
+        if: needs.promote-docs.result == 'success' && needs.release.outputs.published == 'true'
         runs-on: ubuntu-latest
         steps:
             - name: Checkout branch
@@ -123,14 +123,17 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Send Slack Notification
-              if: needs.promote-docs.result == 'success'
               run: pnpm run release:slack
               env:
                   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
                   PUBLISHED_PACKAGES: ${{ needs.release.outputs.publishedPackages }}
 
+    notify-failure:
+        needs: [release, promote-docs]
+        if: always() && needs.promote-docs.result != 'success' && needs.release.outputs.published == 'true'
+        runs-on: ubuntu-latest
+        steps:
             - name: Send Slack Failure Notification
-              if: needs.promote-docs.result != 'success'
               run: |
                   curl -fsS -X POST "$SLACK_GDS_ALARM_WEBHOOK_URL" \
                       -H "Content-Type: application/json" \
