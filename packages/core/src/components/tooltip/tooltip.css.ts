@@ -9,7 +9,6 @@ export const popup = componentStyle([
         paddingInline: vars.size.space['100'],
         borderRadius: vars.size.borderRadius['300'],
         backgroundColor: vars.color.background.contrast[200],
-        border: `0.0625rem solid ${vars.color.border.normal}`,
         color: vars.color.white,
         boxShadow: vars.shadow.md,
     },
@@ -18,23 +17,4 @@ export const popup = componentStyle([
 export const arrow = componentStyle({
     display: 'flex',
     color: vars.color.background.contrast[200],
-
-    selectors: {
-        '&[data-side="top"]': {
-            bottom: '-11px',
-            transform: 'rotate(-90deg)',
-        },
-        '&[data-side="right"]': {
-            left: '-7px',
-            transform: 'rotate(0deg)',
-        },
-        '&[data-side="bottom"]': {
-            top: '-11px',
-            transform: 'rotate(90deg)',
-        },
-        '&[data-side="left"]': {
-            right: '-7px',
-            transform: 'rotate(180deg)',
-        },
-    },
 });

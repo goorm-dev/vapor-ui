@@ -37,7 +37,10 @@ export const Default: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
 
 export const Customable: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.Props> = {
     argTypes: {
-        side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] },
+        side: {
+            control: 'inline-radio',
+            options: ['top', 'right', 'bottom', 'left', 'inline-start', 'inline-end'],
+        },
         sideOffset: { control: 'number' },
         align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
         alignOffset: { control: 'number' },
@@ -161,6 +164,41 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
             </HStack>
 
             <HStack
+                $css={{
+                    padding: '$800',
+                    gap: '$400',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    border: '1px solid',
+                }}
+            >
+                <Popover.Root {...args} open>
+                    <Popover.Trigger render={<Button>Inline Start Popover</Button>} />
+
+                    <Popover.Popup
+                        positionerElement={<Popover.PositionerPrimitive side="inline-start" />}
+                    >
+                        <Popover.Title>Inline Start Popover</Popover.Title>
+                        <Popover.Description>
+                            This popover uses a logical inline-start side.
+                        </Popover.Description>
+                    </Popover.Popup>
+                </Popover.Root>
+                <Popover.Root {...args} open>
+                    <Popover.Trigger render={<Button>Inline End Popover</Button>} />
+
+                    <Popover.Popup
+                        positionerElement={<Popover.PositionerPrimitive side="inline-end" />}
+                    >
+                        <Popover.Title>Inline End Popover</Popover.Title>
+                        <Popover.Description>
+                            This popover uses a logical inline-end side.
+                        </Popover.Description>
+                    </Popover.Popup>
+                </Popover.Root>
+            </HStack>
+
+            <HStack
                 $css={{ padding: '$800', border: '1px solid', justifyContent: 'space-between' }}
             >
                 <Popover.Root {...args} open>
@@ -186,7 +224,7 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
                     >
                         <Popover.Title>Shift Popover</Popover.Title>
                         <Popover.Description>
-                            This is a left popover content. it is shifted inside.
+                            This is a right popover content. it is shifted inside.
                         </Popover.Description>
                     </Popover.Popup>
                 </Popover.Root>
@@ -203,7 +241,6 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
                             <Popover.PositionerPrimitive
                                 side="bottom"
                                 align="end"
-                                alignOffset={100}
                                 collisionAvoidance={{ align: 'flip' }}
                             />
                         }

@@ -1,13 +1,15 @@
 'use client';
 
-import type { CSSProperties, ComponentProps, ReactElement } from 'react';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import type { ComponentProps, ReactElement, RefObject } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
+import { useArrowPosition } from '~/hooks/use-arrow-position';
+import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { useRenderElement } from '~/hooks/use-render-element';
-import { vars } from '~/styles/themes.css';
+import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
@@ -17,11 +19,39 @@ import type { VaporUIComponentProps } from '~/utils/types';
 import * as styles from './tooltip.css';
 
 /* -------------------------------------------------------------------------------------------------
+ * TooltipArrowContext (internal)
+ * -----------------------------------------------------------------------------------------------*/
+
+interface TooltipArrowContextValue {
+    triggerRef: RefObject<Element | null>;
+    positionerRef: RefObject<HTMLElement | null>;
+    arrowPadding: number;
+    setArrowPadding: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const [TooltipArrowProvider, useTooltipArrowContext] = createContext<TooltipArrowContextValue>({
+    name: 'TooltipArrowContext',
+    strict: false,
+    hookName: 'useTooltipArrowContext',
+    providerName: 'TooltipRoot',
+});
+
+const DEFAULT_TOOLTIP_ARROW_PADDING = 8;
+
+/* -------------------------------------------------------------------------------------------------
  * Tooltip.Root
  * -----------------------------------------------------------------------------------------------*/
 
 export const TooltipRoot = (props: TooltipRoot.Props) => {
-    return <BaseTooltip.Root {...props} />;
+    const triggerRef = useRef<Element>(null);
+    const positionerRef = useRef<HTMLElement>(null);
+    const [arrowPadding, setArrowPadding] = useState(DEFAULT_TOOLTIP_ARROW_PADDING);
+
+    return (
+        <TooltipArrowProvider value={{ triggerRef, positionerRef, arrowPadding, setArrowPadding }}>
+            <BaseTooltip.Root {...props} />
+        </TooltipArrowProvider>
+    );
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -30,8 +60,10 @@ export const TooltipRoot = (props: TooltipRoot.Props) => {
 
 export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
+    const { triggerRef } = useTooltipArrowContext() ?? {};
+    const composedRef = composeRefs(triggerRef, ref);
 
-    return <BaseTooltip.Trigger ref={ref} {...componentProps} />;
+    return <BaseTooltip.Trigger ref={composedRef} {...componentProps} />;
 });
 TooltipTrigger.displayName = 'Tooltip.Trigger';
 
@@ -60,16 +92,24 @@ export const TooltipPositionerPrimitive = forwardRef<
         side = 'top',
         align = 'center',
         sideOffset = 8,
+        arrowPadding = DEFAULT_TOOLTIP_ARROW_PADDING,
         collisionAvoidance,
         ...componentProps
     } = resolveStyles(props);
+    const { positionerRef, setArrowPadding } = useTooltipArrowContext() ?? {};
+    const composedRef = composeRefs(positionerRef, ref);
+
+    useIsoLayoutEffect(() => {
+        setArrowPadding?.(arrowPadding);
+    }, [arrowPadding, setArrowPadding]);
 
     return (
         <BaseTooltip.Positioner
-            ref={ref}
+            ref={composedRef}
             side={side}
             align={align}
             sideOffset={sideOffset}
+            arrowPadding={arrowPadding}
             collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
             {...componentProps}
         />
@@ -88,18 +128,19 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
 
-        const [side, setSide] = useState<TooltipPositionerPrimitive.Props['side']>('bottom');
+        const [side, setSide] = useState<TooltipPositionerPrimitive.Props['side']>('top');
         const [align, setAlign] = useState<TooltipPositionerPrimitive.Props['align']>('center');
 
-        const position = useMemo(
-            () =>
-                getArrowPosition({
-                    side,
-                    align,
-                    offset: side === 'top' || side === 'bottom' ? 12 : 6,
-                }),
-            [side, align],
-        );
+        const { triggerRef, positionerRef, arrowPadding } = useTooltipArrowContext() ?? {};
+        const arrowDimensions = { width: 10, height: 6 };
+        const arrowStyle = useArrowPosition({
+            triggerElement: triggerRef?.current ?? null,
+            positionerElement: positionerRef?.current ?? null,
+            side: side ?? 'top',
+            align: align ?? 'center',
+            offset: arrowPadding ?? DEFAULT_TOOLTIP_ARROW_PADDING,
+            arrowDimensions,
+        });
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);
@@ -135,7 +176,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
                 className={cn(styles.popup, className)}
                 {...componentProps}
             >
-                <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                <BaseTooltip.Arrow ref={arrowRef} style={arrowStyle} className={styles.arrow}>
                     <ArrowIcon />
                 </BaseTooltip.Arrow>
 
@@ -187,52 +228,18 @@ TooltipPopup.displayName = 'Tooltip.Popup';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type ArrowPositionProps = Pick<
-    VaporUIComponentProps<typeof BaseTooltip.Positioner, BaseTooltip.Positioner.State>,
-    'side' | 'align'
-> & {
-    offset?: number;
-};
-
-const getArrowPosition = ({
-    side = 'top',
-    align = 'center',
-    offset = 12,
-}: ArrowPositionProps): CSSProperties => {
-    const positionMap = {
-        'top-start': { left: offset, right: 'unset' },
-        'top-end': { left: 'unset', right: offset },
-        'bottom-start': { left: offset, right: 'unset' },
-        'bottom-end': { left: 'unset', right: offset },
-        'left-start': { top: offset, bottom: 'unset' },
-        'left-end': { top: 'unset', bottom: offset },
-        'right-start': { top: offset, bottom: 'unset' },
-        'right-end': { top: 'unset', bottom: offset },
-    };
-
-    const key = `${side}-${align}` as keyof typeof positionMap;
-    return positionMap[key] || {};
-};
-
-/* -----------------------------------------------------------------------------------------------*/
-
 const ArrowIcon = (props: ComponentProps<'svg'>) => {
     return (
         <svg
+            width="10"
+            height="6"
+            viewBox="0 0 10 6"
+            fill="var(--color-background-contrast-200)"
             xmlns="http://www.w3.org/2000/svg"
-            width="8"
-            height="16"
-            viewBox="0 0 8 16"
-            fill="none"
             {...props}
         >
             <path
-                d="M1.17969 8.93457C0.620294 8.43733 0.620294 7.56267 1.17969 7.06543L7.25 1.66992L7.25 14.3301L1.17969 8.93457Z"
-                stroke={vars.color.border.normal}
-                strokeWidth="1"
-            />
-            <path
-                d="M1.8858 7.24074C1.42019 7.63984 1.42019 8.36016 1.8858 8.75926L8 14L8 2L1.8858 7.24074Z"
+                d="M10 6L-7.86805e-07 6L4.06574 0.504109C4.56298 -0.168037 5.43702 -0.168037 5.93426 0.504109L10 6Z"
                 fill="currentColor"
             />
         </svg>

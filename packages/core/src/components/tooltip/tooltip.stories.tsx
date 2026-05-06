@@ -20,7 +20,10 @@ export default {
     component: Tooltip.Root,
     argTypes: {
         open: { control: 'boolean' },
-        side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] },
+        side: {
+            control: 'inline-radio',
+            options: ['top', 'right', 'bottom', 'left', 'inline-start', 'inline-end'],
+        },
         sideOffset: { control: 'number' },
         align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
         alignOffset: { control: 'number' },
@@ -135,7 +138,10 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
 
 export const TestBed: StoryObj = {
     argTypes: {
-        side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] },
+        side: {
+            control: 'inline-radio',
+            options: ['top', 'right', 'bottom', 'left', 'inline-start', 'inline-end'],
+        },
         sideOffset: { control: 'number' },
         align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
         alignOffset: { control: 'number' },
@@ -241,6 +247,52 @@ export const TestBed: StoryObj = {
                             />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive align="end" />}
+                            >
+                                Tooltip content
+                            </Tooltip.Popup>
+                        </Tooltip.Root>
+                    </HStack>
+                </VStack>
+
+                <VStack
+                    $css={{
+                        margin: '$800',
+                        gap: '$400',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        border: '1px solid',
+                    }}
+                >
+                    <HStack
+                        $css={{
+                            margin: '$800',
+                            gap: '$400',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Tooltip.Root open>
+                            <Tooltip.Trigger
+                                delay={0}
+                                render={<Button>Inline Start Tooltip</Button>}
+                            />
+                            <Tooltip.Popup
+                                positionerElement={
+                                    <Tooltip.PositionerPrimitive side="inline-start" />
+                                }
+                            >
+                                Tooltip content
+                            </Tooltip.Popup>
+                        </Tooltip.Root>
+                        <Tooltip.Root open>
+                            <Tooltip.Trigger
+                                delay={0}
+                                render={<Button>Inline End Tooltip</Button>}
+                            />
+                            <Tooltip.Popup
+                                positionerElement={
+                                    <Tooltip.PositionerPrimitive side="inline-end" />
+                                }
                             >
                                 Tooltip content
                             </Tooltip.Popup>
