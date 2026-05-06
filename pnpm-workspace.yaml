@@ -13,4 +13,4 @@ catalog:
     '@types/react-dom': ^19.2.3
     typescript: ^5.9.3
     eslint: ^9.39.4
-    prettier: ^3.8.1
+    prettier: ^3.8.3

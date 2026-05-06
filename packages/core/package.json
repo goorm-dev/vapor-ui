@@ -91,7 +91,7 @@
         "autoprefixer": "^10.4.27",
         "eslint": "catalog:",
         "happy-dom": "^20.0.0",
-        "postcss": "^8.5.8",
+        "postcss": "^8.5.13",
         "prettier": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
