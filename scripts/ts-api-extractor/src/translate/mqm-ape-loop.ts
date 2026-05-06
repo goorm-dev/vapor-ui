@@ -1,7 +1,7 @@
+import type { FinalEntry, TextEntry } from '~/translate/entry-transforms';
 import { postprocessWithLlm } from '~/translate/llm-postprocess';
 import { validateWithMqm } from '~/translate/mqm-validator';
 import { applySelectivePatch, extractNoEditSpans } from '~/translate/pipeline';
-import type { FinalEntry, TextEntry } from '~/translate/entry-transforms';
 import type { TranslationConfig } from '~/translate/types';
 
 type LimitFn = <T>(fn: () => Promise<T>) => Promise<T>;
