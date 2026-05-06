@@ -105,9 +105,7 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
                 throw new Error('Invalid translation.validation.mqm.enabled: expected boolean');
             }
             if (mqm.failOnError !== undefined && typeof mqm.failOnError !== 'boolean') {
-                throw new Error(
-                    'Invalid translation.validation.mqm.failOnError: expected boolean',
-                );
+                throw new Error('Invalid translation.validation.mqm.failOnError: expected boolean');
             }
         }
     }
