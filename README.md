@@ -29,7 +29,7 @@ Vapor is a React-based UI library designed with a focus on accessibility, custom
 - [Documentation](https://vapor-ui.goorm.io/)
 - [Getting Started](https://vapor-ui.goorm.io/docs/getting-started/installation)
 - [Contribute](https://github.com/goorm-dev/vapor-ui/blob/main/CONTRIBUTING.md)
-- [Changelog](https://vapor-ui.goorm.io/docs/getting-started/releases/core)
+- [Changelog](https://vapor-ui.goorm.io/docs/releases/core)
 
 ## Packages
 

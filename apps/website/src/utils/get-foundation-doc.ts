@@ -54,6 +54,10 @@ export const getTypographyPrimitiveTokenDoc = () => {
 export const replaceFoundationDoc = (text: string) => {
     return text
         .replace('<FoundationColorTabs />', getColorPrimitiveTokenDoc())
+        .replace(
+            /<Tabs[\s\S]*?<BasicColor\s*\/>[\s\S]*?<SemanticColor\s*\/>[\s\S]*?\/>/,
+            getColorPrimitiveTokenDoc(),
+        )
         .replace('<FoundationSizeTabs />', getSizePrimitiveTokenDoc())
         .replace('<FoundationTypographyTabs />', getTypographyPrimitiveTokenDoc());
 };

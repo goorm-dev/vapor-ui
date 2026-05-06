@@ -253,7 +253,7 @@ export function SidebarFolderContent({
     return (
         <Base.SidebarFolderContent
             className={clsx(
-                'text-fd-muted-foreground relative data-[state=open]:animate-fd-accordion-down data-[state=closed]:animate-fd-accordion-up flex flex-col border-l',
+                'text-fd-muted-foreground relative data-[state=open]:animate-fd-accordion-down data-[state=closed]:animate-fd-accordion-up flex flex-col overflow-hidden data-[state=closed]:animate-fd-collapsible-up data-[state=open]:animate-fd-collapsible-down before:content before:absolute before:w-px before:inset-y-1 before:bg-fd-border before:start-2.5',
                 depth === 1
                     ? "data-[active=true]:before:bg-fd-primary data-[active=true]:before:absolute data-[active=true]:before:inset-y-2.5 data-[active=true]:before:start-2.5 data-[active=true]:before:w-px data-[active=true]:before:content-['']"
                     : '',

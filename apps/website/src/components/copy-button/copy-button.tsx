@@ -144,7 +144,7 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
             setIsLoading(true);
 
             const res = await fetch(markdownUrl);
-            if (res.ok) {
+            if (!res.ok) {
                 throw new Error('문서를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
             }
 

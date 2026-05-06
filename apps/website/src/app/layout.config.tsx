@@ -17,7 +17,7 @@ export const baseOptions: BaseLayoutProps = {
 export const homeLinks: LinkItemType[] = [
     { text: 'Getting Started', url: '/docs/getting-started' },
     { text: 'Components', url: '/docs/components' },
-    { text: 'Resources', url: '/docs/resources' },
+    { text: 'Releases', url: '/docs/releases' },
 ];
 
 export const docsOptions: DocsLayoutProps = {

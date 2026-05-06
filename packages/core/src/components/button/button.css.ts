@@ -3,14 +3,17 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-const fg = createVar();
-const outlineFg = createVar();
-const ghostFg = createVar();
-const bg = createVar();
-const border = createVar();
+const variables = {
+    foreground: createVar('foreground'),
+    outlineForeground: createVar('outline-foreground'),
+    ghostForeground: createVar('ghost-foreground'),
+    background: createVar('background'),
+    borderColor: createVar('border-color'),
+};
 
 export const root = componentRecipe({
     base: [
@@ -26,13 +29,16 @@ export const root = componentRecipe({
             flexWrap: 'nowrap',
             textWrap: 'nowrap',
             selectors: {
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
             },
         },
     ],
 
     defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill' },
     variants: {
+        /**
+         * Size of the button, controlling height, padding, and typography. Default: `'md'`
+         */
         size: {
             sm: [
                 typography({ style: 'subtitle1' }),
@@ -68,76 +74,82 @@ export const root = componentRecipe({
             ],
         },
 
+        /**
+         * Color palette applied to the button. Controls the background, text, and border colors for all visual variants. Default: `'primary'`
+         */
         colorPalette: {
             primary: {
                 vars: {
-                    [fg]: vars.color.foreground.inverse,
-                    [outlineFg]: vars.color.foreground.primary[200],
-                    [ghostFg]: vars.color.foreground.primary[100],
-                    [bg]: vars.color.background.primary[200],
-                    [border]: vars.color.border.primary,
+                    [variables.foreground]: vars.color.foreground.inverse,
+                    [variables.outlineForeground]: vars.color.foreground.primary[200],
+                    [variables.ghostForeground]: vars.color.foreground.primary[100],
+                    [variables.background]: vars.color.background.primary[200],
+                    [variables.borderColor]: vars.color.border.primary,
                 },
             },
             secondary: {
                 vars: {
-                    [fg]: vars.color.foreground.secondary[200],
-                    [outlineFg]: vars.color.foreground.secondary[200],
-                    [ghostFg]: vars.color.foreground.secondary[100],
-                    [bg]: vars.color.background.secondary[200],
-                    [border]: vars.color.border.secondary,
+                    [variables.foreground]: vars.color.foreground.secondary[200],
+                    [variables.outlineForeground]: vars.color.foreground.secondary[200],
+                    [variables.ghostForeground]: vars.color.foreground.secondary[100],
+                    [variables.background]: vars.color.background.secondary[200],
+                    [variables.borderColor]: vars.color.border.secondary,
                 },
             },
             success: {
                 vars: {
-                    [fg]: vars.color.white,
-                    [outlineFg]: vars.color.foreground.success[200],
-                    [ghostFg]: vars.color.foreground.success[100],
-                    [bg]: vars.color.background.success[200],
-                    [border]: vars.color.border.success,
+                    [variables.foreground]: vars.color.white,
+                    [variables.outlineForeground]: vars.color.foreground.success[200],
+                    [variables.ghostForeground]: vars.color.foreground.success[100],
+                    [variables.background]: vars.color.background.success[200],
+                    [variables.borderColor]: vars.color.border.success,
                 },
             },
             warning: {
                 vars: {
-                    [fg]: vars.color.white,
-                    [outlineFg]: vars.color.foreground.warning[200],
-                    [ghostFg]: vars.color.foreground.warning[100],
-                    [bg]: vars.color.background.warning[200],
-                    [border]: vars.color.border.warning,
+                    [variables.foreground]: vars.color.white,
+                    [variables.outlineForeground]: vars.color.foreground.warning[200],
+                    [variables.ghostForeground]: vars.color.foreground.warning[100],
+                    [variables.background]: vars.color.background.warning[200],
+                    [variables.borderColor]: vars.color.border.warning,
                 },
             },
             danger: {
                 vars: {
-                    [fg]: vars.color.white,
-                    [outlineFg]: vars.color.foreground.danger[200],
-                    [ghostFg]: vars.color.foreground.danger[100],
-                    [bg]: vars.color.background.danger[200],
-                    [border]: vars.color.border.danger,
+                    [variables.foreground]: vars.color.white,
+                    [variables.outlineForeground]: vars.color.foreground.danger[200],
+                    [variables.ghostForeground]: vars.color.foreground.danger[100],
+                    [variables.background]: vars.color.background.danger[200],
+                    [variables.borderColor]: vars.color.border.danger,
                 },
             },
             contrast: {
                 vars: {
-                    [fg]: vars.color.white,
-                    [outlineFg]: vars.color.foreground.contrast[200],
-                    [ghostFg]: vars.color.foreground.contrast[100],
-                    [bg]: vars.color.background.contrast[200],
-                    [border]: vars.color.border.contrast,
+                    [variables.foreground]: vars.color.white,
+                    [variables.outlineForeground]: vars.color.foreground.contrast[200],
+                    [variables.ghostForeground]: vars.color.foreground.contrast[100],
+                    [variables.background]: vars.color.background.contrast[200],
+                    [variables.borderColor]: vars.color.border.contrast,
                 },
             },
         },
 
+        /**
+         * Visual style of the button. Default: `'fill'`
+         */
         variant: {
             fill: {
-                backgroundColor: bg,
-                color: fg,
+                backgroundColor: variables.background,
+                color: variables.foreground,
             },
             outline: {
-                boxShadow: `inset 0 0 0 1px ${border}`,
+                boxShadow: `inset 0 0 0 1px ${variables.borderColor}`,
                 backgroundColor: vars.color.background.canvas[100],
-                color: outlineFg,
+                color: variables.outlineForeground,
             },
             ghost: {
                 backgroundColor: 'transparent',
-                color: ghostFg,
+                color: variables.ghostForeground,
             },
         },
     },

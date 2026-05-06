@@ -5,6 +5,22 @@ description: '@vapor-ui/icons 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/icons
 
+## 1.2.0
+
+### Etc.
+
+- Add new icons from Figma ([#554](https://github.com/goorm-dev/vapor-ui/pull/554)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **New Basic Icons:** `LicenseIcon`, `RewardedAdsIcon`
+
+## 1.1.0
+
+### Etc.
+
+- Add new icons from Figma ([#539](https://github.com/goorm-dev/vapor-ui/pull/539)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **New Basic Icons:** `TriangleOutlineIcon`
+
 ## 1.0.1
 
 ### Etc.

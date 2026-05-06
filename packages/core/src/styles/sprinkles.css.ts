@@ -242,6 +242,7 @@ const sprinkleProperties = defineProperties({
         _focus: { selector: '&:focus' },
         _focusVisible: { selector: '&:focus-visible' },
         _focusWithin: { selector: '&:focus-within' },
+        _active: { selector: '&:active' },
         // _selected: { selector: '&:active' },
         // _checked: { selector: '&:checked, &[data-checked]' },
         // _indeterminate: { selector: '&:indeterminate, &[data-indeterminate]' },

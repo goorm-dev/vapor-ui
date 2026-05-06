@@ -1,4 +1,174 @@
 ---
 title: Styling
-description: Vapor UI 컴포넌트의 스타일링 방식에 대해 설명합니다.
+description: Vapor UI 컴포넌트를 스타일링하고 커스터마이징하는 방법을 설명합니다.
 ---
+
+Vapor UI는 단순한 스타일 오버라이드부터 컴포넌트 구조 변경까지 단계별 커스터마이징을 지원합니다.
+
+## 1. 기본 스타일링 (className, style)
+
+가장 익숙한 방식인 `className`과 `style`을 사용합니다. 빠른 스타일 수정이 필요하거나 기존 CSS 체계를 유지해야 할 때 적합합니다.
+
+### className
+
+외부 CSS 파일이나 CSS 모듈의 클래스를 적용합니다.
+
+```tsx
+import { Button } from '@vapor-ui/core';
+
+export default function Example() {
+    return <Button className="my-button">저장</Button>;
+}
+```
+
+### style
+
+인라인 스타일을 통해 동적인 스타일을 직접 주입합니다.
+
+```tsx
+import { Button } from '@vapor-ui/core';
+
+export default function Example() {
+    return (
+        <Button
+            style={{
+                background: 'linear-gradient(135deg, #0ea5e9, #0284c7)',
+                color: 'white',
+            }}
+        >
+            배포하기
+        </Button>
+    );
+}
+```
+
+## 2. `$css` 속성
+
+Vapor UI가 권장하는 기본 방식입니다. 별도의 CSS 파일 없이 컴포넌트에서 직접 스타일을 제어할 수 있습니다.
+
+### 기본 CSS 속성 수정
+
+CSS 속성을 객체 형태로 전달하여 스타일을 수정합니다.
+
+```tsx
+import { Button } from '@vapor-ui/core';
+
+export default function Example() {
+    return (
+        <Button
+            $css={{
+                borderRadius: '9999px',
+                paddingInline: '20px',
+                fontWeight: 700,
+            }}
+        >
+            기본 속성 수정
+        </Button>
+    );
+}
+```
+
+### 토큰 기반 스타일링
+
+디자인 토큰을 사용해 일관된 스타일을 유지하세요. 타입 지원을 통해 오타를 방지할 수 있습니다.
+
+```tsx
+import { Button } from '@vapor-ui/core';
+
+export default function Example() {
+    return (
+        <Button
+            $css={{
+                borderRadius: '$300',
+                paddingInline: '$300',
+                backgroundColor: '$bg-primary-100',
+                color: '$fg-normal-100',
+            }}
+        >
+            토큰 기반 스타일
+        </Button>
+    );
+}
+```
+
+### 반응형 및 가상 선택자
+
+반응형 조건(breakpoints)과 가상 선택자(`_hover` 등)를 `$css` 안에서 한 번에 정의할 수 있습니다.
+
+```tsx
+import { Button } from '@vapor-ui/core';
+
+export default function Example() {
+    return (
+        <Button
+            $css={{
+                paddingInline: { default: '$200', md: '$300' },
+                backgroundColor: {
+                    default: '$bg-primary-100',
+                    _hover: '$bg-primary-200',
+                },
+            }}
+        >
+            반응형 + 가상 선택자
+        </Button>
+    );
+}
+```
+
+## 3. 상태 기반 스타일링
+
+컴포넌트의 상태(checked, invalid 등)에 따라 스타일을 유연하게 변경할 수 있습니다.
+
+### 함수형 className, style
+
+`className`과 `style`에 함수를 전달하여 현재 상태에 맞는 스타일을 동적으로 반환합니다.
+
+```tsx
+import { Checkbox } from '@vapor-ui/core';
+
+export default function Example() {
+    return (
+        <Checkbox.Root
+            checked
+            className={(state) => (state.checked ? 'checkbox-checked' : 'checkbox-unchecked')}
+            style={(state) => ({
+                backgroundColor: state.invalid
+                    ? 'color-mix(in srgb, red 12%, transparent)'
+                    : undefined,
+            })}
+        />
+    );
+}
+```
+
+### Data Attributes
+
+컴포넌트 상태는 `data-*` 속성으로 노출됩니다. 상태별 스타일 로직을 CSS 파일로 분리할 때 유용합니다.
+
+```css
+/* 데이터 속성을 활용한 스타일 정의 */
+.checkbox[data-checked] {
+    background-color: var(--vapor-color-background-primary-200);
+}
+.checkbox[data-invalid] {
+    border-color: var(--vapor-color-border-danger);
+}
+```
+
+### 함수형 render
+
+`render` prop을 사용하면 렌더링되는 엘리먼트 자체와 클래스 구성을 직접 제어할 수 있습니다.
+
+```tsx
+import { NavigationMenu } from '@vapor-ui/core';
+
+export default function Example() {
+    return (
+        <NavigationMenu.Root
+            render={(_, state) => (
+                <nav className={state.open ? 'nav nav-open' : 'nav'}>네비게이션</nav>
+            )}
+        />
+    );
+}
+```

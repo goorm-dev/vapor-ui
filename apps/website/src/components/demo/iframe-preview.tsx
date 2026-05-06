@@ -4,8 +4,8 @@ import * as React from 'react';
 
 import { useTheme } from '@vapor-ui/core';
 
-import type { DeviceType } from '~/constants/code-block';
-import { DEVICE_WIDTH_MAP } from '~/constants/code-block';
+import type { DeviceType } from './constants';
+import { DEVICE_WIDTH_MAP } from './constants';
 
 interface IframePreviewProps {
     name: string;
