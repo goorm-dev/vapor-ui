@@ -1,5 +1,6 @@
 import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
+import type { JSXAttribute, JSXElement, JSXSpreadAttribute } from 'estree-jsx';
 import ts from 'typescript';
 
 import { getSource } from '~/utils/get-source';
@@ -64,7 +65,7 @@ export const shouldHaveTitleOnDialogRule: Rule.RuleModule = {
                 }
             },
 
-            JSXElement(node) {
+            JSXElement(node: JSXElement) {
                 const openingElement = node.openingElement;
                 const nodeName = openingElement.name;
                 let isTarget = false;
@@ -98,8 +99,9 @@ export const shouldHaveTitleOnDialogRule: Rule.RuleModule = {
                 if (!isTarget) return;
 
                 const hasAriaLabel = openingElement.attributes.some(
-                    (attr) =>
+                    (attr: JSXAttribute | JSXSpreadAttribute) =>
                         attr.type === 'JSXAttribute' &&
+                        attr.name.type === 'JSXIdentifier' &&
                         (attr.name.name === 'aria-label' || attr.name.name === 'aria-labelledby'),
                 );
 
