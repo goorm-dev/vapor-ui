@@ -2,6 +2,7 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
@@ -26,7 +27,7 @@ const baseElement = componentStyle({
     color: vars.color.foreground.normal[100],
 
     selectors: {
-        '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
+        [when.disabled()]: { pointerEvents: 'none', opacity: 0.32 },
     },
 });
 
