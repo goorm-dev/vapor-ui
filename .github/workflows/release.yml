@@ -71,20 +71,16 @@ jobs:
 
             - name: Wait for Staged Production Deployment
               id: wait_for_deployment
+              timeout-minutes: 5
               run: |
-                  TIMEOUT_SECONDS=300
-                  INTERVAL_SECONDS=10
-                  ELAPSED_SECONDS=0
-
-                  while [ "$ELAPSED_SECONDS" -lt "$TIMEOUT_SECONDS" ]; do
+                  while true; do
                       if ! RESPONSE=$(curl -fsS \
                           --connect-timeout 10 \
                           --max-time 30 \
                           -H "Authorization: Bearer $VERCEL_TOKEN" \
                           "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&sha=${{ github.sha }}&target=production&limit=1&teamId=$VERCEL_ORG_ID"); then
                           echo "Failed to query Vercel deployment for ${{ github.sha }}; retrying..."
-                          sleep "$INTERVAL_SECONDS"
-                          ELAPSED_SECONDS=$((ELAPSED_SECONDS + INTERVAL_SECONDS))
+                          sleep 10
                           continue
                       fi
 
@@ -92,24 +88,22 @@ jobs:
                       DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.deployments[0].uid // empty')
                       READY_SUBSTATE=$(echo "$RESPONSE" | jq -r '.deployments[0].readySubstate // empty')
 
-                      if [ "$STATE" = "READY" ] && [ -n "$DEPLOYMENT_ID" ]; then
-                          echo "deployment_id=$DEPLOYMENT_ID" >> "$GITHUB_OUTPUT"
-                          echo "ready_substate=$READY_SUBSTATE" >> "$GITHUB_OUTPUT"
-                          exit 0
-                      fi
-
-                      if [ "$STATE" = "ERROR" ] || [ "$STATE" = "CANCELED" ]; then
-                          echo "Deployment for commit ${{ github.sha }} failed with state $STATE"
-                          exit 1
-                      fi
-
-                      echo "Waiting for deployment for ${{ github.sha }}. Current state: ${STATE:-not found}"
-                      sleep "$INTERVAL_SECONDS"
-                      ELAPSED_SECONDS=$((ELAPSED_SECONDS + INTERVAL_SECONDS))
+                      case "$STATE" in
+                          READY)
+                              echo "deployment_id=$DEPLOYMENT_ID" >> "$GITHUB_OUTPUT"
+                              echo "ready_substate=$READY_SUBSTATE" >> "$GITHUB_OUTPUT"
+                              exit 0
+                              ;;
+                          ERROR|CANCELED)
+                              echo "Deployment for commit ${{ github.sha }} failed with state $STATE"
+                              exit 1
+                              ;;
+                          *)
+                              echo "Waiting for deployment for ${{ github.sha }}. Current state: ${STATE:-not found}"
+                              sleep 10
+                              ;;
+                      esac
                   done
-
-                  echo "Timed out waiting for a READY production deployment for commit ${{ github.sha }}"
-                  exit 1
 
             - name: Promote Deployment to Production
               if: steps.wait_for_deployment.outputs.ready_substate != 'PROMOTED'
@@ -119,7 +113,7 @@ jobs:
 
     notify:
         needs: [release, promote-docs]
-        if: needs.release.outputs.published == 'true'
+        if: always() && needs.release.outputs.published == 'true'
         runs-on: ubuntu-latest
         steps:
             - name: Checkout branch
@@ -129,7 +123,19 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Send Slack Notification
+              if: needs.promote-docs.result == 'success'
               run: pnpm run release:slack
               env:
                   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
                   PUBLISHED_PACKAGES: ${{ needs.release.outputs.publishedPackages }}
+
+            - name: Send Slack Failure Notification
+              if: needs.promote-docs.result != 'success'
+              run: |
+                  curl -fsS -X POST "$SLACK_GDS_ALARM_WEBHOOK_URL" \
+                      -H "Content-Type: application/json" \
+                      -d '{
+                          "text": "⚠️ Vercel 문서 사이트 promote 실패\n\nnpm publish는 완료됐지만, 문서 사이트 promote가 실패했습니다.\n아래 커밋을 수동으로 promote해 주세요.\n\n• SHA: ${{ github.sha }}"
+                      }'
+              env:
+                  SLACK_GDS_ALARM_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
