@@ -32,28 +32,12 @@ export async function processOneEntry(
 
     // MQM 비활성
     if (!config.validation.mqm.enabled) {
-        log(`mqm: disabled for ${label}`);
-        if (!config.llm.enabled) {
-            log(`llm: disabled for ${label}, using DeepL output`);
-            return {
-                translated: mtOutput,
-                pipeline: 'mt-only',
-                hadErrors: false,
-                hadOverEdit: false,
-                initial: { verdict: 'PASS', errors: [] },
-                final: { verdict: 'PASS', errors: [] },
-            };
-        }
-        log(`llm: postprocessing ${label} without MQM errors`);
-        const postprocess = await limit(() =>
-            postprocessWithLlm(entry.text, mtOutput, [], [], config.llm.postprocessModel),
-        );
+        log(`mqm: disabled for ${label}, using DeepL output`);
         return {
-            translated: postprocess.translated,
-            pipeline: 'mt-ape',
+            translated: mtOutput,
+            pipeline: 'mt-only',
             hadErrors: false,
             hadOverEdit: false,
-            ...(postprocess.degraded ? { llmDegraded: true as const } : {}),
             initial: { verdict: 'PASS', errors: [] },
             final: { verdict: 'PASS', errors: [] },
         };
@@ -78,7 +62,7 @@ export async function processOneEntry(
     if (mqmResult.verdict === 'PASS') {
         return {
             translated: mtOutput,
-            pipeline: 'mt-only',
+            pipeline: 'mt-mqm-pass',
             hadErrors: false,
             hadOverEdit: false,
             ...(mqmResult.degraded ? { llmDegraded: true as const } : {}),

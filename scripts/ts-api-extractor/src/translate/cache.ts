@@ -9,7 +9,7 @@ export interface CacheEntry {
     source: string;
     translated: string;
     cachedAt: string;
-    pipeline: 'mt-only' | 'mt-ape';
+    pipeline: 'mt-only' | 'mt-mqm-pass' | 'mt-ape';
     hadErrors: boolean;
     hadOverEdit: boolean;
 }

@@ -13,7 +13,7 @@ export interface TextEntry {
 
 export interface FinalEntry {
     translated: string;
-    pipeline: 'mt-only' | 'mt-ape';
+    pipeline: 'mt-only' | 'mt-mqm-pass' | 'mt-ape';
     hadErrors: boolean;
     hadOverEdit: boolean;
     /** LLM 호출 실패로 인해 MQM 검증 또는 재번역이 degraded 처리된 경우 */
