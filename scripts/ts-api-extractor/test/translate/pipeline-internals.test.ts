@@ -69,32 +69,49 @@ describe('applySelectivePatch', () => {
     });
 
     it('change within allowed span → no over-edit', () => {
-        // mtOutput: "클릭 handler" — allowed to edit "클릭"
-        // rewrittenOutput: "onClick handler" — changed "클릭" to "onClick" (allowed), "handler" preserved
-        const result = applySelectivePatch('클릭 handler', 'onClick handler', ['클릭']);
+        // noEditSpans: ["handler"] (the part outside the error span "클릭")
+        // rewrittenOutput preserves "handler" → no over-edit
+        const result = applySelectivePatch('클릭 handler', 'onClick handler', ['handler']);
         expect(result.hasOverEdit).toBe(false);
         expect(result.result).toBe('onClick handler');
     });
 
-    it('change outside allowed span → over-edit detected, falls back to mtOutput', () => {
-        // mtOutput: "클릭 handler" — allowed to edit "클릭"
-        // rewrittenOutput: "onClick 핸들러" — "handler" (no-edit span) was also changed → over-edit
-        const result = applySelectivePatch('클릭 handler', 'onClick 핸들러', ['클릭']);
+    it('change outside allowed span → over-edit detected, restores damaged no-edit span', () => {
+        // noEditSpans: ["handler"] — LLM changed it to "핸들러" → over-edit
+        // B1: find "핸들러" at ~same offset in rewritten, replace with "handler"
+        const result = applySelectivePatch('클릭 handler', 'onClick 핸들러', ['handler']);
         expect(result.hasOverEdit).toBe(true);
-        expect(result.result).toBe('클릭 handler'); // falls back to mtOutput
+        expect(result.result).toBe('onClick handler');
     });
 
-    it('empty allowedEditSpans with change → over-edit detected', () => {
+    it('empty noEditSpans with change → no over-edit (nothing to protect)', () => {
+        // If noEditSpans is empty, entire string is in allowed edit zone
         const result = applySelectivePatch('hello world', 'hello 세계', []);
+        expect(result.hasOverEdit).toBe(false);
+        expect(result.result).toBe('hello 세계');
+    });
+
+    it('entire string is one no-edit span → over-edit if changed, falls back to MT', () => {
+        // noEditSpans = ["handler callback"] — LLM changed it entirely
+        const result = applySelectivePatch('handler callback', '핸들러 콜백', ['handler callback']);
+        expect(result.hasOverEdit).toBe(true);
+        // Restored: offset 0..15 in rewritten replaced with "handler callback"
+        expect(result.result).toBe('handler callback');
+    });
+
+    it('multiple no-edit spans — restores each damaged one', () => {
+        // MT: "A 클릭 B handler C"  noEditSpans: ["A", "B", "C"]
+        // LLM changed "B" to "비" → over-edit on "B"
+        const result = applySelectivePatch('A 클릭 B handler C', 'A onClick 비 handler C', ['A', 'B', 'C']);
+        expect(result.hasOverEdit).toBe(true);
+        expect(result.result).toContain('B');
+        expect(result.result).not.toContain('비');
+    });
+
+    it('no-edit span completely absent from rewritten and MT → falls back to mtOutput', () => {
+        // Span "ghost" doesn't appear in MT either → cannot restore, full fallback
+        const result = applySelectivePatch('hello world', 'hi earth', ['ghost']);
         expect(result.hasOverEdit).toBe(true);
         expect(result.result).toBe('hello world');
-    });
-
-    it('entire string is in allowed span → no over-edit', () => {
-        // When the whole mtOutput is the allowed span, noEditSpans will be empty after extraction
-        const result = applySelectivePatch('버튼', '버튼입니다', ['버튼']);
-        // noEditSpans = [] (whole string is replaced by \x00, resulting in empty after filter)
-        expect(result.hasOverEdit).toBe(false);
-        expect(result.result).toBe('버튼입니다');
     });
 });

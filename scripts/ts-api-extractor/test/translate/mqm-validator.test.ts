@@ -30,7 +30,7 @@ describe('validateWithMqm', () => {
     it('llm.enabled: false → returns PASS immediately, no fetch', async () => {
         const config = { ...baseConfig, llm: { ...baseConfig.llm, enabled: false } };
         const result = await validateWithMqm('hello', '안녕', config);
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
         expect(fetch).not.toHaveBeenCalled();
     });
 
@@ -40,7 +40,7 @@ describe('validateWithMqm', () => {
             validation: { mqm: { enabled: false, failOnError: false } },
         };
         const result = await validateWithMqm('hello', '안녕', config);
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
         expect(fetch).not.toHaveBeenCalled();
     });
 
@@ -48,7 +48,7 @@ describe('validateWithMqm', () => {
         vi.stubEnv('LITELLM_BASE_URL', '');
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const result = await validateWithMqm('hello', '안녕', baseConfig);
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
         expect(fetch).not.toHaveBeenCalled();
         expect(warnSpy).toHaveBeenCalledOnce();
     });
@@ -57,7 +57,7 @@ describe('validateWithMqm', () => {
         vi.mocked(fetch).mockResolvedValueOnce({ ok: false, status: 429 } as Response);
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const result = await validateWithMqm('hello', '안녕', baseConfig);
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
         expect(warnSpy).toHaveBeenCalledOnce();
     });
 
@@ -68,7 +68,7 @@ describe('validateWithMqm', () => {
         } as Response);
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const result = await validateWithMqm('hello', '안녕', baseConfig);
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
         expect(warnSpy).toHaveBeenCalledOnce();
     });
 
@@ -80,7 +80,7 @@ describe('validateWithMqm', () => {
             }),
         } as Response);
         const result = await validateWithMqm('hello', '안녕', baseConfig);
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
     });
 
     it('sends design-system MQM taxonomy in the evaluator prompt', async () => {
@@ -106,9 +106,6 @@ describe('validateWithMqm', () => {
             systemPrompt.includes('Markup & Code/') &&
             systemPrompt.includes('Cross-reference/');
         expect(hasTaxonomySection).toBe(true);
-
-        // 디자인 시스템 핵심 invariant: 브레드크럼 한국어 표기 규칙
-        expect(systemPrompt).toContain('브레드크럼');
 
         // 출력 언어 지시 포함
         expect(systemPrompt).toContain('Korean');
@@ -167,7 +164,7 @@ describe('validateWithMqm', () => {
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const result = await validateWithMqm('onClick handler', '클릭 handler', baseConfig);
 
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
         expect(warnSpy).toHaveBeenCalledOnce();
     });
 
@@ -179,7 +176,7 @@ describe('validateWithMqm', () => {
             }),
         } as Response);
         const result = await validateWithMqm('hello', '안녕', baseConfig);
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
     });
 
     it('malformed JSON in response → returns PASS + console.warn', async () => {
@@ -189,7 +186,7 @@ describe('validateWithMqm', () => {
         } as Response);
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const result = await validateWithMqm('hello', '안녕', baseConfig);
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
         expect(warnSpy).toHaveBeenCalledOnce();
     });
 
@@ -197,7 +194,7 @@ describe('validateWithMqm', () => {
         vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'));
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const result = await validateWithMqm('hello', '안녕', baseConfig);
-        expect(result).toEqual({ verdict: 'PASS', errors: [] });
+        expect(result).toMatchObject({ verdict: 'PASS', errors: [] });
         expect(warnSpy).toHaveBeenCalledOnce();
     });
 });

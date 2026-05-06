@@ -4,19 +4,17 @@ import type { PropsInfoJson } from '~/models/output';
 import { loadCache, makeCacheKey, saveCache } from '~/translate/cache';
 import type { CacheStore } from '~/translate/cache';
 import { translateWithDeepl } from '~/translate/deepl';
-import { postprocessWithLlm } from '~/translate/llm-postprocess';
-import { validateWithMqm } from '~/translate/mqm-validator';
+import { processOneEntry } from '~/translate/pipeline-process';
+import {
+    applyTranslations,
+    buildComponentReports,
+    collectTextEntries,
+    partitionByCache,
+} from '~/translate/pipeline-stages';
 import type { ComponentReport } from '~/translate/report';
 import type { MqmError, TranslationConfig } from '~/translate/types';
 
 const LLM_CONCURRENCY = 5;
-
-interface TextEntry {
-    text: string;
-    kind: 'component' | 'prop';
-    componentIndex: number;
-    propIndex?: number;
-}
 
 export interface TranslateResult {
     props: PropsInfoJson[];
@@ -40,7 +38,61 @@ export interface PatchResult {
     hasOverEdit: boolean;
 }
 
-function formatEntryLabel(props: PropsInfoJson[], entry: TextEntry): string {
+/** spec 기능 5: noEditSpans 밖의 변경을 감지하고, over-editing 시 손상된 no-edit span을 MT 원본으로 복원 */
+export function applySelectivePatch(
+    mtOutput: string,
+    rewrittenOutput: string,
+    noEditSpans: string[],
+): PatchResult {
+    if (mtOutput === rewrittenOutput) {
+        return { result: rewrittenOutput, hasOverEdit: false };
+    }
+
+    const damagedSpans = noEditSpans.filter(
+        (span) => span.length > 0 && !rewrittenOutput.includes(span),
+    );
+
+    if (damagedSpans.length === 0) {
+        return { result: rewrittenOutput, hasOverEdit: false };
+    }
+
+    // over-editing 발생: 손상된 no-edit span을 rewritten에서 찾아 MT 원본으로 교체
+    // char offset은 MT와 rewritten에서 달라지므로 단어 인덱스(토큰 번호) 기반으로 위치를 추적
+    const mtTokens = mtOutput.split(' ');
+
+    let result = rewrittenOutput;
+    for (const span of damagedSpans) {
+        const spanTokens = span.split(' ');
+        const spanTokenCount = spanTokens.length;
+
+        let mtTokenStart = -1;
+        for (let i = 0; i <= mtTokens.length - spanTokenCount; i++) {
+            if (mtTokens.slice(i, i + spanTokenCount).join(' ') === span) {
+                mtTokenStart = i;
+                break;
+            }
+        }
+
+        if (mtTokenStart === -1) {
+            return { result: mtOutput, hasOverEdit: true };
+        }
+
+        const resultTokens = result.split(' ');
+        if (mtTokenStart + spanTokenCount > resultTokens.length) {
+            return { result: mtOutput, hasOverEdit: true };
+        }
+
+        resultTokens.splice(mtTokenStart, spanTokenCount, span);
+        result = resultTokens.join(' ');
+    }
+
+    return { result, hasOverEdit: true };
+}
+
+function formatEntryLabel(
+    props: PropsInfoJson[],
+    entry: ReturnType<typeof collectTextEntries>[number],
+): string {
     const component = props[entry.componentIndex];
     const componentName = component?.name ?? `component#${entry.componentIndex}`;
 
@@ -56,114 +108,31 @@ function formatEntryLabel(props: PropsInfoJson[], entry: TextEntry): string {
     return `${componentName}.props.${propName}`;
 }
 
-function formatErrorCount(count: number): string {
-    return `${count} ${count === 1 ? 'error' : 'errors'}`;
-}
-
-function logMqmErrors(log: (message: string) => void, label: string, errors: MqmError[]): void {
-    errors.forEach((error, index) => {
-        log(`mqm:error ${label} #${index + 1} ${error.severity} ${error.category}`);
-        log(`  source_span: ${JSON.stringify(error.source_span)}`);
-        log(`  mt_span: ${JSON.stringify(error.mt_span)}`);
-        log(`  explanation: ${error.explanation}`);
-    });
-}
-
-/** spec 기능 5: allowedEditSpans 밖의 변경을 감지하고 over-editing 시 MT 원본 기반으로 복원 */
-export function applySelectivePatch(
-    mtOutput: string,
-    rewrittenOutput: string,
-    allowedEditSpans: string[],
-): PatchResult {
-    // 변경이 없으면 바로 반환
-    if (mtOutput === rewrittenOutput) {
-        return { result: rewrittenOutput, hasOverEdit: false };
-    }
-
-    let hasOverEdit = false;
-
-    // 단어 단위 diff를 직접 구현 (외부 라이브러리 없이)
-    // allowedEditSpans 밖에서 변경된 내용이 있으면 MT 원본으로 폴백
-    const noEditSpans = extractNoEditSpans(
-        mtOutput,
-        allowedEditSpans.map((s) => ({ mt_span: s }) as MqmError),
-    );
-
-    for (const span of noEditSpans) {
-        if (span.length > 0 && !rewrittenOutput.includes(span)) {
-            hasOverEdit = true;
-            break;
-        }
-    }
-
-    if (hasOverEdit) {
-        // over-editing 발생: MT 원본에서 허용된 구간만 rewrittenOutput의 것으로 교체
-        const result = mtOutput;
-        for (const span of allowedEditSpans) {
-            // allowedEditSpan에 대응하는 rewritten 결과가 있으면 교체
-            // (정확한 대응을 찾기 어려우므로 MT 원본 그대로 반환)
-            void span;
-        }
-        return { result, hasOverEdit: true };
-    }
-
-    return { result: rewrittenOutput, hasOverEdit: false };
-}
-
 export async function translatePropsInfo(
     props: PropsInfoJson[],
     config: TranslationConfig,
     outputDir?: string,
     verbose = false,
 ): Promise<TranslateResult> {
-    const skipCache = config.skipCache;
     const log = (message: string): void => {
-        if (verbose) {
-            console.error(`[i18n] ${message}`);
-        }
+        if (verbose) console.error(`[i18n] ${message}`);
     };
 
-    // 1. 번역 대상 텍스트 수집
-    const entries: TextEntry[] = [];
-
-    for (let componentIndex = 0; componentIndex < props.length; componentIndex++) {
-        const component = props[componentIndex];
-
-        if (component.description) {
-            entries.push({
-                text: component.description,
-                kind: 'component',
-                componentIndex,
-            });
-        }
-
-        for (let propIndex = 0; propIndex < component.props.length; propIndex++) {
-            const prop = component.props[propIndex];
-            if (prop.description) {
-                entries.push({
-                    text: prop.description,
-                    kind: 'prop',
-                    componentIndex,
-                    propIndex,
-                });
-            }
-        }
-    }
+    // 1. 텍스트 수집
+    const entries = collectTextEntries(props);
 
     if (entries.length === 0) {
         log(`collected 0 translatable texts from ${props.length} components`);
         return {
-            props: props.map((component) => ({
-                ...component,
-                props: component.props.map((prop) => ({ ...prop })),
-            })),
-            componentReports: props.map((component) => ({
-                name: component.name,
+            props: props.map((c) => ({ ...c, props: c.props.map((p) => ({ ...p })) })),
+            componentReports: props.map((c) => ({
+                name: c.name,
                 totalTexts: 0,
                 initial: { failCount: 0, errors: [] },
                 final: { failCount: 0, errors: [] },
                 failCount: 0,
                 errors: [],
+                degradedCount: 0,
             })),
         };
     }
@@ -171,56 +140,27 @@ export async function translatePropsInfo(
     log(`collected ${entries.length} translatable texts from ${props.length} components`);
 
     const cacheOutputDir = outputDir ?? '';
-    const useCache = !skipCache;
-    const llmModel = process.env['LITELLM_MODEL'] ?? 'claude-sonnet-4-6';
+    const useCache = !config.skipCache;
     const glossaryId = process.env['DEEPL_GLOSSARY_ID'] ?? '';
+    const postprocessModel = config.llm.postprocessModel ?? 'claude-sonnet-4-6';
+    const validationModel = config.llm.validationModel ?? 'claude-sonnet-4-6';
 
+    // 2. 캐시 로드 & 히트/미스 분리
     let cacheStore: CacheStore = new Map();
     if (useCache && cacheOutputDir) {
         cacheStore = loadCache(cacheOutputDir);
     }
 
-    // 2. 캐시 히트/미스 분리
-    interface FinalEntry {
-        translated: string;
-        pipeline: 'mt-only' | 'mt-ape';
-        hadErrors: boolean;
-        hadOverEdit: boolean;
-    }
-    const finalEntries: FinalEntry[] = new Array(entries.length);
-    const missIndices: number[] = [];
-    let cacheHits = 0;
-
-    for (let entryIndex = 0; entryIndex < entries.length; entryIndex++) {
-        const entry = entries[entryIndex];
-        if (useCache) {
-            const key = makeCacheKey(entry.text, config.targetLocale, llmModel, glossaryId);
-            const hit = cacheStore.get(key);
-            if (hit) {
-                finalEntries[entryIndex] = {
-                    translated: hit.translated,
-                    pipeline: hit.pipeline,
-                    hadErrors: hit.hadErrors,
-                    hadOverEdit: hit.hadOverEdit,
-                };
-                cacheHits++;
-                continue;
-            }
-        }
-        missIndices.push(entryIndex);
-    }
+    const { finalEntries, missIndices, cacheHits } = useCache
+        ? partitionByCache(entries, cacheStore, config, postprocessModel, validationModel, glossaryId)
+        : { finalEntries: new Array(entries.length), missIndices: entries.map((_, i) => i), cacheHits: 0 };
 
     log(`cache: ${cacheHits} hit, ${missIndices.length} miss`);
 
-    const initialMqmErrorsByEntryIdx = new Map<number, MqmError[]>();
-    const finalMqmErrorsByEntryIdx = new Map<number, MqmError[]>();
-    const initialFailedEntryIndices = new Set<number>();
-    const finalFailedEntryIndices = new Set<number>();
-
+    // 3. DeepL 배치 번역 + 4. 검증·후처리 루프
     if (missIndices.length > 0) {
         const limit = pLimit(LLM_CONCURRENCY);
 
-        // 3. DeepL 1차 번역 (배치)
         const missTexts = missIndices.map((i) => entries[i].text);
         log(`deepl: translating ${missTexts.length} texts`);
         const deeplResults = await translateWithDeepl(missTexts, glossaryId);
@@ -230,175 +170,58 @@ export async function translatePropsInfo(
                 : 'deepl: unavailable, falling back to source text',
         );
 
-        // 4. spec 순서: MQM 평가 먼저 → errors 있으면 LLM 재번역
-        const missResults: FinalEntry[] = await Promise.all(
-            missIndices.map(async (entryIndex, batchIndex) => {
-                const entry = entries[entryIndex];
-                const mtOutput = deeplResults?.[batchIndex];
-                const label = formatEntryLabel(props, entry);
+        if (!deeplResults) {
+            for (const i of missIndices) {
+                console.warn(`[deepl] Unavailable, using source text as fallback for all misses.`);
+                finalEntries[i] = {
+                    translated: entries[i].text,
+                    pipeline: 'mt-only',
+                    hadErrors: false,
+                    hadOverEdit: false,
+                    initial: { verdict: 'PASS', errors: [] },
+                    final: { verdict: 'PASS', errors: [] },
+                };
+            }
+        } else {
+            const missResults = await Promise.all(
+                missIndices.map(async (entryIndex, batchIndex) => {
+                    const entry = entries[entryIndex];
+                    const mtOutput = deeplResults[batchIndex];
+                    const label = formatEntryLabel(props, entry);
 
-                if (mtOutput === undefined) {
-                    console.warn(
-                        `[deepl] Missing result at batch index ${batchIndex}, using source text as fallback.`,
-                    );
-                    log(`deepl: missing result for ${label}, using source text`);
-                    return {
-                        translated: entry.text,
-                        pipeline: 'mt-only' as const,
-                        hadErrors: false,
-                        hadOverEdit: false,
-                    };
-                }
-
-                // 4a. MQM 평가 (MT output 기준)
-                if (!config.validation.mqm.enabled) {
-                    log(`mqm: disabled for ${label}`);
-                    if (!config.llm.enabled) {
-                        log(`llm: disabled for ${label}, using DeepL output`);
-                        return {
-                            translated: mtOutput,
-                            pipeline: 'mt-only' as const,
-                            hadErrors: false,
-                            hadOverEdit: false,
-                        };
-                    }
-                    // MQM 비활성화: LLM postprocess만 실행 (errors 없이)
-                    log(`llm: postprocessing ${label} without MQM errors`);
-                    const rewritten = await limit(() =>
-                        postprocessWithLlm(
-                            entry.text,
-                            mtOutput,
-                            [],
-                            [],
-                            config.llm.postprocessModel,
-                        ),
-                    );
-                    return {
-                        translated: rewritten,
-                        pipeline: 'mt-ape' as const,
-                        hadErrors: false,
-                        hadOverEdit: false,
-                    };
-                }
-
-                const mqmResult = await limit(() => validateWithMqm(entry.text, mtOutput, config));
-                log(
-                    `mqm: ${label} ${mqmResult.verdict}${
-                        mqmResult.verdict === 'FAIL'
-                            ? ` (${formatErrorCount(mqmResult.errors.length)})`
-                            : ''
-                    }`,
-                );
-                if (mqmResult.verdict === 'FAIL') {
-                    logMqmErrors(log, label, mqmResult.errors);
-                }
-
-                // 4b. verdict PASS면 MT output 그대로 반환 (mt-only 경로)
-                if (mqmResult.verdict === 'PASS') {
-                    return {
-                        translated: mtOutput,
-                        pipeline: 'mt-only' as const,
-                        hadErrors: false,
-                        hadOverEdit: false,
-                    };
-                }
-
-                // 4c. verdict FAIL이면 no_edit_spans 계산 후 LLM 재번역
-                initialFailedEntryIndices.add(entryIndex);
-                initialMqmErrorsByEntryIdx.set(entryIndex, mqmResult.errors);
-                const allowedEditSpans = mqmResult.errors.map((e) => e.mt_span);
-
-                if (!config.llm.enabled) {
-                    log(`llm: disabled for ${label}, keeping failed DeepL output`);
-                    finalFailedEntryIndices.add(entryIndex);
-                    finalMqmErrorsByEntryIdx.set(entryIndex, mqmResult.errors);
-                    return {
-                        translated: mtOutput,
-                        pipeline: 'mt-only' as const,
-                        hadErrors: true,
-                        hadOverEdit: false,
-                    };
-                }
-
-                const noEditSpans = extractNoEditSpans(mtOutput, mqmResult.errors);
-
-                log(`llm: postprocessing ${label}`);
-                const rewrittenOutput = await limit(() =>
-                    postprocessWithLlm(
-                        entry.text,
-                        mtOutput,
-                        mqmResult.errors,
-                        noEditSpans,
-                        config.llm.postprocessModel,
-                    ),
-                );
-
-                // 5. diff 검증 — over-editing 감지
-                const { result, hasOverEdit } = applySelectivePatch(
-                    mtOutput,
-                    rewrittenOutput,
-                    allowedEditSpans,
-                );
-
-                if (hasOverEdit) {
-                    console.warn(
-                        `[pipeline] Over-editing detected for: "${entry.text.slice(0, 60)}...". Falling back to MT output.`,
-                    );
-                    log(`llm: over-editing detected for ${label}, using DeepL output`);
-                }
-
-                log(`mqm: recheck ${label}`);
-                const recheck = await limit(() => validateWithMqm(entry.text, result, config));
-                log(
-                    `mqm: recheck ${label} ${recheck.verdict}${
-                        recheck.verdict === 'FAIL'
-                            ? ` (${formatErrorCount(recheck.errors.length)})`
-                            : ''
-                    }`,
-                );
-                if (recheck.verdict === 'FAIL') {
-                    logMqmErrors(log, label, recheck.errors);
-                    finalFailedEntryIndices.add(entryIndex);
-                    finalMqmErrorsByEntryIdx.set(entryIndex, recheck.errors);
-
-                    if (config.validation.mqm.failOnError) {
-                        throw new Error(
-                            `[mqm-validator] Translation validation FAILED after retry for: "${entry.text.slice(0, 60)}..."`,
+                    if (mtOutput === undefined) {
+                        console.warn(
+                            `[deepl] Missing result at batch index ${batchIndex}, using source text as fallback.`,
                         );
                     }
+
+                    return processOneEntry(entry, mtOutput, config, limit, label, log);
+                }),
+            );
+
+            // 5. 미스 결과 병합 & 캐시 갱신
+            for (let batchIndex = 0; batchIndex < missIndices.length; batchIndex++) {
+                const entryIndex = missIndices[batchIndex];
+                const finalEntry = missResults[batchIndex];
+                finalEntries[entryIndex] = finalEntry;
+
+                if (useCache && finalEntry.translated !== entries[entryIndex].text) {
+                    const key = makeCacheKey(
+                        entries[entryIndex].text,
+                        config.targetLocale,
+                        postprocessModel,
+                        validationModel,
+                        glossaryId,
+                    );
+                    cacheStore.set(key, {
+                        source: entries[entryIndex].text,
+                        translated: finalEntry.translated,
+                        cachedAt: new Date().toISOString(),
+                        pipeline: finalEntry.pipeline,
+                        hadErrors: finalEntry.hadErrors,
+                        hadOverEdit: finalEntry.hadOverEdit,
+                    });
                 }
-
-                return {
-                    translated: result,
-                    pipeline: 'mt-ape' as const,
-                    hadErrors: true,
-                    hadOverEdit: hasOverEdit,
-                };
-            }),
-        );
-
-        // 6. 미스 결과 병합 및 캐시 저장
-        for (let batchIndex = 0; batchIndex < missIndices.length; batchIndex++) {
-            const entryIndex = missIndices[batchIndex];
-            const finalEntry = missResults[batchIndex];
-            finalEntries[entryIndex] = finalEntry;
-
-            // DeepL 실패로 원문이 그대로 반환된 경우 캐시하지 않음
-            if (useCache && finalEntry.translated !== entries[entryIndex].text) {
-                const key = makeCacheKey(
-                    entries[entryIndex].text,
-                    config.targetLocale,
-                    llmModel,
-                    glossaryId,
-                );
-                cacheStore.set(key, {
-                    source: entries[entryIndex].text,
-                    translated: finalEntry.translated,
-                    cachedAt: new Date().toISOString(),
-                    pipeline: finalEntry.pipeline,
-                    hadErrors: finalEntry.hadErrors,
-                    hadOverEdit: finalEntry.hadOverEdit,
-                });
             }
         }
     }
@@ -410,86 +233,11 @@ export async function translatePropsInfo(
         log(`cache: save skipped (${useCache ? 'no outputDir' : 'skipCache=true'})`);
     }
 
-    // 7. 번역된 PropsInfoJson 배열 구성 (불변)
-    const result: PropsInfoJson[] = props.map((component) => ({
-        ...component,
-        props: component.props.map((prop) => ({ ...prop })),
-    }));
+    // 6. props 재구성 & 7. 리포트 집계
+    const translatedProps = applyTranslations(props, entries, finalEntries);
+    const componentReports = buildComponentReports(props, entries, finalEntries);
 
-    for (let entryIndex = 0; entryIndex < entries.length; entryIndex++) {
-        const entry = entries[entryIndex];
-        const translated = finalEntries[entryIndex]?.translated ?? entry.text;
+    log(`completed ${translatedProps.length} components`);
 
-        if (entry.kind === 'component') {
-            result[entry.componentIndex] = {
-                ...result[entry.componentIndex],
-                description: translated,
-            };
-        } else if (entry.kind === 'prop' && entry.propIndex !== undefined) {
-            const component = result[entry.componentIndex];
-            const updatedProps = [...component.props];
-            updatedProps[entry.propIndex] = {
-                ...updatedProps[entry.propIndex],
-                description: translated,
-            };
-            result[entry.componentIndex] = { ...component, props: updatedProps };
-        }
-    }
-
-    // 8. 컴포넌트별 리포트 생성
-    const textCountByComponent = new Map<number, number>();
-    for (const entry of entries) {
-        const componentIndex = entry.componentIndex;
-        textCountByComponent.set(
-            componentIndex,
-            (textCountByComponent.get(componentIndex) ?? 0) + 1,
-        );
-    }
-
-    function buildStageByComponent(
-        failedEntryIndices: Set<number>,
-        errorsByEntryIdx: Map<number, MqmError[]>,
-    ): Map<number, { failCount: number; errors: MqmError[] }> {
-        const resultByComponent = new Map<number, { failCount: number; errors: MqmError[] }>();
-
-        for (const entryIndex of failedEntryIndices) {
-            const componentIndex = entries[entryIndex].componentIndex;
-            const current = resultByComponent.get(componentIndex) ?? {
-                failCount: 0,
-                errors: [],
-            };
-            resultByComponent.set(componentIndex, {
-                failCount: current.failCount + 1,
-                errors: [...current.errors, ...(errorsByEntryIdx.get(entryIndex) ?? [])],
-            });
-        }
-
-        return resultByComponent;
-    }
-
-    const initialByComponent = buildStageByComponent(
-        initialFailedEntryIndices,
-        initialMqmErrorsByEntryIdx,
-    );
-    const finalByComponent = buildStageByComponent(
-        finalFailedEntryIndices,
-        finalMqmErrorsByEntryIdx,
-    );
-
-    const componentReports: ComponentReport[] = props.map((component, componentIndex) => {
-        const initial = initialByComponent.get(componentIndex) ?? { failCount: 0, errors: [] };
-        const final = finalByComponent.get(componentIndex) ?? { failCount: 0, errors: [] };
-        return {
-            name: component.name,
-            totalTexts: textCountByComponent.get(componentIndex) ?? 0,
-            initial,
-            final,
-            failCount: final.failCount,
-            errors: final.errors,
-        };
-    });
-
-    log(`completed ${result.length} components`);
-
-    return { props: result, componentReports };
+    return { props: translatedProps, componentReports };
 }

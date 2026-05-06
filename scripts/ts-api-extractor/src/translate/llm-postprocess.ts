@@ -6,11 +6,8 @@ const SYSTEM_PROMPT = `You are a professional Korean translator and post-editor.
 Rules:
 1. Fix only the mt_span portions listed in the errors. Do not change anything else.
 2. no_edit_spans listed below must remain character-for-character identical in your output.
-3. UI component terms (e.g. breadcrumb, checkbox, dialog) must be transliterated in Korean (브레드크럼, 체크박스, 다이얼로그), never translated literally.
-4. camelCase identifiers (onClick, className, children, etc.), JSDoc tags (@param, @returns), and type expressions (string | number) must remain in English.
-5. Markdown code blocks (\`...\`), HTML tags, and placeholders ({...}, {{...}}) must be preserved exactly.
-6. Output ONLY the single final Korean text.
-7. Do NOT output multiple versions, explanations, commentary, or markdown wrapping.`;
+3. Output ONLY the single final Korean text.
+4. Do NOT output multiple versions, explanations, commentary, or markdown wrapping.`;
 
 function buildRewritePrompt(
     source: string,
@@ -36,13 +33,18 @@ function buildRewritePrompt(
     );
 }
 
+export interface PostprocessResult {
+    translated: string;
+    degraded?: true;
+}
+
 export async function postprocessWithLlm(
     source: string,
     mtOutput: string,
     errors: MqmError[] = [],
     noEditSpans: string[] = [],
     model?: string,
-): Promise<string> {
+): Promise<PostprocessResult> {
     const userPrompt = buildRewritePrompt(source, mtOutput, errors, noEditSpans);
 
     const result = await callLlm(
@@ -54,8 +56,9 @@ export async function postprocessWithLlm(
     );
 
     if (!result.content) {
-        console.warn(`[llm-postprocess] ${result.error}. Returning DeepL draft as-is.`);
-        return mtOutput;
+        const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
+        console.warn(`[llm-postprocess] ${result.error}${statusInfo}. Returning DeepL draft as-is (degraded).`);
+        return { translated: mtOutput, degraded: true };
     }
 
     // Strip markdown code fences if LLM wraps the output
@@ -63,5 +66,5 @@ export async function postprocessWithLlm(
         .replace(/^```(?:\w+)?\s*/i, '')
         .replace(/\s*```$/, '')
         .trim();
-    return cleaned || mtOutput;
+    return { translated: cleaned || mtOutput };
 }

@@ -20,6 +20,7 @@ describe('buildReport', () => {
                 errors: [],
                 initial: { failCount: 2, errors: [] },
                 final: { failCount: 1, errors: [] },
+                degradedCount: 0,
             },
             {
                 name: 'Avatar',
@@ -28,6 +29,7 @@ describe('buildReport', () => {
                 errors: [],
                 initial: { failCount: 0, errors: [] },
                 final: { failCount: 0, errors: [] },
+                degradedCount: 0,
             },
         ];
         const report = buildReport(components);
@@ -67,6 +69,7 @@ describe('renderReport', () => {
             failCount: 0,
             initialFailCount: 0,
             finalFailCount: 0,
+            totalDegradedCount: 0,
             components: [],
         };
         const output = renderReport(report);
@@ -81,6 +84,7 @@ describe('renderReport', () => {
             failCount: 2,
             initialFailCount: 3,
             finalFailCount: 2,
+            totalDegradedCount: 0,
             components: [
                 {
                     name: 'Button',
@@ -89,6 +93,7 @@ describe('renderReport', () => {
                     errors: [],
                     initial: { failCount: 3, errors: [] },
                     final: { failCount: 2, errors: [] },
+                degradedCount: 0,
                 },
             ],
         };
@@ -104,6 +109,7 @@ describe('renderReport', () => {
             failCount: 0,
             initialFailCount: 1,
             finalFailCount: 0,
+            totalDegradedCount: 0,
             components: [
                 {
                     name: 'Avatar',
@@ -112,6 +118,7 @@ describe('renderReport', () => {
                     errors: [],
                     initial: { failCount: 1, errors: [] },
                     final: { failCount: 0, errors: [] },
+                degradedCount: 0,
                 },
             ],
         };
@@ -129,6 +136,7 @@ describe('renderReport', () => {
             failCount: 1,
             initialFailCount: 2,
             finalFailCount: 1,
+            totalDegradedCount: 0,
             components: [
                 {
                     name: 'Dialog',
@@ -167,6 +175,7 @@ describe('renderReport', () => {
                             },
                         ],
                     },
+                    degradedCount: 0,
                 },
             ],
         };
@@ -209,6 +218,7 @@ describe('writeReport', () => {
                 errors: [],
                 initial: { failCount: 0, errors: [] },
                 final: { failCount: 0, errors: [] },
+                degradedCount: 0,
             },
         ]);
         writeReport(report, tmpDir);

@@ -6,6 +6,7 @@ export interface LlmMessage {
 export interface LlmCallResult {
     content: string | null;
     error?: string;
+    statusCode?: number;
 }
 
 export async function callLlm(messages: LlmMessage[], model?: string): Promise<LlmCallResult> {
@@ -40,7 +41,7 @@ export async function callLlm(messages: LlmMessage[], model?: string): Promise<L
         }
 
         if (!response.ok) {
-            return { content: null, error: `Request failed with status ${response.status}` };
+            return { content: null, error: `Request failed with status ${response.status}`, statusCode: response.status };
         }
 
         const data = (await response.json()) as {

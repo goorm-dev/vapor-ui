@@ -19,11 +19,14 @@ export type CacheStore = Map<string, CacheEntry>;
 export function makeCacheKey(
     source: string,
     targetLocale: string,
-    llmModel: string,
+    postprocessModel: string,
+    validationModel: string,
     glossaryId: string,
 ): string {
     return createHash('sha256')
-        .update(`${CACHE_VERSION}:${source}:${targetLocale}:${llmModel}:${glossaryId}`)
+        .update(
+            `${CACHE_VERSION}:${source}:${targetLocale}:${postprocessModel}:${validationModel}:${glossaryId}`,
+        )
         .digest('hex');
 }
 

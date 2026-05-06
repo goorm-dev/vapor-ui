@@ -17,6 +17,8 @@ export interface ComponentReport {
     failCount: number;
     /** Final MQM errors. Kept as a convenience alias for summary consumers. */
     errors: MqmError[];
+    /** LLM 호출 실패로 검증/재번역이 degraded 처리된 텍스트 수 */
+    degradedCount: number;
 }
 
 export interface TranslationReport {
@@ -27,6 +29,8 @@ export interface TranslationReport {
     finalFailCount: number;
     /** Final MQM failure count. Kept for backward-compatible summary rendering. */
     failCount: number;
+    /** 전체 degraded 텍스트 수 */
+    totalDegradedCount: number;
     components: ComponentReport[];
 }
 
@@ -38,6 +42,7 @@ export function buildReport(components: ComponentReport[]): TranslationReport {
         initialFailCount: components.reduce((sum, c) => sum + c.initial.failCount, 0),
         finalFailCount: components.reduce((sum, c) => sum + c.final.failCount, 0),
         failCount: components.reduce((sum, c) => sum + c.final.failCount, 0),
+        totalDegradedCount: components.reduce((sum, c) => sum + c.degradedCount, 0),
         components,
     };
 }
@@ -127,6 +132,7 @@ export function renderReport(report: TranslationReport): string {
         `| Pass rate | ${passRate}% |`,
         `| Initial MQM failures | ${report.initialFailCount} |`,
         `| Final MQM failures | ${report.finalFailCount} |`,
+        `| LLM degraded (no validation) | ${report.totalDegradedCount} |`,
         '',
         '## Component Summary',
         '',

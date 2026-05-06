@@ -1,5 +1,5 @@
 import { callLlm } from '~/translate/llm-client';
-import type { MqmError, MqmResult, TranslationConfig } from '~/translate/types';
+import type { MqmCategory, MqmError, MqmResult, TranslationConfig } from '~/translate/types';
 
 const SYSTEM_PROMPT = `You are a design-system documentation translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
 
@@ -32,12 +32,8 @@ Severity:
 - major: seriously harms understanding or trust. Examples: behavior description distorted, important explanation omitted, non-source content added.
 - minor: lowers expression quality but does not block understanding. Examples: awkward literal phrasing, typo, style inconsistency.
 
-Rules:
-- Component names (Button, Dialog, Breadcrumb), prop names (onClick, className, children), token names, JSDoc tags (@param, @returns), type expressions, Markdown inline code, HTML tags, and placeholders ({count}, {{name}}) must be preserved exactly.
-- Translate "breadcrumb" as "브레드크럼" in Korean prose. Do not translate it as "이동 경로" or invent a phonetic variant.
-- Markdown code blocks, inline code (\`...\`), HTML tags, links, anchors, and placeholders must NOT be flagged as errors when preserved exactly.
-- Write explanation in Korean. Keep category and severity values in English exactly as specified.
-- If no errors exist, return errors as an empty array.
+Write explanation in Korean. Keep category and severity values in English exactly as specified.
+If no errors exist, return errors as an empty array.
 
 Respond with EXACTLY this JSON shape and nothing else:
 {"verdict":"PASS","errors":[]}
@@ -45,8 +41,10 @@ or
 {"verdict":"FAIL","errors":[{"category":"Terminology/Prop name mistranslated","severity":"critical","source_span":"onClick","mt_span":"클릭","explanation":"prop 이름은 번역하면 안 됩니다."}]}`;
 
 const passResult = (): MqmResult => ({ verdict: 'PASS', errors: [] });
+const degradedResult = (): MqmResult => ({ verdict: 'PASS', errors: [], degraded: true });
 
-const MQM_CATEGORIES = new Set<MqmError['category']>([
+// MqmCategory 유니온에서 파생 — 카테고리 추가/삭제는 types.ts 한 곳에서만
+const MQM_CATEGORIES: Set<MqmCategory> = new Set([
     'Terminology/Component name inconsistency',
     'Terminology/Token name altered',
     'Terminology/Prop name mistranslated',
@@ -63,7 +61,7 @@ const MQM_CATEGORIES = new Set<MqmError['category']>([
     'Cross-reference/See also mismatch',
     'Locale/Number / unit format',
     'Locale/Directional text',
-]);
+] satisfies MqmCategory[]);
 
 const MQM_SEVERITIES = new Set<MqmError['severity']>(['minor', 'major', 'critical']);
 
@@ -104,8 +102,9 @@ export async function validateWithMqm(
     );
 
     if (!result.content) {
-        console.warn(`[mqm-validator] ${result.error}. Returning PASS.`);
-        return passResult();
+        const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
+        console.warn(`[mqm-validator] ${result.error}${statusInfo}. Returning PASS (degraded).`);
+        return degradedResult();
     }
 
     try {
@@ -128,8 +127,8 @@ export async function validateWithMqm(
             !Array.isArray(p.errors) ||
             !(p.errors as unknown[]).every(isMqmError)
         ) {
-            console.warn('[mqm-validator] Unexpected JSON shape from LLM. Returning PASS.');
-            return passResult();
+            console.warn('[mqm-validator] Unexpected JSON shape from LLM. Returning PASS (degraded).');
+            return degradedResult();
         }
         return {
             verdict: p.verdict,
@@ -139,6 +138,6 @@ export async function validateWithMqm(
         console.warn(
             `[mqm-validator] Failed to parse MQM response as JSON. Raw: ${result.content.slice(0, 300)}`,
         );
-        return passResult();
+        return degradedResult();
     }
 }

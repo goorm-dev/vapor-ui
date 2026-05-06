@@ -12,31 +12,37 @@ function makeTmpDir(): string {
 
 describe('makeCacheKey', () => {
     it('same inputs produce same key (deterministic)', () => {
-        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', '');
+        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
+        const b = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
         expect(a).toBe(b);
     });
 
     it('different source produces different key', () => {
-        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey('world', 'ko', 'claude-sonnet-4-6', '');
+        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
+        const b = makeCacheKey('world', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
         expect(a).not.toBe(b);
     });
 
     it('different glossaryId produces different key', () => {
-        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'glossary-123');
+        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
+        const b = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', 'glossary-123');
         expect(a).not.toBe(b);
     });
 
-    it('different llmModel produces different key', () => {
-        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey('hello', 'ko', 'claude-opus-4-7', '');
+    it('different postprocessModel produces different key', () => {
+        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
+        const b = makeCacheKey('hello', 'ko', 'claude-opus-4-7', 'claude-sonnet-4-6', '');
+        expect(a).not.toBe(b);
+    });
+
+    it('different validationModel produces different key', () => {
+        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
+        const b = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-opus-4-7', '');
         expect(a).not.toBe(b);
     });
 
     it('includes CACHE_VERSION in key (prompt version invalidation)', () => {
-        const key = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', '');
+        const key = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
         expect(typeof key).toBe('string');
         expect(key.length).toBe(64); // sha256 hex
     });
@@ -63,7 +69,7 @@ describe('loadCache', () => {
             hadErrors: false,
             hadOverEdit: false,
         };
-        const key = makeCacheKey('hello', 'ko', 'model', '');
+        const key = makeCacheKey('hello', 'ko', 'model', 'model', '');
         fs.writeFileSync(
             path.join(dir, '.translation-cache.json'),
             JSON.stringify({ [key]: entry }),
@@ -95,7 +101,7 @@ describe('saveCache / loadCache roundtrip', () => {
 
     it('written cache can be read back', () => {
         const store = new Map<string, CacheEntry>();
-        const key = makeCacheKey('hello', 'ko', 'model', '');
+        const key = makeCacheKey('hello', 'ko', 'model', 'model', '');
         store.set(key, {
             source: 'hello',
             translated: '안녕',

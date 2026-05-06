@@ -79,7 +79,7 @@ describe('translatePropsInfo', () => {
     it('DeepL API 키 없을 때 원문 반환 + warn 출력', async () => {
         vi.stubEnv('DEEPL_API_KEY', '');
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (source) => source);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (source) => ({ translated: source }));
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
             verdict: 'PASS',
             errors: [],
@@ -104,7 +104,7 @@ describe('translatePropsInfo', () => {
             '버튼 component.',
             '클릭 핸들러 callback.',
         ]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (source) => source);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (source) => ({ translated: source }));
         const mqmSpy = vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
             verdict: 'PASS',
             errors: [],
@@ -126,7 +126,7 @@ describe('translatePropsInfo', () => {
             '버튼 컴포넌트.',
             '클릭 핸들러.',
         ]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (source) => source);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (source) => ({ translated: source }));
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
             verdict: 'FAIL',
             errors: [
@@ -162,7 +162,7 @@ describe('translatePropsInfo', () => {
 
     it('verbose=true이면 MQM 실패 판정과 error 상세를 로그로 출력', async () => {
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue(['버튼 컴포넌트.']);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue('버튼 컴포넌트입니다.');
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue({ translated: '버튼 컴포넌트입니다.' });
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
             verdict: 'FAIL',
             errors: [
@@ -199,7 +199,7 @@ describe('translatePropsInfo', () => {
     // Test case 5: failOnError: true + FAIL → Error throw
     it('failOnError: true + FAIL → Error throw', async () => {
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue(['버튼 컴포넌트.']);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (source) => source);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (source) => ({ translated: source }));
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
             verdict: 'FAIL',
             errors: [
@@ -236,7 +236,7 @@ describe('translatePropsInfo', () => {
         const mtText = '버튼 컴포넌트.';
         const rewrittenText = '버튼 컴포넌트입니다.';
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue(rewrittenText);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue({ translated: rewrittenText });
         vi.spyOn(mqmModule, 'validateWithMqm')
             .mockResolvedValueOnce({
                 verdict: 'FAIL',
@@ -280,7 +280,7 @@ describe('translatePropsInfo', () => {
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
         const postprocessSpy = vi
             .spyOn(llmModule, 'postprocessWithLlm')
-            .mockResolvedValue(rewrittenText);
+            .mockResolvedValue({ translated: rewrittenText });
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
             verdict: 'FAIL',
             errors: [],
@@ -314,7 +314,7 @@ describe('translatePropsInfo', () => {
         vi.spyOn(cacheModule, 'loadCache').mockReturnValue(
             new Map([
                 [
-                    cacheModule.makeCacheKey('A button component.', 'ko', 'claude-sonnet-4-6', ''),
+                    cacheModule.makeCacheKey('A button component.', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', ''),
                     {
                         source: 'A button component.',
                         translated: cachedText,
@@ -328,6 +328,7 @@ describe('translatePropsInfo', () => {
                     cacheModule.makeCacheKey(
                         'Click handler callback.',
                         'ko',
+                        'claude-sonnet-4-6',
                         'claude-sonnet-4-6',
                         '',
                     ),
@@ -356,7 +357,7 @@ describe('translatePropsInfo', () => {
         // DeepL이 첫 번째 항목만 반환 (두 번째 누락)
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue(['버튼 컴포넌트.']);
         vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(
-            async (_source, draft) => draft,
+            async (_source, draft) => ({ translated: draft }),
         );
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({ verdict: 'PASS', errors: [] });
 
@@ -396,7 +397,7 @@ describe('translatePropsInfo', () => {
         const mtText = '버튼 컴포넌트.';
         const rewrittenText = '버튼입니다.';
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue(rewrittenText);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue({ translated: rewrittenText });
 
         const initialError = {
             category: 'Accuracy/Mistranslation' as const,
@@ -440,7 +441,7 @@ describe('translatePropsInfo', () => {
     it('recheck FAIL + failOnError:true → Error throw', async () => {
         const mtText = '버튼 컴포넌트.';
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue('수정된 버튼.');
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue({ translated: '수정된 버튼.' });
         vi.spyOn(mqmModule, 'validateWithMqm')
             .mockResolvedValueOnce({
                 verdict: 'FAIL',
@@ -494,7 +495,7 @@ describe('translatePropsInfo', () => {
         // LLM이 허용되지 않은 "handler"까지 바꿔버림 → over-edit
         const overEditText = 'onClick 핸들러입니다.';
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue(overEditText);
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue({ translated: overEditText });
         vi.spyOn(mqmModule, 'validateWithMqm')
             .mockResolvedValueOnce({
                 verdict: 'FAIL',
@@ -517,7 +518,7 @@ describe('translatePropsInfo', () => {
         const result = await translatePropsInfo(propsWithDescription, baseConfig);
 
         expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Over-editing detected'));
-        // over-edit → MT 원본으로 폴백
-        expect(result.props[0].description).toBe(mtText);
+        // over-edit → no-edit span("handler입니다.")은 MT에서 복원, 허용된 span("클릭")은 LLM 결과("onClick") 유지
+        expect(result.props[0].description).toBe('onClick handler입니다.');
     });
 });
