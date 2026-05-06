@@ -25,7 +25,13 @@ describe('makeCacheKey', () => {
 
     it('different glossaryId produces different key', () => {
         const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', 'glossary-123');
+        const b = makeCacheKey(
+            'hello',
+            'ko',
+            'claude-sonnet-4-6',
+            'claude-sonnet-4-6',
+            'glossary-123',
+        );
         expect(a).not.toBe(b);
     });
 

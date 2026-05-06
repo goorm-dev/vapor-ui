@@ -127,7 +127,9 @@ export async function validateWithMqm(
             !Array.isArray(p.errors) ||
             !(p.errors as unknown[]).every(isMqmError)
         ) {
-            console.warn('[mqm-validator] Unexpected JSON shape from LLM. Returning PASS (degraded).');
+            console.warn(
+                '[mqm-validator] Unexpected JSON shape from LLM. Returning PASS (degraded).',
+            );
             return degradedResult();
         }
         return {

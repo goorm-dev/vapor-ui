@@ -11,43 +11,85 @@ describe('extractNoEditSpans', () => {
 
     it('single error span in the middle → two surrounding spans', () => {
         const spans = extractNoEditSpans('hello onClick world', [
-            { mt_span: 'onClick', category: 'Terminology/Prop name mistranslated', severity: 'critical', source_span: 'onClick', explanation: '' },
+            {
+                mt_span: 'onClick',
+                category: 'Terminology/Prop name mistranslated',
+                severity: 'critical',
+                source_span: 'onClick',
+                explanation: '',
+            },
         ]);
         expect(spans).toEqual(['hello', 'world']);
     });
 
     it('error span at start → one trailing span', () => {
         const spans = extractNoEditSpans('클릭 handler callback', [
-            { mt_span: '클릭', category: 'Terminology/Prop name mistranslated', severity: 'critical', source_span: 'onClick', explanation: '' },
+            {
+                mt_span: '클릭',
+                category: 'Terminology/Prop name mistranslated',
+                severity: 'critical',
+                source_span: 'onClick',
+                explanation: '',
+            },
         ]);
         expect(spans).toEqual(['handler callback']);
     });
 
     it('error span at end → one leading span', () => {
         const spans = extractNoEditSpans('click the 버튼', [
-            { mt_span: '버튼', category: 'Terminology/Component name inconsistency', severity: 'major', source_span: 'Button', explanation: '' },
+            {
+                mt_span: '버튼',
+                category: 'Terminology/Component name inconsistency',
+                severity: 'major',
+                source_span: 'Button',
+                explanation: '',
+            },
         ]);
         expect(spans).toEqual(['click the']);
     });
 
     it('multiple errors → multiple no-edit spans', () => {
         const spans = extractNoEditSpans('A 클릭 B 버튼 C', [
-            { mt_span: '클릭', category: 'Terminology/Prop name mistranslated', severity: 'critical', source_span: 'onClick', explanation: '' },
-            { mt_span: '버튼', category: 'Terminology/Component name inconsistency', severity: 'major', source_span: 'Button', explanation: '' },
+            {
+                mt_span: '클릭',
+                category: 'Terminology/Prop name mistranslated',
+                severity: 'critical',
+                source_span: 'onClick',
+                explanation: '',
+            },
+            {
+                mt_span: '버튼',
+                category: 'Terminology/Component name inconsistency',
+                severity: 'major',
+                source_span: 'Button',
+                explanation: '',
+            },
         ]);
         expect(spans).toEqual(['A', 'B', 'C']);
     });
 
     it('error span not present in mtOutput → whole string returned', () => {
         const spans = extractNoEditSpans('hello world', [
-            { mt_span: 'notfound', category: 'Accuracy/Mistranslation', severity: 'major', source_span: 'x', explanation: '' },
+            {
+                mt_span: 'notfound',
+                category: 'Accuracy/Mistranslation',
+                severity: 'major',
+                source_span: 'x',
+                explanation: '',
+            },
         ]);
         expect(spans).toEqual(['hello world']);
     });
 
     it('empty mtOutput → returns empty array', () => {
         const spans = extractNoEditSpans('', [
-            { mt_span: 'anything', category: 'Accuracy/Mistranslation', severity: 'major', source_span: 'x', explanation: '' },
+            {
+                mt_span: 'anything',
+                category: 'Accuracy/Mistranslation',
+                severity: 'major',
+                source_span: 'x',
+                explanation: '',
+            },
         ]);
         expect(spans).toEqual([]);
     });
@@ -55,7 +97,13 @@ describe('extractNoEditSpans', () => {
     it('duplicate mt_span — replaces only first occurrence', () => {
         // String.replace replaces the first match only
         const spans = extractNoEditSpans('foo bar foo', [
-            { mt_span: 'foo', category: 'Accuracy/Mistranslation', severity: 'minor', source_span: 'foo', explanation: '' },
+            {
+                mt_span: 'foo',
+                category: 'Accuracy/Mistranslation',
+                severity: 'minor',
+                source_span: 'foo',
+                explanation: '',
+            },
         ]);
         // first "foo" replaced → "\x00 bar foo" → trimmed → ["bar foo"]
         expect(spans).toEqual(['bar foo']);
@@ -102,7 +150,11 @@ describe('applySelectivePatch', () => {
     it('multiple no-edit spans — restores each damaged one', () => {
         // MT: "A 클릭 B handler C"  noEditSpans: ["A", "B", "C"]
         // LLM changed "B" to "비" → over-edit on "B"
-        const result = applySelectivePatch('A 클릭 B handler C', 'A onClick 비 handler C', ['A', 'B', 'C']);
+        const result = applySelectivePatch('A 클릭 B handler C', 'A onClick 비 handler C', [
+            'A',
+            'B',
+            'C',
+        ]);
         expect(result.hasOverEdit).toBe(true);
         expect(result.result).toContain('B');
         expect(result.result).not.toContain('비');

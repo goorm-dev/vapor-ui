@@ -152,8 +152,19 @@ export async function translatePropsInfo(
     }
 
     const { finalEntries, missIndices, cacheHits } = useCache
-        ? partitionByCache(entries, cacheStore, config, postprocessModel, validationModel, glossaryId)
-        : { finalEntries: new Array(entries.length), missIndices: entries.map((_, i) => i), cacheHits: 0 };
+        ? partitionByCache(
+              entries,
+              cacheStore,
+              config,
+              postprocessModel,
+              validationModel,
+              glossaryId,
+          )
+        : {
+              finalEntries: new Array(entries.length),
+              missIndices: entries.map((_, i) => i),
+              cacheHits: 0,
+          };
 
     log(`cache: ${cacheHits} hit, ${missIndices.length} miss`);
 

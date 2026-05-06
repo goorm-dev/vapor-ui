@@ -59,7 +59,13 @@ export function partitionByCache(
 
     for (let entryIndex = 0; entryIndex < entries.length; entryIndex++) {
         const entry = entries[entryIndex];
-        const key = makeCacheKey(entry.text, config.targetLocale, postprocessModel, validationModel, glossaryId);
+        const key = makeCacheKey(
+            entry.text,
+            config.targetLocale,
+            postprocessModel,
+            validationModel,
+            glossaryId,
+        );
         const hit = cacheStore.get(key);
         if (hit) {
             finalEntries[entryIndex] = cacheEntryToFinalEntry(hit);
@@ -138,7 +144,10 @@ export function buildComponentReports(
         if (!result) continue;
 
         if (result.initial.verdict === 'FAIL') {
-            const current = initialByComponent.get(entry.componentIndex) ?? { failCount: 0, errors: [] };
+            const current = initialByComponent.get(entry.componentIndex) ?? {
+                failCount: 0,
+                errors: [],
+            };
             initialByComponent.set(entry.componentIndex, {
                 failCount: current.failCount + 1,
                 errors: [...current.errors, ...result.initial.errors],
@@ -146,7 +155,10 @@ export function buildComponentReports(
         }
 
         if (result.final.verdict === 'FAIL') {
-            const current = finalByComponent.get(entry.componentIndex) ?? { failCount: 0, errors: [] };
+            const current = finalByComponent.get(entry.componentIndex) ?? {
+                failCount: 0,
+                errors: [],
+            };
             finalByComponent.set(entry.componentIndex, {
                 failCount: current.failCount + 1,
                 errors: [...current.errors, ...result.final.errors],

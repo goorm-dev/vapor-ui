@@ -93,7 +93,7 @@ describe('renderReport', () => {
                     errors: [],
                     initial: { failCount: 3, errors: [] },
                     final: { failCount: 2, errors: [] },
-                degradedCount: 0,
+                    degradedCount: 0,
                 },
             ],
         };
@@ -118,7 +118,7 @@ describe('renderReport', () => {
                     errors: [],
                     initial: { failCount: 1, errors: [] },
                     final: { failCount: 0, errors: [] },
-                degradedCount: 0,
+                    degradedCount: 0,
                 },
             ],
         };

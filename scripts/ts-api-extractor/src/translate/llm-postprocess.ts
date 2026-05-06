@@ -57,7 +57,9 @@ export async function postprocessWithLlm(
 
     if (!result.content) {
         const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
-        console.warn(`[llm-postprocess] ${result.error}${statusInfo}. Returning DeepL draft as-is (degraded).`);
+        console.warn(
+            `[llm-postprocess] ${result.error}${statusInfo}. Returning DeepL draft as-is (degraded).`,
+        );
         return { translated: mtOutput, degraded: true };
     }
 

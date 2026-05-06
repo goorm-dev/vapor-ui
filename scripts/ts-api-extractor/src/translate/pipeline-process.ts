@@ -115,7 +115,11 @@ export async function processOneEntry(
         ),
     );
 
-    const { result, hasOverEdit } = applySelectivePatch(mtOutput, postprocess.translated, noEditSpans);
+    const { result, hasOverEdit } = applySelectivePatch(
+        mtOutput,
+        postprocess.translated,
+        noEditSpans,
+    );
     if (hasOverEdit) {
         console.warn(
             `[pipeline] Over-editing detected for: "${entry.text.slice(0, 60)}...". Falling back to MT output.`,
