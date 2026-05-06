@@ -207,6 +207,18 @@ export const TestBed = {
                 </Grid.Item>
 
                 <Grid.Item>
+                    {(['invalid', 'disabled', 'readOnly', 'required'] as const).map((state) => (
+                        <MultiSelect.Root
+                            key={state}
+                            placeholder="Placeholder"
+                            {...{ [state]: true }}
+                        >
+                            <MultiSelect.Trigger />
+                        </MultiSelect.Root>
+                    ))}
+                </Grid.Item>
+
+                <Grid.Item>
                     <MultiSelect.Root placeholder="Grouped" defaultOpen>
                         <MultiSelect.Trigger />
                         <MultiSelect.Popup>

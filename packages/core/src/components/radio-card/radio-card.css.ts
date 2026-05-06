@@ -1,8 +1,12 @@
+import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
+import { when } from '~/styles/mixins/logical-states';
 import { vars } from '~/styles/themes.css';
+
+const boxShadowColor = createVar('box-shadow-color');
 
 export const root = componentRecipe({
     base: [
@@ -12,7 +16,7 @@ export const root = componentRecipe({
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
-            boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
             borderRadius: vars.size.borderRadius[300],
             color: vars.color.foreground.normal[200],
             cursor: 'pointer',
@@ -20,17 +24,13 @@ export const root = componentRecipe({
             paddingInline: vars.size.space['150'],
 
             selectors: {
-                '&[data-checked]': {
-                    boxShadow: `inset 0 0 0 1px ${vars.color.border.primary}`,
-                },
-                '&[data-readonly]': {
-                    backgroundColor: vars.color.gray['200'],
-                },
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
-                '&[data-invalid]': {
-                    boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}`,
-                },
+                '&[data-checked]': { vars: { [boxShadowColor]: vars.color.border.primary } },
+                [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
+                [when.readonly()]: { backgroundColor: vars.color.gray['200'] },
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
             },
+
+            vars: { [boxShadowColor]: vars.color.border.normal },
         },
     ],
 

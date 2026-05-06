@@ -88,6 +88,38 @@ describe('Avatar', () => {
         expect(image).toHaveAttribute('alt', alt);
     });
 
+    it('should render no img and one fallback span initially when children contain ImagePrimitive and FallbackPrimitive', () => {
+        const alt = 'Vapor';
+
+        const rendered = render(
+            <Avatar.Root alt={alt}>
+                <Avatar.ImagePrimitive />
+                <Avatar.FallbackPrimitive>V</Avatar.FallbackPrimitive>
+            </Avatar.Root>,
+        );
+
+        const images = rendered.queryAllByRole('img');
+        const fallbacks = rendered.queryAllByText('V');
+
+        expect(images).toHaveLength(0); // the image should not be rendered initially
+        expect(fallbacks).toHaveLength(1); // the fallback should be rendered initially
+    });
+
+    it('should not double-render primitives when using children composition', async () => {
+        const src = 'https://cdn.mos.cms.futurecdn.net/yuenhhyDC6DR5rv6KQNxu5.png';
+        const alt = 'Vapor';
+
+        const rendered = render(
+            <Avatar.Root src={src} alt={alt}>
+                <Avatar.ImagePrimitive />
+                <Avatar.FallbackPrimitive>V</Avatar.FallbackPrimitive>
+            </Avatar.Root>,
+        );
+
+        const images = await rendered.findAllByRole('img');
+        expect(images).toHaveLength(1);
+    });
+
     it('can handle changing src', async () => {
         const src = 'https://cdn.mos.cms.futurecdn.net/yuenhhyDC6DR5rv6KQNxu5.png';
         const src2 = 'https://cdn.kinocheck.com/i/c6b9vau1yd.jpg';
