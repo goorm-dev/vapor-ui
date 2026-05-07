@@ -31,6 +31,9 @@ export interface MqmResult {
     degraded?: true;
 }
 
+/** MQM stage result stored in FinalEntry. `degraded` is excluded — pipeline-level degradation is tracked via `FinalEntry.llmDegraded`. */
+export type MqmStageResult = Omit<MqmResult, 'degraded'>;
+
 export interface TranslationConfig {
     enabled: boolean;
     skipCache: boolean;

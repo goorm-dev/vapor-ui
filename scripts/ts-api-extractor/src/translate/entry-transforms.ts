@@ -2,7 +2,7 @@ import type { PropsInfoJson } from '~/models/output';
 import type { CacheEntry, CacheStore } from '~/translate/cache';
 import { makeCacheKey } from '~/translate/cache';
 import type { ComponentReport } from '~/translate/report';
-import type { MqmError, TranslationConfig } from '~/translate/types';
+import type { MqmError, MqmStageResult, TranslationConfig } from '~/translate/types';
 
 export interface TextEntry {
     text: string;
@@ -11,12 +11,22 @@ export interface TextEntry {
     propIndex?: number;
 }
 
+/**
+ * The final translation result for a single source text.
+ *
+ * Cache-hit entries are also represented by this type. A cache hit means the
+ * text passed the full pipeline in a previous run, so `initial`/`final` are
+ * both assumed PASS for cache hits.
+ */
 export interface FinalEntry {
+    /** Final translated text. */
     translated: string;
-    /** LLM 호출 실패로 인해 MQM 검증 또는 재번역이 degraded 처리된 경우 */
+    /** Set when an LLM API failure caused MQM validation or APE to be skipped. Falls back to the DeepL MT output. */
     llmDegraded?: true;
-    initial: { verdict: 'PASS' | 'FAIL'; errors: MqmError[] };
-    final: { verdict: 'PASS' | 'FAIL'; errors: MqmError[] };
+    /** MQM evaluation result immediately after DeepL MT. Assumed PASS for cache hits. */
+    initial: MqmStageResult;
+    /** MQM recheck result after LLM post-editing (APE). Assumed PASS for cache hits. */
+    final: MqmStageResult;
 }
 
 export interface CachePartition {
