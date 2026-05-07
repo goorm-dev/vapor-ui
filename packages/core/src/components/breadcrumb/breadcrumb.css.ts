@@ -17,6 +17,9 @@ export const item = componentStyle({
 export const link = componentRecipe({
     defaultVariants: { size: 'md', current: false },
     variants: {
+        /**
+         * Size of the breadcrumb link text.
+         */
         size: {
             sm: typography({ style: 'body4' }),
             md: typography({ style: 'body3' }),
@@ -24,6 +27,9 @@ export const link = componentRecipe({
             xl: typography({ style: 'body1' }),
         },
 
+        /**
+         * Whether this link represents the current page.
+         */
         current: {
             false: [
                 {
@@ -60,6 +66,9 @@ export const icon = componentRecipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Size of the separator and ellipsis icon.
+         */
         size: {
             sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },
             md: { width: vars.size.dimension[200], height: vars.size.dimension[200] },
