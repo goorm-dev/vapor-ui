@@ -1,15 +1,14 @@
 import pLimit from 'p-limit';
 
 import type { PropsInfoJson } from '~/models/output';
-import { loadCache, makeCacheKey, saveCache } from '~/translate/cache';
+import { loadCache, makeCacheKey, partitionByCache, saveCache } from '~/translate/cache';
 import type { CacheStore } from '~/translate/cache';
 import { translateWithDeepl } from '~/translate/deepl';
 import {
     applyTranslations,
     buildComponentReports,
     collectTextEntries,
-    partitionByCache,
-} from '~/translate/entry-transforms';
+} from '~/translate/props-projection';
 import { processOneEntry } from '~/translate/mqm-ape-loop';
 import type { ComponentReport } from '~/translate/report';
 import type { TranslationConfig } from '~/translate/types';

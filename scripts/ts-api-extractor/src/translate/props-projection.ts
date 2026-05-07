@@ -1,39 +1,9 @@
 import type { PropsInfoJson } from '~/models/output';
-import type { CacheEntry, CacheStore } from '~/translate/cache';
-import { makeCacheKey } from '~/translate/cache';
+import type { FinalEntry, TextEntry } from '~/translate/cache';
 import type { ComponentReport } from '~/translate/report';
-import type { MqmError, MqmStageResult, TranslationConfig } from '~/translate/types';
+import type { MqmError } from '~/translate/types';
 
-export interface TextEntry {
-    text: string;
-    kind: 'component' | 'prop';
-    componentIndex: number;
-    propIndex?: number;
-}
-
-/**
- * The final translation result for a single source text.
- *
- * Cache-hit entries are also represented by this type. A cache hit means the
- * text passed the full pipeline in a previous run, so `initial`/`final` are
- * both assumed PASS for cache hits.
- */
-export interface FinalEntry {
-    /** Final translated text. */
-    translated: string;
-    /** Set when an LLM API failure caused MQM validation or APE to be skipped. Falls back to the DeepL MT output. */
-    llmDegraded?: true;
-    /** MQM evaluation result immediately after DeepL MT. Assumed PASS for cache hits. */
-    initial: MqmStageResult;
-    /** MQM recheck result after LLM post-editing (APE). Assumed PASS for cache hits. */
-    final: MqmStageResult;
-}
-
-export interface CachePartition {
-    finalEntries: (FinalEntry | undefined)[];
-    missIndices: number[];
-    cacheHits: number;
-}
+export type { FinalEntry, TextEntry };
 
 export function collectTextEntries(props: PropsInfoJson[]): TextEntry[] {
     const entries: TextEntry[] = [];
@@ -50,42 +20,6 @@ export function collectTextEntries(props: PropsInfoJson[]): TextEntry[] {
         }
     }
     return entries;
-}
-
-export function partitionByCache(
-    entries: TextEntry[],
-    cacheStore: CacheStore,
-    config: TranslationConfig,
-    glossaryId: string,
-): CachePartition {
-    const finalEntries: (FinalEntry | undefined)[] = new Array(entries.length);
-    const missIndices: number[] = [];
-    let cacheHits = 0;
-
-    for (let entryIndex = 0; entryIndex < entries.length; entryIndex++) {
-        const entry = entries[entryIndex];
-        const key = makeCacheKey(entry.text, config, glossaryId);
-        const hit = cacheStore.get(key);
-        if (hit) {
-            finalEntries[entryIndex] = cacheEntryToFinalEntry(hit);
-            cacheHits++;
-        } else {
-            missIndices.push(entryIndex);
-        }
-    }
-
-    return { finalEntries, missIndices, cacheHits };
-}
-
-function cacheEntryToFinalEntry(hit: CacheEntry): FinalEntry {
-    // Cache hits are treated as clean results: a previously cached translation
-    // already went through the full pipeline once. Report verdicts are reset
-    // to PASS — fresh validation/postprocess data is intentionally not preserved.
-    return {
-        translated: hit.translated,
-        initial: { verdict: 'PASS', errors: [] },
-        final: { verdict: 'PASS', errors: [] },
-    };
 }
 
 export function applyTranslations(

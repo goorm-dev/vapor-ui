@@ -1,4 +1,4 @@
-import type { FinalEntry, TextEntry } from '~/translate/entry-transforms';
+import type { FinalEntry, TextEntry } from '~/translate/cache';
 import { postprocessWithLlm } from '~/translate/llm-postprocess';
 import { validateWithMqm } from '~/translate/mqm-validator';
 import type { TranslationConfig } from '~/translate/types';
