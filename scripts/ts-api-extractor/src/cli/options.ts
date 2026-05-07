@@ -26,28 +26,23 @@ export class CliError extends Error {
     }
 }
 
+function validateTranslateFlag(input: CliInput): void {
+    if (input.translate && !process.env['DEEPL_API_KEY']) {
+        throw new CliError(
+            'DEEPL_API_KEY is not set. Set it in your .env file or environment to use --translate.',
+        );
+    }
+}
+
 function mergeFlagOverrides(config: ExtractorConfig, input: CliInput): ExtractorConfig {
     const next: ExtractorConfig = {
         ...config,
         translation: { ...config.translation },
     };
 
-    if (input.translate) {
-        if (!process.env['DEEPL_API_KEY']) {
-            throw new CliError(
-                'DEEPL_API_KEY is not set. Set it in your .env file or environment to use --translate.',
-            );
-        }
-        next.translation.enabled = true;
-    }
-
-    if (input.skipCache) {
-        next.translation.skipCache = true;
-    }
-
-    if (input.verbose) {
-        next.verbose = true;
-    }
+    if (input.translate) next.translation.enabled = true;
+    if (input.skipCache) next.translation.skipCache = true;
+    if (input.verbose) next.verbose = true;
 
     return next;
 }
@@ -103,8 +98,9 @@ async function resolveTargetFiles(
 }
 
 export async function resolveRunContext(input: CliInput): Promise<ExtractorRunContext> {
-    const loaded = await loadExtractorConfig({ configPath: input.configPath });
+    validateTranslateFlag(input);
 
+    const loaded = await loadExtractorConfig({ configPath: input.configPath });
     const config = mergeFlagOverrides(loaded, input);
 
     const absolutePath = resolvePath(config);
