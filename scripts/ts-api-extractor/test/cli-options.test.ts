@@ -65,29 +65,29 @@ describe('resolveRunContext', () => {
 
     describe('flag overrides', () => {
         it('--translate 플래그가 없으면 translation.enabled를 변경하지 않는다', async () => {
-            const resolved = await resolveRunContext({ translate: false });
+            const resolved = await resolveRunContext({ translation: { translate: false } });
             expect(resolved.config.translation?.enabled).toBe(false);
         });
 
         it('--translate 플래그가 있고 DEEPL_API_KEY가 설정되어 있으면 translation.enabled를 true로 변경한다', async () => {
-            const resolved = await resolveRunContext({ translate: true });
+            const resolved = await resolveRunContext({ translation: { translate: true } });
             expect(resolved.config.translation?.enabled).toBe(true);
         });
 
         it('--translate 플래그가 있고 DEEPL_API_KEY가 없으면 CliError를 던진다', async () => {
             vi.stubEnv('DEEPL_API_KEY', '');
-            await expect(resolveRunContext({ translate: true })).rejects.toThrowError(CliError);
+            await expect(resolveRunContext({ translation: { translate: true } })).rejects.toThrowError(CliError);
         });
 
         it('CliError 메시지에 DEEPL_API_KEY가 포함된다', async () => {
             vi.stubEnv('DEEPL_API_KEY', '');
-            await expect(resolveRunContext({ translate: true })).rejects.toThrowError(
+            await expect(resolveRunContext({ translation: { translate: true } })).rejects.toThrowError(
                 /DEEPL_API_KEY/,
             );
         });
 
         it('--skip-cache 플래그가 있으면 translation.skipCache를 true로 변경한다', async () => {
-            const resolved = await resolveRunContext({ skipCache: true });
+            const resolved = await resolveRunContext({ translation: { skipCache: true } });
             expect(resolved.config.translation?.skipCache).toBe(true);
         });
 
@@ -100,7 +100,7 @@ describe('resolveRunContext', () => {
             const loaded = makeConfig({ inputPath: '.' });
             mockedLoadExtractorConfig.mockResolvedValue(loaded);
 
-            await resolveRunContext({ translate: true, skipCache: true, verbose: true });
+            await resolveRunContext({ translation: { translate: true, skipCache: true }, verbose: true });
 
             expect(loaded.verbose).toBe(false);
             expect(loaded.translation?.enabled).toBe(false);

@@ -46,9 +46,11 @@ async function runCli(): Promise<void> {
     const resolved = await resolveRunContext({
         component: cli.flags.component,
         configPath: cli.flags.configPath,
-        translate: cli.flags.translate,
-        skipCache: cli.flags.skipCache,
         verbose: cli.flags.verbose,
+        translation: {
+            translate: cli.flags.translate,
+            skipCache: cli.flags.skipCache,
+        },
     });
 
     await extract(resolved);

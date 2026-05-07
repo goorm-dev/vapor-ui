@@ -11,12 +11,16 @@ export interface ExtractorRunContext {
     config: ExtractorConfig;
 }
 
+export interface CliTranslationFlags {
+    translate?: boolean;
+    skipCache?: boolean;
+}
+
 export interface CliInput {
     component?: string;
     configPath?: string;
-    translate?: boolean;
-    skipCache?: boolean;
     verbose?: boolean;
+    translation?: CliTranslationFlags;
 }
 
 export class CliError extends Error {
@@ -27,7 +31,7 @@ export class CliError extends Error {
 }
 
 function validateTranslateFlag(input: CliInput): void {
-    if (input.translate && !process.env['DEEPL_API_KEY']) {
+    if (input.translation?.translate && !process.env['DEEPL_API_KEY']) {
         throw new CliError(
             'DEEPL_API_KEY is not set. Set it in your .env file or environment to use --translate.',
         );
@@ -40,8 +44,8 @@ function mergeFlagOverrides(config: ExtractorConfig, input: CliInput): Extractor
         translation: { ...config.translation },
     };
 
-    if (input.translate) next.translation.enabled = true;
-    if (input.skipCache) next.translation.skipCache = true;
+    if (input.translation?.translate) next.translation.enabled = true;
+    if (input.translation?.skipCache) next.translation.skipCache = true;
     if (input.verbose) next.verbose = true;
 
     return next;
