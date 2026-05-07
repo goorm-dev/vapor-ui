@@ -62,6 +62,8 @@ export function partitionByCache(
         const key = makeCacheKey(
             entry.text,
             config.targetLocale,
+            config.llm.enabled,
+            config.validation.mqm.enabled,
             postprocessModel,
             validationModel,
             glossaryId,

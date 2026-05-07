@@ -220,6 +220,8 @@ export async function translatePropsInfo(
                     const key = makeCacheKey(
                         entries[entryIndex].text,
                         config.targetLocale,
+                        config.llm.enabled,
+                        config.validation.mqm.enabled,
                         postprocessModel,
                         validationModel,
                         glossaryId,

@@ -23,10 +23,10 @@ export async function processOneEntry(
         return {
             translated: entry.text,
             pipeline: 'mt-only',
-            hadErrors: false,
+            hadErrors: true,
             hadOverEdit: false,
-            initial: { verdict: 'PASS', errors: [] },
-            final: { verdict: 'PASS', errors: [] },
+            initial: { verdict: 'FAIL', errors: [] },
+            final: { verdict: 'FAIL', errors: [] },
         };
     }
 

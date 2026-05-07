@@ -77,7 +77,9 @@ function isMqmError(value: unknown): value is MqmError {
         typeof error.severity === 'string' &&
         MQM_SEVERITIES.has(error.severity as MqmError['severity']) &&
         typeof error.source_span === 'string' &&
+        error.source_span.trim().length > 0 &&
         typeof error.mt_span === 'string' &&
+        error.mt_span.trim().length > 0 &&
         typeof error.explanation === 'string'
     );
 }
