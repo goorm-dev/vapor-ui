@@ -230,7 +230,7 @@ importers:
   apps/website:
     dependencies:
       '@base-ui/react':
-        specifier: ^1.4.0
+        specifier: ^1.4.1
         version: 1.4.1(@date-fns/tz@1.4.1)(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@orama/orama':
         specifier: ^3.1.18
@@ -497,10 +497,10 @@ importers:
   packages/core:
     dependencies:
       '@base-ui/react':
-        specifier: ^1.4.0
+        specifier: ^1.4.1
         version: 1.4.1(@date-fns/tz@1.4.1)(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@base-ui/utils':
-        specifier: ^0.2.6
+        specifier: ^0.2.8
         version: 0.2.8(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@vanilla-extract/css':
         specifier: ^1.20.1
