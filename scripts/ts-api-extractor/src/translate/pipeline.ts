@@ -106,8 +106,8 @@ export async function translatePropsInfo(
                 console.warn(`[deepl] Unavailable, using source text as fallback for all misses.`);
                 finalEntries[i] = {
                     translated: entries[i].text,
-                    initial: { verdict: 'PASS', errors: [] },
-                    final: { verdict: 'PASS', errors: [] },
+                    initial: { verdict: 'FAIL', errors: [] },
+                    final: { verdict: 'FAIL', errors: [] },
                 };
             }
         } else {

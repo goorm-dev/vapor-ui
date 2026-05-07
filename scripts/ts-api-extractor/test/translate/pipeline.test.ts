@@ -278,7 +278,7 @@ describe('translatePropsInfo', () => {
         expect(result.props[0].description).toBe(rewrittenText);
         expect(result.componentReports[0].initial.failCount).toBeGreaterThan(0);
         expect(result.componentReports[0].final.failCount).toBe(0);
-        expect(result.componentReports[0].final.failCount).toBe(0);
+        expect(result.componentReports[0].final.errors).toEqual([]);
     });
 
     it('MQM verdict FAIL with empty errors → does not treat as PASS', async () => {
@@ -426,7 +426,6 @@ describe('translatePropsInfo', () => {
         const result = await translatePropsInfo(propsWithDescription, config);
 
         expect(result.componentReports[0].initial.failCount).toBe(1);
-        expect(result.componentReports[0].final.failCount).toBe(1);
         expect(result.componentReports[0].final.failCount).toBe(1);
         expect(result.componentReports[0].final.errors).toEqual([recheckError]);
         // LLM 재번역 결과를 그대로 사용

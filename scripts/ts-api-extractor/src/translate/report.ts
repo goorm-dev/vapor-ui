@@ -51,12 +51,20 @@ function escapeTableCell(s: string): string {
     return sanitizeMarkdown(s).replace(/\|/g, '\\|');
 }
 
+function inlineCodeCell(value: string): string {
+    const normalized = value.replace(/[\r\n]+/g, ' ').replace(/\|/g, '\\|').trim();
+    const longest = Math.max(0, ...(normalized.match(/`+/g)?.map((m) => m.length) ?? [0]));
+    const fence = '`'.repeat(longest + 1);
+    const pad = normalized.startsWith('`') || normalized.endsWith('`') ? ' ' : '';
+    return `${fence}${pad}${normalized}${pad}${fence}`;
+}
+
 function renderErrorRows(errors: MqmError[]): string[] {
     return errors.map((e) => {
-        const sourceSpan = escapeTableCell(e.source_span);
-        const mtSpan = escapeTableCell(e.mt_span);
+        const sourceSpan = inlineCodeCell(e.source_span);
+        const mtSpan = inlineCodeCell(e.mt_span);
         const explanation = escapeTableCell(e.explanation);
-        return `| ${e.severity.toUpperCase()} | ${e.category} | \`${sourceSpan}\` | \`${mtSpan}\` | ${explanation} |`;
+        return `| ${e.severity.toUpperCase()} | ${e.category} | ${sourceSpan} | ${mtSpan} | ${explanation} |`;
     });
 }
 
