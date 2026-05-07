@@ -1,7 +1,6 @@
 import type { FinalEntry, TextEntry } from '~/translate/entry-transforms';
 import { postprocessWithLlm } from '~/translate/llm-postprocess';
 import { validateWithMqm } from '~/translate/mqm-validator';
-import { applySelectivePatch, extractNoEditSpans } from '~/translate/pipeline';
 import type { TranslationConfig } from '~/translate/types';
 
 type LimitFn = <T>(fn: () => Promise<T>) => Promise<T>;
@@ -75,33 +74,14 @@ export async function processOneEntry(
     }
 
     // LLM 재번역
-    const noEditSpans = extractNoEditSpans(mtOutput, mqmResult.errors);
     log(`llm: postprocessing ${label}`);
     const postprocess = await limit(() =>
-        postprocessWithLlm(
-            entry.text,
-            mtOutput,
-            mqmResult.errors,
-            noEditSpans,
-            config.llm.postprocessModel,
-        ),
+        postprocessWithLlm(entry.text, mtOutput, mqmResult.errors, config.llm.postprocessModel),
     );
-
-    const { result, hasOverEdit } = applySelectivePatch(
-        mtOutput,
-        postprocess.translated,
-        noEditSpans,
-    );
-    if (hasOverEdit) {
-        console.warn(
-            `[pipeline] Over-editing detected for: "${entry.text.slice(0, 60)}...". Falling back to MT output.`,
-        );
-        log(`llm: over-editing detected for ${label}, using DeepL output`);
-    }
 
     // MQM recheck
     log(`mqm: recheck ${label}`);
-    const recheck = await limit(() => validateWithMqm(entry.text, result, config));
+    const recheck = await limit(() => validateWithMqm(entry.text, postprocess.translated, config));
     log(
         `mqm: recheck ${label} ${recheck.verdict}${
             recheck.verdict === 'FAIL' ? ` (${formatErrorCount(recheck.errors.length)})` : ''
@@ -124,7 +104,7 @@ export async function processOneEntry(
 
     const llmDegraded = postprocess.degraded === true || recheck.degraded === true;
     return {
-        translated: result,
+        translated: postprocess.translated,
         ...(llmDegraded ? { llmDegraded: true as const } : {}),
         initial: initialStage,
         final: { verdict: recheck.verdict, errors: recheck.errors },

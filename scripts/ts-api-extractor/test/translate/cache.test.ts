@@ -84,7 +84,6 @@ describe('loadCache', () => {
         const entry: CacheEntry = {
             source: 'hello',
             translated: '안녕',
-            cachedAt: '2026-01-01T00:00:00.000Z',
         };
         const k = key('hello');
         fs.writeFileSync(path.join(dir, '.translation-cache.json'), JSON.stringify({ [k]: entry }));
@@ -119,7 +118,6 @@ describe('saveCache / loadCache roundtrip', () => {
         store.set(k, {
             source: 'hello',
             translated: '안녕',
-            cachedAt: '2026-01-01T00:00:00.000Z',
         });
 
         saveCache(tmpDir, store);
@@ -128,7 +126,6 @@ describe('saveCache / loadCache roundtrip', () => {
         expect(loaded.get(k)).toEqual({
             source: 'hello',
             translated: '안녕',
-            cachedAt: '2026-01-01T00:00:00.000Z',
         });
     });
 

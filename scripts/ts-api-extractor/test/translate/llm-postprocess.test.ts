@@ -83,8 +83,10 @@ describe('postprocessWithLlm', () => {
         const body = JSON.parse((options as RequestInit).body as string) as Record<string, unknown>;
         const messages = body.messages as { role: string; content: string }[];
         const userMessage = messages.find((m) => m.role === 'user');
-        expect(userMessage?.content).toContain('Errors to fix:');
+        expect(userMessage?.content).toContain('MQM errors to fix');
         expect(userMessage?.content).toContain('onClick');
+        expect(userMessage?.content).toContain('클릭');
+        expect(userMessage?.content).toContain('must not be translated');
     });
 
     it('empty choices → returns DeepL draft + degraded + console.warn', async () => {

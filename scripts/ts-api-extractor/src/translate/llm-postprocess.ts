@@ -1,35 +1,26 @@
 import { callLlm } from '~/translate/llm-client';
 import type { MqmError } from '~/translate/types';
 
-const SYSTEM_PROMPT = `You are a professional Korean translator and post-editor. You will receive an English source text and a machine-translated Korean draft along with MQM error feedback. Your job is to fix ONLY the error spans listed in the feedback — preserving the rest of the draft exactly as-is.
+const SYSTEM_PROMPT = `You are a professional Korean translator and post-editor for a design system documentation site. You will receive an English source text, a machine-translated Korean draft, and MQM error feedback identifying specific translation problems.
+
+Your job is to produce an improved Korean translation that fixes the identified errors while keeping correct portions of the draft unchanged.
 
 Rules:
-1. Fix only the mt_span portions listed in the errors. Do not change anything else.
-2. no_edit_spans listed below must remain character-for-character identical in your output.
-3. Output ONLY the single final Korean text.
-4. Do NOT output multiple versions, explanations, commentary, or markdown wrapping.`;
+1. Address every error listed in the MQM feedback. Each error includes: the error category, severity, the problematic source span, the problematic translation span, and a Korean explanation of what went wrong.
+2. Do not change parts of the draft that are not covered by any error.
+3. Preserve all inline code, prop names, component names, token names, and markdown formatting exactly — never translate or alter these.
+4. Output ONLY the single final Korean text. No explanations, no commentary, no markdown wrapping.`;
 
-function buildRewritePrompt(
-    source: string,
-    mtOutput: string,
-    errors: MqmError[],
-    noEditSpans: string[],
-): string {
+function buildRewritePrompt(source: string, mtOutput: string, errors: MqmError[]): string {
     const errorLines = errors.map(
-        (e) =>
-            `- [${e.severity.toUpperCase()} ${e.category}] source: "${e.source_span}" → mt: "${e.mt_span}": ${e.explanation}`,
+        (e, i) =>
+            `${i + 1}. [${e.severity.toUpperCase()}] ${e.category}\n   원문 구간: "${e.source_span}"\n   번역 구간: "${e.mt_span}"\n   문제: ${e.explanation}`,
     );
-
-    const noEditSection =
-        noEditSpans.length > 0
-            ? `\n\nno_edit_spans (must remain unchanged):\n${noEditSpans.map((s) => `- "${s}"`).join('\n')}`
-            : '';
 
     return (
         `Source (English):\n${source}\n\n` +
         `Draft (DeepL Korean):\n${mtOutput}\n\n` +
-        `Errors to fix:\n${errorLines.join('\n')}` +
-        noEditSection
+        `MQM errors to fix (${errors.length}):\n${errorLines.join('\n\n')}`
     );
 }
 
@@ -42,10 +33,9 @@ export async function postprocessWithLlm(
     source: string,
     mtOutput: string,
     errors: MqmError[] = [],
-    noEditSpans: string[] = [],
     model?: string,
 ): Promise<PostprocessResult> {
-    const userPrompt = buildRewritePrompt(source, mtOutput, errors, noEditSpans);
+    const userPrompt = buildRewritePrompt(source, mtOutput, errors);
 
     const result = await callLlm(
         [

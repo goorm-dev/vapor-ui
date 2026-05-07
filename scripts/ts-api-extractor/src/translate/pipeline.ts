@@ -12,81 +12,13 @@ import {
 } from '~/translate/entry-transforms';
 import { processOneEntry } from '~/translate/mqm-ape-loop';
 import type { ComponentReport } from '~/translate/report';
-import type { MqmError, TranslationConfig } from '~/translate/types';
+import type { TranslationConfig } from '~/translate/types';
 
 const LLM_CONCURRENCY = 5;
 
 export interface TranslateResult {
     props: PropsInfoJson[];
     componentReports: ComponentReport[];
-}
-
-/** spec 기능 3: mt_span을 제거한 나머지 구간을 no_edit_spans로 추출 */
-export function extractNoEditSpans(mtOutput: string, errors: MqmError[]): string[] {
-    let remaining = mtOutput;
-    for (const error of errors) {
-        remaining = remaining.replace(error.mt_span, '\x00');
-    }
-    return remaining
-        .split('\x00')
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0);
-}
-
-export interface PatchResult {
-    result: string;
-    hasOverEdit: boolean;
-}
-
-/** spec 기능 5: noEditSpans 밖의 변경을 감지하고, over-editing 시 손상된 no-edit span을 MT 원본으로 복원 */
-export function applySelectivePatch(
-    mtOutput: string,
-    rewrittenOutput: string,
-    noEditSpans: string[],
-): PatchResult {
-    if (mtOutput === rewrittenOutput) {
-        return { result: rewrittenOutput, hasOverEdit: false };
-    }
-
-    const damagedSpans = noEditSpans.filter(
-        (span) => span.length > 0 && !rewrittenOutput.includes(span),
-    );
-
-    if (damagedSpans.length === 0) {
-        return { result: rewrittenOutput, hasOverEdit: false };
-    }
-
-    // over-editing 발생: 손상된 no-edit span을 rewritten에서 찾아 MT 원본으로 교체
-    // char offset은 MT와 rewritten에서 달라지므로 단어 인덱스(토큰 번호) 기반으로 위치를 추적
-    const mtTokens = mtOutput.split(' ');
-
-    let result = rewrittenOutput;
-    for (const span of damagedSpans) {
-        const spanTokens = span.split(' ');
-        const spanTokenCount = spanTokens.length;
-
-        let mtTokenStart = -1;
-        for (let i = 0; i <= mtTokens.length - spanTokenCount; i++) {
-            if (mtTokens.slice(i, i + spanTokenCount).join(' ') === span) {
-                mtTokenStart = i;
-                break;
-            }
-        }
-
-        if (mtTokenStart === -1) {
-            return { result: mtOutput, hasOverEdit: true };
-        }
-
-        const resultTokens = result.split(' ');
-        if (mtTokenStart + spanTokenCount > resultTokens.length) {
-            return { result: mtOutput, hasOverEdit: true };
-        }
-
-        resultTokens.splice(mtTokenStart, spanTokenCount, span);
-        result = resultTokens.join(' ');
-    }
-
-    return { result, hasOverEdit: true };
 }
 
 function formatEntryLabel(
@@ -226,7 +158,6 @@ export async function translatePropsInfo(
                     cacheStore.set(key, {
                         source: entries[entryIndex].text,
                         translated: finalEntry.translated,
-                        cachedAt: new Date().toISOString(),
                     });
                 }
             }

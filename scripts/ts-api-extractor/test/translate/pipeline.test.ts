@@ -130,9 +130,9 @@ describe('translatePropsInfo', () => {
             '버튼 컴포넌트.',
             '클릭 핸들러.',
         ]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockImplementation(async (source) => ({
-            translated: source,
-        }));
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue({
+            translated: '버튼 컴포넌트.',
+        });
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
             verdict: 'FAIL',
             errors: [
@@ -146,17 +146,14 @@ describe('translatePropsInfo', () => {
             ],
         });
 
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-
         const config = {
             ...baseConfig,
             validation: { mqm: { enabled: true, failOnError: false } },
         };
 
-        // failOnError: false → should not throw, just warn
+        // failOnError: false → should not throw
         const result = await translatePropsInfo(sampleProps, config);
 
-        expect(warnSpy).toHaveBeenCalled();
         expect(result).toBeDefined();
         expect(result.componentReports[0].failCount).toBeGreaterThan(0);
         expect(result.componentReports[0].errors).toEqual(
@@ -311,8 +308,9 @@ describe('translatePropsInfo', () => {
 
         const result = await translatePropsInfo(propsWithDescription, config);
 
+        // FAIL이어도 LLM 후처리를 거친 결과(rewrittenText)가 사용됨
         expect(postprocessSpy).toHaveBeenCalled();
-        expect(result.props[0].description).toBe(mtText);
+        expect(result.props[0].description).toBe(rewrittenText);
         expect(result.componentReports[0].failCount).toBe(1);
     });
 
@@ -519,13 +517,12 @@ describe('translatePropsInfo', () => {
         expect(savedStore.size).toBe(0);
     });
 
-    // Test case 13: over-editing 감지 → warn 출력 + MT 원본 폴백
-    it('over-editing 감지 시 warn 출력하고 MT 원본으로 폴백', async () => {
+    // Test case 13: LLM이 MQM 오류를 수정 → recheck PASS → final PASS
+    it('MQM FAIL 후 LLM 후처리로 오류 수정 → recheck PASS → final PASS', async () => {
         const mtText = '클릭 handler입니다.';
-        // LLM이 허용되지 않은 "handler"까지 바꿔버림 → over-edit
-        const overEditText = 'onClick 핸들러입니다.';
+        const fixedText = 'onClick handler입니다.';
         vi.spyOn(deeplModule, 'translateWithDeepl').mockResolvedValue([mtText]);
-        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue({ translated: overEditText });
+        vi.spyOn(llmModule, 'postprocessWithLlm').mockResolvedValue({ translated: fixedText });
         vi.spyOn(mqmModule, 'validateWithMqm')
             .mockResolvedValueOnce({
                 verdict: 'FAIL',
@@ -541,16 +538,15 @@ describe('translatePropsInfo', () => {
             })
             .mockResolvedValueOnce({ verdict: 'PASS', errors: [] });
 
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-
         const propsWithDescription: PropsInfoJson[] = [
             { name: 'Button', description: 'onClick handler.', props: [] },
         ];
 
         const result = await translatePropsInfo(propsWithDescription, baseConfig);
 
-        expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Over-editing detected'));
-        // over-edit → no-edit span("handler입니다.")은 MT에서 복원, 허용된 span("클릭")은 LLM 결과("onClick") 유지
-        expect(result.props[0].description).toBe('onClick handler입니다.');
+        // LLM이 오류를 고침 → recheck PASS
+        expect(result.props[0].description).toBe(fixedText);
+        expect(result.componentReports[0].initial.failCount).toBe(1);
+        expect(result.componentReports[0].final.failCount).toBe(0);
     });
 });

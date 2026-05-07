@@ -3,12 +3,11 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 // Bump this when LLM prompts or pipeline semantics change to invalidate stale cache entries.
-export const CACHE_VERSION = 'v2';
+export const CACHE_VERSION = 'v1';
 
 export interface CacheEntry {
     source: string;
     translated: string;
-    cachedAt: string;
 }
 
 export type CacheStore = Map<string, CacheEntry>;
