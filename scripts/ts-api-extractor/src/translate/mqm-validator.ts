@@ -8,13 +8,13 @@ Evaluate the Korean translation of a JSDoc comment using the MQM taxonomy below.
 Use one of these categories exactly:
 
 Standard dimensions:
-- Terminology/Component name inconsistency — component names are translated or rendered inconsistently across pages
+- Terminology/Component name inconsistency — PascalCase component names (e.g. Breadcrumb, Button, TextInput) are translated, romanized, or rendered inconsistently; the original English spelling must be preserved exactly
 - Terminology/Token name altered — design token names are translated, altered, or normalized
-- Terminology/Prop name mistranslated — prop names are translated, altered, or mistranslated
+- Terminology/Prop name mistranslated — camelCase prop names (e.g. asChild, onClick, isDisabled) or quoted enum values (e.g. "sm", "ghost") are translated, romanized, or altered; HTML/ARIA attributes (e.g. aria-label, data-state) must also be preserved exactly
 - Accuracy/Mistranslation — source meaning is distorted or communicated differently
 - Accuracy/Omission — important source information is missing
 - Accuracy/Addition — information not present in the source is added
-- Fluency/Unnatural phrasing — grammatically valid but awkward literal phrasing
+- Fluency/Unnatural phrasing — grammatically valid but awkward literal phrasing. Flag these patterns even if grammatically correct: "~를 제어합니다" (prefer "~지정합니다" or "~설정합니다"), "~를 수행합니다" (use a direct verb), "~에 적용되는" (prefer "~에 줄"), "~를 반환하는 함수입니다" (prefer dropping final 이다), abstract-noun subjects where the component or developer should be the subject
 - Fluency/Style inconsistency — tone and voice are inconsistent within the docs
 - Fluency/Grammatical error — grammar error in Korean
 
@@ -38,7 +38,7 @@ If no errors exist, return errors as an empty array.
 Respond with EXACTLY this JSON shape and nothing else:
 {"verdict":"PASS","errors":[]}
 or
-{"verdict":"FAIL","errors":[{"category":"Terminology/Prop name mistranslated","severity":"critical","source_span":"onClick","mt_span":"클릭","explanation":"prop 이름은 번역하면 안 됩니다."}]}`;
+{"verdict":"FAIL","errors":[{"category":"Terminology/Component name inconsistency","severity":"critical","source_span":"Breadcrumb Root","mt_span":"브레드크럼 루트","explanation":"컴포넌트 이름은 영어 원문을 그대로 유지해야 합니다. 음역도 허용되지 않습니다."}]}`;
 
 const passResult = (): MqmResult => ({ verdict: 'PASS', errors: [] });
 const degradedResult = (): MqmResult => ({ verdict: 'PASS', errors: [], degraded: true });

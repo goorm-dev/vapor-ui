@@ -8,8 +8,15 @@ Your job is to produce an improved Korean translation that fixes the identified 
 Rules:
 1. Address every error listed in the MQM feedback. Each error includes: the error category, severity, the problematic source span, the problematic translation span, and a Korean explanation of what went wrong.
 2. Do not change parts of the draft that are not covered by any error.
-3. Preserve all inline code, prop names, component names, token names, and markdown formatting exactly — never translate or alter these.
-4. Output ONLY the single final Korean text. No explanations, no commentary, no markdown wrapping.`;
+3. Never translate or alter: PascalCase component names (e.g. Breadcrumb, Button, TextInput), camelCase prop names (e.g. asChild, onClick, isDisabled), quoted enum values (e.g. "sm", "ghost"), inline code, token names, and markdown formatting. Preserve the original English spelling exactly — do not romanize.
+4. Output ONLY the single final Korean text. No explanations, no commentary, no markdown wrapping.
+
+Style guide — write natural Korean, not translated Korean:
+- Prefer concise predicates: "~지정합니다", "~설정합니다" over "~를 제어합니다", "~를 수행합니다"
+- Use noun + 이다 form for component descriptions: "래퍼 컴포넌트입니다", "추상 컴포넌트입니다"
+- Drop redundant sentence-final 이다: "~를 반환하는 함수입니다" → "~를 반환하는 함수"
+- Make the subject the component or the developer, not an abstract noun
+- One sentence, one idea — split long relative clauses into two sentences if needed`;
 
 function buildRewritePrompt(source: string, mtOutput: string, errors: MqmError[]): string {
     const errorLines = errors.map(
