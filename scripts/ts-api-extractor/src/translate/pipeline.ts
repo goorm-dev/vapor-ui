@@ -186,9 +186,6 @@ export async function translatePropsInfo(
                 console.warn(`[deepl] Unavailable, using source text as fallback for all misses.`);
                 finalEntries[i] = {
                     translated: entries[i].text,
-                    pipeline: 'mt-only',
-                    hadErrors: false,
-                    hadOverEdit: false,
                     initial: { verdict: 'PASS', errors: [] },
                     final: { verdict: 'PASS', errors: [] },
                 };
@@ -230,9 +227,6 @@ export async function translatePropsInfo(
                         source: entries[entryIndex].text,
                         translated: finalEntry.translated,
                         cachedAt: new Date().toISOString(),
-                        pipeline: finalEntry.pipeline,
-                        hadErrors: finalEntry.hadErrors,
-                        hadOverEdit: finalEntry.hadOverEdit,
                     });
                 }
             }

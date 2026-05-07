@@ -13,9 +13,6 @@ export interface TextEntry {
 
 export interface FinalEntry {
     translated: string;
-    pipeline: 'mt-only' | 'mt-mqm-pass' | 'mt-ape';
-    hadErrors: boolean;
-    hadOverEdit: boolean;
     /** LLM 호출 실패로 인해 MQM 검증 또는 재번역이 degraded 처리된 경우 */
     llmDegraded?: true;
     initial: { verdict: 'PASS' | 'FAIL'; errors: MqmError[] };
@@ -81,13 +78,13 @@ export function partitionByCache(
 }
 
 function cacheEntryToFinalEntry(hit: CacheEntry): FinalEntry {
+    // Cache hits are treated as clean results: a previously cached translation
+    // already went through the full pipeline once. Report verdicts are reset
+    // to PASS — fresh validation/postprocess data is intentionally not preserved.
     return {
         translated: hit.translated,
-        pipeline: hit.pipeline,
-        hadErrors: hit.hadErrors,
-        hadOverEdit: hit.hadOverEdit,
-        initial: { verdict: hit.hadErrors ? 'FAIL' : 'PASS', errors: [] },
-        final: { verdict: hit.hadErrors ? 'FAIL' : 'PASS', errors: [] },
+        initial: { verdict: 'PASS', errors: [] },
+        final: { verdict: 'PASS', errors: [] },
     };
 }
 

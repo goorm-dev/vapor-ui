@@ -10,47 +10,61 @@ function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'cache-test-'));
 }
 
+function key(
+    source: string,
+    overrides: Partial<{
+        targetLocale: string;
+        llmEnabled: boolean;
+        mqmEnabled: boolean;
+        postprocessModel: string;
+        validationModel: string;
+        glossaryId: string;
+    }> = {},
+): string {
+    return makeCacheKey(
+        source,
+        overrides.targetLocale ?? 'ko',
+        overrides.llmEnabled ?? true,
+        overrides.mqmEnabled ?? true,
+        overrides.postprocessModel ?? 'claude-sonnet-4-6',
+        overrides.validationModel ?? 'claude-sonnet-4-6',
+        overrides.glossaryId ?? '',
+    );
+}
+
 describe('makeCacheKey', () => {
     it('same inputs produce same key (deterministic)', () => {
-        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
-        expect(a).toBe(b);
+        expect(key('hello')).toBe(key('hello'));
     });
 
     it('different source produces different key', () => {
-        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey('world', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
-        expect(a).not.toBe(b);
+        expect(key('hello')).not.toBe(key('world'));
     });
 
     it('different glossaryId produces different key', () => {
-        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey(
-            'hello',
-            'ko',
-            'claude-sonnet-4-6',
-            'claude-sonnet-4-6',
-            'glossary-123',
-        );
-        expect(a).not.toBe(b);
+        expect(key('hello')).not.toBe(key('hello', { glossaryId: 'glossary-123' }));
     });
 
     it('different postprocessModel produces different key', () => {
-        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey('hello', 'ko', 'claude-opus-4-7', 'claude-sonnet-4-6', '');
-        expect(a).not.toBe(b);
+        expect(key('hello')).not.toBe(key('hello', { postprocessModel: 'claude-opus-4-7' }));
     });
 
     it('different validationModel produces different key', () => {
-        const a = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
-        const b = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-opus-4-7', '');
-        expect(a).not.toBe(b);
+        expect(key('hello')).not.toBe(key('hello', { validationModel: 'claude-opus-4-7' }));
     });
 
-    it('includes CACHE_VERSION in key (prompt version invalidation)', () => {
-        const key = makeCacheKey('hello', 'ko', 'claude-sonnet-4-6', 'claude-sonnet-4-6', '');
-        expect(typeof key).toBe('string');
-        expect(key.length).toBe(64); // sha256 hex
+    it('different llmEnabled produces different key', () => {
+        expect(key('hello')).not.toBe(key('hello', { llmEnabled: false }));
+    });
+
+    it('different mqmEnabled produces different key', () => {
+        expect(key('hello')).not.toBe(key('hello', { mqmEnabled: false }));
+    });
+
+    it('returns sha256 hex string', () => {
+        const k = key('hello');
+        expect(typeof k).toBe('string');
+        expect(k.length).toBe(64);
     });
 });
 
@@ -71,18 +85,12 @@ describe('loadCache', () => {
             source: 'hello',
             translated: '안녕',
             cachedAt: '2026-01-01T00:00:00.000Z',
-            pipeline: 'mt-only',
-            hadErrors: false,
-            hadOverEdit: false,
         };
-        const key = makeCacheKey('hello', 'ko', 'model', 'model', '');
-        fs.writeFileSync(
-            path.join(dir, '.translation-cache.json'),
-            JSON.stringify({ [key]: entry }),
-        );
+        const k = key('hello');
+        fs.writeFileSync(path.join(dir, '.translation-cache.json'), JSON.stringify({ [k]: entry }));
 
         const store = loadCache(dir);
-        expect(store.get(key)).toEqual(entry);
+        expect(store.get(k)).toEqual(entry);
         fs.rmSync(dir, { recursive: true });
     });
 
@@ -107,26 +115,20 @@ describe('saveCache / loadCache roundtrip', () => {
 
     it('written cache can be read back', () => {
         const store = new Map<string, CacheEntry>();
-        const key = makeCacheKey('hello', 'ko', 'model', 'model', '');
-        store.set(key, {
+        const k = key('hello');
+        store.set(k, {
             source: 'hello',
             translated: '안녕',
             cachedAt: '2026-01-01T00:00:00.000Z',
-            pipeline: 'mt-ape',
-            hadErrors: true,
-            hadOverEdit: false,
         });
 
         saveCache(tmpDir, store);
         const loaded = loadCache(tmpDir);
 
-        expect(loaded.get(key)).toEqual({
+        expect(loaded.get(k)).toEqual({
             source: 'hello',
             translated: '안녕',
             cachedAt: '2026-01-01T00:00:00.000Z',
-            pipeline: 'mt-ape',
-            hadErrors: true,
-            hadOverEdit: false,
         });
     });
 

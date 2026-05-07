@@ -22,9 +22,6 @@ export async function processOneEntry(
         log(`deepl: missing result for ${label}, using source text`);
         return {
             translated: entry.text,
-            pipeline: 'mt-only',
-            hadErrors: true,
-            hadOverEdit: false,
             initial: { verdict: 'FAIL', errors: [] },
             final: { verdict: 'FAIL', errors: [] },
         };
@@ -35,9 +32,6 @@ export async function processOneEntry(
         log(`mqm: disabled for ${label}, using DeepL output`);
         return {
             translated: mtOutput,
-            pipeline: 'mt-only',
-            hadErrors: false,
-            hadOverEdit: false,
             initial: { verdict: 'PASS', errors: [] },
             final: { verdict: 'PASS', errors: [] },
         };
@@ -62,9 +56,6 @@ export async function processOneEntry(
     if (mqmResult.verdict === 'PASS') {
         return {
             translated: mtOutput,
-            pipeline: 'mt-mqm-pass',
-            hadErrors: false,
-            hadOverEdit: false,
             ...(mqmResult.degraded ? { llmDegraded: true as const } : {}),
             initial: { verdict: 'PASS', errors: [] },
             final: { verdict: 'PASS', errors: [] },
@@ -78,9 +69,6 @@ export async function processOneEntry(
         log(`llm: disabled for ${label}, keeping failed DeepL output`);
         return {
             translated: mtOutput,
-            pipeline: 'mt-only',
-            hadErrors: true,
-            hadOverEdit: false,
             initial: initialStage,
             final: initialStage,
         };
@@ -137,9 +125,6 @@ export async function processOneEntry(
     const llmDegraded = postprocess.degraded === true || recheck.degraded === true;
     return {
         translated: result,
-        pipeline: 'mt-ape',
-        hadErrors: true,
-        hadOverEdit: hasOverEdit,
         ...(llmDegraded ? { llmDegraded: true as const } : {}),
         initial: initialStage,
         final: { verdict: recheck.verdict, errors: recheck.errors },

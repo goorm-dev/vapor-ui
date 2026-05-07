@@ -2,16 +2,13 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-// Bump this when LLM prompts change to invalidate stale cache entries.
-export const CACHE_VERSION = 'v1';
+// Bump this when LLM prompts or pipeline semantics change to invalidate stale cache entries.
+export const CACHE_VERSION = 'v2';
 
 export interface CacheEntry {
     source: string;
     translated: string;
     cachedAt: string;
-    pipeline: 'mt-only' | 'mt-mqm-pass' | 'mt-ape';
-    hadErrors: boolean;
-    hadOverEdit: boolean;
 }
 
 export type CacheStore = Map<string, CacheEntry>;
@@ -51,8 +48,8 @@ export function loadCache(outputDir: string): CacheStore {
             ([, v]) =>
                 typeof v === 'object' &&
                 v !== null &&
-                typeof (v as CacheEntry).translated === 'string' &&
-                typeof (v as CacheEntry).pipeline === 'string',
+                typeof (v as CacheEntry).source === 'string' &&
+                typeof (v as CacheEntry).translated === 'string',
         ) as [string, CacheEntry][];
         return new Map(valid);
     } catch {
