@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
+import type { TranslationConfig } from '~/translate/types';
+
 // Bump this when LLM prompts or pipeline semantics change to invalidate stale cache entries.
 export const CACHE_VERSION = 'v1';
 
@@ -12,23 +14,23 @@ export interface CacheEntry {
 
 export type CacheStore = Map<string, CacheEntry>;
 
+const DEFAULT_MODEL = 'claude-sonnet-4-6';
+
 export function makeCacheKey(
     source: string,
-    targetLocale: string,
-    llmEnabled: boolean,
-    mqmEnabled: boolean,
-    postprocessModel: string,
-    validationModel: string,
+    config: TranslationConfig,
     glossaryId: string,
 ): string {
+    const postprocessModel = config.llm.postprocessModel ?? DEFAULT_MODEL;
+    const validationModel = config.llm.validationModel ?? DEFAULT_MODEL;
     return createHash('sha256')
         .update(
             JSON.stringify({
                 version: CACHE_VERSION,
                 source,
-                targetLocale,
-                llmEnabled,
-                mqmEnabled,
+                targetLocale: config.targetLocale,
+                llmEnabled: config.llm.enabled,
+                mqmEnabled: config.validation.mqm.enabled,
                 postprocessModel,
                 validationModel,
                 glossaryId,

@@ -5,31 +5,34 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { CacheEntry } from '~/translate/cache';
 import { loadCache, makeCacheKey, saveCache } from '~/translate/cache';
+import type { TranslationConfig } from '~/translate/types';
 
 function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'cache-test-'));
 }
 
-function key(
-    source: string,
-    overrides: Partial<{
-        targetLocale: string;
-        llmEnabled: boolean;
-        mqmEnabled: boolean;
-        postprocessModel: string;
-        validationModel: string;
-        glossaryId: string;
-    }> = {},
-): string {
-    return makeCacheKey(
-        source,
-        overrides.targetLocale ?? 'ko',
-        overrides.llmEnabled ?? true,
-        overrides.mqmEnabled ?? true,
-        overrides.postprocessModel ?? 'claude-sonnet-4-6',
-        overrides.validationModel ?? 'claude-sonnet-4-6',
-        overrides.glossaryId ?? '',
-    );
+function makeConfig(overrides: Partial<{
+    targetLocale: TranslationConfig['targetLocale'];
+    llmEnabled: boolean;
+    mqmEnabled: boolean;
+    postprocessModel: string;
+    validationModel: string;
+}> = {}): TranslationConfig {
+    return {
+        enabled: true,
+        skipCache: false,
+        targetLocale: overrides.targetLocale ?? 'ko',
+        llm: {
+            enabled: overrides.llmEnabled ?? true,
+            postprocessModel: overrides.postprocessModel ?? 'claude-sonnet-4-6',
+            validationModel: overrides.validationModel ?? 'claude-sonnet-4-6',
+        },
+        validation: { mqm: { enabled: overrides.mqmEnabled ?? true, failOnError: false } },
+    };
+}
+
+function key(source: string, configOverrides: Parameters<typeof makeConfig>[0] = {}, glossaryId = ''): string {
+    return makeCacheKey(source, makeConfig(configOverrides), glossaryId);
 }
 
 describe('makeCacheKey', () => {
@@ -42,7 +45,7 @@ describe('makeCacheKey', () => {
     });
 
     it('different glossaryId produces different key', () => {
-        expect(key('hello')).not.toBe(key('hello', { glossaryId: 'glossary-123' }));
+        expect(key('hello')).not.toBe(key('hello', {}, 'glossary-123'));
     });
 
     it('different postprocessModel produces different key', () => {

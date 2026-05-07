@@ -322,15 +322,7 @@ describe('translatePropsInfo', () => {
         vi.spyOn(cacheModule, 'loadCache').mockReturnValue(
             new Map([
                 [
-                    cacheModule.makeCacheKey(
-                        'A button component.',
-                        'ko',
-                        true,
-                        true,
-                        'claude-sonnet-4-6',
-                        'claude-sonnet-4-6',
-                        '',
-                    ),
+                    cacheModule.makeCacheKey('A button component.', baseConfig, ''),
                     {
                         source: 'A button component.',
                         translated: cachedText,
@@ -338,15 +330,7 @@ describe('translatePropsInfo', () => {
                     },
                 ],
                 [
-                    cacheModule.makeCacheKey(
-                        'Click handler callback.',
-                        'ko',
-                        true,
-                        true,
-                        'claude-sonnet-4-6',
-                        'claude-sonnet-4-6',
-                        '',
-                    ),
+                    cacheModule.makeCacheKey('Click handler callback.', baseConfig, ''),
                     {
                         source: 'Click handler callback.',
                         translated: '캐시된 콜백',

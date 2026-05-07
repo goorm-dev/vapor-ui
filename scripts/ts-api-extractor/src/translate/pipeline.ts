@@ -74,8 +74,6 @@ export async function translatePropsInfo(
     const cacheOutputDir = outputDir ?? '';
     const useCache = !config.skipCache;
     const glossaryId = process.env['DEEPL_GLOSSARY_ID'] ?? '';
-    const postprocessModel = config.llm.postprocessModel ?? 'claude-sonnet-4-6';
-    const validationModel = config.llm.validationModel ?? 'claude-sonnet-4-6';
 
     // 2. 캐시 로드 & 히트/미스 분리
     let cacheStore: CacheStore = new Map();
@@ -84,14 +82,7 @@ export async function translatePropsInfo(
     }
 
     const { finalEntries, missIndices, cacheHits } = useCache
-        ? partitionByCache(
-              entries,
-              cacheStore,
-              config,
-              postprocessModel,
-              validationModel,
-              glossaryId,
-          )
+        ? partitionByCache(entries, cacheStore, config, glossaryId)
         : {
               finalEntries: new Array(entries.length),
               missIndices: entries.map((_, i) => i),
@@ -146,15 +137,7 @@ export async function translatePropsInfo(
                 finalEntries[entryIndex] = finalEntry;
 
                 if (useCache && finalEntry.translated !== entries[entryIndex].text) {
-                    const key = makeCacheKey(
-                        entries[entryIndex].text,
-                        config.targetLocale,
-                        config.llm.enabled,
-                        config.validation.mqm.enabled,
-                        postprocessModel,
-                        validationModel,
-                        glossaryId,
-                    );
+                    const key = makeCacheKey(entries[entryIndex].text, config, glossaryId);
                     cacheStore.set(key, {
                         source: entries[entryIndex].text,
                         translated: finalEntry.translated,

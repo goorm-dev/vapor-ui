@@ -56,8 +56,6 @@ export function partitionByCache(
     entries: TextEntry[],
     cacheStore: CacheStore,
     config: TranslationConfig,
-    postprocessModel: string,
-    validationModel: string,
     glossaryId: string,
 ): CachePartition {
     const finalEntries: (FinalEntry | undefined)[] = new Array(entries.length);
@@ -66,15 +64,7 @@ export function partitionByCache(
 
     for (let entryIndex = 0; entryIndex < entries.length; entryIndex++) {
         const entry = entries[entryIndex];
-        const key = makeCacheKey(
-            entry.text,
-            config.targetLocale,
-            config.llm.enabled,
-            config.validation.mqm.enabled,
-            postprocessModel,
-            validationModel,
-            glossaryId,
-        );
+        const key = makeCacheKey(entry.text, config, glossaryId);
         const hit = cacheStore.get(key);
         if (hit) {
             finalEntries[entryIndex] = cacheEntryToFinalEntry(hit);
