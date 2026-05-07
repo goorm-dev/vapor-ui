@@ -11,13 +11,15 @@ function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'cache-test-'));
 }
 
-function makeConfig(overrides: Partial<{
-    targetLocale: TranslationConfig['targetLocale'];
-    llmEnabled: boolean;
-    mqmEnabled: boolean;
-    postprocessModel: string;
-    validationModel: string;
-}> = {}): TranslationConfig {
+function makeConfig(
+    overrides: Partial<{
+        targetLocale: TranslationConfig['targetLocale'];
+        llmEnabled: boolean;
+        mqmEnabled: boolean;
+        postprocessModel: string;
+        validationModel: string;
+    }> = {},
+): TranslationConfig {
     return {
         enabled: true,
         skipCache: false,
@@ -31,7 +33,11 @@ function makeConfig(overrides: Partial<{
     };
 }
 
-function key(source: string, configOverrides: Parameters<typeof makeConfig>[0] = {}, glossaryId = ''): string {
+function key(
+    source: string,
+    configOverrides: Parameters<typeof makeConfig>[0] = {},
+    glossaryId = '',
+): string {
     return makeCacheKey(source, makeConfig(configOverrides), glossaryId);
 }
 

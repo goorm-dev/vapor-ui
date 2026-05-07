@@ -76,14 +76,16 @@ describe('resolveRunContext', () => {
 
         it('--translate 플래그가 있고 DEEPL_API_KEY가 없으면 CliError를 던진다', async () => {
             vi.stubEnv('DEEPL_API_KEY', '');
-            await expect(resolveRunContext({ translation: { translate: true } })).rejects.toThrowError(CliError);
+            await expect(
+                resolveRunContext({ translation: { translate: true } }),
+            ).rejects.toThrowError(CliError);
         });
 
         it('CliError 메시지에 DEEPL_API_KEY가 포함된다', async () => {
             vi.stubEnv('DEEPL_API_KEY', '');
-            await expect(resolveRunContext({ translation: { translate: true } })).rejects.toThrowError(
-                /DEEPL_API_KEY/,
-            );
+            await expect(
+                resolveRunContext({ translation: { translate: true } }),
+            ).rejects.toThrowError(/DEEPL_API_KEY/);
         });
 
         it('--skip-cache 플래그가 있으면 translation.skipCache를 true로 변경한다', async () => {
@@ -100,7 +102,10 @@ describe('resolveRunContext', () => {
             const loaded = makeConfig({ inputPath: '.' });
             mockedLoadExtractorConfig.mockResolvedValue(loaded);
 
-            await resolveRunContext({ translation: { translate: true, skipCache: true }, verbose: true });
+            await resolveRunContext({
+                translation: { translate: true, skipCache: true },
+                verbose: true,
+            });
 
             expect(loaded.verbose).toBe(false);
             expect(loaded.translation?.enabled).toBe(false);

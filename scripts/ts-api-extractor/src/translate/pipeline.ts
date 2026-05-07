@@ -4,12 +4,12 @@ import type { PropsInfoJson } from '~/models/output';
 import { loadCache, makeCacheKey, partitionByCache, saveCache } from '~/translate/cache';
 import type { CacheStore } from '~/translate/cache';
 import { translateWithDeepl } from '~/translate/deepl';
+import { processOneEntry } from '~/translate/mqm-ape-loop';
 import {
     applyTranslations,
     buildComponentReports,
     collectTextEntries,
 } from '~/translate/props-projection';
-import { processOneEntry } from '~/translate/mqm-ape-loop';
 import type { ComponentReport } from '~/translate/report';
 import type { TranslationConfig } from '~/translate/types';
 
