@@ -16,8 +16,6 @@ describe('buildReport', () => {
             {
                 name: 'Button',
                 totalTexts: 5,
-                failCount: 1,
-                errors: [],
                 initial: { failCount: 2, errors: [] },
                 final: { failCount: 1, errors: [] },
                 degradedCount: 0,
@@ -25,8 +23,6 @@ describe('buildReport', () => {
             {
                 name: 'Avatar',
                 totalTexts: 3,
-                failCount: 0,
-                errors: [],
                 initial: { failCount: 0, errors: [] },
                 final: { failCount: 0, errors: [] },
                 degradedCount: 0,
@@ -35,9 +31,8 @@ describe('buildReport', () => {
         const report = buildReport(components);
         expect(report.totalComponents).toBe(2);
         expect(report.totalTexts).toBe(8);
-        expect(report.failCount).toBe(1);
-        expect(report.initialFailCount).toBe(2);
         expect(report.finalFailCount).toBe(1);
+        expect(report.initialFailCount).toBe(2);
         expect(report.components).toBe(components);
     });
 
@@ -45,7 +40,6 @@ describe('buildReport', () => {
         const report = buildReport([]);
         expect(report.totalComponents).toBe(0);
         expect(report.totalTexts).toBe(0);
-        expect(report.failCount).toBe(0);
         expect(report.initialFailCount).toBe(0);
         expect(report.finalFailCount).toBe(0);
     });
@@ -66,7 +60,6 @@ describe('renderReport', () => {
             generatedAt: '2026-04-21T00:00:00.000Z',
             totalComponents: 0,
             totalTexts: 0,
-            failCount: 0,
             initialFailCount: 0,
             finalFailCount: 0,
             totalDegradedCount: 0,
@@ -81,7 +74,6 @@ describe('renderReport', () => {
             generatedAt: '2026-04-21T00:00:00.000Z',
             totalComponents: 1,
             totalTexts: 10,
-            failCount: 2,
             initialFailCount: 3,
             finalFailCount: 2,
             totalDegradedCount: 0,
@@ -89,8 +81,6 @@ describe('renderReport', () => {
                 {
                     name: 'Button',
                     totalTexts: 10,
-                    failCount: 2,
-                    errors: [],
                     initial: { failCount: 3, errors: [] },
                     final: { failCount: 2, errors: [] },
                     degradedCount: 0,
@@ -106,7 +96,6 @@ describe('renderReport', () => {
             generatedAt: '2026-04-21T00:00:00.000Z',
             totalComponents: 1,
             totalTexts: 3,
-            failCount: 0,
             initialFailCount: 1,
             finalFailCount: 0,
             totalDegradedCount: 0,
@@ -114,8 +103,6 @@ describe('renderReport', () => {
                 {
                     name: 'Avatar',
                     totalTexts: 3,
-                    failCount: 0,
-                    errors: [],
                     initial: { failCount: 1, errors: [] },
                     final: { failCount: 0, errors: [] },
                     degradedCount: 0,
@@ -133,7 +120,6 @@ describe('renderReport', () => {
             generatedAt: '2026-04-21T00:00:00.000Z',
             totalComponents: 1,
             totalTexts: 4,
-            failCount: 1,
             initialFailCount: 2,
             finalFailCount: 1,
             totalDegradedCount: 0,
@@ -141,16 +127,6 @@ describe('renderReport', () => {
                 {
                     name: 'Dialog',
                     totalTexts: 4,
-                    failCount: 1,
-                    errors: [
-                        {
-                            severity: 'major',
-                            category: 'Accuracy/Mistranslation',
-                            source_span: 'Close',
-                            mt_span: '닫기X',
-                            explanation: 'Translation contains extraneous character',
-                        },
-                    ],
                     initial: {
                         failCount: 2,
                         errors: [
@@ -214,8 +190,6 @@ describe('writeReport', () => {
             {
                 name: 'Button',
                 totalTexts: 2,
-                failCount: 0,
-                errors: [],
                 initial: { failCount: 0, errors: [] },
                 final: { failCount: 0, errors: [] },
                 degradedCount: 0,

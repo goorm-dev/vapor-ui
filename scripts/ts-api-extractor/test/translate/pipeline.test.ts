@@ -155,8 +155,8 @@ describe('translatePropsInfo', () => {
         const result = await translatePropsInfo(sampleProps, config);
 
         expect(result).toBeDefined();
-        expect(result.componentReports[0].failCount).toBeGreaterThan(0);
-        expect(result.componentReports[0].errors).toEqual(
+        expect(result.componentReports[0].final.failCount).toBeGreaterThan(0);
+        expect(result.componentReports[0].final.errors).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({ severity: 'major', category: 'Accuracy/Mistranslation' }),
             ]),
@@ -278,7 +278,7 @@ describe('translatePropsInfo', () => {
         expect(result.props[0].description).toBe(rewrittenText);
         expect(result.componentReports[0].initial.failCount).toBeGreaterThan(0);
         expect(result.componentReports[0].final.failCount).toBe(0);
-        expect(result.componentReports[0].failCount).toBe(0);
+        expect(result.componentReports[0].final.failCount).toBe(0);
     });
 
     it('MQM verdict FAIL with empty errors → does not treat as PASS', async () => {
@@ -311,7 +311,7 @@ describe('translatePropsInfo', () => {
         // FAIL이어도 LLM 후처리를 거친 결과(rewrittenText)가 사용됨
         expect(postprocessSpy).toHaveBeenCalled();
         expect(result.props[0].description).toBe(rewrittenText);
-        expect(result.componentReports[0].failCount).toBe(1);
+        expect(result.componentReports[0].final.failCount).toBe(1);
     });
 
     // Test case 7: 캐시 히트 → DeepL 호출 없이 캐시 결과 반환
@@ -427,8 +427,8 @@ describe('translatePropsInfo', () => {
 
         expect(result.componentReports[0].initial.failCount).toBe(1);
         expect(result.componentReports[0].final.failCount).toBe(1);
-        expect(result.componentReports[0].failCount).toBe(1);
-        expect(result.componentReports[0].errors).toEqual([recheckError]);
+        expect(result.componentReports[0].final.failCount).toBe(1);
+        expect(result.componentReports[0].final.errors).toEqual([recheckError]);
         // LLM 재번역 결과를 그대로 사용
         expect(result.props[0].description).toBe(rewrittenText);
     });

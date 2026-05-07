@@ -61,8 +61,6 @@ export async function translatePropsInfo(
                 totalTexts: 0,
                 initial: { failCount: 0, errors: [] },
                 final: { failCount: 0, errors: [] },
-                failCount: 0,
-                errors: [],
                 degradedCount: 0,
             })),
         };

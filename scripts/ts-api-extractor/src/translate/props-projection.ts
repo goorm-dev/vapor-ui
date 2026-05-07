@@ -119,8 +119,6 @@ export function buildComponentReports(
             totalTexts: textCountByComponent.get(componentIndex) ?? 0,
             initial,
             final,
-            failCount: final.failCount,
-            errors: final.errors,
             degradedCount: degradedCountByComponent.get(componentIndex) ?? 0,
         };
     });

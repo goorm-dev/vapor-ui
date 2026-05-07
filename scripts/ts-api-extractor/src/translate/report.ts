@@ -13,10 +13,6 @@ export interface ComponentReport {
     totalTexts: number;
     initial: MqmStageReport;
     final: MqmStageReport;
-    /** Final MQM failure count. Kept as a convenience alias for summary consumers. */
-    failCount: number;
-    /** Final MQM errors. Kept as a convenience alias for summary consumers. */
-    errors: MqmError[];
     /** LLM 호출 실패로 검증/재번역이 degraded 처리된 텍스트 수 */
     degradedCount: number;
 }
@@ -27,8 +23,6 @@ export interface TranslationReport {
     totalTexts: number;
     initialFailCount: number;
     finalFailCount: number;
-    /** Final MQM failure count. Kept for backward-compatible summary rendering. */
-    failCount: number;
     /** 전체 degraded 텍스트 수 */
     totalDegradedCount: number;
     components: ComponentReport[];
@@ -41,7 +35,6 @@ export function buildReport(components: ComponentReport[]): TranslationReport {
         totalTexts: components.reduce((sum, c) => sum + c.totalTexts, 0),
         initialFailCount: components.reduce((sum, c) => sum + c.initial.failCount, 0),
         finalFailCount: components.reduce((sum, c) => sum + c.final.failCount, 0),
-        failCount: components.reduce((sum, c) => sum + c.final.failCount, 0),
         totalDegradedCount: components.reduce((sum, c) => sum + c.degradedCount, 0),
         components,
     };
@@ -108,7 +101,7 @@ function renderComponentDetails(c: ComponentReport, open = false): string {
 export function renderReport(report: TranslationReport): string {
     const passRate =
         report.totalTexts > 0
-            ? (((report.totalTexts - report.failCount) / report.totalTexts) * 100).toFixed(1)
+            ? (((report.totalTexts - report.finalFailCount) / report.totalTexts) * 100).toFixed(1)
             : '100.0';
     const finalFailures = report.components.filter((component) => component.final.failCount > 0);
     const recovered = report.components.filter(
