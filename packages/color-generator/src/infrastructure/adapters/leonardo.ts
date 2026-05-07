@@ -85,7 +85,7 @@ const createColorDefinition = ({
     return new Color({
         name,
         colorKeys: [lightKey, darkKey],
-        colorSpace: 'OKLCH',
+        colorspace: 'OKLCH',
         ratios: contrastRatios,
     });
 };
