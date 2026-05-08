@@ -89,11 +89,26 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
             if (typeof config.translation.llm !== 'object' || config.translation.llm === null) {
                 throw new Error('Invalid translation.llm: expected object');
             }
+            if ('enabled' in config.translation.llm) {
+                throw new Error('Invalid translation.llm.enabled: option has been removed');
+            }
             if (
-                config.translation.llm.enabled !== undefined &&
-                typeof config.translation.llm.enabled !== 'boolean'
+                config.translation.llm.translationModel !== undefined &&
+                typeof config.translation.llm.translationModel !== 'string'
             ) {
-                throw new Error('Invalid translation.llm.enabled: expected boolean');
+                throw new Error('Invalid translation.llm.translationModel: expected string');
+            }
+            if (
+                config.translation.llm.validationModel !== undefined &&
+                typeof config.translation.llm.validationModel !== 'string'
+            ) {
+                throw new Error('Invalid translation.llm.validationModel: expected string');
+            }
+            if (
+                config.translation.llm.postprocessModel !== undefined &&
+                typeof config.translation.llm.postprocessModel !== 'string'
+            ) {
+                throw new Error('Invalid translation.llm.postprocessModel: expected string');
             }
         }
         if (config.translation.validation?.mqm !== undefined) {
@@ -101,11 +116,13 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
             if (typeof mqm !== 'object' || mqm === null) {
                 throw new Error('Invalid translation.validation.mqm: expected object');
             }
+            if ('failOnError' in mqm) {
+                throw new Error(
+                    'Invalid translation.validation.mqm.failOnError: option has been removed',
+                );
+            }
             if (mqm.enabled !== undefined && typeof mqm.enabled !== 'boolean') {
                 throw new Error('Invalid translation.validation.mqm.enabled: expected boolean');
-            }
-            if (mqm.failOnError !== undefined && typeof mqm.failOnError !== 'boolean') {
-                throw new Error('Invalid translation.validation.mqm.failOnError: expected boolean');
             }
         }
     }

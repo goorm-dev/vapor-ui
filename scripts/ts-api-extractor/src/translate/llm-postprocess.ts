@@ -1,4 +1,5 @@
 import { callLlm } from '~/translate/llm-client';
+import { parseLlmJson } from '~/translate/llm-json';
 import type { MqmError } from '~/translate/types';
 
 const SYSTEM_PROMPT = `You are a professional Korean translator and post-editor for a design system documentation site. You will receive an English source text, a machine-translated Korean draft, and MQM error feedback identifying specific translation problems.
@@ -9,7 +10,7 @@ Rules:
 1. Address every error listed in the MQM feedback. Each error includes: the error category, severity, the problematic source span, the problematic translation span, and a Korean explanation of what went wrong.
 2. Do not change parts of the draft that are not covered by any error.
 3. Never translate or alter: PascalCase component names (e.g. Breadcrumb, Button, TextInput), camelCase prop names (e.g. asChild, onClick, isDisabled), quoted enum values (e.g. "sm", "ghost"), inline code, token names, and markdown formatting. Preserve the original English spelling exactly — do not romanize.
-4. Output ONLY the single final Korean text. No explanations, no commentary, no markdown wrapping.
+4. Respond ONLY with JSON in this exact shape: {"translated":"final Korean text"}.
 
 Style guide — write natural Korean, not translated Korean:
 - Prefer concise predicates: "~지정합니다", "~설정합니다" over "~를 제어합니다", "~를 수행합니다"
@@ -26,14 +27,32 @@ function buildRewritePrompt(source: string, mtOutput: string, errors: MqmError[]
 
     return (
         `Source (English):\n${source}\n\n` +
-        `Draft (DeepL Korean):\n${mtOutput}\n\n` +
+        `Initial Korean translation:\n${mtOutput}\n\n` +
         `MQM errors to fix (${errors.length}):\n${errorLines.join('\n\n')}`
     );
 }
 
 export interface PostprocessResult {
     translated: string;
-    degraded?: true;
+    invalid?: true;
+}
+
+function invalidResult(mtOutput: string): PostprocessResult {
+    return { translated: mtOutput, invalid: true };
+}
+
+function parseTranslated(content: string): string | undefined {
+    try {
+        const parsed = parseLlmJson(content);
+        if (typeof parsed !== 'object' || parsed === null) return undefined;
+        const translated = (parsed as Record<string, unknown>).translated;
+        if (typeof translated !== 'string' || translated.trim().length === 0) {
+            return undefined;
+        }
+        return translated;
+    } catch {
+        return undefined;
+    }
 }
 
 export async function postprocessWithLlm(
@@ -49,21 +68,24 @@ export async function postprocessWithLlm(
             { role: 'system', content: SYSTEM_PROMPT },
             { role: 'user', content: userPrompt },
         ],
-        model,
+        { model, responseFormat: 'json' },
     );
 
     if (!result.content) {
         const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
         console.warn(
-            `[llm-postprocess] ${result.error}${statusInfo}. Returning DeepL draft as-is (degraded).`,
+            `[llm-postprocess] ${result.error}${statusInfo}. Returning initial translation as-is.`,
         );
-        return { translated: mtOutput, degraded: true };
+        return invalidResult(mtOutput);
     }
 
-    // Strip markdown code fences if LLM wraps the output
-    const cleaned = result.content
-        .replace(/^```(?:\w+)?\s*/i, '')
-        .replace(/\s*```$/, '')
-        .trim();
-    return { translated: cleaned || mtOutput };
+    const translated = parseTranslated(result.content);
+    if (!translated) {
+        console.warn(
+            `[llm-postprocess] Unexpected JSON response shape. Raw: ${result.content.slice(0, 300)}`,
+        );
+        return invalidResult(mtOutput);
+    }
+
+    return { translated };
 }

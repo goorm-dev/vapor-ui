@@ -45,14 +45,13 @@ export const defaultExtractorConfig: ExtractorConfig = {
         skipCache: false,
         targetLocale: 'ko',
         llm: {
-            enabled: true,
+            translationModel: 'claude-sonnet-4-6',
             postprocessModel: 'claude-sonnet-4-6',
-            validationModel: 'claude-sonnet-4-6',
+            validationModel: 'claude-opus-4-7',
         },
         validation: {
             mqm: {
                 enabled: true,
-                failOnError: false,
             },
         },
     },

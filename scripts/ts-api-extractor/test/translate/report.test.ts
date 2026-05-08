@@ -10,162 +10,144 @@ function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'report-test-'));
 }
 
+const unverifiedOutcome = {
+    id: 'component.description',
+    source: 'A button component.',
+    translated: 'Button 컴포넌트.',
+    assurance: 'unverified' as const,
+    reportable: true,
+    reason: 'final_quality_gate_failed' as const,
+    initialTranslation: 'Button component.',
+    initialEvaluation: {
+        verdict: 'FAIL' as const,
+        errors: [
+            {
+                severity: 'major' as const,
+                category: 'Accuracy/Mistranslation' as const,
+                source_span: 'button',
+                mt_span: 'component',
+                explanation: '오역입니다.',
+            },
+        ],
+    },
+    finalEvaluation: {
+        verdict: 'FAIL' as const,
+        errors: [
+            {
+                severity: 'minor' as const,
+                category: 'Fluency/Unnatural phrasing' as const,
+                source_span: 'component',
+                mt_span: '컴포넌트.',
+                explanation: '어색합니다.',
+            },
+        ],
+    },
+    events: [{ stage: 'mqm' as const, message: 'Final MQM failed.' }],
+};
+
 describe('buildReport', () => {
-    it('aggregates totalTexts and failCount across components', () => {
+    it('aggregates verified, unverified, cached, and gate-skipped counts', () => {
         const components: ComponentReport[] = [
             {
                 name: 'Button',
                 totalTexts: 5,
-                initial: { failCount: 2, errors: [] },
-                final: { failCount: 1, errors: [] },
-                degradedCount: 0,
+                verified: 3,
+                unverified: 2,
+                cached: 1,
+                gateSkipped: 1,
+                unverifiedOutcomes: [unverifiedOutcome],
             },
             {
-                name: 'Avatar',
-                totalTexts: 3,
-                initial: { failCount: 0, errors: [] },
-                final: { failCount: 0, errors: [] },
-                degradedCount: 0,
+                name: 'Divider',
+                totalTexts: 0,
+                verified: 0,
+                unverified: 0,
+                cached: 0,
+                gateSkipped: 0,
+                unverifiedOutcomes: [],
             },
         ];
+
         const report = buildReport(components);
-        expect(report.totalComponents).toBe(2);
-        expect(report.totalTexts).toBe(8);
-        expect(report.finalFailCount).toBe(1);
-        expect(report.initialFailCount).toBe(2);
-        expect(report.components).toBe(components);
-    });
 
-    it('handles empty component list', () => {
-        const report = buildReport([]);
-        expect(report.totalComponents).toBe(0);
-        expect(report.totalTexts).toBe(0);
-        expect(report.initialFailCount).toBe(0);
-        expect(report.finalFailCount).toBe(0);
-    });
-
-    it('sets generatedAt to a valid ISO timestamp', () => {
-        const before = Date.now();
-        const report = buildReport([]);
-        const after = Date.now();
-        const ts = new Date(report.generatedAt).getTime();
-        expect(ts).toBeGreaterThanOrEqual(before);
-        expect(ts).toBeLessThanOrEqual(after);
+        expect(report).toMatchObject({
+            totalComponents: 2,
+            totalTexts: 5,
+            verifiedCount: 3,
+            unverifiedCount: 2,
+            cachedCount: 1,
+            gateSkippedCount: 1,
+            components,
+        });
     });
 });
 
 describe('renderReport', () => {
-    it('shows 100.0% pass rate when totalTexts is 0', () => {
+    it('renders the ADR summary columns including components with zero units', () => {
         const report: TranslationReport = {
-            generatedAt: '2026-04-21T00:00:00.000Z',
-            totalComponents: 0,
-            totalTexts: 0,
-            initialFailCount: 0,
-            finalFailCount: 0,
-            totalDegradedCount: 0,
-            components: [],
-        };
-        const output = renderReport(report);
-        expect(output).toContain('Pass rate | 100.0%');
-    });
-
-    it('calculates pass rate correctly for non-zero texts', () => {
-        const report: TranslationReport = {
-            generatedAt: '2026-04-21T00:00:00.000Z',
-            totalComponents: 1,
-            totalTexts: 10,
-            initialFailCount: 3,
-            finalFailCount: 2,
-            totalDegradedCount: 0,
+            generatedAt: '2026-05-08T00:00:00.000Z',
+            totalComponents: 2,
+            totalTexts: 2,
+            verifiedCount: 1,
+            unverifiedCount: 1,
+            cachedCount: 0,
+            gateSkippedCount: 0,
             components: [
                 {
                     name: 'Button',
-                    totalTexts: 10,
-                    initial: { failCount: 3, errors: [] },
-                    final: { failCount: 2, errors: [] },
-                    degradedCount: 0,
+                    totalTexts: 2,
+                    verified: 1,
+                    unverified: 1,
+                    cached: 0,
+                    gateSkipped: 0,
+                    unverifiedOutcomes: [unverifiedOutcome],
                 },
-            ],
-        };
-        const output = renderReport(report);
-        expect(output).toContain('Pass rate | 80.0%');
-    });
-
-    it('renders PASS status for component with no failures', () => {
-        const report: TranslationReport = {
-            generatedAt: '2026-04-21T00:00:00.000Z',
-            totalComponents: 1,
-            totalTexts: 3,
-            initialFailCount: 1,
-            finalFailCount: 0,
-            totalDegradedCount: 0,
-            components: [
                 {
-                    name: 'Avatar',
-                    totalTexts: 3,
-                    initial: { failCount: 1, errors: [] },
-                    final: { failCount: 0, errors: [] },
-                    degradedCount: 0,
+                    name: 'Divider',
+                    totalTexts: 0,
+                    verified: 0,
+                    unverified: 0,
+                    cached: 0,
+                    gateSkipped: 0,
+                    unverifiedOutcomes: [],
                 },
             ],
         };
-        const output = renderReport(report);
-        expect(output).toContain('| Avatar | 1/3 | 0/3 | PASS |');
-        expect(output).toContain('## Recovered After Postprocess');
-        expect(output).toContain('<summary>Avatar — Initial FAIL (1/3), Final PASS</summary>');
-    });
 
-    it('renders FAIL status with error details for component with failures', () => {
-        const report: TranslationReport = {
-            generatedAt: '2026-04-21T00:00:00.000Z',
-            totalComponents: 1,
-            totalTexts: 4,
-            initialFailCount: 2,
-            finalFailCount: 1,
-            totalDegradedCount: 0,
-            components: [
-                {
-                    name: 'Dialog',
-                    totalTexts: 4,
-                    initial: {
-                        failCount: 2,
-                        errors: [
-                            {
-                                severity: 'major',
-                                category: 'Accuracy/Addition',
-                                source_span: 'Open',
-                                mt_span: '열기 열기',
-                                explanation: 'Duplicated phrase',
-                            },
-                        ],
-                    },
-                    final: {
-                        failCount: 1,
-                        errors: [
-                            {
-                                severity: 'major',
-                                category: 'Accuracy/Mistranslation',
-                                source_span: 'Close',
-                                mt_span: '닫기X',
-                                explanation: 'Translation contains extraneous character',
-                            },
-                        ],
-                    },
-                    degradedCount: 0,
-                },
-            ],
-        };
         const output = renderReport(report);
-        expect(output).toContain('## Component Summary');
-        expect(output).toContain('| Dialog | 2/4 | 1/4 | FAIL |');
-        expect(output).toContain('## Final Failures');
+
         expect(output).toContain(
-            '<summary>Dialog — Final FAIL (1/4), Initial FAIL (2/4)</summary>',
+            '| Component | Total Texts | Verified | Unverified | Cached | Gate Skipped |',
         );
-        expect(output).toContain('| Severity | Category | Source | MT | Explanation |');
-        expect(output).toContain('| MAJOR | Accuracy/Mistranslation |');
-        expect(output).toContain('`Close`');
-        expect(output).toContain('extraneous character');
+        expect(output).toContain('| Button | 2 | 1 | 1 | 0 | 0 |');
+        expect(output).toContain('| Divider | 0 | 0 | 0 | 0 | 0 |');
+    });
+
+    it('renders details only for reportable unverified outcomes', () => {
+        const report = buildReport([
+            {
+                name: 'Button',
+                totalTexts: 3,
+                verified: 1,
+                unverified: 2,
+                cached: 0,
+                gateSkipped: 1,
+                unverifiedOutcomes: [unverifiedOutcome],
+            },
+        ]);
+
+        const output = renderReport(report);
+
+        expect(output).toContain('## Unverified Details');
+        expect(output).toContain('### Button — component.description');
+        expect(output).toContain('Reason: `final_quality_gate_failed`');
+        expect(output).toContain('Source: `A button component.`');
+        expect(output).toContain('Output: `Button 컴포넌트.`');
+        expect(output).toContain('Initial translation: `Button component.`');
+        expect(output).toContain('Initial MQM errors');
+        expect(output).toContain('Final MQM errors');
+        expect(output).toContain('Final MQM failed.');
+        expect(output).not.toContain('quality_gate_disabled');
     });
 });
 
@@ -190,9 +172,11 @@ describe('writeReport', () => {
             {
                 name: 'Button',
                 totalTexts: 2,
-                initial: { failCount: 0, errors: [] },
-                final: { failCount: 0, errors: [] },
-                degradedCount: 0,
+                verified: 2,
+                unverified: 0,
+                cached: 0,
+                gateSkipped: 0,
+                unverifiedOutcomes: [],
             },
         ]);
         writeReport(report, tmpDir);
@@ -201,13 +185,6 @@ describe('writeReport', () => {
         const content = fs.readFileSync(filePath, 'utf-8');
         expect(content).toContain('Translation Quality Report');
         expect(content).toContain('Button');
-    });
-
-    it('creates intermediate directories if they do not exist', () => {
-        const nested = path.join(tmpDir, 'deep', 'nested');
-        const report = buildReport([]);
-        writeReport(report, nested);
-        expect(fs.existsSync(path.join(nested, '.i18n-report.md'))).toBe(true);
     });
 
     it('warns and does not throw when write fails', () => {

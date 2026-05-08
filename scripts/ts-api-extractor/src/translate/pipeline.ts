@@ -1,17 +1,18 @@
 import pLimit from 'p-limit';
 
 import type { PropsInfoJson } from '~/models/output';
-import { loadCache, makeCacheKey, partitionByCache, saveCache } from '~/translate/cache';
+import { loadCache, makeCacheKey, saveCache } from '~/translate/cache';
 import type { CacheStore } from '~/translate/cache';
-import { translateWithDeepl } from '~/translate/deepl';
-import { processOneEntry } from '~/translate/mqm-ape-loop';
-import {
-    applyTranslations,
-    buildComponentReports,
-    collectTextEntries,
-} from '~/translate/props-projection';
+import { processTranslationLifecycle } from '~/translate/lifecycle';
+import { translateComponentUnits } from '~/translate/llm-translation';
 import type { ComponentReport } from '~/translate/report';
-import type { TranslationConfig } from '~/translate/types';
+import {
+    applyTranslationOutcomes,
+    buildComponentReports,
+    collectTranslationUnits,
+    getTranslationUnitKey,
+} from '~/translate/translation-units';
+import type { TranslationConfig, TranslationOutcome, TranslationUnit } from '~/translate/types';
 
 const LLM_CONCURRENCY = 5;
 
@@ -20,23 +21,33 @@ export interface TranslateResult {
     componentReports: ComponentReport[];
 }
 
-function formatEntryLabel(
-    props: PropsInfoJson[],
-    entry: ReturnType<typeof collectTextEntries>[number],
-): string {
-    const component = props[entry.componentIndex];
-    const componentName = component?.name ?? `component#${entry.componentIndex}`;
+function cloneProps(props: PropsInfoJson[]): PropsInfoJson[] {
+    return props.map((component) => ({
+        ...component,
+        props: component.props.map((prop) => ({ ...prop })),
+    }));
+}
 
-    if (entry.kind === 'component') {
-        return `${componentName}.description`;
+function cacheHitOutcome(unit: TranslationUnit, translated: string): TranslationOutcome {
+    return {
+        id: unit.id,
+        source: unit.source,
+        translated,
+        assurance: 'verified',
+        reportable: false,
+        reason: 'cache_hit',
+        events: [{ stage: 'cache', message: 'Verified translation loaded from cache.' }],
+    };
+}
+
+function groupByComponent(units: TranslationUnit[]): Map<number, TranslationUnit[]> {
+    const groups = new Map<number, TranslationUnit[]>();
+    for (const unit of units) {
+        const current = groups.get(unit.componentIndex) ?? [];
+        current.push(unit);
+        groups.set(unit.componentIndex, current);
     }
-
-    const propName =
-        entry.propIndex !== undefined
-            ? (component?.props[entry.propIndex]?.name ?? `prop#${entry.propIndex}`)
-            : 'prop';
-
-    return `${componentName}.props.${propName}`;
+    return groups;
 }
 
 export async function translatePropsInfo(
@@ -49,95 +60,75 @@ export async function translatePropsInfo(
         if (verbose) console.error(`[i18n] ${message}`);
     };
 
-    // 1. 텍스트 수집
-    const entries = collectTextEntries(props);
+    const units = collectTranslationUnits(props);
+    log(`collected ${units.length} translatable texts from ${props.length} components`);
 
-    if (entries.length === 0) {
-        log(`collected 0 translatable texts from ${props.length} components`);
+    if (units.length === 0) {
         return {
-            props: props.map((c) => ({ ...c, props: c.props.map((p) => ({ ...p })) })),
-            componentReports: props.map((c) => ({
-                name: c.name,
-                totalTexts: 0,
-                initial: { failCount: 0, errors: [] },
-                final: { failCount: 0, errors: [] },
-                degradedCount: 0,
-            })),
+            props: cloneProps(props),
+            componentReports: buildComponentReports(props, units, new Map()),
         };
     }
 
-    log(`collected ${entries.length} translatable texts from ${props.length} components`);
-
     const cacheOutputDir = outputDir ?? '';
     const useCache = !config.skipCache;
-    const glossaryId = process.env['DEEPL_GLOSSARY_ID'] ?? '';
-
-    // 2. 캐시 로드 & 히트/미스 분리
     let cacheStore: CacheStore = new Map();
     if (useCache && cacheOutputDir) {
         cacheStore = loadCache(cacheOutputDir);
     }
 
-    const { finalEntries, missIndices, cacheHits } = useCache
-        ? partitionByCache(entries, cacheStore, config, glossaryId)
-        : {
-              finalEntries: new Array(entries.length),
-              missIndices: entries.map((_, i) => i),
-              cacheHits: 0,
-          };
+    const outcomes = new Map<string, TranslationOutcome>();
+    const missUnits: TranslationUnit[] = [];
+    let cacheHits = 0;
 
-    log(`cache: ${cacheHits} hit, ${missIndices.length} miss`);
-
-    // 3. DeepL 배치 번역 + 4. 검증·후처리 루프
-    if (missIndices.length > 0) {
-        const limit = pLimit(LLM_CONCURRENCY);
-
-        const missTexts = missIndices.map((i) => entries[i].text);
-        log(`deepl: translating ${missTexts.length} texts`);
-        const deeplResults = await translateWithDeepl(missTexts, glossaryId);
-        log(
-            deeplResults
-                ? `deepl: received ${deeplResults.length} translations`
-                : 'deepl: unavailable, falling back to source text',
-        );
-
-        if (!deeplResults) {
-            for (const i of missIndices) {
-                console.warn(`[deepl] Unavailable, using source text as fallback for all misses.`);
-                finalEntries[i] = {
-                    translated: entries[i].text,
-                    initial: { verdict: 'FAIL', errors: [] },
-                    final: { verdict: 'FAIL', errors: [] },
-                };
-            }
+    for (const unit of units) {
+        const cacheEntry = useCache ? cacheStore.get(makeCacheKey(unit.source, config)) : undefined;
+        if (cacheEntry) {
+            outcomes.set(getTranslationUnitKey(unit), cacheHitOutcome(unit, cacheEntry.translated));
+            cacheHits++;
         } else {
-            const missResults = await Promise.all(
-                missIndices.map(async (entryIndex, batchIndex) => {
-                    const entry = entries[entryIndex];
-                    const mtOutput = deeplResults[batchIndex];
-                    const label = formatEntryLabel(props, entry);
+            missUnits.push(unit);
+        }
+    }
 
-                    if (mtOutput === undefined) {
-                        console.warn(
-                            `[deepl] Missing result at batch index ${batchIndex}, using source text as fallback.`,
-                        );
+    log(`cache: ${cacheHits} hit, ${missUnits.length} miss`);
+
+    if (missUnits.length > 0) {
+        const validationLimit = pLimit(LLM_CONCURRENCY);
+        const missGroups = groupByComponent(missUnits);
+
+        for (const [componentIndex, componentUnits] of missGroups) {
+            const componentName = props[componentIndex]?.name ?? `component#${componentIndex}`;
+            log(`translation: requesting ${componentUnits.length} texts for ${componentName}`);
+            const translations = await translateComponentUnits(
+                componentName,
+                componentUnits,
+                config,
+            );
+
+            const processed = await Promise.all(
+                componentUnits.map(async (unit) => {
+                    const translated = translations.get(unit.id);
+                    if (translated === undefined) {
+                        throw new Error(`Missing validated translation id: ${unit.id}`);
                     }
-
-                    return processOneEntry(entry, mtOutput, config, limit, label, log);
+                    const outcome = await processTranslationLifecycle(
+                        unit,
+                        translated,
+                        config,
+                        validationLimit,
+                        log,
+                    );
+                    return [unit, outcome] as const;
                 }),
             );
 
-            // 5. 미스 결과 병합 & 캐시 갱신
-            for (let batchIndex = 0; batchIndex < missIndices.length; batchIndex++) {
-                const entryIndex = missIndices[batchIndex];
-                const finalEntry = missResults[batchIndex];
-                finalEntries[entryIndex] = finalEntry;
-
-                if (useCache && finalEntry.translated !== entries[entryIndex].text) {
-                    const key = makeCacheKey(entries[entryIndex].text, config, glossaryId);
-                    cacheStore.set(key, {
-                        source: entries[entryIndex].text,
-                        translated: finalEntry.translated,
+            for (const [unit, outcome] of processed) {
+                outcomes.set(getTranslationUnitKey(unit), outcome);
+                if (useCache && outcome.assurance === 'verified') {
+                    cacheStore.set(makeCacheKey(unit.source, config), {
+                        source: unit.source,
+                        translated: outcome.translated,
                     });
                 }
             }
@@ -151,9 +142,8 @@ export async function translatePropsInfo(
         log(`cache: save skipped (${useCache ? 'no outputDir' : 'skipCache=true'})`);
     }
 
-    // 6. props 재구성 & 7. 리포트 집계
-    const translatedProps = applyTranslations(props, entries, finalEntries);
-    const componentReports = buildComponentReports(props, entries, finalEntries);
+    const translatedProps = applyTranslationOutcomes(props, units, outcomes);
+    const componentReports = buildComponentReports(props, units, outcomes);
 
     log(`completed ${translatedProps.length} components`);
 

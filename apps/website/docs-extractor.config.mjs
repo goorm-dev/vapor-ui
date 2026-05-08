@@ -11,6 +11,7 @@ export default defineConfig({
     components: {},
     translation: {
         llm: {
+            translationModel: 'claude-sonnet-4-6',
             postprocessModel: 'claude-sonnet-4-6',
             validationModel: 'claude-opus-4-7',
         },

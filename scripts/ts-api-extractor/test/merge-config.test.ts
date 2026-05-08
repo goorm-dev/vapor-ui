@@ -5,11 +5,11 @@ import { mergeConfig } from '~/config/schema';
 
 describe('mergeConfig', () => {
     describe('translation deep merge', () => {
-        it('translation.validation.mqm.failOnError만 patch해도 나머지 translation 기본값이 보존된다', () => {
+        it('translation.validation.mqm.enabled만 patch해도 나머지 translation 기본값이 보존된다', () => {
             const merged = mergeConfig(defaultExtractorConfig, {
                 translation: {
                     validation: {
-                        mqm: { failOnError: true },
+                        mqm: { enabled: false },
                     },
                 },
             });
@@ -19,28 +19,25 @@ describe('mergeConfig', () => {
             expect(merged.translation.targetLocale).toBe(
                 defaultExtractorConfig.translation.targetLocale,
             );
-            expect(merged.translation.llm.enabled).toBe(
-                defaultExtractorConfig.translation.llm.enabled,
+            expect(merged.translation.llm.translationModel).toBe(
+                defaultExtractorConfig.translation.llm.translationModel,
             );
-            expect(merged.translation.validation.mqm.enabled).toBe(
-                defaultExtractorConfig.translation.validation.mqm.enabled,
+            expect(merged.translation.llm.validationModel).toBe(
+                defaultExtractorConfig.translation.llm.validationModel,
             );
-            expect(merged.translation.validation.mqm.failOnError).toBe(true);
+            expect(merged.translation.validation.mqm.enabled).toBe(false);
         });
 
-        it('translation.llm.enabled만 patch해도 validation.mqm 기본값이 보존된다', () => {
+        it('translation.llm.translationModel만 patch해도 validation.mqm 기본값이 보존된다', () => {
             const merged = mergeConfig(defaultExtractorConfig, {
                 translation: {
-                    llm: { enabled: false },
+                    llm: { translationModel: 'claude-opus-4-7' },
                 },
             });
 
-            expect(merged.translation.llm.enabled).toBe(false);
+            expect(merged.translation.llm.translationModel).toBe('claude-opus-4-7');
             expect(merged.translation.validation.mqm.enabled).toBe(
                 defaultExtractorConfig.translation.validation.mqm.enabled,
-            );
-            expect(merged.translation.validation.mqm.failOnError).toBe(
-                defaultExtractorConfig.translation.validation.mqm.failOnError,
             );
         });
 
@@ -50,8 +47,8 @@ describe('mergeConfig', () => {
             });
 
             expect(merged.translation.enabled).toBe(true);
-            expect(merged.translation.llm.enabled).toBe(
-                defaultExtractorConfig.translation.llm.enabled,
+            expect(merged.translation.llm.translationModel).toBe(
+                defaultExtractorConfig.translation.llm.translationModel,
             );
             expect(merged.translation.validation.mqm.enabled).toBe(
                 defaultExtractorConfig.translation.validation.mqm.enabled,
@@ -116,7 +113,7 @@ describe('mergeConfig', () => {
             const snapshot = structuredClone(base);
 
             mergeConfig(base, {
-                translation: { enabled: true, llm: { enabled: false } },
+                translation: { enabled: true, llm: { translationModel: 'claude-opus-4-7' } },
             });
 
             expect(base).toEqual(snapshot);

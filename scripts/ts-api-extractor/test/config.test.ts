@@ -3,12 +3,37 @@
  */
 import { defaultExtractorConfig as config } from '~/config/defaults';
 import { resolveComponentInclude } from '~/config/resolve';
+import { validatePartialConfig } from '~/config/schema';
 
 describe('config', () => {
     it('기본 설정값 확인', () => {
         expect(config.filterExternal).toBe(true);
         expect(config.filterHtml).toBe(true);
         expect(config.filterSprinkles).toBe(true);
+    });
+});
+
+describe('validatePartialConfig', () => {
+    it('rejects removed translation.llm.enabled option', () => {
+        expect(() =>
+            validatePartialConfig({
+                translation: {
+                    llm: { enabled: true },
+                },
+            } as never),
+        ).toThrow(/translation\.llm\.enabled/);
+    });
+
+    it('rejects removed translation.validation.mqm.failOnError option', () => {
+        expect(() =>
+            validatePartialConfig({
+                translation: {
+                    validation: {
+                        mqm: { failOnError: true },
+                    },
+                },
+            } as never),
+        ).toThrow(/translation\.validation\.mqm\.failOnError/);
     });
 });
 

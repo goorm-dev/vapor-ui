@@ -9,8 +9,12 @@ const baseTranslationConfig = {
     enabled: false,
     skipCache: false,
     targetLocale: 'ko' as const,
-    llm: { enabled: true },
-    validation: { mqm: { enabled: true, failOnError: false } },
+    llm: {
+        translationModel: 'claude-sonnet-4-6',
+        validationModel: 'claude-opus-4-7',
+        postprocessModel: 'claude-sonnet-4-6',
+    },
+    validation: { mqm: { enabled: true } },
 };
 
 function makeConfig(overrides: Partial<ExtractorConfig> = {}): ExtractorConfig {
@@ -46,7 +50,8 @@ const mockedFindFileByComponentName = vi.mocked(findFileByComponentName);
 
 describe('resolveRunContext', () => {
     beforeEach(() => {
-        vi.stubEnv('DEEPL_API_KEY', 'test-key');
+        vi.stubEnv('LITELLM_BASE_URL', 'https://litellm.internal');
+        vi.stubEnv('LITELLM_API_KEY', 'test-key');
         mockedLoadExtractorConfig.mockReset();
         mockedFindComponentFiles.mockReset();
         mockedFindFileByComponentName.mockReset();
@@ -69,23 +74,30 @@ describe('resolveRunContext', () => {
             expect(resolved.config.translation?.enabled).toBe(false);
         });
 
-        it('--translate 플래그가 있고 DEEPL_API_KEY가 설정되어 있으면 translation.enabled를 true로 변경한다', async () => {
+        it('--translate 플래그가 있고 LiteLLM env가 설정되어 있으면 translation.enabled를 true로 변경한다', async () => {
             const resolved = await resolveRunContext({ translation: { translate: true } });
             expect(resolved.config.translation?.enabled).toBe(true);
         });
 
-        it('--translate 플래그가 있고 DEEPL_API_KEY가 없으면 CliError를 던진다', async () => {
-            vi.stubEnv('DEEPL_API_KEY', '');
+        it('--translate 플래그가 있고 LITELLM_BASE_URL이 없으면 CliError를 던진다', async () => {
+            vi.stubEnv('LITELLM_BASE_URL', '');
             await expect(
                 resolveRunContext({ translation: { translate: true } }),
             ).rejects.toThrowError(CliError);
         });
 
-        it('CliError 메시지에 DEEPL_API_KEY가 포함된다', async () => {
-            vi.stubEnv('DEEPL_API_KEY', '');
+        it('--translate 플래그가 있고 LITELLM_API_KEY가 없으면 CliError를 던진다', async () => {
+            vi.stubEnv('LITELLM_API_KEY', '');
             await expect(
                 resolveRunContext({ translation: { translate: true } }),
-            ).rejects.toThrowError(/DEEPL_API_KEY/);
+            ).rejects.toThrowError(CliError);
+        });
+
+        it('CliError 메시지에 LiteLLM env 이름이 포함된다', async () => {
+            vi.stubEnv('LITELLM_API_KEY', '');
+            await expect(
+                resolveRunContext({ translation: { translate: true } }),
+            ).rejects.toThrowError(/LITELLM_API_KEY/);
         });
 
         it('--skip-cache 플래그가 있으면 translation.skipCache를 true로 변경한다', async () => {

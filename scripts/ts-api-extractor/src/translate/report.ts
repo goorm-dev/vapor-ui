@@ -1,30 +1,26 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import type { MqmError } from '~/translate/types';
-
-export interface MqmStageReport {
-    failCount: number;
-    errors: MqmError[];
-}
+import type { MqmError, TranslationOutcome } from '~/translate/types';
 
 export interface ComponentReport {
     name: string;
     totalTexts: number;
-    initial: MqmStageReport;
-    final: MqmStageReport;
-    /** LLM 호출 실패로 검증/재번역이 degraded 처리된 텍스트 수 */
-    degradedCount: number;
+    verified: number;
+    unverified: number;
+    cached: number;
+    gateSkipped: number;
+    unverifiedOutcomes: TranslationOutcome[];
 }
 
 export interface TranslationReport {
     generatedAt: string;
     totalComponents: number;
     totalTexts: number;
-    initialFailCount: number;
-    finalFailCount: number;
-    /** 전체 degraded 텍스트 수 */
-    totalDegradedCount: number;
+    verifiedCount: number;
+    unverifiedCount: number;
+    cachedCount: number;
+    gateSkippedCount: number;
     components: ComponentReport[];
 }
 
@@ -32,91 +28,77 @@ export function buildReport(components: ComponentReport[]): TranslationReport {
     return {
         generatedAt: new Date().toISOString(),
         totalComponents: components.length,
-        totalTexts: components.reduce((sum, c) => sum + c.totalTexts, 0),
-        initialFailCount: components.reduce((sum, c) => sum + c.initial.failCount, 0),
-        finalFailCount: components.reduce((sum, c) => sum + c.final.failCount, 0),
-        totalDegradedCount: components.reduce((sum, c) => sum + c.degradedCount, 0),
+        totalTexts: components.reduce((sum, component) => sum + component.totalTexts, 0),
+        verifiedCount: components.reduce((sum, component) => sum + component.verified, 0),
+        unverifiedCount: components.reduce((sum, component) => sum + component.unverified, 0),
+        cachedCount: components.reduce((sum, component) => sum + component.cached, 0),
+        gateSkippedCount: components.reduce((sum, component) => sum + component.gateSkipped, 0),
         components,
     };
 }
 
-function sanitizeMarkdown(s: string): string {
-    return s
-        .replace(/[\r\n]+/g, ' ')
-        .replace(/[#\-*_>`[\]()+]/g, (c) => `\\${c}`)
-        .trim();
-}
-
-function escapeTableCell(s: string): string {
-    return sanitizeMarkdown(s).replace(/\|/g, '\\|');
-}
-
-function inlineCodeCell(value: string): string {
-    const normalized = value.replace(/[\r\n]+/g, ' ').replace(/\|/g, '\\|').trim();
-    const longest = Math.max(0, ...(normalized.match(/`+/g)?.map((m) => m.length) ?? [0]));
+function inlineCode(value: string): string {
+    const normalized = value.replace(/[\r\n]+/g, ' ').trim();
+    const longest = Math.max(0, ...(normalized.match(/`+/g)?.map((match) => match.length) ?? [0]));
     const fence = '`'.repeat(longest + 1);
     const pad = normalized.startsWith('`') || normalized.endsWith('`') ? ' ' : '';
     return `${fence}${pad}${normalized}${pad}${fence}`;
 }
 
-function renderErrorRows(errors: MqmError[]): string[] {
-    return errors.map((e) => {
-        const sourceSpan = inlineCodeCell(e.source_span);
-        const mtSpan = inlineCodeCell(e.mt_span);
-        const explanation = escapeTableCell(e.explanation);
-        return `| ${e.severity.toUpperCase()} | ${e.category} | ${sourceSpan} | ${mtSpan} | ${explanation} |`;
-    });
+function escapeTableCell(value: string): string {
+    return value
+        .replace(/[\r\n]+/g, ' ')
+        .replace(/\|/g, '\\|')
+        .trim();
 }
 
-function renderStageTable(label: string, stage: MqmStageReport, totalTexts: number): string[] {
-    const status =
-        stage.failCount === 0
-            ? `${label}: PASS`
-            : `${label}: FAIL (${stage.failCount}/${totalTexts})`;
-
-    if (stage.errors.length === 0) {
-        return [`### ${status}`];
-    }
-
+function renderMqmErrors(title: string, errors: MqmError[]): string[] {
+    if (errors.length === 0) return [];
     return [
-        `### ${status}`,
+        `${title}:`,
         '',
-        '| Severity | Category | Source | MT | Explanation |',
+        '| Severity | Category | Source | Output | Explanation |',
         '|---|---|---|---|---|',
-        ...renderErrorRows(stage.errors),
+        ...errors.map(
+            (error) =>
+                `| ${error.severity.toUpperCase()} | ${error.category} | ${inlineCode(
+                    error.source_span,
+                )} | ${inlineCode(error.mt_span)} | ${escapeTableCell(error.explanation)} |`,
+        ),
     ];
 }
 
-function renderComponentSummary(c: ComponentReport): string {
-    const status = c.final.failCount === 0 ? 'PASS' : 'FAIL';
-    return `| ${c.name} | ${c.initial.failCount}/${c.totalTexts} | ${c.final.failCount}/${c.totalTexts} | ${status} |`;
-}
+function renderUnverifiedDetail(component: ComponentReport, outcome: TranslationOutcome): string {
+    const lines = [
+        `### ${component.name} — ${outcome.id}`,
+        '',
+        `Reason: ${inlineCode(outcome.reason)}`,
+        `Source: ${inlineCode(outcome.source)}`,
+        `Output: ${inlineCode(outcome.translated)}`,
+    ];
 
-function renderComponentDetails(c: ComponentReport, open = false): string {
-    const summary =
-        c.final.failCount === 0
-            ? `${c.name} — Initial FAIL (${c.initial.failCount}/${c.totalTexts}), Final PASS`
-            : `${c.name} — Final FAIL (${c.final.failCount}/${c.totalTexts}), Initial FAIL (${c.initial.failCount}/${c.totalTexts})`;
-    const lines = [`<details${open ? ' open' : ''}>`, `<summary>${summary}</summary>`, ''];
+    if (outcome.initialTranslation) {
+        lines.push(`Initial translation: ${inlineCode(outcome.initialTranslation)}`);
+    }
 
-    lines.push(...renderStageTable('Initial MQM', c.initial, c.totalTexts));
-    lines.push('', ...renderStageTable('Final MQM', c.final, c.totalTexts));
-    lines.push('', '</details>');
+    const initialErrors = outcome.initialEvaluation?.errors ?? [];
+    const finalErrors = outcome.finalEvaluation?.errors ?? [];
+    if (initialErrors.length > 0) {
+        lines.push('', ...renderMqmErrors('Initial MQM errors', initialErrors));
+    }
+    if (finalErrors.length > 0) {
+        lines.push('', ...renderMqmErrors('Final MQM errors', finalErrors));
+    }
+    if (outcome.events.length > 0) {
+        lines.push('', 'Events:', ...outcome.events.map((event) => `- ${event.message}`));
+    }
 
     return lines.join('\n');
 }
 
 export function renderReport(report: TranslationReport): string {
-    const passRate =
-        report.totalTexts > 0
-            ? (((report.totalTexts - report.finalFailCount) / report.totalTexts) * 100).toFixed(1)
-            : '100.0';
-    const finalFailures = report.components.filter((component) => component.final.failCount > 0);
-    const recovered = report.components.filter(
-        (component) => component.initial.failCount > 0 && component.final.failCount === 0,
-    );
-    const cleanPasses = report.components.filter(
-        (component) => component.initial.failCount === 0 && component.final.failCount === 0,
+    const details = report.components.flatMap((component) =>
+        component.unverifiedOutcomes.map((outcome) => renderUnverifiedDetail(component, outcome)),
     );
 
     const lines = [
@@ -126,44 +108,27 @@ export function renderReport(report: TranslationReport): string {
         '',
         '## Summary',
         '',
-        `| Metric | Value |`,
-        `|--------|-------|`,
+        '| Metric | Value |',
+        '|---|---:|',
         `| Components | ${report.totalComponents} |`,
         `| Total texts | ${report.totalTexts} |`,
-        `| Pass rate | ${passRate}% |`,
-        `| Initial MQM failures | ${report.initialFailCount} |`,
-        `| Final MQM failures | ${report.finalFailCount} |`,
-        `| LLM degraded (no validation) | ${report.totalDegradedCount} |`,
+        `| Verified | ${report.verifiedCount} |`,
+        `| Unverified | ${report.unverifiedCount} |`,
+        `| Cached | ${report.cachedCount} |`,
+        `| Gate skipped | ${report.gateSkippedCount} |`,
         '',
         '## Component Summary',
         '',
-        '| Component | Initial | Final | Status |',
-        '|---|---:|---:|---|',
-        ...report.components.map(renderComponentSummary),
+        '| Component | Total Texts | Verified | Unverified | Cached | Gate Skipped |',
+        '|---|---:|---:|---:|---:|---:|',
+        ...report.components.map(
+            (component) =>
+                `| ${component.name} | ${component.totalTexts} | ${component.verified} | ${component.unverified} | ${component.cached} | ${component.gateSkipped} |`,
+        ),
         '',
-        '## Final Failures',
+        '## Unverified Details',
         '',
-        ...(finalFailures.length > 0
-            ? finalFailures.map((component) => renderComponentDetails(component, true))
-            : ['No final MQM failures.']),
-        '',
-        '## Recovered After Postprocess',
-        '',
-        ...(recovered.length > 0
-            ? recovered.map((component) => renderComponentDetails(component))
-            : ['No recovered MQM failures.']),
-        '',
-        '## Passed Without MQM Errors',
-        '',
-        ...(cleanPasses.length > 0
-            ? [
-                  '| Component | Texts |',
-                  '|---|---:|',
-                  ...cleanPasses.map(
-                      (component) => `| ${component.name} | ${component.totalTexts} |`,
-                  ),
-              ]
-            : ['No components passed without MQM errors.']),
+        ...(details.length > 0 ? details : ['No reportable unverified translations.']),
         '',
     ];
 

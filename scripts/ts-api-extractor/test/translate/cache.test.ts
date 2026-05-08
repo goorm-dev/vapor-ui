@@ -14,8 +14,8 @@ function makeTmpDir(): string {
 function makeConfig(
     overrides: Partial<{
         targetLocale: TranslationConfig['targetLocale'];
-        llmEnabled: boolean;
         mqmEnabled: boolean;
+        translationModel: string;
         postprocessModel: string;
         validationModel: string;
     }> = {},
@@ -25,20 +25,16 @@ function makeConfig(
         skipCache: false,
         targetLocale: overrides.targetLocale ?? 'ko',
         llm: {
-            enabled: overrides.llmEnabled ?? true,
+            translationModel: overrides.translationModel ?? 'claude-sonnet-4-6',
             postprocessModel: overrides.postprocessModel ?? 'claude-sonnet-4-6',
             validationModel: overrides.validationModel ?? 'claude-sonnet-4-6',
         },
-        validation: { mqm: { enabled: overrides.mqmEnabled ?? true, failOnError: false } },
+        validation: { mqm: { enabled: overrides.mqmEnabled ?? true } },
     };
 }
 
-function key(
-    source: string,
-    configOverrides: Parameters<typeof makeConfig>[0] = {},
-    glossaryId = '',
-): string {
-    return makeCacheKey(source, makeConfig(configOverrides), glossaryId);
+function key(source: string, configOverrides: Parameters<typeof makeConfig>[0] = {}): string {
+    return makeCacheKey(source, makeConfig(configOverrides));
 }
 
 describe('makeCacheKey', () => {
@@ -50,20 +46,16 @@ describe('makeCacheKey', () => {
         expect(key('hello')).not.toBe(key('world'));
     });
 
-    it('different glossaryId produces different key', () => {
-        expect(key('hello')).not.toBe(key('hello', {}, 'glossary-123'));
-    });
-
     it('different postprocessModel produces different key', () => {
         expect(key('hello')).not.toBe(key('hello', { postprocessModel: 'claude-opus-4-7' }));
     });
 
-    it('different validationModel produces different key', () => {
-        expect(key('hello')).not.toBe(key('hello', { validationModel: 'claude-opus-4-7' }));
+    it('different translationModel produces different key', () => {
+        expect(key('hello')).not.toBe(key('hello', { translationModel: 'claude-opus-4-7' }));
     });
 
-    it('different llmEnabled produces different key', () => {
-        expect(key('hello')).not.toBe(key('hello', { llmEnabled: false }));
+    it('different validationModel produces different key', () => {
+        expect(key('hello')).not.toBe(key('hello', { validationModel: 'claude-opus-4-7' }));
     });
 
     it('different mqmEnabled produces different key', () => {

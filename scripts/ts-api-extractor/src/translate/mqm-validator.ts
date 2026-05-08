@@ -40,8 +40,7 @@ Respond with EXACTLY this JSON shape and nothing else:
 or
 {"verdict":"FAIL","errors":[{"category":"Terminology/Component name inconsistency","severity":"critical","source_span":"Breadcrumb Root","mt_span":"브레드크럼 루트","explanation":"컴포넌트 이름은 영어 원문을 그대로 유지해야 합니다. 음역도 허용되지 않습니다."}]}`;
 
-const passResult = (): MqmResult => ({ verdict: 'PASS', errors: [] });
-const degradedResult = (): MqmResult => ({ verdict: 'PASS', errors: [], degraded: true });
+const unavailableResult = (): MqmResult => ({ verdict: 'FAIL', errors: [], unavailable: true });
 
 // MqmCategory 유니온에서 파생 — 카테고리 추가/삭제는 types.ts 한 곳에서만
 const MQM_CATEGORIES: Set<MqmCategory> = new Set([
@@ -89,8 +88,8 @@ export async function validateWithMqm(
     translated: string,
     config: TranslationConfig,
 ): Promise<MqmResult> {
-    if (!config.llm.enabled || !config.validation.mqm.enabled) {
-        return passResult();
+    if (!config.validation.mqm.enabled) {
+        return unavailableResult();
     }
 
     const userPrompt = `[원문 JSDoc]: ${source}\n[번역 JSDoc]: ${translated}`;
@@ -100,13 +99,16 @@ export async function validateWithMqm(
             { role: 'system', content: SYSTEM_PROMPT },
             { role: 'user', content: userPrompt },
         ],
-        config.llm.validationModel,
+        {
+            model: config.llm.validationModel ?? 'claude-opus-4-7',
+            responseFormat: 'json',
+        },
     );
 
     if (!result.content) {
         const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
-        console.warn(`[mqm-validator] ${result.error}${statusInfo}. Returning PASS (degraded).`);
-        return degradedResult();
+        console.warn(`[mqm-validator] ${result.error}${statusInfo}. Marking MQM unavailable.`);
+        return unavailableResult();
     }
 
     try {
@@ -130,9 +132,9 @@ export async function validateWithMqm(
             !(p.errors as unknown[]).every(isMqmError)
         ) {
             console.warn(
-                '[mqm-validator] Unexpected JSON shape from LLM. Returning PASS (degraded).',
+                '[mqm-validator] Unexpected JSON shape from LLM. Marking MQM unavailable.',
             );
-            return degradedResult();
+            return unavailableResult();
         }
         return {
             verdict: p.verdict,
@@ -142,6 +144,6 @@ export async function validateWithMqm(
         console.warn(
             `[mqm-validator] Failed to parse MQM response as JSON. Raw: ${result.content.slice(0, 300)}`,
         );
-        return degradedResult();
+        return unavailableResult();
     }
 }

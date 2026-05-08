@@ -9,7 +9,15 @@ export interface LlmCallResult {
     statusCode?: number;
 }
 
-export async function callLlm(messages: LlmMessage[], model?: string): Promise<LlmCallResult> {
+export interface LlmCallOptions {
+    model?: string;
+    responseFormat?: 'text' | 'json';
+}
+
+export async function callLlm(
+    messages: LlmMessage[],
+    options: LlmCallOptions = {},
+): Promise<LlmCallResult> {
     const baseUrl = process.env['LITELLM_BASE_URL'];
     const apiKey = process.env['LITELLM_API_KEY'];
     if (!baseUrl) {
@@ -31,8 +39,11 @@ export async function callLlm(messages: LlmMessage[], model?: string): Promise<L
                     Authorization: `Bearer ${apiKey}`,
                 },
                 body: JSON.stringify({
-                    model: model ?? 'claude-sonnet-4-6',
+                    model: options.model ?? 'claude-sonnet-4-6',
                     messages,
+                    ...(options.responseFormat === 'json'
+                        ? { response_format: { type: 'json_object' } }
+                        : {}),
                 }),
                 signal: controller.signal,
             });

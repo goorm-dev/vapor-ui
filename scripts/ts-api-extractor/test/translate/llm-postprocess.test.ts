@@ -7,7 +7,6 @@ describe('postprocessWithLlm', () => {
         vi.stubGlobal('fetch', vi.fn());
         vi.stubEnv('LITELLM_BASE_URL', 'https://litellm.internal');
         vi.stubEnv('LITELLM_API_KEY', 'test-key');
-        vi.stubEnv('LITELLM_MODEL', 'claude-sonnet-4-6');
     });
 
     afterEach(() => {
@@ -16,57 +15,71 @@ describe('postprocessWithLlm', () => {
         vi.restoreAllMocks();
     });
 
-    it('no LITELLM_BASE_URL → returns DeepL draft + degraded + console.warn', async () => {
-        vi.stubEnv('LITELLM_BASE_URL', '');
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    it('uses JSON mode and returns the translated field', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                choices: [{ message: { content: '{"translated":"수정된 번역"}' } }],
+            }),
+        } as Response);
+
+        const result = await postprocessWithLlm('hello', '안녕 draft', [], 'claude-sonnet-4-6');
+
+        expect(result).toEqual({ translated: '수정된 번역' });
+        const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
+            model: string;
+            response_format?: { type: string };
+        };
+        expect(body.model).toBe('claude-sonnet-4-6');
+        expect(body.response_format).toEqual({ type: 'json_object' });
+    });
+
+    it('parses JSON responses wrapped in markdown code fences', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                choices: [
+                    {
+                        message: {
+                            content: '```json\n{"translated":"수정된 번역"}\n```',
+                        },
+                    },
+                ],
+            }),
+        } as Response);
+
         const result = await postprocessWithLlm('hello', '안녕 draft');
-        expect(result.translated).toBe('안녕 draft');
-        expect(result.degraded).toBe(true);
-        expect(fetch).not.toHaveBeenCalled();
+
+        expect(result).toEqual({ translated: '수정된 번역' });
+    });
+
+    it('invalid JSON response returns the initial draft and marks invalid', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ choices: [{ message: { content: 'plain text' } }] }),
+        } as Response);
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+        const result = await postprocessWithLlm('hello', '안녕 draft');
+
+        expect(result).toEqual({ translated: '안녕 draft', invalid: true });
         expect(warnSpy).toHaveBeenCalledOnce();
     });
 
-    it('fetch throws network error → returns DeepL draft + degraded + console.warn', async () => {
-        vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'));
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-        const result = await postprocessWithLlm('hello', '안녕 draft');
-        expect(result.translated).toBe('안녕 draft');
-        expect(result.degraded).toBe(true);
-        expect(warnSpy).toHaveBeenCalledOnce();
-    });
-
-    it('fetch returns non-ok status → returns DeepL draft + degraded + console.warn', async () => {
+    it('request failure returns the initial draft and marks invalid', async () => {
         vi.mocked(fetch).mockResolvedValueOnce({ ok: false, status: 500 } as Response);
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
         const result = await postprocessWithLlm('hello', '안녕 draft');
-        expect(result.translated).toBe('안녕 draft');
-        expect(result.degraded).toBe(true);
+
+        expect(result).toEqual({ translated: '안녕 draft', invalid: true });
         expect(warnSpy).toHaveBeenCalledOnce();
     });
 
-    it('success case → returns LLM-corrected translation without degraded', async () => {
+    it('includes MQM error feedback in the request body', async () => {
         vi.mocked(fetch).mockResolvedValueOnce({
             ok: true,
-            json: async () => ({ choices: [{ message: { content: '안녕하세요 수정됨' } }] }),
-        } as Response);
-        const result = await postprocessWithLlm('hello', '안녕 draft');
-        expect(result.translated).toBe('안녕하세요 수정됨');
-        expect(result.degraded).toBeUndefined();
-    });
-
-    it('response wrapped in markdown fences → strips fences', async () => {
-        vi.mocked(fetch).mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({ choices: [{ message: { content: '```\n안녕하세요\n```' } }] }),
-        } as Response);
-        const result = await postprocessWithLlm('hello', '안녕 draft');
-        expect(result.translated).toBe('안녕하세요');
-    });
-
-    it('mqmErrors populated → includes error feedback in request body', async () => {
-        vi.mocked(fetch).mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({ choices: [{ message: { content: '수정된 번역' } }] }),
+            json: async () => ({ choices: [{ message: { content: '{"translated":"수정"}' } }] }),
         } as Response);
 
         await postprocessWithLlm('onClick handler', '클릭 핸들러', [
@@ -79,25 +92,13 @@ describe('postprocessWithLlm', () => {
             },
         ]);
 
-        const [, options] = vi.mocked(fetch).mock.calls[0];
-        const body = JSON.parse((options as RequestInit).body as string) as Record<string, unknown>;
-        const messages = body.messages as { role: string; content: string }[];
-        const userMessage = messages.find((m) => m.role === 'user');
+        const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
+            messages: { role: string; content: string }[];
+        };
+        const userMessage = body.messages.find((m) => m.role === 'user');
         expect(userMessage?.content).toContain('MQM errors to fix');
         expect(userMessage?.content).toContain('onClick');
         expect(userMessage?.content).toContain('클릭');
         expect(userMessage?.content).toContain('must not be translated');
-    });
-
-    it('empty choices → returns DeepL draft + degraded + console.warn', async () => {
-        vi.mocked(fetch).mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({ choices: [] }),
-        } as Response);
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-        const result = await postprocessWithLlm('hello', '안녕 draft');
-        expect(result.translated).toBe('안녕 draft');
-        expect(result.degraded).toBe(true);
-        expect(warnSpy).toHaveBeenCalledOnce();
     });
 });

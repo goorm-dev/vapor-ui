@@ -31,9 +31,19 @@ export class CliError extends Error {
 }
 
 function validateTranslateFlag(input: CliInput): void {
-    if (input.translation?.translate && !process.env['DEEPL_API_KEY']) {
+    if (!input.translation?.translate) {
+        return;
+    }
+
+    if (!process.env['LITELLM_BASE_URL']) {
         throw new CliError(
-            'DEEPL_API_KEY is not set. Set it in your .env file or environment to use --translate.',
+            'LITELLM_BASE_URL is not set. Set it in your .env file or environment to use --translate.',
+        );
+    }
+
+    if (!process.env['LITELLM_API_KEY']) {
+        throw new CliError(
+            'LITELLM_API_KEY is not set. Set it in your .env file or environment to use --translate.',
         );
     }
 }
