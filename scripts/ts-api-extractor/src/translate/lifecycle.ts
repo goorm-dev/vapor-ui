@@ -18,6 +18,23 @@ function hasUnavailable(result: MqmResult): boolean {
     return result.unavailable === true;
 }
 
+function elapsedMs(startedAt: number): number {
+    return Math.max(0, Date.now() - startedAt);
+}
+
+async function measureAsync<T>(
+    log: (message: string) => void,
+    label: string,
+    fn: () => Promise<T>,
+): Promise<T> {
+    const startedAt = Date.now();
+    try {
+        return await fn();
+    } finally {
+        log(`timing: ${label} ${elapsedMs(startedAt)}ms`);
+    }
+}
+
 function qualityGateDisabledOutcome(unit: TranslationUnit, translated: string): TranslationOutcome {
     return {
         id: unit.id,
@@ -44,8 +61,10 @@ export async function processTranslationLifecycle(
         return qualityGateDisabledOutcome(unit, initialTranslation);
     }
 
-    const initialEvaluation = await limit(() =>
-        validateWithMqm(unit.source, initialTranslation, config),
+    const initialEvaluation = await measureAsync(log, `initialMqm ${unit.id}`, () =>
+        limit(() =>
+            validateWithMqm(unit.source, initialTranslation, config, log, `initialMqm ${unit.id}`),
+        ),
     );
     events.push(
         event(
@@ -82,12 +101,16 @@ export async function processTranslationLifecycle(
         };
     }
 
-    const postprocess = await limit(() =>
-        postprocessWithLlm(
-            unit.source,
-            initialTranslation,
-            initialEvaluation.errors,
-            config.llm.postprocessModel,
+    const postprocess = await measureAsync(log, `postprocess ${unit.id}`, () =>
+        limit(() =>
+            postprocessWithLlm(
+                unit.source,
+                initialTranslation,
+                initialEvaluation.errors,
+                config.llm.postprocessModel,
+                log,
+                `postprocess ${unit.id}`,
+            ),
         ),
     );
     events.push(
@@ -112,8 +135,16 @@ export async function processTranslationLifecycle(
         };
     }
 
-    const finalEvaluation = await limit(() =>
-        validateWithMqm(unit.source, postprocess.translated, config),
+    const finalEvaluation = await measureAsync(log, `finalMqm ${unit.id}`, () =>
+        limit(() =>
+            validateWithMqm(
+                unit.source,
+                postprocess.translated,
+                config,
+                log,
+                `finalMqm ${unit.id}`,
+            ),
+        ),
     );
     events.push(
         event(

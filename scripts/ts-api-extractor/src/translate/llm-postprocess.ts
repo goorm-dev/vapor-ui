@@ -1,4 +1,4 @@
-import { callLlm } from '~/translate/llm-client';
+import { callLlm, logLlmMetadata } from '~/translate/llm-client';
 import { parseLlmJson } from '~/translate/llm-json';
 import type { MqmError } from '~/translate/types';
 
@@ -60,6 +60,8 @@ export async function postprocessWithLlm(
     mtOutput: string,
     errors: MqmError[] = [],
     model?: string,
+    log?: (message: string) => void,
+    logLabel = 'postprocess',
 ): Promise<PostprocessResult> {
     const userPrompt = buildRewritePrompt(source, mtOutput, errors);
 
@@ -70,6 +72,7 @@ export async function postprocessWithLlm(
         ],
         { model, responseFormat: 'json' },
     );
+    logLlmMetadata(log, logLabel, result);
 
     if (!result.content) {
         const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';

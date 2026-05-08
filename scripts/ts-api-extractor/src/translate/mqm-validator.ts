@@ -1,7 +1,7 @@
-import { callLlm } from '~/translate/llm-client';
+import { callLlm, logLlmMetadata } from '~/translate/llm-client';
 import type { MqmCategory, MqmError, MqmResult, TranslationConfig } from '~/translate/types';
 
-const SYSTEM_PROMPT = `You are a design-system documentation translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
+export const MQM_EVALUATOR_PROMPT = `You are a design-system documentation translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
 
 Evaluate the Korean translation of a JSDoc comment using the MQM taxonomy below. For each error, return the exact substring from the source (source_span) and the exact substring from the translation (mt_span) that contains the error.
 
@@ -33,7 +33,9 @@ Severity:
 - minor: lowers expression quality but does not block understanding. Examples: awkward literal phrasing, typo, style inconsistency.
 
 Write explanation in Korean. Keep category and severity values in English exactly as specified.
-If no errors exist, return errors as an empty array.
+If no errors exist, return errors as an empty array.`;
+
+const SYSTEM_PROMPT = `${MQM_EVALUATOR_PROMPT}
 
 Respond with EXACTLY this JSON shape and nothing else:
 {"verdict":"PASS","errors":[]}
@@ -64,7 +66,7 @@ const MQM_CATEGORIES: Set<MqmCategory> = new Set([
 
 const MQM_SEVERITIES = new Set<MqmError['severity']>(['minor', 'major', 'critical']);
 
-function isMqmError(value: unknown): value is MqmError {
+export function isMqmError(value: unknown): value is MqmError {
     if (typeof value !== 'object' || value === null) {
         return false;
     }
@@ -87,6 +89,8 @@ export async function validateWithMqm(
     source: string,
     translated: string,
     config: TranslationConfig,
+    log?: (message: string) => void,
+    logLabel = 'mqm',
 ): Promise<MqmResult> {
     if (!config.validation.mqm.enabled) {
         return unavailableResult();
@@ -104,6 +108,7 @@ export async function validateWithMqm(
             responseFormat: 'json',
         },
     );
+    logLlmMetadata(log, logLabel, result);
 
     if (!result.content) {
         const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';

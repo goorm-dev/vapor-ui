@@ -53,6 +53,25 @@ describe('postprocessWithLlm', () => {
         expect(result).toEqual({ translated: '수정된 번역' });
     });
 
+    it('logs LiteLLM usage and response cost metadata when provided', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            headers: new Headers({ 'x-litellm-response-cost': '0.0015' }),
+            json: async () => ({
+                model: 'claude-sonnet-4-6',
+                choices: [{ message: { content: '{"translated":"수정된 번역"}' } }],
+                usage: { prompt_tokens: 180, completion_tokens: 20, total_tokens: 200 },
+            }),
+        } as Response);
+        const log = vi.fn();
+
+        await postprocessWithLlm('hello', '안녕 draft', [], 'claude-sonnet-4-6', log);
+
+        expect(log).toHaveBeenCalledWith(
+            'llm: postprocess model=claude-sonnet-4-6 promptTokens=180 completionTokens=20 totalTokens=200 cost=$0.001500',
+        );
+    });
+
     it('invalid JSON response returns the initial draft and marks invalid', async () => {
         vi.mocked(fetch).mockResolvedValueOnce({
             ok: true,

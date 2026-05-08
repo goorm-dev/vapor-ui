@@ -1,4 +1,4 @@
-import { callLlm } from '~/translate/llm-client';
+import { callLlm, logLlmMetadata } from '~/translate/llm-client';
 import { parseLlmJson } from '~/translate/llm-json';
 import type { TranslationConfig, TranslationUnit } from '~/translate/types';
 
@@ -77,6 +77,7 @@ export async function translateComponentUnits(
     componentName: string,
     units: TranslationUnit[],
     config: TranslationConfig,
+    log?: (message: string) => void,
 ): Promise<Map<string, string>> {
     if (units.length === 0) {
         return new Map();
@@ -102,6 +103,7 @@ export async function translateComponentUnits(
             responseFormat: 'json',
         },
     );
+    logLlmMetadata(log, `translation ${componentName}`, result);
 
     if (!result.content) {
         const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';

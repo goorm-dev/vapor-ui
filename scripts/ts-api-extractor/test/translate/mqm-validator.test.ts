@@ -62,6 +62,31 @@ describe('validateWithMqm', () => {
         expect(body.messages[0].content).toContain('verdict');
     });
 
+    it('logs LiteLLM usage and response cost metadata when provided', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            headers: new Headers({ 'x-litellm-response-cost': '0.0042' }),
+            json: async () => ({
+                model: 'claude-opus-4-7',
+                choices: [{ message: { content: '{"verdict":"PASS","errors":[]}' } }],
+                usage: { prompt_tokens: 300, completion_tokens: 40, total_tokens: 340 },
+            }),
+        } as Response);
+        const log = vi.fn();
+
+        await validateWithMqm(
+            'breadcrumb item',
+            'Breadcrumb 항목',
+            baseConfig,
+            log,
+            'initialMqm component.description',
+        );
+
+        expect(log).toHaveBeenCalledWith(
+            'llm: initialMqm component.description model=claude-opus-4-7 promptTokens=300 completionTokens=40 totalTokens=340 cost=$0.004200',
+        );
+    });
+
     it('valid FAIL response returns FAIL with errors', async () => {
         const failPayload = {
             verdict: 'FAIL',

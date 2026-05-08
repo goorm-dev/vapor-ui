@@ -3,15 +3,97 @@ export interface LlmMessage {
     content: string;
 }
 
+export interface LlmUsage {
+    promptTokens?: number;
+    completionTokens?: number;
+    totalTokens?: number;
+}
+
 export interface LlmCallResult {
     content: string | null;
     error?: string;
+    model?: string;
+    responseCost?: number;
     statusCode?: number;
+    usage?: LlmUsage;
 }
 
 export interface LlmCallOptions {
     model?: string;
     responseFormat?: 'text' | 'json';
+}
+
+function readNumber(value: unknown): number | undefined {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    if (typeof value === 'string' && value.trim().length > 0) {
+        const parsed = Number(value);
+        if (Number.isFinite(parsed)) return parsed;
+    }
+    return undefined;
+}
+
+function readUsage(data: Record<string, unknown>): LlmUsage | undefined {
+    const usage = data['usage'];
+    if (typeof usage !== 'object' || usage === null) return undefined;
+
+    const record = usage as Record<string, unknown>;
+    const result: LlmUsage = {
+        promptTokens: readNumber(record['prompt_tokens']),
+        completionTokens: readNumber(record['completion_tokens']),
+        totalTokens: readNumber(record['total_tokens']),
+    };
+
+    return Object.values(result).some((value) => value !== undefined) ? result : undefined;
+}
+
+function readResponseCost(response: Response, data: Record<string, unknown>): number | undefined {
+    const headers = (response as Response & { headers?: Headers }).headers;
+    const headerCost = readNumber(headers?.get('x-litellm-response-cost'));
+    if (headerCost !== undefined) return headerCost;
+
+    const bodyCost = readNumber(data['response_cost']);
+    if (bodyCost !== undefined) return bodyCost;
+
+    const hiddenParams = data['_hidden_params'];
+    if (typeof hiddenParams === 'object' && hiddenParams !== null) {
+        return readNumber((hiddenParams as Record<string, unknown>)['response_cost']);
+    }
+
+    return undefined;
+}
+
+export function formatLlmMetadata(label: string, result: LlmCallResult): string | undefined {
+    if (!result.usage && result.responseCost === undefined) {
+        return undefined;
+    }
+
+    const parts = [`llm: ${label}`];
+    if (result.model) parts.push(`model=${result.model}`);
+    if (result.usage?.promptTokens !== undefined) {
+        parts.push(`promptTokens=${result.usage.promptTokens}`);
+    }
+    if (result.usage?.completionTokens !== undefined) {
+        parts.push(`completionTokens=${result.usage.completionTokens}`);
+    }
+    if (result.usage?.totalTokens !== undefined) {
+        parts.push(`totalTokens=${result.usage.totalTokens}`);
+    }
+    if (result.responseCost !== undefined) {
+        parts.push(`cost=$${result.responseCost.toFixed(6)}`);
+    }
+
+    return parts.join(' ');
+}
+
+export function logLlmMetadata(
+    log: ((message: string) => void) | undefined,
+    label: string,
+    result: LlmCallResult,
+): void {
+    if (!log) return;
+
+    const message = formatLlmMetadata(label, result);
+    if (message) log(message);
 }
 
 export async function callLlm(
@@ -61,12 +143,21 @@ export async function callLlm(
 
         const data = (await response.json()) as {
             choices?: { message?: { content?: unknown } }[];
-        };
+        } & Record<string, unknown>;
         const raw = data.choices?.[0]?.message?.content;
         if (typeof raw !== 'string') {
             return { content: null, error: 'Unexpected response shape' };
         }
-        return { content: raw };
+
+        return {
+            content: raw,
+            model:
+                typeof data['model'] === 'string'
+                    ? data['model']
+                    : (options.model ?? 'claude-sonnet-4-6'),
+            responseCost: readResponseCost(response, data),
+            usage: readUsage(data),
+        };
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         return { content: null, error: `fetch failed: ${message}` };

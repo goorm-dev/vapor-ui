@@ -48,4 +48,36 @@ describe('callLlm', () => {
         };
         expect(body.response_format).toBeUndefined();
     });
+
+    it('returns LiteLLM usage and response cost metadata', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            headers: new Headers({ 'x-litellm-response-cost': '0.001234' }),
+            json: async () => ({
+                model: 'claude-sonnet-4-6',
+                choices: [{ message: { content: '{"ok":true}' } }],
+                usage: {
+                    prompt_tokens: 120,
+                    completion_tokens: 30,
+                    total_tokens: 150,
+                },
+            }),
+        } as Response);
+
+        const result = await callLlm([{ role: 'user', content: 'hello' }], {
+            model: 'claude-sonnet-4-6',
+            responseFormat: 'json',
+        });
+
+        expect(result).toMatchObject({
+            content: '{"ok":true}',
+            model: 'claude-sonnet-4-6',
+            responseCost: 0.001234,
+            usage: {
+                promptTokens: 120,
+                completionTokens: 30,
+                totalTokens: 150,
+            },
+        });
+    });
 });

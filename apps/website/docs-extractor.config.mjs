@@ -12,7 +12,7 @@ export default defineConfig({
     translation: {
         llm: {
             translationModel: 'claude-sonnet-4-6',
-            postprocessModel: 'claude-sonnet-4-6',
+            postprocessModel: 'claude-opus-4-7',
             validationModel: 'claude-opus-4-7',
         },
     },

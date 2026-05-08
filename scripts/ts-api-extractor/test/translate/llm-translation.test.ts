@@ -103,6 +103,42 @@ ${JSON.stringify({
         );
     });
 
+    it('logs LiteLLM usage and response cost metadata when provided', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            headers: new Headers({ 'x-litellm-response-cost': '0.0025' }),
+            json: async () => ({
+                model: 'claude-sonnet-4-6',
+                choices: [
+                    {
+                        message: {
+                            content: JSON.stringify({
+                                translations: [
+                                    {
+                                        id: 'component.description',
+                                        translated: 'Button 컴포넌트입니다.',
+                                    },
+                                    {
+                                        id: 'props[0].size.description',
+                                        translated: '크기를 지정합니다.',
+                                    },
+                                ],
+                            }),
+                        },
+                    },
+                ],
+                usage: { prompt_tokens: 200, completion_tokens: 50, total_tokens: 250 },
+            }),
+        } as Response);
+        const log = vi.fn();
+
+        await translateComponentUnits('Button', units, config, log);
+
+        expect(log).toHaveBeenCalledWith(
+            'llm: translation Button model=claude-sonnet-4-6 promptTokens=200 completionTokens=50 totalTokens=250 cost=$0.002500',
+        );
+    });
+
     it('throws when an expected id is missing', async () => {
         mockFetchContent(
             JSON.stringify({
