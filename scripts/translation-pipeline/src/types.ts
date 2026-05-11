@@ -69,7 +69,10 @@ export type TranslationOutcomeReason =
     | 'postprocess_response_invalid'
     | 'final_quality_gate_passed'
     | 'final_quality_gate_failed'
-    | 'final_quality_gate_unavailable';
+    | 'final_quality_gate_unavailable'
+    | 'batch_mqm_failed'
+    | 'batch_postprocess_failed'
+    | 'batch_final_mqm_failed';
 
 export interface TranslationEvent {
     stage: 'cache' | 'translation' | 'mqm' | 'postprocess';

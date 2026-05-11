@@ -1,12 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as cacheModule from '~/cache/cache';
-import * as postprocessModule from '~/postprocess/postprocess';
 import * as clientModule from '~/translation/client';
 import * as translationModule from '~/translation/translate';
 import { translatePropsInfo } from '~/translator/translator';
 import type { TranslatableDoc, TranslationConfig } from '~/types';
-import * as mqmModule from '~/validation/validator';
 
 const baseConfig: TranslationConfig = {
     skipCache: false,
@@ -41,7 +39,6 @@ function mockTranslations(translations: Record<string, string>): void {
 function mockBatchMqmPass(): void {
     vi.spyOn(clientModule, 'callLlm').mockImplementation(async (messages) => {
         const userContent = messages.find((m) => m.role === 'user')?.content ?? '';
-        // batch MQM — user message is JSON with units array
         try {
             const parsed = JSON.parse(userContent) as { units?: { id: string }[] };
             if (Array.isArray(parsed.units)) {
@@ -68,10 +65,6 @@ describe('translatePropsInfo', () => {
     beforeEach(() => {
         vi.spyOn(cacheModule, 'loadCache').mockReturnValue(new Map());
         vi.spyOn(cacheModule, 'saveCache').mockImplementation(() => undefined);
-        vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({ verdict: 'PASS', errors: [] });
-        vi.spyOn(postprocessModule, 'postprocessWithLlm').mockResolvedValue({
-            translated: '수정된 번역',
-        });
         mockTranslations({
             'component.description': 'Button 컴포넌트입니다.',
             'props[0].onClick.description': '클릭 handler callback입니다.',
@@ -111,7 +104,6 @@ describe('translatePropsInfo', () => {
             ],
             baseConfig,
         );
-        expect(mqmModule.validateWithMqm).not.toHaveBeenCalled();
         expect(result.props[0].description).toBe('Button 컴포넌트입니다.');
         expect(result.props[0].props[0].description).toBe('캐시된 콜백 설명입니다.');
     });
@@ -154,7 +146,6 @@ describe('translatePropsInfo', () => {
         vi.spyOn(clientModule, 'callLlm').mockImplementation(async () => {
             llmCallCount++;
             if (llmCallCount === 1) {
-                // 초기 batch MQM: component.description PASS, onClick FAIL
                 return {
                     content: JSON.stringify({
                         evaluations: [
@@ -172,7 +163,6 @@ describe('translatePropsInfo', () => {
                 };
             }
             if (llmCallCount === 2) {
-                // batch postprocess: 수정된 번역 반환
                 return {
                     content: JSON.stringify({
                         translations: [
@@ -187,7 +177,6 @@ describe('translatePropsInfo', () => {
                     cost: 0,
                 };
             }
-            // 최종 batch MQM: onClick 여전히 FAIL
             return {
                 content: JSON.stringify({
                     evaluations: [
@@ -216,57 +205,60 @@ describe('translatePropsInfo', () => {
         ]);
     });
 
-    it('keeps initial translation as unverified when postprocess response is invalid', async () => {
-        // batch MQM returns FAIL, batch postprocess returns invalid → fallback to unit lifecycle
-        vi.spyOn(clientModule, 'callLlm').mockImplementation(async (messages) => {
-            const userContent = messages.find((m) => m.role === 'user')?.content ?? '';
-            try {
-                const parsed = JSON.parse(userContent) as { units?: unknown[] };
-                if (Array.isArray(parsed.units)) {
-                    return {
-                        content: JSON.stringify({
-                            evaluations: [
-                                {
-                                    id: 'component.description',
-                                    verdict: 'FAIL',
-                                    errors: [
-                                        {
-                                            category: 'Accuracy/Mistranslation',
-                                            severity: 'major',
-                                            source_span: 'A button component.',
-                                            mt_span: 'Button 컴포넌트',
-                                            explanation: '문장 종결이 부자연스럽습니다.',
-                                        },
-                                    ],
-                                },
-                            ],
-                        }),
-                        inputTokens: 0,
-                        outputTokens: 0,
-                        cost: 0,
-                    };
-                }
-                // postprocess returns invalid JSON
-                return { content: 'invalid', inputTokens: 0, outputTokens: 0, cost: 0 };
-            } catch {
-                return { content: '{}', inputTokens: 0, outputTokens: 0, cost: 0 };
+    it('marks all units as degraded with batch_mqm_failed when batch MQM response is invalid', async () => {
+        vi.spyOn(clientModule, 'callLlm').mockResolvedValue({
+            content: 'not-valid-json',
+        });
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+        const result = await translatePropsInfo(
+            [{ name: 'Button', description: 'A button component.', props: [] }],
+            baseConfig,
+        );
+
+        expect(result.componentReports[0]).toMatchObject({
+            verified: 0,
+            unverified: 1,
+        });
+        expect(result.componentReports[0].unverifiedOutcomes[0]).toMatchObject({
+            reason: 'batch_mqm_failed',
+            assurance: 'unverified',
+            reportable: true,
+        });
+        expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('batch failure summary'));
+    });
+
+    it('marks failed units as degraded with batch_postprocess_failed when batch postprocess response is invalid', async () => {
+        let llmCallCount = 0;
+        vi.spyOn(clientModule, 'callLlm').mockImplementation(async () => {
+            llmCallCount++;
+            if (llmCallCount === 1) {
+                // 초기 batch MQM: FAIL
+                return {
+                    content: JSON.stringify({
+                        evaluations: [
+                            {
+                                id: 'component.description',
+                                verdict: 'FAIL',
+                                errors: [
+                                    {
+                                        category: 'Accuracy/Mistranslation',
+                                        severity: 'major',
+                                        source_span: 'A button component.',
+                                        mt_span: 'Button 컴포넌트',
+                                        explanation: '부자연스럽습니다.',
+                                    },
+                                ],
+                            },
+                        ],
+                    }),
+                    inputTokens: 0,
+                    outputTokens: 0,
+                    cost: 0,
+                };
             }
-        });
-        vi.spyOn(postprocessModule, 'postprocessWithLlm').mockResolvedValue({
-            translated: 'Button 컴포넌트입니다.',
-            invalid: true,
-        });
-        vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({
-            verdict: 'FAIL',
-            errors: [
-                {
-                    category: 'Accuracy/Mistranslation',
-                    severity: 'major',
-                    source_span: 'A button component.',
-                    mt_span: 'Button 컴포넌트',
-                    explanation: '문장 종결이 부자연스럽습니다.',
-                },
-            ],
+            // batch postprocess: invalid JSON
+            return { content: 'not-valid-json', inputTokens: 0, outputTokens: 0, cost: 0 };
         });
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
@@ -275,32 +267,12 @@ describe('translatePropsInfo', () => {
             baseConfig,
         );
 
-        expect(result.props[0].description).toBe('Button 컴포넌트입니다.');
         expect(result.componentReports[0].unverifiedOutcomes[0]).toMatchObject({
-            reason: 'postprocess_response_invalid',
-            source: 'A button component.',
-            translated: 'Button 컴포넌트입니다.',
+            reason: 'batch_postprocess_failed',
+            assurance: 'unverified',
             reportable: true,
+            source: 'A button component.',
         });
-    });
-
-    it('falls back to the per-unit lifecycle when batch MQM response is invalid', async () => {
-        vi.spyOn(clientModule, 'callLlm').mockResolvedValue({
-            content: 'not-valid-json',
-        });
-        vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({ verdict: 'PASS', errors: [] });
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-
-        const result = await translatePropsInfo(sampleProps.slice(0, 1), baseConfig);
-
-        expect(mqmModule.validateWithMqm).toHaveBeenCalledTimes(2);
-        expect(result.componentReports[0]).toMatchObject({
-            verified: 2,
-            unverified: 0,
-        });
-        expect(warnSpy).toHaveBeenCalledWith(
-            expect.stringContaining('[i18n] batch fallback summary: 1 chunk(s) fell back.'),
-        );
     });
 
     it('lets component B hit the cache produced earlier in the run by component A', async () => {
