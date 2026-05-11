@@ -1,169 +1,69 @@
 /**
  * Prop filter unit tests
  */
-import type { FilterConfig } from '~/models/config';
 import type { ParsedComponent, PropSource } from '~/models/pipeline';
 import { filterParsedComponents, shouldIncludeProp } from '~/stages/filter';
 
-const BASE_OPTIONS: FilterConfig = {
-    filterExternal: false,
-    filterHtml: false,
-    filterSprinkles: false,
-};
-
 describe('shouldIncludeProp', () => {
-    describe('includeSet priority', () => {
-        it('always includes props present in includeSet', () => {
-            const result = shouldIncludeProp(
-                'className',
-                'react' as PropSource,
-                { ...BASE_OPTIONS, filterExternal: true },
-                new Set(['className']),
-                new Set(),
-            );
-            expect(result).toBe(true);
+    describe('include whitelist priority', () => {
+        it('includeSet에 있는 prop은 항상 포함된다', () => {
+            expect(shouldIncludeProp('className', 'react' as PropSource, new Set(['className']))).toBe(true);
+        });
+
+        it('includeSet에 있는 HTML attribute도 포함된다', () => {
+            expect(shouldIncludeProp('aria-label', 'project' as PropSource, new Set(['aria-label']))).toBe(true);
         });
     });
 
-    describe('includeHtml whitelist', () => {
-        it('includes whitelisted html-like props even when filterHtml is on', () => {
-            const result = shouldIncludeProp(
-                'ariaLabel',
-                'project' as PropSource,
-                { ...BASE_OPTIONS, filterHtml: true, includeHtml: ['ariaLabel'] },
-                new Set(),
-                new Set(['ariaLabel']),
-            );
-            expect(result).toBe(true);
+    describe('external declaration filtering (always on)', () => {
+        it('react 출처 prop은 제외된다', () => {
+            expect(shouldIncludeProp('onClick', 'react' as PropSource, new Set())).toBe(false);
+        });
+
+        it('dom 출처 prop은 제외된다', () => {
+            expect(shouldIncludeProp('id', 'dom' as PropSource, new Set())).toBe(false);
+        });
+
+        it('external 출처 prop은 제외된다', () => {
+            expect(shouldIncludeProp('someExternalProp', 'external' as PropSource, new Set())).toBe(false);
+        });
+
+        it('project 출처 prop은 포함된다', () => {
+            expect(shouldIncludeProp('size', 'project' as PropSource, new Set())).toBe(true);
         });
     });
 
-    describe('external declaration filtering', () => {
-        it('excludes props declared in node_modules/@types/react when filterExternal is on', () => {
-            const result = shouldIncludeProp(
-                'onClick',
-                'react' as PropSource,
-                { ...BASE_OPTIONS, filterExternal: true },
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(false);
+    describe('HTML attribute filtering (always on)', () => {
+        it('data-* prop은 제외된다', () => {
+            expect(shouldIncludeProp('data-testid', 'project' as PropSource, new Set())).toBe(false);
         });
 
-        it('keeps props declared in node_modules/@types/react when filterExternal is off', () => {
-            const result = shouldIncludeProp(
-                'onClick',
-                'react' as PropSource,
-                { ...BASE_OPTIONS, filterExternal: false },
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(true);
-        });
-
-        it('keeps project-level props when filterExternal is on', () => {
-            const result = shouldIncludeProp(
-                'size',
-                'project' as PropSource,
-                { ...BASE_OPTIONS, filterExternal: true },
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(true);
+        it('aria-* prop은 제외된다', () => {
+            expect(shouldIncludeProp('aria-hidden', 'project' as PropSource, new Set())).toBe(false);
         });
     });
 
-    describe('HTML attribute filtering', () => {
-        it('excludes data-* props when filterHtml is on', () => {
-            const result = shouldIncludeProp(
-                'data-testid',
-                'project' as PropSource,
-                { ...BASE_OPTIONS, filterHtml: true },
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(false);
+    describe('sprinkles filtering (always on)', () => {
+        it('sprinkles 출처 prop은 제외된다', () => {
+            expect(shouldIncludeProp('color', 'sprinkles' as PropSource, new Set())).toBe(false);
         });
 
-        it('excludes aria-* props when filterHtml is on', () => {
-            const result = shouldIncludeProp(
-                'aria-hidden',
-                'project' as PropSource,
-                { ...BASE_OPTIONS, filterHtml: true },
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(false);
+        it('deprecated CSS prop은 제외된다', () => {
+            expect(shouldIncludeProp('$css', 'project' as PropSource, new Set())).toBe(false);
         });
 
-        it('keeps data-* props when filterHtml is off', () => {
-            const result = shouldIncludeProp(
-                'data-testid',
-                'project' as PropSource,
-                { ...BASE_OPTIONS, filterHtml: false },
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(true);
-        });
-    });
-
-    describe('sprinkles filtering', () => {
-        it('excludes props declared in sprinkles.css.ts when filterSprinkles is on', () => {
-            const result = shouldIncludeProp(
-                'color',
-                'sprinkles' as PropSource,
-                { ...BASE_OPTIONS, filterSprinkles: true },
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(false);
-        });
-
-        it('excludes deprecated css props when filterSprinkles is on', () => {
-            const result = shouldIncludeProp(
-                '$css',
-                'project' as PropSource,
-                { ...BASE_OPTIONS, filterSprinkles: true },
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(false);
-        });
-
-        it('keeps sprinkles-path props when filterSprinkles is off', () => {
-            const result = shouldIncludeProp(
-                'color',
-                'sprinkles' as PropSource,
-                { ...BASE_OPTIONS, filterSprinkles: false },
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(true);
+        it('padding은 deprecated CSS prop으로 제외된다', () => {
+            expect(shouldIncludeProp('padding', 'project' as PropSource, new Set())).toBe(false);
         });
     });
 
     describe('regular props', () => {
-        it('includes regular project-level props', () => {
-            const result = shouldIncludeProp(
-                'disabled',
-                'project' as PropSource,
-                BASE_OPTIONS,
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(true);
+        it('일반 project prop은 포함된다', () => {
+            expect(shouldIncludeProp('disabled', 'project' as PropSource, new Set())).toBe(true);
         });
 
-        it('includes props with undefined declarationFilePath', () => {
-            const result = shouldIncludeProp(
-                'size',
-                'project' as PropSource,
-                BASE_OPTIONS,
-                new Set(),
-                new Set(),
-            );
-            expect(result).toBe(true);
+        it('variant prop은 포함된다', () => {
+            expect(shouldIncludeProp('variant', 'project' as PropSource, new Set())).toBe(true);
         });
     });
 });
@@ -174,72 +74,40 @@ describe('filterParsedComponents', () => {
         props,
     });
 
-    it('filters out external props when filterExternal is on', () => {
+    it('external prop은 제외된다', () => {
         const components: ParsedComponent[] = [
             makeComponent('Button', [
-                {
-                    name: 'size',
-                    typeString: 'string',
-                    isOptional: true,
-                    source: 'project',
-                },
-                {
-                    name: 'onClick',
-                    typeString: '() => void',
-                    isOptional: true,
-                    source: 'react',
-                },
+                { name: 'size', typeString: 'string', isOptional: true, source: 'project' },
+                { name: 'onClick', typeString: '() => void', isOptional: true, source: 'react' },
             ]),
         ];
 
-        const result = filterParsedComponents(components, {
-            ...BASE_OPTIONS,
-            filterExternal: true,
-        });
+        const result = filterParsedComponents(components, {});
 
         expect(result[0].props).toHaveLength(1);
         expect(result[0].props[0].name).toBe('size');
     });
 
-    it('keeps all props when all filters are off', () => {
+    it('include에 있는 prop은 external이어도 포함된다', () => {
         const components: ParsedComponent[] = [
             makeComponent('Button', [
-                {
-                    name: 'size',
-                    typeString: 'string',
-                    isOptional: true,
-                    source: 'project',
-                },
-                {
-                    name: 'aria-label',
-                    typeString: 'string',
-                    isOptional: true,
-                    source: 'project',
-                },
-                {
-                    name: 'padding',
-                    typeString: 'string',
-                    isOptional: true,
-                    source: 'sprinkles',
-                },
+                { name: 'className', typeString: 'string', isOptional: true, source: 'react' },
+                { name: 'onClick', typeString: '() => void', isOptional: true, source: 'react' },
             ]),
         ];
 
-        const result = filterParsedComponents(components, BASE_OPTIONS);
+        const result = filterParsedComponents(components, { include: ['className'] });
 
-        expect(result[0].props).toHaveLength(3);
+        expect(result[0].props).toHaveLength(1);
+        expect(result[0].props[0].name).toBe('className');
     });
 
-    it('preserves component name and description', () => {
+    it('컴포넌트 이름과 description이 보존된다', () => {
         const components: ParsedComponent[] = [
-            {
-                name: 'Button',
-                description: 'A button component',
-                props: [],
-            },
+            { name: 'Button', description: 'A button component', props: [] },
         ];
 
-        const result = filterParsedComponents(components, BASE_OPTIONS);
+        const result = filterParsedComponents(components, {});
 
         expect(result[0].name).toBe('Button');
         expect(result[0].description).toBe('A button component');

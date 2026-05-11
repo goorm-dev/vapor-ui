@@ -91,11 +91,7 @@ describe('parseSourceFile → transform pipeline', () => {
         const sourceFile = project.addSourceFileAtPath(componentFile);
 
         const parsed = parseSourceFile(sourceFile);
-        const filtered = filterParsedComponents(parsed, {
-            filterExternal: true,
-            filterHtml: true,
-            filterSprinkles: true,
-        });
+        const filtered = filterParsedComponents(parsed, {});
         const models = parsedComponentsToModels(filtered);
         const props = componentsToJson(models);
 
@@ -121,9 +117,6 @@ describe('parseSourceFile → transform pipeline', () => {
 
         const parsed = parseSourceFile(sourceFile);
         const filterConfig: FilterConfig = {
-            filterExternal: false,
-            filterHtml: false,
-            filterSprinkles: false,
             include: ['data-testid'],
         };
         const filtered = filterParsedComponents(parsed, filterConfig);

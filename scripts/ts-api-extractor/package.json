@@ -33,7 +33,6 @@
         "glob": "^10.5.0",
         "lodash-es": "^4.17.23",
         "meow": "^14.1.0",
-        "p-limit": "^7.3.0",
         "ts-morph": "^22.0.0"
     },
     "devDependencies": {

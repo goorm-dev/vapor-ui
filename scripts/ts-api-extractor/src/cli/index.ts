@@ -1,7 +1,8 @@
 import meow from 'meow';
 import path from 'node:path';
 
-import { CliError, resolveRunContext } from '~/cli/options';
+import { CliError } from '~/cli/input';
+import { resolveRunContext } from '~/cli/context';
 import { extract } from '~/extract';
 
 // Load .env from cwd (website app root when running via turbo)
@@ -19,25 +20,19 @@ async function runCli(): Promise<void> {
 
   Options
     --component, -n   Component name to process (default: all components)
-    --config-path     Config file path
-    --translate       Enable translation pipeline (outputs en/ and ko/ subfolders)
-    --skip-cache      Skip translation cache (do not read or write cache)
+    --package, -p     Package name to extract from (default: core)
     --verbose, -v     Enable verbose logging
 
   Examples
     $ ts-api-extractor
     $ ts-api-extractor --component Tabs
-    $ ts-api-extractor --config-path ./docs-extractor.config.mjs
-    $ ts-api-extractor --translate
-    $ ts-api-extractor --translate --skip-cache --verbose
+    $ ts-api-extractor --package hooks
 `,
         {
             importMeta: import.meta,
             flags: {
                 component: { type: 'string', shortFlag: 'n' },
-                configPath: { type: 'string' },
-                translate: { type: 'boolean', default: false },
-                skipCache: { type: 'boolean', default: false },
+                package: { type: 'string', shortFlag: 'p' },
                 verbose: { type: 'boolean', shortFlag: 'v', default: false },
             },
         },
@@ -45,12 +40,8 @@ async function runCli(): Promise<void> {
 
     const resolved = await resolveRunContext({
         component: cli.flags.component,
-        configPath: cli.flags.configPath,
+        package: cli.flags.package,
         verbose: cli.flags.verbose,
-        translation: {
-            translate: cli.flags.translate,
-            skipCache: cli.flags.skipCache,
-        },
     });
 
     await extract(resolved);

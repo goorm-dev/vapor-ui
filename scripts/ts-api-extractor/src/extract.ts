@@ -1,7 +1,6 @@
 import path from 'node:path';
 import { Project } from 'ts-morph';
 
-import { resolveComponentInclude } from '~/config/resolve';
 import type { ExtractorConfig } from '~/config/schema';
 import type { FilterConfig, ParseConfig } from '~/models/config';
 import type { PropsInfoJson } from '~/models/output';
@@ -11,8 +10,6 @@ import { parseSourceFile } from '~/stages/parse';
 import { componentsToJson } from '~/stages/serialize';
 import { parsedComponentsToModels } from '~/stages/transform';
 import { writePropsFiles } from '~/stages/write';
-import { translatePropsInfo } from '~/translate/pipeline';
-import { buildReport, writeReport } from '~/translate/report';
 import { formatFileName } from '~/utils/filename';
 
 export interface ExtractInput {
@@ -26,7 +23,6 @@ export interface ExtractOutput {
     models: ComponentModel[];
     props: PropsInfoJson[];
     writtenFiles: string[];
-    translatedProps?: PropsInfoJson[];
 }
 
 export async function extract(input: ExtractInput): Promise<ExtractOutput> {
@@ -53,11 +49,7 @@ export async function extract(input: ExtractInput): Promise<ExtractOutput> {
                 verbose: config.verbose,
             };
             const filterConfig: FilterConfig = {
-                filterExternal: config.all ? false : config.filterExternal,
-                filterHtml: config.all ? false : config.filterHtml,
-                filterSprinkles: config.all ? false : config.filterSprinkles,
-                includeHtml: config.includeHtml,
-                include: resolveComponentInclude(filePath, config),
+                include: config.include,
             };
 
             const parsedComponents = parseSourceFile(sourceFile, parseConfig);
@@ -76,42 +68,17 @@ export async function extract(input: ExtractInput): Promise<ExtractOutput> {
 
     console.error(`Done! Extracted ${props.length} components.`);
 
-    let translatedProps: PropsInfoJson[] | undefined;
-    let writtenFiles: string[];
-
-    if (config.translation?.enabled) {
-        // Save original English output to en/ subfolder
-        const enFiles = writePropsFiles(
-            props,
-            outputDir,
-            (prop) => formatFileName(prop.name),
-            'en',
-        );
-        // Translate and save to ko/ subfolder (outputDir passed explicitly, no config mutation)
-        const translateResult = await translatePropsInfo(
-            props,
-            config.translation,
-            outputDir,
-            config.verbose,
-        );
-        translatedProps = translateResult.props;
-        writeReport(buildReport(translateResult.componentReports), outputDir);
-        const koFiles = writePropsFiles(
-            translatedProps,
-            outputDir,
-            (prop) => formatFileName(prop.name),
-            'ko',
-        );
-        writtenFiles = [...enFiles, ...koFiles];
-    } else {
-        writtenFiles = writePropsFiles(props, outputDir, (prop) => formatFileName(prop.name));
-    }
+    const writtenFiles = writePropsFiles(
+        props,
+        outputDir,
+        (prop) => formatFileName(prop.name),
+        'en',
+    );
 
     return {
         parsed,
         models,
         props,
         writtenFiles,
-        translatedProps,
     };
 }

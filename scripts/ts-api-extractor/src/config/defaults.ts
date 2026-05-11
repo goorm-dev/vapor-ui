@@ -20,39 +20,16 @@ function findMonorepoRoot(): string {
 
 const monorepoRoot = findMonorepoRoot();
 
-/**
- * Default extractor configuration.
- *
- * Path defaults are absolute, derived from the monorepo root located via
- * `pnpm-workspace.yaml`. Users may still override any of them in their
- * `docs-extractor.config.mjs`.
- */
+export function resolvePackagePaths(packageName: string): { inputPath: string; tsconfig: string } {
+    return {
+        inputPath: path.join(monorepoRoot, 'packages', packageName, 'src'),
+        tsconfig: path.join(monorepoRoot, 'packages', packageName, 'tsconfig.json'),
+    };
+}
+
 export const defaultExtractorConfig: ExtractorConfig = {
-    inputPath: path.join(monorepoRoot, 'packages/core'),
-    tsconfig: path.join(monorepoRoot, 'packages/core/tsconfig.json'),
-    exclude: [],
-    excludeDefaults: true,
+    ...resolvePackagePaths('core'),
     outputDir: path.join(monorepoRoot, 'apps/website/public/components/generated'),
-    filterExternal: true,
-    filterHtml: true,
-    filterSprinkles: true,
-    includeHtml: ['className'],
-    components: {},
-    all: false,
+    include: ['className', 'style'],
     verbose: false,
-    translation: {
-        enabled: false,
-        skipCache: false,
-        targetLocale: 'ko',
-        llm: {
-            translationModel: 'claude-sonnet-4-6',
-            postprocessModel: 'claude-sonnet-4-6',
-            validationModel: 'claude-opus-4-7',
-        },
-        validation: {
-            mqm: {
-                enabled: true,
-            },
-        },
-    },
 };

@@ -1,42 +1,21 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CliError, resolveRunContext } from '~/cli/options';
-import { loadExtractorConfig } from '~/config/loader';
-import type { ExtractorConfig } from '~/config/schema';
+import { CliError } from '~/cli/input';
+import { resolveRunContext } from '~/cli/context';
 import { findComponentFiles, findFileByComponentName } from '~/stages/scan';
 
-const baseTranslationConfig = {
-    enabled: false,
-    skipCache: false,
-    targetLocale: 'ko' as const,
-    llm: {
-        translationModel: 'claude-sonnet-4-6',
-        validationModel: 'claude-opus-4-7',
-        postprocessModel: 'claude-sonnet-4-6',
-    },
-    validation: { mqm: { enabled: true } },
-};
-
-function makeConfig(overrides: Partial<ExtractorConfig> = {}): ExtractorConfig {
-    return {
-        inputPath: './src/components',
-        tsconfig: './tsconfig.json',
-        exclude: [],
-        excludeDefaults: true,
+vi.mock('~/config/defaults', () => ({
+    defaultExtractorConfig: {
+        inputPath: '.',
+        tsconfig: './package.json',
         outputDir: './dist',
-        filterExternal: true,
-        filterHtml: true,
-        filterSprinkles: true,
-        components: {},
-        all: false,
+        include: ['className', 'style'],
         verbose: false,
-        translation: { ...baseTranslationConfig },
-        ...overrides,
-    };
-}
-
-vi.mock('~/config/loader', () => ({
-    loadExtractorConfig: vi.fn(),
+    },
+    resolvePackagePaths: vi.fn((_packageName: string) => ({
+        inputPath: '.',
+        tsconfig: './package.json',
+    })),
 }));
 
 vi.mock('~/stages/scan', () => ({
@@ -44,84 +23,44 @@ vi.mock('~/stages/scan', () => ({
     findFileByComponentName: vi.fn(),
 }));
 
-const mockedLoadExtractorConfig = vi.mocked(loadExtractorConfig);
 const mockedFindComponentFiles = vi.mocked(findComponentFiles);
 const mockedFindFileByComponentName = vi.mocked(findFileByComponentName);
 
 describe('resolveRunContext', () => {
     beforeEach(() => {
-        vi.stubEnv('LITELLM_BASE_URL', 'https://litellm.internal');
-        vi.stubEnv('LITELLM_API_KEY', 'test-key');
-        mockedLoadExtractorConfig.mockReset();
         mockedFindComponentFiles.mockReset();
         mockedFindFileByComponentName.mockReset();
 
-        // Default: input path & tsconfig point to existing files in cwd
-        mockedLoadExtractorConfig.mockResolvedValue(
-            makeConfig({ inputPath: '.', tsconfig: './package.json' }),
-        );
         mockedFindComponentFiles.mockResolvedValue(['/abs/Button.tsx']);
         mockedFindFileByComponentName.mockReturnValue('/abs/Button.tsx');
     });
 
-    afterEach(() => {
-        vi.unstubAllEnvs();
-    });
-
     describe('flag overrides', () => {
-        it('--translate 플래그가 없으면 translation.enabled를 변경하지 않는다', async () => {
-            const resolved = await resolveRunContext({ translation: { translate: false } });
-            expect(resolved.config.translation?.enabled).toBe(false);
-        });
-
-        it('--translate 플래그가 있고 LiteLLM env가 설정되어 있으면 translation.enabled를 true로 변경한다', async () => {
-            const resolved = await resolveRunContext({ translation: { translate: true } });
-            expect(resolved.config.translation?.enabled).toBe(true);
-        });
-
-        it('--translate 플래그가 있고 LITELLM_BASE_URL이 없으면 CliError를 던진다', async () => {
-            vi.stubEnv('LITELLM_BASE_URL', '');
-            await expect(
-                resolveRunContext({ translation: { translate: true } }),
-            ).rejects.toThrowError(CliError);
-        });
-
-        it('--translate 플래그가 있고 LITELLM_API_KEY가 없으면 CliError를 던진다', async () => {
-            vi.stubEnv('LITELLM_API_KEY', '');
-            await expect(
-                resolveRunContext({ translation: { translate: true } }),
-            ).rejects.toThrowError(CliError);
-        });
-
-        it('CliError 메시지에 LiteLLM env 이름이 포함된다', async () => {
-            vi.stubEnv('LITELLM_API_KEY', '');
-            await expect(
-                resolveRunContext({ translation: { translate: true } }),
-            ).rejects.toThrowError(/LITELLM_API_KEY/);
-        });
-
-        it('--skip-cache 플래그가 있으면 translation.skipCache를 true로 변경한다', async () => {
-            const resolved = await resolveRunContext({ translation: { skipCache: true } });
-            expect(resolved.config.translation?.skipCache).toBe(true);
-        });
-
         it('--verbose 플래그가 있으면 config.verbose를 true로 변경한다', async () => {
             const resolved = await resolveRunContext({ verbose: true });
             expect(resolved.config.verbose).toBe(true);
         });
 
-        it('loader가 반환한 원본 config 객체를 mutate하지 않는다', async () => {
-            const loaded = makeConfig({ inputPath: '.' });
-            mockedLoadExtractorConfig.mockResolvedValue(loaded);
+        it('defaultExtractorConfig 원본 객체를 mutate하지 않는다', async () => {
+            const { defaultExtractorConfig } = await import('~/config/defaults');
+            const originalVerbose = defaultExtractorConfig.verbose;
 
-            await resolveRunContext({
-                translation: { translate: true, skipCache: true },
-                verbose: true,
-            });
+            await resolveRunContext({ verbose: true });
 
-            expect(loaded.verbose).toBe(false);
-            expect(loaded.translation?.enabled).toBe(false);
-            expect(loaded.translation?.skipCache).toBe(false);
+            expect(defaultExtractorConfig.verbose).toBe(originalVerbose);
+        });
+    });
+
+    describe('--package flag', () => {
+        it('--package가 없으면 defaultExtractorConfig의 inputPath를 사용한다', async () => {
+            const resolved = await resolveRunContext({});
+            expect(resolved.config.inputPath).toBe('.');
+        });
+
+        it('--package hooks이면 resolvePackagePaths가 호출된다', async () => {
+            const { resolvePackagePaths } = await import('~/config/defaults');
+            await resolveRunContext({ package: 'hooks' });
+            expect(vi.mocked(resolvePackagePaths)).toHaveBeenCalledWith('hooks');
         });
     });
 
@@ -159,11 +98,13 @@ describe('resolveRunContext', () => {
         });
 
         it('tsconfig 파일이 존재하지 않으면 CliError를 던진다', async () => {
-            mockedLoadExtractorConfig.mockResolvedValue(
-                makeConfig({ inputPath: '.', tsconfig: './does-not-exist.json' }),
-            );
+            const { resolvePackagePaths } = await import('~/config/defaults');
+            vi.mocked(resolvePackagePaths).mockReturnValueOnce({
+                inputPath: '.',
+                tsconfig: './does-not-exist.json',
+            });
 
-            await expect(resolveRunContext({})).rejects.toThrowError(/tsconfig/i);
+            await expect(resolveRunContext({ package: 'fake' })).rejects.toThrowError(/tsconfig/i);
         });
     });
 });

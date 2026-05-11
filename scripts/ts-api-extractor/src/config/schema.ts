@@ -1,35 +1,14 @@
 import { mergeWith } from 'lodash-es';
 
-import type { TranslationConfig } from '~/translate/types';
-
-export interface ComponentExtractConfig {
-    include?: string[];
-}
-
 export interface ExtractorConfig {
     inputPath: string;
     tsconfig: string;
-    exclude: string[];
-    excludeDefaults: boolean;
     outputDir: string;
-    filterExternal: boolean;
-    filterHtml: boolean;
-    filterSprinkles: boolean;
-    includeHtml?: string[];
-    components: Record<string, ComponentExtractConfig>;
-    all: boolean;
+    include: string[];
     verbose: boolean;
-    translation: TranslationConfig;
 }
 
-type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
-
-export type PartialExtractorConfig = Partial<
-    Omit<ExtractorConfig, 'components' | 'translation'> & {
-        components: Record<string, ComponentExtractConfig>;
-        translation: DeepPartial<TranslationConfig>;
-    }
->;
+export type PartialExtractorConfig = Partial<ExtractorConfig>;
 
 function assertStringArray(name: string, value: unknown): asserts value is string[] {
     if (!Array.isArray(value) || value.some((item) => typeof item !== 'string')) {
@@ -47,105 +26,15 @@ export function validatePartialConfig(config: PartialExtractorConfig): void {
     if (config.outputDir !== undefined && typeof config.outputDir !== 'string') {
         throw new Error('Invalid outputDir: expected string');
     }
-    if (config.exclude !== undefined) assertStringArray('exclude', config.exclude);
-    if (config.includeHtml !== undefined) assertStringArray('includeHtml', config.includeHtml);
+    if (config.include !== undefined) assertStringArray('include', config.include);
 
-    if (config.excludeDefaults !== undefined && typeof config.excludeDefaults !== 'boolean') {
-        throw new Error('Invalid excludeDefaults: expected boolean');
-    }
-    if (config.filterExternal !== undefined && typeof config.filterExternal !== 'boolean') {
-        throw new Error('Invalid filterExternal: expected boolean');
-    }
-    if (config.filterHtml !== undefined && typeof config.filterHtml !== 'boolean') {
-        throw new Error('Invalid filterHtml: expected boolean');
-    }
-    if (config.filterSprinkles !== undefined && typeof config.filterSprinkles !== 'boolean') {
-        throw new Error('Invalid filterSprinkles: expected boolean');
-    }
-    if (config.all !== undefined && typeof config.all !== 'boolean') {
-        throw new Error('Invalid all: expected boolean');
-    }
     if (config.verbose !== undefined && typeof config.verbose !== 'boolean') {
         throw new Error('Invalid verbose: expected boolean');
-    }
-
-    if (config.translation !== undefined) {
-        if (typeof config.translation !== 'object' || config.translation === null) {
-            throw new Error('Invalid translation: expected object');
-        }
-        if (
-            config.translation.enabled !== undefined &&
-            typeof config.translation.enabled !== 'boolean'
-        ) {
-            throw new Error('Invalid translation.enabled: expected boolean');
-        }
-        if (
-            config.translation.targetLocale !== undefined &&
-            config.translation.targetLocale !== 'ko'
-        ) {
-            throw new Error("Invalid translation.targetLocale: expected 'ko'");
-        }
-        if (config.translation.llm !== undefined) {
-            if (typeof config.translation.llm !== 'object' || config.translation.llm === null) {
-                throw new Error('Invalid translation.llm: expected object');
-            }
-            if ('enabled' in config.translation.llm) {
-                throw new Error('Invalid translation.llm.enabled: option has been removed');
-            }
-            if (
-                config.translation.llm.translationModel !== undefined &&
-                typeof config.translation.llm.translationModel !== 'string'
-            ) {
-                throw new Error('Invalid translation.llm.translationModel: expected string');
-            }
-            if (
-                config.translation.llm.validationModel !== undefined &&
-                typeof config.translation.llm.validationModel !== 'string'
-            ) {
-                throw new Error('Invalid translation.llm.validationModel: expected string');
-            }
-            if (
-                config.translation.llm.postprocessModel !== undefined &&
-                typeof config.translation.llm.postprocessModel !== 'string'
-            ) {
-                throw new Error('Invalid translation.llm.postprocessModel: expected string');
-            }
-        }
-        if (config.translation.validation?.mqm !== undefined) {
-            const mqm = config.translation.validation.mqm;
-            if (typeof mqm !== 'object' || mqm === null) {
-                throw new Error('Invalid translation.validation.mqm: expected object');
-            }
-            if ('failOnError' in mqm) {
-                throw new Error(
-                    'Invalid translation.validation.mqm.failOnError: option has been removed',
-                );
-            }
-            if (mqm.enabled !== undefined && typeof mqm.enabled !== 'boolean') {
-                throw new Error('Invalid translation.validation.mqm.enabled: expected boolean');
-            }
-        }
-    }
-
-    if (config.components !== undefined) {
-        if (typeof config.components !== 'object' || config.components === null) {
-            throw new Error('Invalid components: expected object');
-        }
-
-        for (const [key, value] of Object.entries(config.components)) {
-            if (typeof key !== 'string' || typeof value !== 'object' || value === null) {
-                throw new Error('Invalid components entry');
-            }
-
-            if (value.include !== undefined) {
-                assertStringArray(`components[${key}].include`, value.include);
-            }
-        }
     }
 }
 
 // Arrays should be replaced (not concatenated/index-merged) so user patches like
-// `exclude: ['foo']` fully override defaults instead of partially merging.
+// `include: ['foo']` fully override defaults instead of partially merging.
 function replaceArrays(baseValue: unknown, patchValue: unknown): unknown {
     if (Array.isArray(baseValue) || Array.isArray(patchValue)) {
         return patchValue ?? baseValue;
