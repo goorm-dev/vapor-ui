@@ -110,8 +110,13 @@ export async function translatePropsInfo(
         if (verbose) console.error(`[i18n] ${message}`);
     };
 
+    const progress = (message: string): void => {
+        console.error(`[i18n] ${message}`);
+    };
+
     const units = measureSync(log, 'collectTranslationUnits', () => collectTranslationUnits(props));
     log(`collected ${units.length} translatable texts from ${props.length} components`);
+    progress(`starting ${props.length} component(s) — ${units.length} translatable text(s)`);
 
     if (units.length === 0) {
         const clonedProps = measureSync(log, 'cloneProps', () => cloneProps(props));
@@ -119,6 +124,7 @@ export async function translatePropsInfo(
             buildComponentReports(props, units, new Map()),
         );
         logTiming(log, 'translatePropsInfo total', totalStartedAt);
+        progress(`done: ${props.length} component(s) — nothing to translate`);
         return {
             props: clonedProps,
             componentReports,
@@ -140,8 +146,14 @@ export async function translatePropsInfo(
     let totalHits = 0;
     let totalMisses = 0;
 
-    for (const [componentIndex, componentUnits] of componentGroups) {
+    const componentEntries = [...componentGroups.entries()];
+    const totalComponents = componentEntries.length;
+    let componentCount = 0;
+
+    for (const [componentIndex, componentUnits] of componentEntries) {
         const componentName = props[componentIndex]?.name ?? `component#${componentIndex}`;
+        componentCount++;
+        progress(`[${componentCount}/${totalComponents}] ${componentName}`);
         const missUnits: TranslationUnit[] = [];
         let componentHits = 0;
 
@@ -238,6 +250,7 @@ export async function translatePropsInfo(
 
     log(`completed ${translatedProps.length} components`);
     logTiming(log, 'translatePropsInfo total', totalStartedAt);
+    progress(`done: ${translatedProps.length} component(s) in ${elapsedMs(totalStartedAt)}ms`);
 
     return { props: translatedProps, componentReports, batchFallbacks };
 }

@@ -202,7 +202,7 @@ function writeKoFiles(
     const writtenFiles: string[] = [];
     for (const { fileName, content } of files) {
         const filePath = join(koDir, basename(fileName));
-        writeFileSync(filePath, JSON.stringify(content, null, 2) + '\n', 'utf-8');
+        writeFileSync(filePath, JSON.stringify(content, null, 4) + '\n', 'utf-8');
         writtenFiles.push(filePath);
     }
     return writtenFiles;
