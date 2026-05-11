@@ -29,8 +29,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "meow": "^14.1.0",
-        "p-limit": "^7.3.0"
+        "meow": "^14.1.0"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",

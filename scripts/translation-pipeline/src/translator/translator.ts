@@ -1,5 +1,3 @@
-import pLimit from 'p-limit';
-
 import { type CacheStore, loadCache, makeCacheKey, saveCache } from '~/cache/cache';
 import { type ComponentReport, buildComponentReports } from '~/report/report';
 import { translateComponentUnits } from '~/translation/translate';
@@ -11,7 +9,6 @@ import type {
     TranslationUnit,
 } from '~/types';
 
-const LLM_CONCURRENCY = 10;
 const TRANSLATION_BATCH_SIZE = 20;
 
 // ─── Translation Units ────────────────────────────────────────────────────────
@@ -159,7 +156,6 @@ export async function translatePropsInfo(
     }
 
     const outcomes = new Map<string, TranslationOutcome>();
-    const _limit = pLimit(LLM_CONCURRENCY);
     const componentGroups = groupByComponent(units);
     const batchFallbacks: BatchFallbackEntry[] = [];
 
