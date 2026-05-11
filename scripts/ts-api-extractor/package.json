@@ -35,7 +35,7 @@
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
-        "@types/node": "^20.19.39",
+        "@types/node": "^20.19.40",
         "@vitest/coverage-v8": "^2.1.9",
         "eslint": "^9.39.4",
         "prettier": "catalog:",
