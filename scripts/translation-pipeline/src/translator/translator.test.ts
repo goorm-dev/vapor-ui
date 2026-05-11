@@ -288,9 +288,6 @@ describe('translatePropsInfo', () => {
     it('falls back to the per-unit lifecycle when batch MQM response is invalid', async () => {
         vi.spyOn(clientModule, 'callLlm').mockResolvedValue({
             content: 'not-valid-json',
-            inputTokens: 0,
-            outputTokens: 0,
-            cost: 0,
         });
         vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({ verdict: 'PASS', errors: [] });
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
