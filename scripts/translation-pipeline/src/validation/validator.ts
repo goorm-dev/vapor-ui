@@ -1,4 +1,4 @@
-import { callLlm, logLlmMetadata } from '~/translation/client';
+import { callLlm } from '~/translation/client';
 import type { MqmCategory, MqmError, MqmResult, TranslationConfig } from '~/types';
 
 export const MQM_EVALUATOR_PROMPT = `You are a design-system documentation translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
@@ -89,8 +89,6 @@ export async function validateWithMqm(
     source: string,
     translated: string,
     config: TranslationConfig,
-    log?: (message: string) => void,
-    logLabel = 'mqm',
 ): Promise<MqmResult> {
     const userPrompt = `[원문 JSDoc]: ${source}\n[번역 JSDoc]: ${translated}`;
 
@@ -104,7 +102,6 @@ export async function validateWithMqm(
             responseFormat: 'json',
         },
     );
-    logLlmMetadata(log, logLabel, result);
 
     if (!result.content) {
         const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';

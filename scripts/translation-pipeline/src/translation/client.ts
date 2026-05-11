@@ -62,40 +62,6 @@ function readResponseCost(response: Response, data: Record<string, unknown>): nu
     return undefined;
 }
 
-export function formatLlmMetadata(label: string, result: LlmCallResult): string | undefined {
-    if (!result.usage && result.responseCost === undefined) {
-        return undefined;
-    }
-
-    const parts = [`llm: ${label}`];
-    if (result.model) parts.push(`model=${result.model}`);
-    if (result.usage?.promptTokens !== undefined) {
-        parts.push(`promptTokens=${result.usage.promptTokens}`);
-    }
-    if (result.usage?.completionTokens !== undefined) {
-        parts.push(`completionTokens=${result.usage.completionTokens}`);
-    }
-    if (result.usage?.totalTokens !== undefined) {
-        parts.push(`totalTokens=${result.usage.totalTokens}`);
-    }
-    if (result.responseCost !== undefined) {
-        parts.push(`cost=$${result.responseCost.toFixed(6)}`);
-    }
-
-    return parts.join(' ');
-}
-
-export function logLlmMetadata(
-    log: ((message: string) => void) | undefined,
-    label: string,
-    result: LlmCallResult,
-): void {
-    if (!log) return;
-
-    const message = formatLlmMetadata(label, result);
-    if (message) log(message);
-}
-
 export async function callLlm(
     messages: LlmMessage[],
     options: LlmCallOptions = {},

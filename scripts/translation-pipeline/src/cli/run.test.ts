@@ -35,7 +35,7 @@ function passthroughRunner(docs: TranslatableDoc[]): Promise<TranslateResult> {
 describe('parseCliArgs', () => {
     it('returns input and output when both are provided', () => {
         const result = parseCliArgs(['--input', './en', '--output', './out']);
-        expect(result).toEqual({ input: './en', output: './out', verbose: false });
+        expect(result).toEqual({ input: './en', output: './out' });
     });
 
     it('throws CliError when --input is missing', () => {
@@ -46,11 +46,6 @@ describe('parseCliArgs', () => {
     it('throws CliError when --output is missing', () => {
         expect(() => parseCliArgs(['--input', './en'])).toThrow(CliError);
         expect(() => parseCliArgs(['--input', './en'])).toThrow(/--output/);
-    });
-
-    it('honors --verbose flag', () => {
-        const result = parseCliArgs(['-i', './en', '-o', './out', '--verbose']);
-        expect(result.verbose).toBe(true);
     });
 });
 

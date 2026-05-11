@@ -3,7 +3,7 @@ import pLimit from 'p-limit';
 import { type CacheStore, loadCache, makeCacheKey, saveCache } from '~/cache/cache';
 import { postprocessWithLlm } from '~/postprocess/postprocess';
 import { type ComponentReport, buildComponentReports } from '~/report/report';
-import { callLlm, logLlmMetadata } from '~/translation/client';
+import { callLlm } from '~/translation/client';
 import { parseLlmJson } from '~/translation/json';
 import { translateComponentUnits } from '~/translation/translate';
 import type {
@@ -88,8 +88,6 @@ async function validateBatchWithMqm(
     units: TranslationUnit[],
     translations: Map<string, string>,
     config: TranslationConfig,
-    log?: (message: string) => void,
-    logLabel = `batchMqm ${componentName}`,
 ): Promise<BatchMqmResult> {
     if (units.length === 0) return { ok: true, evaluations: new Map() };
 
@@ -111,7 +109,6 @@ async function validateBatchWithMqm(
         ],
         { model: config.llm.validationModel ?? 'claude-opus-4-7', responseFormat: 'json' },
     );
-    logLlmMetadata(log, logLabel, result);
 
     if (!result.content) {
         const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
@@ -214,8 +211,6 @@ async function postprocessBatchWithLlm(
     componentName: string,
     inputs: BatchPostprocessInput[],
     model?: string,
-    log?: (message: string) => void,
-    logLabel = `batchPostprocess ${componentName}`,
 ): Promise<BatchPostprocessResult> {
     if (inputs.length === 0) return { ok: true, translations: new Map() };
 
@@ -238,7 +233,6 @@ async function postprocessBatchWithLlm(
         ],
         { model, responseFormat: 'json' },
     );
-    logLlmMetadata(log, logLabel, result);
 
     if (!result.content) {
         const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
@@ -340,36 +334,16 @@ function hasUnavailable(result: MqmResult): boolean {
     return result.unavailable === true;
 }
 
-function elapsedMs(startedAt: number): number {
-    return Math.max(0, Date.now() - startedAt);
-}
-
-async function measureAsync<T>(
-    log: (message: string) => void,
-    label: string,
-    fn: () => Promise<T>,
-): Promise<T> {
-    const startedAt = Date.now();
-    try {
-        return await fn();
-    } finally {
-        log(`timing: ${label} ${elapsedMs(startedAt)}ms`);
-    }
-}
-
 async function processUnitLifecycle(
     unit: TranslationUnit,
     initialTranslation: string,
     config: TranslationConfig,
     limit: LimitFn,
-    log: (message: string) => void,
 ): Promise<TranslationOutcome> {
     const events: TranslationEvent[] = [makeEvent('translation', 'Initial translation received.')];
 
-    const initialEvaluation = await measureAsync(log, `initialMqm ${unit.id}`, () =>
-        limit(() =>
-            validateWithMqm(unit.source, initialTranslation, config, log, `initialMqm ${unit.id}`),
-        ),
+    const initialEvaluation = await limit(() =>
+        validateWithMqm(unit.source, initialTranslation, config),
     );
     events.push(
         makeEvent(
@@ -406,16 +380,12 @@ async function processUnitLifecycle(
         };
     }
 
-    const postprocess = await measureAsync(log, `postprocess ${unit.id}`, () =>
-        limit(() =>
-            postprocessWithLlm(
-                unit.source,
-                initialTranslation,
-                initialEvaluation.errors,
-                config.llm.postprocessModel,
-                log,
-                `postprocess ${unit.id}`,
-            ),
+    const postprocess = await limit(() =>
+        postprocessWithLlm(
+            unit.source,
+            initialTranslation,
+            initialEvaluation.errors,
+            config.llm.postprocessModel,
         ),
     );
     events.push(
@@ -440,16 +410,8 @@ async function processUnitLifecycle(
         };
     }
 
-    const finalEvaluation = await measureAsync(log, `finalMqm ${unit.id}`, () =>
-        limit(() =>
-            validateWithMqm(
-                unit.source,
-                postprocess.translated,
-                config,
-                log,
-                `finalMqm ${unit.id}`,
-            ),
-        ),
+    const finalEvaluation = await limit(() =>
+        validateWithMqm(unit.source, postprocess.translated, config),
     );
     events.push(
         makeEvent(
@@ -577,16 +539,14 @@ async function fallbackToUnitLifecycle(
     translations: Map<string, string>,
     config: TranslationConfig,
     limit: LimitFn,
-    log: (message: string) => void,
 ): Promise<ComponentLifecycleResult> {
-    log(`batch fallback: ${componentName}: ${reason}`);
     const outcomes = await Promise.all(
         units.map(async (unit) => {
             const translated = translations.get(unit.id);
             if (translated === undefined) {
                 throw new Error(`Missing fallback translation id: ${unit.id}`);
             }
-            const outcome = await processUnitLifecycle(unit, translated, config, limit, log);
+            const outcome = await processUnitLifecycle(unit, translated, config, limit);
             return [unit, outcome] as [TranslationUnit, TranslationOutcome];
         }),
     );
@@ -599,25 +559,17 @@ async function processComponentLifecycle(
     translations: Map<string, string>,
     config: TranslationConfig,
     limit: LimitFn,
-    log: (message: string) => void,
 ): Promise<ComponentLifecycleResult> {
     const outcomes: [TranslationUnit, TranslationOutcome][] = [];
     const fallbackReasons: string[] = [];
 
     const mqmChunks = chunkArray(units, MQM_BATCH_SIZE);
-    for (const [chunkIndex, mqmChunk] of mqmChunks.entries()) {
-        const chunkLabel =
-            mqmChunks.length > 1 ? `${componentName}#${chunkIndex + 1}` : componentName;
-
-        const initialResult = await measureAsync(log, `batchMqm ${chunkLabel}`, () =>
-            validateBatchWithMqm(
-                componentName,
-                mqmChunk,
-                translations,
-                config,
-                log,
-                `batchMqm ${chunkLabel}`,
-            ),
+    for (const mqmChunk of mqmChunks) {
+        const initialResult = await validateBatchWithMqm(
+            componentName,
+            mqmChunk,
+            translations,
+            config,
         );
 
         if (!initialResult.ok) {
@@ -628,7 +580,6 @@ async function processComponentLifecycle(
                 translations,
                 config,
                 limit,
-                log,
             );
             outcomes.push(...fallback.outcomes);
             fallbackReasons.push(...fallback.fallbackReasons);
@@ -649,27 +600,15 @@ async function processComponentLifecycle(
             failedUnits.push({ unit, initialTranslation: translated, initialEvaluation });
         }
 
-        for (const [failedChunkIndex, failedChunk] of chunkArray(
-            failedUnits,
-            POSTPROCESS_BATCH_SIZE,
-        ).entries()) {
-            const failedChunkLabel = `${componentName}#${chunkIndex + 1}.${failedChunkIndex + 1}`;
-
-            const postprocess = await measureAsync(
-                log,
-                `batchPostprocess ${failedChunkLabel}`,
-                () =>
-                    postprocessBatchWithLlm(
-                        componentName,
-                        failedChunk.map(({ unit, initialTranslation, initialEvaluation }) => ({
-                            unit,
-                            initialTranslation,
-                            errors: initialEvaluation.errors,
-                        })),
-                        config.llm.postprocessModel,
-                        log,
-                        `batchPostprocess ${failedChunkLabel}`,
-                    ),
+        for (const failedChunk of chunkArray(failedUnits, POSTPROCESS_BATCH_SIZE)) {
+            const postprocess = await postprocessBatchWithLlm(
+                componentName,
+                failedChunk.map(({ unit, initialTranslation, initialEvaluation }) => ({
+                    unit,
+                    initialTranslation,
+                    errors: initialEvaluation.errors,
+                })),
+                config.llm.postprocessModel,
             );
 
             if (!postprocess.ok) {
@@ -680,22 +619,17 @@ async function processComponentLifecycle(
                     translations,
                     config,
                     limit,
-                    log,
                 );
                 outcomes.push(...fallback.outcomes);
                 fallbackReasons.push(...fallback.fallbackReasons);
                 continue;
             }
 
-            const finalResult = await measureAsync(log, `batchFinalMqm ${failedChunkLabel}`, () =>
-                validateBatchWithMqm(
-                    componentName,
-                    failedChunk.map(({ unit }) => unit),
-                    postprocess.translations,
-                    config,
-                    log,
-                    `batchFinalMqm ${failedChunkLabel}`,
-                ),
+            const finalResult = await validateBatchWithMqm(
+                componentName,
+                failedChunk.map(({ unit }) => unit),
+                postprocess.translations,
+                config,
             );
 
             if (!finalResult.ok) {
@@ -706,7 +640,6 @@ async function processComponentLifecycle(
                     translations,
                     config,
                     limit,
-                    log,
                 );
                 outcomes.push(...fallback.outcomes);
                 fallbackReasons.push(...fallback.fallbackReasons);
@@ -762,48 +695,25 @@ function groupByComponent(units: TranslationUnit[]): Map<number, TranslationUnit
     return groups;
 }
 
-function measureSync<T>(log: (message: string) => void, label: string, fn: () => T): T {
-    const startedAt = Date.now();
-    try {
-        return fn();
-    } finally {
-        log(`timing: ${label} ${elapsedMs(startedAt)}ms`);
-    }
-}
-
-function logTiming(log: (message: string) => void, label: string, startedAt: number): void {
-    log(`timing: ${label} ${elapsedMs(startedAt)}ms`);
-}
-
 export async function translatePropsInfo(
     props: TranslatableDoc[],
     config: TranslationConfig,
     outputDir?: string,
-    verbose = false,
 ): Promise<TranslateResult> {
     const totalStartedAt = Date.now();
-    const log = (message: string): void => {
-        if (verbose) console.error(`[i18n] ${message}`);
-    };
     const progress = (message: string): void => {
         console.error(`[i18n] ${message}`);
     };
 
-    const units = measureSync(log, 'collectTranslationUnits', () => collectTranslationUnits(props));
-    log(`collected ${units.length} translatable texts from ${props.length} components`);
+    const units = collectTranslationUnits(props);
     progress(`starting ${props.length} component(s) — ${units.length} translatable text(s)`);
 
     if (units.length === 0) {
-        const clonedProps = measureSync(log, 'cloneProps', () =>
-            props.map((component) => ({
-                ...component,
-                props: component.props.map((prop) => ({ ...prop })),
-            })),
-        );
-        const componentReports = measureSync(log, 'buildComponentReports', () =>
-            buildComponentReports(props, units, new Map()),
-        );
-        logTiming(log, 'translatePropsInfo total', totalStartedAt);
+        const clonedProps = props.map((component) => ({
+            ...component,
+            props: component.props.map((prop) => ({ ...prop })),
+        }));
+        const componentReports = buildComponentReports(props, units, new Map());
         progress(`done: ${props.length} component(s) — nothing to translate`);
         return { props: clonedProps, componentReports, batchFallbacks: [] };
     }
@@ -812,15 +722,13 @@ export async function translatePropsInfo(
     const useCache = !config.skipCache;
     let cacheStore: CacheStore = new Map();
     if (useCache && cacheOutputDir) {
-        cacheStore = measureSync(log, 'loadCache', () => loadCache(cacheOutputDir));
+        cacheStore = loadCache(cacheOutputDir);
     }
 
     const outcomes = new Map<string, TranslationOutcome>();
     const validationLimit = pLimit(LLM_CONCURRENCY);
     const componentGroups = groupByComponent(units);
     const batchFallbacks: BatchFallbackEntry[] = [];
-    let totalHits = 0;
-    let totalMisses = 0;
 
     const componentEntries = [...componentGroups.entries()];
     const totalComponents = componentEntries.length;
@@ -831,7 +739,6 @@ export async function translatePropsInfo(
         componentCount++;
         progress(`[${componentCount}/${totalComponents}] ${componentName}`);
         const missUnits: TranslationUnit[] = [];
-        let componentHits = 0;
 
         for (const unit of componentUnits) {
             const cacheEntry = useCache
@@ -842,32 +749,17 @@ export async function translatePropsInfo(
                     getTranslationUnitKey(unit),
                     cacheHitOutcome(unit, cacheEntry.translated),
                 );
-                componentHits++;
             } else {
                 missUnits.push(unit);
             }
         }
 
-        totalHits += componentHits;
-        totalMisses += missUnits.length;
-        log(
-            `cache (${componentName}): ${componentHits} hit, ${missUnits.length} miss (running total: ${totalHits} hit / ${totalMisses} miss)`,
-        );
-
         if (missUnits.length > 0) {
-            for (const [chunkIndex, componentChunk] of chunkArray(
-                missUnits,
-                TRANSLATION_BATCH_SIZE,
-            ).entries()) {
-                const chunkLabel =
-                    missUnits.length > TRANSLATION_BATCH_SIZE
-                        ? `${componentName}#${chunkIndex + 1}`
-                        : componentName;
-                log(`translation: requesting ${componentChunk.length} texts for ${chunkLabel}`);
-                const translations = await measureAsync(
-                    log,
-                    `translateComponentUnits ${chunkLabel}`,
-                    () => translateComponentUnits(componentName, componentChunk, config, log),
+            for (const componentChunk of chunkArray(missUnits, TRANSLATION_BATCH_SIZE)) {
+                const translations = await translateComponentUnits(
+                    componentName,
+                    componentChunk,
+                    config,
                 );
 
                 const processed = await processComponentLifecycle(
@@ -876,7 +768,6 @@ export async function translatePropsInfo(
                     translations,
                     config,
                     validationLimit,
-                    log,
                 );
                 for (const reason of processed.fallbackReasons) {
                     batchFallbacks.push({ componentName, reason });
@@ -895,16 +786,8 @@ export async function translatePropsInfo(
         }
 
         if (useCache && cacheOutputDir) {
-            measureSync(log, `saveCache ${componentName}`, () =>
-                saveCache(cacheOutputDir, cacheStore),
-            );
+            saveCache(cacheOutputDir, cacheStore);
         }
-    }
-
-    if (!useCache || !cacheOutputDir) {
-        log(`cache: save skipped (${useCache ? 'no outputDir' : 'skipCache=true'})`);
-    } else {
-        log(`cache: final size ${cacheStore.size} entries`);
     }
 
     if (batchFallbacks.length > 0) {
@@ -915,16 +798,12 @@ export async function translatePropsInfo(
         );
     }
 
-    const translatedProps = measureSync(log, 'applyTranslationOutcomes', () =>
-        applyTranslationOutcomes(props, units, outcomes),
-    );
-    const componentReports = measureSync(log, 'buildComponentReports', () =>
-        buildComponentReports(props, units, outcomes),
-    );
+    const translatedProps = applyTranslationOutcomes(props, units, outcomes);
+    const componentReports = buildComponentReports(props, units, outcomes);
 
-    log(`completed ${translatedProps.length} components`);
-    logTiming(log, 'translatePropsInfo total', totalStartedAt);
-    progress(`done: ${translatedProps.length} component(s) in ${elapsedMs(totalStartedAt)}ms`);
+    progress(
+        `done: ${translatedProps.length} component(s) in ${Math.max(0, Date.now() - totalStartedAt)}ms`,
+    );
 
     return { props: translatedProps, componentReports, batchFallbacks };
 }

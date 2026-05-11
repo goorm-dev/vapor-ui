@@ -17,7 +17,6 @@ export class CliError extends Error {
 export interface CliOptions {
     input: string;
     output: string;
-    verbose: boolean;
 }
 
 export interface RunOptions {
@@ -28,7 +27,6 @@ export interface RunOptions {
         docs: TranslatableDoc[],
         config: TranslationConfig,
         outputDir: string,
-        verbose: boolean,
     ) => ReturnType<typeof translatePropsInfo>;
     /** Override env lookup for tests. */
     env?: NodeJS.ProcessEnv;
@@ -47,7 +45,6 @@ const HELP_TEXT = `
   Options
     --input, -i      Directory containing EN JSON files (required)
     --output, -o     Directory where ko/, .translation-cache.json, .i18n-report.md are written (required)
-    --verbose, -v    Enable verbose logging
 
   Examples
     $ translation-pipeline --input ./generated/en --output ./generated
@@ -60,7 +57,6 @@ export function parseCliArgs(argv: string[]): CliOptions {
         flags: {
             input: { type: 'string', shortFlag: 'i' },
             output: { type: 'string', shortFlag: 'o' },
-            verbose: { type: 'boolean', shortFlag: 'v', default: false },
         },
     });
 
@@ -74,7 +70,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
         throw new CliError('Missing required option: --output');
     }
 
-    return { input, output, verbose: cli.flags.verbose };
+    return { input, output };
 }
 
 function requireEnv(env: NodeJS.ProcessEnv, name: string): string {
@@ -223,7 +219,7 @@ export async function run(argv: string[], options: RunOptions = {}): Promise<Run
 
     const config = defaultTranslationConfig();
     const runner = options.runPipeline ?? translatePropsInfo;
-    const result = await runner(docs, config, outputDir, cliOptions.verbose);
+    const result = await runner(docs, config, outputDir);
 
     const merged = applyTranslationsToRaw(rawDocs, result.props);
     const writtenFiles = writeKoFiles(outputDir, merged);

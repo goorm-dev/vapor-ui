@@ -110,7 +110,6 @@ describe('translatePropsInfo', () => {
                 }),
             ],
             baseConfig,
-            expect.any(Function),
         );
         expect(mqmModule.validateWithMqm).not.toHaveBeenCalled();
         expect(result.props[0].description).toBe('Button 컴포넌트입니다.');
@@ -337,26 +336,5 @@ describe('translatePropsInfo', () => {
         await translatePropsInfo(twoTranslatables, baseConfig, '/tmp/cache');
 
         expect(saveCacheSpy).toHaveBeenCalledTimes(2);
-    });
-
-    it('logs stage timings when verbose logging is enabled', async () => {
-        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-
-        await translatePropsInfo(sampleProps.slice(0, 1), baseConfig, '/tmp/cache', true);
-
-        const logs = errorSpy.mock.calls.map(([message]) => String(message));
-        expect(logs).toEqual(
-            expect.arrayContaining([
-                expect.stringMatching(/^\[i18n\] timing: collectTranslationUnits \d+ms$/),
-                expect.stringMatching(/^\[i18n\] timing: loadCache \d+ms$/),
-                expect.stringMatching(/^\[i18n\] cache \(Button\): \d+ hit, \d+ miss/),
-                expect.stringMatching(/^\[i18n\] timing: translateComponentUnits Button \d+ms$/),
-                expect.stringMatching(/^\[i18n\] timing: batchMqm Button \d+ms$/),
-                expect.stringMatching(/^\[i18n\] timing: saveCache Button \d+ms$/),
-                expect.stringMatching(/^\[i18n\] timing: applyTranslationOutcomes \d+ms$/),
-                expect.stringMatching(/^\[i18n\] timing: buildComponentReports \d+ms$/),
-                expect.stringMatching(/^\[i18n\] timing: translatePropsInfo total \d+ms$/),
-            ]),
-        );
     });
 });
