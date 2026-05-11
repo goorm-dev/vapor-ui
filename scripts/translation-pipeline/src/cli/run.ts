@@ -3,8 +3,8 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { basename, join, resolve } from 'node:path';
 
 import { defaultTranslationConfig } from '~/defaults';
-import { translatePropsInfo } from '~/pipeline';
-import { buildReport, writeReport } from '~/report';
+import { buildReport, writeReport } from '~/report/report';
+import { translatePropsInfo } from '~/translator/translator';
 import type { TranslatableDoc, TranslationConfig } from '~/types';
 
 export class CliError extends Error {

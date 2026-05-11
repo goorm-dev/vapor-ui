@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { translateComponentUnits } from '~/llm-translation';
+import { translateComponentUnits } from '~/translation/translate';
 import type { TranslationConfig, TranslationUnit } from '~/types';
 
 const config: TranslationConfig = {

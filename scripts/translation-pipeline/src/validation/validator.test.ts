@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { validateWithMqm } from '~/mqm-validator';
 import type { TranslationConfig } from '~/types';
+import { validateWithMqm } from '~/validation/validator';
 
 const baseConfig: TranslationConfig = {
     skipCache: false,

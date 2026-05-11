@@ -1,5 +1,5 @@
-import { callLlm, logLlmMetadata } from '~/llm-client';
-import { parseLlmJson } from '~/llm-json';
+import { callLlm, logLlmMetadata } from '~/translation/client';
+import { parseLlmJson } from '~/translation/json';
 import type { TranslationConfig, TranslationUnit } from '~/types';
 
 const DEFAULT_TRANSLATION_MODEL = 'claude-sonnet-4-6';

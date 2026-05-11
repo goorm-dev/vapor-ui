@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import type { MqmError, TranslationOutcome } from '~/types';
+import type { MqmError, TranslatableDoc, TranslationOutcome, TranslationUnit } from '~/types';
 
 export interface ComponentReport {
     name: string;
@@ -26,6 +26,36 @@ export interface TranslationReport {
     cachedCount: number;
     components: ComponentReport[];
     batchFallbacks: BatchFallbackReportEntry[];
+}
+
+function getTranslationUnitKey(unit: TranslationUnit): string {
+    return `${unit.componentIndex}:${unit.id}`;
+}
+
+export function buildComponentReports(
+    props: TranslatableDoc[],
+    units: TranslationUnit[],
+    outcomes: Map<string, TranslationOutcome>,
+): ComponentReport[] {
+    return props.map((component, componentIndex) => {
+        const componentUnits = units.filter((unit) => unit.componentIndex === componentIndex);
+        const componentOutcomes = componentUnits
+            .map((unit) => outcomes.get(getTranslationUnitKey(unit)) ?? outcomes.get(unit.id))
+            .filter((outcome): outcome is TranslationOutcome => outcome !== undefined);
+
+        return {
+            name: component.name,
+            totalTexts: componentUnits.length,
+            verified: componentOutcomes.filter((outcome) => outcome.assurance === 'verified')
+                .length,
+            unverified: componentOutcomes.filter((outcome) => outcome.assurance === 'unverified')
+                .length,
+            cached: componentOutcomes.filter((outcome) => outcome.reason === 'cache_hit').length,
+            unverifiedOutcomes: componentOutcomes.filter(
+                (outcome) => outcome.assurance === 'unverified' && outcome.reportable,
+            ),
+        };
+    });
 }
 
 export function buildReport(

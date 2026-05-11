@@ -3,8 +3,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { buildReport, renderReport, writeReport } from '~/report';
-import type { ComponentReport, TranslationReport } from '~/report';
+import { buildComponentReports, buildReport, renderReport, writeReport } from '~/report/report';
+import type { ComponentReport, TranslationReport } from '~/report/report';
+import type { TranslatableDoc, TranslationOutcome, TranslationUnit } from '~/types';
 
 function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'report-test-'));
@@ -234,5 +235,73 @@ describe('writeReport', () => {
             warnSpy.mockRestore();
             fs.rmSync(readonlyDir);
         }
+    });
+});
+
+describe('buildComponentReports', () => {
+    const props: TranslatableDoc[] = [
+        {
+            name: 'Button',
+            description: 'A button component.',
+            props: [{ name: 'size', description: 'Controls the size.' }, { name: 'disabled' }],
+        },
+    ];
+
+    const units: TranslationUnit[] = [
+        {
+            id: 'component.description',
+            kind: 'component.description',
+            ownerName: 'Button',
+            source: 'A button component.',
+            componentIndex: 0,
+        },
+        {
+            id: 'props[0].size.description',
+            kind: 'prop.description',
+            ownerName: 'size',
+            source: 'Controls the size.',
+            componentIndex: 0,
+            propIndex: 0,
+        },
+    ];
+
+    it('summarizes verified, unverified, and cached outcomes per component', () => {
+        const outcomes = new Map<string, TranslationOutcome>([
+            [
+                '0:component.description',
+                {
+                    id: 'component.description',
+                    source: 'A button component.',
+                    translated: '캐시된 번역',
+                    assurance: 'verified',
+                    reportable: false,
+                    reason: 'cache_hit',
+                    events: [],
+                },
+            ],
+            [
+                '0:props[0].size.description',
+                {
+                    id: 'props[0].size.description',
+                    source: 'Controls the size.',
+                    translated: '크기를 지정합니다.',
+                    assurance: 'unverified',
+                    reportable: false,
+                    reason: 'initial_quality_gate_unavailable',
+                    events: [],
+                },
+            ],
+        ]);
+
+        expect(buildComponentReports(props, units, outcomes)).toEqual([
+            {
+                name: 'Button',
+                totalTexts: 2,
+                verified: 1,
+                unverified: 1,
+                cached: 1,
+                unverifiedOutcomes: [],
+            },
+        ]);
     });
 });

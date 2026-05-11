@@ -3,26 +3,14 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { CliError, run } from '~/cli/run';
-import type { TranslateResult } from '~/pipeline';
+import { CliError, parseCliArgs, run } from '~/cli/run';
+import type { TranslateResult } from '~/translator/translator';
 import type { TranslatableDoc, TranslationOutcome } from '~/types';
 
 const validEnv = {
     LITELLM_API_KEY: 'test-key',
     LITELLM_BASE_URL: 'https://example.test',
 };
-
-function makeOutcome(unit: { id: string; source: string }): TranslationOutcome {
-    return {
-        id: unit.id,
-        source: unit.source,
-        translated: `[ko]${unit.source}`,
-        assurance: 'verified',
-        reportable: false,
-        reason: 'initial_quality_gate_passed',
-        events: [],
-    };
-}
 
 function passthroughRunner(docs: TranslatableDoc[]): Promise<TranslateResult> {
     const translatedProps = docs.map((doc) => ({
@@ -41,9 +29,30 @@ function passthroughRunner(docs: TranslatableDoc[]): Promise<TranslateResult> {
         cached: 0,
         unverifiedOutcomes: [] as TranslationOutcome[],
     }));
-    void makeOutcome;
     return Promise.resolve({ props: translatedProps, componentReports, batchFallbacks: [] });
 }
+
+describe('parseCliArgs', () => {
+    it('returns input and output when both are provided', () => {
+        const result = parseCliArgs(['--input', './en', '--output', './out']);
+        expect(result).toEqual({ input: './en', output: './out', verbose: false });
+    });
+
+    it('throws CliError when --input is missing', () => {
+        expect(() => parseCliArgs(['--output', './out'])).toThrow(CliError);
+        expect(() => parseCliArgs(['--output', './out'])).toThrow(/--input/);
+    });
+
+    it('throws CliError when --output is missing', () => {
+        expect(() => parseCliArgs(['--input', './en'])).toThrow(CliError);
+        expect(() => parseCliArgs(['--input', './en'])).toThrow(/--output/);
+    });
+
+    it('honors --verbose flag', () => {
+        const result = parseCliArgs(['-i', './en', '-o', './out', '--verbose']);
+        expect(result.verbose).toBe(true);
+    });
+});
 
 describe('cli run', () => {
     let workDir: string;
@@ -124,9 +133,7 @@ describe('cli run', () => {
         expect(koContent.name).toBe('Button');
         expect(koContent.description).toBe('[ko]A clickable button.');
         expect(koContent.props[0].description).toBe('[ko]Size of the button.');
-        // type field is preserved (we only translate description)
         expect(koContent.props[0].type).toEqual(['"sm"', '"md"']);
-        // props without description should remain unchanged
         expect(koContent.props[1].name).toBe('className');
         expect(koContent.props[1].description).toBeUndefined();
 

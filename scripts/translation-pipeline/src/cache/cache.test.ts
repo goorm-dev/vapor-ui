@@ -3,8 +3,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { CacheEntry } from '~/cache';
-import { loadCache, makeCacheKey, saveCache } from '~/cache';
+import type { CacheEntry } from '~/cache/cache';
+import { loadCache, makeCacheKey, saveCache } from '~/cache/cache';
 import type { TranslationConfig } from '~/types';
 
 function makeTmpDir(): string {

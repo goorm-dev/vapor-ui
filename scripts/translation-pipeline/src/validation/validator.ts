@@ -1,4 +1,4 @@
-import { callLlm, logLlmMetadata } from '~/llm-client';
+import { callLlm, logLlmMetadata } from '~/translation/client';
 import type { MqmCategory, MqmError, MqmResult, TranslationConfig } from '~/types';
 
 export const MQM_EVALUATOR_PROMPT = `You are a design-system documentation translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
