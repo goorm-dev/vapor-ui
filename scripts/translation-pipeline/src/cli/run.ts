@@ -1,7 +1,6 @@
+import meow from 'meow';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-
-import meow from 'meow';
 
 import { defaultTranslationConfig } from '~/defaults';
 import { translatePropsInfo } from '~/pipeline';
@@ -121,7 +120,8 @@ function normalizeDoc(raw: unknown, fileName: string): TranslatableDoc {
     if (typeof name !== 'string' || !name) {
         throw new CliError(`${fileName}: missing required string field "name"`);
     }
-    const description = typeof record['description'] === 'string' ? record['description'] : undefined;
+    const description =
+        typeof record['description'] === 'string' ? record['description'] : undefined;
     const propsRaw = record['props'];
     const props = Array.isArray(propsRaw)
         ? propsRaw.map((prop, index) => normalizeProp(prop, fileName, index))

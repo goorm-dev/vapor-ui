@@ -111,9 +111,7 @@ describe('renderReport', () => {
 
         const output = renderReport(report);
 
-        expect(output).toContain(
-            '| Component | Total Texts | Verified | Unverified | Cached |',
-        );
+        expect(output).toContain('| Component | Total Texts | Verified | Unverified | Cached |');
         expect(output).toContain('| Button | 2 | 1 | 1 | 0 |');
         expect(output).toContain('| Divider | 0 | 0 | 0 | 0 |');
     });

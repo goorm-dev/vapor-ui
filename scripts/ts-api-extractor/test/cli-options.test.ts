@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CliError } from '~/cli/input';
 import { resolveRunContext } from '~/cli/context';
+import { CliError } from '~/cli/input';
 import { findComponentFiles, findFileByComponentName } from '~/stages/scan';
 
 vi.mock('~/config/defaults', () => ({

@@ -1,21 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import type { TranslatableDoc } from '~/types';
 import {
     applyTranslationOutcomes,
     buildComponentReports,
     collectTranslationUnits,
 } from '~/translation-units';
+import type { TranslatableDoc } from '~/types';
 import type { TranslationOutcome } from '~/types';
 
 const props: TranslatableDoc[] = [
     {
         name: 'Button',
         description: 'A button component.',
-        props: [
-            { name: 'size', description: 'Controls the size.' },
-            { name: 'disabled' },
-        ],
+        props: [{ name: 'size', description: 'Controls the size.' }, { name: 'disabled' }],
     },
 ];
 

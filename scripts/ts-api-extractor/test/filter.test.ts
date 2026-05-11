@@ -7,11 +7,15 @@ import { filterParsedComponents, shouldIncludeProp } from '~/stages/filter';
 describe('shouldIncludeProp', () => {
     describe('include whitelist priority', () => {
         it('includeSet에 있는 prop은 항상 포함된다', () => {
-            expect(shouldIncludeProp('className', 'react' as PropSource, new Set(['className']))).toBe(true);
+            expect(
+                shouldIncludeProp('className', 'react' as PropSource, new Set(['className'])),
+            ).toBe(true);
         });
 
         it('includeSet에 있는 HTML attribute도 포함된다', () => {
-            expect(shouldIncludeProp('aria-label', 'project' as PropSource, new Set(['aria-label']))).toBe(true);
+            expect(
+                shouldIncludeProp('aria-label', 'project' as PropSource, new Set(['aria-label'])),
+            ).toBe(true);
         });
     });
 
@@ -25,7 +29,9 @@ describe('shouldIncludeProp', () => {
         });
 
         it('external 출처 prop은 제외된다', () => {
-            expect(shouldIncludeProp('someExternalProp', 'external' as PropSource, new Set())).toBe(false);
+            expect(shouldIncludeProp('someExternalProp', 'external' as PropSource, new Set())).toBe(
+                false,
+            );
         });
 
         it('project 출처 prop은 포함된다', () => {
@@ -35,11 +41,15 @@ describe('shouldIncludeProp', () => {
 
     describe('HTML attribute filtering (always on)', () => {
         it('data-* prop은 제외된다', () => {
-            expect(shouldIncludeProp('data-testid', 'project' as PropSource, new Set())).toBe(false);
+            expect(shouldIncludeProp('data-testid', 'project' as PropSource, new Set())).toBe(
+                false,
+            );
         });
 
         it('aria-* prop은 제외된다', () => {
-            expect(shouldIncludeProp('aria-hidden', 'project' as PropSource, new Set())).toBe(false);
+            expect(shouldIncludeProp('aria-hidden', 'project' as PropSource, new Set())).toBe(
+                false,
+            );
         });
     });
 

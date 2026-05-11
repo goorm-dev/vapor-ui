@@ -134,8 +134,7 @@ export function renderReport(report: TranslationReport): string {
                   '| Component | Reason |',
                   '|---|---|',
                   ...report.batchFallbacks.map(
-                      (entry) =>
-                          `| ${entry.componentName} | ${escapeTableCell(entry.reason)} |`,
+                      (entry) => `| ${entry.componentName} | ${escapeTableCell(entry.reason)} |`,
                   ),
               ]),
         '',

@@ -6,7 +6,9 @@ import { defaultExtractorConfig, resolvePackagePaths } from '~/config/defaults';
 describe('defaultExtractorConfig', () => {
     it('inputPath는 monorepo root 기준 절대 경로다', () => {
         expect(path.isAbsolute(defaultExtractorConfig.inputPath)).toBe(true);
-        expect(defaultExtractorConfig.inputPath.endsWith(path.join('packages', 'core', 'src'))).toBe(true);
+        expect(
+            defaultExtractorConfig.inputPath.endsWith(path.join('packages', 'core', 'src')),
+        ).toBe(true);
     });
 
     it('tsconfig는 monorepo root 기준 절대 경로다', () => {

@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { TranslatableDoc } from '~/types';
 import * as batchMqmModule from '~/batch-mqm-validator';
 import * as batchPostprocessModule from '~/batch-postprocess';
 import type * as CacheModule from '~/cache';
@@ -9,6 +8,7 @@ import * as postprocessModule from '~/llm-postprocess';
 import * as translationModule from '~/llm-translation';
 import * as mqmModule from '~/mqm-validator';
 import { translatePropsInfo } from '~/pipeline';
+import type { TranslatableDoc } from '~/types';
 import type { TranslationConfig } from '~/types';
 
 vi.mock('~/translate/cache', async (importOriginal) => {
@@ -293,15 +293,11 @@ describe('translatePropsInfo', () => {
         const propsWithSharedSource: TranslatableDoc[] = [
             {
                 name: 'Button',
-                props: [
-                    { name: 'onClick', description: sharedSource },
-                ],
+                props: [{ name: 'onClick', description: sharedSource }],
             },
             {
                 name: 'IconButton',
-                props: [
-                    { name: 'onClick', description: sharedSource },
-                ],
+                props: [{ name: 'onClick', description: sharedSource }],
             },
         ];
 

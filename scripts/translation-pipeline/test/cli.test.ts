@@ -1,7 +1,6 @@
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { CliError, run } from '~/cli/run';
@@ -98,7 +97,12 @@ describe('cli run', () => {
             name: 'Button',
             description: 'A clickable button.',
             props: [
-                { name: 'size', type: ['"sm"', '"md"'], required: false, description: 'Size of the button.' },
+                {
+                    name: 'size',
+                    type: ['"sm"', '"md"'],
+                    required: false,
+                    description: 'Size of the button.',
+                },
                 { name: 'className', type: ['string'], required: false },
             ],
         };
