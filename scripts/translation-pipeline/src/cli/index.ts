@@ -1,11 +1,11 @@
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 
 import { CliError, run } from '~/cli/run';
 
-try {
-    process.loadEnvFile(path.resolve(process.cwd(), '.env'));
-} catch {
-    // .env is optional
+const envPath = path.resolve(process.cwd(), '.env');
+if (existsSync(envPath)) {
+    process.loadEnvFile(envPath);
 }
 
 async function main(): Promise<void> {

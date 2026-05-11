@@ -64,9 +64,7 @@ export function applyTranslationOutcomes(
     }));
 
     for (const unit of units) {
-        const translated =
-            (outcomes.get(getTranslationUnitKey(unit)) ?? outcomes.get(unit.id))?.translated ??
-            unit.source;
+        const translated = outcomes.get(getTranslationUnitKey(unit))?.translated ?? unit.source;
         if (unit.kind === 'component.description') {
             result[unit.componentIndex] = {
                 ...result[unit.componentIndex],

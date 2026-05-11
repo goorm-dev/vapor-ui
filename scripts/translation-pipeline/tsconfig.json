@@ -4,7 +4,7 @@
         "module": "ESNext",
         "moduleResolution": "bundler",
         "lib": ["ES2022"],
-        "types": ["vitest/globals"],
+        "types": ["node", "vitest/globals"],
         "outDir": "./dist",
         "baseUrl": ".",
         "paths": {
