@@ -1,28 +1,38 @@
 import pLimit from 'p-limit';
 
-import type { PropsInfoJson } from '~/models/output';
-import { processComponentBatchLifecycle } from '~/translate/batch-lifecycle';
-import { loadCache, makeCacheKey, saveCache } from '~/translate/cache';
-import type { CacheStore } from '~/translate/cache';
-import { translateComponentUnits } from '~/translate/llm-translation';
-import type { ComponentReport } from '~/translate/report';
+import { processComponentBatchLifecycle } from '~/batch-lifecycle';
+import { loadCache, makeCacheKey, saveCache } from '~/cache';
+import type { CacheStore } from '~/cache';
+import { translateComponentUnits } from '~/llm-translation';
+import type { ComponentReport } from '~/report';
 import {
     applyTranslationOutcomes,
     buildComponentReports,
     collectTranslationUnits,
     getTranslationUnitKey,
-} from '~/translate/translation-units';
-import type { TranslationConfig, TranslationOutcome, TranslationUnit } from '~/translate/types';
+} from '~/translation-units';
+import type {
+    TranslatableDoc,
+    TranslationConfig,
+    TranslationOutcome,
+    TranslationUnit,
+} from '~/types';
 
 const LLM_CONCURRENCY = 10;
 const TRANSLATION_BATCH_SIZE = 20;
 
-export interface TranslateResult {
-    props: PropsInfoJson[];
-    componentReports: ComponentReport[];
+export interface BatchFallbackEntry {
+    componentName: string;
+    reason: string;
 }
 
-function cloneProps(props: PropsInfoJson[]): PropsInfoJson[] {
+export interface TranslateResult {
+    props: TranslatableDoc[];
+    componentReports: ComponentReport[];
+    batchFallbacks: BatchFallbackEntry[];
+}
+
+function cloneProps(props: TranslatableDoc[]): TranslatableDoc[] {
     return props.map((component) => ({
         ...component,
         props: component.props.map((prop) => ({ ...prop })),
@@ -90,7 +100,7 @@ async function measureAsync<T>(
 }
 
 export async function translatePropsInfo(
-    props: PropsInfoJson[],
+    props: TranslatableDoc[],
     config: TranslationConfig,
     outputDir?: string,
     verbose = false,
@@ -112,6 +122,7 @@ export async function translatePropsInfo(
         return {
             props: clonedProps,
             componentReports,
+            batchFallbacks: [],
         };
     }
 
@@ -123,11 +134,18 @@ export async function translatePropsInfo(
     }
 
     const outcomes = new Map<string, TranslationOutcome>();
-    const { cacheHits, missUnits } = measureSync(log, 'resolveCacheMisses', () => {
-        const misses: TranslationUnit[] = [];
-        let hits = 0;
+    const validationLimit = pLimit(LLM_CONCURRENCY);
+    const componentGroups = groupByComponent(units);
+    const batchFallbacks: BatchFallbackEntry[] = [];
+    let totalHits = 0;
+    let totalMisses = 0;
 
-        for (const unit of units) {
+    for (const [componentIndex, componentUnits] of componentGroups) {
+        const componentName = props[componentIndex]?.name ?? `component#${componentIndex}`;
+        const missUnits: TranslationUnit[] = [];
+        let componentHits = 0;
+
+        for (const unit of componentUnits) {
             const cacheEntry = useCache
                 ? cacheStore.get(makeCacheKey(unit.source, config))
                 : undefined;
@@ -136,30 +154,25 @@ export async function translatePropsInfo(
                     getTranslationUnitKey(unit),
                     cacheHitOutcome(unit, cacheEntry.translated),
                 );
-                hits++;
+                componentHits++;
             } else {
-                misses.push(unit);
+                missUnits.push(unit);
             }
         }
 
-        return { cacheHits: hits, missUnits: misses };
-    });
+        totalHits += componentHits;
+        totalMisses += missUnits.length;
+        log(
+            `cache (${componentName}): ${componentHits} hit, ${missUnits.length} miss (running total: ${totalHits} hit / ${totalMisses} miss)`,
+        );
 
-    log(`cache: ${cacheHits} hit, ${missUnits.length} miss`);
-
-    if (missUnits.length > 0) {
-        const validationLimit = pLimit(LLM_CONCURRENCY);
-        const missGroups = groupByComponent(missUnits);
-        const batchFallbackReasons: string[] = [];
-
-        for (const [componentIndex, componentUnits] of missGroups) {
-            const componentName = props[componentIndex]?.name ?? `component#${componentIndex}`;
+        if (missUnits.length > 0) {
             for (const [chunkIndex, componentChunk] of chunkArray(
-                componentUnits,
+                missUnits,
                 TRANSLATION_BATCH_SIZE,
             ).entries()) {
                 const chunkLabel =
-                    componentUnits.length > TRANSLATION_BATCH_SIZE
+                    missUnits.length > TRANSLATION_BATCH_SIZE
                         ? `${componentName}#${chunkIndex + 1}`
                         : componentName;
                 log(`translation: requesting ${componentChunk.length} texts for ${chunkLabel}`);
@@ -177,7 +190,9 @@ export async function translatePropsInfo(
                     validationLimit,
                     log,
                 );
-                batchFallbackReasons.push(...processed.fallbackReasons);
+                for (const reason of processed.fallbackReasons) {
+                    batchFallbacks.push({ componentName, reason });
+                }
 
                 for (const [unit, outcome] of processed.outcomes) {
                     outcomes.set(getTranslationUnitKey(unit), outcome);
@@ -191,18 +206,27 @@ export async function translatePropsInfo(
             }
         }
 
-        if (batchFallbackReasons.length > 0) {
-            console.warn(
-                `[i18n] batch fallback summary: ${batchFallbackReasons.length} chunk(s) fell back. ${batchFallbackReasons.join('; ')}`,
+        // Save cache after each component so partial progress survives crashes
+        // and so subsequent components can hit translations produced earlier in this run.
+        if (useCache && cacheOutputDir) {
+            measureSync(log, `saveCache ${componentName}`, () =>
+                saveCache(cacheOutputDir, cacheStore),
             );
         }
     }
 
-    if (useCache && cacheOutputDir) {
-        measureSync(log, 'saveCache', () => saveCache(cacheOutputDir, cacheStore));
-        log(`cache: saved ${cacheStore.size} entries`);
-    } else {
+    if (!useCache || !cacheOutputDir) {
         log(`cache: save skipped (${useCache ? 'no outputDir' : 'skipCache=true'})`);
+    } else {
+        log(`cache: final size ${cacheStore.size} entries`);
+    }
+
+    if (batchFallbacks.length > 0) {
+        console.warn(
+            `[i18n] batch fallback summary: ${batchFallbacks.length} chunk(s) fell back. ${batchFallbacks
+                .map((entry) => `${entry.componentName}: ${entry.reason}`)
+                .join('; ')}`,
+        );
     }
 
     const translatedProps = measureSync(log, 'applyTranslationOutcomes', () =>
@@ -215,5 +239,5 @@ export async function translatePropsInfo(
     log(`completed ${translatedProps.length} components`);
     logTiming(log, 'translatePropsInfo total', totalStartedAt);
 
-    return { props: translatedProps, componentReports };
+    return { props: translatedProps, componentReports, batchFallbacks };
 }

@@ -1,7 +1,7 @@
-import { callLlm, logLlmMetadata } from '~/translate/llm-client';
-import { parseLlmJson } from '~/translate/llm-json';
-import { MQM_EVALUATOR_PROMPT, isMqmError } from '~/translate/mqm-validator';
-import type { MqmResult, TranslationConfig, TranslationUnit } from '~/translate/types';
+import { callLlm, logLlmMetadata } from '~/llm-client';
+import { parseLlmJson } from '~/llm-json';
+import { MQM_EVALUATOR_PROMPT, isMqmError } from '~/mqm-validator';
+import type { MqmResult, TranslationConfig, TranslationUnit } from '~/types';
 
 const DEFAULT_VALIDATION_MODEL = 'claude-opus-4-7';
 

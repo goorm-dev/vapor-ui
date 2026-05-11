@@ -1,19 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { validateWithMqm } from '~/translate/mqm-validator';
-import type { TranslationConfig } from '~/translate/types';
+import { validateWithMqm } from '~/mqm-validator';
+import type { TranslationConfig } from '~/types';
 
 const baseConfig: TranslationConfig = {
-    enabled: true,
     skipCache: false,
     targetLocale: 'ko',
     llm: {
         translationModel: 'claude-sonnet-4-6',
         validationModel: 'claude-opus-4-7',
-        postprocessModel: 'claude-sonnet-4-6',
-    },
-    validation: {
-        mqm: { enabled: true },
+        postprocessModel: 'claude-opus-4-7',
     },
 };
 
@@ -28,16 +24,6 @@ describe('validateWithMqm', () => {
         vi.unstubAllGlobals();
         vi.unstubAllEnvs();
         vi.restoreAllMocks();
-    });
-
-    it('mqm.enabled: false returns unavailable without calling fetch', async () => {
-        const config = {
-            ...baseConfig,
-            validation: { mqm: { enabled: false } },
-        };
-        const result = await validateWithMqm('hello', '안녕', config);
-        expect(result).toMatchObject({ verdict: 'FAIL', errors: [], unavailable: true });
-        expect(fetch).not.toHaveBeenCalled();
     });
 
     it('uses JSON mode with the validation model', async () => {

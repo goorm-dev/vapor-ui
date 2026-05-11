@@ -3,8 +3,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { buildReport, renderReport, writeReport } from '~/translate/report';
-import type { ComponentReport, TranslationReport } from '~/translate/report';
+import { buildReport, renderReport, writeReport } from '~/report';
+import type { ComponentReport, TranslationReport } from '~/report';
 
 function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'report-test-'));
@@ -46,7 +46,7 @@ const unverifiedOutcome = {
 };
 
 describe('buildReport', () => {
-    it('aggregates verified, unverified, cached, and gate-skipped counts', () => {
+    it('aggregates verified, unverified, and cached counts', () => {
         const components: ComponentReport[] = [
             {
                 name: 'Button',
@@ -54,7 +54,6 @@ describe('buildReport', () => {
                 verified: 3,
                 unverified: 2,
                 cached: 1,
-                gateSkipped: 1,
                 unverifiedOutcomes: [unverifiedOutcome],
             },
             {
@@ -63,7 +62,6 @@ describe('buildReport', () => {
                 verified: 0,
                 unverified: 0,
                 cached: 0,
-                gateSkipped: 0,
                 unverifiedOutcomes: [],
             },
         ];
@@ -76,14 +74,13 @@ describe('buildReport', () => {
             verifiedCount: 3,
             unverifiedCount: 2,
             cachedCount: 1,
-            gateSkippedCount: 1,
             components,
         });
     });
 });
 
 describe('renderReport', () => {
-    it('renders the ADR summary columns including components with zero units', () => {
+    it('renders the summary columns including components with zero units', () => {
         const report: TranslationReport = {
             generatedAt: '2026-05-08T00:00:00.000Z',
             totalComponents: 2,
@@ -91,7 +88,7 @@ describe('renderReport', () => {
             verifiedCount: 1,
             unverifiedCount: 1,
             cachedCount: 0,
-            gateSkippedCount: 0,
+            batchFallbacks: [],
             components: [
                 {
                     name: 'Button',
@@ -99,7 +96,6 @@ describe('renderReport', () => {
                     verified: 1,
                     unverified: 1,
                     cached: 0,
-                    gateSkipped: 0,
                     unverifiedOutcomes: [unverifiedOutcome],
                 },
                 {
@@ -108,7 +104,6 @@ describe('renderReport', () => {
                     verified: 0,
                     unverified: 0,
                     cached: 0,
-                    gateSkipped: 0,
                     unverifiedOutcomes: [],
                 },
             ],
@@ -117,10 +112,55 @@ describe('renderReport', () => {
         const output = renderReport(report);
 
         expect(output).toContain(
-            '| Component | Total Texts | Verified | Unverified | Cached | Gate Skipped |',
+            '| Component | Total Texts | Verified | Unverified | Cached |',
         );
-        expect(output).toContain('| Button | 2 | 1 | 1 | 0 | 0 |');
-        expect(output).toContain('| Divider | 0 | 0 | 0 | 0 | 0 |');
+        expect(output).toContain('| Button | 2 | 1 | 1 | 0 |');
+        expect(output).toContain('| Divider | 0 | 0 | 0 | 0 |');
+    });
+
+    it('renders "None." in Batch Fallbacks section when there are no fallbacks', () => {
+        const report = buildReport(
+            [
+                {
+                    name: 'Button',
+                    totalTexts: 1,
+                    verified: 1,
+                    unverified: 0,
+                    cached: 0,
+                    unverifiedOutcomes: [],
+                },
+            ],
+            [],
+        );
+        const output = renderReport(report);
+        expect(output).toContain('## Batch Fallbacks');
+        expect(output).toContain('| Batch fallbacks | 0 |');
+        expect(output).toMatch(/## Batch Fallbacks\n\nNone\./);
+    });
+
+    it('renders batch fallback rows when fallbacks occurred', () => {
+        const report = buildReport(
+            [
+                {
+                    name: 'Button',
+                    totalTexts: 1,
+                    verified: 1,
+                    unverified: 0,
+                    cached: 0,
+                    unverifiedOutcomes: [],
+                },
+            ],
+            [
+                { componentName: 'Button', reason: 'batch MQM invalid: missing id "x"' },
+                { componentName: 'Button', reason: 'batch postprocess invalid' },
+            ],
+        );
+        const output = renderReport(report);
+        expect(output).toContain('| Batch fallbacks | 2 |');
+        expect(output).toContain('2 chunk(s) fell back to per-unit lifecycle.');
+        expect(output).toContain('| Component | Reason |');
+        expect(output).toContain('| Button | batch MQM invalid: missing id "x" |');
+        expect(output).toContain('| Button | batch postprocess invalid |');
     });
 
     it('renders details only for reportable unverified outcomes', () => {
@@ -131,7 +171,6 @@ describe('renderReport', () => {
                 verified: 1,
                 unverified: 2,
                 cached: 0,
-                gateSkipped: 1,
                 unverifiedOutcomes: [unverifiedOutcome],
             },
         ]);
@@ -147,7 +186,6 @@ describe('renderReport', () => {
         expect(output).toContain('Initial MQM errors');
         expect(output).toContain('Final MQM errors');
         expect(output).toContain('Final MQM failed.');
-        expect(output).not.toContain('quality_gate_disabled');
     });
 });
 
@@ -175,7 +213,6 @@ describe('writeReport', () => {
                 verified: 2,
                 unverified: 0,
                 cached: 0,
-                gateSkipped: 0,
                 unverifiedOutcomes: [],
             },
         ]);

@@ -1,5 +1,5 @@
-import { callLlm, logLlmMetadata } from '~/translate/llm-client';
-import type { MqmCategory, MqmError, MqmResult, TranslationConfig } from '~/translate/types';
+import { callLlm, logLlmMetadata } from '~/llm-client';
+import type { MqmCategory, MqmError, MqmResult, TranslationConfig } from '~/types';
 
 export const MQM_EVALUATOR_PROMPT = `You are a design-system documentation translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
 
@@ -92,10 +92,6 @@ export async function validateWithMqm(
     log?: (message: string) => void,
     logLabel = 'mqm',
 ): Promise<MqmResult> {
-    if (!config.validation.mqm.enabled) {
-        return unavailableResult();
-    }
-
     const userPrompt = `[원문 JSDoc]: ${source}\n[번역 JSDoc]: ${translated}`;
 
     const result = await callLlm(

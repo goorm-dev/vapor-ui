@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import type { MqmError, TranslationOutcome } from '~/translate/types';
+import type { MqmError, TranslationOutcome } from '~/types';
 
 export interface ComponentReport {
     name: string;
@@ -9,8 +9,12 @@ export interface ComponentReport {
     verified: number;
     unverified: number;
     cached: number;
-    gateSkipped: number;
     unverifiedOutcomes: TranslationOutcome[];
+}
+
+export interface BatchFallbackReportEntry {
+    componentName: string;
+    reason: string;
 }
 
 export interface TranslationReport {
@@ -20,11 +24,14 @@ export interface TranslationReport {
     verifiedCount: number;
     unverifiedCount: number;
     cachedCount: number;
-    gateSkippedCount: number;
     components: ComponentReport[];
+    batchFallbacks: BatchFallbackReportEntry[];
 }
 
-export function buildReport(components: ComponentReport[]): TranslationReport {
+export function buildReport(
+    components: ComponentReport[],
+    batchFallbacks: BatchFallbackReportEntry[] = [],
+): TranslationReport {
     return {
         generatedAt: new Date().toISOString(),
         totalComponents: components.length,
@@ -32,8 +39,8 @@ export function buildReport(components: ComponentReport[]): TranslationReport {
         verifiedCount: components.reduce((sum, component) => sum + component.verified, 0),
         unverifiedCount: components.reduce((sum, component) => sum + component.unverified, 0),
         cachedCount: components.reduce((sum, component) => sum + component.cached, 0),
-        gateSkippedCount: components.reduce((sum, component) => sum + component.gateSkipped, 0),
         components,
+        batchFallbacks,
     };
 }
 
@@ -115,15 +122,30 @@ export function renderReport(report: TranslationReport): string {
         `| Verified | ${report.verifiedCount} |`,
         `| Unverified | ${report.unverifiedCount} |`,
         `| Cached | ${report.cachedCount} |`,
-        `| Gate skipped | ${report.gateSkippedCount} |`,
+        `| Batch fallbacks | ${report.batchFallbacks.length} |`,
+        '',
+        '## Batch Fallbacks',
+        '',
+        ...(report.batchFallbacks.length === 0
+            ? ['None.']
+            : [
+                  `${report.batchFallbacks.length} chunk(s) fell back to per-unit lifecycle.`,
+                  '',
+                  '| Component | Reason |',
+                  '|---|---|',
+                  ...report.batchFallbacks.map(
+                      (entry) =>
+                          `| ${entry.componentName} | ${escapeTableCell(entry.reason)} |`,
+                  ),
+              ]),
         '',
         '## Component Summary',
         '',
-        '| Component | Total Texts | Verified | Unverified | Cached | Gate Skipped |',
-        '|---|---:|---:|---:|---:|---:|',
+        '| Component | Total Texts | Verified | Unverified | Cached |',
+        '|---|---:|---:|---:|---:|',
         ...report.components.map(
             (component) =>
-                `| ${component.name} | ${component.totalTexts} | ${component.verified} | ${component.unverified} | ${component.cached} | ${component.gateSkipped} |`,
+                `| ${component.name} | ${component.totalTexts} | ${component.verified} | ${component.unverified} | ${component.cached} |`,
         ),
         '',
         '## Unverified Details',

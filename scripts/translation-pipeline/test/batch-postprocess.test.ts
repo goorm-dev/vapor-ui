@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { postprocessBatchWithLlm } from '~/translate/batch-postprocess';
-import type { MqmError, TranslationUnit } from '~/translate/types';
+import { postprocessBatchWithLlm } from '~/batch-postprocess';
+import type { MqmError, TranslationUnit } from '~/types';
 
 const unit: TranslationUnit = {
     id: 'component.description',

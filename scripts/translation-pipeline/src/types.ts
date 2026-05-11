@@ -1,3 +1,18 @@
+/**
+ * 번역 파이프라인이 입력으로 받는 문서 형태.
+ * `ts-api-extractor`의 출력 스키마와는 의도적으로 분리한다 — 번역에 필요한 필드만 노출한다.
+ */
+export interface TranslatableDocProp {
+    name: string;
+    description?: string;
+}
+
+export interface TranslatableDoc {
+    name: string;
+    description?: string;
+    props: TranslatableDocProp[];
+}
+
 export type MqmCategory =
     | 'Terminology/Component name inconsistency'
     | 'Terminology/Token name altered'
@@ -48,7 +63,6 @@ export type AssuranceStatus = 'verified' | 'unverified';
 
 export type TranslationOutcomeReason =
     | 'cache_hit'
-    | 'quality_gate_disabled'
     | 'initial_quality_gate_passed'
     | 'initial_quality_gate_failed'
     | 'initial_quality_gate_unavailable'
@@ -76,17 +90,11 @@ export interface TranslationOutcome {
 }
 
 export interface TranslationConfig {
-    enabled: boolean;
     skipCache: boolean;
     targetLocale: 'ko';
     llm: {
         translationModel?: string;
         postprocessModel?: string;
         validationModel?: string;
-    };
-    validation: {
-        mqm: {
-            enabled: boolean;
-        };
     };
 }

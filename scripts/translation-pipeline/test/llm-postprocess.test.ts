@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { postprocessWithLlm } from '~/translate/llm-postprocess';
+import { postprocessWithLlm } from '~/llm-postprocess';
 
 describe('postprocessWithLlm', () => {
     beforeEach(() => {

@@ -1,13 +1,13 @@
-import { validateBatchWithMqm } from '~/translate/batch-mqm-validator';
-import { postprocessBatchWithLlm } from '~/translate/batch-postprocess';
-import { processTranslationLifecycle } from '~/translate/lifecycle';
+import { validateBatchWithMqm } from '~/batch-mqm-validator';
+import { postprocessBatchWithLlm } from '~/batch-postprocess';
+import { processTranslationLifecycle } from '~/lifecycle';
 import type {
     MqmResult,
     TranslationConfig,
     TranslationEvent,
     TranslationOutcome,
     TranslationUnit,
-} from '~/translate/types';
+} from '~/types';
 
 type LimitFn = <T>(fn: () => Promise<T>) => Promise<T>;
 
@@ -52,18 +52,6 @@ async function measureAsync<T>(
 
 function event(stage: TranslationEvent['stage'], message: string): TranslationEvent {
     return { stage, message };
-}
-
-function qualityGateDisabledOutcome(unit: TranslationUnit, translated: string): TranslationOutcome {
-    return {
-        id: unit.id,
-        source: unit.source,
-        translated,
-        assurance: 'unverified',
-        reportable: false,
-        reason: 'quality_gate_disabled',
-        events: [event('mqm', 'MQM quality gate was disabled.')],
-    };
 }
 
 function initialPassOutcome(
@@ -143,16 +131,6 @@ export async function processComponentBatchLifecycle(
     limit: LimitFn,
     log: (message: string) => void,
 ): Promise<BatchLifecycleResult> {
-    if (!config.validation.mqm.enabled) {
-        return {
-            outcomes: units.map((unit) => [
-                unit,
-                qualityGateDisabledOutcome(unit, translations.get(unit.id) ?? unit.source),
-            ]),
-            fallbackReasons: [],
-        };
-    }
-
     const outcomes: [TranslationUnit, TranslationOutcome][] = [];
     const fallbackReasons: string[] = [];
 

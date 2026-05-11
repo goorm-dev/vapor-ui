@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { callLlm } from '~/translate/llm-client';
+import { callLlm } from '~/llm-client';
 
 describe('callLlm', () => {
     beforeEach(() => {

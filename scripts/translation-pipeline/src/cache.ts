@@ -2,7 +2,12 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import type { TranslationConfig } from '~/translate/types';
+import {
+    DEFAULT_POSTPROCESS_MODEL,
+    DEFAULT_TRANSLATION_MODEL,
+    DEFAULT_VALIDATION_MODEL,
+} from '~/defaults';
+import type { TranslationConfig } from '~/types';
 
 // v2 reflects the LLM JSON-mode lifecycle. Older cache entries are not reused.
 export const CACHE_VERSION = 'v2';
@@ -14,10 +19,6 @@ export interface CacheEntry {
 
 export type CacheStore = Map<string, CacheEntry>;
 
-const DEFAULT_TRANSLATION_MODEL = 'claude-sonnet-4-6';
-const DEFAULT_VALIDATION_MODEL = 'claude-opus-4-7';
-const DEFAULT_POSTPROCESS_MODEL = 'claude-sonnet-4-6';
-
 export function makeCacheKey(source: string, config: TranslationConfig): string {
     return createHash('sha256')
         .update(
@@ -25,7 +26,6 @@ export function makeCacheKey(source: string, config: TranslationConfig): string 
                 version: CACHE_VERSION,
                 source,
                 targetLocale: config.targetLocale,
-                mqmEnabled: config.validation.mqm.enabled,
                 translationModel: config.llm.translationModel ?? DEFAULT_TRANSLATION_MODEL,
                 validationModel: config.llm.validationModel ?? DEFAULT_VALIDATION_MODEL,
                 postprocessModel: config.llm.postprocessModel ?? DEFAULT_POSTPROCESS_MODEL,

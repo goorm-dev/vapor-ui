@@ -1,12 +1,11 @@
-import type { PropsInfoJson } from '~/models/output';
-import type { ComponentReport } from '~/translate/report';
-import type { TranslationOutcome, TranslationUnit } from '~/translate/types';
+import type { ComponentReport } from '~/report';
+import type { TranslatableDoc, TranslationOutcome, TranslationUnit } from '~/types';
 
 export function getTranslationUnitKey(unit: TranslationUnit): string {
     return `${unit.componentIndex}:${unit.id}`;
 }
 
-export function collectTranslationUnits(props: PropsInfoJson[]): TranslationUnit[] {
+export function collectTranslationUnits(props: TranslatableDoc[]): TranslationUnit[] {
     const units: TranslationUnit[] = [];
 
     for (let componentIndex = 0; componentIndex < props.length; componentIndex++) {
@@ -40,11 +39,11 @@ export function collectTranslationUnits(props: PropsInfoJson[]): TranslationUnit
 }
 
 export function applyTranslationOutcomes(
-    props: PropsInfoJson[],
+    props: TranslatableDoc[],
     units: TranslationUnit[],
     outcomes: Map<string, TranslationOutcome>,
-): PropsInfoJson[] {
-    const result: PropsInfoJson[] = props.map((component) => ({
+): TranslatableDoc[] {
+    const result: TranslatableDoc[] = props.map((component) => ({
         ...component,
         props: component.props.map((prop) => ({ ...prop })),
     }));
@@ -75,7 +74,7 @@ export function applyTranslationOutcomes(
 }
 
 export function buildComponentReports(
-    props: PropsInfoJson[],
+    props: TranslatableDoc[],
     units: TranslationUnit[],
     outcomes: Map<string, TranslationOutcome>,
 ): ComponentReport[] {
@@ -93,9 +92,6 @@ export function buildComponentReports(
             unverified: componentOutcomes.filter((outcome) => outcome.assurance === 'unverified')
                 .length,
             cached: componentOutcomes.filter((outcome) => outcome.reason === 'cache_hit').length,
-            gateSkipped: componentOutcomes.filter(
-                (outcome) => outcome.reason === 'quality_gate_disabled',
-            ).length,
             unverifiedOutcomes: componentOutcomes.filter(
                 (outcome) => outcome.assurance === 'unverified' && outcome.reportable,
             ),

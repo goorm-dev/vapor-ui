@@ -1,29 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
-import type { PropsInfoJson } from '~/models/output';
+import type { TranslatableDoc } from '~/types';
 import {
     applyTranslationOutcomes,
     buildComponentReports,
     collectTranslationUnits,
-} from '~/translate/translation-units';
-import type { TranslationOutcome } from '~/translate/types';
+} from '~/translation-units';
+import type { TranslationOutcome } from '~/types';
 
-const props: PropsInfoJson[] = [
+const props: TranslatableDoc[] = [
     {
         name: 'Button',
         description: 'A button component.',
         props: [
-            {
-                name: 'size',
-                type: ['"sm"', '"md"'],
-                required: false,
-                description: 'Controls the size.',
-            },
-            {
-                name: 'disabled',
-                type: ['boolean'],
-                required: false,
-            },
+            { name: 'size', description: 'Controls the size.' },
+            { name: 'disabled' },
         ],
     },
 ];
@@ -90,7 +81,7 @@ describe('applyTranslationOutcomes', () => {
 });
 
 describe('buildComponentReports', () => {
-    it('summarizes verified, unverified, cached, and gate-skipped outcomes per component', () => {
+    it('summarizes verified, unverified, and cached outcomes per component', () => {
         const units = collectTranslationUnits(props);
         const outcomes = new Map<string, TranslationOutcome>([
             [
@@ -113,7 +104,7 @@ describe('buildComponentReports', () => {
                     translated: '크기를 지정합니다.',
                     assurance: 'unverified',
                     reportable: false,
-                    reason: 'quality_gate_disabled',
+                    reason: 'initial_quality_gate_unavailable',
                     events: [],
                 },
             ],
@@ -126,7 +117,6 @@ describe('buildComponentReports', () => {
                 verified: 1,
                 unverified: 1,
                 cached: 1,
-                gateSkipped: 1,
                 unverifiedOutcomes: [],
             },
         ]);

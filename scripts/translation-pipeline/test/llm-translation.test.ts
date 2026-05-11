@@ -1,10 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { translateComponentUnits } from '~/translate/llm-translation';
-import type { TranslationConfig, TranslationUnit } from '~/translate/types';
+import { translateComponentUnits } from '~/llm-translation';
+import type { TranslationConfig, TranslationUnit } from '~/types';
 
 const config: TranslationConfig = {
-    enabled: true,
     skipCache: false,
     targetLocale: 'ko',
     llm: {
@@ -12,7 +11,6 @@ const config: TranslationConfig = {
         validationModel: 'claude-opus-4-7',
         postprocessModel: 'claude-sonnet-4-6',
     },
-    validation: { mqm: { enabled: true } },
 };
 
 const units: TranslationUnit[] = [
@@ -81,6 +79,37 @@ describe('translateComponentUnits', () => {
         expect(body.response_format).toEqual({ type: 'json_object' });
         expect(body.messages.at(-1)?.content).toContain('"componentName":"Button"');
         expect(body.messages.at(-1)?.content).toContain('"id":"props[0].size.description"');
+    });
+
+    it('sends a system prompt that includes MQM-mirrored style rules', async () => {
+        mockFetchContent(
+            JSON.stringify({
+                translations: [
+                    { id: 'component.description', translated: 'Button 컴포넌트입니다.' },
+                    { id: 'props[0].size.description', translated: '크기를 지정합니다.' },
+                ],
+            }),
+        );
+
+        await translateComponentUnits('Button', units, config);
+
+        const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
+            messages: { role: string; content: string }[];
+        };
+        const systemMessage = body.messages.find((message) => message.role === 'system');
+        expect(systemMessage).toBeDefined();
+        const systemContent = systemMessage?.content ?? '';
+
+        // MQM 미러링 패턴
+        expect(systemContent).toContain('~를 제어합니다');
+        expect(systemContent).toContain('~를 수행합니다');
+        expect(systemContent).toContain('~에 적용되는');
+        // 문체 규칙
+        expect(systemContent).toContain('합쇼체');
+        expect(systemContent).toContain('active voice');
+        // 식별자 보존
+        expect(systemContent).toContain('PascalCase');
+        expect(systemContent).toContain('camelCase');
     });
 
     it('parses JSON responses wrapped in markdown code fences', async () => {

@@ -1,10 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { validateBatchWithMqm } from '~/translate/batch-mqm-validator';
-import type { TranslationConfig, TranslationUnit } from '~/translate/types';
+import { validateBatchWithMqm } from '~/batch-mqm-validator';
+import type { TranslationConfig, TranslationUnit } from '~/types';
 
 const config: TranslationConfig = {
-    enabled: true,
     skipCache: false,
     targetLocale: 'ko',
     llm: {
@@ -12,7 +11,6 @@ const config: TranslationConfig = {
         validationModel: 'claude-opus-4-7',
         postprocessModel: 'claude-sonnet-4-6',
     },
-    validation: { mqm: { enabled: true } },
 };
 
 const units: TranslationUnit[] = [

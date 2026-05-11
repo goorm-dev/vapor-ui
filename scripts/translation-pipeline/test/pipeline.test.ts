@@ -1,15 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { PropsInfoJson } from '~/models/output';
-import * as batchMqmModule from '~/translate/batch-mqm-validator';
-import * as batchPostprocessModule from '~/translate/batch-postprocess';
-import type * as CacheModule from '~/translate/cache';
-import * as cacheModule from '~/translate/cache';
-import * as postprocessModule from '~/translate/llm-postprocess';
-import * as translationModule from '~/translate/llm-translation';
-import * as mqmModule from '~/translate/mqm-validator';
-import { translatePropsInfo } from '~/translate/pipeline';
-import type { TranslationConfig } from '~/translate/types';
+import type { TranslatableDoc } from '~/types';
+import * as batchMqmModule from '~/batch-mqm-validator';
+import * as batchPostprocessModule from '~/batch-postprocess';
+import type * as CacheModule from '~/cache';
+import * as cacheModule from '~/cache';
+import * as postprocessModule from '~/llm-postprocess';
+import * as translationModule from '~/llm-translation';
+import * as mqmModule from '~/mqm-validator';
+import { translatePropsInfo } from '~/pipeline';
+import type { TranslationConfig } from '~/types';
 
 vi.mock('~/translate/cache', async (importOriginal) => {
     const actual = await importOriginal<typeof CacheModule>();
@@ -21,33 +21,20 @@ vi.mock('~/translate/cache', async (importOriginal) => {
 });
 
 const baseConfig: TranslationConfig = {
-    enabled: true,
     skipCache: false,
     targetLocale: 'ko',
     llm: {
         translationModel: 'claude-sonnet-4-6',
         validationModel: 'claude-opus-4-7',
-        postprocessModel: 'claude-sonnet-4-6',
-    },
-    validation: {
-        mqm: {
-            enabled: true,
-        },
+        postprocessModel: 'claude-opus-4-7',
     },
 };
 
-const sampleProps: PropsInfoJson[] = [
+const sampleProps: TranslatableDoc[] = [
     {
         name: 'Button',
         description: 'A button component.',
-        props: [
-            {
-                name: 'onClick',
-                type: ['() => void'],
-                required: false,
-                description: 'Click handler callback.',
-            },
-        ],
+        props: [{ name: 'onClick', description: 'Click handler callback.' }],
     },
     {
         name: 'Divider',
@@ -141,32 +128,9 @@ describe('translatePropsInfo', () => {
                     verified: 0,
                     unverified: 0,
                     cached: 0,
-                    gateSkipped: 0,
                 }),
             ]),
         );
-    });
-
-    it('treats MQM disabled as unverified but non-reportable and does not cache it', async () => {
-        const saveCacheSpy = vi.spyOn(cacheModule, 'saveCache');
-        const config: TranslationConfig = {
-            ...baseConfig,
-            validation: { mqm: { enabled: false } },
-        };
-
-        const result = await translatePropsInfo(sampleProps, config, '/tmp/cache');
-
-        expect(mqmModule.validateWithMqm).not.toHaveBeenCalled();
-        expect(batchMqmModule.validateBatchWithMqm).not.toHaveBeenCalled();
-        expect(result.componentReports[0]).toMatchObject({
-            totalTexts: 2,
-            verified: 0,
-            unverified: 2,
-            cached: 0,
-            gateSkipped: 2,
-        });
-        const savedStore = saveCacheSpy.mock.calls[0]?.[1];
-        expect(savedStore?.size).toBe(0);
     });
 
     it('saves only verified final outcomes to cache', async () => {
@@ -279,7 +243,7 @@ describe('translatePropsInfo', () => {
         mockTranslations({
             'component.description': 'A button component.',
         });
-        const propsWithDescription: PropsInfoJson[] = [
+        const propsWithDescription: TranslatableDoc[] = [
             { name: 'Button', description: 'A button component.', props: [] },
         ];
 
@@ -324,6 +288,54 @@ describe('translatePropsInfo', () => {
         );
     });
 
+    it('lets component B hit the cache produced earlier in the run by component A', async () => {
+        const sharedSource = 'Click handler callback.';
+        const propsWithSharedSource: TranslatableDoc[] = [
+            {
+                name: 'Button',
+                props: [
+                    { name: 'onClick', description: sharedSource },
+                ],
+            },
+            {
+                name: 'IconButton',
+                props: [
+                    { name: 'onClick', description: sharedSource },
+                ],
+            },
+        ];
+
+        // No pre-existing cache file — both components start with empty store.
+        vi.spyOn(cacheModule, 'loadCache').mockReturnValue(new Map());
+        const translateSpy = vi
+            .spyOn(translationModule, 'translateComponentUnits')
+            .mockImplementation(async (_componentName, units) => {
+                return new Map(units.map((unit) => [unit.id, '클릭 핸들러 콜백.']));
+            });
+
+        await translatePropsInfo(propsWithSharedSource, baseConfig, '/tmp/cache');
+
+        // Component A triggers a translation; component B should hit the in-memory cache and skip the LLM.
+        expect(translateSpy).toHaveBeenCalledTimes(1);
+        expect(translateSpy.mock.calls[0]?.[0]).toBe('Button');
+    });
+
+    it('saves cache once per component, not only at the end', async () => {
+        const twoTranslatables: TranslatableDoc[] = [
+            { name: 'A', description: 'first', props: [] },
+            { name: 'B', description: 'second', props: [] },
+        ];
+        const saveCacheSpy = vi.spyOn(cacheModule, 'saveCache').mockImplementation(() => undefined);
+        vi.spyOn(translationModule, 'translateComponentUnits').mockImplementation(
+            async (_componentName, units) => new Map(units.map((unit) => [unit.id, '번역'])),
+        );
+
+        await translatePropsInfo(twoTranslatables, baseConfig, '/tmp/cache');
+
+        // Each component has translatable text → saveCache fires after each one completes.
+        expect(saveCacheSpy).toHaveBeenCalledTimes(2);
+    });
+
     it('logs stage timings when verbose logging is enabled', async () => {
         const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
@@ -334,10 +346,10 @@ describe('translatePropsInfo', () => {
             expect.arrayContaining([
                 expect.stringMatching(/^\[i18n\] timing: collectTranslationUnits \d+ms$/),
                 expect.stringMatching(/^\[i18n\] timing: loadCache \d+ms$/),
-                expect.stringMatching(/^\[i18n\] timing: resolveCacheMisses \d+ms$/),
+                expect.stringMatching(/^\[i18n\] cache \(Button\): \d+ hit, \d+ miss/),
                 expect.stringMatching(/^\[i18n\] timing: translateComponentUnits Button \d+ms$/),
                 expect.stringMatching(/^\[i18n\] timing: batchMqm Button \d+ms$/),
-                expect.stringMatching(/^\[i18n\] timing: saveCache \d+ms$/),
+                expect.stringMatching(/^\[i18n\] timing: saveCache Button \d+ms$/),
                 expect.stringMatching(/^\[i18n\] timing: applyTranslationOutcomes \d+ms$/),
                 expect.stringMatching(/^\[i18n\] timing: buildComponentReports \d+ms$/),
                 expect.stringMatching(/^\[i18n\] timing: translatePropsInfo total \d+ms$/),

@@ -1,6 +1,6 @@
-import { callLlm, logLlmMetadata } from '~/translate/llm-client';
-import { parseLlmJson } from '~/translate/llm-json';
-import type { MqmError, TranslationUnit } from '~/translate/types';
+import { callLlm, logLlmMetadata } from '~/llm-client';
+import { parseLlmJson } from '~/llm-json';
+import type { MqmError, TranslationUnit } from '~/types';
 
 const SYSTEM_PROMPT = `You are a professional Korean translator and post-editor for a design system documentation site.
 

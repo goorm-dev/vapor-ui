@@ -1,0 +1,49 @@
+{
+    "name": "@vapor-ui/translation-pipeline",
+    "version": "0.0.1",
+    "private": true,
+    "description": "LLM-based JSON translation pipeline with MQM quality gating",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "bin": {
+        "translation-pipeline": "./dist/cli/index.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "format": "prettier --write \"./**/*.{ts,md,mjs}\"",
+        "lint": "eslint ./src",
+        "test": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "test:run": "vitest run",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "meow": "^14.1.0",
+        "p-limit": "^7.3.0"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@types/node": "^20.19.39",
+        "@vitest/coverage-v8": "^2.1.9",
+        "eslint": "^9.39.4",
+        "prettier": "catalog:",
+        "tsup": "^8.5.1",
+        "tsx": "^4.21.0",
+        "typescript": "catalog:",
+        "vitest": "^2.1.9"
+    },
+    "engines": {
+        "node": ">=20.20.2"
+    }
+}

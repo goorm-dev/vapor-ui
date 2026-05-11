@@ -3,9 +3,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { CacheEntry } from '~/translate/cache';
-import { loadCache, makeCacheKey, saveCache } from '~/translate/cache';
-import type { TranslationConfig } from '~/translate/types';
+import type { CacheEntry } from '~/cache';
+import { loadCache, makeCacheKey, saveCache } from '~/cache';
+import type { TranslationConfig } from '~/types';
 
 function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'cache-test-'));
@@ -14,14 +14,12 @@ function makeTmpDir(): string {
 function makeConfig(
     overrides: Partial<{
         targetLocale: TranslationConfig['targetLocale'];
-        mqmEnabled: boolean;
         translationModel: string;
         postprocessModel: string;
         validationModel: string;
     }> = {},
 ): TranslationConfig {
     return {
-        enabled: true,
         skipCache: false,
         targetLocale: overrides.targetLocale ?? 'ko',
         llm: {
@@ -29,7 +27,6 @@ function makeConfig(
             postprocessModel: overrides.postprocessModel ?? 'claude-sonnet-4-6',
             validationModel: overrides.validationModel ?? 'claude-sonnet-4-6',
         },
-        validation: { mqm: { enabled: overrides.mqmEnabled ?? true } },
     };
 }
 
@@ -56,10 +53,6 @@ describe('makeCacheKey', () => {
 
     it('different validationModel produces different key', () => {
         expect(key('hello')).not.toBe(key('hello', { validationModel: 'claude-opus-4-7' }));
-    });
-
-    it('different mqmEnabled produces different key', () => {
-        expect(key('hello')).not.toBe(key('hello', { mqmEnabled: false }));
     });
 
     it('returns sha256 hex string', () => {

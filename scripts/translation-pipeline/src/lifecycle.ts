@@ -1,12 +1,12 @@
-import { postprocessWithLlm } from '~/translate/llm-postprocess';
-import { validateWithMqm } from '~/translate/mqm-validator';
+import { postprocessWithLlm } from '~/llm-postprocess';
+import { validateWithMqm } from '~/mqm-validator';
 import type {
     MqmResult,
     TranslationConfig,
     TranslationEvent,
     TranslationOutcome,
     TranslationUnit,
-} from '~/translate/types';
+} from '~/types';
 
 type LimitFn = <T>(fn: () => Promise<T>) => Promise<T>;
 
@@ -35,18 +35,6 @@ async function measureAsync<T>(
     }
 }
 
-function qualityGateDisabledOutcome(unit: TranslationUnit, translated: string): TranslationOutcome {
-    return {
-        id: unit.id,
-        source: unit.source,
-        translated,
-        assurance: 'unverified',
-        reportable: false,
-        reason: 'quality_gate_disabled',
-        events: [event('mqm', 'MQM quality gate was disabled.')],
-    };
-}
-
 export async function processTranslationLifecycle(
     unit: TranslationUnit,
     initialTranslation: string,
@@ -55,11 +43,6 @@ export async function processTranslationLifecycle(
     log: (message: string) => void,
 ): Promise<TranslationOutcome> {
     const events: TranslationEvent[] = [event('translation', 'Initial translation received.')];
-
-    if (!config.validation.mqm.enabled) {
-        log(`mqm: disabled for ${unit.id}`);
-        return qualityGateDisabledOutcome(unit, initialTranslation);
-    }
 
     const initialEvaluation = await measureAsync(log, `initialMqm ${unit.id}`, () =>
         limit(() =>
