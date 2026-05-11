@@ -28,6 +28,9 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbConte
  * Breadcrumb.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The root container that provides size context to all descendant breadcrumb parts. Renders a `<nav>` element.
+ */
 export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     (props, ref) => {
         const { render, ...componentProps } = resolveStyles(props);
@@ -54,6 +57,9 @@ BreadcrumbRootPrimitive.displayName = 'Breadcrumb.RootPrimitive';
  * Breadcrumb.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * An ordered list that wraps breadcrumb items. Renders an `<ol>` element.
+ */
 export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbListPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -75,6 +81,9 @@ BreadcrumbListPrimitive.displayName = 'Breadcrumb.ListPrimitive';
  * Breadcrumb.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * A convenience wrapper that composes `BreadcrumbRootPrimitive` and `BreadcrumbListPrimitive` into a single component. Renders a `<nav>` element.
+ */
 export const BreadcrumbRoot = forwardRef<HTMLElement, BreadcrumbRoot.Props>(
     ({ children, ...props }, ref) => {
         return (
@@ -90,6 +99,9 @@ BreadcrumbRoot.displayName = 'Breadcrumb.Root';
  * Breadcrumb.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * A single list item that wraps a breadcrumb link or ellipsis. Renders an `<li>` element.
+ */
 export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -111,6 +123,9 @@ BreadcrumbItemPrimitive.displayName = 'Breadcrumb.ItemPrimitive';
  * Breadcrumb.LinkPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * A navigable link inside a breadcrumb item. Renders an `<a>` element.
+ */
 export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         const { render, current = false, className, ...componentProps } = resolveStyles(props);
@@ -139,6 +154,9 @@ BreadcrumbLinkPrimitive.displayName = 'Breadcrumb.LinkPrimitive';
  * Breadcrumb.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * A convenience wrapper that composes `BreadcrumbItemPrimitive` and `BreadcrumbLinkPrimitive` into a single component. Renders an `<a>` element inside an `<li>` element.
+ */
 export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbItem.Props>((props, ref) => {
     return (
         <BreadcrumbItemPrimitive>
@@ -152,6 +170,9 @@ BreadcrumbItem.displayName = 'Breadcrumb.Item';
  * Breadcrumb.Separator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * A visual divider between breadcrumb items, defaulting to a slash icon. Renders an `<li>` element.
+ */
 export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator.Props>(
     (props, ref) => {
         const {
@@ -189,6 +210,9 @@ BreadcrumbSeparator.displayName = 'Breadcrumb.Separator';
  * Breadcrumb.EllipsisPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * An icon indicating collapsed breadcrumb items, defaulting to a more icon. Renders a `<span>` element.
+ */
 export const BreadcrumbEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     BreadcrumbEllipsisPrimitive.Props
@@ -222,6 +246,9 @@ BreadcrumbEllipsisPrimitive.displayName = 'Breadcrumb.EllipsisPrimitive';
  * BreadcrumbEllipsis
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * A convenience wrapper that composes `BreadcrumbItemPrimitive` and `BreadcrumbEllipsisPrimitive` into a single component. Renders a `<span>` element inside an `<li>` element.
+ */
 export const BreadcrumbEllipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisPrimitive.Props>(
     (props, ref) => {
         return (
