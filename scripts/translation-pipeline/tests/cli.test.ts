@@ -64,9 +64,6 @@ describe('E2E: CLI → translator → 파일 출력', () => {
                     { id: 'props[0].size.description', verdict: 'PASS', errors: [] },
                 ],
             }),
-            inputTokens: 0,
-            outputTokens: 0,
-            cost: 0,
         });
 
         const result = await run(['--input', inputDir, '--output', outputDir], { env: validEnv });
