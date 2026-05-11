@@ -1,35 +1,24 @@
-import { findUpSync } from 'find-up';
-import path from 'node:path';
-
 import type { ExtractorConfig } from '~/config/schema';
 
-// `pnpm-workspace.yaml` marks the monorepo root. This tool is only meaningful
-// inside the vapor-ui monorepo, so absolute defaults derived from the root let
-// `ts-api-extractor` run from any cwd inside the repo without breaking.
-const ROOT_MARKER = 'pnpm-workspace.yaml';
-
-function findMonorepoRoot(): string {
-    const markerPath = findUpSync(ROOT_MARKER);
-    if (!markerPath) {
-        throw new Error(
-            `@vapor-ui/ts-api-extractor: could not locate monorepo root (no ${ROOT_MARKER} found upward from ${process.cwd()})`,
-        );
-    }
-    return path.dirname(markerPath);
-}
-
-const monorepoRoot = findMonorepoRoot();
-
-export function resolvePackagePaths(packageName: string): { inputPath: string; tsconfig: string } {
-    return {
-        inputPath: path.join(monorepoRoot, 'packages', packageName, 'src'),
-        tsconfig: path.join(monorepoRoot, 'packages', packageName, 'tsconfig.json'),
-    };
-}
-
+/**
+ * Default extractor configuration.
+ *
+ * NOTE: Relative paths (inputPath, tsconfig, outputDir) are resolved against
+ * `process.cwd()` at runtime. This configuration assumes the tool is invoked
+ * from the repository root. For other invocation contexts, provide an explicit
+ * config file (e.g. docs-extractor.config.mjs) with paths relative to that file.
+ */
 export const defaultExtractorConfig: ExtractorConfig = {
-    ...resolvePackagePaths('core'),
-    outputDir: path.join(monorepoRoot, 'apps/website/public/components/generated'),
-    include: ['className', 'style'],
+    inputPath: '../../packages/core',
+    tsconfig: '../../packages/core/tsconfig.json',
+    exclude: [],
+    excludeDefaults: true,
+    outputDir: '../../apps/website/public/components/generated',
+    filterExternal: true,
+    filterHtml: true,
+    filterSprinkles: true,
+    includeHtml: ['className'],
+    components: {},
+    all: false,
     verbose: false,
 };

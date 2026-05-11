@@ -57,13 +57,17 @@ function isDeprecatedCssProp(name: string): boolean {
 export function shouldIncludeProp(
     name: string,
     source: PropSource,
+    options: FilterConfig,
     includeSet: Set<string>,
+    htmlWhitelist: Set<string>,
 ): boolean {
     if (includeSet.has(name)) return true;
-    if (source === 'react' || source === 'dom' || source === 'external') return false;
-    if (isHtmlAttribute(name)) return false;
-    if (source === 'sprinkles') return false;
-    if (isDeprecatedCssProp(name)) return false;
+    if (htmlWhitelist.has(name)) return true;
+    if (options.filterExternal && (source === 'react' || source === 'dom' || source === 'external'))
+        return false;
+    if (options.filterHtml && isHtmlAttribute(name)) return false;
+    if (options.filterSprinkles && source === 'sprinkles') return false;
+    if (options.filterSprinkles && isDeprecatedCssProp(name)) return false;
     return true;
 }
 
@@ -72,10 +76,11 @@ export function filterParsedComponents(
     options: FilterConfig,
 ): ParsedComponent[] {
     const includeSet = new Set(options.include ?? []);
+    const htmlWhitelist = new Set(options.includeHtml ?? []);
     return components.map((component) => ({
         ...component,
         props: component.props.filter((prop) =>
-            shouldIncludeProp(prop.name, prop.source, includeSet),
+            shouldIncludeProp(prop.name, prop.source, options, includeSet, htmlWhitelist),
         ),
     }));
 }

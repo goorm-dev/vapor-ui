@@ -1,16 +1,7 @@
 import meow from 'meow';
-import path from 'node:path';
 
-import { resolveRunContext } from '~/cli/context';
-import { CliError } from '~/cli/input';
+import { CliError, resolveOptions } from '~/cli/options';
 import { extract } from '~/extract';
-
-// Load .env from cwd (website app root when running via turbo)
-try {
-    process.loadEnvFile(path.resolve(process.cwd(), '.env'));
-} catch {
-    // File does not exist — proceed without it
-}
 
 async function runCli(): Promise<void> {
     const cli = meow(
@@ -20,31 +11,32 @@ async function runCli(): Promise<void> {
 
   Options
     --component, -n   Component name to process (default: all components)
-    --package, -p     Package name to extract from (default: core)
-    --verbose, -v     Enable verbose logging
+    --config          Config file path
 
   Examples
     $ ts-api-extractor
     $ ts-api-extractor --component Tabs
-    $ ts-api-extractor --package hooks
+    $ ts-api-extractor --config ./docs-extractor.config.mjs
 `,
         {
             importMeta: import.meta,
             flags: {
                 component: { type: 'string', shortFlag: 'n' },
-                package: { type: 'string', shortFlag: 'p' },
-                verbose: { type: 'boolean', shortFlag: 'v', default: false },
+                config: { type: 'string' },
             },
         },
     );
 
-    const resolved = await resolveRunContext({
+    const resolved = await resolveOptions({
         component: cli.flags.component,
-        package: cli.flags.package,
-        verbose: cli.flags.verbose,
+        configPath: cli.flags.config,
     });
 
-    await extract(resolved);
+    extract({
+        tsconfigPath: resolved.tsconfigPath,
+        targetFiles: resolved.targetFiles,
+        config: resolved.config,
+    });
 }
 
 function handleCliError(error: unknown): never {

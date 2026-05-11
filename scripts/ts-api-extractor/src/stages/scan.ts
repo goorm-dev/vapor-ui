@@ -3,6 +3,11 @@ import path from 'node:path';
 
 const DEFAULT_EXCLUDES = ['.stories.tsx', '.css.ts', '.test.tsx'];
 
+export interface ScannerOptions {
+    exclude?: string[];
+    skipDefaultExcludes?: boolean;
+}
+
 export function normalizeComponentName(name: string): string {
     return name.toLowerCase().replace(/-/g, '');
 }
@@ -18,7 +23,19 @@ export function findFileByComponentName(files: string[], componentName: string):
     );
 }
 
-export async function findComponentFiles(inputPath: string): Promise<string[]> {
+export async function findComponentFiles(
+    inputPath: string,
+    options?: ScannerOptions,
+): Promise<string[]> {
     const files = await glob('**/*.tsx', { cwd: inputPath, absolute: true });
-    return files.filter((file) => !DEFAULT_EXCLUDES.some((pattern) => file.endsWith(pattern)));
+
+    const defaultPatterns = options?.skipDefaultExcludes ? [] : DEFAULT_EXCLUDES;
+    const customPatterns = options?.exclude ?? [];
+    const excludePatterns = [...defaultPatterns, ...customPatterns];
+
+    if (excludePatterns.length === 0) {
+        return files;
+    }
+
+    return files.filter((file) => !excludePatterns.some((pattern) => file.endsWith(pattern)));
 }

@@ -1,10 +1,9 @@
 import path from 'node:path';
 import { Project } from 'ts-morph';
 
-import type { ExtractorConfig } from '~/config/schema';
+import { resolveComponentInclude } from '~/config/resolve';
 import type { FilterConfig, ParseConfig } from '~/models/config';
-import type { PropsInfoJson } from '~/models/output';
-import type { ComponentModel, ParsedComponent } from '~/models/pipeline';
+import type { ExtractInput, ExtractOutput } from '~/models/output';
 import { filterParsedComponents } from '~/stages/filter';
 import { parseSourceFile } from '~/stages/parse';
 import { componentsToJson } from '~/stages/serialize';
@@ -12,20 +11,7 @@ import { parsedComponentsToModels } from '~/stages/transform';
 import { writePropsFiles } from '~/stages/write';
 import { formatFileName } from '~/utils/filename';
 
-export interface ExtractInput {
-    tsconfigPath: string;
-    targetFiles: string[];
-    config: ExtractorConfig;
-}
-
-export interface ExtractOutput {
-    parsed: ParsedComponent[];
-    models: ComponentModel[];
-    props: PropsInfoJson[];
-    writtenFiles: string[];
-}
-
-export async function extract(input: ExtractInput): Promise<ExtractOutput> {
+export function extract(input: ExtractInput): ExtractOutput {
     const { config } = input;
     const outputDir = path.resolve(process.cwd(), config.outputDir);
     const project = new Project({ tsConfigFilePath: input.tsconfigPath });
@@ -49,7 +35,11 @@ export async function extract(input: ExtractInput): Promise<ExtractOutput> {
                 verbose: config.verbose,
             };
             const filterConfig: FilterConfig = {
-                include: config.include,
+                filterExternal: config.all ? false : config.filterExternal,
+                filterHtml: config.all ? false : config.filterHtml,
+                filterSprinkles: config.all ? false : config.filterSprinkles,
+                includeHtml: config.includeHtml,
+                include: resolveComponentInclude(filePath, config),
             };
 
             const parsedComponents = parseSourceFile(sourceFile, parseConfig);
@@ -68,12 +58,7 @@ export async function extract(input: ExtractInput): Promise<ExtractOutput> {
 
     console.error(`Done! Extracted ${props.length} components.`);
 
-    const writtenFiles = writePropsFiles(
-        props,
-        outputDir,
-        (prop) => formatFileName(prop.name),
-        'en',
-    );
+    const writtenFiles = writePropsFiles(props, outputDir, (prop) => formatFileName(prop.name));
 
     return {
         parsed,
