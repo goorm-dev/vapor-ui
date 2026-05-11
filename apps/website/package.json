@@ -8,13 +8,13 @@
         "clean": "rm -rf node_modules .next .turbo .source",
         "dev": "next dev --turbo",
         "extract": "ts-api-extractor",
-        "translate": "translation-pipeline --input ./public/components/generated/en --output ./public/components/generated",
-        "i18n": "pnpm extract && pnpm translate",
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
+        "i18n": "pnpm extract && pnpm translate",
         "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src",
         "start": "next start",
+        "translate": "translation-pipeline --input ./public/components/generated/en --output ./public/components/generated",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
