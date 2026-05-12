@@ -3,9 +3,9 @@ import type { ComponentProps, ReactNode } from 'react';
 import { AlignCenterOutlineIcon, EditOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 import type { AnchorProviderProps, TOCItemType } from 'fumadocs-core/toc';
+import { TOCProvider, TOCScrollArea } from 'fumadocs-ui/components/toc';
 import * as TocClerk from 'fumadocs-ui/components/toc/clerk';
 import * as TocDefault from 'fumadocs-ui/components/toc/default';
-import { TOCProvider, TOCScrollArea } from 'fumadocs-ui/components/toc/index';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import { I18nLabel } from 'fumadocs-ui/contexts/i18n';
 
@@ -122,9 +122,17 @@ export function CustomDocsPage({
                             {tocPopoverOptions.header}
                             <TOCScrollArea>
                                 {tocPopoverOptions.style === 'clerk' ? (
-                                    <TocClerk.TOCItems />
+                                    <TocClerk.TOCItems>
+                                        {toc.map((item) => (
+                                            <TocClerk.TOCItem key={item.url} item={item} />
+                                        ))}
+                                    </TocClerk.TOCItems>
                                 ) : (
-                                    <TocDefault.TOCItems />
+                                    <TocDefault.TOCItems>
+                                        {toc.map((item) => (
+                                            <TocDefault.TOCItem key={item.url} item={item} />
+                                        ))}
+                                    </TocDefault.TOCItems>
                                 )}
                             </TOCScrollArea>
                             {tocPopoverOptions.footer}
@@ -135,8 +143,8 @@ export function CustomDocsPage({
                 data-full={full}
                 id="nd-page"
                 className={clsx(
-                    'flex flex-col gap-4 px-4 py-6 [grid-area:main] *:max-w-[900px] md:px-6 md:pt-8 xl:px-8 xl:pt-8',
-                    full && '*:max-w-[1285px]',
+                    'flex flex-col gap-4 px-4 py-6 [grid-area:main] *:max-w-225 md:px-6 md:pt-8 xl:px-8 xl:pt-8',
+                    full && '*:max-w-321.25',
                 )}
             >
                 {!!breadcrumbEnabled && (breadcrumb ?? <PageBreadcrumb {...breadcrumbProps} />)}
@@ -160,9 +168,17 @@ export function CustomDocsPage({
                         </h3>
                         <TOCScrollArea>
                             {tocOptions.style === 'clerk' ? (
-                                <TocClerk.TOCItems />
+                                <TocClerk.TOCItems>
+                                    {toc.map((item) => (
+                                        <TocClerk.TOCItem key={item.url} item={item} />
+                                    ))}
+                                </TocClerk.TOCItems>
                             ) : (
-                                <TocDefault.TOCItems />
+                                <TocDefault.TOCItems>
+                                    {toc.map((item) => (
+                                        <TocDefault.TOCItem key={item.url} item={item} />
+                                    ))}
+                                </TocDefault.TOCItems>
                             )}
                         </TOCScrollArea>
                         {tocOptions.footer}

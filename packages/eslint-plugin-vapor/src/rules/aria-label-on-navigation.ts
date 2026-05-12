@@ -1,5 +1,6 @@
 import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
+import type { JSXAttribute, JSXOpeningElement, JSXSpreadAttribute } from 'estree-jsx';
 
 import { getSource } from '~/utils/get-source';
 import { isJSXIdentifier, isJSXMemberExpression } from '~/utils/guard';
@@ -58,7 +59,7 @@ export const ariaLabelOnNavigationRule: Rule.RuleModule = {
                 }
             },
 
-            JSXOpeningElement(node) {
+            JSXOpeningElement(node: JSXOpeningElement) {
                 const nodeName = node.name;
                 let isTarget = false;
                 let detectedName = '';
@@ -90,7 +91,10 @@ export const ariaLabelOnNavigationRule: Rule.RuleModule = {
 
                 // 속성 검사 로직
                 const hasAriaLabel = node.attributes.some(
-                    (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'aria-label',
+                    (attr: JSXAttribute | JSXSpreadAttribute) =>
+                        attr.type === 'JSXAttribute' &&
+                        attr.name.type === 'JSXIdentifier' &&
+                        attr.name.name === 'aria-label',
                 );
 
                 if (!hasAriaLabel) {
