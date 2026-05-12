@@ -27,8 +27,6 @@
             "cache": false
         },
         "lint": { "outputs": [] },
-        "format": { "outputs": [], "cache": false },
-        "format:check": { "outputs": [] },
         "clean": { "cache": false },
         "build:storybook": {
             "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],

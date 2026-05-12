@@ -21,8 +21,6 @@
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
-        "format": "prettier --write \"./**/*.{ts,md,mjs}\"",
-        "format:check": "prettier --check \"./**/*.{ts,md,mjs}\"",
         "lint": "eslint ./src",
         "test": "vitest",
         "test:coverage": "vitest run --coverage",
