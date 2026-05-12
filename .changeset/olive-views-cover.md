@@ -15,7 +15,7 @@ Previously, when `children` were passed to `Avatar.Root`, the internal `image` a
 
 ```tsx
 <Avatar.Root src="..." alt="...">
-  <Avatar.ImagePrimitive />
-  <Avatar.FallbackPrimitive />
+    <Avatar.ImagePrimitive />
+    <Avatar.FallbackPrimitive />
 </Avatar.Root>
 ```

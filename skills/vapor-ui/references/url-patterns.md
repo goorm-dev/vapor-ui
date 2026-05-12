@@ -4,10 +4,10 @@ All URLs use the `{VERSION}` placeholder which should be replaced with the actua
 
 ## Base URLs
 
-| Type | URL |
-|------|-----|
+| Type        | URL                                                                             |
+| ----------- | ------------------------------------------------------------------------------- |
 | Raw Content | `https://raw.githubusercontent.com/goorm-dev/vapor-ui/@vapor-ui/core@{VERSION}` |
-| GitHub API | `https://api.github.com/repos/goorm-dev/vapor-ui/contents` |
+| GitHub API  | `https://api.github.com/repos/goorm-dev/vapor-ui/contents`                      |
 
 ## Component Information
 
@@ -60,6 +60,7 @@ node scripts/detect-version.mjs ./package.json
 ```
 
 Output:
+
 ```
 CORE: 1.0.0-beta.12
 ICONS: 1.0.0-beta.12

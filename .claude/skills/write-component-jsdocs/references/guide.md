@@ -57,8 +57,7 @@ When custom props are defined via an `interface`, write JSDoc on the **interface
 ```ts
 // dialog.tsx
 export interface DialogRootProps
-    extends DialogVariants,
-        Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
+    extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
      * Closes the dialog when the overlay is clicked. Default: `true`
      */
@@ -78,8 +77,10 @@ export namespace DialogRoot {
 
 ```ts
 // avatar.tsx
-export interface AvatarRootProps
-    extends Assign<VaporUIComponentProps<typeof BaseAvatar.Root, AvatarRoot.State>, AvatarContext> {
+export interface AvatarRootProps extends Assign<
+    VaporUIComponentProps<typeof BaseAvatar.Root, AvatarRoot.State>,
+    AvatarContext
+> {
     /**
      * Custom image element to render inside the avatar.
      */
