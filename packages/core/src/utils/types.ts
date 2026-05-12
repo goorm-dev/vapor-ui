@@ -38,7 +38,13 @@ export type Styles = {
 export type VaporUIComponentProps<ElementType extends React.ElementType, State> = Styles &
     DeprecatedSprinkles &
     Omit<useRender.ComponentProps<ElementType, State>, OmitColorProp<ElementType> | 'className'> & {
+        /**
+         * CSS class applied to the element, or a function that returns a class based on the component’s state.
+         */
         className?: ClassNameParams<State>;
+        /**
+         * Style applied to the element, or a function that returns a style object based on the component’s state.
+         */
         style?: StyleParams<State>;
     };
 

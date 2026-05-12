@@ -2,6 +2,7 @@ packages:
     - apps/*
     - packages/*
     - scripts/ts-api-extractor
+    - scripts/sync-figma
 
 # Unified React 19 for entire monorepo
 # Libraries (packages/*) maintain peerDependencies for React 17/18/19 compatibility
@@ -10,6 +11,6 @@ catalog:
     react-dom: ^19.2.5
     '@types/react': ^19.2.14
     '@types/react-dom': ^19.2.3
-    typescript: ^5.9.2
-    eslint: ^9.37.0
-    prettier: ^3.8.1
+    typescript: ^5.9.3
+    eslint: ^9.39.4
+    prettier: ^3.8.3

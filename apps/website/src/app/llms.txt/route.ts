@@ -1,10 +1,10 @@
-import type { Page, PageData } from 'fumadocs-core/source';
+import type { Page } from 'fumadocs-core/source';
 
 import { source } from '~/lib/source';
 
 export const revalidate = false;
 
-function processPages<T extends Page<PageData>>(pages: T[], sectionTitle: string) {
+function processPages(pages: Page[], sectionTitle: string) {
     const scanned: string[] = [];
     const map = new Map<string, string[]>();
 

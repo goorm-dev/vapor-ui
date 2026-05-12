@@ -6,9 +6,9 @@ import clsx from 'clsx';
 import Link from 'fumadocs-core/link';
 import type * as PageTree from 'fumadocs-core/page-tree';
 import type { SidebarPageTreeComponents } from 'fumadocs-ui/components/sidebar/page-tree';
+import type { GetSidebarTabsOptions } from 'fumadocs-ui/components/sidebar/tabs';
+import { getSidebarTabs } from 'fumadocs-ui/components/sidebar/tabs';
 import type { SidebarTabWithProps } from 'fumadocs-ui/components/sidebar/tabs/dropdown';
-import type { GetSidebarTabsOptions } from 'fumadocs-ui/components/sidebar/tabs/index';
-import { getSidebarTabs } from 'fumadocs-ui/components/sidebar/tabs/index';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import { TreeContextProvider } from 'fumadocs-ui/contexts/tree';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
@@ -136,8 +136,9 @@ export const CustomDocsLayout = (props: DocsLayoutProps) => {
                   );
 
         // Normalize nav.title to ReactNode
-        const titleNode: ReactNode =
-            typeof nav.title === 'function' ? nav.title({} as ComponentProps<'a'>) : nav.title;
+        const titleNode = (
+            typeof nav.title === 'function' ? nav.title({} as ComponentProps<'a'>) : nav.title
+        ) as ReactNode;
 
         const viewport = (
             <SidebarViewport>
@@ -288,8 +289,9 @@ function DocsNavbar({
     const showLayoutTabs = tabMode === 'navbar' && tabs.length > 0;
 
     // Normalize nav.title to ReactNode
-    const titleNode: ReactNode =
-        typeof nav.title === 'function' ? nav.title({} as ComponentProps<'a'>) : nav.title;
+    const titleNode = (
+        typeof nav.title === 'function' ? nav.title({} as ComponentProps<'a'>) : nav.title
+    ) as ReactNode;
 
     return (
         <LayoutHeader

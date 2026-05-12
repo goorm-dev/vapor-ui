@@ -42,9 +42,13 @@ export default function NavigationMenuSelected() {
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
 
-                    <NavigationMenu.Viewport
-                        portalElement={<NavigationMenu.PortalPrimitive keepMounted />}
-                    />
+                    <NavigationMenu.PortalPrimitive keepMounted>
+                        <NavigationMenu.PositionerPrimitive>
+                            <NavigationMenu.PopupPrimitive>
+                                <NavigationMenu.ViewportPrimitive />
+                            </NavigationMenu.PopupPrimitive>
+                        </NavigationMenu.PositionerPrimitive>
+                    </NavigationMenu.PortalPrimitive>
                 </NavigationMenu.Root>
             </div>
         </div>

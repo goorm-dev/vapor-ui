@@ -43,7 +43,8 @@ export namespace Button {
 export const root = componentRecipe({
     variants: {
         /**
-         * Visual style of the button. Default: `'fill'`
+         * Visual style of the button.
+         * @default 'fill'
          */
         variant: { fill: {}, outline: {}, ghost: {} },
     },
@@ -59,7 +60,9 @@ When custom props are defined via an `interface`, write JSDoc on the **interface
 export interface DialogRootProps
     extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
-     * Closes the dialog when the overlay is clicked. Default: `true`
+     *
+     * Closes the dialog when the overlay is clicked.
+     * @default true
      */
     closeOnClickOverlay?: boolean;
 }
@@ -267,12 +270,16 @@ Explain what happens when the prop is set — especially when it interacts with 
 
 ```tsx
 /**
- * Disables the button, blocking all interactions and dimming its appearance. Automatically set to `true` when `loading` is `true`. Default: `false`
+ *
+ * Disables the button, blocking all interactions and dimming its appearance. Automatically set to `true` when `loading` is `true`.
+ * @default false
  */
 disabled?: boolean;
 
 /**
- * Shows a spinner and disables the button while `true`. Default: `false`
+ *
+ * Shows a spinner and disables the button while `true`.
+ * @default false
  */
 loading?: boolean;
 ```
