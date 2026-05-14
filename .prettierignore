@@ -2,3 +2,5 @@ dist
 .turbo
 node_modules
 public
+pnpm-lock.yaml
+**/.source

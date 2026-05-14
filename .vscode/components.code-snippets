@@ -24,9 +24,7 @@
     "import styles": {
         "scope": "typescriptreact",
         "prefix": "styles",
-        "body": [
-            "import * as styles from './${TM_DIRECTORY/^.+\\/(.*)$/$1/}.css';",
-        ],
+        "body": ["import * as styles from './${TM_DIRECTORY/^.+\\/(.*)$/$1/}.css';"],
         "description": "Import styles using the current directory name",
     },
 }

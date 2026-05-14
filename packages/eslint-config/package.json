@@ -14,9 +14,6 @@
         "./import": "./import.js"
     },
     "main": "./index.js",
-    "scripts": {
-        "format": "prettier . --write"
-    },
     "devDependencies": {
         "@antebudimir/eslint-plugin-vanilla-extract": "^1.16.0",
         "@eslint/compat": "^1.4.1",
@@ -32,7 +29,6 @@
         "eslint-plugin-react-hooks": "^5.2.0",
         "eslint-plugin-storybook": "^9.1.20",
         "globals": "^16.5.0",
-        "prettier": "catalog:",
         "typescript-eslint": "^8.59.2"
     },
     "peerDependencies": {

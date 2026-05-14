@@ -33,13 +33,15 @@ import Link from 'next/link';
 import { Switch } from '@vapor-ui/core';
 import { DarkIcon, LightIcon } from '@vapor-ui/icons';
 
-<Switch.Root
-    render={(props, state) => (
-        <span {...props}>
-            {state.checked ? <DarkIcon /> : <LightIcon />}
-        </span>
-    )}
-/>
+export default function Example() {
+    return (
+        <Switch.Root
+            render={(props, state) => (
+                <span {...props}>{state.checked ? <DarkIcon /> : <LightIcon />}</span>
+            )}
+        />
+    );
+}
 ```
 
 ## Primitive 직접 조합하기
@@ -49,19 +51,23 @@ Primitive를 직접 조합하면 Portal 위치, Overlay 렌더링 순서 등 레
 ```tsx
 import { Button, Dialog } from '@vapor-ui/core';
 
-<Dialog.Root>
-    <Dialog.Trigger>열기</Dialog.Trigger>
-    <Dialog.PortalPrimitive>
-        <Dialog.OverlayPrimitive />
-        <Dialog.PopupPrimitive>
-            <Dialog.Header>
-                <Dialog.Title>제목</Dialog.Title>
-            </Dialog.Header>
-            <Dialog.Body>내용</Dialog.Body>
-            <Dialog.Footer>
-                <Dialog.Close render={<Button>닫기</Button>} />
-            </Dialog.Footer>
-        </Dialog.PopupPrimitive>
-    </Dialog.PortalPrimitive>
-</Dialog.Root>
+export default function Example() {
+    return (
+        <Dialog.Root>
+            <Dialog.Trigger>열기</Dialog.Trigger>
+            <Dialog.PortalPrimitive>
+                <Dialog.OverlayPrimitive />
+                <Dialog.PopupPrimitive>
+                    <Dialog.Header>
+                        <Dialog.Title>제목</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>내용</Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.Close render={<Button>닫기</Button>} />
+                    </Dialog.Footer>
+                </Dialog.PopupPrimitive>
+            </Dialog.PortalPrimitive>
+        </Dialog.Root>
+    );
+}
 ```
