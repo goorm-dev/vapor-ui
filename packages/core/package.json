@@ -68,7 +68,7 @@
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {
-        "@playwright/test": "^1.59.1",
+        "@playwright/test": "^1.60.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@rollup/plugin-alias": "^5.1.1",
