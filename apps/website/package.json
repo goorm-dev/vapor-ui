@@ -62,7 +62,7 @@
         "@types/react-dom": "catalog:",
         "@vapor-ui/ts-api-extractor": "workspace:*",
         "eslint": "catalog:",
-        "postcss": "^8.5.14",
+        "postcss": "^8.5.15",
         "shiki": "^3.23.0",
         "tailwindcss": "^4.2.4",
         "typescript": "catalog:"

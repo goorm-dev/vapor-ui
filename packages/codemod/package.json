@@ -44,7 +44,7 @@
         "eslint": "catalog:",
         "jest": "^30.3.0",
         "rimraf": "^6.1.3",
-        "ts-jest": "^29.4.9",
+        "ts-jest": "^29.4.10",
         "tsup": "^8.5.1"
     },
     "engines": {
