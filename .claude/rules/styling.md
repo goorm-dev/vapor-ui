@@ -13,7 +13,7 @@ All styles use **Vanilla Extract** — zero-runtime, type-safe CSS-in-JS. No inl
 
 Every component follows the same three-step flow at runtime:
 
-```
+```text
 resolveStyles(props)           $css / deprecated flat props → sprinkles() → className + style
                                remaining props pass through untouched
 
@@ -190,7 +190,7 @@ Deprecated flat sprinkle props (`padding`, `margin`, `color`, etc.) are being ph
 
 ## `@layer` Cascade Order
 
-```
+```text
 @layer vapor.theme       design token CSS variables
 @layer vapor.reset       browser default resets
 @layer vapor.components  componentRecipe / componentStyle output  ← components live here

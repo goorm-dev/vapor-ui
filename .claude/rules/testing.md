@@ -1,7 +1,7 @@
 ---
 description: Testing conventions for packages/core — Vitest, Testing Library, accessibility checks
 paths:
-  - "packages/core/src/**/*.test.tsx"
+    - 'packages/core/src/**/*.test.tsx'
 ---
 
 # Testing Rules (`packages/core`)
@@ -38,7 +38,11 @@ afterEach(() => {
 });
 
 it('shows tooltip after delay', async () => {
-    render(<Tooltip content="Hello"><button>Hover me</button></Tooltip>);
+    render(
+        <Tooltip content="Hello">
+            <button>Hover me</button>
+        </Tooltip>,
+    );
     await userEvent.hover(screen.getByRole('button'));
     await act(() => vi.advanceTimersByTime(300));
     expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -63,7 +67,7 @@ it('has no accessibility violations', async () => {
 
 Keep test files next to the component they cover:
 
-```
+```text
 src/components/button/
   button.tsx
   button.test.tsx   ← colocated

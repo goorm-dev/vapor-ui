@@ -13,7 +13,7 @@ paths:
 
 Stories live colocated with the component:
 
-```
+```text
 src/components/button/
   button.tsx
   button.stories.tsx   ← colocated

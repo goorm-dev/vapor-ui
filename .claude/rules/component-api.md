@@ -11,7 +11,7 @@ paths:
 
 Keep implementation, styles, stories, and tests colocated in the component folder:
 
-```
+```text
 src/components/button/
   button.tsx
   button.css.ts

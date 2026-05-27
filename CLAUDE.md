@@ -10,23 +10,23 @@ An open-source React UI component library and design system maintained by goorm.
 
 **Packages** (`packages/`) — published to npm:
 
-| Package | Role |
-|---------|------|
-| `@vapor-ui/core` | 34+ accessible React components. Headless-first via `@base-ui/react`, zero-runtime styling via Vanilla Extract, variant system via `recipe()` + Sprinkles |
-| `@vapor-ui/hooks` | Shared React hooks for state and UI management — used internally by `core` and available to consumers |
-| `@vapor-ui/icons` | SVG-to-React icon components, synced automatically from Figma |
-| `@vapor-ui/color-generator` | OKLCH-based WCAG-compliant color palette generator — produces design tokens used by `css-generator` |
-| `@vapor-ui/css-generator` | Generates CSS variables and themes from design tokens produced by `color-generator` |
-| `@vapor-ui/codemod` | jscodeshift-based automated code migration tools for major version upgrades |
+| Package                     | Role                                                                                                                                                      |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@vapor-ui/core`            | 34+ accessible React components. Headless-first via `@base-ui/react`, zero-runtime styling via Vanilla Extract, variant system via `recipe()` + Sprinkles |
+| `@vapor-ui/hooks`           | Shared React hooks for state and UI management — used internally by `core` and available to consumers                                                     |
+| `@vapor-ui/icons`           | SVG-to-React icon components, synced automatically from Figma                                                                                             |
+| `@vapor-ui/color-generator` | OKLCH-based WCAG-compliant color palette generator — produces design tokens used by `css-generator`                                                       |
+| `@vapor-ui/css-generator`   | Generates CSS variables and themes from design tokens produced by `color-generator`                                                                       |
+| `@vapor-ui/codemod`         | jscodeshift-based automated code migration tools for major version upgrades                                                                               |
 
 **Apps** (`apps/`) — not published:
 
-| App | Role |
-|-----|------|
-| `storybook` | Component development and visual regression baseline |
-| `website` | Next.js documentation site |
-| `figma-plugin` | Figma theme/color management plugin |
-| `figma-codegen-plugin` | Figma code generation plugin |
+| App                    | Role                                                 |
+| ---------------------- | ---------------------------------------------------- |
+| `storybook`            | Component development and visual regression baseline |
+| `website`              | Next.js documentation site                           |
+| `figma-plugin`         | Figma theme/color management plugin                  |
+| `figma-codegen-plugin` | Figma code generation plugin                         |
 
 Turborepo manages build dependency order automatically — `pnpm dev` builds upstream packages before starting dev servers.
 
@@ -85,20 +85,20 @@ pnpm release          # 3. build all packages + publish to npm
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
+```text
 <type>(<scope>): <subject>
 ```
 
 Primary types:
 
-| Type | When to use |
-|------|-------------|
-| `feat` | New component, prop, or user-facing feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `refactor` | Code change with no behavior change |
-| `test` | Add or update tests |
-| `chore` | Build, config, dependency updates |
+| Type              | When to use                                     |
+| ----------------- | ----------------------------------------------- |
+| `feat`            | New component, prop, or user-facing feature     |
+| `fix`             | Bug fix                                         |
+| `docs`            | Documentation only                              |
+| `refactor`        | Code change with no behavior change             |
+| `test`            | Add or update tests                             |
+| `chore`           | Build, config, dependency updates               |
 | `BREAKING CHANGE` | Add `!` after type or `BREAKING CHANGE:` footer |
 
 Commit type alone does not determine the release version — the changeset level (`patch` / `minor` / `major`) decides that. See `packages/core/CLAUDE.md` for detailed rules.

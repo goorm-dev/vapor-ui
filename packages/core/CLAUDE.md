@@ -24,7 +24,7 @@ Full rule files live in `.claude/rules/` at the repo root. Load them when you ne
 
 **Standalone** — single component, simple API (e.g., `Button`, `TextInput`):
 
-```
+```text
 src/components/button/
   button.tsx         ← component + Props namespace
   button.css.ts      ← componentRecipe / componentStyle
@@ -35,7 +35,7 @@ src/components/button/
 
 **Compound** — multi-part namespace API (e.g., `Dialog`, `Menu`):
 
-```
+```text
 src/components/dialog/
   dialog.tsx         ← all parts + Props namespaces
   dialog.css.ts
@@ -82,7 +82,7 @@ import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 
 Every component follows the same three-step flow:
 
-```
+```text
 resolveStyles(props)      → strips $css / deprecated flat props, returns { className, style, ...rest }
 cn(recipe(variants), className)  → merges classNames
 <BaseComponent className={...} {...otherProps} />
@@ -141,7 +141,7 @@ Always use the `vars` object from `~/styles/themes.css`. Never use hard-coded va
 
 ### `@layer` cascade order
 
-```
+```text
 vapor.theme → vapor.reset → vapor.components → vapor.utilities → (no layer: user className)
 ```
 
