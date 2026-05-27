@@ -16,19 +16,37 @@ paths:
 | Constants                            | `CONSTANT_CASE` |
 | Files, directories                   | `kebab-case`    |
 
+## React Components
+
+Never use `React.FC`. Use plain function or arrow function with an explicit props type instead.
+
+`React.FC` implicitly adds `children?: ReactNode` to every component, making it unclear whether children are intentional. It also breaks with `defaultProps` (`LibraryManagedAttributes` stops working), doesn't support generics, and was removed from the Create React App TypeScript template in React 18.
+
+```tsx
+// ❌
+const Button: React.FC<Props> = ({ children }) => { ... }
+
+// ✅
+interface Props {
+    children?: React.ReactNode; // only when actually needed
+}
+const Button = ({ children }: Props) => { ... }
+```
+
 ## Type vs. Interface
 
-- **`interface`**: component props and object shapes (supports `extends`)
-- **`type`**: unions, intersections, utility-heavy composite types
+- **`interface`**: component props and extendable object shapes — prefer `interface` because `extends` catches type conflicts at definition time, whereas `type &` intersection silently produces `never` for conflicting property types and only surfaces the error at the use site. `interface` is also faster for the TypeScript compiler when inheritance is involved.
+- **`type`**: unions, intersections, computed/conditional types, and single-line literal unions
 
 ```ts
-// ✅ interface for props
+// ✅ interface for props (catches conflicts early)
 interface ButtonProps {
     variant?: 'solid' | 'outline';
 }
 
-// ✅ type for unions
+// ✅ type for unions and computed types
 type ButtonSize = 'sm' | 'md' | 'lg';
+type Flatten<T> = T extends Array<infer U> ? U : T;
 ```
 
 ## Null & Undefined
@@ -80,6 +98,17 @@ Constants use `CONSTANT_CASE` with `as const`:
 
 ```ts
 const MAX_RETRY_COUNT = 3 as const;
+```
+
+## Imports
+
+Namespace import aliases use `lowerCamelCase`:
+
+```ts
+// ✅
+import * as fooBar from './foo-bar';
+// ❌
+import * as FooBar from './foo-bar';
 ```
 
 ## Coding Style
