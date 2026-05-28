@@ -111,6 +111,8 @@ const compilerOptions: ts.CompilerOptions = {
     jsx: ts.JsxEmit.React,
     target: ts.ScriptTarget.ESNext,
     moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    noLib: true,
+    skipLibCheck: true,
 };
 
 const documentRegistry = ts.createDocumentRegistry();
