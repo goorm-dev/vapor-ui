@@ -40,7 +40,7 @@
         "next": "16.2.6",
         "react": "catalog:",
         "react-dom": "catalog:",
-        "react-error-boundary": "^6.1.1",
+        "react-error-boundary": "^6.1.2",
         "react-live": "^4.1.8",
         "react-markdown": "^10.1.0",
         "remark": "^15.0.1",
