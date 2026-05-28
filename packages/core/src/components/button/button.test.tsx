@@ -22,10 +22,8 @@ describe('Button', () => {
     it('should be clickable', async () => {
         const handleClickMock: Mock = vi.fn();
 
-        const rendered = render(<ButtonTest onClick={handleClickMock} />);
-        const button = rendered.getByText(BUTTON_LABEL);
-
-        await userEvent.click(button);
+        render(<ButtonTest onClick={handleClickMock} />);
+        await userEvent.click(screen.getByRole('button', { name: BUTTON_LABEL }));
 
         expect(handleClickMock).toHaveBeenCalledTimes(1);
     });
@@ -33,10 +31,8 @@ describe('Button', () => {
     it('should not be clickable when disabled', async () => {
         const handleClickMock: Mock = vi.fn();
 
-        const rendered = render(<ButtonTest disabled onClick={handleClickMock} />);
-        const button = rendered.getByText(BUTTON_LABEL);
-
-        await userEvent.click(button);
+        render(<ButtonTest disabled onClick={handleClickMock} />);
+        await userEvent.click(screen.getByRole('button', { name: BUTTON_LABEL }));
 
         expect(handleClickMock).not.toHaveBeenCalled();
     });
