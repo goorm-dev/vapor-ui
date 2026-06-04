@@ -35,8 +35,8 @@ export const Default: Story = {
 
 export const TestBed: Story = {
     render: () => (
-        <VStack $css={{ gap: '$500' }}>
-            <HStack $css={{ flexWrap: 'wrap', gap: '$300' }}>
+        <VStack $css={{ gap: '$400' }}>
+            <HStack $css={{ flexWrap: 'wrap', gap: '$200' }}>
                 <VStack $css={{ gap: '$100' }}>
                     <Buttons colorPalette="primary" />
                     <Buttons colorPalette="primary" disabled />
@@ -63,7 +63,7 @@ export const TestBed: Story = {
                 </VStack>
             </HStack>
 
-            <HStack $css={{ flexWrap: 'wrap', gap: '$300' }}>
+            <HStack $css={{ flexWrap: 'wrap', gap: '$200' }}>
                 <Button size="sm">SM</Button>
                 <Button size="md">MD</Button>
                 <Button size="lg">LG</Button>
