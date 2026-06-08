@@ -25,251 +25,248 @@
 // 사용:
 //   node scripts/evaluate.mjs < elements.json
 //   또는 import { evaluate } from './evaluate.mjs' 로 테스트에서 직접 호출.
-
-import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
+import { readFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const RULESET_PATH = join(__dirname, "..", "assets", "vapor-ruleset.json");
+const RULESET_PATH = join(__dirname, '..', 'assets', 'vapor-ruleset.json');
 
 // ── WCAG 2.x 상대 휘도 & 대비비 ──
 // 결정론 검사의 핵심. 공식은 WCAG 정의 그대로.
 export function relativeLuminance(hex) {
-  const { r, g, b } = hexToRgb(hex);
-  const lin = (c) => {
-    const s = c / 255;
-    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-  };
-  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+    const { r, g, b } = hexToRgb(hex);
+    const lin = (c) => {
+        const s = c / 255;
+        return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    };
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 }
 
 export function contrastRatio(hexA, hexB) {
-  const la = relativeLuminance(hexA);
-  const lb = relativeLuminance(hexB);
-  const [hi, lo] = la >= lb ? [la, lb] : [lb, la];
-  return (hi + 0.05) / (lo + 0.05);
+    const la = relativeLuminance(hexA);
+    const lb = relativeLuminance(hexB);
+    const [hi, lo] = la >= lb ? [la, lb] : [lb, la];
+    return (hi + 0.05) / (lo + 0.05);
 }
 
 export function hexToRgb(hex) {
-  let h = String(hex).trim().replace(/^#/, "");
-  if (h.length === 3)
-    h = h
-      .split("")
-      .map((c) => c + c)
-      .join("");
-  if (!/^[0-9a-fA-F]{6}$/.test(h)) {
-    throw new Error(`잘못된 hex: ${hex}`);
-  }
-  return {
-    r: parseInt(h.slice(0, 2), 16),
-    g: parseInt(h.slice(2, 4), 16),
-    b: parseInt(h.slice(4, 6), 16),
-  };
+    let h = String(hex).trim().replace(/^#/, '');
+    if (h.length === 3)
+        h = h
+            .split('')
+            .map((c) => c + c)
+            .join('');
+    if (!/^[0-9a-fA-F]{6}$/.test(h)) {
+        throw new Error(`잘못된 hex: ${hex}`);
+    }
+    return {
+        r: parseInt(h.slice(0, 2), 16),
+        g: parseInt(h.slice(2, 4), 16),
+        b: parseInt(h.slice(4, 6), 16),
+    };
 }
 
 // 엄격 순백 판정 — 정확히 #ffffff(또는 단축 #fff), 그리고 "투명"만 순백으로 본다.
 // near-white(#fefefe 등)는 비순백. 규칙이 "순백 또는 투명"을 한데 묶으므로 투명도 여기 포함.
 export function isPureWhite(backgroundHex) {
-  const v = String(backgroundHex).trim().toLowerCase();
-  if (v === "transparent") return true;
-  const h = v.replace(/^#/, "");
-  return h === "ffffff" || h === "fff";
+    const v = String(backgroundHex).trim().toLowerCase();
+    if (v === 'transparent') return true;
+    const h = v.replace(/^#/, '');
+    return h === 'ffffff' || h === 'fff';
 }
 
 // ── 2단 결정론 평가 ──
 // ruleset을 주입받게 해 테스트에서 고정 룰셋을 넣을 수 있다(파일 IO와 로직 분리).
 export function evaluate(elements, ruleset) {
-  const doNotUse = new Set(ruleset.doNotUse);
-  const contrast = ruleset.contrast;
-  // disabled-opacity는 더 이상 토큰별 avoid가 아니라 전역 규칙(_rules.disabled)이다.
-  // 모든 토큰에 같은 임계(예: 32%)를 적용한다.
-  const disabledOpacityPct =
-    ruleset.globalRules?.disabledOpacityPercent ?? null;
-  // foreground surface 규칙(_rules.foreground): tier(.100/.200)가 놓일 배경 제약.
-  const fgSurface = ruleset.globalRules?.foregroundSurface ?? null;
+    const doNotUse = new Set(ruleset.doNotUse);
+    const contrast = ruleset.contrast;
+    // disabled-opacity는 더 이상 토큰별 avoid가 아니라 전역 규칙(_rules.disabled)이다.
+    // 모든 토큰에 같은 임계(예: 32%)를 적용한다.
+    const disabledOpacityPct = ruleset.globalRules?.disabledOpacityPercent ?? null;
+    // foreground surface 규칙(_rules.foreground): tier(.100/.200)가 놓일 배경 제약.
+    const fgSurface = ruleset.globalRules?.foregroundSurface ?? null;
 
-  const violations = [];
-  const conformant = [];
+    const violations = [];
+    const conformant = [];
 
-  for (const el of elements) {
-    // (0) 미바인딩 = 토큰 미사용. 폴백이 작동했다는 것 자체가 위반.
-    if (el.token == null) {
-      violations.push({
-        nodeId: el.nodeId,
-        name: el.name,
-        type: "token-not-used",
-        severity: "high",
-        detail: el.hex
-          ? `raw 색 ${el.hex} 사용 (vapor 토큰 미바인딩)`
-          : "vapor 토큰 미바인딩",
-        suggested: el.nearestToken ? [el.nearestToken] : [],
-      });
-      continue;
-    }
-
-    // (1) do-not-use 토큰 사용
-    if (doNotUse.has(el.token)) {
-      violations.push({
-        nodeId: el.nodeId,
-        name: el.name,
-        token: el.token,
-        type: "do-not-use",
-        severity: "high",
-        detail: `${el.token} 은(는) do-not-use 토큰`,
-        suggested: [],
-      });
-      // do-not-use여도 contrast/opacity는 추가로 볼 수 있으나, 이미 high 위반이라 다음으로.
-      continue;
-    }
-
-    let conform = true;
-
-    // (2) minimumContrast — 전경 토큰이고 hex/배경hex가 있을 때만 결정론 검사 가능.
-    const cReq = contrast[el.token];
-    if (cReq && cReq.ratio != null) {
-      if (el.hex && el.backgroundHex) {
-        const ratio = contrastRatio(el.hex, el.backgroundHex);
-        if (ratio < cReq.ratio) {
-          conform = false;
-          violations.push({
-            nodeId: el.nodeId,
-            name: el.name,
-            token: el.token,
-            type: "contrast-fail",
-            severity: "high",
-            detail: `대비 ${ratio.toFixed(2)}:1 < 요구 ${cReq.minimumContrast} (배경 ${el.backgroundHex})`,
-            suggested: [],
-          });
-        }
-      } else {
-        // hex/배경이 없어 계산 불가 — 위반이 아니라 "검사 보류". 3단/리포트가 알 수 있게 표시.
-        violations.push({
-          nodeId: el.nodeId,
-          name: el.name,
-          token: el.token,
-          type: "contrast-unchecked",
-          severity: "info",
-          detail: `대비 요구 ${cReq.minimumContrast}이나 hex/배경 미제공으로 미검사`,
-          suggested: [],
-        });
-      }
-    }
-
-    // (3) foreground surface — _rules.foreground 전역 규칙. tier 접미사(.100/.200)가
-    //     놓일 배경 제약을 검사한다. 엄격 해석 — 순백은 정확히 #ffffff(또는 투명)뿐.
-    //     near-white는 비순백으로 본다(스키마가 near-white를 .200쪽에 명시).
-    //     배경 hex를 모르면 contrast와 같은 정직성 원칙으로 "미검사"(info)로 보류한다.
-    if (fgSurface && el.token) {
-      const m = el.token.match(/\.foreground\..+\.(100|200)$/);
-      if (m) {
-        const tier = m[1];
-        if (el.backgroundHex == null) {
-          violations.push({
-            nodeId: el.nodeId,
-            name: el.name,
-            token: el.token,
-            type: "foreground-surface-unchecked",
-            severity: "info",
-            detail: `tier .${tier} 배경 제약이나 배경 hex 미제공으로 미검사`,
-            suggested: [],
-          });
-        } else {
-          const white = isPureWhite(el.backgroundHex);
-          if (tier === "100" && !white) {
-            conform = false;
+    for (const el of elements) {
+        // (0) 미바인딩 = 토큰 미사용. 폴백이 작동했다는 것 자체가 위반.
+        if (el.token == null) {
             violations.push({
-              nodeId: el.nodeId,
-              name: el.name,
-              token: el.token,
-              type: "foreground-surface-mismatch",
-              severity: "high",
-              detail: `.100 전경은 순백(#ffffff)/투명 배경 전용인데 배경 ${el.backgroundHex}`,
-              suggested: [],
+                nodeId: el.nodeId,
+                name: el.name,
+                type: 'token-not-used',
+                severity: 'high',
+                detail: el.hex
+                    ? `raw 색 ${el.hex} 사용 (vapor 토큰 미바인딩)`
+                    : 'vapor 토큰 미바인딩',
+                suggested: el.nearestToken ? [el.nearestToken] : [],
             });
-          } else if (tier === "200" && white) {
-            conform = false;
-            violations.push({
-              nodeId: el.nodeId,
-              name: el.name,
-              token: el.token,
-              type: "foreground-surface-mismatch",
-              severity: "high",
-              detail: `.200 전경은 비순백 배경 전용인데 배경이 순백 ${el.backgroundHex}`,
-              suggested: [],
-            });
-          }
+            continue;
         }
-      }
+
+        // (1) do-not-use 토큰 사용
+        if (doNotUse.has(el.token)) {
+            violations.push({
+                nodeId: el.nodeId,
+                name: el.name,
+                token: el.token,
+                type: 'do-not-use',
+                severity: 'high',
+                detail: `${el.token} 은(는) do-not-use 토큰`,
+                suggested: [],
+            });
+            // do-not-use여도 contrast/opacity는 추가로 볼 수 있으나, 이미 high 위반이라 다음으로.
+            continue;
+        }
+
+        let conform = true;
+
+        // (2) minimumContrast — 전경 토큰이고 hex/배경hex가 있을 때만 결정론 검사 가능.
+        const cReq = contrast[el.token];
+        if (cReq && cReq.ratio != null) {
+            if (el.hex && el.backgroundHex) {
+                const ratio = contrastRatio(el.hex, el.backgroundHex);
+                if (ratio < cReq.ratio) {
+                    conform = false;
+                    violations.push({
+                        nodeId: el.nodeId,
+                        name: el.name,
+                        token: el.token,
+                        type: 'contrast-fail',
+                        severity: 'high',
+                        detail: `대비 ${ratio.toFixed(2)}:1 < 요구 ${cReq.minimumContrast} (배경 ${el.backgroundHex})`,
+                        suggested: [],
+                    });
+                }
+            } else {
+                // hex/배경이 없어 계산 불가 — 위반이 아니라 "검사 보류". 3단/리포트가 알 수 있게 표시.
+                violations.push({
+                    nodeId: el.nodeId,
+                    name: el.name,
+                    token: el.token,
+                    type: 'contrast-unchecked',
+                    severity: 'info',
+                    detail: `대비 요구 ${cReq.minimumContrast}이나 hex/배경 미제공으로 미검사`,
+                    suggested: [],
+                });
+            }
+        }
+
+        // (3) foreground surface — _rules.foreground 전역 규칙. tier 접미사(.100/.200)가
+        //     놓일 배경 제약을 검사한다. 엄격 해석 — 순백은 정확히 #ffffff(또는 투명)뿐.
+        //     near-white는 비순백으로 본다(스키마가 near-white를 .200쪽에 명시).
+        //     배경 hex를 모르면 contrast와 같은 정직성 원칙으로 "미검사"(info)로 보류한다.
+        if (fgSurface && el.token) {
+            const m = el.token.match(/\.foreground\..+\.(100|200)$/);
+            if (m) {
+                const tier = m[1];
+                if (el.backgroundHex == null) {
+                    violations.push({
+                        nodeId: el.nodeId,
+                        name: el.name,
+                        token: el.token,
+                        type: 'foreground-surface-unchecked',
+                        severity: 'info',
+                        detail: `tier .${tier} 배경 제약이나 배경 hex 미제공으로 미검사`,
+                        suggested: [],
+                    });
+                } else {
+                    const white = isPureWhite(el.backgroundHex);
+                    if (tier === '100' && !white) {
+                        conform = false;
+                        violations.push({
+                            nodeId: el.nodeId,
+                            name: el.name,
+                            token: el.token,
+                            type: 'foreground-surface-mismatch',
+                            severity: 'high',
+                            detail: `.100 전경은 순백(#ffffff)/투명 배경 전용인데 배경 ${el.backgroundHex}`,
+                            suggested: [],
+                        });
+                    } else if (tier === '200' && white) {
+                        conform = false;
+                        violations.push({
+                            nodeId: el.nodeId,
+                            name: el.name,
+                            token: el.token,
+                            type: 'foreground-surface-mismatch',
+                            severity: 'high',
+                            detail: `.200 전경은 비순백 배경 전용인데 배경이 순백 ${el.backgroundHex}`,
+                            suggested: [],
+                        });
+                    }
+                }
+            }
+        }
+
+        // (4) disabled-opacity — 전역 규칙(_rules.disabled). 모든 토큰에 같은 임계 적용.
+        //     단 "이 요소가 disabled인가"는 의미 판정이라 여기서 단정하지 않는다. opacity가
+        //     100%(불투명)도 규정치(32%)도 아닌 어정쩡한 값일 때만 info로만 기록한다(보조 신호).
+        if (disabledOpacityPct != null && el.opacity != null) {
+            const appliedPct = Math.round(el.opacity * 100);
+            if (appliedPct !== 100 && appliedPct !== disabledOpacityPct) {
+                violations.push({
+                    nodeId: el.nodeId,
+                    name: el.name,
+                    token: el.token,
+                    type: 'opacity-mismatch',
+                    severity: 'info',
+                    detail: `opacity ${appliedPct}% — disabled라면 규정 ${disabledOpacityPct}% 권장`,
+                    suggested: [],
+                });
+            }
+        }
+
+        if (conform) {
+            conformant.push({ nodeId: el.nodeId, name: el.name, token: el.token });
+        }
     }
 
-    // (4) disabled-opacity — 전역 규칙(_rules.disabled). 모든 토큰에 같은 임계 적용.
-    //     단 "이 요소가 disabled인가"는 의미 판정이라 여기서 단정하지 않는다. opacity가
-    //     100%(불투명)도 규정치(32%)도 아닌 어정쩡한 값일 때만 info로만 기록한다(보조 신호).
-    if (disabledOpacityPct != null && el.opacity != null) {
-      const appliedPct = Math.round(el.opacity * 100);
-      if (appliedPct !== 100 && appliedPct !== disabledOpacityPct) {
-        violations.push({
-          nodeId: el.nodeId,
-          name: el.name,
-          token: el.token,
-          type: "opacity-mismatch",
-          severity: "info",
-          detail: `opacity ${appliedPct}% — disabled라면 규정 ${disabledOpacityPct}% 권장`,
-          suggested: [],
-        });
-      }
-    }
+    // 적합률: 명백 위반(high)만 부적합으로 카운트. info(미검사/opacity)는 분모에서 중립.
+    const total = elements.length;
+    const conformCount = conformant.length;
 
-    if (conform) {
-      conformant.push({ nodeId: el.nodeId, name: el.name, token: el.token });
-    }
-  }
-
-  // 적합률: 명백 위반(high)만 부적합으로 카운트. info(미검사/opacity)는 분모에서 중립.
-  const total = elements.length;
-  const conformCount = conformant.length;
-
-  // 집계 검산 가드 — conformCount는 high 위반 dedup(요소 단위)으로도 계산 가능하다.
-  // 두 경로가 어긋나면 정규화/루프에 버그가 있다는 신호이므로 거짓 수치를 보고하지 않고 멈춘다.
-  const hardViolated = new Set(
-    violations.filter((v) => v.severity === "high").map((v) => v.nodeId),
-  );
-  if (conformCount !== total - hardViolated.size) {
-    throw new Error(
-      `집계 불일치: conformant ${conformCount} != total(${total}) - high위반요소(${hardViolated.size})`,
+    // 집계 검산 가드 — conformCount는 high 위반 dedup(요소 단위)으로도 계산 가능하다.
+    // 두 경로가 어긋나면 정규화/루프에 버그가 있다는 신호이므로 거짓 수치를 보고하지 않고 멈춘다.
+    const hardViolated = new Set(
+        violations.filter((v) => v.severity === 'high').map((v) => v.nodeId),
     );
-  }
+    if (conformCount !== total - hardViolated.size) {
+        throw new Error(
+            `집계 불일치: conformant ${conformCount} != total(${total}) - high위반요소(${hardViolated.size})`,
+        );
+    }
 
-  return {
-    violations,
-    conformant,
-    summary: {
-      total,
-      conformCount,
-      conformanceRate: total ? Number((conformCount / total).toFixed(3)) : null,
-      highViolations: violations.filter((v) => v.severity === "high").length,
-      infoFlags: violations.filter((v) => v.severity === "info").length,
-    },
-  };
+    return {
+        violations,
+        conformant,
+        summary: {
+            total,
+            conformCount,
+            conformanceRate: total ? Number((conformCount / total).toFixed(3)) : null,
+            highViolations: violations.filter((v) => v.severity === 'high').length,
+            infoFlags: violations.filter((v) => v.severity === 'info').length,
+        },
+    };
 }
 
 async function loadRuleset() {
-  return JSON.parse(await readFile(RULESET_PATH, "utf8"));
+    return JSON.parse(await readFile(RULESET_PATH, 'utf8'));
 }
 
 async function readStdin() {
-  const chunks = [];
-  for await (const c of process.stdin) chunks.push(c);
-  return Buffer.concat(chunks).toString("utf8");
+    const chunks = [];
+    for await (const c of process.stdin) chunks.push(c);
+    return Buffer.concat(chunks).toString('utf8');
 }
 
 // CLI 진입 (import 시엔 실행 안 함)
-const isMain =
-  process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
-  const [ruleset, input] = await Promise.all([loadRuleset(), readStdin()]);
-  const elements = JSON.parse(input);
-  const result = evaluate(elements, ruleset);
-  process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+    const [ruleset, input] = await Promise.all([loadRuleset(), readStdin()]);
+    const elements = JSON.parse(input);
+    const result = evaluate(elements, ruleset);
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n');
 }

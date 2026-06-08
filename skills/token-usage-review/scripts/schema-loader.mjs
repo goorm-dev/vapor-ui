@@ -7,48 +7,47 @@
 //
 // 버전 핀: 평가 재현성을 위해 어떤 스키마 버전으로 평가했는지가 리포트에 박혀야 한다.
 // SCHEMA_VERSION을 단일 진실로 두고, 파일명/CDN 경로/리포트가 모두 이걸 참조한다.
-
-import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
+import { readFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // 단일 진실: 스키마 버전. 새 스키마를 반입하면 이 값과 파일명을 함께 올린다.
-export const SCHEMA_VERSION = "v0.2.3";
+export const SCHEMA_VERSION = 'v0.2.3';
 
 // 번들 경로 (현재). CDN 전환 시 이 상수 대신 fetch URL을 쓴다.
 const BUNDLED_SCHEMA_PATH = join(
-  __dirname,
-  "..",
-  "assets",
-  `vapor-token-schemas-${SCHEMA_VERSION}.json`,
+    __dirname,
+    '..',
+    'assets',
+    `vapor-token-schemas-${SCHEMA_VERSION}.json`,
 );
 
 // 추후 CDN 전환 시: 이 함수 내부만 fetch로 교체. 호출부(build-ruleset, evaluate)는 무변경.
 async function loadRaw() {
-  return JSON.parse(await readFile(BUNDLED_SCHEMA_PATH, "utf8"));
+    return JSON.parse(await readFile(BUNDLED_SCHEMA_PATH, 'utf8'));
 }
 
 // 토큰만 반환한다. `_rules`(전역 규칙)는 토큰이 아니므로 떼어내, 순회 대상 오염을
 // 막는다(예: counts.tokens가 부풀려지는 것). 전역 규칙은 loadGlobalRules로 따로 꺼낸다.
 export async function loadSchema() {
-  const raw = await loadRaw();
-  const { _rules, ...tokens } = raw;
-  return tokens;
+    const raw = await loadRaw();
+    const { _rules, ...tokens } = raw;
+    return tokens;
 }
 
 // 전역 규칙(`_rules`)을 꺼낸다. v0.2.3 신버전에서 disabled opacity·foreground surface
 // 규칙이 개별 토큰 avoid가 아니라 여기로 모였다. 없으면 빈 객체.
 export async function loadGlobalRules() {
-  const raw = await loadRaw();
-  return raw._rules ?? {};
+    const raw = await loadRaw();
+    return raw._rules ?? {};
 }
 
 // 토큰 하나에서 vapor 메타데이터를 안전하게 꺼낸다.
 // 스키마 구조가 깊어(`$extensions.vapor`) 호출부마다 옵셔널 체이닝을 반복하지 않도록 모은다.
 export function vaporMeta(tokenDef) {
-  return tokenDef?.$extensions?.vapor ?? {};
+    return tokenDef?.$extensions?.vapor ?? {};
 }
 
 // 토큰의 라이트/다크 값 참조(alias)를 꺼낸다 — 예: `{colors.blue.100.light}`.
@@ -57,8 +56,8 @@ export function vaporMeta(tokenDef) {
 // evaluate.mjs는 그 hex를 입력으로 받아 대비비를 계산한다.
 // 이 함수는 "스키마가 어떤 프리미티브를 의도했는가"를 리포트에 참고로 보일 때만 쓴다.
 export function tokenValueRefs(tokenDef) {
-  return {
-    light: tokenDef?.light?.$value ?? null,
-    dark: tokenDef?.dark?.$value ?? null,
-  };
+    return {
+        light: tokenDef?.light?.$value ?? null,
+        dark: tokenDef?.dark?.$value ?? null,
+    };
 }
