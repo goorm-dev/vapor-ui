@@ -24,7 +24,7 @@ const BUNDLED_SCHEMA_PATH = join(
     `vapor-token-schemas-${SCHEMA_VERSION}.json`,
 );
 
-// 추후 CDN 전환 시: 이 함수 내부만 fetch로 교체. 호출부(build-ruleset, evaluate)는 무변경.
+// 추후 CDN 전환 시: 이 함수 내부만 fetch로 교체. 호출부(evaluate)는 무변경.
 async function loadRaw() {
     return JSON.parse(await readFile(BUNDLED_SCHEMA_PATH, 'utf8'));
 }
@@ -59,5 +59,36 @@ export function tokenValueRefs(tokenDef) {
     return {
         light: tokenDef?.light?.$value ?? null,
         dark: tokenDef?.dark?.$value ?? null,
+    };
+}
+
+// ── 결정론 룰셋 도출 (스키마 → evaluate.mjs가 소비할 규칙) ──
+//
+// 왜 런타임 도출인가: 예전엔 build-ruleset.mjs가 스키마를 가공해 vapor-ruleset.json
+// 산물을 만들고, 그걸 git에 커밋해 두었다. 산물을 따로 두면 스키마를 고친 뒤 재생성을
+// 깜빡할 때 평가가 stale한 규칙으로 조용히 돌아간다. 그래서 산물을 없애고, evaluate가
+// 시작할 때 스키마에서 그 자리에서 도출한다.
+//
+// 결정론 임계값(disabled opacity·contrast 비율·foreground surface)은 더 이상 스키마
+// 자연어/메타에서 파싱하지 않는다. 가짓수가 작고 거의 안 바뀌므로 evaluate 코드 상수로
+// 옮겼다. 여기서 스키마에서 읽는 건 do-not-use(status 열거값)·tokenKeys(키 집합)·
+// _rules 키 목록(unknownGlobalRules 안전망)뿐 — 모두 파싱이 아닌 키/열거값이다.
+export function deriveRuleset(schema, globalRules) {
+    const doNotUse = [];
+    for (const [tokenKey, def] of Object.entries(schema)) {
+        if (vaporMeta(def).status === 'do-not-use') doNotUse.push(tokenKey);
+    }
+
+    // 미래 결정론 조건 감지. 지금 결정론으로 코드에 박힌 _rules 키는 foreground·disabled뿐.
+    // 그 밖의 키가 등장하면 "결정론으로 다뤄야 할 새 규칙이 스키마에 들어왔는데 evaluate가
+    // 모른다"는 신호다 — 값은 파싱하지 않고 키 목록만 보고 경고한다.
+    const KNOWN_GLOBAL_RULES = new Set(['foreground', 'disabled']);
+    const unknownGlobalRules = Object.keys(globalRules).filter((k) => !KNOWN_GLOBAL_RULES.has(k));
+
+    return {
+        schemaVersion: SCHEMA_VERSION,
+        doNotUse,
+        tokenKeys: Object.keys(schema), // evaluate가 "바인딩된 토큰명이 스키마에 있나"(unknown-token) 판정용.
+        unknownGlobalRules, // 비어 있어야 정상. 차 있으면 evaluate가 경고한다.
     };
 }
