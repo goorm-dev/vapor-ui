@@ -1,0 +1,260 @@
+{
+  "_meta": {
+    "source": "Notion Typography Roles",
+    "status": "진행중",
+    "version": "v0.1.0"
+  },
+  "display1": {
+    "$type": "typography",
+    "$description": "[Intent] 페이지 최상위 히어로 제목 — 가장 큰 임팩트",
+    "$extensions": {
+      "vapor": {
+        "intent": "페이지 전체의 가장 상위 히어로 제목. 최대 임팩트가 필요한 단일 문장.",
+        "when": [
+          "랜딩/히어로 섹션의 단일 최상위 헤드라인",
+          "임팩트가 최우선인 페이지 제목"
+        ],
+        "avoid": [
+          "섹션 제목 → display3/display4",
+          "본문 텍스트 → body1",
+          "모바일 뷰포트 → heading1"
+        ],
+        "viewport": ["pc"]
+      }
+    }
+  },
+  "display2": {
+    "$type": "typography",
+    "$description": "[Intent] 페이지 최상위 히어로 — display1보다 한 단계 작음",
+    "$extensions": {
+      "vapor": {
+        "intent": "히어로 섹션 제목. display1과 동일 맥락이나 약간 작은 스케일.",
+        "when": ["히어로 섹션 제목", "display1이 과하다고 판단될 때"],
+        "avoid": ["섹션 단위 제목 → display3/display4", "본문 → body1/body2"],
+        "viewport": ["pc"]
+      }
+    }
+  },
+  "display3": {
+    "$type": "typography",
+    "$description": "[Intent] 콘텐츠 섹션 최상위 제목 — 강조 필요한 섹션",
+    "$extensions": {
+      "vapor": {
+        "intent": "강조가 필요한 콘텐츠 섹션의 최상위 제목.",
+        "when": [
+          "강조가 필요한 콘텐츠 섹션의 최상위 제목",
+          "display1/2보다 임팩트가 덜 필요할 때"
+        ],
+        "avoid": [
+          "페이지 전체 최상위 제목 → display1/display2",
+          "본문 텍스트 → body1/body2"
+        ],
+        "viewport": ["pc", "tablet"]
+      }
+    }
+  },
+  "display4": {
+    "$type": "typography",
+    "$description": "[Intent] 콘텐츠 섹션 제목 — display3보다 한 단계 작음",
+    "$extensions": {
+      "vapor": {
+        "intent": "콘텐츠 섹션 제목. display3과 동일 맥락이나 약간 작은 스케일.",
+        "when": ["콘텐츠 섹션 제목", "display3보다 임팩트가 덜 필요할 때"],
+        "avoid": [
+          "페이지 전체 최상위 제목 → display1/display2",
+          "본문 텍스트 → body1/body2"
+        ],
+        "viewport": ["pc", "tablet"]
+      }
+    }
+  },
+  "heading1": {
+    "$type": "typography",
+    "$description": "[Intent] 모바일 히어로 제목 — Mobile에서 Display 역할",
+    "$extensions": {
+      "vapor": {
+        "intent": "모바일 뷰포트에서 히어로/최상위 섹션 제목 역할. PC의 display3/display4에 해당.",
+        "when": [
+          "모바일 히어로/섹션 최상위 제목",
+          "모바일에서 가장 큰 임팩트가 필요한 제목"
+        ],
+        "avoid": ["PC/Tablet 뷰포트 → display3/display4", "본문 → body1/body2"],
+        "viewport": ["mobile"]
+      }
+    }
+  },
+  "heading2": {
+    "$type": "typography",
+    "$description": "[Intent] 강조 필요한 콘텐츠 섹션 최상위 제목",
+    "$extensions": {
+      "vapor": {
+        "intent": "강조가 필요한 콘텐츠 섹션의 최상위 제목.",
+        "when": [
+          "콘텐츠 섹션의 가장 상위 제목",
+          "heading1보다 임팩트가 덜 필요할 때"
+        ],
+        "avoid": [
+          "페이지 전체 최상위 제목 → display3/display4",
+          "본문 텍스트 → body2"
+        ],
+        "viewport": ["pc", "tablet"]
+      }
+    }
+  },
+  "heading3": {
+    "$type": "typography",
+    "$description": "[Intent] 콘텐츠 섹션 내 중위 제목",
+    "$extensions": {
+      "vapor": {
+        "intent": "콘텐츠 섹션 내 중위 계층 제목.",
+        "when": ["섹션 내 중위 제목", "heading2 하위 그룹의 제목"],
+        "avoid": [
+          "최상위 섹션 제목 → heading2",
+          "본문 텍스트 → body1/body2",
+          "레이블 → subtitle1/subtitle2"
+        ],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  },
+  "heading4": {
+    "$type": "typography",
+    "$description": "[Intent] 콘텐츠 섹션 내 소위 제목",
+    "$extensions": {
+      "vapor": {
+        "intent": "섹션 내 소위 계층 제목. heading3 하위.",
+        "when": ["섹션 내 소위 제목", "heading3 하위 그룹의 제목"],
+        "avoid": ["중위 제목 → heading3", "본문 텍스트 → body1/body2"],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  },
+  "heading5": {
+    "$type": "typography",
+    "$description": "[Intent] 컴포넌트/카드 단위 제목",
+    "$extensions": {
+      "vapor": {
+        "intent": "카드, 패널, 모달 등 컴포넌트 단위의 제목.",
+        "when": ["카드/패널/모달 제목", "작은 콘텐츠 블록의 제목"],
+        "avoid": [
+          "섹션 제목 → heading3/heading4",
+          "본문 → body1/body2",
+          "레이블 → subtitle1/subtitle2"
+        ],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  },
+  "heading6": {
+    "$type": "typography",
+    "$description": "[Intent] 가장 작은 제목 계층 — 강조 레이블에 가까움",
+    "$extensions": {
+      "vapor": {
+        "intent": "가장 작은 제목 계층. 강조된 레이블이나 미니 헤더.",
+        "when": ["최소 단위 제목", "컴포넌트 내부 소제목", "강조 레이블"],
+        "avoid": ["일반 레이블 → subtitle1/subtitle2", "본문 → body3/body4"],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  },
+  "subtitle1": {
+    "$type": "typography",
+    "$description": "[Intent] 강조 레이블 — 제목과 본문 사이 브릿지",
+    "$extensions": {
+      "vapor": {
+        "intent": "제목과 본문 사이 중간 강조. 카테고리명, 태그, 부제목.",
+        "when": ["카테고리명/태그", "섹션 부제목", "폼 그룹 레이블"],
+        "avoid": ["섹션 제목 → heading5/heading6", "일반 본문 → body1/body2"],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  },
+  "subtitle2": {
+    "$type": "typography",
+    "$description": "[Intent] 작은 강조 레이블",
+    "$extensions": {
+      "vapor": {
+        "intent": "subtitle1보다 작은 강조 레이블. 보조 카테고리명, 메타 정보.",
+        "when": ["보조 카테고리명", "메타 정보 레이블", "작은 부제목"],
+        "avoid": ["일반 제목 → heading6", "본문 → body3/body4"],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  },
+  "body1": {
+    "$type": "typography",
+    "$description": "[Intent] 장문 본문 — 가장 크고 읽기 편한 본문",
+    "$extensions": {
+      "vapor": {
+        "intent": "편안한 독서 경험이 필요한 장문 본문. 아티클, 설명 텍스트.",
+        "when": ["아티클/블로그 본문", "긴 설명 텍스트", "주요 읽기 콘텐츠"],
+        "avoid": [
+          "제목 → heading2/heading3",
+          "UI 레이블 → body3/body4",
+          "코드 → code1/code2"
+        ],
+        "viewport": ["pc", "tablet"]
+      }
+    }
+  },
+  "body2": {
+    "$type": "typography",
+    "$description": "[Intent] 일반 본문 — 가장 범용적인 본문",
+    "$extensions": {
+      "vapor": {
+        "intent": "일반적인 UI 본문. 가장 범용적으로 쓰이는 텍스트 크기.",
+        "when": ["일반 UI 본문", "설명 텍스트", "리스트 아이템 내용"],
+        "avoid": ["장문 독서 콘텐츠 → body1", "UI 레이블 → body3/body4"],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  },
+  "body3": {
+    "$type": "typography",
+    "$description": "[Intent] 보조 본문 — UI 레이블·설명에 적합",
+    "$extensions": {
+      "vapor": {
+        "intent": "UI 레이블, 보조 설명, 힌트 텍스트.",
+        "when": ["UI 레이블", "보조 설명 텍스트", "힌트/플레이스홀더"],
+        "avoid": ["주요 본문 → body1/body2", "캡션/배지 → body4"],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  },
+  "body4": {
+    "$type": "typography",
+    "$description": "[Intent] 가장 작은 본문 — 캡션·배지·메타",
+    "$extensions": {
+      "vapor": {
+        "intent": "캡션, 배지 텍스트, 최소 메타 정보.",
+        "when": ["캡션", "배지/태그 텍스트", "타임스탬프 등 최소 메타"],
+        "avoid": ["일반 본문 → body2/body3", "장문 본문에 사용 — 가독성 저하"],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  },
+  "code1": {
+    "$type": "typography",
+    "$description": "[Intent] 코드 블록 — 멀티라인 코드",
+    "$extensions": {
+      "vapor": {
+        "intent": "코드 블록 내 멀티라인 코드. 모노스페이스 폰트.",
+        "when": ["코드 블록", "멀티라인 코드 스니펫"],
+        "avoid": ["인라인 코드 → code2", "일반 본문 → body1/body2"],
+        "viewport": ["pc", "tablet"]
+      }
+    }
+  },
+  "code2": {
+    "$type": "typography",
+    "$description": "[Intent] 인라인 코드 — 문장 내 코드",
+    "$extensions": {
+      "vapor": {
+        "intent": "문장 내 인라인 코드. 모노스페이스 폰트.",
+        "when": ["인라인 코드", "문장 속 변수명/함수명"],
+        "avoid": ["멀티라인 코드 → code1", "일반 텍스트 → body2/body3"],
+        "viewport": ["pc", "tablet", "mobile"]
+      }
+    }
+  }
+}

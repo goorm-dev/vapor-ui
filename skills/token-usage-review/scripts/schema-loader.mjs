@@ -92,3 +92,34 @@ export function deriveRuleset(schema, globalRules) {
         unknownGlobalRules, // 비어 있어야 정상. 차 있으면 evaluate가 경고한다.
     };
 }
+
+// ── Typography 스키마 ──
+
+export const TYPOGRAPHY_SCHEMA_VERSION = 'v0.1.0';
+
+const BUNDLED_TYPO_SCHEMA_PATH = join(
+    __dirname,
+    '..',
+    'assets',
+    `typography-token-schemas-${TYPOGRAPHY_SCHEMA_VERSION}.json`,
+);
+
+async function loadRawTypography() {
+    return JSON.parse(await readFile(BUNDLED_TYPO_SCHEMA_PATH, 'utf8'));
+}
+
+// _meta를 제외한 16개 역할 객체를 반환한다.
+export async function loadTypographySchema() {
+    const raw = await loadRawTypography();
+    const { _meta, ...roles } = raw;
+    return roles;
+}
+
+// 결정론(2단)은 이 ruleset을 안 쓴다(appliedStatus만 본다).
+// roleKeys는 3단 LLM/리포트가 "Text Style 이름이 유효한 16개 역할 중 하나인가"를 확인할 때 쓴다.
+export function deriveTypographyRuleset(schema) {
+    return {
+        schemaVersion: TYPOGRAPHY_SCHEMA_VERSION,
+        roleKeys: Object.keys(schema),
+    };
+}
