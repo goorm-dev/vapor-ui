@@ -104,8 +104,12 @@ export function evaluate(elements, ruleset) {
 
     const violations = [];
     const conformant = [];
+    // 요소별 high 위반 여부 — 가드 검산용. 같은 nodeId라도 요소(속성)마다 독립으로 센다.
+    // 각 요소가 만든 violations 구간을 길이 스냅샷으로 구분하므로 nodeId dedup에 의존하지 않는다.
+    const elementHadHighViolation = [];
 
     for (const el of elements) {
+        const violCountBefore = violations.length;
         // (0a) 변수 바인딩은 정상이나 이름이 스키마 키와 불일치(오타/미등록). raw가 아니다.
         //      tokenStatus 'unknown'이거나, token은 있는데 스키마 키 집합에 없으면 → unknown-token(info).
         const isUnknownToken =
@@ -128,6 +132,9 @@ export function evaluate(elements, ruleset) {
                 name: el.name,
                 token: el.token ?? null,
             });
+            elementHadHighViolation.push(
+                violations.slice(violCountBefore).some((v) => v.severity === 'high'),
+            );
             continue;
         }
 
@@ -143,6 +150,9 @@ export function evaluate(elements, ruleset) {
                     : 'vapor 토큰 미바인딩',
                 suggested: el.nearestToken ? [el.nearestToken] : [],
             });
+            elementHadHighViolation.push(
+                violations.slice(violCountBefore).some((v) => v.severity === 'high'),
+            );
             continue;
         }
 
@@ -158,6 +168,9 @@ export function evaluate(elements, ruleset) {
                 suggested: [],
             });
             // do-not-use여도 contrast/opacity는 추가로 볼 수 있으나, 이미 high 위반이라 다음으로.
+            elementHadHighViolation.push(
+                violations.slice(violCountBefore).some((v) => v.severity === 'high'),
+            );
             continue;
         }
 
@@ -168,16 +181,30 @@ export function evaluate(elements, ruleset) {
         const reqRatio = expectedRatioForToken(el.token);
         if (reqRatio != null) {
             if (el.hex && el.backgroundHex) {
-                const ratio = contrastRatio(el.hex, el.backgroundHex);
-                if (ratio < reqRatio) {
-                    conform = false;
+                try {
+                    const ratio = contrastRatio(el.hex, el.backgroundHex);
+                    if (ratio < reqRatio) {
+                        conform = false;
+                        violations.push({
+                            nodeId: el.nodeId,
+                            name: el.name,
+                            token: el.token,
+                            type: 'contrast-fail',
+                            severity: 'high',
+                            detail: `대비 ${ratio.toFixed(2)}:1 < 요구 ${reqRatio}:1 (배경 ${el.backgroundHex})`,
+                            suggested: [],
+                        });
+                    }
+                } catch {
+                    // hex/배경 형식이 비정상(예: 'transparent')이라 계산 불가 — 한 요소 문제로
+                    // 전체 평가를 중단하지 않는다. contrast-unchecked(info)로 보류 표시.
                     violations.push({
                         nodeId: el.nodeId,
                         name: el.name,
                         token: el.token,
-                        type: 'contrast-fail',
-                        severity: 'high',
-                        detail: `대비 ${ratio.toFixed(2)}:1 < 요구 ${reqRatio}:1 (배경 ${el.backgroundHex})`,
+                        type: 'contrast-unchecked',
+                        severity: 'info',
+                        detail: `대비 요구 ${reqRatio}:1이나 hex/배경 형식 문제로 미검사`,
                         suggested: [],
                     });
                 }
@@ -264,20 +291,23 @@ export function evaluate(elements, ruleset) {
         if (conform) {
             conformant.push({ nodeId: el.nodeId, name: el.name, token: el.token });
         }
+        elementHadHighViolation.push(
+            violations.slice(violCountBefore).some((v) => v.severity === 'high'),
+        );
     }
 
     // 적합률: 명백 위반(high)만 부적합으로 카운트. info(미검사/opacity)는 분모에서 중립.
     const total = elements.length;
     const conformCount = conformant.length;
 
-    // 집계 검산 가드 — conformCount는 high 위반 dedup(요소 단위)으로도 계산 가능하다.
+    // 집계 검산 가드 — conformCount는 "high 위반을 가진 요소 수"로도 계산 가능하다.
     // 두 경로가 어긋나면 정규화/루프에 버그가 있다는 신호이므로 거짓 수치를 보고하지 않고 멈춘다.
-    const hardViolated = new Set(
-        violations.filter((v) => v.severity === 'high').map((v) => v.nodeId),
-    );
-    if (conformCount !== total - hardViolated.size) {
+    // 카운트는 요소 단위다 — 같은 nodeId에 여러 속성(fill/stroke/text)이 각각 위반될 수 있으므로
+    // nodeId로 dedup하면 안 된다(요소 단위 conformCount와 단위가 어긋나 오탐 throw가 난다).
+    const hardViolatedCount = elementHadHighViolation.filter(Boolean).length;
+    if (conformCount !== total - hardViolatedCount) {
         throw new Error(
-            `집계 불일치: conformant ${conformCount} != total(${total}) - high위반요소(${hardViolated.size})`,
+            `집계 불일치: conformant ${conformCount} != total(${total}) - high위반요소(${hardViolatedCount})`,
         );
     }
 
