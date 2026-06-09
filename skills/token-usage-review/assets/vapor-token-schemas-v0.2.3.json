@@ -150,7 +150,7 @@
           "layout region requiring a subtle distinction between background layers without component-level context"
         ],
         "avoid": [
-          "direct use as a component background → colors.background.secondary.100",
+          "direct use as a component background → colors.background.secondary.200",
           "primary page background → colors.background.canvas.100"
         ],
         "accessibility": {

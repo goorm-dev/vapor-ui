@@ -70,7 +70,7 @@ Figma 시안에서 **어떤 요소가 어떤 vapor 색상 토큰을 썼는지** 
 
 ## 번들 구성
 
-```
+```text
 token-usage-review/
 ├── SKILL.md
 ├── references/
