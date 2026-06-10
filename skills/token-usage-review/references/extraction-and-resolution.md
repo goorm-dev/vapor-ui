@@ -23,7 +23,7 @@
 3. **collection 단계 판별(이름 기준)**: `💙`·`{Component}/Color` → component, `● Token`·`Token/Color` → semantic, `⚙️Primitives`·`Primitive` → primitive. 체인에서 **semantic 단계 변수의 `.name`** 이 복원 대상.
 4. **API 제약**: `figma.variables.getVariableByIdAsync`(sync `getVariableById`는 deprecated — 금지), read-only(`return`만, `set*` 호출 금지), 방문 id `Set`으로 alias 루프 가드, 모든 Promise `await`.
 5. **스키마 키 변환**: 복원한 semantic 변수 이름을 vapor 스키마 키 형태로 바꾼다 — **`color-` 접두 → `colors.`, 나머지 하이픈 → `.`**. 예: `color-foreground-primary-200` → `colors.foreground.primary.200`, `color-foreground-inverse` → `colors.foreground.inverse`(tier 없는 토큰도 성립). 오타(`color-backgroud-primary` → `colors.backgroud.primary`)는 스키마에 없어 `evaluate`가 `unknown-token`으로 잡는다.
-6. **배경 전파**: 컨테이너 fill의 hex를 자식들에게 배경으로 내려보내되, 그 fill이 **불투명(opacity≥1·visible·SOLID)일 때만**. 불확실하면 전파하지 않는다(`backgroundHex: null` → 미검사 보류). 전경 노드(TEXT, 또는 stroke 바인딩)의 `backgroundHex`는 가장 가까운 불투명 조상 컨테이너 배경 hex다. 상세는 §3.
+6. **배경 전파**: 컨테이너 fill의 hex를 자식들에게 배경으로 내려보내되, 그 fill이 **불투명(opacity≥1·visible·SOLID)일 때만**. 불확실하면 전파하지 않는다(`backgroundHex: null` → 미검사 보류). 전경 노드(TEXT, 또는 stroke 바인딩)의 `backgroundHex`는 가장 가까운 불투명 조상 컨테이너 배경 hex다. **단 outset 인디케이터(이름이 `/focus|ring/i`인 stroke 노드 — focus ring 등)는 예외다.** 이들은 트리상 컴포넌트의 자손이지만 시각적으로 컴포넌트 *바깥*에 그려지므로, 배경은 직속 조상 fill이 아니라 "이 노드가 속한 가장 안쪽 컴포넌트 경계(COMPONENT/COMPONENT_SET/INSTANCE)의 바깥 불투명 배경"이다(WCAG 1.4.11 "컴포넌트가 놓인 배경"). 바깥 배경을 못 잡으면 `backgroundHex: null`로 미검사 보류 — 컴포넌트 내부 fill로 오판하지 마라. 상세는 §3.
 7. **Element 직접 출력**: `{nodeId, name, property, token, hex, opacity, backgroundHex, nearestToken, tokenStatus}` 형식 배열을 반환한다. `evaluate.mjs`가 바로 받는다(별도 정규화 없음). `nearestToken`은 항상 `null`(제안은 이 스킬의 비목표 — 검증만 한다).
 8. **정직성**: 체인이 semantic collection에 도달했으면 그 키를 `token`에 넣고 `tokenStatus:'ok'`. 도달 못 했으나 변수 바인딩은 있으면(오타/깨진 별칭) `token:null, tokenStatus:'unknown'`. 변수 미바인딩(raw 색)이면 `token:null, tokenStatus:'raw'`. **hex가 같다는 이유로 token을 추론해 채우지 마라** — 그러면 결정론 층이 거짓을 신뢰해 적합률이 부풀려진다(Callout 교훈). 역추적은 추측이 아니라 MCP가 평탄화해 숨긴 사실의 복원이다.
 9. **remote 변수 방어(예외)**: `getVariableByIdAsync(id)`가 `null`/throw면(team library 미enabled), `variable.remote === true`일 때 한정 `importVariableByKeyAsync(key)`를 한 번 시도하고 재조회한다. 그래도 실패면 체인을 중단하고 `token:null`로 둔다(거짓 통과 금지). 대부분 파일은 컬렉션이 enabled라 이 분기는 안 탄다 — 일반화를 위한 방어 코드일 뿐.
@@ -98,9 +98,18 @@ function toToken(chain) {
 }
 
 const out = [];
-async function visit(node, ancestorBgHex) {
+// 컴포넌트 경계 — 진입 직전의 배경이 곧 "이 컴포넌트가 놓인 바깥 배경".
+const COMPONENT_BOUNDARY = new Set(["COMPONENT", "COMPONENT_SET", "INSTANCE"]);
+// outset 인디케이터(focus ring 등): 컴포넌트 바깥 배경과 대비해야 한다(불변 원칙 6).
+const isFocusRing = (node) => /focus|ring/i.test(node.name || "");
+
+async function visit(node, ancestorBgHex, outerBgHex) {
   const bv = node.boundVariables || {};
   let myBg = ancestorBgHex;
+  // 컴포넌트 경계에 "진입"하는 순간의 ancestorBgHex가 이 컴포넌트의 바깥 배경.
+  const myOuterBg = COMPONENT_BOUNDARY.has(node.type)
+    ? ancestorBgHex
+    : outerBgHex;
 
   // fill 바인딩 — 컨테이너 배경이 되어 자식에 전파(불투명일 때만)
   for (const a of bv.fills || []) {
@@ -146,7 +155,7 @@ async function visit(node, ancestorBgHex) {
       }
     });
   }
-  // stroke 바인딩 — 전경 취급(테두리). backgroundHex = 조상 배경.
+  // stroke 바인딩 — 전경 취급(테두리). 일반 stroke=조상 배경, focus ring=컴포넌트 바깥 배경.
   for (const a of bv.strokes || []) {
     if (!a || !a.id) continue;
     const { chain, finalHex } = await walk(node, a.id);
@@ -158,7 +167,8 @@ async function visit(node, ancestorBgHex) {
       token,
       hex: finalHex,
       opacity: node.opacity ?? 1,
-      backgroundHex: ancestorBgHex,
+      // focus ring은 박스 바깥 outset이라 컴포넌트 바깥 배경과 대비(없으면 null→미검사 보류).
+      backgroundHex: isFocusRing(node) ? (myOuterBg ?? null) : ancestorBgHex,
       nearestToken: null,
       tokenStatus,
     });
@@ -166,13 +176,14 @@ async function visit(node, ancestorBgHex) {
   // TEXT fill은 위 fills 루프에서 push되지만, 텍스트는 전경이므로 backgroundHex를 조상으로 채워야 한다.
   // (실제 작성 시: node.type==='TEXT'이면 fill Element의 property를 'text'로, backgroundHex=ancestorBgHex로 둔다.)
 
-  if ("children" in node) for (const ch of node.children) await visit(ch, myBg);
+  if ("children" in node)
+    for (const ch of node.children) await visit(ch, myBg, myOuterBg);
 }
-await visit(await figma.getNodeByIdAsync(ROOT_ID), null);
+await visit(await figma.getNodeByIdAsync(ROOT_ID), null, null);
 return out; // evaluate.mjs 입력 형식 그대로
 ```
 
-> 위 골격은 fill/stroke의 뼈대만 보인다. **실제 작성 시 주의**: TEXT 노드의 fill은 `property:'text'`로 두고 `backgroundHex = ancestorBgHex`(조상 배경)로 채운다. 아이콘(VECTOR) fill도 전경이면 같은 처리. 컨테이너 fill은 `backgroundHex:null`. 노드가 비-기본 페이지면 `await figma.setCurrentPageAsync(page)`를 호출당 1회.
+> 위 골격은 fill/stroke의 뼈대만 보인다. **실제 작성 시 주의**: TEXT 노드의 fill은 `property:'text'`로 두고 `backgroundHex = ancestorBgHex`(조상 배경)로 채운다(focus ring 예외는 stroke에만 적용 — TEXT/아이콘은 outset이 아니므로 조상 배경 그대로). 아이콘(VECTOR) fill도 전경이면 같은 처리. 컨테이너 fill은 `backgroundHex:null`. `visit`는 `(node, ancestorBgHex, outerBgHex)` 3인자로 순회하며, `outerBgHex`는 컴포넌트 경계마다 갱신돼 focus ring 배경 교정에 쓰인다(불변 원칙 6). 노드가 비-기본 페이지면 `await figma.setCurrentPageAsync(page)`를 호출당 1회.
 
 ## 3. 배경↔전경 매핑 알고리즘 (대비 검사의 토대)
 
@@ -187,6 +198,7 @@ return out; // evaluate.mjs 입력 형식 그대로
 1. **z-order 형제 겹침**: 같은 부모 안에서 아래 형제가 실제 배경일 때.
 2. **`layoutPositioning === "ABSOLUTE"`**: 흐름에서 빠져 부모-자식 관계로 배경을 못 정할 때.
 3. **반투명 배경의 알파 합성**: 여러 반투명 레이어가 겹쳐 실효색이 합성될 때.
+4. **outset 인디케이터(focus ring 등)**: 트리상 컴포넌트의 자손이나 시각적으로 컴포넌트 *바깥*에 그려진다. 배경은 직속 조상 fill이 아니라 "컴포넌트가 놓인 바깥 배경"이다(WCAG 1.4.11 "컴포넌트가 놓인 배경"). 이름이 `/focus|ring/i`인 stroke 노드는 `outerBgHex`(가장 안쪽 컴포넌트 경계의 바깥 불투명 배경)로 교정하고, 못 잡으면 `null`로 보류한다 — 컴포넌트 내부 fill(예: checked 박스 색)로 오판하지 않는다. 이름 외 신호로 명명된 outset(예: `outline`)은 아직 자동 교정 못 해 일반 stroke로 처리(=기존 조상 배경)된다.
 
 상용 도구(Stark·Contrast)조차 "선택 요소 바로 뒤 색" 휴리스틱 + 수동 fallback에 의존한다. 잡히면 쓰되, **불확실하면 `backgroundHex: null`로 두어 미검사 보류**한다. 통과로 위장하지 않는다.
 
@@ -206,5 +218,6 @@ return out; // evaluate.mjs 입력 형식 그대로
 2. `tokenStatus:'ok'` 건의 `token`이 전부 `colors.*` 형태(스키마 키 변환 성공)인가? `color-` 접두 변환이 누락된 건이 없는지.
 3. `raw`/`unknown` 건수가 `get_screenshot`·`get_metadata`로 본 시안과 모순 없나? **raw가 갑자기 폭증하면 추출 이상 신호**다(예: 6 variant 중 5개는 semantic인데 1개만 raw면 그 1개를 따로 확인).
 4. 전경 노드(TEXT/아이콘)의 `backgroundHex`가 조상 컨테이너 fill과 일치하나?(배경 전파 정상성, §3) 못 잡았으면 `null`인 게 정상이고, 엉뚱한 hex가 들어갔으면 전파 로직을 본다.
+5. **focus ring 배경 교정 점검(outset 케이스):** 이름이 `/focus|ring/i`인 stroke 요소가 있으면, 그 `backgroundHex`가 **컴포넌트 내부 fill(예: checked 박스 색)을 물고 있지 않은지** 확인한다. 정상은 ⓐ 컴포넌트 바깥 배경 hex 또는 ⓑ `null`(바깥 배경 미상 → 미검사 보류) 둘 중 하나다. 직속 조상의 박스 fill이 들어가 있으면 `outerBgHex` 전파가 누락된 것 — 추출 스크립트를 고쳐 재실행한다. (추출은 매 실행 새로 짜는 비결정 단계라, 이 점검이 교정 누락을 잡는 안전장치다.)
 
 > **셀프체크 실패 시**: 추출 스크립트의 결함이면 고쳐서 재실행한다. 시안 자체의 문제(디자이너가 토큰 안 씀)면 **정직하게 raw/unknown으로 보고**하고 통과로 위장하지 않는다(불변 원칙 8과 동일). 셀프체크는 "스크립트 결함"과 "시안 결함"을 가르는 단계지, 시안 결함을 덮는 단계가 아니다.
