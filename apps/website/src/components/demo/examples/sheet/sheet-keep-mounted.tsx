@@ -41,25 +41,30 @@ export default function SheetKeepMounted() {
                     <Sheet.Trigger render={<Button variant="outline" colorPalette="success" />}>
                         유지 Sheet
                     </Sheet.Trigger>
-                    <Sheet.Popup portalElement={<Sheet.PortalPrimitive keepMounted />}>
-                        <Box className="absolute top-2 right-2">
-                            <Sheet.Close aria-label="Close sheet" className="flex">
-                                <CloseOutlineIcon />
-                            </Sheet.Close>
-                        </Box>
-                        <Sheet.Header>
-                            <Sheet.Title>유지되는 Sheet</Sheet.Title>
-                        </Sheet.Header>
-                        <Sheet.Body>
-                            <Sheet.Description>
-                                이 Sheet는 닫혀도 DOM에 유지됩니다. 입력한 내용이 보존되는 것을
-                                확인해보세요.
-                            </Sheet.Description>
-                            <Box $css={{ marginTop: '$100' }}>
-                                <TextInput placeholder="상태 보존 테스트..." />
-                            </Box>
-                        </Sheet.Body>
-                    </Sheet.Popup>
+                    <Sheet.PortalPrimitive keepMounted>
+                        <Sheet.OverlayPrimitive />
+                        <Sheet.PositionerPrimitive>
+                            <Sheet.PopupPrimitive>
+                                <Box className="absolute top-2 right-2">
+                                    <Sheet.Close aria-label="Close sheet" className="flex">
+                                        <CloseOutlineIcon />
+                                    </Sheet.Close>
+                                </Box>
+                                <Sheet.Header>
+                                    <Sheet.Title>유지되는 Sheet</Sheet.Title>
+                                </Sheet.Header>
+                                <Sheet.Body>
+                                    <Sheet.Description>
+                                        이 Sheet는 닫혀도 DOM에 유지됩니다. 입력한 내용이 보존되는
+                                        것을 확인해보세요.
+                                    </Sheet.Description>
+                                    <Box $css={{ marginTop: '$100' }}>
+                                        <TextInput placeholder="상태 보존 테스트..." />
+                                    </Box>
+                                </Sheet.Body>
+                            </Sheet.PopupPrimitive>
+                        </Sheet.PositionerPrimitive>
+                    </Sheet.PortalPrimitive>
                 </Sheet.Root>
             </HStack>
         </VStack>

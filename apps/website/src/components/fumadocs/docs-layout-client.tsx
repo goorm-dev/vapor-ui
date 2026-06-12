@@ -19,7 +19,7 @@ import Link from 'fumadocs-core/link';
 import type { SidebarTabWithProps } from 'fumadocs-ui/components/sidebar/tabs/dropdown';
 import { SidebarTabsDropdown, isTabActive } from 'fumadocs-ui/components/sidebar/tabs/dropdown';
 import { Popover, PopoverContent, PopoverTrigger } from 'fumadocs-ui/components/ui/popover';
-import type { LinkItemType, MenuItemType } from 'fumadocs-ui/utils/link-item';
+import type { LinkItemType, MenuItemType } from 'fumadocs-ui/layouts/shared';
 import { useIsScrollTop } from 'fumadocs-ui/utils/use-is-scroll-top';
 
 export function normalize(urlOrPath: string) {

@@ -1,10 +1,10 @@
-name: "Release Packages"
+name: 'Release Packages'
 
 on:
     push:
         paths:
-            - ".changeset/**"
-            - "packages/**"
+            - '.changeset/**'
+            - 'packages/**'
         branches:
             - main
 
@@ -12,6 +12,9 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
     release:
+        outputs:
+            published: ${{ steps.changesets.outputs.published }}
+            publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
         name: Release
         runs-on: ubuntu-latest
         steps:
@@ -35,7 +38,7 @@ jobs:
               with:
                   publish: pnpm run release
                   version: pnpm run version
-                  commit: "ci(changesets): version packages"
+                  commit: 'ci(changesets): version packages'
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -54,9 +57,88 @@ jobs:
                       git push --set-upstream origin changeset-release/main
                   fi
 
+    promote-docs:
+        needs: release
+        if: needs.release.outputs.published == 'true'
+        runs-on: ubuntu-latest
+        env:
+            VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+            VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+            VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        steps:
+            - name: Install Vercel CLI
+              run: npm install -g vercel@^50
+
+            - name: Wait for Staged Production Deployment
+              id: wait_for_deployment
+              timeout-minutes: 5
+              run: |
+                  while true; do
+                      if ! RESPONSE=$(curl -fsS \
+                          --connect-timeout 10 \
+                          --max-time 30 \
+                          -H "Authorization: Bearer $VERCEL_TOKEN" \
+                          "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&sha=${{ github.sha }}&target=production&limit=1&teamId=$VERCEL_ORG_ID"); then
+                          echo "Failed to query Vercel deployment for ${{ github.sha }}; retrying..."
+                          sleep 10
+                          continue
+                      fi
+
+                      STATE=$(echo "$RESPONSE" | jq -r '.deployments[0].state // empty')
+                      DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.deployments[0].uid // empty')
+                      READY_SUBSTATE=$(echo "$RESPONSE" | jq -r '.deployments[0].readySubstate // empty')
+
+                      case "$STATE" in
+                          READY)
+                              echo "deployment_id=$DEPLOYMENT_ID" >> "$GITHUB_OUTPUT"
+                              echo "ready_substate=$READY_SUBSTATE" >> "$GITHUB_OUTPUT"
+                              exit 0
+                              ;;
+                          ERROR|CANCELED)
+                              echo "Deployment for commit ${{ github.sha }} failed with state $STATE"
+                              exit 1
+                              ;;
+                          *)
+                              echo "Waiting for deployment for ${{ github.sha }}. Current state: ${STATE:-not found}"
+                              sleep 10
+                              ;;
+                      esac
+                  done
+
+            - name: Promote Deployment to Production
+              if: steps.wait_for_deployment.outputs.ready_substate != 'PROMOTED'
+              run: vercel promote $DEPLOYMENT_ID --yes
+              env:
+                  DEPLOYMENT_ID: ${{ steps.wait_for_deployment.outputs.deployment_id }}
+
+    notify-success:
+        needs: [release, promote-docs]
+        if: needs.promote-docs.result == 'success' && needs.release.outputs.published == 'true'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
             - name: Send Slack Notification
-              if: steps.changesets.outputs.published == 'true'
               run: pnpm run release:slack
               env:
                   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-                  PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
+                  PUBLISHED_PACKAGES: ${{ needs.release.outputs.publishedPackages }}
+
+    notify-failure:
+        needs: [release, promote-docs]
+        if: always() && needs.promote-docs.result != 'success' && needs.release.outputs.published == 'true'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Send Slack Failure Notification
+              run: |
+                  curl -fsS -X POST "$SLACK_GDS_ALARM_WEBHOOK_URL" \
+                      -H "Content-Type: application/json" \
+                      -d '{
+                          "text": "⚠️ Vercel 문서 사이트 promote 실패\n\nnpm publish는 완료됐지만, 문서 사이트 promote가 실패했습니다.\n아래 커밋을 수동으로 promote해 주세요.\n\n• SHA: ${{ github.sha }}"
+                      }'
+              env:
+                  SLACK_GDS_ALARM_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
