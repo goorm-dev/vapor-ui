@@ -43,4 +43,18 @@ describe('Interaction', () => {
         const classList = container.firstElementChild?.className.split(' ') ?? [];
         expect(classList).toContain('my-child-class');
     });
+
+    it('merges external className prop with recipe and child classes', () => {
+        const { container } = render(
+            <Interaction className="external-class">
+                <button type="button" className="child-class">
+                    Click
+                </button>
+            </Interaction>,
+        );
+
+        const classList = container.firstElementChild?.className.split(' ') ?? [];
+        expect(classList).toContain('external-class');
+        expect(classList).toContain('child-class');
+    });
 });
