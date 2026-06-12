@@ -81,4 +81,29 @@ describe('Interaction', () => {
             expect.arrayContaining(lightFormExpected.split(' ').filter(Boolean)),
         );
     });
+
+    it('throws when given multiple children', () => {
+        const previousError = console.error;
+        console.error = vi.fn();
+
+        expect(() =>
+            render(
+                <Interaction>
+                    <button type="button">A</button>
+                    <button type="button">B</button>
+                </Interaction>,
+            ),
+        ).toThrow();
+
+        console.error = previousError;
+    });
+
+    it('throws when child is not a React element', () => {
+        const previousError = console.error;
+        console.error = vi.fn();
+
+        expect(() => render(<Interaction>{'just a string' as unknown as never}</Interaction>)).toThrow();
+
+        console.error = previousError;
+    });
 });
