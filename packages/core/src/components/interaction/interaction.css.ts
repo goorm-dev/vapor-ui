@@ -1,48 +1,53 @@
-import { createVar } from '@vanilla-extract/css';
+import { createGlobalVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
-import { componentRecipe } from '~/styles/mixins/layer-style.css';
+import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-const ratio = createVar('opacity-ratio');
+const variables = {
+    ratio: createGlobalVar('ratio'),
+    opacity: createGlobalVar('overlay-opacity'),
+};
+
+export const overlay = componentStyle({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    transition: 'opacity 150ms ease',
+    opacity: variables.opacity,
+    border: 'none',
+    borderRadius: 'inherit',
+    backgroundColor: vars.color.gray[900],
+    pointerEvents: 'none',
+    width: '100%',
+    height: '100%',
+});
 
 export const root = componentRecipe({
     base: {
         position: 'relative',
-        vars: { [ratio]: '0.08' },
         selectors: {
-            '&::before': {
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                transition: 'opacity 150ms ease',
-                opacity: 0,
-                border: 'none',
-                borderRadius: 'inherit',
-                backgroundColor: vars.color.gray[900],
-                pointerEvents: 'none',
-                width: '100%',
-                height: '100%',
-                content: '',
-            },
             '&:focus': { outline: 'none' },
             '&:focus-visible': { outline: 'none' },
         },
+        vars: {
+            [variables.ratio]: '0.08',
+            [variables.opacity]: '0',
+        },
     },
-    defaultVariants: {
-        scale: 'normal',
-        type: 'default',
-    },
+    defaultVariants: { scale: 'normal', type: 'default' },
     variants: {
         scale: {
             normal: {},
-            light: { vars: { [ratio]: '0.04' } },
+            light: { vars: { [variables.ratio]: '0.04' } },
         },
         type: {
             default: {
                 selectors: {
-                    '&:active::before': { opacity: calc.multiply(ratio, 2) },
+                    '&:active': {
+                        vars: { [variables.opacity]: calc.multiply(variables.ratio, 2) },
+                    },
                     '&:focus-visible': {
                         outline: `2px solid ${vars.color.foreground.normal[200]}`,
                         outlineOffset: '2px',
@@ -51,8 +56,10 @@ export const root = componentRecipe({
                 '@media': {
                     '(hover: hover)': {
                         selectors: {
-                            '&:hover::before': { opacity: calc.multiply(ratio, 1) },
-                            '&:active::before': { opacity: calc.multiply(ratio, 2) },
+                            '&:hover': { vars: { [variables.opacity]: variables.ratio } },
+                            '&:active': {
+                                vars: { [variables.opacity]: calc.multiply(variables.ratio, 2) },
+                            },
                         },
                     },
                 },
@@ -76,8 +83,8 @@ export const root = componentRecipe({
             },
             roving: {
                 selectors: {
-                    '&[data-highlighted]::before': { opacity: 0.08 },
-                    '&[data-highlighted]:active::before': { opacity: 0.16 },
+                    '&[data-highlighted]': { vars: { [variables.opacity]: '0.08' } },
+                    '&[data-highlighted]:active': { vars: { [variables.opacity]: '0.16' } },
                 },
             },
         },

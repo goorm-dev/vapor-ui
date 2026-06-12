@@ -47,7 +47,7 @@ describe('Interaction', () => {
         expect(classList).toContain('my-child-class');
     });
 
-    it('merges external className prop with recipe and child classes', () => {
+    it('applies external className prop onto the overlay and preserves the child class on the root', () => {
         const { container } = render(
             <Interaction className="external-class">
                 <button type="button" className="child-class">
@@ -56,9 +56,15 @@ describe('Interaction', () => {
             </Interaction>,
         );
 
-        const classList = container.firstElementChild?.className.split(' ') ?? [];
-        expect(classList).toContain('external-class');
-        expect(classList).toContain('child-class');
+        const root = container.firstElementChild;
+        const overlay = root?.querySelector('[data-vapor-interaction-overlay]');
+
+        const rootClasses = root?.className.split(' ') ?? [];
+        const overlayClasses = overlay?.className.split(' ') ?? [];
+
+        expect(rootClasses).toContain('child-class');
+        expect(rootClasses).not.toContain('external-class');
+        expect(overlayClasses).toContain('external-class');
     });
 
     it('applies variant props through to the recipe', () => {
@@ -108,6 +114,40 @@ describe('Interaction', () => {
         expect(() => render(<Interaction>{'just a string' as unknown as never}</Interaction>)).toThrow();
 
         console.error = previousError;
+    });
+
+    it('appends a presentational overlay as the last child', () => {
+        const { container } = render(
+            <Interaction>
+                <button type="button">
+                    <span data-testid="label">Click</span>
+                </button>
+            </Interaction>,
+        );
+
+        const button = container.firstElementChild;
+        const overlay = button?.lastElementChild;
+
+        expect(overlay?.tagName).toBe('DIV');
+        expect(overlay?.getAttribute('role')).toBe('presentation');
+        expect(overlay?.getAttribute('aria-hidden')).toBe('true');
+        expect(overlay?.hasAttribute('data-vapor-interaction-overlay')).toBe(true);
+        expect(overlay?.className.split(' ')).toEqual(
+            expect.arrayContaining(styles.overlay.split(' ').filter(Boolean)),
+        );
+        expect(button?.querySelector('[data-testid="label"]')).not.toBeNull();
+    });
+
+    it('does not inject an overlay for the form variant', () => {
+        const { container } = render(
+            <Interaction type="form">
+                <input type="text" />
+            </Interaction>,
+        );
+
+        const input = container.firstElementChild;
+        expect(input?.tagName).toBe('INPUT');
+        expect(input?.querySelector('[data-vapor-interaction-overlay]')).toBeNull();
     });
 
     it('preserves the child ref', () => {

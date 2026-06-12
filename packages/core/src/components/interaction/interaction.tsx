@@ -1,35 +1,58 @@
 import { Children, cloneElement, isValidElement } from 'react';
-import type { ReactNode } from 'react';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
+import type { VaporUIComponentProps } from '~/utils/types';
 
 import * as styles from './interaction.css';
 import type { InteractionVariants } from './interaction.css';
 
-interface InteractionProps extends InteractionVariants {
-    className?: string;
-    children: ReactNode;
-}
+/* -------------------------------------------------------------------------------------------------
+ * Interaction
+ * -----------------------------------------------------------------------------------------------*/
 
-const Interaction = (props: InteractionProps) => {
-    const [variantProps, { className, children }] = createSplitProps<InteractionVariants>()(
-        props,
-        ['scale', 'type'],
-    );
+export const Interaction = (props: Interaction.Props) => {
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const [variantProps, otherProps] = createSplitProps<InteractionVariants>()(componentProps, [
+        'scale',
+        'type',
+    ]);
 
-    const child = Children.only(children);
+    const child = Children.only(childrenProp);
 
-    if (!isValidElement<{ className?: string }>(child)) {
+    if (!isValidElement<Interaction.Props>(child)) {
         throw new Error('<Interaction> child must be a single React element');
     }
 
+    const element = useRenderElement({
+        defaultTagName: 'div',
+        state: { 'vapor-interaction': true },
+        props: {
+            role: 'presentation',
+            'aria-hidden': 'true',
+            className: cn(styles.overlay, className),
+            ...otherProps,
+        },
+    });
+
+    const children = (
+        <>
+            {child.props.children}
+            {element}
+        </>
+    );
+
     return cloneElement(child, {
-        className: cn(styles.root(variantProps), className, child.props.className),
+        className: cn(styles.root(variantProps), child.props.className),
+        children: variantProps.type !== 'form' ? children : undefined,
     });
 };
 
-Interaction.displayName = 'Interaction';
+/* -----------------------------------------------------------------------------------------------*/
 
-export { Interaction };
-export type { InteractionProps };
+export namespace Interaction {
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State> & InteractionVariants;
+}
