@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 
 import { render } from '@testing-library/react';
+import { axe } from 'vitest-axe';
 
 import { Interaction } from './interaction';
 import * as styles from './interaction.css';
@@ -122,5 +123,17 @@ describe('Interaction', () => {
 
         expect(ref.current).not.toBeNull();
         expect(ref.current?.tagName).toBe('BUTTON');
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(
+            <Interaction>
+                <button type="button">Click</button>
+            </Interaction>,
+        );
+
+        const results = await axe(container);
+
+        expect(results).toHaveNoViolations();
     });
 });
