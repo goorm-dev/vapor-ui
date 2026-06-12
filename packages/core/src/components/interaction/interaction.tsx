@@ -2,16 +2,22 @@ import { Children, cloneElement, isValidElement } from 'react';
 import type { ReactNode } from 'react';
 
 import { cn } from '~/utils/cn';
+import { createSplitProps } from '~/utils/create-split-props';
 
 import * as styles from './interaction.css';
+import type { InteractionVariants } from './interaction.css';
 
-interface InteractionProps {
+interface InteractionProps extends InteractionVariants {
     className?: string;
     children: ReactNode;
 }
 
 const Interaction = (props: InteractionProps) => {
-    const { className, children } = props;
+    const [variantProps, { className, children }] = createSplitProps<InteractionVariants>()(
+        props,
+        ['scale', 'type'],
+    );
+
     const child = Children.only(children);
 
     if (!isValidElement<{ className?: string }>(child)) {
@@ -19,7 +25,7 @@ const Interaction = (props: InteractionProps) => {
     }
 
     return cloneElement(child, {
-        className: cn(styles.root({}), className, child.props.className),
+        className: cn(styles.root(variantProps), className, child.props.className),
     });
 };
 

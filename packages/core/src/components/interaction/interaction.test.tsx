@@ -57,4 +57,28 @@ describe('Interaction', () => {
         expect(classList).toContain('external-class');
         expect(classList).toContain('child-class');
     });
+
+    it('applies variant props through to the recipe', () => {
+        const { container: defaultContainer } = render(
+            <Interaction>
+                <button type="button">Click</button>
+            </Interaction>,
+        );
+
+        const { container: lightFormContainer } = render(
+            <Interaction scale="light" type="form">
+                <button type="button">Click</button>
+            </Interaction>,
+        );
+
+        expect(defaultContainer.firstElementChild?.className).not.toBe(
+            lightFormContainer.firstElementChild?.className,
+        );
+
+        const lightFormExpected = styles.root({ scale: 'light', type: 'form' });
+        const lightFormActual = lightFormContainer.firstElementChild?.className.split(' ') ?? [];
+        expect(lightFormActual).toEqual(
+            expect.arrayContaining(lightFormExpected.split(' ').filter(Boolean)),
+        );
+    });
 });
