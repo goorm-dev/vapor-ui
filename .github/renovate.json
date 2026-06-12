@@ -50,13 +50,15 @@
             "groupName": "React Core",
             "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
             "labels": ["type: dependencies"],
-            "automerge": false
+            "automerge": false,
+            "dependencyDashboardApproval": false
         },
         {
             "description": "Vanilla Extract - CSS-in-TS styling",
             "groupName": "Vanilla Extract",
             "labels": ["type: dependencies"],
             "automerge": false,
+            "dependencyDashboardApproval": false,
             "matchPackageNames": ["/^@vanilla-extract\\/.*/"]
         },
         {
@@ -64,6 +66,7 @@
             "groupName": "Base UI",
             "labels": ["type: dependencies"],
             "automerge": false,
+            "dependencyDashboardApproval": false,
             "matchPackageNames": ["@base-ui/*"]
         }
     ]
