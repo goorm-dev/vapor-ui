@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 
 import { Interaction } from './interaction';
+import * as styles from './interaction.css';
 
 describe('Interaction', () => {
     it('renders the single child element with no wrapper DOM', () => {
@@ -15,5 +16,18 @@ describe('Interaction', () => {
         expect(container.children).toHaveLength(1);
         expect(container.firstElementChild?.tagName).toBe('BUTTON');
         expect(container.firstElementChild?.getAttribute('data-testid')).toBe('child');
+    });
+
+    it('applies the interaction recipe className onto the child', () => {
+        const { container } = render(
+            <Interaction>
+                <button type="button">Click</button>
+            </Interaction>,
+        );
+
+        const expectedClass = styles.root({});
+        expect(container.firstElementChild?.className.split(' ')).toEqual(
+            expect.arrayContaining(expectedClass.split(' ').filter(Boolean)),
+        );
     });
 });
