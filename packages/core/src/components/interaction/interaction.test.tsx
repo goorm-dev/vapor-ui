@@ -30,4 +30,17 @@ describe('Interaction', () => {
             expect.arrayContaining(expectedClass.split(' ').filter(Boolean)),
         );
     });
+
+    it('preserves the child existing className', () => {
+        const { container } = render(
+            <Interaction>
+                <button type="button" className="my-child-class">
+                    Click
+                </button>
+            </Interaction>,
+        );
+
+        const classList = container.firstElementChild?.className.split(' ') ?? [];
+        expect(classList).toContain('my-child-class');
+    });
 });
