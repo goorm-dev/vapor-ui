@@ -57,7 +57,7 @@ describe('Interaction', () => {
         );
 
         const root = container.firstElementChild;
-        const overlay = root?.querySelector('[data-vapor-interaction-overlay]');
+        const overlay = root?.querySelector('[data-vapor-interaction]');
 
         const rootClasses = root?.className.split(' ') ?? [];
         const overlayClasses = overlay?.className.split(' ') ?? [];
@@ -111,7 +111,9 @@ describe('Interaction', () => {
         const previousError = console.error;
         console.error = vi.fn();
 
-        expect(() => render(<Interaction>{'just a string' as unknown as never}</Interaction>)).toThrow();
+        expect(() =>
+            render(<Interaction>{'just a string' as unknown as never}</Interaction>),
+        ).toThrow();
 
         console.error = previousError;
     });
@@ -131,7 +133,7 @@ describe('Interaction', () => {
         expect(overlay?.tagName).toBe('DIV');
         expect(overlay?.getAttribute('role')).toBe('presentation');
         expect(overlay?.getAttribute('aria-hidden')).toBe('true');
-        expect(overlay?.hasAttribute('data-vapor-interaction-overlay')).toBe(true);
+        expect(overlay?.hasAttribute('data-vapor-interaction')).toBe(true);
         expect(overlay?.className.split(' ')).toEqual(
             expect.arrayContaining(styles.overlay.split(' ').filter(Boolean)),
         );
@@ -147,7 +149,7 @@ describe('Interaction', () => {
 
         const input = container.firstElementChild;
         expect(input?.tagName).toBe('INPUT');
-        expect(input?.querySelector('[data-vapor-interaction-overlay]')).toBeNull();
+        expect(input?.querySelector('[data-vapor-interaction]')).toBeNull();
     });
 
     it('preserves the child ref', () => {

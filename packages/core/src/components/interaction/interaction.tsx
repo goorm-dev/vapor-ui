@@ -39,8 +39,8 @@ export const Interaction = (props: Interaction.Props) => {
 
     const children = (
         <>
-            {child.props.children}
             {element}
+            {child.props.children}
         </>
     );
 
