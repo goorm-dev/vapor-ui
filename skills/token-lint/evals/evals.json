@@ -5,7 +5,7 @@
             "id": 1,
             "name": "all-clean-css",
             "prompt": "이 디렉터리의 디자인 토큰 사용을 검사해줘: /tmp/token-lint-eval/clean/",
-            "expected_output": "전체 0건 typo. exit 0. 'clean' 메시지.",
+            "expected_output": "전체 0건 typo. exit 0. '검사 완료' 메시지.",
             "files": [
                 {
                     "path": "/tmp/token-lint-eval/clean/styles.css",
@@ -17,7 +17,7 @@
                     "text": "exit code 0"
                 },
                 {
-                    "text": "'clean' 또는 '0 unknown' 메시지 포함"
+                    "text": "'검사 완료' 또는 '찾지 못했습니다' 메시지 포함"
                 },
                 {
                     "text": "어떤 --vapor- 변수도 typo로 신고하지 않음"
@@ -28,7 +28,7 @@
             "id": 2,
             "name": "typo-with-close-suggestion",
             "prompt": "/token-lint /tmp/token-lint-eval/typos/",
-            "expected_output": "최소 2건 typo 검출. 각 typo에 distance ≤ 2 후보 제시. exit 1.",
+            "expected_output": "최소 2건 typo 검출. 각 typo에 distance ≤ 2 후보 제시. exit 0 (typo 발견은 실패 아님 — SKILL.md 명시).",
             "files": [
                 {
                     "path": "/tmp/token-lint-eval/typos/card.tsx",
@@ -37,7 +37,10 @@
             ],
             "assertions": [
                 {
-                    "text": "exit code 1"
+                    "text": "exit code 0"
+                },
+                {
+                    "text": "요약 줄에 '2건' 발견 명시"
                 },
                 {
                     "text": "--vapor-color-foregruond-primary-100 에 대해 --vapor-color-foreground-primary-100 추천"
@@ -54,7 +57,7 @@
             "id": 3,
             "name": "mixed-native-and-skip-dirs",
             "prompt": "이 프로젝트 lint해줘. /tmp/token-lint-eval/mixed/",
-            "expected_output": "native --webkit-* 변수는 무시. node_modules 안 파일은 검사 제외. src/ 내 typo만 신고.",
+            "expected_output": "native --webkit-* 변수는 무시. node_modules 안 파일은 검사 제외. src/ 내 typo만 신고. exit 0 (typo 발견은 실패 아님).",
             "files": [
                 {
                     "path": "/tmp/token-lint-eval/mixed/src/app.css",
@@ -67,6 +70,9 @@
             ],
             "assertions": [
                 {
+                    "text": "exit code 0"
+                },
+                {
                     "text": "--vapor-size-spaec-100 typo로 신고됨"
                 },
                 {
@@ -77,9 +83,6 @@
                 },
                 {
                     "text": "node_modules 안 --vapor-totally-fake-token 신고 안 됨"
-                },
-                {
-                    "text": "exit code 1"
                 }
             ]
         },
@@ -91,7 +94,7 @@
             "files": [
                 {
                     "path": "/tmp/token-lint-eval/string-prefix/util.ts",
-                    "content": "export function isVaporToken(value: unknown): boolean {\n  return (\n   typeof value === 'string' &&\n    (value.startsWith('#') || value.startsWith('var(--vapor-color-'))\n  );\n}\n"
+                    "content": "export function isVaporToken(value: unknown): boolean {\n  return (\n    typeof value === 'string' &&\n    (value.startsWith('#') || value.startsWith('var(--vapor-color-'))\n  );\n}\n"
                 }
             ],
             "assertions": [
@@ -99,7 +102,7 @@
                     "text": "exit code 0"
                 },
                 {
-                    "text": "'clean' 또는 '0 unknown' 메시지 포함"
+                    "text": "'검사 완료' 또는 '찾지 못했습니다' 메시지 포함"
                 },
                 {
                     "text": "--vapor-color- 를 typo로 신고하지 않음"

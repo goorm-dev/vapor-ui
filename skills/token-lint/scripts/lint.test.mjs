@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { chmod, mkdir, mkdtemp, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -8,6 +8,7 @@ import { extractFromFile, loadCanonical } from './extract-tokens.mjs';
 import {
     VAR_RE,
     damerauLevenshtein,
+    iterTargetFiles,
     renderReportBlocks,
     scanText,
     segmentDistance,
@@ -261,5 +262,63 @@ test('loadCanonical: merges multiple files', async () => {
             '--vapor-size-space-100',
             '--vapor-typography-fontWeight-400',
         ]);
+    });
+});
+
+async function withTempDir(fn) {
+    const dir = await mkdtemp(join(tmpdir(), 'token-lint-walk-'));
+    try {
+        await fn(dir);
+    } finally {
+        await rm(dir, { recursive: true, force: true });
+    }
+}
+
+test('iterTargetFiles: yields entries in deterministic alphabetical order', async () => {
+    await withTempDir(async (dir) => {
+        for (const name of ['c.css', 'a.css', 'b.css', 'z.css', 'm.css']) {
+            await writeFile(join(dir, name), '');
+        }
+        await mkdir(join(dir, 'sub'));
+        await writeFile(join(dir, 'sub', 'y.css'), '');
+        await writeFile(join(dir, 'sub', 'x.css'), '');
+        const rootStat = await stat(dir);
+        const out = [];
+        for await (const fp of iterTargetFiles(dir, rootStat)) {
+            out.push(fp.slice(dir.length + 1));
+        }
+        assert.deepEqual(out, [
+            'a.css',
+            'b.css',
+            'c.css',
+            'm.css',
+            join('sub', 'x.css'),
+            join('sub', 'y.css'),
+            'z.css',
+        ]);
+    });
+});
+
+test('iterTargetFiles: unreadable subdir is skipped, walk continues', async (t) => {
+    if (process.platform === 'win32' || process.getuid?.() === 0) {
+        t.skip('chmod-based unreadable subdir test requires non-root POSIX');
+        return;
+    }
+    await withTempDir(async (dir) => {
+        await writeFile(join(dir, 'a.css'), '');
+        await mkdir(join(dir, 'locked'));
+        await writeFile(join(dir, 'locked', 'inside.css'), '');
+        await writeFile(join(dir, 'z.css'), '');
+        await chmod(join(dir, 'locked'), 0o000);
+        try {
+            const rootStat = await stat(dir);
+            const out = [];
+            for await (const fp of iterTargetFiles(dir, rootStat)) {
+                out.push(fp.slice(dir.length + 1));
+            }
+            assert.deepEqual(out, ['a.css', 'z.css']);
+        } finally {
+            await chmod(join(dir, 'locked'), 0o755);
+        }
     });
 });

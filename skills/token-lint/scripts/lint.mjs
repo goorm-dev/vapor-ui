@@ -97,13 +97,19 @@ function extname(p) {
     return i > slash ? p.slice(i) : '';
 }
 
-async function* iterTargetFiles(rootPath, rootStat) {
+export async function* iterTargetFiles(rootPath, rootStat) {
     if (rootStat.isFile()) {
         if (TARGET_EXTS.has(extname(rootPath))) yield rootPath;
         return;
     }
     async function* walkDir(dir) {
-        const entries = await readdir(dir, { withFileTypes: true });
+        let entries;
+        try {
+            entries = await readdir(dir, { withFileTypes: true });
+        } catch {
+            return;
+        }
+        entries.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
         for (const ent of entries) {
             const full = join(dir, ent.name);
             if (ent.isDirectory()) {
