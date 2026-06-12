@@ -1,3 +1,5 @@
+import { createRef } from 'react';
+
 import { render } from '@testing-library/react';
 
 import { Interaction } from './interaction';
@@ -105,5 +107,20 @@ describe('Interaction', () => {
         expect(() => render(<Interaction>{'just a string' as unknown as never}</Interaction>)).toThrow();
 
         console.error = previousError;
+    });
+
+    it('preserves the child ref', () => {
+        const ref = createRef<HTMLButtonElement>();
+
+        render(
+            <Interaction>
+                <button ref={ref} type="button">
+                    Click
+                </button>
+            </Interaction>,
+        );
+
+        expect(ref.current).not.toBeNull();
+        expect(ref.current?.tagName).toBe('BUTTON');
     });
 });
