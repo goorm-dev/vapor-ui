@@ -16,6 +16,7 @@ export * from './components/grid';
 export * from './components/h-stack';
 export * from './components/icon-button';
 export * from './components/input-group';
+export * from './components/interaction';
 export * from './components/menu';
 export * from './components/multi-select';
 export * from './components/navigation-menu';
