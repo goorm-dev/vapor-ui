@@ -1,0 +1,384 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+    "textStyle": {
+        "$type": "typography",
+        "display1": {
+            "$description": "The high-level display text to deliver maximum visual impact as a graphic element in brand or marketing contexts.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "hero or landing section on desktop where text functions as a visual graphic rather than readable prose",
+                        "brand or campaign statement limited to a few words requiring the strongest typographic presence"
+                    ],
+                    "avoid": [
+                        "mobile viewports → display2 or display3",
+                        "text carrying meaningful readable content → display2 or display3"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.800}",
+                "fontSize": "{typography.fontSize.1000}",
+                "lineHeight": "{typography.lineHeight.1000}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "display2": {
+            "$description": "The mid-level display text to deliver strong marketing messages at the largest readable display scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "primary hero headline requiring the strongest readable typographic presence on desktop",
+                        "marketing message intended to appear once per page at maximum display emphasis"
+                    ],
+                    "avoid": [
+                        "mobile viewports → display4 or heading1",
+                        "cases where display3 scale is sufficient → display3"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.800}",
+                "fontSize": "{typography.fontSize.900}",
+                "lineHeight": "{typography.lineHeight.900}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "display3": {
+            "$description": "The mid-level display text to headline landing or hero sections as the default display scale on desktop.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "primary headline of a landing page or hero section on desktop",
+                        "marketing statement requiring large visual weight with readable content, intended once per page"
+                    ],
+                    "avoid": [
+                        "mobile viewports → display4 or heading1",
+                        "cases requiring stronger impact → display2"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.800}",
+                "fontSize": "{typography.fontSize.800}",
+                "lineHeight": "{typography.lineHeight.800}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "display4": {
+            "$description": "The low-level display text to title subsections within a hero or marketing layout at the lowest display hierarchy.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "subsection headline within a hero or landing area sitting below a display2 or display3 title",
+                        "largest title in a promotional block that does not require full display1–3 scale"
+                    ],
+                    "avoid": ["mobile viewports → heading1 or heading2"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.800}",
+                "fontSize": "{typography.fontSize.700}",
+                "lineHeight": "{typography.lineHeight.700}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "heading1": {
+            "$description": "The high-level heading to title landing page sections with the strongest heading scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "section title of a landing page requiring strong typographic emphasis",
+                        "primary hero headline on mobile where display tokens are not applicable"
+                    ],
+                    "avoid": [
+                        "general product UI → heading2 or heading3",
+                        "mobile viewports where heading1 is too large → heading2 or heading3"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.600}",
+                "lineHeight": "{typography.lineHeight.600}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "heading2": {
+            "$description": "The high-level heading to deliver specific messages in product UI or serve as a mobile hero headline.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "high-emphasis message within a product UI context such as a welcome or onboarding headline",
+                        "mobile hero headline where heading1 provides more impact than needed"
+                    ],
+                    "avoid": [
+                        "general informational page titles → heading3",
+                        "desktop hero headlines → display2, display3, or display4"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.500}",
+                "lineHeight": "{typography.lineHeight.500}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "heading3": {
+            "$description": "The mid-level heading to title general product pages or serve as a secondary title beneath heading1 or heading2.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "primary title of a general product page in standard UI contexts",
+                        "secondary title beneath heading1 or heading2 when a lower hierarchy is needed"
+                    ],
+                    "avoid": ["marketing or high-emphasis messages → heading2"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.400}",
+                "lineHeight": "{typography.lineHeight.400}",
+                "letterSpacing": "{typography.letterSpacing.300}"
+            }
+        },
+        "heading4": {
+            "$description": "The mid-level heading to title sections or serve as the largest title within a contained component.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "section title within a page layout",
+                        "primary title inside a dialog, card, or side navigation at the largest component heading scale"
+                    ],
+                    "avoid": ["full page main title → heading3"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.300}",
+                "lineHeight": "{typography.lineHeight.300}",
+                "letterSpacing": "{typography.letterSpacing.200}"
+            }
+        },
+        "heading5": {
+            "$description": "The low-level heading to title compact components as the default component heading scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "primary title inside a dialog, card, or side navigation at the default component heading scale",
+                        "short emphatic label requiring stronger visual weight than subtitle or body tokens"
+                    ],
+                    "avoid": [
+                        "full page main title → heading3",
+                        "cases requiring larger component heading scale → heading4"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.200}",
+                "lineHeight": "{typography.lineHeight.200}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "heading6": {
+            "$description": "The low-level heading to label the smallest component titles or extra-large component labels.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "smallest title inside a dialog, card, or side navigation",
+                        "label for an extra-large component where medium weight is sufficient"
+                    ],
+                    "avoid": [
+                        "cases requiring bold emphasis → heading5",
+                        "cases requiring larger component heading scale → heading5"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.500}",
+                "fontSize": "{typography.fontSize.100}",
+                "lineHeight": "{typography.lineHeight.100}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "subtitle1": {
+            "$description": "The high-level subtitle to label medium and large components or provide emphasis within body text.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "label for medium or large components as the default label scale",
+                        "short text requiring emphasis within a body text context without increasing font size"
+                    ],
+                    "avoid": ["body or paragraph text → body2"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.500}",
+                "fontSize": "{typography.fontSize.075}",
+                "lineHeight": "{typography.lineHeight.075}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "subtitle2": {
+            "$description": "The low-level subtitle to label small components or serve as a supporting label beneath heading6 or subtitle1.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "label for small components as the smallest label scale",
+                        "supporting label paired beneath heading6 or subtitle1"
+                    ],
+                    "avoid": [
+                        "standalone use without accompanying text or component → subtitle1",
+                        "body or paragraph text → body2 or body3"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.500}",
+                "fontSize": "{typography.fontSize.050}",
+                "lineHeight": "{typography.lineHeight.050}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
+        },
+        "body1": {
+            "$description": "The high-level body text to provide supplementary description alongside heading3 or heading4.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "descriptive text paired directly with heading3 or heading4 as a supporting explanation",
+                        "placeholder or item label in a large component requiring descriptive text"
+                    ],
+                    "avoid": [
+                        "general body or paragraph text → body2",
+                        "supporting text for heading5 or heading6 → body2 or body3"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.100}",
+                "lineHeight": "{typography.lineHeight.100}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "body2": {
+            "$description": "The high-level body text to deliver readable content as the default body text scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "general body or paragraph text in most UI contexts",
+                        "caption text when used alongside subtitle1",
+                        "placeholder or item label in a medium component requiring descriptive text"
+                    ],
+                    "avoid": [
+                        "labels requiring emphasis → subtitle1",
+                        "supporting description for heading3 or heading4 → body1"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.075}",
+                "lineHeight": "{typography.lineHeight.075}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "body3": {
+            "$description": "The low-level body text to provide descriptive captions for content elements at the default caption scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "caption text describing a title, body, or image element",
+                        "placeholder or item label in a small component requiring descriptive text"
+                    ],
+                    "avoid": [
+                        "standalone use without accompanying text or component → body2",
+                        "general body or paragraph text → body2"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.050}",
+                "lineHeight": "{typography.lineHeight.050}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "body4": {
+            "$description": "The low-level body text to present the smallest caption scale in space-constrained contexts.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["caption in a space-constrained UI element where no larger size fits"],
+                    "avoid": [
+                        "captions users must read without difficulty → body3",
+                        "general caption or supplementary description → body3"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.025}",
+                "lineHeight": "{typography.lineHeight.025}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
+        },
+        "code1": {
+            "$description": "The high-level code text to display code blocks or inline code at the default code scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["code block or inline code requiring the default code text size"],
+                    "avoid": [
+                        "non-code text → body2 or body3",
+                        "replacing with sans-serif style is not permitted → always use fontFamily.code"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.code}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.075}",
+                "lineHeight": "{typography.lineHeight.075}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
+        },
+        "code2": {
+            "$description": "The low-level code text to display code blocks or inline code at the smallest code scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "code block or inline code in a space-constrained context requiring a smaller code text size"
+                    ],
+                    "avoid": [
+                        "non-code text → body3",
+                        "replacing with sans-serif style is not permitted → always use fontFamily.code"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.code}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.050}",
+                "lineHeight": "{typography.lineHeight.050}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
+        }
+    }
+}

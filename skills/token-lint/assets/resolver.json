@@ -1,0 +1,32 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+    "name": "vapor",
+    "version": "2025.10",
+    "resolutionOrder": [{ "$ref": "#/sets/foundation" }, { "$ref": "#/modifiers/theme" }],
+    "sets": {
+        "foundation": {
+            "sources": [
+                { "$ref": "border-radius.json" },
+                { "$ref": "dimension.json" },
+                { "$ref": "space.json" },
+                { "$ref": "typography.json" },
+                { "$ref": "text-style.json" }
+            ]
+        }
+    },
+    "modifiers": {
+        "theme": {
+            "default": "light",
+            "contexts": {
+                "light": [
+                    { "$ref": "primitive-color.light.json" },
+                    { "$ref": "semantic-color.light.json" }
+                ],
+                "dark": [
+                    { "$ref": "primitive-color.dark.json" },
+                    { "$ref": "semantic-color.dark.json" }
+                ]
+            }
+        }
+    }
+}
