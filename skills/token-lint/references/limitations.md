@@ -8,7 +8,7 @@
 
 스크립트는 파일 전체를 단일 정규식으로 스캔해 `var(--vapor-...)` 패턴을 잡습니다(공백/개행 포함). 토큰 참조의 구문 트리를 파싱하지 않으므로 다음은 **검출이 누락**됩니다 (false negative — 깨끗하게 통과하지만 실제로는 검사되지 않은 코드).
 
-- 동적 조립: `` var(`--vapor-color-${variant}`) ``, `var('--vapor-' + name)`, 객체 매핑에서 토큰 키만 저장한 뒤 런타임 조립.
+- 동적 조립: ``var(`--vapor-color-${variant}`)``, `var('--vapor-' + name)`, 객체 매핑에서 토큰 키만 저장한 뒤 런타임 조립.
 - helper 간접: `buildToken('color-primary-100')`, `getCssVar(token)` 같은 래퍼를 거치면 정규식은 토큰 이름 자체를 보지 못합니다.
 - 폴백 체인 안쪽: `var(--vapor-a, var(--vapor-typo))` — 정규식은 `var(...)` 두 개를 각각 잡지만 폴백 위치의 의미(첫 토큰이 없을 때만 사용되는 디폴트)는 알지 못해, 진짜 사용 토큰과 디폴트 토큰을 같은 무게로 검사합니다.
 - CSS Custom Property 정의 사이트: `--vapor-team-x: red;` 같은 사용자 측 vapor prefix 확장 정의는 `var()` 래퍼가 없어 검사 대상에서 제외됩니다. 카탈로그 외 prefix 확장은 침묵 통과합니다.

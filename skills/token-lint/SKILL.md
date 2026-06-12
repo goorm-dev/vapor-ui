@@ -10,6 +10,7 @@ description: 지정한 경로의 vapor 디자인 토큰 CSS 변수 사용을 검
 사용자가 Figma 디자인을 코드(CSS, React 등)로 막 옮기고, 모든 `var(--vapor-...)` 참조가 실제 존재하는 토큰을 가리키는지 확인하고 싶을 때 사용합니다. Figma 측 의미 린트(이 맥락에 적합한 토큰인지 여부)는 이미 완료된 것으로 가정하며, 이 스킬은 전사 과정에서 발생하는 **오타**를 잡습니다.
 
 트리거 표현:
+
 - `/token-lint <path>`
 - "vapor 토큰 오타 검사"
 - "이 컴포넌트 토큰 사용 검사해줘"
@@ -43,9 +44,8 @@ node <skill-dir>/scripts/lint.mjs <path>
 
 이 스킬은 파일 전체 정규식 스캔 + 동결된 카탈로그 스냅샷 + 세그먼트 정렬 Damerau-Levenshtein으로 동작합니다. 따라서 깨끗한 exit이 "전부 검사했고 전부 옳다"를 보장하지 않습니다. 아래 **증상이 의심될 때만** `references/limitations.md`를 읽고 그 카테고리의 보정 지침을 적용해 사용자에게 알리세요.
 
-- `` var(`--vapor-${name}`) ``, helper 함수로 토큰을 조립하는 코드, 사용자 측 vapor prefix 확장 정의(`--vapor-team-x: ...`)가 검사 대상에 포함되어 있다 → §1 regex 한계.
+- ``var(`--vapor-${name}`)``, helper 함수로 토큰을 조립하는 코드, 사용자 측 vapor prefix 확장 정의(`--vapor-team-x: ...`)가 검사 대상에 포함되어 있다 → §1 regex 한계.
 - unknown으로 신고됐는데 제안이 비어 있거나, 직관적으로 의미축(foreground↔background 등) 오타로 보인다 → §2 Levenshtein 의미 맹점.
 - 작업이 토큰의 타입 적합성(color를 font-size 자리에 쓰는 등)이나 deprecated 토큰 검출까지 요구한다 → §3 단방향 존재 검사.
 
 위 어느 증상에도 해당하지 않으면 limitations.md를 읽을 필요 없이 stdout 결과를 그대로 보고합니다.
-
