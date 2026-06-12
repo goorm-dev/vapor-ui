@@ -3,16 +3,15 @@
     "textStyle": {
         "$type": "typography",
         "display1": {
-            "$description": "The high-level display text to deliver maximum visual impact as a graphic element in brand or marketing contexts.",
+            "$description": "The largest text style in the system. Recommended for use as a graphic element rather than readable text.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "hero or landing section on desktop where text functions as a visual graphic rather than readable prose",
-                        "brand or campaign statement limited to a few words requiring the strongest typographic presence"
+                        "hero section or marketing content headline on a landing page at the largest display scale"
                     ],
                     "avoid": [
                         "mobile viewports → display2 or display3",
-                        "text carrying meaningful readable content → display2 or display3"
+                        "text requiring readability → display2 or display3"
                     ]
                 }
             },
@@ -25,16 +24,13 @@
             }
         },
         "display2": {
-            "$description": "The mid-level display text to deliver strong marketing messages at the largest readable display scale.",
+            "$description": "The largest readable display scale. Recommended for delivering strong marketing messages.",
             "$extensions": {
                 "io.goorm.vapor": {
-                    "when": [
-                        "primary hero headline requiring the strongest readable typographic presence on desktop",
-                        "marketing message intended to appear once per page at maximum display emphasis"
-                    ],
+                    "when": ["hero section or marketing content headline on a landing page"],
                     "avoid": [
                         "mobile viewports → display4 or heading1",
-                        "cases where display3 scale is sufficient → display3"
+                        "more than one instance per page"
                     ]
                 }
             },
@@ -47,16 +43,15 @@
             }
         },
         "display3": {
-            "$description": "The mid-level display text to headline landing or hero sections as the default display scale on desktop.",
+            "$description": "The default readable display scale.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "primary headline of a landing page or hero section on desktop",
-                        "marketing statement requiring large visual weight with readable content, intended once per page"
+                        "hero section or marketing content headline on a landing page at medium display scale"
                     ],
                     "avoid": [
                         "mobile viewports → display4 or heading1",
-                        "cases requiring stronger impact → display2"
+                        "more than one instance per page"
                     ]
                 }
             },
@@ -69,12 +64,12 @@
             }
         },
         "display4": {
-            "$description": "The low-level display text to title subsections within a hero or marketing layout at the lowest display hierarchy.",
+            "$description": "The smallest readable display scale. Can be applied to subsection titles when display2 or display3 is used on the same page.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "subsection headline within a hero or landing area sitting below a display2 or display3 title",
-                        "largest title in a promotional block that does not require full display1–3 scale"
+                        "hero section or marketing content headline on a landing page at the smallest display scale",
+                        "subsection title beneath a display2 or display3 headline"
                     ],
                     "avoid": ["mobile viewports → heading1 or heading2"]
                 }
@@ -88,16 +83,13 @@
             }
         },
         "heading1": {
-            "$description": "The high-level heading to title landing page sections with the strongest heading scale.",
+            "$description": "The default section title scale for landing pages.",
             "$extensions": {
                 "io.goorm.vapor": {
-                    "when": [
-                        "section title of a landing page requiring strong typographic emphasis",
-                        "primary hero headline on mobile where display tokens are not applicable"
-                    ],
+                    "when": ["section title on a landing page"],
                     "avoid": [
                         "general product UI → heading2 or heading3",
-                        "mobile viewports where heading1 is too large → heading2 or heading3"
+                        "mobile viewports → heading2 or heading3"
                     ]
                 }
             },
@@ -110,17 +102,14 @@
             }
         },
         "heading2": {
-            "$description": "The high-level heading to deliver specific messages in product UI or serve as a mobile hero headline.",
+            "$description": "The largest page title scale in general product UI. Recommended for delivering a specific message rather than a generic title.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "high-emphasis message within a product UI context such as a welcome or onboarding headline",
-                        "mobile hero headline where heading1 provides more impact than needed"
+                        "welcome message on an AI product home screen",
+                        "page title in a general product UI requiring stronger emphasis than heading3"
                     ],
-                    "avoid": [
-                        "general informational page titles → heading3",
-                        "desktop hero headlines → display2, display3, or display4"
-                    ]
+                    "avoid": ["general informational page titles → heading3"]
                 }
             },
             "$value": {
@@ -132,12 +121,12 @@
             }
         },
         "heading3": {
-            "$description": "The mid-level heading to title general product pages or serve as a secondary title beneath heading1 or heading2.",
+            "$description": "The default page title scale in general product UI. Can be applied as a subtitle when heading1 or heading2 is used as the primary title.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "primary title of a general product page in standard UI contexts",
-                        "secondary title beneath heading1 or heading2 when a lower hierarchy is needed"
+                        "primary page title in a general product UI",
+                        "subtitle beneath heading1 or heading2"
                     ],
                     "avoid": ["marketing or high-emphasis messages → heading2"]
                 }
@@ -151,14 +140,14 @@
             }
         },
         "heading4": {
-            "$description": "The mid-level heading to title sections or serve as the largest title within a contained component.",
+            "$description": "The smallest page title scale and the largest component title scale in general product UI.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "section title within a page layout",
-                        "primary title inside a dialog, card, or side navigation at the largest component heading scale"
+                        "subtitle beneath a page title",
+                        "title of a dialog, card, or side navigation at the largest component heading scale"
                     ],
-                    "avoid": ["full page main title → heading3"]
+                    "avoid": ["primary page main title → heading3"]
                 }
             },
             "$value": {
@@ -170,17 +159,13 @@
             }
         },
         "heading5": {
-            "$description": "The low-level heading to title compact components as the default component heading scale.",
+            "$description": "The default component title scale for dialogs, cards, and side navigation.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "primary title inside a dialog, card, or side navigation at the default component heading scale",
-                        "short emphatic label requiring stronger visual weight than subtitle or body tokens"
+                        "title of a dialog, card, or side navigation at the default component heading scale"
                     ],
-                    "avoid": [
-                        "full page main title → heading3",
-                        "cases requiring larger component heading scale → heading4"
-                    ]
+                    "avoid": ["primary page main title → heading3"]
                 }
             },
             "$value": {
@@ -192,17 +177,14 @@
             }
         },
         "heading6": {
-            "$description": "The low-level heading to label the smallest component titles or extra-large component labels.",
+            "$description": "The smallest component title scale for dialogs, cards, and side navigation. Also used as a label for extra-large components.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "smallest title inside a dialog, card, or side navigation",
-                        "label for an extra-large component where medium weight is sufficient"
+                        "title of a dialog, card, or side navigation at the smallest component heading scale",
+                        "label for an extra-large component"
                     ],
-                    "avoid": [
-                        "cases requiring bold emphasis → heading5",
-                        "cases requiring larger component heading scale → heading5"
-                    ]
+                    "avoid": ["cases requiring bold emphasis → heading5"]
                 }
             },
             "$value": {
@@ -214,13 +196,10 @@
             }
         },
         "subtitle1": {
-            "$description": "The high-level subtitle to label medium and large components or provide emphasis within body text.",
+            "$description": "The default label scale. Used as a general label or for medium and large components.",
             "$extensions": {
                 "io.goorm.vapor": {
-                    "when": [
-                        "label for medium or large components as the default label scale",
-                        "short text requiring emphasis within a body text context without increasing font size"
-                    ],
+                    "when": ["general label or label for medium and large components"],
                     "avoid": ["body or paragraph text → body2"]
                 }
             },
@@ -233,17 +212,11 @@
             }
         },
         "subtitle2": {
-            "$description": "The low-level subtitle to label small components or serve as a supporting label beneath heading6 or subtitle1.",
+            "$description": "The smallest label scale. Used as a supporting label beneath heading6 or subtitle1, or for small components.",
             "$extensions": {
                 "io.goorm.vapor": {
-                    "when": [
-                        "label for small components as the smallest label scale",
-                        "supporting label paired beneath heading6 or subtitle1"
-                    ],
-                    "avoid": [
-                        "standalone use without accompanying text or component → subtitle1",
-                        "body or paragraph text → body2 or body3"
-                    ]
+                    "when": ["supporting label or label for small components"],
+                    "avoid": ["standalone use without accompanying text or component → subtitle1"]
                 }
             },
             "$value": {
@@ -255,17 +228,14 @@
             }
         },
         "body1": {
-            "$description": "The high-level body text to provide supplementary description alongside heading3 or heading4.",
+            "$description": "Recommended as supporting text for heading3 or heading4. Used for descriptive text in large components.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "descriptive text paired directly with heading3 or heading4 as a supporting explanation",
-                        "placeholder or item label in a large component requiring descriptive text"
+                        "supporting text beneath heading3 or heading4",
+                        "placeholder text in an extra-large component"
                     ],
-                    "avoid": [
-                        "general body or paragraph text → body2",
-                        "supporting text for heading5 or heading6 → body2 or body3"
-                    ]
+                    "avoid": ["supporting text for heading5 or heading6 → body2 or body3"]
                 }
             },
             "$value": {
@@ -277,18 +247,15 @@
             }
         },
         "body2": {
-            "$description": "The high-level body text to deliver readable content as the default body text scale.",
+            "$description": "The default body text scale. Used for descriptive text in medium and large components.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "general body or paragraph text in most UI contexts",
-                        "caption text when used alongside subtitle1",
-                        "placeholder or item label in a medium component requiring descriptive text"
+                        "body or paragraph text",
+                        "placeholder text in medium or large components",
+                        "menu item or field description"
                     ],
-                    "avoid": [
-                        "labels requiring emphasis → subtitle1",
-                        "supporting description for heading3 or heading4 → body1"
-                    ]
+                    "avoid": ["labels → subtitle1"]
                 }
             },
             "$value": {
@@ -300,17 +267,14 @@
             }
         },
         "body3": {
-            "$description": "The low-level body text to provide descriptive captions for content elements at the default caption scale.",
+            "$description": "The default caption scale. Used for descriptive text explaining titles, body, or images, and for small components.",
             "$extensions": {
                 "io.goorm.vapor": {
                     "when": [
-                        "caption text describing a title, body, or image element",
-                        "placeholder or item label in a small component requiring descriptive text"
+                        "placeholder text in a small component",
+                        "caption text describing a title, body, or image"
                     ],
-                    "avoid": [
-                        "standalone use without accompanying text or component → body2",
-                        "general body or paragraph text → body2"
-                    ]
+                    "avoid": ["standalone use without accompanying text or component → body2"]
                 }
             },
             "$value": {
@@ -322,14 +286,11 @@
             }
         },
         "body4": {
-            "$description": "The low-level body text to present the smallest caption scale in space-constrained contexts.",
+            "$description": "The smallest caption scale. Readability is not guaranteed; use sparingly.",
             "$extensions": {
                 "io.goorm.vapor": {
-                    "when": ["caption in a space-constrained UI element where no larger size fits"],
-                    "avoid": [
-                        "captions users must read without difficulty → body3",
-                        "general caption or supplementary description → body3"
-                    ]
+                    "when": ["caption text in space-constrained contexts"],
+                    "avoid": ["captions users must read without difficulty → body3"]
                 }
             },
             "$value": {
@@ -341,12 +302,12 @@
             }
         },
         "code1": {
-            "$description": "The high-level code text to display code blocks or inline code at the default code scale.",
+            "$description": "The default code text scale.",
             "$extensions": {
                 "io.goorm.vapor": {
-                    "when": ["code block or inline code requiring the default code text size"],
+                    "when": ["code block or inline code at the default code scale"],
                     "avoid": [
-                        "non-code text → body2 or body3",
+                        "non-code text → body2",
                         "replacing with sans-serif style is not permitted → always use fontFamily.code"
                     ]
                 }
@@ -360,13 +321,12 @@
             }
         },
         "code2": {
-            "$description": "The low-level code text to display code blocks or inline code at the smallest code scale.",
+            "$description": "The smallest code text scale.",
             "$extensions": {
                 "io.goorm.vapor": {
-                    "when": [
-                        "code block or inline code in a space-constrained context requiring a smaller code text size"
-                    ],
+                    "when": ["code block or inline code at the smallest code scale"],
                     "avoid": [
+                        "large screen contexts → code1",
                         "non-code text → body3",
                         "replacing with sans-serif style is not permitted → always use fontFamily.code"
                     ]
