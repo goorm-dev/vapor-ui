@@ -16,6 +16,7 @@ import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Badge } from '../badge';
+import { Interaction } from '../interaction';
 import type { TriggerVariants } from './multi-select.css';
 import * as styles from './multi-select.css';
 
@@ -73,16 +74,18 @@ export const MultiSelectTriggerPrimitive = forwardRef<
     const dataAttrs = createDataAttributes({ required, invalid });
 
     return (
-        <BaseSelect.Trigger
-            ref={ref}
-            render={render}
-            nativeButton={nativeButton}
-            aria-invalid={invalid || undefined}
-            aria-required={required || undefined}
-            className={cn(styles.trigger({ size, invalid }), className)}
-            {...dataAttrs}
-            {...componentProps}
-        />
+        <Interaction>
+            <BaseSelect.Trigger
+                ref={ref}
+                render={render}
+                nativeButton={nativeButton}
+                aria-invalid={invalid || undefined}
+                aria-required={required || undefined}
+                className={cn(styles.trigger({ size, invalid }), className)}
+                {...dataAttrs}
+                {...componentProps}
+            />
+        </Interaction>
     );
 });
 MultiSelectTriggerPrimitive.displayName = 'MultiSelect.TriggerPrimitive';
@@ -316,7 +319,13 @@ export const MultiSelectItemPrimitive = forwardRef<HTMLElement, MultiSelectItemP
         const { className, ...componentProps } = resolveStyles(props);
 
         return (
-            <BaseSelect.Item ref={ref} className={cn(styles.item, className)} {...componentProps} />
+            <Interaction type="roving">
+                <BaseSelect.Item
+                    ref={ref}
+                    className={cn(styles.item, className)}
+                    {...componentProps}
+                />
+            </Interaction>
         );
     },
 );

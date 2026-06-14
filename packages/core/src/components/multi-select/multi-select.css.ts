@@ -2,7 +2,6 @@ import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
-import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
@@ -12,7 +11,6 @@ const boxShadowColor = createVar('box-shadow-color');
 
 export const trigger = componentRecipe({
     base: [
-        interaction(),
         {
             display: 'flex',
             alignItems: 'center',
@@ -192,7 +190,6 @@ export const popup = componentStyle({
 });
 
 export const item = componentStyle([
-    interaction({ type: 'roving' }),
     typography({ style: 'body2' }),
     {
         display: 'flex',

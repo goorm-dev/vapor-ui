@@ -12,6 +12,7 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import type { RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
 
@@ -55,15 +56,17 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
     const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
 
     return (
-        <BaseInput
-            ref={ref}
-            {...(isControlled ? { value } : { defaultValue })}
-            aria-invalid={invalid}
-            onValueChange={handleChange}
-            className={cn(styles.root({ invalid, size }), className)}
-            {...dataAttrs}
-            {...otherProps}
-        />
+        <Interaction type="form">
+            <BaseInput
+                ref={ref}
+                {...(isControlled ? { value } : { defaultValue })}
+                aria-invalid={invalid}
+                onValueChange={handleChange}
+                className={cn(styles.root({ invalid, size }), className)}
+                {...dataAttrs}
+                {...otherProps}
+            />
+        </Interaction>
     );
 });
 TextInput.displayName = 'TextInput';
