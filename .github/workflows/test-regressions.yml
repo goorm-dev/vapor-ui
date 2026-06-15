@@ -41,9 +41,6 @@ jobs:
 
     test:
         runs-on: ubuntu-latest
-        container:
-            image: mcr.microsoft.com/playwright:v1.59.1-noble
-            options: --user 1001
         needs: [build-storybook]
         strategy:
             fail-fast: false
