@@ -13,10 +13,47 @@ export default defineConfig({
     ],
     use: { baseURL: BASE_URL, trace: 'on' },
     projects: [
-        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-        { name: 'safari', use: { ...devices['Desktop Safari'] } },
-        { name: 'chrome', use: { ...devices['Desktop Chrome'] } },
-        { name: 'edge', use: { ...devices['Desktop Edge'] } },
+        {
+            name: 'firefox',
+            use: {
+                ...devices['Desktop Firefox'],
+                launchOptions: {
+                    firefoxUserPrefs: {
+                        'gfx.text.subpixel-position.force-enabled': false,
+                        'gfx.text.disable-aa': true,
+                        'gfx.font_rendering.cleartype_params.rendering_mode': 5,
+                    },
+                },
+            },
+        },
+        {
+            name: 'safari',
+            use: { ...devices['Desktop Safari'] },
+        },
+        {
+            name: 'chrome',
+            use: {
+                ...devices['Desktop Chrome'],
+                launchOptions: {
+                    args: [
+                        '--disable-font-subpixel-positioning',
+                        '--font-render-hinting=none',
+                    ],
+                },
+            },
+        },
+        {
+            name: 'edge',
+            use: {
+                ...devices['Desktop Edge'],
+                launchOptions: {
+                    args: [
+                        '--disable-font-subpixel-positioning',
+                        '--font-render-hinting=none',
+                    ],
+                },
+            },
+        },
     ],
 
     fullyParallel: true,
