@@ -66,7 +66,7 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Install Playwright Browsers
-              run: pnpm core exec playwright install --with-deps
+              run: pnpm core exec playwright install --with-deps --only-shell ${{ matrix.shard.project }}
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
