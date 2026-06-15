@@ -41,7 +41,8 @@
         "PORT",
         "npm_lifecycle_event",
         "COMPONENT",
-        "STORYBOOK_SKIP_DOCGEN"
+        "STORYBOOK_SKIP_DOCGEN",
+        "PLAYWRIGHT_BROWSERS_PATH"
     ],
     "globalPassThroughEnv": ["FIGMA_API_KEY"]
 }
