@@ -33,7 +33,7 @@ jobs:
 
             - name: Take a snapshot
               run: |
-                  pnpm core test:regressions -- --update-snapshots
+                  pnpm core test:regressions --update-snapshots
                   git add packages/core/__tests__/screenshots
                   git diff --exit-code || git commit -m 'ci: update snapshots'
 

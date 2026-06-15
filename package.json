@@ -37,8 +37,6 @@
         "sync-icons:symbol": "pnpm --filter @repo/sync-figma sync-icons:symbol",
         "test": "turbo run test",
         "test:regressions": "turbo run test:regressions",
-        "test:update-snapshots": "turbo run test:regressions -- --update-snapshots",
-        "test:update-snapshots:docker": "scripts/vrt-docker.sh -- --update-snapshots",
         "ts-api-extractor": "pnpm --filter @vapor-ui/ts-api-extractor",
         "typecheck": "turbo typecheck",
         "update-releases": "node scripts/update-releases.mjs",
