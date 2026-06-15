@@ -63,7 +63,12 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Install Playwright Browsers
-              run: pnpm core exec playwright install ${{ matrix.shard.project }}
+              run: |
+                  if [ "${{ matrix.shard.project }}" = "chromium" ]; then
+                      pnpm core exec playwright install --only-shell chromium
+                  else
+                      pnpm core exec playwright install ${{ matrix.shard.project }}
+                  fi
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
