@@ -18,6 +18,11 @@ jobs:
             - name: Install Dependencies
               uses: ./.github/composite/install
 
+            - name: Install Playwright Browsers
+              uses: ./.github/composite/browser-install
+              with:
+                  working-directory: packages/core
+
             - name: Configure Git
               run: |
                   git config user.name "$(git log -n 1 --pretty=format:%an)"
