@@ -5,7 +5,10 @@ on:
 
 jobs:
     update-snapshots:
-        runs-on: macos-latest
+        runs-on: ubuntu-latest
+        container:
+            image: mcr.microsoft.com/playwright:v1.59.1-noble
+            options: --user 1001
         steps:
             - name: Git clone the repository
               uses: actions/checkout@v4
@@ -14,11 +17,6 @@ jobs:
 
             - name: Install Dependencies
               uses: ./.github/composite/install
-
-            - name: Install Playwright Browsers
-              uses: ./.github/composite/browser-install
-              with:
-                  working-directory: packages/core
 
             - name: Configure Git
               run: |
