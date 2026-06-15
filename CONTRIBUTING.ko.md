@@ -81,7 +81,7 @@ pnpm test
 4. UI가 변경되었다면 스냅샷을 업데이트 하세요:
 
 ```bash
-pnpm test:regressions -- --update-snapshots
+pnpm test:update-snapshots:docker
 ```
 
 5. 변경사항이 사용자에게 영향을 미치는 경우 changeset을 추가하세요:
@@ -100,14 +100,17 @@ git commit -m "fix(Button): correct loading state styling"
 
 ## 시각적 회귀 테스트 (VRT)
 
-VRT는 공식 Playwright Docker 컨테이너 안에서 실행되어, 로컬과 CI 환경에서 스크린샷이 바이트 단위로 동일하게 유지됩니다. 로컬에서 스냅샷을 업데이트하려면:
+VRT는 공식 Playwright Docker 컨테이너 안에서 실행되어, 로컬과 CI 환경에서 스크린샷이 바이트 단위로 동일하게 유지됩니다. 로컬과 CI 모두 동일한 Linux 컨테이너를 사용하므로, 환경 간 폰트나 렌더링 차이가 발생하지 않습니다.
 
 ```bash
-# 모든 브라우저, 모든 스토리
-pnpm core test:regressions:docker -- --update-snapshots
+# 로컬에서 VRT 베이스라인 업데이트 (CI와 동일한 Linux 컨테이너 안에서 실행)
+pnpm test:update-snapshots:docker
 
-# 특정 브라우저 샤드
+# 특정 브라우저만 업데이트
 pnpm core test:regressions:docker -- --update-snapshots --project=chrome
+
+# 기존 베이스라인으로 검증
+pnpm core test:regressions:docker
 ```
 
 또는 GitHub에서 `Update Visual Snapshots` 워크플로를 직접 실행할 수도 있습니다. 동일한 컨테이너를 사용합니다.

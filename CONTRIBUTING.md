@@ -94,14 +94,17 @@ git commit -m "fix(Button): correct loading state styling"
 
 ## Visual Regression Tests (VRT)
 
-VRT runs inside the official Playwright Docker container so screenshots are byte-identical across local and CI environments. To update snapshots locally:
+VRT runs inside the official Playwright Docker container so screenshots are byte-identical across local and CI environments. The same Linux container is used both locally and in CI, so there is no font or rendering divergence between machines.
 
 ```bash
-# All browsers, all stories
-pnpm core test:regressions:docker -- --update-snapshots
+# Update VRT baselines locally (runs inside the same Linux container as CI)
+pnpm test:update-snapshots:docker
 
-# Specific browser shard
+# Update only one browser project
 pnpm core test:regressions:docker -- --update-snapshots --project=chrome
+
+# Verify against an existing baseline
+pnpm core test:regressions:docker
 ```
 
 Or trigger the `Update Visual Snapshots` workflow on GitHub — it runs the same container.
