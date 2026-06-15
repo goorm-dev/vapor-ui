@@ -1,19 +1,53 @@
-# 한계 (정직하게)
+# 한계 (정직성 기록)
 
-이 스킬이 무엇을 단정할 수 없는지 — 통과로 위장하지 않기 위한 정직성 기록.
+이 스킬이 결정론으로 단정 못 하는 지점을 모은다. "미검사"를 "통과"로 오해하지 않으려고 둔다.
 
-- **`unknown-token`(오타/스키마 미등록)은 부적합으로 카운트하지 않는다(info).** 변수 바인딩 자체는 정상이고 이름만 스키마 키와 어긋난 경우라(예: `color-backgroud-primary`), 진짜 raw(`token-not-used`, high)와 분리해 info로 둔다. "스키마에 없는 토큰명을 썼다"는 사실은 리포트에 남기되 적합률은 깎지 않는다 — 디자이너가 토큰을 쓰려 한 의도는 인정하고 이름 정정만 권한다.
+## 1. WCAG 명도비 ratio는 계산하지 않는다
 
-- **의미 판정(LLM 단계)은 추론이라 confidence가 낮을 수 있다.** 특히 의도 미제공 시. 리포트는 그 불확실성을 숨기지 않는다.
+4축은 foreground 토큰의 배경이 **순백/투명/그 외** 중 무엇이냐의 3분류(`gradeRules.100/200`)만 본다.
+다음은 전부 범위 밖이다:
 
-- **component→semantic 역추적(통합 추출 1단계)은 read-only Plugin API에 의존한다.** 변수가 remote(team library, `variable.remote === true`)면 `getVariableByIdAsync`가 `null`을 줄 수 있어 체인을 못 따라간다 — `importVariableByKeyAsync`를 한 번 시도하는 예외 방어가 있으나 그래도 실패하면 보수적으로 `token: null`(미검사로 통과시키지 않고 진짜 위반 후보로 둔다). 또한 light/dark 중 **어느 mode를 보는지에 따라 체인이 달라질 수 있어** `resolvedVariableModes`로 mode를 고정한다 — 시안에 두 mode 데모가 모두 있으면 각각 별도 요소로 평가한다.
+- oklch → sRGB 변환, gamut mapping
+- 4.499:1 같은 반올림 경계 함정
+- opacity/blend 합성으로 얻는 effective color
+- gradient/image 위 텍스트의 worst-pixel 대비
+- z-order 정밀 재구성(Polychrom)
 
-- **현재 색상 스키마는 토큰 41개만 다룬다.** spacing 등은 스키마가 확장되면 같은 파이프라인에 얹는다.
+즉 "fg-200이 충분한 대비를 갖느냐"는 묻지 않는다 — "fg-100이 비순백 배경에 쓰였나"만 본다.
 
-- **typography 위계 추론(LLM 3단)은 스크린샷 해상도에 의존한다.** `get_screenshot(maxDimension:2576)`으로 찍지만, 텍스트가 극히 작거나 배경과 대비가 낮으면 LLM이 내용을 읽지 못해 위계를 오추론할 수 있다. confidence LOW로 표시하되 통과로 위장하지 마라.
+## 2. 배경 식별의 결정론 한계
 
-- **typography 위계 판정은 의도 미제공 시 신뢰도가 낮다.** 의도("이 화면은 랜딩 히어로 섹션")를 주면 HIGH confidence로 올라가지만, 없으면 스크린샷만으로 추론하므로 기본 LOW~MED. 리포트에 confidence 등급을 반드시 명시한다.
+`classifyBackground`는 조상 체인의 가장 가까운 불투명 SOLID fill을 배경으로 채택한다. 단순 케이스만
+정확하다. 다음은 `ambiguous`로 떨어뜨려 **보류(info)** 한다 — 오판보다 보류가 낫다("파란 fill 오판 전례"):
 
-- **Text Style이 remote library에 있으면 `getStyleByIdAsync`가 `null`을 반환할 수 있다.** 이 경우 override 탐지가 불가능해 `styled-clean`으로 보수적 처리한다. 팀 라이브러리가 disabled된 환경이면 override 노드를 못 잡을 수 있다는 점을 리포트에 명시한다.
+- z-order 겹침(형제가 위에 덮인 경우)
+- opacity:0 InteractionLayer, 반투명 fill로 아래 색과 섞이는 경우
+- absolute positioning으로 트리 구조와 시각 배경이 어긋나는 경우
 
-- **Notion Typography Roles는 진행중(`_meta.status: "진행중"`)이다.** `assets/typography-token-schemas-v0.1.0.json`의 `when`/`avoid` 정의가 향후 바뀔 수 있다. `TYPOGRAPHY_SCHEMA_VERSION` 핀이 리포트에 박혀 재현성을 확보하지만, 스키마 갱신 시 이전 평가와 결과가 달라질 수 있다. Notion Roles가 확정되면 스키마를 v0.2.0으로 올리고 `_meta.status`를 "확정"으로 바꾼다.
+`ambiguous`는 적합률에 중립이며 "검토 필요"로 노출된다 — 사람이 직접 봐야 한다.
+
+## 3. CI 헤드리스 자동화 미지원
+
+추출은 Figma 파일 컨텍스트에서 JS를 실행하는 `use_figma`에 의존한다. 사람이 스킬을 호출하는
+인터랙티브 흐름만 지원하고, 헤드리스 CI 파이프라인은 범위 밖이다.
+
+## 4. typography 수치 분해 비교 안 함
+
+3축은 Text Style 이름 매칭(바인딩 여부)만 본다. 개별 fontSize/lineHeight/letterSpacing 수치를 분해해
+type ramp 이탈을 잡지 않는다. Text Style에 바인딩됐으면 수치는 정의상 일치하고, 불일치면 그건 raw/detach
+문제로 바인딩 검출이 잡는다. lineHeight AUTO/PERCENT 정규화도 범위 밖.
+
+## 5. LLM 의미 판정의 비결정성
+
+2·3축 의미 판정은 LLM이 한다. temp=0도 run-to-run 변동이 있다. 그래서:
+
+- PASS/FAIL을 단정하지 않고 **confidence**를 함께 낸다. 저confidence는 human 라우팅.
+- 점수화(0-100)는 기준 모호·재현성 저하로 쓰지 않는다.
+- 같은 시안이라도 판정이 미세하게 달라질 수 있음을 전제로 읽어야 한다.
+
+## 6. 스키마 버전 동기화는 운영 전제
+
+스키마 키 부재 = 위반(2축)은 **assets/CDN 스키마 = 시안 토큰셋**이 같은 세대일 때만 정확하다.
+구버전 스키마면 정상 토큰을 오탐할 수 있다. 버전 핀/일치 가드는 두지 않으므로(코드가 버전을
+비교·차단하지 않음), 스키마를 최신으로 유지하는 운영 규율이 정확도의 전제다. unknown-token이
+비정상적으로 많으면 시안 결함이 아니라 스키마가 구버전인지 의심하라.
