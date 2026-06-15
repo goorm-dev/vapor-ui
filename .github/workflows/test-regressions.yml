@@ -36,9 +36,6 @@ jobs:
             - name: Install Dependencies
               uses: ./.github/composite/install
 
-            - name: Build Storybook
-              run: pnpm build:storybook
-
     test:
         runs-on: ubuntu-latest
         container:
@@ -66,11 +63,6 @@ jobs:
 
             - name: Install Dependencies
               uses: ./.github/composite/install
-
-            # - name: Install Playwright Browsers
-            #   run: |
-            #       rm -rf ~/.cache/ms-playwright
-            #       pnpm core exec playwright install ${{ matrix.shard.project }}
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"

@@ -97,3 +97,21 @@ git commit -m "fix(Button): correct loading state styling"
 ```
 
 7. 변경사항을 푸시하고 Pull Request를 생성하세요
+
+## 시각적 회귀 테스트 (VRT)
+
+VRT는 공식 Playwright Docker 컨테이너 안에서 실행되어, 로컬과 CI 환경에서 스크린샷이 바이트 단위로 동일하게 유지됩니다. 로컬에서 스냅샷을 업데이트하려면:
+
+```bash
+# 모든 브라우저, 모든 스토리
+pnpm core test:regressions:docker -- --update-snapshots
+
+# 특정 브라우저 샤드
+pnpm core test:regressions:docker -- --update-snapshots --project=chrome
+```
+
+또는 GitHub에서 `Update Visual Snapshots` 워크플로를 직접 실행할 수도 있습니다. 동일한 컨테이너를 사용합니다.
+
+처음 로컬 실행 시에는 Linux 전용 캐시(호스트의 `node_modules`와는 별도)에 의존성을 설치하므로 시간이 더 걸립니다. 이후 실행부터는 캐시를 재사용합니다.
+
+Apple Silicon 사용자: 이 래퍼는 CI 환경과 동일한 픽셀을 보장하기 위해 QEMU 에뮬레이션을 통해 `linux/amd64`를 강제합니다. 픽셀 동등성을 확인한 경우, `VRT_DOCKER_PLATFORM=linux/arm64`를 설정하면 네이티브 속도로 실행할 수 있습니다.

@@ -51,6 +51,7 @@
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",
         "test:regressions": "playwright test -c ./playwright.config.ts",
+        "test:regressions:docker": "../../scripts/vrt-docker.sh",
         "test:watch": "vitest",
         "typecheck": "tsc --noEmit"
     },

@@ -91,3 +91,21 @@ git commit -m "fix(Button): correct loading state styling"
 ```
 
 6. Push and create a Pull Request
+
+## Visual Regression Tests (VRT)
+
+VRT runs inside the official Playwright Docker container so screenshots are byte-identical across local and CI environments. To update snapshots locally:
+
+```bash
+# All browsers, all stories
+pnpm core test:regressions:docker -- --update-snapshots
+
+# Specific browser shard
+pnpm core test:regressions:docker -- --update-snapshots --project=chrome
+```
+
+Or trigger the `Update Visual Snapshots` workflow on GitHub — it runs the same container.
+
+First local run takes longer because dependencies install into a Linux-native cache (separate from the host's `node_modules`). Subsequent runs reuse the cache.
+
+Apple Silicon users: the wrapper forces `linux/amd64` for CI parity via QEMU emulation. Set `VRT_DOCKER_PLATFORM=linux/arm64` to use native speed if you have verified pixel parity for your changes.
