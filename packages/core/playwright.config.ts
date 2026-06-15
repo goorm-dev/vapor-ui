@@ -8,7 +8,8 @@ export default defineConfig({
     outputDir: `./__tests__/results/`,
 
     reporter: [
-        process.env.CI ? ['blob'] : ['html', { outputFolder: './__tests__/report' }],
+        // process.env.CI ? ['blob'] : ['html', { outputFolder: './__tests__/report' }],
+        ['html', { outputFolder: './__tests__/report' }],
         ['json', { outputFile: './__tests__/report/index.json' }],
     ],
     use: { baseURL: BASE_URL, trace: 'on' },
@@ -35,10 +36,7 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
                 launchOptions: {
-                    args: [
-                        '--disable-font-subpixel-positioning',
-                        '--font-render-hinting=none',
-                    ],
+                    args: ['--disable-font-subpixel-positioning', '--font-render-hinting=none'],
                 },
             },
         },
@@ -47,10 +45,7 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Edge'],
                 launchOptions: {
-                    args: [
-                        '--disable-font-subpixel-positioning',
-                        '--font-render-hinting=none',
-                    ],
+                    args: ['--disable-font-subpixel-positioning', '--font-render-hinting=none'],
                 },
             },
         },
