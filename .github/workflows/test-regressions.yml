@@ -44,6 +44,8 @@ jobs:
         container:
             image: mcr.microsoft.com/playwright:v1.60.0-noble
             options: --user 1001
+        env:
+            PLAYWRIGHT_BROWSERS_PATH: /ms-playwright # ← 이미지 내 브라우저 위치 명시
         needs: [build-storybook]
         strategy:
             fail-fast: false
@@ -65,10 +67,10 @@ jobs:
             - name: Install Dependencies
               uses: ./.github/composite/install
 
-            - name: Install Playwright Browsers
-              run: |
-                  rm -rf ~/.cache/ms-playwright
-                  pnpm core exec playwright install ${{ matrix.shard.project }}
+            # - name: Install Playwright Browsers
+            #   run: |
+            #       rm -rf ~/.cache/ms-playwright
+            #       pnpm core exec playwright install ${{ matrix.shard.project }}
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
