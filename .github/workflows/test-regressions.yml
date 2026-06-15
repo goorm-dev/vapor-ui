@@ -65,14 +65,8 @@ jobs:
             - name: Install Dependencies
               uses: ./.github/composite/install
 
-            - name: Browser Version Check
-              run: pnpm core exec playwright install --list
-
             - name: Install Playwright Browsers
-              run: pnpm core exec playwright install ${{ matrix.shard.project }}
-
-            - name: Browser Version Check
-              run: pnpm core exec playwright install --list
+              run: npx playwright install --with-deps
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
