@@ -28,7 +28,7 @@ concurrency:
 
 jobs:
     build-storybook:
-        runs-on: macos-latest
+        runs-on: ubuntu-latest
         steps:
             - name: Git clone the repository
               uses: actions/checkout@v4
@@ -40,7 +40,10 @@ jobs:
               run: pnpm build:storybook
 
     test:
-        runs-on: macos-latest
+        runs-on: ubuntu-latest
+        container:
+            image: mcr.microsoft.com/playwright:v1.59.1-noble
+            options: --user 1001
         needs: [build-storybook]
         strategy:
             fail-fast: false
@@ -61,9 +64,6 @@ jobs:
 
             - name: Install Dependencies
               uses: ./.github/composite/install
-
-            - name: Install Playwright Browsers
-              run: pnpm core exec playwright install ${{ matrix.shard.project }}
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
