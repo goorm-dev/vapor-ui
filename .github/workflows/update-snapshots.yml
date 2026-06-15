@@ -1,4 +1,4 @@
-name: 'Update Visual Snapshots'
+name: "Update Visual Snapshots"
 
 on:
     workflow_dispatch:
@@ -7,7 +7,7 @@ jobs:
     update-snapshots:
         runs-on: ubuntu-latest
         container:
-            image: mcr.microsoft.com/playwright:v1.59.1-noble
+            image: mcr.microsoft.com/playwright:v1.60.0-noble
             options: --user 1001
         steps:
             - name: Git clone the repository

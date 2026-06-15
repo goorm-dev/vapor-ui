@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-IMAGE="mcr.microsoft.com/playwright:v1.59.1-noble"
+IMAGE="mcr.microsoft.com/playwright:v1.60.0-noble"
 PLATFORM="${VRT_DOCKER_PLATFORM:-linux/amd64}"
 NODE_MODULES_VOL="vapor-vrt-linux-node-modules"
 PNPM_STORE_VOL="vapor-vrt-linux-pnpm-store"
