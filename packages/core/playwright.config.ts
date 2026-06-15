@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 const BASE_URL = 'http://localhost:9999';
 
 export default defineConfig({
-    snapshotPathTemplate: './__tests__/screenshots/{arg}-{projectName}-{platform}-{ext}',
+    snapshotPathTemplate: './__tests__/screenshots/{arg}-{projectName}{ext}',
     testMatch: '__tests__/regressions.test.ts',
     outputDir: `./__tests__/results/`,
 
