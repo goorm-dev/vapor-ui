@@ -42,7 +42,7 @@ jobs:
             image: mcr.microsoft.com/playwright:v1.60.0-noble
             options: --user 1001
         env:
-            PLAYWRIGHT_BROWSERS_PATH: /ms-playwright # ← 이미지 내 브라우저 위치 명시
+            PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
         needs: [build-storybook]
         strategy:
             fail-fast: false
