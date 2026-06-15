@@ -103,15 +103,54 @@ snapshotPathTemplate: './__tests__/screenshots/{arg}-{projectName}{ext}',
 
 `-{platform}` 토큰을 제거한다. Arimo 통일로 OS별 픽셀 차이가 사라지므로 platform 디스크립터가 무의미하며, 유지할 경우 macOS local 스냅샷(`-darwin-`)이 Linux CI에서 미발견 처리된다.
 
-### 5. CI runner
+### 5. CI runner + Playwright 공식 Docker 이미지
 
-`.github/workflows/test-regressions.yml`의 `build-storybook`, `test` 두 job:
+#### 5.1 runner OS
+
+`build-storybook` job은 브라우저가 필요 없으므로 일반 `ubuntu-latest`로 둔다.
 
 ```yaml
-runs-on: ubuntu-latest    # was: macos-latest
+build-storybook:
+    runs-on: ubuntu-latest    # was: macos-latest
 ```
 
-`.github/workflows/update-snapshots.yml`의 모든 job: 동일하게 `ubuntu-latest`.
+#### 5.2 test job — Playwright 공식 이미지를 container로 사용
+
+`test` job은 GitHub Actions의 `container:` 디렉티브로 Playwright 공식 이미지를 사용한다. 이미지는 packages/core의 `@playwright/test` 버전과 동일한 태그를 고정한다.
+
+```yaml
+test:
+    runs-on: ubuntu-latest
+    container:
+        image: mcr.microsoft.com/playwright:v1.59.1-noble
+        options: --user 1001
+```
+
+이미지가 제공하는 것:
+
+- 모든 브라우저 바이너리 (chromium, firefox, webkit) 사전 설치
+- 브라우저별 OS dependency (libnss, libwoff, gstreamer 등) 사전 설치
+- Playwright 버전과 1:1 매핑된 브라우저 빌드 → 버전 mismatch 불가능
+
+워크플로에서 제거되는 step:
+
+```yaml
+# 삭제
+- name: Install Playwright Browsers
+  run: pnpm core exec playwright install ${{ matrix.shard.project }}
+```
+
+#### 5.3 update-snapshots.yml
+
+동일하게 `build-storybook`은 `ubuntu-latest`로, snapshot 갱신 job은 Playwright 공식 이미지를 container로 사용한다.
+
+#### 5.4 이미지 태그 유지보수
+
+`@playwright/test` 의존성 버전이 바뀌면 워크플로의 이미지 태그도 같은 버전으로 맞춰야 한다 (예: `v1.59.1-noble`). Renovate 등 자동화 업데이트 시 함께 bump되도록 `mcr.microsoft.com/playwright` 이미지 태그를 추적 대상에 추가한다.
+
+#### 5.5 폰트와 무관성
+
+Playwright 공식 이미지는 Ubuntu 24.04 (Noble) 기반이며 Arial은 여전히 설치되어 있지 않다. 그러나 본 설계는 §1–3에서 Arimo를 self-host로 강제하므로 컨테이너 내 시스템 폰트와 무관하게 동일 픽셀이 보장된다.
 
 ### 6. 기존 스냅샷 정리
 
@@ -135,7 +174,7 @@ runs-on: ubuntu-latest    # was: macos-latest
 
 ## 영향 범위
 
-- 변경 파일: 워크플로 2개, Storybook 설정 2개(global.css, preview-head.html 신규), 폰트 자산 1개, playwright config 1개, 스냅샷 156장 전체 교체
+- 변경 파일: 워크플로 2개(runner OS 변경 + container 적용 + Install Playwright Browsers step 제거), Storybook 설정 2개(global.css, preview-head.html 신규), 폰트 자산 1개, playwright config 1개, 스냅샷 156장 전체 교체
 - 영향받지 않음: 패키지 소스 코드(`packages/core/src/**`), 디자인 시스템 토큰, 사용자 facing 폰트 정책
 
 ## 리스크 및 완화
@@ -146,3 +185,5 @@ runs-on: ubuntu-latest    # was: macos-latest
 | Arimo가 Arial 대비 시각적으로 어색하게 보임 | metric-compatible이라 폭/높이는 일치. 글리프 디테일 차이는 VRT 자체에는 무관 (둘 다 동일 폰트로 비교) |
 | Linux WebKit이 macOS Safari와 다름 | VRT는 동일 환경 내 비교만 하므로 무관. 영향 없음 |
 | Arimo woff2 다운로드 실패 시 fallback `sans-serif`로 렌더 → 픽셀 차이 | `font-display: block`이 폰트 로드 완료까지 텍스트 invisible로 막음. self-host라 다운로드 실패 자체가 거의 없음 |
+| Playwright 버전과 Docker 이미지 태그 mismatch | 이미지 태그를 코드의 `@playwright/test` 버전과 동기화하여 명시. Renovate 추적 대상에 이미지 추가 |
+| container 모드에서 `actions/checkout` 및 composite install action 동작 호환성 | Playwright 공식 이미지는 git, node, 표준 유닉스 도구가 모두 사전 설치되어 있어 GitHub Actions 표준 액션이 정상 동작. 사전 검증을 1차 PR에서 수행 |
