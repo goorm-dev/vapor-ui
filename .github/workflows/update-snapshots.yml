@@ -27,11 +27,11 @@ jobs:
               run: pnpm icons build
 
             - name: Build Storybook
-              run: pnpm build-storybook
+              run: pnpm build:storybook
 
             - name: Take a snapshot
               run: |
-                  pnpm core test:visual --update-snapshots
+                  pnpm core test:regressions -- --update-snapshots
                   git add packages/core/__tests__/screenshots
                   git diff --exit-code || git commit -m 'ci: update snapshots'
 
