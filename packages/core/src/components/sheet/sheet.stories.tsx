@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 import { Sheet } from '.';
-import { Box } from '../box';
 import { Button } from '../button';
 import { IconButton } from '../icon-button';
 import { VStack } from '../v-stack';
@@ -58,7 +57,10 @@ export const Default: SheetStory = {
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>
                     <Sheet.Popup>
-                        <Box
+                        <IconButton
+                            render={<Sheet.Close />}
+                            variant="ghost"
+                            colorPalette="secondary"
                             aria-label="Close sheet"
                             $css={{
                                 position: 'absolute',
@@ -66,10 +68,9 @@ export const Default: SheetStory = {
                                 top: '1rem',
                                 right: '1rem',
                             }}
-                            render={<Sheet.Close />}
                         >
                             <CloseOutlineIcon />
-                        </Box>
+                        </IconButton>
                         <Sheet.Header>
                             <Sheet.Title>Sheet Title</Sheet.Title>
                         </Sheet.Header>
