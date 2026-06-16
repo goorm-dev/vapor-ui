@@ -184,7 +184,7 @@ describe('Checkbox', () => {
             expect(checkbox).not.toHaveAttribute('aria-invalid');
         });
 
-        it('should provide the invalid state to the indicator', async () => {
+        it('should propagate the invalid state to the indicator', async () => {
             const rendered = render(
                 <Checkbox.Root id="checkbox" aria-label={LABEL_TEXT} invalid>
                     <Checkbox.IndicatorPrimitive data-testid="indicator" />
@@ -229,7 +229,7 @@ describe('Checkbox', () => {
             expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
         });
 
-        it('should provide the indeterminate state to the indicator', async () => {
+        it('should propagate the indeterminate state to the indicator', async () => {
             const rendered = render(
                 <Checkbox.Root id="checkbox" aria-label={LABEL_TEXT} indeterminate>
                     <Checkbox.IndicatorPrimitive data-testid="indicator" />
@@ -268,7 +268,7 @@ describe('Checkbox', () => {
             expect(checkbox).not.toBeChecked();
         });
 
-        it('should provide the disabled state to the indicator', async () => {
+        it('should propagate the disabled state to the indicator', async () => {
             const rendered = render(
                 <Checkbox.Root id="checkbox" aria-label={LABEL_TEXT} disabled>
                     <Checkbox.IndicatorPrimitive data-testid="indicator" />
@@ -326,7 +326,7 @@ describe('Checkbox', () => {
             expect(nextButton).toHaveFocus();
         });
 
-        it('should provide the readOnly state to the indicator', async () => {
+        it('should propagate the readOnly state to the indicator', async () => {
             const rendered = render(
                 <Checkbox.Root id="checkbox" aria-label={LABEL_TEXT} readOnly>
                     <Checkbox.IndicatorPrimitive data-testid="indicator" />
