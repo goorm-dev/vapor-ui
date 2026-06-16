@@ -17,7 +17,7 @@ type Story = StoryObj<typeof Interaction>;
 
 export const Default: Story = {
     render: (args) => (
-        <Interaction {...args}>
+        <Interaction {...args} type="form">
             <Box $css={{ display: 'inline-block', padding: '16px', border: '1px solid' }}>
                 Interactive button
             </Box>

@@ -1,4 +1,4 @@
-import { Children, cloneElement, isValidElement } from 'react';
+import { Children, Fragment, cloneElement, isValidElement } from 'react';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { cn } from '~/utils/cn';
@@ -14,7 +14,12 @@ import type { InteractionVariants } from './interaction.css';
  * -----------------------------------------------------------------------------------------------*/
 
 export const Interaction = (props: Interaction.Props) => {
-    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const {
+        className: classNameProp,
+        children: childrenProp,
+        ...componentProps
+    } = resolveStyles(props);
+
     const [variantProps, otherProps] = createSplitProps<InteractionVariants>()(componentProps, [
         'scale',
         'type',
@@ -28,25 +33,29 @@ export const Interaction = (props: Interaction.Props) => {
 
     const element = useRenderElement({
         defaultTagName: 'div',
-        state: { 'vapor-interaction': true },
+        state: { interaction: true },
         props: {
             role: 'presentation',
             'aria-hidden': 'true',
-            className: cn(styles.overlay, className),
+            className: cn(styles.overlay, classNameProp),
             ...otherProps,
         },
     });
 
-    const children = (
-        <>
-            {element}
-            {child.props.children}
-        </>
-    );
+    const { type } = variantProps;
+    const { className, children } = child.props;
 
     return cloneElement(child, {
-        className: cn(styles.root(variantProps), child.props.className),
-        children: variantProps.type !== 'form' ? children : undefined,
+        className: cn(styles.root(variantProps), className),
+        children:
+            type === 'form' ? (
+                children
+            ) : (
+                <Fragment>
+                    {element}
+                    {children}
+                </Fragment>
+            ),
     });
 };
 
