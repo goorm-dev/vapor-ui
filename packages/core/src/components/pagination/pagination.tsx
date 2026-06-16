@@ -239,7 +239,7 @@ export const PaginationPreviousPrimitive = forwardRef<
 
     const state: PaginationPreviousPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
 
-    return useRenderElement({
+    const element = useRenderElement({
         ref,
         render,
         defaultTagName: 'button',
@@ -253,6 +253,8 @@ export const PaginationPreviousPrimitive = forwardRef<
             ...componentProps,
         },
     });
+
+    return <Interaction>{element}</Interaction>;
 });
 PaginationPreviousPrimitive.displayName = 'Pagination.PreviousPrimitive';
 
@@ -310,7 +312,7 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
 
         const state: PaginationNextPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
 
-        return useRenderElement({
+        const element = useRenderElement({
             ref,
             render,
             defaultTagName: 'button',
@@ -324,6 +326,8 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
                 ...componentProps,
             },
         });
+
+        return <Interaction>{element}</Interaction>;
     },
 );
 PaginationNextPrimitive.displayName = 'Pagination.NextPrimitive';

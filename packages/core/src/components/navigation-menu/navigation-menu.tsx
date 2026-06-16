@@ -157,13 +157,15 @@ export const NavigationMenuTriggerPrimitive = forwardRef<
     const dataAttrs = createDataAttributes({ disabled });
 
     return (
-        <BaseNavigationMenu.Trigger
-            ref={ref}
-            disabled={disabled}
-            className={cn(styles.link({ size }), styles.trigger, className)}
-            {...dataAttrs}
-            {...componentProps}
-        />
+        <Interaction>
+            <BaseNavigationMenu.Trigger
+                ref={ref}
+                disabled={disabled}
+                className={cn(styles.link({ size }), styles.trigger, className)}
+                {...dataAttrs}
+                {...componentProps}
+            />
+        </Interaction>
     );
 });
 NavigationMenuTriggerPrimitive.displayName = 'NavigationMenu.TriggerPrimitive';
