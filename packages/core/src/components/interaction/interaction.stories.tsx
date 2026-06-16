@@ -1,7 +1,7 @@
-import type { CSSProperties } from 'react';
-
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Box } from '../box';
+import { VStack } from '../v-stack';
 import { Interaction } from './interaction';
 
 export default {
@@ -15,95 +15,81 @@ export default {
 
 type Story = StoryObj<typeof Interaction>;
 
-const buttonStyle: CSSProperties = {
-    padding: '0.5rem 1rem',
-    border: '1px solid #ccc',
-    borderRadius: '0.375rem',
-    background: '#fff',
-    cursor: 'pointer',
-};
-
-const inputStyle: CSSProperties = {
-    padding: '0.5rem 0.75rem',
-    border: '1px solid #ccc',
-    borderRadius: '0.375rem',
-    outline: 'none',
-};
-
-const itemStyle: CSSProperties = {
-    padding: '0.5rem 0.75rem',
-    borderRadius: '0.375rem',
-    userSelect: 'none',
-    cursor: 'pointer',
-};
-
 export const Default: Story = {
     render: (args) => (
         <Interaction {...args}>
-            <button type="button" style={buttonStyle}>
+            <Box $css={{ display: 'inline-block', padding: '16px', border: '1px solid' }}>
                 Interactive button
-            </button>
+            </Box>
         </Interaction>
-    ),
-};
-
-export const ScaleLight: Story = {
-    args: { scale: 'light' },
-    render: (args) => (
-        <Interaction {...args}>
-            <button type="button" style={buttonStyle}>
-                Light scale
-            </button>
-        </Interaction>
-    ),
-};
-
-export const TypeForm: Story = {
-    args: { type: 'form' },
-    render: (args) => (
-        <Interaction {...args}>
-            <input type="text" placeholder="Form input" style={inputStyle} />
-        </Interaction>
-    ),
-};
-
-export const TypeRoving: Story = {
-    args: { type: 'roving' },
-    render: (args) => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-            <Interaction {...args}>
-                <div data-highlighted style={itemStyle}>
-                    Highlighted item
-                </div>
-            </Interaction>
-            <Interaction {...args}>
-                <div style={itemStyle}>Regular item</div>
-            </Interaction>
-        </div>
     ),
 };
 
 export const TestBed: Story = {
-    render: () => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <Interaction>
-                <button type="button" style={buttonStyle}>
-                    default / normal
-                </button>
-            </Interaction>
-            <Interaction scale="light">
-                <button type="button" style={buttonStyle}>
-                    default / light
-                </button>
-            </Interaction>
-            <Interaction type="form">
-                <input type="text" placeholder="form / normal" style={inputStyle} />
-            </Interaction>
-            <Interaction type="roving">
-                <div data-highlighted style={itemStyle}>
-                    roving (highlighted)
-                </div>
-            </Interaction>
-        </div>
-    ),
+    parameters: {
+        pseudo: {
+            hover: ['#default-hover', '#light-hover', '#form-hover'],
+            focus: '#form-focus',
+            focusVisible: '#default-focus-visible',
+            active: ['#default-active', '#roving-active'],
+        },
+    },
+    render: (args) => {
+        const boxCss = { display: 'inline-block', padding: '16px', border: '1px solid' } as const;
+        return (
+            <VStack $css={{ gap: '$200' }}>
+                <Interaction {...args}>
+                    <Box $css={boxCss}>default / rest</Box>
+                </Interaction>
+                <Interaction {...args}>
+                    <Box id="default-hover" $css={boxCss}>
+                        default / hover
+                    </Box>
+                </Interaction>
+                <Interaction {...args}>
+                    <Box id="default-focus-visible" $css={boxCss}>
+                        default / focus-visible
+                    </Box>
+                </Interaction>
+                <Interaction {...args}>
+                    <Box id="default-active" $css={boxCss}>
+                        default / active
+                    </Box>
+                </Interaction>
+
+                <Interaction scale="light">
+                    <Box $css={boxCss}>light / rest</Box>
+                </Interaction>
+                <Interaction scale="light">
+                    <Box id="light-hover" $css={boxCss}>
+                        light / hover
+                    </Box>
+                </Interaction>
+
+                <Interaction type="form">
+                    <input type="text" placeholder="form / rest" />
+                </Interaction>
+                <Interaction type="form">
+                    <input id="form-hover" type="text" placeholder="form / hover" />
+                </Interaction>
+                <Interaction type="form">
+                    <input id="form-focus" type="text" placeholder="form / focus" />
+                </Interaction>
+
+                <Interaction type="roving">
+                    <Box $css={boxCss}>roving / rest</Box>
+                </Interaction>
+                <Interaction type="roving">
+                    <Box data-highlighted $css={boxCss}>
+                        roving / highlighted
+                    </Box>
+                </Interaction>
+                <Interaction type="roving">
+                    <Box id="roving-active" data-highlighted $css={boxCss}>
+                        roving / highlighted + active
+                    </Box>
+                </Interaction>
+            </VStack>
+        );
+    },
 };
