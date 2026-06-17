@@ -317,9 +317,11 @@ const FilterSelect = ({ content, triggerLabel, ...props }: FilterSelectProps) =>
                 {triggerLabel}
                 <MultiSelect.TriggerIconPrimitive />
             </MultiSelect.TriggerPrimitive>
-            <MultiSelect.Popup positionerElement={<MultiSelect.PositionerPrimitive align="end" />}>
-                {content}
-            </MultiSelect.Popup>
+            <MultiSelect.PortalPrimitive>
+                <MultiSelect.PositionerPrimitive align="end">
+                    <MultiSelect.PopupPrimitive>{content}</MultiSelect.PopupPrimitive>
+                </MultiSelect.PositionerPrimitive>
+            </MultiSelect.PortalPrimitive>
         </MultiSelect.Root>
     );
 };

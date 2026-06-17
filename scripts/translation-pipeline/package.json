@@ -4,14 +4,6 @@
     "private": true,
     "description": "LLM-based JSON translation pipeline with MQM quality gating",
     "type": "module",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
-        }
-    },
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
     "bin": {
         "translation-pipeline": "./dist/cli/index.js"
     },
@@ -36,7 +28,6 @@
         "@types/node": "^20.19.39",
         "@vitest/coverage-v8": "^2.1.9",
         "eslint": "^9.39.4",
-        "prettier": "catalog:",
         "tsup": "^8.5.1",
         "tsx": "^4.21.0",
         "typescript": "catalog:",

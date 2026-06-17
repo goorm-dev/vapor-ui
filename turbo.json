@@ -26,9 +26,7 @@
             "dependsOn": ["storybook#build:storybook"],
             "cache": false
         },
-        "lint": { "outputs": [] },
-        "format": { "outputs": [], "cache": false },
-        "format:check": { "outputs": [] },
+        "lint": { "dependsOn": ["^lint"] },
         "clean": { "cache": false },
         "build:storybook": {
             "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],

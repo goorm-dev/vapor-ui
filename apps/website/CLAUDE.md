@@ -51,19 +51,19 @@ It is updated to match the current website code and the public API exposed by `@
 - Named exports are still common for barrels, utilities, and shared APIs that benefit from explicit discoverability.
 - When writing docs examples for Vapor UI components, use the **current public API** from `@vapor-ui/core`.
 
-  ```tsx
-  import { Button, Dialog, RadioGroup, TextInput } from '@vapor-ui/core';
+    ```tsx
+    import { Button, Dialog, RadioGroup, TextInput } from '@vapor-ui/core';
 
-  <Button>Click me</Button>;
-  <TextInput placeholder="Email" />;
+    <Button>Click me</Button>;
+    <TextInput placeholder="Email" />;
 
-  <Dialog.Root>
-      <Dialog.Trigger>Open</Dialog.Trigger>
-      <Dialog.Popup />
-  </Dialog.Root>;
+    <Dialog.Root>
+        <Dialog.Trigger>Open</Dialog.Trigger>
+        <Dialog.Popup />
+    </Dialog.Root>;
 
-  <RadioGroup.Root>{/* ... */}</RadioGroup.Root>;
-  ```
+    <RadioGroup.Root>{/* ... */}</RadioGroup.Root>;
+    ```
 
 - Do not document outdated APIs such as `Button.Root` for standalone components.
 

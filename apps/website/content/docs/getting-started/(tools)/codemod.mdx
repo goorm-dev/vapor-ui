@@ -8,7 +8,8 @@ description: Vapor UI v1 마이그레이션을 자동으로 수행하는 CLI 도
 ## 시작하기 전에
 
 <Callout type="warn">
-`@vapor-ui/core`에서 import한 컴포넌트만 변환됩니다. 다른 라이브러리의 동일한 이름의 컴포넌트는 변환되지 않습니다.
+    `@vapor-ui/core`에서 import한 컴포넌트만 변환됩니다. 다른 라이브러리의 동일한 이름의 컴포넌트는
+    변환되지 않습니다.
 </Callout>
 
 - **Git 상태 확인**: uncommitted changes가 있으면 실행되지 않습니다. `--force` 옵션으로 우회할 수 있습니다.
@@ -349,15 +350,16 @@ CSS 선택자에서 사용되는 data attribute가 변경됩니다.
 ```css
 /* Before */
 [data-selected] {
-  background-color: var(--color-primary);
+    background-color: var(--color-primary);
 }
 
 /* After */
 [data-active] {
-  background-color: var(--color-primary);
+    background-color: var(--color-primary);
 }
 ```
 
 <Callout type="info">
-CSS 선택자는 컴포넌트 import와 무관하게 사용되므로 codemod로 자동 변환할 수 없습니다. `data-selected`를 검색하여 직접 수정하세요.
+    CSS 선택자는 컴포넌트 import와 무관하게 사용되므로 codemod로 자동 변환할 수 없습니다.
+    `data-selected`를 검색하여 직접 수정하세요.
 </Callout>
