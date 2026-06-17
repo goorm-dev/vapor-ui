@@ -12,7 +12,7 @@ An open-source React UI component library and design system maintained by goorm.
 
 | Package                     | Role                                                                                                                                                      |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@vapor-ui/core`            | 34+ accessible React components. Headless-first via `@base-ui/react`, zero-runtime styling via Vanilla Extract, variant system via `recipe()` + Sprinkles |
+| `@vapor-ui/core`            | 40+ accessible React components. Headless-first via `@base-ui/react`, zero-runtime styling via Vanilla Extract, variant system via `recipe()` + Sprinkles |
 | `@vapor-ui/hooks`           | Shared React hooks for state and UI management — used internally by `core` and available to consumers                                                     |
 | `@vapor-ui/icons`           | SVG-to-React icon components, synced automatically from Figma                                                                                             |
 | `@vapor-ui/color-generator` | OKLCH-based WCAG-compliant color palette generator — produces design tokens used by `css-generator`                                                       |

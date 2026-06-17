@@ -51,7 +51,7 @@ it('shows tooltip after delay', async () => {
 
 ## Accessibility Check
 
-Add `vitest-axe` checks for all public components:
+Add `vitest-axe` checks for public components. Full coverage is the target and it is required for new components; a few existing components are still being backfilled.
 
 ```tsx
 import { axe } from 'vitest-axe';

@@ -72,6 +72,8 @@ export {
 
 Do **not** use `Object.assign` to build compound namespace exports.
 
+Compound components may expose layout-convenience parts beyond the Base UI primitives — e.g. `Dialog` adds `Header`, `Body`, `Footer` alongside `Root`/`Trigger`/`Popup`/`Close`. Re-export these as namespace parts in `index.parts.ts` like any other part.
+
 ## Props Typing
 
 Use `VaporUIComponentProps` (from `~/utils/types`) for all components — it merges Base UI `render` prop, Sprinkles `$css`, and stateful `className`/`style`:

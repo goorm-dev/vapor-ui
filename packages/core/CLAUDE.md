@@ -151,7 +151,7 @@ User `className` always wins over component styles without `!important`.
 
 - **Vitest** + `@testing-library/react` + `@testing-library/user-event` + `vitest-axe`
 - Test files are colocated: `button.tsx` → `button.test.tsx`
-- Every public component must have an `axe` accessibility check
+- New public components must include a `vitest-axe` accessibility check; full coverage is the goal and existing components are being backfilled (a few — e.g. wrappers like `input-group`, or parts covered via their group like `radio` → `radio-group` — are not yet checked directly)
 - Use `vi.useFakeTimers()` for delay-driven behavior (tooltips, animations)
 - Visual regressions are in `__tests__/regressions.test.ts` via Playwright against Storybook "Test Bed" stories
 
