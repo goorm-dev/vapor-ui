@@ -2,12 +2,7 @@ import { type CacheStore, loadCache, makeCacheKey, saveCache } from '~/cache/cac
 import { type ComponentReport, buildComponentReports } from '~/report/report';
 import { translateComponentUnits } from '~/translation/translate';
 import { processComponentLifecycle } from '~/translator/batch-lifecycle';
-import type {
-    TranslatableDoc,
-    TranslationConfig,
-    TranslationOutcome,
-    TranslationUnit,
-} from '~/types';
+import type { TranslatableDoc, TranslationOutcome, TranslationUnit } from '~/types';
 
 const TRANSLATION_BATCH_SIZE = 20;
 
@@ -85,12 +80,10 @@ export function applyTranslationOutcomes(
 function cacheHitOutcome(unit: TranslationUnit, translated: string): TranslationOutcome {
     return {
         id: unit.id,
-        source: unit.source,
         translated,
         assurance: 'verified',
         reportable: false,
         reason: 'cache_hit',
-        events: [{ stage: 'cache', message: 'Verified translation loaded from cache.' }],
     };
 }
 
@@ -127,7 +120,6 @@ export interface TranslateResult {
 
 export async function translatePropsInfo(
     props: TranslatableDoc[],
-    config: TranslationConfig,
     outputDir?: string,
 ): Promise<TranslateResult> {
     const totalStartedAt = Date.now();
@@ -149,9 +141,8 @@ export async function translatePropsInfo(
     }
 
     const cacheOutputDir = outputDir ?? '';
-    const useCache = !config.skipCache;
     let cacheStore: CacheStore = new Map();
-    if (useCache && cacheOutputDir) {
+    if (cacheOutputDir) {
         cacheStore = loadCache(cacheOutputDir);
     }
 
@@ -170,9 +161,7 @@ export async function translatePropsInfo(
         const missUnits: TranslationUnit[] = [];
 
         for (const unit of componentUnits) {
-            const cacheEntry = useCache
-                ? cacheStore.get(makeCacheKey(unit.source, config))
-                : undefined;
+            const cacheEntry = cacheStore.get(makeCacheKey(unit.source));
             if (cacheEntry) {
                 outcomes.set(
                     getTranslationUnitKey(unit),
@@ -185,17 +174,12 @@ export async function translatePropsInfo(
 
         if (missUnits.length > 0) {
             for (const componentChunk of chunkArray(missUnits, TRANSLATION_BATCH_SIZE)) {
-                const translations = await translateComponentUnits(
-                    componentName,
-                    componentChunk,
-                    config,
-                );
+                const translations = await translateComponentUnits(componentName, componentChunk);
 
                 const processed = await processComponentLifecycle(
                     componentName,
                     componentChunk,
                     translations,
-                    config,
                 );
                 for (const reason of processed.batchFailureReasons) {
                     batchFallbacks.push({ componentName, reason });
@@ -203,8 +187,8 @@ export async function translatePropsInfo(
 
                 for (const [unit, outcome] of processed.outcomes) {
                     outcomes.set(getTranslationUnitKey(unit), outcome);
-                    if (useCache && outcome.assurance === 'verified') {
-                        cacheStore.set(makeCacheKey(unit.source, config), {
+                    if (outcome.assurance === 'verified') {
+                        cacheStore.set(makeCacheKey(unit.source), {
                             source: unit.source,
                             translated: outcome.translated,
                         });
@@ -213,7 +197,7 @@ export async function translatePropsInfo(
             }
         }
 
-        if (useCache && cacheOutputDir) {
+        if (cacheOutputDir) {
             saveCache(cacheOutputDir, cacheStore);
         }
     }

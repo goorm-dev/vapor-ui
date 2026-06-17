@@ -4,17 +4,7 @@ import * as cacheModule from '~/cache/cache';
 import * as clientModule from '~/translation/client';
 import * as translationModule from '~/translation/translate';
 import { translatePropsInfo } from '~/translator/translator';
-import type { TranslatableDoc, TranslationConfig } from '~/types';
-
-const baseConfig: TranslationConfig = {
-    skipCache: false,
-    targetLocale: 'ko',
-    llm: {
-        translationModel: 'claude-sonnet-4-6',
-        validationModel: 'claude-opus-4-7',
-        postprocessModel: 'claude-opus-4-7',
-    },
-};
+import type { TranslatableDoc } from '~/types';
 
 const sampleProps: TranslatableDoc[] = [
     {
@@ -77,7 +67,7 @@ describe('translatePropsInfo', () => {
     });
 
     it('sends one component-scoped JSON translation request containing only cache misses', async () => {
-        const cachedKey = cacheModule.makeCacheKey('Click handler callback.', baseConfig);
+        const cachedKey = cacheModule.makeCacheKey('Click handler callback.');
         vi.spyOn(cacheModule, 'loadCache').mockReturnValue(
             new Map([
                 [
@@ -91,7 +81,7 @@ describe('translatePropsInfo', () => {
         );
         const translateSpy = vi.spyOn(translationModule, 'translateComponentUnits');
 
-        const result = await translatePropsInfo(sampleProps, baseConfig, '/tmp/cache');
+        const result = await translatePropsInfo(sampleProps, '/tmp/cache');
 
         expect(translateSpy).toHaveBeenCalledOnce();
         expect(translateSpy).toHaveBeenCalledWith(
@@ -102,14 +92,13 @@ describe('translatePropsInfo', () => {
                     source: 'A button component.',
                 }),
             ],
-            baseConfig,
         );
         expect(result.props[0].description).toBe('Button 컴포넌트입니다.');
         expect(result.props[0].props[0].description).toBe('캐시된 콜백 설명입니다.');
     });
 
     it('keeps components with zero translation units in the report summary', async () => {
-        const result = await translatePropsInfo(sampleProps, baseConfig);
+        const result = await translatePropsInfo(sampleProps);
 
         expect(result.componentReports).toEqual(
             expect.arrayContaining([
@@ -193,7 +182,7 @@ describe('translatePropsInfo', () => {
             };
         });
 
-        await translatePropsInfo(sampleProps.slice(0, 1), baseConfig, '/tmp/cache');
+        await translatePropsInfo(sampleProps.slice(0, 1), '/tmp/cache');
 
         const savedStore = saveCacheSpy.mock.calls[0]?.[1];
         expect(savedStore?.size).toBe(1);
@@ -211,10 +200,9 @@ describe('translatePropsInfo', () => {
         });
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-        const result = await translatePropsInfo(
-            [{ name: 'Button', description: 'A button component.', props: [] }],
-            baseConfig,
-        );
+        const result = await translatePropsInfo([
+            { name: 'Button', description: 'A button component.', props: [] },
+        ]);
 
         expect(result.componentReports[0]).toMatchObject({
             verified: 0,
@@ -226,6 +214,25 @@ describe('translatePropsInfo', () => {
             reportable: true,
         });
         expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('batch failure summary'));
+    });
+
+    it('marks a chunk degraded when batch MQM omits an expected id', async () => {
+        vi.spyOn(clientModule, 'callLlm').mockResolvedValue({
+            content: JSON.stringify({
+                evaluations: [{ id: 'component.description', verdict: 'PASS', errors: [] }],
+            }),
+        });
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+        const result = await translatePropsInfo(sampleProps.slice(0, 1));
+
+        expect(result.componentReports[0]).toMatchObject({
+            verified: 0,
+            unverified: 2,
+        });
+        expect(result.batchFallbacks[0]?.reason).toContain(
+            'Missing response id: props[0].onClick.description',
+        );
     });
 
     it('marks failed units as degraded with batch_postprocess_failed when batch postprocess response is invalid', async () => {
@@ -262,16 +269,14 @@ describe('translatePropsInfo', () => {
         });
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-        const result = await translatePropsInfo(
-            [{ name: 'Button', description: 'A button component.', props: [] }],
-            baseConfig,
-        );
+        const result = await translatePropsInfo([
+            { name: 'Button', description: 'A button component.', props: [] },
+        ]);
 
         expect(result.componentReports[0].unverifiedOutcomes[0]).toMatchObject({
             reason: 'batch_postprocess_failed',
             assurance: 'unverified',
             reportable: true,
-            source: 'A button component.',
         });
     });
 
@@ -289,7 +294,7 @@ describe('translatePropsInfo', () => {
                 return new Map(units.map((unit) => [unit.id, '클릭 핸들러 콜백.']));
             });
 
-        await translatePropsInfo(propsWithSharedSource, baseConfig, '/tmp/cache');
+        await translatePropsInfo(propsWithSharedSource, '/tmp/cache');
 
         expect(translateSpy).toHaveBeenCalledTimes(1);
         expect(translateSpy.mock.calls[0]?.[0]).toBe('Button');
@@ -305,7 +310,7 @@ describe('translatePropsInfo', () => {
             async (_componentName, units) => new Map(units.map((unit) => [unit.id, '번역'])),
         );
 
-        await translatePropsInfo(twoTranslatables, baseConfig, '/tmp/cache');
+        await translatePropsInfo(twoTranslatables, '/tmp/cache');
 
         expect(saveCacheSpy).toHaveBeenCalledTimes(2);
     });

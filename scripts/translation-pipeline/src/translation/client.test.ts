@@ -49,6 +49,45 @@ describe('callLlm', () => {
         expect(body.response_format).toBeUndefined();
     });
 
+    it('sends strict json_schema when provided', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ choices: [{ message: { content: '{"ok":true}' } }] }),
+        } as Response);
+
+        await callLlm([{ role: 'user', content: 'hello' }], {
+            jsonSchema: {
+                name: 'test_response',
+                schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['ok'],
+                    properties: { ok: { type: 'boolean' } },
+                },
+            },
+        });
+
+        const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
+            response_format?: {
+                type: string;
+                json_schema?: { name: string; strict: boolean; schema: object };
+            };
+        };
+        expect(body.response_format).toEqual({
+            type: 'json_schema',
+            json_schema: {
+                name: 'test_response',
+                strict: true,
+                schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['ok'],
+                    properties: { ok: { type: 'boolean' } },
+                },
+            },
+        });
+    });
+
     it('returns LiteLLM usage and response cost metadata', async () => {
         vi.mocked(fetch).mockResolvedValueOnce({
             ok: true,

@@ -89,9 +89,8 @@ src/
 ├── translator/    # Unit collection, cache lookup, batch lifecycle
 ├── translation/   # LiteLLM calls, initial translation prompt
 ├── validation/    # MQM evaluation prompt and response validation
-├── postprocess/   # MQM FAIL feedback-based translation correction
 ├── cache/         # SHA256 key generation, cache load/save
 ├── report/        # Per-component stats, report rendering
-├── defaults.ts    # Default model configuration
+├── defaults.ts    # Default model names
 └── types.ts       # Shared type definitions
 ```

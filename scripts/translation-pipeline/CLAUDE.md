@@ -35,8 +35,7 @@ cli/run.ts
   → translator/translator.ts          # cache lookup, initial translation, outcome merge
       → translation/translate.ts      # LLM initial translation (batch of 20)
       → translator/batch-lifecycle.ts # MQM → postprocess → final MQM
-          → validation/validator.ts   # batch MQM evaluation (batch of 10)
-          → postprocess/postprocess.ts # corrective rewrite on MQM FAIL
+          → validation/validator.ts   # MQM prompt and error shape
   → report/report.ts                  # renders .i18n-report.md
 ```
 
@@ -54,7 +53,7 @@ cli/run.ts
 
 **Cache key composition**: `makeCacheKey` in `cache.ts` hashes `version + source + targetLocale + translationModel + validationModel + postprocessModel`. Changing any model name in `defaults.ts` invalidates the entire cache and triggers a full re-translation on the next run.
 
-**Degraded outcome**: If any batch step (MQM, postprocess, or final MQM) returns a malformed response, the affected units are marked `unverified` without per-unit retry. The three reason codes are `batch_mqm_failed`, `batch_postprocess_failed`, and `batch_final_mqm_failed`.
+**Degraded outcome**: If any batch step (MQM, postprocess, or final MQM) returns a malformed response, the affected units are marked `unverified`. The three reason codes are `batch_mqm_failed`, `batch_postprocess_failed`, and `batch_final_mqm_failed`.
 
 **Cache write timing**: Only `verified` outcomes are written to cache. Cache is saved after each component finishes (inside the loop in `translator.ts`), so a mid-run crash does not lose already-completed components.
 

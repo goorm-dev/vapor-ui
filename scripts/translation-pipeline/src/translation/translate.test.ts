@@ -1,17 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { translateComponentUnits } from '~/translation/translate';
-import type { TranslationConfig, TranslationUnit } from '~/types';
-
-const config: TranslationConfig = {
-    skipCache: false,
-    targetLocale: 'ko',
-    llm: {
-        translationModel: 'claude-sonnet-4-6',
-        validationModel: 'claude-opus-4-7',
-        postprocessModel: 'claude-sonnet-4-6',
-    },
-};
+import type { TranslationUnit } from '~/types';
 
 const units: TranslationUnit[] = [
     {
@@ -61,7 +51,7 @@ describe('translateComponentUnits', () => {
             }),
         );
 
-        const result = await translateComponentUnits('Button', units, config);
+        const result = await translateComponentUnits('Button', units);
 
         expect(result).toEqual(
             new Map([
@@ -72,11 +62,12 @@ describe('translateComponentUnits', () => {
 
         const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
             model: string;
-            response_format?: { type: string };
+            response_format?: { type: string; json_schema?: { strict: boolean } };
             messages: { role: string; content: string }[];
         };
         expect(body.model).toBe('claude-sonnet-4-6');
-        expect(body.response_format).toEqual({ type: 'json_object' });
+        expect(body.response_format?.type).toBe('json_schema');
+        expect(body.response_format?.json_schema?.strict).toBe(true);
         expect(body.messages.at(-1)?.content).toContain('"componentName":"Button"');
         expect(body.messages.at(-1)?.content).toContain('"id":"props[0].size.description"');
     });
@@ -91,7 +82,7 @@ describe('translateComponentUnits', () => {
             }),
         );
 
-        await translateComponentUnits('Button', units, config);
+        await translateComponentUnits('Button', units);
 
         const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
             messages: { role: string; content: string }[];
@@ -122,7 +113,7 @@ ${JSON.stringify({
 })}
 \`\`\``);
 
-        const result = await translateComponentUnits('Button', units, config);
+        const result = await translateComponentUnits('Button', units);
 
         expect(result).toEqual(
             new Map([
@@ -139,7 +130,7 @@ ${JSON.stringify({
             }),
         );
 
-        await expect(translateComponentUnits('Button', units, config)).rejects.toThrow(
+        await expect(translateComponentUnits('Button', units)).rejects.toThrow(
             /Missing translation id: props\[0\]\.size\.description/,
         );
     });
@@ -155,7 +146,7 @@ ${JSON.stringify({
             }),
         );
 
-        await expect(translateComponentUnits('Button', units, config)).rejects.toThrow(
+        await expect(translateComponentUnits('Button', units)).rejects.toThrow(
             /Duplicate translation id: component\.description/,
         );
     });
@@ -171,7 +162,7 @@ ${JSON.stringify({
             }),
         );
 
-        await expect(translateComponentUnits('Button', units, config)).rejects.toThrow(
+        await expect(translateComponentUnits('Button', units)).rejects.toThrow(
             /Unknown translation id: props\[9\]\.ghost\.description/,
         );
     });
@@ -186,7 +177,7 @@ ${JSON.stringify({
             }),
         );
 
-        await expect(translateComponentUnits('Button', units, config)).rejects.toThrow(
+        await expect(translateComponentUnits('Button', units)).rejects.toThrow(
             /Empty translation for id: component\.description/,
         );
     });
@@ -201,7 +192,7 @@ ${JSON.stringify({
             }),
         );
 
-        const result = await translateComponentUnits('Button', units, config);
+        const result = await translateComponentUnits('Button', units);
 
         expect(result.get('component.description')).toBe('A button component.');
         expect(result.get('props[0].size.description')).toBe('Controls the size.');

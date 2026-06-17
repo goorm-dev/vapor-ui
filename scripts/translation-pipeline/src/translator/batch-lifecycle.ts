@@ -1,14 +1,12 @@
+import { DEFAULT_POSTPROCESS_MODEL, DEFAULT_VALIDATION_MODEL } from '~/defaults';
 import { callLlm } from '~/translation/client';
 import { parseLlmJson } from '~/translation/json';
-import type {
-    MqmError,
-    MqmResult,
-    TranslationConfig,
-    TranslationEvent,
-    TranslationOutcome,
-    TranslationUnit,
-} from '~/types';
-import { MQM_EVALUATOR_PROMPT, isMqmError } from '~/validation/validator';
+import type { MqmError, MqmResult, TranslationOutcome, TranslationUnit } from '~/types';
+import {
+    MQM_CATEGORY_VALUES,
+    MQM_EVALUATOR_PROMPT,
+    MQM_SEVERITY_VALUES,
+} from '~/validation/validator';
 
 const MQM_BATCH_SIZE = 10;
 const POSTPROCESS_BATCH_SIZE = 10;
@@ -21,6 +19,40 @@ Batch mode:
 You will receive multiple translation units. Evaluate each unit independently.
 Respond with EXACTLY this JSON shape and nothing else:
 {"evaluations":[{"id":"component.description","verdict":"PASS","errors":[]}]}`;
+
+const MQM_ERROR_SCHEMA = {
+    type: 'object',
+    additionalProperties: false,
+    required: ['category', 'severity', 'source_span', 'mt_span', 'explanation'],
+    properties: {
+        category: { type: 'string', enum: MQM_CATEGORY_VALUES },
+        severity: { type: 'string', enum: MQM_SEVERITY_VALUES },
+        source_span: { type: 'string' },
+        mt_span: { type: 'string' },
+        explanation: { type: 'string' },
+    },
+};
+
+const BATCH_MQM_RESPONSE_SCHEMA = {
+    type: 'object',
+    additionalProperties: false,
+    required: ['evaluations'],
+    properties: {
+        evaluations: {
+            type: 'array',
+            items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['id', 'verdict', 'errors'],
+                properties: {
+                    id: { type: 'string' },
+                    verdict: { type: 'string', enum: ['PASS', 'FAIL'] },
+                    errors: { type: 'array', items: MQM_ERROR_SCHEMA },
+                },
+            },
+        },
+    },
+};
 
 interface BatchMqmSuccess {
     ok: true;
@@ -38,45 +70,56 @@ function invalidMqm(reason: string): BatchMqmInvalid {
     return { ok: false, reason };
 }
 
+function reconcileById<T extends { id: string }>(expectedIds: string[], items: T[]): Map<string, T> {
+    const expected = new Set(expectedIds);
+    const result = new Map<string, T>();
+
+    for (const item of items) {
+        if (!expected.has(item.id)) throw new Error(`Unknown response id: ${item.id}`);
+        if (result.has(item.id)) throw new Error(`Duplicate response id: ${item.id}`);
+        result.set(item.id, item);
+    }
+    for (const id of expected) {
+        if (!result.has(id)) throw new Error(`Missing response id: ${id}`);
+    }
+    return result;
+}
+
+interface BatchEvaluationItem {
+    id: string;
+    verdict: MqmResult['verdict'];
+    errors: MqmError[];
+}
+
 function validateBatchEvaluations(units: TranslationUnit[], evaluations: unknown): BatchMqmResult {
     if (!Array.isArray(evaluations)) {
         return invalidMqm('MQM batch response must contain evaluations[]');
     }
 
-    const expectedIds = new Set(units.map((unit) => unit.id));
-    const seen = new Set<string>();
-    const result = new Map<string, MqmResult>();
-
-    for (const item of evaluations) {
-        if (typeof item !== 'object' || item === null) {
-            return invalidMqm('MQM evaluation item must be a JSON object');
-        }
-        const record = item as Record<string, unknown>;
-        if (typeof record.id !== 'string') return invalidMqm('MQM evaluation id must be a string');
-        if (!expectedIds.has(record.id)) return invalidMqm(`Unknown evaluation id: ${record.id}`);
-        if (seen.has(record.id)) return invalidMqm(`Duplicate evaluation id: ${record.id}`);
-        if (record.verdict !== 'PASS' && record.verdict !== 'FAIL') {
-            return invalidMqm(`Invalid MQM verdict for id: ${record.id}`);
-        }
-        if (!Array.isArray(record.errors) || !record.errors.every(isMqmError)) {
-            return invalidMqm(`Invalid MQM errors for id: ${record.id}`);
-        }
-        seen.add(record.id);
-        result.set(record.id, { verdict: record.verdict, errors: record.errors });
+    try {
+        const items = reconcileById(
+            units.map((unit) => unit.id),
+            evaluations as BatchEvaluationItem[],
+        );
+        return {
+            ok: true,
+            evaluations: new Map(
+                [...items].map(([id, item]) => [
+                    id,
+                    { verdict: item.verdict, errors: item.errors },
+                ]),
+            ),
+        };
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        return invalidMqm(message);
     }
-
-    for (const unit of units) {
-        if (!seen.has(unit.id)) return invalidMqm(`Missing evaluation id: ${unit.id}`);
-    }
-
-    return { ok: true, evaluations: result };
 }
 
 async function validateBatchWithMqm(
     componentName: string,
     units: TranslationUnit[],
     translations: Map<string, string>,
-    config: TranslationConfig,
 ): Promise<BatchMqmResult> {
     if (units.length === 0) return { ok: true, evaluations: new Map() };
 
@@ -96,7 +139,10 @@ async function validateBatchWithMqm(
             { role: 'system', content: BATCH_MQM_SYSTEM_PROMPT },
             { role: 'user', content: JSON.stringify(request) },
         ],
-        { model: config.llm.validationModel ?? 'claude-opus-4-7', responseFormat: 'json' },
+        {
+            model: DEFAULT_VALIDATION_MODEL,
+            jsonSchema: { name: 'batch_mqm_response', schema: BATCH_MQM_RESPONSE_SCHEMA },
+        },
     );
 
     if (!result.content) {
@@ -129,6 +175,26 @@ Rules:
 4. Respond ONLY with JSON in this exact shape:
 {"translations":[{"id":"component.description","translated":"final Korean text"}]}`;
 
+const BATCH_POSTPROCESS_RESPONSE_SCHEMA = {
+    type: 'object',
+    additionalProperties: false,
+    required: ['translations'],
+    properties: {
+        translations: {
+            type: 'array',
+            items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['id', 'translated'],
+                properties: {
+                    id: { type: 'string' },
+                    translated: { type: 'string' },
+                },
+            },
+        },
+    },
+};
+
 interface BatchPostprocessInput {
     unit: TranslationUnit;
     initialTranslation: string;
@@ -159,47 +225,29 @@ function validateBatchTranslations(
         return invalidPostprocess('Postprocess batch response must contain translations[]');
     }
 
-    const expectedIds = new Set(inputs.map((input) => input.unit.id));
-    const seen = new Set<string>();
-    const result = new Map<string, string>();
-
-    for (const item of translations) {
-        if (typeof item !== 'object' || item === null) {
-            return invalidPostprocess('Postprocess translation item must be a JSON object');
+    try {
+        const items = reconcileById(
+            inputs.map((input) => input.unit.id),
+            translations as { id: string; translated: string }[],
+        );
+        for (const item of items.values()) {
+            if (item.translated.trim().length === 0) {
+                return invalidPostprocess(`Empty translation for id: ${item.id}`);
+            }
         }
-        const record = item as Record<string, unknown>;
-        if (typeof record.id !== 'string') {
-            return invalidPostprocess('Postprocess translation id must be a string');
-        }
-        if (!expectedIds.has(record.id)) {
-            return invalidPostprocess(`Unknown translation id: ${record.id}`);
-        }
-        if (seen.has(record.id)) {
-            return invalidPostprocess(`Duplicate translation id: ${record.id}`);
-        }
-        if (typeof record.translated !== 'string') {
-            return invalidPostprocess(`Translated text must be a string for id: ${record.id}`);
-        }
-        if (record.translated.trim().length === 0) {
-            return invalidPostprocess(`Empty translation for id: ${record.id}`);
-        }
-        seen.add(record.id);
-        result.set(record.id, record.translated);
+        return {
+            ok: true,
+            translations: new Map([...items].map(([id, item]) => [id, item.translated])),
+        };
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        return invalidPostprocess(message);
     }
-
-    for (const input of inputs) {
-        if (!seen.has(input.unit.id)) {
-            return invalidPostprocess(`Missing translation id: ${input.unit.id}`);
-        }
-    }
-
-    return { ok: true, translations: result };
 }
 
 async function postprocessBatchWithLlm(
     componentName: string,
     inputs: BatchPostprocessInput[],
-    model?: string,
 ): Promise<BatchPostprocessResult> {
     if (inputs.length === 0) return { ok: true, translations: new Map() };
 
@@ -220,7 +268,13 @@ async function postprocessBatchWithLlm(
             { role: 'system', content: BATCH_POSTPROCESS_SYSTEM_PROMPT },
             { role: 'user', content: JSON.stringify(request) },
         ],
-        { model, responseFormat: 'json' },
+        {
+            model: DEFAULT_POSTPROCESS_MODEL,
+            jsonSchema: {
+                name: 'batch_postprocess_response',
+                schema: BATCH_POSTPROCESS_RESPONSE_SCHEMA,
+            },
+        },
     );
 
     if (!result.content) {
@@ -244,54 +298,29 @@ async function postprocessBatchWithLlm(
 
 // ─── Outcome Builders ─────────────────────────────────────────────────────────
 
-function makeEvent(stage: TranslationEvent['stage'], message: string): TranslationEvent {
-    return { stage, message };
-}
-
-function initialPassOutcome(
-    unit: TranslationUnit,
-    translated: string,
-    initialEvaluation: MqmResult,
-): TranslationOutcome {
+function initialPassOutcome(unit: TranslationUnit, translated: string): TranslationOutcome {
     return {
         id: unit.id,
-        source: unit.source,
         translated,
         assurance: 'verified',
         reportable: false,
-        reason: 'initial_quality_gate_passed',
-        initialEvaluation,
-        events: [
-            makeEvent('translation', 'Initial translation received.'),
-            makeEvent('mqm', 'Initial MQM PASS.'),
-        ],
+        reason: 'quality_gate_passed',
     };
 }
 
 function finalOutcome(
     unit: TranslationUnit,
-    initialTranslation: string,
-    initialEvaluation: MqmResult,
     translated: string,
     finalEvaluation: MqmResult,
 ): TranslationOutcome {
     const passed = finalEvaluation.verdict === 'PASS';
     return {
         id: unit.id,
-        source: unit.source,
         translated,
         assurance: passed ? 'verified' : 'unverified',
         reportable: !passed,
-        reason: passed ? 'final_quality_gate_passed' : 'final_quality_gate_failed',
-        initialTranslation,
-        initialEvaluation,
-        finalEvaluation,
-        events: [
-            makeEvent('translation', 'Initial translation received.'),
-            makeEvent('mqm', `Initial MQM ${initialEvaluation.verdict}.`),
-            makeEvent('postprocess', 'Postprocess translation received.'),
-            makeEvent('mqm', `Final MQM ${finalEvaluation.verdict}.`),
-        ],
+        reason: passed ? 'quality_gate_passed' : 'quality_gate_failed',
+        ...(passed ? {} : { errors: finalEvaluation.errors }),
     };
 }
 
@@ -299,21 +328,15 @@ function degradedOutcome(
     unit: TranslationUnit,
     translated: string,
     reason: 'batch_mqm_failed' | 'batch_postprocess_failed' | 'batch_final_mqm_failed',
+    errors: MqmError[] = [],
 ): TranslationOutcome {
     return {
         id: unit.id,
-        source: unit.source,
         translated,
         assurance: 'unverified',
         reportable: true,
         reason,
-        events: [
-            makeEvent('translation', 'Initial translation received.'),
-            makeEvent(
-                'mqm',
-                `Batch ${reason.replace('batch_', '').replace('_failed', '')} failed — degraded.`,
-            ),
-        ],
+        ...(errors.length > 0 ? { errors } : {}),
     };
 }
 
@@ -344,18 +367,12 @@ export async function processComponentLifecycle(
     componentName: string,
     units: TranslationUnit[],
     translations: Map<string, string>,
-    config: TranslationConfig,
 ): Promise<ComponentLifecycleResult> {
     const outcomes: [TranslationUnit, TranslationOutcome][] = [];
     const batchFailureReasons: string[] = [];
 
     for (const mqmChunk of chunkArray(units, MQM_BATCH_SIZE)) {
-        const initialResult = await validateBatchWithMqm(
-            componentName,
-            mqmChunk,
-            translations,
-            config,
-        );
+        const initialResult = await validateBatchWithMqm(componentName, mqmChunk, translations);
 
         if (!initialResult.ok) {
             batchFailureReasons.push(
@@ -379,7 +396,7 @@ export async function processComponentLifecycle(
                 throw new Error(`Missing batch MQM result for id: ${unit.id}`);
             }
             if (initialEvaluation.verdict === 'PASS') {
-                outcomes.push([unit, initialPassOutcome(unit, translated, initialEvaluation)]);
+                outcomes.push([unit, initialPassOutcome(unit, translated)]);
                 continue;
             }
             failedUnits.push({ unit, initialTranslation: translated, initialEvaluation });
@@ -393,7 +410,6 @@ export async function processComponentLifecycle(
                     initialTranslation,
                     errors: initialEvaluation.errors,
                 })),
-                config.llm.postprocessModel,
             );
 
             if (!postprocess.ok) {
@@ -403,7 +419,12 @@ export async function processComponentLifecycle(
                 for (const { unit, initialTranslation } of failedChunk) {
                     outcomes.push([
                         unit,
-                        degradedOutcome(unit, initialTranslation, 'batch_postprocess_failed'),
+                        degradedOutcome(
+                            unit,
+                            initialTranslation,
+                            'batch_postprocess_failed',
+                            initialResult.evaluations.get(unit.id)?.errors,
+                        ),
                     ]);
                 }
                 continue;
@@ -413,7 +434,6 @@ export async function processComponentLifecycle(
                 componentName,
                 failedChunk.map(({ unit }) => unit),
                 postprocess.translations,
-                config,
             );
 
             if (!finalResult.ok) {
@@ -439,13 +459,7 @@ export async function processComponentLifecycle(
                 }
                 outcomes.push([
                     failed.unit,
-                    finalOutcome(
-                        failed.unit,
-                        failed.initialTranslation,
-                        failed.initialEvaluation,
-                        translated,
-                        finalEvaluation,
-                    ),
+                    finalOutcome(failed.unit, translated, finalEvaluation),
                 ]);
             }
         }

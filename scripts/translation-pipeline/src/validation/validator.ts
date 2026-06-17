@@ -1,5 +1,4 @@
-import { callLlm } from '~/translation/client';
-import type { MqmCategory, MqmError, MqmResult, TranslationConfig } from '~/types';
+import type { MqmCategory, MqmError } from '~/types';
 
 export const MQM_EVALUATOR_PROMPT = `You are a design-system documentation translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
 
@@ -35,17 +34,8 @@ Severity:
 Write explanation in Korean. Keep category and severity values in English exactly as specified.
 If no errors exist, return errors as an empty array.`;
 
-const SYSTEM_PROMPT = `${MQM_EVALUATOR_PROMPT}
-
-Respond with EXACTLY this JSON shape and nothing else:
-{"verdict":"PASS","errors":[]}
-or
-{"verdict":"FAIL","errors":[{"category":"Terminology/Component name inconsistency","severity":"critical","source_span":"Breadcrumb Root","mt_span":"브레드크럼 루트","explanation":"컴포넌트 이름은 영어 원문을 그대로 유지해야 합니다. 음역도 허용되지 않습니다."}]}`;
-
-const unavailableResult = (): MqmResult => ({ verdict: 'FAIL', errors: [], unavailable: true });
-
 // MqmCategory 유니온에서 파생 — 카테고리 추가/삭제는 types.ts 한 곳에서만
-const MQM_CATEGORIES: Set<MqmCategory> = new Set([
+export const MQM_CATEGORY_VALUES = [
     'Terminology/Component name inconsistency',
     'Terminology/Token name altered',
     'Terminology/Prop name mistranslated',
@@ -62,9 +52,12 @@ const MQM_CATEGORIES: Set<MqmCategory> = new Set([
     'Cross-reference/See also mismatch',
     'Locale/Number / unit format',
     'Locale/Directional text',
-] satisfies MqmCategory[]);
+] satisfies MqmCategory[];
 
-const MQM_SEVERITIES = new Set<MqmError['severity']>(['minor', 'major', 'critical']);
+export const MQM_SEVERITY_VALUES = ['minor', 'major', 'critical'] satisfies MqmError['severity'][];
+
+const MQM_CATEGORIES: Set<MqmCategory> = new Set(MQM_CATEGORY_VALUES);
+const MQM_SEVERITIES = new Set<MqmError['severity']>(MQM_SEVERITY_VALUES);
 
 export function isMqmError(value: unknown): value is MqmError {
     if (typeof value !== 'object' || value === null) {
@@ -83,65 +76,4 @@ export function isMqmError(value: unknown): value is MqmError {
         error.mt_span.trim().length > 0 &&
         typeof error.explanation === 'string'
     );
-}
-
-export async function validateWithMqm(
-    source: string,
-    translated: string,
-    config: TranslationConfig,
-): Promise<MqmResult> {
-    const userPrompt = `[원문 JSDoc]: ${source}\n[번역 JSDoc]: ${translated}`;
-
-    const result = await callLlm(
-        [
-            { role: 'system', content: SYSTEM_PROMPT },
-            { role: 'user', content: userPrompt },
-        ],
-        {
-            model: config.llm.validationModel ?? 'claude-opus-4-7',
-            responseFormat: 'json',
-        },
-    );
-
-    if (!result.content) {
-        const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
-        console.warn(`[mqm-validator] ${result.error}${statusInfo}. Marking MQM unavailable.`);
-        return unavailableResult();
-    }
-
-    try {
-        // Strip markdown code fences
-        let jsonStr = result.content
-            .replace(/^```(?:json)?\s*/i, '')
-            .replace(/\s*```$/, '')
-            .trim();
-        // Extract first {...} block if response isn't clean JSON
-        if (!jsonStr.startsWith('{')) {
-            const match = jsonStr.match(/\{[\s\S]*\}/);
-            if (match) jsonStr = match[0];
-        }
-        const parsed = JSON.parse(jsonStr) as unknown;
-        const p = parsed as Record<string, unknown>;
-        if (
-            typeof parsed !== 'object' ||
-            parsed === null ||
-            (p.verdict !== 'PASS' && p.verdict !== 'FAIL') ||
-            !Array.isArray(p.errors) ||
-            !(p.errors as unknown[]).every(isMqmError)
-        ) {
-            console.warn(
-                '[mqm-validator] Unexpected JSON shape from LLM. Marking MQM unavailable.',
-            );
-            return unavailableResult();
-        }
-        return {
-            verdict: p.verdict,
-            errors: p.errors,
-        };
-    } catch {
-        console.warn(
-            `[mqm-validator] Failed to parse MQM response as JSON. Raw: ${result.content.slice(0, 300)}`,
-        );
-        return unavailableResult();
-    }
 }

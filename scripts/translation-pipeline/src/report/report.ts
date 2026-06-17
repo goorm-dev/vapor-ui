@@ -110,24 +110,11 @@ function renderUnverifiedDetail(component: ComponentReport, outcome: Translation
         `### ${component.name} — ${outcome.id}`,
         '',
         `Reason: ${inlineCode(outcome.reason)}`,
-        `Source: ${inlineCode(outcome.source)}`,
         `Output: ${inlineCode(outcome.translated)}`,
     ];
 
-    if (outcome.initialTranslation) {
-        lines.push(`Initial translation: ${inlineCode(outcome.initialTranslation)}`);
-    }
-
-    const initialErrors = outcome.initialEvaluation?.errors ?? [];
-    const finalErrors = outcome.finalEvaluation?.errors ?? [];
-    if (initialErrors.length > 0) {
-        lines.push('', ...renderMqmErrors('Initial MQM errors', initialErrors));
-    }
-    if (finalErrors.length > 0) {
-        lines.push('', ...renderMqmErrors('Final MQM errors', finalErrors));
-    }
-    if (outcome.events.length > 0) {
-        lines.push('', 'Events:', ...outcome.events.map((event) => `- ${event.message}`));
+    if (outcome.errors && outcome.errors.length > 0) {
+        lines.push('', ...renderMqmErrors('MQM errors', outcome.errors));
     }
 
     return lines.join('\n');
@@ -159,7 +146,7 @@ export function renderReport(report: TranslationReport): string {
         ...(report.batchFallbacks.length === 0
             ? ['None.']
             : [
-                  `${report.batchFallbacks.length} chunk(s) fell back to per-unit lifecycle.`,
+                  `${report.batchFallbacks.length} chunk(s) were marked unverified.`,
                   '',
                   '| Component | Reason |',
                   '|---|---|',

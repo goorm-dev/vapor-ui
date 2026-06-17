@@ -1,8 +1,7 @@
+import { DEFAULT_TRANSLATION_MODEL } from '~/defaults';
 import { callLlm } from '~/translation/client';
 import { parseLlmJson } from '~/translation/json';
-import type { TranslationConfig, TranslationUnit } from '~/types';
-
-const DEFAULT_TRANSLATION_MODEL = 'claude-sonnet-4-6';
+import type { TranslationUnit } from '~/types';
 
 const SYSTEM_PROMPT = `You are a professional Korean translator for design-system API documentation. Respond ONLY with valid JSON.
 
@@ -34,6 +33,26 @@ interface TranslationResponseItem {
     translated: string;
 }
 
+const TRANSLATION_RESPONSE_SCHEMA = {
+    type: 'object',
+    additionalProperties: false,
+    required: ['translations'],
+    properties: {
+        translations: {
+            type: 'array',
+            items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['id', 'translated'],
+                properties: {
+                    id: { type: 'string' },
+                    translated: { type: 'string' },
+                },
+            },
+        },
+    },
+};
+
 function readTranslations(content: string): TranslationResponseItem[] {
     const parsed = parseLlmJson(content);
     if (typeof parsed !== 'object' || parsed === null) {
@@ -45,19 +64,7 @@ function readTranslations(content: string): TranslationResponseItem[] {
         throw new Error('Translation response must contain translations[]');
     }
 
-    return translations.map((item): TranslationResponseItem => {
-        if (typeof item !== 'object' || item === null) {
-            throw new Error('Translation item must be a JSON object');
-        }
-        const record = item as Record<string, unknown>;
-        if (typeof record.id !== 'string') {
-            throw new Error('Translation item id must be a string');
-        }
-        if (typeof record.translated !== 'string') {
-            throw new Error(`Translation item translated must be a string for id: ${record.id}`);
-        }
-        return { id: record.id, translated: record.translated };
-    });
+    return translations as TranslationResponseItem[];
 }
 
 function validateTranslations(
@@ -94,7 +101,6 @@ function validateTranslations(
 export async function translateComponentUnits(
     componentName: string,
     units: TranslationUnit[],
-    config: TranslationConfig,
 ): Promise<Map<string, string>> {
     if (units.length === 0) {
         return new Map();
@@ -116,8 +122,8 @@ export async function translateComponentUnits(
             { role: 'user', content: JSON.stringify(request) },
         ],
         {
-            model: config.llm.translationModel ?? DEFAULT_TRANSLATION_MODEL,
-            responseFormat: 'json',
+            model: DEFAULT_TRANSLATION_MODEL,
+            jsonSchema: { name: 'translation_response', schema: TRANSLATION_RESPONSE_SCHEMA },
         },
     );
 

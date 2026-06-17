@@ -4,10 +4,8 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { run } from '~/cli/run';
-import * as postprocessModule from '~/postprocess/postprocess';
 import * as clientModule from '~/translation/client';
 import * as translationModule from '~/translation/translate';
-import * as mqmModule from '~/validation/validator';
 
 const validEnv = {
     LITELLM_API_KEY: 'test-key',
@@ -169,12 +167,6 @@ describe('E2E: CLI → translator → 파일 출력', () => {
                 cost: 0,
             };
         });
-
-        // postprocess fallback용 (batch 성공하므로 호출 안 됨)
-        vi.spyOn(postprocessModule, 'postprocessWithLlm').mockResolvedValue({
-            translated: '버튼의 크기를 지정합니다.',
-        });
-        vi.spyOn(mqmModule, 'validateWithMqm').mockResolvedValue({ verdict: 'PASS', errors: [] });
 
         const result = await run(['--input', inputDir, '--output', outputDir], { env: validEnv });
 

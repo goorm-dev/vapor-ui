@@ -7,7 +7,6 @@ import {
     DEFAULT_TRANSLATION_MODEL,
     DEFAULT_VALIDATION_MODEL,
 } from '~/defaults';
-import type { TranslationConfig } from '~/types';
 
 // v2 reflects the LLM JSON-mode lifecycle. Older cache entries are not reused.
 export const CACHE_VERSION = 'v2';
@@ -19,16 +18,16 @@ export interface CacheEntry {
 
 export type CacheStore = Map<string, CacheEntry>;
 
-export function makeCacheKey(source: string, config: TranslationConfig): string {
+export function makeCacheKey(source: string): string {
     return createHash('sha256')
         .update(
             JSON.stringify({
                 version: CACHE_VERSION,
                 source,
-                targetLocale: config.targetLocale,
-                translationModel: config.llm.translationModel ?? DEFAULT_TRANSLATION_MODEL,
-                validationModel: config.llm.validationModel ?? DEFAULT_VALIDATION_MODEL,
-                postprocessModel: config.llm.postprocessModel ?? DEFAULT_POSTPROCESS_MODEL,
+                targetLocale: 'ko',
+                translationModel: DEFAULT_TRANSLATION_MODEL,
+                validationModel: DEFAULT_VALIDATION_MODEL,
+                postprocessModel: DEFAULT_POSTPROCESS_MODEL,
             }),
         )
         .digest('hex');

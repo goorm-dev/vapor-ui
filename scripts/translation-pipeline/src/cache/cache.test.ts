@@ -5,33 +5,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { CacheEntry } from '~/cache/cache';
 import { loadCache, makeCacheKey, saveCache } from '~/cache/cache';
-import type { TranslationConfig } from '~/types';
 
 function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'cache-test-'));
 }
 
-function makeConfig(
-    overrides: Partial<{
-        targetLocale: TranslationConfig['targetLocale'];
-        translationModel: string;
-        postprocessModel: string;
-        validationModel: string;
-    }> = {},
-): TranslationConfig {
-    return {
-        skipCache: false,
-        targetLocale: overrides.targetLocale ?? 'ko',
-        llm: {
-            translationModel: overrides.translationModel ?? 'claude-sonnet-4-6',
-            postprocessModel: overrides.postprocessModel ?? 'claude-sonnet-4-6',
-            validationModel: overrides.validationModel ?? 'claude-sonnet-4-6',
-        },
-    };
-}
-
-function key(source: string, configOverrides: Parameters<typeof makeConfig>[0] = {}): string {
-    return makeCacheKey(source, makeConfig(configOverrides));
+function key(source: string): string {
+    return makeCacheKey(source);
 }
 
 describe('makeCacheKey', () => {
@@ -41,18 +21,6 @@ describe('makeCacheKey', () => {
 
     it('different source produces different key', () => {
         expect(key('hello')).not.toBe(key('world'));
-    });
-
-    it('different postprocessModel produces different key', () => {
-        expect(key('hello')).not.toBe(key('hello', { postprocessModel: 'claude-opus-4-7' }));
-    });
-
-    it('different translationModel produces different key', () => {
-        expect(key('hello')).not.toBe(key('hello', { translationModel: 'claude-opus-4-7' }));
-    });
-
-    it('different validationModel produces different key', () => {
-        expect(key('hello')).not.toBe(key('hello', { validationModel: 'claude-opus-4-7' }));
     });
 
     it('returns sha256 hex string', () => {

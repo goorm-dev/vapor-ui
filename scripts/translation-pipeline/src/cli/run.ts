@@ -2,10 +2,9 @@ import meow from 'meow';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 
-import { defaultTranslationConfig } from '~/defaults';
 import { buildReport, writeReport } from '~/report/report';
 import { translatePropsInfo } from '~/translator/translator';
-import type { TranslatableDoc, TranslationConfig } from '~/types';
+import type { TranslatableDoc } from '~/types';
 
 export class CliError extends Error {
     constructor(message: string) {
@@ -25,7 +24,6 @@ export interface RunOptions {
      */
     runPipeline?: (
         docs: TranslatableDoc[],
-        config: TranslationConfig,
         outputDir: string,
     ) => ReturnType<typeof translatePropsInfo>;
     /** Override env lookup for tests. */
@@ -81,7 +79,13 @@ function requireEnv(env: NodeJS.ProcessEnv, name: string): string {
     return value;
 }
 
-function readEnJsonFiles(inputDir: string): TranslatableDoc[] {
+interface InputDoc {
+    doc: TranslatableDoc;
+    raw: Record<string, unknown>;
+    fileName: string;
+}
+
+function readInputDocs(inputDir: string): InputDoc[] {
     if (!existsSync(inputDir)) {
         throw new CliError(`Input directory does not exist: ${inputDir}`);
     }
@@ -90,7 +94,7 @@ function readEnJsonFiles(inputDir: string): TranslatableDoc[] {
         .map((entry) => entry.name)
         .sort();
 
-    const docs: TranslatableDoc[] = [];
+    const docs: InputDoc[] = [];
     for (const fileName of entries) {
         const filePath = join(inputDir, fileName);
         let raw: unknown;
@@ -102,7 +106,7 @@ function readEnJsonFiles(inputDir: string): TranslatableDoc[] {
         }
 
         const doc = normalizeDoc(raw, fileName);
-        docs.push(doc);
+        docs.push({ doc, raw: raw as Record<string, unknown>, fileName });
     }
     return docs;
 }
@@ -143,25 +147,8 @@ function normalizeProp(
     return { name, description };
 }
 
-interface RawDocFromInput {
-    raw: Record<string, unknown>;
-    fileName: string;
-}
-
-function readRawDocs(inputDir: string): RawDocFromInput[] {
-    const entries = readdirSync(inputDir, { withFileTypes: true })
-        .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
-        .map((entry) => entry.name)
-        .sort();
-    return entries.map((fileName) => {
-        const filePath = join(inputDir, fileName);
-        const raw = JSON.parse(readFileSync(filePath, 'utf-8')) as Record<string, unknown>;
-        return { raw, fileName };
-    });
-}
-
 function applyTranslationsToRaw(
-    rawDocs: RawDocFromInput[],
+    rawDocs: Pick<InputDoc, 'raw' | 'fileName'>[],
     translatedDocs: TranslatableDoc[],
 ): { fileName: string; content: Record<string, unknown> }[] {
     return rawDocs.map((entry, index) => {
@@ -214,14 +201,13 @@ export async function run(argv: string[], options: RunOptions = {}): Promise<Run
     const inputDir = resolve(cliOptions.input);
     const outputDir = resolve(cliOptions.output);
 
-    const docs = readEnJsonFiles(inputDir);
-    const rawDocs = readRawDocs(inputDir);
+    const inputDocs = readInputDocs(inputDir);
+    const docs = inputDocs.map((entry) => entry.doc);
 
-    const config = defaultTranslationConfig();
     const runner = options.runPipeline ?? translatePropsInfo;
-    const result = await runner(docs, config, outputDir);
+    const result = await runner(docs, outputDir);
 
-    const merged = applyTranslationsToRaw(rawDocs, result.props);
+    const merged = applyTranslationsToRaw(inputDocs, result.props);
     const writtenFiles = writeKoFiles(outputDir, merged);
 
     writeReport(buildReport(result.componentReports, result.batchFallbacks), outputDir);

@@ -21,6 +21,7 @@ export interface LlmCallResult {
 export interface LlmCallOptions {
     model?: string;
     responseFormat?: 'text' | 'json';
+    jsonSchema?: { name: string; schema: object };
 }
 
 function readNumber(value: unknown): number | undefined {
@@ -89,9 +90,20 @@ export async function callLlm(
                 body: JSON.stringify({
                     model: options.model ?? 'claude-sonnet-4-6',
                     messages,
-                    ...(options.responseFormat === 'json'
-                        ? { response_format: { type: 'json_object' } }
-                        : {}),
+                    ...(options.jsonSchema
+                        ? {
+                              response_format: {
+                                  type: 'json_schema',
+                                  json_schema: {
+                                      name: options.jsonSchema.name,
+                                      strict: true,
+                                      schema: options.jsonSchema.schema,
+                                  },
+                              },
+                          }
+                        : options.responseFormat === 'json'
+                          ? { response_format: { type: 'json_object' } }
+                          : {}),
                 }),
                 signal: controller.signal,
             });

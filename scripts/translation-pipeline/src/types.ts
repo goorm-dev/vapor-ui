@@ -46,8 +46,6 @@ export interface MqmResult {
     unavailable?: true;
 }
 
-export type MqmStageResult = MqmResult;
-
 export type TranslationUnitKind = 'component.description' | 'prop.description';
 
 export interface TranslationUnit {
@@ -63,41 +61,17 @@ export type AssuranceStatus = 'verified' | 'unverified';
 
 export type TranslationOutcomeReason =
     | 'cache_hit'
-    | 'initial_quality_gate_passed'
-    | 'initial_quality_gate_failed'
-    | 'initial_quality_gate_unavailable'
-    | 'postprocess_response_invalid'
-    | 'final_quality_gate_passed'
-    | 'final_quality_gate_failed'
-    | 'final_quality_gate_unavailable'
+    | 'quality_gate_passed'
+    | 'quality_gate_failed'
     | 'batch_mqm_failed'
     | 'batch_postprocess_failed'
     | 'batch_final_mqm_failed';
 
-export interface TranslationEvent {
-    stage: 'cache' | 'translation' | 'mqm' | 'postprocess';
-    message: string;
-}
-
 export interface TranslationOutcome {
     id: string;
-    source: string;
     translated: string;
     assurance: AssuranceStatus;
     reportable: boolean;
     reason: TranslationOutcomeReason;
-    initialTranslation?: string;
-    initialEvaluation?: MqmStageResult;
-    finalEvaluation?: MqmStageResult;
-    events: TranslationEvent[];
-}
-
-export interface TranslationConfig {
-    skipCache: boolean;
-    targetLocale: 'ko';
-    llm: {
-        translationModel?: string;
-        postprocessModel?: string;
-        validationModel?: string;
-    };
+    errors?: MqmError[];
 }

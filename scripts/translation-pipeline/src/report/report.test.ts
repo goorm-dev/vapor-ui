@@ -13,37 +13,19 @@ function makeTmpDir(): string {
 
 const unverifiedOutcome = {
     id: 'component.description',
-    source: 'A button component.',
     translated: 'Button 컴포넌트.',
     assurance: 'unverified' as const,
     reportable: true,
-    reason: 'final_quality_gate_failed' as const,
-    initialTranslation: 'Button component.',
-    initialEvaluation: {
-        verdict: 'FAIL' as const,
-        errors: [
-            {
-                severity: 'major' as const,
-                category: 'Accuracy/Mistranslation' as const,
-                source_span: 'button',
-                mt_span: 'component',
-                explanation: '오역입니다.',
-            },
-        ],
-    },
-    finalEvaluation: {
-        verdict: 'FAIL' as const,
-        errors: [
-            {
-                severity: 'minor' as const,
-                category: 'Fluency/Unnatural phrasing' as const,
-                source_span: 'component',
-                mt_span: '컴포넌트.',
-                explanation: '어색합니다.',
-            },
-        ],
-    },
-    events: [{ stage: 'mqm' as const, message: 'Final MQM failed.' }],
+    reason: 'quality_gate_failed' as const,
+    errors: [
+        {
+            severity: 'minor' as const,
+            category: 'Fluency/Unnatural phrasing' as const,
+            source_span: 'component',
+            mt_span: '컴포넌트.',
+            explanation: '어색합니다.',
+        },
+    ],
 };
 
 describe('buildReport', () => {
@@ -156,7 +138,7 @@ describe('renderReport', () => {
         );
         const output = renderReport(report);
         expect(output).toContain('| Batch fallbacks | 2 |');
-        expect(output).toContain('2 chunk(s) fell back to per-unit lifecycle.');
+        expect(output).toContain('2 chunk(s) were marked unverified.');
         expect(output).toContain('| Component | Reason |');
         expect(output).toContain('| Button | batch MQM invalid: missing id "x" |');
         expect(output).toContain('| Button | batch postprocess invalid |');
@@ -178,13 +160,10 @@ describe('renderReport', () => {
 
         expect(output).toContain('## Unverified Details');
         expect(output).toContain('### Button — component.description');
-        expect(output).toContain('Reason: `final_quality_gate_failed`');
-        expect(output).toContain('Source: `A button component.`');
+        expect(output).toContain('Reason: `quality_gate_failed`');
         expect(output).toContain('Output: `Button 컴포넌트.`');
-        expect(output).toContain('Initial translation: `Button component.`');
-        expect(output).toContain('Initial MQM errors');
-        expect(output).toContain('Final MQM errors');
-        expect(output).toContain('Final MQM failed.');
+        expect(output).toContain('MQM errors');
+        expect(output).toContain('어색합니다.');
     });
 });
 
@@ -271,24 +250,20 @@ describe('buildComponentReports', () => {
                 '0:component.description',
                 {
                     id: 'component.description',
-                    source: 'A button component.',
                     translated: '캐시된 번역',
                     assurance: 'verified',
                     reportable: false,
                     reason: 'cache_hit',
-                    events: [],
                 },
             ],
             [
                 '0:props[0].size.description',
                 {
                     id: 'props[0].size.description',
-                    source: 'Controls the size.',
                     translated: '크기를 지정합니다.',
                     assurance: 'unverified',
                     reportable: false,
-                    reason: 'initial_quality_gate_unavailable',
-                    events: [],
+                    reason: 'batch_mqm_failed',
                 },
             ],
         ]);
