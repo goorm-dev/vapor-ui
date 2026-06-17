@@ -70,7 +70,10 @@ function invalidMqm(reason: string): BatchMqmInvalid {
     return { ok: false, reason };
 }
 
-function reconcileById<T extends { id: string }>(expectedIds: string[], items: T[]): Map<string, T> {
+function reconcileById<T extends { id: string }>(
+    expectedIds: string[],
+    items: T[],
+): Map<string, T> {
     const expected = new Set(expectedIds);
     const result = new Map<string, T>();
 

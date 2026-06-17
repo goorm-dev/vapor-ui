@@ -42,10 +42,10 @@ LITELLM_BASE_URL=<litellm endpoint>
 translation-pipeline --input <dir> --output <dir>
 ```
 
-| Option | Short | Required | Description |
-|--------|-------|----------|-------------|
-| `--input` | `-i` | Yes | Directory containing English JSON files |
-| `--output` | `-o` | Yes | Directory to write `ko/`, cache, and report |
+| Option     | Short | Required | Description                                 |
+| ---------- | ----- | -------- | ------------------------------------------- |
+| `--input`  | `-i`  | Yes      | Directory containing English JSON files     |
+| `--output` | `-o`  | Yes      | Directory to write `ko/`, cache, and report |
 
 ## Input and Output
 
@@ -56,11 +56,11 @@ Only `description` fields are translated.
 
 All other fields (`name`, `type`, `required`, `defaultValue`, etc.) are preserved as-is.
 
-| Output | Description |
-|--------|-------------|
-| `ko/*.json` | JSON with Korean descriptions applied |
-| `.translation-cache.json` | Verified translation cache |
-| `.i18n-report.md` | MQM quality report |
+| Output                    | Description                           |
+| ------------------------- | ------------------------------------- |
+| `ko/*.json`               | JSON with Korean descriptions applied |
+| `.translation-cache.json` | Verified translation cache            |
+| `.i18n-report.md`         | MQM quality report                    |
 
 ## Development
 

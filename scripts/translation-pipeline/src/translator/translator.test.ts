@@ -84,15 +84,12 @@ describe('translatePropsInfo', () => {
         const result = await translatePropsInfo(sampleProps, '/tmp/cache');
 
         expect(translateSpy).toHaveBeenCalledOnce();
-        expect(translateSpy).toHaveBeenCalledWith(
-            'Button',
-            [
-                expect.objectContaining({
-                    id: 'component.description',
-                    source: 'A button component.',
-                }),
-            ],
-        );
+        expect(translateSpy).toHaveBeenCalledWith('Button', [
+            expect.objectContaining({
+                id: 'component.description',
+                source: 'A button component.',
+            }),
+        ]);
         expect(result.props[0].description).toBe('Button 컴포넌트입니다.');
         expect(result.props[0].props[0].description).toBe('캐시된 콜백 설명입니다.');
     });
