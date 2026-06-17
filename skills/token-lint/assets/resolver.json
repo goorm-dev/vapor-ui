@@ -10,7 +10,8 @@
                 { "$ref": "dimension.json" },
                 { "$ref": "space.json" },
                 { "$ref": "typography.json" },
-                { "$ref": "text-style.json" }
+                { "$ref": "text-style.json" },
+                { "$ref": "shadow.json" }
             ]
         }
     },
