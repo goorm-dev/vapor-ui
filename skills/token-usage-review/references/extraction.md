@@ -1,6 +1,6 @@
 # 1단계: 통합 추출 (extraction)
 
-`scripts/extract.figma.js`는 `use_figma`에 전달하는 read-only 동결 스크립트다. 에이전트는 상단
+`scripts/extract.figma.js`는 `use_figma`에 전달하는 read-only 고정 스크립트다. 에이전트는 상단
 `ROOT_ID`·`MODE` 두 상수만 치환하고 로직은 손대지 않는다. 결함을 발견하면 파일 자체를 고치고
 이 문서·테스트를 함께 갱신한다(매 실행 즉석 재작성 금지 — 재작성 드리프트가 정확도의 최대 위협).
 
@@ -21,7 +21,8 @@ vapor는 component-specific 토큰(`vapor-primary` 등)이 Figma에만 정의돼
 
 - **판정 기준 토큰 = 진입점(component)이 아니라 체인이 도달한 semantic.** `vapor-primary`가
   `foreground-primary-200`을 거치면 2·4축 판정은 `foreground-primary-200` 기준.
-- **mode 고정**: 노드의 `resolvedVariableModes[collectionId]`로 light/dark 체인을 정한다(임의 첫 mode 금지).
+- **mode 고정**: 노드의 `resolvedVariableModes[collectionId]`로 light/dark 체인을 정하고,
+  값이 없을 때만 해당 변수의 첫 mode를 fallback으로 사용한다.
 - **collection 단계 판별**은 이름 기준(`tierOf`): primitive/semantic/component. semantic 단계 변수의 `.name`이 복원원.
 - **스키마 키 변환**: `color-foreground-primary-200` → `colors.foreground.primary.200`
   (`color-`→`colors.`, 하이픈→점). 변환 키가 스키마에 실제 있는지는 evaluate가 판정한다.
@@ -52,50 +53,50 @@ remote 변수는 `importVariableByKeyAsync`를 한 번 시도하고 재조회한
 
 ```jsonc
 {
-  "mode": "both",
-  "viewport": "pc",
-  "schemaMode": "light",
-  "stats": {
-    "visited": 24,
-    "textNodes": 6,
-    "colorGroups": 11,
-    "typoGroups": 4,
-  },
-  "colors": [
-    {
-      "nodeIds": ["1:2"],
-      "count": 1,
-      "name": "bg",
-      "property": "fill",
-      "token": "colors.background.primary.100",
-      "hex": "#c6e6ff",
-      "tokenStatus": "ok",
-      "background": null,
+    "mode": "both",
+    "viewport": "pc",
+    "schemaMode": "light",
+    "stats": {
+        "visited": 24,
+        "textNodes": 6,
+        "colorGroups": 11,
+        "typoGroups": 4,
     },
-    {
-      "nodeIds": ["3:4"],
-      "count": 1,
-      "name": "text",
-      "property": "text",
-      "token": "colors.foreground.primary.100",
-      "hex": "#0043b3",
-      "tokenStatus": "ok",
-      "background": { "kind": "other", "hex": "#2a6ff3" },
-    },
-  ],
-  "typography": [
-    {
-      "nodeIds": ["5:6"],
-      "count": 1,
-      "name": "label",
-      "characters": "안내",
-      "textStyle": "subtitle1",
-      "viewport": "pc",
-      "appliedStatus": "styled-clean",
-      "overriddenFields": [],
-      "resolved": { "fontSize": 14, "lineHeight": {}, "fontName": {} },
-    },
-  ],
+    "colors": [
+        {
+            "nodeIds": ["1:2"],
+            "count": 1,
+            "name": "bg",
+            "property": "fill",
+            "token": "colors.background.primary.100",
+            "hex": "#c6e6ff",
+            "tokenStatus": "ok",
+            "background": null,
+        },
+        {
+            "nodeIds": ["3:4"],
+            "count": 1,
+            "name": "text",
+            "property": "text",
+            "token": "colors.foreground.primary.100",
+            "hex": "#0043b3",
+            "tokenStatus": "ok",
+            "background": { "kind": "other", "hex": "#2a6ff3" },
+        },
+    ],
+    "typography": [
+        {
+            "nodeIds": ["5:6"],
+            "count": 1,
+            "name": "label",
+            "characters": "안내",
+            "textStyle": "subtitle1",
+            "viewport": "pc",
+            "appliedStatus": "styled-clean",
+            "overriddenFields": [],
+            "resolved": { "fontSize": 14, "lineHeight": {}, "fontName": {} },
+        },
+    ],
 }
 ```
 

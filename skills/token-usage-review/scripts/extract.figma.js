@@ -1,5 +1,5 @@
 // extract.figma.js
-// 1단 통합 추출 — use_figma read-only 동결 스크립트.
+// 1단 통합 추출 — use_figma read-only 고정 스크립트.
 //
 // 사용법(에이전트): 이 파일을 Read한 뒤 아래 두 상수만 치환해 use_figma에 그대로 전달한다.
 //   ROOT_ID — 검증 대상 루트 노드 id ("37843:3511" 형식)
@@ -262,39 +262,25 @@ async function visit(node) {
   const fillProperty = node.type === "TEXT" ? "text" : "fill";
 
   if (MODE !== "typography") {
-    const boundFills = bv.fills || [];
-    for (const a of boundFills) {
-      if (!a || !a.id) continue;
-      const { chain, finalHex } = await walk(node, a.id);
-      const { token, tokenStatus } = toToken(chain);
-      pushColor(node, fillProperty, token, finalHex, tokenStatus);
-    }
-    if (Array.isArray(node.fills)) {
-      node.fills.forEach((p, i) => {
-        if (p && p.type === "SOLID" && p.visible !== false && !boundFills[i]) {
-          pushColor(node, fillProperty, null, rgbaToHex(p.color), "raw");
-        }
-      });
-    }
-    const boundStrokes = bv.strokes || [];
-    for (const a of boundStrokes) {
-      if (!a || !a.id) continue;
-      const { chain, finalHex } = await walk(node, a.id);
-      const { token, tokenStatus } = toToken(chain);
-      pushColor(node, "stroke", token, finalHex, tokenStatus);
-    }
-    if (Array.isArray(node.strokes)) {
-      node.strokes.forEach((p, i) => {
-        if (
-          p &&
-          p.type === "SOLID" &&
-          p.visible !== false &&
-          !boundStrokes[i]
-        ) {
-          pushColor(node, "stroke", null, rgbaToHex(p.color), "raw");
-        }
-      });
-    }
+    // bound paint는 alias 체인을 끝까지 walk해 토큰 복원, 미바인딩 SOLID는 'raw'.
+    // fill(TEXT면 property='text')·stroke가 같은 로직이라 한 함수로 묶는다.
+    const extractPaints = async (paints, bound, property) => {
+      for (const a of bound) {
+        if (!a || !a.id) continue;
+        const { chain, finalHex } = await walk(node, a.id);
+        const { token, tokenStatus } = toToken(chain);
+        pushColor(node, property, token, finalHex, tokenStatus);
+      }
+      if (Array.isArray(paints)) {
+        paints.forEach((p, i) => {
+          if (p && p.type === "SOLID" && p.visible !== false && !bound[i]) {
+            pushColor(node, property, null, rgbaToHex(p.color), "raw");
+          }
+        });
+      }
+    };
+    await extractPaints(node.fills, bv.fills || [], fillProperty);
+    await extractPaints(node.strokes, bv.strokes || [], "stroke");
   }
 
   if (MODE !== "color" && node.type === "TEXT") {
@@ -340,26 +326,26 @@ function groupBy(items, keyOf) {
 }
 
 const colors = groupBy(colorRaw, (e) =>
-  [
+  JSON.stringify([
     e.name,
     e.property,
     e.token,
     e.hex,
     e.tokenStatus,
-    e.background ? e.background.kind : "-",
-    e.background ? e.background.hex : "-",
-  ].join(""),
+    e.background ? e.background.kind : null,
+    e.background ? e.background.hex : null,
+  ]),
 );
 const typography = groupBy(typoRaw, (e) =>
-  [
+  JSON.stringify([
     e.name,
     e.characters,
     e.textStyle,
     e.viewport,
     e.appliedStatus,
-    e.overriddenFields.join(","),
-    JSON.stringify(e.resolved),
-  ].join(""),
+    e.overriddenFields,
+    e.resolved,
+  ]),
 );
 
 return {
