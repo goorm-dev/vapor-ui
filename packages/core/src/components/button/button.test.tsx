@@ -19,55 +19,61 @@ describe('Button', () => {
         expect(result).toHaveNoViolations();
     });
 
-    it('should be clickable', async () => {
-        const handleClickMock: Mock = vi.fn();
+    describe('prop: disabled', () => {
+        it('should not be clickable when disabled', async () => {
+            const handleClickMock: Mock = vi.fn();
 
-        render(<ButtonTest onClick={handleClickMock} />);
-        await userEvent.click(screen.getByRole('button', { name: BUTTON_LABEL }));
+            render(<ButtonTest disabled onClick={handleClickMock} />);
+            await userEvent.click(screen.getByRole('button', { name: BUTTON_LABEL }));
 
-        expect(handleClickMock).toHaveBeenCalledTimes(1);
+            expect(handleClickMock).not.toHaveBeenCalled();
+        });
+
+        it('should not be focusable when disabled', async () => {
+            render(<ButtonTest disabled />);
+            await userEvent.tab();
+
+            expect(screen.getByRole('button', { name: BUTTON_LABEL })).not.toHaveFocus();
+        });
     });
 
-    it('should not be clickable when disabled', async () => {
-        const handleClickMock: Mock = vi.fn();
+    describe('pointer interaction', () => {
+        it('should be clickable', async () => {
+            const handleClickMock: Mock = vi.fn();
 
-        render(<ButtonTest disabled onClick={handleClickMock} />);
-        await userEvent.click(screen.getByRole('button', { name: BUTTON_LABEL }));
+            render(<ButtonTest onClick={handleClickMock} />);
+            await userEvent.click(screen.getByRole('button', { name: BUTTON_LABEL }));
 
-        expect(handleClickMock).not.toHaveBeenCalled();
+            expect(handleClickMock).toHaveBeenCalledTimes(1);
+        });
     });
 
-    it('should be triggered by Enter key', async () => {
-        const handleClickMock: Mock = vi.fn();
+    describe('keyboard interaction', () => {
+        it('should be triggered by Enter key', async () => {
+            const handleClickMock: Mock = vi.fn();
 
-        render(<ButtonTest onClick={handleClickMock} />);
-        screen.getByRole('button', { name: BUTTON_LABEL }).focus();
-        await userEvent.keyboard('{Enter}');
+            render(<ButtonTest onClick={handleClickMock} />);
+            screen.getByRole('button', { name: BUTTON_LABEL }).focus();
+            await userEvent.keyboard('{Enter}');
 
-        expect(handleClickMock).toHaveBeenCalledTimes(1);
-    });
+            expect(handleClickMock).toHaveBeenCalledTimes(1);
+        });
 
-    it('should be triggered by Space key', async () => {
-        const handleClickMock: Mock = vi.fn();
+        it('should be triggered by Space key', async () => {
+            const handleClickMock: Mock = vi.fn();
 
-        render(<ButtonTest onClick={handleClickMock} />);
-        screen.getByRole('button', { name: BUTTON_LABEL }).focus();
-        await userEvent.keyboard(' ');
+            render(<ButtonTest onClick={handleClickMock} />);
+            screen.getByRole('button', { name: BUTTON_LABEL }).focus();
+            await userEvent.keyboard(' ');
 
-        expect(handleClickMock).toHaveBeenCalledTimes(1);
-    });
+            expect(handleClickMock).toHaveBeenCalledTimes(1);
+        });
 
-    it('should be focusable by Tab key', async () => {
-        render(<ButtonTest />);
-        await userEvent.tab();
+        it('should be focusable by Tab key', async () => {
+            render(<ButtonTest />);
+            await userEvent.tab();
 
-        expect(screen.getByRole('button', { name: BUTTON_LABEL })).toHaveFocus();
-    });
-
-    it('should not be focusable when disabled', async () => {
-        render(<ButtonTest disabled />);
-        await userEvent.tab();
-
-        expect(screen.getByRole('button', { name: BUTTON_LABEL })).not.toHaveFocus();
+            expect(screen.getByRole('button', { name: BUTTON_LABEL })).toHaveFocus();
+        });
     });
 });
