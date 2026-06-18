@@ -99,7 +99,7 @@
         "rollup-plugin-node-externals": "^8.1.2",
         "rollup-plugin-preserve-directives": "^0.4.0",
         "typescript": "catalog:",
-        "vitest": "^3.2.4",
+        "vitest": "^3.2.6",
         "vitest-axe": "^1.0.0-pre.5"
     },
     "peerDependencies": {
