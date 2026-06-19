@@ -43,9 +43,7 @@ describe('stateful-props', () => {
     // 엣지 케이스: 잘못된 입력에 대한 throw
     describe('resolveClassName — invalid input', () => {
         it('throws when the resolver is neither a string nor a function', () => {
-            expect(() =>
-                resolveClassName(42 as unknown as string, { active: true }),
-            ).toThrow();
+            expect(() => resolveClassName(42 as unknown as string, { active: true })).toThrow();
         });
     });
 
