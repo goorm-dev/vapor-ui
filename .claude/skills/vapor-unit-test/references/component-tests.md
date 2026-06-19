@@ -19,13 +19,13 @@ describe('Button', () => {
 
 테스트가 **2개 이상의 카테고리**로 나뉠 때만 nested describe로 묶습니다. 카테고리가 1개거나 테스트가 몇 개 안 되면 nested 없이 최상위 `describe`에 평탄하게 둡니다 — 불필요한 중첩은 가독성을 해칩니다.
 
-| 그룹 이름 | 사용 시점 |
-| --- | --- |
-| `'given a default <Component>'` | 기본 uncontrolled 상태 |
+| 그룹 이름                          | 사용 시점                      |
+| ---------------------------------- | ------------------------------ |
+| `'given a default <Component>'`    | 기본 uncontrolled 상태         |
 | `'given a controlled <Component>'` | controlled value/onChange 상태 |
-| `'ARIA attributes'` | `aria-*` 속성 검증 전용 |
-| `'keyboard navigation'` | Tab, 화살표, Enter/Space 동작 |
-| `'prop: <propName>'` | 특정 prop 동작 |
+| `'ARIA attributes'`                | `aria-*` 속성 검증 전용        |
+| `'keyboard navigation'`            | Tab, 화살표, Enter/Space 동작  |
+| `'prop: <propName>'`               | 특정 prop 동작                 |
 
 ## 렌더 결과는 항상 `rendered`
 
@@ -93,14 +93,14 @@ await waitFor(() => {
 
 개발자가 코드에서 보는 것은 컴포넌트 이름입니다. 변수명도 그에 맞추면 JSX와 테스트가 같은 어휘를 공유합니다.
 
-| 컴포넌트 | ARIA role | 변수명 |
-| --- | --- | --- |
-| `Select.Trigger` | `combobox` | `trigger` |
-| `Select.Popup` | `listbox` | `popup` |
-| `Select.Item` | `option` | `appleItem`, `bananaItem`, … |
-| `Dialog.Trigger` | `button` | `trigger` |
-| `Dialog.Popup` | `dialog` | `popup` |
-| `Menu.Item` | `menuitem` | `deleteItem`, `editItem`, … |
+| 컴포넌트         | ARIA role  | 변수명                       |
+| ---------------- | ---------- | ---------------------------- |
+| `Select.Trigger` | `combobox` | `trigger`                    |
+| `Select.Popup`   | `listbox`  | `popup`                      |
+| `Select.Item`    | `option`   | `appleItem`, `bananaItem`, … |
+| `Dialog.Trigger` | `button`   | `trigger`                    |
+| `Dialog.Popup`   | `dialog`   | `popup`                      |
+| `Menu.Item`      | `menuitem` | `deleteItem`, `editItem`, …  |
 
 여러 item 중에서는 콘텐츠 라벨을 접두사로 붙여 구분(`appleItem`, `item1` 금지).
 

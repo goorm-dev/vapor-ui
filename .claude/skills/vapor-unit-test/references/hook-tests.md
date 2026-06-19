@@ -18,7 +18,7 @@ describe('useInterval', () => {
 `@testing-library/react`의 `renderHook`을 사용합니다. 결과 변수명은 `view`(`rendered`는 컴포넌트 테스트 전용).
 
 ```ts
-import { renderHook, act } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 
 const view = renderHook(() => useCounter(0));
 

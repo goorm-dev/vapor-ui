@@ -55,9 +55,11 @@ describe('color-generator', () => {
 
 ```ts
 it('throws on invalid hex color', () => {
-    expect(() => generatePrimitiveColorPalette({
-        brandColor: { name: 'invalid', hexcode: 'invalid-hex' },
-    })).toThrow('Invalid brand color hex');
+    expect(() =>
+        generatePrimitiveColorPalette({
+            brandColor: { name: 'invalid', hexcode: 'invalid-hex' },
+        }),
+    ).toThrow('Invalid brand color hex');
 });
 ```
 

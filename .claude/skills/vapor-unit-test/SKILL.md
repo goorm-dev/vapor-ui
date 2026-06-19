@@ -19,11 +19,11 @@ vapor-ui 모노레포의 모든 유닛 테스트를 작성·리뷰합니다.
 
 작성 대상에 맞춰 references/ 안의 가이드 한 개를 골라 읽으세요. **전부 한꺼번에 로드하지 마세요.**
 
-| 대상 | 가이드 |
-| --- | --- |
-| React 컴포넌트 | `references/component-tests.md` |
-| React 커스텀 hook (`use*`) | `references/hook-tests.md` |
-| 그 외 일반 JS/TS 파일 (순수 함수, 변환기, 생성기, 린트 규칙 등) | `references/general-tests.md` |
+| 대상                                                            | 가이드                          |
+| --------------------------------------------------------------- | ------------------------------- |
+| React 컴포넌트                                                  | `references/component-tests.md` |
+| React 커스텀 hook (`use*`)                                      | `references/hook-tests.md`      |
+| 그 외 일반 JS/TS 파일 (순수 함수, 변환기, 생성기, 린트 규칙 등) | `references/general-tests.md`   |
 
 작성 전에 **반드시 대상 소스 파일을 먼저 읽으세요.** 무엇을 테스트할지, 무엇이 위임(delegation)이라 테스트가 불필요한지 판단하기 위해서입니다.
 
@@ -58,6 +58,7 @@ vapor-ui 모노레포의 모든 유닛 테스트를 작성·리뷰합니다.
 테스트가 외부 fixture(`.input.tsx`/`.output.tsx`, JSON 모킹 데이터, 큰 입력 스냅샷 등)를 사용하면 **테스트 파일과 같은 위치의 `__testfixtures__/` 하위 폴더**에 둡니다 (`__testfixtures__`는 jscodeshift 관례명, 다른 도메인도 동일 이름 사용).
 
 이유:
+
 - 소스 폴더에 fixture가 섞이면 본체 파일 식별이 어려워짐
 - fixture는 의도적으로 부분/구버전 코드인 경우가 많아 빌드·타입체크 글롭이 fixture를 잡으면 오탐 발생 → `__testfixtures__/`는 vitest/tsconfig 글롭에서 한 번에 제외하기 쉬움
 
@@ -77,7 +78,7 @@ vapor-ui 모노레포의 모든 유닛 테스트를 작성·리뷰합니다.
 Vitest는 `globals: true` 설정으로 동작합니다. 다음 식별자는 **import 하지 마세요** — 전역으로 제공됩니다.
 
 ```ts
-describe, it, expect, beforeEach, afterEach, beforeAll, afterAll, vi
+(describe, it, expect, beforeEach, afterEach, beforeAll, afterAll, vi);
 ```
 
 `Mock` 등 타입만은 `import type { Mock } from 'vitest'`로 가져옵니다.
