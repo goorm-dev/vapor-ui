@@ -51,6 +51,7 @@ storybook-static
 /.source/
 
 # Claude local docs (reader-based: drafts & scratch, not team assets)
+CLAUDE.local.md
 handoff.md
 docs/research/
 docs/plans/
