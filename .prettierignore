@@ -4,3 +4,13 @@ node_modules
 public
 pnpm-lock.yaml
 **/.source
+
+# figma-token-review 스킬의 데이터 자산.
+# vapor-ruleset.json은 build-ruleset.mjs가 JSON.stringify(2-space)로 생성하는 산출물이라
+# prettier(4-space)로 포맷하면 다음 생성 때 되돌아가 format:check가 깨진다. 생성물이므로 제외.
+# vapor-token-schemas-*.json은 외부에서 수령한 토큰 스키마 정본이라 그대로 보존한다.
+skills/figma-token-review/assets/
+
+# use_figma 전용 동결 스크립트. 톱레벨 await/return이 의도된 형태라(use_figma가 async 함수로 감싸 실행)
+# prettier가 일반 JS로 파싱하면 'return' outside of function으로 죽는다. 제외.
+skills/figma-token-review/scripts/extract.figma.js
