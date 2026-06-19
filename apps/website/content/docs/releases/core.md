@@ -5,6 +5,8 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
+## 1.3.1
+
 ## 1.3.0
 
 ### Avatar

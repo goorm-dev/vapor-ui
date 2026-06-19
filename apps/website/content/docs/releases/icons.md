@@ -5,6 +5,14 @@ description: '@vapor-ui/icons 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/icons
 
+## 1.2.1
+
+### Etc.
+
+- Update icons from Figma ([#608](https://github.com/goorm-dev/vapor-ui/pull/608)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **Updated Basic Icons:** `CopyOutlineIcon`
+
 ## 1.2.0
 
 ### Etc.
