@@ -5,9 +5,9 @@ const PSEUDO_ORDER: PseudoName[] = [
     '_before',
     '_after',
     '_focus',
-    '_hover',
     '_focusVisible',
     '_focusWithin',
+    '_hover',
     '_active',
 ];
 
