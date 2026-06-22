@@ -509,6 +509,12 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@vanilla-extract/css@1.20.1)(@vanilla-extract/dynamic@2.1.5)
     devDependencies:
+      '@babel/parser':
+        specifier: ^7.24.0
+        version: 7.29.3
+      '@babel/types':
+        specifier: ^7.24.0
+        version: 7.29.0
       '@playwright/test':
         specifier: ^1.60.0
         version: 1.60.0
@@ -599,6 +605,9 @@ importers:
       rollup-plugin-preserve-directives:
         specifier: ^0.4.0
         version: 0.4.0(rollup@4.60.4)
+      tsx:
+        specifier: ^4.7.0
+        version: 4.21.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
