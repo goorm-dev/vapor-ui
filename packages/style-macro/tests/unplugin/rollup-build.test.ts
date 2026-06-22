@@ -20,6 +20,7 @@ describe('rollup build', () => {
                 vaporStyleMacro.rollup({
                     tokensManifestPath: manifestPath,
                     importSource: './$style-stub',
+                    themeStylesImport: false,
                 }),
                 nodeResolve({ extensions: ['.ts', '.tsx', '.js'] }),
                 typescript({

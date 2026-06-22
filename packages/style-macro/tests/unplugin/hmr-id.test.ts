@@ -18,7 +18,7 @@ interface TransformPlugin {
 
 function makePlugin(): TransformPlugin {
     const factory = vaporStyleMacro.raw(
-        { tokensManifestPath: manifestPath, importSource: './$style-stub' },
+        { tokensManifestPath: manifestPath, importSource: './$style-stub', themeStylesImport: false },
         { framework: 'esbuild' },
     ) as unknown as TransformPlugin;
     return factory;

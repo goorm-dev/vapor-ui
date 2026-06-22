@@ -24,10 +24,20 @@ function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
     const require_ = createRequire(base);
     const manifestPath =
         opts.tokensManifestPath ?? require_.resolve('@vapor-ui/core/tokens.manifest.json');
+    const importSource = opts.importSource ?? '@vapor-ui/core';
+    let themeStylesImport: string | null;
+    if (opts.themeStylesImport === false) {
+        themeStylesImport = null;
+    } else if (typeof opts.themeStylesImport === 'string') {
+        themeStylesImport = opts.themeStylesImport;
+    } else {
+        themeStylesImport = `${importSource}/styles.css`;
+    }
     return {
         manifest: loadManifest(manifestPath),
-        importSource: opts.importSource ?? '@vapor-ui/core',
+        importSource,
         importName: opts.importName ?? '$style',
+        themeStylesImport,
         include: opts.include ?? defaultInclude,
     };
 }
@@ -86,8 +96,11 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
             if (!result.css) return null;
             const hash = hashContent(result.css);
             records.set(hash, { css: result.css, classes: result.classes });
+            const themeLine = opts.themeStylesImport
+                ? `import "${opts.themeStylesImport}";\n`
+                : '';
             const importLine = `import "${PUBLIC_PREFIX}${hash}${VIRTUAL_SUFFIX}";\n`;
-            return { code: importLine + result.code, map: null };
+            return { code: themeLine + importLine + result.code, map: null };
         },
     };
 });

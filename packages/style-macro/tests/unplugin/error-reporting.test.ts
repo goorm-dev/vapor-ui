@@ -27,6 +27,7 @@ describe('error reporting', () => {
                     vaporStyleMacro.vite({
                         tokensManifestPath: manifestPath,
                         importSource: './$style-stub',
+                        themeStylesImport: false,
                     }),
                 ],
             }),

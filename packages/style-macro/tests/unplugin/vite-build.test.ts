@@ -25,6 +25,7 @@ async function buildEntry(entry: string) {
             vaporStyleMacro.vite({
                 tokensManifestPath: manifestPath,
                 importSource: './$style-stub',
+                themeStylesImport: false,
             }),
         ],
     })) as RollupOutput | RollupOutput[];

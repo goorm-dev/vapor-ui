@@ -16,15 +16,11 @@ export type SpaceProperty =
     | 'paddingBottom'
     | 'paddingLeft'
     | 'paddingRight'
-    | 'paddingX'
-    | 'paddingY'
     | 'margin'
     | 'marginTop'
     | 'marginBottom'
     | 'marginLeft'
     | 'marginRight'
-    | 'marginX'
-    | 'marginY'
     | 'gap'
     | 'rowGap'
     | 'columnGap';
@@ -50,66 +46,45 @@ export type BreakpointCondition = 'sm' | 'md' | 'lg';
 
 export type ConditionKey = 'default' | BreakpointCondition | PseudoCondition | `@media ${string}`;
 
-// `string & {}` preserves literal-token autocomplete while accepting any string.
-type LiteralString = string & Record<never, never>;
+type CSSProps = CSS.Properties<string | number>;
 
-// Sugar props (paddingX/Y, marginX/Y) are NOT real CSS — typed via overlay.
-type SugarValue = SpaceToken | LiteralString | number;
+type TokenOverlay<P> = P extends SpaceProperty
+    ? SpaceToken
+    : P extends DimensionProperty
+      ? DimensionToken
+      : P extends ColorProperty
+        ? ColorToken
+        : P extends BorderRadiusProperty
+          ? BorderRadiusToken
+          : P extends ShadowProperty
+            ? ShadowToken
+            : never;
 
+type ValueFor<P> = P extends keyof CSSProps
+    ? TokenOverlay<P> | NonNullable<CSSProps[P]>
+    : TokenOverlay<P> | string | number;
+
+export type ConditionRecord<V = string | number> = Partial<Record<ConditionKey, V>>;
+
+// Sugar props (paddingX/Y, marginX/Y) not in csstype.
 interface SugarProperties {
-    paddingX?: SugarValue;
-    paddingY?: SugarValue;
-    marginX?: SugarValue;
-    marginY?: SugarValue;
+    paddingX?: SpaceToken | string | number;
+    paddingY?: SpaceToken | string | number;
+    marginX?: SpaceToken | string | number;
+    marginY?: SpaceToken | string | number;
 }
 
-// Per-property value overlay: token union + native CSS value
-type ValueOverlay<P extends string, V> = P extends SpaceProperty
-    ? SpaceToken | V
-    : P extends DimensionProperty
-      ? DimensionToken | V
-      : P extends ColorProperty
-        ? ColorToken | V
-        : P extends BorderRadiusProperty
-          ? BorderRadiusToken | V
-          : P extends ShadowProperty
-            ? ShadowToken | V
-            : V;
-
-// Replace number-only types with LiteralString fallback so '$token' stays valid.
-type WithLiteralFallback<V> = V extends string
-    ? V | LiteralString
-    : V extends number
-      ? V | LiteralString
-      : V | LiteralString;
-
-type CSSEntry<P extends keyof CSS.Properties> = WithLiteralFallback<NonNullable<CSS.Properties[P]>>;
-
-type CSSStyleInput = {
-    [P in keyof CSS.Properties]?:
-        | ValueOverlay<P, CSSEntry<P>>
-        | ConditionRecord<ValueOverlay<P, CSSEntry<P>>>;
-};
-
-type SugarStyleInput = {
+export type StyleInput = {
+    [P in keyof CSSProps]?: ValueFor<P> | ConditionRecord<ValueFor<P>>;
+} & {
     [P in keyof SugarProperties]?:
         | NonNullable<SugarProperties[P]>
         | ConditionRecord<NonNullable<SugarProperties[P]>>;
 };
 
-export type ConditionRecord<V = LiteralString | number> = Partial<Record<ConditionKey, V>>;
+export type SupportedProperty = keyof CSSProps | keyof SugarProperties;
 
-export type StyleInput = CSSStyleInput & SugarStyleInput;
-
-export type SupportedProperty =
-    | SpaceProperty
-    | DimensionProperty
-    | ColorProperty
-    | BorderRadiusProperty
-    | ShadowProperty
-    | keyof CSS.Properties;
-
-export type StyleValue = LiteralString | number;
+export type StyleValue = string | number;
 
 export type { ColorToken, SpaceToken, DimensionToken, BorderRadiusToken, ShadowToken };
 

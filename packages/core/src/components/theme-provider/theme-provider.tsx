@@ -2,8 +2,6 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import '~/styles/themes.css';
-
 /* -------------------------------------------------------------------------------------------------
  * NOTE: Theme Priority Order (highest to lowest):
  *
