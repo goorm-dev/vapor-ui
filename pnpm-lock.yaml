@@ -259,6 +259,9 @@ importers:
       '@vapor-ui/icons':
         specifier: workspace:*
         version: link:../../packages/icons
+      '@vapor-ui/style-macro':
+        specifier: workspace:*
+        version: link:../../packages/style-macro
       '@vercel/analytics':
         specifier: ^1.6.1
         version: 1.6.1(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.99.0))(react@19.2.7)

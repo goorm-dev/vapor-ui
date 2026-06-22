@@ -18,4 +18,5 @@ export function vaporCustomMedia(overrides: BreakpointOverrides = {}): Plugin {
 
 (vaporCustomMedia as unknown as { postcss: true }).postcss = true;
 
+export default vaporCustomMedia;
 export type { BreakpointOverrides };
