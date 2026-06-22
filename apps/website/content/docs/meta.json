@@ -1,5 +1,5 @@
 {
     "title": "Documentation",
     "description": "Vapor UI Documentation",
-    "pages": ["getting-started", "components", "releases"]
+    "pages": ["getting-started", "components", "migration", "releases"]
 }

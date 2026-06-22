@@ -1,0 +1,5 @@
+{
+    "title": "Migration",
+    "description": "Migration guides for Vapor UI breaking changes.",
+    "pages": ["style-fn"]
+}

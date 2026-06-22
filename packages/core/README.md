@@ -27,6 +27,48 @@ yarn add @vapor-ui/core
 
 > For detailed usage instructions, please refer to the [official documentation](https://vapor-ui.goorm.io/docs/getting-started/installation).
 
+## `$style` build-time utility
+
+`@vapor-ui/core` ships a `$style({...})` macro that compiles to atomic class names at build time:
+
+```tsx
+import { $style } from '@vapor-ui/core';
+
+export const Box = () => (
+  <div
+    className={$style({
+      padding: { default: '$400', sm: '$200' },
+      backgroundColor: '$blue-500',
+      color: { default: '$white', _hover: '$blue-100' },
+    })}
+  />
+);
+```
+
+The macro requires `@vapor-ui/style-macro/unplugin` in your bundler:
+
+```js
+// vite.config.ts | rollup.config.mjs | next.config.mjs
+import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+// vite:   plugins: [vaporStyleMacro.vite()]
+// rollup: plugins: [vaporStyleMacro.rollup()]
+// next webpack: config.plugins.push(vaporStyleMacro.webpack())
+```
+
+For raw `@custom-media` resolution (e.g. Next/PostCSS pipelines), also enable the helper:
+
+```js
+// postcss.config.mjs
+export default {
+  plugins: {
+    '@vapor-ui/core/postcss': {},
+    // …other postcss plugins
+  },
+};
+```
+
+Override breakpoints by passing `{ sm, md, lg }` to the helper. See the migration guide for full details.
+
 ## License
 
 MIT License © 2025 goorm, Inc
