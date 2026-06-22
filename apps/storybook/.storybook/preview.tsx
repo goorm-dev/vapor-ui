@@ -1,4 +1,5 @@
 import './global.css';
+import '@vapor-ui/core/styles/breakpoints.css';
 
 import type { Preview } from '@storybook/react-vite';
 

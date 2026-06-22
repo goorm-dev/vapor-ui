@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
 import { createRequire } from 'node:module';
 import path, { dirname, join } from 'node:path';
 import { mergeConfig } from 'vite';
@@ -39,6 +40,7 @@ const config: StorybookConfig = {
             },
 
             plugins: [
+                vaporStyleMacro.vite(),
                 vanillaExtractPlugin({
                     identifiers: ({ hash, filePath, debugId }) => {
                         const componentName = path.basename(filePath, '.css.ts');

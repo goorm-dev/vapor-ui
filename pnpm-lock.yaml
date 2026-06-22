@@ -159,6 +159,12 @@ importers:
 
   apps/storybook:
     dependencies:
+      '@vapor-ui/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@vapor-ui/style-macro':
+        specifier: workspace:*
+        version: link:../../packages/style-macro
       react:
         specifier: 'catalog:'
         version: 19.2.7

@@ -17,7 +17,11 @@ function defaultInclude(id: string): boolean {
 }
 
 function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
-    const require_ = createRequire(import.meta.url);
+    const base =
+        typeof import.meta !== 'undefined' && import.meta.url
+            ? import.meta.url
+            : `file://${process.cwd()}/`;
+    const require_ = createRequire(base);
     const manifestPath =
         opts.tokensManifestPath ?? require_.resolve('@vapor-ui/core/tokens.manifest.json');
     return {

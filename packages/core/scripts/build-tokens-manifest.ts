@@ -1,11 +1,9 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { parse } from '@babel/parser';
 import * as t from '@babel/types';
-
-import { DEFAULT_BREAKPOINTS } from '../src/postcss/breakpoints';
 
 type TokenScope = 'color' | 'space' | 'dimension' | 'borderRadius' | 'shadow' | 'typography';
 
@@ -242,10 +240,8 @@ console.log(`tokens.manifest.json written: ${counts}`);
 
 const stylesDir = resolve(outDir, 'styles');
 mkdirSync(stylesDir, { recursive: true });
-const bpCss =
-    Object.entries(DEFAULT_BREAKPOINTS)
-        .map(([k, v]) => `@custom-media --vapor-${k} ${v};`)
-        .join('\n') + '\n';
-writeFileSync(resolve(stylesDir, 'breakpoints.css'), bpCss, 'utf-8');
+const bpSrc = resolve(here, '..', 'src', 'styles', 'breakpoints.css');
+const bpDst = resolve(stylesDir, 'breakpoints.css');
+copyFileSync(bpSrc, bpDst);
 // eslint-disable-next-line no-console
-console.log('dist/styles/breakpoints.css written');
+console.log('dist/styles/breakpoints.css copied from src/');
