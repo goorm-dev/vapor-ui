@@ -177,7 +177,7 @@ const commonPlugins = [
         }),
     }),
     vanillaExtractPlugin({ identifiers }),
-    depsExternal(),
+    depsExternal({ exclude: ['csstype'] }),
 ];
 
 const buildPlugins = [
