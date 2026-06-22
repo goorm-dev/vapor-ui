@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { parse } from '@babel/parser';
 import * as t from '@babel/types';
 
+import { DEFAULT_BREAKPOINTS } from '../src/postcss/breakpoints';
+
 type TokenScope = 'color' | 'space' | 'dimension' | 'borderRadius' | 'shadow' | 'typography';
 
 interface ManifestShape {
@@ -237,3 +239,13 @@ const counts = (Object.keys(manifest.tokens) as TokenScope[])
     .join(', ');
 // eslint-disable-next-line no-console
 console.log(`tokens.manifest.json written: ${counts}`);
+
+const stylesDir = resolve(outDir, 'styles');
+mkdirSync(stylesDir, { recursive: true });
+const bpCss =
+    Object.entries(DEFAULT_BREAKPOINTS)
+        .map(([k, v]) => `@custom-media --vapor-${k} ${v};`)
+        .join('\n') + '\n';
+writeFileSync(resolve(stylesDir, 'breakpoints.css'), bpCss, 'utf-8');
+// eslint-disable-next-line no-console
+console.log('dist/styles/breakpoints.css written');

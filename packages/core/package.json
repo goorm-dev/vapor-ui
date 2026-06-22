@@ -37,7 +37,13 @@
         },
         "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
         "./styles.css": "./dist/styles/themes.css.ts.vanilla.css",
-        "./tokens.manifest.json": "./dist/tokens.manifest.json"
+        "./tokens.manifest.json": "./dist/tokens.manifest.json",
+        "./postcss": {
+            "types": "./dist/postcss/index.d.ts",
+            "import": "./dist/postcss/index.js",
+            "require": "./dist/postcss/index.cjs"
+        },
+        "./styles/breakpoints.css": "./dist/styles/breakpoints.css"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
@@ -108,8 +114,12 @@
         "vitest-axe": "^1.0.0-pre.5"
     },
     "peerDependencies": {
+        "postcss": "^8.4.0",
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
         "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    },
+    "peerDependenciesMeta": {
+        "postcss": { "optional": true }
     },
     "publishConfig": {
         "access": "public"

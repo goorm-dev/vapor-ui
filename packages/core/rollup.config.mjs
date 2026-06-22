@@ -44,6 +44,7 @@ const getComponentEntries = (componentsDir = 'src/components') => {
 
 const ENTRY_POINTS = {
     index: 'src/index.ts',
+    'postcss/index': 'src/postcss/index.ts',
     'styles/tailwind-preset': 'src/styles/tailwind-preset.css.ts',
     ...getComponentEntries('src/components'),
 };
