@@ -5,7 +5,44 @@ Build-time macro that transforms `$style({...})` calls into atomic class names +
 **This is a low-level package.** Application authors should never import from it directly. Use:
 
 - `import { $style } from '@vapor-ui/core'` in source code
-- `@vapor-ui/style-macro/unplugin` in `vite.config` / `next.config` / `rollup.config` (Plan B)
+- `@vapor-ui/style-macro/unplugin` in `vite.config` / `rollup.config` / `next.config` / `webpack.config`
+
+## Bundler wiring (the only thing app authors do)
+
+```ts
+// vite.config.ts
+import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+export default { plugins: [vaporStyleMacro.vite()] };
+```
+
+```ts
+// rollup.config.mjs
+import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+export default { plugins: [vaporStyleMacro.rollup()] };
+```
+
+```ts
+// next.config.mjs (use --webpack, not Turbopack)
+import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+export default {
+    webpack(config) {
+        config.plugins.push(vaporStyleMacro.webpack());
+        return config;
+    },
+};
+```
+
+Adapter also exposes `.esbuild()`, `.rspack()`, `.farm()`, `.rolldown()` (anything `unplugin` supports).
+
+### Options
+
+| Option                | Default                                                  | Purpose                                              |
+|-----------------------|----------------------------------------------------------|------------------------------------------------------|
+| `tokensManifestPath`  | `require.resolve('@vapor-ui/core/tokens.manifest.json')` | Override for non-`@vapor-ui/core` token sources      |
+| `importSource`        | `'@vapor-ui/core'`                                       | Module the `$style` symbol is imported from          |
+| `importName`          | `'$style'`                                               | Local binding to recognize as the macro call         |
+| `include`             | `*.{ts,tsx,js,jsx,mts,mjs,cts,cjs}` minus `node_modules` | Custom file filter                                   |
+
 
 ## Who runs what
 
