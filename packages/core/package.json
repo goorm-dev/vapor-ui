@@ -52,8 +52,9 @@
         "dist"
     ],
     "scripts": {
-        "build": "rimraf dist && rollup -c rollup.config.mjs && pnpm run build:tokens-manifest",
-        "build:tokens-manifest": "tsx scripts/build-tokens-manifest.ts",
+        "build": "pnpm run gen:tokens && rimraf dist && rollup -c rollup.config.mjs && pnpm run build:tokens-manifest",
+        "gen:tokens": "tsx scripts/build-tokens-manifest.ts --src-only",
+        "build:tokens-manifest": "tsx scripts/build-tokens-manifest.ts --dist-only",
         "clean": "rimraf dist node_modules .turbo",
         "lint": "eslint ./src",
         "test": "vitest --run",
