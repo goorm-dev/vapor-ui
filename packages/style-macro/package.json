@@ -11,6 +11,11 @@
             "types": "./dist/index.d.ts",
             "import": "./dist/index.js",
             "require": "./dist/index.cjs"
+        },
+        "./unplugin": {
+            "types": "./dist/unplugin-entry.d.ts",
+            "import": "./dist/unplugin-entry.js",
+            "require": "./dist/unplugin-entry.cjs"
         }
     },
     "files": ["dist"],
@@ -27,7 +32,8 @@
         "@babel/generator": "^7.24.0",
         "@babel/parser": "^7.24.0",
         "@babel/traverse": "^7.24.0",
-        "@babel/types": "^7.24.0"
+        "@babel/types": "^7.24.0",
+        "unplugin": "^2.0.0"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
