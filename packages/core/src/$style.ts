@@ -1,22 +1,56 @@
 export type StyleTokenValue = `$${string}`;
 export type StyleValue = string | number | StyleTokenValue;
 
-export interface ConditionRecord {
-    default?: StyleValue;
-    sm?: StyleValue;
-    md?: StyleValue;
-    lg?: StyleValue;
-    _before?: StyleValue;
-    _after?: StyleValue;
-    _hover?: StyleValue;
-    _focus?: StyleValue;
-    _focusVisible?: StyleValue;
-    _focusWithin?: StyleValue;
-    _active?: StyleValue;
-    [rawMedia: `@media ${string}`]: StyleValue | undefined;
-}
+export type SupportedProperty =
+    | 'padding'
+    | 'paddingTop'
+    | 'paddingBottom'
+    | 'paddingLeft'
+    | 'paddingRight'
+    | 'paddingX'
+    | 'paddingY'
+    | 'margin'
+    | 'marginTop'
+    | 'marginBottom'
+    | 'marginLeft'
+    | 'marginRight'
+    | 'marginX'
+    | 'marginY'
+    | 'gap'
+    | 'rowGap'
+    | 'columnGap'
+    | 'width'
+    | 'height'
+    | 'minWidth'
+    | 'minHeight'
+    | 'maxWidth'
+    | 'maxHeight'
+    | 'color'
+    | 'backgroundColor'
+    | 'borderColor'
+    | 'borderRadius'
+    | 'boxShadow'
+    | 'display'
+    | 'position'
+    | 'overflow'
+    | 'opacity';
 
-export type StyleInput = Record<string, StyleValue | ConditionRecord>;
+export type PseudoCondition =
+    | '_before'
+    | '_after'
+    | '_hover'
+    | '_focus'
+    | '_focusVisible'
+    | '_focusWithin'
+    | '_active';
+
+export type BreakpointCondition = 'sm' | 'md' | 'lg';
+
+export type ConditionKey = 'default' | BreakpointCondition | PseudoCondition | `@media ${string}`;
+
+export type ConditionRecord = Partial<Record<ConditionKey, StyleValue>>;
+
+export type StyleInput = Partial<Record<SupportedProperty, StyleValue | ConditionRecord>>;
 
 /**
  * Build-time macro. `@vapor-ui/style-macro/unplugin` rewrites every call site of this
