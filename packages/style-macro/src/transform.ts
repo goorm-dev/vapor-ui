@@ -3,7 +3,7 @@ import { parse } from '@babel/parser';
 import _traverse from '@babel/traverse';
 import * as t from '@babel/types';
 
-import { buildClassName } from './class-name';
+import { buildClassName, type ClassNameMode } from './class-name';
 import { classifyCondition } from './condition';
 import { emitCss } from './emit-css';
 import { parseCallArgs } from './parse-call';
@@ -29,6 +29,7 @@ export interface TransformOpts {
     manifest: ManifestShape;
     importSource?: string | string[];
     importName?: string;
+    obfuscate?: boolean;
 }
 
 function valueShortFromLiteral(literal: string | number): string {
@@ -69,6 +70,7 @@ function buildEntryExpression(
     manifest: ManifestShape,
     tuples: Tuple[],
     allClasses: Set<string>,
+    mode: ClassNameMode,
 ): t.Expression | null {
     if (entry.value?.kind === 'ternary') {
         const conseq = tupleFor(
@@ -79,8 +81,8 @@ function buildEntryExpression(
         );
         const alt = tupleFor(entry.property, { kind: 'default' }, entry.value.alternate!, manifest);
         tuples.push(conseq, alt);
-        const conseqCls = buildClassName(conseq);
-        const altCls = buildClassName(alt);
+        const conseqCls = buildClassName(conseq, mode);
+        const altCls = buildClassName(alt, mode);
         allClasses.add(conseqCls);
         allClasses.add(altCls);
         return t.conditionalExpression(
@@ -97,7 +99,7 @@ function buildEntryExpression(
             if ('error' in cond) continue;
             const tup = tupleFor(entry.property, cond, c.value, manifest);
             tuples.push(tup);
-            const cls = buildClassName(tup);
+            const cls = buildClassName(tup, mode);
             classNames.push(cls);
             allClasses.add(cls);
         }
@@ -108,7 +110,7 @@ function buildEntryExpression(
     if (entry.value) {
         const tup = tupleFor(entry.property, { kind: 'default' }, entry.value, manifest);
         tuples.push(tup);
-        const cls = buildClassName(tup);
+        const cls = buildClassName(tup, mode);
         allClasses.add(cls);
         return t.stringLiteral(cls);
     }
@@ -122,6 +124,7 @@ export function transform(opts: TransformOpts): TransformResult {
         Array.isArray(importSourceRaw) ? importSourceRaw : [importSourceRaw],
     );
     const importName = opts.importName ?? '$style';
+    const mode: ClassNameMode = opts.obfuscate ? 'hashed' : 'readable';
 
     let ast: ReturnType<typeof parse>;
     try {
@@ -192,7 +195,13 @@ export function transform(opts: TransformOpts): TransformResult {
             const entryNodes: t.Expression[] = [];
             for (const entry of entries) {
                 if (entry.error) continue;
-                const expr = buildEntryExpression(entry, opts.manifest, allTuples, allClasses);
+                const expr = buildEntryExpression(
+                    entry,
+                    opts.manifest,
+                    allTuples,
+                    allClasses,
+                    mode,
+                );
                 if (expr) entryNodes.push(expr);
             }
 
@@ -223,6 +232,6 @@ export function transform(opts: TransformOpts): TransformResult {
     }
 
     const { code } = generate(ast, { retainLines: false, comments: true }, opts.source);
-    const css = allTuples.length ? emitCss(allTuples) : null;
+    const css = allTuples.length ? emitCss(allTuples, mode) : null;
     return { code, css, classes: [...allClasses].sort(), errors: [] };
 }

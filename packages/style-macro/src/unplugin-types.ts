@@ -20,6 +20,12 @@ export interface VaporStyleOptions {
      */
     themeStylesImport?: string | false;
     include?: (id: string) => boolean;
+    /**
+     * When `true`, emit short hashed class names (e.g. `_a3k9f2x`) instead of
+     * readable atomic names (e.g. `_lg-bg-background-success-100`).
+     * Defaults to `process.env.NODE_ENV === 'production'`.
+     */
+    obfuscate?: boolean;
 }
 
 export interface ResolvedOptions {
@@ -28,6 +34,7 @@ export interface ResolvedOptions {
     importName: string;
     themeStylesImport: string | null;
     include: (id: string) => boolean;
+    obfuscate: boolean;
 }
 
 export interface FileRecord {

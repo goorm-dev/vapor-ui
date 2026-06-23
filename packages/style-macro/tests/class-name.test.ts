@@ -50,3 +50,31 @@ describe('buildClassName', () => {
         expect(cls).toBe('_mqabcdef-p-400');
     });
 });
+
+describe('buildClassName (hashed)', () => {
+    it('produces _<8-char base36 slug>', () => {
+        const cls = buildClassName(t({}), 'hashed');
+        expect(cls).toMatch(/^_[0-9a-z]{8}$/);
+    });
+    it('stable: same tuple → same class', () => {
+        const a = buildClassName(t({}), 'hashed');
+        const b = buildClassName(t({}), 'hashed');
+        expect(a).toBe(b);
+    });
+    it('distinct condition → distinct class', () => {
+        const def = buildClassName(t({}), 'hashed');
+        const sm = buildClassName(t({ condition: { kind: 'named-bp', name: 'sm' } }), 'hashed');
+        const hover = buildClassName(t({ condition: { kind: 'pseudo', name: '_hover' } }), 'hashed');
+        expect(new Set([def, sm, hover]).size).toBe(3);
+    });
+    it('distinct cssValue → distinct class', () => {
+        const a = buildClassName(t({ cssValue: 'var(--a)' }), 'hashed');
+        const b = buildClassName(t({ cssValue: 'var(--b)' }), 'hashed');
+        expect(a).not.toBe(b);
+    });
+    it('distinct property → distinct class', () => {
+        const a = buildClassName(t({ property: 'padding' }), 'hashed');
+        const b = buildClassName(t({ property: 'margin' }), 'hashed');
+        expect(a).not.toBe(b);
+    });
+});

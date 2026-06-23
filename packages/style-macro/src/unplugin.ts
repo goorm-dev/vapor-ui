@@ -18,6 +18,7 @@ function defaultInclude(id: string): boolean {
 function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
     const importSource = opts.importSource || '@vapor-ui/core/style';
     const themeStylesImport = opts.themeStylesImport || '@vapor-ui/core/styles.css';
+    const obfuscate = opts.obfuscate ?? process.env.NODE_ENV === 'production';
 
     return {
         manifest: opts.manifest ?? defaultManifest,
@@ -25,6 +26,7 @@ function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
         importName: opts.importName ?? '$style',
         themeStylesImport,
         include: opts.include ?? defaultInclude,
+        obfuscate,
     };
 }
 
@@ -71,6 +73,7 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
                 manifest: opts.manifest,
                 importSource: opts.importSource,
                 importName: opts.importName,
+                obfuscate: opts.obfuscate,
             });
 
             if (result.errors.length) {

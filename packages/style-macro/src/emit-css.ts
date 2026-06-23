@@ -1,4 +1,4 @@
-import { buildClassName } from './class-name';
+import { buildClassName, type ClassNameMode } from './class-name';
 import type { ConditionKey, PseudoName, Tuple } from './types';
 
 const PSEUDO_ORDER: PseudoName[] = [
@@ -34,17 +34,17 @@ function bucket(c: ConditionKey): 'default' | 'sm' | 'md' | 'lg' | 'raw' | 'pseu
     }
 }
 
-function dedupe(tuples: Tuple[]): Tuple[] {
+function dedupe(tuples: Tuple[], mode: ClassNameMode): Tuple[] {
     const seen = new Map<string, Tuple>();
     for (const t of tuples) {
-        const key = buildClassName(t);
+        const key = buildClassName(t, mode);
         if (!seen.has(key)) seen.set(key, t);
     }
     return [...seen.values()];
 }
 
-function ruleLine(t: Tuple): string {
-    const cls = buildClassName(t);
+function ruleLine(t: Tuple, mode: ClassNameMode): string {
+    const cls = buildClassName(t, mode);
     const sel = t.condition.kind === 'pseudo' ? `${cls}${PSEUDO_SELECTOR[t.condition.name]}` : cls;
     return `    .${sel} { ${kebab(t.property)}: ${t.cssValue}; }`;
 }
@@ -53,8 +53,8 @@ function kebab(p: string): string {
     return p.replace(/([A-Z])/g, '-$1').toLowerCase();
 }
 
-export function emitCss(tuples: Tuple[]): string {
-    const unique = dedupe(tuples);
+export function emitCss(tuples: Tuple[], mode: ClassNameMode = 'readable'): string {
+    const unique = dedupe(tuples, mode);
     const groups = {
         default: [] as Tuple[],
         sm: [] as Tuple[],
@@ -79,7 +79,7 @@ export function emitCss(tuples: Tuple[]): string {
 
     // within each bucket, sort by class name for byte-identical output
     const sortByClass = (arr: Tuple[]) =>
-        arr.sort((a, b) => buildClassName(a).localeCompare(buildClassName(b)));
+        arr.sort((a, b) => buildClassName(a, mode).localeCompare(buildClassName(b, mode)));
     sortByClass(groups.default);
     sortByClass(groups.sm);
     sortByClass(groups.md);
@@ -87,11 +87,11 @@ export function emitCss(tuples: Tuple[]): string {
     // raw + pseudo already deterministic above
 
     const lines: string[] = ['@layer vapor.utilities {'];
-    for (const t of groups.default) lines.push(ruleLine(t));
+    for (const t of groups.default) lines.push(ruleLine(t, mode));
     const namedBpBlock = (name: 'sm' | 'md' | 'lg', arr: Tuple[]) => {
         if (!arr.length) return;
         lines.push(`    @media (--vapor-${name}) {`);
-        for (const t of arr) lines.push('    ' + ruleLine(t));
+        for (const t of arr) lines.push('    ' + ruleLine(t, mode));
         lines.push('    }');
     };
     namedBpBlock('sm', groups.sm);
@@ -100,10 +100,10 @@ export function emitCss(tuples: Tuple[]): string {
     for (const t of groups.raw) {
         if (t.condition.kind !== 'raw-media') continue;
         lines.push(`    @media ${t.condition.query} {`);
-        lines.push('    ' + ruleLine(t));
+        lines.push('    ' + ruleLine(t, mode));
         lines.push('    }');
     }
-    for (const t of groups.pseudo) lines.push(ruleLine(t));
+    for (const t of groups.pseudo) lines.push(ruleLine(t, mode));
     lines.push('}');
     return lines.join('\n') + '\n';
 }
