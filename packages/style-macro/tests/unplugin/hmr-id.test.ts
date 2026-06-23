@@ -1,11 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import { join } from 'node:path';
 
 import vaporStyleMacro from '../../src/unplugin';
-
-const fixtureRoot = fileURLToPath(new URL('./fixtures', import.meta.url));
-const manifestPath = join(fixtureRoot, 'manifest.json');
+import { manifest } from './fixtures/manifest';
 
 function extractVirtualImport(code: string): string | null {
     const m = code.match(/import\s+"(virtual:vapor-style\/[a-f0-9]+\.css)"/);
@@ -18,7 +14,7 @@ interface TransformPlugin {
 
 function makePlugin(): TransformPlugin {
     const factory = vaporStyleMacro.raw(
-        { tokensManifestPath: manifestPath, importSource: './$style-stub', themeStylesImport: false },
+        { manifest, importSource: './$style-stub', themeStylesImport: false },
         { framework: 'esbuild' },
     ) as unknown as TransformPlugin;
     return factory;

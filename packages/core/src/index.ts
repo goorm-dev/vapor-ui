@@ -40,14 +40,4 @@ export * from './components/toast';
 export * from './components/v-stack';
 export * from './components/radio-card';
 export * from './styles/tokens';
-export { $style } from './$style';
-export type {
-    StyleInput,
-    StyleValue,
-    StyleTokenValue,
-    ConditionRecord,
-    ConditionKey,
-    SupportedProperty,
-    BreakpointCondition,
-    PseudoCondition,
-} from './$style';
+export * from './utils/style-macro';

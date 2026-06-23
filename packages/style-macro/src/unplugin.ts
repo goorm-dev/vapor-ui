@@ -1,11 +1,11 @@
 import { createHash } from 'node:crypto';
-import { createRequire } from 'node:module';
 import { createUnplugin } from 'unplugin';
 
-import { transform } from './transform';
-import { loadManifest } from './tokens';
+import { manifest as defaultManifest } from '@vapor-ui/tokens';
+
 import { formatBuildError } from './code-frame';
-import type { ResolvedOptions, VaporStyleOptions, FileRecord } from './unplugin-types';
+import { transform } from './transform';
+import type { FileRecord, ResolvedOptions, VaporStyleOptions } from './unplugin-types';
 
 const VIRTUAL_PREFIX = '\0virtual:vapor-style/';
 const VIRTUAL_SUFFIX = '.css';
@@ -17,13 +17,6 @@ function defaultInclude(id: string): boolean {
 }
 
 function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
-    const base =
-        typeof import.meta !== 'undefined' && import.meta.url
-            ? import.meta.url
-            : `file://${process.cwd()}/`;
-    const require_ = createRequire(base);
-    const manifestPath =
-        opts.tokensManifestPath ?? require_.resolve('@vapor-ui/core/tokens.manifest.json');
     const importSource = opts.importSource ?? '@vapor-ui/core';
     let themeStylesImport: string | null;
     if (opts.themeStylesImport === false) {
@@ -34,7 +27,7 @@ function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
         themeStylesImport = `${importSource}/styles.css`;
     }
     return {
-        manifest: loadManifest(manifestPath),
+        manifest: opts.manifest ?? defaultManifest,
         importSource,
         importName: opts.importName ?? '$style',
         themeStylesImport,
@@ -96,9 +89,7 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
             if (!result.css) return null;
             const hash = hashContent(result.css);
             records.set(hash, { css: result.css, classes: result.classes });
-            const themeLine = opts.themeStylesImport
-                ? `import "${opts.themeStylesImport}";\n`
-                : '';
+            const themeLine = opts.themeStylesImport ? `import "${opts.themeStylesImport}";\n` : '';
             const importLine = `import "${PUBLIC_PREFIX}${hash}${VIRTUAL_SUFFIX}";\n`;
             return { code: themeLine + importLine + result.code, map: null };
         },

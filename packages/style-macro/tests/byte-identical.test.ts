@@ -3,9 +3,8 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { transform } from '../src';
-import { loadManifest } from '../src/tokens';
+import { manifest } from './fixtures/manifest.sample';
 
-const manifest = loadManifest(new URL('./fixtures/manifest.sample.json', import.meta.url).pathname);
 const FIX = new URL('./fixtures', import.meta.url).pathname;
 
 describe('byte-identical output', () => {

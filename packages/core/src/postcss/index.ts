@@ -11,7 +11,10 @@ export function vaporCustomMedia(overrides: BreakpointOverrides = {}): Plugin {
         postcssPlugin: 'vapor-custom-media',
         AtRule(atRule) {
             if (atRule.name !== 'media') return;
-            atRule.params = atRule.params.replace(pattern, (_match, name: BreakpointName) => resolved[name]);
+            atRule.params = atRule.params.replace(
+                pattern,
+                (_match, name: BreakpointName) => resolved[name],
+            );
         },
     };
 }

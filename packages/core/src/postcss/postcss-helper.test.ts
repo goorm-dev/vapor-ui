@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
 import postcss from 'postcss';
+import { describe, expect, it } from 'vitest';
 
-import { vaporCustomMedia } from './index';
 import { DEFAULT_BREAKPOINTS, resolveBreakpoints } from './breakpoints';
+import { vaporCustomMedia } from './index';
 
 describe('vaporCustomMedia', () => {
     it('exposes defaults', () => {
@@ -23,9 +23,12 @@ describe('vaporCustomMedia', () => {
 
     it('expands @media (--vapor-sm) to override value', async () => {
         const input = `@media (--vapor-sm) { .a { color: red } }`;
-        const result = await postcss([vaporCustomMedia({ sm: '(max-width: 600px)' })]).process(input, {
-            from: undefined,
-        });
+        const result = await postcss([vaporCustomMedia({ sm: '(max-width: 600px)' })]).process(
+            input,
+            {
+                from: undefined,
+            },
+        );
         expect(result.css).toContain('(max-width: 600px)');
     });
 

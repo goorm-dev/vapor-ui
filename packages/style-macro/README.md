@@ -38,9 +38,10 @@ Adapter also exposes `.esbuild()`, `.rspack()`, `.farm()`, `.rolldown()` (anythi
 
 | Option                | Default                                                  | Purpose                                              |
 |-----------------------|----------------------------------------------------------|------------------------------------------------------|
-| `tokensManifestPath`  | `require.resolve('@vapor-ui/core/tokens.manifest.json')` | Override for non-`@vapor-ui/core` token sources      |
+| `manifest`            | `import { manifest } from '@vapor-ui/tokens'`            | Alternative token manifest object (`ManifestShape`)  |
 | `importSource`        | `'@vapor-ui/core'`                                       | Module the `$style` symbol is imported from          |
 | `importName`          | `'$style'`                                               | Local binding to recognize as the macro call         |
+| `themeStylesImport`   | `'${importSource}/styles.css'`                           | Side-effect CSS import injected per-file. `false` to disable. |
 | `include`             | `*.{ts,tsx,js,jsx,mts,mjs,cts,cjs}` minus `node_modules` | Custom file filter                                   |
 
 
@@ -49,19 +50,18 @@ Adapter also exposes `.esbuild()`, `.rspack()`, `.farm()`, `.rolldown()` (anythi
 | Layer | What it does | Who runs it |
 |---|---|---|
 | End-user source | `$style({ padding: '$400' })` | App author writes |
-| `@vapor-ui/style-macro/unplugin` | Calls `loadManifest()` **once** at bundler start, then `transform()` per file | Bundler plugin (Vite / webpack / Rollup) |
+| `@vapor-ui/style-macro/unplugin` | Imports `manifest` from `@vapor-ui/tokens` once, then `transform()` per file | Bundler plugin (Vite / webpack / Rollup) |
 | `@vapor-ui/style-macro` (this package) | `transform(source, opts)` → `{ code, css, classes }`. Pure function. | The unplugin above |
-| `@vapor-ui/core` | Ships `dist/tokens.manifest.json` next to the `$style` runtime stub | `@vapor-ui/core` build (Plan C) |
+| `@vapor-ui/tokens` | Owns token data + emits `manifest` (TS module) + token literal union types | tokens build |
+| `@vapor-ui/core` | Hosts the `$style` runtime stub; ships the theme CSS contract | `@vapor-ui/core` build |
 
-End users never see `loadManifest` or `transform`. They `import { $style } from '@vapor-ui/core'` and write call sites; the bundler plugin wires the rest.
+End users never see the manifest or `transform`. They `import { $style } from '@vapor-ui/core/style'` and write call sites; the bundler plugin wires the rest.
 
 ## Contract (for plugin authors / internal use)
 
 ```ts
-import { transform, loadManifest, formatBuildError } from '@vapor-ui/style-macro';
-
-// Bundler-plugin start: load manifest once
-const manifest = loadManifest(require.resolve('@vapor-ui/core/tokens.manifest.json'));
+import { transform, formatBuildError } from '@vapor-ui/style-macro';
+import { manifest } from '@vapor-ui/tokens';
 
 // Per source file
 const result = transform({ source, filename, manifest });

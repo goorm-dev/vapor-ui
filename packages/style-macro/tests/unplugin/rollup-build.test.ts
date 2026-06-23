@@ -6,9 +6,9 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 
 import vaporStyleMacro from '../../src/unplugin';
+import { manifest } from './fixtures/manifest';
 
 const fixtureRoot = fileURLToPath(new URL('./fixtures', import.meta.url));
-const manifestPath = join(fixtureRoot, 'manifest.json');
 
 describe('rollup build', () => {
     it('rewrites the call and registers a virtual CSS module', async () => {
@@ -18,7 +18,7 @@ describe('rollup build', () => {
             external: ['react', 'react/jsx-runtime'],
             plugins: [
                 vaporStyleMacro.rollup({
-                    tokensManifestPath: manifestPath,
+                    manifest,
                     importSource: './$style-stub',
                     themeStylesImport: false,
                 }),

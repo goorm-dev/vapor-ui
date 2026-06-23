@@ -37,13 +37,17 @@
         },
         "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
         "./styles.css": "./dist/styles/themes.css.ts.vanilla.css",
-        "./tokens.manifest.json": "./dist/tokens.manifest.json",
+        "./breakpoints.css": "./dist/styles/breakpoints.css",
+        "./style": {
+            "types": "./dist/utils/style-macro/index.d.ts",
+            "import": "./dist/utils/style-macro/index.js",
+            "require": "./dist/utils/style-macro/index.cjs"
+        },
         "./postcss": {
             "types": "./dist/postcss/index.d.ts",
             "import": "./dist/postcss/index.js",
             "require": "./dist/postcss/index.cjs"
-        },
-        "./styles/breakpoints.css": "./dist/styles/breakpoints.css"
+        }
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
@@ -52,9 +56,8 @@
         "dist"
     ],
     "scripts": {
-        "build": "pnpm run gen:tokens && rimraf dist && rollup -c rollup.config.mjs && pnpm run build:tokens-manifest",
-        "gen:tokens": "tsx scripts/build-tokens-manifest.ts --src-only",
-        "build:tokens-manifest": "tsx scripts/build-tokens-manifest.ts --dist-only",
+        "build": "rimraf dist && rollup -c rollup.config.mjs && pnpm run build:breakpoints",
+        "build:breakpoints": "node -e \"require('node:fs').mkdirSync('dist/styles', {recursive: true}); require('node:fs').copyFileSync('src/styles/breakpoints.css', 'dist/styles/breakpoints.css'); console.log('dist/styles/breakpoints.css copied')\"",
         "clean": "rimraf dist node_modules .turbo",
         "lint": "eslint ./src",
         "test": "vitest --run",
@@ -74,12 +77,11 @@
         "@vanilla-extract/sprinkles": "^1.6.5",
         "@vapor-ui/hooks": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
+        "@vapor-ui/tokens": "workspace:*",
         "clsx": "^2.1.1",
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {
-        "@babel/parser": "^7.24.0",
-        "@babel/types": "^7.24.0",
         "@playwright/test": "^1.60.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
@@ -110,7 +112,6 @@
         "rollup-plugin-esbuild": "^6.2.1",
         "rollup-plugin-node-externals": "^8.1.2",
         "rollup-plugin-preserve-directives": "^0.4.0",
-        "tsx": "^4.7.0",
         "typescript": "catalog:",
         "vitest": "^3.2.4",
         "vitest-axe": "^1.0.0-pre.5"
@@ -121,7 +122,9 @@
         "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
     },
     "peerDependenciesMeta": {
-        "postcss": { "optional": true }
+        "postcss": {
+            "optional": true
+        }
     },
     "publishConfig": {
         "access": "public"

@@ -12,7 +12,9 @@ export interface BreakpointOverrides {
     lg?: string;
 }
 
-export function resolveBreakpoints(overrides: BreakpointOverrides = {}): Record<BreakpointName, string> {
+export function resolveBreakpoints(
+    overrides: BreakpointOverrides = {},
+): Record<BreakpointName, string> {
     for (const key of Object.keys(overrides)) {
         if (!(key in DEFAULT_BREAKPOINTS)) {
             throw new Error(

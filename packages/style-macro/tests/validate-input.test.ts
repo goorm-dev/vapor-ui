@@ -2,12 +2,9 @@ import { describe, expect, it } from 'vitest';
 import * as parser from '@babel/parser';
 import * as t from '@babel/types';
 
-import { loadManifest } from '../src/tokens';
 import { validateInput } from '../src/validate-input';
 import { parseCallArgs } from '../src/parse-call';
-
-const manifestPath = new URL('./fixtures/manifest.sample.json', import.meta.url).pathname;
-const manifest = loadManifest(manifestPath);
+import { manifest } from './fixtures/manifest.sample';
 
 function callArg(src: string): t.ObjectExpression {
     const file = parser.parse(`$style(${src})`, {

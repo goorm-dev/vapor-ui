@@ -220,7 +220,7 @@ _mq3a7f9-p-400               // @media (min-width: 2560px): padding $400
 1. `default`
 2. 명명 BP: `sm` → `md` → `lg`
 3. Raw `@media`: query 문자열 사전순
-4. Pseudo: `_before` → `_after` → `_hover` → `_focus` → `_focusVisible` → `_focusWithin` → `_active`
+4. Pseudo: `_before` → `_after` → `_focus` → `_focusVisible` → `_focusWithin` → `_hover` → `_active` (LVFHA — focus before hover for accessibility, hover ring must not override focus ring)
 
 매크로가 항상 이 순서로 emit → 동일 입력 → 동일 CSS 바이트.
 

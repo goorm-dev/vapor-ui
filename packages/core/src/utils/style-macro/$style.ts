@@ -6,7 +6,7 @@ import type {
     DimensionToken,
     ShadowToken,
     SpaceToken,
-} from './$style.tokens.generated';
+} from '@vapor-ui/tokens';
 
 export type StyleTokenValue = `$${string}`;
 

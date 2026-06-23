@@ -1,7 +1,11 @@
-import type { ManifestShape } from './types';
+import type { ManifestShape } from '@vapor-ui/tokens';
 
 export interface VaporStyleOptions {
-    tokensManifestPath?: string;
+    /**
+     * Token manifest object. Defaults to the export from `@vapor-ui/tokens`.
+     * Pass a custom manifest to use an alternative token set.
+     */
+    manifest?: ManifestShape;
     importSource?: string;
     importName?: string;
     /**

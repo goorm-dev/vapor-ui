@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
+import vitePlugin from '@vapor-ui/style-macro/unplugin';
 import react from '@vitejs/plugin-react';
-import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-    plugins: [vaporStyleMacro.vite(), react()],
+    plugins: [vitePlugin.vite(), react()],
 });
