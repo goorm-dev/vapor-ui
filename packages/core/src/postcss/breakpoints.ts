@@ -1,7 +1,7 @@
 export const DEFAULT_BREAKPOINTS = {
-    sm: '(max-width: 767px)',
-    md: '(max-width: 1024px)',
-    lg: '(min-width: 1025px)',
+    sm: 'screen and (max-width: 767px)',
+    md: 'screen and (min-width: 768px) and (max-width: 1024px)',
+    lg: 'screen and (min-width: 1025px)',
 } as const;
 
 export type BreakpointName = keyof typeof DEFAULT_BREAKPOINTS;
