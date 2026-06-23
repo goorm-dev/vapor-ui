@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { classifyCondition, hashMediaQuery } from '../src/condition';
 
 describe('classifyCondition', () => {
@@ -12,14 +13,18 @@ describe('classifyCondition', () => {
     });
     it('classifies pseudo', () => {
         expect(classifyCondition('_hover')).toEqual({ kind: 'pseudo', name: '_hover' });
-        expect(classifyCondition('_focusVisible')).toEqual({ kind: 'pseudo', name: '_focusVisible' });
+        expect(classifyCondition('_focusVisible')).toEqual({
+            kind: 'pseudo',
+            name: '_focusVisible',
+        });
     });
     it('classifies raw @media with normalized hash', () => {
         const a = classifyCondition('@media (min-width: 2560px)');
         const b = classifyCondition('@media (min-width:2560px)');
         const c = classifyCondition('@media   (MIN-WIDTH:  2560PX)');
         expect(a.kind).toBe('raw-media');
-        if (a.kind !== 'raw-media' || b.kind !== 'raw-media' || c.kind !== 'raw-media') throw new Error();
+        if (a.kind !== 'raw-media' || b.kind !== 'raw-media' || c.kind !== 'raw-media')
+            throw new Error();
         expect(a.hash).toBe(b.hash);
         expect(a.hash).toBe(c.hash);
         expect(a.hash).toHaveLength(8);

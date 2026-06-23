@@ -78,7 +78,8 @@ export function emitCss(tuples: Tuple[]): string {
     });
 
     // within each bucket, sort by class name for byte-identical output
-    const sortByClass = (arr: Tuple[]) => arr.sort((a, b) => buildClassName(a).localeCompare(buildClassName(b)));
+    const sortByClass = (arr: Tuple[]) =>
+        arr.sort((a, b) => buildClassName(a).localeCompare(buildClassName(b)));
     sortByClass(groups.default);
     sortByClass(groups.sm);
     sortByClass(groups.md);

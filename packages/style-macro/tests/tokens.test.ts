@@ -5,7 +5,9 @@ import { manifest } from './fixtures/manifest.sample';
 
 describe('resolveToken', () => {
     it('returns css var for valid token', () => {
-        expect(resolveToken(manifest, 'padding', '400')).toEqual({ cssVar: '--vapor-size-space-400' });
+        expect(resolveToken(manifest, 'padding', '400')).toEqual({
+            cssVar: '--vapor-size-space-400',
+        });
     });
 
     it('rejects scope mismatch', () => {

@@ -1,6 +1,13 @@
 import type { ManifestShape, TokenScope } from './types';
 
-const SCOPES: TokenScope[] = ['color', 'space', 'dimension', 'borderRadius', 'shadow', 'typography'];
+const SCOPES: TokenScope[] = [
+    'color',
+    'space',
+    'dimension',
+    'borderRadius',
+    'shadow',
+    'typography',
+];
 
 export type ResolveResult =
     | { cssVar: string }

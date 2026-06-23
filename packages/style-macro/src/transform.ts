@@ -1,17 +1,17 @@
+import _generate from '@babel/generator';
 import { parse } from '@babel/parser';
 import _traverse from '@babel/traverse';
-import _generate from '@babel/generator';
 import * as t from '@babel/types';
 
-import { emitCss } from './emit-css';
-import { parseCallArgs } from './parse-call';
-import { validateInput } from './validate-input';
 import { buildClassName } from './class-name';
 import { classifyCondition } from './condition';
+import { emitCss } from './emit-css';
+import { parseCallArgs } from './parse-call';
+import type { RawEntry, RawValue } from './parse-call';
 import { shortenProperty } from './property-shorthand';
 import { resolveToken } from './tokens';
 import type { BuildError, ConditionKey, ManifestShape, Tuple } from './types';
-import type { RawEntry, RawValue } from './parse-call';
+import { validateInput } from './validate-input';
 
 const traverse = (_traverse as unknown as { default?: typeof _traverse }).default ?? _traverse;
 const generate = (_generate as unknown as { default?: typeof _generate }).default ?? _generate;
@@ -27,7 +27,7 @@ export interface TransformOpts {
     source: string;
     filename: string;
     manifest: ManifestShape;
-    importSource?: string;
+    importSource?: string | string[];
     importName?: string;
 }
 
@@ -37,7 +37,12 @@ function valueShortFromLiteral(literal: string | number): string {
         .replace(/^-|-$/g, '');
 }
 
-function tupleFor(property: string, cond: ConditionKey, raw: RawValue, manifest: ManifestShape): Tuple {
+function tupleFor(
+    property: string,
+    cond: ConditionKey,
+    raw: RawValue,
+    manifest: ManifestShape,
+): Tuple {
     const propertyShort = shortenProperty(property);
     if (raw.kind === 'literal') {
         return {
@@ -66,7 +71,12 @@ function buildEntryExpression(
     allClasses: Set<string>,
 ): t.Expression | null {
     if (entry.value?.kind === 'ternary') {
-        const conseq = tupleFor(entry.property, { kind: 'default' }, entry.value.consequent!, manifest);
+        const conseq = tupleFor(
+            entry.property,
+            { kind: 'default' },
+            entry.value.consequent!,
+            manifest,
+        );
         const alt = tupleFor(entry.property, { kind: 'default' }, entry.value.alternate!, manifest);
         tuples.push(conseq, alt);
         const conseqCls = buildClassName(conseq);
@@ -107,7 +117,10 @@ function buildEntryExpression(
 }
 
 export function transform(opts: TransformOpts): TransformResult {
-    const importSource = opts.importSource ?? '@vapor-ui/core';
+    const importSourceRaw = opts.importSource ?? ['@vapor-ui/core', '@vapor-ui/core/style'];
+    const importSources = new Set(
+        Array.isArray(importSourceRaw) ? importSourceRaw : [importSourceRaw],
+    );
     const importName = opts.importName ?? '$style';
 
     let ast: ReturnType<typeof parse>;
@@ -128,7 +141,7 @@ export function transform(opts: TransformOpts): TransformResult {
 
     traverse(ast, {
         ImportDeclaration(path) {
-            if (path.node.source.value !== importSource) return;
+            if (!importSources.has(path.node.source.value)) return;
             for (const spec of path.node.specifiers) {
                 if (
                     t.isImportSpecifier(spec) &&

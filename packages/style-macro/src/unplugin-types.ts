@@ -6,6 +6,11 @@ export interface VaporStyleOptions {
      * Pass a custom manifest to use an alternative token set.
      */
     manifest?: ManifestShape;
+    /**
+     * Module specifier(s) the `$style` symbol is imported from. Pass an array
+     * to recognize multiple subpaths. Defaults to
+     * `['@vapor-ui/core', '@vapor-ui/core/style']`.
+     */
     importSource?: string;
     importName?: string;
     /**
@@ -19,7 +24,7 @@ export interface VaporStyleOptions {
 
 export interface ResolvedOptions {
     manifest: ManifestShape;
-    importSource: string;
+    importSource: string | string[];
     importName: string;
     themeStylesImport: string | null;
     include: (id: string) => boolean;

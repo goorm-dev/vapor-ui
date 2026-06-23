@@ -3,9 +3,6 @@
     "version": "0.0.0-private",
     "license": "MIT",
     "type": "module",
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
@@ -19,15 +16,18 @@
         },
         "./manifest.json": "./dist/manifest.json"
     },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
         "dist",
         "src"
     ],
     "scripts": {
         "build": "pnpm run gen && tsup && pnpm run gen:json",
+        "clean": "rimraf dist node_modules .turbo",
         "gen": "tsx scripts/build.ts --src-only",
         "gen:json": "tsx scripts/build.ts --dist-only",
-        "clean": "rimraf dist node_modules .turbo",
         "typecheck": "tsc --noEmit"
     },
     "devDependencies": {

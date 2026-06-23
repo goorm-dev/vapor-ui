@@ -35,13 +35,13 @@ yarn add @vapor-ui/core
 import { $style } from '@vapor-ui/core';
 
 export const Box = () => (
-  <div
-    className={$style({
-      padding: { default: '$400', sm: '$200' },
-      backgroundColor: '$blue-500',
-      color: { default: '$white', _hover: '$blue-100' },
-    })}
-  />
+    <div
+        className={$style({
+            padding: { default: '$400', sm: '$200' },
+            backgroundColor: '$blue-500',
+            color: { default: '$white', _hover: '$blue-100' },
+        })}
+    />
 );
 ```
 
@@ -50,6 +50,7 @@ The macro requires `@vapor-ui/style-macro/unplugin` in your bundler:
 ```js
 // vite.config.ts | rollup.config.mjs | next.config.mjs
 import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+
 // vite:   plugins: [vaporStyleMacro.vite()]
 // rollup: plugins: [vaporStyleMacro.rollup()]
 // next webpack: config.plugins.push(vaporStyleMacro.webpack())
@@ -60,10 +61,10 @@ For raw `@custom-media` resolution (e.g. Next/PostCSS pipelines), also enable th
 ```js
 // postcss.config.mjs
 export default {
-  plugins: {
-    '@vapor-ui/core/postcss': {},
-    // …other postcss plugins
-  },
+    plugins: {
+        '@vapor-ui/core/postcss': {},
+        // …other postcss plugins
+    },
 };
 ```
 

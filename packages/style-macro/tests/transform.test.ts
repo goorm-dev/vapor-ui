@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -18,9 +18,13 @@ describe('transform fixtures', () => {
             const result = transform({ source, filename: 'input.tsx', manifest });
             expect(result.errors).toEqual([]);
             const expectedCode = readFileSync(join(dir, 'expected.code.tsx'), 'utf-8');
-            expect(result.code.replace(/\s+/g, ' ').trim()).toBe(expectedCode.replace(/\s+/g, ' ').trim());
+            expect(result.code.replace(/\s+/g, ' ').trim()).toBe(
+                expectedCode.replace(/\s+/g, ' ').trim(),
+            );
             const expectedCss = readFileSync(join(dir, 'expected.css'), 'utf-8');
-            expect(result.css?.replace(/\s+/g, ' ').trim()).toBe(expectedCss.replace(/\s+/g, ' ').trim());
+            expect(result.css?.replace(/\s+/g, ' ').trim()).toBe(
+                expectedCss.replace(/\s+/g, ' ').trim(),
+            );
         });
     }
 
@@ -38,7 +42,9 @@ describe('transform fixtures', () => {
                 'utf-8',
             );
             const expected = JSON.parse(expectedJson) as Array<{ code: string }>;
-            expect(result.errors.map((e) => e.code).sort()).toEqual(expected.map((e) => e.code).sort());
+            expect(result.errors.map((e) => e.code).sort()).toEqual(
+                expected.map((e) => e.code).sort(),
+            );
         });
     }
 });

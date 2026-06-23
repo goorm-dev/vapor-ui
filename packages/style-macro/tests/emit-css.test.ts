@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { emitCss } from '../src/emit-css';
 import type { Tuple } from '../src/types';
 
@@ -21,17 +22,31 @@ describe('emitCss', () => {
     it('orders: default → sm → md → lg → @media (sorted) → pseudo (fixed order)', () => {
         const tuples: Tuple[] = [
             t({ condition: { kind: 'pseudo', name: '_hover' }, valueShort: 'h' }),
-            t({ condition: { kind: 'raw-media', query: '(min-width: 9999px)', hash: 'zzzzzzzz' }, valueShort: 'z' }),
+            t({
+                condition: { kind: 'raw-media', query: '(min-width: 9999px)', hash: 'zzzzzzzz' },
+                valueShort: 'z',
+            }),
             t({ condition: { kind: 'named-bp', name: 'lg' }, valueShort: 'l' }),
             t({ condition: { kind: 'default' }, valueShort: 'd' }),
             t({ condition: { kind: 'named-bp', name: 'sm' }, valueShort: 's' }),
-            t({ condition: { kind: 'raw-media', query: '(min-width: 1000px)', hash: 'aaaaaaaa' }, valueShort: 'a' }),
+            t({
+                condition: { kind: 'raw-media', query: '(min-width: 1000px)', hash: 'aaaaaaaa' },
+                valueShort: 'a',
+            }),
             t({ condition: { kind: 'named-bp', name: 'md' }, valueShort: 'm' }),
             t({ condition: { kind: 'pseudo', name: '_focus' }, valueShort: 'f' }),
         ];
         const css = emitCss(tuples);
-        const positions = ['_p-d', '_sm-p-s', '_md-p-m', '_lg-p-l', '_mqaaaaaa-p-a', '_mqzzzzzz-p-z', '_focus-p-f', '_hover-p-h']
-            .map((cls) => css.indexOf(cls));
+        const positions = [
+            '_p-d',
+            '_sm-p-s',
+            '_md-p-m',
+            '_lg-p-l',
+            '_mqaaaaaa-p-a',
+            '_mqzzzzzz-p-z',
+            '_focus-p-f',
+            '_hover-p-h',
+        ].map((cls) => css.indexOf(cls));
         const sorted = [...positions].sort((a, b) => a - b);
         expect(positions).toEqual(sorted);
         expect(positions.every((p) => p >= 0)).toBe(true);
@@ -44,17 +59,26 @@ describe('emitCss', () => {
     });
 
     it('wraps named BP in @media (--vapor-<name>)', () => {
-        const css = emitCss([t({ condition: { kind: 'named-bp', name: 'sm' }, valueShort: '100' })]);
+        const css = emitCss([
+            t({ condition: { kind: 'named-bp', name: 'sm' }, valueShort: '100' }),
+        ]);
         expect(css).toMatch(/@media \(--vapor-sm\)\s*\{\s*\._sm-p-100/);
     });
 
     it('wraps raw @media using raw query string', () => {
-        const css = emitCss([t({ condition: { kind: 'raw-media', query: '(min-width: 2560px)', hash: 'abcdef12' }, valueShort: '400' })]);
+        const css = emitCss([
+            t({
+                condition: { kind: 'raw-media', query: '(min-width: 2560px)', hash: 'abcdef12' },
+                valueShort: '400',
+            }),
+        ]);
         expect(css).toMatch(/@media \(min-width: 2560px\)\s*\{\s*\._mqabcdef-p-400/);
     });
 
     it('appends :pseudo selector', () => {
-        const css = emitCss([t({ condition: { kind: 'pseudo', name: '_hover' }, valueShort: 'h' })]);
+        const css = emitCss([
+            t({ condition: { kind: 'pseudo', name: '_hover' }, valueShort: 'h' }),
+        ]);
         expect(css).toMatch(/\._hover-p-h:hover\s*\{/);
     });
 

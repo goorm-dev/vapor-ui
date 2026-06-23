@@ -1,9 +1,9 @@
-import { rollup } from 'rollup';
-import { describe, expect, it } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import { join } from 'node:path';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { rollup } from 'rollup';
+import { describe, expect, it } from 'vitest';
 
 import vaporStyleMacro from '../../src/unplugin';
 import { manifest } from './fixtures/manifest';

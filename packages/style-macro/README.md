@@ -12,18 +12,21 @@ Build-time macro that transforms `$style({...})` calls into atomic class names +
 ```ts
 // vite.config.ts
 import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+
 export default { plugins: [vaporStyleMacro.vite()] };
 ```
 
 ```ts
 // rollup.config.mjs
 import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+
 export default { plugins: [vaporStyleMacro.rollup()] };
 ```
 
 ```ts
 // next.config.mjs (use --webpack, not Turbopack)
 import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+
 export default {
     webpack(config) {
         config.plugins.push(vaporStyleMacro.webpack());
@@ -36,31 +39,30 @@ Adapter also exposes `.esbuild()`, `.rspack()`, `.farm()`, `.rolldown()` (anythi
 
 ### Options
 
-| Option                | Default                                                  | Purpose                                              |
-|-----------------------|----------------------------------------------------------|------------------------------------------------------|
-| `manifest`            | `import { manifest } from '@vapor-ui/tokens'`            | Alternative token manifest object (`ManifestShape`)  |
-| `importSource`        | `'@vapor-ui/core'`                                       | Module the `$style` symbol is imported from          |
-| `importName`          | `'$style'`                                               | Local binding to recognize as the macro call         |
-| `themeStylesImport`   | `'${importSource}/styles.css'`                           | Side-effect CSS import injected per-file. `false` to disable. |
-| `include`             | `*.{ts,tsx,js,jsx,mts,mjs,cts,cjs}` minus `node_modules` | Custom file filter                                   |
-
+| Option              | Default                                                  | Purpose                                                       |
+| ------------------- | -------------------------------------------------------- | ------------------------------------------------------------- |
+| `manifest`          | `import { manifest } from '@vapor-ui/tokens'`            | Alternative token manifest object (`ManifestShape`)           |
+| `importSource`      | `'@vapor-ui/core'`                                       | Module the `$style` symbol is imported from                   |
+| `importName`        | `'$style'`                                               | Local binding to recognize as the macro call                  |
+| `themeStylesImport` | `'${importSource}/styles.css'`                           | Side-effect CSS import injected per-file. `false` to disable. |
+| `include`           | `*.{ts,tsx,js,jsx,mts,mjs,cts,cjs}` minus `node_modules` | Custom file filter                                            |
 
 ## Who runs what
 
-| Layer | What it does | Who runs it |
-|---|---|---|
-| End-user source | `$style({ padding: '$400' })` | App author writes |
-| `@vapor-ui/style-macro/unplugin` | Imports `manifest` from `@vapor-ui/tokens` once, then `transform()` per file | Bundler plugin (Vite / webpack / Rollup) |
-| `@vapor-ui/style-macro` (this package) | `transform(source, opts)` → `{ code, css, classes }`. Pure function. | The unplugin above |
-| `@vapor-ui/tokens` | Owns token data + emits `manifest` (TS module) + token literal union types | tokens build |
-| `@vapor-ui/core` | Hosts the `$style` runtime stub; ships the theme CSS contract | `@vapor-ui/core` build |
+| Layer                                  | What it does                                                                 | Who runs it                              |
+| -------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------- |
+| End-user source                        | `$style({ padding: '$400' })`                                                | App author writes                        |
+| `@vapor-ui/style-macro/unplugin`       | Imports `manifest` from `@vapor-ui/tokens` once, then `transform()` per file | Bundler plugin (Vite / webpack / Rollup) |
+| `@vapor-ui/style-macro` (this package) | `transform(source, opts)` → `{ code, css, classes }`. Pure function.         | The unplugin above                       |
+| `@vapor-ui/tokens`                     | Owns token data + emits `manifest` (TS module) + token literal union types   | tokens build                             |
+| `@vapor-ui/core`                       | Hosts the `$style` runtime stub; ships the theme CSS contract                | `@vapor-ui/core` build                   |
 
 End users never see the manifest or `transform`. They `import { $style } from '@vapor-ui/core/style'` and write call sites; the bundler plugin wires the rest.
 
 ## Contract (for plugin authors / internal use)
 
 ```ts
-import { transform, formatBuildError } from '@vapor-ui/style-macro';
+import { formatBuildError, transform } from '@vapor-ui/style-macro';
 import { manifest } from '@vapor-ui/tokens';
 
 // Per source file
@@ -82,9 +84,9 @@ Same `(source, manifest)` → byte-identical `code`, `css`, `classes`. Class nam
 
 ```ts
 interface ManifestShape {
-  version: '1';
-  tokens: Record<TokenScope, Record<string, string>>;     // token name → CSS var
-  propertyScopes: Record<string, TokenScope>;             // property → which scope its tokens live in
+    version: '1';
+    tokens: Record<TokenScope, Record<string, string>>; // token name → CSS var
+    propertyScopes: Record<string, TokenScope>; // property → which scope its tokens live in
 }
 
 type TokenScope = 'color' | 'space' | 'dimension' | 'borderRadius' | 'shadow' | 'typography';
@@ -94,12 +96,12 @@ type TokenScope = 'color' | 'space' | 'dimension' | 'borderRadius' | 'shadow' | 
 
 ## Conditions
 
-| Key                   | Maps to                    |
-|-----------------------|----------------------------|
-| `default`             | base rule                  |
-| `sm` / `md` / `lg`    | `@media (--vapor-<name>)`  |
-| `@media (…)`          | raw CSS media query        |
-| `_hover`, `_focus`, … | pseudo-class selector      |
+| Key                   | Maps to                   |
+| --------------------- | ------------------------- |
+| `default`             | base rule                 |
+| `sm` / `md` / `lg`    | `@media (--vapor-<name>)` |
+| `@media (…)`          | raw CSS media query       |
+| `_hover`, `_focus`, … | pseudo-class selector     |
 
 ## Error codes
 

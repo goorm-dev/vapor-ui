@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { PROPERTY_SHORT, shortenProperty } from '../src/property-shorthand';
 
 describe('PROPERTY_SHORT', () => {

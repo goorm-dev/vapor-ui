@@ -1,5 +1,3 @@
-import type * as CSS from 'csstype';
-
 import type {
     BorderRadiusToken,
     ColorToken,
@@ -7,6 +5,7 @@ import type {
     ShadowToken,
     SpaceToken,
 } from '@vapor-ui/tokens';
+import type * as CSS from 'csstype';
 
 export type StyleTokenValue = `$${string}`;
 

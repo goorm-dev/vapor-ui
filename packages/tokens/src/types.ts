@@ -1,10 +1,4 @@
-export type TokenScope =
-    | 'color'
-    | 'space'
-    | 'dimension'
-    | 'borderRadius'
-    | 'shadow'
-    | 'typography';
+export type TokenScope = 'color' | 'space' | 'dimension' | 'borderRadius' | 'shadow' | 'typography';
 
 export interface ManifestShape {
     version: '1';

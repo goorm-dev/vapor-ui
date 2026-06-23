@@ -1,7 +1,7 @@
 import { classifyCondition } from './condition';
+import type { RawEntry, RawValue } from './parse-call';
 import { resolveToken } from './tokens';
 import type { BuildError, ManifestShape } from './types';
-import type { RawEntry, RawValue } from './parse-call';
 
 function validateValue(
     property: string,

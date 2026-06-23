@@ -16,7 +16,11 @@ export interface RawEntry {
     loc: { line: number; column: number };
     error?: 'spread' | 'computed-key';
     value?: RawValue;
-    conditions?: Array<{ conditionKey: string; value: RawValue; loc: { line: number; column: number } }>;
+    conditions?: Array<{
+        conditionKey: string;
+        value: RawValue;
+        loc: { line: number; column: number };
+    }>;
     testNode?: t.Expression;
 }
 
@@ -106,7 +110,11 @@ export function parseCallArgs(arg: t.ObjectExpression): RawEntry[] {
         }
 
         if (!t.isExpression(valueNode)) {
-            out.push({ property: name, loc: locOf(prop), value: { kind: 'unknown', loc: locOf(prop) } });
+            out.push({
+                property: name,
+                loc: locOf(prop),
+                value: { kind: 'unknown', loc: locOf(prop) },
+            });
             continue;
         }
 

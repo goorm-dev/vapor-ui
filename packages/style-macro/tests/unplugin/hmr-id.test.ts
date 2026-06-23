@@ -9,7 +9,11 @@ function extractVirtualImport(code: string): string | null {
 }
 
 interface TransformPlugin {
-    transform: (this: { error: (msg: string) => void }, code: string, id: string) => { code: string } | null;
+    transform: (
+        this: { error: (msg: string) => void },
+        code: string,
+        id: string,
+    ) => { code: string } | null;
 }
 
 function makePlugin(): TransformPlugin {

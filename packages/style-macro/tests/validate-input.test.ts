@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest';
 import * as parser from '@babel/parser';
 import * as t from '@babel/types';
+import { describe, expect, it } from 'vitest';
 
-import { validateInput } from '../src/validate-input';
 import { parseCallArgs } from '../src/parse-call';
+import { validateInput } from '../src/validate-input';
 import { manifest } from './fixtures/manifest.sample';
 
 function callArg(src: string): t.ObjectExpression {
@@ -43,7 +43,10 @@ describe('validateInput', () => {
     });
 
     it('rejects spread', () => {
-        const errors = validateInput(parseCallArgs(callArg(`{ ...base, padding: '$400' }`)), manifest);
+        const errors = validateInput(
+            parseCallArgs(callArg(`{ ...base, padding: '$400' }`)),
+            manifest,
+        );
         expect(errors.map((e) => e.code)).toContain('spread');
     });
 
@@ -58,7 +61,10 @@ describe('validateInput', () => {
     });
 
     it('rejects ternary with dynamic arm', () => {
-        const errors = validateInput(parseCallArgs(callArg(`{ padding: isLarge ? foo : '$400' }`)), manifest);
+        const errors = validateInput(
+            parseCallArgs(callArg(`{ padding: isLarge ? foo : '$400' }`)),
+            manifest,
+        );
         expect(errors.map((e) => e.code)).toContain('dynamic-value');
     });
 

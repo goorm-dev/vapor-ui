@@ -1,6 +1,10 @@
 @layer vapor.utilities {
-    ._p-400 { padding: var(--vapor-size-space-400); }
+    ._p-400 {
+        padding: var(--vapor-size-space-400);
+    }
     @media (min-width: 1000px) {
-    ._mqd8d16e-p-600 { padding: var(--vapor-size-space-600); }
+        ._mqd8d16e-p-600 {
+            padding: var(--vapor-size-space-600);
+        }
     }
 }

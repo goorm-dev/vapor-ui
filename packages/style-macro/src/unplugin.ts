@@ -1,7 +1,6 @@
+import { manifest as defaultManifest } from '@vapor-ui/tokens';
 import { createHash } from 'node:crypto';
 import { createUnplugin } from 'unplugin';
-
-import { manifest as defaultManifest } from '@vapor-ui/tokens';
 
 import { formatBuildError } from './code-frame';
 import { transform } from './transform';
@@ -17,15 +16,9 @@ function defaultInclude(id: string): boolean {
 }
 
 function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
-    const importSource = opts.importSource ?? '@vapor-ui/core';
-    let themeStylesImport: string | null;
-    if (opts.themeStylesImport === false) {
-        themeStylesImport = null;
-    } else if (typeof opts.themeStylesImport === 'string') {
-        themeStylesImport = opts.themeStylesImport;
-    } else {
-        themeStylesImport = `${importSource}/styles.css`;
-    }
+    const importSource = opts.importSource || '@vapor-ui/core/style';
+    const themeStylesImport = opts.themeStylesImport || '@vapor-ui/core/styles.css';
+
     return {
         manifest: opts.manifest ?? defaultManifest,
         importSource,
@@ -79,6 +72,7 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
                 importSource: opts.importSource,
                 importName: opts.importName,
             });
+
             if (result.errors.length) {
                 const msg = result.errors
                     .map((e) => formatBuildError(e, code, filename))
@@ -86,11 +80,15 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
                 this.error(msg);
                 return null;
             }
+
             if (!result.css) return null;
+
             const hash = hashContent(result.css);
             records.set(hash, { css: result.css, classes: result.classes });
+
             const themeLine = opts.themeStylesImport ? `import "${opts.themeStylesImport}";\n` : '';
             const importLine = `import "${PUBLIC_PREFIX}${hash}${VIRTUAL_SUFFIX}";\n`;
+
             return { code: themeLine + importLine + result.code, map: null };
         },
     };

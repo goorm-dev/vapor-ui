@@ -1,7 +1,7 @@
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { build } from 'vite';
 import { describe, expect, it } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import { resolve } from 'node:path';
 
 import vaporStyleMacro from '../../src/unplugin';
 import { manifest } from './fixtures/manifest';
