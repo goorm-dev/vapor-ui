@@ -1,7 +1,8 @@
-import { findSharedImage } from '~/utils/linear/image-sharing';
+import { getActiveTabId } from '~/utils/browser/active-tab';
 import { blobToDataUrl, dataUrlToBlob, getImage, putImage } from '~/utils/data/image-store';
-import { onMessage, sendMessage } from '~/utils/messaging';
 import { getItems } from '~/utils/data/session-store';
+import { findSharedImage } from '~/utils/linear/image-sharing';
+import { onMessage, sendMessage } from '~/utils/messaging';
 
 export default defineBackground(() => {
     // sidepanel ↔ background port. Chrome엔 sidePanel.onClosed가 없어,
@@ -10,8 +11,8 @@ export default defineBackground(() => {
         if (port.name !== 'sidepanel') return;
 
         const notify = async (open: boolean) => {
-            const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-            if (tab?.id != null) await sendMessage('setPanelOpen', { open }, tab.id);
+            const tabId = await getActiveTabId();
+            if (tabId != null) await sendMessage('setPanelOpen', { open }, tabId);
         };
 
         void notify(true).catch(console.error);
@@ -48,13 +49,13 @@ export default defineBackground(() => {
         const blob = await getImage(data.imageRef);
         if (!blob) return;
 
-        const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-        if (tab?.id == null) return;
+        const tabId = await getActiveTabId();
+        if (tabId == null) return;
 
         await sendMessage(
             'showLightbox',
             { dataUrl: await blobToDataUrl(blob), boxes: data.boxes, alt: data.alt },
-            tab.id,
+            tabId,
         );
     });
 });

@@ -1,13 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { getActiveTabId } from '~/utils/browser/active-tab';
 import { sendMessage } from '~/utils/messaging';
 
 export type InspectingStatus = 'loading' | 'on' | 'off' | 'unsupported';
-
-const queryActiveTab = async (): Promise<number | undefined> => {
-    const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-    return tab?.id;
-};
 
 export interface UseInspecting {
     status: InspectingStatus;
@@ -22,7 +18,7 @@ export const useInspecting = (): UseInspecting => {
         let active = true;
 
         void (async () => {
-            const tabId = await queryActiveTab();
+            const tabId = await getActiveTabId();
             if (tabId == null) {
                 if (active) setStatus('unsupported');
                 return;
@@ -45,7 +41,7 @@ export const useInspecting = (): UseInspecting => {
     const toggle = useCallback(async () => {
         if (status !== 'on' && status !== 'off') return;
 
-        const tabId = await queryActiveTab();
+        const tabId = await getActiveTabId();
         if (tabId == null) return;
 
         await sendMessage('setInspecting', { on: status !== 'on' }, tabId);
