@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 
 import { Button, Callout, HStack, Select, Text, VStack } from '@vapor-ui/core';
 
-import { clearImages } from '../../utils/data/image-store';
-import { clearItems } from '../../utils/data/session-store';
-import type { QaItem } from '../../utils/data/session-store';
-import { createIssue, listTeams } from '../../utils/linear';
-import type { LinearTeam } from '../../utils/linear';
-import { buildDescription, buildTitle } from '../../utils/linear/build-issue';
+import { clearImages } from '~/utils/data/image-store';
+import { clearItems } from '~/utils/data/session-store';
+import type { QaItem } from '~/utils/data/session-store';
+import { createIssue, listTeams } from '~/utils/linear';
+import type { LinearTeam } from '~/utils/linear';
+import { buildDescription, buildTitle } from '~/utils/linear/build-issue';
 
 interface RegisterBarProps {
     apiKey: string;

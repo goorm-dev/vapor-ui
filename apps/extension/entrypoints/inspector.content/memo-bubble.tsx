@@ -4,7 +4,7 @@ import { Button } from '@vapor-ui/core/button';
 import { Field } from '@vapor-ui/core/field';
 import { Textarea } from '@vapor-ui/core/textarea';
 
-import type { CapturedRect } from '../../utils/data/session-store';
+import type { CapturedRect } from '~/utils/data/session-store';
 
 interface MemoBubbleProps {
     rect: CapturedRect;

@@ -1,4 +1,4 @@
-import type { LightboxBox } from '../../utils/messaging';
+import type { LightboxBox } from '~/utils/messaging';
 
 const Z = 2147483647;
 

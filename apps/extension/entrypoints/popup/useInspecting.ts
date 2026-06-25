@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { sendMessage } from '../../utils/messaging';
+import { sendMessage } from '~/utils/messaging';
 
 export type InspectingStatus = 'loading' | 'on' | 'off' | 'unsupported';
 

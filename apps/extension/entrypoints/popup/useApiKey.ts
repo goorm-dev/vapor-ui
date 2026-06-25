@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { storage } from 'wxt/utils/storage';
 
-import { LinearAuthError, verifyKey } from '../../utils/linear';
+import { LinearAuthError, verifyKey } from '~/utils/linear';
 
 const keyStore = storage.defineItem<string>('local:linearApiKey', { fallback: '' });
 

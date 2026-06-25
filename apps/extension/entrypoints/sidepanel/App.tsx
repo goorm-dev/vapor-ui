@@ -1,6 +1,6 @@
 import { Box, Text, VStack } from '@vapor-ui/core';
 
-import { groupByImage } from '../../utils/linear/group-by-image';
+import { groupByImage } from '~/utils/linear/group-by-image';
 import { ItemCard } from './ItemCard';
 import { RegisterBar } from './RegisterBar';
 import { useQaItems } from './useQaItems';

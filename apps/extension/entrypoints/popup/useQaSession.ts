@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { clearImages } from '../../utils/data/image-store';
-import { clearItems, getItems, watchItems } from '../../utils/data/session-store';
+import { clearImages } from '~/utils/data/image-store';
+import { clearItems, getItems, watchItems } from '~/utils/data/session-store';
 
 export interface UseQaSession {
     count: number;

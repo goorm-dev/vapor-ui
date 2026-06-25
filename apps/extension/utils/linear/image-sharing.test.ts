@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { findSharedImage } from './image-sharing';
-import type { QaItem } from '../data/session-store';
+import type { QaItem } from '~/utils/data/session-store';
 
 let counter = 0;
 const item = (over: Partial<QaItem>): QaItem => ({

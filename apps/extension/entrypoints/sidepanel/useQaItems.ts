@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { getItems, watchItems } from '../../utils/data/session-store';
-import type { QaItem } from '../../utils/data/session-store';
+import { getItems, watchItems } from '~/utils/data/session-store';
+import type { QaItem } from '~/utils/data/session-store';
 
 export const useQaItems = (): QaItem[] => {
     const [items, setItems] = useState<QaItem[]>([]);

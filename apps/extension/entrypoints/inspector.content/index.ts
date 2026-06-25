@@ -1,13 +1,13 @@
 import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { FIBER_REQUEST, FIBER_RESPONSE, FIBER_TARGET_ATTR } from '../../utils/messaging/fiber-protocol';
-import type { FiberResponse } from '../../utils/messaging/fiber-protocol';
-import { onMessage, sendMessage } from '../../utils/messaging';
-import { buildSelector } from '../../utils/dom/selector';
-import { addItem } from '../../utils/data/session-store';
-import type { CapturedRect } from '../../utils/data/session-store';
-import { extractStyle } from '../../utils/dom/style-extract';
+import { FIBER_REQUEST, FIBER_RESPONSE, FIBER_TARGET_ATTR } from '~/utils/messaging/fiber-protocol';
+import type { FiberResponse } from '~/utils/messaging/fiber-protocol';
+import { onMessage, sendMessage } from '~/utils/messaging';
+import { buildSelector } from '~/utils/dom/selector';
+import { addItem } from '~/utils/data/session-store';
+import type { CapturedRect } from '~/utils/data/session-store';
+import { extractStyle } from '~/utils/dom/style-extract';
 import { InspectorUi } from './inspector-ui';
 import type { InspectorUiHandle } from './inspector-ui';
 import { showLightbox } from './lightbox';

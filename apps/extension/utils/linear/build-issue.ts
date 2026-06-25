@@ -1,5 +1,5 @@
-import { blobToDataUrl, getImage } from '../data/image-store';
-import type { QaItem } from '../data/session-store';
+import { blobToDataUrl, getImage } from '~/utils/data/image-store';
+import type { QaItem } from '~/utils/data/session-store';
 import { groupByImage } from './group-by-image';
 import { uploadImage } from './index';
 
