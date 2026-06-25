@@ -55,7 +55,8 @@ export type CodeMsg =
     | { type: 'selection'; state: SelectionState }
     | { type: 'scan-result'; payload: ScanPayload }
     | { type: 'scan-error'; message: string }
-    | { type: 'focus-result'; resolved: number; missing: number };
+    | { type: 'focus-result'; resolved: number; missing: number }
+    | { type: 'focus-error'; message: string };
 
 export type UiMsg =
     | { type: 'request-selection' }

@@ -24,6 +24,12 @@ const App = () => {
     const [toast, setToast] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!toast) return;
+        const id = setTimeout(() => setToast(null), 3000);
+        return () => clearTimeout(id);
+    }, [toast]);
+
+    useEffect(() => {
         const unsubscribe = subscribe((msg) => {
             switch (msg.type) {
                 case 'selection':
@@ -38,9 +44,15 @@ const App = () => {
                 case 'focus-result':
                     if (msg.resolved > 0 && msg.missing > 0) {
                         setToast(`${msg.missing}개 노드 누락`);
-                        setTimeout(() => setToast(null), 3000);
                     }
                     return;
+                case 'focus-error':
+                    setToast(msg.message);
+                    return;
+                default: {
+                    const _exhaustive: never = msg;
+                    return _exhaustive;
+                }
             }
         });
         postToCode({ type: 'request-selection' });

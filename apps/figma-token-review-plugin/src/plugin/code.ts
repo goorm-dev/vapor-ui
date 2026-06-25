@@ -29,7 +29,10 @@ figma.ui.onmessage = async (msg: UiMsg) => {
             emitSelection();
             return;
         case 'scan': {
+            scanToken += 1;
+            const myToken = scanToken;
             const node = await figma.getNodeByIdAsync(msg.frameId);
+            if (myToken !== scanToken) return;
             if (!node || node.type !== 'FRAME') {
                 figma.ui.postMessage({
                     type: 'scan-error',
@@ -37,8 +40,6 @@ figma.ui.onmessage = async (msg: UiMsg) => {
                 } satisfies CodeMsg);
                 return;
             }
-            scanToken += 1;
-            const myToken = scanToken;
             try {
                 const payload = await callEvaluator(msg.frameId);
                 if (myToken !== scanToken) return;
@@ -65,7 +66,7 @@ figma.ui.onmessage = async (msg: UiMsg) => {
             }
             if (resolved.length === 0) {
                 figma.ui.postMessage({
-                    type: 'scan-error',
+                    type: 'focus-error',
                     message: '이 프레임에 해당 노드 없음 — 파일이 다른가요?',
                 } satisfies CodeMsg);
                 figma.ui.postMessage({
@@ -83,6 +84,10 @@ figma.ui.onmessage = async (msg: UiMsg) => {
                 missing: missing.length,
             } satisfies CodeMsg);
             return;
+        }
+        default: {
+            const _exhaustive: never = msg;
+            return _exhaustive;
         }
     }
 };
