@@ -1,4 +1,4 @@
-import { Box, Button, Text } from '@vapor-ui/core';
+import { Button, Text } from '@vapor-ui/core';
 
 type Props = {
     nodeId: string;
@@ -8,13 +8,18 @@ type Props = {
 
 export function NodeRow({ nodeId, index, onClick }: Props) {
     return (
-        <Box className="flex items-center justify-between border-t border-v-gray-200 px-v-100 py-v-050">
-            <Text typography="body4" className="font-mono text-v-gray-700">
-                #{index + 1} {nodeId}
+        <button
+            type="button"
+            className="flex w-full items-center justify-between border-b border-v-gray-100 px-v-200 py-v-100 text-left hover:bg-v-gray-50"
+            onClick={onClick}
+        >
+            <Text typography="body4">#{index + 1}</Text>
+            <Text typography="body4" className="font-mono text-v-gray-500">
+                {nodeId}
             </Text>
-            <Button size="sm" variant="ghost" colorPalette="primary" onClick={onClick}>
+            <Button size="sm" variant="ghost" colorPalette="primary">
                 포커스
             </Button>
-        </Box>
+        </button>
     );
 }

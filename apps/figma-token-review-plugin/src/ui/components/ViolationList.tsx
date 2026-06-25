@@ -1,4 +1,4 @@
-import { Box } from '@vapor-ui/core';
+import { Box, Text } from '@vapor-ui/core';
 
 import type { EvaluateOutput, Violation } from '~/shared/schema';
 import { ViolationItem } from './ViolationItem';
@@ -10,8 +10,7 @@ type Props = {
 };
 
 function weight(v: Violation): number {
-    const base = v.severity === 'high' ? 1_000_000 : 0;
-    return base + (v.count ?? v.nodeIds?.length ?? 1);
+    return v.count ?? v.nodeIds?.length ?? 1;
 }
 
 export function ViolationList({ violations, summary }: Props) {
@@ -19,12 +18,20 @@ export function ViolationList({ violations, summary }: Props) {
         return <EmptyState summary={summary} />;
     }
 
-    const sorted = [...violations].sort((a, b) => weight(b) - weight(a));
+    const sorted = [...violations].sort((a, b) => {
+        if (a.severity === b.severity) return weight(b) - weight(a);
+        return a.severity === 'high' ? -1 : 1;
+    });
 
     return (
-        <Box className="flex flex-col">
+        <Box>
+            <Box className="px-v-200 py-v-100">
+                <Text typography="body4" className="text-v-gray-600">
+                    전체 {summary.total} · 부적합 {summary.violationsCount} · 중요 {summary.highSeverity}
+                </Text>
+            </Box>
             {sorted.map((v, i) => (
-                <ViolationItem key={v.nodeId + v.type + i} violation={v} />
+                <ViolationItem key={`${v.nodeId}-${i}`} violation={v} />
             ))}
         </Box>
     );
