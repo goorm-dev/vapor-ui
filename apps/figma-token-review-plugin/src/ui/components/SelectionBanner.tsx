@@ -28,7 +28,7 @@ export function SelectionBanner({ state, onScan }: Props) {
             <Text typography="body2">{label}</Text>
             <Button
                 size="md"
-                color="primary"
+                colorPalette="primary"
                 disabled={!enabled}
                 onClick={() => state.kind === 'frame' && onScan(state.id)}
             >
