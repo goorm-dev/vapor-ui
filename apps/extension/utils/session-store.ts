@@ -14,6 +14,7 @@ export interface QaItem {
     memo: string;
     createdAt: number;
     styleJSON?: Record<string, string>;
+    components?: string[];
     // 캡처 이미지 공유: 같은 scrollX/scrollY면 imageRef를 공유하고 index로 구분
     imageRef?: string;
     index?: number;
@@ -38,3 +39,5 @@ export const addItem = async (item: Omit<QaItem, 'id' | 'createdAt'>): Promise<Q
 };
 
 export const watchItems = (callback: (items: QaItem[]) => void) => itemsStore.watch(callback);
+
+export const clearItems = () => itemsStore.setValue([]);

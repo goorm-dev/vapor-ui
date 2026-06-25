@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Card, Dialog, HStack, Text, VStack } from '@vapor-ui/core';
+import { Card, Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
 
 import { getImage } from '../../utils/image-store';
+import { sendMessage } from '../../utils/messaging';
 import type { QaItem } from '../../utils/session-store';
 
 const useImageUrl = (imageRef?: string) => {
@@ -102,67 +103,94 @@ const CapturedImage = ({ src, boxes, alt }: { src: string; boxes: BoxOverlay[]; 
 };
 
 interface ItemCardProps {
-    item: QaItem;
-    /** 같은 이미지를 공유하는 모든 항목(확대 보기에서 전체 박스 표시용) */
-    siblings: QaItem[];
+    /** 같은 imageRef를 공유하는 항목들(index 오름차순). 최소 1개. */
+    group: QaItem[];
 }
 
-export const ItemCard = ({ item, siblings }: ItemCardProps) => {
-    const imageUrl = useImageUrl(item.imageRef);
-    const alt = item.memo || item.selector;
-    const allBoxes: BoxOverlay[] = siblings.map((s) => ({ rect: s.rect, index: s.index }));
+export const ItemCard = ({ group }: ItemCardProps) => {
+    const head = group[0];
+    const imageUrl = useImageUrl(head.imageRef);
+    const alt = head.memo || head.selector;
+    const boxes: BoxOverlay[] = group.map((item) => ({ rect: item.rect, index: item.index }));
+
+    // sidepanel은 패널 폭을 못 벗어나므로, 확대는 활성 탭 페이지 위에 전체화면 오버레이로 띄운다.
+    const openLightbox = () => {
+        if (!head.imageRef) return;
+        void sendMessage('openLightbox', {
+            imageRef: head.imageRef,
+            boxes,
+            alt,
+        }).catch(console.error);
+    };
 
     return (
         <Card.Root>
             <Card.Body>
                 <VStack gap="$200">
                     {imageUrl ? (
-                        <Dialog.Root>
-                            <Dialog.Trigger
-                                render={
-                                    <button
-                                        type="button"
-                                        style={{
-                                            all: 'unset',
-                                            cursor: 'zoom-in',
-                                            display: 'block',
-                                            width: '100%',
-                                        }}
-                                    />
-                                }
-                            >
-                                <CapturedImage
-                                    src={imageUrl}
-                                    alt={alt}
-                                    boxes={[{ rect: item.rect, index: item.index }]}
-                                />
-                            </Dialog.Trigger>
-                            <Dialog.Popup>
-                                <Dialog.Title>캡처 확대 ({siblings.length}개 항목)</Dialog.Title>
-                                <Dialog.Body>
-                                    <CapturedImage src={imageUrl} alt={alt} boxes={allBoxes} />
-                                </Dialog.Body>
-                                <Dialog.Close>닫기</Dialog.Close>
-                            </Dialog.Popup>
-                        </Dialog.Root>
+                        <button
+                            type="button"
+                            onClick={openLightbox}
+                            style={{
+                                all: 'unset',
+                                cursor: 'zoom-in',
+                                display: 'block',
+                                width: '100%',
+                            }}
+                        >
+                            <CapturedImage src={imageUrl} alt={alt} boxes={boxes} />
+                        </button>
                     ) : null}
 
-                    <HStack gap="$100">
-                        {item.index != null && <Text typography="body2">#{item.index}</Text>}
-                        <Text typography="body2">{item.memo || '(메모 없음)'}</Text>
-                    </HStack>
-                    <Text typography="subtitle2" foreground="hint-100">
-                        {item.selector}
-                    </Text>
-
-                    <VStack gap="$050">
-                        {Object.entries(item.styleJSON ?? {}).map(([key, value]) => (
-                            <HStack key={key} gap="$100" justifyContent="space-between">
+                    <VStack gap="$200">
+                        {group.map((item) => (
+                            <VStack key={item.id} gap="$050">
+                                <HStack gap="$100">
+                                    {item.index != null && (
+                                        <Text typography="body2">#{item.index}</Text>
+                                    )}
+                                    <Text typography="body2">{item.memo || '(메모 없음)'}</Text>
+                                </HStack>
+                                {item.components && item.components.length > 0 && (
+                                    <Text typography="subtitle2">
+                                        {item.components.join(' › ')}
+                                    </Text>
+                                )}
                                 <Text typography="subtitle2" foreground="hint-100">
-                                    {key}
+                                    {item.selector}
                                 </Text>
-                                <Text typography="subtitle2">{value}</Text>
-                            </HStack>
+
+                                {item.styleJSON && Object.keys(item.styleJSON).length > 0 && (
+                                    <Collapsible.Root>
+                                        <Collapsible.Trigger>
+                                            스타일 ({Object.keys(item.styleJSON).length})
+                                        </Collapsible.Trigger>
+                                        <Collapsible.Panel>
+                                            <VStack gap="$050">
+                                                {Object.entries(item.styleJSON).map(
+                                                    ([key, value]) => (
+                                                        <HStack
+                                                            key={key}
+                                                            gap="$100"
+                                                            justifyContent="space-between"
+                                                        >
+                                                            <Text
+                                                                typography="subtitle2"
+                                                                foreground="hint-100"
+                                                            >
+                                                                {key}
+                                                            </Text>
+                                                            <Text typography="subtitle2">
+                                                                {value}
+                                                            </Text>
+                                                        </HStack>
+                                                    ),
+                                                )}
+                                            </VStack>
+                                        </Collapsible.Panel>
+                                    </Collapsible.Root>
+                                )}
+                            </VStack>
                         ))}
                     </VStack>
                 </VStack>

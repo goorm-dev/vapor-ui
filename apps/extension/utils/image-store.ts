@@ -33,3 +33,17 @@ export const getImage = async (ref: string): Promise<Blob | undefined> => {
     const db = await getDb();
     return db.get('images', ref);
 };
+
+export const clearImages = async (): Promise<void> => {
+    const db = await getDb();
+    await db.clear('images');
+};
+
+/** Blob을 dataURL로 변환한다. content script(다른 origin)로 이미지를 넘길 때 사용. */
+export const blobToDataUrl = (blob: Blob): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(blob);
+    });

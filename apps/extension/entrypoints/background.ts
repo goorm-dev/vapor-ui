@@ -1,12 +1,21 @@
 import { findSharedImage } from '../utils/image-sharing';
-import { dataUrlToBlob, putImage } from '../utils/image-store';
+import { blobToDataUrl, dataUrlToBlob, getImage, putImage } from '../utils/image-store';
 import { onMessage, sendMessage } from '../utils/messaging';
 import { getItems } from '../utils/session-store';
 
 export default defineBackground(() => {
-    onMessage('startInspecting', async () => {
-        const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-        if (tab?.id != null) await sendMessage('setInspecting', { on: true }, tab.id);
+    // sidepanel ↔ background port. Chrome엔 sidePanel.onClosed가 없어,
+    // port 수명으로 열림/닫힘을 감지해 활성 탭 content에 통보한다.
+    browser.runtime.onConnect.addListener((port) => {
+        if (port.name !== 'sidepanel') return;
+
+        const notify = async (open: boolean) => {
+            const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+            if (tab?.id != null) await sendMessage('setPanelOpen', { open }, tab.id);
+        };
+
+        void notify(true).catch(console.error);
+        port.onDisconnect.addListener(() => void notify(false).catch(console.error));
     });
 
     onMessage('openReviewPanel', async ({ sender }) => {
@@ -30,5 +39,22 @@ export default defineBackground(() => {
 
         const imageRef = await putImage(await dataUrlToBlob(dataUrl));
         return { imageRef, index: 1 };
+    });
+
+    // sidepanel은 자기 패널 폭을 못 벗어나므로, 이미지 확대는 활성 탭 페이지 위에
+    // content script가 전체화면 오버레이로 그린다. blob은 background에서 dataURL로
+    // 바꿔 넘긴다(content script는 확장 origin IndexedDB를 못 읽음).
+    onMessage('openLightbox', async ({ data }) => {
+        const blob = await getImage(data.imageRef);
+        if (!blob) return;
+
+        const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+        if (tab?.id == null) return;
+
+        await sendMessage(
+            'showLightbox',
+            { dataUrl: await blobToDataUrl(blob), boxes: data.boxes, alt: data.alt },
+            tab.id,
+        );
     });
 });

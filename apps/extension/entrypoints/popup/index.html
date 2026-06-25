@@ -4,6 +4,14 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Vapor QA</title>
+        <style>
+            /* 팝업은 폭을 명시하지 않으면 콘텐츠 최소 폭으로 수축한다(사이드패널과 달리
+               브라우저가 폭을 잡아주지 않음). 320px로 고정. */
+            body {
+                width: 320px;
+                margin: 0;
+            }
+        </style>
     </head>
     <body>
         <div id="root"></div>

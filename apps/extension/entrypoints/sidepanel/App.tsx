@@ -1,9 +1,13 @@
 import { Box, Text, VStack } from '@vapor-ui/core';
 
+import { groupByImage } from '../../utils/group-by-image';
 import { ItemCard } from './ItemCard';
+import { RegisterBar } from './RegisterBar';
 import { useQaItems } from './useQaItems';
+import { useStoredApiKey } from './useStoredApiKey';
 
 const App = () => {
+    const apiKey = useStoredApiKey();
     const items = useQaItems();
 
     return (
@@ -16,13 +20,18 @@ const App = () => {
                         아직 수집된 항목이 없습니다.
                     </Text>
                 ) : (
-                    items.map((item) => (
-                        <ItemCard
-                            key={item.id}
-                            item={item}
-                            siblings={items.filter((other) => other.imageRef === item.imageRef)}
-                        />
-                    ))
+                    <>
+                        {apiKey ? (
+                            <RegisterBar apiKey={apiKey} items={items} />
+                        ) : (
+                            <Text typography="body2" foreground="hint-100">
+                                확장 아이콘을 눌러 Linear API 키를 먼저 입력하세요.
+                            </Text>
+                        )}
+                        {groupByImage(items).map((group) => (
+                            <ItemCard key={group[0].id} group={group} />
+                        ))}
+                    </>
                 )}
             </VStack>
         </Box>

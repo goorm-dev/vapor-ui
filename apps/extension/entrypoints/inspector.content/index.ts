@@ -1,6 +1,8 @@
 import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { FIBER_REQUEST, FIBER_RESPONSE, FIBER_TARGET_ATTR } from '../../utils/fiber-protocol';
+import type { FiberResponse } from '../../utils/fiber-protocol';
 import { onMessage, sendMessage } from '../../utils/messaging';
 import { buildSelector } from '../../utils/selector';
 import { addItem } from '../../utils/session-store';
@@ -8,6 +10,7 @@ import type { CapturedRect } from '../../utils/session-store';
 import { extractStyle } from '../../utils/style-extract';
 import { InspectorUi } from './InspectorUi';
 import type { InspectorUiHandle } from './InspectorUi';
+import { showLightbox } from './lightbox';
 import { createOverlay } from './overlay';
 
 const toCapturedRect = (rect: DOMRect): CapturedRect => ({
@@ -28,12 +31,42 @@ export default defineContentScript({
         let overlay: ReturnType<typeof createOverlay> | undefined;
         let pinnedElement: Element | null = null;
         let pinnedRect: CapturedRect | null = null;
+        let pinnedComponents: string[] = [];
+
+        // fiber expando는 isolated에서 못 읽으므로, MAIN world의 fiber-reader에
+        // 마킹된 노드를 읽어달라고 요청해 컴포넌트 계보를 받아온다.
+        let readerInjected = false;
+        const requestComponents = async (element: Element): Promise<string[]> => {
+            if (!readerInjected) {
+                await injectScript('/fiber-reader.js', { keepInDom: true });
+                readerInjected = true;
+            }
+            element.setAttribute(FIBER_TARGET_ATTR, '');
+            try {
+                return await new Promise<string[]>((resolve) => {
+                    const onResponse = (event: MessageEvent) => {
+                        if (event.source !== window || event.data?.type !== FIBER_RESPONSE) return;
+                        window.removeEventListener('message', onResponse);
+                        resolve((event.data as FiberResponse).components);
+                    };
+                    window.addEventListener('message', onResponse);
+                    window.postMessage({ type: FIBER_REQUEST }, '*');
+                });
+            } finally {
+                element.removeAttribute(FIBER_TARGET_ATTR);
+            }
+        };
 
         const lockScroll = (locked: boolean) => {
             document.documentElement.style.overflow = locked ? 'hidden' : '';
         };
 
-        const saveItem = async (element: Element, rect: CapturedRect, memo: string) => {
+        const saveItem = async (
+            element: Element,
+            rect: CapturedRect,
+            memo: string,
+            components: string[],
+        ) => {
             const styleJSON = extractStyle(element);
             const { scrollX, scrollY } = window;
 
@@ -51,6 +84,7 @@ export default defineContentScript({
                     selector: buildSelector(element),
                     rect,
                     memo,
+                    components,
                     styleJSON,
                     imageRef,
                     index,
@@ -91,15 +125,14 @@ export default defineContentScript({
                             if (!pinnedElement || !pinnedRect) return;
                             const element = pinnedElement;
                             const rect = pinnedRect;
-                            pinnedElement = null;
-                            pinnedRect = null;
-                            lockScroll(false);
-                            void saveItem(element, rect, memo).catch(console.error);
+                            const components = pinnedComponents;
+                            // clearPinned가 onUnpin을 통해 pinnedElement/pinnedRect 초기화와
+                            // lockScroll 해제까지 처리하므로, 캡처할 값은 미리 확보해 둔다.
+                            overlay?.clearPinned();
+                            void saveItem(element, rect, memo, components).catch(console.error);
                         },
                         onCancelMemo: () => {
-                            pinnedElement = null;
-                            pinnedRect = null;
-                            lockScroll(false);
+                            overlay?.clearPinned();
                         },
                     }),
                 );
@@ -123,12 +156,22 @@ export default defineContentScript({
                     onPin: (element, rect) => {
                         pinnedElement = element;
                         pinnedRect = toCapturedRect(rect);
+                        pinnedComponents = [];
                         lockScroll(true);
                         uiHandle?.setPin({ rect: pinnedRect });
+                        overlay?.setLabel('');
+                        // 계보는 MAIN world 왕복이라 비동기. 회신이 늦게 와도
+                        // 여전히 같은 요소가 pin된 상태일 때만 라벨에 반영한다.
+                        void requestComponents(element).then((components) => {
+                            if (pinnedElement !== element) return;
+                            pinnedComponents = components;
+                            overlay?.setLabel(components.join(' › '));
+                        });
                     },
                     onUnpin: () => {
                         pinnedElement = null;
                         pinnedRect = null;
+                        pinnedComponents = [];
                         lockScroll(false);
                         uiHandle?.setPin(null);
                     },
@@ -141,6 +184,7 @@ export default defineContentScript({
             overlay = undefined;
             pinnedElement = null;
             pinnedRect = null;
+            pinnedComponents = [];
             lockScroll(false);
             uiHandle?.setPin(null);
             ui.remove();
@@ -150,12 +194,25 @@ export default defineContentScript({
             setInspecting(data.on);
         });
 
-        ctx.onInvalidated(() => {
-            removeListener();
-            setInspecting(false);
+        // popup이 시작/멈춤 버튼 라벨을 정하려고 현재 탭의 인스펙팅 상태를 묻는다.
+        const removeGetInspecting = onMessage('getInspecting', () => inspecting);
+
+        // sidepanel 열림/닫힘에 따라 인스펙팅 차단·dim 토글.
+        const removePanelOpenListener = onMessage('setPanelOpen', ({ data }) => {
+            overlay?.setPanelOpen(data.open);
         });
 
-        // ponytail: temporary Step 3 bootstrap; popup owns this trigger in Step 4+.
-        setInspecting(true);
+        // 인스펙팅 여부와 무관하게 항상 받는다(sidepanel에서 확대 요청).
+        const removeLightboxListener = onMessage('showLightbox', ({ data }) => {
+            showLightbox(data.dataUrl, data.boxes, data.alt);
+        });
+
+        ctx.onInvalidated(() => {
+            removeListener();
+            removeGetInspecting();
+            removePanelOpenListener();
+            removeLightboxListener();
+            setInspecting(false);
+        });
     },
 });
