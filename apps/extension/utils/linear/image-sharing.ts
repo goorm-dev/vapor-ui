@@ -1,4 +1,4 @@
-import type { QaItem } from './session-store';
+import type { QaItem } from '../data/session-store';
 
 /**
  * 같은 스크롤 좌표(=같은 뷰포트)에서 이미 캡처한 이미지가 있으면 그 ref와 다음 index를 돌려준다.

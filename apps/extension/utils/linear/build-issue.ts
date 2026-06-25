@@ -1,7 +1,7 @@
+import { blobToDataUrl, getImage } from '../data/image-store';
+import type { QaItem } from '../data/session-store';
 import { groupByImage } from './group-by-image';
-import { blobToDataUrl, getImage } from './image-store';
-import { uploadImage } from './linear';
-import type { QaItem } from './session-store';
+import { uploadImage } from './index';
 
 export interface TabMeta {
     url?: string;

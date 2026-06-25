@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import type { CapturedRect } from '../../utils/session-store';
-import { Fab } from './Fab';
-import { MemoBubble } from './MemoBubble';
+import type { CapturedRect } from '../../utils/data/session-store';
+import { Fab } from './fab';
+import { MemoBubble } from './memo-bubble';
 
 export interface PinTarget {
     rect: CapturedRect;

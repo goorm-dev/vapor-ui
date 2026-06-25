@@ -33,7 +33,9 @@ export const showLightbox = (dataUrl: string, boxes: LightboxBox[], alt: string)
 
     const drawBoxes = () => {
         if (img.naturalWidth === 0) return;
-        frame.querySelectorAll('[data-box]').forEach((el) => el.remove());
+        frame.querySelectorAll('[data-box]').forEach((el) => {
+            el.remove();
+        });
         const scale = img.clientWidth / img.naturalWidth;
         for (const { rect, index } of boxes) {
             const box = document.createElement('div');

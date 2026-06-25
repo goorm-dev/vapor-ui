@@ -19,7 +19,7 @@ export const ApiKeyForm = ({ verifying, errorMessage, onSubmit }: ApiKeyFormProp
                     onSubmit(value);
                 }}
             >
-                <VStack gap="$200">
+                <VStack $css={{ gap: '$200' }}>
                     <Text typography="heading6">Linear API 키 입력</Text>
                     <Text typography="body2" foreground="hint-100">
                         QA 항목을 Linear에 등록하려면 Personal API 키가 필요합니다.

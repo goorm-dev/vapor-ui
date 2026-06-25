@@ -1,7 +1,7 @@
-import { findSharedImage } from '../utils/image-sharing';
-import { blobToDataUrl, dataUrlToBlob, getImage, putImage } from '../utils/image-store';
+import { findSharedImage } from '../utils/linear/image-sharing';
+import { blobToDataUrl, dataUrlToBlob, getImage, putImage } from '../utils/data/image-store';
 import { onMessage, sendMessage } from '../utils/messaging';
-import { getItems } from '../utils/session-store';
+import { getItems } from '../utils/data/session-store';
 
 export default defineBackground(() => {
     // sidepanel ↔ background port. Chrome엔 sidePanel.onClosed가 없어,

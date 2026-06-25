@@ -1,4 +1,4 @@
-import type { QaItem } from './session-store';
+import type { QaItem } from '../data/session-store';
 
 /**
  * 같은 imageRef(=같은 뷰포트) 항목을 한 그룹으로 묶는다.

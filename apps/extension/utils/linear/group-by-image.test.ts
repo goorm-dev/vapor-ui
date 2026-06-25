@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { groupByImage } from './group-by-image';
-import type { QaItem } from './session-store';
+import type { QaItem } from '../data/session-store';
 
 let counter = 0;
 const item = (over: Partial<QaItem>): QaItem => ({

@@ -1,6 +1,6 @@
 import { Box, Text, VStack } from '@vapor-ui/core';
 
-import { groupByImage } from '../../utils/group-by-image';
+import { groupByImage } from '../../utils/linear/group-by-image';
 import { ItemCard } from './ItemCard';
 import { RegisterBar } from './RegisterBar';
 import { useQaItems } from './useQaItems';
@@ -12,7 +12,7 @@ const App = () => {
 
     return (
         <Box style={{ padding: 16 }}>
-            <VStack gap="$200">
+            <VStack $css={{ gap: '$200' }}>
                 <Text typography="heading6">QA 항목 검토 ({items.length})</Text>
 
                 {items.length === 0 ? (

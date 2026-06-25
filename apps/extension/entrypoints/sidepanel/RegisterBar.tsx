@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 
 import { Button, Callout, HStack, Select, Text, VStack } from '@vapor-ui/core';
 
-import { buildDescription, buildTitle } from '../../utils/build-issue';
-import { clearImages } from '../../utils/image-store';
+import { clearImages } from '../../utils/data/image-store';
+import { clearItems } from '../../utils/data/session-store';
+import type { QaItem } from '../../utils/data/session-store';
 import { createIssue, listTeams } from '../../utils/linear';
 import type { LinearTeam } from '../../utils/linear';
-import { clearItems } from '../../utils/session-store';
-import type { QaItem } from '../../utils/session-store';
+import { buildDescription, buildTitle } from '../../utils/linear/build-issue';
 
 interface RegisterBarProps {
     apiKey: string;
@@ -72,7 +72,7 @@ export const RegisterBar = ({ apiKey, items }: RegisterBarProps) => {
     if (result?.kind === 'success') {
         return (
             <Callout.Root colorPalette="success">
-                <VStack gap="$050">
+                <VStack $css={{ gap: '$050' }}>
                     <Text typography="body2">등록 완료: {result.identifier}</Text>
                     <a href={result.url} target="_blank" rel="noreferrer">
                         <Text typography="body2" foreground="primary-200">
@@ -85,14 +85,14 @@ export const RegisterBar = ({ apiKey, items }: RegisterBarProps) => {
     }
 
     return (
-        <VStack gap="$150">
+        <VStack $css={{ gap: '$150' }}>
             {result?.kind === 'error' && (
                 <Callout.Root colorPalette="danger">
                     <Text typography="body2">{result.message}</Text>
                 </Callout.Root>
             )}
 
-            <HStack gap="$100" alignItems="end">
+            <HStack $css={{ gap: '$100', alignItems: 'end' }}>
                 <Select.Root
                     placeholder="팀 선택"
                     items={teams.map((t) => ({ value: t.id, label: t.name }))}

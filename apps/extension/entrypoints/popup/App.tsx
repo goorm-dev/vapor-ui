@@ -21,9 +21,9 @@ const ReadyPanel = ({ inspecting, toggle }: { inspecting: 'on' | 'off'; toggle: 
     };
 
     return (
-        <Box style={{ padding: 16 }}>
-            <VStack gap="$200">
-                <HStack justifyContent="space-between" alignItems="center">
+        <Box $css={{ padding: 16 }}>
+            <VStack $css={{ gap: '$200' }}>
+                <HStack $css={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text typography="heading6">QA 항목 {count}건</Text>
                     <Button
                         size="sm"
@@ -51,7 +51,7 @@ const App = () => {
 
     if (keyStatus === 'loading') {
         return (
-            <Box style={{ padding: 16 }}>
+            <Box $css={{ padding: 16 }}>
                 <Spinner />
             </Box>
         );
@@ -69,7 +69,7 @@ const App = () => {
 
     if (inspecting === 'loading') {
         return (
-            <Box style={{ padding: 16 }}>
+            <Box $css={{ padding: 16 }}>
                 <Spinner />
             </Box>
         );
@@ -77,8 +77,8 @@ const App = () => {
 
     if (inspecting === 'unsupported') {
         return (
-            <Box style={{ padding: 16 }}>
-                <VStack gap="$100">
+            <Box $css={{ padding: 16 }}>
+                <VStack $css={{ gap: '$100' }}>
                     <Text typography="heading6">Vapor QA</Text>
                     <Text typography="body2" foreground="hint-100">
                         이 페이지에서는 Vapor QA를 사용할 수 없습니다. 일반 웹페이지에서 열어주세요.

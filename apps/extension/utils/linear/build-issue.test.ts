@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { buildTitle } from './build-issue';
-import type { QaItem } from './session-store';
+import type { QaItem } from '../data/session-store';
 
 let counter = 0;
 const item = (over: Partial<QaItem> = {}): QaItem => ({

@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Card, Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
 
-import { getImage } from '../../utils/image-store';
+import { getImage } from '../../utils/data/image-store';
 import { sendMessage } from '../../utils/messaging';
-import type { QaItem } from '../../utils/session-store';
+import type { QaItem } from '../../utils/data/session-store';
 
 const useImageUrl = (imageRef?: string) => {
     const [url, setUrl] = useState<string>();
