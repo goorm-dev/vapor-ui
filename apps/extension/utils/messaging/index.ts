@@ -11,7 +11,7 @@ interface ProtocolMap {
     setInspecting(data: { on: boolean }): void;
     setPanelOpen(data: { open: boolean }): void;
     openReviewPanel(): void;
-    captureAndStore(data: { scrollX: number; scrollY: number }): {
+    captureAndStore(data: { scrollX: number; scrollY: number; width: number }): {
         imageRef: string;
         index: number;
     };

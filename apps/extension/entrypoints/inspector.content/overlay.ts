@@ -1,61 +1,46 @@
+const Z = 2147483646;
+const HOVER = '#2a72e5';
+const PINNED = '#058765';
+
+// 페이지 CSS와 충돌하지 않도록 모두 인라인 스타일. data-vapor-qa-overlay로 마킹해
+// isInspectorElement가 자기 오버레이를 걸러낸다.
+const create = (tag: string, css: string) => {
+    const el = document.createElement(tag);
+    el.dataset.vaporQaOverlay = '';
+    el.style.cssText = css;
+    return el;
+};
+
 const createBox = (kind: 'hover' | 'pinned') => {
-    const box = document.createElement('div');
-    box.dataset.vaporQaOverlay = '';
+    const color = kind === 'hover' ? HOVER : PINNED;
+    const fill = kind === 'hover' ? 'rgba(42,114,229,0.1)' : 'rgba(5,135,101,0.14)';
+    const box = create(
+        'div',
+        `position:fixed;top:0;left:0;z-index:${Z};pointer-events:none;box-sizing:border-box;` +
+            `border:2px solid ${color};background:${fill};border-radius:2px;display:none;` +
+            'transition:transform 60ms ease,width 60ms ease,height 60ms ease',
+    );
     box.dataset[`vaporQa${kind === 'hover' ? 'Hover' : 'Pinned'}`] = '';
-    box.style.cssText = [
-        'position:fixed',
-        'top:0',
-        'left:0',
-        'z-index:2147483646',
-        'pointer-events:none',
-        'box-sizing:border-box',
-        `border:2px solid ${kind === 'hover' ? '#2a72e5' : '#058765'}`,
-        `background:${kind === 'hover' ? 'rgba(42,114,229,0.1)' : 'rgba(5,135,101,0.14)'}`,
-        'border-radius:2px',
-        'transition:transform 60ms ease,width 60ms ease,height 60ms ease',
-        'display:none',
-    ].join(';');
     document.body.append(box);
     return box;
 };
 
 const createLabel = (box: HTMLElement) => {
-    const label = document.createElement('span');
-    label.dataset.vaporQaOverlay = '';
-    label.style.cssText = [
-        'position:absolute',
-        'left:0',
-        'bottom:100%',
-        'margin-bottom:2px',
-        'padding:1px 6px',
-        'background:#058765',
-        'color:#fff',
-        'font-size:11px',
-        'line-height:16px',
-        'border-radius:2px',
-        'white-space:nowrap',
-        'display:none',
-    ].join(';');
+    const label = create(
+        'span',
+        `position:absolute;left:0;bottom:100%;margin-bottom:2px;padding:1px 6px;background:${PINNED};` +
+            'color:#fff;font-size:11px;line-height:16px;border-radius:2px;white-space:nowrap;display:none',
+    );
     box.append(label);
     return label;
 };
 
 const createDim = () => {
-    const dim = document.createElement('div');
-    dim.dataset.vaporQaOverlay = '';
-    dim.style.cssText = [
-        'position:fixed',
-        'inset:0',
-        'z-index:2147483646',
-        'background:rgba(0,0,0,0.4)',
-        'display:none',
-        'align-items:center',
-        'justify-content:center',
-        'color:#fff',
-        'font-size:14px',
-        'text-align:center',
-        'padding:24px',
-    ].join(';');
+    const dim = create(
+        'div',
+        `position:fixed;inset:0;z-index:${Z};background:rgba(0,0,0,0.4);display:none;` +
+            'align-items:center;justify-content:center;color:#fff;font-size:14px;text-align:center;padding:24px',
+    );
     dim.textContent = '사이드패널을 닫으면 인스펙팅을 계속합니다';
     document.body.append(dim);
     return dim;

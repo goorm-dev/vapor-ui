@@ -36,14 +36,17 @@ interface BoxOverlay {
 }
 
 // 캡처 이미지(뷰포트) 위에 요소 rect 박스 + index 번호를 그린다.
-// 이미지는 width:100%로 축소되므로 표시폭/naturalWidth 비율로 스케일한다(dpr 자동 흡수).
+// rect는 getBoundingClientRect의 CSS px인데 naturalWidth는 captureVisibleTab의
+// 물리 px(= CSS폭 × DPR)이라, 표시폭/naturalWidth로만 나누면 박스가 1/DPR로 줄어
+// 좌상단으로 당겨진다. devicePixelRatio를 곱해 보정(lightbox.ts와 동일 공식).
 const CapturedImage = ({ src, boxes, alt }: { src: string; boxes: BoxOverlay[]; alt: string }) => {
     const imgRef = useRef<HTMLImageElement>(null);
     const [scale, setScale] = useState(0);
 
     const updateScale = () => {
         const img = imgRef.current;
-        if (img && img.naturalWidth > 0) setScale(img.clientWidth / img.naturalWidth);
+        if (img && img.naturalWidth > 0)
+            setScale((img.clientWidth * window.devicePixelRatio) / img.naturalWidth);
     };
 
     useEffect(() => {

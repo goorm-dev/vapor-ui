@@ -69,7 +69,7 @@ export default defineContentScript({
             components: string[],
         ) => {
             const styleJSON = extractStyle(element);
-            const { scrollX, scrollY } = window;
+            const { scrollX, scrollY, innerWidth: width } = window;
 
             // 캡처 직전 인스펙터 UI(박스·말풍선·FAB)를 숨겨 이미지에 안 찍히게 한다.
             overlay?.setVisible(false);
@@ -80,6 +80,7 @@ export default defineContentScript({
                 const { imageRef, index } = await sendMessage('captureAndStore', {
                     scrollX,
                     scrollY,
+                    width,
                 });
                 await addItem({
                     selector: buildSelector(element),
@@ -91,6 +92,7 @@ export default defineContentScript({
                     index,
                     scrollX,
                     scrollY,
+                    width,
                 });
             } finally {
                 if (uiHost) uiHost.style.display = '';

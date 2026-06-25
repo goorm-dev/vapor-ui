@@ -4,7 +4,12 @@ const Z = 2147483647;
 
 // 활성 탭 페이지 위에 전체화면 이미지 오버레이를 그린다(순수 DOM, React 없음).
 // sidepanel은 패널 폭을 못 벗어나므로 확대는 여기서 한다.
-// 박스 좌표는 캡처 당시 뷰포트 px이므로, 표시폭/naturalWidth 비율로 스케일한다.
+// 박스 좌표(rect)는 getBoundingClientRect의 CSS px인데, captureVisibleTab 이미지의
+// naturalWidth는 물리 px(= CSS폭 × DPR)이다. 그래서 표시폭/naturalWidth로만 나누면
+// 좌표·크기가 1/DPR로 줄어 박스가 좌상단으로 당겨진다. devicePixelRatio를 곱해 보정.
+// (캡처·라이트박스가 같은 탭/페이지라 lightbox 시점 DPR = 캡처 시점 DPR로 본다.
+//  ponytail: DPR을 저장해 넘기는 4파일 파이프라인 대신 한 줄. 캡처 후 다른 DPR
+//  모니터로 창을 옮겨 여는 드문 경우만 어긋난다 — 그때 캡처 시점 DPR 저장으로 승격.)
 export const showLightbox = (dataUrl: string, boxes: LightboxBox[], alt: string) => {
     document.getElementById('vapor-qa-lightbox')?.remove();
 
@@ -36,7 +41,7 @@ export const showLightbox = (dataUrl: string, boxes: LightboxBox[], alt: string)
         frame.querySelectorAll('[data-box]').forEach((el) => {
             el.remove();
         });
-        const scale = img.clientWidth / img.naturalWidth;
+        const scale = (img.clientWidth * window.devicePixelRatio) / img.naturalWidth;
         for (const { rect, index } of boxes) {
             const box = document.createElement('div');
             box.dataset.box = '';

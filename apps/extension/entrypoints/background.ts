@@ -29,7 +29,7 @@ export default defineBackground(() => {
     // 읽지 못하므로, 저장을 background로 모아 origin을 일치시킨다.
     // 같은 스크롤 좌표(=같은 뷰포트)면 이미지를 새로 찍지 않고 공유하며 index만 올린다.
     onMessage('captureAndStore', async ({ sender, data }) => {
-        const shared = findSharedImage(await getItems(), data.scrollX, data.scrollY);
+        const shared = findSharedImage(await getItems(), data.scrollX, data.scrollY, data.width);
         if (shared) return { imageRef: shared.imageRef, index: shared.nextIndex };
 
         const windowId = sender.tab?.windowId;

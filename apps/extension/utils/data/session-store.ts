@@ -15,11 +15,12 @@ export interface QaItem {
     createdAt: number;
     styleJSON?: Record<string, string>;
     components?: string[];
-    // 캡처 이미지 공유: 같은 scrollX/scrollY면 imageRef를 공유하고 index로 구분
+    // 캡처 이미지 공유: 같은 scrollX/scrollY/width면 imageRef를 공유하고 index로 구분
     imageRef?: string;
     index?: number;
     scrollX?: number;
     scrollY?: number;
+    width?: number;
 }
 
 const itemsStore = storage.defineItem<QaItem[]>('local:qaItems', { fallback: [] });
