@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Card, Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
 
 import { getImage } from '../../utils/data/image-store';
-import { sendMessage } from '../../utils/messaging';
 import type { QaItem } from '../../utils/data/session-store';
+import { sendMessage } from '../../utils/messaging';
 
 const useImageUrl = (imageRef?: string) => {
     const [url, setUrl] = useState<string>();
@@ -126,7 +126,7 @@ export const ItemCard = ({ group }: ItemCardProps) => {
     return (
         <Card.Root>
             <Card.Body>
-                <VStack gap="$200">
+                <VStack $css={{ gap: '$200' }}>
                     {imageUrl ? (
                         <button
                             type="button"
@@ -142,10 +142,10 @@ export const ItemCard = ({ group }: ItemCardProps) => {
                         </button>
                     ) : null}
 
-                    <VStack gap="$200">
+                    <VStack $css={{ gap: '$200' }}>
                         {group.map((item) => (
-                            <VStack key={item.id} gap="$050">
-                                <HStack gap="$100">
+                            <VStack key={item.id} $css={{ gap: '$050' }}>
+                                <HStack $css={{ gap: '$100' }}>
                                     {item.index != null && (
                                         <Text typography="body2">#{item.index}</Text>
                                     )}
@@ -166,13 +166,15 @@ export const ItemCard = ({ group }: ItemCardProps) => {
                                             스타일 ({Object.keys(item.styleJSON).length})
                                         </Collapsible.Trigger>
                                         <Collapsible.Panel>
-                                            <VStack gap="$050">
+                                            <VStack $css={{ gap: '$050' }}>
                                                 {Object.entries(item.styleJSON).map(
                                                     ([key, value]) => (
                                                         <HStack
                                                             key={key}
-                                                            gap="$100"
-                                                            justifyContent="space-between"
+                                                            $css={{
+                                                                gap: '$100',
+                                                                justifyContent: 'space-between',
+                                                            }}
                                                         >
                                                             <Text
                                                                 typography="subtitle2"
