@@ -52,8 +52,37 @@ figma.ui.onmessage = async (msg: UiMsg) => {
             }
             return;
         }
-        case 'focus':
-            // Task 8 will implement this
+        case 'focus': {
+            const resolved: SceneNode[] = [];
+            const missing: string[] = [];
+            for (const nodeId of msg.nodeIds) {
+                const n = await figma.getNodeByIdAsync(nodeId);
+                if (n && n.type !== 'DOCUMENT' && n.type !== 'PAGE' && 'visible' in n) {
+                    resolved.push(n as SceneNode);
+                } else {
+                    missing.push(nodeId);
+                }
+            }
+            if (resolved.length === 0) {
+                figma.ui.postMessage({
+                    type: 'scan-error',
+                    message: '이 프레임에 해당 노드 없음 — 파일이 다른가요?',
+                } satisfies CodeMsg);
+                figma.ui.postMessage({
+                    type: 'focus-result',
+                    resolved: 0,
+                    missing: missing.length,
+                } satisfies CodeMsg);
+                return;
+            }
+            figma.currentPage.selection = resolved;
+            figma.viewport.scrollAndZoomIntoView(resolved);
+            figma.ui.postMessage({
+                type: 'focus-result',
+                resolved: resolved.length,
+                missing: missing.length,
+            } satisfies CodeMsg);
             return;
+        }
     }
 };

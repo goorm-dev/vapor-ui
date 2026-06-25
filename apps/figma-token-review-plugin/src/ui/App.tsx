@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box } from '@vapor-ui/core';
+import { Box, Text } from '@vapor-ui/core';
 
 import type { ScanPayload, SelectionState } from '~/shared/schema';
 import { postToCode, subscribe } from './messaging';
@@ -21,6 +21,7 @@ const App = () => {
     const [selection, setSelection] = useState<SelectionState>({ kind: 'none' });
     const [scan, setScan] = useState<ScanStatus>({ kind: 'idle' });
     const [tab, setTab] = useState<Tab>('color');
+    const [toast, setToast] = useState<string | null>(null);
 
     useEffect(() => {
         const unsubscribe = subscribe((msg) => {
@@ -35,6 +36,10 @@ const App = () => {
                     setScan({ kind: 'error', message: msg.message });
                     return;
                 case 'focus-result':
+                    if (msg.resolved > 0 && msg.missing > 0) {
+                        setToast(`${msg.missing}개 노드 누락`);
+                        setTimeout(() => setToast(null), 3000);
+                    }
                     return;
             }
         });
@@ -50,6 +55,11 @@ const App = () => {
     return (
         <Box className="min-h-screen bg-v-gray-50">
             <SelectionBanner state={selection} onScan={handleScan} />
+            {toast && (
+                <Box className="bg-v-yellow-50 px-v-200 py-v-100">
+                    <Text typography="body4" className="text-v-yellow-800">{toast}</Text>
+                </Box>
+            )}
             {scan.kind === 'loading' && <LoadingState />}
             {scan.kind === 'error' && <ErrorState message={scan.message} />}
             {scan.kind === 'success' && (
