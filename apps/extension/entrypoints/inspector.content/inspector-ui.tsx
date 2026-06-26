@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import type { CapturedRect } from '~/utils/data/session-store';
+
 import { Fab } from './fab';
 import { MemoBubble } from './memo-bubble';
 

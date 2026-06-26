@@ -32,8 +32,15 @@ export const RegisterBar = ({ apiKey, items }: RegisterBarProps) => {
                 setTeams(next);
                 if (next.length === 1) setTeamId(next[0].id);
             })
-            .catch(() => {
-                /* 팀 로드 실패는 등록 시 에러로 드러난다 */
+            .catch((error) => {
+                if (!active) return;
+                setResult({
+                    kind: 'error',
+                    message:
+                        error instanceof Error
+                            ? error.message
+                            : 'Linear 팀 목록을 불러오지 못했습니다.',
+                });
             });
         return () => {
             active = false;
@@ -52,13 +59,17 @@ export const RegisterBar = ({ apiKey, items }: RegisterBarProps) => {
             const issue = await createIssue(apiKey, {
                 teamId,
                 title: buildTitle(items, meta),
-                description: await buildDescription(apiKey, items, meta),
+                description: await buildDescription(items, meta),
             });
 
-            // 성공 시에만 비운다(결정 9a). 실패 시 항목 보존(결정 9b).
-            await clearItems();
-            await clearImages();
             setResult({ kind: 'success', url: issue.url, identifier: issue.identifier });
+
+            // 이슈 생성은 이미 성공했다. 로컬 정리 실패를 생성 실패로 표시하면
+            // 사용자가 재시도해 중복 이슈를 만들 수 있으므로 best-effort로 끝낸다.
+            const cleanup = await Promise.allSettled([clearItems(), clearImages()]);
+            for (const result of cleanup) {
+                if (result.status === 'rejected') console.error(result.reason);
+            }
         } catch (e) {
             setResult({
                 kind: 'error',

@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { dataUrlToBlob } from './image-store';
+import { blobToDataUrlUnderLimit, dataUrlToBlob } from './image-store';
 
 // 1x1 투명 PNG
 const PNG_DATA_URL =
@@ -14,5 +14,11 @@ describe('image-store', () => {
         const blob = await dataUrlToBlob(PNG_DATA_URL);
         expect(blob.type).toBe('image/png');
         expect(blob.size).toBeGreaterThan(0);
+    });
+
+    it('keeps a Blob data URL when it already fits the limit', async () => {
+        await expect(
+            blobToDataUrlUnderLimit(new Blob(['ok'], { type: 'text/plain' }), 100),
+        ).resolves.toBe('data:text/plain;base64,b2s=');
     });
 });

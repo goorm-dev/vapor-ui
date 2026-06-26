@@ -47,20 +47,21 @@ content script           ── inspector.content/. 페이지에 주입.
 
 2. **fiber 계보는 MAIN world에서만 읽힌다.** isolated content script는 페이지의 React fiber expando·`__REACT_DEVTOOLS_GLOBAL_HOOK__`에 접근 불가. 정본 경로: `inspector.content/index.ts`가 `injectScript('/fiber-reader.js')`로 MAIN world 주입 → 노드를 `data-vapor-qa-fiber-target`으로 마킹 → `postMessage`(FIBER_REQUEST/RESPONSE, `messaging/fiber-protocol.ts`)로 계보 회신. `wxt.config.ts`의 `fiber-reader.js` `web_accessible_resources` 선언은 이 경로에 **필수** — 삭제하지 말 것. isolated에서 expando를 직접 읽으려 하지 말 것(안 보임).
 
-3. **이미지 공유 키는 `scrollX/scrollY/width` 셋 다.** 같은 뷰포트(스크롤+창 너비)면 새로 캡처하지 않고 imageRef를 공유하고 `index`만 올린다(`linear/image-sharing.ts`의 `findSharedImage`). `width`는 `window.innerWidth`(뷰포트, outerWidth 아님). width를 빼지 말 것 — 창 너비 변화 시 옛 이미지 재사용으로 박스가 어긋나던 버그를 막는 키다. height·DPR은 일부러 제외(스크롤 좌표가 height를 흡수, DPR은 표시 시점 런타임 계산).
+3. **이미지 공유 키는 `tabId/pageUrl/scrollX/scrollY/width`다.** 같은 탭·페이지·뷰포트에서만 imageRef를 공유하고 `index`를 올린다(`linear/image-sharing.ts`의 `findSharedImage`). `width`는 `window.innerWidth`다. 탭·URL·너비 중 하나라도 다르면 새로 캡처한다.
 
 ## 동작 명세 (버그로 오인하기 쉬운 의도된 동작)
 
 - **인스펙팅 ON/OFF의 정본은 content script 메모리 변수 하나(`inspecting`)** — storage에 저장 안 함. 따라서 **인스펙팅 중 새로고침하면 조용히 OFF로 돌아간다**(content 재주입 → 초기화). 명세이지 버그 아님. `inspector.content/index.ts`에 자동 `setInspecting(true)`를 다시 넣지 말 것 — 인스펙터는 오직 팝업 토글로만 켜진다.
 - **popup→content는 `sendMessage('getInspecting'/'setInspecting', ..., tabId)`로 직접 보낸다**(background 미경유). content 미주입 탭은 reject되며 그게 곧 "비지원 탭" 판정 — URL 화이트리스트·폴백 주입 도입 금지(의도).
 - **API 키 입력 폼은 popup에만 둔다**(`popup/ApiKeyForm.tsx`·`useApiKey.ts`). sidepanel은 `useStoredApiKey`로 읽기만 — sidepanel에 입력 폼 되돌리지 말 것.
+- **사이드패널 상태는 Chrome 142+의 `sidePanel.onOpened/onClosed`가 정본**이다. 포트 수명으로 열림 상태를 추측하지 말 것.
 - **저장 경로에서 `clearPinned()`를 element/rect/components 확보 _전에_ 부르지 말 것** — `onUnpin`이 `pinnedElement/pinnedRect/pinnedComponents`를 전부 초기화해 저장할 값을 잃는다(`inspector.content/index.ts`의 `onSaveMemo`). 반드시 값 확보 후 호출.
 - **vapor 컴포넌트가 새로 추가되면 fiber 추출 시 빠질 수 있다** — `extractComponentAncestry`는 이름 있는 컴포넌트를 거르되 구조 래퍼(`*Context`/`*Provider`)는 제외한다(벤더 중립). 누락이 잦으면 빌드 스크립트 자동 추출로 승격 고려.
 
 ## Linear 통합 함정
 
 - Personal API Key는 `Authorization` 헤더에 값 그대로 — **`Bearer` 접두사 없음**(`utils/linear/index.ts`).
-- 이미지 업로드는 presigned URL PUT을 시도하되, Linear CSP/CORS에 막히면 `uploadImage`가 `null`을 반환하고 호출부가 **data URL 폴백**으로 마크다운에 박는다(`linear/build-issue.ts`). 이 폴백 경로를 지우지 말 것.
+- 합성 이미지는 **base64 data URL을 마크다운에 직접 넣는다**(`linear/build-issue.ts`). Linear가 이미지를 자체 스토리지로 가져간다. 브라우저의 presigned URL PUT 경로를 다시 만들지 말 것.
 - `createIssue`는 `teamId`만 주면 Triage 켜진 팀은 자동 Triage 상태(stateId 생략).
 
 ## vapor 스타일 prop

@@ -22,7 +22,7 @@ const position = (rect: CapturedRect) => {
         : rect.left + rect.width + GAP;
 
     return {
-        top: Math.min(rect.top, window.innerHeight - 160),
+        top: Math.max(GAP, Math.min(rect.top, window.innerHeight - 160)),
         left,
     };
 };

@@ -15,7 +15,10 @@ export interface QaItem {
     createdAt: number;
     styleJSON?: Record<string, string>;
     components?: string[];
-    // 캡처 이미지 공유: 같은 scrollX/scrollY/width면 imageRef를 공유하고 index로 구분
+    tabId?: number;
+    pageUrl?: string;
+    pageTitle?: string;
+    // 캡처 이미지 공유: 같은 탭/페이지/scrollX/scrollY/width면 imageRef를 공유한다.
     imageRef?: string;
     index?: number;
     scrollX?: number;

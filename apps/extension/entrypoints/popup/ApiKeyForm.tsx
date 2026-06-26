@@ -12,7 +12,7 @@ export const ApiKeyForm = ({ verifying, errorMessage, onSubmit }: ApiKeyFormProp
     const [value, setValue] = useState('');
 
     return (
-        <Box style={{ padding: 16 }}>
+        <Box $css={{ padding: '$200' }}>
             <form
                 onSubmit={(e) => {
                     e.preventDefault();

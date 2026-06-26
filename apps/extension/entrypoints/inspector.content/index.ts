@@ -6,8 +6,13 @@ import type { CapturedRect } from '~/utils/data/session-store';
 import { buildSelector } from '~/utils/dom/selector';
 import { extractStyle } from '~/utils/dom/style-extract';
 import { onMessage, sendMessage } from '~/utils/messaging';
-import { FIBER_REQUEST, FIBER_RESPONSE, FIBER_TARGET_ATTR } from '~/utils/messaging/fiber-protocol';
-import type { FiberResponse } from '~/utils/messaging/fiber-protocol';
+import {
+    FIBER_REQUEST,
+    FIBER_TARGET_ATTR,
+    FIBER_TIMEOUT_MS,
+    isFiberResponseForRequest,
+} from '~/utils/messaging/fiber-protocol';
+import type { FiberRequest } from '~/utils/messaging/fiber-protocol';
 
 import { InspectorUi } from './inspector-ui';
 import type { InspectorUiHandle } from './inspector-ui';
@@ -42,19 +47,32 @@ export default defineContentScript({
                 await injectScript('/fiber-reader.js', { keepInDom: true });
                 readerInjected = true;
             }
-            element.setAttribute(FIBER_TARGET_ATTR, '');
+            const requestId = crypto.randomUUID();
+            element.setAttribute(FIBER_TARGET_ATTR, requestId);
             try {
-                return await new Promise<string[]>((resolve) => {
-                    const onResponse = (event: MessageEvent) => {
-                        if (event.source !== window || event.data?.type !== FIBER_RESPONSE) return;
+                return await new Promise<string[]>((resolve, reject) => {
+                    const timeoutId = window.setTimeout(() => {
                         window.removeEventListener('message', onResponse);
-                        resolve((event.data as FiberResponse).components);
+                        reject(new Error('React 컴포넌트 정보를 읽지 못했습니다.'));
+                    }, FIBER_TIMEOUT_MS);
+                    const onResponse = (event: MessageEvent) => {
+                        if (
+                            event.source !== window ||
+                            !isFiberResponseForRequest(event.data, requestId)
+                        )
+                            return;
+                        window.clearTimeout(timeoutId);
+                        window.removeEventListener('message', onResponse);
+                        resolve(event.data.components);
                     };
                     window.addEventListener('message', onResponse);
-                    window.postMessage({ type: FIBER_REQUEST }, '*');
+                    const request: FiberRequest = { type: FIBER_REQUEST, requestId };
+                    window.postMessage(request, '*');
                 });
             } finally {
-                element.removeAttribute(FIBER_TARGET_ATTR);
+                if (element.getAttribute(FIBER_TARGET_ATTR) === requestId) {
+                    element.removeAttribute(FIBER_TARGET_ATTR);
+                }
             }
         };
 
@@ -70,6 +88,8 @@ export default defineContentScript({
         ) => {
             const styleJSON = extractStyle(element);
             const { scrollX, scrollY, innerWidth: width } = window;
+            const pageUrl = window.location.href;
+            const pageTitle = document.title;
 
             // 캡처 직전 인스펙터 UI(박스·말풍선·FAB)를 숨겨 이미지에 안 찍히게 한다.
             overlay?.setVisible(false);
@@ -77,7 +97,8 @@ export default defineContentScript({
             await nextFrame();
 
             try {
-                const { imageRef, index } = await sendMessage('captureAndStore', {
+                const { imageRef, index, tabId } = await sendMessage('captureAndStore', {
+                    pageUrl,
                     scrollX,
                     scrollY,
                     width,
@@ -88,6 +109,9 @@ export default defineContentScript({
                     memo,
                     components,
                     styleJSON,
+                    tabId,
+                    pageUrl,
+                    pageTitle,
                     imageRef,
                     index,
                     scrollX,
@@ -165,11 +189,13 @@ export default defineContentScript({
                         overlay?.setLabel('');
                         // 계보는 MAIN world 왕복이라 비동기. 회신이 늦게 와도
                         // 여전히 같은 요소가 pin된 상태일 때만 라벨에 반영한다.
-                        void requestComponents(element).then((components) => {
-                            if (pinnedElement !== element) return;
-                            pinnedComponents = components;
-                            overlay?.setLabel(components.join(' › '));
-                        });
+                        void requestComponents(element)
+                            .then((components) => {
+                                if (pinnedElement !== element) return;
+                                pinnedComponents = components;
+                                overlay?.setLabel(components.join(' › '));
+                            })
+                            .catch(console.error);
                     },
                     onUnpin: () => {
                         pinnedElement = null;

@@ -14,3 +14,6 @@ skills/figma-token-review/assets/
 # use_figma 전용 동결 스크립트. 톱레벨 await/return이 의도된 형태라(use_figma가 async 함수로 감싸 실행)
 # prettier가 일반 JS로 파싱하면 'return' outside of function으로 죽는다. 제외.
 skills/figma-token-review/scripts/extract.figma.js
+
+apps/extension/.output
+apps/extension/.wxt

@@ -123,6 +123,7 @@ export const ItemCard = ({ group }: ItemCardProps) => {
             imageRef: head.imageRef,
             boxes,
             alt,
+            tabId: head.tabId,
         }).catch(console.error);
     };
 

@@ -11,12 +11,18 @@ interface ProtocolMap {
     setInspecting(data: { on: boolean }): void;
     setPanelOpen(data: { open: boolean }): void;
     openReviewPanel(): void;
-    captureAndStore(data: { scrollX: number; scrollY: number; width: number }): {
+    captureAndStore(data: { pageUrl: string; scrollX: number; scrollY: number; width: number }): {
         imageRef: string;
         index: number;
+        tabId: number;
     };
     // sidepanel → background: 활성 탭 위에 전체화면 이미지 라이트박스를 띄운다.
-    openLightbox(data: { imageRef: string; boxes: LightboxBox[]; alt: string }): void;
+    openLightbox(data: {
+        imageRef: string;
+        boxes: LightboxBox[];
+        alt: string;
+        tabId?: number;
+    }): void;
     // background → content: 이미지 dataURL을 받아 페이지 위에 오버레이로 그린다.
     showLightbox(data: { dataUrl: string; boxes: LightboxBox[]; alt: string }): void;
 }

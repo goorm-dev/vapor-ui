@@ -21,7 +21,7 @@ const ReadyPanel = ({ inspecting, toggle }: { inspecting: 'on' | 'off'; toggle: 
     };
 
     return (
-        <Box $css={{ padding: 16 }}>
+        <Box $css={{ padding: '$200' }}>
             <VStack $css={{ gap: '$200' }}>
                 <HStack $css={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text typography="heading6">QA 항목 {count}건</Text>
@@ -51,7 +51,7 @@ const App = () => {
 
     if (keyStatus === 'loading') {
         return (
-            <Box $css={{ padding: 16 }}>
+            <Box $css={{ padding: '$200' }}>
                 <Spinner />
             </Box>
         );
@@ -69,7 +69,7 @@ const App = () => {
 
     if (inspecting === 'loading') {
         return (
-            <Box $css={{ padding: 16 }}>
+            <Box $css={{ padding: '$200' }}>
                 <Spinner />
             </Box>
         );
@@ -77,7 +77,7 @@ const App = () => {
 
     if (inspecting === 'unsupported') {
         return (
-            <Box $css={{ padding: 16 }}>
+            <Box $css={{ padding: '$200' }}>
                 <VStack $css={{ gap: '$100' }}>
                     <Text typography="heading6">Vapor QA</Text>
                     <Text typography="body2" foreground="hint-100">

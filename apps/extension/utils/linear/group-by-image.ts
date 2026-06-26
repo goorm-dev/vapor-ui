@@ -7,7 +7,6 @@ import type { QaItem } from '~/utils/data/session-store';
  */
 export const groupByImage = (items: QaItem[]): QaItem[][] => {
     const groups = new Map<string, QaItem[]>();
-    const order: string[] = [];
 
     for (const item of items) {
         const key = item.imageRef ?? `__solo:${item.id}`;
@@ -15,12 +14,11 @@ export const groupByImage = (items: QaItem[]): QaItem[][] => {
         if (!group) {
             group = [];
             groups.set(key, group);
-            order.push(key);
         }
         group.push(item);
     }
 
-    return order.map((key) =>
-        [...groups.get(key)!].sort((a, b) => (a.index ?? 0) - (b.index ?? 0)),
+    return [...groups.values()].map((group) =>
+        [...group].sort((a, b) => (a.index ?? 0) - (b.index ?? 0)),
     );
 };

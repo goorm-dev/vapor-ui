@@ -7,8 +7,8 @@
         "build": "wxt build",
         "compile": "tsc --noEmit",
         "dev": "wxt",
-        "lint": "eslint .",
         "postinstall": "wxt prepare",
+        "lint": "eslint .",
         "test": "vitest --run",
         "typecheck": "tsc --noEmit",
         "zip": "wxt zip"
