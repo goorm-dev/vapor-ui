@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
 import type { ScanPayload } from '~/shared/schema';
 
 import { postToCode, subscribe } from '../messaging';
-import { useFunnel } from './useFunnel';
+import { useFunnel } from './use-funnel';
 
 export type ScanStatus =
     | { kind: 'idle' }

@@ -5,7 +5,7 @@ import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-
 
 import type { EvaluateOutput, ScanPayload, Violation } from '~/shared/schema';
 
-import { EmptyState } from './states/EmptyState';
+import { EmptyState } from './states/empty';
 import { ViolationCard } from './violation-card';
 
 type TabKey = 'color' | 'typography' | 'space' | 'dimension' | 'radius';

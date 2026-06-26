@@ -1,14 +1,14 @@
 import { Box } from '@vapor-ui/core';
 
-import { ResizeHandle } from './components/ResizeHandle';
-import { ScanResultView } from './components/ScanResultView';
-import { SelectionBanner } from './components/SelectionBanner';
-import { ErrorState } from './components/states/ErrorState';
-import { LoadingState } from './components/states/LoadingState';
-import { SuccessState } from './components/states/SuccessState';
-import { useFocusToasts } from './hooks/useFocusToasts';
-import { useScanResult } from './hooks/useScanResult';
-import { useSelection } from './hooks/useSelection';
+import { ResizeHandle } from './components/resize-handler';
+import { ScanResultView } from './components/scan-result-view';
+import { SelectionBanner } from './components/selection-banner';
+import { ErrorState } from './components/states/error';
+import { LoadingState } from './components/states/loading';
+import { SuccessState } from './components/states/success';
+import { useFocusToasts } from './hooks/use-focus-toasts';
+import { useScanResult } from './hooks/use-scan-result';
+import { useSelection } from './hooks/use-selection';
 
 const App = () => {
     const selection = useSelection();

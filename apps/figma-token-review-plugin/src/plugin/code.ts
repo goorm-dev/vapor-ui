@@ -1,6 +1,6 @@
 import type { CodeMsg, SelectionState, UiMsg } from '~/shared/schema';
 
-import { callEvaluator } from './callEvaluator';
+import { callEvaluator } from './call-evaluator';
 
 const SIZE_KEY = 'ui-size';
 const DEFAULT_SIZE = { width: 800, height: 600 };
