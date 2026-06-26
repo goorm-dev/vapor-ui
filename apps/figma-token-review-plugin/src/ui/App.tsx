@@ -10,6 +10,7 @@ import { ViolationList } from './components/ViolationList';
 import { ErrorState } from './components/states/ErrorState';
 import { LoadingState } from './components/states/LoadingState';
 import { SuccessState } from './components/states/SuccessState';
+import { useFunnel } from './hooks/useFunnel';
 import { postToCode, subscribe } from './messaging';
 
 type ScanStatus =
@@ -23,7 +24,7 @@ type Tab = 'color' | 'typography';
 
 const App = () => {
     const [selection, setSelection] = useState<SelectionState>({ kind: 'none' });
-    const [scan, setScan] = useState<ScanStatus>({ kind: 'idle' });
+    const { setState: setScan, match: matchScan } = useFunnel<ScanStatus>({ kind: 'idle' });
     const [tab, setTab] = useState<Tab>('color');
     const [toast, setToast] = useState<string | null>(null);
 
@@ -65,7 +66,7 @@ const App = () => {
         });
         postToCode({ type: 'request-selection' });
         return unsubscribe;
-    }, []);
+    }, [setScan]);
 
     const handleAttemptScan = () => {
         switch (selection.kind) {
@@ -94,29 +95,32 @@ const App = () => {
                     </Text>
                 </Box>
             )}
-            {scan.kind === 'idle' && (
-                <SelectionBanner
-                    disabled={selection.kind === 'none'}
-                    onAttemptScan={handleAttemptScan}
-                />
-            )}
-            {scan.kind === 'loading' && <LoadingState />}
-            {scan.kind === 'error' && <ErrorState message={scan.message} />}
-            {scan.kind === 'clean' && <SuccessState onReset={() => setScan({ kind: 'idle' })} />}
-            {scan.kind === 'success' && (
-                <>
-                    <TabHeader
-                        active={tab}
-                        colorCount={scan.payload.color.violations.length}
-                        typographyCount={scan.payload.typography.violations.length}
-                        onChange={setTab}
+
+            {matchScan({
+                idle: () => (
+                    <SelectionBanner
+                        disabled={selection.kind === 'none'}
+                        onAttemptScan={handleAttemptScan}
                     />
-                    <ViolationList
-                        violations={scan.payload[tab].violations}
-                        summary={scan.payload[tab].summary}
-                    />
-                </>
-            )}
+                ),
+                loading: () => <LoadingState />,
+                clean: () => <SuccessState onReset={() => setScan({ kind: 'idle' })} />,
+                error: ({ message }) => <ErrorState message={message} />,
+                success: ({ payload }) => (
+                    <>
+                        <TabHeader
+                            active={tab}
+                            colorCount={payload.color.violations.length}
+                            typographyCount={payload.typography.violations.length}
+                            onChange={setTab}
+                        />
+                        <ViolationList
+                            violations={payload[tab].violations}
+                            summary={payload[tab].summary}
+                        />
+                    </>
+                ),
+            })}
         </Box>
     );
 };
