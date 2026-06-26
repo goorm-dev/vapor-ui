@@ -1,13 +1,44 @@
 import { Box, Button, Text } from '@vapor-ui/core';
 
+import type { SelectionState } from '~/shared/schema';
 import surveyUrl from '~/ui/assets/survey.svg';
 
+import { toastManager } from './toast';
+
 type Props = {
-    disabled: boolean;
-    onAttemptScan: () => void;
+    selection: SelectionState;
+    onScan: (frameId: string) => void;
 };
 
-export function SelectionBanner({ disabled, onAttemptScan }: Props) {
+export function SelectionBanner({ selection, onScan }: Props) {
+    const disabled = selection.kind === 'none';
+
+    const handleClick = () => {
+        switch (selection.kind) {
+            case 'frame':
+                onScan(selection.id);
+                return;
+            case 'none':
+                toastManager.add({
+                    title: '프레임을 1개 선택해 주세요.',
+                    colorPalette: 'danger',
+                });
+                return;
+            case 'multi':
+                toastManager.add({
+                    title: '프레임 1개만 선택해 주세요.',
+                    colorPalette: 'danger',
+                });
+                return;
+            case 'invalid':
+                toastManager.add({
+                    title: `프레임 노드만 선택할 수 있습니다. (현재: ${selection.nodeType})`,
+                    colorPalette: 'danger',
+                });
+                return;
+        }
+    };
+
     return (
         <Box className="flex flex-col items-center bg-white">
             <Box className="flex flex-col items-center gap-[20px] pt-[120px]">
@@ -41,7 +72,7 @@ export function SelectionBanner({ disabled, onAttemptScan }: Props) {
                     colorPalette="primary"
                     variant="fill"
                     disabled={disabled}
-                    onClick={onAttemptScan}
+                    onClick={handleClick}
                 >
                     검수 시작하기
                 </Button>
