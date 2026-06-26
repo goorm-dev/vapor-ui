@@ -40,38 +40,40 @@ export function SelectionBanner({ state, onScan }: Props) {
     const { title, subtitle } = copyFor(state);
 
     return (
-        <Box className="flex flex-col items-center bg-white pt-[120px]">
-            <Box className="flex flex-col items-center justify-center gap-[8px]">
-                <Box className="h-[120px] w-[160px] overflow-hidden">
-                    <img
-                        alt=""
-                        src={surveyUrl}
-                        className="block h-full w-full object-contain"
-                    />
-                </Box>
-                <Box className="flex flex-col items-center gap-[20px]">
-                    <Box className="flex flex-col items-center gap-[4px] text-center">
-                        <Text typography="heading5" foreground="normal-200">
-                            {title}
-                        </Text>
-                        <Box className="flex flex-col items-center">
-                            {subtitle.map((line) => (
-                                <Text key={line} typography="body2" foreground="hint-100">
-                                    {line}
-                                </Text>
-                            ))}
+        <Box className="flex flex-col items-center bg-white">
+            <Box className="flex flex-col items-center gap-[20px] pt-[120px]">
+                <Box className="flex flex-col items-center justify-center gap-[8px]">
+                    <Box className="h-[120px] w-[160px] overflow-hidden">
+                        <img
+                            alt=""
+                            src={surveyUrl}
+                            className="block h-full w-full object-contain"
+                        />
+                    </Box>
+                    <Box className="flex flex-col items-center gap-[20px]">
+                        <Box className="flex flex-col items-center gap-[4px] text-center">
+                            <Text typography="heading5" foreground="normal-200">
+                                {title}
+                            </Text>
+                            <Box className="flex flex-col items-center">
+                                {subtitle.map((line) => (
+                                    <Text key={line} typography="body2" foreground="hint-100">
+                                        {line}
+                                    </Text>
+                                ))}
+                            </Box>
                         </Box>
                     </Box>
-                    <Button
-                        size="md"
-                        colorPalette="primary"
-                        variant="fill"
-                        disabled={!enabled}
-                        onClick={() => state.kind === 'frame' && onScan(state.id)}
-                    >
-                        검수 시작하기
-                    </Button>
                 </Box>
+                <Button
+                    size="md"
+                    colorPalette="primary"
+                    variant="fill"
+                    disabled={!enabled}
+                    onClick={() => state.kind === 'frame' && onScan(state.id)}
+                >
+                    검수 시작하기
+                </Button>
             </Box>
         </Box>
     );
