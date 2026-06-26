@@ -1,6 +1,5 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
-import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
@@ -87,7 +86,7 @@ export const currentPage = componentRecipe({
 export const button = componentRecipe({
     base: [
         baseElement,
-        interaction(),
+
         {
             selectors: {
                 '&[data-current]': {

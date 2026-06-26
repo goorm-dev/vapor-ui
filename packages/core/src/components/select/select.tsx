@@ -15,6 +15,7 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import * as styles from './select.css';
 import type { TriggerVariants } from './select.css';
 
@@ -64,16 +65,18 @@ export const SelectTriggerPrimitive = forwardRef<HTMLButtonElement, SelectTrigge
         const dataAttrs = createDataAttributes({ required, invalid });
 
         return (
-            <BaseSelect.Trigger
-                ref={ref}
-                render={render}
-                nativeButton={nativeButton}
-                aria-required={required || undefined}
-                aria-invalid={invalid || undefined}
-                className={cn(styles.trigger({ size, invalid }), className)}
-                {...dataAttrs}
-                {...componentProps}
-            />
+            <Interaction>
+                <BaseSelect.Trigger
+                    ref={ref}
+                    render={render}
+                    nativeButton={nativeButton}
+                    aria-required={required || undefined}
+                    aria-invalid={invalid || undefined}
+                    className={cn(styles.trigger({ size, invalid }), className)}
+                    {...dataAttrs}
+                    {...componentProps}
+                />
+            </Interaction>
         );
     },
 );
@@ -280,7 +283,13 @@ export const SelectItemPrimitive = forwardRef<HTMLElement, SelectItemPrimitive.P
         const { className, ...componentProps } = resolveStyles(props);
 
         return (
-            <BaseSelect.Item ref={ref} className={cn(styles.item, className)} {...componentProps} />
+            <Interaction type="roving">
+                <BaseSelect.Item
+                    ref={ref}
+                    className={cn(styles.item, className)}
+                    {...componentProps}
+                />
+            </Interaction>
         );
     },
 );

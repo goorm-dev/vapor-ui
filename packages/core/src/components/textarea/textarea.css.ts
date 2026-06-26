@@ -1,7 +1,6 @@
 import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
-import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
@@ -11,8 +10,6 @@ const boxShadowColor = createVar('box-shadow-color');
 
 export const textarea = componentRecipe({
     base: [
-        interaction({ type: 'form' }),
-
         {
             boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
             borderRadius: vars.size.borderRadius['300'],

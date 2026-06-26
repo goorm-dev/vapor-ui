@@ -14,6 +14,7 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import type { RootVariants } from './checkbox.css';
 import * as styles from './checkbox.css';
 
@@ -58,7 +59,11 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
         },
     });
 
-    return <CheckboxProvider value={{ size, indeterminate }}>{root}</CheckboxProvider>;
+    return (
+        <CheckboxProvider value={{ size, indeterminate }}>
+            <Interaction>{root}</Interaction>
+        </CheckboxProvider>
+    );
 });
 CheckboxRoot.displayName = 'Checkbox.Root';
 

@@ -10,6 +10,7 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import { useRadioGroupContext } from '../radio-group';
 import type { RadioCardVariants } from './radio-card.css';
 import * as styles from './radio-card.css';
@@ -28,13 +29,15 @@ export const RadioCard = forwardRef<HTMLElement, RadioCard.Props>((props, ref) =
     const dataAttrs = createDataAttributes({ invalid });
 
     return (
-        <BaseRadio.Root
-            ref={ref}
-            aria-invalid={invalid}
-            className={cn(styles.root({ invalid }), className)}
-            {...dataAttrs}
-            {...otherProps}
-        />
+        <Interaction>
+            <BaseRadio.Root
+                ref={ref}
+                aria-invalid={invalid}
+                className={cn(styles.root({ invalid }), className)}
+                {...dataAttrs}
+                {...otherProps}
+            />
+        </Interaction>
     );
 });
 RadioCard.displayName = 'RadioCard';

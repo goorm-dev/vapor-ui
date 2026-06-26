@@ -13,6 +13,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import type { TextareaVariants } from './textarea.css';
 import * as styles from './textarea.css';
 
@@ -66,7 +67,7 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         [disabled, readOnly, required, invalid],
     );
 
-    return useRenderElement({
+    const element = useRenderElement({
         ref: composedRef,
         state,
         render: render || <BaseField.Control render={<textarea />} />,
@@ -78,6 +79,8 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
             ...otherProps,
         },
     });
+
+    return <Interaction type="form">{element}</Interaction>;
 });
 Textarea.displayName = 'Textarea';
 

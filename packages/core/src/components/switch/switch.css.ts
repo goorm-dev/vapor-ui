@@ -1,13 +1,11 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
-import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
 import { vars } from '~/styles/themes.css';
 
 export const control = componentRecipe({
     base: [
-        interaction(),
         {
             position: 'relative',
             display: 'flex',
