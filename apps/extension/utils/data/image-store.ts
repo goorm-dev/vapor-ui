@@ -82,10 +82,7 @@ export const blobToDataUrlUnderLimit = async (
     }
 };
 
-const resizeToJpegDataUrl = async (
-    img: HTMLImageElement,
-    targetWidth: number,
-): Promise<string> => {
+const resizeToJpegDataUrl = async (img: HTMLImageElement, targetWidth: number): Promise<string> => {
     const scale = Math.min(1, targetWidth / img.naturalWidth);
     const canvas = document.createElement('canvas');
     canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
