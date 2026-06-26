@@ -3,10 +3,11 @@ import { Box, Button, Text } from '@vapor-ui/core';
 import surveyUrl from '~/ui/assets/survey.svg';
 
 type Props = {
+    disabled: boolean;
     onAttemptScan: () => void;
 };
 
-export function SelectionBanner({ onAttemptScan }: Props) {
+export function SelectionBanner({ disabled, onAttemptScan }: Props) {
     return (
         <Box className="flex flex-col items-center bg-white">
             <Box className="flex flex-col items-center gap-[20px] pt-[120px]">
@@ -34,10 +35,12 @@ export function SelectionBanner({ onAttemptScan }: Props) {
                         </Box>
                     </Box>
                 </Box>
+
                 <Button
                     size="md"
                     colorPalette="primary"
                     variant="fill"
+                    disabled={disabled}
                     onClick={onAttemptScan}
                 >
                     검수 시작하기

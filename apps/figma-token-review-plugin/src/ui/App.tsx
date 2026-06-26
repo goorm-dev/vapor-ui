@@ -84,7 +84,12 @@ const App = () => {
                     <Text typography="body4" className="text-v-yellow-800">{toast}</Text>
                 </Box>
             )}
-            {scan.kind === 'idle' && <SelectionBanner onAttemptScan={handleAttemptScan} />}
+            {scan.kind === 'idle' && (
+                <SelectionBanner
+                    disabled={selection.kind === 'none'}
+                    onAttemptScan={handleAttemptScan}
+                />
+            )}
             {scan.kind === 'loading' && <LoadingState />}
             {scan.kind === 'error' && <ErrorState message={scan.message} />}
             {scan.kind === 'success' && (
