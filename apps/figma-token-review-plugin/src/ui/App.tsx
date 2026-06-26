@@ -1,17 +1,21 @@
 import { useEffect, useState } from 'react';
+
 import { Box, Text } from '@vapor-ui/core';
 
 import type { ScanPayload, SelectionState } from '~/shared/schema';
-import { postToCode, subscribe } from './messaging';
+
 import { SelectionBanner } from './components/SelectionBanner';
 import { TabHeader } from './components/TabHeader';
 import { ViolationList } from './components/ViolationList';
-import { LoadingState } from './components/states/LoadingState';
 import { ErrorState } from './components/states/ErrorState';
+import { LoadingState } from './components/states/LoadingState';
+import { SuccessState } from './components/states/SuccessState';
+import { postToCode, subscribe } from './messaging';
 
 type ScanStatus =
     | { kind: 'idle' }
     | { kind: 'loading' }
+    | { kind: 'clean' }
     | { kind: 'success'; payload: ScanPayload }
     | { kind: 'error'; message: string };
 
@@ -35,9 +39,13 @@ const App = () => {
                 case 'selection':
                     setSelection(msg.state);
                     return;
-                case 'scan-result':
-                    setScan({ kind: 'success', payload: msg.payload });
+                case 'scan-result': {
+                    const empty =
+                        msg.payload.color.violations.length === 0 &&
+                        msg.payload.typography.violations.length === 0;
+                    setScan(empty ? { kind: 'clean' } : { kind: 'success', payload: msg.payload });
                     return;
+                }
                 case 'scan-error':
                     setScan({ kind: 'error', message: msg.message });
                     return;
@@ -81,7 +89,9 @@ const App = () => {
         <Box className="min-h-screen bg-white">
             {toast && (
                 <Box className="bg-v-yellow-50 px-v-200 py-v-100">
-                    <Text typography="body4" className="text-v-yellow-800">{toast}</Text>
+                    <Text typography="body4" className="text-v-yellow-800">
+                        {toast}
+                    </Text>
                 </Box>
             )}
             {scan.kind === 'idle' && (
@@ -92,6 +102,7 @@ const App = () => {
             )}
             {scan.kind === 'loading' && <LoadingState />}
             {scan.kind === 'error' && <ErrorState message={scan.message} />}
+            {scan.kind === 'clean' && <SuccessState onReset={() => setScan({ kind: 'idle' })} />}
             {scan.kind === 'success' && (
                 <>
                     <TabHeader
