@@ -59,9 +59,22 @@ const App = () => {
         return unsubscribe;
     }, []);
 
-    const handleScan = (frameId: string) => {
-        setScan({ kind: 'loading' });
-        postToCode({ type: 'scan', frameId });
+    const handleAttemptScan = () => {
+        switch (selection.kind) {
+            case 'frame':
+                setScan({ kind: 'loading' });
+                postToCode({ type: 'scan', frameId: selection.id });
+                return;
+            case 'none':
+                setToast('프레임을 1개 선택해 주세요.');
+                return;
+            case 'multi':
+                setToast('프레임 1개만 선택해 주세요.');
+                return;
+            case 'invalid':
+                setToast(`프레임 노드만 선택할 수 있습니다. (현재: ${selection.nodeType})`);
+                return;
+        }
     };
 
     return (
@@ -71,7 +84,7 @@ const App = () => {
                     <Text typography="body4" className="text-v-yellow-800">{toast}</Text>
                 </Box>
             )}
-            {scan.kind === 'idle' && <SelectionBanner state={selection} onScan={handleScan} />}
+            {scan.kind === 'idle' && <SelectionBanner onAttemptScan={handleAttemptScan} />}
             {scan.kind === 'loading' && <LoadingState />}
             {scan.kind === 'error' && <ErrorState message={scan.message} />}
             {scan.kind === 'success' && (
