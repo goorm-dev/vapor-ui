@@ -2,6 +2,10 @@ import type { LightboxBox } from '~/utils/messaging';
 
 const Z = 2147483647;
 
+// 직전 lightbox의 정리 함수. 노드만 지우면 resize/keydown 리스너가 남으므로
+// 재오픈 시 이전 close()를 먼저 호출해 전부 떼어낸다.
+let teardownPrevious: (() => void) | null = null;
+
 // 활성 탭 페이지 위에 전체화면 이미지 오버레이를 그린다(순수 DOM, React 없음).
 // sidepanel은 패널 폭을 못 벗어나므로 확대는 여기서 한다.
 // 박스 좌표(rect)는 getBoundingClientRect의 CSS px인데, captureVisibleTab 이미지의
@@ -11,7 +15,7 @@ const Z = 2147483647;
 //  ponytail: DPR을 저장해 넘기는 4파일 파이프라인 대신 한 줄. 캡처 후 다른 DPR
 //  모니터로 창을 옮겨 여는 드문 경우만 어긋난다 — 그때 캡처 시점 DPR 저장으로 승격.)
 export const showLightbox = (dataUrl: string, boxes: LightboxBox[], alt: string) => {
-    document.getElementById('vapor-qa-lightbox')?.remove();
+    teardownPrevious?.();
 
     const overlay = document.createElement('div');
     overlay.id = 'vapor-qa-lightbox';
@@ -83,6 +87,7 @@ export const showLightbox = (dataUrl: string, boxes: LightboxBox[], alt: string)
         overlay.remove();
         window.removeEventListener('resize', drawBoxes);
         document.removeEventListener('keydown', onKey);
+        teardownPrevious = null;
     };
     const onKey = (e: KeyboardEvent) => {
         if (e.key === 'Escape') close();
@@ -95,4 +100,5 @@ export const showLightbox = (dataUrl: string, boxes: LightboxBox[], alt: string)
     frame.append(img);
     overlay.append(frame);
     document.body.append(overlay);
+    teardownPrevious = close;
 };

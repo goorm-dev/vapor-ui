@@ -25,29 +25,36 @@ export const useApiKey = (): UseApiKey => {
     useEffect(() => {
         let active = true;
 
-        void keyStore.getValue().then(async (saved) => {
-            if (!active) return;
-            if (!saved) {
-                setStatus('needKey');
-                return;
-            }
-
-            setApiKey(saved);
-            setStatus('ready');
-
-            try {
-                await verifyKey(saved);
-            } catch (e) {
+        void keyStore
+            .getValue()
+            .then(async (saved) => {
                 if (!active) return;
-                // 키가 그새 무효화됐으면 입력 화면으로 복귀.
-                if (e instanceof LinearAuthError) {
-                    setApiKey('');
-                    await keyStore.removeValue();
+                if (!saved) {
                     setStatus('needKey');
+                    return;
                 }
-                // 네트워크 등 일시 오류면 낙관적 ready 유지.
-            }
-        });
+
+                setApiKey(saved);
+                setStatus('ready');
+
+                try {
+                    await verifyKey(saved);
+                } catch (e) {
+                    if (!active) return;
+                    // 키가 그새 무효화됐으면 입력 화면으로 복귀.
+                    if (e instanceof LinearAuthError) {
+                        setApiKey('');
+                        await keyStore.removeValue();
+                        setStatus('needKey');
+                    }
+                    // 네트워크 등 일시 오류면 낙관적 ready 유지.
+                }
+            })
+            .catch(() => {
+                // storage 읽기 자체가 실패하면 loading 스피너가 영구 고착되므로
+                // 입력 화면으로 폴백해 팝업을 사용 가능 상태로 둔다.
+                if (active) setStatus('needKey');
+            });
 
         return () => {
             active = false;

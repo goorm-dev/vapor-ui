@@ -26,6 +26,10 @@ export const RegisterBar = ({ apiKey, items }: RegisterBarProps) => {
 
     useEffect(() => {
         let active = true;
+        // 키가 바뀌면 옛 자격증명의 팀 선택을 즉시 비운다 — 안 그러면 새 목록을
+        // 불러오는 동안 사용자가 이전 키의 팀으로 제출할 수 있다.
+        setTeams([]);
+        setTeamId('');
         void listTeams(apiKey)
             .then((next) => {
                 if (!active) return;

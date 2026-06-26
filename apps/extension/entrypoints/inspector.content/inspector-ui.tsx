@@ -32,6 +32,9 @@ export const InspectorUi = ({ onReview, onSaveMemo, onCancelMemo, bind }: Inspec
             <Fab onReview={onReview} />
             {pin ? (
                 <MemoBubble
+                    // 핀 타깃이 바뀌면 새 인스턴스로 갈아끼워, 이전 요소에
+                    // 입력하던 메모가 다음 항목으로 딸려가지 않게 한다.
+                    key={`${pin.rect.top},${pin.rect.left},${pin.rect.width},${pin.rect.height}`}
                     rect={pin.rect}
                     onSave={(memo) => {
                         onSaveMemo(memo);

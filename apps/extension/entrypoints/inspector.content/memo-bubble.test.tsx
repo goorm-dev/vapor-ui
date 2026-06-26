@@ -9,8 +9,16 @@ import { MemoBubble } from './memo-bubble';
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 describe('MemoBubble', () => {
+    const originalInnerHeight = window.innerHeight;
+
     afterEach(() => {
         document.body.replaceChildren();
+        // 이 테스트가 innerHeight를 덮어쓰므로, 뒤따르는 테스트가 100px 뷰포트를
+        // 물려받지 않도록 원래 값으로 되돌린다.
+        Object.defineProperty(window, 'innerHeight', {
+            configurable: true,
+            value: originalInnerHeight,
+        });
     });
 
     it('keeps the bubble inside a short viewport', () => {

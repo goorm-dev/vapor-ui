@@ -10,6 +10,9 @@ const useImageUrl = (imageRef?: string) => {
     const [url, setUrl] = useState<string>();
 
     useEffect(() => {
+        // imageRef가 바뀌거나 비면 이전 미리보기를 먼저 비운다 — 안 그러면 새 blob을
+        // 받기 전까지 다른 그룹의 옛 스크린샷이 잠깐 그대로 남는다.
+        setUrl(undefined);
         if (!imageRef) return;
 
         let objectUrl: string | undefined;

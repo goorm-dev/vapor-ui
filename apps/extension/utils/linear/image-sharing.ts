@@ -23,6 +23,10 @@ export const findSharedImage = (
     );
     if (sameViewport.length === 0) return null;
 
+    // Invariant: one viewport key (tabId+pageUrl+scrollX+scrollY+width) always maps
+    // to a single imageRef. The first save for a viewport captures and fixes the ref;
+    // every later save with the same key reuses it via this function. So sameViewport
+    // can never hold two distinct refs, and taking [0] with a max-index bump is safe.
     const imageRef = sameViewport[0].imageRef!;
     const nextIndex = Math.max(...sameViewport.map((item) => item.index ?? 0)) + 1;
     return { imageRef, nextIndex };

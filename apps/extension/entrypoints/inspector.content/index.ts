@@ -26,7 +26,13 @@ const toCapturedRect = (rect: DOMRect): CapturedRect => ({
     height: rect.height,
 });
 
-const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+// rAF 콜백은 다음 페인트 *직전*에 돈다. 한 번만 기다리면 UI를 숨긴 DOM 변경이
+// 아직 페인트되지 않은 채 captureVisibleTab이 오버레이/FAB를 잡을 수 있다.
+// 이중 rAF로 한 페인트가 끝난 뒤를 보장한다.
+const nextFrame = () =>
+    new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
 
 export default defineContentScript({
     matches: ['<all_urls>'],

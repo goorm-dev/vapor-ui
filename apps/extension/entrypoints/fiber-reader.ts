@@ -13,6 +13,7 @@ export default defineUnlistedScript(() => {
 
         const target = document.querySelector(`[${FIBER_TARGET_ATTR}="${requestId}"]`);
         const components = target ? extractComponentAncestry(target) : [];
-        window.postMessage({ type: FIBER_RESPONSE, requestId, components }, '*');
+        // 요청·응답이 같은 window 안에서 오가므로 origin을 자기 자신으로 제한한다.
+        window.postMessage({ type: FIBER_RESPONSE, requestId, components }, window.location.origin);
     });
 });

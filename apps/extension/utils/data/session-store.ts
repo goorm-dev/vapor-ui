@@ -30,6 +30,10 @@ const itemsStore = storage.defineItem<QaItem[]>('local:qaItems', { fallback: [] 
 
 export const getItems = () => itemsStore.getValue();
 
+// ponytail: non-atomic read-modify-write. The only save path is one pinned
+// element → one memo → one save click, so two addItem() calls never overlap in
+// practice and the lost-update race can't surface. Promote to a serialized
+// queue (or storage.lock) only if a code path ever saves items concurrently.
 export const addItem = async (item: Omit<QaItem, 'id' | 'createdAt'>): Promise<QaItem> => {
     const entry: QaItem = {
         ...item,
