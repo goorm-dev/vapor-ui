@@ -65,13 +65,13 @@ const App = () => {
     };
 
     return (
-        <Box className="min-h-screen bg-v-gray-50">
-            <SelectionBanner state={selection} onScan={handleScan} />
+        <Box className="min-h-screen bg-white">
             {toast && (
                 <Box className="bg-v-yellow-50 px-v-200 py-v-100">
                     <Text typography="body4" className="text-v-yellow-800">{toast}</Text>
                 </Box>
             )}
+            {scan.kind === 'idle' && <SelectionBanner state={selection} onScan={handleScan} />}
             {scan.kind === 'loading' && <LoadingState />}
             {scan.kind === 'error' && <ErrorState message={scan.message} />}
             {scan.kind === 'success' && (
