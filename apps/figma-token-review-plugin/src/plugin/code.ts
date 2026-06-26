@@ -2,7 +2,17 @@ import type { CodeMsg, SelectionState, UiMsg } from '~/shared/schema';
 
 import { callEvaluator } from './callEvaluator';
 
-figma.showUI(__html__, { width: 800, height: 600 });
+const SIZE_KEY = 'ui-size';
+const DEFAULT_SIZE = { width: 800, height: 600 };
+const MIN_SIZE = { width: 360, height: 480 };
+
+figma.showUI(__html__, DEFAULT_SIZE);
+
+(async () => {
+    const saved = await figma.clientStorage.getAsync(SIZE_KEY);
+    if (!saved || typeof saved.width !== 'number' || typeof saved.height !== 'number') return;
+    figma.ui.resize(Math.max(MIN_SIZE.width, saved.width), Math.max(MIN_SIZE.height, saved.height));
+})();
 
 let scanToken = 0;
 
@@ -84,6 +94,13 @@ figma.ui.onmessage = async (msg: UiMsg) => {
                 resolved: resolved.length,
                 missing: missing.length,
             } satisfies CodeMsg);
+            return;
+        }
+        case 'resize': {
+            const width = Math.max(MIN_SIZE.width, Math.round(msg.width));
+            const height = Math.max(MIN_SIZE.height, Math.round(msg.height));
+            figma.ui.resize(width, height);
+            await figma.clientStorage.setAsync(SIZE_KEY, { width, height });
             return;
         }
         default: {

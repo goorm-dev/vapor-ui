@@ -1,5 +1,6 @@
 import { Box } from '@vapor-ui/core';
 
+import { ResizeHandle } from './components/ResizeHandle';
 import { ScanResultView } from './components/ScanResultView';
 import { SelectionBanner } from './components/SelectionBanner';
 import { ErrorState } from './components/states/ErrorState';
@@ -30,6 +31,8 @@ const App = () => {
                     <ScanResultView frameName={frameName} payload={payload} />
                 ),
             })}
+
+            <ResizeHandle />
         </Box>
     );
 };

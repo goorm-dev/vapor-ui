@@ -5,8 +5,8 @@ import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-
 
 import type { EvaluateOutput, ScanPayload, Violation } from '~/shared/schema';
 
-import { ViolationCard } from './ViolationCard';
 import { EmptyState } from './states/EmptyState';
+import { ViolationCard } from './violation-card';
 
 type TabKey = 'color' | 'typography' | 'space' | 'dimension' | 'radius';
 
@@ -190,10 +190,7 @@ export function ScanResultView({ frameName = '이름 없는 프레임', payload 
             </VStack>
 
             <Tabs.Panel value="color">
-                <TabContent
-                    violations={payload.color.violations}
-                    summary={payload.color.summary}
-                />
+                <TabContent violations={payload.color.violations} summary={payload.color.summary} />
             </Tabs.Panel>
             <Tabs.Panel value="typography">
                 <TabContent
