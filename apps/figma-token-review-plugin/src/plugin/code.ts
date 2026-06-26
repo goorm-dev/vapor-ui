@@ -2,7 +2,7 @@ import type { CodeMsg, SelectionState, UiMsg } from '~/shared/schema';
 
 import { callEvaluator } from './callEvaluator';
 
-figma.showUI(__html__, { width: 450, height: 600 });
+figma.showUI(__html__, { width: 800, height: 600 });
 
 let scanToken = 0;
 

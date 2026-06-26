@@ -7,13 +7,13 @@ import { useFunnel } from './useFunnel';
 
 export type ScanStatus =
     | { kind: 'idle' }
-    | { kind: 'loading' }
-    | { kind: 'clean' }
-    | { kind: 'success'; payload: ScanPayload }
+    | { kind: 'loading'; frameName: string }
+    | { kind: 'clean'; frameName: string }
+    | { kind: 'success'; frameName: string; payload: ScanPayload }
     | { kind: 'error'; message: string };
 
 export function useScanResult() {
-    const { setState, match } = useFunnel<ScanStatus>({ kind: 'idle' });
+    const { state, setState, match } = useFunnel<ScanStatus>({ kind: 'idle' });
 
     useEffect(() => {
         return subscribe((msg) => {
@@ -23,16 +23,24 @@ export function useScanResult() {
             }
             if (msg.type !== 'scan-result') return;
 
+            const frameName =
+                state.kind === 'loading' || state.kind === 'success' || state.kind === 'clean'
+                    ? state.frameName
+                    : '';
             const { color, typography } = msg.payload;
             const empty = color.violations.length === 0 && typography.violations.length === 0;
 
-            setState(empty ? { kind: 'clean' } : { kind: 'success', payload: msg.payload });
+            setState(
+                empty
+                    ? { kind: 'clean', frameName }
+                    : { kind: 'success', frameName, payload: msg.payload },
+            );
         });
-    }, [setState]);
+    }, [setState, state]);
 
     const start = useCallback(
-        (frameId: string) => {
-            setState({ kind: 'loading' });
+        (frameId: string, frameName: string) => {
+            setState({ kind: 'loading', frameName });
             postToCode({ type: 'scan', frameId });
         },
         [setState],
