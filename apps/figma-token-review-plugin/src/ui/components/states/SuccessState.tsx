@@ -1,5 +1,7 @@
 import { Box, Button, Text } from '@vapor-ui/core';
 
+import confirmUrl from '~/ui/assets/confirm.svg';
+
 type Props = {
     onReset: () => void;
 };
@@ -12,7 +14,7 @@ export function SuccessState({ onReset }: Props) {
                     <Box className="flex h-[120px] w-[160px] items-center justify-center">
                         <img
                             alt=""
-                            src="https://statics.goorm.io/gds/resources/images/light/confirm.svg"
+                            src={confirmUrl}
                             className="block h-full w-full object-contain"
                         />
                     </Box>
