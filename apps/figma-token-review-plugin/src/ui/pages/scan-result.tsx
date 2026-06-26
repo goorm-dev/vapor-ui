@@ -1,14 +1,98 @@
 import { useState } from 'react';
 
-import { Badge, Collapsible, HStack, IconButton, Tabs, Text, VStack } from '@vapor-ui/core';
+import { Badge, Box, Collapsible, HStack, IconButton, Tabs, Text, VStack } from '@vapor-ui/core';
 import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-ui/icons';
 
 import type { EvaluateOutput, ScanPayload, Violation } from '~/shared/schema';
 
-import { EmptyState } from './states/empty';
-import { ViolationCard } from './violation-card';
+import { ViolationCard } from '../components/violation-card';
 
 type TabKey = 'color' | 'typography' | 'space' | 'dimension' | 'radius';
+
+export function ScanResultPage({ frameName = '이름 없는 프레임', payload }: Props) {
+    const [tab, setTab] = useState<TabKey>('color');
+
+    const counts: Record<TabKey, number> = {
+        color: payload.color.violations.length,
+        typography: payload.typography.violations.length,
+        space: 0,
+        dimension: 0,
+        radius: 0,
+    };
+
+    return (
+        <Tabs.Root
+            value={tab}
+            onValueChange={(value) => setTab(value as TabKey)}
+            variant="line"
+            size="md"
+            $css={{
+                width: '100%',
+                minHeight: '100vh',
+                backgroundColor: '$bg-canvas-100',
+            }}
+        >
+            <Tabs.List $css={{ paddingInline: '$250', paddingTop: '$150' }}>
+                {(Object.keys(TAB_LABEL) as TabKey[]).map((key) => {
+                    const enabled = FRAME_TAB_KEYS.includes(key);
+                    const selected = enabled && key === tab;
+
+                    return (
+                        <Tabs.Button
+                            key={key}
+                            value={key}
+                            disabled={!enabled}
+                            $css={{ flexShrink: 0 }}
+                        >
+                            {TAB_LABEL[key]}
+                            <Badge size="sm" colorPalette={selected ? 'primary' : 'hint'}>
+                                {counts[key]}
+                            </Badge>
+                        </Tabs.Button>
+                    );
+                })}
+            </Tabs.List>
+
+            <VStack
+                $css={{
+                    gap: '$050',
+                    width: '100%',
+                    padding: '$200',
+                    borderBottomWidth: '1px',
+                    borderBottomStyle: 'solid',
+                    borderBottomColor: '$border-normal',
+                }}
+            >
+                <Text typography="subtitle2" foreground="hint-100">
+                    선택한 프레임
+                </Text>
+                <HStack $css={{ alignItems: 'center', gap: '$050' }}>
+                    <Text typography="heading5" foreground="normal-200">
+                        {frameName}
+                    </Text>
+                    <IconButton
+                        size="sm"
+                        variant="ghost"
+                        colorPalette="secondary"
+                        aria-label="새로고침"
+                    >
+                        <RefreshOutlineIcon />
+                    </IconButton>
+                </HStack>
+            </VStack>
+
+            <Tabs.Panel value="color">
+                <TabContent violations={payload.color.violations} summary={payload.color.summary} />
+            </Tabs.Panel>
+            <Tabs.Panel value="typography">
+                <TabContent
+                    violations={payload.typography.violations}
+                    summary={payload.typography.summary}
+                />
+            </Tabs.Panel>
+        </Tabs.Root>
+    );
+}
 
 const FRAME_TAB_KEYS: TabKey[] = ['color', 'typography'];
 
@@ -109,7 +193,7 @@ type TabContentProps = {
 };
 
 function TabContent({ violations, summary }: TabContentProps) {
-    if (violations.length === 0) return <EmptyState summary={summary} />;
+    if (violations.length === 0) return <Empty summary={summary} />;
 
     const sorted = sortViolations(violations);
     const textOnes = sorted.filter(isTextViolation);
@@ -123,87 +207,15 @@ function TabContent({ violations, summary }: TabContentProps) {
     );
 }
 
-export function ScanResultView({ frameName = '이름 없는 프레임', payload }: Props) {
-    const [tab, setTab] = useState<TabKey>('color');
+type EmptyProps = { summary: EvaluateOutput['summary'] };
 
-    const counts: Record<TabKey, number> = {
-        color: payload.color.violations.length,
-        typography: payload.typography.violations.length,
-        space: 0,
-        dimension: 0,
-        radius: 0,
-    };
-
+function Empty({ summary }: EmptyProps) {
     return (
-        <Tabs.Root
-            value={tab}
-            onValueChange={(value) => setTab(value as TabKey)}
-            variant="line"
-            size="md"
-            $css={{
-                width: '100%',
-                minHeight: '100vh',
-                backgroundColor: '$bg-canvas-100',
-            }}
-        >
-            <Tabs.List $css={{ paddingInline: '$250', paddingTop: '$150' }}>
-                {(Object.keys(TAB_LABEL) as TabKey[]).map((key) => {
-                    const enabled = FRAME_TAB_KEYS.includes(key);
-                    const selected = enabled && key === tab;
-
-                    return (
-                        <Tabs.Button
-                            key={key}
-                            value={key}
-                            disabled={!enabled}
-                            $css={{ flexShrink: 0 }}
-                        >
-                            {TAB_LABEL[key]}
-                            <Badge size="sm" colorPalette={selected ? 'primary' : 'hint'}>
-                                {counts[key]}
-                            </Badge>
-                        </Tabs.Button>
-                    );
-                })}
-            </Tabs.List>
-
-            <VStack
-                $css={{
-                    gap: '$050',
-                    width: '100%',
-                    padding: '$200',
-                    borderBottomWidth: '1px',
-                    borderBottomStyle: 'solid',
-                    borderBottomColor: '$border-normal',
-                }}
-            >
-                <Text typography="subtitle2" foreground="hint-100">
-                    선택한 프레임
-                </Text>
-                <HStack $css={{ alignItems: 'center', gap: '$050' }}>
-                    <Text typography="heading5" foreground="normal-200">
-                        {frameName}
-                    </Text>
-                    <IconButton
-                        size="sm"
-                        variant="ghost"
-                        colorPalette="secondary"
-                        aria-label="새로고침"
-                    >
-                        <RefreshOutlineIcon />
-                    </IconButton>
-                </HStack>
-            </VStack>
-
-            <Tabs.Panel value="color">
-                <TabContent violations={payload.color.violations} summary={payload.color.summary} />
-            </Tabs.Panel>
-            <Tabs.Panel value="typography">
-                <TabContent
-                    violations={payload.typography.violations}
-                    summary={payload.typography.summary}
-                />
-            </Tabs.Panel>
-        </Tabs.Root>
+        <Box className="flex flex-col items-center gap-v-100 p-v-400">
+            <Text typography="body2">위반 없음.</Text>
+            <Text typography="body4" className="text-v-gray-600">
+                검사 노드 총 {summary.total}개
+            </Text>
+        </Box>
     );
 }

@@ -18,6 +18,7 @@ export function ResizeHandle() {
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
         event.preventDefault();
         event.currentTarget.setPointerCapture(event.pointerId);
+
         dragRef.current = {
             startX: event.clientX,
             startY: event.clientY,
@@ -28,6 +29,7 @@ export function ResizeHandle() {
 
     const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
         const drag = dragRef.current;
+
         if (!drag) return;
         if (event.buttons === 0) {
             if (event.currentTarget.hasPointerCapture(event.pointerId)) {
@@ -36,6 +38,7 @@ export function ResizeHandle() {
             dragRef.current = null;
             return;
         }
+
         const width = Math.max(MIN_WIDTH, drag.startWidth + (event.clientX - drag.startX));
         const height = Math.max(MIN_HEIGHT, drag.startHeight + (event.clientY - drag.startY));
         postToCode({ type: 'resize', width, height });
@@ -45,6 +48,7 @@ export function ResizeHandle() {
         if (event.currentTarget.hasPointerCapture(event.pointerId)) {
             event.currentTarget.releasePointerCapture(event.pointerId);
         }
+
         dragRef.current = null;
     };
 
@@ -57,16 +61,7 @@ export function ResizeHandle() {
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
-            style={{
-                position: 'fixed',
-                right: 0,
-                bottom: 0,
-                width: 16,
-                height: 16,
-                cursor: 'nwse-resize',
-                touchAction: 'none',
-                zIndex: 9999,
-            }}
+            className="fixed right-0 bottom-0 w-4 h-4 cursor-nwse-resize touch-none z-9999"
         >
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden focusable="false">
                 <path

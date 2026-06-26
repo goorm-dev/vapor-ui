@@ -1,52 +1,49 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import type { ScanPayload } from '~/shared/schema';
 
 import { postToCode, subscribe } from '../messaging';
 import { useFunnel } from './use-funnel';
 
-export type ScanStatus =
-    | { kind: 'idle' }
-    | { kind: 'loading'; frameName: string }
-    | { kind: 'clean'; frameName: string }
-    | { kind: 'success'; frameName: string; payload: ScanPayload }
-    | { kind: 'error'; message: string };
+type Variant = { kind: string };
 
-export function useScanResult() {
-    const { state, setState, match } = useFunnel<ScanStatus>({ kind: 'idle' });
+export type ScanResultBuilder<TStatus extends Variant> = {
+    initial: TStatus;
+    onStart: (frameName: string) => TStatus;
+    onResult: (frameName: string, payload: ScanPayload, isEmpty: boolean) => TStatus;
+    onError: (message: string) => TStatus;
+};
+
+export function useScanResult<TStatus extends Variant>(builder: ScanResultBuilder<TStatus>) {
+    const { setState, match } = useFunnel<TStatus>(builder.initial);
+    const builderRef = useRef(builder);
+    builderRef.current = builder;
+    const frameNameRef = useRef('');
 
     useEffect(() => {
         return subscribe((msg) => {
             if (msg.type === 'scan-error') {
-                setState({ kind: 'error', message: msg.message });
+                setState(builderRef.current.onError(msg.message));
                 return;
             }
             if (msg.type !== 'scan-result') return;
 
-            const frameName =
-                state.kind === 'loading' || state.kind === 'success' || state.kind === 'clean'
-                    ? state.frameName
-                    : '';
             const { color, typography } = msg.payload;
             const empty = color.violations.length === 0 && typography.violations.length === 0;
-
-            setState(
-                empty
-                    ? { kind: 'clean', frameName }
-                    : { kind: 'success', frameName, payload: msg.payload },
-            );
+            setState(builderRef.current.onResult(frameNameRef.current, msg.payload, empty));
         });
-    }, [setState, state]);
+    }, [setState]);
 
     const start = useCallback(
         (frameId: string, frameName: string) => {
-            setState({ kind: 'loading', frameName });
+            frameNameRef.current = frameName;
+            setState(builderRef.current.onStart(frameName));
             postToCode({ type: 'scan', frameId });
         },
         [setState],
     );
 
-    const reset = useCallback(() => setState({ kind: 'idle' }), [setState]);
+    const reset = useCallback(() => setState(builderRef.current.initial), [setState]);
 
     return { match, start, reset };
 }
