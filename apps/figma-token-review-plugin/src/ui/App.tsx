@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Box, Text } from '@vapor-ui/core';
+import { Box } from '@vapor-ui/core';
 
 import type { ScanPayload, SelectionState } from '~/shared/schema';
 
@@ -10,6 +10,7 @@ import { ViolationList } from './components/ViolationList';
 import { ErrorState } from './components/states/ErrorState';
 import { LoadingState } from './components/states/LoadingState';
 import { SuccessState } from './components/states/SuccessState';
+import { toastManager } from './components/toast';
 import { useFunnel } from './hooks/useFunnel';
 import { postToCode, subscribe } from './messaging';
 
@@ -26,13 +27,6 @@ const App = () => {
     const [selection, setSelection] = useState<SelectionState>({ kind: 'none' });
     const { setState: setScan, match: matchScan } = useFunnel<ScanStatus>({ kind: 'idle' });
     const [tab, setTab] = useState<Tab>('color');
-    const [toast, setToast] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (!toast) return;
-        const id = setTimeout(() => setToast(null), 3000);
-        return () => clearTimeout(id);
-    }, [toast]);
 
     useEffect(() => {
         const unsubscribe = subscribe((msg) => {
@@ -52,11 +46,14 @@ const App = () => {
                     return;
                 case 'focus-result':
                     if (msg.resolved > 0 && msg.missing > 0) {
-                        setToast(`${msg.missing}개 노드 누락`);
+                        toastManager.add({
+                            title: `${msg.missing}개 노드 누락`,
+                            colorPalette: 'info',
+                        });
                     }
                     return;
                 case 'focus-error':
-                    setToast(msg.message);
+                    toastManager.add({ title: msg.message, colorPalette: 'danger' });
                     return;
                 default: {
                     const _exhaustive: never = msg;
@@ -75,27 +72,22 @@ const App = () => {
                 postToCode({ type: 'scan', frameId: selection.id });
                 return;
             case 'none':
-                setToast('프레임을 1개 선택해 주세요.');
+                toastManager.add({ title: '프레임을 1개 선택해 주세요.', colorPalette: 'danger' });
                 return;
             case 'multi':
-                setToast('프레임 1개만 선택해 주세요.');
+                toastManager.add({ title: '프레임 1개만 선택해 주세요.', colorPalette: 'danger' });
                 return;
             case 'invalid':
-                setToast(`프레임 노드만 선택할 수 있습니다. (현재: ${selection.nodeType})`);
+                toastManager.add({
+                    title: `프레임 노드만 선택할 수 있습니다. (현재: ${selection.nodeType})`,
+                    colorPalette: 'danger',
+                });
                 return;
         }
     };
 
     return (
         <Box className="min-h-screen bg-white">
-            {toast && (
-                <Box className="bg-v-yellow-50 px-v-200 py-v-100">
-                    <Text typography="body4" className="text-v-yellow-800">
-                        {toast}
-                    </Text>
-                </Box>
-            )}
-
             {matchScan({
                 idle: () => (
                     <SelectionBanner

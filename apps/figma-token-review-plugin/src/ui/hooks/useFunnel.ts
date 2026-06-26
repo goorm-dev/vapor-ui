@@ -21,6 +21,7 @@ export function useFunnel<T extends Variant>(initial: T): Funnel<T> {
             const handler = handlers[state.kind as T['kind']] as (
                 state: Extract<T, { kind: T['kind'] }>,
             ) => ReactNode;
+
             return handler(state as Extract<T, { kind: T['kind'] }>);
         },
         [state],
