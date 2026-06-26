@@ -150,8 +150,14 @@ export function ScanResultView({ frameName = '이름 없는 프레임', payload 
                 {(Object.keys(TAB_LABEL) as TabKey[]).map((key) => {
                     const enabled = FRAME_TAB_KEYS.includes(key);
                     const selected = enabled && key === tab;
+
                     return (
-                        <Tabs.Button key={key} value={key} disabled={!enabled}>
+                        <Tabs.Button
+                            key={key}
+                            value={key}
+                            disabled={!enabled}
+                            $css={{ flexShrink: 0 }}
+                        >
                             {TAB_LABEL[key]}
                             <Badge size="sm" colorPalette={selected ? 'primary' : 'hint'}>
                                 {counts[key]}
