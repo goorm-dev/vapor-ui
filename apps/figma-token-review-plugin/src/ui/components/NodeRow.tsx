@@ -17,7 +17,10 @@ export function NodeRow({ nodeId, index, onClick }: Props) {
             <Text typography="body4" className="font-mono text-v-gray-500">
                 {nodeId}
             </Text>
-            <Text typography="body4" className="rounded bg-v-gray-100 px-v-100 py-v-050 text-v-gray-700">
+            <Text
+                typography="body4"
+                className="rounded bg-v-gray-100 px-v-100 py-v-050 text-v-gray-700"
+            >
                 포커스
             </Text>
         </button>

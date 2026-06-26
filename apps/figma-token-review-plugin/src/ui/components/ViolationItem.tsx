@@ -1,8 +1,10 @@
 import { useState } from 'react';
+
 import { Box, Button, Text } from '@vapor-ui/core';
 
 import type { Violation } from '~/shared/schema';
 import { postToCode } from '~/ui/messaging';
+
 import { NodeRow } from './NodeRow';
 
 const SEVERITY_LABEL: Record<Violation['severity'], string> = { high: '부적합', info: '안내' };
@@ -13,7 +15,8 @@ type Props = {
 
 export function ViolationItem({ violation }: Props) {
     const [open, setOpen] = useState<boolean>(false);
-    const nodes = violation.nodeIds && violation.nodeIds.length > 0 ? violation.nodeIds : [violation.nodeId];
+    const nodes =
+        violation.nodeIds && violation.nodeIds.length > 0 ? violation.nodeIds : [violation.nodeId];
     const count = violation.count ?? nodes.length;
 
     return (
@@ -24,7 +27,10 @@ export function ViolationItem({ violation }: Props) {
                 onClick={() => setOpen((v) => !v)}
             >
                 <Box className="flex items-center gap-v-100">
-                    <Text typography="body4" className="rounded bg-v-red-100 px-v-050 text-v-red-700">
+                    <Text
+                        typography="body4"
+                        className="rounded bg-v-red-100 px-v-050 text-v-red-700"
+                    >
                         {SEVERITY_LABEL[violation.severity]}
                     </Text>
                     <Text typography="body4" className="text-v-gray-500">
@@ -46,7 +52,9 @@ export function ViolationItem({ violation }: Props) {
                 <Box className="bg-v-gray-50 px-v-200 pb-v-200 pt-v-100">
                     {violation.suggested.length > 0 && (
                         <Box className="mb-v-100 flex flex-wrap gap-v-050">
-                            <Text typography="body4" className="text-v-gray-600">추천:</Text>
+                            <Text typography="body4" className="text-v-gray-600">
+                                추천:
+                            </Text>
                             {violation.suggested.map((s) => (
                                 <Text
                                     key={s}

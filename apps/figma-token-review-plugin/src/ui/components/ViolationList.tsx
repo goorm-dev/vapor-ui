@@ -1,6 +1,7 @@
 import { Box, Text } from '@vapor-ui/core';
 
 import type { EvaluateOutput, Violation } from '~/shared/schema';
+
 import { ViolationItem } from './ViolationItem';
 import { EmptyState } from './states/EmptyState';
 
@@ -27,7 +28,8 @@ export function ViolationList({ violations, summary }: Props) {
         <Box>
             <Box className="px-v-200 py-v-100">
                 <Text typography="body4" className="text-v-gray-600">
-                    전체 {summary.total} · 부적합 {summary.violationsCount} · 중요 {summary.highSeverity}
+                    전체 {summary.total} · 부적합 {summary.violationsCount} · 중요{' '}
+                    {summary.highSeverity}
                 </Text>
             </Box>
             {sorted.map((v, i) => (
