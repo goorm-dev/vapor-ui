@@ -24,7 +24,7 @@ export function ViolationDetail({ detail, hasSuggestion }: ViolationDetailProps)
                 <AiSmartieIcon size="14" />
                 AI 추천
             </Badge>
-            <Text typography="body2" foreground="normal-200">
+            <Text typography="body2" foreground="normal-200" $css={{ textAlign: 'left' }}>
                 {detail}
             </Text>
         </DescriptionBox>
