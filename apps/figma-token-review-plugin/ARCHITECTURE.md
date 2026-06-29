@@ -9,6 +9,9 @@ src/
     └── libs/llm.ts  # LLM 판정 2단 — runLlmEvaluation
 ```
 
+- `plugin/extract`: 1단(결정론) RawExtract 추출. LLM 호출 없음.
+- `ui/libs/llm`: 2단 LLM 판정. RawExtract → ScanPayload.
+
 샌드박스(`plugin/`)와 UI(`ui/`)는 `figma.ui.postMessage` / `window.message`로만 통신. 모든 wire-level 형식은 `shared/`가 정의.
 
 ---
