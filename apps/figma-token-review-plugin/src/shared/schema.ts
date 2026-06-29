@@ -6,7 +6,9 @@ export type ViolationType =
     | 'do-not-use'
     | 'role-mismatch'
     | 'fg-grade-mismatch'
-    | 'fg-grade-ambiguous';
+    | 'fg-grade-ambiguous'
+    | 'typo-raw'
+    | 'typo-styled-override';
 
 export type Violation = {
     nodeId: string;
@@ -26,18 +28,18 @@ export type Conformant = {
     token: string;
 };
 
+export type EvaluateSummary = {
+    total: number;
+    conformCount: number;
+    highViolations: number;
+    infoFlags: number;
+};
+
 export type EvaluateOutput = {
     violations: Violation[];
     conformant: Conformant[];
-    summary: {
-        total: number;
-        violationsCount: number;
-        highSeverity: number;
-    };
-    rubric: {
-        version: string;
-        source: string;
-    };
+    summary: EvaluateSummary;
+    rubric?: Record<string, unknown>;
 };
 
 export type ScanPayload = {
