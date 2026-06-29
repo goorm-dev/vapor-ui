@@ -31,6 +31,7 @@ export type Conformant = {
 export type EvaluateSummary = {
     total: number;
     conformCount: number;
+    conformanceRate: number | null;
     highViolations: number;
     infoFlags: number;
 };
