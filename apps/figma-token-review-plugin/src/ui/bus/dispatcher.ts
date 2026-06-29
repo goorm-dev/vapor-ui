@@ -1,7 +1,7 @@
 import type { CodeEnvelope } from '~/shared/protocol';
 
 import { toastManager } from '../components/toast';
-import { EvaluatorHttpError, EvaluatorParseError, runEvaluation } from '../evaluator';
+import { LlmHttpError, LlmParseError, runLlmEvaluation } from '../libs/llm';
 import { scanActions, scanStore } from '../store/scan';
 import { selectionStore } from '../store/selection';
 import { onMessage } from './client';
@@ -62,7 +62,7 @@ async function evaluateExtract(
     activeEvaluation = controller;
 
     try {
-        const payload = await runEvaluation(msg.payload, { signal: controller.signal });
+        const payload = await runLlmEvaluation(msg.payload, { signal: controller.signal });
         if (activeEvaluation !== controller) return;
         scanActions.result(payload, msg.requestId);
     } catch (err) {
@@ -82,12 +82,12 @@ async function evaluateExtract(
 }
 
 function messageFromEvaluatorError(err: unknown): string {
-    if (err instanceof EvaluatorHttpError) {
+    if (err instanceof LlmHttpError) {
         if (err.status === 401 || err.status === 403) return 'API 키를 확인하세요.';
         if (err.status === 429) return '요청이 많습니다. 잠시 후 다시 시도해 주세요.';
         return `LLM 호출 실패 (${err.status})`;
     }
-    if (err instanceof EvaluatorParseError) return 'LLM 응답 형식 오류';
+    if (err instanceof LlmParseError) return 'LLM 응답 형식 오류';
     if (err instanceof Error) return err.message;
     return '알 수 없는 오류';
 }
