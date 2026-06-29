@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 
-import { startMessageBridge } from './bus/dispatcher';
+import { postToCode } from '~/common/messages';
+
+import { startMessageBridge } from './messages/router';
 import { ToastProvider, toastManager } from './components/toast';
-import { postToCode } from './messaging';
 
 type Props = { children: ReactNode };
 

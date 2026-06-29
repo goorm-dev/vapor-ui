@@ -1,3 +1,7 @@
+/* -------------------------------------------------------------------------------------------------
+ * Domain types (formerly src/shared/schema.ts)
+ * -----------------------------------------------------------------------------------------------*/
+
 export type Severity = 'high' | 'info';
 
 export type ViolationType =
@@ -56,10 +60,15 @@ export type SelectionState =
     | { kind: 'invalid'; nodeType: string };
 
 export type Viewport = 'pc' | 'tablet' | 'mobile';
+
 export type SchemaMode = 'light' | 'dark';
+
 export type ColorProperty = 'fill' | 'stroke' | 'text';
+
 export type TokenStatus = 'ok' | 'raw' | 'unknown';
+
 export type BackgroundKind = 'white' | 'other' | 'transparent' | 'ambiguous';
+
 export type AppliedStatus = 'styled-clean' | 'styled-override' | 'var-only' | 'raw' | 'mixed';
 
 export type ColorBackground = {
@@ -125,3 +134,39 @@ export type UiMsg =
     | { type: 'scan'; frameId: string }
     | { type: 'focus'; nodeIds: string[] }
     | { type: 'resize'; width: number; height: number; commit?: boolean };
+
+/* -------------------------------------------------------------------------------------------------
+ * Envelope + RequestId (formerly src/shared/protocol.ts)
+ * -----------------------------------------------------------------------------------------------*/
+
+export type RequestId = string;
+
+export type Envelope<T> = T & { requestId?: RequestId };
+
+export type UiEnvelope = Envelope<UiMsg>;
+
+export type CodeEnvelope = Envelope<CodeMsg>;
+
+export function newRequestId(): RequestId {
+    return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Post helpers
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * UI → plugin direction. Uses `parent` (DOM iframe global).
+ * Tree-shaken from plugin bundle when only types are imported.
+ */
+export function postToCode(msg: UiMsg | UiEnvelope): void {
+    parent.postMessage({ pluginMessage: msg }, '*');
+}
+
+/**
+ * Plugin → UI direction. Uses `figma.ui` (plugin sandbox global).
+ * Tree-shaken from UI bundle when only types are imported.
+ */
+export function postToUi(msg: CodeEnvelope, requestId?: RequestId): void {
+    figma.ui.postMessage(requestId ? { ...msg, requestId } : msg);
+}

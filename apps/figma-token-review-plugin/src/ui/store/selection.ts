@@ -1,4 +1,4 @@
-import type { SelectionState } from '~/shared/schema';
+import type { SelectionState } from '~/common/messages';
 
 import { createStore } from './create-store';
 

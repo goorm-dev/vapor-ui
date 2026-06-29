@@ -8,7 +8,7 @@ import type {
     TokenStatus,
     TypographyUsage,
     Viewport,
-} from '~/shared/schema';
+} from '~/common/messages';
 
 const MODE: 'both' | 'color' | 'typography' = 'both';
 

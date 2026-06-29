@@ -1,6 +1,7 @@
-import type { SelectionState } from '~/shared/schema';
+import type { SelectionState } from '~/common/messages';
 
-import { on, postToUi } from '../bus';
+import { on } from '../messages';
+import { postToUi } from '~/common/messages';
 
 function computeSelection(): SelectionState {
     const sel = figma.currentPage.selection;

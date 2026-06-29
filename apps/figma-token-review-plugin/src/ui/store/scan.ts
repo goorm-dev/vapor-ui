@@ -1,5 +1,4 @@
-import type { RequestId } from '~/shared/protocol';
-import type { ScanPayload } from '~/shared/schema';
+import type { RequestId, ScanPayload } from '~/common/messages';
 
 import { createStore } from './create-store';
 

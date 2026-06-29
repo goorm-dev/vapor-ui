@@ -1,4 +1,4 @@
-import type { CodeEnvelope } from '~/shared/protocol';
+import type { CodeEnvelope } from '~/common/messages';
 
 type Listener = (msg: CodeEnvelope) => void;
 

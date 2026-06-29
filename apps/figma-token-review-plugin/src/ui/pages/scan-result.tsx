@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { Badge, Box, Collapsible, HStack, IconButton, Tabs, Text, VStack } from '@vapor-ui/core';
 import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-ui/icons';
 
-import type { EvaluateOutput, ScanPayload, Violation } from '~/shared/schema';
+import type { EvaluateOutput, ScanPayload, Violation } from '~/common/messages';
 
 import { ViolationCard } from '../components/violation-card';
 

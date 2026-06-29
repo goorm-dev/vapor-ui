@@ -1,7 +1,7 @@
 import { Card, VStack } from '@vapor-ui/core';
 
-import type { Violation } from '~/shared/schema';
-import { requestFocus } from '~/ui/bus/request';
+import type { Violation } from '~/common/messages';
+import { requestFocus } from '~/ui/focus/request-id';
 
 import { TokenComparison } from './token-comparison';
 import { extractRawValue } from './utils';
