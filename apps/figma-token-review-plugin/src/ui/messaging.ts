@@ -10,6 +10,7 @@ export function subscribe(handler: (msg: CodeMsg) => void): () => void {
         if (!data || typeof data.type !== 'string') return;
         handler(data);
     };
+
     window.addEventListener('message', listener);
     return () => window.removeEventListener('message', listener);
 }

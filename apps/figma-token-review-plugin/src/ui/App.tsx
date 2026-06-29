@@ -26,6 +26,7 @@ const App = () => {
             isEmpty ? { kind: 'clean', frameName } : { kind: 'success', frameName, payload },
         onError: () => ({ kind: 'idle' }),
     });
+
     useFocusToasts();
 
     const handleScan = (frameId: string) => {

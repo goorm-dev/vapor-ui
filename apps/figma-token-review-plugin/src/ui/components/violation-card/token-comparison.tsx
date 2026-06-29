@@ -26,6 +26,8 @@ export function TokenComparison({ usedLabel, suggestedLabel, swatch }: TokenComp
     );
 }
 
+/* -----------------------------------------------------------------------------------------------*/
+
 type TokenChipProps = {
     label: string;
     swatch: string | null;
@@ -56,6 +58,8 @@ export function TokenChip({ label, swatch, tone }: TokenChipProps) {
         </HStack>
     );
 }
+
+/* -----------------------------------------------------------------------------------------------*/
 
 type ColorSwatchProps = {
     value: string | null;

@@ -17,8 +17,9 @@ export type ScanResultBuilder<TStatus extends Variant> = {
 export function useScanResult<TStatus extends Variant>(builder: ScanResultBuilder<TStatus>) {
     const { setState, match } = useFunnel<TStatus>(builder.initial);
     const builderRef = useRef(builder);
-    builderRef.current = builder;
     const frameNameRef = useRef('');
+
+    builderRef.current = builder;
 
     useEffect(() => {
         return subscribe((msg) => {
@@ -30,6 +31,7 @@ export function useScanResult<TStatus extends Variant>(builder: ScanResultBuilde
 
             const { color, typography } = msg.payload;
             const empty = color.violations.length === 0 && typography.violations.length === 0;
+
             setState(builderRef.current.onResult(frameNameRef.current, msg.payload, empty));
         });
     }, [setState]);
@@ -37,6 +39,7 @@ export function useScanResult<TStatus extends Variant>(builder: ScanResultBuilde
     const start = useCallback(
         (frameId: string, frameName: string) => {
             frameNameRef.current = frameName;
+
             setState(builderRef.current.onStart(frameName));
             postToCode({ type: 'scan', frameId });
         },
