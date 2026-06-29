@@ -1,53 +1,49 @@
 import { Box } from '@vapor-ui/core';
 
-import type { ScanPayload } from '~/shared/schema';
+import type { SelectionState } from '~/shared/schema';
 
 import { Loader } from './components/loader';
 import { ResizeHandle } from './components/resize-handler';
-import { useFocusToasts } from './hooks/use-focus-toasts';
-import { useScanResult } from './hooks/use-scan-result';
+import { useScan } from './hooks/use-scan';
 import { useSelection } from './hooks/use-selection';
-import { MainPage } from './pages/main';
+import { HomePage } from './pages/home';
 import { ScanResultPage } from './pages/scan-result';
 import { SuccessPage } from './pages/success';
-
-type ScanStatus =
-    | { kind: 'idle' }
-    | { kind: 'loading' }
-    | { kind: 'clean'; frameName: string }
-    | { kind: 'success'; frameName: string; payload: ScanPayload };
+import type { ScanState } from './store/scan';
 
 const App = () => {
     const selection = useSelection();
-    const scan = useScanResult<ScanStatus>({
-        initial: { kind: 'idle' },
-        onStart: () => ({ kind: 'loading' }),
-        onResult: (frameName, payload, isEmpty) =>
-            isEmpty ? { kind: 'clean', frameName } : { kind: 'success', frameName, payload },
-        onError: () => ({ kind: 'idle' }),
-    });
-
-    useFocusToasts();
+    const { state, start, reset } = useScan();
 
     const handleScan = (frameId: string) => {
         const name = selection.kind === 'frame' ? selection.name : '';
-        scan.start(frameId, name);
+        start(frameId, name);
     };
 
     return (
         <Box className="min-h-screen bg-white">
-            {scan.match({
-                idle: () => <MainPage selection={selection} onScan={handleScan} />,
-                clean: () => <SuccessPage onReset={scan.reset} />,
-                loading: () => <Loader />,
-                success: ({ frameName, payload }) => (
-                    <ScanResultPage frameName={frameName} payload={payload} />
-                ),
-            })}
-
+            {renderScan(state, selection, handleScan, reset)}
             <ResizeHandle />
         </Box>
     );
 };
+
+function renderScan(
+    state: ScanState,
+    selection: SelectionState,
+    onScan: (frameId: string) => void,
+    onReset: () => void,
+) {
+    switch (state.kind) {
+        case 'idle':
+            return <HomePage selection={selection} onScan={onScan} />;
+        case 'loading':
+            return <Loader />;
+        case 'clean':
+            return <SuccessPage onReset={onReset} />;
+        case 'success':
+            return <ScanResultPage frameName={state.frameName} payload={state.payload} />;
+    }
+}
 
 export default App;

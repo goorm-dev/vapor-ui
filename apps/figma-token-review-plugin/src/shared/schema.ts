@@ -62,4 +62,4 @@ export type UiMsg =
     | { type: 'request-selection' }
     | { type: 'scan'; frameId: string }
     | { type: 'focus'; nodeIds: string[] }
-    | { type: 'resize'; width: number; height: number };
+    | { type: 'resize'; width: number; height: number; commit?: boolean };

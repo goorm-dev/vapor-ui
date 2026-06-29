@@ -1,22 +1,8 @@
-import { useEffect, useState } from 'react';
-
 import type { SelectionState } from '~/shared/schema';
 
-import { postToCode, subscribe } from '../messaging';
+import { useStore } from '../store/create-store';
+import { selectionStore } from '../store/selection';
 
 export function useSelection(): SelectionState {
-    const [selection, setSelection] = useState<SelectionState>({ kind: 'none' });
-
-    useEffect(() => {
-        const unsubscribe = subscribe((msg) => {
-            if (msg.type !== 'selection') return;
-            setSelection(msg.state);
-        });
-
-        postToCode({ type: 'request-selection' });
-
-        return unsubscribe;
-    }, []);
-
-    return selection;
+    return useStore(selectionStore);
 }

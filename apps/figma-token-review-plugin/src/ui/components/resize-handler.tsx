@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { postToCode } from '~/ui/messaging';
 
@@ -14,6 +14,36 @@ type DragState = {
 
 export function ResizeHandle() {
     const dragRef = useRef<DragState | null>(null);
+    const rafRef = useRef<number | null>(null);
+    const pendingRef = useRef<{ width: number; height: number } | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+        };
+    }, []);
+
+    const flush = () => {
+        rafRef.current = null;
+        const pending = pendingRef.current;
+        if (!pending) return;
+        pendingRef.current = null;
+        postToCode({ type: 'resize', width: pending.width, height: pending.height });
+    };
+
+    const queueResize = (width: number, height: number) => {
+        pendingRef.current = { width, height };
+        if (rafRef.current !== null) return;
+        rafRef.current = requestAnimationFrame(flush);
+    };
+
+    const cancelPending = () => {
+        if (rafRef.current !== null) {
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = null;
+        }
+        pendingRef.current = null;
+    };
 
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -36,12 +66,13 @@ export function ResizeHandle() {
                 event.currentTarget.releasePointerCapture(event.pointerId);
             }
             dragRef.current = null;
+            cancelPending();
             return;
         }
 
         const width = Math.max(MIN_WIDTH, drag.startWidth + (event.clientX - drag.startX));
         const height = Math.max(MIN_HEIGHT, drag.startHeight + (event.clientY - drag.startY));
-        postToCode({ type: 'resize', width, height });
+        queueResize(width, height);
     };
 
     const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -49,7 +80,18 @@ export function ResizeHandle() {
             event.currentTarget.releasePointerCapture(event.pointerId);
         }
 
+        const drag = dragRef.current;
         dragRef.current = null;
+
+        if (!drag) {
+            cancelPending();
+            return;
+        }
+
+        cancelPending();
+        const width = Math.max(MIN_WIDTH, drag.startWidth + (event.clientX - drag.startX));
+        const height = Math.max(MIN_HEIGHT, drag.startHeight + (event.clientY - drag.startY));
+        postToCode({ type: 'resize', width, height, commit: true });
     };
 
     return (

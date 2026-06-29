@@ -9,7 +9,7 @@ type Props = {
     onScan: (frameId: string) => void;
 };
 
-export function MainPage({ selection, onScan }: Props) {
+export function HomePage({ selection, onScan }: Props) {
     const disabled = selection.kind === 'none';
 
     const handleClick = () => {

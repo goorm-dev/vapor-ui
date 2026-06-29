@@ -1,7 +1,7 @@
 import { Card, VStack } from '@vapor-ui/core';
 
 import type { Violation } from '~/shared/schema';
-import { postToCode } from '~/ui/messaging';
+import { requestFocus } from '~/ui/bus/request';
 
 import { TokenComparison } from './token-comparison';
 import { extractRawValue } from './utils';
@@ -30,10 +30,7 @@ export function ViolationCard({ violation }: ViolationCardProps) {
         violation.nodeIds && violation.nodeIds.length > 0 ? violation.nodeIds : [violation.nodeId];
 
     return (
-        <Card.Root
-            render={<button />}
-            onClick={() => postToCode({ type: 'focus', nodeIds: nodes })}
-        >
+        <Card.Root render={<button />} onClick={() => requestFocus(nodes)}>
             <Card.Body $css={{ padding: '$200', paddingTop: '$150' }}>
                 <VStack $css={{ gap: '$150', width: '100%' }}>
                     <VStack $css={{ gap: '$100', width: '100%', alignItems: 'flex-start' }}>

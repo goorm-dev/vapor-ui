@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Badge, Box, Collapsible, HStack, IconButton, Tabs, Text, VStack } from '@vapor-ui/core';
 import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-ui/icons';
@@ -16,7 +16,7 @@ type Props = {
 
 export function ScanResultPage({ frameName = '이름 없는 프레임', payload }: Props) {
     const [tab, setTab] = useState<TabKey>('color');
-    const counts = getViolationCounts(payload);
+    const counts = useMemo(() => getViolationCounts(payload), [payload]);
 
     return (
         <Tabs.Root
@@ -141,9 +141,12 @@ type ViolationPanelProps = {
 };
 
 function ViolationPanel({ violations, summary }: ViolationPanelProps) {
-    if (violations.length === 0) return <EmptyState summary={summary} />;
+    const { frameOnes, textOnes } = useMemo(
+        () => splitByKind(sortViolations(violations)),
+        [violations],
+    );
 
-    const { frameOnes, textOnes } = splitByKind(sortViolations(violations));
+    if (violations.length === 0) return <EmptyState summary={summary} />;
 
     return (
         <VStack $css={{ gap: '$300', width: '100%', flex: 1, padding: '$200' }}>
