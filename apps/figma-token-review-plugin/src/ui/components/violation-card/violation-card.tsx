@@ -23,9 +23,9 @@ type ViolationCardProps = {
 
 export function ViolationCard({ violation }: ViolationCardProps) {
     const property = PROPERTY_LABEL[violation.type];
-    const rawValue = extractRawValue(violation.detail) ?? '—';
-    const usedLabel = violation.token ?? rawValue;
-    const suggested = violation.suggested[0] ?? '추천 없음';
+    const rawValue = extractRawValue(violation.detail);
+    const usedLabel = violation.token ?? rawValue ?? '—';
+    const suggested = violation.suggested[0];
     const nodes =
         violation.nodeIds && violation.nodeIds.length > 0 ? violation.nodeIds : [violation.nodeId];
 
@@ -40,11 +40,10 @@ export function ViolationCard({ violation }: ViolationCardProps) {
                         <ViolationBreadcrumb name={violation.name} property={property} />
                         <TokenComparison
                             usedLabel={usedLabel}
-                            suggestedLabel={suggested}
+                            suggestedLabel={suggested ?? '추천 없음'}
                             swatch={rawValue}
                         />
                     </VStack>
-
                     <ViolationDetail detail={violation.detail} hasSuggestion={Boolean(suggested)} />
                 </VStack>
             </Card.Body>
