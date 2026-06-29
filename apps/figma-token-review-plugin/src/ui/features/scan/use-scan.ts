@@ -1,8 +1,8 @@
 import { newRequestId, postToCode } from '~/common/messages';
 
-import { useStore } from '../stores/create-store';
-import type { ScanState } from '../stores/scan';
-import { scanActions, scanStore } from '../stores/scan';
+import { useStore } from '../../shared/create-store';
+import type { ScanState } from './store';
+import { scanActions, scanStore } from './store';
 
 export type UseScan = {
     state: ScanState;
