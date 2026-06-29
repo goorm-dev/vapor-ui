@@ -1,5 +1,5 @@
-import type { SelectionState } from '~/common/messages';
 import { postToUi } from '~/common/messages';
+import type { SelectionState } from '~/common/schemas';
 
 import { on } from '../messages';
 

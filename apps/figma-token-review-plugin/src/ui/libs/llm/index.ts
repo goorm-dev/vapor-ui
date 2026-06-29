@@ -1,4 +1,4 @@
-import type { RawExtract, ScanPayload } from '~/common/messages';
+import type { RawExtract, ScanPayload } from '~/common/schemas';
 
 import type { LlmEnv } from './client';
 import { LlmHttpError, LlmTimeoutError, postLiteLLM } from './client';

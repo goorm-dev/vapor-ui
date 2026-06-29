@@ -1,4 +1,4 @@
-import type { ScanPayload } from '~/common/messages';
+import type { ScanPayload } from '~/common/schemas';
 
 type AnthropicTextBlock = { type: 'text'; text: string };
 type AnthropicContentBlock = AnthropicTextBlock | { type: string; [key: string]: unknown };

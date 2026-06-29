@@ -1,6 +1,6 @@
 import { Box } from '@vapor-ui/core';
 
-import type { SelectionState } from '~/common/messages';
+import type { SelectionState } from '~/common/schemas';
 
 import { Loader } from './components/loader';
 import { ResizeHandle } from './components/resize-handler';
