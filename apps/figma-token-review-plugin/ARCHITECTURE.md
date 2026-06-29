@@ -6,7 +6,7 @@ src/
 ├── plugin/    # Figma 샌드박스 (figma API 접근, DOM 없음)
 │   └── extract.ts   # 프레임 추출 1단 — extractFrame
 └── ui/        # React iframe UI
-    └── libs/llm.ts  # LLM 판정 2단 — runLlmEvaluation
+    └── libs/llm/    # LLM 판정 2단 — runLlmEvaluation (index.ts, client.ts, parse.ts, prompt.ts)
 ```
 
 - `plugin/extract`: 1단(결정론) RawExtract 추출. LLM 호출 없음.
