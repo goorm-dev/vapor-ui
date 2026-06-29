@@ -1,25 +1,33 @@
+import { useEffect } from 'react';
+
 import type { CodeEnvelope } from '~/common/messages';
+import { postToCode } from '~/common/messages';
 
 import { toastManager } from '../components/toast';
-import { isActiveFocus } from '../focus/request-id';
+import { isActiveFocus } from '../libs/focus-node';
 import { LlmHttpError, LlmParseError, runLlmEvaluation } from '../libs/llm';
-import { scanActions, scanStore } from '../store/scan';
-import { selectionStore } from '../store/selection';
-import { onMessage } from './inbound';
+import { scanActions, scanStore } from '../stores/scan';
+import { selectionStore } from '../stores/selection';
 
-let started = false;
+export const useBridge = () => {
+    useEffect(() => {
+        window.addEventListener('message', handleWindowMessage);
+        postToCode({ type: 'request-selection' });
+
+        return () => {
+            window.removeEventListener('message', handleWindowMessage);
+        };
+    }, []);
+};
+
+/* ----- utils ----- */
+
 let activeEvaluation: AbortController | null = null;
 
-export function startMessageBridge(): () => void {
-    if (started) return () => {};
-    started = true;
-
-    const unsub = onMessage(handle);
-
-    return () => {
-        unsub();
-        started = false;
-    };
+function handleWindowMessage(event: MessageEvent) {
+    const msg = event.data?.pluginMessage as CodeEnvelope | undefined;
+    if (!msg || typeof msg.type !== 'string') return;
+    handle(msg);
 }
 
 function handle(msg: CodeEnvelope) {

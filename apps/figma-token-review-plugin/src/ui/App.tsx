@@ -9,7 +9,7 @@ import { useSelection } from './hooks/use-selection';
 import { HomePage } from './pages/home';
 import { ScanResultPage } from './pages/scan-result';
 import { SuccessPage } from './pages/success';
-import type { ScanState } from './store/scan';
+import type { ScanState } from './stores/scan';
 
 const App = () => {
     const selection = useSelection();

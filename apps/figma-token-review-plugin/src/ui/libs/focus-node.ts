@@ -1,5 +1,5 @@
-import type { RequestId } from '~/common/messages';
 import { newRequestId, postToCode } from '~/common/messages';
+import type { RequestId } from '~/common/messages';
 
 let activeFocusId: RequestId | null = null;
 
