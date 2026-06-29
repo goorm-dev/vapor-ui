@@ -1,5 +1,6 @@
-import { on } from '../messages';
 import { postToUi } from '~/common/messages';
+
+import { on } from '../messages';
 import { extractFrame } from './extract';
 
 let activeRequestId: string | null = null;

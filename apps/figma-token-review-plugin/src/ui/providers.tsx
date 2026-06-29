@@ -3,8 +3,8 @@ import type { ReactNode } from 'react';
 
 import { postToCode } from '~/common/messages';
 
-import { startMessageBridge } from './messages/router';
 import { ToastProvider, toastManager } from './components/toast';
+import { startMessageBridge } from './messages/router';
 
 type Props = { children: ReactNode };
 

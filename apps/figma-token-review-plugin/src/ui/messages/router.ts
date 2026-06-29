@@ -1,11 +1,11 @@
 import type { CodeEnvelope } from '~/common/messages';
 
 import { toastManager } from '../components/toast';
+import { isActiveFocus } from '../focus/request-id';
 import { LlmHttpError, LlmParseError, runLlmEvaluation } from '../libs/llm';
 import { scanActions, scanStore } from '../store/scan';
 import { selectionStore } from '../store/selection';
 import { onMessage } from './inbound';
-import { isActiveFocus } from '../focus/request-id';
 
 let started = false;
 let activeEvaluation: AbortController | null = null;

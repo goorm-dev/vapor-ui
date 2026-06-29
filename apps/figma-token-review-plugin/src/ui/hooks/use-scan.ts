@@ -1,4 +1,5 @@
 import { newRequestId, postToCode } from '~/common/messages';
+
 import { useStore } from '../store/create-store';
 import type { ScanState } from '../store/scan';
 import { scanActions, scanStore } from '../store/scan';

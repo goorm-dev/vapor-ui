@@ -34,9 +34,9 @@
 
 ### Plugin 측 — 1단 추출
 
-| 항목 | 전 | 후 |
-|---|---|---|
-| 파일 | `src/plugin/call-evaluator.ts` | `src/plugin/extract.ts` |
+| 항목 | 전                                            | 후                                           |
+| ---- | --------------------------------------------- | -------------------------------------------- |
+| 파일 | `src/plugin/call-evaluator.ts`                | `src/plugin/extract.ts`                      |
 | 함수 | `callEvaluator(frameId): Promise<RawExtract>` | `extractFrame(frameId): Promise<RawExtract>` |
 
 영향: `src/plugin/handlers/scan.ts`의 import 경로 + 호출 식별자 두 군데.
@@ -48,22 +48,22 @@
 파일 4개 그대로 옮긴다. 내부 구조는 변경하지 않는다.
 
 | 파일 (불변 이름) |
-|---|
-| `index.ts` |
-| `client.ts` |
-| `parse.ts` |
-| `prompt.ts` |
+| ---------------- |
+| `index.ts`       |
+| `client.ts`      |
+| `parse.ts`       |
+| `prompt.ts`      |
 
 심볼 rename:
 
-| 전 | 후 |
-|---|---|
-| `EvaluatorEnv` | `LlmEnv` |
-| `EvaluatorHttpError` | `LlmHttpError` |
-| `EvaluatorTimeoutError` | `LlmTimeoutError` |
-| `EvaluatorParseError` | `LlmParseError` |
-| `runEvaluation` | `runLlmEvaluation` |
-| `RunEvaluationOptions` | `RunLlmEvaluationOptions` |
+| 전                      | 후                        |
+| ----------------------- | ------------------------- |
+| `EvaluatorEnv`          | `LlmEnv`                  |
+| `EvaluatorHttpError`    | `LlmHttpError`            |
+| `EvaluatorTimeoutError` | `LlmTimeoutError`         |
+| `EvaluatorParseError`   | `LlmParseError`           |
+| `runEvaluation`         | `runLlmEvaluation`        |
+| `RunEvaluationOptions`  | `RunLlmEvaluationOptions` |
 
 심볼 유지 (도메인-중립 또는 wire 프로토콜 명):
 
@@ -96,16 +96,16 @@
 
 ## 영향 파일 (총 8)
 
-| 파일 | 변경 종류 |
-|---|---|
-| `src/plugin/call-evaluator.ts` | 이동 + 함수명 변경 |
-| `src/plugin/handlers/scan.ts` | import + 호출 식별자 |
-| `src/ui/evaluator/index.ts` | 이동 + 심볼 rename |
-| `src/ui/evaluator/client.ts` | 이동 + 심볼 rename |
-| `src/ui/evaluator/parse.ts` | 이동 + 심볼 rename |
-| `src/ui/evaluator/prompt.ts` | 이동 (변경 없음) |
-| `src/ui/bus/dispatcher.ts` | import 경로 + 심볼 |
-| `apps/figma-token-review-plugin/ARCHITECTURE.md` | evaluator 참조 정합 |
+| 파일                                             | 변경 종류            |
+| ------------------------------------------------ | -------------------- |
+| `src/plugin/call-evaluator.ts`                   | 이동 + 함수명 변경   |
+| `src/plugin/handlers/scan.ts`                    | import + 호출 식별자 |
+| `src/ui/evaluator/index.ts`                      | 이동 + 심볼 rename   |
+| `src/ui/evaluator/client.ts`                     | 이동 + 심볼 rename   |
+| `src/ui/evaluator/parse.ts`                      | 이동 + 심볼 rename   |
+| `src/ui/evaluator/prompt.ts`                     | 이동 (변경 없음)     |
+| `src/ui/bus/dispatcher.ts`                       | import 경로 + 심볼   |
+| `apps/figma-token-review-plugin/ARCHITECTURE.md` | evaluator 참조 정합  |
 
 ## 검증
 

@@ -1,5 +1,6 @@
-import { on } from '../messages';
 import { postToUi } from '~/common/messages';
+
+import { on } from '../messages';
 
 export function initFocus(): void {
     on('focus', async (msg) => {
