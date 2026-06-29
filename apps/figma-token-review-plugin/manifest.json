@@ -9,6 +9,6 @@
     "documentAccess": "dynamic-page",
     "editorType": ["figma"],
     "networkAccess": {
-        "allowedDomains": ["none"]
+        "allowedDomains": ["https://litellm.internal.goorm.io"]
     }
 }

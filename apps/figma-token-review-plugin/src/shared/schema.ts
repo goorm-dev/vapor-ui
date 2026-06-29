@@ -51,10 +51,68 @@ export type SelectionState =
     | { kind: 'multi' }
     | { kind: 'invalid'; nodeType: string };
 
+export type Viewport = 'pc' | 'tablet' | 'mobile';
+export type SchemaMode = 'light' | 'dark';
+export type ColorProperty = 'fill' | 'stroke' | 'text';
+export type TokenStatus = 'ok' | 'raw' | 'unknown';
+export type BackgroundKind = 'white' | 'other' | 'transparent' | 'ambiguous';
+export type AppliedStatus = 'styled-clean' | 'styled-override' | 'var-only' | 'raw' | 'mixed';
+
+export type ColorBackground = {
+    kind: BackgroundKind;
+    hex: string | null;
+};
+
+export type ColorUsage = {
+    nodeId: string;
+    nodeIds?: string[];
+    count?: number;
+    name: string;
+    property: ColorProperty;
+    token: string | null;
+    hex: string | null;
+    tokenStatus: TokenStatus;
+    background: ColorBackground | null;
+};
+
+export type TypographyResolved = {
+    fontSize: number | null;
+    lineHeight: unknown;
+    letterSpacing: unknown;
+    fontName: unknown;
+};
+
+export type TypographyUsage = {
+    nodeId: string;
+    nodeIds?: string[];
+    count?: number;
+    name: string;
+    characters: string;
+    textStyle: string | null;
+    viewport: Viewport;
+    appliedStatus: AppliedStatus;
+    overriddenFields: string[];
+    resolved: TypographyResolved;
+};
+
+export type RawExtractStats = {
+    nodeCount: number;
+    textNodes: number;
+    visited: number;
+};
+
+export type RawExtract = {
+    schemaMode: SchemaMode;
+    viewport: Viewport;
+    colors: ColorUsage[];
+    typography: TypographyUsage[];
+    stats: RawExtractStats;
+};
+
 export type CodeMsg =
     | { type: 'selection'; state: SelectionState }
-    | { type: 'scan-result'; payload: ScanPayload }
-    | { type: 'scan-error'; message: string }
+    | { type: 'extract-result'; payload: RawExtract }
+    | { type: 'extract-error'; message: string }
     | { type: 'focus-result'; resolved: number; missing: number }
     | { type: 'focus-error'; message: string };
 
