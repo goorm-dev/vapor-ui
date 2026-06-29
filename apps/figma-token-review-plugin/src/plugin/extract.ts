@@ -229,7 +229,7 @@ function groupBy<T extends { nodeId: string }>(
     return [...map.values()];
 }
 
-export async function callEvaluator(frameId: string): Promise<RawExtract> {
+export async function extractFrame(frameId: string): Promise<RawExtract> {
     figma.skipInvisibleInstanceChildren = true;
 
     const root = await figma.getNodeByIdAsync(frameId);
