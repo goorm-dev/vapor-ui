@@ -24,6 +24,7 @@ export type Violation = {
 
 export type Conformant = {
     nodeId: string;
+    nodeIds?: string[];
     name: string;
     token: string;
 };
