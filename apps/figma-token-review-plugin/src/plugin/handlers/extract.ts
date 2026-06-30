@@ -51,37 +51,19 @@ function toSchemaKey(name: string | null): string | null {
     return name && name.startsWith('color-') ? name : null;
 }
 
-/** Map a bound-variable field to the canonical token-key prefix used by the loader. */
-function categoryPrefixFor(field: string): string {
-    switch (field) {
-        case 'paddingTop':
-        case 'paddingRight':
-        case 'paddingBottom':
-        case 'paddingLeft':
-        case 'itemSpacing':
-            return 'size-space';
-        case 'width':
-        case 'height':
-            return 'size-dimension';
-        case 'topLeftRadius':
-        case 'topRightRadius':
-        case 'bottomLeftRadius':
-        case 'bottomRightRadius':
-        case 'cornerRadius':
-            return 'size-borderRadius';
-        default:
-            return 'size-space'; // fallback
-    }
+/** Strip a leading "<prefix>/" from a Figma variable/style name; otherwise return verbatim.
+ * Examples:
+ *   "size/size-space-200" → "size-space-200"
+ *   "color/color-background-primary-100" → "color-background-primary-100"
+ *   "shadow/shadow-md" → "shadow-md"
+ *   "already-clean-200" → "already-clean-200"
+ */
+function stripLeadingPrefix(name: string): string {
+    const idx = name.indexOf('/');
+    return idx === -1 ? name : name.substring(idx + 1);
 }
 
-/** Extract the leaf segment from a Figma variable name (slash or dash separated). */
-function leafSegment(varName: string): string {
-    // Variable names use '/' as separator: "size/space/200" → "200"
-    const parts = varName.split('/');
-    return parts[parts.length - 1];
-}
-
-/** Resolve a single boundVariable ref to a token key using field-category prefix. Returns null + 'raw' if no binding. */
+/** Resolve a single boundVariable ref to a token key. Returns null + 'raw' if no binding. */
 async function readBoundToken(
     bound: Record<string, { id: string }> | undefined,
     field: string,
@@ -90,9 +72,7 @@ async function readBoundToken(
     if (!ref) return { token: null, status: 'raw' };
     const variable = await getVariableWithRemoteDefense(ref.id);
     if (!variable) return { token: null, status: 'unknown' };
-    const leaf = leafSegment(variable.name);
-    const prefix = categoryPrefixFor(field);
-    return { token: `${prefix}-${leaf}`, status: 'ok' };
+    return { token: stripLeadingPrefix(variable.name), status: 'ok' };
 }
 
 /**
@@ -111,8 +91,7 @@ async function readEffectStyleToken(
     try {
         const style = await figma.getStyleByIdAsync(styleId);
         if (!style) return { token: null, status: 'unknown' };
-        const leaf = leafSegment(style.name);
-        return { token: `shadow-${leaf}`, status: 'ok' };
+        return { token: stripLeadingPrefix(style.name), status: 'ok' };
     } catch (_e) {
         return { token: null, status: 'unknown' };
     }
