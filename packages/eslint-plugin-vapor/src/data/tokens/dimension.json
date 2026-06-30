@@ -1,0 +1,24 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+    "size": {
+        "dimension": {
+            "$type": "dimension",
+            "$description": "Scale for dimension properties such as width and height. The number is a scale index, not a px value.",
+            "025": { "$value": { "value": 2, "unit": "px" } },
+            "050": { "$value": { "value": 4, "unit": "px" } },
+            "075": { "$value": { "value": 6, "unit": "px" } },
+            "100": { "$value": { "value": 8, "unit": "px" } },
+            "150": { "$value": { "value": 12, "unit": "px" } },
+            "175": { "$value": { "value": 14, "unit": "px" } },
+            "200": { "$value": { "value": 16, "unit": "px" } },
+            "225": { "$value": { "value": 18, "unit": "px" } },
+            "250": { "$value": { "value": 20, "unit": "px" } },
+            "300": { "$value": { "value": 24, "unit": "px" } },
+            "400": { "$value": { "value": 32, "unit": "px" } },
+            "500": { "$value": { "value": 40, "unit": "px" } },
+            "600": { "$value": { "value": 48, "unit": "px" } },
+            "700": { "$value": { "value": 56, "unit": "px" } },
+            "800": { "$value": { "value": 64, "unit": "px" } }
+        }
+    }
+}

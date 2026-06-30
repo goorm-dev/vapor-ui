@@ -17,6 +17,9 @@
     "files": [
         "dist"
     ],
+    "dependencies": {
+        "culori": "^4.0.1"
+    },
     "scripts": {
         "build": "tsup",
         "clean": "rimraf dist node_modules coverage .turbo",
@@ -26,6 +29,7 @@
         "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
+        "@eslint/css": "^0.6.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/eslint": "^9.6.1",
@@ -38,9 +42,15 @@
         "vitest": "^3.2.4"
     },
     "peerDependencies": {
+        "@eslint/css": ">=0.6.0",
         "eslint": "^8.57.0 || ^9.0.0",
         "eslint-plugin-jsx-a11y": ">=6.10.2",
         "typescript": ">=4.8.4 <6.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@eslint/css": {
+            "optional": true
+        }
     },
     "publishConfig": {
         "access": "public"
