@@ -38,6 +38,13 @@ describe('css/prefer-design-token', () => {
                 token: '--vapor-color-blue-600',
                 property: 'color',
               },
+              suggestions: [
+                {
+                  messageId: 'replaceWithToken',
+                  data: { candidate: '--vapor-color-foreground-primary-100' },
+                  output: '.x { color: var(--vapor-color-foreground-primary-100); }',
+                },
+              ],
             },
           ],
         },
@@ -52,6 +59,13 @@ describe('css/prefer-design-token', () => {
                 rawValue: '#ffffff',
                 property: 'background-color',
               },
+              suggestions: [
+                {
+                  messageId: 'replaceWithToken',
+                  data: { candidate: '--vapor-color-background-overlay-100' },
+                  output: '.x { background-color: var(--vapor-color-background-overlay-100); }',
+                },
+              ],
             },
           ],
         },
@@ -66,6 +80,13 @@ describe('css/prefer-design-token', () => {
                 rawValue: '12px',
                 property: 'width',
               },
+              suggestions: [
+                {
+                  messageId: 'replaceWithToken',
+                  data: { candidate: '--vapor-size-dimension-150' },
+                  output: '.x { width: var(--vapor-size-dimension-150); }',
+                },
+              ],
             },
           ],
         },

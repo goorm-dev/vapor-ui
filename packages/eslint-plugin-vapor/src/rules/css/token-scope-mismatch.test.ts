@@ -80,6 +80,13 @@ describe('css/token-scope-mismatch', () => {
                 expectedScopes: 'dimension',
                 candidates: '--vapor-size-dimension-100',
               },
+              suggestions: [
+                {
+                  messageId: 'replaceWithToken',
+                  data: { candidate: '--vapor-size-dimension-100' },
+                  output: '.x { width: var(--vapor-size-dimension-100); }',
+                },
+              ],
             },
           ],
         },

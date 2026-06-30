@@ -123,7 +123,7 @@ export default [
 }
 ```
 
-- `categories` (`Scope[]`, default: all categories): restrict suggestions to tokens in the given scope categories (e.g. `"foreground"`, `"background"`, `"border"`, `"dimension"`, `"space"`, `"borderRadius"`).
+- `categories` (`Scope[]`, default: all categories): restrict suggestions to tokens in the given scope categories (e.g. `"foreground"`, `"background"`, `"border"`, `"dimension"`, `"space"`, `"borderRadius"`, `"shadow"`).
 - `ignoreProperties` (`string[]`, default `[]`): CSS property names to skip entirely.
 - `ignoreValues` (`string[]`, default `["0","0px","transparent","none","currentcolor","inherit","initial","unset"]`): raw CSS values to skip.
 - `maxSuggestions` (`number`, default `3`): maximum number of token suggestions to offer per violation.
