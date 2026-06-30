@@ -281,7 +281,7 @@ async function classifyTextNode(node: TextNode): Promise<{
 function groupBy<T extends { nodeId: string }>(
     items: T[],
     keyOf: (item: T) => string,
-): (Omit<T, 'nodeId'> & { nodeIds: string[]; count: number })[] {
+): (T & { nodeIds: string[]; count: number })[] {
     const map = new Map<string, any>();
     for (const it of items) {
         const key = keyOf(it);
@@ -290,8 +290,7 @@ function groupBy<T extends { nodeId: string }>(
             g.nodeIds.push(it.nodeId);
             g.count++;
         } else {
-            const { nodeId, ...rest } = it;
-            map.set(key, { ...rest, nodeIds: [nodeId], count: 1 });
+            map.set(key, { ...it, nodeIds: [it.nodeId], count: 1 });
         }
     }
     return [...map.values()];
