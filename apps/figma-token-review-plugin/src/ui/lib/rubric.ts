@@ -48,8 +48,18 @@ export type BuildLlmInputArgs = {
 export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
     const { extract, deterministicConformant, frameName, colorSchema, textStyleSchema } = args;
 
-    const colorByNode = new Map(extract.colors.map((c) => [c.nodeId, c]));
-    const typoByNode = new Map(extract.typography.map((t) => [t.nodeId, t]));
+    // After groupBy in extract.ts, items have nodeIds: string[] instead of nodeId.
+    // Build a map from each individual nodeId to its grouped entry.
+    const colorByNode = new Map<string, (typeof extract.colors)[number]>();
+    for (const c of extract.colors) {
+        const ids = c.nodeIds ?? (c.nodeId ? [c.nodeId] : []);
+        for (const id of ids) colorByNode.set(id, c);
+    }
+    const typoByNode = new Map<string, (typeof extract.typography)[number]>();
+    for (const t of extract.typography) {
+        const ids = t.nodeIds ?? (t.nodeId ? [t.nodeId] : []);
+        for (const id of ids) typoByNode.set(id, t);
+    }
 
     const semanticColorTargets: ColorTarget[] = [];
     const usedColorTokens = new Set<string>();
@@ -61,7 +71,7 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
         const property: 'fill' | 'fill-on-text' | 'stroke' =
             u.property === 'text' ? 'fill-on-text' : u.property === 'fill' ? 'fill' : 'stroke';
         semanticColorTargets.push({
-            nodeId: u.nodeId,
+            nodeId: conf.nodeId,
             name: u.name,
             property,
             token: conf.token,
@@ -75,7 +85,7 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
         const u = typoByNode.get(conf.nodeId);
         if (!u || !conf.token) continue;
         typographyTargets.push({
-            nodeId: u.nodeId,
+            nodeId: conf.nodeId,
             name: u.name,
             characters: u.characters,
             textStyle: conf.token,
