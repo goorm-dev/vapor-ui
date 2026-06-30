@@ -46,8 +46,7 @@ function dimensionIndex(property: Property, ctx: RecommendCtx): TokenValueIndex 
 
 /**
  * For raw color or primitive-used: look up hex in hexIndex, filter by property scope.
- * raw color only: if no scope match, also include all hex-matching tokens (primitive fallback skipped —
- * we return scope-filtered results; if none, return empty).
+ * Priority: scope-matched semantics → same-hex primitives → []
  */
 function colorSuggestions(hex: string | null, property: Property, schema: ColorSchema): string[] {
     if (!hex) return [];
@@ -60,9 +59,12 @@ function colorSuggestions(hex: string | null, property: Property, schema: ColorS
         return meta && meta.role && allowedRoles.includes(meta.role) && meta.status !== 'do-not-use';
     });
 
-    // Return scope-filtered if any; otherwise return all non-do-not-use matches
     if (scoped.length > 0) return scoped;
-    return candidates.filter((token) => schema.semantic[token]?.status !== 'do-not-use');
+
+    // No scope-matched semantic — fall back to primitive tokens with the same hex
+    return Object.entries(schema.primitive)
+        .filter(([, v]) => v.toLowerCase() === key)
+        .map(([k]) => k);
 }
 
 /**
