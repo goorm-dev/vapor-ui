@@ -7,7 +7,7 @@ import type { EvaluateOutput, ScanPayload, Violation } from '~/common/schemas';
 
 import { ViolationCard } from '../components/violation-card';
 
-type TabKey = 'color' | 'typography' | 'space' | 'dimension' | 'radius';
+type TabKey = 'color' | 'space' | 'dimension' | 'typography' | 'borderRadius' | 'shadow';
 
 type Props = {
     frameName?: string;
@@ -36,10 +36,34 @@ export function ScanResultPage({ frameName = '이름 없는 프레임', payload 
                     summary={payload.color.summary}
                 />
             </Tabs.Panel>
+            <Tabs.Panel value="space">
+                <ViolationPanel
+                    violations={payload.space.violations}
+                    summary={payload.space.summary}
+                />
+            </Tabs.Panel>
+            <Tabs.Panel value="dimension">
+                <ViolationPanel
+                    violations={payload.dimension.violations}
+                    summary={payload.dimension.summary}
+                />
+            </Tabs.Panel>
             <Tabs.Panel value="typography">
                 <ViolationPanel
                     violations={payload.typography.violations}
                     summary={payload.typography.summary}
+                />
+            </Tabs.Panel>
+            <Tabs.Panel value="borderRadius">
+                <ViolationPanel
+                    violations={payload.borderRadius.violations}
+                    summary={payload.borderRadius.summary}
+                />
+            </Tabs.Panel>
+            <Tabs.Panel value="shadow">
+                <ViolationPanel
+                    violations={payload.shadow.violations}
+                    summary={payload.shadow.summary}
                 />
             </Tabs.Panel>
         </Tabs.Root>
@@ -48,14 +72,15 @@ export function ScanResultPage({ frameName = '이름 없는 프레임', payload 
 
 // ----- Tab bar -----
 
-const FRAME_TAB_KEYS: TabKey[] = ['color', 'typography'];
+const FRAME_TAB_KEYS: TabKey[] = ['color', 'space', 'dimension', 'typography', 'borderRadius', 'shadow'];
 
 const TAB_LABEL: Record<TabKey, string> = {
     color: 'Color',
-    typography: 'Typography',
     space: 'Space',
     dimension: 'Dimension',
-    radius: 'Border Radius',
+    typography: 'Typography',
+    borderRadius: 'Border Radius',
+    shadow: 'Shadow',
 };
 
 type ScanTabBarProps = {
@@ -66,17 +91,11 @@ type ScanTabBarProps = {
 function ScanTabBar({ selected, counts }: ScanTabBarProps) {
     return (
         <Tabs.List $css={{ paddingInline: '$250', paddingTop: '$150' }}>
-            {(Object.keys(TAB_LABEL) as TabKey[]).map((key) => {
-                const enabled = FRAME_TAB_KEYS.includes(key);
-                const isActive = enabled && selected === key;
+            {FRAME_TAB_KEYS.map((key) => {
+                const isActive = selected === key;
 
                 return (
-                    <Tabs.Button
-                        key={key}
-                        value={key}
-                        disabled={!FRAME_TAB_KEYS.includes(key)}
-                        $css={{ flexShrink: 0 }}
-                    >
+                    <Tabs.Button key={key} value={key} $css={{ flexShrink: 0 }}>
                         {TAB_LABEL[key]}
 
                         <Badge size="sm" colorPalette={isActive ? 'primary' : 'hint'}>
@@ -92,10 +111,11 @@ function ScanTabBar({ selected, counts }: ScanTabBarProps) {
 function getViolationCounts(payload: ScanPayload): Record<TabKey, number> {
     return {
         color: payload.color.violations.length,
+        space: payload.space.violations.length,
+        dimension: payload.dimension.violations.length,
         typography: payload.typography.violations.length,
-        space: 0,
-        dimension: 0,
-        radius: 0,
+        borderRadius: payload.borderRadius.violations.length,
+        shadow: payload.shadow.violations.length,
     };
 }
 
@@ -170,7 +190,13 @@ function splitByKind(violations: Violation[]): {
 }
 
 function isTextViolation(v: Violation): boolean {
-    return v.type === 'fg-grade-mismatch' || v.type === 'fg-grade-ambiguous';
+    return (
+        v.type === 'fg-grade-mismatch' ||
+        v.type === 'fg-grade-ambiguous' ||
+        v.type === 'typo-raw' ||
+        v.type === 'typo-styled-override' ||
+        v.type === 'typo-hierarchy'
+    );
 }
 
 function sortViolations(violations: Violation[]): Violation[] {

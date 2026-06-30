@@ -1,4 +1,4 @@
-import { Card, VStack } from '@vapor-ui/core';
+import { Badge, Card, HStack, Text, VStack } from '@vapor-ui/core';
 
 import type { Violation } from '~/common/schemas';
 import { requestFocus } from '~/ui/features/messaging';
@@ -40,13 +40,37 @@ export function ViolationCard({ violation }: ViolationCardProps) {
                 <VStack $css={{ gap: '$150', width: '100%' }}>
                     <VStack $css={{ gap: '$100', width: '100%', alignItems: 'flex-start' }}>
                         <ViolationBreadcrumb name={violation.name} property={property} />
+                        {violation.heuristic ? (
+                            <HStack $css={{ gap: '$050', alignItems: 'center' }}>
+                                <Badge size="sm" colorPalette="warning">
+                                    의미 판정
+                                </Badge>
+                                <Badge
+                                    size="sm"
+                                    colorPalette={
+                                        violation.confidence === 'HIGH' ? 'primary' : 'hint'
+                                    }
+                                >
+                                    {violation.confidence ?? 'MED'}
+                                </Badge>
+                            </HStack>
+                        ) : null}
                         <TokenComparison
                             usedLabel={usedLabel}
                             suggestedLabel={suggested ?? '추천 없음'}
                             swatch={rawValue}
                         />
                     </VStack>
-                    <ViolationDetail detail={violation.detail} hasSuggestion={Boolean(suggested)} />
+                    {violation.heuristic && violation.reasoning ? (
+                        <Text typography="body4" foreground="hint-100">
+                            {violation.reasoning}
+                        </Text>
+                    ) : (
+                        <ViolationDetail
+                            detail={violation.detail}
+                            hasSuggestion={Boolean(suggested)}
+                        />
+                    )}
                 </VStack>
             </Card.Body>
         </Card.Root>
