@@ -8,18 +8,17 @@ import { extractRawValue } from './utils';
 import { ViolationBreadcrumb } from './violation-breadcrumb';
 import { ViolationDetail } from './violation-detail';
 
-const PROPERTY_LABEL: Record<Violation['type'], string> = {
-    'token-not-used': 'Fill',
-    'primitive-used': 'Fill',
-    'unknown-token': 'Fill',
-    'do-not-use': 'Fill',
-    'role-mismatch': 'Role',
-    'fg-grade-mismatch': 'Text',
-    'fg-grade-ambiguous': 'Text',
-    'typo-raw': 'Typography',
-    'typo-styled-override': 'Typography',
-    'semantic-misfit': 'Fill',
-    'typo-hierarchy': 'Typography',
+const PROPERTY_LABEL: Record<Violation['property'], string> = {
+    fill: 'Fill',
+    'fill-on-text': 'Text Fill',
+    stroke: 'Stroke',
+    padding: 'Padding',
+    gap: 'Gap',
+    width: 'Width',
+    height: 'Height',
+    borderRadius: 'Border Radius',
+    shadow: 'Shadow',
+    textStyle: 'Text Style',
 };
 
 type ViolationCardProps = {
@@ -27,7 +26,7 @@ type ViolationCardProps = {
 };
 
 export function ViolationCard({ violation }: ViolationCardProps) {
-    const property = PROPERTY_LABEL[violation.type];
+    const property = PROPERTY_LABEL[violation.property];
     const rawValue = extractRawValue(violation.detail);
     const usedLabel = violation.token ?? rawValue ?? '—';
     const suggested = violation.suggested[0];

@@ -51,10 +51,35 @@ function extractJsonObject(text: string): string | null {
     return candidate.slice(start, end + 1);
 }
 
+function isTypoJudgment(v: unknown): v is LlmTypoJudgment {
+    if (!v || typeof v !== 'object') return false;
+    const o = v as Record<string, unknown>;
+    return (
+        typeof o.nodeId === 'string' &&
+        typeof o.name === 'string' &&
+        typeof o.token === 'string' &&
+        (o.verdict === 'PASS' || o.verdict === 'FAIL') &&
+        (o.confidence === 'HIGH' || o.confidence === 'MED' || o.confidence === 'LOW') &&
+        typeof o.reasoning === 'string' &&
+        Array.isArray(o.suggested)
+    );
+}
+
+function isColorJudgment(v: unknown): v is LlmColorJudgment {
+    if (!isTypoJudgment(v)) return false;
+    const o = v as unknown as LlmColorJudgment;
+    return o.property === 'fill' || o.property === 'fill-on-text' || o.property === 'stroke';
+}
+
 function isJudgments(value: unknown): value is LlmJudgments {
     if (!value || typeof value !== 'object') return false;
     const v = value as Record<string, unknown>;
-    return Array.isArray(v.typography) && Array.isArray(v.semanticColor);
+    return (
+        Array.isArray(v.typography) &&
+        v.typography.every(isTypoJudgment) &&
+        Array.isArray(v.semanticColor) &&
+        v.semanticColor.every(isColorJudgment)
+    );
 }
 
 export function parseLlmResponse(response: AnthropicMessagesResponse): LlmJudgments {
@@ -69,7 +94,8 @@ export function parseLlmResponse(response: AnthropicMessagesResponse): LlmJudgme
     try {
         parsed = JSON.parse(json);
     } catch (e) {
-        throw new LlmParseError(`JSON parse 실패: ${(e as Error).message}`, json);
+        const msg = e instanceof Error ? e.message : String(e);
+        throw new LlmParseError(`JSON parse 실패: ${msg}`, json);
     }
     if (!isJudgments(parsed)) throw new LlmParseError('LlmJudgments schema mismatch.', json);
     return parsed;

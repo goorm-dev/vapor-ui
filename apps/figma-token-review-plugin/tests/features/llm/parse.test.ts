@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseLlmResponse } from '~/ui/features/llm/parse';
+import { LlmParseError, parseLlmResponse } from '~/ui/features/llm/parse';
 
 describe('parseLlmResponse', () => {
     it('JSON text block 을 LlmJudgments 로 파싱한다', () => {
@@ -35,5 +35,52 @@ describe('parseLlmResponse', () => {
         };
         const result = parseLlmResponse(response);
         expect(result.typography).toEqual([]);
+    });
+
+    it('typography 배열에 malformed item(null)이 있으면 LlmParseError를 던진다', () => {
+        const response = {
+            content: [
+                {
+                    type: 'text' as const,
+                    text: JSON.stringify({
+                        typography: [null],
+                        semanticColor: [],
+                    }),
+                },
+            ],
+        };
+        expect(() => parseLlmResponse(response)).toThrow(LlmParseError);
+    });
+
+    it('semanticColor 배열에 malformed item(숫자)이 있으면 LlmParseError를 던진다', () => {
+        const response = {
+            content: [
+                {
+                    type: 'text' as const,
+                    text: JSON.stringify({
+                        typography: [],
+                        semanticColor: [42],
+                    }),
+                },
+            ],
+        };
+        expect(() => parseLlmResponse(response)).toThrow(LlmParseError);
+    });
+
+    it('semanticColor item에 property 필드가 없으면 LlmParseError를 던진다', () => {
+        const response = {
+            content: [
+                {
+                    type: 'text' as const,
+                    text: JSON.stringify({
+                        typography: [],
+                        semanticColor: [
+                            { nodeId: '1', name: 'x', token: 'tok', verdict: 'PASS', confidence: 'HIGH', reasoning: 'ok', suggested: [] },
+                        ],
+                    }),
+                },
+            ],
+        };
+        expect(() => parseLlmResponse(response)).toThrow(LlmParseError);
     });
 });
