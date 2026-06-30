@@ -3,8 +3,12 @@ import type {
     ColorBackground,
     ColorProperty,
     ColorUsage,
+    DimensionUsage,
+    RadiusUsage,
     RawExtract,
     SchemaMode,
+    ShadowUsage,
+    SpaceUsage,
     TokenStatus,
     TypographyUsage,
     Viewport,
@@ -46,6 +50,74 @@ function toSchemaKey(name: string | null): string | null {
     return name && name.startsWith('color-')
         ? 'colors.' + name.slice('color-'.length).replace(/-/g, '.')
         : null;
+}
+
+/**
+ * Convert a Figma variable name to a dimension/space/radius schema key.
+ * e.g. "space/200" → "space.200"
+ * NOTE: If the Figma variable has a tier prefix (e.g. "size/space/200"),
+ * this would produce "size.space.200" which would NOT match the schema key
+ * "space.200". This is a known assumption that must be validated in T13 smoke.
+ */
+function varNameToSchemaKey(name: string): string {
+    return name.replace(/\//g, '.');
+}
+
+/** Resolve a single boundVariable ref to a token key. Returns null + 'raw' if no binding. */
+async function readBoundToken(
+    bound: Record<string, { id: string }> | undefined,
+    field: string,
+): Promise<{ token: string | null; status: TokenStatus }> {
+    const ref = bound?.[field];
+    if (!ref) return { token: null, status: 'raw' };
+    const variable = await getVariableWithRemoteDefense(ref.id);
+    if (!variable) return { token: null, status: 'unknown' };
+    const key = varNameToSchemaKey(variable.name);
+    return { token: key, status: 'ok' };
+}
+
+/**
+ * Resolve shadow token via effectStyleId.
+ * Figma shadows bind at the effect-style level, not via per-effect boundVariables.
+ * If an effectStyleId is present, derive the token key from the style name.
+ * Otherwise mark as 'raw'.
+ * NOTE: This assumes the effect style name matches the shadow schema key format
+ * (e.g. "shadow/md" → "shadow.md"). Validate in T13 smoke.
+ */
+async function readEffectStyleToken(
+    node: SceneNode,
+): Promise<{ token: string | null; status: TokenStatus }> {
+    const styleId: string | undefined = (node as any).effectStyleId;
+    if (!styleId) return { token: null, status: 'raw' };
+    try {
+        const style = await figma.getStyleByIdAsync(styleId);
+        if (!style) return { token: null, status: 'unknown' };
+        const key = varNameToSchemaKey(style.name);
+        return { token: key, status: 'ok' };
+    } catch (_e) {
+        return { token: null, status: 'unknown' };
+    }
+}
+
+/** Stringify a Figma RGBA color to CSS rgba() string. */
+function rgbaToString(c: any): string {
+    if (!c) return 'rgba(0,0,0,1)';
+    const r = Math.round(c.r * 255);
+    const g = Math.round(c.g * 255);
+    const b = Math.round(c.b * 255);
+    const a = typeof c.a === 'number' ? c.a : 1;
+    return `rgba(${r},${g},${b},${a})`;
+}
+
+/** Convert a Figma DROP_SHADOW or INNER_SHADOW effect to a CSS box-shadow string. */
+function shadowToCss(eff: any): string {
+    const inset = eff.type === 'INNER_SHADOW' ? 'inset ' : '';
+    const x = Math.round(eff.offset?.x ?? 0);
+    const y = Math.round(eff.offset?.y ?? 0);
+    const blur = Math.round(eff.radius ?? 0);
+    const spread = Math.round(eff.spread ?? 0);
+    const color = rgbaToString(eff.color);
+    return `${inset}${x}px ${y}px ${blur}px ${spread}px ${color}`;
 }
 
 async function getVariableWithRemoteDefense(id: string): Promise<any> {
@@ -241,6 +313,10 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
 
     const colorRaw: (ColorUsage & { nodeId: string })[] = [];
     const typoRaw: (TypographyUsage & { nodeId: string })[] = [];
+    const spaceRaw: SpaceUsage[] = [];
+    const dimensionRaw: DimensionUsage[] = [];
+    const radiusRaw: RadiusUsage[] = [];
+    const shadowRaw: ShadowUsage[] = [];
     let visited = 0;
     let textNodes = 0;
 
@@ -318,6 +394,91 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
             });
         }
 
+        // — Space (padding + gap) —
+        const bvRecord = bv as Record<string, { id: string }> | undefined;
+        const spaceFields: Array<['padding' | 'gap', string]> = [
+            ['padding', 'paddingTop'],
+            ['padding', 'paddingRight'],
+            ['padding', 'paddingBottom'],
+            ['padding', 'paddingLeft'],
+            ['gap', 'itemSpacing'],
+        ];
+        for (const [property, field] of spaceFields) {
+            const rawValue: unknown = (node as any)[field];
+            if (typeof rawValue === 'number') {
+                const { token, status } = await readBoundToken(bvRecord, field);
+                spaceRaw.push({
+                    nodeId: node.id,
+                    name: node.name,
+                    property,
+                    value: `${rawValue}px`,
+                    token,
+                    tokenStatus: status,
+                });
+            }
+        }
+
+        // — Dimension (width + height) —
+        // NOTE: Figma plugin typings do not expose a standard boundVariables.width/.height
+        // binding. Width/height are typically layout-constrained, not variable-bound.
+        // readBoundToken will return { token: null, status: 'raw' } for these fields.
+        // This assumption should be validated in T13 smoke test.
+        const dimFields: Array<['width' | 'height', string]> = [
+            ['width', 'width'],
+            ['height', 'height'],
+        ];
+        for (const [property, field] of dimFields) {
+            const rawValue: unknown = (node as any)[field];
+            if (typeof rawValue === 'number') {
+                const { token, status } = await readBoundToken(bvRecord, field);
+                dimensionRaw.push({
+                    nodeId: node.id,
+                    name: node.name,
+                    property,
+                    value: `${rawValue}px`,
+                    token,
+                    tokenStatus: status,
+                });
+            }
+        }
+
+        // — Border Radius —
+        // Skip figma.mixed (per-corner radii) — only uniform cornerRadius is extracted.
+        const cr: unknown = (node as any).cornerRadius;
+        if (typeof cr === 'number') {
+            const { token, status } = await readBoundToken(bvRecord, 'cornerRadius');
+            radiusRaw.push({
+                nodeId: node.id,
+                name: node.name,
+                value: `${cr}px`,
+                token,
+                tokenStatus: status,
+            });
+        }
+
+        // — Shadow —
+        // Figma shadows bind at effect-style level (effectStyleId), not per-effect boundVariables.
+        // Token resolution is via style name → schema key (e.g. "shadow/md" → "shadow.md").
+        // Per-effect bindings (color/offset/etc.) are intentionally NOT followed here.
+        // NOTE: This naming assumption must be validated in T13 smoke test.
+        const effects: any[] = Array.isArray((node as any).effects) ? (node as any).effects : [];
+        const shadowEffects = effects.filter(
+            (eff: any) => eff.type === 'DROP_SHADOW' || eff.type === 'INNER_SHADOW',
+        );
+        if (shadowEffects.length > 0) {
+            // Resolve style token once per node (all effects share the same effectStyleId)
+            const { token, status } = await readEffectStyleToken(node);
+            for (const eff of shadowEffects) {
+                shadowRaw.push({
+                    nodeId: node.id,
+                    name: node.name,
+                    value: shadowToCss(eff),
+                    token,
+                    tokenStatus: status,
+                });
+            }
+        }
+
         if ('children' in node) for (const ch of node.children) await visit(ch);
     }
 
@@ -351,10 +512,10 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
         viewport,
         colors: colors as unknown as ColorUsage[],
         typography: typography as unknown as TypographyUsage[],
-        spaces: [],
-        dimensions: [],
-        radii: [],
-        shadows: [],
+        spaces: spaceRaw,
+        dimensions: dimensionRaw,
+        radii: radiusRaw,
+        shadows: shadowRaw,
         stats: {
             nodeCount: visited,
             textNodes,
