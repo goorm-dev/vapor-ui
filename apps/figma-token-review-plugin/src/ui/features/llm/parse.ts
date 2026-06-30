@@ -84,9 +84,12 @@ function isJudgments(value: unknown): value is LlmJudgments {
 
 export function parseLlmResponse(response: AnthropicMessagesResponse): LlmJudgments {
     const blocks = response.content ?? [];
-    const lastText = [...blocks].reverse().find(
-        (b): b is AnthropicTextBlock => b.type === 'text' && typeof (b as AnthropicTextBlock).text === 'string',
-    );
+    const lastText = [...blocks]
+        .reverse()
+        .find(
+            (b): b is AnthropicTextBlock =>
+                b.type === 'text' && typeof (b as AnthropicTextBlock).text === 'string',
+        );
     if (!lastText) throw new LlmParseError('LLM 응답에 text block이 없습니다.', null);
     const json = extractJsonObject(lastText.text);
     if (!json) throw new LlmParseError('LLM 응답에서 JSON 객체를 찾을 수 없습니다.', lastText.text);

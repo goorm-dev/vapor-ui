@@ -83,7 +83,10 @@ export function loadDimensionSchemas(): DimensionSchemas {
     return {
         space: flattenSized(spaceRaw as { size?: Record<string, Node> }, 'space'),
         dimension: flattenSized(dimensionRaw as { size?: Record<string, Node> }, 'dimension'),
-        borderRadius: flattenSized(borderRadiusRaw as { size?: Record<string, Node> }, 'borderRadius'),
+        borderRadius: flattenSized(
+            borderRadiusRaw as { size?: Record<string, Node> },
+            'borderRadius',
+        ),
         shadow: flatten(shadowRaw, 'shadow'),
     };
 }

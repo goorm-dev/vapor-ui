@@ -50,12 +50,18 @@ function heuristicColor(j: LlmColorJudgment): Violation {
     };
 }
 
-function summarize(violations: Violation[], conformant: Conformant[], total: number): EvaluateSummary {
+function summarize(
+    violations: Violation[],
+    conformant: Conformant[],
+    total: number,
+): EvaluateSummary {
     const isFail = (v: Violation): boolean =>
         v.severity === 'high' && (v.origin === 'rule' || v.confidence === 'HIGH');
     const high = violations.filter(isFail).length;
     const heuristics = violations.filter((v) => v.origin === 'llm').length;
-    const infos = violations.filter((v) => v.severity === 'info' || (v.origin === 'llm' && v.confidence !== 'HIGH')).length;
+    const infos = violations.filter(
+        (v) => v.severity === 'info' || (v.origin === 'llm' && v.confidence !== 'HIGH'),
+    ).length;
     const conformCount = conformant.length;
     const conformanceRate = total > 0 ? (total - high) / total : null;
     return {
@@ -71,7 +77,9 @@ function summarize(violations: Violation[], conformant: Conformant[], total: num
 export function mergeScanPayload(args: MergeArgs): ScanPayload {
     const { deterministic, llm, schemaMode } = args;
 
-    const colorHeuristics = llm.semanticColor.filter((j) => j.verdict === 'FAIL').map(heuristicColor);
+    const colorHeuristics = llm.semanticColor
+        .filter((j) => j.verdict === 'FAIL')
+        .map(heuristicColor);
     const typoHeuristics = llm.typography.filter((j) => j.verdict === 'FAIL').map(heuristicTypo);
 
     const buildOutput = (cat: Category, extra: Violation[]): EvaluateOutput => {

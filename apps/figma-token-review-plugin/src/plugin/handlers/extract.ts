@@ -395,7 +395,12 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
         const bvRecord = bv as Record<string, { id: string }> | undefined;
 
         // Collect 4 padding directions
-        type PaddingDir = { field: string; value: number; token: string | null; status: TokenStatus };
+        type PaddingDir = {
+            field: string;
+            value: number;
+            token: string | null;
+            status: TokenStatus;
+        };
         const paddingDirs: PaddingDir[] = [];
         for (const f of ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'] as const) {
             const v = (node as any)[f];
@@ -467,7 +472,11 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
                         spaceRaw.push({
                             nodeId: node.id,
                             name: node.name,
-                            property: d.field as 'paddingTop' | 'paddingRight' | 'paddingBottom' | 'paddingLeft',
+                            property: d.field as
+                                | 'paddingTop'
+                                | 'paddingRight'
+                                | 'paddingBottom'
+                                | 'paddingLeft',
                             value: `${d.value}px`,
                             token: d.token,
                             tokenStatus: d.status,
@@ -506,8 +515,10 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
             const rawValue: unknown = (node as any)[field];
             if (typeof rawValue === 'number') {
                 // Only extract FIXED dimensions; FILL and HUG are layout-driven (Finding 1)
-                if (property === 'width' && (node as any).layoutSizingHorizontal !== 'FIXED') continue;
-                if (property === 'height' && (node as any).layoutSizingVertical !== 'FIXED') continue;
+                if (property === 'width' && (node as any).layoutSizingHorizontal !== 'FIXED')
+                    continue;
+                if (property === 'height' && (node as any).layoutSizingVertical !== 'FIXED')
+                    continue;
                 const { token, status } = await readBoundToken(bvRecord, field);
                 dimensionRaw.push({
                     nodeId: node.id,
@@ -526,7 +537,13 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
         if (typeof cr === 'number') {
             // Figma uniform cornerRadius may not have boundVariables.cornerRadius.
             // Try per-corner fields as fallback before giving up.
-            const cornerFields = ['cornerRadius', 'topLeftRadius', 'topRightRadius', 'bottomLeftRadius', 'bottomRightRadius'] as const;
+            const cornerFields = [
+                'cornerRadius',
+                'topLeftRadius',
+                'topRightRadius',
+                'bottomLeftRadius',
+                'bottomRightRadius',
+            ] as const;
             let radiusToken: string | null = null;
             let radiusStatus: TokenStatus = 'raw';
             for (const cf of cornerFields) {

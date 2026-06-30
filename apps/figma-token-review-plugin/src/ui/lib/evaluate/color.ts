@@ -1,9 +1,4 @@
-import type {
-    ColorUsage,
-    Conformant,
-    Property,
-    Violation,
-} from '~/common/schemas';
+import type { ColorUsage, Conformant, Property, Violation } from '~/common/schemas';
 import type { ColorSchema } from '~/ui/lib/loaders/color';
 import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 
@@ -90,7 +85,8 @@ export function evaluateColor(
                 ...base,
                 type: 'primitive-used',
                 severity: 'info',
-                message: 'primitive 토큰이 직접 사용되었습니다. 같은 값의 semantic 토큰이 있는지 확인하세요.',
+                message:
+                    'primitive 토큰이 직접 사용되었습니다. 같은 값의 semantic 토큰이 있는지 확인하세요.',
             });
             continue;
         }
@@ -119,7 +115,8 @@ export function evaluateColor(
         }
 
         // 6. role mismatch — PROPERTY_SCOPE 기반
-        const allowedRoles = (PROPERTY_SCOPE as Record<string, ReadonlyArray<string>>)[property] ?? [];
+        const allowedRoles =
+            (PROPERTY_SCOPE as Record<string, ReadonlyArray<string>>)[property] ?? [];
         if (meta.role && !allowedRoles.includes(meta.role)) {
             violations.push({
                 ...base,

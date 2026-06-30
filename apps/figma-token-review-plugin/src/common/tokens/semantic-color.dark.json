@@ -690,9 +690,7 @@
                 "$description": "The base primary border for focused states of input-type interactive elements.",
                 "$extensions": {
                     "io.goorm.vapor": {
-                        "when": [
-                            "border of text input or textarea elements in focused state"
-                        ],
+                        "when": ["border of text input or textarea elements in focused state"],
                         "avoid": [
                             "focused state of non-input interactive elements → colors.border.contrast",
                             "default (unfocused) border of input elements → colors.border.normal"
@@ -749,9 +747,7 @@
                             "border of element indicating an action that requires careful consideration",
                             "border conveying a cautionary state to guide deliberate user decision"
                         ],
-                        "avoid": [
-                            "irreversible or destructive actions → colors.border.danger"
-                        ],
+                        "avoid": ["irreversible or destructive actions → colors.border.danger"],
                         "accessibility": {
                             "role": "border",
                             "minimumContrast": "3:1"
@@ -767,9 +763,7 @@
                         "when": [
                             "border of element that visually implies clickable or tappable interaction"
                         ],
-                        "avoid": [
-                            "non-interactive elements → colors.border.normal"
-                        ],
+                        "avoid": ["non-interactive elements → colors.border.normal"],
                         "accessibility": {
                             "role": "border",
                             "minimumContrast": "4.5:1"

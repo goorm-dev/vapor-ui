@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
-import { evaluateRadius } from '~/ui/lib/evaluate/radius';
 import type { RadiusUsage } from '~/common/schemas';
+import { evaluateRadius } from '~/ui/lib/evaluate/radius';
+import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
 
 const schemas = loadDimensionSchemas();
 
@@ -18,7 +18,10 @@ describe('evaluateRadius', () => {
     });
 
     it('스키마에 없는 토큰은 unknown-token', () => {
-        const r = evaluateRadius([usage({ token: 'borderRadius.999', tokenStatus: 'ok' })], schemas.borderRadius);
+        const r = evaluateRadius(
+            [usage({ token: 'borderRadius.999', tokenStatus: 'ok' })],
+            schemas.borderRadius,
+        );
         expect(r.violations[0].type).toBe('unknown-token');
     });
 

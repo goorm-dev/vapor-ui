@@ -15,10 +15,27 @@ describe('mergeScanPayload', () => {
             },
             llm: {
                 typography: [
-                    { nodeId: '1', name: 'h', token: 'body2', verdict: 'FAIL', confidence: 'HIGH', reasoning: '제목 자리에 본문', suggested: ['heading4'] },
+                    {
+                        nodeId: '1',
+                        name: 'h',
+                        token: 'body2',
+                        verdict: 'FAIL',
+                        confidence: 'HIGH',
+                        reasoning: '제목 자리에 본문',
+                        suggested: ['heading4'],
+                    },
                 ],
                 semanticColor: [
-                    { nodeId: '2', name: 'alert', property: 'fill', token: 'color-background-danger-100', verdict: 'FAIL', confidence: 'MED', reasoning: '경고 아님', suggested: [] },
+                    {
+                        nodeId: '2',
+                        name: 'alert',
+                        property: 'fill',
+                        token: 'color-background-danger-100',
+                        verdict: 'FAIL',
+                        confidence: 'MED',
+                        reasoning: '경고 아님',
+                        suggested: [],
+                    },
                 ],
             },
             schemaMode: 'light',
@@ -41,8 +58,26 @@ describe('mergeScanPayload', () => {
             llm: {
                 typography: [],
                 semanticColor: [
-                    { nodeId: '1', name: 'a', property: 'fill', token: 'color-background-primary-100', verdict: 'FAIL', confidence: 'HIGH', reasoning: '', suggested: [] },
-                    { nodeId: '2', name: 'b', property: 'fill', token: 'color-background-primary-100', verdict: 'FAIL', confidence: 'LOW', reasoning: '', suggested: [] },
+                    {
+                        nodeId: '1',
+                        name: 'a',
+                        property: 'fill',
+                        token: 'color-background-primary-100',
+                        verdict: 'FAIL',
+                        confidence: 'HIGH',
+                        reasoning: '',
+                        suggested: [],
+                    },
+                    {
+                        nodeId: '2',
+                        name: 'b',
+                        property: 'fill',
+                        token: 'color-background-primary-100',
+                        verdict: 'FAIL',
+                        confidence: 'LOW',
+                        reasoning: '',
+                        suggested: [],
+                    },
                 ],
             },
             schemaMode: 'light',
@@ -63,7 +98,15 @@ describe('mergeScanPayload', () => {
             },
             llm: {
                 typography: [
-                    { nodeId: '1', name: 'h', token: 'body2', verdict: 'PASS', confidence: 'HIGH', reasoning: '', suggested: [] },
+                    {
+                        nodeId: '1',
+                        name: 'h',
+                        token: 'body2',
+                        verdict: 'PASS',
+                        confidence: 'HIGH',
+                        reasoning: '',
+                        suggested: [],
+                    },
                 ],
                 semanticColor: [],
             },

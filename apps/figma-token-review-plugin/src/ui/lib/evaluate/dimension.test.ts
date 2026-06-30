@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
-import { evaluateDimension } from '~/ui/lib/evaluate/dimension';
 import type { DimensionUsage } from '~/common/schemas';
+import { evaluateDimension } from '~/ui/lib/evaluate/dimension';
+import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
 
 const schemas = loadDimensionSchemas();
 
@@ -26,7 +26,10 @@ describe('evaluateDimension', () => {
     });
 
     it('스키마에 없는 토큰은 unknown-token', () => {
-        const r = evaluateDimension([usage({ token: 'dimension.999', tokenStatus: 'ok' })], schemas.dimension);
+        const r = evaluateDimension(
+            [usage({ token: 'dimension.999', tokenStatus: 'ok' })],
+            schemas.dimension,
+        );
         expect(r.violations[0].type).toBe('unknown-token');
     });
 

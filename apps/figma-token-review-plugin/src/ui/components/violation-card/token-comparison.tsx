@@ -10,7 +10,12 @@ type TokenComparisonProps = {
     rightColor?: string | null;
 };
 
-export function TokenComparison({ usedLabel, suggestedLabel, leftColor, rightColor }: TokenComparisonProps) {
+export function TokenComparison({
+    usedLabel,
+    suggestedLabel,
+    leftColor,
+    rightColor,
+}: TokenComparisonProps) {
     return (
         <HStack
             $css={{

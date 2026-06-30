@@ -1,23 +1,41 @@
 import { describe, expect, it } from 'vitest';
 
+import type { Conformant, RawExtract } from '~/common/schemas';
 import { loadColorSchema } from '~/ui/lib/loaders/color';
 import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
 import { buildLlmInput } from '~/ui/lib/rubric';
-import type { Conformant, RawExtract } from '~/common/schemas';
 
 const colorSchema = loadColorSchema('light');
 const textStyleSchema = loadTextStyleSchema();
 
-const fgKey = Object.entries(colorSchema.semantic).find(([, v]) => v.role === 'foreground')?.[0] ?? '';
+const fgKey =
+    Object.entries(colorSchema.semantic).find(([, v]) => v.role === 'foreground')?.[0] ?? '';
 
 const extract: RawExtract = {
     schemaMode: 'light',
     viewport: 'pc',
     colors: [
-        { nodeId: '1', name: 't', property: 'text', token: fgKey, hex: '#000', tokenStatus: 'ok', background: null },
+        {
+            nodeId: '1',
+            name: 't',
+            property: 'text',
+            token: fgKey,
+            hex: '#000',
+            tokenStatus: 'ok',
+            background: null,
+        },
     ],
     typography: [
-        { nodeId: '2', name: 'h', characters: '제목', textStyle: 'subtitle1', viewport: 'pc', appliedStatus: 'styled-clean', overriddenFields: [], resolved: { fontSize: 14, lineHeight: {}, letterSpacing: {}, fontName: {} } },
+        {
+            nodeId: '2',
+            name: 'h',
+            characters: '제목',
+            textStyle: 'subtitle1',
+            viewport: 'pc',
+            appliedStatus: 'styled-clean',
+            overriddenFields: [],
+            resolved: { fontSize: 14, lineHeight: {}, letterSpacing: {}, fontName: {} },
+        },
     ],
     spaces: [],
     dimensions: [],
@@ -29,8 +47,12 @@ const extract: RawExtract = {
 describe('buildLlmInput', () => {
     it('의미 판정 대상은 결정론 통과 conformant 노드만', () => {
         const conformant = {
-            color: [{ nodeId: '1', name: 't', property: 'fill-on-text', token: fgKey } as Conformant],
-            typography: [{ nodeId: '2', name: 'h', property: 'textStyle', token: 'subtitle1' } as Conformant],
+            color: [
+                { nodeId: '1', name: 't', property: 'fill-on-text', token: fgKey } as Conformant,
+            ],
+            typography: [
+                { nodeId: '2', name: 'h', property: 'textStyle', token: 'subtitle1' } as Conformant,
+            ],
         };
         const input = buildLlmInput({
             extract,
@@ -45,8 +67,12 @@ describe('buildLlmInput', () => {
 
     it('rubric 서브셋은 실제 등장한 토큰만 담는다', () => {
         const conformant = {
-            color: [{ nodeId: '1', name: 't', property: 'fill-on-text', token: fgKey } as Conformant],
-            typography: [{ nodeId: '2', name: 'h', property: 'textStyle', token: 'subtitle1' } as Conformant],
+            color: [
+                { nodeId: '1', name: 't', property: 'fill-on-text', token: fgKey } as Conformant,
+            ],
+            typography: [
+                { nodeId: '2', name: 'h', property: 'textStyle', token: 'subtitle1' } as Conformant,
+            ],
         };
         const input = buildLlmInput({
             extract,

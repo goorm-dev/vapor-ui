@@ -79,7 +79,14 @@ export function ScanResultPage({ frameName = '이름 없는 프레임', payload 
 
 // ----- Tab bar -----
 
-const FRAME_TAB_KEYS: TabKey[] = ['color', 'space', 'dimension', 'typography', 'borderRadius', 'shadow'];
+const FRAME_TAB_KEYS: TabKey[] = [
+    'color',
+    'space',
+    'dimension',
+    'typography',
+    'borderRadius',
+    'shadow',
+];
 
 const TAB_LABEL: Record<TabKey, string> = {
     color: 'Color',
@@ -181,8 +188,18 @@ function ViolationPanel({ violations, summary, schemaMode }: ViolationPanelProps
 
     return (
         <VStack $css={{ gap: '$300', width: '100%', flex: 1, padding: '$200' }}>
-            <ViolationSection icon="frame" title="Frame" violations={frameOnes} schemaMode={schemaMode} />
-            <ViolationSection icon="text" title="Text" violations={textOnes} schemaMode={schemaMode} />
+            <ViolationSection
+                icon="frame"
+                title="Frame"
+                violations={frameOnes}
+                schemaMode={schemaMode}
+            />
+            <ViolationSection
+                icon="text"
+                title="Text"
+                violations={textOnes}
+                schemaMode={schemaMode}
+            />
         </VStack>
     );
 }
@@ -266,7 +283,13 @@ function SectionHeader({ icon, title }: { icon: 'frame' | 'text'; title: string 
     );
 }
 
-function ViolationList({ violations, schemaMode }: { violations: Violation[]; schemaMode: SchemaMode }) {
+function ViolationList({
+    violations,
+    schemaMode,
+}: {
+    violations: Violation[];
+    schemaMode: SchemaMode;
+}) {
     return (
         <VStack $css={{ gap: '$150', width: '100%', paddingTop: '$150' }}>
             {violations.map((v, i) => (

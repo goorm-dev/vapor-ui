@@ -40,7 +40,12 @@ export function evaluateRadius(
             continue;
         }
 
-        conformant.push({ nodeId: u.nodeId, name: u.name, property: 'borderRadius', token: u.token });
+        conformant.push({
+            nodeId: u.nodeId,
+            name: u.name,
+            property: 'borderRadius',
+            token: u.token,
+        });
     }
 
     return { violations, conformant };

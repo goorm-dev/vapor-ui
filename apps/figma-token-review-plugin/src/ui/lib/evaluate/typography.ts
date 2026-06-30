@@ -51,7 +51,12 @@ export function evaluateTypography(
         }
 
         if (u.textStyle) {
-            conformant.push({ nodeId: u.nodeId, name: u.name, property: 'textStyle', token: u.textStyle });
+            conformant.push({
+                nodeId: u.nodeId,
+                name: u.name,
+                property: 'textStyle',
+                token: u.textStyle,
+            });
         }
     }
 

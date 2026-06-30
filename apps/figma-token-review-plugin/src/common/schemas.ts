@@ -33,13 +33,7 @@ export type Role =
     | 'borderRadius'
     | 'shadow';
 
-export type Category =
-    | 'color'
-    | 'space'
-    | 'dimension'
-    | 'typography'
-    | 'borderRadius'
-    | 'shadow';
+export type Category = 'color' | 'space' | 'dimension' | 'typography' | 'borderRadius' | 'shadow';
 
 export type ViolationType =
     | 'token-not-used'
@@ -161,7 +155,15 @@ export type TypographyUsage = {
 export type SpaceUsage = {
     nodeId: string;
     name: string;
-    property: 'padding' | 'paddingTop' | 'paddingRight' | 'paddingBottom' | 'paddingLeft' | 'paddingVertical' | 'paddingHorizontal' | 'gap';
+    property:
+        | 'padding'
+        | 'paddingTop'
+        | 'paddingRight'
+        | 'paddingBottom'
+        | 'paddingLeft'
+        | 'paddingVertical'
+        | 'paddingHorizontal'
+        | 'gap';
     value: string;
     token: string | null;
     tokenStatus: TokenStatus;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 import type { Property, Role } from '~/common/schemas';
+import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 
 describe('PROPERTY_SCOPE', () => {
     it('fill 은 background role 만 허용한다', () => {

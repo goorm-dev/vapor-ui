@@ -34,7 +34,10 @@ export type TextStyleMetaSubset = {
 export type LlmInput = {
     context: { schemaMode: 'light' | 'dark'; viewport: string; frameName: string };
     judgmentTargets: { typography: TypographyTarget[]; semanticColor: ColorTarget[] };
-    rubric: { textStyle: Record<string, TextStyleMetaSubset>; color: Record<string, ColorMetaSubset> };
+    rubric: {
+        textStyle: Record<string, TextStyleMetaSubset>;
+        color: Record<string, ColorMetaSubset>;
+    };
 };
 
 export type BuildLlmInputArgs = {
