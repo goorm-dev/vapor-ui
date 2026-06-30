@@ -98,6 +98,17 @@ cp skills/token-lint/assets/resolver.json packages/eslint-plugin-vapor/src/data/
 
 Verify: `ls packages/eslint-plugin-vapor/src/data/tokens/` → 11 files.
 
+- [ ] **Step 2a: Enable JSON module resolution in tsconfig**
+
+`packages/eslint-plugin-vapor/tsconfig.json` currently lacks `resolveJsonModule`. Add it to `compilerOptions` (alongside the existing `~/*` path alias):
+
+```json
+"resolveJsonModule": true,
+"esModuleInterop": true
+```
+
+Run `pnpm --filter eslint-plugin-vapor typecheck` → PASS (no JSON imports yet, so still a no-op).
+
 - [ ] **Step 2: Add `culori` runtime dep + `@eslint/css` optional peer**
 
 Edit `packages/eslint-plugin-vapor/package.json`. Insert two new top-level keys (keep all existing keys intact):
@@ -813,8 +824,9 @@ function walkSemanticColors(b: IndexBuilder, json: unknown, primitiveByName: Rea
       const ref = obj.$value.trim();
       if (ref.startsWith('{') && ref.endsWith('}')) {
         const refPath = ref.slice(1, -1).split('.');
-        // refPath looks like ['colors', 'blue', '100']; turn into primitive name --vapor-color-blue-100
-        const primName = `--vapor-${refPath.join('-')}`;
+        // refPath looks like ['colors', 'blue', '100']; primitive token names use singular 'color' prefix → drop leading 'colors'
+        const primSegments = refPath[0] === 'colors' ? refPath.slice(1) : refPath;
+        const primName = `--vapor-color-${primSegments.join('-')}`;
         const hex = primitiveByName.get(primName);
         const name = nameFromPath('color', path);
         const scope = scopeFromTokenName(name);
