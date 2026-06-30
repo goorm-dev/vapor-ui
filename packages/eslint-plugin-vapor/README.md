@@ -32,6 +32,99 @@ yarn add -D eslint-plugin-vapor
 > - [eslint-plugin-jsx-a11y guide](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y?tab=readme-ov-file#installation)
 > - [typescript-eslint guide](https://typescript-eslint.io/getting-started/#step-1-installation).
 
+## CSS Design-Token Rules
+
+Lint CSS files for correct use of Vapor design tokens. Requires [`@eslint/css`](https://github.com/eslint/css) (flat-config only).
+
+### Usage
+
+```sh
+pnpm add -D @eslint/css
+```
+
+```js
+// eslint.config.mjs
+import vapor from 'eslint-plugin-vapor';
+import css from '@eslint/css';
+
+export default [
+  {
+    files: ['**/*.css'],
+    plugins: { css, vapor: vapor.configs.css.plugins.vapor },
+    language: 'css/css',
+    rules: vapor.configs.css.rules,
+  },
+];
+```
+
+Or use the preset shorthand:
+
+```js
+// eslint.config.mjs
+import vapor from 'eslint-plugin-vapor';
+import css from '@eslint/css';
+
+export default [
+  {
+    files: ['**/*.css'],
+    language: 'css/css',
+    ...vapor.configs.css,
+    plugins: { ...vapor.configs.css.plugins, css },
+  },
+];
+```
+
+### Rules
+
+| Rule | Severity in preset | Description |
+|---|---|---|
+| `vapor/css/no-invalid-design-token` | error | Disallow `var()` references to Vapor tokens not in the catalog |
+| `vapor/css/token-scope-mismatch` | error | Disallow Vapor tokens used in a property whose semantic scope does not match |
+| `vapor/css/prefer-design-token` | warn | Suggest replacing raw CSS values with the nearest Vapor design token |
+
+### Options
+
+#### `vapor/css/no-invalid-design-token`
+
+```json
+{
+  "vapor/css/no-invalid-design-token": ["error", {
+    "allowCustomTokens": ["--vapor-custom-token-a"]
+  }]
+}
+```
+
+- `allowCustomTokens` (`string[]`, default `[]`): token names to whitelist. Supports `*` glob wildcards. Also merges with `settings.vapor.customTokens` (shared settings).
+
+#### `vapor/css/token-scope-mismatch`
+
+No options. Token-to-scope mappings come from the built-in catalog.
+
+#### `vapor/css/prefer-design-token`
+
+```json
+{
+  "vapor/css/prefer-design-token": ["warn", {
+    "properties": ["color", "background-color"],
+    "threshold": 10
+  }]
+}
+```
+
+- `properties` (`string[]`, default: all properties): limit suggestions to specific CSS properties.
+- `threshold` (`number`, default `10`): maximum perceptual distance (deltaE) to surface a suggestion.
+
+### Limits (v1)
+
+- CSS files only. No SCSS, Less, or CSS-in-JS.
+- No autofix (suggestions only via IDE quick-fix).
+- No shorthand decomposition (e.g. `border` shorthand is not analysed for color parts).
+- No dark-theme hex matching (only light-mode token values are indexed).
+
+### Token Sync
+
+Token assets live in `src/data/tokens/` and are copied from `skills/token-lint/assets/`. When the upstream token catalog changes, re-copy the assets and bump the package version.
+
 ## License
 
 MIT License © 2025 goorm, Inc
