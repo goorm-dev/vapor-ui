@@ -98,21 +98,35 @@ export default [
 
 #### `vapor/css/token-scope-mismatch`
 
-No options. Token-to-scope mappings come from the built-in catalog.
+```json
+{
+  "vapor/css/token-scope-mismatch": ["error", {
+    "propertyScopeMap": { "my-custom-prop": ["foreground"] },
+    "ignoreProperties": ["--vendor-color"]
+  }]
+}
+```
+
+- `propertyScopeMap` (`Record<string, Scope[]>`, default `{}`): extend or override the built-in property→scope mapping. Merged on top of the built-in catalog.
+- `ignoreProperties` (`string[]`, default `[]`): CSS property names to skip entirely.
 
 #### `vapor/css/prefer-design-token`
 
 ```json
 {
   "vapor/css/prefer-design-token": ["warn", {
-    "properties": ["color", "background-color"],
-    "threshold": 10
+    "categories": ["foreground", "background"],
+    "ignoreProperties": ["outline-color"],
+    "ignoreValues": ["0", "transparent"],
+    "maxSuggestions": 3
   }]
 }
 ```
 
-- `properties` (`string[]`, default: all properties): limit suggestions to specific CSS properties.
-- `threshold` (`number`, default `10`): maximum perceptual distance (deltaE) to surface a suggestion.
+- `categories` (`Scope[]`, default: all categories): restrict suggestions to tokens in the given scope categories (e.g. `"foreground"`, `"background"`, `"border"`, `"dimension"`, `"space"`, `"borderRadius"`).
+- `ignoreProperties` (`string[]`, default `[]`): CSS property names to skip entirely.
+- `ignoreValues` (`string[]`, default `["0","0px","transparent","none","currentcolor","inherit","initial","unset"]`): raw CSS values to skip.
+- `maxSuggestions` (`number`, default `3`): maximum number of token suggestions to offer per violation.
 
 ### Limits (v1)
 
