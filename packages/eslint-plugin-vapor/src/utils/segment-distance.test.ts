@@ -18,6 +18,6 @@ describe('segmentDistance', () => {
     expect(segmentDistance('--vapr-clor-foregruond-primary-100', '--vapor-color-foreground-primary-100')).toBe(null);
   });
   it('handles Damerau transposition as distance 1', () => {
-    expect(segmentDistance('--vapor-color-foregruond-primary-100', '--vapor-color-foreground-primary-100')).toBe(1);
+    expect(segmentDistance('ab', 'ba')).toBe(1);
   });
 });

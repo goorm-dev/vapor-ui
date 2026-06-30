@@ -25,6 +25,14 @@ describe('parseDeclarationValue', () => {
     expect(parseDeclarationValue(ast)).toEqual([{ type: 'hex', raw: '#FFF', normalized: '#ffffff', offset: 0 }]);
   });
 
+  it('extracts 4-digit hex and normalizes to 8-digit', () => {
+    const ast = {
+      type: 'Value',
+      children: [{ type: 'Hash', value: 'abcd', loc: { start: { offset: 0 } } }],
+    };
+    expect(parseDeclarationValue(ast)).toEqual([{ type: 'hex', raw: '#abcd', normalized: '#aabbccdd', offset: 0 }]);
+  });
+
   it('extracts 8-digit hex', () => {
     const ast = {
       type: 'Value',
