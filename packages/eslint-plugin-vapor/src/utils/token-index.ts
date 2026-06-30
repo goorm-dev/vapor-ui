@@ -172,3 +172,7 @@ export function buildTokenIndex(): TokenIndex {
 }
 
 export const TOKEN_INDEX: TokenIndex = buildTokenIndex();
+
+export function isCanonicalToken(name: string): boolean {
+  return TOKEN_INDEX.canonicalTokens.has(name);
+}
