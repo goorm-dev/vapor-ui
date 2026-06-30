@@ -1,14 +1,29 @@
-import type { RawExtract, ScanPayload } from '~/common/schemas';
+import type { Category, RawExtract, ScanPayload } from '~/common/schemas';
+
+import { evaluateColor } from '~/ui/lib/evaluate/color';
+import { evaluateDimension } from '~/ui/lib/evaluate/dimension';
+import { evaluateRadius } from '~/ui/lib/evaluate/radius';
+import { evaluateShadow } from '~/ui/lib/evaluate/shadow';
+import { evaluateSpace } from '~/ui/lib/evaluate/space';
+import { evaluateTypography } from '~/ui/lib/evaluate/typography';
+import { loadColorSchema } from '~/ui/lib/loaders/color';
+import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
+import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
+import { applyRecommendations } from '~/ui/lib/recommend';
+import { buildLlmInput } from '~/ui/lib/rubric';
 
 import type { LlmEnv } from './client';
 import { LlmHttpError, LlmTimeoutError, postLiteLLM } from './client';
-import { LlmParseError, parseScanPayload } from './parse';
+import type { CategoryDet, MergeArgs } from './merge';
+import { mergeScanPayload } from './merge';
+import { LlmParseError, parseLlmResponse } from './parse';
 import { buildRequest } from './prompt';
 
 export type RunLlmEvaluationOptions = {
     signal?: AbortSignal;
     env?: LlmEnv;
     model?: string;
+    frameName?: string;
 };
 
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
@@ -19,9 +34,46 @@ export async function runLlmEvaluation(
 ): Promise<ScanPayload> {
     const env = options.env ?? envFromImportMeta();
     const model = options.model ?? importMetaModel() ?? DEFAULT_MODEL;
-    const request = buildRequest(extract, model);
+    const frameName = options.frameName ?? '';
+
+    const colorSchema = loadColorSchema(extract.schemaMode);
+    const dim = loadDimensionSchemas();
+    const textStyleSchema = loadTextStyleSchema();
+
+    const det: Record<Category, CategoryDet> = {
+        color: { ...evaluateColor(extract.colors, colorSchema), total: extract.colors.length },
+        space: { ...evaluateSpace(extract.spaces, dim.space), total: extract.spaces.length },
+        dimension: { ...evaluateDimension(extract.dimensions, dim.dimension), total: extract.dimensions.length },
+        typography: { ...evaluateTypography(extract.typography, textStyleSchema), total: extract.typography.length },
+        borderRadius: { ...evaluateRadius(extract.radii, dim.borderRadius), total: extract.radii.length },
+        shadow: { ...evaluateShadow(extract.shadows, dim.shadow), total: extract.shadows.length },
+    };
+
+    const ctx = {
+        colorSchema,
+        space: dim.space,
+        dimension: dim.dimension,
+        borderRadius: dim.borderRadius,
+        shadow: dim.shadow,
+    };
+    for (const key of Object.keys(det) as Category[]) {
+        det[key].violations = applyRecommendations(det[key].violations, ctx);
+    }
+
+    const llmInput = buildLlmInput({
+        extract,
+        deterministicConformant: { color: det.color.conformant, typography: det.typography.conformant },
+        frameName,
+        colorSchema,
+        textStyleSchema,
+    });
+
+    const request = buildRequest(llmInput, model);
     const response = await postLiteLLM(request, { env, signal: options.signal });
-    return parseScanPayload(response);
+    const judgments = parseLlmResponse(response);
+
+    const mergeArgs: MergeArgs = { deterministic: det, llm: judgments };
+    return mergeScanPayload(mergeArgs);
 }
 
 function envFromImportMeta(): LlmEnv {

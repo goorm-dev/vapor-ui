@@ -1,88 +1,69 @@
-import type { RawExtract } from '~/common/schemas';
+import type { LlmInput } from '~/ui/lib/rubric';
 
-export const SYSTEM_PROMPT = [
-    'You are the vapor design token reviewer.',
-    'Apply the rules in .claude/skills/figma-token-review/scripts/evaluate.mjs (color)',
-    'and typography-evaluate.mjs (typography) by reasoning. You do NOT execute code.',
+const SYSTEM_BASE = [
+    '당신은 vapor 디자인 토큰의 의미 판정자다.',
+    '결정론 분석은 일체 하지 않는다 — plugin이 이미 끝냈다.',
+    '너의 역할은 두 가지뿐이다.',
+    '1) 텍스트 위계(text styles) 적합성 분석',
+    '2) semantic color의 역할/상태/상황 적합성 분석',
+    '각 항목에 verdict(PASS/FAIL), confidence(HIGH/MED/LOW), 한국어 reasoning, 그리고 FAIL일 때만 자기 영역의 대체 토큰 후보(`suggested`)를 낸다.',
+    '결정론 fail 노드는 입력에 없다. 결정론 fail에 대한 의견은 내지 마라.',
     '',
-    'Input (user message): a RawExtract JSON describing Figma frame extraction.',
-    '',
-    'Output: a single JSON object -- no markdown fences, no prose around it.',
-    'Top-level shape:',
+    '출력은 다음 JSON 객체 하나뿐. 마크다운 fence/문장/접두사 금지.',
     '{',
-    '  "color": EvaluateOutput,',
-    '  "typography": EvaluateOutput',
+    '  "typography": LlmTypoJudgment[],',
+    '  "semanticColor": LlmColorJudgment[]',
     '}',
     '',
-    'EvaluateOutput = {',
-    '  "violations": Violation[],',
-    '  "conformant": Conformant[],',
-    '  "summary": {',
-    '    "total": number,',
-    '    "conformCount": number,',
-    '    "conformanceRate": number | null,',
-    '    "highViolations": number,',
-    '    "infoFlags": number',
-    '  },',
-    '  "rubric"?: object',
+    'LlmTypoJudgment = {',
+    '  "nodeId": string, "name": string, "token": string,',
+    '  "verdict": "PASS" | "FAIL",',
+    '  "confidence": "HIGH" | "MED" | "LOW",',
+    '  "reasoning": string (Korean),',
+    '  "suggested": string[]   // verdict=FAIL 일 때만 채움. 빈 배열 가능. 절대 string 으로 내지 마라.',
     '}',
     '',
-    'Violation = {',
-    '  "nodeId": string,           // required. group violation: copy nodeIds[0] here',
-    '  "nodeIds"?: string[],       // optional grouping',
-    '  "count"?: number,',
-    '  "name": string,             // figma node name verbatim',
-    '  "token": string | null,     // current token key (null when raw)',
-    '  "type": ViolationType,',
-    '  "severity": "high" | "info",',
-    '  "detail": string,           // Korean natural language',
-    '  "suggested": string[]       // ARRAY of token keys. NEVER a string. NEVER "A or B"',
+    'LlmColorJudgment = {',
+    '  "nodeId": string, "name": string, "property": "fill" | "fill-on-text" | "stroke", "token": string,',
+    '  "verdict": "PASS" | "FAIL",',
+    '  "confidence": "HIGH" | "MED" | "LOW",',
+    '  "reasoning": string (Korean),',
+    '  "suggested": string[]',
     '}',
     '',
-    'ViolationType =',
-    '  | "token-not-used" | "unknown-token" | "do-not-use"',
-    '  | "role-mismatch" | "fg-grade-mismatch" | "fg-grade-ambiguous"',
-    '  | "typo-raw" | "typo-styled-override";',
-    '',
-    'Conformant = {',
-    '  "nodeId": string,',
-    '  "nodeIds"?: string[],',
-    '  "name": string,',
-    '  "token": string',
-    '}',
-    '',
-    'Hard rules (any violation = invalid output):',
-    '- "suggested" MUST be a JSON array. Multiple candidates -> multiple array elements:',
-    '  ["colors.foreground.normal.100", "colors.foreground.hint.100"].',
-    '  No candidates -> []. NEVER emit a string. NEVER use "A or B" syntax.',
-    '- Every Violation MUST include "nodeId" (string). Group violation: copy nodeIds[0].',
-    '- "type" and "severity" are required on every Violation.',
-    '- Typography violations use the same base shape. Encode typography-only context',
-    '  (characters, textStyle, appliedStatus, overriddenFields) inside "detail" as Korean prose.',
-    '- "detail" and natural-language portions of "suggested" MUST be Korean.',
-    '  Token keys (e.g. colors.foreground.normal.100) stay English.',
-    '- Output the JSON object only. No markdown, no preamble, no trailing prose.',
+    'Hard rules:',
+    '- suggested 는 항상 배열. 후보 없으면 [].',
+    '- 토큰 키(예: colors.background.danger.100, subtitle1)는 영문 그대로.',
+    '- reasoning 은 한국어. 어느 when/avoid 항목이 부합/위배되는지 명시.',
+    '- 확신이 약하면 confidence를 낮추되 verdict는 PASS/FAIL 둘 중 하나만 사용.',
 ].join('\n');
+
+const SEMANTIC_GUIDE = [
+    '의미 판정 가이드 (vapor 토큰 의미 기준):',
+    '- color: 각 토큰의 when/avoid 가 전제하는 역할(danger/warning/primary/normal/hint 등)과 실제 자리(노드 이름·부모·인접 노드)의 의미가 부합하는가.',
+    '  - avoid 의 "조건 → colors.X.Y" 형식은 우변이 그대로 remedy 후보다.',
+    '- typography: rank 는 위계 인덱스(작을수록 큰 제목). totalRanks 와 함께 보고 위계 뒤집힘 / 본문에 heading 오용 등을 잡는다.',
+    '  - viewport 의존 규칙은 textStyle 의 when 에 명시("mobile viewports → heading1" 등)되어 있다.',
+    '- 점수화(0-100) 금지. PASS/FAIL + confidence 만.',
+].join('\n');
+
+export type SystemBlock = { type: 'text'; text: string; cache_control?: { type: 'ephemeral' } };
 
 export type AnthropicMessagesRequest = {
     model: string;
     max_tokens: number;
-    system: string;
+    system: SystemBlock[];
     messages: Array<{ role: 'user'; content: string }>;
-    skills?: Array<{ type: 'skill'; name: string }>;
 };
 
-export function buildRequest(extract: RawExtract, model: string): AnthropicMessagesRequest {
+export function buildRequest(input: LlmInput, model: string): AnthropicMessagesRequest {
     return {
         model,
-        max_tokens: 8192,
-        system: SYSTEM_PROMPT,
-        messages: [
-            {
-                role: 'user',
-                content: JSON.stringify(extract),
-            },
+        max_tokens: 4096,
+        system: [
+            { type: 'text', text: SYSTEM_BASE },
+            { type: 'text', text: SEMANTIC_GUIDE, cache_control: { type: 'ephemeral' } },
         ],
-        skills: [{ type: 'skill', name: 'figma-token-review' }],
+        messages: [{ role: 'user', content: JSON.stringify(input) }],
     };
 }
