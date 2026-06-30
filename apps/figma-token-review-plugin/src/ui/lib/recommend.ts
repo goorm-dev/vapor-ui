@@ -163,8 +163,8 @@ function fgGradeMismatchSuggestions(token: string | null, schema: ColorSchema): 
 
 export function applyRecommendations(violations: Violation[], ctx: RecommendCtx): Violation[] {
     return violations.map((violation) => {
-        // heuristic pass-through — never modify
-        if (violation.heuristic) return violation;
+        // llm origin pass-through — never modify
+        if (violation.origin === 'llm') return violation;
 
         let suggested: string[] = [];
 

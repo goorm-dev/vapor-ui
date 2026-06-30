@@ -72,7 +72,7 @@ export async function runLlmEvaluation(
     const response = await postLiteLLM(request, { env, signal: options.signal });
     const judgments = parseLlmResponse(response);
 
-    const mergeArgs: MergeArgs = { deterministic: det, llm: judgments };
+    const mergeArgs: MergeArgs = { deterministic: det, llm: judgments, schemaMode: extract.schemaMode };
     return mergeScanPayload(mergeArgs);
 }
 

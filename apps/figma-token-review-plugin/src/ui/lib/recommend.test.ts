@@ -17,7 +17,8 @@ function v(partial: Partial<Violation>): Violation {
         value: null,
         type: 'token-not-used',
         severity: 'high',
-        detail: '',
+        origin: 'rule',
+        message: '',
         suggested: [],
         ...partial,
     };
@@ -226,11 +227,11 @@ describe('applyRecommendations', () => {
         expect(out[0].suggested).toEqual([]);
     });
 
-    // Heuristic pass-through
-    it('heuristic=true인 violation은 suggested를 변경하지 않는다', () => {
+    // LLM origin pass-through
+    it('origin=llm인 violation은 suggested를 변경하지 않는다', () => {
         const original = ['colors.background.primary.100'];
         const out = applyRecommendations(
-            [v({ type: 'role-mismatch', property: 'fill', token: 'colors.foreground.primary.100', suggested: original, heuristic: true })],
+            [v({ type: 'role-mismatch', property: 'fill', token: 'colors.foreground.primary.100', suggested: original, origin: 'llm' })],
             { colorSchema, ...dim },
         );
         expect(out[0].suggested).toEqual(original);

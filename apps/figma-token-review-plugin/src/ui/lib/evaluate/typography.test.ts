@@ -36,13 +36,13 @@ describe('evaluateTypography', () => {
         expect(r.violations[0].severity).toBe('info');
     });
 
-    it('styled-override detail 에 overriddenFields 표시', () => {
+    it('styled-override message 에 overriddenFields 표시', () => {
         const r = evaluateTypography(
             [usage({ appliedStatus: 'styled-override', overriddenFields: ['fontSize', 'lineHeight'] })],
             schema,
         );
-        expect(r.violations[0].detail).toContain('fontSize');
-        expect(r.violations[0].detail).toContain('lineHeight');
+        expect(r.violations[0].message).toContain('fontSize');
+        expect(r.violations[0].message).toContain('lineHeight');
     });
 
     it('styled-clean 은 conformant', () => {

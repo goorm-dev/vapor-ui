@@ -428,8 +428,13 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
             ['height', 'height'],
         ];
         for (const [property, field] of dimFields) {
+            // Skip root frame dimensions (Finding 2)
+            if (node.id === root!.id) continue;
             const rawValue: unknown = (node as any)[field];
             if (typeof rawValue === 'number') {
+                // Only extract FIXED dimensions; FILL and HUG are layout-driven (Finding 1)
+                if (property === 'width' && (node as any).layoutSizingHorizontal !== 'FIXED') continue;
+                if (property === 'height' && (node as any).layoutSizingVertical !== 'FIXED') continue;
                 const { token, status } = await readBoundToken(bvRecord, field);
                 dimensionRaw.push({
                     nodeId: node.id,

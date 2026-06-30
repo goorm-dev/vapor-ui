@@ -4,6 +4,7 @@
 
 export type Severity = 'high' | 'info';
 export type Confidence = 'HIGH' | 'MED' | 'LOW';
+export type Origin = 'rule' | 'llm';
 
 export type Property =
     | 'fill'
@@ -57,11 +58,10 @@ export type Violation = {
     value: string | null;
     type: ViolationType;
     severity: Severity;
-    detail: string;
+    origin: Origin;
+    message: string;
     suggested: string[];
-    heuristic?: true;
-    confidence?: Confidence;
-    reasoning?: string;
+    confidence?: Confidence; // only when origin === 'llm'
 };
 
 export type Conformant = {
@@ -94,6 +94,7 @@ export type ScanPayload = {
     typography: EvaluateOutput;
     borderRadius: EvaluateOutput;
     shadow: EvaluateOutput;
+    schemaMode: SchemaMode;
 };
 
 export type SelectionState =

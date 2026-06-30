@@ -15,7 +15,8 @@ export function evaluateShadow(
             property: 'shadow' as const,
             token: u.token,
             value: u.value,
-            detail: '',
+            origin: 'rule' as const,
+            message: '',
             suggested: [] as string[],
         };
 
@@ -24,7 +25,7 @@ export function evaluateShadow(
                 ...base,
                 type: 'token-not-used',
                 severity: 'high',
-                detail: `shadow에 raw value(${u.value})가 직접 입력되었습니다.`,
+                message: `shadow에 raw value(${u.value})가 직접 입력되었습니다.`,
             });
             continue;
         }
@@ -34,7 +35,7 @@ export function evaluateShadow(
                 ...base,
                 type: 'unknown-token',
                 severity: 'high',
-                detail: 'shadow 스키마에 등록되지 않은 토큰입니다.',
+                message: 'shadow 스키마에 등록되지 않은 토큰입니다.',
             });
             continue;
         }

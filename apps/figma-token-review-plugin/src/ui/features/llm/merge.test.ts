@@ -21,10 +21,11 @@ describe('mergeScanPayload', () => {
                     { nodeId: '2', name: 'alert', property: 'fill', token: 'colors.background.danger.100', verdict: 'FAIL', confidence: 'MED', reasoning: '경고 아님', suggested: [] },
                 ],
             },
+            schemaMode: 'light',
         });
-        expect(payload.typography.violations[0].heuristic).toBe(true);
+        expect(payload.typography.violations[0].origin).toBe('llm');
         expect(payload.typography.violations[0].severity).toBe('high');
-        expect(payload.color.violations[0].heuristic).toBe(true);
+        expect(payload.color.violations[0].origin).toBe('llm');
     });
 
     it('적합률은 결정론 high + HIGH-confidence heuristic 만 부적합', () => {
@@ -44,6 +45,7 @@ describe('mergeScanPayload', () => {
                     { nodeId: '2', name: 'b', property: 'fill', token: 'colors.background.primary.100', verdict: 'FAIL', confidence: 'LOW', reasoning: '', suggested: [] },
                 ],
             },
+            schemaMode: 'light',
         });
         // 부적합 1건(HIGH), 비결정 1건(LOW). 적합률 = (10-1)/10 = 0.9
         expect(payload.color.summary.conformanceRate).toBeCloseTo(0.9);
@@ -65,6 +67,7 @@ describe('mergeScanPayload', () => {
                 ],
                 semanticColor: [],
             },
+            schemaMode: 'light',
         });
         expect(payload.typography.violations.length).toBe(0);
         expect(payload.typography.conformant.length).toBe(0); // 결정론 conformant 입력 없음
