@@ -18,6 +18,12 @@ describe('PROPERTY_SCOPE', () => {
 
     it('padding 과 gap 은 space role', () => {
         expect(PROPERTY_SCOPE.padding).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingTop).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingRight).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingBottom).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingLeft).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingVertical).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingHorizontal).toEqual(['space']);
         expect(PROPERTY_SCOPE.gap).toEqual(['space']);
     });
 

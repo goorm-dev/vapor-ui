@@ -51,15 +51,37 @@ function toSchemaKey(name: string | null): string | null {
     return name && name.startsWith('color-') ? name : null;
 }
 
-/**
- * Convert a Figma variable name to a dimension/space/radius schema key.
- * e.g. "size/space/200" → "size-space-200", "shadow/md" → "shadow-md"
- */
-function varNameToSchemaKey(name: string): string {
-    return name.replace(/\//g, '-');
+/** Map a bound-variable field to the canonical token-key prefix used by the loader. */
+function categoryPrefixFor(field: string): string {
+    switch (field) {
+        case 'paddingTop':
+        case 'paddingRight':
+        case 'paddingBottom':
+        case 'paddingLeft':
+        case 'itemSpacing':
+            return 'size-space';
+        case 'width':
+        case 'height':
+            return 'size-dimension';
+        case 'topLeftRadius':
+        case 'topRightRadius':
+        case 'bottomLeftRadius':
+        case 'bottomRightRadius':
+        case 'cornerRadius':
+            return 'size-borderRadius';
+        default:
+            return 'size-space'; // fallback
+    }
 }
 
-/** Resolve a single boundVariable ref to a token key. Returns null + 'raw' if no binding. */
+/** Extract the leaf segment from a Figma variable name (slash or dash separated). */
+function leafSegment(varName: string): string {
+    // Variable names use '/' as separator: "size/space/200" → "200"
+    const parts = varName.split('/');
+    return parts[parts.length - 1];
+}
+
+/** Resolve a single boundVariable ref to a token key using field-category prefix. Returns null + 'raw' if no binding. */
 async function readBoundToken(
     bound: Record<string, { id: string }> | undefined,
     field: string,
@@ -68,8 +90,9 @@ async function readBoundToken(
     if (!ref) return { token: null, status: 'raw' };
     const variable = await getVariableWithRemoteDefense(ref.id);
     if (!variable) return { token: null, status: 'unknown' };
-    const key = varNameToSchemaKey(variable.name);
-    return { token: key, status: 'ok' };
+    const leaf = leafSegment(variable.name);
+    const prefix = categoryPrefixFor(field);
+    return { token: `${prefix}-${leaf}`, status: 'ok' };
 }
 
 /**
@@ -88,8 +111,8 @@ async function readEffectStyleToken(
     try {
         const style = await figma.getStyleByIdAsync(styleId);
         if (!style) return { token: null, status: 'unknown' };
-        const key = varNameToSchemaKey(style.name);
-        return { token: key, status: 'ok' };
+        const leaf = leafSegment(style.name);
+        return { token: `shadow-${leaf}`, status: 'ok' };
     } catch (_e) {
         return { token: null, status: 'unknown' };
     }
@@ -391,26 +414,102 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
 
         // — Space (padding + gap) —
         const bvRecord = bv as Record<string, { id: string }> | undefined;
-        const spaceFields: Array<['padding' | 'gap', string]> = [
-            ['padding', 'paddingTop'],
-            ['padding', 'paddingRight'],
-            ['padding', 'paddingBottom'],
-            ['padding', 'paddingLeft'],
-            ['gap', 'itemSpacing'],
-        ];
-        for (const [property, field] of spaceFields) {
-            const rawValue: unknown = (node as any)[field];
-            if (typeof rawValue === 'number') {
-                const { token, status } = await readBoundToken(bvRecord, field);
+
+        // Collect 4 padding directions
+        type PaddingDir = { field: string; value: number; token: string | null; status: TokenStatus };
+        const paddingDirs: PaddingDir[] = [];
+        for (const f of ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'] as const) {
+            const v = (node as any)[f];
+            if (typeof v === 'number') {
+                const { token, status } = await readBoundToken(bvRecord, f);
+                paddingDirs.push({ field: f, value: v, token, status });
+            }
+        }
+
+        if (paddingDirs.length > 0) {
+            const allSame =
+                paddingDirs.length === 4 &&
+                paddingDirs.every(
+                    (d) =>
+                        d.value === paddingDirs[0].value &&
+                        d.token === paddingDirs[0].token &&
+                        d.status === paddingDirs[0].status,
+                );
+
+            if (allSame) {
+                // Uniform padding: emit one 'padding' entry
                 spaceRaw.push({
                     nodeId: node.id,
                     name: node.name,
-                    property,
-                    value: `${rawValue}px`,
-                    token,
-                    tokenStatus: status,
+                    property: 'padding',
+                    value: `${paddingDirs[0].value}px`,
+                    token: paddingDirs[0].token,
+                    tokenStatus: paddingDirs[0].status,
                 });
+            } else {
+                const top = paddingDirs.find((d) => d.field === 'paddingTop');
+                const bot = paddingDirs.find((d) => d.field === 'paddingBottom');
+                const left = paddingDirs.find((d) => d.field === 'paddingLeft');
+                const right = paddingDirs.find((d) => d.field === 'paddingRight');
+                const vertEq =
+                    top &&
+                    bot &&
+                    top.value === bot.value &&
+                    top.token === bot.token &&
+                    top.status === bot.status;
+                const horzEq =
+                    left &&
+                    right &&
+                    left.value === right.value &&
+                    left.token === right.token &&
+                    left.status === right.status;
+
+                if (paddingDirs.length === 4 && vertEq && horzEq) {
+                    // Symmetric: emit paddingVertical + paddingHorizontal
+                    spaceRaw.push({
+                        nodeId: node.id,
+                        name: node.name,
+                        property: 'paddingVertical',
+                        value: `${top!.value}px`,
+                        token: top!.token,
+                        tokenStatus: top!.status,
+                    });
+                    spaceRaw.push({
+                        nodeId: node.id,
+                        name: node.name,
+                        property: 'paddingHorizontal',
+                        value: `${left!.value}px`,
+                        token: left!.token,
+                        tokenStatus: left!.status,
+                    });
+                } else {
+                    // 4 separate entries
+                    for (const d of paddingDirs) {
+                        spaceRaw.push({
+                            nodeId: node.id,
+                            name: node.name,
+                            property: d.field as 'paddingTop' | 'paddingRight' | 'paddingBottom' | 'paddingLeft',
+                            value: `${d.value}px`,
+                            token: d.token,
+                            tokenStatus: d.status,
+                        });
+                    }
+                }
             }
+        }
+
+        // Gap (itemSpacing)
+        const gapValue: unknown = (node as any).itemSpacing;
+        if (typeof gapValue === 'number') {
+            const { token, status } = await readBoundToken(bvRecord, 'itemSpacing');
+            spaceRaw.push({
+                nodeId: node.id,
+                name: node.name,
+                property: 'gap',
+                value: `${gapValue}px`,
+                token,
+                tokenStatus: status,
+            });
         }
 
         // — Dimension (width + height) —
@@ -446,13 +545,25 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
         // Skip figma.mixed (per-corner radii) — only uniform cornerRadius is extracted.
         const cr: unknown = (node as any).cornerRadius;
         if (typeof cr === 'number') {
-            const { token, status } = await readBoundToken(bvRecord, 'cornerRadius');
+            // Figma uniform cornerRadius may not have boundVariables.cornerRadius.
+            // Try per-corner fields as fallback before giving up.
+            const cornerFields = ['cornerRadius', 'topLeftRadius', 'topRightRadius', 'bottomLeftRadius', 'bottomRightRadius'] as const;
+            let radiusToken: string | null = null;
+            let radiusStatus: TokenStatus = 'raw';
+            for (const cf of cornerFields) {
+                const result = await readBoundToken(bvRecord, cf);
+                if (result.status !== 'raw') {
+                    radiusToken = result.token;
+                    radiusStatus = result.status;
+                    break;
+                }
+            }
             radiusRaw.push({
                 nodeId: node.id,
                 name: node.name,
                 value: `${cr}px`,
-                token,
-                tokenStatus: status,
+                token: radiusToken,
+                tokenStatus: radiusStatus,
             });
         }
 

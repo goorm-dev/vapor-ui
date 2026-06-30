@@ -30,6 +30,12 @@ export type RecommendCtx = {
 function dimensionIndex(property: Property, ctx: RecommendCtx): TokenValueIndex | null {
     switch (property) {
         case 'padding':
+        case 'paddingTop':
+        case 'paddingRight':
+        case 'paddingBottom':
+        case 'paddingLeft':
+        case 'paddingVertical':
+        case 'paddingHorizontal':
         case 'gap':
             return ctx.space;
         case 'width':

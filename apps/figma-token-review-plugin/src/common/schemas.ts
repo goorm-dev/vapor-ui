@@ -11,6 +11,12 @@ export type Property =
     | 'fill-on-text'
     | 'stroke'
     | 'padding'
+    | 'paddingTop'
+    | 'paddingRight'
+    | 'paddingBottom'
+    | 'paddingLeft'
+    | 'paddingVertical'
+    | 'paddingHorizontal'
     | 'gap'
     | 'width'
     | 'height'
@@ -155,7 +161,7 @@ export type TypographyUsage = {
 export type SpaceUsage = {
     nodeId: string;
     name: string;
-    property: 'padding' | 'gap';
+    property: 'padding' | 'paddingTop' | 'paddingRight' | 'paddingBottom' | 'paddingLeft' | 'paddingVertical' | 'paddingHorizontal' | 'gap';
     value: string;
     token: string | null;
     tokenStatus: TokenStatus;
