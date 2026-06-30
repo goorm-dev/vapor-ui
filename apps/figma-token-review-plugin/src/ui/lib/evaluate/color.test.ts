@@ -57,7 +57,7 @@ describe('evaluateColor', () => {
 
     it('primitive 토큰 사용은 primitive-used / info', () => {
         const result = evaluateColor(
-            [usage({ tokenStatus: 'ok', token: 'colors.blue.500', hex: '#0000ff' })],
+            [usage({ tokenStatus: 'ok', token: 'color-blue-500', hex: '#0000ff' })],
             schema,
         );
         expect(result.violations[0].type).toBe('primitive-used');

@@ -47,20 +47,16 @@ function rgbaToHex(c: any): string | null {
 }
 
 function toSchemaKey(name: string | null): string | null {
-    return name && name.startsWith('color-')
-        ? 'colors.' + name.slice('color-'.length).replace(/-/g, '.')
-        : null;
+    // Figma semantic color variable names are already in the new key format (e.g. "color-background-primary-100")
+    return name && name.startsWith('color-') ? name : null;
 }
 
 /**
  * Convert a Figma variable name to a dimension/space/radius schema key.
- * e.g. "space/200" → "space.200"
- * NOTE: If the Figma variable has a tier prefix (e.g. "size/space/200"),
- * this would produce "size.space.200" which would NOT match the schema key
- * "space.200". This is a known assumption that must be validated in T13 smoke.
+ * e.g. "size/space/200" → "size-space-200", "shadow/md" → "shadow-md"
  */
 function varNameToSchemaKey(name: string): string {
-    return name.replace(/\//g, '.');
+    return name.replace(/\//g, '-');
 }
 
 /** Resolve a single boundVariable ref to a token key. Returns null + 'raw' if no binding. */

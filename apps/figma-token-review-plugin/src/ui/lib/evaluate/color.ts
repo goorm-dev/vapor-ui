@@ -7,9 +7,9 @@ import type {
 import type { ColorSchema } from '~/ui/lib/loaders/color';
 import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 
-/** primitive 토큰 키 판별: 'colors.<family>.<grade>' 형식 */
+/** primitive 토큰 키 판별: 'color-<family>-<grade>' 형식 */
 function isPrimitiveKey(token: string): boolean {
-    return /^colors\.[a-z]+\.[0-9]{3}$/.test(token);
+    return /^color-[a-z]+-[0-9]{3}$/.test(token);
 }
 
 /**
@@ -142,7 +142,7 @@ export function evaluateColor(
                 });
                 continue;
             }
-            const grade = u.token.split('.').pop();
+            const grade = u.token.split('-').pop();
             if (kind === 'other' && grade === '100') {
                 violations.push({
                     ...base,

@@ -90,10 +90,10 @@ function flattenPrimitive(root: { colors?: Node }): Record<string, string> {
         }
         for (const [k, v] of Object.entries(node)) {
             if (k.startsWith('$')) continue;
-            walk(v as Node, path ? `${path}.${k}` : k);
+            walk(v as Node, path ? `${path}-${k}` : k);
         }
     };
-    if (root.colors) walk(root.colors, 'colors');
+    if (root.colors) walk(root.colors, 'color');
     return out;
 }
 
@@ -101,7 +101,9 @@ function resolveAlias(valueRef: string | null, primitive: Record<string, string>
     if (!valueRef) return null;
     const m = valueRef.match(/^\{(.+)\}$/);
     if (!m) return /^#[0-9a-f]{3,8}$/i.test(valueRef) ? valueRef : null;
-    return primitive[m[1]] ?? null;
+    // Convert JSON alias path (dot-separated, plural 'colors') to new key format (dash-separated, singular 'color')
+    const aliasPath = m[1].replace(/^colors\./, 'color-').replace(/\./g, '-');
+    return primitive[aliasPath] ?? null;
 }
 
 function asRole(value: unknown): Role | null {
@@ -128,7 +130,7 @@ function flattenSemantic(
         const meta = vaporMeta(node);
         const gradeRules = (meta.gradeRules as Record<string, string> | undefined) ?? inheritedGradeRules;
         if ('$value' in node && typeof node.$value === 'string') {
-            const grade = path.split('.').pop() ?? '';
+            const grade = path.split('-').pop() ?? '';
             const valueRef = node.$value as string;
             const hex = resolveAlias(valueRef, primitive);
             // Store the grade key ('100'/'200') as GradeRule.other rather than the
@@ -158,10 +160,10 @@ function flattenSemantic(
         }
         for (const [k, v] of Object.entries(node)) {
             if (k.startsWith('$')) continue;
-            walk(v as Node, path ? `${path}.${k}` : k, gradeRules ?? null);
+            walk(v as Node, path ? `${path}-${k}` : k, gradeRules ?? null);
         }
     };
-    if (root.colors) walk(root.colors, 'colors', null);
+    if (root.colors) walk(root.colors, 'color', null);
     return { semantic: out, tokenKeys: Object.keys(out), hexIndex };
 }
 

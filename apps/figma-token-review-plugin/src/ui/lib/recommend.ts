@@ -81,14 +81,14 @@ function valueSuggestions(value: string | null, index: TokenValueIndex): string[
  */
 function scopeMismatchSuggestions(token: string | null, property: Property, schema: ColorSchema): string[] {
     if (!token) return [];
-    const grade = token.split('.').pop() ?? '';
+    const grade = token.split('-').pop() ?? '';
     const allowedRoles = (PROPERTY_SCOPE as Record<string, ReadonlyArray<string>>)[property] ?? [];
 
     return Object.entries(schema.semantic)
         .filter(([path, meta]) => {
             if (meta.status === 'do-not-use') return false;
             if (!meta.role || !allowedRoles.includes(meta.role)) return false;
-            if (grade && path.split('.').pop() !== grade) return false;
+            if (grade && path.split('-').pop() !== grade) return false;
             return true;
         })
         .map(([path]) => path);
@@ -114,13 +114,13 @@ function doNotUseSuggestions(token: string | null, schema: ColorSchema): string[
 
     // Fallback 2: parse avoid[] for token refs
     const fromAvoid = (meta.avoid ?? [])
-        .flatMap((line) => Array.from(line.matchAll(/colors\.[a-zA-Z0-9.]+/g), (m) => m[0]))
+        .flatMap((line) => Array.from(line.matchAll(/color-[a-zA-Z0-9-]+/g), (m) => m[0]))
         .filter((cand) => cand !== token && cand in schema.semantic && schema.semantic[cand].status !== 'do-not-use');
     if (fromAvoid.length > 0) return Array.from(new Set(fromAvoid));
 
     // Fallback 3: same grade + same role + different family + not do-not-use
-    const parts = token.split('.');
-    // Expected structure: colors.<role>.<family>.<grade>
+    const parts = token.split('-');
+    // Expected structure: color-<role>-<family>-<grade>
     if (parts.length < 4) return [];
     const grade = parts[parts.length - 1];
     const role = parts[1];
@@ -129,7 +129,7 @@ function doNotUseSuggestions(token: string | null, schema: ColorSchema): string[
     return Object.entries(schema.semantic)
         .filter(([path, m]) => {
             if (m.status === 'do-not-use') return false;
-            const p = path.split('.');
+            const p = path.split('-');
             if (p.length < 4) return false;
             const pGrade = p[p.length - 1];
             const pRole = p[1];
@@ -144,13 +144,13 @@ function doNotUseSuggestions(token: string | null, schema: ColorSchema): string[
  */
 function fgGradeMismatchSuggestions(token: string | null, schema: ColorSchema): string[] {
     if (!token) return [];
-    const parts = token.split('.');
+    const parts = token.split('-');
     const grade = parts[parts.length - 1];
-    // Only handle .100 → .200 substitution
+    // Only handle -100 → -200 substitution
     if (grade !== '100') return [];
 
-    const base = parts.slice(0, -1).join('.');
-    const candidate = `${base}.200`;
+    const base = parts.slice(0, -1).join('-');
+    const candidate = `${base}-200`;
     if (schema.semantic[candidate] && schema.semantic[candidate].status !== 'do-not-use') {
         return [candidate];
     }

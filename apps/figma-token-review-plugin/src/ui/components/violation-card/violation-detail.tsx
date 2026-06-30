@@ -11,7 +11,7 @@ export function ViolationDetail({ message, hasSuggestion }: ViolationDetailProps
     if (!hasSuggestion) {
         return (
             <DescriptionBox>
-                <Text typography="body2" foreground="normal-200">
+                <Text typography="body2" foreground="normal-200" $css={{ textAlign: 'left' }}>
                     {message}
                 </Text>
             </DescriptionBox>

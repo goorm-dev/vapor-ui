@@ -1,4 +1,4 @@
-import { Badge, Card, HStack, Text, VStack } from '@vapor-ui/core';
+import { Card, VStack } from '@vapor-ui/core';
 
 import type { SchemaMode, Violation } from '~/common/schemas';
 import { requestFocus } from '~/ui/features/messaging';
@@ -21,7 +21,11 @@ const PROPERTY_LABEL: Record<Violation['property'], string> = {
     textStyle: 'Text Style',
 };
 
-const COLOR_PROPERTIES: ReadonlySet<Violation['property']> = new Set(['fill', 'fill-on-text', 'stroke']);
+const COLOR_PROPERTIES: ReadonlySet<Violation['property']> = new Set([
+    'fill',
+    'fill-on-text',
+    'stroke',
+]);
 
 function isColorProperty(p: Violation['property']): boolean {
     return COLOR_PROPERTIES.has(p);
@@ -61,13 +65,6 @@ export function ViolationCard({ violation, schemaMode }: ViolationCardProps) {
                 <VStack $css={{ gap: '$150', width: '100%' }}>
                     <VStack $css={{ gap: '$100', width: '100%', alignItems: 'flex-start' }}>
                         <ViolationBreadcrumb name={violation.name} property={property} />
-                        {violation.origin === 'llm' ? (
-                            <HStack $css={{ gap: '$050', alignItems: 'center' }}>
-                                <Badge size="sm" colorPalette="warning">
-                                    의미 판정 · {violation.confidence ?? 'MED'}
-                                </Badge>
-                            </HStack>
-                        ) : null}
                         <TokenComparison
                             usedLabel={usedLabel}
                             suggestedLabel={suggestedLabel}
@@ -75,16 +72,11 @@ export function ViolationCard({ violation, schemaMode }: ViolationCardProps) {
                             rightColor={rightColor}
                         />
                     </VStack>
-                    {violation.origin === 'llm' ? (
-                        <Text typography="body4" foreground="hint-100">
-                            {violation.message}
-                        </Text>
-                    ) : (
-                        <ViolationDetail
-                            message={violation.message}
-                            hasSuggestion={Boolean(suggested)}
-                        />
-                    )}
+
+                    <ViolationDetail
+                        message={violation.message}
+                        hasSuggestion={violation.origin === 'llm'}
+                    />
                 </VStack>
             </Card.Body>
         </Card.Root>
