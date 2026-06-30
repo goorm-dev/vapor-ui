@@ -97,7 +97,7 @@ function scopeMismatchSuggestions(token: string | null, property: Property, sche
 /**
  * For do-not-use tokens: 3-step fallback chain.
  * 1. meta.replacement (string | string[]) explicit field
- * 2. meta.avoid 우변 `colors\.\S+` 정규식 추출
+ * 2. meta.avoid 우변 `colors\.[a-zA-Z0-9.]+` 정규식 추출 (dedup 포함)
  * 3. 동위계(same grade) + same role + different family + status !== 'do-not-use'
  */
 function doNotUseSuggestions(token: string | null, schema: ColorSchema): string[] {
@@ -113,13 +113,10 @@ function doNotUseSuggestions(token: string | null, schema: ColorSchema): string[
     }
 
     // Fallback 2: parse avoid[] for token refs
-    const avoidRefs = (meta.avoid ?? [])
-        .flatMap((a) => {
-            const matches = a.match(/colors\.\S+/g) ?? [];
-            return matches;
-        })
-        .filter((ref) => schema.semantic[ref] && schema.semantic[ref].status !== 'do-not-use');
-    if (avoidRefs.length > 0) return avoidRefs;
+    const fromAvoid = (meta.avoid ?? [])
+        .flatMap((line) => Array.from(line.matchAll(/colors\.[a-zA-Z0-9.]+/g), (m) => m[0]))
+        .filter((cand) => cand !== token && cand in schema.semantic && schema.semantic[cand].status !== 'do-not-use');
+    if (fromAvoid.length > 0) return Array.from(new Set(fromAvoid));
 
     // Fallback 3: same grade + same role + different family + not do-not-use
     const parts = token.split('.');
