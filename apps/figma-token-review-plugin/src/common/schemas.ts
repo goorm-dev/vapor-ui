@@ -3,33 +3,72 @@
  * -----------------------------------------------------------------------------------------------*/
 
 export type Severity = 'high' | 'info';
+export type Confidence = 'HIGH' | 'MED' | 'LOW';
+
+export type Property =
+    | 'fill'
+    | 'fill-on-text'
+    | 'stroke'
+    | 'padding'
+    | 'gap'
+    | 'width'
+    | 'height'
+    | 'borderRadius'
+    | 'shadow'
+    | 'textStyle';
+
+export type Role =
+    | 'background'
+    | 'foreground'
+    | 'border'
+    | 'space'
+    | 'dimension'
+    | 'borderRadius'
+    | 'shadow';
+
+export type Category =
+    | 'color'
+    | 'space'
+    | 'dimension'
+    | 'typography'
+    | 'borderRadius'
+    | 'shadow';
 
 export type ViolationType =
     | 'token-not-used'
+    | 'primitive-used'
     | 'unknown-token'
     | 'do-not-use'
     | 'role-mismatch'
     | 'fg-grade-mismatch'
     | 'fg-grade-ambiguous'
     | 'typo-raw'
-    | 'typo-styled-override';
+    | 'typo-styled-override'
+    | 'semantic-misfit' // heuristic: LLM 의미 판정 FAIL (color)
+    | 'typo-hierarchy'; // heuristic: LLM 텍스트 위계 FAIL
 
 export type Violation = {
     nodeId: string;
     nodeIds?: string[];
     count?: number;
     name: string;
+    property: Property;
     token: string | null;
+    value: string | null;
     type: ViolationType;
     severity: Severity;
     detail: string;
     suggested: string[];
+    heuristic?: true;
+    confidence?: Confidence;
+    reasoning?: string;
 };
 
 export type Conformant = {
     nodeId: string;
     nodeIds?: string[];
     name: string;
+    property: Property;
     token: string;
 };
 
@@ -39,18 +78,22 @@ export type EvaluateSummary = {
     conformanceRate: number | null;
     highViolations: number;
     infoFlags: number;
+    heuristicViolations: number;
 };
 
 export type EvaluateOutput = {
     violations: Violation[];
     conformant: Conformant[];
     summary: EvaluateSummary;
-    rubric?: Record<string, unknown>;
 };
 
 export type ScanPayload = {
     color: EvaluateOutput;
+    space: EvaluateOutput;
+    dimension: EvaluateOutput;
     typography: EvaluateOutput;
+    borderRadius: EvaluateOutput;
+    shadow: EvaluateOutput;
 };
 
 export type SelectionState =
@@ -108,6 +151,40 @@ export type TypographyUsage = {
     resolved: TypographyResolved;
 };
 
+export type SpaceUsage = {
+    nodeId: string;
+    name: string;
+    property: 'padding' | 'gap';
+    value: string;
+    token: string | null;
+    tokenStatus: TokenStatus;
+};
+
+export type DimensionUsage = {
+    nodeId: string;
+    name: string;
+    property: 'width' | 'height';
+    value: string;
+    token: string | null;
+    tokenStatus: TokenStatus;
+};
+
+export type RadiusUsage = {
+    nodeId: string;
+    name: string;
+    value: string;
+    token: string | null;
+    tokenStatus: TokenStatus;
+};
+
+export type ShadowUsage = {
+    nodeId: string;
+    name: string;
+    value: string;
+    token: string | null;
+    tokenStatus: TokenStatus;
+};
+
 export type RawExtractStats = {
     nodeCount: number;
     textNodes: number;
@@ -119,5 +196,9 @@ export type RawExtract = {
     viewport: Viewport;
     colors: ColorUsage[];
     typography: TypographyUsage[];
+    spaces: SpaceUsage[];
+    dimensions: DimensionUsage[];
+    radii: RadiusUsage[];
+    shadows: ShadowUsage[];
     stats: RawExtractStats;
 };

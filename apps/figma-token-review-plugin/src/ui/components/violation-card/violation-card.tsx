@@ -10,6 +10,7 @@ import { ViolationDetail } from './violation-detail';
 
 const PROPERTY_LABEL: Record<Violation['type'], string> = {
     'token-not-used': 'Fill',
+    'primitive-used': 'Fill',
     'unknown-token': 'Fill',
     'do-not-use': 'Fill',
     'role-mismatch': 'Role',
@@ -17,6 +18,8 @@ const PROPERTY_LABEL: Record<Violation['type'], string> = {
     'fg-grade-ambiguous': 'Text',
     'typo-raw': 'Typography',
     'typo-styled-override': 'Typography',
+    'semantic-misfit': 'Fill',
+    'typo-hierarchy': 'Typography',
 };
 
 type ViolationCardProps = {

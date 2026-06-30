@@ -351,6 +351,10 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
         viewport,
         colors: colors as unknown as ColorUsage[],
         typography: typography as unknown as TypographyUsage[],
+        spaces: [],
+        dimensions: [],
+        radii: [],
+        shadows: [],
         stats: {
             nodeCount: visited,
             textNodes,
