@@ -713,6 +713,9 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/culori':
+        specifier: ^4.0.1
+        version: 4.0.1
       '@types/eslint':
         specifier: ^9.6.1
         version: 9.6.1
