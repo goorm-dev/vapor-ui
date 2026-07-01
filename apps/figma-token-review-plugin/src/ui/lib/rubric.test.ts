@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Conformant, RawExtract } from '~/common/schemas';
+import type { Conformant, NodeInfo, RawExtract } from '~/common/schemas';
 import { loadColorSchema } from '~/ui/lib/loaders/color';
 import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
 import { buildLlmInput } from '~/ui/lib/rubric';
@@ -60,6 +60,7 @@ describe('buildLlmInput', () => {
             frameName: 'frame',
             colorSchema,
             textStyleSchema,
+            nodeTree: [],
         });
         expect(input.judgmentTargets.semanticColor.map((t) => t.nodeId)).toEqual(['1']);
         expect(input.judgmentTargets.typography.map((t) => t.nodeId)).toEqual(['2']);
@@ -80,6 +81,7 @@ describe('buildLlmInput', () => {
             frameName: 'frame',
             colorSchema,
             textStyleSchema,
+            nodeTree: [],
         });
         expect(Object.keys(input.rubric.color)).toEqual([fgKey]);
         expect(Object.keys(input.rubric.textStyle)).toEqual(['subtitle1']);
@@ -97,6 +99,7 @@ describe('buildLlmInput', () => {
             frameName: 'frame',
             colorSchema,
             textStyleSchema,
+            nodeTree: [],
         });
         expect(input.judgmentTargets.semanticColor).toHaveLength(0);
         expect(input.judgmentTargets.typography).toHaveLength(0);
@@ -112,9 +115,26 @@ describe('buildLlmInput', () => {
             frameName: 'MyFrame',
             colorSchema,
             textStyleSchema,
+            nodeTree: [],
         });
         expect(input.context.schemaMode).toBe('light');
         expect(input.context.viewport).toBe('pc');
         expect(input.context.frameName).toBe('MyFrame');
+    });
+
+    it('nodeTree가 LlmInput에 그대로 복사된다', () => {
+        const nodeTree: NodeInfo[] = [
+            { id: 'r', type: 'FRAME', name: 'Root', parentId: null, childIds: ['c'], x: 0, y: 0, w: 100, h: 200 },
+            { id: 'c', type: 'TEXT', name: 'Caption', parentId: 'r', childIds: [], x: 10, y: 10, w: 80, h: 20 },
+        ];
+        const input = buildLlmInput({
+            extract,
+            deterministicConformant: { color: [], typography: [] },
+            frameName: 'F',
+            colorSchema,
+            textStyleSchema,
+            nodeTree,
+        });
+        expect(input.nodeTree).toEqual(nodeTree);
     });
 });

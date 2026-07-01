@@ -1,4 +1,4 @@
-import type { Conformant, RawExtract, Role } from '~/common/schemas';
+import type { Conformant, NodeInfo, RawExtract, Role } from '~/common/schemas';
 import type { ColorSchema } from '~/ui/lib/loaders/color';
 import type { TextStyleSchema } from '~/ui/lib/loaders/typography';
 
@@ -38,6 +38,7 @@ export type LlmInput = {
         textStyle: Record<string, TextStyleMetaSubset>;
         color: Record<string, ColorMetaSubset>;
     };
+    nodeTree: NodeInfo[];
 };
 
 export type BuildLlmInputArgs = {
@@ -46,10 +47,11 @@ export type BuildLlmInputArgs = {
     frameName: string;
     colorSchema: ColorSchema;
     textStyleSchema: TextStyleSchema;
+    nodeTree: NodeInfo[];
 };
 
 export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
-    const { extract, deterministicConformant, frameName, colorSchema, textStyleSchema } = args;
+    const { extract, deterministicConformant, frameName, colorSchema, textStyleSchema, nodeTree } = args;
 
     // After groupBy in extract.ts, items have nodeIds: string[] instead of nodeId.
     // Build a map from each individual nodeId to its grouped entry.
@@ -126,5 +128,6 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
         context: { schemaMode: extract.schemaMode, viewport: extract.viewport, frameName },
         judgmentTargets: { typography: typographyTargets, semanticColor: semanticColorTargets },
         rubric: { textStyle: textStyleRubric, color: colorRubric },
+        nodeTree,
     };
 }

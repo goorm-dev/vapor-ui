@@ -77,6 +77,7 @@ export async function runLlmEvaluation(
         frameName,
         colorSchema,
         textStyleSchema,
+        nodeTree: [],
     });
 
     const request = buildRequest(llmInput, model);
