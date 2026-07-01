@@ -211,3 +211,20 @@ export type RawExtract = {
     shadows: ShadowUsage[];
     stats: RawExtractStats;
 };
+
+export type NodeInfo = {
+    id: string;
+    type: string;
+    name: string;
+    parentId: string | null;
+    childIds: string[];
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+};
+
+export type LlmContext = {
+    screenshotB64: string;
+    nodeTree: NodeInfo[];
+};

@@ -1,8 +1,8 @@
-import type { RawExtract, SelectionState } from './schemas';
+import type { LlmContext, RawExtract, SelectionState } from './schemas';
 
 export type CodeMsg =
     | { type: 'selection'; state: SelectionState }
-    | { type: 'extract-result'; payload: RawExtract }
+    | { type: 'extract-result'; payload: { extract: RawExtract; llmContext: LlmContext } }
     | { type: 'extract-error'; message: string }
     | { type: 'focus-result'; resolved: number; missing: number }
     | { type: 'focus-error'; message: string };
