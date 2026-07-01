@@ -44,16 +44,16 @@ pnpm add -D @eslint/css
 
 ```js
 // eslint.config.mjs
-import vapor from 'eslint-plugin-vapor';
 import css from '@eslint/css';
+import vapor from 'eslint-plugin-vapor';
 
 export default [
-  {
-    files: ['**/*.css'],
-    plugins: { css, vapor: vapor.configs.css.plugins.vapor },
-    language: 'css/css',
-    rules: vapor.configs.css.rules,
-  },
+    {
+        files: ['**/*.css'],
+        plugins: { css, vapor: vapor.configs.css.plugins.vapor },
+        language: 'css/css',
+        rules: vapor.configs.css.rules,
+    },
 ];
 ```
 
@@ -61,26 +61,26 @@ Or use the preset shorthand:
 
 ```js
 // eslint.config.mjs
-import vapor from 'eslint-plugin-vapor';
 import css from '@eslint/css';
+import vapor from 'eslint-plugin-vapor';
 
 export default [
-  {
-    files: ['**/*.css'],
-    language: 'css/css',
-    ...vapor.configs.css,
-    plugins: { ...vapor.configs.css.plugins, css },
-  },
+    {
+        files: ['**/*.css'],
+        language: 'css/css',
+        ...vapor.configs.css,
+        plugins: { ...vapor.configs.css.plugins, css },
+    },
 ];
 ```
 
 ### Rules
 
-| Rule | Severity in preset | Description |
-|---|---|---|
-| `vapor/css/no-invalid-design-token` | error | Disallow `var()` references to Vapor tokens not in the catalog |
-| `vapor/css/token-scope-mismatch` | error | Disallow Vapor tokens used in a property whose semantic scope does not match |
-| `vapor/css/prefer-design-token` | warn | Suggest replacing raw CSS values with the nearest Vapor design token |
+| Rule                                | Severity in preset | Description                                                                  |
+| ----------------------------------- | ------------------ | ---------------------------------------------------------------------------- |
+| `vapor/css/no-invalid-design-token` | error              | Disallow `var()` references to Vapor tokens not in the catalog               |
+| `vapor/css/token-scope-mismatch`    | error              | Disallow Vapor tokens used in a property whose semantic scope does not match |
+| `vapor/css/prefer-design-token`     | warn               | Suggest replacing raw CSS values with the nearest Vapor design token         |
 
 ### Options
 
@@ -88,9 +88,12 @@ export default [
 
 ```json
 {
-  "vapor/css/no-invalid-design-token": ["error", {
-    "allowCustomTokens": ["--vapor-custom-token-a"]
-  }]
+    "vapor/css/no-invalid-design-token": [
+        "error",
+        {
+            "allowCustomTokens": ["--vapor-custom-token-a"]
+        }
+    ]
 }
 ```
 
@@ -100,10 +103,13 @@ export default [
 
 ```json
 {
-  "vapor/css/token-scope-mismatch": ["error", {
-    "propertyScopeMap": { "my-custom-prop": ["foreground"] },
-    "ignoreProperties": ["--vendor-color"]
-  }]
+    "vapor/css/token-scope-mismatch": [
+        "error",
+        {
+            "propertyScopeMap": { "my-custom-prop": ["foreground"] },
+            "ignoreProperties": ["--vendor-color"]
+        }
+    ]
 }
 ```
 
@@ -114,12 +120,15 @@ export default [
 
 ```json
 {
-  "vapor/css/prefer-design-token": ["warn", {
-    "categories": ["foreground", "background"],
-    "ignoreProperties": ["outline-color"],
-    "ignoreValues": ["0", "transparent"],
-    "maxSuggestions": 3
-  }]
+    "vapor/css/prefer-design-token": [
+        "warn",
+        {
+            "categories": ["foreground", "background"],
+            "ignoreProperties": ["outline-color"],
+            "ignoreValues": ["0", "transparent"],
+            "maxSuggestions": 3
+        }
+    ]
 }
 ```
 

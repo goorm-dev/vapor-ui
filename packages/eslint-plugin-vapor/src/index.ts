@@ -3,20 +3,19 @@ import type { Rule } from 'eslint';
 import { altTextOnAvatarRule } from './rules/alt-text-on-avatar';
 import { ariaLabelOnIconButtonRule } from './rules/aria-label-on-icon-button';
 import { ariaLabelOnNavigationRule } from './rules/aria-label-on-navigation';
+import { noInvalidDesignTokenRule } from './rules/no-invalid-design-token';
+import { preferDesignTokenRule } from './rules/prefer-design-token';
 import { shouldHaveTitleOnDialogRule } from './rules/should-have-title-on-dialog';
-
-import { noInvalidDesignTokenRule } from './rules/css/no-invalid-design-token';
-import { tokenScopeMismatchRule } from './rules/css/token-scope-mismatch';
-import { preferDesignTokenRule } from './rules/css/prefer-design-token';
+import { tokenScopeMismatchRule } from './rules/token-scope-mismatch';
 
 const rules = {
     'icon-button-has-aria-label': ariaLabelOnIconButtonRule,
     'navigation-has-aria-label': ariaLabelOnNavigationRule,
     'avatar-has-alt-text': altTextOnAvatarRule,
     'dialog-should-have-title': shouldHaveTitleOnDialogRule,
-    'css/no-invalid-design-token': noInvalidDesignTokenRule,
-    'css/token-scope-mismatch': tokenScopeMismatchRule,
-    'css/prefer-design-token': preferDesignTokenRule,
+    'no-invalid-design-token': noInvalidDesignTokenRule,
+    'token-scope-mismatch': tokenScopeMismatchRule,
+    'prefer-design-token': preferDesignTokenRule,
 } satisfies Record<string, Rule.RuleModule>;
 
 const a11yRecommended = {
@@ -27,9 +26,9 @@ const a11yRecommended = {
 } as const;
 
 const cssRecommended = {
-    'vapor/css/no-invalid-design-token': 'error',
-    'vapor/css/token-scope-mismatch': 'error',
-    'vapor/css/prefer-design-token': 'warn',
+    'vapor/no-invalid-design-token': 'error',
+    'vapor/token-scope-mismatch': 'error',
+    'vapor/prefer-design-token': 'warn',
 } as const;
 
 const plugin = {
