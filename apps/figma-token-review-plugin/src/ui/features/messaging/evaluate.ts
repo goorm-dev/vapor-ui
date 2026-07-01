@@ -17,7 +17,9 @@ export async function evaluateExtract(
     activeEvaluation = controller;
 
     try {
-        const payload = await runLlmEvaluation(msg.payload, { signal: controller.signal });
+        const payload = await runLlmEvaluation(msg.payload.extract, msg.payload.llmContext, {
+            signal: controller.signal,
+        });
         if (activeEvaluation !== controller) return;
         scanActions.result(payload, msg.requestId);
     } catch (err) {
