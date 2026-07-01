@@ -5,6 +5,7 @@ import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-
 
 import type { EvaluateOutput, ScanPayload, SchemaMode, Violation } from '~/common/schemas';
 
+import { toastManager } from '../components/toast';
 import { ViolationCard } from '../components/violation-card';
 import { useScan } from '../features/scan';
 import { useSelection } from '../features/selection';
@@ -136,56 +137,52 @@ function getViolationCounts(payload: ScanPayload): Record<TabKey, number> {
 
 // ----- Selected frame header -----
 
+const toastError = (title: string) => toastManager.add({ title, colorPalette: 'danger' });
+
 /**
  * 재검사 버튼 활성화 규칙
  * - 스캔된 프레임 밖으로 selection이 한 번이라도 벗어난 뒤, 다시 어떤 프레임이든 선택된 상태.
  * - 스캔 직후 그대로 남아 있는 동안엔 disabled.
  */
 function SelectedFrameHeader() {
-    const selection = useSelection();
     const { state, start } = useScan();
+    const { selection, buildAction } = useSelection();
+    const handleRescan = buildAction({
+        frame: (sel) => start(sel.id, sel.name),
+        none: () => toastError('프레임을 1개 선택해 주세요.'),
+        multi: () => toastError('프레임 1개만 선택해 주세요.'),
+        invalid: (sel) => toastError(`프레임 노드만 선택할 수 있습니다. (현재: ${sel.nodeType})`),
+    });
 
+    const isFrame = selection.kind === 'frame';
     const scannedFrameId = state.lastScannedFrameId;
-    const scannedFrameName = state.lastScannedFrameName ?? '이름 없는 프레임';
-
-    const isOnScannedFrame = selection.kind === 'frame' && selection.id === scannedFrameId;
+    const isOnScannedFrame = isFrame && selection.id === scannedFrameId;
 
     const [hasLeftScannedFrame, setHasLeftScannedFrame] = useState(false);
-
     useEffect(() => {
         if (!isOnScannedFrame) setHasLeftScannedFrame(true);
     }, [isOnScannedFrame]);
 
-    const canRescan = hasLeftScannedFrame && selection.kind === 'frame';
-
-    const handleRescan = () => {
-        if (selection.kind !== 'frame') return;
-        start(selection.id, selection.name);
-    };
+    const canRescan = isFrame && hasLeftScannedFrame;
 
     return (
         <HStack
             $css={{
-                padding: '$200',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 gap: '$250',
-                borderBottomWidth: '1px',
-                borderBottomStyle: 'solid',
-                borderBottomColor: '$border-normal',
                 width: '100%',
+                padding: '$200',
+                borderBottom: '1px solid',
+                borderBottomColor: '$border-normal',
             }}
         >
-            <VStack
-                $css={{
-                    gap: '$050',
-                }}
-            >
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="subtitle2" foreground="hint-100">
                     선택한 프레임
                 </Text>
                 <Text typography="heading5" foreground="normal-200">
-                    {scannedFrameName}
+                    {isFrame ? selection.name : '이름 없는 프레임'}
                 </Text>
             </VStack>
 
@@ -310,13 +307,12 @@ function SectionHeader({ icon, title }: { icon: 'frame' | 'text'; title: string 
     );
 }
 
-function ViolationList({
-    violations,
-    schemaMode,
-}: {
+type ViolationListProps = {
     violations: Violation[];
     schemaMode: SchemaMode;
-}) {
+};
+
+function ViolationList({ violations, schemaMode }: ViolationListProps) {
     return (
         <VStack $css={{ gap: '$150', width: '100%', paddingTop: '$150' }}>
             {violations.map((v, i) => (

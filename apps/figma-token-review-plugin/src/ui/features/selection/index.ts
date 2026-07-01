@@ -1,2 +1,3 @@
 export { selectionStore } from './store';
-export { useSelection } from './use-selection';
+export { useSelection, type SelectionStrategy } from './use-selection';
+export * from './plugins';

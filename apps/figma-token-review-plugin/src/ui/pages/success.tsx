@@ -1,12 +1,11 @@
 import confirmUrl from '~/ui/assets/confirm.svg';
 
 import { HeroPanel } from '../components/hero-panel';
+import { useScan } from '../features/scan';
 
-type Props = {
-    onReset: () => void;
-};
+export function SuccessPage() {
+    const { reset } = useScan();
 
-export function SuccessPage({ onReset }: Props) {
     return (
         <HeroPanel.Root>
             <HeroPanel.Content>
@@ -19,7 +18,7 @@ export function SuccessPage({ onReset }: Props) {
                     </HeroPanel.Description>
                 </HeroPanel.Heading>
             </HeroPanel.Content>
-            <HeroPanel.Action onClick={onReset}>다른 프레임 검수하기</HeroPanel.Action>
+            <HeroPanel.Action onClick={reset}>다른 프레임 검수하기</HeroPanel.Action>
         </HeroPanel.Root>
     );
 }
