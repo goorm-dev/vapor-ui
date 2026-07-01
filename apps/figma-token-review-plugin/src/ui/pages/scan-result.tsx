@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Badge, Box, Button, Collapsible, HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-ui/icons';
@@ -6,15 +6,18 @@ import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-
 import type { EvaluateOutput, ScanPayload, SchemaMode, Violation } from '~/common/schemas';
 
 import { ViolationCard } from '../components/violation-card';
+import { useScan } from '../features/scan';
+import { useSelection } from '../features/selection';
 
 type TabKey = 'color' | 'space' | 'dimension' | 'typography' | 'borderRadius' | 'shadow';
 
 type Props = {
+    frameId: string;
     frameName?: string;
     payload: ScanPayload;
 };
 
-export function ScanResultPage({ frameName = '이름 없는 프레임', payload }: Props) {
+export function ScanResultPage({ frameId, frameName = '이름 없는 프레임', payload }: Props) {
     const [tab, setTab] = useState<TabKey>('color');
     const counts = useMemo(() => getViolationCounts(payload), [payload]);
     const schemaMode = payload.schemaMode;
@@ -29,7 +32,7 @@ export function ScanResultPage({ frameName = '이름 없는 프레임', payload 
         >
             <ScanTabBar selected={tab} counts={counts} />
 
-            <SelectedFrameHeader frameName={frameName} />
+            <SelectedFrameHeader scannedFrameId={frameId} frameName={frameName} />
 
             <Tabs.Panel value="color">
                 <ViolationPanel
@@ -135,7 +138,33 @@ function getViolationCounts(payload: ScanPayload): Record<TabKey, number> {
 
 // ----- Selected frame header -----
 
-function SelectedFrameHeader({ frameName }: { frameName: string }) {
+function SelectedFrameHeader({
+    scannedFrameId,
+    frameName,
+}: {
+    scannedFrameId: string;
+    frameName: string;
+}) {
+    const selection = useSelection();
+    const { start } = useScan();
+
+    // 프레임 선택이 해제된 적이 있는지 추적. 동일한 프레임을 재선택해 재검사하려면
+    // 반드시 그 사이에 프레임 선택이 해제되어야 한다.
+    const [deselectedSinceScan, setDeselectedSinceScan] = useState(false);
+
+    useEffect(() => {
+        if (selection.kind !== 'frame') setDeselectedSinceScan(true);
+    }, [selection.kind]);
+
+    const canRescan =
+        selection.kind === 'frame' &&
+        (selection.id !== scannedFrameId || deselectedSinceScan);
+
+    const handleRescan = () => {
+        if (!canRescan || selection.kind !== 'frame') return;
+        start(selection.id, selection.name);
+    };
+
     return (
         <HStack
             $css={{
@@ -162,9 +191,9 @@ function SelectedFrameHeader({ frameName }: { frameName: string }) {
                 </Text>
             </VStack>
 
-            <Button>
+            <Button disabled={!canRescan} onClick={handleRescan}>
                 <RefreshOutlineIcon />
-                검사하기
+                재검사하기
             </Button>
         </HStack>
     );

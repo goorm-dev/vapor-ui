@@ -5,15 +5,15 @@ import { createStore } from '../../shared/create-store';
 
 export type ScanState =
     | { kind: 'idle' }
-    | { kind: 'loading'; frameName: string; requestId: RequestId }
-    | { kind: 'clean'; frameName: string }
-    | { kind: 'success'; frameName: string; payload: ScanPayload };
+    | { kind: 'loading'; frameId: string; frameName: string; requestId: RequestId }
+    | { kind: 'clean'; frameId: string; frameName: string }
+    | { kind: 'success'; frameId: string; frameName: string; payload: ScanPayload };
 
 export const scanStore = createStore<ScanState>({ kind: 'idle' });
 
 export const scanActions = {
-    start(frameName: string, requestId: RequestId) {
-        scanStore.setState({ kind: 'loading', frameName, requestId });
+    start(frameId: string, frameName: string, requestId: RequestId) {
+        scanStore.setState({ kind: 'loading', frameId, frameName, requestId });
     },
     result(payload: ScanPayload, requestId: RequestId | undefined) {
         const state = scanStore.getState();
@@ -25,8 +25,13 @@ export const scanActions = {
 
         scanStore.setState(
             empty
-                ? { kind: 'clean', frameName: state.frameName }
-                : { kind: 'success', frameName: state.frameName, payload },
+                ? { kind: 'clean', frameId: state.frameId, frameName: state.frameName }
+                : {
+                      kind: 'success',
+                      frameId: state.frameId,
+                      frameName: state.frameName,
+                      payload,
+                  },
         );
     },
     error(requestId: RequestId | undefined): boolean {
