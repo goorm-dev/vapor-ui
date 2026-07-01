@@ -3,17 +3,38 @@ import type { ScanPayload } from '~/common/schemas';
 
 import { createStore } from '../../shared/create-store';
 
-export type ScanState =
-    | { kind: 'idle' }
-    | { kind: 'loading'; frameId: string; frameName: string; requestId: RequestId }
-    | { kind: 'clean'; frameId: string; frameName: string }
-    | { kind: 'success'; frameId: string; frameName: string; payload: ScanPayload };
+/**
+ * 마지막 scan 시점의 frame snapshot. 재검사 gating(선택 이탈 감지) 용도로 유지된다.
+ * 현재 selection은 useSelection에서 읽는다 — 여기선 관여하지 않는다.
+ */
+type LastScanned = {
+    lastScannedFrameId: string | null;
+    lastScannedFrameName: string | null;
+};
 
-export const scanStore = createStore<ScanState>({ kind: 'idle' });
+export type ScanState = LastScanned &
+    (
+        | { kind: 'idle' }
+        | { kind: 'loading'; requestId: RequestId }
+        | { kind: 'clean' }
+        | { kind: 'success'; payload: ScanPayload }
+    );
+
+const INITIAL_LAST_SCANNED: LastScanned = {
+    lastScannedFrameId: null,
+    lastScannedFrameName: null,
+};
+
+export const scanStore = createStore<ScanState>({ ...INITIAL_LAST_SCANNED, kind: 'idle' });
 
 export const scanActions = {
     start(frameId: string, frameName: string, requestId: RequestId) {
-        scanStore.setState({ kind: 'loading', frameId, frameName, requestId });
+        scanStore.setState({
+            kind: 'loading',
+            requestId,
+            lastScannedFrameId: frameId,
+            lastScannedFrameName: frameName,
+        });
     },
     result(payload: ScanPayload, requestId: RequestId | undefined) {
         const state = scanStore.getState();
@@ -23,24 +44,20 @@ export const scanActions = {
         const empty =
             payload.color.violations.length === 0 && payload.typography.violations.length === 0;
 
-        scanStore.setState(
-            empty
-                ? { kind: 'clean', frameId: state.frameId, frameName: state.frameName }
-                : {
-                      kind: 'success',
-                      frameId: state.frameId,
-                      frameName: state.frameName,
-                      payload,
-                  },
-        );
+        scanStore.setState({
+            kind: empty ? 'clean' : 'success',
+            lastScannedFrameId: state.lastScannedFrameId,
+            lastScannedFrameName: state.lastScannedFrameName,
+            ...(empty ? {} : { payload }),
+        } as ScanState);
     },
     error(requestId: RequestId | undefined): boolean {
         const state = scanStore.getState();
         if (state.kind === 'loading' && state.requestId !== requestId) return false;
-        scanStore.setState({ kind: 'idle' });
+        scanStore.setState({ ...INITIAL_LAST_SCANNED, kind: 'idle' });
         return true;
     },
     reset() {
-        scanStore.setState({ kind: 'idle' });
+        scanStore.setState({ ...INITIAL_LAST_SCANNED, kind: 'idle' });
     },
 };

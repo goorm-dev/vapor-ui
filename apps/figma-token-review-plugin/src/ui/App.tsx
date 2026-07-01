@@ -42,13 +42,7 @@ function renderScan(
         case 'clean':
             return <SuccessPage onReset={onReset} />;
         case 'success':
-            return (
-                <ScanResultPage
-                    frameId={state.frameId}
-                    frameName={state.frameName}
-                    payload={state.payload}
-                />
-            );
+            return <ScanResultPage payload={state.payload} />;
     }
 }
 

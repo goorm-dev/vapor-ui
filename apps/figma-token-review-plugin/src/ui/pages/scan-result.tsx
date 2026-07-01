@@ -12,12 +12,10 @@ import { useSelection } from '../features/selection';
 type TabKey = 'color' | 'space' | 'dimension' | 'typography' | 'borderRadius' | 'shadow';
 
 type Props = {
-    frameId: string;
-    frameName?: string;
     payload: ScanPayload;
 };
 
-export function ScanResultPage({ frameId, frameName = '이름 없는 프레임', payload }: Props) {
+export function ScanResultPage({ payload }: Props) {
     const [tab, setTab] = useState<TabKey>('color');
     const counts = useMemo(() => getViolationCounts(payload), [payload]);
     const schemaMode = payload.schemaMode;
@@ -32,7 +30,7 @@ export function ScanResultPage({ frameId, frameName = '이름 없는 프레임',
         >
             <ScanTabBar selected={tab} counts={counts} />
 
-            <SelectedFrameHeader scannedFrameId={frameId} frameName={frameName} />
+            <SelectedFrameHeader />
 
             <Tabs.Panel value="color">
                 <ViolationPanel
@@ -138,30 +136,30 @@ function getViolationCounts(payload: ScanPayload): Record<TabKey, number> {
 
 // ----- Selected frame header -----
 
-function SelectedFrameHeader({
-    scannedFrameId,
-    frameName,
-}: {
-    scannedFrameId: string;
-    frameName: string;
-}) {
+/**
+ * 재검사 버튼 활성화 규칙
+ * - 스캔된 프레임 밖으로 selection이 한 번이라도 벗어난 뒤, 다시 어떤 프레임이든 선택된 상태.
+ * - 스캔 직후 그대로 남아 있는 동안엔 disabled.
+ */
+function SelectedFrameHeader() {
     const selection = useSelection();
-    const { start } = useScan();
+    const { state, start } = useScan();
 
-    // 프레임 선택이 해제된 적이 있는지 추적. 동일한 프레임을 재선택해 재검사하려면
-    // 반드시 그 사이에 프레임 선택이 해제되어야 한다.
-    const [deselectedSinceScan, setDeselectedSinceScan] = useState(false);
+    const scannedFrameId = state.lastScannedFrameId;
+    const scannedFrameName = state.lastScannedFrameName ?? '이름 없는 프레임';
+
+    const isOnScannedFrame = selection.kind === 'frame' && selection.id === scannedFrameId;
+
+    const [hasLeftScannedFrame, setHasLeftScannedFrame] = useState(false);
 
     useEffect(() => {
-        if (selection.kind !== 'frame') setDeselectedSinceScan(true);
-    }, [selection.kind]);
+        if (!isOnScannedFrame) setHasLeftScannedFrame(true);
+    }, [isOnScannedFrame]);
 
-    const canRescan =
-        selection.kind === 'frame' &&
-        (selection.id !== scannedFrameId || deselectedSinceScan);
+    const canRescan = hasLeftScannedFrame && selection.kind === 'frame';
 
     const handleRescan = () => {
-        if (!canRescan || selection.kind !== 'frame') return;
+        if (selection.kind !== 'frame') return;
         start(selection.id, selection.name);
     };
 
@@ -187,7 +185,7 @@ function SelectedFrameHeader({
                     선택한 프레임
                 </Text>
                 <Text typography="heading5" foreground="normal-200">
-                    {frameName}
+                    {scannedFrameName}
                 </Text>
             </VStack>
 
