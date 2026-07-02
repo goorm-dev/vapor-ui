@@ -66,7 +66,7 @@ jobs:
               run: pnpm core exec playwright install ${{ matrix.shard.project }}
 
             - name: Run Playwright tests
-              run: pnpm core test:regressions --project="${{ matrix.shard.name }}"
+              run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
