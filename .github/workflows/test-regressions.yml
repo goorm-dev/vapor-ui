@@ -1,4 +1,4 @@
-name: 'Visual Regression'
+name: "Visual Regression"
 
 on:
     workflow_dispatch:
@@ -18,9 +18,9 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    REPORT_PATH: ''
+    REPORT_PATH: ""
     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-    TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -38,6 +38,14 @@ jobs:
 
             - name: Build Storybook
               run: pnpm build:storybook
+
+            - name: Upload Storybook build
+              uses: actions/upload-artifact@v4
+              with:
+                  name: storybook-static
+                  path: apps/storybook/storybook-static
+                  retention-days: 1
+                  if-no-files-found: error
 
     test:
         runs-on: macos-latest
@@ -62,11 +70,17 @@ jobs:
             - name: Install Dependencies
               uses: ./.github/composite/install
 
+            - name: Download Storybook build
+              uses: actions/download-artifact@v4
+              with:
+                  name: storybook-static
+                  path: apps/storybook/storybook-static
+
             - name: Install Playwright Browsers
               run: pnpm core exec playwright install ${{ matrix.shard.project }}
 
             - name: Run Playwright tests
-              run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
+              run: pnpm core test:regressions --project="${{ matrix.shard.name }}"
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
