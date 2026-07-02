@@ -1,4 +1,4 @@
-name: "Visual Regression"
+name: 'Visual Regression'
 
 on:
     workflow_dispatch:
@@ -18,7 +18,7 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    REPORT_PATH: ""
+    REPORT_PATH: ''
     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
     TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
@@ -35,20 +35,6 @@ jobs:
 
             - name: Install Dependencies
               uses: ./.github/composite/install
-
-            - name: Debug turbo hashes
-              run: |
-                  pnpm build:storybook --dry-run=json 2>/dev/null > /tmp/plan.json
-                  echo "=== all hashes ==="
-                  sed -n '/^{/,$p' /tmp/plan.json | python3 -c "import sys,json;d=json.load(sys.stdin);[print(t['taskId'],t['hash']) for t in d['tasks']]"
-                  echo "=== core#build detail ==="
-                  sed -n '/^{/,$p' /tmp/plan.json | python3 -c "
-                  import sys, json
-                  d = json.load(sys.stdin)
-                  for t in d['tasks']:
-                      if t['taskId'] == '@vapor-ui/core#build':
-                          print(json.dumps(t, indent=2))
-                  "
 
             - name: Build Storybook
               run: pnpm build:storybook
@@ -76,26 +62,8 @@ jobs:
             - name: Install Dependencies
               uses: ./.github/composite/install
 
-            - name: Check core dir before/after playwright install
-              run: |
-                  ls -la packages/core/ > /tmp/before.txt
-                  pnpm core exec playwright install ${{ matrix.shard.project }}
-                  ls -la packages/core/ > /tmp/after.txt
-                  diff /tmp/before.txt /tmp/after.txt || echo "diff found"
-
-            - name: Debug turbo hashes
-              run: |
-                  pnpm test:regressions --dry-run=json 2>/dev/null > /tmp/plan.json
-                  echo "=== all hashes ==="
-                  sed -n '/^{/,$p' /tmp/plan.json | python3 -c "import sys,json;d=json.load(sys.stdin);[print(t['taskId'],t['hash']) for t in d['tasks']]"
-                  echo "=== core#build detail ==="
-                  sed -n '/^{/,$p' /tmp/plan.json | python3 -c "
-                  import sys, json
-                  d = json.load(sys.stdin)
-                  for t in d['tasks']:
-                      if t['taskId'] == '@vapor-ui/core#build':
-                          print(json.dumps(t, indent=2))
-                  "
+            - name: Install Playwright Browsers
+              run: pnpm core exec playwright install ${{ matrix.shard.project }}
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
