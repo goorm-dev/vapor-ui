@@ -39,6 +39,10 @@ jobs:
             - name: Build Storybook
               run: pnpm build:storybook
 
+            - run: |
+                  pnpm build:storybook --dry-run=json 2>/dev/null > /tmp/plan.json
+                  sed -n '/^{/,$p' /tmp/plan.json | python3 -c "import sys,json;d=json.load(sys.stdin);[print(t['taskId'],t['hash']) for t in d['tasks']]"
+
     test:
         runs-on: macos-latest
         needs: [build-storybook]
@@ -67,6 +71,10 @@ jobs:
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
+
+            - run: |
+                  pnpm test:regressions --dry-run=json 2>/dev/null > /tmp/plan.json
+                  sed -n '/^{/,$p' /tmp/plan.json | python3 -c "import sys,json;d=json.load(sys.stdin);[print(t['taskId'],t['hash']) for t in d['tasks']]"
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
