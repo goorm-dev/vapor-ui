@@ -39,14 +39,6 @@ jobs:
             - name: Build Storybook
               run: pnpm build:storybook
 
-            - name: Upload Storybook build
-              uses: actions/upload-artifact@v4
-              with:
-                  name: storybook-static
-                  path: apps/storybook/storybook-static
-                  retention-days: 1
-                  if-no-files-found: error
-
     test:
         runs-on: macos-latest
         needs: [build-storybook]
@@ -69,12 +61,6 @@ jobs:
 
             - name: Install Dependencies
               uses: ./.github/composite/install
-
-            - name: Download Storybook build
-              uses: actions/download-artifact@v4
-              with:
-                  name: storybook-static
-                  path: apps/storybook/storybook-static
 
             - name: Install Playwright Browsers
               run: pnpm core exec playwright install ${{ matrix.shard.project }}
