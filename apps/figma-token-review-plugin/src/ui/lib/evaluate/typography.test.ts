@@ -70,8 +70,57 @@ describe('evaluateTypography', () => {
         expect(r.violations[0].property).toBe('textStyle');
     });
 
-    it('suggested 는 항상 빈 배열', () => {
-        const r = evaluateTypography([usage({ appliedStatus: 'raw', textStyle: null })], schema);
+    it('typo-raw 는 resolved.fontSize 와 일치하는 textStyle 이름을 suggested 에 담는다', () => {
+        // body2 는 14px 로 resolve 된다 (Task 2)
+        const r = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'raw',
+                    textStyle: null,
+                    resolved: { fontSize: 14, lineHeight: {}, letterSpacing: {}, fontName: {} },
+                }),
+            ],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('typo-raw');
+        expect(r.violations[0].suggested).toContain('body2');
+    });
+
+    it('typo-raw 의 fontSize 가 null 이면 suggested 빈 배열', () => {
+        const r = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'raw',
+                    textStyle: null,
+                    resolved: { fontSize: null, lineHeight: {}, letterSpacing: {}, fontName: {} },
+                }),
+            ],
+            schema,
+        );
+        expect(r.violations[0].suggested).toEqual([]);
+    });
+
+    it('typo-styled-override 는 바인딩된 textStyle 을 suggested 로 복원 제안한다', () => {
+        const r = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'styled-override',
+                    textStyle: 'body2',
+                    overriddenFields: ['fontSize'],
+                }),
+            ],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('typo-styled-override');
+        expect(r.violations[0].suggested).toEqual(['body2']);
+    });
+
+    it('unknown-token 은 suggested 빈 배열', () => {
+        const r = evaluateTypography(
+            [usage({ textStyle: 'nonexistent-style-xyz', appliedStatus: 'styled-clean' })],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('unknown-token');
         expect(r.violations[0].suggested).toEqual([]);
     });
 

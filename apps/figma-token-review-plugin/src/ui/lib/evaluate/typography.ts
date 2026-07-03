@@ -1,6 +1,14 @@
 import type { Conformant, TypographyUsage, Violation } from '~/common/schemas';
 import type { TextStyleSchema } from '~/ui/lib/loaders/typography';
 
+function suggestByFontSize(
+    fontSize: number | null,
+    schema: TextStyleSchema,
+): string[] {
+    if (fontSize == null) return [];
+    return schema.order.filter((name) => schema.styles[name].fontSize === fontSize);
+}
+
 export function evaluateTypography(
     usages: TypographyUsage[],
     schema: TextStyleSchema,
@@ -21,11 +29,14 @@ export function evaluateTypography(
         };
 
         if (u.appliedStatus === 'raw') {
+            const fontSize =
+                typeof u.resolved.fontSize === 'number' ? u.resolved.fontSize : null;
             violations.push({
                 ...base,
                 type: 'typo-raw',
                 severity: 'high',
                 message: `Text Style이 바인딩되지 않은 raw 텍스트입니다 ("${u.characters}").`,
+                suggested: suggestByFontSize(fontSize, schema),
             });
             continue;
         }
@@ -36,6 +47,7 @@ export function evaluateTypography(
                 type: 'typo-styled-override',
                 severity: 'info',
                 message: `Text Style "${u.textStyle}" 적용 후 ${u.overriddenFields.join(', ')} 필드가 오버라이드되었습니다.`,
+                suggested: u.textStyle ? [u.textStyle] : [],
             });
             continue;
         }
