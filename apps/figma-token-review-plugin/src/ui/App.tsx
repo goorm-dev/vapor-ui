@@ -1,48 +1,34 @@
 import { Box } from '@vapor-ui/core';
 
-import type { SelectionState } from '~/common/schemas';
-
 import { Loader } from './components/loader';
 import { ResizeHandle } from './components/resize-handler';
 import type { ScanState } from './features/scan';
 import { useScan } from './features/scan';
-import { useSelection } from './features/selection';
 import { HomePage } from './pages/home';
 import { ScanResultPage } from './pages/scan-result';
 import { SuccessPage } from './pages/success';
 
 const App = () => {
-    const selection = useSelection();
-    const { state, start, reset } = useScan();
-
-    const handleScan = (frameId: string) => {
-        const name = selection.kind === 'frame' ? selection.name : '';
-        start(frameId, name);
-    };
+    const { state } = useScan();
 
     return (
         <Box className="min-h-screen bg-white">
-            {renderScan(state, selection, handleScan, reset)}
+            {renderScan(state)}
             <ResizeHandle />
         </Box>
     );
 };
 
-function renderScan(
-    state: ScanState,
-    selection: SelectionState,
-    onScan: (frameId: string) => void,
-    onReset: () => void,
-) {
+function renderScan(state: ScanState) {
     switch (state.kind) {
         case 'idle':
-            return <HomePage selection={selection} onScan={onScan} />;
+            return <HomePage />;
         case 'loading':
             return <Loader />;
         case 'clean':
-            return <SuccessPage onReset={onReset} />;
+            return <SuccessPage />;
         case 'success':
-            return <ScanResultPage frameName={state.frameName} payload={state.payload} />;
+            return <ScanResultPage payload={state.payload} />;
     }
 }
 

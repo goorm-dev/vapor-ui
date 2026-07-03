@@ -17,7 +17,7 @@ export function useScan(): UseScan {
         state,
         start: (frameId, frameName) => {
             const requestId = newRequestId();
-            scanActions.start(frameName, requestId);
+            scanActions.start(frameId, frameName, requestId);
             postToCode({ type: 'scan', frameId, requestId });
         },
         reset: scanActions.reset,

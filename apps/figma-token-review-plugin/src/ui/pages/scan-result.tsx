@@ -1,20 +1,22 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Badge, Box, Button, Collapsible, HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-ui/icons';
 
 import type { EvaluateOutput, ScanPayload, SchemaMode, Violation } from '~/common/schemas';
 
+import { toastManager } from '../components/toast';
 import { ViolationCard } from '../components/violation-card';
+import { useScan } from '../features/scan';
+import { useSelection } from '../features/selection';
 
 type TabKey = 'color' | 'space' | 'dimension' | 'typography' | 'borderRadius' | 'shadow';
 
 type Props = {
-    frameName?: string;
     payload: ScanPayload;
 };
 
-export function ScanResultPage({ frameName = '이름 없는 프레임', payload }: Props) {
+export function ScanResultPage({ payload }: Props) {
     const [tab, setTab] = useState<TabKey>('color');
     const counts = useMemo(() => getViolationCounts(payload), [payload]);
     const schemaMode = payload.schemaMode;
@@ -29,7 +31,7 @@ export function ScanResultPage({ frameName = '이름 없는 프레임', payload 
         >
             <ScanTabBar selected={tab} counts={counts} />
 
-            <SelectedFrameHeader frameName={frameName} />
+            <SelectedFrameHeader />
 
             <Tabs.Panel value="color">
                 <ViolationPanel
@@ -135,36 +137,58 @@ function getViolationCounts(payload: ScanPayload): Record<TabKey, number> {
 
 // ----- Selected frame header -----
 
-function SelectedFrameHeader({ frameName }: { frameName: string }) {
+const toastError = (title: string) => toastManager.add({ title, colorPalette: 'danger' });
+
+/**
+ * 재검사 버튼 활성화 규칙
+ * - 스캔된 프레임 밖으로 selection이 한 번이라도 벗어난 뒤, 다시 어떤 프레임이든 선택된 상태.
+ * - 스캔 직후 그대로 남아 있는 동안엔 disabled.
+ */
+function SelectedFrameHeader() {
+    const { state, start } = useScan();
+    const { selection, buildAction } = useSelection();
+    const handleRescan = buildAction({
+        frame: (sel) => start(sel.id, sel.name),
+        none: () => toastError('프레임을 1개 선택해 주세요.'),
+        multi: () => toastError('프레임 1개만 선택해 주세요.'),
+        invalid: (sel) => toastError(`프레임 노드만 선택할 수 있습니다. (현재: ${sel.nodeType})`),
+    });
+
+    const isFrame = selection.kind === 'frame';
+    const scannedFrameId = state.lastScannedFrameId;
+    const isOnScannedFrame = isFrame && selection.id === scannedFrameId;
+
+    const [hasLeftScannedFrame, setHasLeftScannedFrame] = useState(false);
+    useEffect(() => {
+        if (!isOnScannedFrame) setHasLeftScannedFrame(true);
+    }, [isOnScannedFrame]);
+
+    const canRescan = isFrame && hasLeftScannedFrame;
+
     return (
         <HStack
             $css={{
-                padding: '$200',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 gap: '$250',
-                borderBottomWidth: '1px',
-                borderBottomStyle: 'solid',
-                borderBottomColor: '$border-normal',
                 width: '100%',
+                padding: '$200',
+                borderBottom: '1px solid',
+                borderBottomColor: '$border-normal',
             }}
         >
-            <VStack
-                $css={{
-                    gap: '$050',
-                }}
-            >
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="subtitle2" foreground="hint-100">
                     선택한 프레임
                 </Text>
                 <Text typography="heading5" foreground="normal-200">
-                    {frameName}
+                    {isFrame ? selection.name : '이름 없는 프레임'}
                 </Text>
             </VStack>
 
-            <Button>
+            <Button disabled={!canRescan} onClick={handleRescan}>
                 <RefreshOutlineIcon />
-                검사하기
+                재검사하기
             </Button>
         </HStack>
     );
@@ -283,13 +307,12 @@ function SectionHeader({ icon, title }: { icon: 'frame' | 'text'; title: string 
     );
 }
 
-function ViolationList({
-    violations,
-    schemaMode,
-}: {
+type ViolationListProps = {
     violations: Violation[];
     schemaMode: SchemaMode;
-}) {
+};
+
+function ViolationList({ violations, schemaMode }: ViolationListProps) {
     return (
         <VStack $css={{ gap: '$150', width: '100%', paddingTop: '$150' }}>
             {violations.map((v, i) => (
