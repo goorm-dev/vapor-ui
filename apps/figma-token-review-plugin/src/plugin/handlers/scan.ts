@@ -1,5 +1,5 @@
 import { on, postToUi } from '../bus';
-import { callEvaluator } from '../call-evaluator';
+import { extractFrame } from '../extract';
 
 let activeRequestId: string | null = null;
 
@@ -22,7 +22,7 @@ export function initScan(): void {
         }
 
         try {
-            const payload = await callEvaluator(msg.frameId);
+            const payload = await extractFrame(msg.frameId);
 
             if (activeRequestId !== requestId) return;
 

@@ -12,6 +12,12 @@ import type {
 
 const MODE: 'both' | 'color' | 'typography' = 'both';
 
+const SKIP_PREFIXES = ['🟨', '🔶'] as const;
+
+function shouldSkipNode(name: string): boolean {
+    return SKIP_PREFIXES.some((p) => name.startsWith(p));
+}
+
 function sameLineHeight(a: LineHeight | undefined, b: LineHeight | undefined): boolean {
     if (!a || !b) return a === b;
     if (a.unit !== b.unit) return false;
@@ -223,7 +229,7 @@ function groupBy<T extends { nodeId: string }>(
     return [...map.values()];
 }
 
-export async function callEvaluator(frameId: string): Promise<RawExtract> {
+export async function extractFrame(frameId: string): Promise<RawExtract> {
     figma.skipInvisibleInstanceChildren = true;
 
     const root = await figma.getNodeByIdAsync(frameId);
@@ -262,6 +268,7 @@ export async function callEvaluator(frameId: string): Promise<RawExtract> {
     }
 
     async function visit(node: SceneNode): Promise<void> {
+        if (shouldSkipNode(node.name)) return;
         visited++;
         const bv: any = (node as any).boundVariables || {};
         const fillProperty: ColorProperty = node.type === 'TEXT' ? 'text' : 'fill';
