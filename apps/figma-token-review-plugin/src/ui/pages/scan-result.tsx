@@ -244,7 +244,9 @@ function isTextViolation(v: Violation): boolean {
         v.type === 'fg-grade-ambiguous' ||
         v.type === 'typo-raw' ||
         v.type === 'typo-styled-override' ||
-        v.type === 'typo-hierarchy'
+        v.type === 'typo-hierarchy' ||
+        v.type === 'typo-role-misfit' ||
+        v.type === 'typo-viewport-misfit'
     );
 }
 
