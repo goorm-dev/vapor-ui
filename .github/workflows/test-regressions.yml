@@ -20,7 +20,7 @@ env:
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
     REPORT_PATH: ''
     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-    TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+    TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
