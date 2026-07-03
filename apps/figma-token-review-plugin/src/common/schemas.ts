@@ -1,3 +1,7 @@
+/* -------------------------------------------------------------------------------------------------
+ * Domain types (formerly src/shared/schema.ts)
+ * -----------------------------------------------------------------------------------------------*/
+
 export type Severity = 'high' | 'info';
 
 export type ViolationType =
@@ -56,10 +60,15 @@ export type SelectionState =
     | { kind: 'invalid'; nodeType: string };
 
 export type Viewport = 'pc' | 'tablet' | 'mobile';
+
 export type SchemaMode = 'light' | 'dark';
+
 export type ColorProperty = 'fill' | 'stroke' | 'text';
+
 export type TokenStatus = 'ok' | 'raw' | 'unknown';
+
 export type BackgroundKind = 'white' | 'other' | 'transparent' | 'ambiguous';
+
 export type AppliedStatus = 'styled-clean' | 'styled-override' | 'var-only' | 'raw' | 'mixed';
 
 export type ColorBackground = {
@@ -112,16 +121,3 @@ export type RawExtract = {
     typography: TypographyUsage[];
     stats: RawExtractStats;
 };
-
-export type CodeMsg =
-    | { type: 'selection'; state: SelectionState }
-    | { type: 'extract-result'; payload: RawExtract }
-    | { type: 'extract-error'; message: string }
-    | { type: 'focus-result'; resolved: number; missing: number }
-    | { type: 'focus-error'; message: string };
-
-export type UiMsg =
-    | { type: 'request-selection' }
-    | { type: 'scan'; frameId: string }
-    | { type: 'focus'; nodeIds: string[] }
-    | { type: 'resize'; width: number; height: number; commit?: boolean };

@@ -1,7 +1,5 @@
-import type { RequestId } from '~/shared/protocol';
-import { newRequestId } from '~/shared/protocol';
-
-import { postToCode } from '../messaging';
+import { newRequestId, postToCode } from '~/common/messages';
+import type { RequestId } from '~/common/messages';
 
 let activeFocusId: RequestId | null = null;
 

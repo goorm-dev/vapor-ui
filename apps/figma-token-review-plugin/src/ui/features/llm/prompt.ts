@@ -1,4 +1,4 @@
-import type { RawExtract } from '~/shared/schema';
+import type { RawExtract } from '~/common/schemas';
 
 export const SYSTEM_PROMPT = [
     'You are the vapor design token reviewer.',

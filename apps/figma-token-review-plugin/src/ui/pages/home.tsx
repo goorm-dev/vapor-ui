@@ -1,4 +1,4 @@
-import type { SelectionState } from '~/shared/schema';
+import type { SelectionState } from '~/common/schemas';
 import surveyUrl from '~/ui/assets/survey.svg';
 
 import { HeroPanel } from '../components/hero-panel';

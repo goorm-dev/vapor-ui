@@ -1,7 +1,7 @@
-import type { RequestId } from '~/shared/protocol';
-import type { ScanPayload } from '~/shared/schema';
+import type { RequestId } from '~/common/messages';
+import type { ScanPayload } from '~/common/schemas';
 
-import { createStore } from './create-store';
+import { createStore } from '../../shared/create-store';
 
 export type ScanState =
     | { kind: 'idle' }

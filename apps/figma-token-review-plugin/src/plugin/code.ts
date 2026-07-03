@@ -1,13 +1,12 @@
-import { start } from './bus';
 import { initFocus } from './handlers/focus';
-import { initResize } from './handlers/resize';
+import { DEFAULT_SIZE, initResize, restoreSavedSize } from './handlers/resize';
 import { initScan } from './handlers/scan';
 import { initSelection } from './handlers/selection';
-import { DEFAULT_SIZE, restoreSavedSize } from './sizing';
+import { start } from './messages';
 
 figma.showUI(__html__, DEFAULT_SIZE);
-void restoreSavedSize();
 
+restoreSavedSize();
 initSelection();
 initScan();
 initFocus();

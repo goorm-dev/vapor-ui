@@ -1,21 +1,21 @@
-import type { RawExtract, ScanPayload } from '~/shared/schema';
+import type { RawExtract, ScanPayload } from '~/common/schemas';
 
-import type { EvaluatorEnv } from './client';
-import { EvaluatorHttpError, EvaluatorTimeoutError, postLiteLLM } from './client';
-import { EvaluatorParseError, parseScanPayload } from './parse';
+import type { LlmEnv } from './client';
+import { LlmHttpError, LlmTimeoutError, postLiteLLM } from './client';
+import { LlmParseError, parseScanPayload } from './parse';
 import { buildRequest } from './prompt';
 
-export type RunEvaluationOptions = {
+export type RunLlmEvaluationOptions = {
     signal?: AbortSignal;
-    env?: EvaluatorEnv;
+    env?: LlmEnv;
     model?: string;
 };
 
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
 
-export async function runEvaluation(
+export async function runLlmEvaluation(
     extract: RawExtract,
-    options: RunEvaluationOptions = {},
+    options: RunLlmEvaluationOptions = {},
 ): Promise<ScanPayload> {
     const env = options.env ?? envFromImportMeta();
     const model = options.model ?? importMetaModel() ?? DEFAULT_MODEL;
@@ -24,7 +24,7 @@ export async function runEvaluation(
     return parseScanPayload(response);
 }
 
-function envFromImportMeta(): EvaluatorEnv {
+function envFromImportMeta(): LlmEnv {
     const baseUrl = importMetaString('VITE_LITELLM_BASE_URL');
     const apiKey = importMetaString('VITE_LITELLM_API_KEY');
     if (!baseUrl) throw new Error('VITE_LITELLM_BASE_URL 누락');
@@ -41,4 +41,4 @@ function importMetaString(key: string): string | undefined {
     return env ? env[key] : undefined;
 }
 
-export { EvaluatorHttpError, EvaluatorTimeoutError, EvaluatorParseError };
+export { LlmHttpError, LlmTimeoutError, LlmParseError };

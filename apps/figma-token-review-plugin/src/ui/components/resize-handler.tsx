@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { postToCode } from '~/ui/messaging';
+import { postToCode } from '~/common/messages';
 
 const MIN_WIDTH = 360;
 const MIN_HEIGHT = 480;

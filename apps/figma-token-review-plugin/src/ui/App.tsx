@@ -1,15 +1,15 @@
 import { Box } from '@vapor-ui/core';
 
-import type { SelectionState } from '~/shared/schema';
+import type { SelectionState } from '~/common/schemas';
 
 import { Loader } from './components/loader';
 import { ResizeHandle } from './components/resize-handler';
-import { useScan } from './hooks/use-scan';
-import { useSelection } from './hooks/use-selection';
+import type { ScanState } from './features/scan';
+import { useScan } from './features/scan';
+import { useSelection } from './features/selection';
 import { HomePage } from './pages/home';
 import { ScanResultPage } from './pages/scan-result';
 import { SuccessPage } from './pages/success';
-import type { ScanState } from './store/scan';
 
 const App = () => {
     const selection = useSelection();

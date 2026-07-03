@@ -1,5 +1,7 @@
-import { on, postToUi } from '../bus';
-import { extractFrame } from '../extract';
+import { postToUi } from '~/common/messages';
+
+import { on } from '../messages';
+import { extractFrame } from './extract';
 
 let activeRequestId: string | null = null;
 

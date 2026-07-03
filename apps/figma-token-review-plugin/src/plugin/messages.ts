@@ -1,5 +1,4 @@
-import type { CodeEnvelope, RequestId, UiEnvelope } from '~/shared/protocol';
-import type { UiMsg } from '~/shared/schema';
+import type { UiEnvelope, UiMsg } from '~/common/messages';
 
 type Handler = (msg: UiEnvelope) => void | Promise<void>;
 
@@ -22,8 +21,4 @@ export function start(): void {
             });
         }
     };
-}
-
-export function postToUi(msg: CodeEnvelope, requestId?: RequestId): void {
-    figma.ui.postMessage(requestId ? { ...msg, requestId } : msg);
 }

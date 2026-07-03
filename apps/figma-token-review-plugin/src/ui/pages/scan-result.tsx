@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 
-import { Badge, Box, Collapsible, HStack, IconButton, Tabs, Text, VStack } from '@vapor-ui/core';
+import { Badge, Box, Button, Collapsible, HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-ui/icons';
 
-import type { EvaluateOutput, ScanPayload, Violation } from '~/shared/schema';
+import type { EvaluateOutput, ScanPayload, Violation } from '~/common/schemas';
 
 import { ViolationCard } from '../components/violation-card';
 
@@ -103,33 +103,36 @@ function getViolationCounts(payload: ScanPayload): Record<TabKey, number> {
 
 function SelectedFrameHeader({ frameName }: { frameName: string }) {
     return (
-        <VStack
+        <HStack
             $css={{
-                gap: '$050',
-                width: '100%',
                 padding: '$200',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: '$250',
                 borderBottomWidth: '1px',
                 borderBottomStyle: 'solid',
                 borderBottomColor: '$border-normal',
+                width: '100%',
             }}
         >
-            <Text typography="subtitle2" foreground="hint-100">
-                선택한 프레임
-            </Text>
-            <HStack $css={{ alignItems: 'center', gap: '$050' }}>
+            <VStack
+                $css={{
+                    gap: '$050',
+                }}
+            >
+                <Text typography="subtitle2" foreground="hint-100">
+                    선택한 프레임
+                </Text>
                 <Text typography="heading5" foreground="normal-200">
                     {frameName}
                 </Text>
-                <IconButton
-                    size="sm"
-                    variant="ghost"
-                    colorPalette="secondary"
-                    aria-label="새로고침"
-                >
-                    <RefreshOutlineIcon />
-                </IconButton>
-            </HStack>
-        </VStack>
+            </VStack>
+
+            <Button>
+                <RefreshOutlineIcon />
+                검사하기
+            </Button>
+        </HStack>
     );
 }
 

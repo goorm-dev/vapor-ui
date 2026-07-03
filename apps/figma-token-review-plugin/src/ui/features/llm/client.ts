@@ -1,31 +1,31 @@
 import type { AnthropicMessagesResponse } from './parse';
 import type { AnthropicMessagesRequest } from './prompt';
 
-export type EvaluatorEnv = {
+export type LlmEnv = {
     baseUrl: string;
     apiKey: string;
 };
 
-export class EvaluatorHttpError extends Error {
+export class LlmHttpError extends Error {
     readonly status: number;
     readonly bodyText: string;
     constructor(message: string, status: number, bodyText: string) {
         super(message);
-        this.name = 'EvaluatorHttpError';
+        this.name = 'LlmHttpError';
         this.status = status;
         this.bodyText = bodyText;
     }
 }
 
-export class EvaluatorTimeoutError extends Error {
+export class LlmTimeoutError extends Error {
     constructor(message = 'LLM 호출 timeout (60s)') {
         super(message);
-        this.name = 'EvaluatorTimeoutError';
+        this.name = 'LlmTimeoutError';
     }
 }
 
 export type PostOptions = {
-    env: EvaluatorEnv;
+    env: LlmEnv;
     signal?: AbortSignal;
     timeoutMs?: number;
     fetchImpl?: typeof fetch;
@@ -43,7 +43,7 @@ export async function postLiteLLM(
     try {
         return await postOnce(request, env, signal, timeoutMs, fetchImpl);
     } catch (err) {
-        if (err instanceof EvaluatorHttpError && err.status === 429) {
+        if (err instanceof LlmHttpError && err.status === 429) {
             await delay(RATE_LIMIT_RETRY_DELAY_MS, signal);
             return postOnce(request, env, signal, timeoutMs, fetchImpl);
         }
@@ -53,7 +53,7 @@ export async function postLiteLLM(
 
 async function postOnce(
     request: AnthropicMessagesRequest,
-    env: EvaluatorEnv,
+    env: LlmEnv,
     signal: AbortSignal | undefined,
     timeoutMs: number,
     fetchImpl: typeof fetch,
@@ -77,7 +77,7 @@ async function postOnce(
         });
     } catch (err) {
         if ((err as Error)?.name === 'AbortError' && !signal?.aborted) {
-            throw new EvaluatorTimeoutError();
+            throw new LlmTimeoutError();
         }
         throw err;
     } finally {
@@ -87,7 +87,7 @@ async function postOnce(
 
     if (!res.ok) {
         const bodyText = await res.text().catch(() => '');
-        throw new EvaluatorHttpError(`LiteLLM ${res.status}`, res.status, bodyText);
+        throw new LlmHttpError(`LiteLLM ${res.status}`, res.status, bodyText);
     }
 
     return (await res.json()) as AnthropicMessagesResponse;
