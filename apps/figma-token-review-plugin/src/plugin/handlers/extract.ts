@@ -308,17 +308,17 @@ async function captureScreenshot(frame: FrameNode): Promise<string> {
     return figma.base64Encode(bytes);
 }
 
-function walkTree(root: SceneNode): NodeInfo[] {
+async function walkTree(root: SceneNode): Promise<NodeInfo[]> {
     const out: NodeInfo[] = [];
-    const stack: Array<{ node: SceneNode; parentId: string | null }> = [{ node: root, parentId: null }];
-    while (stack.length > 0) {
-        const frame = stack.pop();
-        if (!frame) continue;
-        const { node, parentId } = frame;
+    const stack: Array<{ node: SceneNode; parentId: string | null }> = [
+        { node: root, parentId: null },
+    ];
+    while (stack.length) {
+        const { node, parentId } = stack.pop()!;
         if (shouldSkipNode(node.name)) continue;
-        const children: readonly SceneNode[] =
-            'children' in node ? (node.children as readonly SceneNode[]) : [];
-        out.push({
+        const children = 'children' in node ? (node.children as readonly SceneNode[]) : [];
+
+        const info: NodeInfo = {
             id: node.id,
             type: node.type,
             name: node.name,
@@ -328,11 +328,21 @@ function walkTree(root: SceneNode): NodeInfo[] {
             y: 'y' in node ? (node as { y: number }).y : 0,
             w: 'width' in node ? (node as { width: number }).width : 0,
             h: 'height' in node ? (node as { height: number }).height : 0,
-        });
-        // Preserve document order in the output: push children in reverse so pop() yields them in-order.
-        for (let i = children.length - 1; i >= 0; i--) {
-            stack.push({ node: children[i]!, parentId: node.id });
+        };
+
+        if (node.type === 'TEXT') {
+            const textNode = node as TextNode;
+            info.characters = (textNode.characters || '').slice(0, 60);
+            try {
+                const { textStyle } = await classifyTextNode(textNode);
+                if (textStyle) info.textStyle = textStyle;
+            } catch {
+                // Skip textStyle on failure; characters still surfaces.
+            }
         }
+
+        out.push(info);
+        for (const c of children) stack.push({ node: c, parentId: node.id });
     }
     return out;
 }
@@ -673,20 +683,10 @@ export async function extractFrame(
         },
     };
 
-    let screenshotB64 = '';
-    try {
-        screenshotB64 = await captureScreenshot(root as FrameNode);
-    } catch (err) {
-        console.warn('[figma-token-review-plugin] exportAsync failed, continuing text-only', err);
-    }
-
-    let nodeTree: NodeInfo[] = [];
-    try {
-        nodeTree = walkTree(root as SceneNode);
-    } catch (err) {
-        console.warn('[figma-token-review-plugin] walkTree failed, continuing without tree', err);
-        nodeTree = [];
-    }
+    const [screenshotB64, nodeTree] = await Promise.all([
+        captureScreenshot(root as FrameNode).catch(() => ''),
+        walkTree(root as SceneNode).catch(() => [] as NodeInfo[]),
+    ]);
 
     return { extract, llmContext: { screenshotB64, nodeTree } };
 }

@@ -233,11 +233,21 @@ export function applyRecommendations(violations: Violation[], ctx: RecommendCtx)
                 break;
             }
 
-            // Unknown / ambiguous / typo → no suggestions
-            case 'unknown-token':
-            case 'fg-grade-ambiguous':
             case 'typo-raw':
             case 'typo-styled-override':
+                // suggested already filled by evaluateTypography — do not overwrite
+                return violation;
+
+            case 'unknown-token':
+                if (property === 'textStyle') {
+                    // typography path — evaluateTypography already set suggested (currently [])
+                    return violation;
+                }
+                suggested = [];
+                break;
+
+            // Color-side ambiguous / LLM-defense types → no suggestions
+            case 'fg-grade-ambiguous':
             case 'semantic-misfit':
             case 'typo-hierarchy':
                 suggested = [];

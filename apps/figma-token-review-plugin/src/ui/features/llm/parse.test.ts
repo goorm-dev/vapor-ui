@@ -16,6 +16,8 @@ describe('parseLlmResponse', () => {
                                 token: 'subtitle1',
                                 verdict: 'PASS',
                                 confidence: 'HIGH',
+                                axis: 'hierarchy',
+                                matchedRule: '',
                                 reasoning: '맞음',
                                 suggested: [],
                             },
@@ -85,6 +87,88 @@ describe('parseLlmResponse', () => {
             ],
         };
         expect(() => parseLlmResponse(response)).toThrow(LlmParseError);
+    });
+
+    it('typography item 에 axis 필드가 없으면 LlmParseError', () => {
+        const response = {
+            content: [
+                {
+                    type: 'text' as const,
+                    text: JSON.stringify({
+                        typography: [
+                            {
+                                nodeId: '1',
+                                name: 'h',
+                                token: 'subtitle1',
+                                verdict: 'PASS',
+                                confidence: 'HIGH',
+                                matchedRule: '',
+                                reasoning: '맞음',
+                                suggested: [],
+                            },
+                        ],
+                        semanticColor: [],
+                    }),
+                },
+            ],
+        };
+        expect(() => parseLlmResponse(response)).toThrow(LlmParseError);
+    });
+
+    it('typography item 의 axis 가 3-value union 밖이면 LlmParseError', () => {
+        const response = {
+            content: [
+                {
+                    type: 'text' as const,
+                    text: JSON.stringify({
+                        typography: [
+                            {
+                                nodeId: '1',
+                                name: 'h',
+                                token: 'subtitle1',
+                                verdict: 'FAIL',
+                                confidence: 'MED',
+                                axis: 'unknown',
+                                matchedRule: 'x',
+                                reasoning: 'nope',
+                                suggested: [],
+                            },
+                        ],
+                        semanticColor: [],
+                    }),
+                },
+            ],
+        };
+        expect(() => parseLlmResponse(response)).toThrow(LlmParseError);
+    });
+
+    it('typography item 에 matchedRule 이 빈 문자열이면 통과한다', () => {
+        const response = {
+            content: [
+                {
+                    type: 'text' as const,
+                    text: JSON.stringify({
+                        typography: [
+                            {
+                                nodeId: '1',
+                                name: 'h',
+                                token: 'subtitle1',
+                                verdict: 'PASS',
+                                confidence: 'HIGH',
+                                axis: 'role',
+                                matchedRule: '',
+                                reasoning: '맞음',
+                                suggested: [],
+                            },
+                        ],
+                        semanticColor: [],
+                    }),
+                },
+            ],
+        };
+        const result = parseLlmResponse(response);
+        expect(result.typography[0].axis).toBe('role');
+        expect(result.typography[0].matchedRule).toBe('');
     });
 
     it('semanticColor item에 property 필드가 없으면 LlmParseError를 던진다', () => {

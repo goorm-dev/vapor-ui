@@ -280,3 +280,66 @@ describe('applyRecommendations', () => {
         expect(input[0].suggested).toEqual(before);
     });
 });
+
+describe('applyRecommendations - typography pass-through', () => {
+    const colorSchema = loadColorSchema('light');
+    const dim = loadDimensionSchemas();
+    const ctx = {
+        colorSchema,
+        space: dim.space,
+        dimension: dim.dimension,
+        borderRadius: dim.borderRadius,
+        shadow: dim.shadow,
+    };
+
+    it('typo-raw 는 이미 채워진 suggested 를 보존한다', () => {
+        const v: Violation = {
+            nodeId: 'n1',
+            name: 'title',
+            property: 'textStyle',
+            token: null,
+            value: null,
+            type: 'typo-raw',
+            severity: 'high',
+            origin: 'rule',
+            message: 'raw',
+            suggested: ['body2'],
+        };
+        const [out] = applyRecommendations([v], ctx);
+        expect(out.suggested).toEqual(['body2']);
+    });
+
+    it('typo-styled-override 는 이미 채워진 suggested 를 보존한다', () => {
+        const v: Violation = {
+            nodeId: 'n2',
+            name: 'x',
+            property: 'textStyle',
+            token: 'body1',
+            value: null,
+            type: 'typo-styled-override',
+            severity: 'info',
+            origin: 'rule',
+            message: 'override',
+            suggested: ['body1'],
+        };
+        const [out] = applyRecommendations([v], ctx);
+        expect(out.suggested).toEqual(['body1']);
+    });
+
+    it('typography unknown-token 은 suggested 를 덮어쓰지 않는다', () => {
+        const v: Violation = {
+            nodeId: 'n3',
+            name: 'x',
+            property: 'textStyle',
+            token: 'nonexistent',
+            value: null,
+            type: 'unknown-token',
+            severity: 'high',
+            origin: 'rule',
+            message: 'unknown',
+            suggested: [],
+        };
+        const [out] = applyRecommendations([v], ctx);
+        expect(out.suggested).toEqual([]);
+    });
+});

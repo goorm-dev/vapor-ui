@@ -46,7 +46,9 @@ export type ViolationType =
     | 'typo-raw'
     | 'typo-styled-override'
     | 'semantic-misfit' // heuristic: LLM 의미 판정 FAIL (color)
-    | 'typo-hierarchy'; // heuristic: LLM 텍스트 위계 FAIL
+    | 'typo-hierarchy' // heuristic: LLM 텍스트 위계 FAIL
+    | 'typo-role-misfit' // heuristic: LLM 텍스트 역할 부적합
+    | 'typo-viewport-misfit'; // heuristic: LLM 텍스트 뷰포트 부적합
 
 export type Violation = {
     nodeId: string;
@@ -222,6 +224,8 @@ export type NodeInfo = {
     y: number;
     w: number;
     h: number;
+    characters?: string;   // TEXT nodes only, 60-char cap
+    textStyle?: string;    // TEXT nodes only, bound style name if any
 };
 
 export type LlmContext = {

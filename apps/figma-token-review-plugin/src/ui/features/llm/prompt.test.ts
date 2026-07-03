@@ -13,6 +13,15 @@ function baseInput(): LlmInput {
     };
 }
 
+function minimalInput(): LlmInput {
+    return {
+        context: { schemaMode: 'light', viewport: 'pc', frameName: 'f' },
+        judgmentTargets: { typography: [], semanticColor: [] },
+        rubric: { textStyle: {}, color: {} },
+        nodeTree: [],
+    };
+}
+
 describe('buildRequest', () => {
     it('with a non-empty screenshot, emits [text, image] content blocks', () => {
         const req = buildRequest(baseInput(), 'AAAA', 'claude-sonnet-4-6');
@@ -41,5 +50,25 @@ describe('buildRequest', () => {
         const parsed = JSON.parse(first.text ?? '');
         expect(parsed.context.frameName).toBe('MyFrame');
         expect(Array.isArray(parsed.nodeTree)).toBe(true);
+    });
+
+    it('SYSTEM_BASE typography schema 블록에 axis 와 matchedRule 필드가 포함된다', () => {
+        const req = buildRequest(minimalInput(), '', 'claude-sonnet-4-6');
+        const combined = req.system.map((b) => b.text).join('\n');
+        expect(combined).toContain('"axis"');
+        expect(combined).toContain('"matchedRule"');
+        expect(combined).toContain('"hierarchy"');
+        expect(combined).toContain('"role"');
+        expect(combined).toContain('"viewport"');
+    });
+
+    it('SEMANTIC_GUIDE 는 3축 정의와 rubric 활용 지시를 포함한다', () => {
+        const req = buildRequest(minimalInput(), '', 'claude-sonnet-4-6');
+        const combined = req.system.map((b) => b.text).join('\n');
+        expect(combined).toContain('hierarchy');
+        expect(combined).toContain('role');
+        expect(combined).toContain('viewport');
+        expect(combined).toContain('rubric.textStyle');
+        expect(combined).toContain('matchedRule');
     });
 });
