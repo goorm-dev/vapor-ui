@@ -1,49 +1,42 @@
 import { Box, Button, Text } from '@vapor-ui/core';
 
-import surveyUrl from '~/ui/assets/survey.svg';
+import confirmUrl from '~/ui/assets/confirm.svg';
 
 type Props = {
-    disabled: boolean;
-    onAttemptScan: () => void;
+    onReset: () => void;
 };
 
-export function SelectionBanner({ disabled, onAttemptScan }: Props) {
+export function SuccessState({ onReset }: Props) {
     return (
         <Box className="flex flex-col items-center bg-white">
             <Box className="flex flex-col items-center gap-[20px] pt-[120px]">
                 <Box className="flex flex-col items-center justify-center gap-[8px]">
-                    <Box className="h-[120px] w-[160px] overflow-hidden">
+                    <Box className="flex h-[120px] w-[160px] items-center justify-center">
                         <img
                             alt=""
-                            src={surveyUrl}
+                            src={confirmUrl}
                             className="block h-full w-full object-contain"
                         />
                     </Box>
                     <Box className="flex flex-col items-center gap-[20px]">
                         <Box className="flex flex-col items-center gap-[4px] text-center">
                             <Text typography="heading5" foreground="normal-200">
-                                검수할 프레임을 선택해 주세요
+                                모든 토큰이 올바르게 사용되었어요
                             </Text>
                             <Box className="flex flex-col items-center">
                                 <Text typography="body2" foreground="hint-100">
-                                    프레임을 선택하고 검수 하기 버튼을 누르면
+                                    선택한 프레임의 모든 토큰이
                                 </Text>
                                 <Text typography="body2" foreground="hint-100">
-                                    토큰 검수가 시작됩니다.
+                                    올바르게 사용되었습니다.
                                 </Text>
                             </Box>
                         </Box>
                     </Box>
                 </Box>
 
-                <Button
-                    size="md"
-                    colorPalette="primary"
-                    variant="fill"
-                    disabled={disabled}
-                    onClick={onAttemptScan}
-                >
-                    검수 시작하기
+                <Button size="md" colorPalette="primary" variant="fill" onClick={onReset}>
+                    다른 프레임 검수하기
                 </Button>
             </Box>
         </Box>
