@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
-import { evaluateSpace } from '~/ui/lib/evaluate/space';
 import type { SpaceUsage } from '~/common/schemas';
+import { evaluateSpace } from '~/ui/lib/evaluate/space';
+import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
 
 const schemas = loadDimensionSchemas();
 

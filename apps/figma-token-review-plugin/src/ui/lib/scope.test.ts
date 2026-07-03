@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 import type { Property, Role } from '~/common/schemas';
+import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 
 describe('PROPERTY_SCOPE', () => {
     it('fill 은 background role 만 허용한다', () => {
@@ -18,6 +18,12 @@ describe('PROPERTY_SCOPE', () => {
 
     it('padding 과 gap 은 space role', () => {
         expect(PROPERTY_SCOPE.padding).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingTop).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingRight).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingBottom).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingLeft).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingVertical).toEqual(['space']);
+        expect(PROPERTY_SCOPE.paddingHorizontal).toEqual(['space']);
         expect(PROPERTY_SCOPE.gap).toEqual(['space']);
     });
 

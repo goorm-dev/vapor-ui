@@ -10,10 +10,27 @@ describe('parseLlmResponse', () => {
                     type: 'text' as const,
                     text: JSON.stringify({
                         typography: [
-                            { nodeId: '1', name: 'h', token: 'subtitle1', verdict: 'PASS', confidence: 'HIGH', reasoning: '맞음', suggested: [] },
+                            {
+                                nodeId: '1',
+                                name: 'h',
+                                token: 'subtitle1',
+                                verdict: 'PASS',
+                                confidence: 'HIGH',
+                                reasoning: '맞음',
+                                suggested: [],
+                            },
                         ],
                         semanticColor: [
-                            { nodeId: '2', name: 'alert', property: 'fill', token: 'colors.background.danger.100', verdict: 'FAIL', confidence: 'MED', reasoning: '경고가 아닌 정보 자리', suggested: ['colors.background.hint.100'] },
+                            {
+                                nodeId: '2',
+                                name: 'alert',
+                                property: 'fill',
+                                token: 'colors.background.danger.100',
+                                verdict: 'FAIL',
+                                confidence: 'MED',
+                                reasoning: '경고가 아닌 정보 자리',
+                                suggested: ['colors.background.hint.100'],
+                            },
                         ],
                     }),
                 },
@@ -29,7 +46,10 @@ describe('parseLlmResponse', () => {
             content: [
                 {
                     type: 'text' as const,
-                    text: '```json\n' + JSON.stringify({ typography: [], semanticColor: [] }) + '\n```',
+                    text:
+                        '```json\n' +
+                        JSON.stringify({ typography: [], semanticColor: [] }) +
+                        '\n```',
                 },
             ],
         };
@@ -75,7 +95,15 @@ describe('parseLlmResponse', () => {
                     text: JSON.stringify({
                         typography: [],
                         semanticColor: [
-                            { nodeId: '1', name: 'x', token: 'tok', verdict: 'PASS', confidence: 'HIGH', reasoning: 'ok', suggested: [] },
+                            {
+                                nodeId: '1',
+                                name: 'x',
+                                token: 'tok',
+                                verdict: 'PASS',
+                                confidence: 'HIGH',
+                                reasoning: 'ok',
+                                suggested: [],
+                            },
                         ],
                     }),
                 },

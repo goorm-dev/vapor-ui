@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
-import { evaluateTypography } from '~/ui/lib/evaluate/typography';
 import type { TypographyUsage } from '~/common/schemas';
+import { evaluateTypography } from '~/ui/lib/evaluate/typography';
+import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
 
 const schema = loadTextStyleSchema();
 
@@ -36,13 +36,18 @@ describe('evaluateTypography', () => {
         expect(r.violations[0].severity).toBe('info');
     });
 
-    it('styled-override detail 에 overriddenFields 표시', () => {
+    it('styled-override message 에 overriddenFields 표시', () => {
         const r = evaluateTypography(
-            [usage({ appliedStatus: 'styled-override', overriddenFields: ['fontSize', 'lineHeight'] })],
+            [
+                usage({
+                    appliedStatus: 'styled-override',
+                    overriddenFields: ['fontSize', 'lineHeight'],
+                }),
+            ],
             schema,
         );
-        expect(r.violations[0].detail).toContain('fontSize');
-        expect(r.violations[0].detail).toContain('lineHeight');
+        expect(r.violations[0].message).toContain('fontSize');
+        expect(r.violations[0].message).toContain('lineHeight');
     });
 
     it('styled-clean 은 conformant', () => {
@@ -52,7 +57,10 @@ describe('evaluateTypography', () => {
     });
 
     it('스키마에 없는 textStyle → unknown-token / high', () => {
-        const r = evaluateTypography([usage({ textStyle: 'nonexistent-style-xyz', appliedStatus: 'styled-clean' })], schema);
+        const r = evaluateTypography(
+            [usage({ textStyle: 'nonexistent-style-xyz', appliedStatus: 'styled-clean' })],
+            schema,
+        );
         expect(r.violations[0].type).toBe('unknown-token');
         expect(r.violations[0].severity).toBe('high');
     });
@@ -72,14 +80,23 @@ describe('evaluateTypography', () => {
         expect(r.violations[0].token).toBeNull();
 
         const r2 = evaluateTypography(
-            [usage({ appliedStatus: 'styled-override', textStyle: 'body2', overriddenFields: ['fontSize'] })],
+            [
+                usage({
+                    appliedStatus: 'styled-override',
+                    textStyle: 'body2',
+                    overriddenFields: ['fontSize'],
+                }),
+            ],
             schema,
         );
         expect(r2.violations[0].token).toBe('body2');
     });
 
     it('conformant token 필드는 textStyle 이름', () => {
-        const r = evaluateTypography([usage({ textStyle: 'body2', appliedStatus: 'styled-clean' })], schema);
+        const r = evaluateTypography(
+            [usage({ textStyle: 'body2', appliedStatus: 'styled-clean' })],
+            schema,
+        );
         expect(r.conformant[0].token).toBe('body2');
     });
 

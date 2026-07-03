@@ -5,7 +5,6 @@
  * suggested[] 를 채워 새 배열로 반환 (입력 violations[] 불변).
  * heuristic === true 인 violation은 pass-through.
  * -----------------------------------------------------------------------------------------------*/
-
 import type { Property, Violation } from '~/common/schemas';
 import type { ColorSchema } from '~/ui/lib/loaders/color';
 import type { TokenValueIndex } from '~/ui/lib/loaders/dimension';
@@ -30,6 +29,12 @@ export type RecommendCtx = {
 function dimensionIndex(property: Property, ctx: RecommendCtx): TokenValueIndex | null {
     switch (property) {
         case 'padding':
+        case 'paddingTop':
+        case 'paddingRight':
+        case 'paddingBottom':
+        case 'paddingLeft':
+        case 'paddingVertical':
+        case 'paddingHorizontal':
         case 'gap':
             return ctx.space;
         case 'width':
@@ -56,7 +61,9 @@ function colorSuggestions(hex: string | null, property: Property, schema: ColorS
 
     const scoped = candidates.filter((token) => {
         const meta = schema.semantic[token];
-        return meta && meta.role && allowedRoles.includes(meta.role) && meta.status !== 'do-not-use';
+        return (
+            meta && meta.role && allowedRoles.includes(meta.role) && meta.status !== 'do-not-use'
+        );
     });
 
     if (scoped.length > 0) return scoped;
@@ -79,16 +86,20 @@ function valueSuggestions(value: string | null, index: TokenValueIndex): string[
  * For scope (role) mismatch: suggest semantic tokens that match the property's allowed roles
  * and share the same grade segment as the violating token.
  */
-function scopeMismatchSuggestions(token: string | null, property: Property, schema: ColorSchema): string[] {
+function scopeMismatchSuggestions(
+    token: string | null,
+    property: Property,
+    schema: ColorSchema,
+): string[] {
     if (!token) return [];
-    const grade = token.split('.').pop() ?? '';
+    const grade = token.split('-').pop() ?? '';
     const allowedRoles = (PROPERTY_SCOPE as Record<string, ReadonlyArray<string>>)[property] ?? [];
 
     return Object.entries(schema.semantic)
         .filter(([path, meta]) => {
             if (meta.status === 'do-not-use') return false;
             if (!meta.role || !allowedRoles.includes(meta.role)) return false;
-            if (grade && path.split('.').pop() !== grade) return false;
+            if (grade && path.split('-').pop() !== grade) return false;
             return true;
         })
         .map(([path]) => path);
@@ -114,13 +125,18 @@ function doNotUseSuggestions(token: string | null, schema: ColorSchema): string[
 
     // Fallback 2: parse avoid[] for token refs
     const fromAvoid = (meta.avoid ?? [])
-        .flatMap((line) => Array.from(line.matchAll(/colors\.[a-zA-Z0-9.]+/g), (m) => m[0]))
-        .filter((cand) => cand !== token && cand in schema.semantic && schema.semantic[cand].status !== 'do-not-use');
+        .flatMap((line) => Array.from(line.matchAll(/color-[a-zA-Z0-9-]+/g), (m) => m[0]))
+        .filter(
+            (cand) =>
+                cand !== token &&
+                cand in schema.semantic &&
+                schema.semantic[cand].status !== 'do-not-use',
+        );
     if (fromAvoid.length > 0) return Array.from(new Set(fromAvoid));
 
     // Fallback 3: same grade + same role + different family + not do-not-use
-    const parts = token.split('.');
-    // Expected structure: colors.<role>.<family>.<grade>
+    const parts = token.split('-');
+    // Expected structure: color-<role>-<family>-<grade>
     if (parts.length < 4) return [];
     const grade = parts[parts.length - 1];
     const role = parts[1];
@@ -129,7 +145,7 @@ function doNotUseSuggestions(token: string | null, schema: ColorSchema): string[
     return Object.entries(schema.semantic)
         .filter(([path, m]) => {
             if (m.status === 'do-not-use') return false;
-            const p = path.split('.');
+            const p = path.split('-');
             if (p.length < 4) return false;
             const pGrade = p[p.length - 1];
             const pRole = p[1];
@@ -144,13 +160,13 @@ function doNotUseSuggestions(token: string | null, schema: ColorSchema): string[
  */
 function fgGradeMismatchSuggestions(token: string | null, schema: ColorSchema): string[] {
     if (!token) return [];
-    const parts = token.split('.');
+    const parts = token.split('-');
     const grade = parts[parts.length - 1];
-    // Only handle .100 → .200 substitution
+    // Only handle -100 → -200 substitution
     if (grade !== '100') return [];
 
-    const base = parts.slice(0, -1).join('.');
-    const candidate = `${base}.200`;
+    const base = parts.slice(0, -1).join('-');
+    const candidate = `${base}-200`;
     if (schema.semantic[candidate] && schema.semantic[candidate].status !== 'do-not-use') {
         return [candidate];
     }
@@ -163,8 +179,8 @@ function fgGradeMismatchSuggestions(token: string | null, schema: ColorSchema): 
 
 export function applyRecommendations(violations: Violation[], ctx: RecommendCtx): Violation[] {
     return violations.map((violation) => {
-        // heuristic pass-through — never modify
-        if (violation.heuristic) return violation;
+        // llm origin pass-through — never modify
+        if (violation.origin === 'llm') return violation;
 
         let suggested: string[] = [];
 
@@ -188,11 +204,16 @@ export function applyRecommendations(violations: Violation[], ctx: RecommendCtx)
                 // Same hex + scope semantic only (no primitive fallback)
                 const meta = token ? ctx.colorSchema.semantic[token] : null;
                 const hex = meta?.hex ?? value;
-                const allowedRoles = (PROPERTY_SCOPE as Record<string, ReadonlyArray<string>>)[property] ?? [];
-                const candidates = hex ? ctx.colorSchema.hexIndex.get(hex.toLowerCase()) ?? [] : [];
+                const allowedRoles =
+                    (PROPERTY_SCOPE as Record<string, ReadonlyArray<string>>)[property] ?? [];
+                const candidates = hex
+                    ? (ctx.colorSchema.hexIndex.get(hex.toLowerCase()) ?? [])
+                    : [];
                 suggested = candidates.filter((t) => {
                     const m = ctx.colorSchema.semantic[t];
-                    return m && m.role && allowedRoles.includes(m.role) && m.status !== 'do-not-use';
+                    return (
+                        m && m.role && allowedRoles.includes(m.role) && m.status !== 'do-not-use'
+                    );
                 });
                 break;
             }

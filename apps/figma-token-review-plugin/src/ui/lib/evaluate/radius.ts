@@ -15,7 +15,8 @@ export function evaluateRadius(
             property: 'borderRadius' as const,
             token: u.token,
             value: u.value,
-            detail: '',
+            origin: 'rule' as const,
+            message: '',
             suggested: [] as string[],
         };
 
@@ -24,7 +25,7 @@ export function evaluateRadius(
                 ...base,
                 type: 'token-not-used',
                 severity: 'high',
-                detail: `borderRadius에 raw value(${u.value})가 직접 입력되었습니다.`,
+                message: `borderRadius에 raw value(${u.value})가 직접 입력되었습니다.`,
             });
             continue;
         }
@@ -34,12 +35,17 @@ export function evaluateRadius(
                 ...base,
                 type: 'unknown-token',
                 severity: 'high',
-                detail: 'borderRadius 스키마에 등록되지 않은 토큰입니다.',
+                message: 'borderRadius 스키마에 등록되지 않은 토큰입니다.',
             });
             continue;
         }
 
-        conformant.push({ nodeId: u.nodeId, name: u.name, property: 'borderRadius', token: u.token });
+        conformant.push({
+            nodeId: u.nodeId,
+            name: u.name,
+            property: 'borderRadius',
+            token: u.token,
+        });
     }
 
     return { violations, conformant };

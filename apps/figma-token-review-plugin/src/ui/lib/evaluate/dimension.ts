@@ -15,7 +15,8 @@ export function evaluateDimension(
             property: u.property,
             token: u.token,
             value: u.value,
-            detail: '',
+            origin: 'rule' as const,
+            message: '',
             suggested: [] as string[],
         };
 
@@ -24,7 +25,7 @@ export function evaluateDimension(
                 ...base,
                 type: 'token-not-used',
                 severity: 'high',
-                detail: `${u.property}에 raw value(${u.value})가 직접 입력되었습니다.`,
+                message: `${u.property}에 raw value(${u.value})가 직접 입력되었습니다.`,
             });
             continue;
         }
@@ -34,7 +35,7 @@ export function evaluateDimension(
                 ...base,
                 type: 'unknown-token',
                 severity: 'high',
-                detail: 'dimension 스키마에 등록되지 않은 토큰입니다.',
+                message: 'dimension 스키마에 등록되지 않은 토큰입니다.',
             });
             continue;
         }

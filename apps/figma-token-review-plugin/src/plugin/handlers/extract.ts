@@ -47,20 +47,20 @@ function rgbaToHex(c: any): string | null {
 }
 
 function toSchemaKey(name: string | null): string | null {
-    return name && name.startsWith('color-')
-        ? 'colors.' + name.slice('color-'.length).replace(/-/g, '.')
-        : null;
+    // Figma semantic color variable names are already in the new key format (e.g. "color-background-primary-100")
+    return name && name.startsWith('color-') ? name : null;
 }
 
-/**
- * Convert a Figma variable name to a dimension/space/radius schema key.
- * e.g. "space/200" → "space.200"
- * NOTE: If the Figma variable has a tier prefix (e.g. "size/space/200"),
- * this would produce "size.space.200" which would NOT match the schema key
- * "space.200". This is a known assumption that must be validated in T13 smoke.
+/** Strip a leading "<prefix>/" from a Figma variable/style name; otherwise return verbatim.
+ * Examples:
+ *   "size/size-space-200" → "size-space-200"
+ *   "color/color-background-primary-100" → "color-background-primary-100"
+ *   "shadow/shadow-md" → "shadow-md"
+ *   "already-clean-200" → "already-clean-200"
  */
-function varNameToSchemaKey(name: string): string {
-    return name.replace(/\//g, '.');
+function stripLeadingPrefix(name: string): string {
+    const idx = name.indexOf('/');
+    return idx === -1 ? name : name.substring(idx + 1);
 }
 
 /** Resolve a single boundVariable ref to a token key. Returns null + 'raw' if no binding. */
@@ -72,8 +72,7 @@ async function readBoundToken(
     if (!ref) return { token: null, status: 'raw' };
     const variable = await getVariableWithRemoteDefense(ref.id);
     if (!variable) return { token: null, status: 'unknown' };
-    const key = varNameToSchemaKey(variable.name);
-    return { token: key, status: 'ok' };
+    return { token: stripLeadingPrefix(variable.name), status: 'ok' };
 }
 
 /**
@@ -92,8 +91,7 @@ async function readEffectStyleToken(
     try {
         const style = await figma.getStyleByIdAsync(styleId);
         if (!style) return { token: null, status: 'unknown' };
-        const key = varNameToSchemaKey(style.name);
-        return { token: key, status: 'ok' };
+        return { token: stripLeadingPrefix(style.name), status: 'ok' };
     } catch (_e) {
         return { token: null, status: 'unknown' };
     }
@@ -285,7 +283,7 @@ async function classifyTextNode(node: TextNode): Promise<{
 function groupBy<T extends { nodeId: string }>(
     items: T[],
     keyOf: (item: T) => string,
-): (Omit<T, 'nodeId'> & { nodeIds: string[]; count: number })[] {
+): (T & { nodeIds: string[]; count: number })[] {
     const map = new Map<string, any>();
     for (const it of items) {
         const key = keyOf(it);
@@ -294,8 +292,7 @@ function groupBy<T extends { nodeId: string }>(
             g.nodeIds.push(it.nodeId);
             g.count++;
         } else {
-            const { nodeId, ...rest } = it;
-            map.set(key, { ...rest, nodeIds: [nodeId], count: 1 });
+            map.set(key, { ...it, nodeIds: [it.nodeId], count: 1 });
         }
     }
     return [...map.values()];
@@ -396,26 +393,111 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
 
         // — Space (padding + gap) —
         const bvRecord = bv as Record<string, { id: string }> | undefined;
-        const spaceFields: Array<['padding' | 'gap', string]> = [
-            ['padding', 'paddingTop'],
-            ['padding', 'paddingRight'],
-            ['padding', 'paddingBottom'],
-            ['padding', 'paddingLeft'],
-            ['gap', 'itemSpacing'],
-        ];
-        for (const [property, field] of spaceFields) {
-            const rawValue: unknown = (node as any)[field];
-            if (typeof rawValue === 'number') {
-                const { token, status } = await readBoundToken(bvRecord, field);
+
+        // Collect 4 padding directions
+        type PaddingDir = {
+            field: string;
+            value: number;
+            token: string | null;
+            status: TokenStatus;
+        };
+        const paddingDirs: PaddingDir[] = [];
+        for (const f of ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'] as const) {
+            const v = (node as any)[f];
+            if (typeof v === 'number') {
+                const { token, status } = await readBoundToken(bvRecord, f);
+                paddingDirs.push({ field: f, value: v, token, status });
+            }
+        }
+
+        if (paddingDirs.length > 0) {
+            const allSame =
+                paddingDirs.length === 4 &&
+                paddingDirs.every(
+                    (d) =>
+                        d.value === paddingDirs[0].value &&
+                        d.token === paddingDirs[0].token &&
+                        d.status === paddingDirs[0].status,
+                );
+
+            if (allSame) {
+                // Uniform padding: emit one 'padding' entry
                 spaceRaw.push({
                     nodeId: node.id,
                     name: node.name,
-                    property,
-                    value: `${rawValue}px`,
-                    token,
-                    tokenStatus: status,
+                    property: 'padding',
+                    value: `${paddingDirs[0].value}px`,
+                    token: paddingDirs[0].token,
+                    tokenStatus: paddingDirs[0].status,
                 });
+            } else {
+                const top = paddingDirs.find((d) => d.field === 'paddingTop');
+                const bot = paddingDirs.find((d) => d.field === 'paddingBottom');
+                const left = paddingDirs.find((d) => d.field === 'paddingLeft');
+                const right = paddingDirs.find((d) => d.field === 'paddingRight');
+                const vertEq =
+                    top &&
+                    bot &&
+                    top.value === bot.value &&
+                    top.token === bot.token &&
+                    top.status === bot.status;
+                const horzEq =
+                    left &&
+                    right &&
+                    left.value === right.value &&
+                    left.token === right.token &&
+                    left.status === right.status;
+
+                if (paddingDirs.length === 4 && vertEq && horzEq) {
+                    // Symmetric: emit paddingVertical + paddingHorizontal
+                    spaceRaw.push({
+                        nodeId: node.id,
+                        name: node.name,
+                        property: 'paddingVertical',
+                        value: `${top!.value}px`,
+                        token: top!.token,
+                        tokenStatus: top!.status,
+                    });
+                    spaceRaw.push({
+                        nodeId: node.id,
+                        name: node.name,
+                        property: 'paddingHorizontal',
+                        value: `${left!.value}px`,
+                        token: left!.token,
+                        tokenStatus: left!.status,
+                    });
+                } else {
+                    // 4 separate entries
+                    for (const d of paddingDirs) {
+                        spaceRaw.push({
+                            nodeId: node.id,
+                            name: node.name,
+                            property: d.field as
+                                | 'paddingTop'
+                                | 'paddingRight'
+                                | 'paddingBottom'
+                                | 'paddingLeft',
+                            value: `${d.value}px`,
+                            token: d.token,
+                            tokenStatus: d.status,
+                        });
+                    }
+                }
             }
+        }
+
+        // Gap (itemSpacing)
+        const gapValue: unknown = (node as any).itemSpacing;
+        if (typeof gapValue === 'number') {
+            const { token, status } = await readBoundToken(bvRecord, 'itemSpacing');
+            spaceRaw.push({
+                nodeId: node.id,
+                name: node.name,
+                property: 'gap',
+                value: `${gapValue}px`,
+                token,
+                tokenStatus: status,
+            });
         }
 
         // — Dimension (width + height) —
@@ -428,8 +510,15 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
             ['height', 'height'],
         ];
         for (const [property, field] of dimFields) {
+            // Skip root frame dimensions (Finding 2)
+            if (node.id === root!.id) continue;
             const rawValue: unknown = (node as any)[field];
             if (typeof rawValue === 'number') {
+                // Only extract FIXED dimensions; FILL and HUG are layout-driven (Finding 1)
+                if (property === 'width' && (node as any).layoutSizingHorizontal !== 'FIXED')
+                    continue;
+                if (property === 'height' && (node as any).layoutSizingVertical !== 'FIXED')
+                    continue;
                 const { token, status } = await readBoundToken(bvRecord, field);
                 dimensionRaw.push({
                     nodeId: node.id,
@@ -446,13 +535,31 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
         // Skip figma.mixed (per-corner radii) — only uniform cornerRadius is extracted.
         const cr: unknown = (node as any).cornerRadius;
         if (typeof cr === 'number') {
-            const { token, status } = await readBoundToken(bvRecord, 'cornerRadius');
+            // Figma uniform cornerRadius may not have boundVariables.cornerRadius.
+            // Try per-corner fields as fallback before giving up.
+            const cornerFields = [
+                'cornerRadius',
+                'topLeftRadius',
+                'topRightRadius',
+                'bottomLeftRadius',
+                'bottomRightRadius',
+            ] as const;
+            let radiusToken: string | null = null;
+            let radiusStatus: TokenStatus = 'raw';
+            for (const cf of cornerFields) {
+                const result = await readBoundToken(bvRecord, cf);
+                if (result.status !== 'raw') {
+                    radiusToken = result.token;
+                    radiusStatus = result.status;
+                    break;
+                }
+            }
             radiusRaw.push({
                 nodeId: node.id,
                 name: node.name,
                 value: `${cr}px`,
-                token,
-                tokenStatus: status,
+                token: radiusToken,
+                tokenStatus: radiusStatus,
             });
         }
 

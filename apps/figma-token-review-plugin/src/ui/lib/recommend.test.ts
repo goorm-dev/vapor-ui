@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
+import type { Violation } from '~/common/schemas';
 import { loadColorSchema } from '~/ui/lib/loaders/color';
 import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
 import { applyRecommendations } from '~/ui/lib/recommend';
-import type { Violation } from '~/common/schemas';
 
 const colorSchema = loadColorSchema('light');
 const dim = loadDimensionSchemas();
@@ -17,7 +17,8 @@ function v(partial: Partial<Violation>): Violation {
         value: null,
         type: 'token-not-used',
         severity: 'high',
-        detail: '',
+        origin: 'rule',
+        message: '',
         suggested: [],
         ...partial,
     };
@@ -29,7 +30,11 @@ function v(partial: Partial<Violation>): Violation {
 function findBgHex(): { hex: string; tokens: string[] } {
     for (const [hex, tokens] of colorSchema.hexIndex) {
         const hasBg = tokens.some((t) => colorSchema.semantic[t]?.role === 'background');
-        if (hasBg) return { hex, tokens: tokens.filter((t) => colorSchema.semantic[t]?.role === 'background') };
+        if (hasBg)
+            return {
+                hex,
+                tokens: tokens.filter((t) => colorSchema.semantic[t]?.role === 'background'),
+            };
     }
     throw new Error('No background-role hex found in hexIndex');
 }
@@ -60,9 +65,9 @@ describe('applyRecommendations', () => {
         for (const [primKey, primHex] of Object.entries(colorSchema.primitive)) {
             const semTokens = colorSchema.hexIndex.get(primHex.toLowerCase()) ?? [];
             // All semantic tokens for this hex must be foreground-only
-            const allForeground = semTokens.length > 0 && semTokens.every(
-                (t) => colorSchema.semantic[t]?.role === 'foreground',
-            );
+            const allForeground =
+                semTokens.length > 0 &&
+                semTokens.every((t) => colorSchema.semantic[t]?.role === 'foreground');
             if (allForeground) {
                 testHex = primHex;
                 expectedPrimKey = primKey;
@@ -99,7 +104,9 @@ describe('applyRecommendations', () => {
             { colorSchema, ...dim },
         );
         expect(out[0].suggested.length).toBeGreaterThan(0);
-        expect(dim.space.valueToTokens.get(value)).toEqual(expect.arrayContaining(out[0].suggested));
+        expect(dim.space.valueToTokens.get(value)).toEqual(
+            expect.arrayContaining(out[0].suggested),
+        );
     });
 
     it('raw dimension(token-not-used, width)는 동일 value dimension 토큰을 suggested에 담는다', () => {
@@ -109,7 +116,9 @@ describe('applyRecommendations', () => {
             { colorSchema, ...dim },
         );
         expect(out[0].suggested.length).toBeGreaterThan(0);
-        expect(dim.dimension.valueToTokens.get(value)).toEqual(expect.arrayContaining(out[0].suggested));
+        expect(dim.dimension.valueToTokens.get(value)).toEqual(
+            expect.arrayContaining(out[0].suggested),
+        );
     });
 
     it('raw borderRadius(token-not-used, borderRadius)는 동일 value borderRadius 토큰을 suggested에 담는다', () => {
@@ -119,7 +128,9 @@ describe('applyRecommendations', () => {
             { colorSchema, ...dim },
         );
         expect(out[0].suggested.length).toBeGreaterThan(0);
-        expect(dim.borderRadius.valueToTokens.get(value)).toEqual(expect.arrayContaining(out[0].suggested));
+        expect(dim.borderRadius.valueToTokens.get(value)).toEqual(
+            expect.arrayContaining(out[0].suggested),
+        );
     });
 
     it('raw shadow(token-not-used, shadow)는 동일 value shadow 토큰을 suggested에 담는다', () => {
@@ -129,7 +140,9 @@ describe('applyRecommendations', () => {
             { colorSchema, ...dim },
         );
         expect(out[0].suggested.length).toBeGreaterThan(0);
-        expect(dim.shadow.valueToTokens.get(value)).toEqual(expect.arrayContaining(out[0].suggested));
+        expect(dim.shadow.valueToTokens.get(value)).toEqual(
+            expect.arrayContaining(out[0].suggested),
+        );
     });
 
     // Case 3: Primitive-used → 동일 hex+스코프 semantic
@@ -142,10 +155,19 @@ describe('applyRecommendations', () => {
         const [fgToken, fgMeta] = fgEntry;
         const hex = fgMeta.hex!;
         // Build a primitive key whose value matches this hex
-        const primitiveKey = Object.entries(colorSchema.primitive).find(([, v]) => v.toLowerCase() === hex.toLowerCase())?.[0];
+        const primitiveKey = Object.entries(colorSchema.primitive).find(
+            ([, v]) => v.toLowerCase() === hex.toLowerCase(),
+        )?.[0];
 
         const out = applyRecommendations(
-            [v({ type: 'primitive-used', property: 'fill-on-text', token: primitiveKey ?? 'colors.blue.600', value: hex })],
+            [
+                v({
+                    type: 'primitive-used',
+                    property: 'fill-on-text',
+                    token: primitiveKey ?? 'color-blue-600',
+                    value: hex,
+                }),
+            ],
             { colorSchema, ...dim },
         );
         // Should suggest the matching foreground semantic token
@@ -153,51 +175,51 @@ describe('applyRecommendations', () => {
     });
 
     // Case 4: Scope mismatch → 해당 property scope + 같은 위계(grade)
-    it('role-mismatch(fill, foreground token .100)는 background role의 .100 토큰을 suggested에 담는다', () => {
-        // token = colors.foreground.primary.100, property = fill (expects background)
-        const token = 'colors.foreground.primary.100';
-        const out = applyRecommendations(
-            [v({ type: 'role-mismatch', property: 'fill', token })],
-            { colorSchema, ...dim },
-        );
+    it('role-mismatch(fill, foreground token -100)는 background role의 -100 토큰을 suggested에 담는다', () => {
+        // token = color-foreground-primary-100, property = fill (expects background)
+        const token = 'color-foreground-primary-100';
+        const out = applyRecommendations([v({ type: 'role-mismatch', property: 'fill', token })], {
+            colorSchema,
+            ...dim,
+        });
         expect(out[0].suggested.length).toBeGreaterThan(0);
         for (const s of out[0].suggested) {
             const meta = colorSchema.semantic[s];
             expect(meta?.role).toBe('background');
-            expect(s.endsWith('.100')).toBe(true);
+            expect(s.endsWith('-100')).toBe(true);
         }
     });
 
     // Case 5: do-not-use → fallback chain (same-grade sibling)
-    it('do-not-use(colors.background.secondary.100)는 동위계(grade=100) 다른 family background 토큰을 suggested에 담는다', () => {
-        const token = 'colors.background.secondary.100';
-        const out = applyRecommendations(
-            [v({ type: 'do-not-use', property: 'fill', token })],
-            { colorSchema, ...dim },
-        );
-        // Fallback #3: same grade (.100), same role (background), different family, not do-not-use
+    it('do-not-use(color-background-secondary-100)는 동위계(grade=100) 다른 family background 토큰을 suggested에 담는다', () => {
+        const token = 'color-background-secondary-100';
+        const out = applyRecommendations([v({ type: 'do-not-use', property: 'fill', token })], {
+            colorSchema,
+            ...dim,
+        });
+        // Fallback #3: same grade (-100), same role (background), different family, not do-not-use
         expect(out[0].suggested.length).toBeGreaterThan(0);
         for (const s of out[0].suggested) {
             const meta = colorSchema.semantic[s];
             expect(meta?.status).not.toBe('do-not-use');
             expect(meta?.role).toBe('background');
-            expect(s.endsWith('.100')).toBe(true);
-            expect(s).not.toContain('background.secondary');
+            expect(s.endsWith('-100')).toBe(true);
+            expect(s).not.toContain('background-secondary');
         }
     });
 
     // Case 6: fg-grade-mismatch → same family .200
-    it('fg-grade-mismatch(.100 token)는 동일 family의 .200 토큰을 suggested에 담는다', () => {
-        const token = 'colors.foreground.primary.100';
+    it('fg-grade-mismatch(-100 token)는 동일 family의 -200 토큰을 suggested에 담는다', () => {
+        const token = 'color-foreground-primary-100';
         const out = applyRecommendations(
             [v({ type: 'fg-grade-mismatch', property: 'fill-on-text', token })],
             { colorSchema, ...dim },
         );
-        expect(out[0].suggested).toEqual(['colors.foreground.primary.200']);
+        expect(out[0].suggested).toEqual(['color-foreground-primary-200']);
     });
 
-    it('fg-grade-mismatch(.200 token)는 suggested가 []', () => {
-        const token = 'colors.foreground.primary.200';
+    it('fg-grade-mismatch(-200 token)는 suggested가 []', () => {
+        const token = 'color-foreground-primary-200';
         const out = applyRecommendations(
             [v({ type: 'fg-grade-mismatch', property: 'fill-on-text', token })],
             { colorSchema, ...dim },
@@ -212,7 +234,10 @@ describe('applyRecommendations', () => {
     });
 
     it('fg-grade-ambiguous는 suggested가 []', () => {
-        const out = applyRecommendations([v({ type: 'fg-grade-ambiguous' })], { colorSchema, ...dim });
+        const out = applyRecommendations([v({ type: 'fg-grade-ambiguous' })], {
+            colorSchema,
+            ...dim,
+        });
         expect(out[0].suggested).toEqual([]);
     });
 
@@ -222,15 +247,26 @@ describe('applyRecommendations', () => {
     });
 
     it('typo-styled-override는 suggested가 []', () => {
-        const out = applyRecommendations([v({ type: 'typo-styled-override' })], { colorSchema, ...dim });
+        const out = applyRecommendations([v({ type: 'typo-styled-override' })], {
+            colorSchema,
+            ...dim,
+        });
         expect(out[0].suggested).toEqual([]);
     });
 
-    // Heuristic pass-through
-    it('heuristic=true인 violation은 suggested를 변경하지 않는다', () => {
-        const original = ['colors.background.primary.100'];
+    // LLM origin pass-through
+    it('origin=llm인 violation은 suggested를 변경하지 않는다', () => {
+        const original = ['color-background-primary-100'];
         const out = applyRecommendations(
-            [v({ type: 'role-mismatch', property: 'fill', token: 'colors.foreground.primary.100', suggested: original, heuristic: true })],
+            [
+                v({
+                    type: 'role-mismatch',
+                    property: 'fill',
+                    token: 'color-foreground-primary-100',
+                    suggested: original,
+                    origin: 'llm',
+                }),
+            ],
             { colorSchema, ...dim },
         );
         expect(out[0].suggested).toEqual(original);

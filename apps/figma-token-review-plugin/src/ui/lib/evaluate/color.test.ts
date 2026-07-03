@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadColorSchema } from '~/ui/lib/loaders/color';
-import { evaluateColor } from '~/ui/lib/evaluate/color';
 import type { ColorUsage } from '~/common/schemas';
+import { evaluateColor } from '~/ui/lib/evaluate/color';
+import { loadColorSchema } from '~/ui/lib/loaders/color';
 
 const schema = loadColorSchema('light');
 
@@ -21,7 +21,10 @@ function usage(partial: Partial<ColorUsage>): ColorUsage {
 
 describe('evaluateColor', () => {
     it('raw fill 은 token-not-used / severity high 로 잡는다', () => {
-        const result = evaluateColor([usage({ tokenStatus: 'raw', hex: '#ff0000', token: null })], schema);
+        const result = evaluateColor(
+            [usage({ tokenStatus: 'raw', hex: '#ff0000', token: null })],
+            schema,
+        );
         expect(result.violations[0].type).toBe('token-not-used');
         expect(result.violations[0].severity).toBe('high');
     });
@@ -36,10 +39,18 @@ describe('evaluateColor', () => {
 
     it('do-not-use 플래그가 박힌 토큰은 do-not-use 로 잡는다', () => {
         // status=do-not-use 가 있는 token 키를 schema 에서 골라 입력
-        const doNotUseKey = Object.entries(schema.semantic).find(([, v]) => v.status === 'do-not-use')?.[0];
+        const doNotUseKey = Object.entries(schema.semantic).find(
+            ([, v]) => v.status === 'do-not-use',
+        )?.[0];
         if (!doNotUseKey) return; // 스키마에 없으면 skip
         const result = evaluateColor(
-            [usage({ tokenStatus: 'ok', token: doNotUseKey, hex: schema.semantic[doNotUseKey].hex })],
+            [
+                usage({
+                    tokenStatus: 'ok',
+                    token: doNotUseKey,
+                    hex: schema.semantic[doNotUseKey].hex,
+                }),
+            ],
             schema,
         );
         expect(result.violations[0].type).toBe('do-not-use');
@@ -49,7 +60,14 @@ describe('evaluateColor', () => {
         const fgKey = Object.entries(schema.semantic).find(([, v]) => v.role === 'foreground')?.[0];
         if (!fgKey) return;
         const result = evaluateColor(
-            [usage({ property: 'fill', tokenStatus: 'ok', token: fgKey, hex: schema.semantic[fgKey].hex })],
+            [
+                usage({
+                    property: 'fill',
+                    tokenStatus: 'ok',
+                    token: fgKey,
+                    hex: schema.semantic[fgKey].hex,
+                }),
+            ],
             schema,
         );
         expect(result.violations.some((v) => v.type === 'role-mismatch')).toBe(true);
@@ -57,7 +75,7 @@ describe('evaluateColor', () => {
 
     it('primitive 토큰 사용은 primitive-used / info', () => {
         const result = evaluateColor(
-            [usage({ tokenStatus: 'ok', token: 'colors.blue.500', hex: '#0000ff' })],
+            [usage({ tokenStatus: 'ok', token: 'color-blue-500', hex: '#0000ff' })],
             schema,
         );
         expect(result.violations[0].type).toBe('primitive-used');

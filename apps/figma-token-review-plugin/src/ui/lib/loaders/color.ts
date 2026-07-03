@@ -1,8 +1,8 @@
+import type { Role, SchemaMode } from '~/common/schemas';
 import primitiveDark from '~/common/tokens/primitive-color.dark.json';
 import primitiveLight from '~/common/tokens/primitive-color.light.json';
 import semanticDark from '~/common/tokens/semantic-color.dark.json';
 import semanticLight from '~/common/tokens/semantic-color.light.json';
-import type { Role, SchemaMode } from '~/common/schemas';
 
 const NS = 'io.goorm.vapor';
 
@@ -48,15 +48,15 @@ function oklchToHex([L, C, h]: [number, number, number]): string {
     // oklab → linear sRGB (via cube-root intermediates)
     const L_ = L + 0.3963377774 * a + 0.2158037573 * b;
     const M_ = L - 0.1055613458 * a - 0.0638541728 * b;
-    const S_ = L - 0.0894841775 * a - 1.2914855480 * b;
+    const S_ = L - 0.0894841775 * a - 1.291485548 * b;
 
     const l = L_ * L_ * L_;
     const m = M_ * M_ * M_;
     const s = S_ * S_ * S_;
 
-    const r =  4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
+    const r = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
     const g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
-    const bv = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s;
+    const bv = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s;
 
     // linear → gamma sRGB
     const toGamma = (x: number): number =>
@@ -64,7 +64,10 @@ function oklchToHex([L, C, h]: [number, number, number]): string {
 
     // clamp, scale to 0-255, format as hex
     const clamp = (x: number) => Math.max(0, Math.min(1, x));
-    const toHex = (x: number) => Math.round(clamp(x) * 255).toString(16).padStart(2, '0');
+    const toHex = (x: number) =>
+        Math.round(clamp(x) * 255)
+            .toString(16)
+            .padStart(2, '0');
 
     return `#${toHex(toGamma(r))}${toHex(toGamma(g))}${toHex(toGamma(bv))}`;
 }
@@ -79,9 +82,17 @@ function flattenPrimitive(root: { colors?: Node }): Record<string, string> {
                 out[path] = v;
                 return;
             }
-            if (v && typeof v === 'object' && (v as { colorSpace?: string }).colorSpace === 'oklch') {
+            if (
+                v &&
+                typeof v === 'object' &&
+                (v as { colorSpace?: string }).colorSpace === 'oklch'
+            ) {
                 const components = (v as { components?: unknown }).components;
-                if (Array.isArray(components) && components.length === 3 && components.every((n) => typeof n === 'number')) {
+                if (
+                    Array.isArray(components) &&
+                    components.length === 3 &&
+                    components.every((n) => typeof n === 'number')
+                ) {
                     out[path] = oklchToHex(components as [number, number, number]);
                 }
                 return;
@@ -90,10 +101,10 @@ function flattenPrimitive(root: { colors?: Node }): Record<string, string> {
         }
         for (const [k, v] of Object.entries(node)) {
             if (k.startsWith('$')) continue;
-            walk(v as Node, path ? `${path}.${k}` : k);
+            walk(v as Node, path ? `${path}-${k}` : k);
         }
     };
-    if (root.colors) walk(root.colors, 'colors');
+    if (root.colors) walk(root.colors, 'color');
     return out;
 }
 
@@ -101,12 +112,24 @@ function resolveAlias(valueRef: string | null, primitive: Record<string, string>
     if (!valueRef) return null;
     const m = valueRef.match(/^\{(.+)\}$/);
     if (!m) return /^#[0-9a-f]{3,8}$/i.test(valueRef) ? valueRef : null;
-    return primitive[m[1]] ?? null;
+    // Convert JSON alias path (dot-separated, plural 'colors') to new key format (dash-separated, singular 'color')
+    const aliasPath = m[1].replace(/^colors\./, 'color-').replace(/\./g, '-');
+    return primitive[aliasPath] ?? null;
 }
 
 function asRole(value: unknown): Role | null {
-    const valid: Role[] = ['background', 'foreground', 'border', 'space', 'dimension', 'borderRadius', 'shadow'];
-    return typeof value === 'string' && (valid as string[]).includes(value) ? (value as Role) : null;
+    const valid: Role[] = [
+        'background',
+        'foreground',
+        'border',
+        'space',
+        'dimension',
+        'borderRadius',
+        'shadow',
+    ];
+    return typeof value === 'string' && (valid as string[]).includes(value)
+        ? (value as Role)
+        : null;
 }
 
 function isGradeKey(value: unknown): value is '100' | '200' | 'ambiguous' {
@@ -126,18 +149,18 @@ function flattenSemantic(
 
     const walk = (node: Node, path: string, inheritedGradeRules: Record<string, string> | null) => {
         const meta = vaporMeta(node);
-        const gradeRules = (meta.gradeRules as Record<string, string> | undefined) ?? inheritedGradeRules;
+        const gradeRules =
+            (meta.gradeRules as Record<string, string> | undefined) ?? inheritedGradeRules;
         if ('$value' in node && typeof node.$value === 'string') {
-            const grade = path.split('.').pop() ?? '';
+            const grade = path.split('-').pop() ?? '';
             const valueRef = node.$value as string;
             const hex = resolveAlias(valueRef, primitive);
             // Store the grade key ('100'/'200') as GradeRule.other rather than the
             // description text — the type requires '100'|'200'|'ambiguous'|null and
             // downstream evaluators need the key, not prose.
             const hasGradeRule = gradeRules != null && grade in gradeRules;
-            const gradeRuleOther: '100' | '200' | 'ambiguous' | null = hasGradeRule && isGradeKey(grade)
-                ? grade
-                : null;
+            const gradeRuleOther: '100' | '200' | 'ambiguous' | null =
+                hasGradeRule && isGradeKey(grade) ? grade : null;
             out[path] = {
                 role: asRole((meta.accessibility as { role?: unknown } | undefined)?.role),
                 status: typeof meta.status === 'string' ? meta.status : null,
@@ -158,10 +181,10 @@ function flattenSemantic(
         }
         for (const [k, v] of Object.entries(node)) {
             if (k.startsWith('$')) continue;
-            walk(v as Node, path ? `${path}.${k}` : k, gradeRules ?? null);
+            walk(v as Node, path ? `${path}-${k}` : k, gradeRules ?? null);
         }
     };
-    if (root.colors) walk(root.colors, 'colors', null);
+    if (root.colors) walk(root.colors, 'color', null);
     return { semantic: out, tokenKeys: Object.keys(out), hexIndex };
 }
 
@@ -169,6 +192,9 @@ export function loadColorSchema(mode: SchemaMode): ColorSchema {
     const semanticRaw = mode === 'dark' ? semanticDark : semanticLight;
     const primitiveRaw = mode === 'dark' ? primitiveDark : primitiveLight;
     const primitive = flattenPrimitive(primitiveRaw as { colors?: Node });
-    const { semantic, tokenKeys, hexIndex } = flattenSemantic(semanticRaw as { colors?: Node }, primitive);
+    const { semantic, tokenKeys, hexIndex } = flattenSemantic(
+        semanticRaw as { colors?: Node },
+        primitive,
+    );
     return { mode, semantic, primitive, tokenKeys, hexIndex };
 }

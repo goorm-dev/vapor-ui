@@ -1,5 +1,4 @@
 import type { Category, RawExtract, ScanPayload } from '~/common/schemas';
-
 import { evaluateColor } from '~/ui/lib/evaluate/color';
 import { evaluateDimension } from '~/ui/lib/evaluate/dimension';
 import { evaluateRadius } from '~/ui/lib/evaluate/radius';
@@ -43,9 +42,18 @@ export async function runLlmEvaluation(
     const det: Record<Category, CategoryDet> = {
         color: { ...evaluateColor(extract.colors, colorSchema), total: extract.colors.length },
         space: { ...evaluateSpace(extract.spaces, dim.space), total: extract.spaces.length },
-        dimension: { ...evaluateDimension(extract.dimensions, dim.dimension), total: extract.dimensions.length },
-        typography: { ...evaluateTypography(extract.typography, textStyleSchema), total: extract.typography.length },
-        borderRadius: { ...evaluateRadius(extract.radii, dim.borderRadius), total: extract.radii.length },
+        dimension: {
+            ...evaluateDimension(extract.dimensions, dim.dimension),
+            total: extract.dimensions.length,
+        },
+        typography: {
+            ...evaluateTypography(extract.typography, textStyleSchema),
+            total: extract.typography.length,
+        },
+        borderRadius: {
+            ...evaluateRadius(extract.radii, dim.borderRadius),
+            total: extract.radii.length,
+        },
         shadow: { ...evaluateShadow(extract.shadows, dim.shadow), total: extract.shadows.length },
     };
 
@@ -62,7 +70,10 @@ export async function runLlmEvaluation(
 
     const llmInput = buildLlmInput({
         extract,
-        deterministicConformant: { color: det.color.conformant, typography: det.typography.conformant },
+        deterministicConformant: {
+            color: det.color.conformant,
+            typography: det.typography.conformant,
+        },
         frameName,
         colorSchema,
         textStyleSchema,
@@ -72,7 +83,11 @@ export async function runLlmEvaluation(
     const response = await postLiteLLM(request, { env, signal: options.signal });
     const judgments = parseLlmResponse(response);
 
-    const mergeArgs: MergeArgs = { deterministic: det, llm: judgments };
+    const mergeArgs: MergeArgs = {
+        deterministic: det,
+        llm: judgments,
+        schemaMode: extract.schemaMode,
+    };
     return mergeScanPayload(mergeArgs);
 }
 

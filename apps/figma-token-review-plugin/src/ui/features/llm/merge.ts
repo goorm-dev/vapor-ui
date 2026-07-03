@@ -4,6 +4,7 @@ import type {
     EvaluateOutput,
     EvaluateSummary,
     ScanPayload,
+    SchemaMode,
     Violation,
 } from '~/common/schemas';
 
@@ -14,6 +15,7 @@ export type CategoryDet = { violations: Violation[]; conformant: Conformant[]; t
 export type MergeArgs = {
     deterministic: Record<Category, CategoryDet>;
     llm: LlmJudgments;
+    schemaMode: SchemaMode;
 };
 
 function heuristicTypo(j: LlmTypoJudgment): Violation {
@@ -25,11 +27,10 @@ function heuristicTypo(j: LlmTypoJudgment): Violation {
         value: null,
         type: 'typo-hierarchy',
         severity: 'high',
-        detail: j.reasoning,
+        origin: 'llm',
+        message: j.reasoning,
         suggested: j.suggested,
-        heuristic: true,
         confidence: j.confidence,
-        reasoning: j.reasoning,
     };
 }
 
@@ -42,20 +43,25 @@ function heuristicColor(j: LlmColorJudgment): Violation {
         value: null,
         type: 'semantic-misfit',
         severity: 'high',
-        detail: j.reasoning,
+        origin: 'llm',
+        message: j.reasoning,
         suggested: j.suggested,
-        heuristic: true,
         confidence: j.confidence,
-        reasoning: j.reasoning,
     };
 }
 
-function summarize(violations: Violation[], conformant: Conformant[], total: number): EvaluateSummary {
+function summarize(
+    violations: Violation[],
+    conformant: Conformant[],
+    total: number,
+): EvaluateSummary {
     const isFail = (v: Violation): boolean =>
-        v.severity === 'high' && (!v.heuristic || v.confidence === 'HIGH');
+        v.severity === 'high' && (v.origin === 'rule' || v.confidence === 'HIGH');
     const high = violations.filter(isFail).length;
-    const heuristics = violations.filter((v) => v.heuristic).length;
-    const infos = violations.filter((v) => v.severity === 'info' || (v.heuristic && v.confidence !== 'HIGH')).length;
+    const heuristics = violations.filter((v) => v.origin === 'llm').length;
+    const infos = violations.filter(
+        (v) => v.severity === 'info' || (v.origin === 'llm' && v.confidence !== 'HIGH'),
+    ).length;
     const conformCount = conformant.length;
     const conformanceRate = total > 0 ? (total - high) / total : null;
     return {
@@ -69,9 +75,11 @@ function summarize(violations: Violation[], conformant: Conformant[], total: num
 }
 
 export function mergeScanPayload(args: MergeArgs): ScanPayload {
-    const { deterministic, llm } = args;
+    const { deterministic, llm, schemaMode } = args;
 
-    const colorHeuristics = llm.semanticColor.filter((j) => j.verdict === 'FAIL').map(heuristicColor);
+    const colorHeuristics = llm.semanticColor
+        .filter((j) => j.verdict === 'FAIL')
+        .map(heuristicColor);
     const typoHeuristics = llm.typography.filter((j) => j.verdict === 'FAIL').map(heuristicTypo);
 
     const buildOutput = (cat: Category, extra: Violation[]): EvaluateOutput => {
@@ -91,5 +99,6 @@ export function mergeScanPayload(args: MergeArgs): ScanPayload {
         typography: buildOutput('typography', typoHeuristics),
         borderRadius: buildOutput('borderRadius', []),
         shadow: buildOutput('shadow', []),
+        schemaMode,
     };
 }

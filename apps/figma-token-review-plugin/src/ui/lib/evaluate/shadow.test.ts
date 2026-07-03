@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
-import { evaluateShadow } from '~/ui/lib/evaluate/shadow';
 import type { ShadowUsage } from '~/common/schemas';
+import { evaluateShadow } from '~/ui/lib/evaluate/shadow';
+import { loadDimensionSchemas } from '~/ui/lib/loaders/dimension';
 
 const schemas = loadDimensionSchemas();
 
@@ -29,7 +29,10 @@ describe('evaluateShadow', () => {
     });
 
     it('스키마에 없는 토큰은 unknown-token', () => {
-        const r = evaluateShadow([usage({ token: 'shadow.999', tokenStatus: 'ok' })], schemas.shadow);
+        const r = evaluateShadow(
+            [usage({ token: 'shadow.999', tokenStatus: 'ok' })],
+            schemas.shadow,
+        );
         expect(r.violations[0].type).toBe('unknown-token');
     });
 

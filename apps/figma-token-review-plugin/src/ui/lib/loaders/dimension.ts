@@ -49,7 +49,7 @@ function flatten(root: unknown, rootKey: string): TokenValueIndex {
         }
         for (const [k, v] of Object.entries(node)) {
             if (k.startsWith('$')) continue;
-            walk(v as Node, path ? `${path}.${k}` : k);
+            walk(v as Node, path ? `${path}-${k}` : k);
         }
     };
 
@@ -62,16 +62,31 @@ function flatten(root: unknown, rootKey: string): TokenValueIndex {
  * space.json, dimension.json, border-radius.json all use:
  *   { size: { <key>: { ... } } }
  * Extract via the `size` wrapper then delegate to `flatten` with the inner key.
+ * The initial path is prefixed with `size-` to produce keys like `size-space-200`.
  */
 function flattenSized(raw: { size?: Record<string, Node> }, innerKey: string): TokenValueIndex {
-    return flatten(raw.size ?? {}, innerKey);
+    const index = flatten(raw.size ?? {}, innerKey);
+    // Re-key: replace initial `<innerKey>` prefix with `size-<innerKey>`
+    const tokens: Record<string, string> = {};
+    const valueToTokens = new Map<string, string[]>();
+    for (const [k, v] of Object.entries(index.tokens)) {
+        const newKey = `size-${k}`;
+        tokens[newKey] = v;
+        const arr = valueToTokens.get(v) ?? [];
+        arr.push(newKey);
+        valueToTokens.set(v, arr);
+    }
+    return { tokens, valueToTokens };
 }
 
 export function loadDimensionSchemas(): DimensionSchemas {
     return {
         space: flattenSized(spaceRaw as { size?: Record<string, Node> }, 'space'),
         dimension: flattenSized(dimensionRaw as { size?: Record<string, Node> }, 'dimension'),
-        borderRadius: flattenSized(borderRadiusRaw as { size?: Record<string, Node> }, 'borderRadius'),
+        borderRadius: flattenSized(
+            borderRadiusRaw as { size?: Record<string, Node> },
+            'borderRadius',
+        ),
         shadow: flatten(shadowRaw, 'shadow'),
     };
 }

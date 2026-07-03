@@ -4,12 +4,19 @@
 
 export type Severity = 'high' | 'info';
 export type Confidence = 'HIGH' | 'MED' | 'LOW';
+export type Origin = 'rule' | 'llm';
 
 export type Property =
     | 'fill'
     | 'fill-on-text'
     | 'stroke'
     | 'padding'
+    | 'paddingTop'
+    | 'paddingRight'
+    | 'paddingBottom'
+    | 'paddingLeft'
+    | 'paddingVertical'
+    | 'paddingHorizontal'
     | 'gap'
     | 'width'
     | 'height'
@@ -26,13 +33,7 @@ export type Role =
     | 'borderRadius'
     | 'shadow';
 
-export type Category =
-    | 'color'
-    | 'space'
-    | 'dimension'
-    | 'typography'
-    | 'borderRadius'
-    | 'shadow';
+export type Category = 'color' | 'space' | 'dimension' | 'typography' | 'borderRadius' | 'shadow';
 
 export type ViolationType =
     | 'token-not-used'
@@ -57,11 +58,10 @@ export type Violation = {
     value: string | null;
     type: ViolationType;
     severity: Severity;
-    detail: string;
+    origin: Origin;
+    message: string;
     suggested: string[];
-    heuristic?: true;
-    confidence?: Confidence;
-    reasoning?: string;
+    confidence?: Confidence; // only when origin === 'llm'
 };
 
 export type Conformant = {
@@ -94,6 +94,7 @@ export type ScanPayload = {
     typography: EvaluateOutput;
     borderRadius: EvaluateOutput;
     shadow: EvaluateOutput;
+    schemaMode: SchemaMode;
 };
 
 export type SelectionState =
@@ -154,7 +155,15 @@ export type TypographyUsage = {
 export type SpaceUsage = {
     nodeId: string;
     name: string;
-    property: 'padding' | 'gap';
+    property:
+        | 'padding'
+        | 'paddingTop'
+        | 'paddingRight'
+        | 'paddingBottom'
+        | 'paddingLeft'
+        | 'paddingVertical'
+        | 'paddingHorizontal'
+        | 'gap';
     value: string;
     token: string | null;
     tokenStatus: TokenStatus;

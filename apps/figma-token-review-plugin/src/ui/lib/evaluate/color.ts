@@ -1,15 +1,10 @@
-import type {
-    ColorUsage,
-    Conformant,
-    Property,
-    Violation,
-} from '~/common/schemas';
+import type { ColorUsage, Conformant, Property, Violation } from '~/common/schemas';
 import type { ColorSchema } from '~/ui/lib/loaders/color';
 import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 
-/** primitive 토큰 키 판별: 'colors.<family>.<grade>' 형식 */
+/** primitive 토큰 키 판별: 'color-<family>-<grade>' 형식 */
 function isPrimitiveKey(token: string): boolean {
-    return /^colors\.[a-z]+\.[0-9]{3}$/.test(token);
+    return /^color-[a-z]+-[0-9]{3}$/.test(token);
 }
 
 /**
@@ -54,7 +49,8 @@ export function evaluateColor(
             property,
             token: u.token,
             value,
-            detail: '',
+            origin: 'rule' as const,
+            message: '',
             suggested: [] as string[],
         };
 
@@ -64,7 +60,7 @@ export function evaluateColor(
                 ...base,
                 type: 'token-not-used',
                 severity: 'high',
-                detail: '변수에 바인딩되지 않은 색이 직접 입력되었습니다.',
+                message: '변수에 바인딩되지 않은 색이 직접 입력되었습니다.',
             });
             continue;
         }
@@ -75,7 +71,7 @@ export function evaluateColor(
                 ...base,
                 type: 'unknown-token',
                 severity: 'high',
-                detail: '바인딩된 변수가 스키마의 semantic 단계에 도달하지 못했습니다.',
+                message: '바인딩된 변수가 스키마의 semantic 단계에 도달하지 못했습니다.',
             });
             continue;
         }
@@ -89,7 +85,8 @@ export function evaluateColor(
                 ...base,
                 type: 'primitive-used',
                 severity: 'info',
-                detail: 'primitive 토큰이 직접 사용되었습니다. 같은 값의 semantic 토큰이 있는지 확인하세요.',
+                message:
+                    'primitive 토큰이 직접 사용되었습니다. 같은 값의 semantic 토큰이 있는지 확인하세요.',
             });
             continue;
         }
@@ -101,7 +98,7 @@ export function evaluateColor(
                 ...base,
                 type: 'unknown-token',
                 severity: 'high',
-                detail: '스키마에 없는 토큰 키입니다.',
+                message: '스키마에 없는 토큰 키입니다.',
             });
             continue;
         }
@@ -112,19 +109,20 @@ export function evaluateColor(
                 ...base,
                 type: 'do-not-use',
                 severity: 'high',
-                detail: '사용이 권장되지 않는 토큰입니다(do-not-use).',
+                message: '사용이 권장되지 않는 토큰입니다(do-not-use).',
             });
             continue;
         }
 
         // 6. role mismatch — PROPERTY_SCOPE 기반
-        const allowedRoles = (PROPERTY_SCOPE as Record<string, ReadonlyArray<string>>)[property] ?? [];
+        const allowedRoles =
+            (PROPERTY_SCOPE as Record<string, ReadonlyArray<string>>)[property] ?? [];
         if (meta.role && !allowedRoles.includes(meta.role)) {
             violations.push({
                 ...base,
                 type: 'role-mismatch',
                 severity: 'high',
-                detail: `${property} 속성에는 ${allowedRoles.join('/')} role만 허용됩니다 (적용: ${meta.role}).`,
+                message: `${property} 속성에는 ${allowedRoles.join('/')} role만 허용됩니다 (적용: ${meta.role}).`,
             });
             continue;
         }
@@ -137,17 +135,17 @@ export function evaluateColor(
                     ...base,
                     type: 'fg-grade-ambiguous',
                     severity: 'info',
-                    detail: '배경 식별이 모호해 fg grade 짝 확인이 보류되었습니다.',
+                    message: '배경 식별이 모호해 fg grade 짝 확인이 보류되었습니다.',
                 });
                 continue;
             }
-            const grade = u.token.split('.').pop();
+            const grade = u.token.split('-').pop();
             if (kind === 'other' && grade === '100') {
                 violations.push({
                     ...base,
                     type: 'fg-grade-mismatch',
                     severity: 'high',
-                    detail: 'fg-100을 비순백 배경 위에 사용했습니다. .200 사용을 검토하세요.',
+                    message: 'fg-100을 비순백 배경 위에 사용했습니다. .200 사용을 검토하세요.',
                 });
                 continue;
             }

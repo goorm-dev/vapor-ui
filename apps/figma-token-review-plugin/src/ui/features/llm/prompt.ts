@@ -33,7 +33,7 @@ const SYSTEM_BASE = [
     '',
     'Hard rules:',
     '- suggested 는 항상 배열. 후보 없으면 [].',
-    '- 토큰 키(예: colors.background.danger.100, subtitle1)는 영문 그대로.',
+    '- 토큰 키(예: color-background-danger-100, subtitle1)는 영문 그대로.',
     '- reasoning 은 한국어. 어느 when/avoid 항목이 부합/위배되는지 명시.',
     '- 확신이 약하면 confidence를 낮추되 verdict는 PASS/FAIL 둘 중 하나만 사용.',
 ].join('\n');
@@ -41,7 +41,7 @@ const SYSTEM_BASE = [
 const SEMANTIC_GUIDE = [
     '의미 판정 가이드 (vapor 토큰 의미 기준):',
     '- color: 각 토큰의 when/avoid 가 전제하는 역할(danger/warning/primary/normal/hint 등)과 실제 자리(노드 이름·부모·인접 노드)의 의미가 부합하는가.',
-    '  - avoid 의 "조건 → colors.X.Y" 형식은 우변이 그대로 remedy 후보다.',
+    '  - avoid 의 "조건 → color-X-Y" 형식은 우변이 그대로 remedy 후보다.',
     '- typography: rank 는 위계 인덱스(작을수록 큰 제목). totalRanks 와 함께 보고 위계 뒤집힘 / 본문에 heading 오용 등을 잡는다.',
     '  - viewport 의존 규칙은 textStyle 의 when 에 명시("mobile viewports → heading1" 등)되어 있다.',
     '- 점수화(0-100) 금지. PASS/FAIL + confidence 만.',

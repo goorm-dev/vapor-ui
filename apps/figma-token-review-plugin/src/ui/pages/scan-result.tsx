@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { Badge, Box, Button, Collapsible, HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-ui/icons';
 
-import type { EvaluateOutput, ScanPayload, Violation } from '~/common/schemas';
+import type { EvaluateOutput, ScanPayload, SchemaMode, Violation } from '~/common/schemas';
 
 import { ViolationCard } from '../components/violation-card';
 
@@ -17,6 +17,7 @@ type Props = {
 export function ScanResultPage({ frameName = '이름 없는 프레임', payload }: Props) {
     const [tab, setTab] = useState<TabKey>('color');
     const counts = useMemo(() => getViolationCounts(payload), [payload]);
+    const schemaMode = payload.schemaMode;
 
     return (
         <Tabs.Root
@@ -34,36 +35,42 @@ export function ScanResultPage({ frameName = '이름 없는 프레임', payload 
                 <ViolationPanel
                     violations={payload.color.violations}
                     summary={payload.color.summary}
+                    schemaMode={schemaMode}
                 />
             </Tabs.Panel>
             <Tabs.Panel value="space">
                 <ViolationPanel
                     violations={payload.space.violations}
                     summary={payload.space.summary}
+                    schemaMode={schemaMode}
                 />
             </Tabs.Panel>
             <Tabs.Panel value="dimension">
                 <ViolationPanel
                     violations={payload.dimension.violations}
                     summary={payload.dimension.summary}
+                    schemaMode={schemaMode}
                 />
             </Tabs.Panel>
             <Tabs.Panel value="typography">
                 <ViolationPanel
                     violations={payload.typography.violations}
                     summary={payload.typography.summary}
+                    schemaMode={schemaMode}
                 />
             </Tabs.Panel>
             <Tabs.Panel value="borderRadius">
                 <ViolationPanel
                     violations={payload.borderRadius.violations}
                     summary={payload.borderRadius.summary}
+                    schemaMode={schemaMode}
                 />
             </Tabs.Panel>
             <Tabs.Panel value="shadow">
                 <ViolationPanel
                     violations={payload.shadow.violations}
                     summary={payload.shadow.summary}
+                    schemaMode={schemaMode}
                 />
             </Tabs.Panel>
         </Tabs.Root>
@@ -72,7 +79,14 @@ export function ScanResultPage({ frameName = '이름 없는 프레임', payload 
 
 // ----- Tab bar -----
 
-const FRAME_TAB_KEYS: TabKey[] = ['color', 'space', 'dimension', 'typography', 'borderRadius', 'shadow'];
+const FRAME_TAB_KEYS: TabKey[] = [
+    'color',
+    'space',
+    'dimension',
+    'typography',
+    'borderRadius',
+    'shadow',
+];
 
 const TAB_LABEL: Record<TabKey, string> = {
     color: 'Color',
@@ -161,9 +175,10 @@ function SelectedFrameHeader({ frameName }: { frameName: string }) {
 type ViolationPanelProps = {
     violations: Violation[];
     summary: EvaluateOutput['summary'];
+    schemaMode: SchemaMode;
 };
 
-function ViolationPanel({ violations, summary }: ViolationPanelProps) {
+function ViolationPanel({ violations, summary, schemaMode }: ViolationPanelProps) {
     const { frameOnes, textOnes } = useMemo(
         () => splitByKind(sortViolations(violations)),
         [violations],
@@ -173,8 +188,18 @@ function ViolationPanel({ violations, summary }: ViolationPanelProps) {
 
     return (
         <VStack $css={{ gap: '$300', width: '100%', flex: 1, padding: '$200' }}>
-            <ViolationSection icon="frame" title="Frame" violations={frameOnes} />
-            <ViolationSection icon="text" title="Text" violations={textOnes} />
+            <ViolationSection
+                icon="frame"
+                title="Frame"
+                violations={frameOnes}
+                schemaMode={schemaMode}
+            />
+            <ViolationSection
+                icon="text"
+                title="Text"
+                violations={textOnes}
+                schemaMode={schemaMode}
+            />
         </VStack>
     );
 }
@@ -216,9 +241,10 @@ type ViolationSectionProps = {
     icon: 'frame' | 'text';
     title: string;
     violations: Violation[];
+    schemaMode: SchemaMode;
 };
 
-function ViolationSection({ icon, title, violations }: ViolationSectionProps) {
+function ViolationSection({ icon, title, violations, schemaMode }: ViolationSectionProps) {
     if (violations.length === 0) return null;
 
     return (
@@ -240,7 +266,7 @@ function ViolationSection({ icon, title, violations }: ViolationSectionProps) {
                 />
             </Collapsible.Trigger>
             <Collapsible.Panel>
-                <ViolationList violations={violations} />
+                <ViolationList violations={violations} schemaMode={schemaMode} />
             </Collapsible.Panel>
         </Collapsible.Root>
     );
@@ -257,11 +283,17 @@ function SectionHeader({ icon, title }: { icon: 'frame' | 'text'; title: string 
     );
 }
 
-function ViolationList({ violations }: { violations: Violation[] }) {
+function ViolationList({
+    violations,
+    schemaMode,
+}: {
+    violations: Violation[];
+    schemaMode: SchemaMode;
+}) {
     return (
         <VStack $css={{ gap: '$150', width: '100%', paddingTop: '$150' }}>
             {violations.map((v, i) => (
-                <ViolationCard key={`${v.nodeId}-${i}`} violation={v} />
+                <ViolationCard key={`${v.nodeId}-${i}`} violation={v} schemaMode={schemaMode} />
             ))}
         </VStack>
     );

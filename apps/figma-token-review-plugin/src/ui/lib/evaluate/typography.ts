@@ -15,7 +15,8 @@ export function evaluateTypography(
             property: 'textStyle' as const,
             token: u.textStyle,
             value: null,
-            detail: '',
+            origin: 'rule' as const,
+            message: '',
             suggested: [] as string[],
         };
 
@@ -24,7 +25,7 @@ export function evaluateTypography(
                 ...base,
                 type: 'typo-raw',
                 severity: 'high',
-                detail: `Text Style이 바인딩되지 않은 raw 텍스트입니다 ("${u.characters}").`,
+                message: `Text Style이 바인딩되지 않은 raw 텍스트입니다 ("${u.characters}").`,
             });
             continue;
         }
@@ -34,7 +35,7 @@ export function evaluateTypography(
                 ...base,
                 type: 'typo-styled-override',
                 severity: 'info',
-                detail: `Text Style "${u.textStyle}" 적용 후 ${u.overriddenFields.join(', ')} 필드가 오버라이드되었습니다.`,
+                message: `Text Style "${u.textStyle}" 적용 후 ${u.overriddenFields.join(', ')} 필드가 오버라이드되었습니다.`,
             });
             continue;
         }
@@ -44,13 +45,18 @@ export function evaluateTypography(
                 ...base,
                 type: 'unknown-token',
                 severity: 'high',
-                detail: `등록되지 않은 Text Style 이름입니다: ${u.textStyle}.`,
+                message: `등록되지 않은 Text Style 이름입니다: ${u.textStyle}.`,
             });
             continue;
         }
 
         if (u.textStyle) {
-            conformant.push({ nodeId: u.nodeId, name: u.name, property: 'textStyle', token: u.textStyle });
+            conformant.push({
+                nodeId: u.nodeId,
+                name: u.name,
+                property: 'textStyle',
+                token: u.textStyle,
+            });
         }
     }
 

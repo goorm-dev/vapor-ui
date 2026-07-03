@@ -3,16 +3,16 @@ import { Badge, Text, VStack } from '@vapor-ui/core';
 import { AiSmartieIcon } from '@vapor-ui/icons';
 
 type ViolationDetailProps = {
-    detail: string;
+    message: string;
     hasSuggestion: boolean;
 };
 
-export function ViolationDetail({ detail, hasSuggestion }: ViolationDetailProps) {
+export function ViolationDetail({ message, hasSuggestion }: ViolationDetailProps) {
     if (!hasSuggestion) {
         return (
             <DescriptionBox>
-                <Text typography="body2" foreground="normal-200">
-                    {detail}
+                <Text typography="body2" foreground="normal-200" $css={{ textAlign: 'left' }}>
+                    {message}
                 </Text>
             </DescriptionBox>
         );
@@ -25,7 +25,7 @@ export function ViolationDetail({ detail, hasSuggestion }: ViolationDetailProps)
                 AI 추천
             </Badge>
             <Text typography="body2" foreground="normal-200" $css={{ textAlign: 'left' }}>
-                {detail}
+                {message}
             </Text>
         </DescriptionBox>
     );

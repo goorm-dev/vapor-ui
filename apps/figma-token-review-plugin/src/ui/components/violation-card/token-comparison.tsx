@@ -6,10 +6,16 @@ import { isHexColor } from './utils';
 type TokenComparisonProps = {
     usedLabel: string;
     suggestedLabel: string;
-    swatch: string | null;
+    leftColor?: string | null;
+    rightColor?: string | null;
 };
 
-export function TokenComparison({ usedLabel, suggestedLabel, swatch }: TokenComparisonProps) {
+export function TokenComparison({
+    usedLabel,
+    suggestedLabel,
+    leftColor,
+    rightColor,
+}: TokenComparisonProps) {
     return (
         <HStack
             $css={{
@@ -19,9 +25,9 @@ export function TokenComparison({ usedLabel, suggestedLabel, swatch }: TokenComp
                 color: '$fg-hint-100',
             }}
         >
-            <TokenChip label={usedLabel} swatch={swatch} tone="used" />
+            <TokenChip label={usedLabel} swatch={leftColor ?? null} tone="used" />
             <ForwardPageOutlineIcon size="20" />
-            <TokenChip label={suggestedLabel} swatch={swatch} tone="suggested" />
+            <TokenChip label={suggestedLabel} swatch={rightColor ?? null} tone="suggested" />
         </HStack>
     );
 }
@@ -66,7 +72,7 @@ type ColorSwatchProps = {
 };
 
 export function ColorSwatch({ value }: ColorSwatchProps) {
-    const isHex = isHexColor(value ?? '');
+    if (!value || !isHexColor(value)) return null;
 
     return (
         <Box
@@ -79,7 +85,7 @@ export function ColorSwatch({ value }: ColorSwatchProps) {
                 borderWidth: '1px',
                 borderStyle: 'solid',
                 borderColor: '$border-normal',
-                ...(isHex ? { backgroundColor: value } : { backgroundColor: '$bg-danger-200' }),
+                backgroundColor: value,
             }}
         />
     );
