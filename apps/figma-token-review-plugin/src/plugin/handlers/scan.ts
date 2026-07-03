@@ -15,7 +15,7 @@ export function initScan(): void {
 
         if (!node || node.type !== 'FRAME') {
             postToUi(
-                { type: 'scan-error', message: '선택한 프레임을 찾을 수 없습니다.' },
+                { type: 'extract-error', message: '선택한 프레임을 찾을 수 없습니다.' },
                 requestId ?? undefined,
             );
             return;
@@ -26,13 +26,13 @@ export function initScan(): void {
 
             if (activeRequestId !== requestId) return;
 
-            postToUi({ type: 'scan-result', payload }, requestId ?? undefined);
+            postToUi({ type: 'extract-result', payload }, requestId ?? undefined);
         } catch (err) {
             if (activeRequestId !== requestId) return;
 
             postToUi(
                 {
-                    type: 'scan-error',
+                    type: 'extract-error',
                     message: err instanceof Error ? err.message : '알 수 없는 오류',
                 },
                 requestId ?? undefined,

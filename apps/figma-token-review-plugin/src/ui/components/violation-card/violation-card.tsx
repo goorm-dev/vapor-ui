@@ -15,6 +15,8 @@ const PROPERTY_LABEL: Record<Violation['type'], string> = {
     'role-mismatch': 'Role',
     'fg-grade-mismatch': 'Text',
     'fg-grade-ambiguous': 'Text',
+    'typo-raw': 'Typography',
+    'typo-styled-override': 'Typography',
 };
 
 type ViolationCardProps = {
