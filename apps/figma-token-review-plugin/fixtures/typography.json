@@ -1,44 +1,44 @@
 {
-  "violations": [],
-  "conformant": [
-    {
-      "nodeId": "1:1636",
-      "name": "하나의 아이디로 구름 서비스를 이용하세요",
-      "token": "display4"
+    "violations": [],
+    "conformant": [
+        {
+            "nodeId": "1:1636",
+            "name": "하나의 아이디로 구름 서비스를 이용하세요",
+            "token": "display4"
+        },
+        {
+            "nodeId": "I1:1639;36344:3831;36344:3860;36344:1125",
+            "name": "Label",
+            "token": "body1"
+        },
+        {
+            "nodeId": "I1:1640;36344:3831;36344:3860;36344:1125",
+            "name": "Label",
+            "token": "code2"
+        },
+        {
+            "nodeId": "I1:1640;36344:3832;34419:33330;34419:33327",
+            "name": "Description",
+            "token": "body2"
+        },
+        {
+            "nodeId": "I1:1642;31537:4214;31454:4188",
+            "name": "BUTTON",
+            "token": "subtitle1"
+        },
+        {
+            "nodeId": "I1:1643;36344:3831;36344:3872;36344:1125",
+            "name": "Label",
+            "token": "body2"
+        }
+    ],
+    "summary": {
+        "total": 6,
+        "violationsCount": 0,
+        "highSeverity": 0
     },
-    {
-      "nodeId": "I1:1639;36344:3831;36344:3860;36344:1125",
-      "name": "Label",
-      "token": "body1"
-    },
-    {
-      "nodeId": "I1:1640;36344:3831;36344:3860;36344:1125",
-      "name": "Label",
-      "token": "code2"
-    },
-    {
-      "nodeId": "I1:1640;36344:3832;34419:33330;34419:33327",
-      "name": "Description",
-      "token": "body2"
-    },
-    {
-      "nodeId": "I1:1642;31537:4214;31454:4188",
-      "name": "BUTTON",
-      "token": "subtitle1"
-    },
-    {
-      "nodeId": "I1:1643;36344:3831;36344:3872;36344:1125",
-      "name": "Label",
-      "token": "body2"
+    "rubric": {
+        "version": "v1",
+        "source": "skills/figma-token-review"
     }
-  ],
-  "summary": {
-    "total": 6,
-    "violationsCount": 0,
-    "highSeverity": 0
-  },
-  "rubric": {
-    "version": "v1",
-    "source": "skills/figma-token-review"
-  }
 }

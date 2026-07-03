@@ -1,0 +1,42 @@
+import { on, postToUi } from '../bus';
+import { callEvaluator } from '../call-evaluator';
+
+let activeRequestId: string | null = null;
+
+export function initScan(): void {
+    on('scan', async (msg) => {
+        if (msg.type !== 'scan') return;
+
+        const requestId = msg.requestId ?? null;
+        activeRequestId = requestId;
+
+        const node = await figma.getNodeByIdAsync(msg.frameId);
+        if (activeRequestId !== requestId) return;
+
+        if (!node || node.type !== 'FRAME') {
+            postToUi(
+                { type: 'scan-error', message: '선택한 프레임을 찾을 수 없습니다.' },
+                requestId ?? undefined,
+            );
+            return;
+        }
+
+        try {
+            const payload = await callEvaluator(msg.frameId);
+
+            if (activeRequestId !== requestId) return;
+
+            postToUi({ type: 'scan-result', payload }, requestId ?? undefined);
+        } catch (err) {
+            if (activeRequestId !== requestId) return;
+
+            postToUi(
+                {
+                    type: 'scan-error',
+                    message: err instanceof Error ? err.message : '알 수 없는 오류',
+                },
+                requestId ?? undefined,
+            );
+        }
+    });
+}
