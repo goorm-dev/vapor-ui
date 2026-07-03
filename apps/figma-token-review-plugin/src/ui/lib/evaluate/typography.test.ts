@@ -149,6 +149,24 @@ describe('evaluateTypography', () => {
         expect(r.conformant[0].token).toBe('body2');
     });
 
+    it('typo-raw: fontSize 가 여러 textStyle 에 매핑되면 suggested 에 모두 포함된다', () => {
+        // fontSize=14 는 schema 에서 subtitle1·body2 두 스타일이 공유 (typography.fontSize.075 = 14px)
+        const r = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'raw',
+                    textStyle: null,
+                    resolved: { fontSize: 14, lineHeight: {}, letterSpacing: {}, fontName: {} },
+                }),
+            ],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('typo-raw');
+        expect(r.violations[0].suggested.length).toBeGreaterThanOrEqual(2);
+        expect(r.violations[0].suggested).toContain('subtitle1');
+        expect(r.violations[0].suggested).toContain('body2');
+    });
+
     it('빈 usages → violations/conformant 모두 빔', () => {
         const r = evaluateTypography([], schema);
         expect(r.violations.length).toBe(0);

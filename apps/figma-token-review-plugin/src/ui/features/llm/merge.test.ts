@@ -165,34 +165,36 @@ function mergeWithTypo(judgment: LlmTypoJudgment) {
     });
 }
 
-it('axis=hierarchy → violation.type=typo-hierarchy', () => {
-    const payload = mergeWithTypo(makeTypoJudgment({ axis: 'hierarchy' }));
-    expect(payload.typography.violations[0].type).toBe('typo-hierarchy');
-});
+describe('heuristicTypo axis mapping / message / filter', () => {
+    it('axis=hierarchy → violation.type=typo-hierarchy', () => {
+        const payload = mergeWithTypo(makeTypoJudgment({ axis: 'hierarchy' }));
+        expect(payload.typography.violations[0].type).toBe('typo-hierarchy');
+    });
 
-it('axis=role → violation.type=typo-role-misfit', () => {
-    const payload = mergeWithTypo(makeTypoJudgment({ axis: 'role' }));
-    expect(payload.typography.violations[0].type).toBe('typo-role-misfit');
-});
+    it('axis=role → violation.type=typo-role-misfit', () => {
+        const payload = mergeWithTypo(makeTypoJudgment({ axis: 'role' }));
+        expect(payload.typography.violations[0].type).toBe('typo-role-misfit');
+    });
 
-it('axis=viewport → violation.type=typo-viewport-misfit', () => {
-    const payload = mergeWithTypo(makeTypoJudgment({ axis: 'viewport' }));
-    expect(payload.typography.violations[0].type).toBe('typo-viewport-misfit');
-});
+    it('axis=viewport → violation.type=typo-viewport-misfit', () => {
+        const payload = mergeWithTypo(makeTypoJudgment({ axis: 'viewport' }));
+        expect(payload.typography.violations[0].type).toBe('typo-viewport-misfit');
+    });
 
-it('matchedRule 이 있으면 message 앞에 대괄호로 붙는다', () => {
-    const payload = mergeWithTypo(makeTypoJudgment({ matchedRule: 'mobile → heading1', reasoning: '모바일임' }));
-    expect(payload.typography.violations[0].message).toBe('[mobile → heading1] 모바일임');
-});
+    it('matchedRule 이 있으면 message 앞에 대괄호로 붙는다', () => {
+        const payload = mergeWithTypo(makeTypoJudgment({ matchedRule: 'mobile → heading1', reasoning: '모바일임' }));
+        expect(payload.typography.violations[0].message).toBe('[mobile → heading1] 모바일임');
+    });
 
-it('matchedRule 이 빈 문자열이면 reasoning 만 사용', () => {
-    const payload = mergeWithTypo(makeTypoJudgment({ matchedRule: '', reasoning: '이유만' }));
-    expect(payload.typography.violations[0].message).toBe('이유만');
-});
+    it('matchedRule 이 빈 문자열이면 reasoning 만 사용', () => {
+        const payload = mergeWithTypo(makeTypoJudgment({ matchedRule: '', reasoning: '이유만' }));
+        expect(payload.typography.violations[0].message).toBe('이유만');
+    });
 
-it('suggested 는 스키마에 없는 이름을 걸러낸다', () => {
-    const payload = mergeWithTypo(
-        makeTypoJudgment({ suggested: ['body1', 'nonexistent-style', 'subtitle1'] }),
-    );
-    expect(payload.typography.violations[0].suggested).toEqual(['body1', 'subtitle1']);
+    it('suggested 는 스키마에 없는 이름을 걸러낸다', () => {
+        const payload = mergeWithTypo(
+            makeTypoJudgment({ suggested: ['body1', 'nonexistent-style', 'subtitle1'] }),
+        );
+        expect(payload.typography.violations[0].suggested).toEqual(['body1', 'subtitle1']);
+    });
 });
