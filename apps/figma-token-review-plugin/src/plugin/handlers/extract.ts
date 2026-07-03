@@ -315,8 +315,11 @@ async function walkTree(root: SceneNode): Promise<NodeInfo[]> {
     ];
     while (stack.length) {
         const { node, parentId } = stack.pop()!;
-        if (shouldSkipNode(node.name)) continue;
         const children = 'children' in node ? (node.children as readonly SceneNode[]) : [];
+        if (shouldSkipNode(node.name)) {
+            for (const c of children) stack.push({ node: c, parentId });
+            continue;
+        }
 
         const info: NodeInfo = {
             id: node.id,
@@ -394,7 +397,10 @@ export async function extractFrame(
     }
 
     async function visit(node: SceneNode): Promise<void> {
-        if (shouldSkipNode(node.name)) return;
+        if (shouldSkipNode(node.name)) {
+            if ('children' in node) for (const ch of node.children) await visit(ch);
+            return;
+        }
         visited++;
         const bv: any = (node as any).boundVariables || {};
         const fillProperty: ColorProperty = node.type === 'TEXT' ? 'text' : 'fill';
