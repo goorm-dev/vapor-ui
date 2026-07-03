@@ -1,4 +1,4 @@
-import type { Category, RawExtract, ScanPayload } from '~/common/schemas';
+import type { Category, LlmContext, RawExtract, ScanPayload } from '~/common/schemas';
 import { evaluateColor } from '~/ui/lib/evaluate/color';
 import { evaluateDimension } from '~/ui/lib/evaluate/dimension';
 import { evaluateRadius } from '~/ui/lib/evaluate/radius';
@@ -29,6 +29,7 @@ const DEFAULT_MODEL = 'claude-sonnet-4-6';
 
 export async function runLlmEvaluation(
     extract: RawExtract,
+    llmContext: LlmContext,
     options: RunLlmEvaluationOptions = {},
 ): Promise<ScanPayload> {
     const env = options.env ?? envFromImportMeta();
@@ -77,9 +78,10 @@ export async function runLlmEvaluation(
         frameName,
         colorSchema,
         textStyleSchema,
+        nodeTree: llmContext.nodeTree,
     });
 
-    const request = buildRequest(llmInput, model);
+    const request = buildRequest(llmInput, llmContext.screenshotB64, model);
     const response = await postLiteLLM(request, { env, signal: options.signal });
     const judgments = parseLlmResponse(response);
 

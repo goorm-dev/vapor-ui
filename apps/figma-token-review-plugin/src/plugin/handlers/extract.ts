@@ -4,6 +4,8 @@ import type {
     ColorProperty,
     ColorUsage,
     DimensionUsage,
+    LlmContext,
+    NodeInfo,
     RadiusUsage,
     RawExtract,
     SchemaMode,
@@ -298,7 +300,48 @@ function groupBy<T extends { nodeId: string }>(
     return [...map.values()];
 }
 
-export async function extractFrame(frameId: string): Promise<RawExtract> {
+async function captureScreenshot(frame: FrameNode): Promise<string> {
+    const bytes = await frame.exportAsync({
+        format: 'PNG',
+        constraint: { type: 'SCALE', value: 1 },
+    });
+    return figma.base64Encode(bytes);
+}
+
+function walkTree(root: SceneNode): NodeInfo[] {
+    const out: NodeInfo[] = [];
+    const stack: Array<{ node: SceneNode; parentId: string | null }> = [{ node: root, parentId: null }];
+    while (stack.length > 0) {
+        const frame = stack.pop();
+        if (!frame) continue;
+        const { node, parentId } = frame;
+        if (shouldSkipNode(node.name)) continue;
+        const children: readonly SceneNode[] =
+            'children' in node ? (node.children as readonly SceneNode[]) : [];
+        out.push({
+            id: node.id,
+            type: node.type,
+            name: node.name,
+            parentId,
+            childIds: children.map((c) => c.id),
+            x: 'x' in node ? (node as { x: number }).x : 0,
+            y: 'y' in node ? (node as { y: number }).y : 0,
+            w: 'width' in node ? (node as { width: number }).width : 0,
+            h: 'height' in node ? (node as { height: number }).height : 0,
+        });
+        // Preserve document order in the output: push children in reverse so pop() yields them in-order.
+        for (let i = children.length - 1; i >= 0; i--) {
+            stack.push({ node: children[i]!, parentId: node.id });
+        }
+    }
+    return out;
+}
+
+export const __testables = { captureScreenshot, walkTree };
+
+export async function extractFrame(
+    frameId: string,
+): Promise<{ extract: RawExtract; llmContext: LlmContext }> {
     figma.skipInvisibleInstanceChildren = true;
 
     const root = await figma.getNodeByIdAsync(frameId);
@@ -614,7 +657,7 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
         ]),
     );
 
-    return {
+    const extract: RawExtract = {
         schemaMode,
         viewport,
         colors: colors as unknown as ColorUsage[],
@@ -629,4 +672,21 @@ export async function extractFrame(frameId: string): Promise<RawExtract> {
             visited,
         },
     };
+
+    let screenshotB64 = '';
+    try {
+        screenshotB64 = await captureScreenshot(root as FrameNode);
+    } catch (err) {
+        console.warn('[figma-token-review-plugin] exportAsync failed, continuing text-only', err);
+    }
+
+    let nodeTree: NodeInfo[] = [];
+    try {
+        nodeTree = walkTree(root as SceneNode);
+    } catch (err) {
+        console.warn('[figma-token-review-plugin] walkTree failed, continuing without tree', err);
+        nodeTree = [];
+    }
+
+    return { extract, llmContext: { screenshotB64, nodeTree } };
 }

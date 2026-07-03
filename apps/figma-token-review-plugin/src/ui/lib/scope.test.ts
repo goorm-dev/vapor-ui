@@ -12,8 +12,8 @@ describe('PROPERTY_SCOPE', () => {
         expect(PROPERTY_SCOPE['fill-on-text']).toEqual(['foreground']);
     });
 
-    it('stroke 는 border, foreground 둘 다 허용한다', () => {
-        expect(PROPERTY_SCOPE.stroke).toEqual(['border', 'foreground']);
+    it('stroke 는 border role 만 허용한다', () => {
+        expect(PROPERTY_SCOPE.stroke).toEqual(['border']);
     });
 
     it('padding 과 gap 은 space role', () => {
