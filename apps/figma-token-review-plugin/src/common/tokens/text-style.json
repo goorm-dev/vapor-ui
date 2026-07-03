@@ -345,16 +345,11 @@
             }
         },
         "code1": {
-            "$description": "The high code style for monospaced content such as code snippets, keyboard shortcuts, or inline technical strings.",
+            "$description": "The first element in the code hierarchy. The default code text scale.",
             "$extensions": {
                 "io.goorm.vapor": {
-                    "when": [
-                        "inline code snippets, keyboard shortcuts, identifiers, or technical strings that need monospaced rendering at the standard code size"
-                    ],
-                    "avoid": [
-                        "prose or UI labels that are not code → body2 or body3",
-                        "when smaller code text is needed in tighter layouts → code2"
-                    ]
+                    "when": ["code block or inline code text"],
+                    "avoid": ["non-code text"]
                 }
             },
             "$value": {
@@ -366,16 +361,11 @@
             }
         },
         "code2": {
-            "$description": "The low code style for smaller monospaced content in tighter layouts.",
+            "$description": "The second and smallest element in the code hierarchy. The smallest code text scale.",
             "$extensions": {
                 "io.goorm.vapor": {
-                    "when": [
-                        "compact inline code, shortcut hints, or monospaced technical strings in tight layouts where code1 is too prominent"
-                    ],
-                    "avoid": [
-                        "prose or UI labels that are not code → body3 or body4",
-                        "when standard code size is available → code1"
-                    ]
+                    "when": ["code block or inline code text"],
+                    "avoid": ["non-code text"]
                 }
             },
             "$value": {

@@ -210,12 +210,7 @@ type ViolationPanelProps = {
     passJudgments?: LlmPassJudgment[];
 };
 
-function ViolationPanel({
-    violations,
-    summary,
-    schemaMode,
-    passJudgments,
-}: ViolationPanelProps) {
+function ViolationPanel({ violations, summary, schemaMode, passJudgments }: ViolationPanelProps) {
     const { frameOnes, textOnes } = useMemo(
         () => splitByKind(sortViolations(violations)),
         [violations],
@@ -238,58 +233,7 @@ function ViolationPanel({
                 violations={textOnes}
                 schemaMode={schemaMode}
             />
-            {hasPass && <PassJudgmentsSection judgments={passJudgments} />}
         </VStack>
-    );
-}
-
-function PassJudgmentsSection({ judgments }: { judgments: LlmPassJudgment[] }) {
-    return (
-        <VStack $css={{ gap: '$150', width: '100%' }}>
-            <HStack $css={{ gap: '$100', alignItems: 'center' }}>
-                <Text typography="subtitle1" foreground="normal-200">
-                    AI 통과 판정
-                </Text>
-                <Badge size="sm" colorPalette="success">
-                    {judgments.length}
-                </Badge>
-            </HStack>
-            <VStack $css={{ gap: '$100' }}>
-                {judgments.map((j) => (
-                    <PassJudgmentCard key={`${j.nodeId}-${j.axis}`} judgment={j} />
-                ))}
-            </VStack>
-        </VStack>
-    );
-}
-
-function PassJudgmentCard({ judgment }: { judgment: LlmPassJudgment }) {
-    return (
-        <Box
-            $css={{
-                border: '1px solid $border-normal',
-                borderRadius: '$100',
-                padding: '$150',
-                backgroundColor: '$bg-canvas-100',
-            }}
-        >
-            <HStack $css={{ gap: '$100', alignItems: 'baseline' }}>
-                <Text typography="body2" foreground="normal-200">
-                    {judgment.name}
-                </Text>
-                <Text typography="body4" foreground="hint-100">
-                    {judgment.token} · {judgment.axis} · {judgment.confidence}
-                </Text>
-            </HStack>
-            {judgment.matchedRule && (
-                <Text typography="body4" foreground="hint-100">
-                    when: {judgment.matchedRule}
-                </Text>
-            )}
-            <Text typography="body3" foreground="normal-200">
-                {judgment.reasoning}
-            </Text>
-        </Box>
     );
 }
 

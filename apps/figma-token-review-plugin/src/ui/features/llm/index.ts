@@ -91,6 +91,7 @@ export async function runLlmEvaluation(
         schemaMode: extract.schemaMode,
         textStyleSchema,
     };
+
     return mergeScanPayload(mergeArgs);
 }
 
