@@ -13,6 +13,8 @@ export type LlmTypoJudgment = {
     token: string;
     verdict: 'PASS' | 'FAIL';
     confidence: Confidence;
+    axis: 'hierarchy' | 'role' | 'viewport';
+    matchedRule: string;
     reasoning: string;
     suggested: string[];
 };
@@ -60,15 +62,26 @@ function isTypoJudgment(v: unknown): v is LlmTypoJudgment {
         typeof o.token === 'string' &&
         (o.verdict === 'PASS' || o.verdict === 'FAIL') &&
         (o.confidence === 'HIGH' || o.confidence === 'MED' || o.confidence === 'LOW') &&
+        (o.axis === 'hierarchy' || o.axis === 'role' || o.axis === 'viewport') &&
+        typeof o.matchedRule === 'string' &&
         typeof o.reasoning === 'string' &&
         Array.isArray(o.suggested)
     );
 }
 
 function isColorJudgment(v: unknown): v is LlmColorJudgment {
-    if (!isTypoJudgment(v)) return false;
-    const o = v as unknown as LlmColorJudgment;
-    return o.property === 'fill' || o.property === 'fill-on-text' || o.property === 'stroke';
+    if (!v || typeof v !== 'object') return false;
+    const o = v as Record<string, unknown>;
+    return (
+        typeof o.nodeId === 'string' &&
+        typeof o.name === 'string' &&
+        typeof o.token === 'string' &&
+        (o.property === 'fill' || o.property === 'fill-on-text' || o.property === 'stroke') &&
+        (o.verdict === 'PASS' || o.verdict === 'FAIL') &&
+        (o.confidence === 'HIGH' || o.confidence === 'MED' || o.confidence === 'LOW') &&
+        typeof o.reasoning === 'string' &&
+        Array.isArray(o.suggested)
+    );
 }
 
 function isJudgments(value: unknown): value is LlmJudgments {
