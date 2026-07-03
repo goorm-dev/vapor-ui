@@ -49,21 +49,46 @@ describe('applyRecommendations', () => {
     });
 
     // Case 1b: Raw color with no scope match → primitive fallback
-    it('raw color(token-not-used)에서 scope 일치 없으면 primitive 포함한 hexIndex 토큰 반환', () => {
-        // foreground hex used on fill-on-text property
-        const fgEntry = Object.entries(colorSchema.semantic).find(
-            ([, m]) => m.role === 'foreground' && m.hex && m.status !== 'do-not-use',
-        );
-        if (!fgEntry) return;
-        const [, fgMeta] = fgEntry;
-        const hex = fgMeta.hex!;
+    it('raw color(token-not-used)에서 scope 일치 없으면 동일 hex primitive 토큰 반환', () => {
+        // Find a hex that exists in primitive but NOT in hexIndex (semantic) — or use a hex
+        // that has only foreground semantics paired with a fill property (expects background).
+        // Strategy: find any primitive hex that has ONLY foreground semantics.
+        // If none, pick any primitive and a property whose allowed roles don't include any semantic for that hex.
+        let testHex: string | null = null;
+        let expectedPrimKey: string | null = null;
 
+        for (const [primKey, primHex] of Object.entries(colorSchema.primitive)) {
+            const semTokens = colorSchema.hexIndex.get(primHex.toLowerCase()) ?? [];
+            // All semantic tokens for this hex must be foreground-only
+            const allForeground = semTokens.length > 0 && semTokens.every(
+                (t) => colorSchema.semantic[t]?.role === 'foreground',
+            );
+            if (allForeground) {
+                testHex = primHex;
+                expectedPrimKey = primKey;
+                break;
+            }
+            // Or hex not in semantic at all (pure primitive)
+            if (semTokens.length === 0) {
+                testHex = primHex;
+                expectedPrimKey = primKey;
+                break;
+            }
+        }
+
+        if (!testHex || !expectedPrimKey) return; // no suitable primitive found, skip
+
+        // Use property 'fill' (expects 'background' role) — no foreground semantic will scope-match
         const out = applyRecommendations(
-            [v({ type: 'token-not-used', property: 'fill-on-text', value: hex })],
+            [v({ type: 'token-not-used', property: 'fill', value: testHex })],
             { colorSchema, ...dim },
         );
-        // At minimum the foreground token itself should be suggested (scope + hex match)
-        expect(out[0].suggested.length).toBeGreaterThan(0);
+        // Primitive key must appear in suggestions (primitive fallback path)
+        expect(out[0].suggested).toContain(expectedPrimKey);
+        // All suggested tokens must be primitive keys (not semantic paths)
+        for (const s of out[0].suggested) {
+            expect(colorSchema.semantic[s]).toBeUndefined();
+        }
     });
 
     // Case 2: Raw dimension/space/radius/shadow → 동일 value 토큰
