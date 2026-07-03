@@ -89,7 +89,9 @@ export async function runLlmEvaluation(
         deterministic: det,
         llm: judgments,
         schemaMode: extract.schemaMode,
+        textStyleSchema,
     };
+
     return mergeScanPayload(mergeArgs);
 }
 

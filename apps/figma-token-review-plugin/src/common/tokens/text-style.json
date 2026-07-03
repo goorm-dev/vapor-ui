@@ -343,6 +343,38 @@
                 "lineHeight": "{typography.lineHeight.025}",
                 "letterSpacing": "{typography.letterSpacing.000}"
             }
+        },
+        "code1": {
+            "$description": "The first element in the code hierarchy. The default code text scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["code block or inline code text"],
+                    "avoid": ["non-code text"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.code}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.075}",
+                "lineHeight": "{typography.lineHeight.075}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
+        },
+        "code2": {
+            "$description": "The second and smallest element in the code hierarchy. The smallest code text scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["code block or inline code text"],
+                    "avoid": ["non-code text"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.code}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.050}",
+                "lineHeight": "{typography.lineHeight.050}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
         }
     }
 }

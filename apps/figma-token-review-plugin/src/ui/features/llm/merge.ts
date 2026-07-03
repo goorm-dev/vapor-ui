@@ -3,10 +3,13 @@ import type {
     Conformant,
     EvaluateOutput,
     EvaluateSummary,
+    LlmPassJudgment,
     ScanPayload,
     SchemaMode,
+    ViolationType,
     Violation,
 } from '~/common/schemas';
+import type { TextStyleSchema } from '~/ui/lib/loaders/typography';
 
 import type { LlmColorJudgment, LlmJudgments, LlmTypoJudgment } from './parse';
 
@@ -16,20 +19,30 @@ export type MergeArgs = {
     deterministic: Record<Category, CategoryDet>;
     llm: LlmJudgments;
     schemaMode: SchemaMode;
+    textStyleSchema: TextStyleSchema;
 };
 
-function heuristicTypo(j: LlmTypoJudgment): Violation {
+const AXIS_TO_TYPE: Record<LlmTypoJudgment['axis'], ViolationType> = {
+    hierarchy: 'typo-hierarchy',
+    role: 'typo-role-misfit',
+    viewport: 'typo-viewport-misfit',
+};
+
+function heuristicTypo(j: LlmTypoJudgment, schema: TextStyleSchema): Violation {
+    const known = new Set(schema.order);
+    const filtered = j.suggested.filter((s) => known.has(s));
+    const message = j.matchedRule ? `[${j.matchedRule}] ${j.reasoning}` : j.reasoning;
     return {
         nodeId: j.nodeId,
         name: j.name,
         property: 'textStyle',
         token: j.token,
         value: null,
-        type: 'typo-hierarchy',
+        type: AXIS_TO_TYPE[j.axis],
         severity: 'high',
         origin: 'llm',
-        message: j.reasoning,
-        suggested: j.suggested,
+        message,
+        suggested: filtered,
         confidence: j.confidence,
     };
 }
@@ -74,21 +87,43 @@ function summarize(
     };
 }
 
+function typoPassJudgments(judgments: LlmTypoJudgment[]): LlmPassJudgment[] {
+    return judgments
+        .filter((j) => j.verdict === 'PASS')
+        .map((j) => ({
+            nodeId: j.nodeId,
+            name: j.name,
+            token: j.token,
+            axis: j.axis,
+            matchedRule: j.matchedRule,
+            reasoning: j.reasoning,
+            confidence: j.confidence,
+        }));
+}
+
 export function mergeScanPayload(args: MergeArgs): ScanPayload {
-    const { deterministic, llm, schemaMode } = args;
+    const { deterministic, llm, schemaMode, textStyleSchema } = args;
 
     const colorHeuristics = llm.semanticColor
         .filter((j) => j.verdict === 'FAIL')
         .map(heuristicColor);
-    const typoHeuristics = llm.typography.filter((j) => j.verdict === 'FAIL').map(heuristicTypo);
+    const typoHeuristics = llm.typography
+        .filter((j) => j.verdict === 'FAIL')
+        .map((j) => heuristicTypo(j, textStyleSchema));
+    const typoPasses = typoPassJudgments(llm.typography);
 
-    const buildOutput = (cat: Category, extra: Violation[]): EvaluateOutput => {
+    const buildOutput = (
+        cat: Category,
+        extra: Violation[],
+        passJudgments?: LlmPassJudgment[],
+    ): EvaluateOutput => {
         const d = deterministic[cat];
         const violations = [...d.violations, ...extra];
         return {
             violations,
             conformant: d.conformant,
             summary: summarize(violations, d.conformant, d.total),
+            ...(passJudgments && passJudgments.length > 0 ? { passJudgments } : {}),
         };
     };
 
@@ -96,7 +131,7 @@ export function mergeScanPayload(args: MergeArgs): ScanPayload {
         color: buildOutput('color', colorHeuristics),
         space: buildOutput('space', []),
         dimension: buildOutput('dimension', []),
-        typography: buildOutput('typography', typoHeuristics),
+        typography: buildOutput('typography', typoHeuristics, typoPasses),
         borderRadius: buildOutput('borderRadius', []),
         shadow: buildOutput('shadow', []),
         schemaMode,
