@@ -3,7 +3,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { Badge, Box, Button, Collapsible, HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-ui/icons';
 
-import type { EvaluateOutput, ScanPayload, SchemaMode, Violation } from '~/common/schemas';
+import type {
+    EvaluateOutput,
+    LlmPassJudgment,
+    ScanPayload,
+    SchemaMode,
+    Violation,
+} from '~/common/schemas';
 
 import { toastManager } from '../components/toast';
 import { ViolationCard } from '../components/violation-card';
@@ -59,6 +65,7 @@ export function ScanResultPage({ payload }: Props) {
                     violations={payload.typography.violations}
                     summary={payload.typography.summary}
                     schemaMode={schemaMode}
+                    passJudgments={payload.typography.passJudgments}
                 />
             </Tabs.Panel>
             <Tabs.Panel value="borderRadius">
@@ -200,15 +207,22 @@ type ViolationPanelProps = {
     violations: Violation[];
     summary: EvaluateOutput['summary'];
     schemaMode: SchemaMode;
+    passJudgments?: LlmPassJudgment[];
 };
 
-function ViolationPanel({ violations, summary, schemaMode }: ViolationPanelProps) {
+function ViolationPanel({
+    violations,
+    summary,
+    schemaMode,
+    passJudgments,
+}: ViolationPanelProps) {
     const { frameOnes, textOnes } = useMemo(
         () => splitByKind(sortViolations(violations)),
         [violations],
     );
+    const hasPass = !!passJudgments && passJudgments.length > 0;
 
-    if (violations.length === 0) return <EmptyState summary={summary} />;
+    if (violations.length === 0 && !hasPass) return <EmptyState summary={summary} />;
 
     return (
         <VStack $css={{ gap: '$300', width: '100%', flex: 1, padding: '$200' }}>
@@ -224,7 +238,58 @@ function ViolationPanel({ violations, summary, schemaMode }: ViolationPanelProps
                 violations={textOnes}
                 schemaMode={schemaMode}
             />
+            {hasPass && <PassJudgmentsSection judgments={passJudgments} />}
         </VStack>
+    );
+}
+
+function PassJudgmentsSection({ judgments }: { judgments: LlmPassJudgment[] }) {
+    return (
+        <VStack $css={{ gap: '$150', width: '100%' }}>
+            <HStack $css={{ gap: '$100', alignItems: 'center' }}>
+                <Text typography="subtitle1" foreground="normal-200">
+                    AI 통과 판정
+                </Text>
+                <Badge size="sm" colorPalette="success">
+                    {judgments.length}
+                </Badge>
+            </HStack>
+            <VStack $css={{ gap: '$100' }}>
+                {judgments.map((j) => (
+                    <PassJudgmentCard key={`${j.nodeId}-${j.axis}`} judgment={j} />
+                ))}
+            </VStack>
+        </VStack>
+    );
+}
+
+function PassJudgmentCard({ judgment }: { judgment: LlmPassJudgment }) {
+    return (
+        <Box
+            $css={{
+                border: '1px solid $border-normal',
+                borderRadius: '$100',
+                padding: '$150',
+                backgroundColor: '$bg-canvas-100',
+            }}
+        >
+            <HStack $css={{ gap: '$100', alignItems: 'baseline' }}>
+                <Text typography="body2" foreground="normal-200">
+                    {judgment.name}
+                </Text>
+                <Text typography="body4" foreground="hint-100">
+                    {judgment.token} · {judgment.axis} · {judgment.confidence}
+                </Text>
+            </HStack>
+            {judgment.matchedRule && (
+                <Text typography="body4" foreground="hint-100">
+                    when: {judgment.matchedRule}
+                </Text>
+            )}
+            <Text typography="body3" foreground="normal-200">
+                {judgment.reasoning}
+            </Text>
+        </Box>
     );
 }
 

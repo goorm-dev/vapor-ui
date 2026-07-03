@@ -3,6 +3,7 @@ import type {
     Conformant,
     EvaluateOutput,
     EvaluateSummary,
+    LlmPassJudgment,
     ScanPayload,
     SchemaMode,
     ViolationType,
@@ -86,6 +87,20 @@ function summarize(
     };
 }
 
+function typoPassJudgments(judgments: LlmTypoJudgment[]): LlmPassJudgment[] {
+    return judgments
+        .filter((j) => j.verdict === 'PASS')
+        .map((j) => ({
+            nodeId: j.nodeId,
+            name: j.name,
+            token: j.token,
+            axis: j.axis,
+            matchedRule: j.matchedRule,
+            reasoning: j.reasoning,
+            confidence: j.confidence,
+        }));
+}
+
 export function mergeScanPayload(args: MergeArgs): ScanPayload {
     const { deterministic, llm, schemaMode, textStyleSchema } = args;
 
@@ -95,14 +110,20 @@ export function mergeScanPayload(args: MergeArgs): ScanPayload {
     const typoHeuristics = llm.typography
         .filter((j) => j.verdict === 'FAIL')
         .map((j) => heuristicTypo(j, textStyleSchema));
+    const typoPasses = typoPassJudgments(llm.typography);
 
-    const buildOutput = (cat: Category, extra: Violation[]): EvaluateOutput => {
+    const buildOutput = (
+        cat: Category,
+        extra: Violation[],
+        passJudgments?: LlmPassJudgment[],
+    ): EvaluateOutput => {
         const d = deterministic[cat];
         const violations = [...d.violations, ...extra];
         return {
             violations,
             conformant: d.conformant,
             summary: summarize(violations, d.conformant, d.total),
+            ...(passJudgments && passJudgments.length > 0 ? { passJudgments } : {}),
         };
     };
 
@@ -110,7 +131,7 @@ export function mergeScanPayload(args: MergeArgs): ScanPayload {
         color: buildOutput('color', colorHeuristics),
         space: buildOutput('space', []),
         dimension: buildOutput('dimension', []),
-        typography: buildOutput('typography', typoHeuristics),
+        typography: buildOutput('typography', typoHeuristics, typoPasses),
         borderRadius: buildOutput('borderRadius', []),
         shadow: buildOutput('shadow', []),
         schemaMode,

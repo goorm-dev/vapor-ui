@@ -83,10 +83,21 @@ export type EvaluateSummary = {
     heuristicViolations: number;
 };
 
+export type LlmPassJudgment = {
+    nodeId: string;
+    name: string;
+    token: string;
+    axis: 'hierarchy' | 'role' | 'viewport';
+    matchedRule: string;
+    reasoning: string;
+    confidence: Confidence;
+};
+
 export type EvaluateOutput = {
     violations: Violation[];
     conformant: Conformant[];
     summary: EvaluateSummary;
+    passJudgments?: LlmPassJudgment[];
 };
 
 export type ScanPayload = {
