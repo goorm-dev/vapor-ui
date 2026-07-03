@@ -85,7 +85,6 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
     }
 
     const typographyTargets: TypographyTarget[] = [];
-    const usedTextStyles = new Set<string>();
     for (const conf of deterministicConformant.typography) {
         const u = typoByNode.get(conf.nodeId);
         if (!u || !conf.token) continue;
@@ -95,7 +94,6 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
             characters: u.characters,
             textStyle: conf.token,
         });
-        usedTextStyles.add(conf.token);
     }
 
     const colorRubric: Record<string, ColorMetaSubset> = {};
@@ -112,10 +110,9 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
 
     const totalRanks = textStyleSchema.order.length;
     const textStyleRubric: Record<string, TextStyleMetaSubset> = {};
-    for (const t of usedTextStyles) {
-        const meta = textStyleSchema.styles[t];
-        if (!meta) continue;
-        textStyleRubric[t] = {
+    for (const name of textStyleSchema.order) {
+        const meta = textStyleSchema.styles[name];
+        textStyleRubric[name] = {
             rank: meta.rank,
             totalRanks,
             when: meta.when,
