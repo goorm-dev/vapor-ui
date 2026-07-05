@@ -113,12 +113,12 @@ Value-first 단독 (`{ backgroundColor: { default: ..., _hover: ..., sm: ... } }
 
 ### 5.1 키 종류
 
-| 키 | 의미 | override 가능 |
-|---|---|---|
-| `default` | 조건 없음 (base) | - |
-| `sm` / `md` / `lg` | 명명 브레이크포인트 | PostCSS로 가능 |
-| `_before` / `_after` / `_hover` / `_focus` / `_focusVisible` / `_focusWithin` / `_active` | Pseudo selector | 불가 |
-| `'@media (<any-query>)'` | Raw media query | 불가 (의도된 일회성) |
+| 키                                                                                        | 의미                | override 가능        |
+| ----------------------------------------------------------------------------------------- | ------------------- | -------------------- |
+| `default`                                                                                 | 조건 없음 (base)    | -                    |
+| `sm` / `md` / `lg`                                                                        | 명명 브레이크포인트 | PostCSS로 가능       |
+| `_before` / `_after` / `_hover` / `_focus` / `_focusVisible` / `_focusWithin` / `_active` | Pseudo selector     | 불가                 |
+| `'@media (<any-query>)'`                                                                  | Raw media query     | 불가 (의도된 일회성) |
 
 매크로 키 구분 규칙: `default` → unconditional, `_` prefix → pseudo, `@media ` prefix → raw media, 기타 식별자 → named BP.
 
@@ -180,11 +180,13 @@ _mq3a7f9-p-400               // @media (min-width: 2560px): padding $400
 ### 6.2 CSS 산출 예
 
 ```tsx
-<Box className={$style({
-    padding: { default: '$200', sm: '$100', '@media (min-width: 2560px)': '$400' },
-    backgroundColor: '$primary',
-    color: { default: '$gray-700', _hover: '$gray-900' },
-})} />
+<Box
+    className={$style({
+        padding: { default: '$200', sm: '$100', '@media (min-width: 2560px)': '$400' },
+        backgroundColor: '$primary',
+        color: { default: '$gray-700', _hover: '$gray-900' },
+    })}
+/>
 ```
 
 →
@@ -193,24 +195,40 @@ _mq3a7f9-p-400               // @media (min-width: 2560px): padding $400
 @custom-media --vapor-sm (max-width: 767px);
 
 @layer vapor.utilities {
-    ._p-200 { padding: var(--vapor-size-space-200); }
-    ._bg-primary { background-color: var(--vapor-color-primary); }
-    ._color-gray-700 { color: var(--vapor-color-gray-700); }
+    ._p-200 {
+        padding: var(--vapor-size-space-200);
+    }
+    ._bg-primary {
+        background-color: var(--vapor-color-primary);
+    }
+    ._color-gray-700 {
+        color: var(--vapor-color-gray-700);
+    }
 
     @media (--vapor-sm) {
-        ._sm-p-100 { padding: var(--vapor-size-space-100); }
+        ._sm-p-100 {
+            padding: var(--vapor-size-space-100);
+        }
     }
     @media (min-width: 2560px) {
-        ._mq-<hash>-p-400 { padding: var(--vapor-size-space-400); }
+        ._mq-<hash > -p-400 {
+            padding: var(--vapor-size-space-400);
+        }
     }
-    ._hover-color-gray-900:hover { color: var(--vapor-color-gray-900); }
+    ._hover-color-gray-900:hover {
+        color: var(--vapor-color-gray-900);
+    }
 }
 ```
 
 호출부는 다음과 같이 치환된다:
 
 ```tsx
-<Box className={'_p-200 _sm-p-100 _mq-<hash>-p-400 _bg-primary _color-gray-700 _hover-color-gray-900'} />
+<Box
+    className={
+        '_p-200 _sm-p-100 _mq-<hash>-p-400 _bg-primary _color-gray-700 _hover-color-gray-900'
+    }
+/>
 ```
 
 ### 6.3 Emit order (cascade 결정성)
@@ -285,8 +303,8 @@ export default {
 
 ```ts
 // vite.config.ts
-import { defineConfig } from 'vite';
 import vaporStyleMacro from '@vapor-ui/style-macro';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
     plugins: [vaporStyleMacro.vite()],
@@ -320,12 +338,12 @@ unplugin이 `.rollup()`, `.esbuild()`, `.webpack()`를 그대로 노출 → Stor
 
 ## 9. 기존 `$css`와의 공존 / 마이그레이션
 
-| Phase | 버전 | 작업 | 사용자 영향 |
-|---|---|---|---|
-| 1. 도입 | minor (예: 1.4.0) | `$style` + `@vapor-ui/style-macro` 출시. `$css`에 `@deprecated` JSDoc. 문서/Storybook 신규 예제 | 변경 강제 없음. 신규 코드부터 `$style` 권장 |
-| 2. 안정화 | 후속 patches | 토큰 타입 확정, codemod 검증, 통합 이슈 fix | - |
-| 3. 경고 | minor (예: 1.7.0) | `$css` 사용 시 dev 모드 1회 console.warn. codemod 공식 릴리스 | warn 노출. 동작 동일 |
-| 4. 제거 | next major (예: 2.0.0) | `$css` prop 제거, `Sprinkles` 타입 제거, `rainbow-sprinkles` peer/dep 제거, atomic prebuild CSS 산출물 제거 | 마이그레이션 필수 |
+| Phase     | 버전                   | 작업                                                                                                        | 사용자 영향                                 |
+| --------- | ---------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| 1. 도입   | minor (예: 1.4.0)      | `$style` + `@vapor-ui/style-macro` 출시. `$css`에 `@deprecated` JSDoc. 문서/Storybook 신규 예제             | 변경 강제 없음. 신규 코드부터 `$style` 권장 |
+| 2. 안정화 | 후속 patches           | 토큰 타입 확정, codemod 검증, 통합 이슈 fix                                                                 | -                                           |
+| 3. 경고   | minor (예: 1.7.0)      | `$css` 사용 시 dev 모드 1회 console.warn. codemod 공식 릴리스                                               | warn 노출. 동작 동일                        |
+| 4. 제거   | next major (예: 2.0.0) | `$css` prop 제거, `Sprinkles` 타입 제거, `rainbow-sprinkles` peer/dep 제거, atomic prebuild CSS 산출물 제거 | 마이그레이션 필수                           |
 
 ### 9.1 Codemod (`packages/codemod`)
 

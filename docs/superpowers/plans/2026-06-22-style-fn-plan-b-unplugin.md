@@ -51,33 +51,40 @@ packages/style-macro/
 ## Task 1: unplugin core + per-file virtual module
 
 **Files:**
+
 - Modify: `packages/style-macro/package.json` (add `unplugin` dep + sub-export)
 - Create: `packages/style-macro/src/unplugin-types.ts`
 - Create: `packages/style-macro/src/unplugin.ts`
 - Create: `packages/style-macro/src/unplugin-entry.ts`
 
 **Interfaces:**
+
 - Consumes: Plan A `transform`, `loadManifest`, types.
 - Produces:
-  ```ts
-  export interface VaporStyleOptions {
-      tokensManifestPath?: string;
-      importSource?: string; // default '@vapor-ui/core'
-      importName?: string;   // default '$style'
-      include?: (id: string) => boolean;
-  }
-  declare const vaporStyleMacro: ReturnType<typeof createUnplugin<VaporStyleOptions>>;
-  export default vaporStyleMacro;
-  ```
-  exposes `.vite()`, `.webpack()`, `.rollup()`, `.esbuild()`.
+
+    ```ts
+    export interface VaporStyleOptions {
+        tokensManifestPath?: string;
+        importSource?: string; // default '@vapor-ui/core'
+        importName?: string; // default '$style'
+        include?: (id: string) => boolean;
+    }
+    declare const vaporStyleMacro: ReturnType<typeof createUnplugin<VaporStyleOptions>>;
+    export default vaporStyleMacro;
+    ```
+
+    exposes `.vite()`, `.webpack()`, `.rollup()`, `.esbuild()`.
 
 - [ ] **Step 1: Update `package.json`**
 
 Add to `dependencies`:
+
 ```json
 { "unplugin": "^2.0.0" }
 ```
+
 Add to `exports`:
+
 ```json
 {
     "./unplugin": {
@@ -87,7 +94,9 @@ Add to `exports`:
     }
 }
 ```
+
 Add `src/unplugin-entry.ts` to `tsup.config.ts` `entry`:
+
 ```ts
 entry: ['src/index.ts', 'src/unplugin-entry.ts'],
 ```
@@ -128,10 +137,10 @@ import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { createUnplugin } from 'unplugin';
 
-import { transform } from './transform';
-import { loadManifest } from './tokens';
 import { formatBuildError } from './code-frame';
-import type { ResolvedOptions, VaporStyleOptions, FileRecord } from './unplugin-types';
+import { loadManifest } from './tokens';
+import { transform } from './transform';
+import type { FileRecord, ResolvedOptions, VaporStyleOptions } from './unplugin-types';
 
 const VIRTUAL_PREFIX = '\0virtual:vapor-style/';
 const VIRTUAL_SUFFIX = '.css';
@@ -147,7 +156,8 @@ function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
     // Resolves the package-exported entry `@vapor-ui/core/tokens.manifest.json`
     // (NOT a deep `/dist/...` path — once `exports` is declared, deep imports are
     // blocked unless explicitly whitelisted). Plan C exposes this exact entry.
-    const manifestPath = opts.tokensManifestPath ?? require_.resolve('@vapor-ui/core/tokens.manifest.json');
+    const manifestPath =
+        opts.tokensManifestPath ?? require_.resolve('@vapor-ui/core/tokens.manifest.json');
     return {
         manifest: loadManifest(manifestPath),
         importSource: opts.importSource ?? '@vapor-ui/core',
@@ -201,7 +211,9 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
                 importName: opts.importName,
             });
             if (result.errors.length) {
-                const msg = result.errors.map((e) => formatBuildError(e, code, filename)).join('\n\n');
+                const msg = result.errors
+                    .map((e) => formatBuildError(e, code, filename))
+                    .join('\n\n');
                 this.error(msg);
                 return null;
             }
@@ -241,6 +253,7 @@ git commit -m "feat(style-macro): unplugin adapter with virtual CSS module"
 ## Task 2: Fixture project skeleton
 
 **Files:**
+
 - Create: `packages/style-macro/tests/unplugin/fixtures/package.json`
 - Create: `packages/style-macro/tests/unplugin/fixtures/manifest.json` (copy of `tests/fixtures/manifest.sample.json`)
 - Create: `packages/style-macro/tests/unplugin/fixtures/src/$style-stub.ts`
@@ -249,6 +262,7 @@ git commit -m "feat(style-macro): unplugin adapter with virtual CSS module"
 - Create: `packages/style-macro/tests/unplugin/fixtures/src/input-error.tsx`
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces: a self-contained mini-project the integration tests build.
 
@@ -267,6 +281,7 @@ Run: `cp packages/style-macro/tests/fixtures/manifest.sample.json packages/style
 - [ ] **Step 3: Write the `$style` stub**
 
 `fixtures/src/$style-stub.ts`:
+
 ```ts
 // Used as the macro's importSource. After build the call is removed; the runtime stub returns ''
 // to keep the source type-checkable in editor mode.
@@ -278,20 +293,29 @@ export function $style(_: Record<string, unknown>): string {
 - [ ] **Step 4: Write fixture inputs**
 
 `fixtures/src/input-static.tsx`:
+
 ```tsx
 import { $style } from './$style-stub';
+
 export const cls = $style({ padding: '$400', backgroundColor: '$primary' });
 ```
 
 `fixtures/src/input-responsive.tsx`:
+
 ```tsx
 import { $style } from './$style-stub';
-export const cls = $style({ padding: { default: '$200', sm: '$100' }, color: { default: '$bg-gray-100', _hover: '$primary' } });
+
+export const cls = $style({
+    padding: { default: '$200', sm: '$100' },
+    color: { default: '$bg-gray-100', _hover: '$primary' },
+});
 ```
 
 `fixtures/src/input-error.tsx`:
+
 ```tsx
 import { $style } from './$style-stub';
+
 export const cls = $style({ padding: '$primary' });
 ```
 
@@ -307,28 +331,32 @@ git commit -m "test(style-macro): unplugin integration fixtures"
 ## Task 3: Vite build integration test
 
 **Files:**
+
 - Modify: `packages/style-macro/package.json` (devDeps: `vite`, no Vite plugins needed)
 - Create: `packages/style-macro/tests/unplugin/vite-build.test.ts`
 
 **Interfaces:**
+
 - Consumes: Task 1 unplugin entry, Task 2 fixtures.
 - Produces: assertion that emitted output contains the expected `@layer vapor.utilities { ... }` CSS and that `cls` is a static string literal.
 
 - [ ] **Step 1: Add devDependency**
 
 Add to `packages/style-macro/package.json` devDeps:
+
 ```json
 { "vite": "^5.0.0" }
 ```
+
 Run: `pnpm install`.
 
 - [ ] **Step 2: Write `tests/unplugin/vite-build.test.ts`**
 
 ```ts
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { build } from 'vite';
 import { describe, expect, it } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import { join, resolve } from 'node:path';
 
 import vaporStyleMacro from '../../src/unplugin';
 
@@ -352,7 +380,11 @@ async function buildEntry(entry: string) {
         ],
     });
     if (!Array.isArray(out)) throw new Error('expected single build output');
-    const assets = (out[0] as { output: Array<{ type: string; fileName: string; source?: string; code?: string }> }).output;
+    const assets = (
+        out[0] as {
+            output: Array<{ type: string; fileName: string; source?: string; code?: string }>;
+        }
+    ).output;
     const js = assets.find((a) => a.fileName.endsWith('.js'));
     const css = assets.find((a) => a.fileName.endsWith('.css'));
     return { js: js?.code ?? '', css: (css?.source as string) ?? '' };
@@ -392,28 +424,36 @@ git commit -m "test(style-macro): vite integration build"
 ## Task 4: Rollup build integration test
 
 **Files:**
+
 - Modify: `packages/style-macro/package.json` (devDeps: `rollup`, `@rollup/plugin-typescript`)
 - Create: `packages/style-macro/tests/unplugin/rollup-build.test.ts`
 
 **Interfaces:**
+
 - Consumes: Task 1 unplugin entry.
 - Produces: confirmation that Rollup's CSS-by-import-side-effect path receives the virtual CSS module (it does not bundle CSS by default, so we assert via `generateBundle` collector).
 
 - [ ] **Step 1: Add devDeps**
 
 Add:
+
 ```json
-{ "rollup": "^4.0.0", "@rollup/plugin-typescript": "^11.0.0", "@rollup/plugin-node-resolve": "^16.0.3" }
+{
+    "rollup": "^4.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3"
+}
 ```
+
 Run: `pnpm install`.
 
 - [ ] **Step 2: Write `tests/unplugin/rollup-build.test.ts`**
 
 ```ts
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { rollup } from 'rollup';
 import { describe, expect, it } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import { join } from 'node:path';
 
 import vaporStyleMacro from '../../src/unplugin';
 
@@ -427,7 +467,10 @@ describe('rollup build', () => {
             input: join(fixtureRoot, 'src/input-static.tsx'),
             external: ['react', 'react/jsx-runtime'],
             plugins: [
-                vaporStyleMacro.rollup({ tokensManifestPath: manifestPath, importSource: './$style-stub' }),
+                vaporStyleMacro.rollup({
+                    tokensManifestPath: manifestPath,
+                    importSource: './$style-stub',
+                }),
                 {
                     name: 'capture-css',
                     load(id) {
@@ -472,20 +515,22 @@ git commit -m "test(style-macro): rollup integration build"
 ## Task 5: Per-file hash invalidation (HMR-equivalent)
 
 **Files:**
+
 - Create: `packages/style-macro/tests/unplugin/hmr-id.test.ts`
 
 **Interfaces:**
+
 - Consumes: Task 1.
 - Produces: assertion that a source edit produces a new virtual module id (so bundler caches invalidate naturally).
 
 - [ ] **Step 1: Write test**
 
 ```ts
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import vaporStyleMacro from '../../src/unplugin';
-import { fileURLToPath } from 'node:url';
-import { join } from 'node:path';
 
 const fixtureRoot = fileURLToPath(new URL('./fixtures', import.meta.url));
 const manifestPath = join(fixtureRoot, 'manifest.json');
@@ -501,10 +546,17 @@ describe('hmr id stability', () => {
             { tokensManifestPath: manifestPath, importSource: './$style-stub' },
             { framework: 'esbuild' },
         );
-        const transformHook = factory.transform as (code: string, id: string) => { code: string } | null | { code: string; map: unknown };
+        const transformHook = factory.transform as (
+            code: string,
+            id: string,
+        ) => { code: string } | null | { code: string; map: unknown };
         const src = `import { $style } from './$style-stub';\nexport const c = $style({ padding: '$400' });`;
-        const a = transformHook.call({ error: () => {} } as never, src, '/v/file.tsx') as { code: string };
-        const b = transformHook.call({ error: () => {} } as never, src, '/v/file.tsx') as { code: string };
+        const a = transformHook.call({ error: () => {} } as never, src, '/v/file.tsx') as {
+            code: string;
+        };
+        const b = transformHook.call({ error: () => {} } as never, src, '/v/file.tsx') as {
+            code: string;
+        };
         expect(extractVirtualImport(a.code)).toBe(extractVirtualImport(b.code));
     });
 
@@ -540,19 +592,21 @@ git commit -m "test(style-macro): per-file virtual module id stability"
 ## Task 6: Build error reporting carries codeframe
 
 **Files:**
+
 - Create: `packages/style-macro/tests/unplugin/error-reporting.test.ts`
 
 **Interfaces:**
+
 - Consumes: Task 1 + Vite build harness.
 - Produces: assertion that a fixture with a bad token (`{ padding: '$primary' }`) causes the bundler build to fail with an error message containing `scope-mismatch` and the source line.
 
 - [ ] **Step 1: Write test**
 
 ```ts
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { build } from 'vite';
 import { describe, expect, it } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import { join, resolve } from 'node:path';
 
 import vaporStyleMacro from '../../src/unplugin';
 
@@ -567,10 +621,19 @@ describe('error reporting', () => {
                 logLevel: 'silent',
                 build: {
                     write: false,
-                    lib: { entry: resolve(fixtureRoot, 'src/input-error.tsx'), formats: ['es'], fileName: 'out' },
+                    lib: {
+                        entry: resolve(fixtureRoot, 'src/input-error.tsx'),
+                        formats: ['es'],
+                        fileName: 'out',
+                    },
                     rollupOptions: { external: ['react', 'react/jsx-runtime'] },
                 },
-                plugins: [vaporStyleMacro.vite({ tokensManifestPath: manifestPath, importSource: './$style-stub' })],
+                plugins: [
+                    vaporStyleMacro.vite({
+                        tokensManifestPath: manifestPath,
+                        importSource: './$style-stub',
+                    }),
+                ],
             }),
         ).rejects.toThrow(/scope-mismatch/);
     });
@@ -594,9 +657,11 @@ git commit -m "test(style-macro): build error includes codeframe"
 ## Task 7: Public README + final build
 
 **Files:**
+
 - Modify: `packages/style-macro/README.md`
 
 **Interfaces:**
+
 - Consumes: full package.
 - Produces: docs for the bundler-side contract Plan C will consume.
 
@@ -604,7 +669,7 @@ git commit -m "test(style-macro): build error includes codeframe"
 
 Append to README:
 
-```markdown
+````markdown
 ## Usage in a bundler
 
 ```js
@@ -615,6 +680,7 @@ export default {
     plugins: [vaporStyleMacro.vite()],
 };
 ```
+````
 
 ```js
 // next.config.mjs / webpack.config.js
@@ -630,15 +696,16 @@ export default {
 
 ### Options
 
-| Option | Default | Notes |
-|---|---|---|
-| `tokensManifestPath` | `require.resolve('@vapor-ui/core/tokens.manifest.json')` | JSON manifest exported by `@vapor-ui/core` (or a future `@vapor-ui/tokens`). Resolves the package's `./tokens.manifest.json` exports entry. |
-| `importSource` | `'@vapor-ui/core'` | Where `$style` is imported from. |
-| `importName` | `'$style'` | Exported name to track. |
-| `include` | `(id) => /\.(tsx?\|jsx?\|mts\|cts)$/.test(id) && !id.includes('node_modules')` | Per-id filter. |
+| Option               | Default                                                                        | Notes                                                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tokensManifestPath` | `require.resolve('@vapor-ui/core/tokens.manifest.json')`                       | JSON manifest exported by `@vapor-ui/core` (or a future `@vapor-ui/tokens`). Resolves the package's `./tokens.manifest.json` exports entry. |
+| `importSource`       | `'@vapor-ui/core'`                                                             | Where `$style` is imported from.                                                                                                            |
+| `importName`         | `'$style'`                                                                     | Exported name to track.                                                                                                                     |
+| `include`            | `(id) => /\.(tsx?\|jsx?\|mts\|cts)$/.test(id) && !id.includes('node_modules')` | Per-id filter.                                                                                                                              |
 
 > Turbopack is not supported in v1. Next 16+ users must run with `--webpack`.
-```
+
+````
 
 - [ ] **Step 2: Final verification**
 
@@ -653,7 +720,7 @@ Expected: all PASS.
 ```bash
 git add packages/style-macro/README.md
 git commit -m "docs(style-macro): unplugin usage guide"
-```
+````
 
 ---
 

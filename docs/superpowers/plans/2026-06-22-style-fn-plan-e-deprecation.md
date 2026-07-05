@@ -5,6 +5,7 @@
 **Goal:** Land the gentle deprecation surface for the legacy `$css` prop (spec §9 Phase 1 + Phase 3) — JSDoc `@deprecated` annotations + a dev-mode `console.warn` that fires once per call site. Phase 4 (breaking removal in v2.0) is **out of scope** and gets its own plan when v2 is real.
 
 **Architecture:** Two changes only.
+
 1. Add `@deprecated` JSDoc to every `$css` declaration in `@vapor-ui/core` source so editors highlight + TS surfaces it (Phase 1).
 2. Add a `runDeprecationWarn` helper invoked from `resolveStyles` (the choke point used by every consumer of `$css` per spec §9.3). It maintains a `Set<string>` keyed by stack frame so each call site warns exactly once, and is no-op in `process.env.NODE_ENV === 'production'` (Phase 3).
 
@@ -15,9 +16,9 @@
 - Spec §9 phases — this plan covers **Phase 1 and Phase 3 only**. Phase 2 (stabilization patches) is not a code change. Phase 4 (breaking removal) is deferred.
 - Spec §9.2 — Phase 1 must not change runtime behavior. Adding JSDoc + extending the resolveStyles signature is allowed; changing prop semantics is not.
 - Phase 3 warning constraints:
-  - Dev mode only. `process.env.NODE_ENV === 'production'` → no-op.
-  - At most **one warning per unique call site** (spec §9 phase row: "warn 노출. 동작 동일").
-  - Must not fire when `$css` is the explicit recommendation source — e.g. the existing `Box` recipe's own internal calls. Implementation strategy: the warn fires only when `resolveStyles` receives a non-empty `$css` from props (consumer-supplied), not from internal recipes. The split happens naturally because `resolveStyles` is the consumer-facing entry point (already accepts the user's props object).
+    - Dev mode only. `process.env.NODE_ENV === 'production'` → no-op.
+    - At most **one warning per unique call site** (spec §9 phase row: "warn 노출. 동작 동일").
+    - Must not fire when `$css` is the explicit recommendation source — e.g. the existing `Box` recipe's own internal calls. Implementation strategy: the warn fires only when `resolveStyles` receives a non-empty `$css` from props (consumer-supplied), not from internal recipes. The split happens naturally because `resolveStyles` is the consumer-facing entry point (already accepts the user's props object).
 - Phase 3 must ship the codemod path as the recommended fix (spec §9 phase row: "codemod 공식 릴리스"). The warn message references the codemod command.
 - Version targets are aspirational (spec uses 1.4.0 / 1.7.0 / 2.0.0 as examples). Use Changesets — do not hardcode version bumps in code.
 - Out of scope (§9 Phase 4): removing `$css`, removing flat deprecated props, removing `Sprinkles` type export, removing `rainbow-sprinkles` dep, removing prebuild CSS artifact.
@@ -47,22 +48,26 @@ packages/core/
 ## Task 1: `deprecation-warn` helper
 
 **Files:**
+
 - Create: `packages/core/src/utils/deprecation-warn.ts`
 - Create: `packages/core/__tests__/style-fn/deprecation-warn.test.ts`
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces:
-  ```ts
-  export function warnCssPropOnce(siteHint?: string): void;
-  // For tests only:
-  export function __resetWarnedSites(): void;
-  ```
+
+    ```ts
+    export function warnCssPropOnce(siteHint?: string): void;
+    // For tests only:
+    export function __resetWarnedSites(): void;
+    ```
 
 - [ ] **Step 1: Write failing tests**
 
 ```ts
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { __resetWarnedSites, warnCssPropOnce } from '../../src/utils/deprecation-warn';
 
 describe('warnCssPropOnce', () => {
@@ -166,9 +171,11 @@ git commit -m "feat(core): warn-once helper for \$css deprecation"
 ## Task 2: Wire `warnCssPropOnce` into `resolveStyles`
 
 **Files:**
+
 - Modify: `packages/core/src/utils/resolve-styles.ts`
 
 **Interfaces:**
+
 - Consumes: Task 1.
 - Produces: every consumer call to `resolveStyles` passing a non-empty `$css` triggers the warning exactly once per call site.
 
@@ -179,12 +186,17 @@ Run: read `packages/core/src/utils/resolve-styles.ts`. Confirm the `createSplitP
 - [ ] **Step 2: Add the warn call right after `$css` is extracted**
 
 Modify the file so the segment looks like:
+
 ```ts
 import { warnCssPropOnce } from './deprecation-warn';
 
 export const resolveStyles = <T extends object>(props: T) => {
     const [layoutProps, _otherProps] = createSplitProps<Styles>()(props, ['$css']);
-    if (layoutProps.$css && typeof layoutProps.$css === 'object' && Object.keys(layoutProps.$css).length > 0) {
+    if (
+        layoutProps.$css &&
+        typeof layoutProps.$css === 'object' &&
+        Object.keys(layoutProps.$css).length > 0
+    ) {
         warnCssPropOnce();
     }
     // ... rest unchanged ...
@@ -201,6 +213,7 @@ Expected: PASS.
 - [ ] **Step 4: Add a smoke test that verifies the wire-up**
 
 Add to `__tests__/style-fn/deprecation-warn.test.ts` a final `it`:
+
 ```ts
 it('fires when resolveStyles receives non-empty $css', () => {
     process.env.NODE_ENV = 'development';
@@ -237,15 +250,18 @@ git commit -m "feat(core): emit deprecation warn from resolveStyles"
 ## Task 3: JSDoc `@deprecated` on every `$css` declaration (Phase 1)
 
 **Files:**
+
 - Modify: every `index.parts.ts` (or equivalent) under `packages/core/src/components/**` that declares a `$css` prop on a public component.
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces: editor tooling (TS / IDE) renders strikethrough on `$css`. No runtime effect.
 
 - [ ] **Step 1: Inventory the prop sites**
 
 Run a search for the declaration. The current type definition lives where `Styles` (the `$css` carrier) is defined. Identify two surfaces:
+
 - The `Styles` interface (likely in `packages/core/src/utils/resolve-styles.ts` or a shared `styles.ts`).
 - Component-level prop interfaces that re-declare or compose `$css`.
 
@@ -254,10 +270,13 @@ Inspect, decide whether a single deprecation on the source `Styles` interface pr
 - [ ] **Step 2: Annotate the canonical declaration**
 
 Wherever `$css?:` is first declared, change:
+
 ```ts
 $css?: Sprinkles;
 ```
+
 to:
+
 ```ts
 /**
  * @deprecated Use the `$style` function instead. Run `npx @vapor-ui/codemod css-to-style` to migrate.
@@ -274,6 +293,7 @@ Read one generated `*.d.ts` (e.g. `dist/components/box/index.d.ts`). The `$css` 
 - [ ] **Step 4: Write the verification test**
 
 `packages/core/__tests__/style-fn/jsdoc-deprecated.test.ts`:
+
 ```ts
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -309,9 +329,11 @@ git commit -m "feat(core): mark \$css prop @deprecated (phase 1)"
 ## Task 4: Changeset
 
 **Files:**
+
 - Create: `.changeset/deprecate-css-prop.md`
 
 **Interfaces:**
+
 - Consumes: existing Changesets workflow.
 - Produces: a `minor` bump on `@vapor-ui/core` carrying the deprecation surface.
 

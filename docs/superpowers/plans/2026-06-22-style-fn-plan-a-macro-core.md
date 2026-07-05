@@ -74,6 +74,7 @@ packages/style-macro/
 ## Task 1: Package skeleton
 
 **Files:**
+
 - Create: `packages/style-macro/package.json`
 - Create: `packages/style-macro/tsconfig.json`
 - Create: `packages/style-macro/tsup.config.ts`
@@ -83,6 +84,7 @@ packages/style-macro/
 - Modify: `pnpm-workspace.yaml` (no change needed if `packages/*` is already globbed — verify)
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces: workspace package `@vapor-ui/style-macro` at version `0.0.0-private`, type-checks clean, vitest runs an empty suite.
 
@@ -217,28 +219,24 @@ git commit -m "feat(style-macro): scaffold package"
 ## Task 2: Token manifest contract + loader
 
 **Files:**
+
 - Create: `packages/style-macro/src/types.ts`
 - Create: `packages/style-macro/src/tokens.ts`
 - Create: `packages/style-macro/tests/tokens.test.ts`
 - Create: `packages/style-macro/tests/fixtures/manifest.sample.json`
 
 **Interfaces:**
+
 - Consumes: nothing.
 - Produces:
-  - `type ManifestShape = { version: '1'; tokens: Record<TokenScope, Record<string, string>>; propertyScopes: Record<string, TokenScope>; }` where `TokenScope = 'color' | 'space' | 'dimension' | 'borderRadius' | 'shadow' | 'typography'`.
-  - `loadManifest(path: string): ManifestShape` — reads + validates JSON, throws on missing keys.
-  - `resolveToken(manifest, property, tokenName): { cssVar: string } | { error: 'unknown-token' | 'scope-mismatch' | 'unknown-property' }`.
+    - `type ManifestShape = { version: '1'; tokens: Record<TokenScope, Record<string, string>>; propertyScopes: Record<string, TokenScope>; }` where `TokenScope = 'color' | 'space' | 'dimension' | 'borderRadius' | 'shadow' | 'typography'`.
+    - `loadManifest(path: string): ManifestShape` — reads + validates JSON, throws on missing keys.
+    - `resolveToken(manifest, property, tokenName): { cssVar: string } | { error: 'unknown-token' | 'scope-mismatch' | 'unknown-property' }`.
 
 - [ ] **Step 1: Write `src/types.ts`**
 
 ```ts
-export type TokenScope =
-    | 'color'
-    | 'space'
-    | 'dimension'
-    | 'borderRadius'
-    | 'shadow'
-    | 'typography';
+export type TokenScope = 'color' | 'space' | 'dimension' | 'borderRadius' | 'shadow' | 'typography';
 
 export interface ManifestShape {
     version: '1';
@@ -290,8 +288,15 @@ export type PseudoName =
 {
     "version": "1",
     "tokens": {
-        "color": { "primary": "--vapor-color-primary", "bg-gray-100": "--vapor-color-background-canvas-100" },
-        "space": { "100": "--vapor-size-space-100", "200": "--vapor-size-space-200", "400": "--vapor-size-space-400" },
+        "color": {
+            "primary": "--vapor-color-primary",
+            "bg-gray-100": "--vapor-color-background-canvas-100"
+        },
+        "space": {
+            "100": "--vapor-size-space-100",
+            "200": "--vapor-size-space-200",
+            "400": "--vapor-size-space-400"
+        },
         "dimension": { "100": "--vapor-size-dimension-100" },
         "borderRadius": { "200": "--vapor-size-borderRadius-200" },
         "shadow": { "100": "--vapor-shadow-100" },
@@ -317,6 +322,7 @@ export type PseudoName =
 
 ```ts
 import { describe, expect, it } from 'vitest';
+
 import { loadManifest, resolveToken } from '../src/tokens';
 
 const manifestPath = new URL('./fixtures/manifest.sample.json', import.meta.url).pathname;
@@ -368,7 +374,14 @@ import { readFileSync } from 'node:fs';
 
 import type { ManifestShape, TokenScope } from './types';
 
-const SCOPES: TokenScope[] = ['color', 'space', 'dimension', 'borderRadius', 'shadow', 'typography'];
+const SCOPES: TokenScope[] = [
+    'color',
+    'space',
+    'dimension',
+    'borderRadius',
+    'shadow',
+    'typography',
+];
 
 export function loadManifest(path: string): ManifestShape {
     let parsed: unknown;
@@ -395,9 +408,15 @@ function isManifest(value: unknown): value is ManifestShape {
     return true;
 }
 
-export type ResolveResult = { cssVar: string } | { error: 'unknown-token' | 'scope-mismatch' | 'unknown-property' };
+export type ResolveResult =
+    | { cssVar: string }
+    | { error: 'unknown-token' | 'scope-mismatch' | 'unknown-property' };
 
-export function resolveToken(manifest: ManifestShape, property: string, tokenName: string): ResolveResult {
+export function resolveToken(
+    manifest: ManifestShape,
+    property: string,
+    tokenName: string,
+): ResolveResult {
     const scope = manifest.propertyScopes[property];
     if (!scope) return { error: 'unknown-property' };
     const bucket = manifest.tokens[scope];
@@ -436,23 +455,26 @@ git commit -m "feat(style-macro): token manifest contract + loader"
 ## Task 3: Property shorthand table + condition classifier
 
 **Files:**
+
 - Create: `packages/style-macro/src/property-shorthand.ts`
 - Create: `packages/style-macro/src/condition.ts`
 - Create: `packages/style-macro/tests/property-shorthand.test.ts`
 - Create: `packages/style-macro/tests/condition.test.ts`
 
 **Interfaces:**
+
 - Consumes: `types.ts`.
 - Produces:
-  - `PROPERTY_SHORT: Record<string, string>` — lookup table mapping `padding`→`p`, `backgroundColor`→`bg`, etc.
-  - `shortenProperty(property): string` — returns `PROPERTY_SHORT[property]` or kebab-cased fallback.
-  - `classifyCondition(key: string): ConditionKey | { error: 'unknown-condition' }`.
-  - `hashMediaQuery(query: string): string` — 8-char lowercase hex; whitespace + case normalized.
+    - `PROPERTY_SHORT: Record<string, string>` — lookup table mapping `padding`→`p`, `backgroundColor`→`bg`, etc.
+    - `shortenProperty(property): string` — returns `PROPERTY_SHORT[property]` or kebab-cased fallback.
+    - `classifyCondition(key: string): ConditionKey | { error: 'unknown-condition' }`.
+    - `hashMediaQuery(query: string): string` — 8-char lowercase hex; whitespace + case normalized.
 
 - [ ] **Step 1: Write failing tests `tests/condition.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
+
 import { classifyCondition, hashMediaQuery } from '../src/condition';
 
 describe('classifyCondition', () => {
@@ -466,14 +488,18 @@ describe('classifyCondition', () => {
     });
     it('classifies pseudo', () => {
         expect(classifyCondition('_hover')).toEqual({ kind: 'pseudo', name: '_hover' });
-        expect(classifyCondition('_focusVisible')).toEqual({ kind: 'pseudo', name: '_focusVisible' });
+        expect(classifyCondition('_focusVisible')).toEqual({
+            kind: 'pseudo',
+            name: '_focusVisible',
+        });
     });
     it('classifies raw @media with normalized hash', () => {
         const a = classifyCondition('@media (min-width: 2560px)');
         const b = classifyCondition('@media (min-width:2560px)');
         const c = classifyCondition('@media   (MIN-WIDTH:  2560PX)');
         expect(a.kind).toBe('raw-media');
-        if (a.kind !== 'raw-media' || b.kind !== 'raw-media' || c.kind !== 'raw-media') throw new Error();
+        if (a.kind !== 'raw-media' || b.kind !== 'raw-media' || c.kind !== 'raw-media')
+            throw new Error();
         expect(a.hash).toBe(b.hash);
         expect(a.hash).toBe(c.hash);
         expect(a.hash).toHaveLength(8);
@@ -498,6 +524,7 @@ describe('hashMediaQuery', () => {
 
 ```ts
 import { describe, expect, it } from 'vitest';
+
 import { PROPERTY_SHORT, shortenProperty } from '../src/property-shorthand';
 
 describe('PROPERTY_SHORT', () => {
@@ -623,18 +650,21 @@ git commit -m "feat(style-macro): property shorthand table + condition classifie
 ## Task 4: Atomic class-name synthesizer
 
 **Files:**
+
 - Create: `packages/style-macro/src/class-name.ts`
 - Create: `packages/style-macro/tests/class-name.test.ts`
 
 **Interfaces:**
+
 - Consumes: `types.ts`, `property-shorthand.ts`, `condition.ts`.
 - Produces:
-  - `buildClassName(tuple: Tuple): string` — deterministic, `_<conditionPrefix>-<propShort>-<valueShort>`.
+    - `buildClassName(tuple: Tuple): string` — deterministic, `_<conditionPrefix>-<propShort>-<valueShort>`.
 
 - [ ] **Step 1: Write failing tests**
 
 ```ts
 import { describe, expect, it } from 'vitest';
+
 import { buildClassName } from '../src/class-name';
 import type { Tuple } from '../src/types';
 
@@ -652,16 +682,36 @@ describe('buildClassName', () => {
         expect(buildClassName(t({}))).toBe('_p-400');
     });
     it('default: bg primary', () => {
-        expect(buildClassName(t({ property: 'backgroundColor', propertyShort: 'bg', valueShort: 'primary' }))).toBe('_bg-primary');
+        expect(
+            buildClassName(
+                t({ property: 'backgroundColor', propertyShort: 'bg', valueShort: 'primary' }),
+            ),
+        ).toBe('_bg-primary');
     });
     it('named BP: _sm-<short>-<value>', () => {
-        expect(buildClassName(t({ valueShort: '100', condition: { kind: 'named-bp', name: 'sm' } }))).toBe('_sm-p-100');
+        expect(
+            buildClassName(t({ valueShort: '100', condition: { kind: 'named-bp', name: 'sm' } })),
+        ).toBe('_sm-p-100');
     });
     it('pseudo: strip leading underscore', () => {
-        expect(buildClassName(t({ property: 'backgroundColor', propertyShort: 'bg', valueShort: 'primary-hover', condition: { kind: 'pseudo', name: '_hover' } }))).toBe('_hover-bg-primary-hover');
+        expect(
+            buildClassName(
+                t({
+                    property: 'backgroundColor',
+                    propertyShort: 'bg',
+                    valueShort: 'primary-hover',
+                    condition: { kind: 'pseudo', name: '_hover' },
+                }),
+            ),
+        ).toBe('_hover-bg-primary-hover');
     });
     it('raw media: _mq<hash6>-<short>-<value>', () => {
-        const cls = buildClassName(t({ valueShort: '400', condition: { kind: 'raw-media', query: '(min-width: 2560px)', hash: 'abcdef12' } }));
+        const cls = buildClassName(
+            t({
+                valueShort: '400',
+                condition: { kind: 'raw-media', query: '(min-width: 2560px)', hash: 'abcdef12' },
+            }),
+        );
         expect(cls).toBe('_mqabcdef-p-400');
     });
 });
@@ -715,18 +765,21 @@ git commit -m "feat(style-macro): atomic class-name synthesizer"
 ## Task 5: CSS emitter with deterministic order
 
 **Files:**
+
 - Create: `packages/style-macro/src/emit-css.ts`
 - Create: `packages/style-macro/tests/emit-css.test.ts`
 
 **Interfaces:**
+
 - Consumes: `types.ts`, `class-name.ts`.
 - Produces:
-  - `emitCss(tuples: Tuple[]): string` — single string. `@layer vapor.utilities { … }`. Emit order per §6.3. Same input → byte-identical output.
+    - `emitCss(tuples: Tuple[]): string` — single string. `@layer vapor.utilities { … }`. Emit order per §6.3. Same input → byte-identical output.
 
 - [ ] **Step 1: Write failing tests**
 
 ```ts
 import { describe, expect, it } from 'vitest';
+
 import { emitCss } from '../src/emit-css';
 import type { Tuple } from '../src/types';
 
@@ -749,17 +802,31 @@ describe('emitCss', () => {
     it('orders: default → sm → md → lg → @media (sorted) → pseudo (fixed order)', () => {
         const tuples: Tuple[] = [
             t({ condition: { kind: 'pseudo', name: '_hover' }, valueShort: 'h' }),
-            t({ condition: { kind: 'raw-media', query: '(min-width: 9999px)', hash: 'zzzzzzzz' }, valueShort: 'z' }),
+            t({
+                condition: { kind: 'raw-media', query: '(min-width: 9999px)', hash: 'zzzzzzzz' },
+                valueShort: 'z',
+            }),
             t({ condition: { kind: 'named-bp', name: 'lg' }, valueShort: 'l' }),
             t({ condition: { kind: 'default' }, valueShort: 'd' }),
             t({ condition: { kind: 'named-bp', name: 'sm' }, valueShort: 's' }),
-            t({ condition: { kind: 'raw-media', query: '(min-width: 1000px)', hash: 'aaaaaaaa' }, valueShort: 'a' }),
+            t({
+                condition: { kind: 'raw-media', query: '(min-width: 1000px)', hash: 'aaaaaaaa' },
+                valueShort: 'a',
+            }),
             t({ condition: { kind: 'named-bp', name: 'md' }, valueShort: 'm' }),
             t({ condition: { kind: 'pseudo', name: '_focus' }, valueShort: 'f' }),
         ];
         const css = emitCss(tuples);
-        const positions = ['_p-d', '_sm-p-s', '_md-p-m', '_lg-p-l', '_mqaaaaaa-p-a', '_mqzzzzzz-p-z', '_focus-p-f', '_hover-p-h']
-            .map((cls) => css.indexOf(cls));
+        const positions = [
+            '_p-d',
+            '_sm-p-s',
+            '_md-p-m',
+            '_lg-p-l',
+            '_mqaaaaaa-p-a',
+            '_mqzzzzzz-p-z',
+            '_focus-p-f',
+            '_hover-p-h',
+        ].map((cls) => css.indexOf(cls));
         const sorted = [...positions].sort((a, b) => a - b);
         expect(positions).toEqual(sorted);
         expect(positions.every((p) => p >= 0)).toBe(true);
@@ -772,17 +839,26 @@ describe('emitCss', () => {
     });
 
     it('wraps named BP in @media (--vapor-<name>)', () => {
-        const css = emitCss([t({ condition: { kind: 'named-bp', name: 'sm' }, valueShort: '100' })]);
+        const css = emitCss([
+            t({ condition: { kind: 'named-bp', name: 'sm' }, valueShort: '100' }),
+        ]);
         expect(css).toMatch(/@media \(--vapor-sm\)\s*\{\s*\._sm-p-100/);
     });
 
     it('wraps raw @media using raw query string', () => {
-        const css = emitCss([t({ condition: { kind: 'raw-media', query: '(min-width: 2560px)', hash: 'abcdef12' }, valueShort: '400' })]);
+        const css = emitCss([
+            t({
+                condition: { kind: 'raw-media', query: '(min-width: 2560px)', hash: 'abcdef12' },
+                valueShort: '400',
+            }),
+        ]);
         expect(css).toMatch(/@media \(min-width: 2560px\)\s*\{\s*\._mqabcdef-p-400/);
     });
 
     it('appends :pseudo selector', () => {
-        const css = emitCss([t({ condition: { kind: 'pseudo', name: '_hover' }, valueShort: 'h' })]);
+        const css = emitCss([
+            t({ condition: { kind: 'pseudo', name: '_hover' }, valueShort: 'h' }),
+        ]);
         expect(css).toMatch(/\._hover-p-h:hover\s*\{/);
     });
 
@@ -885,7 +961,8 @@ export function emitCss(tuples: Tuple[]): string {
     });
 
     // within each bucket, sort by class name for byte-identical output
-    const sortByClass = (arr: Tuple[]) => arr.sort((a, b) => buildClassName(a).localeCompare(buildClassName(b)));
+    const sortByClass = (arr: Tuple[]) =>
+        arr.sort((a, b) => buildClassName(a).localeCompare(buildClassName(b)));
     sortByClass(groups.default);
     sortByClass(groups.sm);
     sortByClass(groups.md);
@@ -932,17 +1009,19 @@ git commit -m "feat(style-macro): deterministic CSS emitter"
 ## Task 6: Input validator + AST walker
 
 **Files:**
+
 - Create: `packages/style-macro/src/code-frame.ts`
 - Create: `packages/style-macro/src/validate-input.ts`
 - Create: `packages/style-macro/src/parse-call.ts`
 - Create: `packages/style-macro/tests/validate-input.test.ts`
 
 **Interfaces:**
+
 - Consumes: `types.ts`, `condition.ts`, `tokens.ts`.
 - Produces:
-  - `parseCallArgs(node: t.ObjectExpression): RawEntry[]` — extracts `{ key, value | ternaryValue, conditions? }`.
-  - `validateInput(raw: RawEntry[], manifest): BuildError[]` — pure validator. Returns all build errors discovered in input shape, token grammar, and the entry-level-only ternary rule (no ternaries inside condition-objects).
-  - `formatBuildError(err: BuildError, source: string, filename: string): string` (uses `@babel/code-frame`).
+    - `parseCallArgs(node: t.ObjectExpression): RawEntry[]` — extracts `{ key, value | ternaryValue, conditions? }`.
+    - `validateInput(raw: RawEntry[], manifest): BuildError[]` — pure validator. Returns all build errors discovered in input shape, token grammar, and the entry-level-only ternary rule (no ternaries inside condition-objects).
+    - `formatBuildError(err: BuildError, source: string, filename: string): string` (uses `@babel/code-frame`).
 
 The orchestrator (Task 7) owns the actual class-name + AST rewrite. This file only validates and reports.
 
@@ -966,18 +1045,22 @@ export function formatBuildError(err: BuildError, source: string, filename: stri
 - [ ] **Step 2: Write failing tests `tests/validate-input.test.ts`**
 
 ```ts
-import { describe, expect, it } from 'vitest';
 import * as parser from '@babel/parser';
 import * as t from '@babel/types';
+import { describe, expect, it } from 'vitest';
+
+import { parseCallArgs } from '../src/parse-call';
 import { loadManifest } from '../src/tokens';
 import { validateInput } from '../src/validate-input';
-import { parseCallArgs } from '../src/parse-call';
 
 const manifestPath = new URL('./fixtures/manifest.sample.json', import.meta.url).pathname;
 const manifest = loadManifest(manifestPath);
 
 function callArg(src: string) {
-    const file = parser.parse(`$style(${src})`, { sourceType: 'module', plugins: ['jsx', 'typescript'] });
+    const file = parser.parse(`$style(${src})`, {
+        sourceType: 'module',
+        plugins: ['jsx', 'typescript'],
+    });
     const expr = (file.program.body[0] as t.ExpressionStatement).expression as t.CallExpression;
     return expr.arguments[0] as t.ObjectExpression;
 }
@@ -989,17 +1072,26 @@ describe('validateInput', () => {
     });
 
     it('accepts an object value with multiple conditions', () => {
-        const errors = validateInput(parseCallArgs(callArg(`{ padding: { default: '$200', sm: '$100' } }`)), manifest);
+        const errors = validateInput(
+            parseCallArgs(callArg(`{ padding: { default: '$200', sm: '$100' } }`)),
+            manifest,
+        );
         expect(errors).toEqual([]);
     });
 
     it('accepts an entry-level ternary', () => {
-        const errors = validateInput(parseCallArgs(callArg(`{ backgroundColor: x ? '$primary' : '$bg-gray-100' }`)), manifest);
+        const errors = validateInput(
+            parseCallArgs(callArg(`{ backgroundColor: x ? '$primary' : '$bg-gray-100' }`)),
+            manifest,
+        );
         expect(errors).toEqual([]);
     });
 
     it('rejects spread', () => {
-        const errors = validateInput(parseCallArgs(callArg(`{ ...other, padding: '$400' }`)), manifest);
+        const errors = validateInput(
+            parseCallArgs(callArg(`{ ...other, padding: '$400' }`)),
+            manifest,
+        );
         expect(errors.map((e) => e.code)).toContain('spread');
     });
 
@@ -1014,12 +1106,18 @@ describe('validateInput', () => {
     });
 
     it('rejects ternary with dynamic arm', () => {
-        const errors = validateInput(parseCallArgs(callArg(`{ padding: x ? '$400' : someVar }`)), manifest);
+        const errors = validateInput(
+            parseCallArgs(callArg(`{ padding: x ? '$400' : someVar }`)),
+            manifest,
+        );
         expect(errors.map((e) => e.code)).toContain('dynamic-value');
     });
 
     it('rejects ternary nested inside a condition-object', () => {
-        const errors = validateInput(parseCallArgs(callArg(`{ color: { default: x ? '$primary' : '$bg-gray-100' } }`)), manifest);
+        const errors = validateInput(
+            parseCallArgs(callArg(`{ color: { default: x ? '$primary' : '$bg-gray-100' } }`)),
+            manifest,
+        );
         expect(errors.map((e) => e.code)).toContain('dynamic-value');
     });
 
@@ -1076,12 +1174,22 @@ function locOf(node: t.Node): { line: number; column: number } {
 function readValueExpression(node: t.Node): RawValue {
     if (t.isStringLiteral(node)) {
         if (node.value.startsWith('$')) {
-            return { kind: 'token', token: node.value.slice(1), rawText: node.value, loc: locOf(node) };
+            return {
+                kind: 'token',
+                token: node.value.slice(1),
+                rawText: node.value,
+                loc: locOf(node),
+            };
         }
         return { kind: 'literal', literal: node.value, rawText: node.value, loc: locOf(node) };
     }
     if (t.isNumericLiteral(node)) {
-        return { kind: 'literal', literal: node.value, rawText: String(node.value), loc: locOf(node) };
+        return {
+            kind: 'literal',
+            literal: node.value,
+            rawText: String(node.value),
+            loc: locOf(node),
+        };
     }
     if (t.isConditionalExpression(node)) {
         return {
@@ -1132,11 +1240,18 @@ export function parseCallArgs(arg: t.ObjectExpression): RawEntry[] {
                     : t.isStringLiteral(inner.key)
                       ? inner.key.value
                       : '<bad>';
-                conditions.push({ conditionKey: ck, value: readValueExpression(inner.value as t.Node) });
+                conditions.push({
+                    conditionKey: ck,
+                    value: readValueExpression(inner.value as t.Node),
+                });
             }
             out.push({ property: name, conditions, loc: locOf(prop) });
         } else {
-            out.push({ property: name, value: readValueExpression(valueNode as t.Node), loc: locOf(prop) });
+            out.push({
+                property: name,
+                value: readValueExpression(valueNode as t.Node),
+                loc: locOf(prop),
+            });
         }
     }
     return out;
@@ -1147,9 +1262,9 @@ export function parseCallArgs(arg: t.ObjectExpression): RawEntry[] {
 
 ```ts
 import { classifyCondition } from './condition';
+import type { RawEntry, RawValue } from './parse-call';
 import { resolveToken } from './tokens';
 import type { BuildError, ManifestShape } from './types';
-import type { RawEntry, RawValue } from './parse-call';
 
 function validateValue(
     property: string,
@@ -1253,48 +1368,50 @@ git commit -m "feat(style-macro): input validator + AST walker"
 ## Task 7: Transform orchestrator + fixture suite
 
 **Files:**
+
 - Create: `packages/style-macro/src/transform.ts`
 - Create: `packages/style-macro/src/index.ts` (overwrite stub)
 - Create: `packages/style-macro/tests/fixtures/**` (one dir per case)
 - Create: `packages/style-macro/tests/transform.test.ts`
 
 **Interfaces:**
+
 - Consumes: every prior file.
 - Produces (public API of the package):
-  ```ts
-  export interface TransformResult {
-      code: string;
-      css: string | null;
-      classes: string[];
-      errors: BuildError[];
-  }
-  export function transform(opts: {
-      source: string;
-      filename: string;
-      manifest: ManifestShape;
-      importSource?: string; // default '@vapor-ui/core'
-      importName?: string;   // default '$style'
-  }): TransformResult;
-  ```
+    ```ts
+    export interface TransformResult {
+        code: string;
+        css: string | null;
+        classes: string[];
+        errors: BuildError[];
+    }
+    export function transform(opts: {
+        source: string;
+        filename: string;
+        manifest: ManifestShape;
+        importSource?: string; // default '@vapor-ui/core'
+        importName?: string; // default '$style'
+    }): TransformResult;
+    ```
 - `transform` parses the source, locates every `$style(...)` call whose callee binding traces to `@vapor-ui/core`'s `$style` import, validates + expands each, replaces the call with a string-literal of space-joined class names, and returns one merged CSS chunk.
 
 - [ ] **Step 1: Write `src/transform.ts`**
 
 ```ts
+import _generate from '@babel/generator';
 import { parse } from '@babel/parser';
 import _traverse from '@babel/traverse';
-import _generate from '@babel/generator';
 import * as t from '@babel/types';
 
-import { emitCss } from './emit-css';
-import { parseCallArgs } from './parse-call';
-import { validateInput } from './validate-input';
 import { buildClassName } from './class-name';
 import { classifyCondition } from './condition';
+import { emitCss } from './emit-css';
+import { parseCallArgs } from './parse-call';
+import type { RawEntry, RawValue } from './parse-call';
 import { shortenProperty } from './property-shorthand';
 import { resolveToken } from './tokens';
 import type { BuildError, ConditionKey, ManifestShape, Tuple } from './types';
-import type { RawEntry, RawValue } from './parse-call';
+import { validateInput } from './validate-input';
 
 const traverse = (_traverse as unknown as { default: typeof _traverse }).default ?? _traverse;
 const generate = (_generate as unknown as { default: typeof _generate }).default ?? _generate;
@@ -1317,13 +1434,20 @@ interface TransformOpts {
 /**
  * Build a tuple for a single value (literal | token). Caller has already validated.
  */
-function tupleFor(property: string, cond: ConditionKey, raw: RawValue, manifest: ManifestShape): Tuple {
+function tupleFor(
+    property: string,
+    cond: ConditionKey,
+    raw: RawValue,
+    manifest: ManifestShape,
+): Tuple {
     const propertyShort = shortenProperty(property);
     if (raw.kind === 'literal') {
         return {
             property,
             propertyShort,
-            valueShort: String(raw.literal).replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, ''),
+            valueShort: String(raw.literal)
+                .replace(/[^a-z0-9]+/gi, '-')
+                .replace(/^-|-$/g, ''),
             cssValue: String(raw.literal),
             condition: cond,
         };
@@ -1356,7 +1480,12 @@ function buildEntryExpression(
 ): t.Expression | null {
     // Case A: entry-level ternary (`{ color: x ? '$a' : '$b' }`)
     if (entry.value?.kind === 'ternary') {
-        const conseq = tupleFor(entry.property, { kind: 'default' }, entry.value.consequent!, manifest);
+        const conseq = tupleFor(
+            entry.property,
+            { kind: 'default' },
+            entry.value.consequent!,
+            manifest,
+        );
         const alt = tupleFor(entry.property, { kind: 'default' }, entry.value.alternate!, manifest);
         tuples.push(conseq, alt);
         const conseqCls = buildClassName(conseq);
@@ -1446,7 +1575,10 @@ export function transform(opts: TransformOpts): TransformResult {
                 errors.push({
                     code: 'invalid-input-shape',
                     message: '$style() requires an object literal argument.',
-                    loc: { line: path.node.loc?.start.line ?? 1, column: path.node.loc?.start.column ?? 0 },
+                    loc: {
+                        line: path.node.loc?.start.line ?? 1,
+                        column: path.node.loc?.start.column ?? 0,
+                    },
                 });
                 return;
             }
@@ -1477,18 +1609,19 @@ export function transform(opts: TransformOpts): TransformResult {
             // All-static → single string literal. Otherwise → array.filter(Boolean).join(' ').
             const allStatic = entryNodes.every((n) => t.isStringLiteral(n));
             if (allStatic) {
-                const merged = entryNodes.map((n) => (n as t.StringLiteral).value).filter(Boolean).join(' ');
+                const merged = entryNodes
+                    .map((n) => (n as t.StringLiteral).value)
+                    .filter(Boolean)
+                    .join(' ');
                 path.replaceWith(t.stringLiteral(merged));
             } else {
                 const arr = t.arrayExpression(entryNodes);
-                const filter = t.callExpression(
-                    t.memberExpression(arr, t.identifier('filter')),
-                    [t.identifier('Boolean')],
-                );
-                const join = t.callExpression(
-                    t.memberExpression(filter, t.identifier('join')),
-                    [t.stringLiteral(' ')],
-                );
+                const filter = t.callExpression(t.memberExpression(arr, t.identifier('filter')), [
+                    t.identifier('Boolean'),
+                ]);
+                const join = t.callExpression(t.memberExpression(filter, t.identifier('join')), [
+                    t.stringLiteral(' '),
+                ]);
                 path.replaceWith(join);
             }
         },
@@ -1528,22 +1661,31 @@ export { loadManifest } from './tokens';
 For each case, create two files (`input.tsx`, `expected.code.tsx`, `expected.css`) under `tests/fixtures/<case>/`. Build at minimum:
 
 `tests/fixtures/static-literal/input.tsx`:
+
 ```tsx
 import { $style } from '@vapor-ui/core';
+
 export const C = () => <div className={$style({ padding: '$400', backgroundColor: '$primary' })} />;
 ```
 
 `tests/fixtures/static-literal/expected.code.tsx`:
+
 ```tsx
 import { $style } from '@vapor-ui/core';
-export const C = () => <div className={"_bg-primary _p-400"} />;
+
+export const C = () => <div className={'_bg-primary _p-400'} />;
 ```
 
 `tests/fixtures/static-literal/expected.css`:
+
 ```css
 @layer vapor.utilities {
-    ._bg-primary { background-color: var(--vapor-color-primary); }
-    ._p-400 { padding: var(--vapor-size-space-400); }
+    ._bg-primary {
+        background-color: var(--vapor-color-primary);
+    }
+    ._p-400 {
+        padding: var(--vapor-size-space-400);
+    }
 }
 ```
 
@@ -1552,9 +1694,10 @@ Add similar fixtures for `ternary/`, `named-bp/`, `raw-media/`, `pseudo/`, `mixe
 - [ ] **Step 4: Write fixture-driven `tests/transform.test.ts`**
 
 ```ts
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+
 import { transform } from '../src';
 import { loadManifest } from '../src/tokens';
 
@@ -1572,9 +1715,13 @@ describe('transform fixtures', () => {
             const result = transform({ source, filename: 'input.tsx', manifest });
             expect(result.errors).toEqual([]);
             const expectedCode = readFileSync(join(dir, 'expected.code.tsx'), 'utf-8');
-            expect(result.code.replace(/\s+/g, ' ').trim()).toBe(expectedCode.replace(/\s+/g, ' ').trim());
+            expect(result.code.replace(/\s+/g, ' ').trim()).toBe(
+                expectedCode.replace(/\s+/g, ' ').trim(),
+            );
             const expectedCss = readFileSync(join(dir, 'expected.css'), 'utf-8');
-            expect(result.css?.replace(/\s+/g, ' ').trim()).toBe(expectedCss.replace(/\s+/g, ' ').trim());
+            expect(result.css?.replace(/\s+/g, ' ').trim()).toBe(
+                expectedCss.replace(/\s+/g, ' ').trim(),
+            );
         });
     }
 
@@ -1587,9 +1734,14 @@ describe('transform fixtures', () => {
         it(`rejects: ${file}`, () => {
             const source = readFileSync(join(FIX_DIR, 'reject', file), 'utf-8');
             const result = transform({ source, filename: file, manifest });
-            const expectedJson = readFileSync(join(FIX_DIR, 'reject', file.replace('.input.tsx', '.expected.errors.json')), 'utf-8');
+            const expectedJson = readFileSync(
+                join(FIX_DIR, 'reject', file.replace('.input.tsx', '.expected.errors.json')),
+                'utf-8',
+            );
             const expected = JSON.parse(expectedJson) as Array<{ code: string }>;
-            expect(result.errors.map((e) => e.code).sort()).toEqual(expected.map((e) => e.code).sort());
+            expect(result.errors.map((e) => e.code).sort()).toEqual(
+                expected.map((e) => e.code).sort(),
+            );
         });
     }
 });
@@ -1617,9 +1769,11 @@ git commit -m "feat(style-macro): transform orchestrator + fixture suite"
 ## Task 8: Byte-identical determinism test
 
 **Files:**
+
 - Create: `packages/style-macro/tests/byte-identical.test.ts`
 
 **Interfaces:**
+
 - Consumes: public `transform`.
 
 - [ ] **Step 1: Write test**
@@ -1628,6 +1782,7 @@ git commit -m "feat(style-macro): transform orchestrator + fixture suite"
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+
 import { transform } from '../src';
 import { loadManifest } from '../src/tokens';
 
@@ -1668,10 +1823,12 @@ git commit -m "test(style-macro): byte-identical determinism"
 ## Task 9: Public API freeze + README
 
 **Files:**
+
 - Modify: `packages/style-macro/README.md`
 - Modify: `packages/style-macro/src/index.ts` (verify exports surface)
 
 **Interfaces:**
+
 - Consumes: full package.
 - Produces: documented contract that downstream Plans B–D import against.
 
@@ -1679,7 +1836,7 @@ git commit -m "test(style-macro): byte-identical determinism"
 
 Overwrite with:
 
-```markdown
+````markdown
 # @vapor-ui/style-macro
 
 Build-time macro powering `@vapor-ui/core`'s `$style` function.
@@ -1687,7 +1844,7 @@ Build-time macro powering `@vapor-ui/core`'s `$style` function.
 ## Contract (consumed by `@vapor-ui/style-macro/unplugin`)
 
 ```ts
-import { transform, loadManifest } from '@vapor-ui/style-macro';
+import { loadManifest, transform } from '@vapor-ui/style-macro';
 
 const manifest = loadManifest(require.resolve('@vapor-ui/core/dist/tokens.manifest.json'));
 const result = transform({ source, filename, manifest });
@@ -1695,6 +1852,7 @@ const result = transform({ source, filename, manifest });
 // result.css  → CSS chunk (or null if no $style calls)
 // result.errors → BuildError[]; formatBuildError() produces codeframe text
 ```
+````
 
 ### Token manifest shape (v1)
 
@@ -1720,7 +1878,8 @@ The token-emitter (currently `@vapor-ui/core`, possibly a future `@vapor-ui/toke
 - Same `(source, manifest)` → byte-identical `code` + `css` (tested).
 - Emit order: default → sm → md → lg → raw `@media` (query-string sort) → pseudo (fixed table).
 - Atomic class names are content-addressed; dedupe is automatic.
-```
+
+````
 
 - [ ] **Step 2: Final verification**
 
@@ -1735,7 +1894,7 @@ Expected: all PASS.
 ```bash
 git add packages/style-macro/README.md packages/style-macro/src/index.ts
 git commit -m "docs(style-macro): public contract for downstream plans"
-```
+````
 
 ---
 
