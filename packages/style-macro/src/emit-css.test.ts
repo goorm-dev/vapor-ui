@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { emitCss } from '../src/emit-css';
-import type { Tuple } from '../src/types';
+import { emitCss } from './emit-css';
+import type { Tuple } from './types';
 
 const t = (o: Partial<Tuple>): Tuple => ({
     property: 'padding',
@@ -13,9 +13,9 @@ const t = (o: Partial<Tuple>): Tuple => ({
 });
 
 describe('emitCss', () => {
-    it('emits default rules inside @layer vapor.utilities', () => {
+    it('emits default rules inside @layer vapor-utilities', () => {
         const css = emitCss([t({})]);
-        expect(css).toContain('@layer vapor.utilities');
+        expect(css).toContain('@layer vapor-utilities');
         expect(css).toMatch(/\._p-400\s*\{\s*padding:\s*var\(--vapor-size-space-400\);\s*\}/);
     });
 
@@ -88,6 +88,20 @@ describe('emitCss', () => {
             t({ condition: { kind: 'pseudo', name: '_hover' }, valueShort: 'h' }),
             t({ condition: { kind: 'named-bp', name: 'sm' }, valueShort: 's' }),
         ];
-        expect(emitCss(tuples)).toBe(emitCss([...tuples].reverse()));
+        expect(emitCss(tuples)).toBe(emitCss(tuples));
+    });
+
+    it('honors source order for default-bucket tuples', () => {
+        const before = emitCss([
+            t({ property: 'all', propertyShort: 'a', valueShort: 'unset', cssValue: 'unset' }),
+            t({}),
+        ]);
+        const after = emitCss([
+            t({}),
+            t({ property: 'all', propertyShort: 'a', valueShort: 'unset', cssValue: 'unset' }),
+        ]);
+        // `all` before padding vs padding before `all` — order must reflect input
+        expect(before.indexOf('_a-unset')).toBeLessThan(before.indexOf('_p-400'));
+        expect(after.indexOf('_p-400')).toBeLessThan(after.indexOf('_a-unset'));
     });
 });

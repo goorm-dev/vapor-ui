@@ -1,5 +1,9 @@
 'use client';
 
+import '~/styles/layers.css';
+import '~/styles/variables.css';
+import '~/styles/themes.css';
+
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 /* -------------------------------------------------------------------------------------------------
@@ -83,8 +87,47 @@ interface UseThemeProps {
     mounted?: boolean;
 }
 
+/**
+ * Vapor's built-in cascade layer names, exposed to `layer` prop consumers.
+ * Keys match the layer registry passed to a `LayerFn`; values are the actual
+ * CSS layer names emitted by `styles/layers.css.ts`.
+ */
+const LAYER_NAMES = {
+    theme: 'vapor-theme',
+    reset: 'vapor-reset',
+    components: 'vapor-components',
+    utilities: 'vapor-utilities',
+} as const;
+
+type LayerRegistry = typeof LAYER_NAMES;
+
+type LayerFn = (layer: LayerRegistry) => readonly string[];
+
+type LayerProp = LayerFn | readonly string[];
+
 interface ThemeProviderProps extends ThemeConfig {
     children: React.ReactNode;
+
+    /**
+     * Customize the cascade-layer order.
+     *
+     * Evaluated at BUILD TIME by `@vapor-ui/style-macro/unplugin` — the value
+     * MUST be a static expression: either an arrow function literal whose
+     * body is an array-literal return, or an array literal of string
+     * literals. Dynamic values throw a build error.
+     *
+     * When omitted, the default `[theme, reset, components, utilities]` order
+     * declared in `styles/layers.css.ts` applies.
+     *
+     * @example
+     * // Function form (recommended — refactor-safe layer references)
+     * layer={(l) => [l.theme, l.reset, 'my-tailwind', l.components, l.utilities]}
+     *
+     * @example
+     * // Array form (all layer names as string literals)
+     * layer={['vapor-theme', 'vapor-reset', 'my-tailwind', 'vapor-components', 'vapor-utilities']}
+     */
+    layer?: LayerProp;
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -315,6 +358,7 @@ const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) 
 };
 
 /* -----------------------------------------------------------------------------------------------*/
-export { ThemeProvider, ThemeScope, useTheme };
+export { ThemeProvider, ThemeScope, useTheme, LAYER_NAMES };
 export type { ThemeConfig, UseThemeProps, ThemeProviderProps, ThemeScopeProps };
+export type { LayerRegistry, LayerFn, LayerProp };
 export type UseThemeReturn = UseThemeProps;

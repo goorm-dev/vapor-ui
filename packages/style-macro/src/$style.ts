@@ -33,6 +33,8 @@ type BorderRadiusValue = BorderRadiusToken | CSS.Property.BorderRadius;
 type ShadowValue = ShadowToken | CSS.Property.BoxShadow;
 
 export interface StyleInput {
+    all?: V<CSS.Property.All>;
+
     // ── Space (padding) ────────────────────────────────────────────
     padding?: V<SpaceValue>;
     paddingTop?: V<SpaceValue>;
@@ -255,7 +257,7 @@ export function $style(_input: StyleInput): string {
         process.env?.NODE_ENV !== 'production'
     ) {
         console.warn(
-            '[@vapor-ui/core] $style was called at runtime — your bundler is missing @vapor-ui/style-macro/unplugin. Returning empty string.',
+            '[@vapor-ui/style-macro] $style was called at runtime — your bundler is missing @vapor-ui/style-macro/unplugin. Returning empty string.',
         );
     }
     return '';

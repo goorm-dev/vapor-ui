@@ -1,8 +1,0 @@
-@layer vapor.utilities {
-    ._bg-primary {
-        background-color: var(--vapor-color-primary);
-    }
-    ._p-400 {
-        padding: var(--vapor-size-space-400);
-    }
-}

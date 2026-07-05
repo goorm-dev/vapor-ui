@@ -1,4 +1,4 @@
-import { buildClassName, type ClassNameMode } from './class-name';
+import { type ClassNameMode, buildClassName } from './class-name';
 import type { ConditionKey, PseudoName, Tuple } from './types';
 
 const PSEUDO_ORDER: PseudoName[] = [
@@ -77,16 +77,16 @@ export function emitCss(tuples: Tuple[], mode: ClassNameMode = 'readable'): stri
         return PSEUDO_ORDER.indexOf(a.condition.name) - PSEUDO_ORDER.indexOf(b.condition.name);
     });
 
-    // within each bucket, sort by class name for byte-identical output
-    const sortByClass = (arr: Tuple[]) =>
-        arr.sort((a, b) => buildClassName(a, mode).localeCompare(buildClassName(b, mode)));
-    sortByClass(groups.default);
-    sortByClass(groups.sm);
-    sortByClass(groups.md);
-    sortByClass(groups.lg);
-    // raw + pseudo already deterministic above
+    // default / sm / md / lg buckets: preserve source order.
+    // `dedupe()` uses a Map keyed by className, whose iteration order is
+    // first-occurrence — so `unique` already reflects the order the user
+    // wrote each property in `$style({...})` (and across multiple calls in
+    // the same file). CSS cascade for equal-specificity classes = declaration
+    // order in the stylesheet, so honoring source order gives the user direct
+    // control (e.g. `all: 'unset'` before individual properties).
+    // Raw media and pseudo keep their explicit ordering above.
 
-    const lines: string[] = ['@layer vapor.utilities {'];
+    const lines: string[] = ['@layer vapor-utilities {'];
     for (const t of groups.default) lines.push(ruleLine(t, mode));
     const namedBpBlock = (name: 'sm' | 'md' | 'lg', arr: Tuple[]) => {
         if (!arr.length) return;

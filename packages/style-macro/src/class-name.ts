@@ -33,10 +33,7 @@ function conditionKey(c: ConditionKey): string {
 function hashedClassName(t: Tuple): string {
     const key = `${conditionKey(t.condition)}|${t.property}|${t.cssValue}`;
     const digest = createHash('sha1').update(key).digest('hex');
-    const slug = parseInt(digest.slice(0, 12), 16)
-        .toString(36)
-        .padStart(8, '0')
-        .slice(-8);
+    const slug = parseInt(digest.slice(0, 12), 16).toString(36).padStart(8, '0').slice(-8);
     return `_${slug}`;
 }
 

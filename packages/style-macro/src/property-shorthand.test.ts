@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { PROPERTY_SHORT, shortenProperty } from '../src/property-shorthand';
+import { PROPERTY_SHORT, shortenProperty } from './property-shorthand';
 
 describe('PROPERTY_SHORT', () => {
     it('covers common spacing props', () => {

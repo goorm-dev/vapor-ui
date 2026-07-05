@@ -3,11 +3,12 @@ import { parse } from '@babel/parser';
 import _traverse from '@babel/traverse';
 import * as t from '@babel/types';
 
-import { buildClassName, type ClassNameMode } from './class-name';
+import { type ClassNameMode, buildClassName } from './class-name';
 import { classifyCondition } from './condition';
 import { emitCss } from './emit-css';
 import { parseCallArgs } from './parse-call';
 import type { RawEntry, RawValue } from './parse-call';
+import { type LayerRegistry, parseLayerProp } from './parse-layer-prop';
 import { shortenProperty } from './property-shorthand';
 import { resolveToken } from './tokens';
 import type { BuildError, ConditionKey, ManifestShape, Tuple } from './types';
@@ -20,6 +21,7 @@ export interface TransformResult {
     code: string;
     css: string | null;
     classes: string[];
+    layerOrder: string[] | null;
     errors: BuildError[];
 }
 
@@ -30,6 +32,21 @@ export interface TransformOpts {
     importSource?: string | string[];
     importName?: string;
     obfuscate?: boolean;
+    /**
+     * Module specifier(s) the layer-owning Provider component is imported
+     * from. When any of these sources appear alongside a matching import
+     * name, the transform inspects `<Provider layer={...}>` JSX for a
+     * static layer-order expression.
+     */
+    providerImportSource?: string | string[];
+    /** Provider component name (import specifier). Defaults to `ThemeProvider`. */
+    providerImportName?: string;
+    /**
+     * Layer registry used to resolve `<param>.<key>` accesses inside a
+     * `layer` prop arrow function. Only used when Provider handling is
+     * enabled via `providerImportSource`.
+     */
+    layerRegistry?: LayerRegistry;
 }
 
 function valueShortFromLiteral(literal: string | number): string {
@@ -119,12 +136,19 @@ function buildEntryExpression(
 }
 
 export function transform(opts: TransformOpts): TransformResult {
-    const importSourceRaw = opts.importSource ?? ['@vapor-ui/core', '@vapor-ui/core/style'];
+    const importSourceRaw = opts.importSource ?? '@vapor-ui/style-macro';
     const importSources = new Set(
         Array.isArray(importSourceRaw) ? importSourceRaw : [importSourceRaw],
     );
     const importName = opts.importName ?? '$style';
     const mode: ClassNameMode = opts.obfuscate ? 'hashed' : 'readable';
+
+    const providerSourcesRaw = opts.providerImportSource ?? [];
+    const providerSources = new Set(
+        Array.isArray(providerSourcesRaw) ? providerSourcesRaw : [providerSourcesRaw],
+    );
+    const providerImportName = opts.providerImportName ?? 'ThemeProvider';
+    const layerRegistry = opts.layerRegistry ?? {};
 
     let ast: ReturnType<typeof parse>;
     try {
@@ -134,31 +158,95 @@ export function transform(opts: TransformOpts): TransformResult {
             sourceFilename: opts.filename,
         });
     } catch {
-        return { code: opts.source, css: null, classes: [], errors: [] };
+        return {
+            code: opts.source,
+            css: null,
+            classes: [],
+            layerOrder: null,
+            errors: [],
+        };
     }
 
     const errors: BuildError[] = [];
     const allTuples: Tuple[] = [];
     const allClasses = new Set<string>();
     let bindingName: string | null = null;
+    let providerBindingName: string | null = null;
 
     traverse(ast, {
         ImportDeclaration(path) {
-            if (!importSources.has(path.node.source.value)) return;
+            const source = path.node.source.value;
+            const matchesMacro = importSources.has(source);
+            const matchesProvider = providerSources.has(source);
+            if (!matchesMacro && !matchesProvider) return;
             for (const spec of path.node.specifiers) {
-                if (
-                    t.isImportSpecifier(spec) &&
-                    t.isIdentifier(spec.imported) &&
-                    spec.imported.name === importName
-                ) {
+                if (!t.isImportSpecifier(spec) || !t.isIdentifier(spec.imported)) continue;
+                if (matchesMacro && spec.imported.name === importName) {
                     bindingName = spec.local.name;
+                }
+                if (matchesProvider && spec.imported.name === providerImportName) {
+                    providerBindingName = spec.local.name;
                 }
             }
         },
     });
 
+    let layerOrder: string[] | null = null;
+
+    if (providerBindingName) {
+        traverse(ast, {
+            JSXOpeningElement(path) {
+                const name = path.node.name;
+                if (!t.isJSXIdentifier(name) || name.name !== providerBindingName) return;
+                const attr = path.node.attributes.find(
+                    (a): a is t.JSXAttribute =>
+                        t.isJSXAttribute(a) && t.isJSXIdentifier(a.name) && a.name.name === 'layer',
+                );
+                if (!attr || !attr.value) return;
+                if (!t.isJSXExpressionContainer(attr.value)) {
+                    errors.push({
+                        code: 'layer-non-static',
+                        message:
+                            '`layer` prop must be a static expression: expected `layer={...}`, not a string literal.',
+                        loc: {
+                            line: attr.loc?.start.line ?? 1,
+                            column: attr.loc?.start.column ?? 0,
+                        },
+                    });
+                    return;
+                }
+                const expr = attr.value.expression;
+                if (t.isJSXEmptyExpression(expr)) return;
+                const result = parseLayerProp(expr, layerRegistry);
+                if (result.errors.length) {
+                    errors.push(...result.errors);
+                    return;
+                }
+                if (layerOrder) {
+                    errors.push({
+                        code: 'layer-non-static',
+                        message:
+                            'Multiple `<ThemeProvider layer={...}>` occurrences in the same file are not allowed.',
+                        loc: {
+                            line: path.node.loc?.start.line ?? 1,
+                            column: path.node.loc?.start.column ?? 0,
+                        },
+                    });
+                    return;
+                }
+                layerOrder = result.order ?? null;
+            },
+        });
+    }
+
     if (!bindingName) {
-        return { code: opts.source, css: null, classes: [], errors: [] };
+        return {
+            code: opts.source,
+            css: null,
+            classes: [],
+            layerOrder,
+            errors,
+        };
     }
 
     traverse(ast, {
@@ -228,10 +316,26 @@ export function transform(opts: TransformOpts): TransformResult {
     });
 
     if (errors.length) {
-        return { code: opts.source, css: null, classes: [], errors };
+        return {
+            code: opts.source,
+            css: null,
+            classes: [],
+            layerOrder,
+            errors,
+        };
     }
 
-    const { code } = generate(ast, { retainLines: false, comments: true }, opts.source);
+    const { code } = generate(
+        ast,
+        { retainLines: false, comments: true, jsescOption: { quotes: 'single' } },
+        opts.source,
+    );
     const css = allTuples.length ? emitCss(allTuples, mode) : null;
-    return { code, css, classes: [...allClasses].sort(), errors: [] };
+    return {
+        code,
+        css,
+        classes: [...allClasses].sort(),
+        layerOrder,
+        errors: [],
+    };
 }

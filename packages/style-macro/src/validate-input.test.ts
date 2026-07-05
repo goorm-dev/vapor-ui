@@ -1,10 +1,26 @@
 import * as parser from '@babel/parser';
-import * as t from '@babel/types';
+import type * as t from '@babel/types';
 import { describe, expect, it } from 'vitest';
 
-import { parseCallArgs } from '../src/parse-call';
-import { validateInput } from '../src/validate-input';
-import { manifest } from './fixtures/manifest.sample';
+import { parseCallArgs } from './parse-call';
+import type { ManifestShape } from './types';
+import { validateInput } from './validate-input';
+
+const manifest: ManifestShape = {
+    version: '1',
+    tokens: {
+        color: { primary: '--vapor-color-primary' },
+        space: { '400': '--vapor-size-space-400', '600': '--vapor-size-space-600' },
+        dimension: {},
+        borderRadius: {},
+        shadow: {},
+        typography: {},
+    },
+    propertyScopes: {
+        padding: 'space',
+        color: 'color',
+    },
+};
 
 function callArg(src: string): t.ObjectExpression {
     const file = parser.parse(`$style(${src})`, {

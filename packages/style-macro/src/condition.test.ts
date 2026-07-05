@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { classifyCondition, hashMediaQuery } from '../src/condition';
+import { classifyCondition, hashMediaQuery } from './condition';
 
 describe('classifyCondition', () => {
     it('classifies default', () => {
@@ -19,12 +19,15 @@ describe('classifyCondition', () => {
         });
     });
     it('classifies raw @media with normalized hash', () => {
-        const a = classifyCondition('@media (min-width: 2560px)');
-        const b = classifyCondition('@media (min-width:2560px)');
-        const c = classifyCondition('@media   (MIN-WIDTH:  2560PX)');
+        const asRawMedia = (c: ReturnType<typeof classifyCondition>) => {
+            if (!('kind' in c) || c.kind !== 'raw-media')
+                throw new Error(`expected raw-media, got ${JSON.stringify(c)}`);
+            return c;
+        };
+        const a = asRawMedia(classifyCondition('@media (min-width: 2560px)'));
+        const b = asRawMedia(classifyCondition('@media (min-width:2560px)'));
+        const c = asRawMedia(classifyCondition('@media   (MIN-WIDTH:  2560PX)'));
         expect(a.kind).toBe('raw-media');
-        if (a.kind !== 'raw-media' || b.kind !== 'raw-media' || c.kind !== 'raw-media')
-            throw new Error();
         expect(a.hash).toBe(b.hash);
         expect(a.hash).toBe(c.hash);
         expect(a.hash).toHaveLength(8);

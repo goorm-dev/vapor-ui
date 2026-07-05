@@ -45,7 +45,6 @@ const getComponentEntries = (componentsDir = 'src/components') => {
 const ENTRY_POINTS = {
     index: 'src/index.ts',
     'postcss/index': 'src/postcss/index.ts',
-    'utils/style-macro/index': 'src/utils/style-macro/index.ts',
     'styles/tailwind-preset': 'src/styles/tailwind-preset.css.ts',
     ...getComponentEntries('src/components'),
 };
@@ -74,6 +73,50 @@ const loadCompilerOptions = (tsConfigPath) => {
 
 const compilerOptions = loadCompilerOptions('tsconfig.json');
 
+const PROVIDER_OWNED_CSS = [
+    'layers.css.ts.vanilla.css',
+    'variables.css.ts.vanilla.css',
+    'themes.css.ts.vanilla.css',
+];
+
+/**
+ * Removing the loads at bundle time keeps a single source of truth in code
+ * while making the Provider the sole authorized loader of the three files.
+ *
+ * @returns {import('rollup').Plugin}
+ */
+const stripProviderOwnedImportsFromChunks = () => ({
+    name: 'strip-provider-owned-imports-from-chunks',
+
+    /**
+     * @param {import('rollup').OutputOptions} _options
+     * @param {Record<string, import('rollup').OutputAsset | import('rollup').OutputChunk>} bundle
+     */
+    generateBundle(options, bundle) {
+        const exceptionFile = 'components/theme-provider/';
+
+        for (const fileName in bundle) {
+            const file = bundle[fileName];
+
+            if (
+                file.type === 'chunk' &&
+                (fileName.endsWith('.css.vanilla.js') || fileName.endsWith('.css.vanilla.cjs')) &&
+                !fileName.startsWith(exceptionFile) &&
+                typeof file.code === 'string'
+            ) {
+                PROVIDER_OWNED_CSS.forEach((name) => {
+                    const escaped = name.replace(/\./g, '\\.');
+                    const regex = new RegExp(
+                        `^\\s*(?:import\\s+|require\\()\\s*['"][^'"]*${escaped}['"]\\s*\\)?\\s*;?\\s*$`,
+                        'gm',
+                    );
+                    file.code = file.code.replace(regex, '');
+                });
+            }
+        }
+    },
+});
+
 /**
  * Removes top-level '@layer ...;' declarations from '.css' asset files.
  * (Excluding layers.css.ts.vanilla.css)
@@ -88,7 +131,7 @@ const cleanCssLayerDeclarations = () => {
          * @param {Record<string, import('rollup').OutputAsset | import('rollup').OutputChunk>} bundle
          */
         generateBundle(options, bundle) {
-            const layerDeclarationRegex = /^@layer vapor.[a-zA-Z0-9_-]+;\s*/gm;
+            const layerDeclarationRegex = /^@layer vapor-[a-zA-Z0-9_-]+;\s*/gm;
             const exceptionFile = 'styles/layers.css.ts.vanilla.css';
 
             for (const fileName in bundle) {
@@ -194,7 +237,7 @@ const buildPlugins = [
 
 const esmBuild = {
     input: ENTRY_POINTS,
-    plugins: [...buildPlugins, cleanCssLayerDeclarations()],
+    plugins: [...buildPlugins, cleanCssLayerDeclarations(), stripProviderOwnedImportsFromChunks()],
     output: [
         createOutput({
             dir: 'dist/',
@@ -206,7 +249,7 @@ const esmBuild = {
 
 const cjsBuild = {
     input: ENTRY_POINTS,
-    plugins: [...buildPlugins, cleanCssLayerDeclarations()],
+    plugins: [...buildPlugins, cleanCssLayerDeclarations(), stripProviderOwnedImportsFromChunks()],
     output: [
         createOutput({
             dir: 'dist/',

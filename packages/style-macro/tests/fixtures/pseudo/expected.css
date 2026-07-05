@@ -1,8 +1,0 @@
-@layer vapor.utilities {
-    ._color-primary {
-        color: var(--vapor-color-primary);
-    }
-    ._hover-color-primary:hover {
-        color: var(--vapor-color-primary);
-    }
-}

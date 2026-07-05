@@ -38,11 +38,6 @@
         "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
         "./styles.css": "./dist/styles/themes.css.ts.vanilla.css",
         "./breakpoints.css": "./dist/styles/breakpoints.css",
-        "./style": {
-            "types": "./dist/utils/style-macro/index.d.ts",
-            "import": "./dist/utils/style-macro/index.js",
-            "require": "./dist/utils/style-macro/index.cjs"
-        },
         "./postcss": {
             "types": "./dist/postcss/index.d.ts",
             "import": "./dist/postcss/index.js",

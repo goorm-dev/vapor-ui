@@ -1,7 +1,23 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveToken } from '../src/tokens';
-import { manifest } from './fixtures/manifest.sample';
+import { resolveToken } from './tokens';
+import type { ManifestShape } from './types';
+
+const manifest: ManifestShape = {
+    version: '1',
+    tokens: {
+        color: { primary: '--vapor-color-primary' },
+        space: { '400': '--vapor-size-space-400' },
+        dimension: {},
+        borderRadius: {},
+        shadow: {},
+        typography: {},
+    },
+    propertyScopes: {
+        padding: 'space',
+        color: 'color',
+    },
+};
 
 describe('resolveToken', () => {
     it('returns css var for valid token', () => {

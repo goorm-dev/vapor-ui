@@ -8,7 +8,9 @@ export interface BuildError {
         | 'invalid-input-shape'
         | 'dynamic-value'
         | 'computed-key'
-        | 'spread';
+        | 'spread'
+        | 'layer-non-static'
+        | 'layer-unknown-registry-key';
     message: string;
     loc: { line: number; column: number };
     frame?: string;

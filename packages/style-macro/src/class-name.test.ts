@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildClassName } from '../src/class-name';
-import type { Tuple } from '../src/types';
+import { buildClassName } from './class-name';
+import type { Tuple } from './types';
 
 const t = (overrides: Partial<Tuple>): Tuple => ({
     property: 'padding',
@@ -64,7 +64,10 @@ describe('buildClassName (hashed)', () => {
     it('distinct condition → distinct class', () => {
         const def = buildClassName(t({}), 'hashed');
         const sm = buildClassName(t({ condition: { kind: 'named-bp', name: 'sm' } }), 'hashed');
-        const hover = buildClassName(t({ condition: { kind: 'pseudo', name: '_hover' } }), 'hashed');
+        const hover = buildClassName(
+            t({ condition: { kind: 'pseudo', name: '_hover' } }),
+            'hashed',
+        );
         expect(new Set([def, sm, hover]).size).toBe(3);
     });
     it('distinct cssValue → distinct class', () => {
