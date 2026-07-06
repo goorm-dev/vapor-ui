@@ -74,21 +74,43 @@ export default [
 ];
 ```
 
-### Rules
+### VS Code setup
 
-| Rule                                | Severity in preset | Description                                                                  |
-| ----------------------------------- | ------------------ | ---------------------------------------------------------------------------- |
-| `vapor/css/no-invalid-design-token` | error              | Disallow `var()` references to Vapor tokens not in the catalog               |
-| `vapor/css/token-scope-mismatch`    | error              | Disallow Vapor tokens used in a property whose semantic scope does not match |
-| `vapor/css/prefer-design-token`     | warn               | Suggest replacing raw CSS values with the nearest Vapor design token         |
-
-### Options
-
-#### `vapor/css/no-invalid-design-token`
+The VS Code ESLint extension does not lint `.css` / `.scss` files by default. Add the following to your `.vscode/settings.json` so the rules run in the editor:
 
 ```json
 {
-    "vapor/css/no-invalid-design-token": [
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "html",
+        "vue",
+        "markdown",
+        "css",
+        "scss"
+    ]
+}
+```
+
+> `eslint.validate` overrides the extension's default list, so include every language you want linted — not just `css` / `scss`. After editing, run **ESLint: Restart ESLint Server** from the command palette.
+
+### Rules
+
+| Rule                            | Severity in preset | Description                                                                  |
+| ------------------------------- | ------------------ | ---------------------------------------------------------------------------- |
+| `vapor/no-invalid-design-token` | error              | Disallow `var()` references to Vapor tokens not in the catalog               |
+| `vapor/token-scope-mismatch`    | error              | Disallow Vapor tokens used in a property whose semantic scope does not match |
+| `vapor/prefer-design-token`     | warn               | Suggest replacing raw CSS values with the nearest Vapor design token         |
+
+### Options
+
+#### `vapor/no-invalid-design-token`
+
+```json
+{
+    "vapor/no-invalid-design-token": [
         "error",
         {
             "allowCustomTokens": ["--vapor-custom-token-a"]
@@ -99,11 +121,11 @@ export default [
 
 - `allowCustomTokens` (`string[]`, default `[]`): token names to whitelist. Supports `*` glob wildcards. Also merges with `settings.vapor.customTokens` (shared settings).
 
-#### `vapor/css/token-scope-mismatch`
+#### `vapor/token-scope-mismatch`
 
 ```json
 {
-    "vapor/css/token-scope-mismatch": [
+    "vapor/token-scope-mismatch": [
         "error",
         {
             "propertyScopeMap": { "my-custom-prop": ["foreground"] },
@@ -116,11 +138,11 @@ export default [
 - `propertyScopeMap` (`Record<string, Scope[]>`, default `{}`): extend or override the built-in property→scope mapping. Merged on top of the built-in catalog.
 - `ignoreProperties` (`string[]`, default `[]`): CSS property names to skip entirely.
 
-#### `vapor/css/prefer-design-token`
+#### `vapor/prefer-design-token`
 
 ```json
 {
-    "vapor/css/prefer-design-token": [
+    "vapor/prefer-design-token": [
         "warn",
         {
             "categories": ["foreground", "background"],
@@ -139,7 +161,6 @@ export default [
 
 ### Limits (v1)
 
-- CSS files only. No SCSS, Less, or CSS-in-JS.
 - No autofix (suggestions only via IDE quick-fix).
 - No shorthand decomposition (e.g. `border` shorthand is not analysed for color parts).
 - No dark-theme hex matching (only light-mode token values are indexed).
