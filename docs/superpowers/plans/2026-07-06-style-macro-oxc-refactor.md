@@ -22,6 +22,7 @@
 - No dev dependency downgrades; `vitest`, `tsup`, `typescript` versions stay at the values already in `package.json`.
 - oxc-parser call: `parseSync(filename, source, { sourceType: 'module', lang: 'tsx' })`. `.tsx` lang unlocks JSX + TS at once and matches the babel plugins previously used (`['jsx', 'typescript']`).
 - Walk order: post-order (child nodes rewritten before their parents) so that `magic-string.overwrite()` on nested calls stays safe.
+- **AST node names are ESTree, not Babel.** oxc-parser@0.138.0 emits `Property` (not `ObjectProperty`), `Literal` (not `StringLiteral`/`NumericLiteral`), and combines primitives in `Literal` — distinguish by `typeof node.value` (`'string'`, `'number'`, `'boolean'`). Everything else in the plan (`ImportDeclaration`, `ImportSpecifier`, `CallExpression`, `ConditionalExpression`, `ArrayExpression`, `ArrowFunctionExpression`, `MemberExpression`, `SpreadElement`, `JSXOpeningElement`, `JSXAttribute`, `JSXIdentifier`, `JSXExpressionContainer`, `ReturnStatement`, `BlockStatement`) matches ESTree names verbatim.
 
 ---
 
@@ -256,14 +257,19 @@ function locOf(node: any): { line: number; column: number } {
 
 function readValueExpression(node: any): RawValue {
     const loc = locOf(node);
-    if (node.type === 'StringLiteral') {
-        if (typeof node.value === 'string' && node.value.startsWith('$')) {
-            return { kind: 'token', rawText: node.value, token: node.value.slice(1), loc };
+    if (node.type === 'Literal') {
+        // oxc emits ESTree-style `Literal` for string/number/boolean/null/regex.
+        // Distinguish by typeof node.value.
+        if (typeof node.value === 'string') {
+            if (node.value.startsWith('$')) {
+                return { kind: 'token', rawText: node.value, token: node.value.slice(1), loc };
+            }
+            return { kind: 'literal', rawText: node.value, literal: node.value, loc };
         }
-        return { kind: 'literal', rawText: node.value, literal: node.value, loc };
-    }
-    if (node.type === 'NumericLiteral') {
-        return { kind: 'literal', literal: node.value, loc };
+        if (typeof node.value === 'number') {
+            return { kind: 'literal', literal: node.value, loc };
+        }
+        return { kind: 'unknown', loc };
     }
     if (node.type === 'ConditionalExpression') {
         return {
@@ -280,7 +286,7 @@ function readValueExpression(node: any): RawValue {
 function keyName(prop: any): string | null {
     if (prop.computed) return null;
     if (prop.key.type === 'Identifier') return prop.key.name;
-    if (prop.key.type === 'StringLiteral') return prop.key.value;
+    if (prop.key.type === 'Literal' && typeof prop.key.value === 'string') return prop.key.value;
     return null;
 }
 
@@ -293,6 +299,7 @@ export function parseCallArgs(arg: any): RawEntry[] {
             out.push({ property: '<spread>', loc: locOf(prop), error: 'spread' });
             continue;
         }
+        if (prop.type !== 'Property') continue;
         if (prop.computed) {
             out.push({ property: '<computed>', loc: locOf(prop), error: 'computed-key' });
             continue;
@@ -307,7 +314,7 @@ export function parseCallArgs(arg: any): RawEntry[] {
         if (valueNode.type === 'ObjectExpression') {
             const conditions: RawEntry['conditions'] = [];
             for (const inner of valueNode.properties) {
-                if (inner.type !== 'ObjectProperty' || inner.computed) {
+                if (inner.type !== 'Property' || inner.computed) {
                     conditions.push({
                         conditionKey: '<bad>',
                         value: { kind: 'unknown', loc: locOf(inner) },
@@ -318,7 +325,7 @@ export function parseCallArgs(arg: any): RawEntry[] {
                 const ck =
                     inner.key.type === 'Identifier'
                         ? inner.key.name
-                        : inner.key.type === 'StringLiteral'
+                        : inner.key.type === 'Literal' && typeof inner.key.value === 'string'
                           ? inner.key.value
                           : '<bad>';
                 conditions.push({
@@ -446,7 +453,7 @@ function readArrayLiteral(
             errors.push(nonStatic(el, 'spread elements are not allowed.'));
             continue;
         }
-        if (el.type === 'StringLiteral') {
+        if (el.type === 'Literal' && typeof el.value === 'string') {
             order.push(el.value);
             continue;
         }
