@@ -1,4 +1,4 @@
-import * as t from '@babel/types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export interface RawValue {
     kind: 'literal' | 'token' | 'ternary' | 'unknown';
@@ -7,7 +7,7 @@ export interface RawValue {
     literal?: string | number;
     consequent?: RawValue;
     alternate?: RawValue;
-    testNode?: t.Expression;
+    testNode?: unknown;
     loc: { line: number; column: number };
 }
 
@@ -21,28 +21,34 @@ export interface RawEntry {
         value: RawValue;
         loc: { line: number; column: number };
     }>;
-    testNode?: t.Expression;
+    testNode?: unknown;
 }
 
-function locOf(node: t.Node): { line: number; column: number } {
+function locOf(node: any): { line: number; column: number } {
+    const start = node.loc?.start;
     return {
-        line: node.loc?.start.line ?? 1,
-        column: node.loc?.start.column ?? 0,
+        line: start?.line ?? 1,
+        column: start?.column ?? 0,
     };
 }
 
-function readValueExpression(node: t.Node): RawValue {
+function readValueExpression(node: any): RawValue {
     const loc = locOf(node);
-    if (t.isStringLiteral(node)) {
-        if (node.value.startsWith('$')) {
-            return { kind: 'token', token: node.value.slice(1), rawText: node.value, loc };
+    if (node.type === 'Literal') {
+        // oxc emits ESTree-style `Literal` for string/number/boolean/null/regex.
+        // Distinguish string vs number by typeof node.value.
+        if (typeof node.value === 'string') {
+            if (node.value.startsWith('$')) {
+                return { kind: 'token', token: node.value.slice(1), rawText: node.value, loc };
+            }
+            return { kind: 'literal', literal: node.value, rawText: node.value, loc };
         }
-        return { kind: 'literal', literal: node.value, rawText: node.value, loc };
+        if (typeof node.value === 'number') {
+            return { kind: 'literal', literal: node.value, rawText: String(node.value), loc };
+        }
+        return { kind: 'unknown', loc };
     }
-    if (t.isNumericLiteral(node)) {
-        return { kind: 'literal', literal: node.value, rawText: String(node.value), loc };
-    }
-    if (t.isConditionalExpression(node)) {
+    if (node.type === 'ConditionalExpression') {
         return {
             kind: 'ternary',
             consequent: readValueExpression(node.consequent),
@@ -54,37 +60,38 @@ function readValueExpression(node: t.Node): RawValue {
     return { kind: 'unknown', loc };
 }
 
-export function parseCallArgs(arg: t.ObjectExpression): RawEntry[] {
+function keyName(prop: any): string | null {
+    if (prop.computed) return null;
+    if (prop.key.type === 'Identifier') return prop.key.name;
+    if (prop.key.type === 'Literal' && typeof prop.key.value === 'string') return prop.key.value;
+    return null;
+}
+
+export function parseCallArgs(arg: any): RawEntry[] {
     const out: RawEntry[] = [];
+    if (!arg || arg.type !== 'ObjectExpression') return out;
+
     for (const prop of arg.properties) {
-        if (t.isSpreadElement(prop)) {
+        if (prop.type === 'SpreadElement') {
             out.push({ property: '<spread>', loc: locOf(prop), error: 'spread' });
             continue;
         }
-        if (!t.isObjectProperty(prop)) continue;
+        if (prop.type !== 'Property') continue;
         if (prop.computed) {
             out.push({ property: '<computed>', loc: locOf(prop), error: 'computed-key' });
             continue;
         }
-        const name = t.isIdentifier(prop.key)
-            ? prop.key.name
-            : t.isStringLiteral(prop.key)
-              ? prop.key.value
-              : null;
-        if (!name) {
-            out.push({ property: '<unknown>', loc: locOf(prop), error: 'computed-key' });
+        const name = keyName(prop);
+        if (name === null) {
+            out.push({ property: '<computed>', loc: locOf(prop), error: 'computed-key' });
             continue;
         }
 
         const valueNode = prop.value;
-        if (t.isObjectExpression(valueNode)) {
-            const conditions: Array<{
-                conditionKey: string;
-                value: RawValue;
-                loc: { line: number; column: number };
-            }> = [];
+        if (valueNode?.type === 'ObjectExpression') {
+            const conditions: RawEntry['conditions'] = [];
             for (const inner of valueNode.properties) {
-                if (!t.isObjectProperty(inner) || inner.computed) {
+                if (inner.type !== 'Property' || inner.computed) {
                     conditions.push({
                         conditionKey: '<bad>',
                         value: { kind: 'unknown', loc: locOf(inner) },
@@ -92,16 +99,18 @@ export function parseCallArgs(arg: t.ObjectExpression): RawEntry[] {
                     });
                     continue;
                 }
-                const ck = t.isIdentifier(inner.key)
-                    ? inner.key.name
-                    : t.isStringLiteral(inner.key)
-                      ? inner.key.value
-                      : '<bad>';
+                const ck =
+                    inner.key.type === 'Identifier'
+                        ? inner.key.name
+                        : inner.key.type === 'Literal' && typeof inner.key.value === 'string'
+                          ? inner.key.value
+                          : '<bad>';
                 conditions.push({
                     conditionKey: ck,
-                    value: t.isExpression(inner.value)
-                        ? readValueExpression(inner.value)
-                        : { kind: 'unknown', loc: locOf(inner) },
+                    value:
+                        inner.value && typeof inner.value.type === 'string'
+                            ? readValueExpression(inner.value)
+                            : { kind: 'unknown', loc: locOf(inner) },
                     loc: locOf(inner),
                 });
             }
@@ -109,7 +118,7 @@ export function parseCallArgs(arg: t.ObjectExpression): RawEntry[] {
             continue;
         }
 
-        if (!t.isExpression(valueNode)) {
+        if (!valueNode || typeof valueNode.type !== 'string') {
             out.push({
                 property: name,
                 loc: locOf(prop),
@@ -120,5 +129,6 @@ export function parseCallArgs(arg: t.ObjectExpression): RawEntry[] {
 
         out.push({ property: name, loc: locOf(prop), value: readValueExpression(valueNode) });
     }
+
     return out;
 }

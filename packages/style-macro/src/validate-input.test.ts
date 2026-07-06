@@ -1,5 +1,4 @@
-import * as parser from '@babel/parser';
-import type * as t from '@babel/types';
+import { parseSync } from 'oxc-parser';
 import { describe, expect, it } from 'vitest';
 
 import { parseCallArgs } from './parse-call';
@@ -22,13 +21,12 @@ const manifest: ManifestShape = {
     },
 };
 
-function callArg(src: string): t.ObjectExpression {
-    const file = parser.parse(`$style(${src})`, {
-        sourceType: 'module',
-        plugins: ['jsx', 'typescript'],
-    });
-    const expr = (file.program.body[0] as t.ExpressionStatement).expression as t.CallExpression;
-    return expr.arguments[0] as t.ObjectExpression;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function callArg(src: string): any {
+    const ast = parseSync('t.ts', `$style(${src})`, { sourceType: 'module', lang: 'ts' });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const expr = (ast.program.body[0] as any).expression as any;
+    return expr.arguments[0];
 }
 
 describe('validateInput', () => {
