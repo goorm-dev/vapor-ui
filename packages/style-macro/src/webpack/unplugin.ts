@@ -1,10 +1,10 @@
-import { manifest as defaultManifest } from '@vapor-ui/tokens';
 import { createHash } from 'node:crypto';
 import { createUnplugin } from 'unplugin';
 
-import { formatBuildError } from './code-frame';
-import { transform } from './transform';
-import type { FileRecord, ResolvedOptions, VaporStyleOptions } from './unplugin-types';
+import { emitLayerOrderCss, resolveOptions } from '~/bundler/plugin-shared';
+import type { FileRecord, VaporStyleOptions } from '~/bundler/unplugin-types';
+import { formatBuildError } from '~/compiler/code-frame';
+import { transform } from '~/compiler/transform';
 
 // Webpack 5 rejects unknown URI schemes (only `data:` and `file:` are native),
 // so the PUBLIC prefix must NOT contain a colon. A path-like specifier under a
@@ -21,51 +21,8 @@ const VIRTUAL_PREFIX = '~vapor-style/';
 const VIRTUAL_SUFFIX = '.css';
 const PUBLIC_PREFIX = '~vapor-style/';
 
-const DEFAULT_PROVIDER_SOURCES = ['@vapor-ui/core', '@vapor-ui/core/theme-provider'];
-
-const DEFAULT_LAYER_REGISTRY: Record<string, string> = {
-    theme: 'vapor-theme',
-    reset: 'vapor-reset',
-    components: 'vapor-components',
-    utilities: 'vapor-utilities',
-};
-
-function defaultInclude(id: string): boolean {
-    if (id.includes('node_modules')) return false;
-    return /\.(?:tsx?|jsx?|mts|mjs|cts|cjs)$/.test(id);
-}
-
-function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
-    const importSource = opts.importSource || '@vapor-ui/style-macro';
-    const themeStylesImport =
-        opts.themeStylesImport === false || opts.themeStylesImport === undefined
-            ? null
-            : opts.themeStylesImport;
-    const obfuscate = opts.obfuscate ?? process.env.NODE_ENV === 'production';
-    const providerImportSourceRaw = opts.providerImportSource ?? DEFAULT_PROVIDER_SOURCES;
-    const providerImportSource = Array.isArray(providerImportSourceRaw)
-        ? providerImportSourceRaw
-        : [providerImportSourceRaw];
-
-    return {
-        manifest: opts.manifest ?? defaultManifest,
-        importSource,
-        importName: opts.importName ?? '$style',
-        themeStylesImport,
-        include: opts.include ?? defaultInclude,
-        obfuscate,
-        providerImportSource,
-        providerImportName: opts.providerImportName ?? 'ThemeProvider',
-        layerRegistry: opts.layerRegistry ?? DEFAULT_LAYER_REGISTRY,
-    };
-}
-
 function hashContent(input: string): string {
     return createHash('sha1').update(input).digest('hex').slice(0, 12);
-}
-
-function emitLayerOrderCss(order: string[]): string {
-    return `@layer ${order.join(', ')};\n`;
 }
 
 // Records + discovered layer order live at module scope so they're shared

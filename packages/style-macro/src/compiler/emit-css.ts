@@ -1,5 +1,5 @@
-import { type ClassNameMode, buildClassName } from './class-name';
-import type { ConditionKey, PseudoName, Tuple } from './types';
+import { type ClassNameMode, buildClassName } from '~/model/class-name';
+import type { ConditionKey, PseudoName, Tuple } from '~/model/types';
 
 const PSEUDO_ORDER: PseudoName[] = [
     '_before',
@@ -63,6 +63,7 @@ export function emitCss(tuples: Tuple[], mode: ClassNameMode = 'readable'): stri
         raw: [] as Tuple[],
         pseudo: [] as Tuple[],
     };
+
     for (const t of unique) groups[bucket(t.condition)].push(t);
 
     // raw-media: sort by query string
@@ -88,22 +89,28 @@ export function emitCss(tuples: Tuple[], mode: ClassNameMode = 'readable'): stri
 
     const lines: string[] = ['@layer vapor-utilities {'];
     for (const t of groups.default) lines.push(ruleLine(t, mode));
+
     const namedBpBlock = (name: 'sm' | 'md' | 'lg', arr: Tuple[]) => {
         if (!arr.length) return;
         lines.push(`    @media (--vapor-${name}) {`);
         for (const t of arr) lines.push('    ' + ruleLine(t, mode));
         lines.push('    }');
     };
+
     namedBpBlock('sm', groups.sm);
     namedBpBlock('md', groups.md);
     namedBpBlock('lg', groups.lg);
+
     for (const t of groups.raw) {
         if (t.condition.kind !== 'raw-media') continue;
+
         lines.push(`    @media ${t.condition.query} {`);
         lines.push('    ' + ruleLine(t, mode));
         lines.push('    }');
     }
+
     for (const t of groups.pseudo) lines.push(ruleLine(t, mode));
     lines.push('}');
+
     return lines.join('\n') + '\n';
 }

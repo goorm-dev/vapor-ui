@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { parseSync } from 'oxc-parser';
 import { describe, expect, it } from 'vitest';
+
+import type { AnyProp } from '~/model/types';
 
 import { parseLayerProp } from './parse-layer-prop';
 
@@ -11,9 +12,9 @@ const REGISTRY = {
     utilities: 'vapor-utilities',
 };
 
-function exprFromSource(src: string): any {
+function exprFromSource(src: string): AnyProp {
     const ast = parseSync('t.ts', `const _ = ${src};`, { sourceType: 'module', lang: 'ts' });
-    const stmt = ast.program.body[0] as any;
+    const stmt = ast.program.body[0] as AnyProp;
     if (stmt.type !== 'VariableDeclaration') throw new Error('unreachable');
     const decl = stmt.declarations[0];
     if (!decl.init) throw new Error('unreachable');

@@ -10,10 +10,21 @@
             "require": "./dist/index.cjs"
         },
         "./unplugin": {
-            "types": "./dist/unplugin-entry.d.ts",
-            "import": "./dist/unplugin-entry.js",
-            "require": "./dist/unplugin-entry.cjs"
-        }
+            "types": "./dist/unplugin.d.ts",
+            "import": "./dist/unplugin.js",
+            "require": "./dist/unplugin.cjs"
+        },
+        "./next": {
+            "types": "./dist/next.d.ts",
+            "import": "./dist/next.js",
+            "require": "./dist/next.cjs"
+        },
+        "./turbopack-loader": {
+            "types": "./dist/turbopack-loader.d.ts",
+            "import": "./dist/turbopack-loader.js",
+            "require": "./dist/turbopack-loader.cjs"
+        },
+        "./package.json": "./package.json"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",

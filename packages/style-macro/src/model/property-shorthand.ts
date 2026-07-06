@@ -34,5 +34,6 @@ export const PROPERTY_SHORT: Record<string, string> = {
 export function shortenProperty(property: string): string {
     const known = PROPERTY_SHORT[property];
     if (known) return known;
+
     return property.replace(/([A-Z])/g, '-$1').toLowerCase();
 }

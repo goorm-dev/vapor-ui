@@ -1,5 +1,8 @@
 export type { ManifestShape, TokenScope } from '@vapor-ui/tokens';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyProp = any;
+
 export interface BuildError {
     code:
         | 'unknown-token'

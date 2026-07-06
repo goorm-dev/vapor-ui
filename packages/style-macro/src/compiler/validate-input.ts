@@ -1,7 +1,8 @@
-import { classifyCondition } from './condition';
+import { classifyCondition } from '~/model/condition';
+import { resolveToken } from '~/model/tokens';
+import type { BuildError, ManifestShape } from '~/model/types';
+
 import type { RawEntry, RawValue } from './parse-call';
-import { resolveToken } from './tokens';
-import type { BuildError, ManifestShape } from './types';
 
 function validateValue(
     property: string,

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { AnyProp } from '~/model/types';
 
 export interface RawValue {
     kind: 'literal' | 'token' | 'ternary' | 'unknown';
@@ -24,7 +24,7 @@ export interface RawEntry {
     testNode?: unknown;
 }
 
-function locOf(node: any): { line: number; column: number } {
+function locOf(node: AnyProp): { line: number; column: number } {
     const start = node.loc?.start;
     return {
         line: start?.line ?? 1,
@@ -32,7 +32,7 @@ function locOf(node: any): { line: number; column: number } {
     };
 }
 
-function readValueExpression(node: any): RawValue {
+function readValueExpression(node: AnyProp): RawValue {
     const loc = locOf(node);
     if (node.type === 'Literal') {
         // oxc emits ESTree-style `Literal` for string/number/boolean/null/regex.
@@ -60,14 +60,14 @@ function readValueExpression(node: any): RawValue {
     return { kind: 'unknown', loc };
 }
 
-function keyName(prop: any): string | null {
+function keyName(prop: AnyProp): string | null {
     if (prop.computed) return null;
     if (prop.key.type === 'Identifier') return prop.key.name;
     if (prop.key.type === 'Literal' && typeof prop.key.value === 'string') return prop.key.value;
     return null;
 }
 
-export function parseCallArgs(arg: any): RawEntry[] {
+export function parseCallArgs(arg: AnyProp): RawEntry[] {
     const out: RawEntry[] = [];
     if (!arg || arg.type !== 'ObjectExpression') return out;
 

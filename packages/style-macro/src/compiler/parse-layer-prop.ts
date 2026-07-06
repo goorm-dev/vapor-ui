@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { BuildError } from './types';
+import type { AnyProp, BuildError } from '~/model/types';
 
 export type LayerRegistry = Record<string, string>;
 
@@ -8,7 +7,7 @@ export interface ParseLayerResult {
     errors: BuildError[];
 }
 
-function locOf(node: any): { line: number; column: number } {
+function locOf(node: AnyProp): { line: number; column: number } {
     const start = node.loc?.start;
     return {
         line: start?.line ?? 1,
@@ -16,7 +15,7 @@ function locOf(node: any): { line: number; column: number } {
     };
 }
 
-function nonStatic(node: any, hint: string): BuildError {
+function nonStatic(node: AnyProp, hint: string): BuildError {
     return {
         code: 'layer-non-static',
         message: `\`layer\` prop must be a static expression: ${hint}`,
@@ -25,7 +24,7 @@ function nonStatic(node: any, hint: string): BuildError {
 }
 
 function readArrayLiteral(
-    node: any,
+    node: AnyProp,
     registry: LayerRegistry,
     paramName: string | null,
 ): { order: string[] | null; errors: BuildError[] } {
@@ -93,7 +92,7 @@ function readArrayLiteral(
  *   - Body is an array literal (or a block returning one)
  *   - Elements: string literals or `<param>.<registry-key>` accesses
  */
-export function parseLayerProp(exprNode: any, registry: LayerRegistry): ParseLayerResult {
+export function parseLayerProp(exprNode: AnyProp, registry: LayerRegistry): ParseLayerResult {
     if (exprNode.type === 'ArrayExpression') {
         return readArrayLiteral(exprNode, registry, null);
     }

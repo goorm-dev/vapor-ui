@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { VaporStyleOptions } from '~/bundler/unplugin-types';
+import type { AnyProp, ManifestShape } from '~/model/types';
+
 import plugin from './unplugin';
-import type { ManifestShape } from './types';
-import type { VaporStyleOptions } from './unplugin-types';
 
 const MANIFEST: ManifestShape = {
     version: '1',
@@ -34,14 +34,14 @@ function makeCtx() {
     };
 }
 
-function getHooks(opts: VaporStyleOptions = {}): any {
-    return (plugin.raw as any)(
+function getHooks(opts: VaporStyleOptions = {}): AnyProp {
+    return (plugin.raw as AnyProp)(
         { manifest: MANIFEST, ...opts },
         { framework: 'rollup', versions: {} },
     );
 }
 
-function callHook(hook: any, ctx: any, ...args: any[]): any {
+function callHook(hook: AnyProp, ctx: AnyProp, ...args: AnyProp[]): AnyProp {
     const fn = typeof hook === 'function' ? hook : hook?.handler;
     return fn.apply(ctx, args);
 }
@@ -145,9 +145,7 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
                 // '$999' is not in the manifest → validation error
                 `const cls = $style({ padding: '$999' });`,
             ].join('\n');
-            expect(() =>
-                callHook(hooks.transform, ctx, src, '/src/err.tsx'),
-            ).toThrow();
+            expect(() => callHook(hooks.transform, ctx, src, '/src/err.tsx')).toThrow();
             expect(ctx.error).toHaveBeenCalledTimes(1);
         });
     });

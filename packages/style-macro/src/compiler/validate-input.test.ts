@@ -1,8 +1,9 @@
 import { parseSync } from 'oxc-parser';
 import { describe, expect, it } from 'vitest';
 
+import type { AnyProp, ManifestShape } from '~/model/types';
+
 import { parseCallArgs } from './parse-call';
-import type { ManifestShape } from './types';
 import { validateInput } from './validate-input';
 
 const manifest: ManifestShape = {
@@ -21,11 +22,10 @@ const manifest: ManifestShape = {
     },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function callArg(src: string): any {
+function callArg(src: string): AnyProp {
     const ast = parseSync('t.ts', `$style(${src})`, { sourceType: 'module', lang: 'ts' });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const expr = (ast.program.body[0] as any).expression as any;
+
+    const expr = (ast.program.body[0] as AnyProp).expression as AnyProp;
     return expr.arguments[0];
 }
 

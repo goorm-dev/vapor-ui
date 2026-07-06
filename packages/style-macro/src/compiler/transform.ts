@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import MagicString from 'magic-string';
 import { parseSync } from 'oxc-parser';
 
-import { type ClassNameMode, buildClassName } from './class-name';
-import { classifyCondition } from './condition';
+import { type ClassNameMode, buildClassName } from '~/model/class-name';
+import { classifyCondition } from '~/model/condition';
+import { shortenProperty } from '~/model/property-shorthand';
+import { resolveToken } from '~/model/tokens';
+import type { AnyProp, BuildError, ConditionKey, ManifestShape, Tuple } from '~/model/types';
+
 import { emitCss } from './emit-css';
 import { walk } from './oxc-walk';
 import { type RawEntry, type RawValue, parseCallArgs } from './parse-call';
 import { type LayerRegistry, parseLayerProp } from './parse-layer-prop';
-import { shortenProperty } from './property-shorthand';
-import { resolveToken } from './tokens';
-import type { BuildError, ConditionKey, ManifestShape, Tuple } from './types';
 import { validateInput } from './validate-input';
 
 export interface TransformResult {
@@ -97,7 +97,7 @@ function buildEntryPart(
     mode: ClassNameMode,
 ): EntryPart | null {
     if (entry.value?.kind === 'ternary') {
-        const testNode = entry.value.testNode as any;
+        const testNode = entry.value.testNode as AnyProp;
         const testSrc = source.slice(testNode.start, testNode.end);
         const conseqTuple = tupleFor(
             entry.property,
@@ -221,7 +221,7 @@ export function transform(opts: TransformOpts): TransformResult {
     const parsed = parseSync(opts.filename, opts.source, {
         sourceType: 'module',
         lang: 'tsx',
-    }) as any;
+    }) as AnyProp;
     if (parsed.errors?.length) return EMPTY_RESULT(opts.source);
 
     const program = parsed.program;
@@ -254,12 +254,12 @@ export function transform(opts: TransformOpts): TransformResult {
     const ms = new MagicString(opts.source);
 
     walk(program, {
-        JSXOpeningElement: (node: any) => {
+        JSXOpeningElement: (node: AnyProp) => {
             if (!providerBindingName) return;
             const nameNode = node.name;
             if (nameNode.type !== 'JSXIdentifier' || nameNode.name !== providerBindingName) return;
-            const layerAttr = (node.attributes as any[]).find(
-                (a: any) =>
+            const layerAttr = (node.attributes as AnyProp[]).find(
+                (a: AnyProp) =>
                     a.type === 'JSXAttribute' &&
                     a.name?.type === 'JSXIdentifier' &&
                     a.name.name === 'layer',
@@ -299,7 +299,7 @@ export function transform(opts: TransformOpts): TransformResult {
             }
             layerOrder = result.order ?? null;
         },
-        CallExpression: (node: any) => {
+        CallExpression: (node: AnyProp) => {
             if (!bindingName) return;
             if (node.callee.type !== 'Identifier' || node.callee.name !== bindingName) return;
             const arg = node.arguments[0];

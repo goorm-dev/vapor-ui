@@ -1,7 +1,8 @@
 import { bench, describe } from 'vitest';
 
+import type { ManifestShape } from '~/model/types';
+
 import { transform } from './transform';
-import type { ManifestShape } from './types';
 
 const MANIFEST: ManifestShape = {
     version: '1',

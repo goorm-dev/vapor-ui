@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { parseSync } from 'oxc-parser';
 import { describe, expect, it } from 'vitest';
+
+import type { AnyProp } from '~/model/types';
 
 import { walk } from './oxc-walk';
 
@@ -10,8 +11,8 @@ describe('walk', () => {
         const ast = parseSync('t.ts', source, { sourceType: 'module', lang: 'ts' });
         const order: string[] = [];
         walk(ast.program, {
-            CallExpression: (node: any) => {
-                order.push((node.callee as any).name);
+            CallExpression: (node: AnyProp) => {
+                order.push((node.callee as AnyProp).name);
             },
         });
         expect(order).toEqual(['g', 'h', 'f']);
@@ -22,7 +23,7 @@ describe('walk', () => {
         const ast = parseSync('t.ts', source, { sourceType: 'module', lang: 'ts' });
         const parents: string[] = [];
         walk(ast.program, {
-            Property: (_node: any, parent: any) => {
+            Property: (_node: AnyProp, parent: AnyProp) => {
                 parents.push(parent.type);
             },
         });

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import type { Tuple } from '~/model/types';
+
 import { emitCss } from './emit-css';
-import type { Tuple } from './types';
 
 const t = (o: Partial<Tuple>): Tuple => ({
     property: 'padding',
