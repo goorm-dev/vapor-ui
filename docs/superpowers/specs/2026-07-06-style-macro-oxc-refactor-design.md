@@ -16,7 +16,7 @@
 - `transform()` 성능을 파일당 최소 5배, 목표 5–15배 개선
 - `@babel/*` 런타임 의존성 4종 제거 (`@babel/parser`, `@babel/generator`, `@babel/traverse`, `@babel/types`) 및 관련 `@types/babel__generator`, `@types/babel__traverse` 제거
 - 기존 unplugin 다중 타깃 (Vite, webpack, Rollup, rspack, esbuild) 지원 유지
-- 기존 test 스위트 전부 무수정 pass — regression gate로 사용
+- 기존 test 스위트 pass — 6개 파일은 무수정, AST 헬퍼를 쓰는 2개 파일은 헬퍼만 oxc 로 포팅 (§8.1)
 - Determinism 계약 유지: 동일 `(source, manifest)` → byte-identical `code` / `css` / `classes`
 
 ## 3. 비목표
@@ -195,18 +195,22 @@ JSX walk에서 `<ThemeProvider layer={(l) => [l.theme, l.reset]}>` 감지. `pars
 
 ### 8.1 Regression gate
 
-기존 test 파일을 수정 없이 pass시키는 것이 refactor 성공의 필수 조건.
-
+**무수정 pass** (AST 미사용, 순수 계약 테스트):
 ```
 $style.test.ts
 class-name.test.ts
 condition.test.ts
 emit-css.test.ts
-parse-layer-prop.test.ts
 property-shorthand.test.ts
 tokens.test.ts
-validate-input.test.ts
 ```
+
+**AST 헬퍼만 교체 후 pass** (테스트 케이스/기대값은 그대로):
+```
+validate-input.test.ts        # callArg() 헬퍼: @babel/parser → oxc-parser
+parse-layer-prop.test.ts      # exprFromSource() 헬퍼: @babel/parser → oxc-parser
+```
+두 파일은 함수 시그니처가 babel `t.ObjectExpression` / `t.Expression` 에서 oxc AST 노드로 바뀌었기 때문에 헬퍼만 포팅한다. `describe`/`it` 케이스와 기대 결과는 손대지 않으며, 이 조건이 곧 회귀 방지 게이트다.
 
 ### 8.2 신규 test
 
@@ -228,7 +232,7 @@ validate-input.test.ts
 2. 단일 PR:
    - `package.json` dep 교체
    - `transform.ts`, `parse-call.ts`, `parse-layer-prop.ts` 재작성
-   - test 파일 무수정
+   - `validate-input.test.ts` / `parse-layer-prop.test.ts` 의 AST 빌드 헬퍼만 oxc 로 포팅 (케이스/기대값 무수정)
 3. CI 게이트 (모두 pass):
    - 기존 test 전부 pass
    - 신규 `transform.oxc.test.ts` pass
