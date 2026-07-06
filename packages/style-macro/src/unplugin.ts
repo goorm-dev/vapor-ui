@@ -68,10 +68,21 @@ function emitLayerOrderCss(order: string[]): string {
     return `@layer ${order.join(', ')};\n`;
 }
 
+// Records + discovered layer order live at module scope so they're shared
+// across every unplugin instance created by the same process. Next.js 16
+// invokes the webpack config function once per compiler (client, RSC server,
+// edge) — each invocation would otherwise get its own factory closure with
+// its own records Map. The transform hook fires only in the compiler that
+// bundles a given source file, but the corresponding virtual CSS may be
+// loaded by a DIFFERENT compiler (e.g. RSC transforms page.tsx, client
+// extracts the CSS). Without shared state, load() finds no record and
+// returns null, so the extracted CSS is empty. Content-hashed keys
+// (sha1(css).slice(0,12)) guarantee sharing is collision-safe.
+const records = new Map<string, FileRecord>();
+let discoveredLayerOrder: string[] | null = null;
+
 export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
     const opts = resolveOptions(rawOpts ?? {});
-    const records = new Map<string, FileRecord>();
-    let discoveredLayerOrder: string[] | null = null;
 
     return {
         name: 'vapor-style-macro',
