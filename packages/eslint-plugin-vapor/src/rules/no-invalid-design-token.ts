@@ -2,7 +2,7 @@ import type { Rule } from 'eslint';
 
 import { matchAllowlist } from '~/utils/allowlist-matcher';
 import { parseDeclarationValue } from '~/utils/css-value-parser';
-import { segmentDistance } from '~/utils/segment-distance';
+import { segmentDistanceFromSegments } from '~/utils/segment-distance';
 import { TOKEN_INDEX } from '~/utils/token-index';
 
 interface Options {
@@ -10,11 +10,16 @@ interface Options {
 }
 
 function findCandidates(name: string): string[] {
+    const segs = name.split('-');
+    const bucket = TOKEN_INDEX.tokensBySegmentCount.get(segs.length);
+    if (!bucket) return [];
+
     const scored: Array<{ name: string; dist: number }> = [];
-    TOKEN_INDEX.canonicalTokens.forEach((canonical) => {
-        const d = segmentDistance(name, canonical);
-        if (d !== null) scored.push({ name: canonical, dist: d });
-    });
+    for (const entry of bucket) {
+        const d = segmentDistanceFromSegments(segs, entry.segments);
+        if (d !== null) scored.push({ name: entry.name, dist: d });
+    }
+
     scored.sort((a, b) => a.dist - b.dist);
     return scored.slice(0, 3).map((c) => c.name);
 }
@@ -63,30 +68,32 @@ export const noInvalidDesignTokenRule: Rule.RuleModule = {
                     const candidates = findCandidates(part.name);
                     const reportNode = (decl as { value: { loc: unknown } }).value;
 
-                    if (candidates.length > 0) {
-                        context.report({
-                            node: reportNode as never,
-                            messageId: 'unknownTokenWithSuggestions',
-                            data: { token: part.name, candidates: candidates.join(', ') },
-                            suggest: candidates.map((c) => ({
-                                messageId: 'replaceWithToken',
-                                data: { candidate: c },
-                                fix(fixer) {
-                                    // part.offset is an absolute document offset (from @eslint/css AST loc.start.offset).
-                                    // @eslint/css nodes have no .range property, so we use the offset directly.
-                                    const tokenStart = part.offset;
-                                    const tokenEnd = tokenStart + part.name.length;
-                                    return fixer.replaceTextRange([tokenStart, tokenEnd], c);
-                                },
-                            })),
-                        });
-                    } else {
+                    if (candidates.length <= 0) {
                         context.report({
                             node: reportNode as never,
                             messageId: 'unknownToken',
                             data: { token: part.name },
                         });
+
+                        continue;
                     }
+
+                    context.report({
+                        node: reportNode as never,
+                        messageId: 'unknownTokenWithSuggestions',
+                        data: { token: part.name, candidates: candidates.join(', ') },
+                        suggest: candidates.map((c) => ({
+                            messageId: 'replaceWithToken',
+                            data: { candidate: c },
+                            fix(fixer) {
+                                // part.offset is an absolute document offset (from @eslint/css AST loc.start.offset).
+                                // @eslint/css nodes have no .range property, so we use the offset directly.
+                                const tokenStart = part.offset;
+                                const tokenEnd = tokenStart + part.name.length;
+                                return fixer.replaceTextRange([tokenStart, tokenEnd], c);
+                            },
+                        })),
+                    });
                 }
             },
         };

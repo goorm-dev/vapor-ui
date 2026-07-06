@@ -21,9 +21,10 @@ function damerauLevenshtein(a: string, b: string, max: number): number {
     return dp[m][n];
 }
 
-export function segmentDistance(a: string, b: string): number | null {
-    const segA = a.split('-');
-    const segB = b.split('-');
+export function segmentDistanceFromSegments(
+    segA: readonly string[],
+    segB: readonly string[],
+): number | null {
     if (segA.length !== segB.length) return null;
     let total = 0;
     for (let i = 0; i < segA.length; i++) {
@@ -33,4 +34,8 @@ export function segmentDistance(a: string, b: string): number | null {
         if (total > 2) return null;
     }
     return total;
+}
+
+export function segmentDistance(a: string, b: string): number | null {
+    return segmentDistanceFromSegments(a.split('-'), b.split('-'));
 }

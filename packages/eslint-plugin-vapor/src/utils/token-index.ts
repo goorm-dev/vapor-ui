@@ -19,11 +19,17 @@ export interface TokenMeta {
     px?: number;
 }
 
+export interface CanonicalTokenEntry {
+    name: string;
+    segments: readonly string[];
+}
+
 export interface TokenIndex {
     canonicalTokens: ReadonlySet<string>;
     tokenMeta: ReadonlyMap<string, TokenMeta>;
     byHex: ReadonlyMap<string, readonly string[]>;
     byPx: ReadonlyMap<number, readonly string[]>;
+    tokensBySegmentCount: ReadonlyMap<number, readonly CanonicalTokenEntry[]>;
 }
 
 interface IndexBuilder {
@@ -176,11 +182,22 @@ export function buildTokenIndex(): TokenIndex {
     walkSemanticColors(b, semanticColorLight, primitiveByName);
     walkShadow(b, shadow);
 
+    const bySegmentCount = new Map<number, CanonicalTokenEntry[]>();
+    b.canonical.forEach((name) => {
+        const segments = name.split('-');
+        const bucket = bySegmentCount.get(segments.length);
+        const entry: CanonicalTokenEntry = { name, segments };
+
+        if (bucket) bucket.push(entry);
+        else bySegmentCount.set(segments.length, [entry]);
+    });
+
     return {
         canonicalTokens: b.canonical,
         tokenMeta: b.meta,
         byHex: b.hexIndex,
         byPx: b.pxIndex,
+        tokensBySegmentCount: bySegmentCount,
     };
 }
 
