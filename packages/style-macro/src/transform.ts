@@ -120,7 +120,7 @@ function buildEntryPart(
         allClasses.add(altCls);
         return {
             kind: 'ternary',
-            expr: `(${testSrc} ? ${JSON.stringify(conseqCls)} : ${JSON.stringify(altCls)})`,
+            expr: `(${testSrc} ? ${jsSingleQuoted(conseqCls)} : ${jsSingleQuoted(altCls)})`,
         };
     }
 
