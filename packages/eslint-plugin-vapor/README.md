@@ -46,37 +46,20 @@ pnpm add -D @eslint/css
 // eslint.config.mjs
 import css from '@eslint/css';
 import vapor from 'eslint-plugin-vapor';
+import { defineConfig } from 'eslint/config';
 
-export default [
+export default defineConfig([
     {
-        files: ['**/*.css'],
-        plugins: { css, vapor: vapor.configs.css.plugins.vapor },
-        language: 'css/css',
-        rules: vapor.configs.css.rules,
+        files: ['**/*.css', '**/*.scss'],
+        plugins: { css, vapor },
+        extends: ['vapor/flat/css'],
     },
-];
-```
-
-Or use the preset shorthand:
-
-```js
-// eslint.config.mjs
-import css from '@eslint/css';
-import vapor from 'eslint-plugin-vapor';
-
-export default [
-    {
-        files: ['**/*.css'],
-        language: 'css/css',
-        ...vapor.configs.css,
-        plugins: { ...vapor.configs.css.plugins, css },
-    },
-];
+]);
 ```
 
 ### VS Code setup
 
-The VS Code ESLint extension does not lint `.css` / `.scss` files by default. Add the following to your `.vscode/settings.json` so the rules run in the editor:
+The VS Code ESLint extension does not lint `.scss` files by default. Add the following to your `.vscode/settings.json` so the rules run in the editor:
 
 ```json
 {

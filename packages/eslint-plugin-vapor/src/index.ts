@@ -41,44 +41,25 @@ const plugin = {
     rules,
     configs: {
         flat: {
-            a11y: { recommended: {} },
-            css: { recommended: {} },
+            name: 'eslint-plugin-vapor/flat',
+            plugins: {},
+            rules: a11yRecommended,
+        },
+        'flat/css': {
+            name: 'eslint-plugin-vapor/flat/css',
+            language: 'css/css',
+            plugins: {},
+            rules: cssRecommended,
         },
         legacy: {
-            recommended: {},
+            name: 'eslint-plugin-vapor/legacy',
+            plugins: ['vapor'],
+            rules: a11yRecommended,
         },
     },
 };
 
-Object.assign(plugin.configs, {
-    flat: {
-        a11y: {
-            recommended: {
-                files: ['**/*.{js,jsx,ts,tsx}'],
-                plugins: { vapor: plugin },
-                rules: a11yRecommended,
-            },
-        },
-        css: {
-            recommended: {
-                files: ['**/*.css', '**/*.scss'],
-                plugins: { vapor: plugin },
-                language: 'css/css',
-                rules: cssRecommended,
-            },
-        },
-    },
-    legacy: {
-        recommended: {
-            plugins: ['vapor'],
-            overrides: [
-                {
-                    files: ['*.js', '*.jsx', '*.ts', '*.tsx'],
-                    rules: a11yRecommended,
-                },
-            ],
-        },
-    },
-});
+Object.assign(plugin.configs.flat.plugins, { vapor: plugin });
+Object.assign(plugin.configs['flat/css'].plugins, { vapor: plugin });
 
 export default plugin;
