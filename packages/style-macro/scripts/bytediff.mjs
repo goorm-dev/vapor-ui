@@ -95,34 +95,18 @@ const hashesB = hashTree(treeB);
 const allPaths = new Set([...hashesA.keys(), ...hashesB.keys()]);
 const sortedPaths = [...allPaths].sort();
 
-let identical = true;
-
 for (const rel of sortedPaths) {
     const ha = hashesA.get(rel);
     const hb = hashesB.get(rel);
 
     if (ha !== hb) {
-        identical = false;
-        if (ha === undefined) {
-            console.error(`DIFF  ${rel}`);
-            console.error(`  treeA: <missing>`);
-            console.error(`  treeB: ${hb}`);
-        } else if (hb === undefined) {
-            console.error(`DIFF  ${rel}`);
-            console.error(`  treeA: ${ha}`);
-            console.error(`  treeB: <missing>`);
-        } else {
-            console.error(`DIFF  ${rel}`);
-            console.error(`  treeA: ${ha}`);
-            console.error(`  treeB: ${hb}`);
-        }
-        // Exit on first differing path per the spec
+        const haStr = ha ?? '<missing>';
+        const hbStr = hb ?? '<missing>';
+        console.error(`DIFF  ${rel}\n  treeA: ${haStr}\n  treeB: ${hbStr}`);
         process.exit(1);
     }
 }
 
-if (identical) {
-    const count = hashesA.size;
-    console.log(`OK    identical trees (${count} file${count !== 1 ? 's' : ''} compared, *.map excluded)`);
-    process.exit(0);
-}
+const count = hashesA.size;
+console.log(`OK    identical trees (${count} file${count !== 1 ? 's' : ''} compared, *.map excluded)`);
+process.exit(0);
