@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { BuildError } from './types';
 
 export type LayerRegistry = Record<string, string>;
@@ -103,7 +102,9 @@ export function parseLayerProp(exprNode: any, registry: LayerRegistry): ParseLay
         if (exprNode.params.length > 1) {
             return {
                 order: null,
-                errors: [nonStatic(exprNode, 'the arrow function must take zero or one parameter.')],
+                errors: [
+                    nonStatic(exprNode, 'the arrow function must take zero or one parameter.'),
+                ],
             };
         }
 

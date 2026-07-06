@@ -115,9 +115,8 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
             const plugins = compiler.options.plugins as
                 | Array<{ apply?: (c: unknown) => void; constructor?: { name?: string } } | null>
                 | undefined;
-            const vfs = plugins?.find(
-                (p) => p?.constructor?.name === 'VirtualModulesPlugin',
-            );
+            const vfs = plugins?.find((p) => p?.constructor?.name === 'VirtualModulesPlugin');
+
             if (vfs && typeof vfs.apply === 'function') {
                 vfs.apply(compiler);
             }

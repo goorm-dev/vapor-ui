@@ -6,7 +6,7 @@ import { type ClassNameMode, buildClassName } from './class-name';
 import { classifyCondition } from './condition';
 import { emitCss } from './emit-css';
 import { walk } from './oxc-walk';
-import { parseCallArgs, type RawEntry, type RawValue } from './parse-call';
+import { type RawEntry, type RawValue, parseCallArgs } from './parse-call';
 import { type LayerRegistry, parseLayerProp } from './parse-layer-prop';
 import { shortenProperty } from './property-shorthand';
 import { resolveToken } from './tokens';
@@ -86,9 +86,7 @@ function tupleFor(
     };
 }
 
-type EntryPart =
-    | { kind: 'static'; value: string }
-    | { kind: 'ternary'; expr: string };
+type EntryPart = { kind: 'static'; value: string } | { kind: 'ternary'; expr: string };
 
 function buildEntryPart(
     entry: RawEntry,
@@ -152,14 +150,17 @@ function buildEntryPart(
 
 function jsSingleQuoted(value: string): string {
     // Escape backslashes and single quotes; escape other special chars the same way JSON.stringify would.
-    return "'" + value
-        .replace(/\\/g, '\\\\')
-        .replace(/'/g, "\\'")
-        .replace(/\n/g, '\\n')
-        .replace(/\r/g, '\\r')
-        .replace(/\u2028/g, '\\u2028')
-        .replace(/\u2029/g, '\\u2029')
-        + "'";
+    return (
+        "'" +
+        value
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/\n/g, '\\n')
+            .replace(/\r/g, '\\r')
+            .replace(/\u2028/g, '\\u2028')
+            .replace(/\u2029/g, '\\u2029') +
+        "'"
+    );
 }
 
 function buildReplacement(
@@ -190,9 +191,7 @@ function buildReplacement(
             .sort();
         return jsSingleQuoted(tokens.join(' '));
     }
-    const frags = parts.map((p) =>
-        p.kind === 'static' ? jsSingleQuoted(p.value) : p.expr,
-    );
+    const frags = parts.map((p) => (p.kind === 'static' ? jsSingleQuoted(p.value) : p.expr));
     return `[${frags.join(', ')}].filter(Boolean).join(' ')`;
 }
 
@@ -258,10 +257,7 @@ export function transform(opts: TransformOpts): TransformResult {
         JSXOpeningElement: (node: any) => {
             if (!providerBindingName) return;
             const nameNode = node.name;
-            if (
-                nameNode.type !== 'JSXIdentifier' ||
-                nameNode.name !== providerBindingName
-            ) return;
+            if (nameNode.type !== 'JSXIdentifier' || nameNode.name !== providerBindingName) return;
             const layerAttr = (node.attributes as any[]).find(
                 (a: any) =>
                     a.type === 'JSXAttribute' &&
@@ -292,7 +288,8 @@ export function transform(opts: TransformOpts): TransformResult {
             if (layerOrder !== null) {
                 errors.push({
                     code: 'layer-non-static',
-                    message: 'Multiple <ThemeProvider layer={...}> occurrences in the same file are not allowed.',
+                    message:
+                        'Multiple <ThemeProvider layer={...}> occurrences in the same file are not allowed.',
                     loc: {
                         line: node.loc?.start.line ?? 1,
                         column: node.loc?.start.column ?? 0,
@@ -320,6 +317,7 @@ export function transform(opts: TransformOpts): TransformResult {
 
             const entries = parseCallArgs(arg);
             const inputErrors = validateInput(entries, opts.manifest);
+
             errors.push(...inputErrors);
             if (inputErrors.length) return;
 

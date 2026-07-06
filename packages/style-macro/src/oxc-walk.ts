@@ -8,7 +8,8 @@ function isNode(value: unknown): value is { type: string } {
 export function walk(node: unknown, visitors: Visitors, parent: any = null): void {
     if (!isNode(node)) return;
     for (const key of Object.keys(node)) {
-        if (key === 'type' || key === 'start' || key === 'end' || key === 'loc' || key === 'range') continue;
+        if (key === 'type' || key === 'start' || key === 'end' || key === 'loc' || key === 'range')
+            continue;
         const child = (node as any)[key];
         if (Array.isArray(child)) {
             for (const item of child) walk(item, visitors, node);

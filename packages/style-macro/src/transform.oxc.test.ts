@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { ManifestShape } from './types';
 import { transform } from './transform';
+import type { ManifestShape } from './types';
 
 const MANIFEST: ManifestShape = {
     version: '1',
@@ -121,7 +121,6 @@ describe('transform (oxc)', () => {
         expect(result.code).not.toContain('$style(');
         // Lock in: ternary branches must be single-quoted, not double-quoted
         expect(result.code).toMatch(/\?\s*'[a-zA-Z0-9_\- ]+'\s*:\s*'[a-zA-Z0-9_\- ]+'/);
-
     });
 
     it('parses TSX generic call sites without error', () => {
