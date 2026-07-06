@@ -22,6 +22,7 @@
         "dist"
     ],
     "scripts": {
+        "bench": "vitest bench --run",
         "build": "tsup",
         "clean": "rimraf dist node_modules .turbo",
         "lint": "eslint ./src",
