@@ -85,6 +85,26 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
             },
         },
 
+        // unplugin 2.x pushes VirtualModulesPlugin into `compiler.options.plugins`
+        // during its own `apply(compiler)` but never invokes `.apply()` on it.
+        // In host environments that snapshot the plugin array before iterating
+        // (Next.js's webpack pipeline included), the VMP never wires itself into
+        // `compiler.inputFileSystem`, so writes vanish and the encoded
+        // `_virtual_...css` path fails to resolve. Force-apply the VMP here —
+        // its `afterEnvironment` hook is idempotent (guarded by
+        // `_writeVirtualFile`).
+        webpack(compiler) {
+            const plugins = compiler.options.plugins as
+                | Array<{ apply?: (c: unknown) => void; constructor?: { name?: string } } | null>
+                | undefined;
+            const vfs = plugins?.find(
+                (p) => p?.constructor?.name === 'VirtualModulesPlugin',
+            );
+            if (vfs && typeof vfs.apply === 'function') {
+                vfs.apply(compiler);
+            }
+        },
+
         resolveId(id) {
             if (id.startsWith(PUBLIC_PREFIX)) return '\0' + id;
             return null;

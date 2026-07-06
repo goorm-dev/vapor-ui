@@ -150,6 +150,22 @@ export function transform(opts: TransformOpts): TransformResult {
     const providerImportName = opts.providerImportName ?? 'ThemeProvider';
     const layerRegistry = opts.layerRegistry ?? {};
 
+    // Content pre-check: if the source mentions neither the macro import name
+    // (default `$style`) nor the Provider import name (default `ThemeProvider`),
+    // there's nothing to rewrite. Skip babel parsing entirely — the vast
+    // majority of files in a typical app take this fast path.
+    const hasMacroMarker = opts.source.includes(importName);
+    const hasProviderMarker = providerSources.size > 0 && opts.source.includes(providerImportName);
+    if (!hasMacroMarker && !hasProviderMarker) {
+        return {
+            code: opts.source,
+            css: null,
+            classes: [],
+            layerOrder: null,
+            errors: [],
+        };
+    }
+
     let ast: ReturnType<typeof parse>;
     try {
         ast = parse(opts.source, {
