@@ -44,36 +44,19 @@ export function parseDeclarationValue(valueNode: unknown): ParsedValuePart[] {
 
     function walk(node: NodeLike | undefined): void {
         if (!node) return;
-        const offset = node.loc?.start?.offset ?? 0;
-        if (node.type === 'Function' && node.name === 'var') {
-            const first = node.children?.[0];
-            if (first?.type === 'Identifier' && typeof first.name === 'string') {
-                out.push({
-                    type: 'var',
-                    name: first.name,
-                    offset: first.loc?.start?.offset ?? offset,
-                });
-            }
+
+        if (isCSSVariable(node)) {
+            const parsed = parseCSSVariable(node);
+            if (parsed) out.push(parsed);
+            for (const c of cssVariableFallbacks(node)) walk(c);
             return;
         }
-        if (node.type === 'Hash' && typeof node.value === 'string') {
-            out.push({
-                type: 'hex',
-                raw: `#${node.value}`,
-                normalized: normalizeHex(node.value),
-                offset,
-            });
+        if (isHexColor(node)) {
+            out.push(parseHexColor(node));
             return;
         }
-        if (node.type === 'Dimension' && node.value != null && typeof node.unit === 'string') {
-            const num = typeof node.value === 'number' ? node.value : Number(node.value);
-            out.push({
-                type: 'dimension',
-                raw: `${node.value}${node.unit}`,
-                value: num,
-                unit: node.unit,
-                offset,
-            });
+        if (isDimension(node)) {
+            out.push(parseDimension(node));
             return;
         }
         if (Array.isArray(node.children)) {
@@ -83,4 +66,58 @@ export function parseDeclarationValue(valueNode: unknown): ParsedValuePart[] {
 
     walk(root);
     return out;
+}
+
+function offsetOf(node: NodeLike | undefined): number {
+    return node?.loc?.start?.offset ?? 0;
+}
+
+// `var(--x[, <fallback>])` — Function node whose name is 'var'
+function isCSSVariable(node: NodeLike): boolean {
+    return node.type === 'Function' && node.name === 'var';
+}
+
+// `#fff` / `#ffffff` — hex color literal
+function isHexColor(node: NodeLike): node is NodeLike & { value: string } {
+    return node.type === 'Hash' && typeof node.value === 'string';
+}
+
+// `8px`, `1.5rem` — numeric value with a unit suffix
+function isDimension(node: NodeLike): node is NodeLike & { value: string | number; unit: string } {
+    return node.type === 'Dimension' && node.value != null && typeof node.unit === 'string';
+}
+
+function parseCSSVariable(node: NodeLike): ParsedValueToken | null {
+    const first = node.children?.[0];
+    if (first?.type !== 'Identifier' || typeof first.name !== 'string') return null;
+    return { type: 'var', name: first.name, offset: offsetOf(first) };
+}
+
+// Children after the identifier are the fallback expression:
+// `var(--x, <fallback>)`. Downstream rules must still see hex/dimension/var
+// nodes inside the fallback.
+function cssVariableFallbacks(node: NodeLike): readonly NodeLike[] {
+    return node.children?.slice(1) ?? [];
+}
+
+function parseHexColor(node: NodeLike & { value: string }): ParsedValueHex {
+    return {
+        type: 'hex',
+        raw: `#${node.value}`,
+        normalized: normalizeHex(node.value),
+        offset: offsetOf(node),
+    };
+}
+
+function parseDimension(
+    node: NodeLike & { value: string | number; unit: string },
+): ParsedValueDimension {
+    const num = typeof node.value === 'number' ? node.value : Number(node.value);
+    return {
+        type: 'dimension',
+        raw: `${node.value}${node.unit}`,
+        value: num,
+        unit: node.unit,
+        offset: offsetOf(node),
+    };
 }

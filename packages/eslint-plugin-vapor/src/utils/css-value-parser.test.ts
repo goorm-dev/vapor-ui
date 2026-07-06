@@ -80,6 +80,50 @@ describe('parseDeclarationValue', () => {
         ]);
     });
 
+    it('walks var() fallback nodes (hex, dimension, nested var)', () => {
+        const ast = {
+            type: 'Value',
+            children: [
+                {
+                    type: 'Function',
+                    name: 'var',
+                    children: [
+                        {
+                            type: 'Identifier',
+                            name: '--vapor-color-foreground-primary-100',
+                            loc: { start: { offset: 4 } },
+                        },
+                        { type: 'Operator', value: ',' },
+                        { type: 'Hash', value: 'fff', loc: { start: { offset: 44 } } },
+                        {
+                            type: 'Function',
+                            name: 'var',
+                            children: [
+                                {
+                                    type: 'Identifier',
+                                    name: '--vapor-color-fallback',
+                                    loc: { start: { offset: 54 } },
+                                },
+                            ],
+                        },
+                        {
+                            type: 'Dimension',
+                            value: '8',
+                            unit: 'px',
+                            loc: { start: { offset: 80 } },
+                        },
+                    ],
+                },
+            ],
+        };
+        expect(parseDeclarationValue(ast)).toEqual([
+            { type: 'var', name: '--vapor-color-foreground-primary-100', offset: 4 },
+            { type: 'hex', raw: '#fff', normalized: '#ffffff', offset: 44 },
+            { type: 'var', name: '--vapor-color-fallback', offset: 54 },
+            { type: 'dimension', raw: '8px', value: 8, unit: 'px', offset: 80 },
+        ]);
+    });
+
     it('collects multiple parts from a shorthand', () => {
         const ast = {
             type: 'Value',
