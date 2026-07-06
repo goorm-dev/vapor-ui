@@ -1,5 +1,5 @@
-import { parse } from '@babel/parser';
-import * as t from '@babel/types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { parseSync } from 'oxc-parser';
 import { describe, expect, it } from 'vitest';
 
 import { parseLayerProp } from './parse-layer-prop';
@@ -11,10 +11,10 @@ const REGISTRY = {
     utilities: 'vapor-utilities',
 };
 
-function exprFromSource(src: string): t.Expression {
-    const ast = parse(`const _ = ${src};`, { sourceType: 'module', plugins: ['jsx'] });
-    const stmt = ast.program.body[0];
-    if (!t.isVariableDeclaration(stmt)) throw new Error('unreachable');
+function exprFromSource(src: string): any {
+    const ast = parseSync('t.ts', `const _ = ${src};`, { sourceType: 'module', lang: 'ts' });
+    const stmt = ast.program.body[0] as any;
+    if (stmt.type !== 'VariableDeclaration') throw new Error('unreachable');
     const decl = stmt.declarations[0];
     if (!decl.init) throw new Error('unreachable');
     return decl.init;

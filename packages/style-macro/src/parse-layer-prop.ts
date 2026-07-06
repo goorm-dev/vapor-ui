@@ -1,22 +1,23 @@
-import * as t from '@babel/types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { BuildError } from './types';
 
 export type LayerRegistry = Record<string, string>;
 
 export interface ParseLayerResult {
-    order?: string[];
+    order: string[] | null;
     errors: BuildError[];
 }
 
-function locOf(node: t.Node): { line: number; column: number } {
+function locOf(node: any): { line: number; column: number } {
+    const start = node.loc?.start;
     return {
-        line: node.loc?.start.line ?? 1,
-        column: node.loc?.start.column ?? 0,
+        line: start?.line ?? 1,
+        column: start?.column ?? 0,
     };
 }
 
-function nonStatic(node: t.Node, hint: string): BuildError {
+function nonStatic(node: any, hint: string): BuildError {
     return {
         code: 'layer-non-static',
         message: `\`layer\` prop must be a static expression: ${hint}`,
@@ -25,10 +26,10 @@ function nonStatic(node: t.Node, hint: string): BuildError {
 }
 
 function readArrayLiteral(
-    node: t.ArrayExpression,
+    node: any,
     registry: LayerRegistry,
     paramName: string | null,
-): { order?: string[]; errors: BuildError[] } {
+): { order: string[] | null; errors: BuildError[] } {
     const errors: BuildError[] = [];
     const order: string[] = [];
 
@@ -37,21 +38,21 @@ function readArrayLiteral(
             errors.push(nonStatic(node, 'holes in the array are not allowed.'));
             continue;
         }
-        if (t.isSpreadElement(el)) {
+        if (el.type === 'SpreadElement') {
             errors.push(nonStatic(el, 'spread elements are not allowed.'));
             continue;
         }
-        if (t.isStringLiteral(el)) {
+        if (el.type === 'Literal' && typeof el.value === 'string') {
             order.push(el.value);
             continue;
         }
         if (
             paramName &&
-            t.isMemberExpression(el) &&
+            el.type === 'MemberExpression' &&
             !el.computed &&
-            t.isIdentifier(el.object) &&
+            el.object.type === 'Identifier' &&
             el.object.name === paramName &&
-            t.isIdentifier(el.property)
+            el.property.type === 'Identifier'
         ) {
             const key = el.property.name;
             const resolved = registry[key];
@@ -80,7 +81,7 @@ function readArrayLiteral(
         );
     }
 
-    return errors.length ? { errors } : { order, errors: [] };
+    return errors.length ? { order: null, errors } : { order, errors: [] };
 }
 
 /**
@@ -93,25 +94,25 @@ function readArrayLiteral(
  *   - Body is an array literal (or a block returning one)
  *   - Elements: string literals or `<param>.<registry-key>` accesses
  */
-export function parseLayerProp(exprNode: t.Expression, registry: LayerRegistry): ParseLayerResult {
-    if (t.isArrayExpression(exprNode)) {
+export function parseLayerProp(exprNode: any, registry: LayerRegistry): ParseLayerResult {
+    if (exprNode.type === 'ArrayExpression') {
         return readArrayLiteral(exprNode, registry, null);
     }
 
-    if (t.isArrowFunctionExpression(exprNode)) {
+    if (exprNode.type === 'ArrowFunctionExpression') {
         if (exprNode.params.length > 1) {
             return {
-                errors: [
-                    nonStatic(exprNode, 'the arrow function must take zero or one parameter.'),
-                ],
+                order: null,
+                errors: [nonStatic(exprNode, 'the arrow function must take zero or one parameter.')],
             };
         }
 
         let paramName: string | null = null;
         if (exprNode.params.length === 1) {
             const p = exprNode.params[0];
-            if (!t.isIdentifier(p)) {
+            if (p.type !== 'Identifier') {
                 return {
+                    order: null,
                     errors: [
                         nonStatic(
                             p,
@@ -123,33 +124,53 @@ export function parseLayerProp(exprNode: t.Expression, registry: LayerRegistry):
             paramName = p.name;
         }
 
-        let arrayNode: t.ArrayExpression | null = null;
-        if (t.isArrayExpression(exprNode.body)) {
-            arrayNode = exprNode.body;
-        } else if (t.isBlockStatement(exprNode.body)) {
-            const stmts = exprNode.body.body;
-            if (stmts.length === 1 && t.isReturnStatement(stmts[0]) && stmts[0].argument) {
-                if (t.isArrayExpression(stmts[0].argument)) {
-                    arrayNode = stmts[0].argument;
-                }
-            }
+        const body = exprNode.body;
+
+        if (body.type === 'ArrayExpression') {
+            return readArrayLiteral(body, registry, paramName);
         }
 
-        if (!arrayNode) {
+        if (body.type === 'BlockStatement') {
+            const stmts = body.body;
+            if (stmts.length === 1 && stmts[0].type === 'ReturnStatement' && stmts[0].argument) {
+                const ret = stmts[0].argument;
+                if (ret.type === 'ArrayExpression') {
+                    return readArrayLiteral(ret, registry, paramName);
+                }
+                return {
+                    order: null,
+                    errors: [
+                        nonStatic(
+                            ret,
+                            'the arrow body must be an array literal (or `{ return [...]; }`).',
+                        ),
+                    ],
+                };
+            }
             return {
+                order: null,
                 errors: [
                     nonStatic(
-                        exprNode.body,
+                        body,
                         'the arrow body must be an array literal (or `{ return [...]; }`).',
                     ),
                 ],
             };
         }
 
-        return readArrayLiteral(arrayNode, registry, paramName);
+        return {
+            order: null,
+            errors: [
+                nonStatic(
+                    body,
+                    'the arrow body must be an array literal (or `{ return [...]; }`).',
+                ),
+            ],
+        };
     }
 
     return {
+        order: null,
         errors: [
             nonStatic(exprNode, 'expected an array literal or an arrow function returning one.'),
         ],
