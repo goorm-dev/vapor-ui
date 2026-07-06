@@ -29,6 +29,7 @@
 ## File Structure
 
 **Modified**
+
 - `packages/style-macro/package.json` — dependency swap
 - `packages/style-macro/src/transform.ts` — full rewrite
 - `packages/style-macro/src/parse-call.ts` — replace babel guards with oxc `node.type` checks; keep `RawEntry` / `RawValue` shape
@@ -37,11 +38,13 @@
 - `packages/style-macro/src/parse-layer-prop.test.ts` — update the `exprFromSource()` helper to use `oxc-parser`
 
 **Created**
+
 - `packages/style-macro/src/oxc-walk.ts` — small manual, post-order AST walker
 - `packages/style-macro/src/transform.oxc.test.ts` — oxc-specific behavioural tests
 - `packages/style-macro/src/transform.oxc.bench.ts` — vitest bench comparing new vs. baseline snapshots
 
 **Unchanged**
+
 - `src/$style.ts`, `src/class-name.ts`, `src/emit-css.ts`, `src/tokens.ts`, `src/condition.ts`, `src/validate-input.ts`, `src/property-shorthand.ts`, `src/types.ts`
 - `src/unplugin.ts`, `src/unplugin-entry.ts`, `src/unplugin-types.ts`
 - `src/code-frame.ts`
@@ -53,16 +56,18 @@
 ## Task 1 — Introduce oxc-parser + magic-string dependencies and the `oxc-walk` helper
 
 **Files:**
+
 - Modify: `packages/style-macro/package.json`
 - Create: `packages/style-macro/src/oxc-walk.ts`
 - Create: `packages/style-macro/src/oxc-walk.test.ts`
 
 **Interfaces:**
+
 - Consumes: none.
 - Produces:
-  - `walk(node: unknown, visitors: Visitors): void` — post-order recursive walker; visits nodes with `type` property. Ignores non-node values.
-  - `type Visitors = { [nodeType: string]: (node: any, parent: any | null) => void }`.
-  - `oxc-parser` and `magic-string` become runtime dependencies of `@vapor-ui/style-macro`.
+    - `walk(node: unknown, visitors: Visitors): void` — post-order recursive walker; visits nodes with `type` property. Ignores non-node values.
+    - `type Visitors = { [nodeType: string]: (node: any, parent: any | null) => void }`.
+    - `oxc-parser` and `magic-string` become runtime dependencies of `@vapor-ui/style-macro`.
 
 - [ ] **Step 1: Add runtime deps + confirm pnpm lock**
 
@@ -183,14 +188,16 @@ git commit -m "feat(style-macro): add oxc-parser + magic-string deps and post-or
 ## Task 2 — Port `parse-call.ts` to oxc nodes
 
 **Files:**
+
 - Modify: `packages/style-macro/src/parse-call.ts`
 - Modify: `packages/style-macro/src/validate-input.test.ts` (helper only)
 
 **Interfaces:**
+
 - Consumes: none new.
 - Produces:
-  - `parseCallArgs(arg: OxcObjectExpression): RawEntry[]` — same output shape as before.
-  - `RawValue.testNode?: unknown` — opaque oxc node; downstream code must not read structural properties.
+    - `parseCallArgs(arg: OxcObjectExpression): RawEntry[]` — same output shape as before.
+    - `RawValue.testNode?: unknown` — opaque oxc node; downstream code must not read structural properties.
 
 - [ ] **Step 1: Update `validate-input.test.ts` helper to use oxc-parser**
 
@@ -379,10 +386,12 @@ git commit -m "refactor(style-macro): read $style() call args from oxc AST"
 ## Task 3 — Port `parse-layer-prop.ts` to oxc nodes
 
 **Files:**
+
 - Modify: `packages/style-macro/src/parse-layer-prop.ts`
 - Modify: `packages/style-macro/src/parse-layer-prop.test.ts` (helper only)
 
 **Interfaces:**
+
 - Consumes: none new.
 - Produces: `parseLayerProp(exprNode: any, registry: LayerRegistry): { order: string[] | null; errors: BuildError[] }` — same return shape.
 
@@ -513,7 +522,12 @@ export function parseLayerProp(
             if (body.body.length !== 1 || body.body[0].type !== 'ReturnStatement') {
                 return {
                     order: null,
-                    errors: [nonStatic(body, 'block-body arrow must contain exactly one return statement.')],
+                    errors: [
+                        nonStatic(
+                            body,
+                            'block-body arrow must contain exactly one return statement.',
+                        ),
+                    ],
                 };
             }
             const ret = body.body[0].argument;
@@ -527,7 +541,10 @@ export function parseLayerProp(
         }
         return { order: null, errors: [nonStatic(body, 'arrow body must be an array literal.')] };
     }
-    return { order: null, errors: [nonStatic(exprNode, 'expected an array literal or an arrow function.')] };
+    return {
+        order: null,
+        errors: [nonStatic(exprNode, 'expected an array literal or an arrow function.')],
+    };
 }
 ```
 
@@ -548,10 +565,12 @@ git commit -m "refactor(style-macro): read layer prop from oxc AST"
 ## Task 4 — Rewrite `transform.ts` on oxc-parser + magic-string
 
 **Files:**
+
 - Modify: `packages/style-macro/src/transform.ts` (full rewrite)
 - Modify: `packages/style-macro/src/parse-call.ts` (add `entry.testNode` when the parent value is a ternary — required for existing `emit-css`/`condition` code paths that surface ternary test locations)
 
 **Interfaces:**
+
 - Consumes: `parseCallArgs`, `parseLayerProp`, `validateInput`, `resolveToken`, `shortenProperty`, `classifyCondition`, `buildClassName`, `emitCss`.
 - Produces: `transform(opts: TransformOpts): TransformResult` — identical signature to the babel version. `TransformResult` shape is unchanged.
 
@@ -608,8 +627,8 @@ import { type ClassNameMode, buildClassName } from './class-name';
 import { classifyCondition } from './condition';
 import { emitCss } from './emit-css';
 import { walk } from './oxc-walk';
-import { parseCallArgs, type RawEntry, type RawValue } from './parse-call';
-import { parseLayerProp, type LayerRegistry } from './parse-layer-prop';
+import { type RawEntry, type RawValue, parseCallArgs } from './parse-call';
+import { type LayerRegistry, parseLayerProp } from './parse-layer-prop';
 import shortenProperty from './property-shorthand';
 import { resolveToken } from './tokens';
 import type { BuildError, ManifestShape, Tuple } from './types';
@@ -650,7 +669,9 @@ const EMPTY_RESULT = (source: string): TransformResult => ({
 export function transform(opts: TransformOpts): TransformResult {
     const importName = opts.importName ?? '$style';
     const importSources = new Set(
-        Array.isArray(opts.importSource) ? opts.importSource : [opts.importSource ?? '@vapor-ui/style-macro'],
+        Array.isArray(opts.importSource)
+            ? opts.importSource
+            : [opts.importSource ?? '@vapor-ui/style-macro'],
     );
     const providerImportName = opts.providerImportName ?? 'ThemeProvider';
     const providerSources = new Set(
@@ -668,8 +689,7 @@ export function transform(opts: TransformOpts): TransformResult {
     };
 
     const hasMacroMarker = opts.source.includes(importName);
-    const hasProviderMarker =
-        providerSources.size > 0 && opts.source.includes(providerImportName);
+    const hasProviderMarker = providerSources.size > 0 && opts.source.includes(providerImportName);
     if (!hasMacroMarker && !hasProviderMarker) return EMPTY_RESULT(opts.source);
 
     const ast = parseSync(opts.filename, opts.source, { sourceType: 'module', lang: 'tsx' });
@@ -736,7 +756,10 @@ export function transform(opts: TransformOpts): TransformResult {
                 errors.push({
                     code: 'invalid-input-shape',
                     message: '`$style(...)` expects a single object literal argument.',
-                    loc: { line: (node.loc?.start.line ?? 1) - 1, column: node.loc?.start.column ?? 0 },
+                    loc: {
+                        line: (node.loc?.start.line ?? 1) - 1,
+                        column: node.loc?.start.column ?? 0,
+                    },
                 });
                 return;
             }
@@ -819,9 +842,11 @@ git commit -m "refactor(style-macro): rewrite transform on oxc-parser + magic-st
 ## Task 5 — Remove babel dependencies (except `code-frame`)
 
 **Files:**
+
 - Modify: `packages/style-macro/package.json`
 
 **Interfaces:**
+
 - Consumes: nothing new.
 - Produces: no runtime interface change. Post-task `pnpm why '@babel/parser'` in `packages/style-macro/` returns nothing.
 
@@ -909,18 +934,21 @@ git commit -m "chore(style-macro): drop @babel/parser|generator|traverse|types d
 ## Task 6 — Determinism + bench gates
 
 **Files:**
+
 - Create: `packages/style-macro/src/transform.oxc.bench.ts`
 - Create: `packages/style-macro/scripts/bytediff.mjs`
 
 **Interfaces:**
+
 - Consumes: `transform`, prebuilt fixtures.
 - Produces:
-  - `pnpm --filter @vapor-ui/style-macro bench` — vitest bench summary.
-  - `node packages/style-macro/scripts/bytediff.mjs` — exits non-zero when this branch's `apps/test-app` or `apps/next-test-app` build differs byte-for-byte from `main`.
+    - `pnpm --filter @vapor-ui/style-macro bench` — vitest bench summary.
+    - `node packages/style-macro/scripts/bytediff.mjs` — exits non-zero when this branch's `apps/test-app` or `apps/next-test-app` build differs byte-for-byte from `main`.
 
 - [ ] **Step 1: Add the byte-diff script**
 
 Create `packages/style-macro/scripts/bytediff.mjs`. It should:
+
 1. Check out `main`'s build output for both apps into a temp folder (via `git worktree add`).
 2. Build both apps on the current branch (already done by CI or a preceding step).
 3. Diff the built `dist/` trees using `crypto.createHash('sha256')` per file, ignoring source-map filenames.
@@ -931,7 +959,7 @@ Small script; keep it under 120 LOC. Example scaffold:
 ```js
 import { execSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 function hashTree(root) {

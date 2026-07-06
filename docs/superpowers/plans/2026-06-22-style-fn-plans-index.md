@@ -4,13 +4,13 @@ Spec: `docs/superpowers/specs/2026-06-22-style-fn-design.md`
 
 Spec was split into 5 sub-plans, each producing working/testable software on its own.
 
-| Plan | Subsystem | Depends on | Status |
-|---|---|---|---|
-| [A](./2026-06-22-style-fn-plan-a-macro-core.md) | `@vapor-ui/style-macro` core (pure AST → `{code, css}`) | — | Draft |
-| [B](./2026-06-22-style-fn-plan-b-unplugin.md) | unplugin adapter + virtual CSS module + Vite/Rollup tests | A | Draft |
-| [C](./2026-06-22-style-fn-plan-c-core-api.md) | `$style` symbol in `@vapor-ui/core`, token manifest emit, `@vapor-ui/core/postcss` helper, `apps/storybook` + `apps/website` wiring | A, B | Draft |
-| [D](./2026-06-22-style-fn-plan-d-codemod.md) | `@vapor-ui/codemod css-to-style` (jscodeshift transform + CLI) | C (for `$style` symbol) | Draft |
-| [E](./2026-06-22-style-fn-plan-e-deprecation.md) | `$css` deprecation phases 1 + 3 (JSDoc + dev-mode warn) | C | Draft |
+| Plan                                             | Subsystem                                                                                                                           | Depends on              | Status |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------ |
+| [A](./2026-06-22-style-fn-plan-a-macro-core.md)  | `@vapor-ui/style-macro` core (pure AST → `{code, css}`)                                                                             | —                       | Draft  |
+| [B](./2026-06-22-style-fn-plan-b-unplugin.md)    | unplugin adapter + virtual CSS module + Vite/Rollup tests                                                                           | A                       | Draft  |
+| [C](./2026-06-22-style-fn-plan-c-core-api.md)    | `$style` symbol in `@vapor-ui/core`, token manifest emit, `@vapor-ui/core/postcss` helper, `apps/storybook` + `apps/website` wiring | A, B                    | Draft  |
+| [D](./2026-06-22-style-fn-plan-d-codemod.md)     | `@vapor-ui/codemod css-to-style` (jscodeshift transform + CLI)                                                                      | C (for `$style` symbol) | Draft  |
+| [E](./2026-06-22-style-fn-plan-e-deprecation.md) | `$css` deprecation phases 1 + 3 (JSDoc + dev-mode warn)                                                                             | C                       | Draft  |
 
 ## Critical path
 

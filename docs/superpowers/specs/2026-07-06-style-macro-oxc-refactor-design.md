@@ -29,14 +29,14 @@
 
 ## 4. 결정 사항
 
-| 항목 | 결정 |
-|---|---|
-| Parser | `oxc-parser` (Rust native, parse-only) |
-| Emit | `magic-string` splice (generator 미사용) |
-| Source map | `null` 유지 |
-| Marker early-out | 유지 (`source.includes(importName)`) |
-| 마이그레이션 | Big-bang, 단일 PR, feature flag 없음 |
-| `@babel/code-frame` | 유지 — 에러 포매팅 전용, hot path 아님 |
+| 항목                | 결정                                     |
+| ------------------- | ---------------------------------------- |
+| Parser              | `oxc-parser` (Rust native, parse-only)   |
+| Emit                | `magic-string` splice (generator 미사용) |
+| Source map          | `null` 유지                              |
+| Marker early-out    | 유지 (`source.includes(importName)`)     |
+| 마이그레이션        | Big-bang, 단일 PR, feature flag 없음     |
+| `@babel/code-frame` | 유지 — 에러 포매팅 전용, hot path 아님   |
 
 ## 5. 아키텍처
 
@@ -82,12 +82,12 @@ transform(source, opts)
 
 ### 6.1 대규모 재작성
 
-| 파일 | 변경 |
-|---|---|
-| `src/transform.ts` | babel 임포트 제거, oxc-parser + magic-string 기반 재작성. 수동 walker 포함. |
-| `src/parse-call.ts` | RawEntry / RawValue 시그니처 유지. `t.isXxx()` 가드 → `node.type === 'Xxx'` 비교로 전환. |
-| `src/parse-layer-prop.ts` | 동일 로직, AST 매칭만 oxc 노드로 교체. |
-| `package.json` | `@babel/parser`, `@babel/generator`, `@babel/traverse`, `@babel/types` 및 `@types/babel__generator`, `@types/babel__traverse` 제거. `oxc-parser`, `magic-string` 추가. `@babel/code-frame` + `@types/babel__code-frame`는 유지. |
+| 파일                      | 변경                                                                                                                                                                                                                            |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/transform.ts`        | babel 임포트 제거, oxc-parser + magic-string 기반 재작성. 수동 walker 포함.                                                                                                                                                     |
+| `src/parse-call.ts`       | RawEntry / RawValue 시그니처 유지. `t.isXxx()` 가드 → `node.type === 'Xxx'` 비교로 전환.                                                                                                                                        |
+| `src/parse-layer-prop.ts` | 동일 로직, AST 매칭만 oxc 노드로 교체.                                                                                                                                                                                          |
+| `package.json`            | `@babel/parser`, `@babel/generator`, `@babel/traverse`, `@babel/types` 및 `@types/babel__generator`, `@types/babel__traverse` 제거. `oxc-parser`, `magic-string` 추가. `@babel/code-frame` + `@types/babel__code-frame`는 유지. |
 
 ### 6.2 유지 (변경 없음)
 
@@ -106,57 +106,66 @@ transform(source, opts)
 ### 6.3 신규 test
 
 - `transform.oxc.test.ts`
-  - AST shape 변환 정확성
-  - splice 정확성 (다중 호출 파일)
-  - 주석 보존
-  - 삼항 원본 test expr 재활용
-  - import 리네이밍 (`import { $style as s }`)
-  - Marker 부재 시 parseSync 미호출 (spy)
-  - TSX generic 문법 파싱
+    - AST shape 변환 정확성
+    - splice 정확성 (다중 호출 파일)
+    - 주석 보존
+    - 삼항 원본 test expr 재활용
+    - import 리네이밍 (`import { $style as s }`)
+    - Marker 부재 시 parseSync 미호출 (spy)
+    - TSX generic 문법 파싱
 
 - `transform.oxc.bench.ts` (vitest bench, CI 옵션)
-  - 1KB / 10KB / 100KB 소스 벤치
-  - babel 대비 ≥ 5배 강제
+    - 1KB / 10KB / 100KB 소스 벤치
+    - babel 대비 ≥ 5배 강제
 
 ## 7. Data flow — 대표 케이스
 
 ### 7.1 기본 케이스
 
 입력:
+
 ```tsx
 import { $style } from '@vapor-ui/style-macro';
+
 const cls = $style({ padding: '$400', color: '$primary', fontSize: 14 });
 ```
 
 RawEntry:
+
 ```ts
 [
-  { property: 'padding',  value: { kind: 'token',   token: '400' } },
-  { property: 'color',    value: { kind: 'token',   token: 'primary' } },
-  { property: 'fontSize', value: { kind: 'literal', literal: 14 } },
-]
+    { property: 'padding', value: { kind: 'token', token: '400' } },
+    { property: 'color', value: { kind: 'token', token: 'primary' } },
+    { property: 'fontSize', value: { kind: 'literal', literal: 14 } },
+];
 ```
 
 Splice:
+
 ```ts
 ms.overwrite(callStart, callEnd, '"p400 cprim fs14"');
 ```
 
 출력:
+
 ```tsx
 import { $style } from '@vapor-ui/style-macro';
-import "~vapor-style/<hash>.css";
-const cls = "p400 cprim fs14";
+
+import '~vapor-style/<hash>.css';
+
+const cls = 'p400 cprim fs14';
 ```
 
 ### 7.2 삼항
 
 입력:
+
 ```tsx
 const cls = $style({ color: isActive ? '$primary' : '$muted' });
 ```
 
 Splice (전체 CallExpression 대체, testNode는 원본 소스 slice 재활용):
+
 ```ts
 const testSrc = source.slice(testNode.start, testNode.end); // "isActive"
 ms.overwrite(callStart, callEnd, `(${testSrc} ? "cprim" : "cmuted")`);
@@ -167,6 +176,7 @@ babel의 `t.conditionalExpression(...)` AST 재구성 불필요.
 ### 7.3 조건 객체 (반응형)
 
 입력:
+
 ```tsx
 $style({ padding: { default: '$200', md: '$400' } });
 ```
@@ -196,6 +206,7 @@ JSX walk에서 `<ThemeProvider layer={(l) => [l.theme, l.reset]}>` 감지. `pars
 ### 8.1 Regression gate
 
 **무수정 pass** (AST 미사용, 순수 계약 테스트):
+
 ```
 $style.test.ts
 class-name.test.ts
@@ -206,10 +217,12 @@ tokens.test.ts
 ```
 
 **AST 헬퍼만 교체 후 pass** (테스트 케이스/기대값은 그대로):
+
 ```
 validate-input.test.ts        # callArg() 헬퍼: @babel/parser → oxc-parser
 parse-layer-prop.test.ts      # exprFromSource() 헬퍼: @babel/parser → oxc-parser
 ```
+
 두 파일은 함수 시그니처가 babel `t.ObjectExpression` / `t.Expression` 에서 oxc AST 노드로 바뀌었기 때문에 헬퍼만 포팅한다. `describe`/`it` 케이스와 기대 결과는 손대지 않으며, 이 조건이 곧 회귀 방지 게이트다.
 
 ### 8.2 신규 test
@@ -230,27 +243,27 @@ parse-layer-prop.test.ts      # exprFromSource() 헬퍼: @babel/parser → oxc-p
 
 1. 브랜치 `feat/style-macro-oxc` (현 `style-utility` 파생)
 2. 단일 PR:
-   - `package.json` dep 교체
-   - `transform.ts`, `parse-call.ts`, `parse-layer-prop.ts` 재작성
-   - `validate-input.test.ts` / `parse-layer-prop.test.ts` 의 AST 빌드 헬퍼만 oxc 로 포팅 (케이스/기대값 무수정)
+    - `package.json` dep 교체
+    - `transform.ts`, `parse-call.ts`, `parse-layer-prop.ts` 재작성
+    - `validate-input.test.ts` / `parse-layer-prop.test.ts` 의 AST 빌드 헬퍼만 oxc 로 포팅 (케이스/기대값 무수정)
 3. CI 게이트 (모두 pass):
-   - 기존 test 전부 pass
-   - 신규 `transform.oxc.test.ts` pass
-   - `apps/test-app` / `apps/next-test-app` 빌드 성공
-   - 산출물 byte-diff = 0
-   - 벤치 ≥ 5배
+    - 기존 test 전부 pass
+    - 신규 `transform.oxc.test.ts` pass
+    - `apps/test-app` / `apps/next-test-app` 빌드 성공
+    - 산출물 byte-diff = 0
+    - 벤치 ≥ 5배
 4. Rollback: 브랜치 revert. Feature flag 없음.
 
 ## 10. 리스크와 완화
 
-| 리스크 | 완화 |
-|---|---|
-| oxc AST shape이 babel과 미묘하게 다름 (loc 위치, StringLiteral vs Literal 등) | `parse-call.ts` / `parse-layer-prop.ts`에 명시적 매핑 계층. `transform.oxc.test.ts`로 shape drift 감지 |
-| oxc-parser native binary 미지원 플랫폼 | oxc-parser는 darwin/linux/windows × x64/arm64 prebuilt 제공. vapor CI target이 이 범위에 포함되는지 확인 |
-| magic-string splice 순서 (중첩 호출) | oxc walker를 후위 순회로 구현. magic-string은 원본 좌표 기준이므로 splice 순서에 영향 없음 |
-| `@babel/code-frame`만 남기는 잔재 | leaf 패키지이며 dep 그래프에 영향 없음 |
-| dev app HMR 회귀 | Vite HMR은 transform 반환값만 소비. code/css 계약이 유지되면 자동 정상 |
-| Determinism 회귀 (class name 순서, CSS 순서) | E2E byte-diff = 0 게이트로 검출 |
+| 리스크                                                                        | 완화                                                                                                     |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| oxc AST shape이 babel과 미묘하게 다름 (loc 위치, StringLiteral vs Literal 등) | `parse-call.ts` / `parse-layer-prop.ts`에 명시적 매핑 계층. `transform.oxc.test.ts`로 shape drift 감지   |
+| oxc-parser native binary 미지원 플랫폼                                        | oxc-parser는 darwin/linux/windows × x64/arm64 prebuilt 제공. vapor CI target이 이 범위에 포함되는지 확인 |
+| magic-string splice 순서 (중첩 호출)                                          | oxc walker를 후위 순회로 구현. magic-string은 원본 좌표 기준이므로 splice 순서에 영향 없음               |
+| `@babel/code-frame`만 남기는 잔재                                             | leaf 패키지이며 dep 그래프에 영향 없음                                                                   |
+| dev app HMR 회귀                                                              | Vite HMR은 transform 반환값만 소비. code/css 계약이 유지되면 자동 정상                                   |
+| Determinism 회귀 (class name 순서, CSS 순서)                                  | E2E byte-diff = 0 게이트로 검출                                                                          |
 
 ## 11. Out of scope
 
