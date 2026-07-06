@@ -72,8 +72,8 @@ Edit `packages/style-macro/package.json` `dependencies` — leave the `@babel/co
     "@babel/code-frame": "^7.29.7",
     "@vapor-ui/tokens": "workspace:*",
     "csstype": "^3.2.3",
-    "magic-string": "^0.30.11",
-    "oxc-parser": "^0.34.0",
+    "magic-string": "^0.30.21",
+    "oxc-parser": "^0.138.0",
     "unplugin": "^3.3.0"
 }
 ```
@@ -839,8 +839,8 @@ Result (dependencies + devDependencies excerpt):
     "@babel/code-frame": "^7.29.7",
     "@vapor-ui/tokens": "workspace:*",
     "csstype": "^3.2.3",
-    "magic-string": "^0.30.11",
-    "oxc-parser": "^0.34.0",
+    "magic-string": "^0.30.21",
+    "oxc-parser": "^0.138.0",
     "unplugin": "^3.3.0"
 },
 "devDependencies": {
