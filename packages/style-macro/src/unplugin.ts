@@ -10,7 +10,14 @@ import type { FileRecord, ResolvedOptions, VaporStyleOptions } from './unplugin-
 // so the PUBLIC prefix must NOT contain a colon. A path-like specifier under a
 // tilde-prefixed pseudo-package is safely intercepted by unplugin's resolveId
 // hook across vite/rollup/webpack/rspack/esbuild adapters.
-const VIRTUAL_PREFIX = '\0~vapor-style/';
+//
+// Historically the resolveId hook prepended `\0` (Rollup virtual-module
+// convention). This produced `_virtual_%00~vapor-style%2F<hash>.css` after
+// unplugin's webpack adapter URL-encoded the request. Next.js 16's webpack
+// pipeline appears to reject the `%00`-containing request at the resolver
+// stage even though VMP is force-applied. Dropping `\0` and returning the
+// prefix verbatim so the encoded form is `_virtual_%7Evapor-style%2F...`.
+const VIRTUAL_PREFIX = '~vapor-style/';
 const VIRTUAL_SUFFIX = '.css';
 const PUBLIC_PREFIX = '~vapor-style/';
 
@@ -106,7 +113,7 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
         },
 
         resolveId(id) {
-            if (id.startsWith(PUBLIC_PREFIX)) return '\0' + id;
+            if (id.startsWith(PUBLIC_PREFIX)) return id;
             return null;
         },
 
