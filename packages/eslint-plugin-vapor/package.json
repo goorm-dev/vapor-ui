@@ -48,11 +48,6 @@
         "eslint-plugin-jsx-a11y": ">=6.10.2",
         "typescript": ">=4.8.4 <6.0.0"
     },
-    "peerDependenciesMeta": {
-        "@eslint/css": {
-            "optional": true
-        }
-    },
     "publishConfig": {
         "access": "public"
     }

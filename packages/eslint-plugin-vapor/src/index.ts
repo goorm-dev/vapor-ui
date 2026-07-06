@@ -47,7 +47,6 @@ const plugin = {
         },
         'flat/css': {
             name: 'eslint-plugin-vapor/flat/css',
-            language: 'css/css',
             plugins: {},
             rules: cssRecommended,
         },
