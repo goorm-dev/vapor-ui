@@ -17,9 +17,6 @@
     "files": [
         "dist"
     ],
-    "dependencies": {
-        "culori": "^4.0.1"
-    },
     "scripts": {
         "build": "tsup",
         "clean": "rimraf dist node_modules coverage .turbo",
@@ -27,6 +24,9 @@
         "lint": "eslint ./src",
         "test": "vitest run",
         "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "culori": "^4.0.1"
     },
     "devDependencies": {
         "@eslint/css": "^1.3.0",
