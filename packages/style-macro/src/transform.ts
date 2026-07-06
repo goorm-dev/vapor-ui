@@ -150,6 +150,18 @@ function buildEntryPart(
     return null;
 }
 
+function jsSingleQuoted(value: string): string {
+    // Escape backslashes and single quotes; escape other special chars the same way JSON.stringify would.
+    return "'" + value
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\u2028/g, '\\u2028')
+        .replace(/\u2029/g, '\\u2029')
+        + "'";
+}
+
 function buildReplacement(
     entries: RawEntry[],
     source: string,
@@ -169,17 +181,17 @@ function buildReplacement(
     const allStatic = parts.every((p) => p.kind === 'static');
     if (parts.length === 1) {
         const p = parts[0];
-        return p.kind === 'static' ? JSON.stringify(p.value) : p.expr;
+        return p.kind === 'static' ? jsSingleQuoted(p.value) : p.expr;
     }
     if (allStatic) {
         const tokens = parts
             .flatMap((p) => (p as { kind: 'static'; value: string }).value.split(/\s+/))
             .filter(Boolean)
             .sort();
-        return JSON.stringify(tokens.join(' '));
+        return jsSingleQuoted(tokens.join(' '));
     }
     const frags = parts.map((p) =>
-        p.kind === 'static' ? JSON.stringify(p.value) : p.expr,
+        p.kind === 'static' ? jsSingleQuoted(p.value) : p.expr,
     );
     return `[${frags.join(', ')}].filter(Boolean).join(' ')`;
 }
@@ -278,7 +290,14 @@ export function transform(opts: TransformOpts): TransformResult {
                 return;
             }
             if (layerOrder !== null) {
-                // first-wins: silently ignore subsequent occurrences
+                errors.push({
+                    code: 'layer-non-static',
+                    message: 'Multiple <ThemeProvider layer={...}> occurrences in the same file are not allowed.',
+                    loc: {
+                        line: node.loc?.start.line ?? 1,
+                        column: node.loc?.start.column ?? 0,
+                    },
+                });
                 return;
             }
             layerOrder = result.order ?? null;

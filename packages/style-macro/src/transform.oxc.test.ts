@@ -100,6 +100,9 @@ describe('transform (oxc)', () => {
         expect(result.errors).toEqual([]);
         expect(result.classes.length).toBe(2);
         expect(result.code).not.toContain('$style(');
+        // Positive: both calls must be rewritten to single-quoted string literals.
+        expect(result.code).toMatch(/wrapper\(\s*'[a-zA-Z0-9_\- ]+'\s*\)/);
+        expect(result.code).toMatch(/const b = '[a-zA-Z0-9_\- ]+'/);
     });
 
     it('inlines entry-level ternary using the original test expression source', () => {
@@ -135,5 +138,29 @@ describe('transform (oxc)', () => {
         expect(result.errors).toEqual([]);
         expect(result.classes.length).toBeGreaterThan(0);
         expect(result.code).not.toContain('$style(');
+    });
+
+    it('emits layer-non-static when multiple <ThemeProvider layer> occur in the same file', () => {
+        const source = [
+            `import { $style } from '@vapor-ui/style-macro';`,
+            `import { ThemeProvider } from '@vapor-ui/core';`,
+            `export const app = (`,
+            `  <ThemeProvider layer={(l) => [l.theme]}>`,
+            `    <ThemeProvider layer={(l) => [l.reset]}>`,
+            `      <div />`,
+            `    </ThemeProvider>`,
+            `  </ThemeProvider>`,
+            `);`,
+        ].join('\n');
+        const result = transform({
+            source,
+            filename: '/t.tsx',
+            manifest: MANIFEST,
+            providerImportSource: ['@vapor-ui/core'],
+            layerRegistry: { theme: 'vapor-theme', reset: 'vapor-reset' },
+        });
+        expect(result.errors.some((e) => e.code === 'layer-non-static')).toBe(true);
+        // First occurrence still wins for layerOrder.
+        expect(result.layerOrder).toEqual(['vapor-theme']);
     });
 });
