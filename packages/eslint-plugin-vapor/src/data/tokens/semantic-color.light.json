@@ -101,7 +101,7 @@
                             }
                         }
                     },
-                    "$value": "{colors.background.canvas}"
+                    "$value": "{colors.canvas}"
                 },
                 "200": {
                     "$description": "The solid secondary canvas background to differentiate background regions within a page.",
