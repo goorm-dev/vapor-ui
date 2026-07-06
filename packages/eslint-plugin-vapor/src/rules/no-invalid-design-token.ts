@@ -37,10 +37,9 @@ export const noInvalidDesignTokenRule: Rule.RuleModule = {
             },
         ],
         messages: {
-            unknownToken: '"{{ token }}" is not a Vapor design token.',
-            unknownTokenWithSuggestions:
-                '"{{ token }}" is not a Vapor design token. Did you mean: {{ candidates }}?',
-            replaceWithToken: 'Replace with "{{ candidate }}"',
+            unknownToken: '"{{ token }}"은(는) Vapor 디자인 토큰이 아닙니다.',
+            unknownTokenWithSuggestions: '"{{ token }}"은(는) Vapor 디자인 토큰이 아닙니다. ',
+            replaceWithToken: '"{{ candidate }}"(으)로 교체',
         },
     },
 

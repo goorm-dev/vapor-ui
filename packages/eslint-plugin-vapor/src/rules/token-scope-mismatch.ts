@@ -30,10 +30,10 @@ export const tokenScopeMismatchRule: Rule.RuleModule = {
         ],
         messages: {
             scopeMismatch:
-                '"{{ token }}" has scope "{{ tokenScope }}" but "{{ property }}" expects {{ expectedScopes }}.',
+                '"{{ token }}"의 scope는 "{{ tokenScope }}"이지만, "{{ property }}"는 {{ expectedScopes }}을(를) 요구합니다.',
             scopeMismatchWithSuggestions:
-                '"{{ token }}" has scope "{{ tokenScope }}" but "{{ property }}" expects {{ expectedScopes }}. Candidate: {{ candidates }}.',
-            replaceWithToken: 'Replace with "{{ candidate }}"',
+                '"{{ token }}"의 scope는 "{{ tokenScope }}"이지만, "{{ property }}"는 {{ expectedScopes }}을(를) 요구합니다.',
+            replaceWithToken: '"{{ candidate }}"(으)로 교체',
         },
     },
 

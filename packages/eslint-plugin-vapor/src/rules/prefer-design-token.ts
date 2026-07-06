@@ -36,8 +36,7 @@ export const preferDesignTokenRule: Rule.RuleModule = {
         type: 'suggestion',
         hasSuggestions: true,
         docs: {
-            description:
-                'Suggest a Vapor design token in place of a primitive token or raw CSS value.',
+            description: '원시 토큰이나 CSS 값을 사용하는 대신 Vapor 디자인 토큰을 사용하세요.',
         },
         schema: [
             {
@@ -53,10 +52,10 @@ export const preferDesignTokenRule: Rule.RuleModule = {
         ],
         messages: {
             preferSemantic:
-                'Use semantic token "{{ candidate }}" instead of primitive "{{ token }}" on "{{ property }}".',
+                '"{{ property }}"에서 primitive 토큰 "{{ token }}" 대신 시맨틱 토큰 "{{ candidate }}"을(를) 사용하세요.',
             preferToken:
-                'Use design token "{{ candidate }}" instead of "{{ rawValue }}" on "{{ property }}".',
-            replaceWithToken: 'Replace with "{{ candidate }}"',
+                '"{{ property }}"에서 "{{ rawValue }}" 대신 디자인 토큰 "{{ candidate }}"을(를) 사용하세요.',
+            replaceWithToken: '"{{ candidate }}"(으)로 교체',
         },
     },
 

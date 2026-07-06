@@ -18,18 +18,20 @@ const rules = {
     'prefer-design-token': preferDesignTokenRule,
 } satisfies Record<string, Rule.RuleModule>;
 
+type RuleName = `vapor/${keyof typeof rules}`;
+
 const a11yRecommended = {
     'vapor/icon-button-has-aria-label': 'error',
     'vapor/navigation-has-aria-label': 'error',
     'vapor/avatar-has-alt-text': 'error',
     'vapor/dialog-should-have-title': 'error',
-} as const;
+} as Record<RuleName, 'error' | 'warn' | 'off'>;
 
 const cssRecommended = {
     'vapor/no-invalid-design-token': 'error',
     'vapor/token-scope-mismatch': 'error',
     'vapor/prefer-design-token': 'warn',
-} as const;
+} as Record<RuleName, 'error' | 'warn' | 'off'>;
 
 const plugin = {
     meta: {
@@ -38,24 +40,44 @@ const plugin = {
     },
     rules,
     configs: {
-        flat: {},
-        legacy: {},
-        css: {},
+        flat: {
+            a11y: { recommended: {} },
+            css: { recommended: {} },
+        },
+        legacy: {
+            recommended: {},
+        },
     },
 };
 
 Object.assign(plugin.configs, {
     flat: {
-        plugins: { vapor: plugin },
-        rules: a11yRecommended,
+        a11y: {
+            recommended: {
+                files: ['**/*.{js,jsx,ts,tsx}'],
+                plugins: { vapor: plugin },
+                rules: a11yRecommended,
+            },
+        },
+        css: {
+            recommended: {
+                files: ['**/*.css', '**/*.scss'],
+                plugins: { vapor: plugin },
+                language: 'css/css',
+                rules: cssRecommended,
+            },
+        },
     },
     legacy: {
-        plugins: ['vapor'],
-        rules: a11yRecommended,
-    },
-    css: {
-        plugins: { vapor: plugin },
-        rules: cssRecommended,
+        recommended: {
+            plugins: ['vapor'],
+            overrides: [
+                {
+                    files: ['*.js', '*.jsx', '*.ts', '*.tsx'],
+                    rules: a11yRecommended,
+                },
+            ],
+        },
     },
 });
 

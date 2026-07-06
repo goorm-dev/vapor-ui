@@ -14,7 +14,8 @@ export const ariaLabelOnIconButtonRule: Rule.RuleModule = {
         },
         fixable: undefined,
         messages: {
-            missingAriaLabel: "The 'IconButton' component requires an 'aria-label' prop.",
+            missingAriaLabel:
+                "'IconButton' 컴포넌트에는 접근성을 위한 'aria-label' prop이 필요합니다.",
         },
     },
     create(context: Rule.RuleContext) {
