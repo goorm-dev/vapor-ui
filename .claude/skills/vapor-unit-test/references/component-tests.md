@@ -13,11 +13,11 @@ describe('Button', () => {
 });
 ```
 
-`cleanup`은 RTL이 자동으로 호출하므로 **기본적으로 추가하지 않습니다.** 한 `it()` 내부에서 여러 번 `render`를 호출하는 등 특수한 경우에만 명시적으로 `afterEach(cleanup)` 또는 `cleanup()`을 직접 호출하세요.
+`cleanup`은 RTL이 자동으로 호출하므로 명시적으로 추가하지 않습니다.
 
 ## describe 그룹
 
-테스트가 **2개 이상의 카테고리**로 나뉠 때만 nested describe로 묶습니다. 카테고리가 1개거나 테스트가 몇 개 안 되면 nested 없이 최상위 `describe`에 평탄하게 둡니다 — 불필요한 중첩은 가독성을 해칩니다.
+테스트가 **2개 이상의 카테고리**로 나뉠 때만 nested describe로 묶습니다. 카테고리가 1개거나 테스트 케이스가 적어 카테고리를 분류할 수 없는 경우 nested 없이 최상위 `describe`에 평탄하게 둡니다 — 불필요한 중첩은 가독성을 해칩니다.
 
 | 그룹 이름                          | 사용 시점                      |
 | ---------------------------------- | ------------------------------ |
@@ -27,23 +27,63 @@ describe('Button', () => {
 | `'keyboard navigation'`            | Tab, 화살표, Enter/Space 동작  |
 | `'prop: <propName>'`               | 특정 prop 동작                 |
 
-## 렌더 결과는 항상 `rendered`
+## 렌더 결과는 항상 `rendered` (테스트별로 직접 렌더)
+
+각 `it()` 안에서 직접 `render`를 호출하고 반환값을 `rendered`에 담습니다. 동일한 테스트베드를 여러 케이스가 쓰더라도 `beforeEach`로 공유하지 말고 각 테스트가 자기 렌더를 소유합니다.
 
 ```tsx
-const rendered = render(<ButtonTest />);
-```
+describe('Checkbox', () => {
+    it('is unchecked by default', () => {
+        const rendered = render(<CheckboxTest />);
+        const checkbox = rendered.getByRole('checkbox');
 
-이유: `render` 호출을 어떤 변수가 받았는지를 변수명으로 명시적으로 지목합니다. `screen`(전역) 대비 한 파일에 여러 `render`가 공존할 때 어느 렌더 트리에 대한 쿼리인지 추적하기 쉽고, "이 단언은 방금 렌더한 트리에 대한 것"이라는 의도가 코드에 그대로 드러납니다.
+        expect(checkbox).not.toBeChecked();
+    });
 
-`beforeEach`로 공유할 때:
+    it('toggles when clicked', async () => {
+        // 동일한 테스트베드라도 케이스마다 새로 렌더
+        const rendered = render(<CheckboxTest />);
+        const checkbox = rendered.getByRole('checkbox');
 
-```tsx
-let rendered: RenderResult;
+        await userEvent.click(checkbox);
 
-beforeEach(() => {
-    rendered = render(<CheckboxTest />);
+        expect(checkbox).toBeChecked();
+    });
 });
 ```
+
+이유:
+
+- **격리** — `beforeEach` 공유 렌더는 어떤 케이스만 다른 prop으로 렌더하고 싶어질 때, 이미 마운트된 트리를 지우려고 케이스 안에서 `cleanup()`을 부르는 지역적 회피를 강제합니다. 각 테스트가 자기 렌더를 소유하면 이 결합이 사라집니다.
+- **가독성** — `render`와 해당 단언이 같은 스코프에 있어 케이스 하나만 읽어도 전체 흐름을 파악할 수 있습니다.
+- **RTL 자동 cleanup** — 테스트가 끝나면 RTL이 마운트한 노드를 `document.body`에서 제거하므로 다음 테스트의 `render`는 항상 깨끗한 body 위에서 시작합니다.
+
+`rendered`라는 이름은 `screen`(전역) 대비 어느 렌더 트리에 대한 쿼리인지 코드에 그대로 드러내기 위함입니다 — 한 파일에 여러 `render`가 공존해도 추적이 쉽고, "이 단언은 방금 렌더한 트리에 대한 것"이라는 의도가 명확해집니다.
+
+### 렌더 결과를 참조하지 않는 경우
+
+트리를 마운트만 하고 쿼리는 `userEvent`, mock, 전역 side effect로만 검증하는 경우 — `rendered` 변수를 만들지 말고 `render()`만 호출합니다.
+
+```tsx
+it('should call onClick when Enter is pressed on focused item', async () => {
+    const onClick = vi.fn();
+
+    render(
+        <Breadcrumb.Root>
+            <Breadcrumb.Item href="away" onClick={onClick}>
+                Away
+            </Breadcrumb.Item>
+        </Breadcrumb.Root>,
+    );
+
+    await userEvent.tab();
+    await userEvent.keyboard('{Enter}');
+
+    expect(onClick).toHaveBeenCalledTimes(1);
+});
+```
+
+사용하지 않는 `rendered`는 "이 렌더에서 뭔가 조회할 것"이라는 잘못된 신호를 줍니다. 참조가 없으면 변수도 없어야 의도가 맞습니다.
 
 ## 요소 쿼리
 
