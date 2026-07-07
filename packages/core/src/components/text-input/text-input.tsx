@@ -58,9 +58,9 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
         <BaseInput
             ref={ref}
             {...(isControlled ? { value } : { defaultValue })}
-            // invalid가 지정된 경우에만 전달 — 항상 전달하면 Base UI가 Field 검증에서
-            // 계산한 aria-invalid를 undefined로 덮어써 버린다
-            {...(invalid != null && { 'aria-invalid': invalid })}
+            // true일 때만 키를 추가 — aria-invalid 키가 존재하기만 해도(값이 false/undefined여도)
+            // Base UI가 Field 검증에서 계산한 aria-invalid를 덮어써 버린다
+            {...(invalid && { 'aria-invalid': true })}
             onValueChange={handleChange}
             className={cn(styles.root({ invalid, size }), className)}
             {...dataAttrs}
