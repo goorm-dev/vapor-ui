@@ -48,17 +48,23 @@ export function parseDeclarationValue(valueNode: unknown): ParsedValuePart[] {
         if (isCSSVariable(node)) {
             const parsed = parseCSSVariable(node);
             if (parsed) out.push(parsed);
-            for (const c of cssVariableFallbacks(node)) walk(c);
+
+            for (const c of cssVariableFallbacks(node)) {
+                walk(c);
+            }
             return;
         }
+
         if (isHexColor(node)) {
             out.push(parseHexColor(node));
             return;
         }
+
         if (isDimension(node)) {
             out.push(parseDimension(node));
             return;
         }
+
         if (Array.isArray(node.children)) {
             for (const c of node.children) walk(c);
         }

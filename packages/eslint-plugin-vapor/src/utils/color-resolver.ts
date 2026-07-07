@@ -14,5 +14,6 @@ export function oklchToHex(components: readonly [number, number, number], alpha?
         alpha: alpha,
     };
     const result = alpha != null && alpha < 1 ? formatHex8(color) : formatHex(color);
-    return (result ?? '#000000').toLowerCase();
+
+    return result.toLowerCase();
 }

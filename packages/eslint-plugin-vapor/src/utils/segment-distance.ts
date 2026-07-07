@@ -1,3 +1,5 @@
+// Damerau-Levenshtein DP with max-threshold pruning (row-min early exit).
+// Ref: https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
 function damerauLevenshtein(a: string, b: string, max: number): number {
     if (a === b) return 0;
     if (Math.abs(a.length - b.length) > max) return max + 1;
