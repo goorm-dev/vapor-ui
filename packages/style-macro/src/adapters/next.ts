@@ -84,12 +84,15 @@ export function withVaporStyle(
         const enableTurbopack = mode === 'on' || (mode === 'auto' && detectNext16InConsumer());
         if (!enableTurbopack) return merged as unknown as T;
 
-        // Resolve the loader from the consumer's `node_modules`. Resolving
-        // relative to *this* file would break under tsup's CJS output
-        // (`import.meta.url` is undefined there) and under pnpm's symlinked
-        // package layout it would still pick up the right dist file.
-        const cwdRequire = createRequire(path.join(process.cwd(), 'package.json'));
-        const loaderPath = cwdRequire.resolve('@vapor-ui/style-macro/turbopack');
+        // Resolve the loader relative to this module (self-reference through
+        // the `./turbopack` subpath export). Anchoring `createRequire` to the
+        // plugin file itself keeps resolution independent of the consumer's
+        // cwd, so pnpm symlinks and `next build` invoked from a parent
+        // directory don't affect it. `__filename` is defined in tsup's CJS
+        // output; `import.meta.url` covers the ESM output.
+        const modulePath = typeof __filename !== 'undefined' ? __filename : import.meta.url;
+        const selfRequire = createRequire(modulePath);
+        const loaderPath = selfRequire.resolve('@vapor-ui/style-macro/turbopack');
 
         // Turbopack rule options must be JSON-serializable AND cannot carry
         // `undefined` values (its serde layer rejects them). Strip functions
