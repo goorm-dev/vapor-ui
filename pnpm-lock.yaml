@@ -650,8 +650,8 @@ importers:
         version: 5.9.3
     devDependencies:
       '@antebudimir/eslint-plugin-vanilla-extract':
-        specifier: ^1.16.0
-        version: 1.16.0(eslint@9.39.4(jiti@2.6.1))
+        specifier: ^1.17.0
+        version: 1.17.0(eslint@9.39.4(jiti@2.6.1))
       '@eslint/compat':
         specifier: ^1.4.1
         version: 1.4.1(eslint@9.39.4(jiti@2.6.1))
@@ -860,8 +860,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@antebudimir/eslint-plugin-vanilla-extract@1.16.0':
-    resolution: {integrity: sha512-a70XiKGG9FvwrjoRoKpkKpLvQNGm9MTM0oO7VvCQNi2RowvdglMeLJBzV36L02QTF7tFoUwadwkM7sGBarUByw==}
+  '@antebudimir/eslint-plugin-vanilla-extract@1.17.0':
+    resolution: {integrity: sha512-JPWAeI4rN9x+aHMSGi/07VkCy1QtTHWg0PvS4/JK8OSyZSyXJVtFy2SqBI+2IAeatadHIH5681b0hKe6EFTm6g==}
     engines: {node: '>=18.18.0'}
     peerDependencies:
       eslint: '>=8.57.0'
@@ -9220,7 +9220,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
 
-  '@antebudimir/eslint-plugin-vanilla-extract@1.16.0(eslint@9.39.4(jiti@2.6.1))':
+  '@antebudimir/eslint-plugin-vanilla-extract@1.17.0(eslint@9.39.4(jiti@2.6.1))':
     dependencies:
       '@babel/parser': 7.29.3
       '@babel/types': 7.29.0
@@ -9352,7 +9352,7 @@ snapshots:
 
   '@babel/helper-annotate-as-pure@7.27.3':
     dependencies:
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
 
   '@babel/helper-compilation-targets@7.27.2':
     dependencies:
@@ -9447,7 +9447,7 @@ snapshots:
   '@babel/helper-module-imports@7.27.1':
     dependencies:
       '@babel/traverse': 7.28.5
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
     transitivePeerDependencies:
       - supports-color
 
@@ -9542,7 +9542,7 @@ snapshots:
   '@babel/helper-skip-transparent-expression-wrappers@7.27.1':
     dependencies:
       '@babel/traverse': 7.28.5
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
     transitivePeerDependencies:
       - supports-color
 
@@ -9556,14 +9556,14 @@ snapshots:
     dependencies:
       '@babel/template': 7.27.2
       '@babel/traverse': 7.28.5
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
     transitivePeerDependencies:
       - supports-color
 
   '@babel/helpers@7.28.4':
     dependencies:
       '@babel/template': 7.27.2
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
 
   '@babel/helpers@7.29.2':
     dependencies:
@@ -10407,7 +10407,7 @@ snapshots:
       '@babel/helper-module-imports': 7.27.1
       '@babel/helper-plugin-utils': 7.27.1
       '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.28.4)
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
     transitivePeerDependencies:
       - supports-color
 
@@ -10738,14 +10738,14 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.4
       '@babel/helper-plugin-utils': 7.27.1
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
       esutils: 2.0.3
 
   '@babel/preset-modules@0.1.6-no-external-plugins(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/helper-plugin-utils': 7.27.1
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
       esutils: 2.0.3
     optional: true
 
@@ -13145,7 +13145,7 @@ snapshots:
 
   '@svgr/hast-util-to-babel-ast@8.0.0':
     dependencies:
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
       entities: 4.5.0
 
   '@svgr/plugin-jsx@8.1.0(@svgr/core@8.1.0(typescript@5.9.3))':
