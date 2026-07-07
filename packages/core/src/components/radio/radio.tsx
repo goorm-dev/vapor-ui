@@ -12,6 +12,7 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import { useRadioGroupContext } from '../radio-group';
 import type { RootVariants } from './radio.css';
 import * as styles from './radio.css';
@@ -43,15 +44,17 @@ export const RadioRoot = forwardRef<HTMLElement, RadioRoot.Props>((props, ref) =
     });
 
     return (
-        <BaseRadio.Root
-            ref={ref}
-            aria-invalid={invalid}
-            className={cn(styles.root({ size, invalid }), className)}
-            {...dataAttrs}
-            {...otherProps}
-        >
-            {children}
-        </BaseRadio.Root>
+        <Interaction>
+            <BaseRadio.Root
+                ref={ref}
+                aria-invalid={invalid}
+                className={cn(styles.root({ size, invalid }), className)}
+                {...dataAttrs}
+                {...otherProps}
+            >
+                {children}
+            </BaseRadio.Root>
+        </Interaction>
     );
 });
 RadioRoot.displayName = 'Radio.Root';

@@ -18,6 +18,7 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import type { LinkVariants, ListVariants } from './navigation-menu.css';
 import * as styles from './navigation-menu.css';
 
@@ -124,16 +125,18 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
                 : classNameProp;
 
         return (
-            <BaseNavigationMenu.Link
-                ref={ref}
-                href={disabled ? undefined : href}
-                aria-current={current ? 'page' : undefined}
-                aria-disabled={disabled ? 'true' : undefined}
-                active={current}
-                className={cn(styles.link({ size }), className)}
-                {...dataAttrs}
-                {...componentProps}
-            />
+            <Interaction>
+                <BaseNavigationMenu.Link
+                    ref={ref}
+                    href={disabled ? undefined : href}
+                    aria-current={current ? 'page' : undefined}
+                    aria-disabled={disabled ? 'true' : undefined}
+                    active={current}
+                    className={cn(styles.link({ size }), className)}
+                    {...dataAttrs}
+                    {...componentProps}
+                />
+            </Interaction>
         );
     },
 );
@@ -154,13 +157,15 @@ export const NavigationMenuTriggerPrimitive = forwardRef<
     const dataAttrs = createDataAttributes({ disabled });
 
     return (
-        <BaseNavigationMenu.Trigger
-            ref={ref}
-            disabled={disabled}
-            className={cn(styles.link({ size }), styles.trigger, className)}
-            {...dataAttrs}
-            {...componentProps}
-        />
+        <Interaction>
+            <BaseNavigationMenu.Trigger
+                ref={ref}
+                disabled={disabled}
+                className={cn(styles.link({ size }), styles.trigger, className)}
+                {...dataAttrs}
+                {...componentProps}
+            />
+        </Interaction>
     );
 });
 NavigationMenuTriggerPrimitive.displayName = 'NavigationMenu.TriggerPrimitive';

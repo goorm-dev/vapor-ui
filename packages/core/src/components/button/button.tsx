@@ -7,6 +7,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
@@ -22,11 +23,13 @@ export const Button = forwardRef<HTMLElement, Button.Props>((props, ref) => {
     ]);
 
     return (
-        <BaseButton
-            ref={ref}
-            className={cn(styles.root(variantsProps), className)}
-            {...otherProps}
-        />
+        <Interaction>
+            <BaseButton
+                ref={ref}
+                className={cn(styles.root(variantsProps), className)}
+                {...otherProps}
+            />
+        </Interaction>
     );
 });
 Button.displayName = 'Button';

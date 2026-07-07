@@ -2,7 +2,6 @@ import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
-import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
@@ -91,7 +90,6 @@ export const list = componentRecipe({
 export const button = componentRecipe({
     base: [
         foregrounds({ color: 'normal-100' }),
-        interaction({ scale: 'light' }),
         typography({ style: 'subtitle1' }),
         {
             position: 'relative',

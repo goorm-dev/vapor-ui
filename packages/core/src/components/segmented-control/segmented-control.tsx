@@ -19,6 +19,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import * as styles from './segmented-control.css';
 import type { RootVariants } from './segmented-control.css';
 
@@ -222,15 +223,17 @@ export const SegmentedControlItem = forwardRef<HTMLButtonElement, SegmentedContr
         }, [value, disabled, registerItem, unregisterItem]);
 
         return (
-            <BaseRadio.Root
-                ref={composedRef}
-                render={render ?? <button />}
-                value={value}
-                disabled={disabled}
-                nativeButton={true}
-                className={cn(styles.item({ size }), className)}
-                {...componentProps}
-            />
+            <Interaction>
+                <BaseRadio.Root
+                    ref={composedRef}
+                    render={render ?? <button />}
+                    value={value}
+                    disabled={disabled}
+                    nativeButton={true}
+                    className={cn(styles.item({ size }), className)}
+                    {...componentProps}
+                />
+            </Interaction>
         );
     },
 );

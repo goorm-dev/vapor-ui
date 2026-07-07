@@ -1,7 +1,6 @@
 import { createVar } from '@vanilla-extract/css';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
-import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
@@ -51,7 +50,6 @@ export const root = componentRecipe({
 
 export const item = componentRecipe({
     base: [
-        interaction(),
         typography({ style: 'subtitle1' }),
         foregrounds({ color: 'secondary-200' }),
         {

@@ -14,6 +14,7 @@ import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import * as styles from './menu.css';
 
 type MenuContext = Pick<MenuRoot.Props, 'disabled'>;
@@ -138,12 +139,14 @@ export const MenuItem = forwardRef<HTMLElement, MenuItem.Props>((props, ref) => 
     const disabled = disabledProp || contextDisabled;
 
     return (
-        <BaseMenu.Item
-            ref={ref}
-            disabled={disabled}
-            className={cn(styles.item, className)}
-            {...componentProps}
-        />
+        <Interaction type="roving">
+            <BaseMenu.Item
+                ref={ref}
+                disabled={disabled}
+                className={cn(styles.item, className)}
+                {...componentProps}
+            />
+        </Interaction>
     );
 });
 MenuItem.displayName = 'Menu.Item';
@@ -237,15 +240,17 @@ export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTrigger
         const composedRef = composeRefs(triggerRef, ref);
 
         return (
-            <BaseMenu.SubmenuTrigger
-                ref={composedRef}
-                className={cn(styles.subTrigger, className)}
-                {...componentProps}
-            >
-                {children}
+            <Interaction type="roving">
+                <BaseMenu.SubmenuTrigger
+                    ref={composedRef}
+                    className={cn(styles.subTrigger, className)}
+                    {...componentProps}
+                >
+                    {children}
 
-                <ChevronRightOutlineIcon />
-            </BaseMenu.SubmenuTrigger>
+                    <ChevronRightOutlineIcon />
+                </BaseMenu.SubmenuTrigger>
+            </Interaction>
         );
     },
 );
@@ -318,14 +323,16 @@ export const MenuCheckboxItemPrimitive = forwardRef<HTMLElement, MenuCheckboxIte
         const disabled = disabledProp || contextDisabled;
 
         return (
-            <BaseMenu.CheckboxItem
-                ref={ref}
-                disabled={disabled}
-                className={cn(styles.item, className)}
-                {...componentProps}
-            >
-                {children}
-            </BaseMenu.CheckboxItem>
+            <Interaction type="roving">
+                <BaseMenu.CheckboxItem
+                    ref={ref}
+                    disabled={disabled}
+                    className={cn(styles.item, className)}
+                    {...componentProps}
+                >
+                    {children}
+                </BaseMenu.CheckboxItem>
+            </Interaction>
         );
     },
 );
@@ -399,12 +406,14 @@ export const MenuRadioItemPrimitive = forwardRef<HTMLElement, MenuRadioItemPrimi
         const disabled = disabledProp || contextDisabled;
 
         return (
-            <BaseMenu.RadioItem
-                ref={ref}
-                disabled={disabled}
-                className={cn(styles.item, className)}
-                {...componentProps}
-            />
+            <Interaction type="roving">
+                <BaseMenu.RadioItem
+                    ref={ref}
+                    disabled={disabled}
+                    className={cn(styles.item, className)}
+                    {...componentProps}
+                />
+            </Interaction>
         );
     },
 );

@@ -11,6 +11,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import * as styles from './tabs.css';
 import type { ButtonVariants, ListVariants } from './tabs.css';
 
@@ -119,12 +120,14 @@ export const TabsButton = forwardRef<HTMLElement, TabsButton.Props>((props, ref)
     const disabled = disabledProp || rootDisabled;
 
     return (
-        <BaseTabs.Tab
-            ref={ref}
-            disabled={disabled}
-            className={cn(styles.button({ size, variant, orientation }), className)}
-            {...componentProps}
-        />
+        <Interaction scale="light">
+            <BaseTabs.Tab
+                ref={ref}
+                disabled={disabled}
+                className={cn(styles.button({ size, variant, orientation }), className)}
+                {...componentProps}
+            />
+        </Interaction>
     );
 });
 TabsButton.displayName = 'Tabs.Button';

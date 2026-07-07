@@ -21,6 +21,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import * as styles from './pagination.css';
 import type { ButtonVariants } from './pagination.css';
 
@@ -184,7 +185,7 @@ export const PaginationButtonPrimitive = forwardRef<
         [disabled, current],
     );
 
-    return useRenderElement({
+    const element = useRenderElement({
         ref,
         render,
         defaultTagName: 'button',
@@ -198,6 +199,8 @@ export const PaginationButtonPrimitive = forwardRef<
             ...props,
         },
     });
+
+    return <Interaction>{element}</Interaction>;
 });
 PaginationButtonPrimitive.displayName = 'Pagination.ButtonPrimitive';
 
@@ -236,7 +239,7 @@ export const PaginationPreviousPrimitive = forwardRef<
 
     const state: PaginationPreviousPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
 
-    return useRenderElement({
+    const element = useRenderElement({
         ref,
         render,
         defaultTagName: 'button',
@@ -250,6 +253,8 @@ export const PaginationPreviousPrimitive = forwardRef<
             ...componentProps,
         },
     });
+
+    return <Interaction>{element}</Interaction>;
 });
 PaginationPreviousPrimitive.displayName = 'Pagination.PreviousPrimitive';
 
@@ -307,7 +312,7 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
 
         const state: PaginationNextPrimitive.State = useMemo(() => ({ disabled }), [disabled]);
 
-        return useRenderElement({
+        const element = useRenderElement({
             ref,
             render,
             defaultTagName: 'button',
@@ -321,6 +326,8 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
                 ...componentProps,
             },
         });
+
+        return <Interaction>{element}</Interaction>;
     },
 );
 PaginationNextPrimitive.displayName = 'Pagination.NextPrimitive';

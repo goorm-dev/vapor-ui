@@ -1,5 +1,4 @@
 import { foregrounds } from '~/styles/mixins/foreground.css';
-import { interaction } from '~/styles/mixins/interactions.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
@@ -39,7 +38,6 @@ export const popup = componentStyle({
 export const subPopup = popup;
 
 export const item = componentStyle([
-    interaction({ type: 'roving' }),
     typography({ style: 'body2' }),
     foregrounds({ color: 'normal-200' }),
 

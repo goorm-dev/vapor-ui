@@ -13,6 +13,7 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Interaction } from '../interaction';
 import type { ControlVariants } from './switch.css';
 import * as styles from './switch.css';
 
@@ -47,16 +48,18 @@ export const SwitchRoot = forwardRef<HTMLElement, SwitchRoot.Props>((props, ref)
 
     return (
         <SwitchProvider value={variantProps}>
-            <BaseSwitch.Root
-                ref={ref}
-                aria-required={required}
-                aria-invalid={invalid}
-                className={cn(styles.control({ size }), className)}
-                {...dataAttrs}
-                {...otherProps}
-            >
-                {children}
-            </BaseSwitch.Root>
+            <Interaction>
+                <BaseSwitch.Root
+                    ref={ref}
+                    aria-required={required}
+                    aria-invalid={invalid}
+                    className={cn(styles.control({ size }), className)}
+                    {...dataAttrs}
+                    {...otherProps}
+                >
+                    {children}
+                </BaseSwitch.Root>
+            </Interaction>
         </SwitchProvider>
     );
 });
