@@ -14,6 +14,13 @@ export default {
             control: { type: 'inline-radio' },
             options: ['sm', 'md', 'lg', 'xl'],
         },
+        variant: {
+            control: { type: 'inline-radio' },
+            options: ['default', 'accent'],
+        },
+        disabled: {
+            control: { type: 'boolean' },
+        },
     },
 } satisfies Meta<typeof ToggleGroup.Root>;
 

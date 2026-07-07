@@ -19,6 +19,12 @@ export default {
             control: { type: 'inline-radio' },
             options: ['default', 'accent'],
         },
+        disabled: {
+            control: { type: 'boolean' },
+        },
+        pressed: {
+            control: { type: 'boolean' },
+        },
     },
 } satisfies StoryMeta;
 
