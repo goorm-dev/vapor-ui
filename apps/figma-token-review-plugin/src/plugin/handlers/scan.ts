@@ -12,20 +12,19 @@ export function initScan(): void {
         const requestId = msg.requestId ?? null;
         activeRequestId = requestId;
 
-        const node = await figma.getNodeByIdAsync(msg.frameId);
-        if (activeRequestId !== requestId) return;
-
-        if (!node || node.type !== 'FRAME') {
-            postToUi(
-                { type: 'extract-error', message: '선택한 프레임을 찾을 수 없습니다.' },
-                requestId ?? undefined,
-            );
-            return;
-        }
-
         try {
-            const payload = await extractFrame(msg.frameId);
+            const node = await figma.getNodeByIdAsync(msg.frameId);
+            if (activeRequestId !== requestId) return;
 
+            if (!node || node.type !== 'FRAME') {
+                postToUi(
+                    { type: 'extract-error', message: '선택한 프레임을 찾을 수 없습니다.' },
+                    requestId ?? undefined,
+                );
+                return;
+            }
+
+            const payload = await extractFrame(msg.frameId);
             if (activeRequestId !== requestId) return;
 
             postToUi({ type: 'extract-result', payload }, requestId ?? undefined);

@@ -182,17 +182,22 @@ function toToken(chain: { name: string; tier: string }[]): {
     return key ? { token: key, tokenStatus: 'ok' } : { token: null, tokenStatus: 'unknown' };
 }
 
+function isVisiblePaint(p: any): boolean {
+    return !!p && p.visible !== false;
+}
+
 function classifyBackground(node: SceneNode): ColorBackground {
     let cur: any = node.parent;
     while (cur && cur.type !== 'PAGE') {
         const nodeOpaque = ('opacity' in cur ? cur.opacity : 1) === 1;
         const fills = 'fills' in cur && Array.isArray(cur.fills) ? cur.fills : [];
-        const solid = fills.find((p: any) => p && p.type === 'SOLID' && p.visible !== false);
-        if (solid) {
-            const fillOpaque = (solid.opacity ?? 1) === 1;
+        const visible = fills.find(isVisiblePaint);
+        if (visible) {
+            if (visible.type !== 'SOLID') return { kind: 'ambiguous', hex: null };
+            const fillOpaque = (visible.opacity ?? 1) === 1;
             if (!nodeOpaque || !fillOpaque)
-                return { kind: 'ambiguous', hex: rgbaToHex(solid.color) };
-            const hex = rgbaToHex(solid.color);
+                return { kind: 'ambiguous', hex: rgbaToHex(visible.color) };
+            const hex = rgbaToHex(visible.color);
             return { kind: hex === '#ffffff' ? 'white' : 'other', hex };
         }
         cur = cur.parent;
@@ -360,10 +365,6 @@ export async function extractFrame(
     const root = await figma.getNodeByIdAsync(frameId);
     if (!root) throw new Error('노드를 찾을 수 없음: ' + frameId);
 
-    let pageNode: any = root;
-    while (pageNode && pageNode.type !== 'PAGE') pageNode = pageNode.parent;
-    if (pageNode && figma.currentPage !== pageNode) await figma.setCurrentPageAsync(pageNode);
-
     const colorRaw: (ColorUsage & { nodeId: string })[] = [];
     const typoRaw: (TypographyUsage & { nodeId: string })[] = [];
     const spaceRaw: SpaceUsage[] = [];
@@ -411,14 +412,18 @@ export async function extractFrame(
                 bound: any[],
                 property: ColorProperty,
             ): Promise<void> => {
-                for (const a of bound) {
+                const paintList = Array.isArray(paints) ? paints : null;
+                for (let i = 0; i < bound.length; i++) {
+                    const a = bound[i];
                     if (!a || !a.id) continue;
+                    const p = paintList ? paintList[i] : null;
+                    if (p && p.visible === false) continue;
                     const { chain, finalHex } = await walk(node, a.id);
                     const { token, tokenStatus } = toToken(chain);
                     pushColor(node, property, token, finalHex, tokenStatus);
                 }
-                if (Array.isArray(paints)) {
-                    paints.forEach((p: any, i: number) => {
+                if (paintList) {
+                    paintList.forEach((p: any, i: number) => {
                         if (p && p.type === 'SOLID' && p.visible !== false && !bound[i]) {
                             pushColor(node, property, null, rgbaToHex(p.color), 'raw');
                         }

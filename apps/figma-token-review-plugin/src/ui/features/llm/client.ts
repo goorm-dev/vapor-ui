@@ -59,7 +59,11 @@ async function postOnce(
     fetchImpl: typeof fetch,
 ): Promise<AnthropicMessagesResponse> {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(new Error('timeout')), timeoutMs);
+    let timedOut = false;
+    const timer = setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+    }, timeoutMs);
     const upstreamAbort = () => controller.abort(signal?.reason);
     signal?.addEventListener('abort', upstreamAbort);
 
@@ -76,9 +80,7 @@ async function postOnce(
             signal: controller.signal,
         });
     } catch (err) {
-        if ((err as Error)?.name === 'AbortError' && !signal?.aborted) {
-            throw new LlmTimeoutError();
-        }
+        if (timedOut) throw new LlmTimeoutError();
         throw err;
     } finally {
         clearTimeout(timer);

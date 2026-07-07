@@ -42,7 +42,12 @@ export const scanActions = {
         if (state.requestId !== requestId) return;
 
         const empty =
-            payload.color.violations.length === 0 && payload.typography.violations.length === 0;
+            payload.color.violations.length === 0 &&
+            payload.typography.violations.length === 0 &&
+            payload.space.violations.length === 0 &&
+            payload.dimension.violations.length === 0 &&
+            payload.borderRadius.violations.length === 0 &&
+            payload.shadow.violations.length === 0;
 
         scanStore.setState({
             kind: empty ? 'clean' : 'success',

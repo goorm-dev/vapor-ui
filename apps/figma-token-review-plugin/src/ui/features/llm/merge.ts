@@ -119,10 +119,12 @@ export function mergeScanPayload(args: MergeArgs): ScanPayload {
     ): EvaluateOutput => {
         const d = deterministic[cat];
         const violations = [...d.violations, ...extra];
+        const flagged = new Set(extra.map((v) => `${v.nodeId}:${v.property}`));
+        const conformant = d.conformant.filter((c) => !flagged.has(`${c.nodeId}:${c.property}`));
         return {
             violations,
-            conformant: d.conformant,
-            summary: summarize(violations, d.conformant, d.total),
+            conformant,
+            summary: summarize(violations, conformant, d.total),
             ...(passJudgments && passJudgments.length > 0 ? { passJudgments } : {}),
         };
     };
