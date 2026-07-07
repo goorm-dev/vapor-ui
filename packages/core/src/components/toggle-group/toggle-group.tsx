@@ -37,6 +37,9 @@ export const ToggleGroupRoot = forwardRef<HTMLDivElement, ToggleGroupRoot.Props>
                 ref={ref}
                 className={clsx(styles.root(variantsProps), className)}
                 {...otherProps}
+                // `aria-orientation` is not allowed on `role="group"`; strip it until the upstream
+                // fix ships. See https://github.com/mui/base-ui/pull/4628.
+                aria-orientation={undefined}
             />
         </ToggleGroupProvider>
     );
