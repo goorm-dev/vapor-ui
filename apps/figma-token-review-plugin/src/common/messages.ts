@@ -1,17 +1,23 @@
 import type { LlmContext, RawExtract, SelectionState } from './schemas';
 
+export type ApiKeyState = { hasKey: boolean; key: string | null };
+
 export type CodeMsg =
     | { type: 'selection'; state: SelectionState }
     | { type: 'extract-result'; payload: { extract: RawExtract; llmContext: LlmContext } }
     | { type: 'extract-error'; message: string }
     | { type: 'focus-result'; resolved: number; missing: number }
-    | { type: 'focus-error'; message: string };
+    | { type: 'focus-error'; message: string }
+    | { type: 'api-key:state'; state: ApiKeyState };
 
 export type UiMsg =
     | { type: 'request-selection' }
     | { type: 'scan'; frameId: string }
     | { type: 'focus'; nodeIds: string[] }
-    | { type: 'resize'; width: number; height: number; commit?: boolean };
+    | { type: 'resize'; width: number; height: number; commit?: boolean }
+    | { type: 'api-key:get' }
+    | { type: 'api-key:set'; value: string }
+    | { type: 'api-key:clear' };
 
 /* -------------------------------------------------------------------------------------------------
  * Envelope + RequestId (formerly src/shared/protocol.ts)

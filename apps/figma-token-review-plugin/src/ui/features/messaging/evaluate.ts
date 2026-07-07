@@ -1,7 +1,8 @@
 import type { CodeEnvelope } from '~/common/messages';
 
 import { toastManager } from '../../components/toast';
-import { LlmHttpError, LlmParseError, runLlmEvaluation } from '../llm';
+import { apiKeyActions, currentApiKey } from '../api-key';
+import { LlmHttpError, LlmParseError, MissingApiKeyError, runLlmEvaluation } from '../llm';
 import { scanActions, scanStore } from '../scan';
 
 let activeEvaluation: AbortController | null = null;
@@ -17,8 +18,12 @@ export async function evaluateExtract(
     activeEvaluation = controller;
 
     try {
+        const apiKey = currentApiKey();
+        if (!apiKey) throw new MissingApiKeyError();
+
         const payload = await runLlmEvaluation(msg.payload.extract, msg.payload.llmContext, {
             signal: controller.signal,
+            apiKey,
         });
         if (activeEvaluation !== controller) return;
         scanActions.result(payload, msg.requestId);
@@ -28,6 +33,10 @@ export async function evaluateExtract(
 
         const applied = scanActions.error(msg.requestId);
         if (!applied) return;
+
+        if (err instanceof LlmHttpError && (err.status === 401 || err.status === 403)) {
+            apiKeyActions.clear();
+        }
 
         toastManager.add({
             title: messageFromEvaluatorError(err),
@@ -39,8 +48,11 @@ export async function evaluateExtract(
 }
 
 function messageFromEvaluatorError(err: unknown): string {
+    if (err instanceof MissingApiKeyError) return err.message;
     if (err instanceof LlmHttpError) {
-        if (err.status === 401 || err.status === 403) return 'API 키를 확인하세요.';
+        if (err.status === 401 || err.status === 403) {
+            return 'API 키가 유효하지 않아 삭제되었습니다. 다시 설정해 주세요.';
+        }
         if (err.status === 429) return '요청이 많습니다. 잠시 후 다시 시도해 주세요.';
         return `LLM 호출 실패 (${err.status})`;
     }

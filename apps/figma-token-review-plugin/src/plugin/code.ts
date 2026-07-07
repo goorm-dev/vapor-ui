@@ -1,3 +1,4 @@
+import { initApiKey } from './handlers/api-key';
 import { initFocus } from './handlers/focus';
 import { DEFAULT_SIZE, initResize, restoreSavedSize } from './handlers/resize';
 import { initScan } from './handlers/scan';
@@ -11,4 +12,5 @@ initSelection();
 initScan();
 initFocus();
 initResize();
+initApiKey();
 start();

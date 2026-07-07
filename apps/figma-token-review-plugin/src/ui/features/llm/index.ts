@@ -20,19 +20,36 @@ import { buildRequest } from './prompt';
 
 export type RunLlmEvaluationOptions = {
     signal?: AbortSignal;
-    env?: LlmEnv;
+    apiKey: string;
+    baseUrl?: string;
     model?: string;
     frameName?: string;
+    extraTags?: string[];
 };
 
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
+const APP_TAG = 'app:figma-token-review-plugin';
+const FEATURE_TAG = 'feature:scan';
+
+export class MissingApiKeyError extends Error {
+    constructor() {
+        super('LiteLLM API 키가 설정되지 않았습니다.');
+        this.name = 'MissingApiKeyError';
+    }
+}
 
 export async function runLlmEvaluation(
     extract: RawExtract,
     llmContext: LlmContext,
-    options: RunLlmEvaluationOptions = {},
+    options: RunLlmEvaluationOptions,
 ): Promise<ScanPayload> {
-    const env = options.env ?? envFromImportMeta();
+    const apiKey = options.apiKey?.trim();
+    if (!apiKey) throw new MissingApiKeyError();
+
+    const baseUrl = options.baseUrl ?? baseUrlFromImportMeta();
+    if (!baseUrl) throw new Error('VITE_LITELLM_BASE_URL 누락');
+
+    const env: LlmEnv = { baseUrl, apiKey };
     const model = options.model ?? importMetaModel() ?? DEFAULT_MODEL;
     const frameName = options.frameName ?? '';
 
@@ -82,7 +99,8 @@ export async function runLlmEvaluation(
     });
 
     const request = buildRequest(llmInput, llmContext.screenshotB64, model);
-    const response = await postLiteLLM(request, { env, signal: options.signal });
+    const tags = [APP_TAG, FEATURE_TAG, `model:${model}`, ...(options.extraTags ?? [])];
+    const response = await postLiteLLM(request, { env, signal: options.signal, tags });
     const judgments = parseLlmResponse(response);
 
     const mergeArgs: MergeArgs = {
@@ -95,12 +113,8 @@ export async function runLlmEvaluation(
     return mergeScanPayload(mergeArgs);
 }
 
-function envFromImportMeta(): LlmEnv {
-    const baseUrl = importMetaString('VITE_LITELLM_BASE_URL');
-    const apiKey = importMetaString('VITE_LITELLM_API_KEY');
-    if (!baseUrl) throw new Error('VITE_LITELLM_BASE_URL 누락');
-    if (!apiKey) throw new Error('VITE_LITELLM_API_KEY 누락');
-    return { baseUrl, apiKey };
+function baseUrlFromImportMeta(): string | undefined {
+    return importMetaString('VITE_LITELLM_BASE_URL');
 }
 
 function importMetaModel(): string | undefined {

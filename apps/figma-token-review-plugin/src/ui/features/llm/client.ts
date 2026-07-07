@@ -29,6 +29,7 @@ export type PostOptions = {
     signal?: AbortSignal;
     timeoutMs?: number;
     fetchImpl?: typeof fetch;
+    tags?: string[];
 };
 
 const DEFAULT_TIMEOUT_MS = 60_000;
@@ -38,14 +39,14 @@ export async function postLiteLLM(
     request: AnthropicMessagesRequest,
     options: PostOptions,
 ): Promise<AnthropicMessagesResponse> {
-    const { env, signal, timeoutMs = DEFAULT_TIMEOUT_MS, fetchImpl = fetch } = options;
+    const { env, signal, timeoutMs = DEFAULT_TIMEOUT_MS, fetchImpl = fetch, tags } = options;
 
     try {
-        return await postOnce(request, env, signal, timeoutMs, fetchImpl);
+        return await postOnce(request, env, signal, timeoutMs, fetchImpl, tags);
     } catch (err) {
         if (err instanceof LlmHttpError && err.status === 429) {
             await delay(RATE_LIMIT_RETRY_DELAY_MS, signal);
-            return postOnce(request, env, signal, timeoutMs, fetchImpl);
+            return postOnce(request, env, signal, timeoutMs, fetchImpl, tags);
         }
         throw err;
     }
@@ -57,25 +58,35 @@ async function postOnce(
     signal: AbortSignal | undefined,
     timeoutMs: number,
     fetchImpl: typeof fetch,
+    tags: string[] | undefined,
 ): Promise<AnthropicMessagesResponse> {
     const controller = new AbortController();
+
     let timedOut = false;
     const timer = setTimeout(() => {
         timedOut = true;
         controller.abort();
     }, timeoutMs);
+
     const upstreamAbort = () => controller.abort(signal?.reason);
     signal?.addEventListener('abort', upstreamAbort);
 
+    const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${env.apiKey}`,
+        'anthropic-version': '2023-06-01',
+    };
+
+    if (tags && tags.length > 0) {
+        headers['x-litellm-tags'] = tags.join(',');
+    }
+
     let res: Response;
+
     try {
         res = await fetchImpl(`${env.baseUrl.replace(/\/$/, '')}/v1/messages`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${env.apiKey}`,
-                'anthropic-version': '2023-06-01',
-            },
+            headers,
             body: JSON.stringify(request),
             signal: controller.signal,
         });
@@ -101,6 +112,7 @@ function delay(ms: number, signal?: AbortSignal): Promise<void> {
             reject(signal.reason ?? new Error('aborted'));
             return;
         }
+
         const timer = setTimeout(() => resolve(), ms);
         signal?.addEventListener(
             'abort',

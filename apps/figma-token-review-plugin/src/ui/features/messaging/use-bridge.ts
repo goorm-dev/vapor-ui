@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import type { CodeEnvelope } from '~/common/messages';
 
 import { toastManager } from '../../components/toast';
+import { apiKeyActions } from '../api-key';
 import { scanActions } from '../scan';
 import { selectionStore } from '../selection';
 import { evaluateExtract } from './evaluate';
@@ -51,6 +52,9 @@ function handle(msg: CodeEnvelope) {
                 title: `${msg.missing}개 노드 누락`,
                 colorPalette: 'info',
             });
+            return;
+        case 'api-key:state':
+            apiKeyActions.apply(msg.state);
             return;
     }
 }
