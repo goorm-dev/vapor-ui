@@ -1,4 +1,5 @@
-import { Box, Button } from '@vapor-ui/core';
+import { Box, IconButton, Tooltip } from '@vapor-ui/core';
+import { SettingIcon } from '@vapor-ui/icons';
 
 import surveyUrl from '~/ui/assets/survey.svg';
 
@@ -25,13 +26,7 @@ export function HomePage({ onOpenSettings }: Props) {
 
     return (
         <Box className="relative">
-            {onOpenSettings && (
-                <Box className="absolute right-3 top-3">
-                    <Button size="sm" variant="ghost" onClick={onOpenSettings}>
-                        설정
-                    </Button>
-                </Box>
-            )}
+            <SettingButton onClick={onOpenSettings} />
             <HeroPanel.Root>
                 <HeroPanel.Content>
                     <HeroPanel.Image src={surveyUrl} />
@@ -50,3 +45,23 @@ export function HomePage({ onOpenSettings }: Props) {
         </Box>
     );
 }
+
+const SettingButton = ({ onClick }: IconButton.Props) => (
+    <Tooltip.Root>
+        <Tooltip.Trigger
+            render={
+                <IconButton
+                    aria-label="설정"
+                    colorPalette="secondary"
+                    variant="ghost"
+                    onClick={onClick}
+                    className="absolute right-3 top-3"
+                >
+                    <SettingIcon />
+                </IconButton>
+            }
+        />
+
+        <Tooltip.Popup>설정</Tooltip.Popup>
+    </Tooltip.Root>
+);
