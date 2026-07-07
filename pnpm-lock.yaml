@@ -191,8 +191,8 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.17)
       '@vanilla-extract/vite-plugin':
-        specifier: ^5.2.2
-        version: 5.2.2(@types/node@25.5.0)(esbuild@0.25.12)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(vite@7.3.5(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0))
+        specifier: ^5.2.3
+        version: 5.2.4(@types/node@25.5.0)(esbuild@0.25.12)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(vite@7.3.5(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0))
       '@vitejs/plugin-react':
         specifier: ^5.2.0
         version: 5.2.0(vite@7.3.5(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0))
@@ -482,8 +482,8 @@ importers:
         specifier: ^0.2.8
         version: 0.2.8(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@vanilla-extract/css':
-        specifier: ^1.20.1
-        version: 1.20.1
+        specifier: ^1.21.1
+        version: 1.21.1
       '@vanilla-extract/css-utils':
         specifier: ^0.1.6
         version: 0.1.6
@@ -492,10 +492,10 @@ importers:
         version: 2.1.5
       '@vanilla-extract/recipes':
         specifier: ^0.5.7
-        version: 0.5.7(@vanilla-extract/css@1.20.1)
+        version: 0.5.7(@vanilla-extract/css@1.21.1)
       '@vanilla-extract/sprinkles':
-        specifier: ^1.6.5
-        version: 1.6.5(@vanilla-extract/css@1.20.1)
+        specifier: ^1.7.0
+        version: 1.7.0(@vanilla-extract/css@1.21.1)
       '@vapor-ui/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -507,7 +507,7 @@ importers:
         version: 2.1.1
       rainbow-sprinkles:
         specifier: ^1.0.0
-        version: 1.0.0(@vanilla-extract/css@1.20.1)(@vanilla-extract/dynamic@2.1.5)
+        version: 1.0.0(@vanilla-extract/css@1.21.1)(@vanilla-extract/dynamic@2.1.5)
     devDependencies:
       '@playwright/test':
         specifier: ^1.60.0
@@ -555,8 +555,8 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3(rollup@4.60.4)
       '@vanilla-extract/vite-plugin':
-        specifier: ^5.2.2
-        version: 5.2.2(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0))
+        specifier: ^5.2.3
+        version: 5.2.4(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0))
       '@vitest/browser':
         specifier: ^3.2.6
         version: 3.2.6(playwright@1.60.0)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0))(vitest@3.2.6)
@@ -1578,10 +1578,6 @@ packages:
 
   '@babel/runtime@7.28.4':
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/runtime@7.28.6':
-    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.29.2':
@@ -4908,17 +4904,20 @@ packages:
   '@vanilla-extract/babel-plugin-debug-ids@1.2.2':
     resolution: {integrity: sha512-MeDWGICAF9zA/OZLOKwhoRlsUW+fiMwnfuOAqFVohL31Agj7Q/RBWAYweqjHLgFBCsdnr6XIfwjJnmb2znEWxw==}
 
-  '@vanilla-extract/compiler@0.7.0':
-    resolution: {integrity: sha512-rZQ40HVmsxfGLjoflwwsaUBLfpbpKDoZC19oiDA0FHq4LdrYtyVbFkc0MfqkNo/qBCvaZfsRezCqk0QQxCqZ8w==}
+  '@vanilla-extract/compiler@0.7.1':
+    resolution: {integrity: sha512-mOokbA2k1Lx3BO1/Qa9rpSWiIWeOHBt4aRHX0e5WMDu53//ifojeZJAvdXj/YkZI8z2AruxXYaLX6YlL8jfzyQ==}
 
   '@vanilla-extract/css-utils@0.1.6':
     resolution: {integrity: sha512-iICpaHma0s2EEnQDw/JRqudQJwYw1JERyWfIllNQplps226KVphjGb3jyGMiBK5Waw69RD3q4gulgRVQAQmKmA==}
 
-  '@vanilla-extract/css@1.20.1':
-    resolution: {integrity: sha512-5I9RNo5uZW9tsBnqrWzJqELegOqTHBrZyDFnES0gR9gJJHBB9dom1N0bwITM9tKwBcfKrTX4a6DHVeQdJ2ubQA==}
+  '@vanilla-extract/css@1.21.1':
+    resolution: {integrity: sha512-T6z6oeT+o0OwqukE6kLs9w5ooB75b8NPRadyU9pPTml83l40TPN+mscPt2OQ9P9cYfwEBMfsfivwiJujs2mzmg==}
 
   '@vanilla-extract/dynamic@2.1.5':
     resolution: {integrity: sha512-QGIFGb1qyXQkbzx6X6i3+3LMc/iv/ZMBttMBL+Wm/DetQd36KsKsFg5CtH3qy+1hCA/5w93mEIIAiL4fkM8ycw==}
+
+  '@vanilla-extract/integration@8.0.10':
+    resolution: {integrity: sha512-01IB5gbrgTe8IIrtfRXXTmACl5D8Enzqp2cKbCWaMKXmnoilXXVCPbJoA96q88PXkNDXsXepCxUugMvEmL3c7A==}
 
   '@vanilla-extract/integration@8.0.9':
     resolution: {integrity: sha512-NP+CSo5IYHDmkMMy5vAxY4R9i2+CAg4sxgvVaxuHiuY9q30i6dNUTujNNKZGW2urEkd4HVVI6NggeIyYjbGPwA==}
@@ -4936,13 +4935,13 @@ packages:
     peerDependencies:
       rollup: ^2.0.0 || ^3.0.0 || ^4.0.0
 
-  '@vanilla-extract/sprinkles@1.6.5':
-    resolution: {integrity: sha512-HOYidLONR/SeGk8NBAeI64I4gYdsMX9vJmniL13ZcLVwawyK0s2GUENEAcGA+GYLIoeyQB61UqmhqPodJry7zA==}
+  '@vanilla-extract/sprinkles@1.7.0':
+    resolution: {integrity: sha512-7I8rt3m1OIEMJRtpMTnPwMy+C1DHpgvenNF1P7lgFFXGzxAoW57+Qk439cJFqONaqsLsTiYOAOVnP4QigCWa1A==}
     peerDependencies:
       '@vanilla-extract/css': ^1.0.0
 
-  '@vanilla-extract/vite-plugin@5.2.2':
-    resolution: {integrity: sha512-AUyB4fDR2b/Mo0lcXhhlf6RxnDPYwFMyKKopalJ4BwQNKYzZSoTwHJ1PLPO9SKhpz7lzXc0Z18GHQZOewzl3YA==}
+  '@vanilla-extract/vite-plugin@5.2.4':
+    resolution: {integrity: sha512-KXm+Hghpr7/BNIPirsSVD7otMDCwjj9vfgc02CmtYoJ5t4shxQU0QbCRHc9YxlVvAeGvZfE2TmGkvhw2N/L/aw==}
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
 
@@ -7185,10 +7184,6 @@ packages:
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
-
-  lru-cache@11.2.1:
-    resolution: {integrity: sha512-r8LA6i4LP4EeWOhqBaZZjDWwehd1xUJPCJd9Sv300H0ZmcUER4+JPh7bqqZeqs1o5pgtgvXm+d9UGrB5zZGDiQ==}
-    engines: {node: 20 || >=22}
 
   lru-cache@11.5.1:
     resolution: {integrity: sha512-RPimw/7aMdv2oqRrxKwvZXcPfwBrn/JZ2xYcY9Hus/6LaS3VOAKVWKWgNLCFSiOm1ESXinjsDlidVU7JlnCN2A==}
@@ -10783,8 +10778,6 @@ snapshots:
 
   '@babel/runtime@7.28.4': {}
 
-  '@babel/runtime@7.28.6': {}
-
   '@babel/runtime@7.29.2': {}
 
   '@babel/template@7.27.2':
@@ -11754,7 +11747,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 30.3.0
       '@jest/types': 30.3.0
-      '@types/node': 20.19.43
+      '@types/node': 22.19.21
       jest-mock: 30.3.0
 
   '@jest/expect-utils@29.7.0':
@@ -11776,7 +11769,7 @@ snapshots:
     dependencies:
       '@jest/types': 30.3.0
       '@sinonjs/fake-timers': 15.3.2
-      '@types/node': 20.19.43
+      '@types/node': 22.19.21
       jest-message-util: 30.3.0
       jest-mock: 30.3.0
       jest-util: 30.3.0
@@ -11884,7 +11877,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 20.19.43
+      '@types/node': 22.19.21
       '@types/yargs': 17.0.35
       chalk: 4.1.2
 
@@ -13752,10 +13745,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vanilla-extract/compiler@0.7.0(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)':
+  '@vanilla-extract/compiler@0.7.1(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)':
     dependencies:
-      '@vanilla-extract/css': 1.20.1
-      '@vanilla-extract/integration': 8.0.9
+      '@vanilla-extract/css': 1.21.1
+      '@vanilla-extract/integration': 8.0.10
       vite: 7.3.5(@types/node@22.19.21)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)
       vite-node: 6.0.0(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0)
     transitivePeerDependencies:
@@ -13775,10 +13768,10 @@ snapshots:
       - tsx
       - yaml
 
-  '@vanilla-extract/compiler@0.7.0(@types/node@25.5.0)(esbuild@0.25.12)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)':
+  '@vanilla-extract/compiler@0.7.1(@types/node@25.5.0)(esbuild@0.25.12)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)':
     dependencies:
-      '@vanilla-extract/css': 1.20.1
-      '@vanilla-extract/integration': 8.0.9
+      '@vanilla-extract/css': 1.21.1
+      '@vanilla-extract/integration': 8.0.10
       vite: 7.3.5(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)
       vite-node: 6.0.0(@types/node@25.5.0)(esbuild@0.25.12)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0)
     transitivePeerDependencies:
@@ -13800,7 +13793,7 @@ snapshots:
 
   '@vanilla-extract/css-utils@0.1.6': {}
 
-  '@vanilla-extract/css@1.20.1':
+  '@vanilla-extract/css@1.21.1':
     dependencies:
       '@emotion/hash': 0.9.2
       '@vanilla-extract/private': 1.0.9
@@ -13820,12 +13813,28 @@ snapshots:
     dependencies:
       '@vanilla-extract/private': 1.0.9
 
+  '@vanilla-extract/integration@8.0.10':
+    dependencies:
+      '@babel/core': 7.29.0
+      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.29.0)
+      '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
+      '@vanilla-extract/css': 1.21.1
+      dedent: 1.7.0
+      esbuild: 0.28.1
+      eval: 0.1.8
+      find-up: 5.0.0
+      javascript-stringify: 2.1.0
+      mlly: 1.8.0
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
+
   '@vanilla-extract/integration@8.0.9':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.28.5)
       '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
-      '@vanilla-extract/css': 1.20.1
+      '@vanilla-extract/css': 1.21.1
       dedent: 1.7.0
       esbuild: 0.27.7
       eval: 0.1.8
@@ -13838,9 +13847,9 @@ snapshots:
 
   '@vanilla-extract/private@1.0.9': {}
 
-  '@vanilla-extract/recipes@0.5.7(@vanilla-extract/css@1.20.1)':
+  '@vanilla-extract/recipes@0.5.7(@vanilla-extract/css@1.21.1)':
     dependencies:
-      '@vanilla-extract/css': 1.20.1
+      '@vanilla-extract/css': 1.21.1
 
   '@vanilla-extract/rollup-plugin@1.5.3(rollup@4.60.4)':
     dependencies:
@@ -13851,14 +13860,14 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  '@vanilla-extract/sprinkles@1.6.5(@vanilla-extract/css@1.20.1)':
+  '@vanilla-extract/sprinkles@1.7.0(@vanilla-extract/css@1.21.1)':
     dependencies:
-      '@vanilla-extract/css': 1.20.1
+      '@vanilla-extract/css': 1.21.1
 
-  '@vanilla-extract/vite-plugin@5.2.2(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0))':
+  '@vanilla-extract/vite-plugin@5.2.4(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0))':
     dependencies:
-      '@vanilla-extract/compiler': 0.7.0(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)
-      '@vanilla-extract/integration': 8.0.9
+      '@vanilla-extract/compiler': 0.7.1(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)
+      '@vanilla-extract/integration': 8.0.10
       vite: 8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0)
     transitivePeerDependencies:
       - '@types/node'
@@ -13877,10 +13886,10 @@ snapshots:
       - tsx
       - yaml
 
-  '@vanilla-extract/vite-plugin@5.2.2(@types/node@25.5.0)(esbuild@0.25.12)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(vite@7.3.5(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0))':
+  '@vanilla-extract/vite-plugin@5.2.4(@types/node@25.5.0)(esbuild@0.25.12)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(vite@7.3.5(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0))':
     dependencies:
-      '@vanilla-extract/compiler': 0.7.0(@types/node@25.5.0)(esbuild@0.25.12)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)
-      '@vanilla-extract/integration': 8.0.9
+      '@vanilla-extract/compiler': 0.7.1(@types/node@25.5.0)(esbuild@0.25.12)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)
+      '@vanilla-extract/integration': 8.0.10
       vite: 7.3.5(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)
     transitivePeerDependencies:
       - '@types/node'
@@ -14127,8 +14136,7 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  acorn@8.17.0:
-    optional: true
+  acorn@8.17.0: {}
 
   ajv@6.15.0:
     dependencies:
@@ -14977,7 +14985,7 @@ snapshots:
   esast-util-from-js@2.0.1:
     dependencies:
       '@types/estree-jsx': 1.0.5
-      acorn: 8.16.0
+      acorn: 8.17.0
       esast-util-from-estree: 2.0.0
       vfile-message: 4.0.3
 
@@ -16219,7 +16227,7 @@ snapshots:
       '@jest/expect': 30.3.0
       '@jest/test-result': 30.3.0
       '@jest/types': 30.3.0
-      '@types/node': 20.19.43
+      '@types/node': 22.19.21
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.7.0
@@ -16322,7 +16330,7 @@ snapshots:
       '@jest/environment': 30.3.0
       '@jest/fake-timers': 30.3.0
       '@jest/types': 30.3.0
-      '@types/node': 20.19.43
+      '@types/node': 22.19.21
       jest-mock: 30.3.0
       jest-util: 30.3.0
       jest-validate: 30.3.0
@@ -16390,7 +16398,7 @@ snapshots:
   jest-mock@30.3.0:
     dependencies:
       '@jest/types': 30.3.0
-      '@types/node': 20.19.43
+      '@types/node': 22.19.21
       jest-util: 30.3.0
 
   jest-pnp-resolver@1.2.3(jest-resolve@30.3.0):
@@ -16537,7 +16545,7 @@ snapshots:
 
   jest-worker@30.3.0:
     dependencies:
-      '@types/node': 20.19.43
+      '@types/node': 22.19.21
       '@ungap/structured-clone': 1.3.0
       jest-util: 30.3.0
       merge-stream: 2.0.0
@@ -16769,10 +16777,7 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
-  lru-cache@11.2.1: {}
-
-  lru-cache@11.5.1:
-    optional: true
+  lru-cache@11.5.1: {}
 
   lru-cache@4.1.5:
     dependencies:
@@ -17010,7 +17015,7 @@ snapshots:
 
   media-query-parser@2.0.2:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
 
   meow@14.1.0: {}
 
@@ -17315,7 +17320,7 @@ snapshots:
 
   mlly@1.8.0:
     dependencies:
-      acorn: 8.16.0
+      acorn: 8.17.0
       pathe: 2.0.3
       pkg-types: 1.3.1
       ufo: 1.6.1
@@ -17638,7 +17643,7 @@ snapshots:
 
   path-scurry@2.0.2:
     dependencies:
-      lru-cache: 11.2.1
+      lru-cache: 11.5.1
       minipass: 7.1.3
 
   path-type@4.0.0: {}
@@ -17755,9 +17760,9 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  rainbow-sprinkles@1.0.0(@vanilla-extract/css@1.20.1)(@vanilla-extract/dynamic@2.1.5):
+  rainbow-sprinkles@1.0.0(@vanilla-extract/css@1.21.1)(@vanilla-extract/dynamic@2.1.5):
     dependencies:
-      '@vanilla-extract/css': 1.20.1
+      '@vanilla-extract/css': 1.21.1
       '@vanilla-extract/dynamic': 2.1.5
 
   react-docgen-typescript@2.4.0(typescript@5.9.3):
