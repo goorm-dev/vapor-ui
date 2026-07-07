@@ -14,8 +14,8 @@ export const list = componentStyle({
 
 export const item = componentStyle({
     display: 'inline-flex',
-    alignItems: 'center',
     flexWrap: 'nowrap',
+    alignItems: 'center',
 });
 
 // Base style shared by all pagination elements
@@ -27,7 +27,7 @@ const baseElement = componentStyle({
     color: vars.color.foreground.normal[100],
 
     selectors: {
-        [when.disabled()]: { pointerEvents: 'none', opacity: 0.32 },
+        [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
     },
 });
 

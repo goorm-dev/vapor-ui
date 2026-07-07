@@ -17,14 +17,14 @@ export const popup = componentStyle({
 });
 
 export const arrow = componentStyle({
-    display: 'flex',
-    color: vars.color.background.overlay[100], // It's background-color, but since it's an SVG, it's specified as color.
-
-    width: vars.size.dimension[100],
-    height: vars.size.dimension[200],
+    zIndex: 1,
+    display: 'flex', // It's background-color, but since it's an SVG, it's specified as color.
 
     transform: 'rotate(180deg)',
-    zIndex: 1,
+    width: vars.size.dimension[100],
+
+    height: vars.size.dimension[200],
+    color: vars.color.background.overlay[100],
 
     selectors: {
         '&[data-side="top"]': {

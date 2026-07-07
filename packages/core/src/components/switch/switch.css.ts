@@ -11,13 +11,13 @@ export const control = componentRecipe({
         {
             position: 'relative',
             display: 'flex',
+            flexShrink: 0,
             alignItems: 'center',
             border: 'none',
             borderRadius: '9999px',
             backgroundColor: vars.color.gray[400],
-            cursor: 'pointer',
 
-            flexShrink: 0,
+            cursor: 'pointer',
 
             selectors: {
                 '&[data-checked]': {
@@ -26,13 +26,13 @@ export const control = componentRecipe({
 
                 [`${when.invalid()}:not(:focus-visible)`]: {
                     outline: '0.125rem solid',
-                    outlineColor: vars.color.border.danger,
                     outlineOffset: '0.125rem',
+                    outlineColor: vars.color.border.danger,
                 },
 
                 [when.readonly()]: {
-                    backgroundColor: vars.color.gray[200],
                     boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
+                    backgroundColor: vars.color.gray[200],
                 },
                 [`${when.readonly()}:active::before`]: { opacity: 0.08 },
 
@@ -80,12 +80,12 @@ export const indicator = componentRecipe({
                 transform: 'translateX(100%)',
             },
             [when.readonly('&[data-readonly][data-unchecked]')]: {
-                backgroundColor: vars.color.gray[400],
                 boxShadow: 'none',
+                backgroundColor: vars.color.gray[400],
             },
             [when.readonly('&[data-readonly][data-checked]')]: {
-                backgroundColor: vars.color.foreground.hint[100],
                 boxShadow: 'none',
+                backgroundColor: vars.color.foreground.hint[100],
             },
         },
     },

@@ -18,12 +18,12 @@ export const trigger = componentRecipe({
             alignItems: 'center',
             justifyContent: 'space-between',
 
-            boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
             borderRadius: vars.size.borderRadius['300'],
-
-            width: '100%',
+            boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
 
             backgroundColor: vars.color.background.overlay[100],
+
+            width: '100%',
 
             selectors: {
                 [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
