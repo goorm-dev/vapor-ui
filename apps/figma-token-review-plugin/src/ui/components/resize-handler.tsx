@@ -91,7 +91,7 @@ export function ResizeHandle() {
         cancelPending();
         const width = Math.max(MIN_WIDTH, drag.startWidth + (event.clientX - drag.startX));
         const height = Math.max(MIN_HEIGHT, drag.startHeight + (event.clientY - drag.startY));
-        postToCode({ type: 'resize', width, height, commit: true });
+        postToCode({ type: 'resize', width, height });
     };
 
     return (

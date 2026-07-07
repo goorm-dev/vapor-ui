@@ -14,7 +14,7 @@ export type UiMsg =
     | { type: 'request-selection' }
     | { type: 'scan'; frameId: string }
     | { type: 'focus'; nodeIds: string[] }
-    | { type: 'resize'; width: number; height: number; commit?: boolean }
+    | { type: 'resize'; width: number; height: number }
     | { type: 'api-key:get' }
     | { type: 'api-key:set'; value: string }
     | { type: 'api-key:clear' };
