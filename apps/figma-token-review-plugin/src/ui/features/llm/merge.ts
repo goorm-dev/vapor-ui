@@ -6,8 +6,8 @@ import type {
     LlmPassJudgment,
     ScanPayload,
     SchemaMode,
-    ViolationType,
     Violation,
+    ViolationType,
 } from '~/common/schemas';
 import type { TextStyleSchema } from '~/ui/lib/loaders/typography';
 

@@ -1,10 +1,7 @@
 import type { Conformant, TypographyUsage, Violation } from '~/common/schemas';
 import type { TextStyleSchema } from '~/ui/lib/loaders/typography';
 
-function suggestByFontSize(
-    fontSize: number | null,
-    schema: TextStyleSchema,
-): string[] {
+function suggestByFontSize(fontSize: number | null, schema: TextStyleSchema): string[] {
     if (fontSize == null) return [];
     return schema.order.filter((name) => schema.styles[name].fontSize === fontSize);
 }
@@ -29,8 +26,7 @@ export function evaluateTypography(
         };
 
         if (u.appliedStatus === 'raw') {
-            const fontSize =
-                typeof u.resolved.fontSize === 'number' ? u.resolved.fontSize : null;
+            const fontSize = typeof u.resolved.fontSize === 'number' ? u.resolved.fontSize : null;
             violations.push({
                 ...base,
                 type: 'typo-raw',

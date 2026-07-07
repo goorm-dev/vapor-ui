@@ -11,16 +11,26 @@ const { captureScreenshot, walkTree } = __testables;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makeFrame(opts: { id?: string; children?: any[] } = {}): any {
     const id = opts.id ?? 'frame';
-    return { id, type: 'FRAME', name: id, children: opts.children ?? [], x: 0, y: 0, width: 100, height: 100 };
+    return {
+        id,
+        type: 'FRAME',
+        name: id,
+        children: opts.children ?? [],
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 100,
+    };
 }
 
-function makeTextNode(opts: {
-    id?: string;
-    characters?: string;
-    boundTextStyleName?: string;
-    classifyThrows?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} = {}): any {
+function makeTextNode(
+    opts: {
+        id?: string;
+        characters?: string;
+        boundTextStyleName?: string;
+        classifyThrows?: boolean;
+    } = {},
+): any {
     const id = opts.id ?? 'text';
     const seg = {
         textStyleId: opts.boundTextStyleName ? `style-${id}` : undefined,
@@ -35,10 +45,15 @@ function makeTextNode(opts: {
         type: 'TEXT',
         name: id,
         children: [],
-        x: 0, y: 0, width: 100, height: 20,
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 20,
         characters: opts.characters ?? '',
         getStyledTextSegments: opts.classifyThrows
-            ? () => { throw new Error('classify failed'); }
+            ? () => {
+                  throw new Error('classify failed');
+              }
             : vi.fn().mockReturnValue([seg]),
     };
 }
@@ -55,7 +70,9 @@ describe('captureScreenshot', () => {
         } as unknown as FrameNode;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (globalThis as any).figma = { base64Encode: (b: Uint8Array) => Buffer.from(b).toString('base64') };
+        (globalThis as any).figma = {
+            base64Encode: (b: Uint8Array) => Buffer.from(b).toString('base64'),
+        };
 
         const out = await captureScreenshot(frame);
         expect(frame.exportAsync).toHaveBeenCalledWith({
@@ -68,12 +85,37 @@ describe('captureScreenshot', () => {
 
 describe('walkTree', () => {
     it('emits parent before children, skips 🟨/🔶 subtrees, populates xywh', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const leaf = { id: 'l', type: 'TEXT', name: 'label', x: 5, y: 6, width: 7, height: 8 } as any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const skipped = { id: 's', type: 'GROUP', name: '🟨 legend', children: [leaf], x: 0, y: 0, width: 0, height: 0 } as any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const root = { id: 'r', type: 'FRAME', name: 'Root', children: [skipped, leaf], x: 0, y: 0, width: 100, height: 200 } as any;
+        const leaf = {
+            id: 'l',
+            type: 'TEXT',
+            name: 'label',
+            x: 5,
+            y: 6,
+            width: 7,
+            height: 8,
+        } as any;
+
+        const skipped = {
+            id: 's',
+            type: 'GROUP',
+            name: '🟨 legend',
+            children: [leaf],
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+        } as any;
+
+        const root = {
+            id: 'r',
+            type: 'FRAME',
+            name: 'Root',
+            children: [skipped, leaf],
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 200,
+        } as any;
 
         const tree = await walkTree(root);
 

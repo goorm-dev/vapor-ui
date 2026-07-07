@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
 import type { MergeArgs } from '~/ui/features/llm/merge';
 import { mergeScanPayload } from '~/ui/features/llm/merge';
 import type { LlmTypoJudgment } from '~/ui/features/llm/parse';
+import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
 
 describe('mergeScanPayload', () => {
     it('LLM heuristic FAIL 항목을 해당 카테고리 violations 로 합친다', () => {
@@ -182,7 +182,9 @@ describe('heuristicTypo axis mapping / message / filter', () => {
     });
 
     it('matchedRule 이 있으면 message 앞에 대괄호로 붙는다', () => {
-        const payload = mergeWithTypo(makeTypoJudgment({ matchedRule: 'mobile → heading1', reasoning: '모바일임' }));
+        const payload = mergeWithTypo(
+            makeTypoJudgment({ matchedRule: 'mobile → heading1', reasoning: '모바일임' }),
+        );
         expect(payload.typography.violations[0].message).toBe('[mobile → heading1] 모바일임');
     });
 

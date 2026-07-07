@@ -235,8 +235,8 @@ export type NodeInfo = {
     y: number;
     w: number;
     h: number;
-    characters?: string;   // TEXT nodes only, 60-char cap
-    textStyle?: string;    // TEXT nodes only, bound style name if any
+    characters?: string; // TEXT nodes only, 60-char cap
+    textStyle?: string; // TEXT nodes only, bound style name if any
 };
 
 export type LlmContext = {

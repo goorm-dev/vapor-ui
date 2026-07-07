@@ -89,9 +89,7 @@ export function buildRequest(
     screenshotB64: string,
     model: string,
 ): AnthropicMessagesRequest {
-    const content: Array<TextBlock | ImageBlock> = [
-        { type: 'text', text: JSON.stringify(input) },
-    ];
+    const content: Array<TextBlock | ImageBlock> = [{ type: 'text', text: JSON.stringify(input) }];
     if (screenshotB64) {
         content.push({
             type: 'image',

@@ -51,7 +51,8 @@ export type BuildLlmInputArgs = {
 };
 
 export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
-    const { extract, deterministicConformant, frameName, colorSchema, textStyleSchema, nodeTree } = args;
+    const { extract, deterministicConformant, frameName, colorSchema, textStyleSchema, nodeTree } =
+        args;
 
     // After groupBy in extract.ts, items have nodeIds: string[] instead of nodeId.
     // Build a map from each individual nodeId to its grouped entry.

@@ -141,8 +141,28 @@ describe('buildLlmInput', () => {
 
     it('nodeTree가 LlmInput에 그대로 복사된다', () => {
         const nodeTree: NodeInfo[] = [
-            { id: 'r', type: 'FRAME', name: 'Root', parentId: null, childIds: ['c'], x: 0, y: 0, w: 100, h: 200 },
-            { id: 'c', type: 'TEXT', name: 'Caption', parentId: 'r', childIds: [], x: 10, y: 10, w: 80, h: 20 },
+            {
+                id: 'r',
+                type: 'FRAME',
+                name: 'Root',
+                parentId: null,
+                childIds: ['c'],
+                x: 0,
+                y: 0,
+                w: 100,
+                h: 200,
+            },
+            {
+                id: 'c',
+                type: 'TEXT',
+                name: 'Caption',
+                parentId: 'r',
+                childIds: [],
+                x: 10,
+                y: 10,
+                w: 80,
+                h: 20,
+            },
         ];
         const input = buildLlmInput({
             extract,
