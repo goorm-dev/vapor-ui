@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, expect, it, vi } from 'vitest';
 
 import { __testables } from './extract';
@@ -8,7 +9,6 @@ const { captureScreenshot, walkTree } = __testables;
 // Factory helpers
 // ---------------------------------------------------------------------------
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makeFrame(opts: { id?: string; children?: any[] } = {}): any {
     const id = opts.id ?? 'frame';
     return {
@@ -69,7 +69,6 @@ describe('captureScreenshot', () => {
             exportAsync: vi.fn().mockResolvedValue(bytes),
         } as unknown as FrameNode;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (globalThis as any).figma = {
             base64Encode: (b: Uint8Array) => Buffer.from(b).toString('base64'),
         };
@@ -129,7 +128,6 @@ describe('walkTree', () => {
     });
 
     it('walkTree TEXT 노드는 characters(60자 컷) 와 textStyle 을 담는다', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (globalThis as any).figma = {
             getStyleByIdAsync: vi.fn().mockResolvedValue({
                 name: 'body2',
