@@ -1,7 +1,8 @@
-import { emitLayerOrderCss, resolveOptions } from '~/bundler/plugin-shared';
-import type { VaporStyleOptions } from '~/bundler/unplugin-types';
 import { formatBuildError } from '~/compiler/code-frame';
 import { transform } from '~/compiler/transform';
+
+import { emitLayerOrderCss, resolveOptions } from './shared';
+import type { VaporStyleOptions } from './unplugin';
 
 /**
  * Turbopack passes a subset of the webpack loader-context to `.rules` loaders.

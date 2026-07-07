@@ -1,9 +1,10 @@
 import { createRequire } from 'node:module';
 import * as path from 'node:path';
 
-import type { VaporStyleOptions } from '~/bundler/unplugin-types';
 import type { AnyProp } from '~/model/types';
-import unplugin from '~/webpack/unplugin';
+
+import unplugin from './unplugin';
+import type { VaporStyleOptions } from './unplugin';
 
 /**
  * Whether the Turbopack path should be wired. `auto` enables it when the
@@ -88,7 +89,7 @@ export function withVaporStyle(
         // (`import.meta.url` is undefined there) and under pnpm's symlinked
         // package layout it would still pick up the right dist file.
         const cwdRequire = createRequire(path.join(process.cwd(), 'package.json'));
-        const loaderPath = cwdRequire.resolve('@vapor-ui/style-macro/turbopack-loader');
+        const loaderPath = cwdRequire.resolve('@vapor-ui/style-macro/turbopack');
 
         // Turbopack rule options must be JSON-serializable AND cannot carry
         // `undefined` values (its serde layer rejects them). Strip functions

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import type { VaporStyleOptions } from '~/bundler/unplugin-types';
 import type { ManifestShape } from '~/model/types';
 
-import vaporStyleTurbopackLoader, { type TurbopackLoaderContext } from './turbopack-loader';
+import vaporStyleTurbopackLoader, { type TurbopackLoaderContext } from './turbopack';
+import type { VaporStyleOptions } from './unplugin';
 
 const MANIFEST: ManifestShape = {
     version: '1',
@@ -34,7 +34,7 @@ async function run(ctx: TurbopackLoaderContext, source: string) {
     return vaporStyleTurbopackLoader.call(ctx, source);
 }
 
-describe('turbopack-loader', () => {
+describe('turbopack', () => {
     it('returns source unmodified when there is no $style call (fast path)', async () => {
         const ctx = mkCtx('/src/plain.tsx');
         const src = `export const x = 1;`;

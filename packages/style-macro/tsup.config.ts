@@ -3,9 +3,9 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
     entry: {
         index: 'src/index.ts',
-        unplugin: 'src/webpack/unplugin-entry.ts',
-        'turbopack-loader': 'src/turbopack/turbopack-loader.ts',
-        next: 'src/turbopack/next.ts',
+        unplugin: 'src/adapters/unplugin.ts',
+        turbopack: 'src/adapters/turbopack.ts',
+        next: 'src/adapters/next.ts',
     },
     format: ['esm', 'cjs'],
     dts: true,

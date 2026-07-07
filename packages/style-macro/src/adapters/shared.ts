@@ -1,6 +1,19 @@
+import type { ManifestShape } from '@vapor-ui/tokens';
 import { manifest as defaultManifest } from '@vapor-ui/tokens';
 
-import type { ResolvedOptions, VaporStyleOptions } from './unplugin-types';
+import type { VaporStyleOptions } from './unplugin';
+
+interface ResolvedOptions {
+    manifest: ManifestShape;
+    importSource: string | string[];
+    importName: string;
+    themeStylesImport: string | null;
+    include: (id: string) => boolean;
+    obfuscate: boolean;
+    providerImportSource: string[];
+    providerImportName: string;
+    layerRegistry: Record<string, string>;
+}
 
 export const DEFAULT_PROVIDER_SOURCES = ['@vapor-ui/core', '@vapor-ui/core/theme-provider'];
 

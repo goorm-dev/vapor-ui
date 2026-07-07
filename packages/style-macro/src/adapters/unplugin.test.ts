@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { VaporStyleOptions } from '~/bundler/unplugin-types';
 import type { AnyProp, ManifestShape } from '~/model/types';
 
-import plugin from './unplugin';
+import plugin, { type VaporStyleOptions } from './unplugin';
 
 const MANIFEST: ManifestShape = {
     version: '1',

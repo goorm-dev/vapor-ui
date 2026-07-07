@@ -19,10 +19,10 @@
             "import": "./dist/next.js",
             "require": "./dist/next.cjs"
         },
-        "./turbopack-loader": {
-            "types": "./dist/turbopack-loader.d.ts",
-            "import": "./dist/turbopack-loader.js",
-            "require": "./dist/turbopack-loader.cjs"
+        "./turbopack": {
+            "types": "./dist/turbopack.d.ts",
+            "import": "./dist/turbopack.js",
+            "require": "./dist/turbopack.cjs"
         },
         "./package.json": "./package.json"
     },
