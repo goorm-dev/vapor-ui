@@ -35,9 +35,8 @@ type RenderArgs = {
 function renderBody({ scan, apiKey, showSettings, setShowSettings }: RenderArgs) {
     if (apiKey.kind === 'unknown') return <Loader />;
     if (apiKey.kind === 'missing') return <SettingsPage />;
-    if (showSettings) {
-        return <SettingsPage dismissable onClose={() => setShowSettings(false)} />;
-    }
+    if (showSettings) return <SettingsPage onClose={() => setShowSettings(false)} />;
+
     return renderScan(scan, () => setShowSettings(true));
 }
 

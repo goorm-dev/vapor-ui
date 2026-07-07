@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
-import { Box, Button, Text, TextInput } from '@vapor-ui/core';
+import { Box, Button, HStack, Text, TextInput } from '@vapor-ui/core';
 
 import { toastManager } from '../components/toast';
 import { useApiKey } from '../features/api-key';
 
 type Props = {
     onClose?: () => void;
-    dismissable?: boolean;
 };
 
 function maskKey(key: string): string {
@@ -15,7 +14,7 @@ function maskKey(key: string): string {
     return `${key.slice(0, 4)}••••${key.slice(-4)}`;
 }
 
-export function SettingsPage({ onClose, dismissable = false }: Props) {
+export function SettingsPage({ onClose }: Props) {
     const { state, save, clear } = useApiKey();
     const [draft, setDraft] = useState('');
 
@@ -28,8 +27,10 @@ export function SettingsPage({ onClose, dismissable = false }: Props) {
             toastManager.add({ title: 'API 키를 입력해 주세요.', colorPalette: 'danger' });
             return;
         }
+
         save(trimmed);
         setDraft('');
+
         toastManager.add({ title: 'API 키가 저장되었습니다.', colorPalette: 'success' });
         onClose?.();
     };
@@ -74,21 +75,21 @@ export function SettingsPage({ onClose, dismissable = false }: Props) {
                 />
             </Box>
 
-            <Box className="flex gap-2">
-                <Button colorPalette="primary" variant="fill" size="md" onClick={handleSave}>
-                    저장
-                </Button>
+            <HStack $css={{ justifyContent: 'space-between' }}>
                 {hasKey && (
                     <Button colorPalette="danger" variant="outline" size="md" onClick={handleClear}>
                         키 삭제
                     </Button>
                 )}
-                {dismissable && (
+                <HStack $css={{ gap: '$050', justifyContent: 'flex-end' }}>
                     <Button variant="ghost" size="md" onClick={onClose}>
                         닫기
                     </Button>
-                )}
-            </Box>
+                    <Button colorPalette="primary" variant="fill" size="md" onClick={handleSave}>
+                        저장
+                    </Button>
+                </HStack>
+            </HStack>
         </Box>
     );
 }
