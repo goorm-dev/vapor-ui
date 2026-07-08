@@ -5,7 +5,6 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Field as BaseField } from '@base-ui/react/field';
 import { useControlled } from '@base-ui/utils/useControlled';
 
-import { useInputGroup } from '~/components/input-group/input-group';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
@@ -38,7 +37,7 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
     ]);
 
     const { invalid = false, autoResize } = variantProps;
-    const { disabled = false, readOnly = false, required = false, maxLength } = otherProps;
+    const { disabled = false, readOnly = false, required = false } = otherProps;
 
     const [value, setValue] = useControlled({
         controlled: valueProp,
@@ -46,8 +45,6 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         name: 'TextArea',
         state: 'value',
     });
-
-    useInputGroup({ value, maxLength });
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     useAutoResize({ ref: textareaRef, value, autoResize });
@@ -72,7 +69,8 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         render: render || <BaseField.Control render={<textarea />} />,
         props: {
             ...(isControlled ? { value } : { defaultValue }),
-            'aria-invalid': invalid,
+            // aria-invalid 는 truthy 일 때만 — 항상 넘기면 Base UI Field 검증 계산값을 덮어쓴다.
+            ...(invalid ? { 'aria-invalid': true } : {}),
             onValueChange: handleValueChange,
             className: cn(styles.textarea(variantProps), className),
             ...otherProps,

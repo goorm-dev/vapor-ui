@@ -1,1 +1,5 @@
-export { InputGroupRoot as Root, InputGroupCounter as Counter } from './input-group';
+export {
+    InputGroupRoot as Root,
+    InputGroupLeadingAddon as LeadingAddon,
+    InputGroupTrailingAddon as TrailingAddon,
+} from './input-group';
