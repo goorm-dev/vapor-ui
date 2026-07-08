@@ -22,9 +22,6 @@ export default {
         disabled: {
             control: { type: 'boolean' },
         },
-        pressed: {
-            control: { type: 'boolean' },
-        },
     },
 } satisfies StoryMeta;
 
