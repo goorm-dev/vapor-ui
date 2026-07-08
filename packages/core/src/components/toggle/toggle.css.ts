@@ -12,7 +12,7 @@ const variables = {
 
 export const root = componentRecipe({
     base: [
-        interaction(),
+        interaction({ scale: 'light' }),
         {
             display: 'inline-flex',
             alignItems: 'center',
