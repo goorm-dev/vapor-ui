@@ -3,6 +3,8 @@ import { forwardRef } from 'react';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
 import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -12,7 +14,7 @@ import * as styles from './toggle.css';
 import type { RootVariants } from './toggle.css';
 
 export const Toggle = forwardRef<HTMLButtonElement, Toggle.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<RootVariants>()(componentProps, [
         'size',
         'variant',
@@ -24,12 +26,23 @@ export const Toggle = forwardRef<HTMLButtonElement, Toggle.Props>((props, ref) =
     const size = sizeProp || contextSize;
     const variant = variantProp || contextVariant;
 
+    const childrenRender = createRender(childrenProp);
+    const children = useRenderElement({
+        render: childrenRender,
+        props: {
+            'aria-hidden': 'true',
+            className: styles.icon,
+        },
+    });
+
     return (
         <BaseToggle
             ref={ref}
             className={clsx(styles.root({ size, variant }), className)}
             {...otherProps}
-        />
+        >
+            {children}
+        </BaseToggle>
     );
 });
 
