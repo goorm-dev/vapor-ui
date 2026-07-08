@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import { Box, Button, HStack, Text, TextInput } from '@vapor-ui/core';
+import { Button, Card, HStack, Text, TextInput, VStack } from '@vapor-ui/core';
 
 import { toastManager } from '../components/toast';
 import { useApiKey } from '../features/api-key';
 
 type Props = {
-    onClose?: () => void;
+    onClose: () => void;
 };
 
 function maskKey(key: string): string {
@@ -41,8 +41,8 @@ export function SettingsPage({ onClose }: Props) {
     };
 
     return (
-        <Box className="flex flex-col gap-4 p-6">
-            <Box className="flex flex-col gap-1">
+        <VStack className="gap-4 p-6">
+            <VStack className="gap-1">
                 <Text typography="heading5" foreground="normal-200">
                     LiteLLM API 키 설정
                 </Text>
@@ -50,20 +50,22 @@ export function SettingsPage({ onClose }: Props) {
                     관리자에게 발급 받은 개인 키를 입력해 주세요. 키는 이 브라우저에만 저장되며
                     번들에는 포함되지 않습니다.
                 </Text>
-            </Box>
+            </VStack>
 
             {hasKey && (
-                <Box className="flex flex-col gap-2 rounded-md border border-solid border-gray-200 p-3">
-                    <Text typography="body3" foreground="hint-100">
-                        저장된 키
-                    </Text>
-                    <Text typography="body2" foreground="normal-200">
-                        {maskKey(currentKey)}
-                    </Text>
-                </Box>
+                <Card.Root className="gap-2">
+                    <Card.Body className="p-3">
+                        <Text typography="body3" foreground="hint-100">
+                            저장된 키
+                        </Text>
+                        <Text typography="body2" foreground="normal-200">
+                            {maskKey(currentKey)}
+                        </Text>
+                    </Card.Body>
+                </Card.Root>
             )}
 
-            <Box className="flex flex-col gap-2">
+            <VStack className="gap-2">
                 <Text typography="body3" foreground="normal-200">
                     {hasKey ? '새 키로 교체' : 'API 키'}
                 </Text>
@@ -73,7 +75,7 @@ export function SettingsPage({ onClose }: Props) {
                     value={draft}
                     onValueChange={setDraft}
                 />
-            </Box>
+            </VStack>
 
             <HStack $css={{ justifyContent: 'space-between' }}>
                 {hasKey && (
@@ -90,6 +92,6 @@ export function SettingsPage({ onClose }: Props) {
                     </Button>
                 </HStack>
             </HStack>
-        </Box>
+        </VStack>
     );
 }
