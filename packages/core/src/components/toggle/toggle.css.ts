@@ -40,7 +40,7 @@ export const root = componentRecipe({
         },
         variant: {
             default: {
-                color: vars.color.foreground.contrast[100],
+                color: vars.color.foreground.hint[200],
 
                 vars: {
                     [variables.backgroundColor]: vars.color.background.hint[100],
