@@ -152,7 +152,7 @@ const bundle = ({ plugins, output }: BundleOptions): RolldownOptions => ({
 export default defineConfig([
     // ESM Build
     bundle({
-        plugins: [plugins.depsExternal, plugins.vanillaExtract, plugins.cleanLayerDeclaration, ,],
+        plugins: [plugins.depsExternal, plugins.vanillaExtract, plugins.cleanLayerDeclaration],
         output: {
             format: 'esm',
             strict: true,
