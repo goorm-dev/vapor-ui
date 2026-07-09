@@ -14,7 +14,6 @@ const compactIconSize = createVar('input-group-compact-icon-size');
 const inputHeight = createVar('input-group-input-height');
 const addonGap = createVar('input-group-addon-gap');
 
-const INVALID = `&[data-invalid], &:has([aria-invalid='true'])`;
 const DISABLED = `&[data-disabled], &:has(:disabled)`;
 
 export const root = componentRecipe({
@@ -35,9 +34,10 @@ export const root = componentRecipe({
             vars: { [boxShadowColor]: vars.color.border.normal },
 
             selectors: {
-                [`${when.invalid(INVALID)}`]: {
-                    vars: { [boxShadowColor]: vars.color.border.danger },
-                },
+                [`${when.invalid('&[data-invalid]')}, ${when.invalid(`&:has([aria-invalid='true'])`)}`]:
+                    {
+                        vars: { [boxShadowColor]: vars.color.border.danger },
+                    },
                 [`${when.readonly()}`]: { backgroundColor: vars.color.gray['200'] },
                 [`${DISABLED}`]: { opacity: 0.32 },
             },
