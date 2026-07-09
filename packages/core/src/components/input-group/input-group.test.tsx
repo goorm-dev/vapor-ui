@@ -97,7 +97,6 @@ describe('InputGroup', () => {
             );
 
             const input = screen.getByPlaceholderText('Search');
-            // 그룹은 시각만 켠다 — 자식은 개발자가 직접 지정하지 않는 한 건드리지 않는다.
             expect(input).not.toBeDisabled();
             expect(input).not.toHaveAttribute('aria-invalid');
         });
