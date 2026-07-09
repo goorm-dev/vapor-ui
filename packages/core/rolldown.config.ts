@@ -1,5 +1,4 @@
 import { vanillaExtractPlugin } from '@vanilla-extract/rollup-plugin';
-import { getTsconfig } from 'get-tsconfig';
 import fs from 'node:fs';
 import path from 'node:path';
 import { defineConfig } from 'rolldown';
@@ -68,24 +67,17 @@ const identifiers = ({ hash, filePath, debugId }: IdentifiersOptions) => {
     return `${prefix}${id ? `-${id}` : ''}-${hash}`;
 };
 
-const compilerOptions = getTsconfig()?.config.compilerOptions;
-
 const plugins = {
     vanillaExtract: vanillaExtractPlugin({ identifiers }),
     depsExternal: depsExternalPlugin(),
     dts: dtsPlugin({
-        // entry: ['src/**/*.{ts,tsx}', '!src/**/*.css.ts'],
-        // tsconfig: 'tsconfig.json',
         emitDtsOnly: true,
         compilerOptions: {
-            ...compilerOptions,
-            baseUrl: compilerOptions?.baseUrl ?? './',
             declaration: true,
             declarationMap: false,
             noEmit: false,
             emitDeclarationOnly: true,
             noEmitOnError: true,
-            target: compilerOptions?.target ?? 'ES2024',
         },
     }),
     cleanLayerDeclaration: cleanLayerDeclaration(),
@@ -146,7 +138,6 @@ type BundleOptions = { plugins: RolldownPluginOption; output: OutputOptions };
 const bundle = ({ plugins, output }: BundleOptions): RolldownOptions => ({
     input: ENTRY_POINTS,
     resolve: sharedResolve,
-    // plugins: [depsExternal, vanillaExtract, cleanLayerDeclaration, dts],
     plugins,
     output: {
         dir: 'dist',

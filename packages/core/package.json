@@ -86,7 +86,6 @@
         "@vitest/coverage-v8": "^3.2.6",
         "autoprefixer": "^10.5.0",
         "eslint": "catalog:",
-        "get-tsconfig": "^4.14.0",
         "happy-dom": "^20.9.0",
         "postcss": "^8.5.15",
         "react": "catalog:",
