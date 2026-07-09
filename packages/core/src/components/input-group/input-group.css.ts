@@ -165,6 +165,15 @@ globalStyle(`${rootBase} ${ICON_BUTTON} > :is(svg, img)`, {
     },
 });
 
+globalStyle(`${addon} > :is(svg, img)`, {
+    '@layer': {
+        [layers.utilities]: {
+            width: compactIconSize,
+            height: compactIconSize,
+        },
+    },
+});
+
 globalStyle(`${rootBase} ${SELECT_TRIGGER}`, {
     '@layer': {
         [layers.utilities]: {
