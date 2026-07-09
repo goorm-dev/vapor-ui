@@ -1,5 +1,5 @@
 ---
-'@vapor-ui/core': major
+'@vapor-ui/core': minor
 ---
 
 Rebuild `InputGroup` as a visual box with addon slots.

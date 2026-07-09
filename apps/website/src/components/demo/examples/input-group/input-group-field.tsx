@@ -1,6 +1,7 @@
 'use client';
 
 import { Field, InputGroup, TextInput, VStack } from '@vapor-ui/core';
+import { MailOutlineIcon } from '@vapor-ui/icons';
 
 export default function InputGroupField() {
     return (
@@ -9,7 +10,9 @@ export default function InputGroupField() {
                 <VStack render={<Field.Label />} $css={{ gap: '$050' }}>
                     Email
                     <InputGroup.Root>
-                        <InputGroup.LeadingAddon>✉</InputGroup.LeadingAddon>
+                        <InputGroup.LeadingAddon>
+                            <MailOutlineIcon />
+                        </InputGroup.LeadingAddon>
                         <TextInput type="email" placeholder="you@example.com" required />
                     </InputGroup.Root>
                 </VStack>
