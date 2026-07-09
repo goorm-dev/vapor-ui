@@ -46,7 +46,6 @@
     ],
     "scripts": {
         "build": "rimraf dist && rolldown -c rolldown.config.ts",
-        "build:rollup": "rimraf dist-rollup && rollup -c rollup.config.ts",
         "clean": "rimraf dist node_modules .turbo",
         "lint": "eslint ./src",
         "test": "vitest --run",
