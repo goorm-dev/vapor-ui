@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { axe } from 'vitest-axe';
 
 import { InputGroup } from '.';
 import { Field } from '../field';
@@ -13,6 +14,20 @@ import { TextInput } from '../text-input';
  */
 describe('InputGroup', () => {
     describe('accessibility & structure', () => {
+        it('should have no a11y violations', async () => {
+            const { container } = render(
+                <InputGroup.Root>
+                    <InputGroup.LeadingAddon>$</InputGroup.LeadingAddon>
+                    <TextInput placeholder="Amount" aria-label="Amount" />
+                    <InputGroup.TrailingAddon>
+                        <IconButton aria-label="clear">x</IconButton>
+                    </InputGroup.TrailingAddon>
+                </InputGroup.Root>,
+            );
+
+            expect(await axe(container)).toHaveNoViolations();
+        });
+
         it('should not set role by default (single input + decoration is not a group)', () => {
             render(
                 <InputGroup.Root data-testid="group">
