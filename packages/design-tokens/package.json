@@ -1,0 +1,14 @@
+{
+    "name": "@vapor-ui/design-tokens",
+    "version": "0.0.1",
+    "private": true,
+    "description": "Vapor design tokens (W3C DTCG 2025.10). Raw JSON only.",
+    "type": "module",
+    "exports": {
+        "./raws/*.json": "./raws/*.json",
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "raws"
+    ]
+}
