@@ -5,8 +5,7 @@
     "description": "Vapor design tokens (W3C DTCG 2025.10). Raw JSON only.",
     "type": "module",
     "exports": {
-        "./raws/*.json": "./raws/*.json",
-        "./package.json": "./package.json"
+        "./raws/*": "./raws/*.json"
     },
     "files": [
         "raws"
