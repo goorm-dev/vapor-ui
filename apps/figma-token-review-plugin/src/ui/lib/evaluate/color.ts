@@ -127,9 +127,18 @@ export function evaluateColor(
             continue;
         }
 
-        // 7. fg-grade 검사 (foreground + fill-on-text + background 정보 있을 때만)
-        if (meta.role === 'foreground' && property === 'fill-on-text' && u.background) {
+        // 7. fg-grade 검사 (gradeRule 있는 foreground + fill-on-text + background 정보 있을 때만)
+        //    스키마의 gradeRules 상속으로 loader 가 gradeRule.other 을 채운 토큰만 검사 대상.
+        //    - grade '100' 은 pure white / transparent 배경 전용
+        //    - grade '200' 은 non-white 배경 전용
+        if (
+            meta.role === 'foreground' &&
+            property === 'fill-on-text' &&
+            u.background &&
+            meta.gradeRule
+        ) {
             const kind = u.background.kind;
+            const grade = meta.gradeRule.other;
             if (kind === 'ambiguous') {
                 violations.push({
                     ...base,
@@ -139,13 +148,21 @@ export function evaluateColor(
                 });
                 continue;
             }
-            const grade = u.token.split('-').pop();
             if (kind === 'other' && grade === '100') {
                 violations.push({
                     ...base,
                     type: 'fg-grade-mismatch',
                     severity: 'high',
                     message: 'fg-100을 비순백 배경 위에 사용했습니다. .200 사용을 검토하세요.',
+                });
+                continue;
+            }
+            if ((kind === 'white' || kind === 'transparent') && grade === '200') {
+                violations.push({
+                    ...base,
+                    type: 'fg-grade-mismatch',
+                    severity: 'high',
+                    message: 'fg-200을 순백/투명 배경 위에 사용했습니다. .100 사용을 검토하세요.',
                 });
                 continue;
             }

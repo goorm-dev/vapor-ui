@@ -156,17 +156,18 @@ function doNotUseSuggestions(token: string | null, schema: ColorSchema): string[
 }
 
 /**
- * For fg-grade-mismatch (.100 token): suggest same family .200 token if it exists.
+ * For fg-grade-mismatch: suggest the same-family opposite-grade token when it exists.
+ * .100 ↔ .200 swap on the last segment.
  */
 function fgGradeMismatchSuggestions(token: string | null, schema: ColorSchema): string[] {
     if (!token) return [];
     const parts = token.split('-');
     const grade = parts[parts.length - 1];
-    // Only handle -100 → -200 substitution
-    if (grade !== '100') return [];
+    const opposite = grade === '100' ? '200' : grade === '200' ? '100' : null;
+    if (!opposite) return [];
 
     const base = parts.slice(0, -1).join('-');
-    const candidate = `${base}-200`;
+    const candidate = `${base}-${opposite}`;
     if (schema.semantic[candidate] && schema.semantic[candidate].status !== 'do-not-use') {
         return [candidate];
     }

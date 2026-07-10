@@ -218,13 +218,13 @@ describe('applyRecommendations', () => {
         expect(out[0].suggested).toEqual(['color-foreground-primary-200']);
     });
 
-    it('fg-grade-mismatch(-200 token)는 suggested가 []', () => {
+    it('fg-grade-mismatch(-200 token)는 동일 family의 -100 토큰을 suggested에 담는다', () => {
         const token = 'color-foreground-primary-200';
         const out = applyRecommendations(
             [v({ type: 'fg-grade-mismatch', property: 'fill-on-text', token })],
             { colorSchema, ...dim },
         );
-        expect(out[0].suggested).toEqual([]);
+        expect(out[0].suggested).toEqual(['color-foreground-primary-100']);
     });
 
     // Case 7: Unknown / fg-grade-ambiguous / typo-raw / typo-styled-override → []

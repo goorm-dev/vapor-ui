@@ -82,6 +82,69 @@ describe('evaluateColor', () => {
         expect(result.violations[0].severity).toBe('info');
     });
 
+    it('fg-200 을 순백 배경 위에 쓰면 fg-grade-mismatch', () => {
+        const key = Object.entries(schema.semantic).find(
+            ([k, v]) =>
+                v.role === 'foreground' && v.gradeRule?.other === '200' && k.endsWith('-200'),
+        )?.[0];
+        if (!key) return;
+        const result = evaluateColor(
+            [
+                usage({
+                    property: 'text',
+                    tokenStatus: 'ok',
+                    token: key,
+                    hex: schema.semantic[key].hex,
+                    background: { kind: 'white', hex: '#ffffff' },
+                }),
+            ],
+            schema,
+        );
+        expect(result.violations.some((v) => v.type === 'fg-grade-mismatch')).toBe(true);
+    });
+
+    it('fg-200 을 투명 배경 위에 쓰면 fg-grade-mismatch', () => {
+        const key = Object.entries(schema.semantic).find(
+            ([k, v]) =>
+                v.role === 'foreground' && v.gradeRule?.other === '200' && k.endsWith('-200'),
+        )?.[0];
+        if (!key) return;
+        const result = evaluateColor(
+            [
+                usage({
+                    property: 'text',
+                    tokenStatus: 'ok',
+                    token: key,
+                    hex: schema.semantic[key].hex,
+                    background: { kind: 'transparent', hex: null },
+                }),
+            ],
+            schema,
+        );
+        expect(result.violations.some((v) => v.type === 'fg-grade-mismatch')).toBe(true);
+    });
+
+    it('fg-100 을 순백 배경 위에 쓰면 문제 없음', () => {
+        const key = Object.entries(schema.semantic).find(
+            ([k, v]) =>
+                v.role === 'foreground' && v.gradeRule?.other === '100' && k.endsWith('-100'),
+        )?.[0];
+        if (!key) return;
+        const result = evaluateColor(
+            [
+                usage({
+                    property: 'text',
+                    tokenStatus: 'ok',
+                    token: key,
+                    hex: schema.semantic[key].hex,
+                    background: { kind: 'white', hex: '#ffffff' },
+                }),
+            ],
+            schema,
+        );
+        expect(result.violations.length).toBe(0);
+    });
+
     it('적합한 semantic 토큰 사용은 conformant 로 떨어진다', () => {
         const fgKey = Object.entries(schema.semantic).find(([, v]) => v.role === 'foreground')?.[0];
         if (!fgKey) return;
