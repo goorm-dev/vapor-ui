@@ -404,7 +404,8 @@ export async function extractFrame(
         }
         visited++;
         const bv: any = (node as any).boundVariables || {};
-        const fillProperty: ColorProperty = node.type === 'TEXT' ? 'text' : 'fill';
+        const fillProperty: ColorProperty =
+            node.type === 'TEXT' || node.type === 'VECTOR' ? 'text' : 'fill';
 
         if (MODE !== 'typography') {
             const extractPaints = async (
