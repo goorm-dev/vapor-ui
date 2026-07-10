@@ -25,11 +25,11 @@ describe('loadColorSchema(light)', () => {
     });
 
     it('oklch primitive white [1,0,0]은 #ffffff로 변환된다', () => {
-        expect(schema.primitive['color-base-white']).toBe('#ffffff');
+        expect(schema.primitive['color-white']).toBe('#ffffff');
     });
 
     it('oklch primitive black [0,0,0]은 #000000으로 변환된다', () => {
-        expect(schema.primitive['color-base-black']).toBe('#000000');
+        expect(schema.primitive['color-black']).toBe('#000000');
     });
 
     it('foreground 그룹의 leaf 토큰은 gradeRule을 상속한다', () => {

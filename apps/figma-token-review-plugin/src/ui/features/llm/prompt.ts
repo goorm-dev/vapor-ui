@@ -96,9 +96,10 @@ export function buildRequest(
             source: { type: 'base64', media_type: 'image/png', data: screenshotB64 },
         });
     }
+
     return {
         model,
-        max_tokens: 4096,
+        max_tokens: 10000,
         system: [
             { type: 'text', text: SYSTEM_BASE },
             { type: 'text', text: SEMANTIC_GUIDE, cache_control: { type: 'ephemeral' } },

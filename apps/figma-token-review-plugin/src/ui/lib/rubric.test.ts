@@ -175,6 +175,69 @@ describe('buildLlmInput', () => {
         expect(input.nodeTree).toEqual(nodeTree);
     });
 
+    it('같은 노드에 fill/stroke 두 색이 붙어도 각 conformant 의 property 를 그대로 보존한다', () => {
+        const bgKey =
+            Object.entries(colorSchema.semantic).find(([, v]) => v.role === 'background')?.[0] ??
+            '';
+        const borderKey =
+            Object.entries(colorSchema.semantic).find(([, v]) => v.role === 'border')?.[0] ?? '';
+        const twoPaintExtract: RawExtract = {
+            schemaMode: 'light',
+            viewport: 'pc',
+            colors: [
+                {
+                    nodeId: '150:537',
+                    name: 'Card',
+                    property: 'fill',
+                    token: bgKey,
+                    hex: '#fff',
+                    tokenStatus: 'ok',
+                    background: null,
+                },
+                {
+                    nodeId: '150:537',
+                    name: 'Card',
+                    property: 'stroke',
+                    token: borderKey,
+                    hex: '#ccc',
+                    tokenStatus: 'ok',
+                    background: null,
+                },
+            ],
+            typography: [],
+            spaces: [],
+            dimensions: [],
+            radii: [],
+            shadows: [],
+            stats: { nodeCount: 1, textNodes: 0, visited: 1 },
+        };
+        const conformant = {
+            color: [
+                { nodeId: '150:537', name: 'Card', property: 'fill', token: bgKey } as Conformant,
+                {
+                    nodeId: '150:537',
+                    name: 'Card',
+                    property: 'stroke',
+                    token: borderKey,
+                } as Conformant,
+            ],
+            typography: [],
+        };
+        const input = buildLlmInput({
+            extract: twoPaintExtract,
+            deterministicConformant: conformant,
+            frameName: 'frame',
+            colorSchema,
+            textStyleSchema,
+            nodeTree: [],
+        });
+        const byToken = Object.fromEntries(
+            input.judgmentTargets.semanticColor.map((t) => [t.token, t.property]),
+        );
+        expect(byToken[bgKey]).toBe('fill');
+        expect(byToken[borderKey]).toBe('stroke');
+    });
+
     it('textStyleRubric 는 스키마 전체 스타일을 포함한다 (사용/미사용 무관)', () => {
         const schema = loadTextStyleSchema();
         const input = buildLlmInput({

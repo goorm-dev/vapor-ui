@@ -10,7 +10,7 @@ function isPrimitiveKey(token: string): boolean {
 /**
  * ColorUsage.property (ColorProperty = 'fill' | 'stroke' | 'text') 를
  * Violation.property (Property) 로 변환.
- * text 노드의 색상 = 'fill-on-text', fill = 'fill', 그 외 = 'stroke'.
+ * TEXT/VECTOR 노드의 색상 = 'fill-on-text', 그 외 fill = 'fill', 그 외 = 'stroke'.
  */
 function effectiveProperty(u: ColorUsage): Property {
     if (u.property === 'text') return 'fill-on-text';

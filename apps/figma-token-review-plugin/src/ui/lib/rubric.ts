@@ -74,12 +74,20 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
         if (!u || !conf.token) continue;
         // 시맨틱 토큰만 의미 판정 대상 (primitive/unknown 제외)
         if (!colorSchema.semantic[conf.token]) continue;
-        const property: 'fill' | 'fill-on-text' | 'stroke' =
-            u.property === 'text' ? 'fill-on-text' : u.property === 'fill' ? 'fill' : 'stroke';
+        // conf.property 는 결정론 평가가 이미 property/token 쌍을 정확히 기록한 값.
+        // colorByNode 는 nodeId 만으로 키잉하므로 fill/stroke 두 색이 같은 노드에 붙으면
+        // 뒤 항목이 앞을 덮어 u.property 가 오염된다. 반드시 conf.property 를 사용해야 함.
+        if (
+            conf.property !== 'fill' &&
+            conf.property !== 'fill-on-text' &&
+            conf.property !== 'stroke'
+        ) {
+            continue;
+        }
         semanticColorTargets.push({
             nodeId: conf.nodeId,
             name: u.name,
-            property,
+            property: conf.property,
             token: conf.token,
         });
         usedColorTokens.add(conf.token);
