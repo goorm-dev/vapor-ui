@@ -364,7 +364,7 @@
                         }
                     }
                 },
-                "$value": "{colors.base.white}"
+                "$value": "{colors.white}"
             },
             "danger": {
                 "100": {
