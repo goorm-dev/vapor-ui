@@ -84,12 +84,18 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
         ) {
             continue;
         }
-        semanticColorTargets.push({
-            nodeId: conf.nodeId,
-            name: u.name,
-            property: conf.property,
-            token: conf.token,
-        });
+        // 같은 스타일·토큰이라도 위치·부모 컨텍스트가 달라 판정이 흔들릴 수 있으므로
+        // 그룹 대표 하나만 LLM 태우고 형제에 상속하지 않고, nodeIds 를 펼쳐 각 노드를 개별 target 으로 보낸다.
+        const ids = conf.nodeIds && conf.nodeIds.length > 0 ? conf.nodeIds : [conf.nodeId];
+        for (const id of ids) {
+            const perNode = colorByNode.get(id);
+            semanticColorTargets.push({
+                nodeId: id,
+                name: perNode?.name ?? u.name,
+                property: conf.property,
+                token: conf.token,
+            });
+        }
         usedColorTokens.add(conf.token);
     }
 
@@ -97,12 +103,16 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
     for (const conf of deterministicConformant.typography) {
         const u = typoByNode.get(conf.nodeId);
         if (!u || !conf.token) continue;
-        typographyTargets.push({
-            nodeId: conf.nodeId,
-            name: u.name,
-            characters: u.characters,
-            textStyle: conf.token,
-        });
+        const ids = conf.nodeIds && conf.nodeIds.length > 0 ? conf.nodeIds : [conf.nodeId];
+        for (const id of ids) {
+            const perNode = typoByNode.get(id);
+            typographyTargets.push({
+                nodeId: id,
+                name: perNode?.name ?? u.name,
+                characters: perNode?.characters ?? u.characters,
+                textStyle: conf.token,
+            });
+        }
     }
 
     const colorRubric: Record<string, ColorMetaSubset> = {};

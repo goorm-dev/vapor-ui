@@ -2,9 +2,12 @@ import type { ColorUsage, Conformant, Property, Violation } from '~/common/schem
 import type { ColorSchema } from '~/ui/lib/loaders/color';
 import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 
-/** primitive 토큰 키 판별: 'color-<family>-<grade>' 형식 */
-function isPrimitiveKey(token: string): boolean {
-    return /^color-[a-z]+-[0-9]{3}$/.test(token);
+/**
+ * primitive 토큰 키 판별. regex 로 grade 유무를 추정하지 않고 loader 가 만든 primitive 사전을 조회한다.
+ * grade 있는 스케일(color-red-100 등)뿐 아니라 grade 없는 원자 primitive(color-white / color-black 등)도 커버.
+ */
+function isPrimitiveKey(token: string, schema: ColorSchema): boolean {
+    return token in schema.primitive;
 }
 
 /**
@@ -80,7 +83,7 @@ export function evaluateColor(
         if (!u.token) continue;
 
         // 3. primitive 토큰 직접 사용
-        if (isPrimitiveKey(u.token) && !schema.semantic[u.token]) {
+        if (isPrimitiveKey(u.token, schema) && !schema.semantic[u.token]) {
             violations.push({
                 ...base,
                 type: 'primitive-used',

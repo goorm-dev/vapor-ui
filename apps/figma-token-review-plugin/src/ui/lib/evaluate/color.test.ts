@@ -82,6 +82,22 @@ describe('evaluateColor', () => {
         expect(result.violations[0].severity).toBe('info');
     });
 
+    it('grade 없는 primitive(color-white, color-black)도 primitive-used 로 판정된다', () => {
+        for (const token of ['color-white', 'color-black']) {
+            const result = evaluateColor(
+                [
+                    usage({
+                        tokenStatus: 'ok',
+                        token,
+                        hex: schema.primitive[token],
+                    }),
+                ],
+                schema,
+            );
+            expect(result.violations[0]?.type).toBe('primitive-used');
+        }
+    });
+
     it('fg-200 을 순백 배경 위에 쓰면 fg-grade-mismatch', () => {
         const key = Object.entries(schema.semantic).find(
             ([k, v]) =>

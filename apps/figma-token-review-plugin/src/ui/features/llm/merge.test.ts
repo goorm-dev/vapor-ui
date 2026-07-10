@@ -6,6 +6,51 @@ import type { LlmTypoJudgment } from '~/ui/features/llm/parse';
 import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
 
 describe('mergeScanPayload', () => {
+    it('nodeIds 로 묶인 conformant 는 노드별로 펼치고 LLM FAIL 노드만 제거된다', () => {
+        const payload = mergeScanPayload({
+            deterministic: {
+                color: {
+                    violations: [],
+                    conformant: [
+                        {
+                            nodeId: 'A',
+                            nodeIds: ['A', 'B', 'C'],
+                            name: 'title',
+                            property: 'fill-on-text',
+                            token: 'color-foreground-normal-100',
+                        },
+                    ],
+                    total: 3,
+                },
+                space: { violations: [], conformant: [], total: 0 },
+                dimension: { violations: [], conformant: [], total: 0 },
+                typography: { violations: [], conformant: [], total: 0 },
+                borderRadius: { violations: [], conformant: [], total: 0 },
+                shadow: { violations: [], conformant: [], total: 0 },
+            },
+            llm: {
+                typography: [],
+                semanticColor: [
+                    {
+                        nodeId: 'B',
+                        name: 'title',
+                        property: 'fill-on-text',
+                        token: 'color-foreground-normal-100',
+                        verdict: 'FAIL',
+                        confidence: 'HIGH',
+                        reasoning: '위계 부적합',
+                        suggested: [],
+                    },
+                ],
+            },
+            schemaMode: 'light',
+            textStyleSchema: loadTextStyleSchema(),
+        });
+        const remainingIds = payload.color.conformant.map((c) => c.nodeId).sort();
+        expect(remainingIds).toEqual(['A', 'C']);
+        expect(payload.color.violations[0].nodeId).toBe('B');
+    });
+
     it('LLM heuristic FAIL 항목을 해당 카테고리 violations 로 합친다', () => {
         const payload = mergeScanPayload({
             deterministic: {

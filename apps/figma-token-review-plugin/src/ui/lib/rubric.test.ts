@@ -175,6 +175,56 @@ describe('buildLlmInput', () => {
         expect(input.nodeTree).toEqual(nodeTree);
     });
 
+    it('같은 스타일 그룹의 형제 노드는 각각 별도의 LLM target 으로 펼쳐진다', () => {
+        const fgKey =
+            Object.entries(colorSchema.semantic).find(([, v]) => v.role === 'foreground')?.[0] ??
+            '';
+        const groupedExtract: RawExtract = {
+            schemaMode: 'light',
+            viewport: 'pc',
+            colors: [
+                {
+                    nodeId: 'A',
+                    nodeIds: ['A', 'B', 'C'],
+                    name: 'title',
+                    property: 'text',
+                    token: fgKey,
+                    hex: '#000',
+                    tokenStatus: 'ok',
+                    background: { kind: 'white', hex: '#ffffff' },
+                } as unknown as RawExtract['colors'][number],
+            ],
+            typography: [],
+            spaces: [],
+            dimensions: [],
+            radii: [],
+            shadows: [],
+            stats: { nodeCount: 3, textNodes: 3, visited: 3 },
+        };
+        const conformant = {
+            color: [
+                {
+                    nodeId: 'A',
+                    nodeIds: ['A', 'B', 'C'],
+                    name: 'title',
+                    property: 'fill-on-text',
+                    token: fgKey,
+                } as Conformant,
+            ],
+            typography: [],
+        };
+        const input = buildLlmInput({
+            extract: groupedExtract,
+            deterministicConformant: conformant,
+            frameName: 'frame',
+            colorSchema,
+            textStyleSchema,
+            nodeTree: [],
+        });
+        const ids = input.judgmentTargets.semanticColor.map((t) => t.nodeId).sort();
+        expect(ids).toEqual(['A', 'B', 'C']);
+    });
+
     it('같은 노드에 fill/stroke 두 색이 붙어도 각 conformant 의 property 를 그대로 보존한다', () => {
         const bgKey =
             Object.entries(colorSchema.semantic).find(([, v]) => v.role === 'background')?.[0] ??

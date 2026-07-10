@@ -120,7 +120,15 @@ export function mergeScanPayload(args: MergeArgs): ScanPayload {
         const d = deterministic[cat];
         const violations = [...d.violations, ...extra];
         const flagged = new Set(extra.map((v) => `${v.nodeId}:${v.property}`));
-        const conformant = d.conformant.filter((c) => !flagged.has(`${c.nodeId}:${c.property}`));
+        // 각 노드는 독립 판정 대상이므로 그룹 conformant 를 nodeIds 단위로 펼친다.
+        // LLM 이 특정 nodeId 만 FAIL 로 뒤집으면 그 노드만 conformant 에서 제외하고 형제는 유지한다.
+        const flatConformant: Conformant[] = d.conformant.flatMap((c) => {
+            const ids = c.nodeIds && c.nodeIds.length > 0 ? c.nodeIds : [c.nodeId];
+            return ids.map((id) => ({ ...c, nodeId: id, nodeIds: [id] }));
+        });
+        const conformant = flatConformant.filter(
+            (c) => !flagged.has(`${c.nodeId}:${c.property}`),
+        );
         return {
             violations,
             conformant,
