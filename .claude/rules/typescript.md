@@ -94,38 +94,12 @@ enum Direction {
 }
 ```
 
-Constants use `CONSTANT_CASE` with `as const`:
-
-```ts
-const MAX_RETRY_COUNT = 3 as const;
-```
-
-## Imports
-
-Namespace import aliases use `lowerCamelCase`:
+Constants use `CONSTANT_CASE`. Apply `as const` only to object constants — primitive values are already narrowed:
 
 ```ts
 // ✅
-import * as fooBar from './foo-bar';
-// ❌
-import * as FooBar from './foo-bar';
+const MAX_RETRY_COUNT = 3;
+
+// ❌ redundant — 3 is already a literal type
+const MAX_RETRY_COUNT = 3 as const;
 ```
-
-## Coding Style
-
-- **Indentation**: 4 spaces.
-- **Semicolons**: always.
-- **Strings**: single quotes for simple strings; template literals when they improve readability.
-- **Early return**: when nesting exceeds 3 levels.
-
-```tsx
-function processUser(user: User) {
-    if (!user) return null;
-    if (!user.isActive) return null;
-    if (!user.permissions.canEdit) return null;
-
-    return editUser(user);
-}
-```
-
-- **Function parameters**: prefer an object parameter when a function has 3 or more parameters.
