@@ -37,7 +37,7 @@
         "eslint": "catalog:",
         "tailwindcss": "^4.2.4",
         "typescript": "catalog:",
-        "vite": "^7.3.5",
+        "vite": "^7.3.6",
         "vite-plugin-singlefile": "^2.3.3"
     }
 }

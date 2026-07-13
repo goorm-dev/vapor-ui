@@ -14,7 +14,7 @@
         "@figma/plugin-typings": "^1.125.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "esbuild": "^0.28.0",
+        "esbuild": "^0.28.1",
         "eslint": "catalog:",
         "typescript": "catalog:"
     }
