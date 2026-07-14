@@ -13,6 +13,19 @@ description: 'Sheet는 화면의 가장자리에서 슬라이드되어 나타나
 ```
 </Demo>
 
+### Resizable
+
+`Sheet.ResizeHandle`을 `Sheet.Popup` 안에 넣으면 가장자리 핸들을 잡고 크기를 조절할 수 있습니다.
+
+<Demo name="sheet/resizable-sheet">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/sheet/resizable-sheet.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
 ## Property
 
 ---
@@ -104,6 +117,10 @@ Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정합니다
 #### Sheet.PositionerPrimitive
 
 <ComponentPropsTable componentName="sheet-positioner-primitive" />
+
+### Sheet.ResizeHandle
+
+<ComponentPropsTable componentName="sheet-resize-handle" />
 
 ### Sheet.Header
 
