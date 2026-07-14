@@ -1,6 +1,6 @@
 import type { Box } from '@vapor-ui/core';
 import { Badge, HStack, Text, VStack } from '@vapor-ui/core';
-import { AiSmartieIcon, WarningIcon } from '@vapor-ui/icons';
+import { AiSmartieIcon } from '@vapor-ui/icons';
 
 import type { Confidence, Severity } from '~/common/schemas';
 
@@ -16,9 +16,8 @@ export function ViolationDetail({ message, severity, confidence }: ViolationDeta
 
     return (
         <DescriptionBox $css={{ gap: '$100', alignItems: 'flex-start', paddingTop: '$150' }}>
-            <HStack $css={{ gap: '$075', alignItems: 'center', flexWrap: 'wrap' }}>
+            <HStack $css={{ gap: '$100', alignItems: 'center', flexWrap: 'wrap' }}>
                 <Badge size="sm" shape="pill" colorPalette={severityMap.palette}>
-                    <WarningIcon size="14" />
                     {severityMap.label}
                 </Badge>
                 {confidenceMap && (
