@@ -11,7 +11,7 @@
         "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
-        "@figma/plugin-typings": "^1.125.0",
+        "@figma/plugin-typings": "^1.130.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "esbuild": "^0.28.0",
