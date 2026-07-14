@@ -9,6 +9,6 @@ export function requestFocus(nodeIds: string[]): void {
     postToCode({ type: 'focus', nodeIds, requestId });
 }
 
-export function isActiveFocus(requestId: RequestId | undefined): boolean {
-    return requestId != null && requestId === activeFocusId;
+export function isActiveFocus(requestId: RequestId): boolean {
+    return requestId === activeFocusId;
 }

@@ -1,6 +1,6 @@
-import type { UiEnvelope, UiMsg } from '~/common/messages';
+import type { UiMsg } from '~/common/messages';
 
-type Handler = (msg: UiEnvelope) => void | Promise<void>;
+type Handler = (msg: UiMsg) => void | Promise<void>;
 
 const handlers = new Map<UiMsg['type'], Handler>();
 
@@ -9,7 +9,7 @@ export function on(type: UiMsg['type'], handler: Handler): void {
 }
 
 export function start(): void {
-    figma.ui.onmessage = (msg: UiEnvelope) => {
+    figma.ui.onmessage = (msg: UiMsg) => {
         const handler = handlers.get(msg.type);
         if (!handler) return;
 

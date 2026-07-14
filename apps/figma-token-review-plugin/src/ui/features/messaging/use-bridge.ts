@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import type { CodeEnvelope } from '~/common/messages';
+import type { CodeMsg } from '~/common/messages';
 
 import { toastManager } from '../../components/toast';
 import { apiKeyActions } from '../api-key';
@@ -22,12 +22,12 @@ export const useBridge = () => {
 /* ----- utils ----- */
 
 function handleWindowMessage(event: MessageEvent) {
-    const msg = event.data?.pluginMessage as CodeEnvelope | undefined;
+    const msg = event.data?.pluginMessage as CodeMsg | undefined;
     if (!msg || typeof msg.type !== 'string') return;
     handle(msg);
 }
 
-function handle(msg: CodeEnvelope) {
+function handle(msg: CodeMsg) {
     switch (msg.type) {
         case 'selection':
             selectionStore.setState(msg.state);

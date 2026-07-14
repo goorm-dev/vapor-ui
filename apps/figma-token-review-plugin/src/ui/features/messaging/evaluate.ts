@@ -1,4 +1,4 @@
-import type { CodeEnvelope } from '~/common/messages';
+import type { CodeMsg } from '~/common/messages';
 
 import { toastManager } from '../../components/toast';
 import { apiKeyActions, currentApiKey } from '../api-key';
@@ -8,7 +8,7 @@ import { scanActions, scanStore } from '../scan';
 let activeEvaluation: AbortController | null = null;
 
 export async function evaluateExtract(
-    msg: Extract<CodeEnvelope, { type: 'extract-result' }>,
+    msg: Extract<CodeMsg, { type: 'extract-result' }>,
 ): Promise<void> {
     const state = scanStore.getState();
     if (state.kind !== 'loading' || state.requestId !== msg.requestId) return;

@@ -36,7 +36,7 @@ export const scanActions = {
             lastScannedFrameName: frameName,
         });
     },
-    result(payload: ScanPayload, requestId: RequestId | undefined) {
+    result(payload: ScanPayload, requestId: RequestId) {
         const state = scanStore.getState();
         if (state.kind !== 'loading') return;
         if (state.requestId !== requestId) return;
@@ -56,7 +56,7 @@ export const scanActions = {
             ...(empty ? {} : { payload }),
         } as ScanState);
     },
-    error(requestId: RequestId | undefined): boolean {
+    error(requestId: RequestId): boolean {
         const state = scanStore.getState();
         if (state.kind === 'loading' && state.requestId !== requestId) return false;
         scanStore.setState({ ...INITIAL_LAST_SCANNED, kind: 'idle' });

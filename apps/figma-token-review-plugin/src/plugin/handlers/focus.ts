@@ -1,13 +1,14 @@
 import { postToUi } from '~/common/messages';
+import type { RequestId } from '~/common/messages';
 
 import { on } from '../messages';
 
-let activeRequestId: string | null = null;
+let activeRequestId: RequestId | null = null;
 
 export function initFocus(): void {
     on('focus', async (msg) => {
         if (msg.type !== 'focus') return;
-        const requestId = msg.requestId ?? null;
+        const { requestId } = msg;
         activeRequestId = requestId;
 
         const resolved: SceneNode[] = [];
@@ -25,21 +26,17 @@ export function initFocus(): void {
         }
 
         if (resolved.length === 0) {
-            postToUi(
-                {
-                    type: 'focus-error',
-                    message: '이 프레임에 해당 노드 없음 — 파일이 다른가요?',
-                },
-                requestId ?? undefined,
-            );
-            postToUi(
-                {
-                    type: 'focus-result',
-                    resolved: 0,
-                    missing: missing.length,
-                },
-                requestId ?? undefined,
-            );
+            postToUi({
+                type: 'focus-error',
+                requestId,
+                message: '이 프레임에 해당 노드 없음 — 파일이 다른가요?',
+            });
+            postToUi({
+                type: 'focus-result',
+                requestId,
+                resolved: 0,
+                missing: missing.length,
+            });
             return;
         }
 
@@ -48,13 +45,11 @@ export function initFocus(): void {
         figma.currentPage.selection = resolved;
         figma.viewport.scrollAndZoomIntoView(resolved);
 
-        postToUi(
-            {
-                type: 'focus-result',
-                resolved: resolved.length,
-                missing: missing.length,
-            },
-            requestId ?? undefined,
-        );
+        postToUi({
+            type: 'focus-result',
+            requestId,
+            resolved: resolved.length,
+            missing: missing.length,
+        });
     });
 }
