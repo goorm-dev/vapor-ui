@@ -18,8 +18,8 @@
     "dependencies": {
         "@vapor-ui/core": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0"
+        "react": "catalog:",
+        "react-dom": "catalog:"
     },
     "devDependencies": {
         "@figma/plugin-typings": "^1.125.0",
@@ -35,7 +35,7 @@
         "rimraf": "^6.0.0",
         "tailwindcss": "^4.0.0",
         "typescript": "catalog:",
-        "vite": "^6.0.0",
+        "vite": "^7.3.5",
         "vite-plugin-singlefile": "^2.0.0",
         "vitest": "^3.2.6"
     }
