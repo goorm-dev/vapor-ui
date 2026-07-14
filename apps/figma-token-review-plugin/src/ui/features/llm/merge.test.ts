@@ -96,7 +96,7 @@ describe('mergeScanPayload', () => {
         expect(payload.color.violations[0].origin).toBe('llm');
     });
 
-    it('적합률은 결정론 high + HIGH-confidence heuristic 만 부적합', () => {
+    it('적합률은 severity=high 전체를 부적합으로 셈, confidence 는 별도 축', () => {
         const payload = mergeScanPayload({
             deterministic: {
                 color: { violations: [], conformant: [], total: 10 },
@@ -134,8 +134,12 @@ describe('mergeScanPayload', () => {
             schemaMode: 'light',
             textStyleSchema: loadTextStyleSchema(),
         });
-        // 부적합 1건(HIGH), 비결정 1건(LOW). 적합률 = (10-1)/10 = 0.9
-        expect(payload.color.summary.conformanceRate).toBeCloseTo(0.9);
+        // severity=high 2건 모두 부적합. 적합률 = (10-2)/10 = 0.8
+        expect(payload.color.summary.conformanceRate).toBeCloseTo(0.8);
+        expect(payload.color.summary.highViolations).toBe(2);
+        expect(payload.color.summary.heuristicViolations).toBe(2);
+        // confidence 축: HIGH 1건, LOW 1건 → lowConfidenceCount = 1
+        expect(payload.color.summary.lowConfidenceCount).toBe(1);
     });
 
     it('verdict=PASS 인 heuristic 은 어디에도 기록하지 않는다', () => {

@@ -81,7 +81,8 @@ export function ViolationCard({ violation, schemaMode }: ViolationCardProps) {
 
                     <ViolationDetail
                         message={violation.message}
-                        hasSuggestion={violation.origin === 'llm'}
+                        severity={violation.severity}
+                        confidence={violation.confidence}
                     />
                 </VStack>
             </Card.Body>

@@ -68,15 +68,19 @@ function summarize(
     conformant: Conformant[],
     total: number,
 ): EvaluateSummary {
-    const isFail = (v: Violation): boolean =>
-        v.severity === 'high' && (v.origin === 'rule' || v.confidence === 'HIGH');
-    const high = violations.filter(isFail).length;
+    // severity 축: origin/confidence 무관, severity 만으로 분류
+    const high = violations.filter((v) => v.severity === 'high').length;
+    const infos = violations.filter((v) => v.severity === 'info').length;
+
+    // 자신도(confidence) 축: LLM 판정에서만 의미 있음, severity 와 겹침 허용
     const heuristics = violations.filter((v) => v.origin === 'llm').length;
-    const infos = violations.filter(
-        (v) => v.severity === 'info' || (v.origin === 'llm' && v.confidence !== 'HIGH'),
+    const lowConfidence = violations.filter(
+        (v) => v.origin === 'llm' && v.confidence !== 'HIGH',
     ).length;
     const conformCount = conformant.length;
+
     const conformanceRate = total > 0 ? (total - high) / total : null;
+
     return {
         total,
         conformCount,
@@ -84,6 +88,7 @@ function summarize(
         highViolations: high,
         infoFlags: infos,
         heuristicViolations: heuristics,
+        lowConfidenceCount: lowConfidence,
     };
 }
 
@@ -126,9 +131,7 @@ export function mergeScanPayload(args: MergeArgs): ScanPayload {
             const ids = c.nodeIds && c.nodeIds.length > 0 ? c.nodeIds : [c.nodeId];
             return ids.map((id) => ({ ...c, nodeId: id, nodeIds: [id] }));
         });
-        const conformant = flatConformant.filter(
-            (c) => !flagged.has(`${c.nodeId}:${c.property}`),
-        );
+        const conformant = flatConformant.filter((c) => !flagged.has(`${c.nodeId}:${c.property}`));
         return {
             violations,
             conformant,

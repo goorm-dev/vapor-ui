@@ -78,9 +78,12 @@ export type EvaluateSummary = {
     total: number;
     conformCount: number;
     conformanceRate: number | null;
+    // severity 축: origin/confidence 무관, severity 만으로 카운트
     highViolations: number;
     infoFlags: number;
-    heuristicViolations: number;
+    // 자신도(confidence) 축: LLM 판정만 대상, severity 와 겹침 허용
+    heuristicViolations: number; // origin === 'llm' 전체
+    lowConfidenceCount: number; // origin === 'llm' && confidence !== 'HIGH'
 };
 
 export type LlmPassJudgment = {
