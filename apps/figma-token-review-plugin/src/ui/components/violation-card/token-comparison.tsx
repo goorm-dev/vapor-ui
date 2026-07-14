@@ -58,7 +58,11 @@ export function TokenChip({ label, swatch, tone }: TokenChipProps) {
             }}
         >
             <ColorSwatch value={swatch} />
-            <Text typography="body2" foreground="normal-200" className="min-w-0 flex-1 truncate">
+            <Text
+                typography="body2"
+                foreground="normal-200"
+                className="min-w-0 flex-1 text-left truncate"
+            >
                 {label}
             </Text>
         </HStack>
