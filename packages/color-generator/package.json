@@ -54,7 +54,7 @@
         "tsup": "^8.5.1",
         "tsx": "^4.21.0",
         "typescript": "catalog:",
-        "vitest": "^3.2.6"
+        "vitest": "^3.2.7"
     },
     "publishConfig": {
         "access": "public"
