@@ -34,13 +34,13 @@
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
-        "@types/node": "^20.19.42",
-        "@vitest/coverage-v8": "^2.1.9",
+        "@types/node": "^20.19.43",
+        "@vitest/coverage-v8": "catalog:",
         "eslint": "^9.39.4",
         "tsup": "^8.5.1",
         "tsx": "^4.21.0",
         "typescript": "catalog:",
-        "vitest": "^3.0.0"
+        "vitest": "catalog:"
     },
     "peerDependencies": {
         "typescript": ">=5.9.3"
