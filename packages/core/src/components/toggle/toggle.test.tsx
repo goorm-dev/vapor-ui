@@ -120,5 +120,19 @@ describe('<Toggle>', () => {
 
             expect(toggle).toHaveAttribute('aria-pressed', 'false');
         });
+
+        it('should toggle pressed state when Enter key is pressed', async () => {
+            const rendered = render(<ToggleTest />);
+            const toggle = rendered.getByRole('button', { name: LABEL_TEXT });
+
+            await userEvent.tab();
+            await userEvent.keyboard('[Enter]');
+
+            expect(toggle).toHaveAttribute('aria-pressed', 'true');
+
+            await userEvent.keyboard('[Enter]');
+
+            expect(toggle).toHaveAttribute('aria-pressed', 'false');
+        });
     });
 });
