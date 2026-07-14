@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+
+import { useIsoLayoutEffect } from './use-iso-layout-effect';
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
 
@@ -64,33 +66,59 @@ export function useResizeHandle(options: UseResizeHandleOptions) {
 
     const resizeBy = useStableCallback((delta: number) => resizeTo(readSize() + delta));
 
+    // Re-clamp the current size when the bounds change, keeping DOM, state, and aria in range.
+    // The useState initializer only clamps on mount; this covers later minSize/maxSize changes.
+    useIsoLayoutEffect(() => {
+        resizeTo(readSize());
+    }, [minSize, maxSize, resizeTo, readSize]);
+
+    // Cleanup for an in-progress drag, so pointerup, pointercancel, and unmount share one path.
+    const cleanupRef = useRef<(() => void) | null>(null);
+
     const onPointerDown = useStableCallback((event: React.PointerEvent<HTMLElement>) => {
         if (disabled || event.defaultPrevented || event.button !== 0) return;
 
+        const pointerId = event.pointerId;
         const startCoord = axis === 'x' ? event.clientX : event.clientY;
         const startSize = readSize();
         let lastSize = startSize;
 
-        event.currentTarget.setPointerCapture?.(event.pointerId);
+        event.currentTarget.setPointerCapture?.(pointerId);
         // Prevent text selection / native drag; focus doesn't happen after preventDefault.
         event.preventDefault();
         (event.currentTarget as HTMLElement).focus({ preventScroll: true });
 
         const handleMove = (moveEvent: PointerEvent) => {
+            // Ignore other pointers (multi-touch) so only this drag drives the size.
+            if (moveEvent.pointerId !== pointerId) return;
             const coord = axis === 'x' ? moveEvent.clientX : moveEvent.clientY;
             const delta = coord - startCoord;
             lastSize = applySize(startSize + delta * growSign);
         };
 
-        const handleUp = () => {
+        const cleanup = () => {
             window.removeEventListener('pointermove', handleMove);
-            window.removeEventListener('pointerup', handleUp);
+            window.removeEventListener('pointerup', handleEnd);
+            window.removeEventListener('pointercancel', handleEnd);
+            cleanupRef.current = null;
+        };
+
+        // pointercancel (gesture stolen by the browser) ends the drag just like pointerup;
+        // without it the move listener would leak and keep resizing after the pointer is gone.
+        const handleEnd = (endEvent: PointerEvent) => {
+            if (endEvent.pointerId !== pointerId) return;
+            cleanup();
             setSize(lastSize);
         };
 
+        cleanupRef.current = cleanup;
         window.addEventListener('pointermove', handleMove);
-        window.addEventListener('pointerup', handleUp);
+        window.addEventListener('pointerup', handleEnd);
+        window.addEventListener('pointercancel', handleEnd);
     });
+
+    // Tear down a drag that's still active when the component unmounts (e.g. sheet closed mid-drag).
+    useEffect(() => () => cleanupRef.current?.(), []);
 
     const onKeyDown = useStableCallback((event: React.KeyboardEvent<HTMLElement>) => {
         if (disabled || event.defaultPrevented) return;

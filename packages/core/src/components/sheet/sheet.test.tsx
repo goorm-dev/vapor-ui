@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
@@ -192,6 +192,79 @@ describe('Sheet', () => {
             await userEvent.keyboard('{ArrowLeft}');
             expect(handle).toHaveAttribute('aria-valuetext', 'width 400 pixels');
         });
+
+        it('should point aria-controls at a user-provided Popup id', () => {
+            const rendered = render(<ResizableSheetTest popupId="custom-panel" />);
+
+            const handle = rendered.getByRole('slider');
+            const popup = rendered.getByRole('dialog');
+
+            expect(popup).toHaveAttribute('id', 'custom-panel');
+            expect(handle).toHaveAttribute('aria-controls', 'custom-panel');
+        });
+
+        it('should clamp an out-of-range defaultSize into bounds', () => {
+            const rendered = render(<ResizableSheetTest defaultSize={1000} maxSize={640} />);
+
+            const handle = rendered.getByRole('slider');
+            expect(handle).toHaveAttribute('aria-valuenow', '640');
+        });
+
+        it('should normalize an inverted min/max range', () => {
+            const rendered = render(
+                <ResizableSheetTest minSize={500} maxSize={300} defaultSize={400} />,
+            );
+
+            const handle = rendered.getByRole('slider');
+            expect(handle).toHaveAttribute('aria-valuemin', '500');
+            expect(handle).toHaveAttribute('aria-valuemax', '500');
+            expect(handle).toHaveAttribute('aria-valuenow', '500');
+        });
+
+        it('should end the drag on pointercancel and stop tracking after', () => {
+            const rendered = render(<ResizableSheetTest />);
+            const handle = rendered.getByRole('slider');
+            const strip = handle.parentElement as HTMLElement;
+
+            // Right-side sheet grows when the pointer moves toward the viewport center (left).
+            fireEvent.pointerDown(strip, { button: 0, pointerId: 1, clientX: 500 });
+            fireEvent.pointerMove(window, { pointerId: 1, clientX: 460 });
+            fireEvent.pointerCancel(window, { pointerId: 1 });
+            expect(handle).toHaveAttribute('aria-valuenow', '440');
+
+            // Listeners are gone: further moves must not resize.
+            fireEvent.pointerMove(window, { pointerId: 1, clientX: 300 });
+            fireEvent.pointerUp(window, { pointerId: 1 });
+            expect(handle).toHaveAttribute('aria-valuenow', '440');
+        });
+
+        it('should ignore pointer events from other pointers mid-drag', () => {
+            const rendered = render(<ResizableSheetTest />);
+            const handle = rendered.getByRole('slider');
+            const strip = handle.parentElement as HTMLElement;
+
+            fireEvent.pointerDown(strip, { button: 0, pointerId: 1, clientX: 500 });
+            // A second finger touching and lifting must not move or end this drag.
+            fireEvent.pointerMove(window, { pointerId: 2, clientX: 300 });
+            fireEvent.pointerUp(window, { pointerId: 2 });
+            // The owning pointer still drives the size.
+            fireEvent.pointerMove(window, { pointerId: 1, clientX: 460 });
+            fireEvent.pointerUp(window, { pointerId: 1 });
+            expect(handle).toHaveAttribute('aria-valuenow', '440');
+        });
+
+        it('should release window listeners when unmounted mid-drag', () => {
+            const removeSpy = vi.spyOn(window, 'removeEventListener');
+            const rendered = render(<ResizableSheetTest />);
+            const strip = rendered.getByRole('slider').parentElement as HTMLElement;
+
+            fireEvent.pointerDown(strip, { button: 0, pointerId: 1, clientX: 500 });
+            rendered.unmount();
+
+            expect(removeSpy).toHaveBeenCalledWith('pointermove', expect.any(Function));
+            expect(removeSpy).toHaveBeenCalledWith('pointercancel', expect.any(Function));
+            removeSpy.mockRestore();
+        });
     });
 
     it('should not close when provided keepMounted and closed', async () => {
@@ -242,12 +315,24 @@ const SheetTest = (props: Sheet.Root.Props) => {
     );
 };
 
-const ResizableSheetTest = ({ disabled }: { disabled?: boolean }) => {
+const ResizableSheetTest = ({
+    disabled,
+    minSize = 300,
+    maxSize = 640,
+    defaultSize = 400,
+    popupId,
+}: {
+    disabled?: boolean;
+    minSize?: number;
+    maxSize?: number;
+    defaultSize?: number;
+    popupId?: string;
+}) => {
     return (
-        <Sheet.Root defaultOpen minSize={300} maxSize={640} defaultSize={400}>
+        <Sheet.Root defaultOpen minSize={minSize} maxSize={maxSize} defaultSize={defaultSize}>
             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
 
-            <Sheet.Popup>
+            <Sheet.Popup id={popupId}>
                 <Sheet.ResizeHandle disabled={disabled} />
                 <Sheet.Header>
                     <Sheet.Title>{TITLE_TEXT}</Sheet.Title>

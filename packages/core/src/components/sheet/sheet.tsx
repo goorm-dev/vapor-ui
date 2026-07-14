@@ -1,12 +1,13 @@
 'use client';
 
 import type { ReactElement, RefObject } from 'react';
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 
+import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { useResizeHandle } from '~/hooks/use-resize-handle';
@@ -20,6 +21,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
+import { resolveStyle } from '~/utils/stateful-props';
 import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Dialog } from '../dialog';
@@ -44,6 +46,8 @@ type RootContext = {
     transitionStatus: TransitionStatus;
     popupRef: RefObject<HTMLDivElement | null>;
     popupId: string;
+    /** Lets Sheet.Popup surface a user-provided id back to the context so ResizeHandle's aria-controls stays in sync. */
+    setPopupId: (id: string | undefined) => void;
     /** Present only when a size prop was passed to Sheet.Root — keeps non-resizable sheets untouched. */
     resize?: ResizeConfig;
 };
@@ -104,20 +108,40 @@ export const SheetRoot = ({
         onOpenChange?.(open, eventDetails);
     };
 
-    const popupId = useVaporId();
+    // Id generation lives here (single source). Sheet.Popup overrides it via setPopupId
+    // only when the user passes an explicit id, keeping DOM id and aria-controls paired.
+    const generatedId = useVaporId();
+    const [customId, setPopupId] = useState<string>();
+    const popupId = customId ?? generatedId;
 
+    // Normalize the size range once, here, so Popup's inline size, the hook's clamped
+    // state, and aria-valuenow all agree. Without this, an out-of-range defaultSize would
+    // render the Popup at one size while the slider reports another.
     const hasResizeProps = minSize != null || maxSize != null || defaultSize != null;
-    const resize: ResizeConfig | undefined = hasResizeProps
-        ? {
-              minSize: minSize ?? DEFAULT_RESIZE.minSize,
-              maxSize: maxSize ?? DEFAULT_RESIZE.maxSize,
-              defaultSize: defaultSize ?? minSize ?? DEFAULT_RESIZE.defaultSize,
-          }
-        : undefined;
+    let resize: ResizeConfig | undefined;
+    if (hasResizeProps) {
+        const min = minSize ?? DEFAULT_RESIZE.minSize;
+        const max = Math.max(min, maxSize ?? DEFAULT_RESIZE.maxSize);
+        const preferred = defaultSize ?? minSize ?? DEFAULT_RESIZE.defaultSize;
+        resize = {
+            minSize: min,
+            maxSize: max,
+            defaultSize: Math.min(max, Math.max(min, preferred)),
+        };
+    }
 
     return (
         <SheetRootProvider
-            value={{ open, mounted, setMounted, transitionStatus, popupRef, popupId, resize }}
+            value={{
+                open,
+                mounted,
+                setMounted,
+                transitionStatus,
+                popupRef,
+                popupId,
+                setPopupId,
+                resize,
+            }}
         >
             <Dialog.Root open={open} onOpenChange={handleOpenChange} {...props} />
         </SheetRootProvider>
@@ -204,12 +228,22 @@ SheetPositionerPrimitive.displayName = 'Sheet.PositionerPrimitive';
 
 export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitive.Props>(
     (props, ref) => {
-        const { className, style, ...componentProps } = resolveStyles(props);
+        const { className, style, id: idProp, ...componentProps } = resolveStyles(props);
 
-        const { popupRef, popupId, resize } = useSheetRootContext();
+        const { popupRef, popupId, setPopupId, resize } = useSheetRootContext();
         const { side = 'right' } = useSheetPositionerContext();
 
         const composedRef = composeRefs(popupRef, ref);
+
+        // A user-provided id wins; otherwise fall back to the context's generated id.
+        // Surface the explicit id back to the context so ResizeHandle's aria-controls matches.
+        const id = idProp ?? popupId;
+        useIsoLayoutEffect(() => {
+            if (idProp) setPopupId(idProp);
+            return () => {
+                if (idProp) setPopupId(undefined);
+            };
+        }, [idProp, setPopupId]);
 
         const dataAttr = createDataAttributes({ side });
 
@@ -218,12 +252,22 @@ export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitiv
         const dimension = side === 'top' || side === 'bottom' ? 'height' : 'width';
         const resizeStyle = resize ? { [dimension]: `${resize.defaultSize}px` } : undefined;
 
+        // Preserve a function-valued style prop: evaluate it against state, then layer
+        // the resize default underneath so user styles still win.
+        const mergedStyle =
+            typeof style === 'function'
+                ? (state: SheetPopupPrimitive.State) => ({
+                      ...resizeStyle,
+                      ...resolveStyle(style, state),
+                  })
+                : { ...resizeStyle, ...style };
+
         return (
             <BaseDialog.Popup
                 ref={composedRef}
-                id={popupId}
+                id={id}
                 className={cn(styles.popup, className)}
-                style={{ ...resizeStyle, ...style }}
+                style={mergedStyle}
                 {...dataAttr}
                 {...componentProps}
             />
@@ -309,8 +353,10 @@ export const SheetResizeHandle = forwardRef<HTMLDivElement, SheetResizeHandle.Pr
         const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
             onPointerDown?.(event);
             handleProps.onPointerDown(event);
-            // Drag can start anywhere on the strip — move focus to the keyboard grip.
-            gripRef.current?.focus({ preventScroll: true });
+            // The hook calls preventDefault() only when it accepts the drag (enabled, left
+            // button). Drag can start anywhere on the strip, so mirror that signal to move
+            // focus to the keyboard grip — but skip it when the drag was rejected.
+            if (event.defaultPrevented) gripRef.current?.focus({ preventScroll: true });
         };
 
         const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
