@@ -134,6 +134,66 @@ describe('Sheet', () => {
         expect(rendered.queryByText(CLOSE_TEXT)).toBeInTheDocument();
     });
 
+    describe('ResizeHandle', () => {
+        it('should expose slider semantics', () => {
+            const rendered = render(<ResizableSheetTest />);
+
+            const handle = rendered.getByRole('slider');
+            const popup = rendered.getByRole('dialog');
+
+            // A left/right sheet resizes along x, so the slider value axis is horizontal.
+            expect(handle).toHaveAttribute('aria-orientation', 'horizontal');
+            expect(handle).toHaveAttribute('aria-valuemin', '300');
+            expect(handle).toHaveAttribute('aria-valuemax', '640');
+            expect(handle).toHaveAttribute('aria-valuenow', '400');
+            expect(handle).toHaveAttribute('aria-valuetext', 'width 400 pixels');
+            expect(handle).toHaveAttribute('aria-controls', popup.id);
+            expect(handle).toHaveAttribute('tabindex', '0');
+        });
+
+        it('should resize with arrow keys following screen direction', async () => {
+            const rendered = render(<ResizableSheetTest />);
+            const handle = rendered.getByRole('slider');
+
+            handle.focus();
+            // A right-side sheet grows toward the viewport center (left).
+            await userEvent.keyboard('{ArrowLeft}');
+            expect(handle).toHaveAttribute('aria-valuetext', 'width 416 pixels');
+
+            await userEvent.keyboard('{ArrowRight}');
+            expect(handle).toHaveAttribute('aria-valuetext', 'width 400 pixels');
+        });
+
+        it('should jump to min/max size with Home/End and clamp within bounds', async () => {
+            const rendered = render(<ResizableSheetTest />);
+            const handle = rendered.getByRole('slider');
+
+            handle.focus();
+            await userEvent.keyboard('{Home}');
+            expect(handle).toHaveAttribute('aria-valuenow', '300');
+            expect(handle).toHaveAttribute('aria-valuetext', 'width 300 pixels');
+
+            // Already at min — shrinking further stays clamped.
+            await userEvent.keyboard('{ArrowRight}');
+            expect(handle).toHaveAttribute('aria-valuenow', '300');
+
+            await userEvent.keyboard('{End}');
+            expect(handle).toHaveAttribute('aria-valuenow', '640');
+        });
+
+        it('should block keyboard resizing and focus when disabled', async () => {
+            const rendered = render(<ResizableSheetTest disabled />);
+            const handle = rendered.getByRole('slider');
+
+            expect(handle).toHaveAttribute('aria-disabled', 'true');
+            expect(handle).toHaveAttribute('tabindex', '-1');
+
+            handle.focus();
+            await userEvent.keyboard('{ArrowLeft}');
+            expect(handle).toHaveAttribute('aria-valuetext', 'width 400 pixels');
+        });
+    });
+
     it('should not close when provided keepMounted and closed', async () => {
         const rendered = render(
             <Sheet.Root>
@@ -177,6 +237,24 @@ const SheetTest = (props: Sheet.Root.Props) => {
                 <Sheet.Footer>
                     <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
                 </Sheet.Footer>
+            </Sheet.Popup>
+        </Sheet.Root>
+    );
+};
+
+const ResizableSheetTest = ({ disabled }: { disabled?: boolean }) => {
+    return (
+        <Sheet.Root defaultOpen minSize={300} maxSize={640} defaultSize={400}>
+            <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
+
+            <Sheet.Popup>
+                <Sheet.ResizeHandle disabled={disabled} />
+                <Sheet.Header>
+                    <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
+                </Sheet.Header>
+                <Sheet.Body>
+                    <Sheet.Description>{DESCRIPTION_TEXT}</Sheet.Description>
+                </Sheet.Body>
             </Sheet.Popup>
         </Sheet.Root>
     );
