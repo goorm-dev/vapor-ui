@@ -106,7 +106,15 @@ type ScanTabBarProps = {
 
 function ScanTabBar({ selected, counts }: ScanTabBarProps) {
     return (
-        <Tabs.List $css={{ paddingInline: '$250', paddingTop: '$150' }}>
+        <Tabs.List
+            $css={{
+                paddingInline: '$250',
+                paddingTop: '$150',
+                overflowX: 'scroll',
+                overflowY: 'clip',
+            }}
+            style={{ scrollbarWidth: 'thin' }}
+        >
             {FRAME_TAB_KEYS.map((key) => {
                 const isActive = selected === key;
 
