@@ -135,16 +135,40 @@ describe('Sheet', () => {
     });
 
     describe('ResizeHandle', () => {
-        it('should expose slider semantics', () => {
-            const rendered = render(<ResizableSheetTest />);
+        // jsdom has no layout: emulate measurement by deriving offsetWidth from the
+        // inline width the hook writes, falling back to a 400px "rendered" popup.
+        const originalOffsetWidth = Object.getOwnPropertyDescriptor(
+            HTMLElement.prototype,
+            'offsetWidth',
+        )!;
+
+        beforeEach(() => {
+            Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+                configurable: true,
+                get(this: HTMLElement) {
+                    return parseFloat(this.style.width) || 400;
+                },
+            });
+        });
+
+        afterEach(() => {
+            Object.defineProperty(HTMLElement.prototype, 'offsetWidth', originalOffsetWidth);
+        });
+
+        it('should expose slider semantics from the popup CSS bounds', () => {
+            const rendered = render(
+                <ResizableSheetTest popupStyle={{ minWidth: 200, maxWidth: 500 }} />,
+            );
 
             const handle = rendered.getByRole('slider');
             const popup = rendered.getByRole('dialog');
 
             // A left/right sheet resizes along x, so the slider value axis is horizontal.
             expect(handle).toHaveAttribute('aria-orientation', 'horizontal');
-            expect(handle).toHaveAttribute('aria-valuemin', '300');
-            expect(handle).toHaveAttribute('aria-valuemax', '640');
+            // Bounds come from the popup's computed min/max-width, not props.
+            expect(handle).toHaveAttribute('aria-valuemin', '200');
+            expect(handle).toHaveAttribute('aria-valuemax', '500');
+            // Initial value is the measured popup size.
             expect(handle).toHaveAttribute('aria-valuenow', '400');
             expect(handle).toHaveAttribute('aria-valuetext', 'width 400 pixels');
             expect(handle).toHaveAttribute('aria-controls', popup.id);
@@ -165,7 +189,9 @@ describe('Sheet', () => {
         });
 
         it('should jump to min/max size with Home/End and clamp within bounds', async () => {
-            const rendered = render(<ResizableSheetTest />);
+            const rendered = render(
+                <ResizableSheetTest popupStyle={{ minWidth: 300, maxWidth: 640 }} />,
+            );
             const handle = rendered.getByRole('slider');
 
             handle.focus();
@@ -179,6 +205,34 @@ describe('Sheet', () => {
 
             await userEvent.keyboard('{End}');
             expect(handle).toHaveAttribute('aria-valuenow', '640');
+        });
+
+        it('should treat unresolved CSS bounds as unbounded — no valuemax, End is a no-op', async () => {
+            // No min/max on the popup: nothing resolves to px.
+            const rendered = render(<ResizableSheetTest />);
+            const handle = rendered.getByRole('slider');
+
+            expect(handle).toHaveAttribute('aria-valuemin', '0');
+            expect(handle).not.toHaveAttribute('aria-valuemax');
+
+            handle.focus();
+            // End has no target when the max is unbounded — size must not change.
+            await userEvent.keyboard('{End}');
+            expect(handle).toHaveAttribute('aria-valuenow', '400');
+        });
+
+        it('should clamp a drag at the popup CSS bounds', () => {
+            const rendered = render(
+                <ResizableSheetTest popupStyle={{ minWidth: 300, maxWidth: 500 }} />,
+            );
+            const handle = rendered.getByRole('slider');
+            const strip = handle.parentElement as HTMLElement;
+
+            // Right-side sheet: moving left grows. 400 + 200 → capped at maxWidth 500.
+            fireEvent.pointerDown(strip, { button: 0, pointerId: 1, clientX: 500 });
+            fireEvent.pointerMove(window, { pointerId: 1, clientX: 300 });
+            fireEvent.pointerUp(window, { pointerId: 1 });
+            expect(handle).toHaveAttribute('aria-valuenow', '500');
         });
 
         it('should block keyboard resizing and focus when disabled', async () => {
@@ -201,24 +255,6 @@ describe('Sheet', () => {
 
             expect(popup).toHaveAttribute('id', 'custom-panel');
             expect(handle).toHaveAttribute('aria-controls', 'custom-panel');
-        });
-
-        it('should clamp an out-of-range defaultSize into bounds', () => {
-            const rendered = render(<ResizableSheetTest defaultSize={1000} maxSize={640} />);
-
-            const handle = rendered.getByRole('slider');
-            expect(handle).toHaveAttribute('aria-valuenow', '640');
-        });
-
-        it('should normalize an inverted min/max range', () => {
-            const rendered = render(
-                <ResizableSheetTest minSize={500} maxSize={300} defaultSize={400} />,
-            );
-
-            const handle = rendered.getByRole('slider');
-            expect(handle).toHaveAttribute('aria-valuemin', '500');
-            expect(handle).toHaveAttribute('aria-valuemax', '500');
-            expect(handle).toHaveAttribute('aria-valuenow', '500');
         });
 
         it('should end the drag on pointercancel and stop tracking after', () => {
@@ -317,22 +353,18 @@ const SheetTest = (props: Sheet.Root.Props) => {
 
 const ResizableSheetTest = ({
     disabled,
-    minSize = 300,
-    maxSize = 640,
-    defaultSize = 400,
     popupId,
+    popupStyle,
 }: {
     disabled?: boolean;
-    minSize?: number;
-    maxSize?: number;
-    defaultSize?: number;
     popupId?: string;
+    popupStyle?: React.CSSProperties;
 }) => {
     return (
-        <Sheet.Root defaultOpen minSize={minSize} maxSize={maxSize} defaultSize={defaultSize}>
+        <Sheet.Root defaultOpen>
             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
 
-            <Sheet.Popup id={popupId}>
+            <Sheet.Popup id={popupId} style={popupStyle}>
                 <Sheet.ResizeHandle disabled={disabled} />
                 <Sheet.Header>
                     <Sheet.Title>{TITLE_TEXT}</Sheet.Title>

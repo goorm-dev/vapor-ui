@@ -24,8 +24,21 @@ export const overlay = componentStyle({
 
 const transformVar = createGlobalVar('transform', { inherits: false, syntax: '*' });
 
-const verticalStyle = { width: '100%', height: '80svh' };
-const horizontalStyle = { width: '18.75rem', height: '100%' };
+// Default resize bounds. ResizeHandle reads the computed min/max of the resized axis
+// (browsers resolve these to px), so consumer CSS overriding them re-bounds the drag.
+// The min keeps the sheet grabbable; the max stops it at the viewport edge.
+const verticalStyle = {
+    width: '100%',
+    height: '80svh',
+    minHeight: vars.size.dimension[800],
+    maxHeight: '100dvh',
+};
+const horizontalStyle = {
+    width: '18.75rem',
+    height: '100%',
+    minWidth: vars.size.dimension[800],
+    maxWidth: '100dvw',
+};
 
 const sideConfig = {
     top: {

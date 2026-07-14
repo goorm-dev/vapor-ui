@@ -21,7 +21,6 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import { resolveStyle } from '~/utils/stateful-props';
 import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Dialog } from '../dialog';
@@ -30,14 +29,6 @@ import * as styles from './sheet.css';
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Root
  * -----------------------------------------------------------------------------------------------*/
-
-type ResizeConfig = {
-    minSize: number;
-    maxSize: number;
-    defaultSize: number;
-};
-
-const DEFAULT_RESIZE: ResizeConfig = { minSize: 300, maxSize: 640, defaultSize: 300 };
 
 type RootContext = {
     open?: boolean;
@@ -48,8 +39,6 @@ type RootContext = {
     popupId: string;
     /** Lets Sheet.Popup surface a user-provided id back to the context so ResizeHandle's aria-controls stays in sync. */
     setPopupId: (id: string | undefined) => void;
-    /** Present only when a size prop was passed to Sheet.Root — keeps non-resizable sheets untouched. */
-    resize?: ResizeConfig;
 };
 
 const [SheetRootProvider, useSheetRootContext] = createContext<RootContext>({
@@ -64,9 +53,6 @@ export const SheetRoot = ({
     open: openProp,
     defaultOpen,
     onOpenChange,
-    minSize,
-    maxSize,
-    defaultSize,
     ...props
 }: SheetRoot.Props) => {
     const [open, setOpen] = useControlled({
@@ -114,22 +100,6 @@ export const SheetRoot = ({
     const [customId, setPopupId] = useState<string>();
     const popupId = customId ?? generatedId;
 
-    // Normalize the size range once, here, so Popup's inline size, the hook's clamped
-    // state, and aria-valuenow all agree. Without this, an out-of-range defaultSize would
-    // render the Popup at one size while the slider reports another.
-    const hasResizeProps = minSize != null || maxSize != null || defaultSize != null;
-    let resize: ResizeConfig | undefined;
-    if (hasResizeProps) {
-        const min = minSize ?? DEFAULT_RESIZE.minSize;
-        const max = Math.max(min, maxSize ?? DEFAULT_RESIZE.maxSize);
-        const preferred = defaultSize ?? minSize ?? DEFAULT_RESIZE.defaultSize;
-        resize = {
-            minSize: min,
-            maxSize: max,
-            defaultSize: Math.min(max, Math.max(min, preferred)),
-        };
-    }
-
     return (
         <SheetRootProvider
             value={{
@@ -140,7 +110,6 @@ export const SheetRoot = ({
                 popupRef,
                 popupId,
                 setPopupId,
-                resize,
             }}
         >
             <Dialog.Root open={open} onOpenChange={handleOpenChange} {...props} />
@@ -228,9 +197,9 @@ SheetPositionerPrimitive.displayName = 'Sheet.PositionerPrimitive';
 
 export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitive.Props>(
     (props, ref) => {
-        const { className, style, id: idProp, ...componentProps } = resolveStyles(props);
+        const { className, id: idProp, ...componentProps } = resolveStyles(props);
 
-        const { popupRef, popupId, setPopupId, resize } = useSheetRootContext();
+        const { popupRef, popupId, setPopupId } = useSheetRootContext();
         const { side = 'right' } = useSheetPositionerContext();
 
         const composedRef = composeRefs(popupRef, ref);
@@ -247,27 +216,11 @@ export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitiv
 
         const dataAttr = createDataAttributes({ side });
 
-        // Applying defaultSize inline (instead of after mount) avoids a first-frame jump
-        // from the CSS default size. Width for left/right, height for top/bottom.
-        const dimension = side === 'top' || side === 'bottom' ? 'height' : 'width';
-        const resizeStyle = resize ? { [dimension]: `${resize.defaultSize}px` } : undefined;
-
-        // Preserve a function-valued style prop: evaluate it against state, then layer
-        // the resize default underneath so user styles still win.
-        const mergedStyle =
-            typeof style === 'function'
-                ? (state: SheetPopupPrimitive.State) => ({
-                      ...resizeStyle,
-                      ...resolveStyle(style, state),
-                  })
-                : { ...resizeStyle, ...style };
-
         return (
             <BaseDialog.Popup
                 ref={composedRef}
                 id={id}
                 className={cn(styles.popup, className)}
-                style={mergedStyle}
                 {...dataAttr}
                 {...componentProps}
             />
@@ -331,16 +284,12 @@ export const SheetResizeHandle = forwardRef<HTMLDivElement, SheetResizeHandle.Pr
             ...componentProps
         } = resolveStyles(props);
 
-        const { popupRef, popupId, resize = DEFAULT_RESIZE } = useSheetRootContext();
+        const { popupRef, popupId } = useSheetRootContext();
         const { side = 'right' } = useSheetPositionerContext();
-        const { minSize, maxSize, defaultSize } = resize;
 
-        const { size, orientation, dimension, handleProps } = useResizeHandle({
+        const { size, bounds, orientation, dimension, handleProps } = useResizeHandle({
             targetRef: popupRef,
             side,
-            minSize,
-            maxSize,
-            initialSize: defaultSize,
             step,
             disabled,
         });
@@ -381,8 +330,9 @@ export const SheetResizeHandle = forwardRef<HTMLDivElement, SheetResizeHandle.Pr
                 'aria-orientation': orientation,
                 'aria-label': `Resize sheet ${dimensionLabel}`,
                 'aria-controls': popupId,
-                'aria-valuemin': minSize,
-                'aria-valuemax': maxSize,
+                'aria-valuemin': Math.round(bounds.min),
+                // Omit valuemax when the CSS max never resolved to px (unbounded).
+                ...(Number.isFinite(bounds.max) && { 'aria-valuemax': Math.round(bounds.max) }),
                 'aria-valuenow': Math.round(size),
                 'aria-valuetext': `${dimensionLabel} ${Math.round(size)} pixels`,
                 'aria-disabled': disabled || undefined,
@@ -454,23 +404,7 @@ SheetDescription.displayName = 'Sheet.Description';
 
 export namespace SheetRoot {
     export type State = {};
-    export interface Props extends Omit<Dialog.Root.Props, 'size'> {
-        /**
-         * Minimum size (px) the sheet can be resized to — width for left/right, height for top/bottom.
-         * Passing any size prop enables resizing via Sheet.ResizeHandle.
-         * @default 300
-         */
-        minSize?: number;
-        /**
-         * Maximum size (px) the sheet can be resized to — width for left/right, height for top/bottom.
-         * @default 640
-         */
-        maxSize?: number;
-        /**
-         * Size (px) the sheet opens at. Defaults to minSize.
-         */
-        defaultSize?: number;
-    }
+    export interface Props extends Omit<Dialog.Root.Props, 'size'> {}
 
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
     export type Actions = BaseDialog.Root.Actions;
