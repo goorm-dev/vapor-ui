@@ -28,13 +28,13 @@ src/
 - **`messages.ts`** — `postToUi` 래퍼 + 핸들러 등록(`on(type, handler)`) + `figma.ui.onmessage` 부착. 응답에 requestId echo.
 - **`handlers/`** — 메시지 종류별 핸들러.
 
-| 파일           | 책임                                                                   |
-| -------------- | ---------------------------------------------------------------------- |
-| `selection.ts` | 초기 emit + `selectionchange` 구독 + `request-selection` 응답          |
-| `scan.ts`      | in-flight scan cancel, `extract.ts` 호출, 결과 echo                    |
-| `extract.ts`   | 프레임 추출 (`extractFrame`)                                           |
-| `focus.ts`     | 노드 id 리스트 resolve, viewport 이동, missing 카운트 응답             |
-| `resize.ts`    | `figma.ui.resize` 적용. `commit===true`일 때만 `clientStorage` persist |
+| 파일           | 책임                                                          |
+| -------------- | ------------------------------------------------------------- |
+| `selection.ts` | 초기 emit + `selectionchange` 구독 + `request-selection` 응답 |
+| `scan.ts`      | in-flight scan cancel, `extract.ts` 호출, 결과 echo           |
+| `extract.ts`   | 프레임 추출 (`extractFrame`)                                  |
+| `focus.ts`     | 노드 id 리스트 resolve, viewport 이동, missing 카운트 응답    |
+| `resize.ts`    | `figma.ui.resize` 적용.                                       |
 
 새 메시지 추가 = `handlers/<name>.ts` 1개 + `code.ts`에 init 한 줄.
 
@@ -120,13 +120,13 @@ ui/
 
 ### `components/`
 
-| 파일                 | 책임                                                                              |
-| -------------------- | --------------------------------------------------------------------------------- |
-| `error-boundary.tsx` | 렌더 에러 catch + fallback UI + reset 버튼                                        |
-| `resize-handler.tsx` | rAF throttle drag. pointermove → 큐 → next frame flush, pointerup만 `commit:true` |
-| `toast.tsx`          | `toastManager` 싱글톤 + ToastProvider                                             |
-| `hero-panel.tsx`     | home/success 공통 패널 슬롯                                                       |
-| `loader.tsx`         | loading 스피너                                                                    |
+| 파일                 | 책임                                                   |
+| -------------------- | ------------------------------------------------------ |
+| `error-boundary.tsx` | 렌더 에러 catch + fallback UI + reset 버튼             |
+| `resize-handler.tsx` | rAF throttle drag. pointermove → 큐 → next frame flush |
+| `toast.tsx`          | `toastManager` 싱글톤 + ToastProvider                  |
+| `hero-panel.tsx`     | home/success 공통 패널 슬롯                            |
+| `loader.tsx`         | loading 스피너                                         |
 
 #### `components/violation-card/`
 
@@ -159,4 +159,4 @@ ui/
 - **extract-result → LLM 평가**: `features/messaging/bridge.handle` → `evaluate.evaluateExtract` → `features/llm.runLlmEvaluation` → `scanActions.result`.
 - **selection 변화**: plugin `figma.on('selectionchange')` → `handlers/selection` emit → `selectionStore` set → 모든 구독 컴포넌트.
 - **focus 토스트**: bridge가 `isActiveFocus()`로 stale 차단.
-- **resize**: UI rAF 큐 → pointermove 시 `commit` 없음 → sandbox apply only / pointerup commit → persist.
+- **resize**: UI rAF 큐 → sandbox apply
