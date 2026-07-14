@@ -9,8 +9,10 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 
 import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
 import { useRenderElement } from '~/hooks/use-render-element';
+import { useResizeHandle } from '~/hooks/use-resize-handle';
 import type { TransitionStatus } from '~/hooks/use-transition-status';
 import { useTransitionStatus } from '~/hooks/use-transition-status';
+import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
@@ -27,12 +29,23 @@ import * as styles from './sheet.css';
  * Sheet.Root
  * -----------------------------------------------------------------------------------------------*/
 
+type ResizeConfig = {
+    minSize: number;
+    maxSize: number;
+    defaultSize: number;
+};
+
+const DEFAULT_RESIZE: ResizeConfig = { minSize: 300, maxSize: 640, defaultSize: 300 };
+
 type RootContext = {
     open?: boolean;
     mounted: boolean;
     setMounted: React.Dispatch<React.SetStateAction<boolean>>;
     transitionStatus: TransitionStatus;
     popupRef: RefObject<HTMLDivElement | null>;
+    popupId: string;
+    /** Present only when a size prop was passed to Sheet.Root — keeps non-resizable sheets untouched. */
+    resize?: ResizeConfig;
 };
 
 const [SheetRootProvider, useSheetRootContext] = createContext<RootContext>({
@@ -47,6 +60,9 @@ export const SheetRoot = ({
     open: openProp,
     defaultOpen,
     onOpenChange,
+    minSize,
+    maxSize,
+    defaultSize,
     ...props
 }: SheetRoot.Props) => {
     const [open, setOpen] = useControlled({
@@ -88,8 +104,21 @@ export const SheetRoot = ({
         onOpenChange?.(open, eventDetails);
     };
 
+    const popupId = useVaporId();
+
+    const hasResizeProps = minSize != null || maxSize != null || defaultSize != null;
+    const resize: ResizeConfig | undefined = hasResizeProps
+        ? {
+              minSize: minSize ?? DEFAULT_RESIZE.minSize,
+              maxSize: maxSize ?? DEFAULT_RESIZE.maxSize,
+              defaultSize: defaultSize ?? minSize ?? DEFAULT_RESIZE.defaultSize,
+          }
+        : undefined;
+
     return (
-        <SheetRootProvider value={{ open, mounted, setMounted, transitionStatus, popupRef }}>
+        <SheetRootProvider
+            value={{ open, mounted, setMounted, transitionStatus, popupRef, popupId, resize }}
+        >
             <Dialog.Root open={open} onOpenChange={handleOpenChange} {...props} />
         </SheetRootProvider>
     );
@@ -175,19 +204,26 @@ SheetPositionerPrimitive.displayName = 'Sheet.PositionerPrimitive';
 
 export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitive.Props>(
     (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
+        const { className, style, ...componentProps } = resolveStyles(props);
 
-        const { popupRef } = useSheetRootContext();
+        const { popupRef, popupId, resize } = useSheetRootContext();
         const { side = 'right' } = useSheetPositionerContext();
 
         const composedRef = composeRefs(popupRef, ref);
 
         const dataAttr = createDataAttributes({ side });
 
+        // Applying defaultSize inline (instead of after mount) avoids a first-frame jump
+        // from the CSS default size. Width for left/right, height for top/bottom.
+        const dimension = side === 'top' || side === 'bottom' ? 'height' : 'width';
+        const resizeStyle = resize ? { [dimension]: `${resize.defaultSize}px` } : undefined;
+
         return (
             <BaseDialog.Popup
                 ref={composedRef}
+                id={popupId}
                 className={cn(styles.popup, className)}
+                style={{ ...resizeStyle, ...style }}
                 {...dataAttr}
                 {...componentProps}
             />
@@ -232,6 +268,94 @@ export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     },
 );
 SheetPopup.displayName = 'Sheet.Popup';
+
+/* -------------------------------------------------------------------------------------------------
+ * Sheet.ResizeHandle
+ * -----------------------------------------------------------------------------------------------*/
+
+const RESIZE_STEP = 16; // px per arrow key press or step button (spec default)
+
+export const SheetResizeHandle = forwardRef<HTMLDivElement, SheetResizeHandle.Props>(
+    (props, ref) => {
+        const {
+            render,
+            step = RESIZE_STEP,
+            disabled = false,
+            className,
+            onPointerDown,
+            onKeyDown,
+            ...componentProps
+        } = resolveStyles(props);
+
+        const { popupRef, popupId, resize = DEFAULT_RESIZE } = useSheetRootContext();
+        const { side = 'right' } = useSheetPositionerContext();
+        const { minSize, maxSize, defaultSize } = resize;
+
+        const { size, orientation, dimension, handleProps } = useResizeHandle({
+            targetRef: popupRef,
+            side,
+            minSize,
+            maxSize,
+            initialSize: defaultSize,
+            step,
+            disabled,
+        });
+
+        const dimensionLabel = dimension;
+
+        // Keyboard semantics live on the inner grip; the outer strip is drag-only.
+        const gripRef = useRef<HTMLDivElement>(null);
+
+        const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+            onPointerDown?.(event);
+            handleProps.onPointerDown(event);
+            // Drag can start anywhere on the strip — move focus to the keyboard grip.
+            gripRef.current?.focus({ preventScroll: true });
+        };
+
+        const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+            onKeyDown?.(event);
+            handleProps.onKeyDown(event);
+        };
+
+        const sideProps = {
+            'data-side': side,
+            ...(disabled && { 'data-disabled': '' }),
+        };
+
+        // The grip is the public element: user props (render/className/style/ref/...)
+        // land here so the affordance is customizable like any other sub-component.
+        // The outer strip stays an internal drag surface.
+        const grip = useRenderElement({
+            ref: [ref, gripRef],
+            render: render || <div />,
+            state: { side, disabled },
+            props: {
+                role: 'slider',
+                'aria-orientation': orientation,
+                'aria-label': `Resize sheet ${dimensionLabel}`,
+                'aria-controls': popupId,
+                'aria-valuemin': minSize,
+                'aria-valuemax': maxSize,
+                'aria-valuenow': Math.round(size),
+                'aria-valuetext': `${dimensionLabel} ${Math.round(size)} pixels`,
+                'aria-disabled': disabled || undefined,
+                tabIndex: disabled ? -1 : 0,
+                ...sideProps,
+                onKeyDown: handleKeyDown,
+                className: cn(styles.resizeHandleGrip, className),
+                ...componentProps,
+            },
+        });
+
+        return (
+            <div {...sideProps} onPointerDown={handlePointerDown} className={styles.resizeHandle}>
+                {grip}
+            </div>
+        );
+    },
+);
+SheetResizeHandle.displayName = 'Sheet.ResizeHandle';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Header
@@ -284,7 +408,23 @@ SheetDescription.displayName = 'Sheet.Description';
 
 export namespace SheetRoot {
     export type State = {};
-    export type Props = Omit<Dialog.Root.Props, 'size'>;
+    export interface Props extends Omit<Dialog.Root.Props, 'size'> {
+        /**
+         * Minimum size (px) the sheet can be resized to — width for left/right, height for top/bottom.
+         * Passing any size prop enables resizing via Sheet.ResizeHandle.
+         * @default 300
+         */
+        minSize?: number;
+        /**
+         * Maximum size (px) the sheet can be resized to — width for left/right, height for top/bottom.
+         * @default 640
+         */
+        maxSize?: number;
+        /**
+         * Size (px) the sheet opens at. Defaults to minSize.
+         */
+        defaultSize?: number;
+    }
 
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
     export type Actions = BaseDialog.Root.Actions;
@@ -349,6 +489,29 @@ export interface SheetPopupProps extends SheetPopupPrimitive.Props {
 export namespace SheetPopup {
     export type State = SheetPopupPrimitive.State;
     export type Props = SheetPopupProps;
+}
+
+export interface SheetResizeHandleState {
+    /** The side of the sheet relative to the viewport. */
+    side: 'top' | 'right' | 'bottom' | 'left';
+
+    /** Whether resizing is disabled. */
+    disabled: boolean;
+}
+
+export namespace SheetResizeHandle {
+    export type State = SheetResizeHandleState;
+    export interface Props extends VaporUIComponentProps<'div', State> {
+        /**
+         * Pixels adjusted per arrow-key press or step-menu button.
+         * @default 16
+         */
+        step?: number;
+        /**
+         * Blocks drag, keyboard, and tap resizing.
+         */
+        disabled?: boolean;
+    }
 }
 
 export namespace SheetHeader {
