@@ -1,0 +1,11 @@
+{
+    "extends": "./.wxt/tsconfig.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "isolatedModules": true,
+        "jsx": "react-jsx",
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "preserveWatchOutput": true
+    }
+}

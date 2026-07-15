@@ -1,0 +1,5 @@
+.output
+.wxt
+stats.html
+stats-*.json
+web-ext.config.ts

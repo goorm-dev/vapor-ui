@@ -1,0 +1,36 @@
+{
+    "name": "extension",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "wxt build",
+        "compile": "tsc --noEmit",
+        "dev": "wxt",
+        "postinstall": "wxt prepare",
+        "lint": "eslint .",
+        "test": "vitest --run",
+        "typecheck": "tsc --noEmit",
+        "zip": "wxt zip"
+    },
+    "dependencies": {
+        "@vapor-ui/core": "workspace:*",
+        "@webext-core/messaging": "^3.0.2",
+        "@wxt-dev/module-react": "^1.2.2",
+        "idb": "^8.0.3",
+        "react": "catalog:",
+        "react-dom": "catalog:",
+        "wxt": "^0.20.27"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/react": "catalog:",
+        "@types/react-dom": "catalog:",
+        "eslint": "catalog:",
+        "happy-dom": "^20.9.0",
+        "typescript": "catalog:",
+        "vite": "^7.3.5",
+        "vitest": "^3.2.4"
+    }
+}
