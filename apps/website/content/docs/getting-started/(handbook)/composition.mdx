@@ -1,6 +1,73 @@
 ---
 title: Composition
-description: Vapor UI 컴포넌트는 다양한 구성 패턴을 지원하여 유연한 UI 구성이 가능합니다. 이 섹션에서는 Vapor UI 컴포넌트의 조합 패턴과 활용 방법에 대해 설명합니다.
+description: 기본 props로 해결되지 않을 때, Vapor UI 컴포넌트의 구조를 직접 제어하는 방법을 설명합니다.
 ---
 
-준비 중입니다.
+기본 props로 해결되지 않을 때 두 가지 방법으로 커스터마이징할 수 있습니다. Primitive는 Vapor UI 컴포넌트의 내부 구조를 이루는 최소 단위 컴포넌트입니다.
+
+- **Primitive가 없는 컴포넌트** (`Button`, `Badge`, `TextInput` 등): `render` prop으로 커스터마이징합니다.
+- **Primitive가 있는 컴포넌트** (`Dialog`, `Sheet`, `Tabs` 등): Primitive를 직접 조합해 내부 구조를 제어합니다.
+
+컴포넌트에 Primitive가 있는지 확인하려면 각 컴포넌트 문서의 Props Table에서 `XxxPrimitive` 항목을 찾으세요.
+
+## render prop으로 렌더링 제어하기
+
+`render` prop은 두 가지 형태로 사용할 수 있습니다.
+
+**ReactElement 형태** — HTML 태그나 외부 컴포넌트로 교체할 때 사용합니다.
+
+```tsx
+import { Button, Card, Dialog } from '@vapor-ui/core';
+import Link from 'next/link';
+
+// div → article로 교체
+<Card.Root render={<article />} />
+
+// Next.js Link로 교체
+<Button render={<Link href="/home" />}>홈으로</Button>
+```
+
+**함수 형태** — 컴포넌트의 내부 state에 따라 렌더링 내용을 동적으로 바꿀 때 사용합니다. 함수는 `(props, state)` 두 인자를 받습니다.
+
+```tsx
+import { Switch } from '@vapor-ui/core';
+import { DarkIcon, LightIcon } from '@vapor-ui/icons';
+
+export default function Example() {
+    return (
+        <Switch.Root
+            render={(props, state) => (
+                <span {...props}>{state.checked ? <DarkIcon /> : <LightIcon />}</span>
+            )}
+        />
+    );
+}
+```
+
+## Primitive 직접 조합하기
+
+Primitive를 직접 조합하면 Portal 위치, Overlay 렌더링 순서 등 레이어 구조 전체를 제어할 수 있습니다.
+
+```tsx
+import { Button, Dialog } from '@vapor-ui/core';
+
+export default function Example() {
+    return (
+        <Dialog.Root>
+            <Dialog.Trigger>열기</Dialog.Trigger>
+            <Dialog.PortalPrimitive>
+                <Dialog.OverlayPrimitive />
+                <Dialog.PopupPrimitive>
+                    <Dialog.Header>
+                        <Dialog.Title>제목</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>내용</Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.Close render={<Button>닫기</Button>} />
+                    </Dialog.Footer>
+                </Dialog.PopupPrimitive>
+            </Dialog.PortalPrimitive>
+        </Dialog.Root>
+    );
+}
+```

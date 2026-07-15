@@ -12,21 +12,26 @@ export default function SheetSide() {
                 </Text>
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button variant="outline" />}>Right</Sheet.Trigger>
-                    <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="right" />}>
-                        <Box className="absolute top-2 right-2">
-                            <Sheet.Close aria-label="Close sheet" className="flex">
-                                <CloseOutlineIcon />
-                            </Sheet.Close>
-                        </Box>
-                        <Sheet.Header>
-                            <Sheet.Title>우측 Sheet</Sheet.Title>
-                        </Sheet.Header>
-                        <Sheet.Body>
-                            <Sheet.Description>
-                                화면 우측에서 슬라이드됩니다. (기본값)
-                            </Sheet.Description>
-                        </Sheet.Body>
-                    </Sheet.Popup>
+                    <Sheet.PortalPrimitive>
+                        <Sheet.OverlayPrimitive />
+                        <Sheet.PositionerPrimitive side="right">
+                            <Sheet.PopupPrimitive>
+                                <Box className="absolute top-2 right-2">
+                                    <Sheet.Close aria-label="Close sheet" className="flex">
+                                        <CloseOutlineIcon />
+                                    </Sheet.Close>
+                                </Box>
+                                <Sheet.Header>
+                                    <Sheet.Title>우측 Sheet</Sheet.Title>
+                                </Sheet.Header>
+                                <Sheet.Body>
+                                    <Sheet.Description>
+                                        화면 우측에서 슬라이드됩니다. (기본값)
+                                    </Sheet.Description>
+                                </Sheet.Body>
+                            </Sheet.PopupPrimitive>
+                        </Sheet.PositionerPrimitive>
+                    </Sheet.PortalPrimitive>
                 </Sheet.Root>
             </HStack>
             <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -35,19 +40,26 @@ export default function SheetSide() {
                 </Text>
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button variant="outline" />}>Left</Sheet.Trigger>
-                    <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="left" />}>
-                        <Box className="absolute top-2 right-2">
-                            <Sheet.Close aria-label="Close sheet" className="flex">
-                                <CloseOutlineIcon />
-                            </Sheet.Close>
-                        </Box>
-                        <Sheet.Header>
-                            <Sheet.Title>좌측 Sheet</Sheet.Title>
-                        </Sheet.Header>
-                        <Sheet.Body>
-                            <Sheet.Description>화면 좌측에서 슬라이드됩니다.</Sheet.Description>
-                        </Sheet.Body>
-                    </Sheet.Popup>
+                    <Sheet.PortalPrimitive>
+                        <Sheet.OverlayPrimitive />
+                        <Sheet.PositionerPrimitive side="left">
+                            <Sheet.PopupPrimitive>
+                                <Box className="absolute top-2 right-2">
+                                    <Sheet.Close aria-label="Close sheet" className="flex">
+                                        <CloseOutlineIcon />
+                                    </Sheet.Close>
+                                </Box>
+                                <Sheet.Header>
+                                    <Sheet.Title>좌측 Sheet</Sheet.Title>
+                                </Sheet.Header>
+                                <Sheet.Body>
+                                    <Sheet.Description>
+                                        화면 좌측에서 슬라이드됩니다.
+                                    </Sheet.Description>
+                                </Sheet.Body>
+                            </Sheet.PopupPrimitive>
+                        </Sheet.PositionerPrimitive>
+                    </Sheet.PortalPrimitive>
                 </Sheet.Root>
             </HStack>
             <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -56,19 +68,26 @@ export default function SheetSide() {
                 </Text>
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button variant="outline" />}>Top</Sheet.Trigger>
-                    <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="top" />}>
-                        <Box className="absolute top-2 right-2">
-                            <Sheet.Close aria-label="Close sheet" className="flex">
-                                <CloseOutlineIcon />
-                            </Sheet.Close>
-                        </Box>
-                        <Sheet.Header>
-                            <Sheet.Title>상단 Sheet</Sheet.Title>
-                        </Sheet.Header>
-                        <Sheet.Body>
-                            <Sheet.Description>화면 상단에서 슬라이드됩니다.</Sheet.Description>
-                        </Sheet.Body>
-                    </Sheet.Popup>
+                    <Sheet.PortalPrimitive>
+                        <Sheet.OverlayPrimitive />
+                        <Sheet.PositionerPrimitive side="top">
+                            <Sheet.PopupPrimitive>
+                                <Box className="absolute top-2 right-2">
+                                    <Sheet.Close aria-label="Close sheet" className="flex">
+                                        <CloseOutlineIcon />
+                                    </Sheet.Close>
+                                </Box>
+                                <Sheet.Header>
+                                    <Sheet.Title>상단 Sheet</Sheet.Title>
+                                </Sheet.Header>
+                                <Sheet.Body>
+                                    <Sheet.Description>
+                                        화면 상단에서 슬라이드됩니다.
+                                    </Sheet.Description>
+                                </Sheet.Body>
+                            </Sheet.PopupPrimitive>
+                        </Sheet.PositionerPrimitive>
+                    </Sheet.PortalPrimitive>
                 </Sheet.Root>
             </HStack>
             <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -77,19 +96,26 @@ export default function SheetSide() {
                 </Text>
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button variant="outline" />}>Bottom</Sheet.Trigger>
-                    <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="bottom" />}>
-                        <Box className="absolute top-2 right-2">
-                            <Sheet.Close aria-label="Close sheet" className="flex">
-                                <CloseOutlineIcon />
-                            </Sheet.Close>
-                        </Box>
-                        <Sheet.Header>
-                            <Sheet.Title>하단 Sheet</Sheet.Title>
-                        </Sheet.Header>
-                        <Sheet.Body>
-                            <Sheet.Description>화면 하단에서 슬라이드됩니다.</Sheet.Description>
-                        </Sheet.Body>
-                    </Sheet.Popup>
+                    <Sheet.PortalPrimitive>
+                        <Sheet.OverlayPrimitive />
+                        <Sheet.PositionerPrimitive side="bottom">
+                            <Sheet.PopupPrimitive>
+                                <Box className="absolute top-2 right-2">
+                                    <Sheet.Close aria-label="Close sheet" className="flex">
+                                        <CloseOutlineIcon />
+                                    </Sheet.Close>
+                                </Box>
+                                <Sheet.Header>
+                                    <Sheet.Title>하단 Sheet</Sheet.Title>
+                                </Sheet.Header>
+                                <Sheet.Body>
+                                    <Sheet.Description>
+                                        화면 하단에서 슬라이드됩니다.
+                                    </Sheet.Description>
+                                </Sheet.Body>
+                            </Sheet.PopupPrimitive>
+                        </Sheet.PositionerPrimitive>
+                    </Sheet.PortalPrimitive>
                 </Sheet.Root>
             </HStack>
         </VStack>

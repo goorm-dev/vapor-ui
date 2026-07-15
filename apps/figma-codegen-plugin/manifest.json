@@ -5,9 +5,7 @@
     "main": "code.js",
     "editorType": ["dev"],
     "capabilities": ["codegen"],
-    "codegenLanguages": [
-        {"label": "React", "value": "react"}
-    ],
+    "codegenLanguages": [{ "label": "React", "value": "react" }],
     "documentAccess": "dynamic-page",
     "networkAccess": {
         "allowedDomains": ["none"]

@@ -1,4 +1,4 @@
-name: "Visual Regression"
+name: 'Visual Regression'
 
 on:
     workflow_dispatch:
@@ -18,7 +18,7 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    REPORT_PATH: ""
+    REPORT_PATH: ''
     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
     TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
@@ -65,8 +65,11 @@ jobs:
             - name: Install Playwright Browsers
               run: pnpm core exec playwright install ${{ matrix.shard.project }}
 
+            - name: Build Storybook(cached)
+              run: pnpm build:storybook
+
             - name: Run Playwright tests
-              run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
+              run: pnpm core test:regressions --project="${{ matrix.shard.name }}"
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}

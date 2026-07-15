@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 import { Sheet } from '.';
-import { Box } from '../box';
 import { Button } from '../button';
+import { IconButton } from '../icon-button';
 import { VStack } from '../v-stack';
 
 export default {
@@ -29,7 +29,10 @@ export const Default: SheetStory = {
                         portalElement={<Sheet.PortalPrimitive keepMounted={true} />}
                         positionerElement={<Sheet.PositionerPrimitive side={side} />}
                     >
-                        <Box
+                        <IconButton
+                            render={<Sheet.Close />}
+                            variant="ghost"
+                            colorPalette="secondary"
                             aria-label="Close sheet"
                             $css={{
                                 position: 'absolute',
@@ -37,10 +40,9 @@ export const Default: SheetStory = {
                                 top: '1rem',
                                 right: '1rem',
                             }}
-                            render={<Sheet.Close />}
                         >
                             <CloseOutlineIcon />
-                        </Box>
+                        </IconButton>
                         <Sheet.Header>
                             <Sheet.Title>Sheet Title</Sheet.Title>
                         </Sheet.Header>
@@ -55,7 +57,10 @@ export const Default: SheetStory = {
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>
                     <Sheet.Popup>
-                        <Box
+                        <IconButton
+                            render={<Sheet.Close />}
+                            variant="ghost"
+                            colorPalette="secondary"
                             aria-label="Close sheet"
                             $css={{
                                 position: 'absolute',
@@ -63,10 +68,9 @@ export const Default: SheetStory = {
                                 top: '1rem',
                                 right: '1rem',
                             }}
-                            render={<Sheet.Close />}
                         >
                             <CloseOutlineIcon />
-                        </Box>
+                        </IconButton>
                         <Sheet.Header>
                             <Sheet.Title>Sheet Title</Sheet.Title>
                         </Sheet.Header>
@@ -90,20 +94,20 @@ export const TestBed: StoryObj<Sheet.Root.Props> = {
                 <Sheet.Root open={true} {...args}>
                     <Sheet.Trigger render={<Button variant="outline" />}>Open Sheet</Sheet.Trigger>
                     <Sheet.Popup>
-                        <Box
-                            aria-label="Close sheet"
-                            $css={{
-                                position: 'absolute',
-                                display: 'flex',
-                                top: '1rem',
-                                right: '1rem',
-                            }}
-                            render={<Sheet.Close />}
+                        <Sheet.Header
+                            $css={{ justifyContent: 'space-between', alignItems: 'center' }}
                         >
-                            <CloseOutlineIcon />
-                        </Box>
-                        <Sheet.Header>
                             <Sheet.Title>Sheet Title</Sheet.Title>
+
+                            <IconButton
+                                render={<Sheet.Close />}
+                                size="sm"
+                                variant="ghost"
+                                colorPalette="secondary"
+                                aria-label="Close sheet"
+                            >
+                                <CloseOutlineIcon />
+                            </IconButton>
                         </Sheet.Header>
                         <Sheet.Body>
                             <Sheet.Description>Sheet content goes here.</Sheet.Description>

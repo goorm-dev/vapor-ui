@@ -13,11 +13,11 @@ export default function TooltipOffset() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>0px</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={<Tooltip.PositionerPrimitive sideOffset={0} />}
-                        >
-                            거리 0px
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive sideOffset={0}>
+                                <Tooltip.PopupPrimitive>거리 0px</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
                 <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -26,11 +26,11 @@ export default function TooltipOffset() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>10px</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={<Tooltip.PositionerPrimitive sideOffset={10} />}
-                        >
-                            거리 10px
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive sideOffset={10}>
+                                <Tooltip.PopupPrimitive>거리 10px</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
                 <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -39,11 +39,11 @@ export default function TooltipOffset() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>20px</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={<Tooltip.PositionerPrimitive sideOffset={20} />}
-                        >
-                            거리 20px
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive sideOffset={20}>
+                                <Tooltip.PopupPrimitive>거리 20px</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
             </VStack>
@@ -58,11 +58,11 @@ export default function TooltipOffset() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>-20px</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={<Tooltip.PositionerPrimitive alignOffset={-20} />}
-                        >
-                            정렬 오프셋 -20px
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive alignOffset={-20}>
+                                <Tooltip.PopupPrimitive>정렬 오프셋 -20px</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
                 <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -71,11 +71,11 @@ export default function TooltipOffset() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>0px</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={<Tooltip.PositionerPrimitive alignOffset={0} />}
-                        >
-                            정렬 오프셋 0px
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive alignOffset={0}>
+                                <Tooltip.PopupPrimitive>정렬 오프셋 0px</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
                 <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -84,11 +84,11 @@ export default function TooltipOffset() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>+20px</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={<Tooltip.PositionerPrimitive alignOffset={20} />}
-                        >
-                            정렬 오프셋 +20px
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive alignOffset={20}>
+                                <Tooltip.PopupPrimitive>정렬 오프셋 +20px</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
             </VStack>

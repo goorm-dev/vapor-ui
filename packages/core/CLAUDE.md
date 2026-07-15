@@ -49,33 +49,33 @@ Follow the [Conventional Commits specification](https://www.conventionalcommits.
 
 - **`feat`**: Add a new feature, such as a component or prop. This will often pair with a **`minor` changeset** when it introduces new user-facing capability.
 
-  Example:
+    Example:
 
-  ```bash
-  feat(Avatar): add new Avatar component
-  feat(Button): implement iconPosition prop for icon placement
-  ```
+    ```bash
+    feat(Avatar): add new Avatar component
+    feat(Button): implement iconPosition prop for icon placement
+    ```
 
 - **`fix`**: Fix a bug. This will often pair with a **`patch` changeset** when it corrects behavior without introducing a breaking API change.
 
-  Example:
+    Example:
 
-  ```bash
-  fix(Input): correct placeholder color in disabled state
-  fix(Modal): resolve issue where modal content is not scrollable
-  ```
+    ```bash
+    fix(Input): correct placeholder color in disabled state
+    fix(Modal): resolve issue where modal content is not scrollable
+    ```
 
 - **`BREAKING CHANGE`**: Introduce an API-breaking change. Add `!` after the type or specify `BREAKING CHANGE:` in the footer. This should pair with a **`major` changeset**.
 
-  Example:
+    Example:
 
-  ```text
-  feat(Button)!: change 'kind' prop to 'variant' for clarity
+    ```text
+    feat(Button)!: change 'kind' prop to 'variant' for clarity
 
-  BREAKING CHANGE: Button component's `kind` prop has been renamed to `variant`.
-  Migrate `kind="primary"` to `variant="solid"`.
-  Migrate `kind="secondary"` to `variant="outline"`.
-  ```
+    BREAKING CHANGE: Button component's `kind` prop has been renamed to `variant`.
+    Migrate `kind="primary"` to `variant="solid"`.
+    Migrate `kind="secondary"` to `variant="outline"`.
+    ```
 
 ### 2.2.2. Other Commit Types
 
@@ -114,23 +114,23 @@ Follow the [Conventional Commits specification](https://www.conventionalcommits.
 
 - **Use absolute paths**: Prefer `tsconfig.json` path aliases such as `~/*` over deep relative imports.
 
-  ```tsx
-  import { createContext } from '~/libs/create-context';
-  ```
+    ```tsx
+    import { createContext } from '~/libs/create-context';
+    ```
 
 - **Alias primitive dependencies clearly**: Current components are primarily built on **Base UI**, and imports commonly use explicit aliases such as:
 
-  ```tsx
-  import { Button as BaseButton } from '@base-ui/react/button';
-  import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-  ```
+    ```tsx
+    import { Button as BaseButton } from '@base-ui/react/button';
+    import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+    ```
 
 - **Prefer named exports** over `default export`.
 
 - **Export prop types following the local module pattern**:
-  - Many components expose namespace-scoped types such as `Button.Props`, `DialogRoot.Props`, and `RadioGroupRoot.Props`.
-  - Some modules also export direct type names such as `PaginationRootProps`.
-  - Preserve the existing public API style of the module instead of forcing a single naming convention across all components.
+    - Many components expose namespace-scoped types such as `Button.Props`, `DialogRoot.Props`, and `RadioGroupRoot.Props`.
+    - Some modules also export direct type names such as `PaginationRootProps`.
+    - Preserve the existing public API style of the module instead of forcing a single naming convention across all components.
 
 ## 3.2. Naming Conventions
 
@@ -150,15 +150,15 @@ Follow the [Conventional Commits specification](https://www.conventionalcommits.
 
 - **Early Return**: When nesting exceeds 3 levels, use early returns to improve readability.
 
-  ```tsx
-  function processUser(user: User) {
-      if (!user) return null;
-      if (!user.isActive) return null;
-      if (!user.permissions.canEdit) return null;
+    ```tsx
+    function processUser(user: User) {
+        if (!user) return null;
+        if (!user.isActive) return null;
+        if (!user.permissions.canEdit) return null;
 
-      return editUser(user);
-  }
-  ```
+        return editUser(user);
+    }
+    ```
 
 # 4. TypeScript
 
@@ -217,57 +217,51 @@ Keep related code such as implementation, styles, stories, and tests in the comp
 ### 5.3.2. Entry Point Strategy
 
 - **Standalone component entrypoint (`src/components/[component]/index.ts`)**
-  - Re-export the implementation directly.
-  - Public usage remains standalone, for example `<Button />`, `<TextInput />`.
+    - Re-export the implementation directly.
+    - Public usage remains standalone, for example `<Button />`, `<TextInput />`.
 
-  ```tsx
-  export * from './button';
-  ```
+    ```tsx
+    export * from './button';
+    ```
 
 - **Compound component entrypoint (`src/components/[component]/index.ts`)**
-  - Export a namespace from `index.parts.ts`.
+    - Export a namespace from `index.parts.ts`.
 
-  ```tsx
-  export * as Dialog from './index.parts';
-  ```
+    ```tsx
+    export * as Dialog from './index.parts';
+    ```
 
 - **Compound component parts file (`src/components/[component]/index.parts.ts`)**
-  - Re-export internal implementation symbols as public namespace members such as `Root`, `Trigger`, `Popup`, and `Close`.
+    - Re-export internal implementation symbols as public namespace members such as `Root`, `Trigger`, `Popup`, and `Close`.
 
-  ```tsx
-  export {
-      DialogRoot as Root,
-      DialogTrigger as Trigger,
-      DialogPopup as Popup,
-  } from './dialog';
-  ```
+    ```tsx
+    export { DialogRoot as Root, DialogTrigger as Trigger, DialogPopup as Popup } from './dialog';
+    ```
 
 - **Component group entrypoint (`src/components/index.ts`)**
-  - This file is not used. If it exists, remove it.
+    - This file is not used. If it exists, remove it.
 
 - **Library root entrypoint (`src/index.ts`)**
-  - Re-export each component entrypoint.
+    - Re-export each component entrypoint.
 
 - **Public API example**:
 
-  ```tsx
-  import { Button, Dialog, RadioGroup, TextInput } from '@vapor-ui/core';
+    ```tsx
+    import { Button, Dialog, RadioGroup, TextInput } from '@vapor-ui/core';
 
-  <Button variant="solid">Click me</Button>;
+    <Button variant="solid">Click me</Button>;
 
-  <TextInput placeholder="Email" />;
+    <TextInput placeholder="Email" />;
 
-  <Dialog.Root>
-      <Dialog.Trigger>Open</Dialog.Trigger>
-      <Dialog.Popup>
-          <Dialog.Close>Close</Dialog.Close>
-      </Dialog.Popup>
-  </Dialog.Root>;
+    <Dialog.Root>
+        <Dialog.Trigger>Open</Dialog.Trigger>
+        <Dialog.Popup>
+            <Dialog.Close>Close</Dialog.Close>
+        </Dialog.Popup>
+    </Dialog.Root>;
 
-  <RadioGroup.Root>
-      {/* ... */}
-  </RadioGroup.Root>;
-  ```
+    <RadioGroup.Root>{/* ... */}</RadioGroup.Root>;
+    ```
 
 # 6. React Components
 
@@ -335,28 +329,29 @@ Keep related code such as implementation, styles, stories, and tests in the comp
 ### 6.13.2. Prop Type Definitions
 
 - **Standard HTML element props**:
-  - Use `React.ComponentPropsWithoutRef<ElementType>` or
-  - `React.ComponentPropsWithRef<ElementType>`.
+    - Use `React.ComponentPropsWithoutRef<ElementType>` or
+    - `React.ComponentPropsWithRef<ElementType>`.
 
 - **Base UI component props**:
-  - Prefer utility types derived from the primitive, for example `VComponentProps<typeof BaseDialog.Trigger>` or `ComponentPropsWithoutRef<typeof BaseDialog.Root>`.
-  - This keeps declarations concise and resilient to primitive updates.
+    - Prefer utility types derived from the primitive, for example `VComponentProps<typeof BaseDialog.Trigger>` or `ComponentPropsWithoutRef<typeof BaseDialog.Root>`.
+    - This keeps declarations concise and resilient to primitive updates.
 
-  ```tsx
-  import type { ComponentPropsWithoutRef } from 'react';
-  import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+    ```tsx
+    import type { ComponentPropsWithoutRef } from 'react';
 
-  type DialogPrimitiveProps = Omit<
-      ComponentPropsWithoutRef<typeof BaseDialog.Root>,
-      'disablePointerDismissal'
-  >;
+    import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 
-  export namespace DialogRoot {
-      export interface Props extends DialogPrimitiveProps {
-          closeOnClickOverlay?: boolean;
-      }
-  }
-  ```
+    type DialogPrimitiveProps = Omit<
+        ComponentPropsWithoutRef<typeof BaseDialog.Root>,
+        'disablePointerDismissal'
+    >;
+
+    export namespace DialogRoot {
+        export interface Props extends DialogPrimitiveProps {
+            closeOnClickOverlay?: boolean;
+        }
+    }
+    ```
 
 ### 6.13.3. Avoid `defaultProps`
 
@@ -374,22 +369,22 @@ Use the compound pattern to support flexible UI composition when a component has
 - Re-export the namespace from `index.ts`.
 - Do **not** assume `Object.assign` is the standard export mechanism in this repository. The current implementation standard is namespace re-export through `index.parts.ts`.
 
-  ```tsx
-  // dialog/index.ts
-  export * as Dialog from './index.parts';
-  ```
+    ```tsx
+    // dialog/index.ts
+    export * as Dialog from './index.parts';
+    ```
 
-  ```tsx
-  // dialog/index.parts.ts
-  export {
-      DialogRoot as Root,
-      DialogTrigger as Trigger,
-      DialogPortalPrimitive as PortalPrimitive,
-      DialogOverlayPrimitive as OverlayPrimitive,
-      DialogPopup as Popup,
-      DialogClose as Close,
-  } from './dialog';
-  ```
+    ```tsx
+    // dialog/index.parts.ts
+    export {
+        DialogRoot as Root,
+        DialogTrigger as Trigger,
+        DialogPortalPrimitive as PortalPrimitive,
+        DialogOverlayPrimitive as OverlayPrimitive,
+        DialogPopup as Popup,
+        DialogClose as Close,
+    } from './dialog';
+    ```
 
 ### 6.14.2. Type Grouping
 

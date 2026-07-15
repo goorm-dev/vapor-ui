@@ -38,7 +38,13 @@ describe('RadioGroup', () => {
         await userEvent.click(firstItem);
 
         expect(onValueChange).toHaveBeenCalledOnce();
-        expect(onValueChange).toHaveBeenCalledWith('option1');
+        expect(onValueChange).toHaveBeenCalledWith(
+            'option1',
+            expect.objectContaining({
+                reason: expect.any(String),
+                event: expect.any(Event),
+            }),
+        );
     });
 
     it('should invoke onValueChange when an label is clicked', async () => {
@@ -49,7 +55,13 @@ describe('RadioGroup', () => {
         await userEvent.click(item);
 
         expect(onValueChange).toHaveBeenCalledOnce();
-        expect(onValueChange).toHaveBeenCalledWith('option1');
+        expect(onValueChange).toHaveBeenCalledWith(
+            'option1',
+            expect.objectContaining({
+                reason: expect.any(String),
+                event: expect.any(Event),
+            }),
+        );
     });
 
     describe('prop: disabled', () => {

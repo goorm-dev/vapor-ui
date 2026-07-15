@@ -89,7 +89,9 @@ function extractExportsFromIndex(content) {
     while ((match = exportRegex.exec(content)) !== null) {
         const exports = match[1].split(',').map((e) => e.trim());
         exports.forEach((exp) => {
-            const [original, alias] = exp.includes(' as ') ? exp.split(' as ').map((s) => s.trim()) : [exp, exp];
+            const [original, alias] = exp.includes(' as ')
+                ? exp.split(' as ').map((s) => s.trim())
+                : [exp, exp];
             parts.push({ original, alias });
         });
     }
@@ -116,12 +118,16 @@ async function getComponentInfo() {
         const hasIndexParts = fileNames.includes('index.parts.ts');
 
         if (hasIndexParts) {
-            const content = await fetchFileContent(`packages/core/src/components/${component}/index.parts.ts`);
+            const content = await fetchFileContent(
+                `packages/core/src/components/${component}/index.parts.ts`,
+            );
             if (content) {
                 parts = extractPartsFromIndexParts(content);
             }
         } else {
-            const content = await fetchFileContent(`packages/core/src/components/${component}/index.ts`);
+            const content = await fetchFileContent(
+                `packages/core/src/components/${component}/index.ts`,
+            );
             if (content) {
                 parts = extractExportsFromIndex(content);
             }
@@ -135,7 +141,11 @@ async function getComponentInfo() {
 
         // Filter by specific part if provided
         if (specificPart) {
-            parts = parts.filter((p) => p.alias.toLowerCase() === specificPart.toLowerCase() || p.original.toLowerCase().includes(specificPart.toLowerCase()));
+            parts = parts.filter(
+                (p) =>
+                    p.alias.toLowerCase() === specificPart.toLowerCase() ||
+                    p.original.toLowerCase().includes(specificPart.toLowerCase()),
+            );
         }
 
         console.log(`Parts found: ${parts.map((p) => p.alias).join(', ')}\n`);
@@ -154,7 +164,9 @@ async function getComponentInfo() {
                 if (json.props && json.props.length > 0) {
                     json.props.forEach((prop) => {
                         const required = prop.required ? ' (required)' : '';
-                        const defaultVal = prop.defaultValue ? ` [default: ${prop.defaultValue}]` : '';
+                        const defaultVal = prop.defaultValue
+                            ? ` [default: ${prop.defaultValue}]`
+                            : '';
                         const type = Array.isArray(prop.type) ? prop.type.join(' | ') : prop.type;
                         console.log(`  - ${prop.name}${required}: ${type}${defaultVal}`);
                         if (prop.description) {

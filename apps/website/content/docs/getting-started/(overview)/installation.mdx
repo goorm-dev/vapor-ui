@@ -9,8 +9,8 @@ description: Vapor UI를 프로젝트에 설치하고 첫 컴포넌트를 사용
 
 다음 환경이 필요합니다.
 
-| 요구사항 | 버전 |
-| :------- | :--- |
+| 요구사항 | 버전    |
+| :------- | :------ |
 | React    | 17 이상 |
 | Node.js  | 16 이상 |
 
@@ -28,15 +28,13 @@ Vapor UI는 Dialog, Popover 같은 팝업 컴포넌트에 Portal을 사용합니
 
 ```tsx title="layout.tsx"
 <body>
-  <div className="root">
-    {children}
-  </div>
+    <div className="root">{children}</div>
 </body>
 ```
 
 ```css title="styles.css"
 .root {
-  isolation: isolate;
+    isolation: isolate;
 }
 ```
 

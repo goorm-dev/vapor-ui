@@ -7,8 +7,6 @@
         "build:storybook": "STORYBOOK_SKIP_DOCGEN=1 storybook build",
         "clean": "rimraf dist node_modules .turbo",
         "dev": "storybook dev -p 9009",
-        "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
-        "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
         "lint": "eslint ./.storybook"
     },
     "dependencies": {
@@ -28,10 +26,9 @@
         "@vitejs/plugin-react": "^5.2.0",
         "eslint": "catalog:",
         "globals": "^16.5.0",
-        "prettier": "catalog:",
         "storybook": "^9.1.20",
         "typescript": "catalog:",
-        "typescript-eslint": "^8.59.2",
-        "vite": "^7.3.2"
+        "typescript-eslint": "^8.59.4",
+        "vite": "^7.3.5"
     }
 }

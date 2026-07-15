@@ -31,7 +31,13 @@ describe('<Collapsible />', () => {
         await userEvent.click(trigger);
 
         expect(onOpenChange).toHaveBeenCalled();
-        expect(onOpenChange).toHaveBeenCalledWith(true);
+        expect(onOpenChange).toHaveBeenCalledWith(
+            true,
+            expect.objectContaining({
+                reason: expect.any(String),
+                event: expect.any(Event),
+            }),
+        );
     });
 
     describe('keyboard navigation', () => {

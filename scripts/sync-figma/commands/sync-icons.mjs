@@ -28,8 +28,8 @@ import {
     FIGMA_NODE_TYPES,
 } from '../src/icons/constants.js';
 import { ICON_TYPES } from '../src/icons/icon-types.js';
-import getIconComponent from '../src/icons/templates/icon/icon-component.js';
 import getIconComponentIndex from '../src/icons/templates/icon/icon-component-index.js';
+import getIconComponent from '../src/icons/templates/icon/icon-component.js';
 import getIconsIndex from '../src/icons/templates/icon/icons-index.js';
 import {
     filterDocumentByNodeType,

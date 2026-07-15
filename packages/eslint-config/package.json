@@ -14,26 +14,22 @@
         "./import": "./import.js"
     },
     "main": "./index.js",
-    "scripts": {
-        "format": "prettier . --write"
-    },
     "devDependencies": {
         "@antebudimir/eslint-plugin-vanilla-extract": "^1.16.0",
         "@eslint/compat": "^1.4.1",
         "@eslint/js": "^9.39.4",
-        "@next/eslint-plugin-next": "^15.5.15",
+        "@next/eslint-plugin-next": "^15.5.19",
         "@types/eslint-plugin-jsx-a11y": "^6.10.1",
         "eslint": "^9.39.4",
-        "eslint-config-next": "^15.5.15",
-        "eslint-config-turbo": "^2.9.9",
+        "eslint-config-next": "^15.5.19",
+        "eslint-config-turbo": "^2.9.16",
         "eslint-plugin-import-x": "^4.16.2",
         "eslint-plugin-jsx-a11y": "^6.10.2",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^5.2.0",
         "eslint-plugin-storybook": "^9.1.20",
         "globals": "^16.5.0",
-        "prettier": "catalog:",
-        "typescript-eslint": "^8.59.2"
+        "typescript-eslint": "^8.59.4"
     },
     "peerDependencies": {
         "eslint": ">=9.39.4",

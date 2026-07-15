@@ -188,13 +188,31 @@ describe('<Pagination />', () => {
             const next = rendered.getByTestId('Next');
 
             await userEvent.click(page3);
-            expect(onPageChange).toHaveBeenLastCalledWith(3, expect.any(Object));
+            expect(onPageChange).toHaveBeenLastCalledWith(
+                3,
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
 
             await userEvent.click(previous);
-            expect(onPageChange).toHaveBeenLastCalledWith(2, expect.any(Object));
+            expect(onPageChange).toHaveBeenLastCalledWith(
+                2,
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
 
             await userEvent.click(next);
-            expect(onPageChange).toHaveBeenLastCalledWith(3, expect.any(Object));
+            expect(onPageChange).toHaveBeenLastCalledWith(
+                3,
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
         });
     });
 

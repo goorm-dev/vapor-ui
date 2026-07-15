@@ -13,13 +13,13 @@ export default function TooltipAlignment() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>시작</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={
-                                <Tooltip.PositionerPrimitive side="bottom" align="start" />
-                            }
-                        >
-                            시작 위치에 정렬된 툴팁
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive side="bottom" align="start">
+                                <Tooltip.PopupPrimitive>
+                                    시작 위치에 정렬된 툴팁
+                                </Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
                 <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -28,13 +28,11 @@ export default function TooltipAlignment() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={
-                                <Tooltip.PositionerPrimitive side="bottom" align="center" />
-                            }
-                        >
-                            중앙에 정렬된 툴팁
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive side="bottom" align="center">
+                                <Tooltip.PopupPrimitive>중앙에 정렬된 툴팁</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
                 <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -43,13 +41,13 @@ export default function TooltipAlignment() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>끝</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={
-                                <Tooltip.PositionerPrimitive side="bottom" align="end" />
-                            }
-                        >
-                            끝 위치에 정렬된 툴팁
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive side="bottom" align="end">
+                                <Tooltip.PopupPrimitive>
+                                    끝 위치에 정렬된 툴팁
+                                </Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
             </VStack>
@@ -64,13 +62,11 @@ export default function TooltipAlignment() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>시작</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={
-                                <Tooltip.PositionerPrimitive side="right" align="start" />
-                            }
-                        >
-                            상단 시작 위치
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive side="right" align="start">
+                                <Tooltip.PopupPrimitive>상단 시작 위치</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
                 <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -79,13 +75,11 @@ export default function TooltipAlignment() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={
-                                <Tooltip.PositionerPrimitive side="right" align="center" />
-                            }
-                        >
-                            중앙 위치
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive side="right" align="center">
+                                <Tooltip.PopupPrimitive>중앙 위치</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
                 <HStack $css={{ gap: '$150', alignItems: 'center' }}>
@@ -94,13 +88,11 @@ export default function TooltipAlignment() {
                     </Text>
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>끝</Button>} />
-                        <Tooltip.Popup
-                            positionerElement={
-                                <Tooltip.PositionerPrimitive side="right" align="end" />
-                            }
-                        >
-                            하단 끝 위치
-                        </Tooltip.Popup>
+                        <Tooltip.PortalPrimitive>
+                            <Tooltip.PositionerPrimitive side="right" align="end">
+                                <Tooltip.PopupPrimitive>하단 끝 위치</Tooltip.PopupPrimitive>
+                            </Tooltip.PositionerPrimitive>
+                        </Tooltip.PortalPrimitive>
                     </Tooltip.Root>
                 </HStack>
             </VStack>

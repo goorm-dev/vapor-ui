@@ -11,8 +11,6 @@
         "dev": "vite --config vite.config.ui.ts",
         "predev:figma": "mkdir -p dist && cp manifest.json dist/",
         "dev:figma": "concurrently \"vite build --config vite.config.ui.ts --watch\" \"vite build --config vite.config.plugin.ts --watch\"",
-        "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
-        "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
         "lint": "eslint ./src",
         "preview": "vite preview",
         "typecheck": "tsc --noEmit"
@@ -37,10 +35,9 @@
         "@vitejs/plugin-react": "^5.2.0",
         "concurrently": "^8.2.2",
         "eslint": "catalog:",
-        "prettier": "catalog:",
         "tailwindcss": "^4.2.4",
         "typescript": "catalog:",
-        "vite": "^7.3.2",
+        "vite": "^7.3.5",
         "vite-plugin-singlefile": "^2.3.3"
     }
 }

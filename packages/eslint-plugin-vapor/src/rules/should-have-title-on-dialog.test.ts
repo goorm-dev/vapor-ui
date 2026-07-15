@@ -97,57 +97,62 @@ describe('should-have-title-on-dialog', () => {
     });
 });
 
-function createTestEnv(code: string) {
-    const fileName = '/absolute/path/to/test.tsx';
-    const coreFileName = '/absolute/path/to/node_modules/@vapor-ui/core/index.d.ts';
+const TEST_FILE_NAME = '/absolute/path/to/test.tsx';
+const CORE_FILE_NAME = '/absolute/path/to/node_modules/@vapor-ui/core/index.d.ts';
+const CORE_FILE_CONTENT = `
+    export namespace Dialog {
+        export const Title: any;
+        export const Root: any;
+        export const Popup: any;
+    }
+`;
 
-    const compilerOptions: ts.CompilerOptions = {
-        jsx: ts.JsxEmit.React,
-        target: ts.ScriptTarget.ESNext,
-        moduleResolution: ts.ModuleResolutionKind.NodeJs,
-    };
+const compilerOptions: ts.CompilerOptions = {
+    jsx: ts.JsxEmit.React,
+    target: ts.ScriptTarget.ESNext,
+    moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    noLib: true,
+    skipLibCheck: true,
+};
 
-    const host = ts.createCompilerHost(compilerOptions);
-    const originalReadFile = host.readFile;
-    const originalFileExists = host.fileExists;
+const documentRegistry = ts.createDocumentRegistry();
 
-    host.readFile = (f) => {
-        if (f === fileName) return code;
-        if (f === coreFileName) {
-            return `
-                export namespace Dialog {
-                    export const Title: any;
-                    export const Root: any;
-                    export const Popup: any;
-                }
-            `;
-        }
-        // Minimal lib.d.ts if requested? typescript usually loads them from disk.
-        return originalReadFile(f);
-    };
+let currentCode = '';
 
-    host.fileExists = (f) => {
-        if (f === fileName || f === coreFileName) return true;
-        return originalFileExists(f);
-    };
-
-    host.resolveModuleNames = (moduleNames) => {
-        return moduleNames.map((moduleName) => {
-            if (moduleName === '@vapor-ui/core') {
-                return {
-                    resolvedFileName: coreFileName,
-                    isExternalLibraryImport: true,
-                };
+const serviceHost: ts.LanguageServiceHost = {
+    getScriptFileNames: () => [TEST_FILE_NAME, CORE_FILE_NAME],
+    getScriptVersion: (fileName) => (fileName === TEST_FILE_NAME ? currentCode : '0'),
+    getScriptSnapshot: (fileName) => {
+        if (fileName === TEST_FILE_NAME) return ts.ScriptSnapshot.fromString(currentCode);
+        if (fileName === CORE_FILE_NAME) return ts.ScriptSnapshot.fromString(CORE_FILE_CONTENT);
+        const text = ts.sys.readFile(fileName);
+        return text !== undefined ? ts.ScriptSnapshot.fromString(text) : undefined;
+    },
+    getCurrentDirectory: () => '/',
+    getCompilationSettings: () => compilerOptions,
+    getDefaultLibFileName: (opts) => ts.getDefaultLibFilePath(opts),
+    fileExists: (f) => f === TEST_FILE_NAME || f === CORE_FILE_NAME || ts.sys.fileExists(f),
+    readFile: (f) => {
+        if (f === TEST_FILE_NAME) return currentCode;
+        if (f === CORE_FILE_NAME) return CORE_FILE_CONTENT;
+        return ts.sys.readFile(f);
+    },
+    resolveModuleNames: (moduleNames) =>
+        moduleNames.map((name) => {
+            if (name === '@vapor-ui/core') {
+                return { resolvedFileName: CORE_FILE_NAME, isExternalLibraryImport: true };
             }
-            // For checking relative imports like import { Dialog } from './dialog'
-            return undefined; // Fail others
-        });
-    };
+            return undefined;
+        }),
+};
 
-    const program = ts.createProgram([fileName], compilerOptions, host);
+const languageService = ts.createLanguageService(serviceHost, documentRegistry);
+
+function createTestEnv(code: string) {
+    currentCode = code;
+    const program = languageService.getProgram()!;
     const checker = program.getTypeChecker();
-    const sourceFile = program.getSourceFile(fileName)!;
-
+    const sourceFile = program.getSourceFile(TEST_FILE_NAME)!;
     return { sourceFile, checker };
 }
 

@@ -544,11 +544,23 @@ describe('<Menu.CheckboxItem>', () => {
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(1);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true);
+            expect(handleCheckedChange).toHaveBeenCalledWith(
+                true,
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(2);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false);
+            expect(handleCheckedChange).toHaveBeenCalledWith(
+                false,
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
         });
 
         // it('should keep the state when closed and reopened', async () => {});
@@ -704,10 +716,22 @@ describe('<Menu.CheckboxItem>', () => {
             const checkitem = rendered.getByRole('menuitemcheckbox');
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true);
+            expect(handleCheckedChange).toHaveBeenCalledWith(
+                true,
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false);
+            expect(handleCheckedChange).toHaveBeenCalledWith(
+                false,
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
         });
     });
 });
@@ -815,11 +839,23 @@ describe('<Menu.RadioGroupItem>', () => {
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(1);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true);
+            expect(handleCheckedChange).toHaveBeenCalledWith(
+                true,
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(2);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false);
+            expect(handleCheckedChange).toHaveBeenCalledWith(
+                false,
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
         });
     });
 
@@ -1010,10 +1046,22 @@ describe('<Menu.RadioGroupItem>', () => {
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
 
             await userEvent.click(radio1);
-            expect(handleCheckedChange).toHaveBeenCalledWith('item1');
+            expect(handleCheckedChange).toHaveBeenCalledWith(
+                'item1',
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
 
             await userEvent.click(radio2);
-            expect(handleCheckedChange).toHaveBeenCalledWith('item2');
+            expect(handleCheckedChange).toHaveBeenCalledWith(
+                'item2',
+                expect.objectContaining({
+                    reason: expect.any(String),
+                    event: expect.any(Event),
+                }),
+            );
         });
     });
 });

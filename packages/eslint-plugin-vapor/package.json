@@ -21,8 +21,6 @@
         "build": "tsup",
         "clean": "rimraf dist node_modules coverage .turbo",
         "dev": "tsup --watch",
-        "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
-        "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
         "lint": "eslint ./src",
         "test": "vitest run",
         "typecheck": "tsc --noEmit"
@@ -31,11 +29,10 @@
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/eslint": "^9.6.1",
-        "@types/estree": "^1.0.8",
+        "@types/estree": "^1.0.9",
         "@types/estree-jsx": "^1.0.5",
-        "@types/node": "^20.19.39",
+        "@types/node": "^20.19.42",
         "eslint": "^9.39.4",
-        "prettier": "catalog:",
         "tsup": "^8.5.1",
         "typescript": "^5.9.3",
         "vitest": "^3.2.4"
