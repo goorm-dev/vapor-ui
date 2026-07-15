@@ -270,7 +270,7 @@ SheetPopup.displayName = 'Sheet.Popup';
  * Sheet.ResizeHandle
  * -----------------------------------------------------------------------------------------------*/
 
-const RESIZE_STEP = 16; // px per arrow key press or step button (spec default)
+const RESIZE_STEP = 16; // px per arrow key press (spec default)
 
 export const SheetResizeHandle = forwardRef<HTMLDivElement, SheetResizeHandle.Props>(
     (props, ref) => {
@@ -487,12 +487,12 @@ export namespace SheetResizeHandle {
     export type State = SheetResizeHandleState;
     export interface Props extends VaporUIComponentProps<'div', State> {
         /**
-         * Pixels adjusted per arrow-key press or step-menu button.
+         * Pixels adjusted per arrow-key press.
          * @default 16
          */
         step?: number;
         /**
-         * Blocks drag, keyboard, and tap resizing.
+         * Blocks drag and keyboard resizing.
          */
         disabled?: boolean;
     }
