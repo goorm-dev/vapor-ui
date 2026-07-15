@@ -11,8 +11,6 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 - Add `Sheet.ResizeHandle` for edge drag-and-keyboard resizing. ([#634](https://github.com/goorm-dev/vapor-ui/pull/634)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-    Place `Sheet.ResizeHandle` inside `Sheet.Popup` to let users resize the sheet by dragging its edge or using arrow keys / Home / End. Size bounds live in CSS: set `min/max-width` (left/right sheets) or `min/max-height` (top/bottom sheets) on the Popup — px and viewport units are supported, and sensible defaults (64px to viewport size) apply when unset. The handle accepts `step` and `disabled`.
-
 ### Etc.
 
 - propagate `invalid` state to indicator element ([#618](https://github.com/goorm-dev/vapor-ui/pull/618)) - Thanks [@noahchoii](https://github.com/noahchoii)!
