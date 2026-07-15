@@ -36,8 +36,8 @@ type RootContext = {
     setMounted: React.Dispatch<React.SetStateAction<boolean>>;
     transitionStatus: TransitionStatus;
     popupRef: RefObject<HTMLDivElement | null>;
-    popupId: string;
-    /** Lets Sheet.Popup surface a user-provided id back to the context so ResizeHandle's aria-controls stays in sync. */
+    /** Owned by Sheet.Popup — undefined until the popup mounts and reports its id. */
+    popupId: string | undefined;
     setPopupId: (id: string | undefined) => void;
 };
 
@@ -94,11 +94,9 @@ export const SheetRoot = ({
         onOpenChange?.(open, eventDetails);
     };
 
-    // Id generation lives here (single source). Sheet.Popup overrides it via setPopupId
-    // only when the user passes an explicit id, keeping DOM id and aria-controls paired.
-    const generatedId = useVaporId();
-    const [customId, setPopupId] = useState<string>();
-    const popupId = customId ?? generatedId;
+    // Sheet.Popup owns id generation and reports it here (RadioGroup.Label pattern),
+    // so ResizeHandle's aria-controls always mirrors the actual DOM id.
+    const [popupId, setPopupId] = useState<string>();
 
     return (
         <SheetRootProvider
@@ -199,20 +197,16 @@ export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitiv
     (props, ref) => {
         const { className, id: idProp, ...componentProps } = resolveStyles(props);
 
-        const { popupRef, popupId, setPopupId } = useSheetRootContext();
+        const { popupRef, setPopupId } = useSheetRootContext();
         const { side = 'right' } = useSheetPositionerContext();
 
         const composedRef = composeRefs(popupRef, ref);
 
-        // A user-provided id wins; otherwise fall back to the context's generated id.
-        // Surface the explicit id back to the context so ResizeHandle's aria-controls matches.
-        const id = idProp ?? popupId;
+        const id = useVaporId(idProp);
         useIsoLayoutEffect(() => {
-            if (idProp) setPopupId(idProp);
-            return () => {
-                if (idProp) setPopupId(undefined);
-            };
-        }, [idProp, setPopupId]);
+            setPopupId(id);
+            return () => setPopupId(undefined);
+        }, [id, setPopupId]);
 
         const dataAttr = createDataAttributes({ side });
 
