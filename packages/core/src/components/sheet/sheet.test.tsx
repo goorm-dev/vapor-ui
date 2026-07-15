@@ -351,15 +351,13 @@ const SheetTest = (props: Sheet.Root.Props) => {
     );
 };
 
-const ResizableSheetTest = ({
-    disabled,
-    popupId,
-    popupStyle,
-}: {
+interface ResizableSheetTestProps {
     disabled?: boolean;
     popupId?: string;
     popupStyle?: React.CSSProperties;
-}) => {
+}
+
+const ResizableSheetTest = ({ disabled, popupId, popupStyle }: ResizableSheetTestProps) => {
     return (
         <Sheet.Root defaultOpen>
             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>

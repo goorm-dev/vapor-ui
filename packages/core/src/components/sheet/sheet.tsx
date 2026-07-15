@@ -301,11 +301,15 @@ export const SheetResizeHandle = forwardRef<HTMLDivElement, SheetResizeHandle.Pr
 
         const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
             onPointerDown?.(event);
+            // Snapshot after the user handler: only the hook runs between here and the
+            // check below, so a false→true flip can only mean the hook accepted the drag.
+            // A user preventDefault() (drag veto) is captured in the snapshot and ignored.
+            const wasPrevented = event.defaultPrevented;
             handleProps.onPointerDown(event);
-            // The hook calls preventDefault() only when it accepts the drag (enabled, left
-            // button). Drag can start anywhere on the strip, so mirror that signal to move
-            // focus to the keyboard grip — but skip it when the drag was rejected.
-            if (event.defaultPrevented) gripRef.current?.focus({ preventScroll: true });
+            // Drag can start anywhere on the strip, so mirror the hook's accept signal
+            // to move focus to the keyboard grip — but skip it when the drag was rejected.
+            if (!wasPrevented && event.defaultPrevented)
+                gripRef.current?.focus({ preventScroll: true });
         };
 
         const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
