@@ -41,7 +41,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@adobe/leonardo-contrast-colors": "1.1.0",
+        "@adobe/leonardo-contrast-colors": "1.0.0",
         "culori": "^4.0.2"
     },
     "devDependencies": {
