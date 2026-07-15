@@ -66,26 +66,6 @@
             "type": ["false", "true"],
             "required": false,
             "description": "오버레이 클릭 시 닫기 여부"
-        },
-        {
-            "name": "minSize",
-            "type": ["number"],
-            "required": false,
-            "description": "Sheet를 조절할 수 있는 최소 크기(px)입니다. left/right는 너비, top/bottom은 높이에 적용됩니다.\n크기 prop을 하나라도 지정하면 Sheet.ResizeHandle로 크기를 조절할 수 있습니다.",
-            "defaultValue": "300"
-        },
-        {
-            "name": "maxSize",
-            "type": ["number"],
-            "required": false,
-            "description": "Sheet를 조절할 수 있는 최대 크기(px)입니다. left/right는 너비, top/bottom은 높이에 적용됩니다.",
-            "defaultValue": "640"
-        },
-        {
-            "name": "defaultSize",
-            "type": ["number"],
-            "required": false,
-            "description": "Sheet가 처음 열릴 때의 크기(px)입니다. 지정하지 않으면 minSize를 따릅니다."
         }
     ]
 }

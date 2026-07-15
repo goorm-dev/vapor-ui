@@ -19,14 +19,14 @@
             "name": "step",
             "type": ["number"],
             "required": false,
-            "description": "화살표 키나 스텝 버튼을 누를 때마다 조절되는 크기(px)입니다.",
+            "description": "화살표 키를 누를 때마다 조절되는 크기(px)입니다.",
             "defaultValue": "16"
         },
         {
             "name": "disabled",
             "type": ["false", "true"],
             "required": false,
-            "description": "드래그, 키보드, 탭으로 크기를 조절하지 못하게 막습니다.",
+            "description": "드래그와 키보드로 크기를 조절하지 못하게 막습니다.",
             "defaultValue": "false"
         }
     ]
