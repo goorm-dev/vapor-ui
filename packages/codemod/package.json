@@ -7,11 +7,6 @@
         "jscodeshift",
         "codemod"
     ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git",
-        "directory": "packages/codemod"
-    },
     "main": "dist/src/index.mjs",
     "bin": {
         "vapor-codemod": "./dist/bin/cli.mjs"
