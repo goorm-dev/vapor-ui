@@ -5,6 +5,20 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
+## 1.4.0
+
+### Sheet
+
+- Add `Sheet.ResizeHandle` for edge drag-and-keyboard resizing. ([#634](https://github.com/goorm-dev/vapor-ui/pull/634)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Etc.
+
+- propagate `invalid` state to indicator element ([#618](https://github.com/goorm-dev/vapor-ui/pull/618)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.2.1
+
 ## 1.3.0
 
 ### Avatar
