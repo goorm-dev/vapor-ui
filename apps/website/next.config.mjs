@@ -1,8 +1,6 @@
-import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
 import { createMDX } from 'fumadocs-mdx/next';
 
 const withMDX = createMDX();
-const vaporPlugin = vaporStyleMacro.webpack();
 
 /** @type {import('next').NextConfig} */
 const config = {
