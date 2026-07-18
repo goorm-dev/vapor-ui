@@ -1,10 +1,10 @@
 # @vapor-ui/style-macro
 
-Build-time macro that transforms `$style({...})` calls into atomic class names + a CSS chunk.
+Build-time macro that transforms `styles({...})` calls into atomic class names + a CSS chunk.
 
 Application authors use:
 
-- `import { $style } from '@vapor-ui/style-macro'` in source code
+- `import { styles } from '@vapor-ui/style-macro'` in source code
 - `@vapor-ui/style-macro/unplugin` in `vite.config` / `rollup.config` / `next.config` / `webpack.config`
 
 ## Bundler wiring (the only thing app authors do)
@@ -42,22 +42,20 @@ Adapter also exposes `.esbuild()`, `.rspack()`, `.farm()`, `.rolldown()` (anythi
 | Option              | Default                                                  | Purpose                                                       |
 | ------------------- | -------------------------------------------------------- | ------------------------------------------------------------- |
 | `manifest`          | `import { manifest } from '@vapor-ui/tokens'`            | Alternative token manifest object (`ManifestShape`)           |
-| `importSource`      | `'@vapor-ui/style-macro'`                                | Module the `$style` symbol is imported from                   |
-| `importName`        | `'$style'`                                               | Local binding to recognize as the macro call                  |
-| `themeStylesImport` | `'${importSource}/styles.css'`                           | Side-effect CSS import injected per-file. `false` to disable. |
+| `themeStylesImport` | `'@vapor-ui/core/styles.css'`                            | Side-effect CSS import injected per-file. `false` to disable. |
 | `include`           | `*.{ts,tsx,js,jsx,mts,mjs,cts,cjs}` minus `node_modules` | Custom file filter                                            |
 
 ## Who runs what
 
 | Layer                                  | What it does                                                                 | Who runs it                              |
 | -------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------- |
-| End-user source                        | `$style({ padding: '$400' })`                                                | App author writes                        |
+| End-user source                        | `styles({ padding: '$400' })`                                                | App author writes                        |
 | `@vapor-ui/style-macro/unplugin`       | Imports `manifest` from `@vapor-ui/tokens` once, then `transform()` per file | Bundler plugin (Vite / webpack / Rollup) |
-| `@vapor-ui/style-macro` (this package) | Hosts the `$style` runtime stub + `transform(source, opts)`                  | The unplugin above                       |
+| `@vapor-ui/style-macro` (this package) | Hosts the `styles` runtime stub + `transform(source, opts)`                  | The unplugin above                       |
 | `@vapor-ui/tokens`                     | Owns token data + emits `manifest` (TS module) + token literal union types   | tokens build                             |
 | `@vapor-ui/core`                       | Ships the theme CSS contract loaded via `themeStylesImport`                  | `@vapor-ui/core` build                   |
 
-End users never see the manifest or `transform`. They `import { $style } from '@vapor-ui/style-macro'` and write call sites; the bundler plugin wires the rest.
+End users never see the manifest or `transform`. They `import { styles } from '@vapor-ui/style-macro'` and write call sites; the bundler plugin wires the rest.
 
 ## Contract (internal)
 

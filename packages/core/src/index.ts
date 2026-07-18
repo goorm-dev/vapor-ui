@@ -40,3 +40,4 @@ export * from './components/toast';
 export * from './components/v-stack';
 export * from './components/radio-card';
 export * from './styles/tokens';
+export * from './utils/styles';

@@ -27,11 +27,11 @@ function dataCssImport(css: string): string {
 /**
  * Turbopack loader entrypoint.
  *
- * Transforms `$style` calls in the source and prepends `data:text/css` imports
+ * Transforms `styles` calls in the source and prepends `data:text/css` imports
  * for any CSS the transform emits (per-file rules, plus a `@layer` order
  * declaration when a `<ThemeProvider layer>` is seen).
  *
- * Source files with no `$style` occurrence are returned unmodified as a fast
+ * Source files with no `styles` occurrence are returned unmodified as a fast
  * path — the loader runs on every matched file in the project, so this early
  * exit is load-bearing.
  */
@@ -42,19 +42,16 @@ export default async function vaporStyleTurbopackLoader(
     const rawOpts = this.getOptions ? this.getOptions() : ({} as VaporStyleOptions);
     const opts = resolveOptions(rawOpts);
 
-    // Fast-path: no `$style` (or user-configured importName) in source → nothing to do.
-    if (!source.includes(opts.importName)) return source;
+    // Fast-path: no `styles` in source → nothing to do.
+    if (!source.includes('styles')) return source;
 
     const result = transform({
         source,
         filename: this.resourcePath,
         manifest: opts.manifest,
-        importSource: opts.importSource,
-        importName: opts.importName,
         obfuscate: opts.obfuscate,
         providerImportSource: opts.providerImportSource,
         providerImportName: opts.providerImportName,
-        layerRegistry: opts.layerRegistry,
     });
 
     if (result.errors.length > 0) {
@@ -66,8 +63,8 @@ export default async function vaporStyleTurbopackLoader(
 
     const prepended: string[] = [];
 
-    if (result.layerOrder) {
-        prepended.push(dataCssImport(emitLayerOrderCss(result.layerOrder)));
+    if (result.hasProviderImport) {
+        prepended.push(dataCssImport(emitLayerOrderCss(opts.layerOrder)));
     }
 
     if (result.css) {

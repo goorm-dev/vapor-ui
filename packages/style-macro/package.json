@@ -1,40 +1,32 @@
 {
     "name": "@vapor-ui/style-macro",
-    "version": "0.0.0",
-    "description": "Build-time macro powering @vapor-ui/core's $style function.",
+    "version": "0.1.0",
+    "description": "Build-time macro powering @vapor-ui/core's styles function.",
     "license": "MIT",
+    "type": "module",
+    "sideEffects": false,
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
+            "import": "./dist/index.mjs",
             "require": "./dist/index.cjs"
         },
-        "./unplugin": {
-            "types": "./dist/unplugin.d.ts",
-            "import": "./dist/unplugin.js",
-            "require": "./dist/unplugin.cjs"
-        },
-        "./next": {
-            "types": "./dist/next.d.ts",
-            "import": "./dist/next.js",
-            "require": "./dist/next.cjs"
-        },
-        "./turbopack": {
-            "types": "./dist/turbopack.d.ts",
-            "import": "./dist/turbopack.js",
-            "require": "./dist/turbopack.cjs"
+        "./*": {
+            "types": "./dist/adapters/*.d.ts",
+            "import": "./dist/adapters/*.mjs",
+            "require": "./dist/adapters/*.cjs"
         },
         "./package.json": "./package.json"
     },
     "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
+    "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
     "files": [
         "dist"
     ],
     "scripts": {
         "bench": "vitest bench --run",
-        "build": "tsup",
+        "build": "tsdown",
         "clean": "rimraf dist node_modules .turbo",
         "lint": "eslint ./src",
         "test": "vitest --run",
@@ -59,6 +51,7 @@
         "eslint": "catalog:",
         "rimraf": "^6.1.3",
         "rollup": "^4.62.2",
+        "tsdown": "^0.22.8",
         "tsup": "^8.5.1",
         "typescript": "catalog:",
         "vite": "^7.3.6",

@@ -3,26 +3,24 @@ import { manifest as defaultManifest } from '@vapor-ui/tokens';
 
 import type { VaporStyleOptions } from './unplugin';
 
+export const DEFAULT_LAYER_ORDER: readonly string[] = [
+    'vapor-theme',
+    'vapor-reset',
+    'vapor-components',
+    'vapor-utilities',
+];
+
 interface ResolvedOptions {
     manifest: ManifestShape;
-    importSource: string | string[];
-    importName: string;
     themeStylesImport: string | null;
     include: (id: string) => boolean;
     obfuscate: boolean;
     providerImportSource: string[];
     providerImportName: string;
-    layerRegistry: Record<string, string>;
+    layerOrder: string[];
 }
 
 export const DEFAULT_PROVIDER_SOURCES = ['@vapor-ui/core', '@vapor-ui/core/theme-provider'];
-
-export const DEFAULT_LAYER_REGISTRY: Record<string, string> = {
-    theme: 'vapor-theme',
-    reset: 'vapor-reset',
-    components: 'vapor-components',
-    utilities: 'vapor-utilities',
-};
 
 export function defaultInclude(id: string): boolean {
     if (id.includes('node_modules')) return false;
@@ -30,7 +28,6 @@ export function defaultInclude(id: string): boolean {
 }
 
 export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
-    const importSource = opts.importSource || '@vapor-ui/style-macro';
     const themeStylesImport =
         opts.themeStylesImport === false || opts.themeStylesImport === undefined
             ? null
@@ -40,17 +37,16 @@ export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
     const providerImportSource = Array.isArray(providerImportSourceRaw)
         ? providerImportSourceRaw
         : [providerImportSourceRaw];
+    const layerOrder = opts.layerOrder ?? [...DEFAULT_LAYER_ORDER];
 
     return {
         manifest: opts.manifest ?? defaultManifest,
-        importSource,
-        importName: opts.importName ?? '$style',
         themeStylesImport,
         include: opts.include ?? defaultInclude,
         obfuscate,
         providerImportSource,
         providerImportName: opts.providerImportName ?? 'ThemeProvider',
-        layerRegistry: opts.layerRegistry ?? DEFAULT_LAYER_REGISTRY,
+        layerOrder,
     };
 }
 

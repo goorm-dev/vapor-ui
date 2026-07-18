@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { buildClassName } from './class-name';
 import type { Tuple } from './types';
 

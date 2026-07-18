@@ -5,8 +5,8 @@
         "rootDir": "src",
         "target": "ES2022",
         "lib": ["ES2022"],
-        "types": ["node"],
-
+        "types": ["node", "vitest/globals"],
+        "declarationMap": false,
         "paths": { "~/*": ["./src/*"] }
     },
     "include": ["src/**/*"],

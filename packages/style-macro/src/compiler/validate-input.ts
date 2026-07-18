@@ -61,8 +61,8 @@ export function validateInput(entries: RawEntry[], manifest: ManifestShape): Bui
                 code: entry.error,
                 message:
                     entry.error === 'spread'
-                        ? 'Spread elements are not supported in $style().'
-                        : 'Computed keys are not supported in $style().',
+                        ? 'Spread elements are not supported in styles().'
+                        : 'Computed keys are not supported in styles().',
                 loc: entry.loc,
             });
             continue;

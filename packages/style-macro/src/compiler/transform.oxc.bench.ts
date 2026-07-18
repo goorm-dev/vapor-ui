@@ -21,9 +21,9 @@ const MANIFEST: ManifestShape = {
 };
 
 function makeSource(callCount: number): string {
-    const lines: string[] = [`import { $style } from '@vapor-ui/style-macro';`];
+    const lines: string[] = [`import { styles } from '@vapor-ui/core';`];
     for (let i = 0; i < callCount; i++) {
-        lines.push(`export const c${i} = $style({ padding: '$400', color: '$primary' });`);
+        lines.push(`export const c${i} = styles({ padding: '$400', color: '$primary' });`);
     }
     return lines.join('\n');
 }

@@ -244,20 +244,21 @@ export type StyleValue = string | number;
 export type { ColorToken, SpaceToken, DimensionToken, BorderRadiusToken, ShadowToken };
 
 /**
- * Build-time macro. `@vapor-ui/style-macro/unplugin` rewrites every call site of this
- * function into a literal class-name string and emits the corresponding atomic CSS.
+ * Build-time macro. The bundler adapter (`@vapor-ui/style-macro/vite`,
+ * `/webpack`, `/next`, ...) rewrites every call site of this function into a
+ * literal class-name string and emits the corresponding atomic CSS.
  *
- * If you see this body executing at runtime, the macro is not configured in your
- * bundler — install `@vapor-ui/style-macro/unplugin` per the migration guide.
+ * If you see this body executing at runtime, no adapter is wired into your
+ * bundler — install the adapter for your build system.
  */
-export function $style(_input: StyleInput): string {
+export function styles(_input: StyleInput): string {
     if (
         typeof console !== 'undefined' &&
         typeof process !== 'undefined' &&
         process.env?.NODE_ENV !== 'production'
     ) {
         console.warn(
-            '[@vapor-ui/style-macro] $style was called at runtime — your bundler is missing @vapor-ui/style-macro/unplugin. Returning empty string.',
+            '[@vapor-ui/style-macro] styles was called at runtime — the bundler adapter is not wired in. Add e.g. `@vapor-ui/style-macro/vite` to your plugin list. Returning empty string.',
         );
     }
     return '';

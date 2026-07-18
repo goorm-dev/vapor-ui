@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { classifyCondition, hashMediaQuery } from './condition';
 
 describe('classifyCondition', () => {

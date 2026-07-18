@@ -1,5 +1,4 @@
 import { createRequire } from 'node:module';
-import * as path from 'node:path';
 
 import type { AnyProp } from '~/model/types';
 
@@ -7,83 +6,82 @@ import unplugin from './unplugin';
 import type { VaporStyleOptions } from './unplugin';
 
 /**
- * Whether the Turbopack path should be wired. `auto` enables it when the
- * consumer's resolved `next` package is >= 16 (the version that ships
- * `turbopack.rules` as a stable option).
+ * Which bundler backend to wire into the returned `NextConfig`.
+ *
+ * - `'auto'` (default) — inspects `process.env.TURBOPACK`. Next.js sets this
+ *   to `'1'` when invoked with `--turbopack` (dev or build). Truthy → wire
+ *   the Turbopack loader only; falsy → wire the webpack unplugin only.
+ * - `'webpack'` — always wire the webpack unplugin, skip Turbopack rules.
+ *   Use this to force the webpack path even when running on a Turbopack
+ *   default (e.g. Next 16 with `--webpack`).
+ * - `'turbopack'` — always wire the Turbopack loader, skip the webpack
+ *   plugin. Use this when you know only Turbopack will run.
  */
-export type UnstableTurbopackMode = 'auto' | 'on' | 'off';
+export type NextMode = 'auto' | 'webpack' | 'turbopack';
 
 export interface WithVaporStyleOptions extends VaporStyleOptions {
-    unstable_turbopack?: {
-        mode?: UnstableTurbopackMode;
-        /** Turbopack rule glob(s) for source files that may contain `$style`. */
-        glob?: string | string[];
-    };
+    mode?: NextMode;
+    /** Turbopack rule glob(s) for source files that may contain `styles`. */
+    turbopackGlob?: string | string[];
 }
 
 /**
- * Structural subset of `NextConfig` we actually touch. Deliberately narrow
- * and lenient — Next's own `NextConfig` isn't structurally compatible with
- * an interface that carries an index signature, so we treat unknown fields
- * as opaque and only pin the ones we augment. Consumers pass a fully-typed
- * `NextConfig` in and get the same type out (see the generic on the caller).
+ * Structural view of the two fields we augment on `NextConfig`. Used only
+ * internally when merging — the exposed generic is unconstrained so that
+ * Next's own `NextConfig` (whose `turbopack`/`webpack` shapes carry no
+ * index signature) passes through without a structural-mismatch TS error.
  */
-interface NextConfigSubset {
+interface NextConfigMutable {
     webpack?: ((config: AnyProp, ctx: AnyProp) => unknown) | null;
     turbopack?: {
         rules?: Record<string, unknown>;
     };
 }
 
-// Deliberately narrow: `$style` is only written in TS/JSX source, so we
+// Deliberately narrow: `styles` is only written in TS/JSX source, so we
 // don't need to run the loader over `.js`/`.cjs`/`.mjs` (compiled deps in
 // node_modules) — mislabelling those as ESM would break CJS interop.
 const DEFAULT_TURBOPACK_GLOB = '**/*.{tsx,jsx,ts}';
 
-function detectNext16InConsumer(): boolean {
-    try {
-        const cwdRequire = createRequire(path.join(process.cwd(), 'package.json'));
-        const pkg = cwdRequire('next/package.json') as { version?: string };
-        if (!pkg?.version) return false;
-
-        const major = Number.parseInt(pkg.version.split('.')[0]!, 10);
-
-        return Number.isFinite(major) && major >= 16;
-    } catch {
-        return false;
-    }
+function detectTurbopack(): boolean {
+    return Boolean(process.env.TURBOPACK);
 }
 
 /**
- * Wrap a `next.config.ts` object with Vapor style-macro support. Wires both
- * the webpack unplugin (for `next dev --webpack` / Next < 16 / production
- * webpack builds) and the Turbopack loader (Next >= 16), so Next picks
- * whichever bundler it runs and everything Just Works.
+ * Wrap a `next.config.ts` object with Vapor style-macro support. Wires
+ * either the webpack unplugin or the Turbopack loader based on `mode`
+ * (default `'auto'` reads `process.env.TURBOPACK`).
  *
  *     // next.config.ts
- *     import { withVaporStyle } from '@vapor-ui/style-macro/next';
- *     export default withVaporStyle()({ ...yourNextConfig });
+ *     import vaporStyle from '@vapor-ui/style-macro/next';
+ *     export default vaporStyle({
+ *         // ...your next config
+ *     });
+ *
+ *     // force webpack path
+ *     export default vaporStyle(nextConfig, { mode: 'webpack' });
  */
-export function withVaporStyle(
+export default function vaporStyleNext<T extends object = object>(
+    nextConfig: T = {} as T,
     opts: WithVaporStyleOptions = {},
-): <T extends NextConfigSubset = NextConfigSubset>(nextConfig?: T) => T {
-    const { unstable_turbopack: turbopackOpts = {}, ...unpluginOpts } = opts;
-    const { mode = 'auto', glob = DEFAULT_TURBOPACK_GLOB } = turbopackOpts;
+): T {
+    const { mode = 'auto', turbopackGlob = DEFAULT_TURBOPACK_GLOB, ...unpluginOpts } = opts;
 
-    return <T extends NextConfigSubset = NextConfigSubset>(nextConfig: T = {} as T): T => {
-        const originalWebpack = nextConfig.webpack;
-        const merged: NextConfigSubset = {
-            ...nextConfig,
-            webpack(config: AnyProp, ctx: AnyProp) {
-                config.plugins ??= [];
-                config.plugins.push(unplugin.webpack(unpluginOpts));
-                return originalWebpack ? originalWebpack(config, ctx) : config;
-            },
+    const useTurbo = mode === 'turbopack' || (mode === 'auto' && detectTurbopack());
+    const useWebpack = mode === 'webpack' || (mode === 'auto' && !detectTurbopack());
+
+    const merged = { ...(nextConfig as NextConfigMutable) } as NextConfigMutable;
+
+    if (useWebpack) {
+        const originalWebpack = (nextConfig as NextConfigMutable).webpack;
+        merged.webpack = (config: AnyProp, ctx: AnyProp) => {
+            config.plugins ??= [];
+            config.plugins.push(unplugin.webpack(unpluginOpts));
+            return originalWebpack ? originalWebpack(config, ctx) : config;
         };
+    }
 
-        const enableTurbopack = mode === 'on' || (mode === 'auto' && detectNext16InConsumer());
-        if (!enableTurbopack) return merged as unknown as T;
-
+    if (useTurbo) {
         // Resolve the loader relative to this module (self-reference through
         // the `./turbopack` subpath export). Anchoring `createRequire` to the
         // plugin file itself keeps resolution independent of the consumer's
@@ -100,13 +98,11 @@ export function withVaporStyle(
         // resulting object is a pure JSON object.
         const rawLoaderOptions: Record<string, unknown> = {
             manifest: unpluginOpts.manifest,
-            importSource: unpluginOpts.importSource,
-            importName: unpluginOpts.importName,
             obfuscate: unpluginOpts.obfuscate,
             themeStylesImport: unpluginOpts.themeStylesImport,
             providerImportSource: unpluginOpts.providerImportSource,
             providerImportName: unpluginOpts.providerImportName,
-            layerRegistry: unpluginOpts.layerRegistry,
+            layerOrder: unpluginOpts.layerOrder,
         };
         const loaderOptions = Object.fromEntries(
             Object.entries(rawLoaderOptions).filter(
@@ -114,7 +110,7 @@ export function withVaporStyle(
             ),
         );
 
-        const globs = Array.isArray(glob) ? glob : [glob];
+        const globs = Array.isArray(turbopackGlob) ? turbopackGlob : [turbopackGlob];
         // Do NOT set `as` on the source rule — we return the same TS/JSX we
         // received (with `import` statements prepended), so Turbopack should
         // continue running its default TS/JSX transform pipeline based on the
@@ -135,7 +131,7 @@ export function withVaporStyle(
                 ...Object.fromEntries(globs.map((g) => [g, sourceRule])),
             },
         };
+    }
 
-        return merged as unknown as T;
-    };
+    return merged as unknown as T;
 }

@@ -1,5 +1,4 @@
 import { parseSync } from 'oxc-parser';
-import { describe, expect, it } from 'vitest';
 
 import type { AnyProp, ManifestShape } from '~/model/types';
 
@@ -23,7 +22,7 @@ const manifest: ManifestShape = {
 };
 
 function callArg(src: string): AnyProp {
-    const ast = parseSync('t.ts', `$style(${src})`, { sourceType: 'module', lang: 'ts' });
+    const ast = parseSync('t.ts', `styles(${src})`, { sourceType: 'module', lang: 'ts' });
 
     const expr = (ast.program.body[0] as AnyProp).expression as AnyProp;
     return expr.arguments[0];

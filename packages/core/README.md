@@ -27,16 +27,16 @@ yarn add @vapor-ui/core
 
 > For detailed usage instructions, please refer to the [official documentation](https://vapor-ui.goorm.io/docs/getting-started/installation).
 
-## `$style` build-time utility
+## `styles` build-time utility
 
-`@vapor-ui/core` ships a `$style({...})` macro that compiles to atomic class names at build time:
+`@vapor-ui/core` ships a `styles({...})` macro that compiles to atomic class names at build time:
 
 ```tsx
-import { $style } from '@vapor-ui/core';
+import { styles } from '@vapor-ui/core';
 
 export const Box = () => (
     <div
-        className={$style({
+        className={styles({
             padding: { default: '$400', sm: '$200' },
             backgroundColor: '$blue-500',
             color: { default: '$white', _hover: '$blue-100' },

@@ -41,10 +41,21 @@ function hashContent(input: string): string {
 // returns null, so the extracted CSS is empty. Content-hashed keys
 // (sha1(css).slice(0,12)) guarantee sharing is collision-safe.
 const records = new Map<string, FileRecord>();
-let discoveredLayerOrder: string[] | null = null;
 
 export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
     const opts = resolveOptions(rawOpts ?? {});
+    const layerOrderCss = emitLayerOrderCss(opts.layerOrder);
+    const layerOrderHash = hashContent(layerOrderCss);
+    records.set(layerOrderHash, { css: layerOrderCss, classes: [] });
+
+    // `transformIndexHtml` is Vite-only. When it fires, the layer-order
+    // declaration is already in <head> and there's no point prepending a
+    // duplicate virtual CSS import into every file that imports the Provider
+    // — the browser would parse the same declaration twice. On non-Vite
+    // bundlers (webpack/turbopack) `transformIndexHtml` never runs, so the
+    // per-file import is the ONLY path that gets layer order into the
+    // bundled CSS.
+    let injectedViaHtml = false;
 
     return {
         name: 'vapor-style-macro',
@@ -52,8 +63,8 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
 
         vite: {
             transformIndexHtml(html) {
-                if (!discoveredLayerOrder) return;
-                const tag = `<style>@layer ${discoveredLayerOrder.join(', ')};</style>`;
+                injectedViaHtml = true;
+                const tag = `<style>@layer ${opts.layerOrder.join(', ')};</style>`;
                 // Inject immediately AFTER the opening <head> so the layer
                 // order declaration is the FIRST stylesheet the browser
                 // parses — before any <link rel="stylesheet"> that Vite
@@ -113,12 +124,9 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
                 source: code,
                 filename,
                 manifest: opts.manifest,
-                importSource: opts.importSource,
-                importName: opts.importName,
                 obfuscate: opts.obfuscate,
                 providerImportSource: opts.providerImportSource,
                 providerImportName: opts.providerImportName,
-                layerRegistry: opts.layerRegistry,
             });
 
             if (result.errors.length) {
@@ -131,25 +139,12 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
 
             const prependLines: string[] = [];
 
-            if (result.layerOrder) {
-                if (discoveredLayerOrder) {
-                    // Conflicting declarations across the app — first one wins,
-                    // second is ignored. Warn via Rollup's context.
-                    if (discoveredLayerOrder.join(',') !== result.layerOrder.join(',')) {
-                        this.warn(
-                            `[vapor-style-macro] Multiple \`<${opts.providerImportName} layer={...}>\` occurrences with different orders detected. First occurrence wins.`,
-                        );
-                    }
-                } else {
-                    discoveredLayerOrder = result.layerOrder;
-                }
-                const css = emitLayerOrderCss(result.layerOrder);
-                const layerHash = hashContent(css);
-                records.set(layerHash, { css, classes: [] });
-                // Also emit as a virtual CSS import so environments without an
-                // `index.html` (e.g. library builds) still see the layer-order
-                // declaration in the bundled CSS.
-                prependLines.push(`import "${PUBLIC_PREFIX}${layerHash}${VIRTUAL_SUFFIX}";`);
+            // Non-Vite adapters (webpack/turbopack) have no HTML injection
+            // hook. Piggyback on every file that imports the Provider so
+            // the layer-order declaration lands in the bundled CSS.
+            // Content-hashed virtual module → bundler dedupes across chunks.
+            if (result.hasProviderImport && !injectedViaHtml) {
+                prependLines.push(`import "${PUBLIC_PREFIX}${layerOrderHash}${VIRTUAL_SUFFIX}";`);
             }
 
             if (result.css) {
@@ -178,12 +173,6 @@ export interface VaporStyleOptions {
      */
     manifest?: ManifestShape;
     /**
-     * Module specifier(s) the `$style` symbol is imported from. Pass an array
-     * to recognize multiple subpaths. Defaults to `'@vapor-ui/style-macro'`.
-     */
-    importSource?: string | string[];
-    importName?: string;
-    /**
      * Optional side-effect import injected at the top of every file that uses
      * the macro. Set to a module specifier to auto-load extra CSS (e.g. legacy
      * `@vapor-ui/core/styles.css`). Defaults to `undefined` — no injection.
@@ -202,19 +191,22 @@ export interface VaporStyleOptions {
 
     /**
      * Module specifier(s) that expose the layer-owning Provider component.
-     * When any of these appear alongside a matching `providerImportName`, the
-     * plugin looks for `<Provider layer={...}>` JSX and materializes the
-     * static layer-order expression as a virtual CSS module.
+     * When any of these appear alongside a matching `providerImportName`,
+     * the adapter injects the layer-order CSS import into that file so
+     * webpack/turbopack builds emit the `@layer …;` declaration in the
+     * bundled CSS (Vite uses `transformIndexHtml` instead).
      *
      * Defaults to `['@vapor-ui/core', '@vapor-ui/core/theme-provider']`.
      */
-    providerImportSource?: string | string[];
+    providerImportSource?: string[];
     /** Provider component name. Defaults to `'ThemeProvider'`. */
     providerImportName?: string;
     /**
-     * Layer registry used to resolve `<param>.<key>` accesses inside a
-     * `layer` prop arrow function. Defaults to Vapor's built-in registry
-     * (`theme`, `reset`, `components`, `utilities`).
+     * Cascade layer declaration order. The plugin emits
+     * `@layer <a>, <b>, …;` — the FIRST occurrence wins per CSS spec, so
+     * this array determines the effective priority of each named layer.
+     *
+     * Defaults to `['vapor-theme', 'vapor-reset', 'vapor-components', 'vapor-utilities']`.
      */
-    layerRegistry?: Record<string, string>;
+    layerOrder?: string[];
 }

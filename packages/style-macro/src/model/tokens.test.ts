@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { resolveToken } from './tokens';
 import type { ManifestShape } from './types';
 

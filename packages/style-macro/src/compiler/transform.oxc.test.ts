@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import type { ManifestShape } from '~/model/types';
 
 import { transform } from './transform';
@@ -21,10 +19,10 @@ const MANIFEST: ManifestShape = {
 };
 
 describe('transform (oxc)', () => {
-    it('replaces a $style call with a string literal', () => {
+    it('replaces a styles call with a string literal', () => {
         const src = [
-            `import { $style } from '@vapor-ui/style-macro';`,
-            `const cls = $style({ padding: '$400' });`,
+            `import { styles } from '@vapor-ui/core';`,
+            `const cls = styles({ padding: '$400' });`,
         ].join('\n');
         const result = transform({
             source: src,
@@ -34,14 +32,14 @@ describe('transform (oxc)', () => {
         });
         expect(result.errors).toEqual([]);
         expect(result.classes.length).toBeGreaterThan(0);
-        expect(result.code).not.toContain('$style(');
+        expect(result.code).not.toContain('styles(');
     });
 
     it('preserves surrounding whitespace and comments', () => {
         const src = [
-            `import { $style } from '@vapor-ui/style-macro';`,
+            `import { styles } from '@vapor-ui/core';`,
             `// leading comment`,
-            `const cls = $style({ padding: '$400' }); /* trailing */`,
+            `const cls = styles({ padding: '$400' }); /* trailing */`,
         ].join('\n');
         const result = transform({
             source: src,
@@ -52,12 +50,12 @@ describe('transform (oxc)', () => {
         expect(result.errors).toEqual([]);
         expect(result.code).toContain('// leading comment');
         expect(result.code).toContain('/* trailing */');
-        expect(result.code).not.toContain('$style(');
+        expect(result.code).not.toContain('styles(');
     });
 
-    it('honours import aliasing (import { $style as s })', () => {
+    it('honours import aliasing (import { styles as s })', () => {
         const src = [
-            `import { $style as s } from '@vapor-ui/style-macro';`,
+            `import { styles as s } from '@vapor-ui/core';`,
             `const cls = s({ padding: '$400' });`,
         ].join('\n');
         const result = transform({
@@ -85,12 +83,12 @@ describe('transform (oxc)', () => {
         expect(result.errors).toEqual([]);
     });
 
-    it('handles nested $style calls in post-order (inner rewritten first)', () => {
-        // $style call inside another function argument — inner fires first
+    it('handles nested styles calls in post-order (inner rewritten first)', () => {
+        // styles call inside another function argument — inner fires first
         const src = [
-            `import { $style } from '@vapor-ui/style-macro';`,
-            `const a = wrapper($style({ padding: '$400' }));`,
-            `const b = $style({ padding: '$200' });`,
+            `import { styles } from '@vapor-ui/core';`,
+            `const a = wrapper(styles({ padding: '$400' }));`,
+            `const b = styles({ padding: '$200' });`,
         ].join('\n');
         const result = transform({
             source: src,
@@ -100,7 +98,7 @@ describe('transform (oxc)', () => {
         });
         expect(result.errors).toEqual([]);
         expect(result.classes.length).toBe(2);
-        expect(result.code).not.toContain('$style(');
+        expect(result.code).not.toContain('styles(');
         // Positive: both calls must be rewritten to single-quoted string literals.
         expect(result.code).toMatch(/wrapper\(\s*'[a-zA-Z0-9_\- ]+'\s*\)/);
         expect(result.code).toMatch(/const b = '[a-zA-Z0-9_\- ]+'/);
@@ -108,8 +106,8 @@ describe('transform (oxc)', () => {
 
     it('inlines entry-level ternary using the original test expression source', () => {
         const src = [
-            `import { $style } from '@vapor-ui/style-macro';`,
-            `const cls = $style({ padding: condition ? '$400' : '$200' });`,
+            `import { styles } from '@vapor-ui/core';`,
+            `const cls = styles({ padding: condition ? '$400' : '$200' });`,
         ].join('\n');
         const result = transform({
             source: src,
@@ -119,16 +117,16 @@ describe('transform (oxc)', () => {
         });
         expect(result.errors).toEqual([]);
         expect(result.code).toContain('condition ?');
-        expect(result.code).not.toContain('$style(');
+        expect(result.code).not.toContain('styles(');
         // Lock in: ternary branches must be single-quoted, not double-quoted
         expect(result.code).toMatch(/\?\s*'[a-zA-Z0-9_\- ]+'\s*:\s*'[a-zA-Z0-9_\- ]+'/);
     });
 
     it('parses TSX generic call sites without error', () => {
         const src = [
-            `import { $style } from '@vapor-ui/style-macro';`,
+            `import { styles } from '@vapor-ui/core';`,
             `function Component<T extends object>() {`,
-            `  const cls = $style({ padding: '$400' });`,
+            `  const cls = styles({ padding: '$400' });`,
             `  return null;`,
             `}`,
         ].join('\n');
@@ -140,30 +138,36 @@ describe('transform (oxc)', () => {
         });
         expect(result.errors).toEqual([]);
         expect(result.classes.length).toBeGreaterThan(0);
-        expect(result.code).not.toContain('$style(');
+        expect(result.code).not.toContain('styles(');
     });
 
-    it('emits layer-non-static when multiple <ThemeProvider layer> occur in the same file', () => {
+    it('sets hasProviderImport when ThemeProvider is imported from providerImportSource', () => {
         const source = [
-            `import { $style } from '@vapor-ui/style-macro';`,
+            `import { styles } from '@vapor-ui/core';`,
             `import { ThemeProvider } from '@vapor-ui/core';`,
-            `export const app = (`,
-            `  <ThemeProvider layer={(l) => [l.theme]}>`,
-            `    <ThemeProvider layer={(l) => [l.reset]}>`,
-            `      <div />`,
-            `    </ThemeProvider>`,
-            `  </ThemeProvider>`,
-            `);`,
+            `export const app = (<ThemeProvider><div /></ThemeProvider>);`,
         ].join('\n');
         const result = transform({
             source,
             filename: '/t.tsx',
             manifest: MANIFEST,
             providerImportSource: ['@vapor-ui/core'],
-            layerRegistry: { theme: 'vapor-theme', reset: 'vapor-reset' },
         });
-        expect(result.errors.some((e) => e.code === 'layer-non-static')).toBe(true);
-        // First occurrence still wins for layerOrder.
-        expect(result.layerOrder).toEqual(['vapor-theme']);
+        expect(result.errors).toEqual([]);
+        expect(result.hasProviderImport).toBe(true);
+    });
+
+    it('leaves hasProviderImport false when Provider import is absent', () => {
+        const source = [
+            `import { styles } from '@vapor-ui/core';`,
+            `const cls = styles({ padding: '$400' });`,
+        ].join('\n');
+        const result = transform({
+            source,
+            filename: '/t.tsx',
+            manifest: MANIFEST,
+            providerImportSource: ['@vapor-ui/core'],
+        });
+        expect(result.hasProviderImport).toBe(false);
     });
 });

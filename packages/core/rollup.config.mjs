@@ -132,16 +132,11 @@ const cleanCssLayerDeclarations = () => {
          */
         generateBundle(options, bundle) {
             const layerDeclarationRegex = /^@layer vapor-[a-zA-Z0-9_-]+;\s*/gm;
-            const exceptionFile = 'styles/layers.css.ts.vanilla.css';
 
             for (const fileName in bundle) {
                 const file = bundle[fileName];
 
-                if (
-                    file.type === 'asset' &&
-                    fileName.endsWith('.css') &&
-                    fileName !== exceptionFile
-                ) {
+                if (file.type === 'asset' && fileName.endsWith('.css')) {
                     if (typeof file.source === 'string') {
                         file.source = file.source.replace(layerDeclarationRegex, '');
                     }
