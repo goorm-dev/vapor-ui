@@ -15,12 +15,8 @@ interface ResolvedOptions {
     themeStylesImport: string | null;
     include: (id: string) => boolean;
     obfuscate: boolean;
-    providerImportSource: string[];
-    providerImportName: string;
     layerOrder: string[];
 }
-
-export const DEFAULT_PROVIDER_SOURCES = ['@vapor-ui/core', '@vapor-ui/core/theme-provider'];
 
 export function defaultInclude(id: string): boolean {
     if (id.includes('node_modules')) return false;
@@ -33,10 +29,6 @@ export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
             ? null
             : opts.themeStylesImport;
     const obfuscate = opts.obfuscate ?? process.env.NODE_ENV === 'production';
-    const providerImportSourceRaw = opts.providerImportSource ?? DEFAULT_PROVIDER_SOURCES;
-    const providerImportSource = Array.isArray(providerImportSourceRaw)
-        ? providerImportSourceRaw
-        : [providerImportSourceRaw];
     const layerOrder = opts.layerOrder ?? [...DEFAULT_LAYER_ORDER];
 
     return {
@@ -44,8 +36,6 @@ export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
         themeStylesImport,
         include: opts.include ?? defaultInclude,
         obfuscate,
-        providerImportSource,
-        providerImportName: opts.providerImportName ?? 'ThemeProvider',
         layerOrder,
     };
 }

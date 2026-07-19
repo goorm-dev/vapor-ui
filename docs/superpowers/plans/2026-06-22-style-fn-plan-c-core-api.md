@@ -1,12 +1,12 @@
-# Plan C — `$style` API in `@vapor-ui/core` + PostCSS Helper + App Wiring Implementation Plan
+# Plan C — `styles` API in `@vapor-ui/core` + PostCSS Helper + App Wiring Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Land the `$style` symbol in `@vapor-ui/core`, emit the token manifest JSON its build produces, ship the `@vapor-ui/core/postcss` helper for breakpoint override, and wire the macro into `apps/storybook` (Vite) + `apps/website` (Next/webpack).
+**Goal:** Land the `styles` symbol in `@vapor-ui/core`, emit the token manifest JSON its build produces, ship the `@vapor-ui/core/postcss` helper for breakpoint override, and wire the macro into `apps/storybook` (Vite) + `apps/website` (Next/webpack).
 
 **Architecture:**
 
-1. `$style` is type-only at runtime — a Babel-friendly identifier replaced by Plan B's macro before bundling. Source file holds an `IDENTITY_RUNTIME_FALLBACK` for editor-mode evaluation. The runtime fallback returns `''`.
+1. `styles` is type-only at runtime — a Babel-friendly identifier replaced by Plan B's macro before bundling. Source file holds an `IDENTITY_RUNTIME_FALLBACK` for editor-mode evaluation. The runtime fallback returns `''`.
 2. A new build step (`scripts/build-tokens-manifest.ts`) reads `src/styles/tokens/` exports and emits `dist/tokens.manifest.json` matching Plan A's `ManifestShape`.
 3. `@vapor-ui/core/postcss` wraps `postcss-custom-media` and strict-validates the BP-name override map (sm/md/lg only).
 4. `apps/storybook/vite.config.ts` adds the unplugin. `apps/website/next.config.mjs` adds webpack plugin + splitChunks group + `@custom-media` CSS injection.
@@ -15,7 +15,7 @@
 
 ## Global Constraints
 
-- `$style`'s runtime is type-only (§7.1 & §8).
+- `styles`'s runtime is type-only (§7.1 & §8).
 - Token grammar (§4.3) — only `$<name>` strings allowed in user input; otherwise build-time error.
 - BP override surface: `sm`/`md`/`lg` only (§5.2 & §11). Unknown BP key in `vaporCustomMedia` → throw with a list of accepted names.
 - Token manifest path consumed by the macro must be `@vapor-ui/core/dist/tokens.manifest.json` — already the default in Plan B.
@@ -32,13 +32,13 @@
 ```
 packages/core/
 ├── src/
-│   ├── $style.ts                          # type + runtime fallback export
+│   ├── styles.ts                          # type + runtime fallback export
 │   ├── postcss/
 │   │   ├── index.ts                       # vaporCustomMedia()
 │   │   └── breakpoints.ts                 # default BP definitions (single source)
 │   ├── styles/
 │   │   └── breakpoints.css.ts             # vanilla-extract emit of @custom-media defaults
-│   └── index.ts                            # add: export { $style }
+│   └── index.ts                            # add: export { styles }
 ├── scripts/
 │   └── build-tokens-manifest.ts           # emits dist/tokens.manifest.json
 ├── package.json                            # add scripts/exports/dep entries
@@ -47,7 +47,7 @@ packages/core/
     └── style-fn/
         ├── manifest-shape.test.ts
         ├── postcss-helper.test.ts
-        └── $style-runtime-fallback.test.ts
+        └── styles-runtime-fallback.test.ts
 
 apps/storybook/vite.config.ts               # add unplugin
 apps/website/next.config.mjs                # add webpack plugin + splitChunks
@@ -58,13 +58,13 @@ apps/storybook/src/stories/StyleFn.stories.tsx  # storybook demo + visual baseli
 
 ---
 
-## Task 1: Source `$style` symbol + identity runtime
+## Task 1: Source `styles` symbol + identity runtime
 
 **Files:**
 
-- Create: `packages/core/src/$style.ts`
-- Modify: `packages/core/src/index.ts` (add `export { $style }`)
-- Create: `packages/core/__tests__/style-fn/$style-runtime-fallback.test.ts`
+- Create: `packages/core/src/styles.ts`
+- Modify: `packages/core/src/index.ts` (add `export { styles }`)
+- Create: `packages/core/__tests__/style-fn/styles-runtime-fallback.test.ts`
 
 **Interfaces:**
 
@@ -88,12 +88,12 @@ apps/storybook/src/stories/StyleFn.stories.tsx  # storybook demo + visual baseli
         _active?: StyleValue;
     } & { [key: `@media ${string}`]: StyleValue };
     export type StyleInput = Record<string, StyleValue | ConditionRecord>;
-    export function $style(input: StyleInput): string;
+    export function styles(input: StyleInput): string;
     ```
 
-    At runtime, `$style` returns `''` (call is removed at build time). Source must remain JSX/Babel-parseable.
+    At runtime, `styles` returns `''` (call is removed at build time). Source must remain JSX/Babel-parseable.
 
-- [ ] **Step 1: Write `src/$style.ts`**
+- [ ] **Step 1: Write `src/styles.ts`**
 
 ```ts
 export type StyleTokenValue = `$${string}`;
@@ -123,14 +123,14 @@ export type StyleInput = Record<string, StyleValue | ConditionRecord>;
  * If you see this body executing at runtime, the macro is not configured in your
  * bundler — install `@vapor-ui/style-macro/unplugin` per the migration guide.
  */
-export function $style(_input: StyleInput): string {
+export function styles(_input: StyleInput): string {
     if (
         typeof console !== 'undefined' &&
         typeof process !== 'undefined' &&
         process.env?.NODE_ENV !== 'production'
     ) {
         console.warn(
-            '[@vapor-ui/core] $style was called at runtime — your bundler is missing @vapor-ui/style-macro/unplugin. Returning empty string.',
+            '[@vapor-ui/core] styles was called at runtime — your bundler is missing @vapor-ui/style-macro/unplugin. Returning empty string.',
         );
     }
     return '';
@@ -142,25 +142,25 @@ export function $style(_input: StyleInput): string {
 Add line near the other top-level exports (after the `components/*` block):
 
 ```ts
-export { $style } from './$style';
-export type { StyleInput, StyleValue, ConditionRecord, StyleTokenValue } from './$style';
+export { styles } from './styles';
+export type { StyleInput, StyleValue, ConditionRecord, StyleTokenValue } from './styles';
 ```
 
-- [ ] **Step 3: Write failing test `__tests__/style-fn/$style-runtime-fallback.test.ts`**
+- [ ] **Step 3: Write failing test `__tests__/style-fn/styles-runtime-fallback.test.ts`**
 
 ```ts
 import { describe, expect, it, vi } from 'vitest';
 
-import { $style } from '../../src/$style';
+import { styles } from '../../src/styles';
 
-describe('$style runtime fallback', () => {
+describe('styles runtime fallback', () => {
     it('returns empty string', () => {
-        expect($style({ padding: '$400' })).toBe('');
+        expect(styles({ padding: '$400' })).toBe('');
     });
 
     it('warns when invoked at runtime in dev', () => {
         const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        $style({ padding: '$400' });
+        styles({ padding: '$400' });
         expect(spy).toHaveBeenCalledTimes(1);
         spy.mockRestore();
     });
@@ -169,7 +169,7 @@ describe('$style runtime fallback', () => {
 
 - [ ] **Step 4: Run test, verify pass**
 
-Run: `pnpm --filter @vapor-ui/core vitest run __tests__/style-fn/$style-runtime-fallback.test.ts`
+Run: `pnpm --filter @vapor-ui/core vitest run __tests__/style-fn/styles-runtime-fallback.test.ts`
 Expected: PASS.
 
 - [ ] **Step 5: Verify typecheck + build**
@@ -181,8 +181,8 @@ Expected: clean.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add packages/core/src/\$style.ts packages/core/src/index.ts packages/core/__tests__/style-fn
-git commit -m "feat(core): add \$style symbol with runtime fallback"
+git add packages/core/src/\styles.ts packages/core/src/index.ts packages/core/__tests__/style-fn
+git commit -m "feat(core): add \styles symbol with runtime fallback"
 ```
 
 ---
@@ -659,7 +659,7 @@ git commit -m "feat(core): vaporCustomMedia + breakpoints CSS export"
 
 **Interfaces:**
 
-- Consumes: Plan B's `vaporStyleMacro.vite()`, `@vapor-ui/core`'s `$style` + `breakpoints.css`.
+- Consumes: Plan B's `vaporStyleMacro.vite()`, `@vapor-ui/core`'s `styles` + `breakpoints.css`.
 - Produces: a story `style-fn/basics` showing static, ternary, responsive, and pseudo cases; serves as the Playwright visual baseline.
 
 - [ ] **Step 1: Update `apps/storybook/vite.config.ts`**
@@ -696,20 +696,20 @@ This ensures `@custom-media --vapor-{sm,md,lg}` is in scope. (If preview already
 ```tsx
 import { useState } from 'react';
 
-import { $style } from '@vapor-ui/core';
+import { styles } from '@vapor-ui/core';
 
-export default { title: 'utility/$style' };
+export default { title: 'utility/styles' };
 
 export const Basics = () => {
     const [active, setActive] = useState(false);
     return (
         <div style={{ display: 'flex', gap: 16, flexDirection: 'column' }}>
-            <div className={$style({ padding: '$400', backgroundColor: '$primary' })}>static</div>
-            <div className={$style({ padding: { default: '$200', sm: '$100', md: '$300' } })}>
+            <div className={styles({ padding: '$400', backgroundColor: '$primary' })}>static</div>
+            <div className={styles({ padding: { default: '$200', sm: '$100', md: '$300' } })}>
                 responsive
             </div>
             <div
-                className={$style({
+                className={styles({
                     backgroundColor: { default: '$bg-gray-100', _hover: '$primary' },
                 })}
             >
@@ -717,7 +717,7 @@ export const Basics = () => {
             </div>
             <button
                 onClick={() => setActive((s) => !s)}
-                className={$style({ backgroundColor: active ? '$primary' : '$bg-gray-100' })}
+                className={styles({ backgroundColor: active ? '$primary' : '$bg-gray-100' })}
             >
                 ternary
             </button>
@@ -735,7 +735,7 @@ Open the story. Confirm classes are applied. Stop the server.
 
 ```bash
 git add apps/storybook
-git commit -m "feat(storybook): wire \$style macro + demo story"
+git commit -m "feat(storybook): wire \styles macro + demo story"
 ```
 
 ---
@@ -834,12 +834,12 @@ Expected: build succeeds; the build log mentions a `vapor-style` chunk being emi
 
 ```bash
 git add apps/website
-git commit -m "feat(website): wire \$style macro + vaporCustomMedia"
+git commit -m "feat(website): wire \styles macro + vaporCustomMedia"
 ```
 
 ---
 
-## Task 6: Visual regression (Playwright) baseline for `$style`
+## Task 6: Visual regression (Playwright) baseline for `styles`
 
 **Files:**
 
@@ -862,7 +862,7 @@ Example (adapt path):
 ```ts
 import { expect, test } from '@playwright/test';
 
-test('utility/$style — basics renders deterministically', async ({ page }) => {
+test('utility/styles — basics renders deterministically', async ({ page }) => {
     await page.goto('/iframe.html?id=utility-style--basics');
     await expect(page.locator('body')).toHaveScreenshot('style-fn-basics.png');
 });
@@ -882,7 +882,7 @@ Expected: PASS.
 
 ```bash
 git add apps/storybook
-git commit -m "test(storybook): visual baseline for \$style basics"
+git commit -m "test(storybook): visual baseline for \styles basics"
 ```
 
 ---
@@ -899,19 +899,19 @@ git commit -m "test(storybook): visual baseline for \$style basics"
 - Consumes: nothing.
 - Produces: human docs for the new function + bundler setup.
 
-- [ ] **Step 1: Update `packages/core/README.md` with a `$style` section**
+- [ ] **Step 1: Update `packages/core/README.md` with a `styles` section**
 
 Add a section under `Usage`:
 
 ````markdown
-## `$style`
+## `styles`
 
 Build-time utility CSS API. Returns a class-name string at build time; the runtime fallback returns `''`.
 
 ```tsx
-import { $style } from '@vapor-ui/core';
+import { styles } from '@vapor-ui/core';
 
-<Box className={$style({ padding: '$400', backgroundColor: '$bg-gray-100' })} />;
+<Box className={styles({ padding: '$400', backgroundColor: '$bg-gray-100' })} />;
 ```
 ````
 
@@ -924,7 +924,7 @@ Requires `@vapor-ui/style-macro/unplugin` in your bundler. See [the migration gu
 Create `apps/website/content/docs/migration/style-fn.mdx`:
 ```mdx
 ---
-title: '$style 함수 사용 가이드'
+title: 'styles 함수 사용 가이드'
 description: '빌드 타임 유틸리티 CSS API'
 ---
 
@@ -985,7 +985,7 @@ Expected: PASS.
 
 ```bash
 git add packages/core/README.md apps/website/content/docs/migration
-git commit -m "docs: \$style migration guide"
+git commit -m "docs: \styles migration guide"
 ````
 
 ---
@@ -998,7 +998,7 @@ git commit -m "docs: \$style migration guide"
 - §7.2 #7 manifest as single source of truth → Task 2.
 - §7.3 splitChunks block + Turbopack notice → Task 5 (verbatim).
 - §7.4 Vite config → Task 4.
-- §8 SSR — `$style` source is RSC-safe (no runtime); covered by Task 1.
+- §8 SSR — `styles` source is RSC-safe (no runtime); covered by Task 1.
 - §10 Storybook + website integration + Playwright visual → Tasks 4 + 5 + 6.
 
 **Out of scope for Plan C (handed off):** codemod (Plan D), JSDoc `@deprecated` + dev-mode warning on `$css` (Plan E).

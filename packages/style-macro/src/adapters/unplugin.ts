@@ -125,8 +125,6 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
                 filename,
                 manifest: opts.manifest,
                 obfuscate: opts.obfuscate,
-                providerImportSource: opts.providerImportSource,
-                providerImportName: opts.providerImportName,
             });
 
             if (result.errors.length) {
@@ -189,18 +187,6 @@ export interface VaporStyleOptions {
      */
     obfuscate?: boolean;
 
-    /**
-     * Module specifier(s) that expose the layer-owning Provider component.
-     * When any of these appear alongside a matching `providerImportName`,
-     * the adapter injects the layer-order CSS import into that file so
-     * webpack/turbopack builds emit the `@layer …;` declaration in the
-     * bundled CSS (Vite uses `transformIndexHtml` instead).
-     *
-     * Defaults to `['@vapor-ui/core', '@vapor-ui/core/theme-provider']`.
-     */
-    providerImportSource?: string[];
-    /** Provider component name. Defaults to `'ThemeProvider'`. */
-    providerImportName?: string;
     /**
      * Cascade layer declaration order. The plugin emits
      * `@layer <a>, <b>, …;` — the FIRST occurrence wins per CSS spec, so

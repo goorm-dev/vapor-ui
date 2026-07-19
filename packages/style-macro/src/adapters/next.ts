@@ -100,8 +100,6 @@ export default function vaporStyleNext<T extends object = object>(
             manifest: unpluginOpts.manifest,
             obfuscate: unpluginOpts.obfuscate,
             themeStylesImport: unpluginOpts.themeStylesImport,
-            providerImportSource: unpluginOpts.providerImportSource,
-            providerImportName: unpluginOpts.providerImportName,
             layerOrder: unpluginOpts.layerOrder,
         };
         const loaderOptions = Object.fromEntries(

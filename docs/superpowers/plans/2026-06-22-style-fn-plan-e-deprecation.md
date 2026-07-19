@@ -113,7 +113,7 @@ describe('warnCssPropOnce', () => {
         warnCssPropOnce('Box');
         const msg = (spy.mock.calls[0]?.[0] ?? '') as string;
         expect(msg).toMatch(/css-to-style/);
-        expect(msg).toMatch(/\$style/);
+        expect(msg).toMatch(/\styles/);
     });
 });
 ```
@@ -143,7 +143,7 @@ export function warnCssPropOnce(siteHint?: string): void {
     warned.add(key);
     if (typeof console === 'undefined') return;
     console.warn(
-        `[@vapor-ui/core] The "$css" prop is deprecated. Switch to the new "$style" function for build-time atomic CSS.\n` +
+        `[@vapor-ui/core] The "$css" prop is deprecated. Switch to the new "styles" function for build-time atomic CSS.\n` +
             `  Run: npx @vapor-ui/codemod css-to-style <paths>\n` +
             `  Site: ${key}`,
     );
@@ -279,7 +279,7 @@ to:
 
 ```ts
 /**
- * @deprecated Use the `$style` function instead. Run `npx @vapor-ui/codemod css-to-style` to migrate.
+ * @deprecated Use the `styles` function instead. Run `npx @vapor-ui/codemod css-to-style` to migrate.
  * @see https://vapor-ui.goorm.io/docs/migration/style-fn
  */
 $css?: Sprinkles;
@@ -348,10 +348,10 @@ Look at an existing `.changeset/*.md`. Match front-matter exactly.
 '@vapor-ui/core': minor
 ---
 
-Deprecate the `$css` prop in favor of the new build-time `$style` function.
+Deprecate the `$css` prop in favor of the new build-time `styles` function.
 
 - `$css` now carries a `@deprecated` JSDoc annotation; editors / TypeScript will surface the notice.
-- In development, the first consumer call site per session emits a one-time `console.warn` referencing the codemod and the new `$style` API. The warning is silent in production.
+- In development, the first consumer call site per session emits a one-time `console.warn` referencing the codemod and the new `styles` API. The warning is silent in production.
 - Behavior is unchanged. Migrate at your own pace via `npx @vapor-ui/codemod css-to-style <paths>` or follow the [migration guide](https://vapor-ui.goorm.io/docs/migration/style-fn).
 ```
 

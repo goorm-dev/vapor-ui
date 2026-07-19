@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Ship a jscodeshift transform that rewrites Vapor UI consumer code from the legacy `$css` prop and the flat deprecated layout props (`padding`, `margin`, `width`, …) to a single `$style({...})` call. Skip-with-warning on dynamic cases the macro can't validate at build time.
+**Goal:** Ship a jscodeshift transform that rewrites Vapor UI consumer code from the legacy `$css` prop and the flat deprecated layout props (`padding`, `margin`, `width`, …) to a single `styles({...})` call. Skip-with-warning on dynamic cases the macro can't validate at build time.
 
 **Architecture:** New transform under `packages/codemod/src/transforms/v1/migrate/migrations/css-to-style.ts`. Reused per-existing-pattern test harness (fixtures in `__testfixtures__/`, jscodeshift `defineTest`-equivalent via existing `runTestTransform`). New CLI entry: `vapor-codemod css-to-style src/`.
 
@@ -12,10 +12,10 @@
 
 - Transform only files importing from `@vapor-ui/core` (existing pattern via `hasTargetPackageImports`).
 - Spec §9.1 specifies two responsibilities and they must both ship in this transform:
-    1. `<X $css={{...}}/>` → `<X className={$style({...})}/>`.
-    2. Flat deprecated layout props (`padding`, `paddingTop`, `paddingBottom`, `paddingLeft`, `paddingRight`, `paddingX`, `paddingY`, `margin`, `marginTop`, `marginBottom`, `marginLeft`, `marginRight`, `marginX`, `marginY`, `gap`, `width`, `height`, `minWidth`, `minHeight`, `maxWidth`, `maxHeight`, `color`, `backgroundColor`, `borderColor`, `border`, `borderRadius`, `opacity`, `pointerEvents`, `overflow`, `textAlign`, `position`, `display`, `alignItems`, `justifyContent`, `flexDirection`, `alignContent`) — consolidate into the same `$style` call.
+    1. `<X $css={{...}}/>` → `<X className={styles({...})}/>`.
+    2. Flat deprecated layout props (`padding`, `paddingTop`, `paddingBottom`, `paddingLeft`, `paddingRight`, `paddingX`, `paddingY`, `margin`, `marginTop`, `marginBottom`, `marginLeft`, `marginRight`, `marginX`, `marginY`, `gap`, `width`, `height`, `minWidth`, `minHeight`, `maxWidth`, `maxHeight`, `color`, `backgroundColor`, `borderColor`, `border`, `borderRadius`, `opacity`, `pointerEvents`, `overflow`, `textAlign`, `position`, `display`, `alignItems`, `justifyContent`, `flexDirection`, `alignContent`) — consolidate into the same `styles` call.
 - Existing `className` on the element must be preserved: if a static string literal, merge with template literal; if dynamic, merge via `clsx`. Only emit `import { clsx } from 'clsx';` when this branch fires AND no `clsx` import already exists.
-- The `$style` import must be added when first introduced; if the file already imports it, reuse.
+- The `styles` import must be added when first introduced; if the file already imports it, reuse.
 - Spread props (`{...rest}`), variable references (`<Box $css={something}/>`), and dynamic-object inputs are **not** transformed. They are reported via the existing codemod CLI report channel (see existing transforms for the pattern; the function returns the file unchanged and pushes a warning row).
 - Ternary on JSX-attribute values (e.g. `$css={isActive ? a : b}`) is **not** transformed if either branch is a variable reference.
 - Per spec §11 token grammar — values that already use `$` strings are preserved verbatim; non-token literals (`'1rem'`, `0`) are preserved verbatim. The transform does NOT validate against the manifest (that's the macro's job).
@@ -80,12 +80,12 @@ packages/codemod/src/bin/cli.ts             # register `css-to-style` subcommand
     export function isStaticCssValue(node, j): boolean;      // literal / token string / static ternary
     export interface ConsolidationPlan {
         ok: true;
-        objectProperties: jscodeshift.Property[];            // merged keys/values for the new $style({...})
+        objectProperties: jscodeshift.Property[];            // merged keys/values for the new styles({...})
         jsxAttrsToRemove: jscodeshift.JSXAttribute[];
         preservedClassName: jscodeshift.JSXAttribute | null;
     } | { ok: false; reason: 'spread' | 'dynamic-value' | 'mixed-with-other-attrs' };
     export function planConsolidation(openingElement, j): ConsolidationPlan;
-    export function ensureStyleImport(root, j): void;        // add `import { $style } from '@vapor-ui/core'` if missing
+    export function ensureStyleImport(root, j): void;        // add `import { styles } from '@vapor-ui/core'` if missing
     export function ensureClsxImport(root, j): void;
     export function mergeClassName(
         previous: jscodeshift.JSXAttribute | null,
@@ -272,7 +272,7 @@ export function ensureStyleImport(root: Collection<unknown>, j: JSCodeshift): vo
             .get('body', 0)
             .insertBefore(
                 j.importDeclaration(
-                    [j.importSpecifier(j.identifier('$style'))],
+                    [j.importSpecifier(j.identifier('styles'))],
                     j.literal('@vapor-ui/core'),
                 ),
             );
@@ -280,9 +280,9 @@ export function ensureStyleImport(root: Collection<unknown>, j: JSCodeshift): vo
     }
     const node = existing.nodes()[0];
     const has = node.specifiers?.some(
-        (s) => s.type === 'ImportSpecifier' && s.imported.name === '$style',
+        (s) => s.type === 'ImportSpecifier' && s.imported.name === 'styles',
     );
-    if (!has) node.specifiers?.push(j.importSpecifier(j.identifier('$style')));
+    if (!has) node.specifiers?.push(j.importSpecifier(j.identifier('styles')));
 }
 
 export function ensureClsxImport(root: Collection<unknown>, j: JSCodeshift): void {
@@ -385,7 +385,7 @@ export function transformCssToStyle(
             return;
         }
 
-        const callExpr = j.callExpression(j.identifier('$style'), [
+        const callExpr = j.callExpression(j.identifier('styles'), [
             j.objectExpression(plan.properties),
         ]);
         const mergedClassName = mergeClassName(plan.classNameAttr, callExpr, j, root);
@@ -468,9 +468,9 @@ export const X = () => <Box $css={{ padding: '$400', backgroundColor: '$primary'
 `static-css-only.output.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 
-export const X = () => <Box className={$style({ padding: '$400', backgroundColor: '$primary' })} />;
+export const X = () => <Box className={styles({ padding: '$400', backgroundColor: '$primary' })} />;
 ```
 
 `ternary-css.input.tsx`:
@@ -486,10 +486,10 @@ export const X = ({ active }) => (
 `ternary-css.output.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 
 export const X = ({ active }) => (
-    <Box className={$style({ backgroundColor: active ? '$primary' : '$bg-gray-100' })} />
+    <Box className={styles({ backgroundColor: active ? '$primary' : '$bg-gray-100' })} />
 );
 ```
 
@@ -504,9 +504,9 @@ export const X = () => <Box padding="$400" backgroundColor="$primary" />;
 `flat-props-only.output.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 
-export const X = () => <Box className={$style({ padding: '$400', backgroundColor: '$primary' })} />;
+export const X = () => <Box className={styles({ padding: '$400', backgroundColor: '$primary' })} />;
 ```
 
 `css-and-flat-props.input.tsx`:
@@ -520,9 +520,9 @@ export const X = () => <Box padding="$400" $css={{ color: '$primary' }} />;
 `css-and-flat-props.output.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 
-export const X = () => <Box className={$style({ padding: '$400', color: '$primary' })} />;
+export const X = () => <Box className={styles({ padding: '$400', color: '$primary' })} />;
 ```
 
 `collision-flat-then-css.input.tsx` — precedence test, flat prop appears first:
@@ -537,10 +537,10 @@ export const X = () => <Box padding="$200" $css={{ padding: '$400' }} />;
 `collision-flat-then-css.output.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 
 // Same key from both surfaces → emit only one entry, sourced from $css (the winner today).
-export const X = () => <Box className={$style({ padding: '$400' })} />;
+export const X = () => <Box className={styles({ padding: '$400' })} />;
 ```
 
 `collision-css-then-flat.input.tsx` — precedence test, `$css` appears first:
@@ -555,9 +555,9 @@ export const X = () => <Box $css={{ padding: '$400' }} padding="$200" />;
 `collision-css-then-flat.output.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 
-export const X = () => <Box className={$style({ padding: '$400' })} />;
+export const X = () => <Box className={styles({ padding: '$400' })} />;
 ```
 
 > Implementation note for Task 2: when both `$css` and a flat-prop carry the same key, keep the `$css` value and drop the flat-prop value. The `planConsolidation` helper from Task 1 must implement this — change the property accumulation so flat-prop entries skip keys already populated from `$css`, regardless of attribute source order. Add a small unit test in `style-prop-utils.test.ts` to lock the precedence rule explicitly.
@@ -573,9 +573,9 @@ export const X = () => <Box className="existing" padding="$400" />;
 `existing-classname-literal.output.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 
-export const X = () => <Box className={`existing ${$style({ padding: '$400' })}`} />;
+export const X = () => <Box className={`existing ${styles({ padding: '$400' })}`} />;
 ```
 
 `existing-classname-dynamic.input.tsx`:
@@ -589,16 +589,16 @@ export const X = ({ cls }) => <Box className={cls} padding="$400" />;
 `existing-classname-dynamic.output.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 import { clsx } from 'clsx';
 
-export const X = ({ cls }) => <Box className={clsx(cls, $style({ padding: '$400' }))} />;
+export const X = ({ cls }) => <Box className={clsx(cls, styles({ padding: '$400' }))} />;
 ```
 
 `existing-style-import.input.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 
 export const X = () => <Box padding="$400" />;
 ```
@@ -606,9 +606,9 @@ export const X = () => <Box padding="$400" />;
 `existing-style-import.output.tsx`:
 
 ```tsx
-import { $style, Box } from '@vapor-ui/core';
+import { Box, styles } from '@vapor-ui/core';
 
-export const X = () => <Box className={$style({ padding: '$400' })} />;
+export const X = () => <Box className={styles({ padding: '$400' })} />;
 ```
 
 `no-vapor-import-skip.input.tsx`:
@@ -738,7 +738,7 @@ Add (or update) a registration block resembling:
 ```ts
 program
     .command('css-to-style <paths...>')
-    .description('Convert $css prop + flat layout props to $style({...})')
+    .description('Convert $css prop + flat layout props to styles({...})')
     .option('--dry', 'Print diff without writing')
     .action(async (paths, opts) => {
         await runTransform({
@@ -833,7 +833,7 @@ Add a section:
 
 `npx @vapor-ui/codemod css-to-style <paths...>`
 
-Converts the legacy `$css` prop and deprecated flat layout props (`padding`, `margin`, `width`, …) into a single `$style({...})` call.
+Converts the legacy `$css` prop and deprecated flat layout props (`padding`, `margin`, `width`, …) into a single `styles({...})` call.
 
 ### Skipped cases
 
@@ -846,8 +846,8 @@ These are reported but not transformed — review and convert manually:
 
 ### className merge
 
-- Static literal preserved with template literal: ``className={`existing ${$style({...})}`}``
-- Dynamic className merged via `clsx`: `className={clsx(prev, $style({...}))}` (import auto-added)
+- Static literal preserved with template literal: ``className={`existing ${styles({...})}`}``
+- Dynamic className merged via `clsx`: `className={clsx(prev, styles({...}))}` (import auto-added)
 ```
 
 - [ ] **Step 2: Commit**
@@ -861,11 +861,11 @@ git commit -m "docs(codemod): css-to-style usage"
 
 ## Self-review against spec
 
-- §9.1 first responsibility: `<X $css={{...}}/>` → `<X className={$style({...})} />` → Task 2 + fixture.
+- §9.1 first responsibility: `<X $css={{...}}/>` → `<X className={styles({...})} />` → Task 2 + fixture.
 - §9.1 second responsibility: consolidate flat deprecated props → Task 1 (`FLAT_LAYOUT_PROPS`) + Task 2 + fixtures.
 - §9.1 className merge (template-literal OR clsx) → Task 1 `mergeClassName` + fixtures.
 - §9.1 skip + report unconvertible cases → Task 2's warning channel + Task 6 docs.
 
 **Out of scope for Plan D (handed off):** deprecation runtime warning on `$css` (Plan E), JSDoc `@deprecated` (Plan E).
 
-**Dependency note:** This plan depends on Plan C landing the `$style` symbol in `@vapor-ui/core`. The fixture files import `$style` from `@vapor-ui/core` and will not type-check until Plan C ships. The jscodeshift transform itself does not need `$style` to exist; only the transformed code does.
+**Dependency note:** This plan depends on Plan C landing the `styles` symbol in `@vapor-ui/core`. The fixture files import `styles` from `@vapor-ui/core` and will not type-check until Plan C ships. The jscodeshift transform itself does not need `styles` to exist; only the transformed code does.

@@ -50,8 +50,6 @@ export default async function vaporStyleTurbopackLoader(
         filename: this.resourcePath,
         manifest: opts.manifest,
         obfuscate: opts.obfuscate,
-        providerImportSource: opts.providerImportSource,
-        providerImportName: opts.providerImportName,
     });
 
     if (result.errors.length > 0) {

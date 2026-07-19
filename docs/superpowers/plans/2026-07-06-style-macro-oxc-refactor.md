@@ -4,14 +4,14 @@
 
 **Goal:** Replace the `@babel/*` parser/traverser/generator pipeline in `@vapor-ui/style-macro` with `oxc-parser` + `magic-string` splice emit while keeping every downstream contract (`transform()` I/O, `RawEntry` shape, existing tests) identical.
 
-**Architecture:** Parse source once with `oxc-parser` (Rust native). Walk the AST manually to locate the `$style()` call sites, `ThemeProvider layer={...}` prop, and the macro import binding. Convert each `$style()` node into a `RawEntry[]` (existing shape), validate against the manifest, build a plain-string class list, and splice a JS string literal into the original source at the call's byte range using `magic-string`. Skip AST regeneration entirely.
+**Architecture:** Parse source once with `oxc-parser` (Rust native). Walk the AST manually to locate the `styles()` call sites, `ThemeProvider layer={...}` prop, and the macro import binding. Convert each `styles()` node into a `RawEntry[]` (existing shape), validate against the manifest, build a plain-string class list, and splice a JS string literal into the original source at the call's byte range using `magic-string`. Skip AST regeneration entirely.
 
 **Tech Stack:** TypeScript, Node ≥ 20, `oxc-parser`, `magic-string`, `unplugin`, `vitest`, `tsup`.
 
 ## Global Constraints
 
 - Package scope: only `packages/style-macro/`. Do not modify sibling packages or app code.
-- Public API surface unchanged: `import $style from '@vapor-ui/style-macro'`, `@vapor-ui/style-macro/unplugin`.
+- Public API surface unchanged: `import styles from '@vapor-ui/style-macro'`, `@vapor-ui/style-macro/unplugin`.
 - `transform()` return shape unchanged: `{ code, css, classes, layerOrder, errors }`.
 - `RawEntry` / `RawValue` types (`src/parse-call.ts`) keep their existing fields; only the internal AST-shape reader changes. `testNode` becomes an opaque oxc node; downstream code must not use its structural properties.
 - Source map: `map: null` remains in `unplugin.ts`.
@@ -45,11 +45,11 @@
 
 **Unchanged**
 
-- `src/$style.ts`, `src/class-name.ts`, `src/emit-css.ts`, `src/tokens.ts`, `src/condition.ts`, `src/validate-input.ts`, `src/property-shorthand.ts`, `src/types.ts`
+- `src/styles.ts`, `src/class-name.ts`, `src/emit-css.ts`, `src/tokens.ts`, `src/condition.ts`, `src/validate-input.ts`, `src/property-shorthand.ts`, `src/types.ts`
 - `src/unplugin.ts`, `src/unplugin-entry.ts`, `src/unplugin-types.ts`
 - `src/code-frame.ts`
-- `src/$style.test.ts`, `src/class-name.test.ts`, `src/condition.test.ts`, `src/emit-css.test.ts`, `src/property-shorthand.test.ts`, `src/tokens.test.ts`
-- `src/$style.stories.tsx`
+- `src/styles.test.ts`, `src/class-name.test.ts`, `src/condition.test.ts`, `src/emit-css.test.ts`, `src/property-shorthand.test.ts`, `src/tokens.test.ts`
+- `src/styles.stories.tsx`
 
 ---
 
@@ -214,7 +214,7 @@ import { validateInput } from './validate-input';
 // ... manifest constant unchanged ...
 
 function callArg(src: string): any {
-    const ast = parseSync('t.ts', `$style(${src})`, { sourceType: 'module', lang: 'ts' });
+    const ast = parseSync('t.ts', `styles(${src})`, { sourceType: 'module', lang: 'ts' });
     const stmt: any = (ast.program as any).body[0];
     return stmt.expression.arguments[0];
 }
@@ -378,7 +378,7 @@ Expected: PASS. Note: `transform.ts` still imports `@babel/*` at this point and 
 
 ```bash
 git add packages/style-macro/src/parse-call.ts packages/style-macro/src/validate-input.test.ts
-git commit -m "refactor(style-macro): read $style() call args from oxc AST"
+git commit -m "refactor(style-macro): read styles() call args from oxc AST"
 ```
 
 ---
@@ -602,11 +602,11 @@ const MANIFEST: any = {
 };
 
 describe('transform (oxc)', () => {
-    it.skip('replaces a $style call with a string literal', () => {});
+    it.skip('replaces a styles call with a string literal', () => {});
     it.skip('preserves surrounding whitespace and comments', () => {});
-    it.skip('honours import aliasing (import { $style as s })', () => {});
+    it.skip('honours import aliasing (import { styles as s })', () => {});
     it.skip('skips parsing when the marker is absent', () => {});
-    it.skip('handles nested $style calls in post-order (inner rewritten first)', () => {});
+    it.skip('handles nested styles calls in post-order (inner rewritten first)', () => {});
     it.skip('inlines entry-level ternary using the original test expression source', () => {});
     it.skip('parses TSX generic call sites without error', () => {});
 });
@@ -640,7 +640,7 @@ export interface TransformOpts {
     manifest: ManifestShape;
     importSource?: string | string[];
     importName?: string;
-    providerImportSource?: string | string[];
+    providerImportSource?: string[];
     providerImportName?: string;
     layerRegistry?: LayerRegistry;
     obfuscate?: boolean;
@@ -667,7 +667,7 @@ const EMPTY_RESULT = (source: string): TransformResult => ({
 // for entry-level ternaries). Reuse validateInput/emitCss unchanged.
 
 export function transform(opts: TransformOpts): TransformResult {
-    const importName = opts.importName ?? '$style';
+    const importName = opts.importName ?? 'styles';
     const importSources = new Set(
         Array.isArray(opts.importSource)
             ? opts.importSource
@@ -755,7 +755,7 @@ export function transform(opts: TransformOpts): TransformResult {
             if (!arg || arg.type !== 'ObjectExpression') {
                 errors.push({
                     code: 'invalid-input-shape',
-                    message: '`$style(...)` expects a single object literal argument.',
+                    message: '`styles(...)` expects a single object literal argument.',
                     loc: {
                         line: (node.loc?.start.line ?? 1) - 1,
                         column: node.loc?.start.column ?? 0,
@@ -798,11 +798,11 @@ export function transform(opts: TransformOpts): TransformResult {
 Un-skip and flesh out each `it()` in `transform.oxc.test.ts`. Example for the first:
 
 ```ts
-it('replaces a $style call with a string literal', () => {
+it('replaces a styles call with a string literal', () => {
     const source = [
-        `import { $style } from '@vapor-ui/style-macro';`,
+        `import { styles } from '@vapor-ui/style-macro';`,
         ``,
-        `export const cls = $style({ padding: '$400', color: '$primary' });`,
+        `export const cls = styles({ padding: '$400', color: '$primary' });`,
     ].join('\n');
     const result = transform({ source, filename: '/t.tsx', manifest: MANIFEST });
     expect(result.errors).toEqual([]);
@@ -823,7 +823,7 @@ Expected: each newly-enabled test PASS. Stop and fix the transform if any fails.
 - [ ] **Step 5: Run the full package suite**
 
 Run: `pnpm --filter @vapor-ui/style-macro test`
-Expected: PASS. All existing tests plus the new oxc suite. `$style.test.ts`, `class-name.test.ts`, `condition.test.ts`, `emit-css.test.ts`, `property-shorthand.test.ts`, `tokens.test.ts` remain byte-identical.
+Expected: PASS. All existing tests plus the new oxc suite. `styles.test.ts`, `class-name.test.ts`, `condition.test.ts`, `emit-css.test.ts`, `property-shorthand.test.ts`, `tokens.test.ts` remain byte-identical.
 
 - [ ] **Step 6: Type-check**
 
@@ -1004,9 +1004,9 @@ const MANIFEST: any = {
 };
 
 function makeSource(callCount: number): string {
-    const lines: string[] = [`import { $style } from '@vapor-ui/style-macro';`];
+    const lines: string[] = [`import { styles } from '@vapor-ui/style-macro';`];
     for (let i = 0; i < callCount; i++) {
-        lines.push(`export const c${i} = $style({ padding: '$400', color: '$primary' });`);
+        lines.push(`export const c${i} = styles({ padding: '$400', color: '$primary' });`);
     }
     return lines.join('\n');
 }

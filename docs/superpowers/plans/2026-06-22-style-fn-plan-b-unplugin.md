@@ -17,7 +17,7 @@
 - Cache stability: same source + manifest → identical virtual module id (content hash) so the bundler's persistent cache stays valid.
 - HMR: file change recomputes hash; old virtual id becomes unreachable; bundler invalidates it via standard `hotUpdate` semantics.
 - Plan A's public surface is frozen — this plan only consumes `transform`/`loadManifest`/types.
-- No `$style` API exists in `@vapor-ui/core` yet — fixtures here use a private package source pointing to a stub `$style` export (see Task 2).
+- No `styles` API exists in `@vapor-ui/core` yet — fixtures here use a private package source pointing to a stub `styles` export (see Task 2).
 - Locked decisions (§11): manifest path is **always configurable** via plugin option `tokensManifestPath`, default `require.resolve('@vapor-ui/core/dist/tokens.manifest.json')`.
 
 ---
@@ -66,7 +66,7 @@ packages/style-macro/
     export interface VaporStyleOptions {
         tokensManifestPath?: string;
         importSource?: string; // default '@vapor-ui/core'
-        importName?: string; // default '$style'
+        importName?: string; // default 'styles'
         include?: (id: string) => boolean;
     }
     declare const vaporStyleMacro: ReturnType<typeof createUnplugin<VaporStyleOptions>>;
@@ -161,7 +161,7 @@ function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
     return {
         manifest: loadManifest(manifestPath),
         importSource: opts.importSource ?? '@vapor-ui/core',
-        importName: opts.importName ?? '$style',
+        importName: opts.importName ?? 'styles',
         include: opts.include ?? defaultInclude,
     };
 }
@@ -256,7 +256,7 @@ git commit -m "feat(style-macro): unplugin adapter with virtual CSS module"
 
 - Create: `packages/style-macro/tests/unplugin/fixtures/package.json`
 - Create: `packages/style-macro/tests/unplugin/fixtures/manifest.json` (copy of `tests/fixtures/manifest.sample.json`)
-- Create: `packages/style-macro/tests/unplugin/fixtures/src/$style-stub.ts`
+- Create: `packages/style-macro/tests/unplugin/fixtures/src/styles-stub.ts`
 - Create: `packages/style-macro/tests/unplugin/fixtures/src/input-static.tsx`
 - Create: `packages/style-macro/tests/unplugin/fixtures/src/input-responsive.tsx`
 - Create: `packages/style-macro/tests/unplugin/fixtures/src/input-error.tsx`
@@ -266,7 +266,7 @@ git commit -m "feat(style-macro): unplugin adapter with virtual CSS module"
 - Consumes: nothing.
 - Produces: a self-contained mini-project the integration tests build.
 
-Note: until Plan C ships, no real `@vapor-ui/core/$style` export exists. The fixtures use a local stub module whose import id we pass via `importSource`.
+Note: until Plan C ships, no real `@vapor-ui/core/styles` export exists. The fixtures use a local stub module whose import id we pass via `importSource`.
 
 - [ ] **Step 1: Write `fixtures/package.json`**
 
@@ -278,14 +278,14 @@ Note: until Plan C ships, no real `@vapor-ui/core/$style` export exists. The fix
 
 Run: `cp packages/style-macro/tests/fixtures/manifest.sample.json packages/style-macro/tests/unplugin/fixtures/manifest.json`
 
-- [ ] **Step 3: Write the `$style` stub**
+- [ ] **Step 3: Write the `styles` stub**
 
-`fixtures/src/$style-stub.ts`:
+`fixtures/src/styles-stub.ts`:
 
 ```ts
 // Used as the macro's importSource. After build the call is removed; the runtime stub returns ''
 // to keep the source type-checkable in editor mode.
-export function $style(_: Record<string, unknown>): string {
+export function styles(_: Record<string, unknown>): string {
     return '';
 }
 ```
@@ -295,17 +295,17 @@ export function $style(_: Record<string, unknown>): string {
 `fixtures/src/input-static.tsx`:
 
 ```tsx
-import { $style } from './$style-stub';
+import { styles } from './styles-stub';
 
-export const cls = $style({ padding: '$400', backgroundColor: '$primary' });
+export const cls = styles({ padding: '$400', backgroundColor: '$primary' });
 ```
 
 `fixtures/src/input-responsive.tsx`:
 
 ```tsx
-import { $style } from './$style-stub';
+import { styles } from './styles-stub';
 
-export const cls = $style({
+export const cls = styles({
     padding: { default: '$200', sm: '$100' },
     color: { default: '$bg-gray-100', _hover: '$primary' },
 });
@@ -314,9 +314,9 @@ export const cls = $style({
 `fixtures/src/input-error.tsx`:
 
 ```tsx
-import { $style } from './$style-stub';
+import { styles } from './styles-stub';
 
-export const cls = $style({ padding: '$primary' });
+export const cls = styles({ padding: '$primary' });
 ```
 
 - [ ] **Step 5: Commit**
@@ -375,7 +375,7 @@ async function buildEntry(entry: string) {
         plugins: [
             vaporStyleMacro.vite({
                 tokensManifestPath: manifestPath,
-                importSource: './$style-stub',
+                importSource: './styles-stub',
             }),
         ],
     });
@@ -469,7 +469,7 @@ describe('rollup build', () => {
             plugins: [
                 vaporStyleMacro.rollup({
                     tokensManifestPath: manifestPath,
-                    importSource: './$style-stub',
+                    importSource: './styles-stub',
                 }),
                 {
                     name: 'capture-css',
@@ -543,14 +543,14 @@ function extractVirtualImport(code: string): string | null {
 describe('hmr id stability', () => {
     it('produces same id when source unchanged', () => {
         const factory = vaporStyleMacro.raw(
-            { tokensManifestPath: manifestPath, importSource: './$style-stub' },
+            { tokensManifestPath: manifestPath, importSource: './styles-stub' },
             { framework: 'esbuild' },
         );
         const transformHook = factory.transform as (
             code: string,
             id: string,
         ) => { code: string } | null | { code: string; map: unknown };
-        const src = `import { $style } from './$style-stub';\nexport const c = $style({ padding: '$400' });`;
+        const src = `import { styles } from './styles-stub';\nexport const c = styles({ padding: '$400' });`;
         const a = transformHook.call({ error: () => {} } as never, src, '/v/file.tsx') as {
             code: string;
         };
@@ -562,12 +562,12 @@ describe('hmr id stability', () => {
 
     it('produces different id when source changes', () => {
         const factory = vaporStyleMacro.raw(
-            { tokensManifestPath: manifestPath, importSource: './$style-stub' },
+            { tokensManifestPath: manifestPath, importSource: './styles-stub' },
             { framework: 'esbuild' },
         );
         const transformHook = factory.transform as (code: string, id: string) => { code: string };
-        const src1 = `import { $style } from './$style-stub';\nexport const c = $style({ padding: '$400' });`;
-        const src2 = `import { $style } from './$style-stub';\nexport const c = $style({ padding: '$200' });`;
+        const src1 = `import { styles } from './styles-stub';\nexport const c = styles({ padding: '$400' });`;
+        const src2 = `import { styles } from './styles-stub';\nexport const c = styles({ padding: '$200' });`;
         const a = transformHook.call({ error: () => {} } as never, src1, '/v/file.tsx');
         const b = transformHook.call({ error: () => {} } as never, src2, '/v/file.tsx');
         expect(extractVirtualImport(a.code)).not.toBe(extractVirtualImport(b.code));
@@ -631,7 +631,7 @@ describe('error reporting', () => {
                 plugins: [
                     vaporStyleMacro.vite({
                         tokensManifestPath: manifestPath,
-                        importSource: './$style-stub',
+                        importSource: './styles-stub',
                     }),
                 ],
             }),
@@ -699,8 +699,8 @@ export default {
 | Option               | Default                                                                        | Notes                                                                                                                                       |
 | -------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `tokensManifestPath` | `require.resolve('@vapor-ui/core/tokens.manifest.json')`                       | JSON manifest exported by `@vapor-ui/core` (or a future `@vapor-ui/tokens`). Resolves the package's `./tokens.manifest.json` exports entry. |
-| `importSource`       | `'@vapor-ui/core'`                                                             | Where `$style` is imported from.                                                                                                            |
-| `importName`         | `'$style'`                                                                     | Exported name to track.                                                                                                                     |
+| `importSource`       | `'@vapor-ui/core'`                                                             | Where `styles` is imported from.                                                                                                            |
+| `importName`         | `'styles'`                                                                     | Exported name to track.                                                                                                                     |
 | `include`            | `(id) => /\.(tsx?\|jsx?\|mts\|cts)$/.test(id) && !id.includes('node_modules')` | Per-id filter.                                                                                                                              |
 
 > Turbopack is not supported in v1. Next 16+ users must run with `--webpack`.
@@ -735,4 +735,4 @@ git commit -m "docs(style-macro): unplugin usage guide"
 - §7.5 Storybook/Rollup/Webpack → Task 4 + unplugin's auto-exposure.
 - §8 SSR safety + HMR → Task 5 (per-file content hash gives natural HMR invalidation).
 
-**Out of scope for Plan B (handed off):** `apps/website/next.config.mjs` + `apps/storybook/vite.config.ts` real wiring (Plan C), `$style` source export (Plan C), token manifest emission from `@vapor-ui/core` (Plan C).
+**Out of scope for Plan B (handed off):** `apps/website/next.config.mjs` + `apps/storybook/vite.config.ts` real wiring (Plan C), `styles` source export (Plan C), token manifest emission from `@vapor-ui/core` (Plan C).

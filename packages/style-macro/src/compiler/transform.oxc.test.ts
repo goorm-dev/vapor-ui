@@ -28,7 +28,6 @@ describe('transform (oxc)', () => {
             source: src,
             filename: 't.tsx',
             manifest: MANIFEST,
-            providerImportSource: [],
         });
         expect(result.errors).toEqual([]);
         expect(result.classes.length).toBeGreaterThan(0);
@@ -45,7 +44,6 @@ describe('transform (oxc)', () => {
             source: src,
             filename: 't.tsx',
             manifest: MANIFEST,
-            providerImportSource: [],
         });
         expect(result.errors).toEqual([]);
         expect(result.code).toContain('// leading comment');
@@ -62,7 +60,6 @@ describe('transform (oxc)', () => {
             source: src,
             filename: 't.tsx',
             manifest: MANIFEST,
-            providerImportSource: [],
         });
         expect(result.errors).toEqual([]);
         expect(result.classes.length).toBeGreaterThan(0);
@@ -75,7 +72,6 @@ describe('transform (oxc)', () => {
             source: src,
             filename: 't.tsx',
             manifest: MANIFEST,
-            providerImportSource: [],
         });
         expect(result.code).toBe(src);
         expect(result.css).toBeNull();
@@ -94,7 +90,6 @@ describe('transform (oxc)', () => {
             source: src,
             filename: 't.tsx',
             manifest: MANIFEST,
-            providerImportSource: [],
         });
         expect(result.errors).toEqual([]);
         expect(result.classes.length).toBe(2);
@@ -113,7 +108,6 @@ describe('transform (oxc)', () => {
             source: src,
             filename: 't.tsx',
             manifest: MANIFEST,
-            providerImportSource: [],
         });
         expect(result.errors).toEqual([]);
         expect(result.code).toContain('condition ?');
@@ -134,14 +128,13 @@ describe('transform (oxc)', () => {
             source: src,
             filename: 't.tsx',
             manifest: MANIFEST,
-            providerImportSource: [],
         });
         expect(result.errors).toEqual([]);
         expect(result.classes.length).toBeGreaterThan(0);
         expect(result.code).not.toContain('styles(');
     });
 
-    it('sets hasProviderImport when ThemeProvider is imported from providerImportSource', () => {
+    it('sets hasProviderImport when ThemeProvider is imported from @vapor-ui/core', () => {
         const source = [
             `import { styles } from '@vapor-ui/core';`,
             `import { ThemeProvider } from '@vapor-ui/core';`,
@@ -151,7 +144,6 @@ describe('transform (oxc)', () => {
             source,
             filename: '/t.tsx',
             manifest: MANIFEST,
-            providerImportSource: ['@vapor-ui/core'],
         });
         expect(result.errors).toEqual([]);
         expect(result.hasProviderImport).toBe(true);
@@ -166,7 +158,6 @@ describe('transform (oxc)', () => {
             source,
             filename: '/t.tsx',
             manifest: MANIFEST,
-            providerImportSource: ['@vapor-ui/core'],
         });
         expect(result.hasProviderImport).toBe(false);
     });

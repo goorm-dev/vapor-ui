@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Ship the pure-function transform core of `$style` — given a source file, the macro parses every `$style({...})` call, synthesizes deterministic atomic class names, and emits a CSS chunk. No bundler wiring yet.
+**Goal:** Ship the pure-function transform core of `styles` — given a source file, the macro parses every `styles({...})` call, synthesizes deterministic atomic class names, and emits a CSS chunk. No bundler wiring yet.
 
 **Architecture:** Standalone npm package `@vapor-ui/style-macro` exposing a `transform(source, opts) → { code, css, classes }` function. Reads a token manifest JSON (path configurable, default resolves `@vapor-ui/core/dist/tokens.manifest.json`). Built around Babel's `@babel/parser` + `@babel/traverse`. Output is deterministic byte-identical for the same input + manifest.
 
@@ -37,7 +37,7 @@ packages/style-macro/
 └── src/
     ├── index.ts                 # public: transform, types
     ├── transform.ts             # orchestrator: source → { code, css, classes }
-    ├── parse-call.ts            # AST walker: locate $style(...) calls, extract input AST
+    ├── parse-call.ts            # AST walker: locate styles(...) calls, extract input AST
     ├── validate-input.ts        # §4.4 rules → either ValidInput or BuildError[]
     ├── tokens.ts                # manifest loader + property-scope checks
     ├── property-shorthand.ts    # PROPERTY_SHORT lookup table
@@ -98,7 +98,7 @@ Run: `ls packages/codemod/` to see tsup/tsconfig style used elsewhere. Match it.
 {
     "name": "@vapor-ui/style-macro",
     "version": "0.0.0",
-    "description": "Build-time macro powering @vapor-ui/core's $style function.",
+    "description": "Build-time macro powering @vapor-ui/core's styles function.",
     "license": "MIT",
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
@@ -196,7 +196,7 @@ export const __placeholder = true;
 ```markdown
 # @vapor-ui/style-macro
 
-Build-time macro powering `@vapor-ui/core`'s `$style` function. Not consumed directly — use the bundler adapter (`@vapor-ui/style-macro/unplugin`) shipped from Plan B.
+Build-time macro powering `@vapor-ui/core`'s `styles` function. Not consumed directly — use the bundler adapter (`@vapor-ui/style-macro/unplugin`) shipped from Plan B.
 ```
 
 - [ ] **Step 8: Install + verify**
@@ -1057,7 +1057,7 @@ const manifestPath = new URL('./fixtures/manifest.sample.json', import.meta.url)
 const manifest = loadManifest(manifestPath);
 
 function callArg(src: string) {
-    const file = parser.parse(`$style(${src})`, {
+    const file = parser.parse(`styles(${src})`, {
         sourceType: 'module',
         plugins: ['jsx', 'typescript'],
     });
@@ -1323,8 +1323,8 @@ export function validateInput(entries: RawEntry[], manifest: ManifestShape): Bui
                 code: entry.error,
                 message:
                     entry.error === 'spread'
-                        ? 'Spread is not allowed inside $style().'
-                        : 'Computed keys are not allowed inside $style().',
+                        ? 'Spread is not allowed inside styles().'
+                        : 'Computed keys are not allowed inside styles().',
                 loc: entry.loc,
             });
             continue;
@@ -1390,10 +1390,10 @@ git commit -m "feat(style-macro): input validator + AST walker"
         filename: string;
         manifest: ManifestShape;
         importSource?: string; // default '@vapor-ui/core'
-        importName?: string; // default '$style'
+        importName?: string; // default 'styles'
     }): TransformResult;
     ```
-- `transform` parses the source, locates every `$style(...)` call whose callee binding traces to `@vapor-ui/core`'s `$style` import, validates + expands each, replaces the call with a string-literal of space-joined class names, and returns one merged CSS chunk.
+- `transform` parses the source, locates every `styles(...)` call whose callee binding traces to `@vapor-ui/core`'s `styles` import, validates + expands each, replaces the call with a string-literal of space-joined class names, and returns one merged CSS chunk.
 
 - [ ] **Step 1: Write `src/transform.ts`**
 
@@ -1529,7 +1529,7 @@ function buildEntryExpression(
 
 export function transform(opts: TransformOpts): TransformResult {
     const importSource = opts.importSource ?? '@vapor-ui/core';
-    const importName = opts.importName ?? '$style';
+    const importName = opts.importName ?? 'styles';
 
     let ast: ReturnType<typeof parse>;
     try {
@@ -1574,7 +1574,7 @@ export function transform(opts: TransformOpts): TransformResult {
             if (!t.isObjectExpression(arg)) {
                 errors.push({
                     code: 'invalid-input-shape',
-                    message: '$style() requires an object literal argument.',
+                    message: 'styles() requires an object literal argument.',
                     loc: {
                         line: path.node.loc?.start.line ?? 1,
                         column: path.node.loc?.start.column ?? 0,
@@ -1663,15 +1663,15 @@ For each case, create two files (`input.tsx`, `expected.code.tsx`, `expected.css
 `tests/fixtures/static-literal/input.tsx`:
 
 ```tsx
-import { $style } from '@vapor-ui/core';
+import { styles } from '@vapor-ui/core';
 
-export const C = () => <div className={$style({ padding: '$400', backgroundColor: '$primary' })} />;
+export const C = () => <div className={styles({ padding: '$400', backgroundColor: '$primary' })} />;
 ```
 
 `tests/fixtures/static-literal/expected.code.tsx`:
 
 ```tsx
-import { $style } from '@vapor-ui/core';
+import { styles } from '@vapor-ui/core';
 
 export const C = () => <div className={'_bg-primary _p-400'} />;
 ```
@@ -1839,7 +1839,7 @@ Overwrite with:
 ````markdown
 # @vapor-ui/style-macro
 
-Build-time macro powering `@vapor-ui/core`'s `$style` function.
+Build-time macro powering `@vapor-ui/core`'s `styles` function.
 
 ## Contract (consumed by `@vapor-ui/style-macro/unplugin`)
 
@@ -1848,8 +1848,8 @@ import { loadManifest, transform } from '@vapor-ui/style-macro';
 
 const manifest = loadManifest(require.resolve('@vapor-ui/core/dist/tokens.manifest.json'));
 const result = transform({ source, filename, manifest });
-// result.code → rewritten source (every $style call replaced with className string)
-// result.css  → CSS chunk (or null if no $style calls)
+// result.code → rewritten source (every styles call replaced with className string)
+// result.css  → CSS chunk (or null if no styles calls)
 // result.errors → BuildError[]; formatBuildError() produces codeframe text
 ```
 ````
@@ -1910,4 +1910,4 @@ git commit -m "docs(style-macro): public contract for downstream plans"
 - §7.2 macro responsibilities (#1–#7) → Tasks 6–7; #4 (virtual module emission) is **deferred to Plan B**; #7 (token mapping reference) is Task 2.
 - §10 macro unit test layer → all macro tests in this plan.
 
-**Out of scope for Plan A (handed off):** unplugin adapter, virtual module wiring, Next/Vite integration, `$style` export from `@vapor-ui/core`, postcss helper, codemod, deprecation, Phase-1 JSDoc.
+**Out of scope for Plan A (handed off):** unplugin adapter, virtual module wiring, Next/Vite integration, `styles` export from `@vapor-ui/core`, postcss helper, codemod, deprecation, Phase-1 JSDoc.

@@ -32,8 +32,8 @@ export interface TransformResult {
     /** All class names referenced by rewritten call sites in this file (deduped). Adapters use this to prune unused rules across the graph. */
     classes: string[];
     /**
-     * `true` when the source file imports the layer-owning Provider component
-     * (identified by `providerImportSource` + `providerImportName`). Adapters
+     * `true` when the source file imports the layer-owning `ThemeProvider`
+     * from `@vapor-ui/core` (or `@vapor-ui/core/theme-provider`). Adapters
      * use this to decide whether to inject the layer-order CSS import into
      * this file's dependency graph.
      */
@@ -47,7 +47,9 @@ export interface TransformResult {
  *
  * `source` + `filename` + `manifest` are required; everything else has a
  * sensible default. The macro is hardcoded to the `styles` export from
- * `@vapor-ui/core` — there is no override.
+ * `@vapor-ui/core`, and the layer-owning `ThemeProvider` is detected from
+ * `@vapor-ui/core` and `@vapor-ui/core/theme-provider` — there are no
+ * overrides.
  */
 export interface TransformOpts {
     /** Raw file contents to transform. */
@@ -63,18 +65,6 @@ export interface TransformOpts {
      * @default false
      */
     obfuscate?: boolean;
-    /**
-     * Module specifier(s) the layer-owning Provider component is imported
-     * from. When any of these sources appear with a matching import name,
-     * the transform sets `hasProviderImport` so adapters can inject the
-     * layer-order declaration into this file's chunk.
-     */
-    providerImportSource?: string[];
-    /**
-     * Provider component name (import specifier).
-     * @default 'ThemeProvider'
-     */
-    providerImportName?: string;
 
     // TODO(roadmap): additional build-time options under review — do not
     // implement in this refactor, but keep them on the radar so the shape
@@ -100,12 +90,12 @@ export function transform(opts: TransformOpts): TransformResult {
 // Transformer — owns per-file state, threads it through methods
 // ────────────────────────────────────────────────────────────────
 
-const MACRO_IMPORT_SOURCE = '@vapor-ui/core';
-const MACRO_IMPORT_NAME = 'styles';
+const IMPORT_SOURCE = '@vapor-ui/core';
+const IMPORT_NAME = 'styles';
+const PROVIDER_SOURCES = new Set(['@vapor-ui/core', '@vapor-ui/core/theme-provider']);
+const PROVIDER_NAME = 'ThemeProvider';
 
 class Transformer {
-    readonly #providerSources: Set<string>;
-    readonly #providerImportName: string;
     readonly #mode: ClassNameMode;
 
     readonly #tuples: Tuple[] = [];
@@ -117,11 +107,7 @@ class Transformer {
     #ms: MagicString | null = null;
 
     constructor(private readonly opts: TransformOpts) {
-        const { providerImportName, providerImportSource = [], obfuscate } = opts;
-
-        this.#providerSources = new Set(providerImportSource);
-        this.#providerImportName = providerImportName ?? 'ThemeProvider';
-        this.#mode = obfuscate ? 'hashed' : 'readable';
+        this.#mode = opts.obfuscate ? 'hashed' : 'readable';
     }
 
     run(): TransformResult {
@@ -151,9 +137,8 @@ class Transformer {
     #shouldSkip(): boolean {
         const { source } = this.opts;
 
-        const hasMacro = source.includes(MACRO_IMPORT_NAME);
-        const hasProvider =
-            this.#providerSources.size > 0 && source.includes(this.#providerImportName);
+        const hasMacro = source.includes(IMPORT_NAME);
+        const hasProvider = source.includes(PROVIDER_NAME);
 
         return !hasMacro && !hasProvider;
     }
@@ -168,8 +153,8 @@ class Transformer {
 
     #scanImportDeclaration(stmt: AnyProp): void {
         const src: string = stmt.source.value;
-        const matchesMacro = src === MACRO_IMPORT_SOURCE;
-        const matchesProvider = this.#providerSources.has(src);
+        const matchesMacro = src === IMPORT_SOURCE;
+        const matchesProvider = PROVIDER_SOURCES.has(src);
 
         if (!matchesMacro && !matchesProvider) return;
 
@@ -181,10 +166,10 @@ class Transformer {
     #scanImportSpecifier(spec: AnyProp, matchesMacro: boolean, matchesProvider: boolean): void {
         if (spec.type !== 'ImportSpecifier' || spec.imported.type !== 'Identifier') return;
 
-        if (matchesMacro && spec.imported.name === MACRO_IMPORT_NAME) {
+        if (matchesMacro && spec.imported.name === IMPORT_NAME) {
             this.#bindingName = spec.local.name;
         }
-        if (matchesProvider && spec.imported.name === this.#providerImportName) {
+        if (matchesProvider && spec.imported.name === PROVIDER_NAME) {
             this.#hasProviderImport = true;
         }
     }

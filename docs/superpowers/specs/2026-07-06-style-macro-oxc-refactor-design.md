@@ -7,7 +7,7 @@
 
 ## 1. 배경
 
-현재 `@vapor-ui/style-macro`는 `$style({...})` 호출을 빌드 타임에 atomic class name + CSS 청크로 변환한다. 파이프라인은 `@babel/parser` → `@babel/traverse` → AST 조작 → `@babel/generator` 3단 구성이며, transform 파일마다 이 세 무거운 단계를 모두 실행한다. 이로 인해 빌드 속도가 저하된다.
+현재 `@vapor-ui/style-macro`는 `styles({...})` 호출을 빌드 타임에 atomic class name + CSS 청크로 변환한다. 파이프라인은 `@babel/parser` → `@babel/traverse` → AST 조작 → `@babel/generator` 3단 구성이며, transform 파일마다 이 세 무거운 단계를 모두 실행한다. 이로 인해 빌드 속도가 저하된다.
 
 리팩터링 목표는 파서 스택을 `oxc-parser` (Rust native)로 교체하고, generator 단계를 제거하여 `magic-string` splice 기반 emit으로 전환하는 것이다. `@react-spectrum/s2` 계열의 style-macro가 사용하는 “parse → find call sites → string splice” 패턴을 채택한다.
 
@@ -23,7 +23,7 @@
 
 - 소스 맵 개선 (현행 `map: null` 유지)
 - Parcel 어댑터 추가 (unplugin이 이미 Parcel 미지원)
-- `$style` DSL 확장 (spread, computed key 등은 현재대로 에러 유지)
+- `styles` DSL 확장 (spread, computed key 등은 현재대로 에러 유지)
 - CSS emit 로직 변경 (`emit-css.ts`, `condition.ts`, `tokens.ts` 등 downstream 그대로)
 - Feature flag 기반 dual-parser 유지 — big-bang 교체
 
@@ -49,7 +49,7 @@ transform(source, opts)
   ├─ @babel/traverse
   │    ├─ ImportDeclaration       → bindingName
   │    ├─ JSXOpeningElement       → ThemeProvider layer prop
-  │    └─ CallExpression          → $style() 매치
+  │    └─ CallExpression          → styles() 매치
   │         └─ replaceWith(t.stringLiteral(...))
   ├─ @babel/generator.generate(ast)             ← 병목 2
   └─ emitCss(tuples)
@@ -100,7 +100,7 @@ transform(source, opts)
 - `src/types.ts`
 - `src/unplugin.ts`, `src/unplugin-entry.ts`, `src/unplugin-types.ts`
 - `src/code-frame.ts` (`@babel/code-frame` 계속 사용)
-- `src/$style.stories.tsx`
+- `src/styles.stories.tsx`
 - 모든 `*.test.ts` — regression gate
 
 ### 6.3 신규 test
@@ -110,7 +110,7 @@ transform(source, opts)
     - splice 정확성 (다중 호출 파일)
     - 주석 보존
     - 삼항 원본 test expr 재활용
-    - import 리네이밍 (`import { $style as s }`)
+    - import 리네이밍 (`import { styles as s }`)
     - Marker 부재 시 parseSync 미호출 (spy)
     - TSX generic 문법 파싱
 
@@ -125,9 +125,9 @@ transform(source, opts)
 입력:
 
 ```tsx
-import { $style } from '@vapor-ui/style-macro';
+import { styles } from '@vapor-ui/style-macro';
 
-const cls = $style({ padding: '$400', color: '$primary', fontSize: 14 });
+const cls = styles({ padding: '$400', color: '$primary', fontSize: 14 });
 ```
 
 RawEntry:
@@ -149,7 +149,7 @@ ms.overwrite(callStart, callEnd, '"p400 cprim fs14"');
 출력:
 
 ```tsx
-import { $style } from '@vapor-ui/style-macro';
+import { styles } from '@vapor-ui/style-macro';
 
 import '~vapor-style/<hash>.css';
 
@@ -161,7 +161,7 @@ const cls = 'p400 cprim fs14';
 입력:
 
 ```tsx
-const cls = $style({ color: isActive ? '$primary' : '$muted' });
+const cls = styles({ color: isActive ? '$primary' : '$muted' });
 ```
 
 Splice (전체 CallExpression 대체, testNode는 원본 소스 slice 재활용):
@@ -178,7 +178,7 @@ babel의 `t.conditionalExpression(...)` AST 재구성 불필요.
 입력:
 
 ```tsx
-$style({ padding: { default: '$200', md: '$400' } });
+styles({ padding: { default: '$200', md: '$400' } });
 ```
 
 `parseCallArgs` → `conditions: [...]`. 이후 `condition.ts` / `emit-css.ts` 로직 재사용. 결과는 문자열 리터럴 splice.
@@ -208,7 +208,7 @@ JSX walk에서 `<ThemeProvider layer={(l) => [l.theme, l.reset]}>` 감지. `pars
 **무수정 pass** (AST 미사용, 순수 계약 테스트):
 
 ```
-$style.test.ts
+styles.test.ts
 class-name.test.ts
 condition.test.ts
 emit-css.test.ts

@@ -1,8 +1,8 @@
-# `$style` 함수 설계
+# `styles` 함수 설계
 
 - 작성일: 2026-06-22
 - 상태: Draft (brainstorming 합의 단계 종료, 구현 계획 작성 전)
-- 범위: `@vapor-ui/core`의 신규 유틸리티 CSS API `$style` 도입 + 기존 `$css` prop 점진적 deprecate
+- 범위: `@vapor-ui/core`의 신규 유틸리티 CSS API `styles` 도입 + 기존 `$css` prop 점진적 deprecate
 - 비-목표: 컴포넌트 recipe 시스템 개편, 토큰 패키지 구조 변경
 
 ## 1. 배경과 문제
@@ -17,7 +17,7 @@
 
 ## 2. 목표
 
-- 빌드 타임에 동작하는 **신규 `$style` 함수** 도입.
+- 빌드 타임에 동작하는 **신규 `styles` 함수** 도입.
 - 호출 인자를 정적 분석해 **실제 사용된 (속성, 값, 조건) 조합에 한해서만** atomic CSS를 emit. prebuild 매트릭스 제거.
 - 기본 CSS 속성과 디자인 토큰을 모두 지원하며, 토큰은 기존 `$css`와 동일한 `$<token-name>` grammar 유지.
 - 반응형은 객체 형태(`default`/`sm`/`md`/`lg`/raw `@media (...)` 키)로 지정 가능.
@@ -40,7 +40,7 @@
 ### 4.1 시그니처
 
 ```ts
-$style(input: StyleInput): string
+styles(input: StyleInput): string
 ```
 
 반환은 항상 `string` (className). `style` 속성 주입 없음. 컴포넌트는 `className`을 통해서만 적용한다.
@@ -48,24 +48,24 @@ $style(input: StyleInput): string
 ### 4.2 사용 예
 
 ```tsx
-import { $style } from '@vapor-ui/core';
+import { styles } from '@vapor-ui/core';
 
 // 정적
-<Box className={$style({ padding: '$400', backgroundColor: '$bg-gray-100' })} />
+<Box className={styles({ padding: '$400', backgroundColor: '$bg-gray-100' })} />
 
 // 정적 ternary (양 분기 모두 정적 분석 가능)
-<Box className={$style({
+<Box className={styles({
     padding: '$400',
     backgroundColor: isActive ? '$primary' : '$bg-gray-100',
 })} />
 
 // 반응형 (value-first)
-<Box className={$style({
+<Box className={styles({
     padding: { default: '$200', sm: '$100', md: '$400' },
 })} />
 
 // Raw @media 키
-<Button className={$style({
+<Button className={styles({
     padding: {
         default: '$200',
         lg: '$300',
@@ -74,12 +74,12 @@ import { $style } from '@vapor-ui/core';
 })} />
 
 // Pseudo state
-<Button className={$style({
+<Button className={styles({
     backgroundColor: { default: '$primary', _hover: '$primary-hover' },
 })} />
 
 // 혼합
-<Box className={$style({
+<Box className={styles({
     padding: { default: '$200', sm: '$100' },
     color: isActive ? '$primary' : { default: '$gray-700', _hover: '$gray-900' },
 })} />
@@ -93,7 +93,7 @@ import { $style } from '@vapor-ui/core';
 
 ### 4.4 값 제약 (빌드 타임 강제)
 
-`$style` 인자는 매크로가 정적 분석한다. 허용되는 형태:
+`styles` 인자는 매크로가 정적 분석한다. 허용되는 형태:
 
 - 객체 리터럴 (computed key 금지)
 - 키: CSS 속성명, 또는 condition key (`default` / `sm` / `md` / `lg` / `_<pseudo>` / `'@media (...)'`)
@@ -181,7 +181,7 @@ _mq3a7f9-p-400               // @media (min-width: 2560px): padding $400
 
 ```tsx
 <Box
-    className={$style({
+    className={styles({
         padding: { default: '$200', sm: '$100', '@media (min-width: 2560px)': '$400' },
         backgroundColor: '$primary',
         color: { default: '$gray-700', _hover: '$gray-900' },
@@ -253,14 +253,14 @@ _mq3a7f9-p-400               // @media (min-width: 2560px): padding $400
 
 ### 7.1 패키지 구조
 
-- `@vapor-ui/core` — `$style` export. 런타임은 type-only, 빌드 후 매크로가 호출부를 치환.
+- `@vapor-ui/core` — `styles` export. 런타임은 type-only, 빌드 후 매크로가 호출부를 치환.
 - `@vapor-ui/style-macro` — `unplugin` 기반 매크로 단일 코어. webpack/vite/rollup/esbuild adapter 자동 노출.
 
 매크로를 별도 패키지로 분리해 unplugin 의존성이 `@vapor-ui/core` 런타임 의존성으로 새지 않도록 한다.
 
 ### 7.2 매크로 책임
 
-1. `@vapor-ui/core`에서 `$style` import한 식별자 binding 추적.
+1. `@vapor-ui/core`에서 `styles` import한 식별자 binding 추적.
 2. 호출 인자 AST 정적 분석 (§4.4 제약).
 3. atomic class 이름 합성 (§6.1).
 4. CSS chunk를 in-memory 가상 모듈 `macro-<contentHash>.css`로 emit + 변환 모듈 상단에 `import 'macro-<contentHash>.css'` 자동 주입.
@@ -340,7 +340,7 @@ unplugin이 `.rollup()`, `.esbuild()`, `.webpack()`를 그대로 노출 → Stor
 
 | Phase     | 버전                   | 작업                                                                                                        | 사용자 영향                                 |
 | --------- | ---------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| 1. 도입   | minor (예: 1.4.0)      | `$style` + `@vapor-ui/style-macro` 출시. `$css`에 `@deprecated` JSDoc. 문서/Storybook 신규 예제             | 변경 강제 없음. 신규 코드부터 `$style` 권장 |
+| 1. 도입   | minor (예: 1.4.0)      | `styles` + `@vapor-ui/style-macro` 출시. `$css`에 `@deprecated` JSDoc. 문서/Storybook 신규 예제             | 변경 강제 없음. 신규 코드부터 `styles` 권장 |
 | 2. 안정화 | 후속 patches           | 토큰 타입 확정, codemod 검증, 통합 이슈 fix                                                                 | -                                           |
 | 3. 경고   | minor (예: 1.7.0)      | `$css` 사용 시 dev 모드 1회 console.warn. codemod 공식 릴리스                                               | warn 노출. 동작 동일                        |
 | 4. 제거   | next major (예: 2.0.0) | `$css` prop 제거, `Sprinkles` 타입 제거, `rainbow-sprinkles` peer/dep 제거, atomic prebuild CSS 산출물 제거 | 마이그레이션 필수                           |
@@ -351,7 +351,7 @@ unplugin이 `.rollup()`, `.esbuild()`, `.webpack()`를 그대로 노출 → Stor
 npx @vapor-ui/codemod css-to-style src/
 ```
 
-- AST 변환: `<X $css={{...}}/>` → `<X className={$style({...})} />`.
+- AST 변환: `<X $css={{...}}/>` → `<X className={styles({...})} />`.
 - 기존 `className` 있으면 template-literal 또는 `clsx`로 합성.
 - 평면 deprecated props(`padding`, `margin`, …)는 같은 호출에 통합.
 - 변환 불가 케이스(동적 객체 spread, 변수 참조 등)는 변환 스킵 + 경고 + 위치 리포트.
