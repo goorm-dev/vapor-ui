@@ -64,12 +64,11 @@ export interface TransformOpts {
      * DevTools legibility.
      * @default false
      */
-    obfuscate?: boolean;
+    hash?: boolean;
 
     // TODO(roadmap): additional build-time options under review — do not
     // implement in this refactor, but keep them on the radar so the shape
     // of TransformOpts stays consistent when they land:
-    //   - hash?: boolean         // opt-in class-name hashing (may supersede/coexist with `obfuscate`)
     //   - prefix?: string        // class-name prefix for multi-tenant / embed scenarios
     //   - lightningcss?: boolean // pipe generated CSS through Lightning CSS (nesting, autoprefix)
     //   - minify?: boolean       // minify emitted CSS
@@ -107,7 +106,7 @@ class Transformer {
     #ms: MagicString | null = null;
 
     constructor(private readonly opts: TransformOpts) {
-        this.#mode = opts.obfuscate ? 'hashed' : 'readable';
+        this.#mode = opts.hash ? 'hashed' : 'readable';
     }
 
     run(): TransformResult {

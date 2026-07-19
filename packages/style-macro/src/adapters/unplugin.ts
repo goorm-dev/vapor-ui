@@ -124,7 +124,7 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
                 source: code,
                 filename,
                 manifest: opts.manifest,
-                obfuscate: opts.obfuscate,
+                hash: opts.hash,
             });
 
             if (result.errors.length) {
@@ -185,7 +185,7 @@ export interface VaporStyleOptions {
      * readable atomic names (e.g. `_lg-bg-background-success-100`).
      * Defaults to `process.env.NODE_ENV === 'production'`.
      */
-    obfuscate?: boolean;
+    hash?: boolean;
 
     /**
      * Cascade layer declaration order. The plugin emits

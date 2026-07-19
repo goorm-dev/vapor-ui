@@ -98,10 +98,11 @@ export default function vaporStyleNext<T extends object = object>(
         // resulting object is a pure JSON object.
         const rawLoaderOptions: Record<string, unknown> = {
             manifest: unpluginOpts.manifest,
-            obfuscate: unpluginOpts.obfuscate,
+            hash: unpluginOpts.hash,
             themeStylesImport: unpluginOpts.themeStylesImport,
             layerOrder: unpluginOpts.layerOrder,
         };
+
         const loaderOptions = Object.fromEntries(
             Object.entries(rawLoaderOptions).filter(
                 ([, v]) => v !== undefined && typeof v !== 'function',

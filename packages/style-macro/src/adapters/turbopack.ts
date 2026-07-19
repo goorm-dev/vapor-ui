@@ -49,7 +49,7 @@ export default async function vaporStyleTurbopackLoader(
         source,
         filename: this.resourcePath,
         manifest: opts.manifest,
-        obfuscate: opts.obfuscate,
+        hash: opts.hash,
     });
 
     if (result.errors.length > 0) {

@@ -14,7 +14,7 @@ interface ResolvedOptions {
     manifest: ManifestShape;
     themeStylesImport: string | null;
     include: (id: string) => boolean;
-    obfuscate: boolean;
+    hash: boolean;
     layerOrder: string[];
 }
 
@@ -28,14 +28,14 @@ export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
         opts.themeStylesImport === false || opts.themeStylesImport === undefined
             ? null
             : opts.themeStylesImport;
-    const obfuscate = opts.obfuscate ?? process.env.NODE_ENV === 'production';
+    const hash = opts.hash ?? process.env.NODE_ENV === 'production';
     const layerOrder = opts.layerOrder ?? [...DEFAULT_LAYER_ORDER];
 
     return {
         manifest: opts.manifest ?? defaultManifest,
         themeStylesImport,
         include: opts.include ?? defaultInclude,
-        obfuscate,
+        hash,
         layerOrder,
     };
 }

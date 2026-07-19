@@ -28,7 +28,6 @@
 
 `packages/style-macro/src/compiler/transform.ts:69` 주석 반영. 지금 refactor scope 밖. `TransformOpts` shape 일관성 유지 위해 landing 시점 미리 정리.
 
-- [ ] **`hash?: boolean`** — opt-in class-name hashing. 기존 `obfuscate` 와 관계 정리 (supersede or coexist) 결정 필요.
 - [ ] **`prefix?: string`** — class-name prefix. multi-tenant / embed 시나리오 대응.
 - [ ] **`lightningcss?: boolean`** — 생성 CSS 를 Lightning CSS 로 파이핑. nesting / autoprefix 처리.
 - [ ] **`minify?: boolean`** — emitted CSS minify.
