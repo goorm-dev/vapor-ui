@@ -20,23 +20,25 @@ interface ResolvedOptions {
 
 export function defaultInclude(id: string): boolean {
     if (id.includes('node_modules')) return false;
+
     return /\.(?:tsx?|jsx?|mts|mjs|cts|cjs)$/.test(id);
 }
 
 export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
-    const themeStylesImport =
-        opts.themeStylesImport === false || opts.themeStylesImport === undefined
-            ? null
-            : opts.themeStylesImport;
-    const hash = opts.hash ?? process.env.NODE_ENV === 'production';
-    const layerOrder = opts.layerOrder ?? [...DEFAULT_LAYER_ORDER];
+    const {
+        manifest = defaultManifest,
+        include = defaultInclude,
+        themeStylesImport,
+        hash = process.env.NODE_ENV === 'production',
+        layerOrder = [...DEFAULT_LAYER_ORDER],
+    } = opts;
 
     return {
-        manifest: opts.manifest ?? defaultManifest,
-        themeStylesImport,
-        include: opts.include ?? defaultInclude,
+        manifest,
+        include,
         hash,
         layerOrder,
+        themeStylesImport: themeStylesImport || null,
     };
 }
 
