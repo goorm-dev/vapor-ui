@@ -39,9 +39,12 @@ Placement depends on the component pattern. See [references/guide.md](references
 ## Component summary rules
 
 1. One single line — no line breaks inside the summary
-2. User perspective: what it is → when to use it
+2. Pattern by role:
+    - **Top-level**: `"A [noun] for/that [purpose]. Renders a \`<x>\` element."`
+    - **Sub-component**: `"A/An [noun] that [role]. Renders a \`<x>\` element."`
+    - **Root/wrapper (no HTML)**: `"Groups/Assembles [parts]. Doesn't render its own HTML element."`
 3. No internal terms (`memoized`, `wrapper`, `token-based`, etc.)
-4. End with the rendered HTML element using backticks around the tag: "Renders a `<button>` element." or "Doesn't render its own HTML element.".
+4. Always end with the rendered HTML element in backticks, or `Doesn't render its own HTML element.` for Root/Provider components.
 
 ## Prop description rules
 
@@ -49,7 +52,6 @@ Placement depends on the component pattern. See [references/guide.md](references
 2. Describe side effects and interactions with other props
 3. For numeric props: include unit and valid range
 4. For event handlers: specify the exact trigger condition, not just "handler"
-5. Use the `@default` JSDoc tag to indicate default values — never write `Default: \`value\`` inline in the description text
 
 ## Review checklist
 

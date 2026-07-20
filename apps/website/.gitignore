@@ -3,6 +3,7 @@
 
 # generated content
 .contentlayer
+**/.i18n-report.md
 .content-collections
 /.source/
 

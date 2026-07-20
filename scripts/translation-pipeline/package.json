@@ -1,19 +1,11 @@
 {
-    "name": "@vapor-ui/ts-api-extractor",
+    "name": "@vapor-ui/translation-pipeline",
     "version": "0.0.1",
     "private": true,
-    "description": "TypeScript AST-based API extractor for documentation generation",
+    "description": "LLM-based JSON translation pipeline with MQM quality gating",
     "type": "module",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
-        }
-    },
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
     "bin": {
-        "ts-api-extractor": "./dist/cli/index.js"
+        "translation-pipeline": "./dist/cli/index.js"
     },
     "files": [
         "dist"
@@ -21,6 +13,7 @@
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
+        "format": "prettier --write \"./**/*.{ts,md,mjs}\"",
         "lint": "eslint ./src",
         "test": "vitest",
         "test:coverage": "vitest run --coverage",
@@ -28,24 +21,19 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "glob": "^10.3.0",
-        "meow": "^14.0.0",
-        "ts-morph": "^22.0.0"
+        "meow": "^14.1.0"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
-        "@types/node": "^20.19.42",
+        "@types/node": "^20.19.39",
         "@vitest/coverage-v8": "^2.1.9",
         "eslint": "^9.39.4",
         "tsup": "^8.5.1",
         "tsx": "^4.21.0",
         "typescript": "catalog:",
-        "vitest": "^3.0.0"
-    },
-    "peerDependencies": {
-        "typescript": ">=5.0.0"
+        "vitest": "^2.1.9"
     },
     "engines": {
-        "node": ">=20.19"
+        "node": ">=20.20.2"
     }
 }

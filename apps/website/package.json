@@ -7,10 +7,12 @@
         "build": "next build",
         "clean": "rm -rf node_modules .next .turbo .source",
         "dev": "next dev --turbo",
-        "extract": "ts-api-extractor --config ./docs-extractor.config.mjs",
+        "extract": "ts-api-extractor",
+        "i18n": "pnpm extract && pnpm translate",
         "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src",
         "start": "next start",
+        "translate": "translation-pipeline --input ./public/components/generated/en --output ./public/components/generated",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -60,6 +62,7 @@
         "@types/node": "^22.19.20",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
+        "@vapor-ui/translation-pipeline": "workspace:*",
         "@vapor-ui/ts-api-extractor": "workspace:*",
         "eslint": "catalog:",
         "postcss": "^8.5.15",
