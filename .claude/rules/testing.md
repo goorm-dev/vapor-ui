@@ -51,7 +51,7 @@ it('shows tooltip after delay', async () => {
 
 ## Accessibility Check
 
-Add `vitest-axe` checks for public components. Full coverage is the target and it is required for new components; a few existing components are still being backfilled.
+Add `vitest-axe` checks for public components. Required for every new component; full coverage of existing components is a pending backlog item — current gaps (`input-group`, `radio`) are not intentional exceptions and should be backfilled.
 
 ```tsx
 import { axe } from 'vitest-axe';

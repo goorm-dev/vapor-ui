@@ -124,7 +124,7 @@ Context is used when the same variant value must style multiple sub-parts simult
 
 ## CSS Variables — Component-scoped Tokens
 
-Use `createVar` to decouple color palette from visual variant within a single recipe. The palette variant sets the variable values; the visual variant consumes them.
+Use `createVar` to decouple color palette from visual variant within a single recipe. The palette variant sets the variable values; the visual variant consumes them — this avoids N×M `compoundVariants` for every palette × variant combination.
 
 ```ts
 const variables = {
@@ -144,8 +144,6 @@ variants: {
     },
 }
 ```
-
-This avoids N×M `compoundVariants` for every palette × variant combination.
 
 ## State Selectors
 
