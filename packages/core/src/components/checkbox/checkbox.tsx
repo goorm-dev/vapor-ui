@@ -58,7 +58,7 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
         },
     });
 
-    return <CheckboxProvider value={{ size, indeterminate }}>{root}</CheckboxProvider>;
+    return <CheckboxProvider value={variantProps}>{root}</CheckboxProvider>;
 });
 CheckboxRoot.displayName = 'Checkbox.Root';
 
