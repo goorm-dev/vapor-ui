@@ -6,7 +6,7 @@
 
 - Add `Sheet.ResizeHandle` for edge drag-and-keyboard resizing. ([#634](https://github.com/goorm-dev/vapor-ui/pull/634)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Etc.
+### Checkbox
 
 - propagate `invalid` state to indicator element ([#618](https://github.com/goorm-dev/vapor-ui/pull/618)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
