@@ -419,10 +419,13 @@ export async function extractFrame(
             if ('children' in node) for (const ch of node.children) await visit(ch);
             return;
         }
+
         visited++;
+
         const bv: any = (node as any).boundVariables || {};
+        // 아이콘(벡터 계열) fill 은 텍스트와 같은 foreground role 스코프로 취급.
         const fillProperty: ColorProperty =
-            node.type === 'TEXT' || node.type === 'VECTOR' ? 'text' : 'fill';
+            node.type === 'TEXT' || isVectorLike(node) ? 'text' : 'fill';
 
         if (MODE !== 'typography') {
             const extractPaints = async (
