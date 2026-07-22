@@ -24,6 +24,23 @@ function shouldSkipNode(name: string): boolean {
     return SKIP_PREFIXES.some((p) => name.startsWith(p));
 }
 
+/**
+ * 벡터(아이콘) 원시 노드는 크기가 도형 자체의 기하학적 속성이므로
+ * dimension 토큰 검사에서 제외한다. 아이콘을 감싸는 프레임 크기는 검사 대상.
+ */
+const VECTOR_LIKE_TYPES: ReadonlySet<string> = new Set([
+    'VECTOR',
+    'BOOLEAN_OPERATION',
+    'LINE',
+    'ELLIPSE',
+    'POLYGON',
+    'STAR',
+]);
+
+function isVectorLike(node: SceneNode): boolean {
+    return VECTOR_LIKE_TYPES.has(node.type);
+}
+
 function sameLineHeight(a: LineHeight | undefined, b: LineHeight | undefined): boolean {
     if (!a || !b) return a === b;
     if (a.unit !== b.unit) return false;
@@ -574,7 +591,10 @@ export async function extractFrame(
             ['width', 'width'],
             ['height', 'height'],
         ];
+        // 벡터(아이콘) 원시 노드 크기는 도형 자체의 기하학이므로 토큰 검사 대상 아님.
+        const skipDimension = isVectorLike(node);
         for (const [property, field] of dimFields) {
+            if (skipDimension) continue;
             // Skip root frame dimensions (Finding 2)
             if (node.id === root!.id) continue;
             const rawValue: unknown = (node as any)[field];
