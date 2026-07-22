@@ -73,16 +73,16 @@ describe('evaluateColor', () => {
         expect(result.violations.some((v) => v.type === 'role-mismatch')).toBe(true);
     });
 
-    it('primitive 토큰 사용은 primitive-used / info', () => {
+    it('primitive 토큰 사용은 warning 으로 잡지 않고 conformant 처리', () => {
         const result = evaluateColor(
             [usage({ tokenStatus: 'ok', token: 'color-blue-500', hex: '#0000ff' })],
             schema,
         );
-        expect(result.violations[0].type).toBe('primitive-used');
-        expect(result.violations[0].severity).toBe('info');
+        expect(result.violations).toHaveLength(0);
+        expect(result.conformant.some((c) => c.token === 'color-blue-500')).toBe(true);
     });
 
-    it('grade 없는 primitive(color-white, color-black)도 primitive-used 로 판정된다', () => {
+    it('grade 없는 primitive(color-white, color-black)도 conformant 로 통과', () => {
         for (const token of ['color-white', 'color-black']) {
             const result = evaluateColor(
                 [
@@ -94,7 +94,8 @@ describe('evaluateColor', () => {
                 ],
                 schema,
             );
-            expect(result.violations[0]?.type).toBe('primitive-used');
+            expect(result.violations).toHaveLength(0);
+            expect(result.conformant.some((c) => c.token === token)).toBe(true);
         }
     });
 

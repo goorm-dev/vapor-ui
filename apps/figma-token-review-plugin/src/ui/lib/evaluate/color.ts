@@ -27,7 +27,7 @@ function effectiveProperty(u: ColorUsage): Property {
  * 판정 순서 (앞 단계에서 해결되면 이후 단계는 건너뜀):
  * 1. raw         → token-not-used (high)
  * 2. unknown     → unknown-token (high)
- * 3. primitive   → primitive-used (info)
+ * 3. primitive   → conformant (warning 제외)
  * 4. 스키마 미등록 → unknown-token (high)
  * 5. do-not-use  → do-not-use (high)
  * 6. role 불일치  → role-mismatch (high)
@@ -82,14 +82,15 @@ export function evaluateColor(
         // token 이 없으면 판정 불가 — 건너뜀
         if (!u.token) continue;
 
-        // 3. primitive 토큰 직접 사용
+        // 3. primitive 토큰 직접 사용 — warning 대상에서 제외.
+        //    semantic 을 우회한 사용이지만 이슈로 잡지 않고 conformant 로 통과시킨다.
         if (isPrimitiveKey(u.token, schema) && !schema.semantic[u.token]) {
-            violations.push({
-                ...base,
-                type: 'primitive-used',
-                severity: 'info',
-                message:
-                    'primitive 토큰이 직접 사용되었습니다. 같은 값의 semantic 토큰이 있는지 확인하세요.',
+            conformant.push({
+                nodeId: u.nodeId,
+                nodeIds: u.nodeIds,
+                name: u.name,
+                property,
+                token: u.token,
             });
             continue;
         }
