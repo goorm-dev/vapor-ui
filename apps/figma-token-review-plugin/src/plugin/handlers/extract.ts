@@ -337,6 +337,8 @@ async function walkTree(root: SceneNode): Promise<NodeInfo[]> {
     ];
     while (stack.length) {
         const { node, parentId } = stack.pop()!;
+        // 숨겨진 레이어(및 그 하위)는 LLM 컨텍스트에서도 제외.
+        if (node.visible === false) continue;
         const children = 'children' in node ? (node.children as readonly SceneNode[]) : [];
         if (shouldSkipNode(node.name)) {
             for (const c of children) stack.push({ node: c, parentId });
@@ -415,6 +417,8 @@ export async function extractFrame(
     }
 
     async function visit(node: SceneNode): Promise<void> {
+        // 숨겨진 레이어(및 그 하위)는 토큰 검사 대상에서 제외.
+        if (node.visible === false) return;
         if (shouldSkipNode(node.name)) {
             if ('children' in node) for (const ch of node.children) await visit(ch);
             return;
