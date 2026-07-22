@@ -11,7 +11,8 @@ function computeSelection(): SelectionState {
 
     const node = sel[0];
 
-    if (node.type !== 'FRAME') return { kind: 'invalid', nodeType: node.type };
+    if (node.type !== 'FRAME' && node.type !== 'INSTANCE')
+        return { kind: 'invalid', nodeType: node.type };
 
     return { kind: 'frame', id: node.id, name: node.name };
 }

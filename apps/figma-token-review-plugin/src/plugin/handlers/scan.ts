@@ -17,11 +17,11 @@ export function initScan(): void {
             const node = await figma.getNodeByIdAsync(msg.frameId);
             if (activeRequestId !== requestId) return;
 
-            if (!node || node.type !== 'FRAME') {
+            if (!node || (node.type !== 'FRAME' && node.type !== 'INSTANCE')) {
                 postToUi({
                     type: 'extract-error',
                     requestId,
-                    message: '선택한 프레임을 찾을 수 없습니다.',
+                    message: '선택한 프레임 또는 인스턴스를 찾을 수 없습니다.',
                 });
                 return;
             }

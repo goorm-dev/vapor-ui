@@ -20,8 +20,9 @@ export function HomePage({ onOpenSettings }: Props) {
     const handleScan = buildAction({
         frame: (sel) => start(sel.id, sel.name),
         none: () => toastError('프레임을 1개 선택해 주세요.'),
-        multi: () => toastError('프레임 1개만 선택해 주세요.'),
-        invalid: (sel) => toastError(`프레임 노드만 선택할 수 있습니다. (현재: ${sel.nodeType})`),
+        multi: () => toastError('프레임을 1개만 선택해 주세요.'),
+        invalid: (sel) =>
+            toastError(`프레임 또는 인스턴스만 선택할 수 있습니다. (현재: ${sel.nodeType})`),
     });
 
     return (
