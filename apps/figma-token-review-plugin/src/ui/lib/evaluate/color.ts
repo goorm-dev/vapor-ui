@@ -157,7 +157,7 @@ export function evaluateColor(
                     ...base,
                     type: 'fg-grade-mismatch',
                     severity: 'high',
-                    message: 'fg-100을 비순백 배경 위에 사용했습니다. .200 사용을 검토하세요.',
+                    message: '색상이 있는 배경에서는 foreground 200 grade 사용을 고려하세요.',
                 });
                 continue;
             }
@@ -166,7 +166,7 @@ export function evaluateColor(
                     ...base,
                     type: 'fg-grade-mismatch',
                     severity: 'high',
-                    message: 'fg-200을 순백/투명 배경 위에 사용했습니다. .100 사용을 검토하세요.',
+                    message: '순백/투명 배경에서는 foreground 100 grade 사용을 고려하세요.',
                 });
                 continue;
             }

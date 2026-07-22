@@ -43,6 +43,7 @@ export type ViolationType =
     | 'role-mismatch'
     | 'fg-grade-mismatch'
     | 'fg-grade-ambiguous'
+    | 'text-contrast-low'
     | 'typo-raw'
     | 'typo-styled-override'
     | 'semantic-misfit' // heuristic: LLM 의미 판정 FAIL (color)
@@ -146,6 +147,14 @@ export type ColorUsage = {
     hex: string | null;
     tokenStatus: TokenStatus;
     background: ColorBackground | null;
+    /** TEXT 노드 fill 인 경우에만 첨부. plugin 이 노드 exportAsync 로 캡처한 PNG (base64). */
+    textShot?: TextShot;
+};
+
+export type TextShot = {
+    imageBase64: string;
+    fontSize: number;
+    isBold: boolean;
 };
 
 export type TypographyResolved = {

@@ -251,6 +251,7 @@ export function applyRecommendations(violations: Violation[], ctx: RecommendCtx)
             case 'fg-grade-ambiguous':
             case 'semantic-misfit':
             case 'typo-hierarchy':
+            case 'text-contrast-low': // text-contrast-low: token swap 이 아닌 디자인 판단 이슈. suggested 없음.
                 suggested = [];
                 break;
 

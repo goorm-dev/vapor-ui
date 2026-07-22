@@ -1,4 +1,5 @@
 import type { Category, LlmContext, RawExtract, ScanPayload } from '~/common/schemas';
+import { evaluateTextContrast } from '~/ui/lib/contrast/analyze';
 import { evaluateColor } from '~/ui/lib/evaluate/color';
 import { evaluateDimension } from '~/ui/lib/evaluate/dimension';
 import { evaluateRadius } from '~/ui/lib/evaluate/radius';
@@ -57,8 +58,13 @@ export async function runLlmEvaluation(
     const dim = loadDimensionSchemas();
     const textStyleSchema = loadTextStyleSchema();
 
+    // 텍스트 fill 픽셀 기반 색대비 판정 (WCAG AA). 실패 시 text-contrast-low violation.
+    const contrastViolations = await evaluateTextContrast(extract.colors);
+    const colorEval = evaluateColor(extract.colors, colorSchema);
+    colorEval.violations.push(...contrastViolations);
+
     const det: Record<Category, CategoryDet> = {
-        color: { ...evaluateColor(extract.colors, colorSchema), total: extract.colors.length },
+        color: { ...colorEval, total: extract.colors.length },
         space: { ...evaluateSpace(extract.spaces, dim.space), total: extract.spaces.length },
         dimension: {
             ...evaluateDimension(extract.dimensions, dim.dimension),

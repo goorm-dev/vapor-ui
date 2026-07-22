@@ -251,6 +251,7 @@ function isTextViolation(v: Violation): boolean {
     return (
         v.type === 'fg-grade-mismatch' ||
         v.type === 'fg-grade-ambiguous' ||
+        v.type === 'text-contrast-low' ||
         v.type === 'typo-raw' ||
         v.type === 'typo-styled-override' ||
         v.type === 'typo-hierarchy' ||
