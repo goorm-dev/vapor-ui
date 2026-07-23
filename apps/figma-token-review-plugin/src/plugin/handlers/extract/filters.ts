@@ -2,7 +2,7 @@
  * 노드 순회 시 무시/특수 취급할 대상 판별.
  */
 
-const SKIP_PREFIXES = ['🟨', '🔶'] as const;
+const SKIP_PREFIXES = ['💙', '🟨', '🔶'] as const;
 
 /** 이모지 접두 규칙에 의해 검사에서 제외되는 노드. 자식은 순회하되 자신은 건너뛴다. */
 export function shouldSkipNode(name: string) {
