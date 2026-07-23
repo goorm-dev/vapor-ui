@@ -147,14 +147,20 @@ export type ColorUsage = {
     hex: string | null;
     tokenStatus: TokenStatus;
     background: ColorBackground | null;
-    /** TEXT 노드 fill 인 경우에만 첨부. plugin 이 노드 exportAsync 로 캡처한 PNG (base64). */
+    /** TEXT 노드 fill 에 붙는 메타. fontSize/isBold 는 WCAG large-text 판정용, PNG 는 배경이 ambiguous 일 때만 첨부. */
     textShot?: TextShot;
 };
 
 export type TextShot = {
-    imageBase64: string;
     fontSize: number;
     isBold: boolean;
+    /** 부모(배경) 노드를 텍스트 숨긴 상태에서 exportAsync 로 캡처한 PNG (base64). ambiguous 배경일 때만 존재. */
+    imageBase64?: string;
+    /** PNG 픽셀 좌표계에서 텍스트 노드 bbox. exportAsync scale 이 이미 반영된 값. */
+    cropX?: number;
+    cropY?: number;
+    cropW?: number;
+    cropH?: number;
 };
 
 export type TypographyResolved = {

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- Figma node property access is intentionally loose. */
 import type {
+    ColorBackground,
     ColorProperty,
     ColorUsage,
     DimensionUsage,
@@ -85,8 +86,10 @@ async function collectColors(
     const fillProperty: ColorProperty =
         node.type === 'TEXT' || isVectorLike(node) ? 'text' : 'fill';
 
-    // TEXT 노드 fill 인 경우에만 PNG 캡처. text-contrast 판정용.
-    const textShot = node.type === 'TEXT' ? await captureTextShot(node as TextNode) : undefined;
+    // TEXT 노드 fill 은 배경 분류 후 필요할 때만 부모 PNG 를 캡처. text-contrast 판정용.
+    const textBackground = node.type === 'TEXT' ? classifyBackground(node) : null;
+    const textShot =
+        node.type === 'TEXT' ? await captureTextShot(node as TextNode, textBackground) : undefined;
 
     const out: (ColorUsage & { nodeId: string })[] = [];
 
@@ -96,6 +99,7 @@ async function collectColors(
         bv.fills || [],
         fillProperty,
         textShot,
+        textBackground,
         out,
     );
     await extractPaints(
@@ -104,6 +108,7 @@ async function collectColors(
         bv.strokes || [],
         'stroke',
         undefined,
+        null,
         out,
     );
 
@@ -116,11 +121,12 @@ async function extractPaints(
     bound: any[],
     property: ColorProperty,
     textShot: TextShot | undefined,
+    textBackground: ColorBackground | null,
     sink: (ColorUsage & { nodeId: string })[],
 ) {
     const paintList = Array.isArray(paints) ? paints : null;
     const shotFor = property === 'text' && node.type === 'TEXT' ? textShot : undefined;
-    const bgFor = property === 'text' ? classifyBackground(node) : null;
+    const bgFor = property === 'text' ? textBackground : null;
 
     for (let i = 0; i < bound.length; i++) {
         const a = bound[i];

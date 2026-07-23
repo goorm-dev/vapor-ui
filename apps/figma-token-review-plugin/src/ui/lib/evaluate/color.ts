@@ -66,7 +66,7 @@ export function evaluateColor(
                 ...base,
                 type: 'token-not-used',
                 severity: 'high',
-                message: '변수에 바인딩되지 않은 색이 직접 입력되었습니다.',
+                message: 'HEX 값 대신 디자인 토큰 사용을 고려하세요.',
             });
             continue;
         }
@@ -77,7 +77,8 @@ export function evaluateColor(
                 ...base,
                 type: 'unknown-token',
                 severity: 'high',
-                message: '바인딩된 변수가 스키마의 semantic 단계에 도달하지 못했습니다.',
+                message:
+                    '존재하지 않는 토큰입니다. 레거시 토큰이라면 신규 토큰으로 교체를 고려하세요.',
             });
             continue;
         }
@@ -105,7 +106,8 @@ export function evaluateColor(
                 ...base,
                 type: 'unknown-token',
                 severity: 'high',
-                message: '스키마에 없는 토큰 키입니다.',
+                message:
+                    '존재하지 않는 토큰입니다. 레거시 토큰이라면 신규 토큰으로 교체를 고려하세요.',
             });
             continue;
         }
@@ -129,7 +131,7 @@ export function evaluateColor(
                 ...base,
                 type: 'role-mismatch',
                 severity: 'high',
-                message: `${property} 속성에는 ${allowedRoles.join('/')} role만 허용됩니다 (적용: ${meta.role}).`,
+                message: `${property} 속성에는 ${meta.role} 토큰을 사용할 수 없습니다. ${allowedRoles.join('/')} 역할 토큰을 고려하세요.`,
             });
             continue;
         }
