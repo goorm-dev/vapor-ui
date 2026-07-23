@@ -1,5 +1,6 @@
 import type { ColorUsage, Conformant, Property, Violation } from '~/common/schemas';
 import type { ColorSchema } from '~/ui/lib/loaders/color';
+import { suggestLegacyReplacement } from '~/ui/lib/loaders/legacy-color';
 import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 
 /**
@@ -44,6 +45,8 @@ export function evaluateColor(
     for (const u of usages) {
         const property = effectiveProperty(u);
         const value = u.hex;
+        const legacy = suggestLegacyReplacement({ token: u.token, hex: u.hex, property });
+        const suggested: string[] = legacy ? [legacy] : [];
         const base = {
             nodeId: u.nodeId,
             nodeIds: u.nodeIds,
@@ -54,7 +57,7 @@ export function evaluateColor(
             value,
             origin: 'rule' as const,
             message: '',
-            suggested: [] as string[],
+            suggested,
         };
 
         // 1. raw: 변수 바인딩 없이 직접 입력된 색상

@@ -1,0 +1,604 @@
+[
+  {
+    "type": "변경",
+    "oldName": "primary",
+    "oldValue": "rgb(42, 114, 229)",
+    "v1_0_0": "color-background-primary-200",
+    "section": "Theme"
+  },
+  {
+    "type": "변경",
+    "oldName": "secondary",
+    "oldValue": "rgb(225, 225, 225)",
+    "v1_0_0": "color-background-secondary-200",
+    "section": "Theme"
+  },
+  {
+    "type": "변경",
+    "oldName": "success",
+    "oldValue": "rgb(5, 135, 101)",
+    "v1_0_0": "color-background-success-200",
+    "section": "Theme"
+  },
+  {
+    "type": "변경",
+    "oldName": "warning",
+    "oldValue": "rgb(211, 71, 1)",
+    "v1_0_0": "color-background-warning-200",
+    "section": "Theme"
+  },
+  {
+    "type": "변경",
+    "oldName": "danger",
+    "oldValue": "rgb(218, 57, 68)",
+    "v1_0_0": "color-background-danger-200",
+    "section": "Theme"
+  },
+  {
+    "type": "변경",
+    "oldName": "hint",
+    "oldValue": "rgb(93, 93, 93)",
+    "v1_0_0": "color-background-hint-200",
+    "section": "Theme"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-background-primary-100",
+    "section": "Theme"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-background-secondary-100",
+    "section": "Theme"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-background-success-100",
+    "section": "Theme"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-background-warning-100",
+    "section": "Theme"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-background-danger-100",
+    "section": "Theme"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-background-hint-100",
+    "section": "Theme"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-primary",
+    "oldValue": "rgb(9, 87, 200)",
+    "v1_0_0": "color-foreground-primary-100",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-primary-alternative",
+    "oldValue": "rgb(0, 67, 179)",
+    "v1_0_0": "color-foreground-primary-200",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-secondary",
+    "oldValue": "rgb(57, 57, 57)",
+    "v1_0_0": "color-foreground-secondary-100",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-secondary-alternative",
+    "oldValue": "rgb(38, 38, 38)",
+    "v1_0_0": "color-foreground-secondary-200",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-success",
+    "oldValue": "rgb(0, 108, 75)",
+    "v1_0_0": "color-foreground-success-100",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-success-alternative",
+    "oldValue": "rgb(0, 88, 58)",
+    "v1_0_0": "color-foreground-success-200",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-warning",
+    "oldValue": "rgb(183, 33, 0)",
+    "v1_0_0": "color-foreground-warning-100",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-warning-alternative",
+    "oldValue": "rgb(158, 0, 0)",
+    "v1_0_0": "color-foreground-warning-200",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-danger",
+    "oldValue": "rgb(187, 18, 37)",
+    "v1_0_0": "color-foreground-danger-100",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-danger-alternative",
+    "oldValue": "rgb(158, 0, 6)",
+    "v1_0_0": "color-foreground-danger-200",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-hint",
+    "oldValue": "rgb(93, 93, 93)",
+    "v1_0_0": "color-foreground-hint-100",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-hint-alternative",
+    "oldValue": "rgb(76, 76, 76)",
+    "v1_0_0": "color-foreground-hint-200",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-contrast",
+    "oldValue": "rgb(57, 57, 57)",
+    "v1_0_0": "color-foreground-contrast-100",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-contrast-alternative",
+    "oldValue": "rgb(38, 38, 38)",
+    "v1_0_0": "color-foreground-contrast-200",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-alternative",
+    "oldValue": "rgb(76, 76, 76)",
+    "v1_0_0": "color-foreground-normal-100",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "text-normal",
+    "oldValue": "rgb(38, 38, 38)",
+    "v1_0_0": "color-foreground-normal-200",
+    "section": "Text"
+  },
+  {
+    "type": "삭제",
+    "oldName": "text-light",
+    "oldValue": "rgb(255, 255, 255)",
+    "v1_0_0": "color-white로 대체",
+    "section": "Text"
+  },
+  {
+    "type": "삭제",
+    "oldName": "text-exception",
+    "oldValue": "rgb(255, 255, 255)",
+    "v1_0_0": "color-white로 대체",
+    "section": "Text"
+  },
+  {
+    "type": "삭제",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-white로 대체",
+    "section": "Text"
+  },
+  {
+    "type": "삭제",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-white로 대체",
+    "section": "Text"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-foreground-button-primary",
+    "section": "Text"
+  },
+  {
+    "type": "변경",
+    "oldName": "background-normal",
+    "oldValue": "rgb(255, 255, 255)",
+    "v1_0_0": "color-background-canvas-100",
+    "section": "Background"
+  },
+  {
+    "type": "변경",
+    "oldName": "background-alternative-01",
+    "oldValue": "rgb(247, 247, 247)",
+    "v1_0_0": "color-background-canvas-200",
+    "section": "Background"
+  },
+  {
+    "type": "변경",
+    "oldName": "background-alternative-02",
+    "oldValue": "rgb(255, 255, 255)",
+    "v1_0_0": "color-background-overlay-100",
+    "section": "Background"
+  },
+  {
+    "type": "변경",
+    "oldName": "border-normal",
+    "oldValue": "rgb(225, 225, 225)",
+    "v1_0_0": "color-border-normal",
+    "section": "Border"
+  },
+  {
+    "type": "삭제",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "-",
+    "section": "Border"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-border-primary",
+    "section": "Border"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-border-success",
+    "section": "Border"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-border-warning",
+    "section": "Border"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-border-danger",
+    "section": "Border"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-border-hint",
+    "section": "Border"
+  },
+  {
+    "type": "추가",
+    "oldName": "-",
+    "oldValue": "-",
+    "v1_0_0": "color-border-contrast",
+    "section": "Border"
+  },
+  {
+    "type": "삭제",
+    "oldName": "primary-transparent-8",
+    "oldValue": "rgba(42, 114, 229, 0.08)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "primary-transparent-16",
+    "oldValue": "rgba(42, 114, 229, 0.16)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "primary-transparent-24",
+    "oldValue": "rgba(42, 114, 229, 0.24)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "primary-transparent-32",
+    "oldValue": "rgba(42, 114, 229, 0.32)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "secondary-transparent-8",
+    "oldValue": "rgba(225, 225, 225, 0.08)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "secondary-transparent-16",
+    "oldValue": "rgba(225, 225, 225, 0.16)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "secondary-transparent-24",
+    "oldValue": "rgba(225, 225, 225, 0.24)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "secondary-transparent-32",
+    "oldValue": "rgba(225, 225, 225, 0.32)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "success-transparent-8",
+    "oldValue": "rgba(5, 135, 101, 0.08)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "success-transparent-16",
+    "oldValue": "rgba(5, 135, 101, 0.16)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "success-transparent-24",
+    "oldValue": "rgba(5, 135, 101, 0.24)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "success-transparent-32",
+    "oldValue": "rgba(5, 135, 101, 0.32)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "warning-transparent-8",
+    "oldValue": "rgba(211, 71, 1, 0.08)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "warning-transparent-16",
+    "oldValue": "rgba(211, 71, 1, 0.16)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "warning-transparent-24",
+    "oldValue": "rgba(211, 71, 1, 0.24)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "warning-transparent-32",
+    "oldValue": "rgba(211, 71, 1, 0.32)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "danger-transparent-8",
+    "oldValue": "rgba(218, 57, 68, 0.08)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "danger-transparent-16",
+    "oldValue": "rgba(218, 57, 68, 0.16)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "danger-transparent-24",
+    "oldValue": "rgba(218, 57, 68, 0.24)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "danger-transparent-32",
+    "oldValue": "rgba(218, 57, 68, 0.32)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "contrast-transparent-8",
+    "oldValue": "rgba(57, 57, 57, 0.08)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "contrast-transparent-16",
+    "oldValue": "rgba(57, 57, 57, 0.16)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "contrast-transparent-24",
+    "oldValue": "rgba(57, 57, 57, 0.24)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "contrast-transparent-32",
+    "oldValue": "rgba(57, 57, 57, 0.32)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "hint-transparent-8",
+    "oldValue": "rgba(93, 93, 93, 0.08)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "hint-transparent-16",
+    "oldValue": "rgba(93, 93, 93, 0.16)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "hint-transparent-24",
+    "oldValue": "rgba(93, 93, 93, 0.24)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "hint-transparent-32",
+    "oldValue": "rgba(93, 93, 93, 0.32)",
+    "v1_0_0": "-(hex code로 사용)",
+    "section": "Theme - Transparent"
+  },
+  {
+    "type": "삭제",
+    "oldName": "primary-hover",
+    "oldValue": "rgb(9, 87, 200)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "primary-active",
+    "oldValue": "rgb(0, 67, 179)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "secondary-hover",
+    "oldValue": "rgb(163, 163, 163)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "secondary-active",
+    "oldValue": "rgb(149, 149, 149)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "success-hover",
+    "oldValue": "rgb(0, 108, 75)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "success-active",
+    "oldValue": "rgb(0, 88, 58)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "warning-hover",
+    "oldValue": "rgb(183, 33, 0)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "warning-active",
+    "oldValue": "rgb(158, 0, 0)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "danger-hover",
+    "oldValue": "rgb(187, 18, 37)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "danger-active",
+    "oldValue": "rgb(158, 0, 6)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "hint-hover",
+    "oldValue": "rgb(76, 76, 76)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "hint-active",
+    "oldValue": "rgb(57, 57, 57)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "contrast-hover",
+    "oldValue": "rgb(38, 38, 38)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  },
+  {
+    "type": "삭제",
+    "oldName": "contrast-active",
+    "oldValue": "rgb(38, 38, 38)",
+    "v1_0_0": "- ( 인터랙션 레이어로 대체 / 사용 필요할 경우 basic으로 사용 )",
+    "section": "Status"
+  }
+]

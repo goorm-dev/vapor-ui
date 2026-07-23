@@ -90,9 +90,13 @@ describe('applyRecommendations', () => {
         );
         // Primitive key must appear in suggestions (primitive fallback path)
         expect(out[0].suggested).toContain(expectedPrimKey);
-        // All suggested tokens must be primitive keys (not semantic paths)
+        // 남은 항목은 primitive 이거나 레거시 매핑에서 온 신규 semantic 이어야 한다.
         for (const s of out[0].suggested) {
-            expect(colorSchema.semantic[s]).toBeUndefined();
+            const isPrimitive = colorSchema.semantic[s] === undefined;
+            const isSemanticBackground =
+                colorSchema.semantic[s]?.role === 'background' &&
+                colorSchema.semantic[s]?.status !== 'do-not-use';
+            expect(isPrimitive || isSemanticBackground).toBe(true);
         }
     });
 

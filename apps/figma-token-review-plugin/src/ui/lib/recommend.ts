@@ -8,6 +8,7 @@
 import type { Property, Violation } from '~/common/schemas';
 import type { ColorSchema } from '~/ui/lib/loaders/color';
 import type { TokenValueIndex } from '~/ui/lib/loaders/dimension';
+import { suggestLegacyReplacement } from '~/ui/lib/loaders/legacy-color';
 import { PROPERTY_SCOPE } from '~/ui/lib/scope';
 
 export type RecommendCtx = {
@@ -178,6 +179,25 @@ function fgGradeMismatchSuggestions(token: string | null, schema: ColorSchema): 
 // Main dispatcher
 // ---------------------------------------------------------------------------
 
+const COLOR_PROPERTIES: ReadonlySet<Property> = new Set(['fill', 'fill-on-text', 'stroke']);
+
+/** color property 위반에 대해 레거시 토큰 매핑을 앞쪽에 추가.
+ *  - property 가 color 계열이 아니면 그대로 반환.
+ *  - legacy 매핑이 이미 suggested 안에 있으면 중복 제거.
+ */
+function withLegacySuggestion(
+    suggested: string[],
+    token: string | null,
+    value: string | null,
+    property: Property,
+): string[] {
+    if (!COLOR_PROPERTIES.has(property)) return suggested;
+    const legacy = suggestLegacyReplacement({ token, hex: value, property });
+    if (!legacy) return suggested;
+    if (suggested.includes(legacy)) return suggested;
+    return [legacy, ...suggested];
+}
+
 export function applyRecommendations(violations: Violation[], ctx: RecommendCtx): Violation[] {
     return violations.map((violation) => {
         // llm origin pass-through — never modify
@@ -259,6 +279,6 @@ export function applyRecommendations(violations: Violation[], ctx: RecommendCtx)
                 suggested = [];
         }
 
-        return { ...violation, suggested };
+        return { ...violation, suggested: withLegacySuggestion(suggested, token, value, property) };
     });
 }
