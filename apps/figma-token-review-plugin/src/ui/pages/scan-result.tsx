@@ -29,9 +29,13 @@ export function ScanResultPage({ payload }: Props) {
             size="md"
             $css={{ width: '100%', minHeight: '100vh', backgroundColor: '$bg-canvas-100' }}
         >
-            <ScanTabBar selected={tab} counts={counts} />
+            <Box
+                $css={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: '$bg-canvas-100' }}
+            >
+                <ScanTabBar selected={tab} counts={counts} />
 
-            <SelectedFrameHeader />
+                <SelectedFrameHeader />
+            </Box>
 
             <Tabs.Panel value="color">
                 <ViolationPanel
