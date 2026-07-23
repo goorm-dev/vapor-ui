@@ -58,6 +58,24 @@ export function evaluateTypography(
             continue;
         }
 
+        // 결정론 뷰포트 규칙: mobile 뷰포트에서 display* 스타일은 즉시 FAIL.
+        // 프롬프트가 LLM 에게 요구하던 "mobile → display* viewport FAIL" 규칙을 결정론에서 처리.
+        if (
+            u.textStyle &&
+            u.viewport === 'mobile' &&
+            u.textStyle.startsWith('display') &&
+            u.textStyle in schema.styles
+        ) {
+            violations.push({
+                ...base,
+                type: 'typo-viewport-misfit',
+                severity: 'high',
+                message: `mobile 뷰포트에서 ${u.textStyle}은 부적합. heading1 또는 heading2 사용을 권장.`,
+                suggested: ['heading1', 'heading2'].filter((s) => s in schema.styles),
+            });
+            continue;
+        }
+
         if (u.textStyle) {
             conformant.push({
                 nodeId: u.nodeId,

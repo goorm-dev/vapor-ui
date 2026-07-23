@@ -28,7 +28,11 @@ describe('legacy-color loader', () => {
 describe('suggestLegacyReplacement', () => {
     it('oldName 이 매치하면 신규 토큰 반환', () => {
         expect(
-            suggestLegacyReplacement({ token: 'text-primary', hex: null, property: 'fill-on-text' }),
+            suggestLegacyReplacement({
+                token: 'text-primary',
+                hex: null,
+                property: 'fill-on-text',
+            }),
         ).toBe('color-foreground-primary-100');
     });
 
@@ -48,7 +52,11 @@ describe('suggestLegacyReplacement', () => {
 
     it('매핑 없으면 null', () => {
         expect(
-            suggestLegacyReplacement({ token: 'not-a-legacy-name', hex: '#123456', property: 'fill' }),
+            suggestLegacyReplacement({
+                token: 'not-a-legacy-name',
+                hex: '#123456',
+                property: 'fill',
+            }),
         ).toBeNull();
     });
 

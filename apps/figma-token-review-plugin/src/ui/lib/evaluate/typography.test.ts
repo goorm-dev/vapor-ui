@@ -172,4 +172,42 @@ describe('evaluateTypography', () => {
         expect(r.violations.length).toBe(0);
         expect(r.conformant.length).toBe(0);
     });
+
+    describe('viewport 결정론 규칙 (mobile + display*)', () => {
+        it('mobile 뷰포트 + display* → typo-viewport-misfit / high', () => {
+            const r = evaluateTypography(
+                [usage({ textStyle: 'display1', viewport: 'mobile' })],
+                schema,
+            );
+            expect(r.violations[0].type).toBe('typo-viewport-misfit');
+            expect(r.violations[0].severity).toBe('high');
+            expect(r.conformant.length).toBe(0);
+        });
+
+        it('mobile 뷰포트 + display* → suggested 는 heading1/heading2', () => {
+            const r = evaluateTypography(
+                [usage({ textStyle: 'display2', viewport: 'mobile' })],
+                schema,
+            );
+            expect(r.violations[0].suggested).toEqual(['heading1', 'heading2']);
+        });
+
+        it('pc 뷰포트 + display* → conformant (뷰포트 규칙 적용 안 함)', () => {
+            const r = evaluateTypography(
+                [usage({ textStyle: 'display1', viewport: 'pc' })],
+                schema,
+            );
+            expect(r.violations.length).toBe(0);
+            expect(r.conformant[0].token).toBe('display1');
+        });
+
+        it('mobile 뷰포트 + non-display → conformant', () => {
+            const r = evaluateTypography(
+                [usage({ textStyle: 'body2', viewport: 'mobile' })],
+                schema,
+            );
+            expect(r.violations.length).toBe(0);
+            expect(r.conformant.length).toBe(1);
+        });
+    });
 });

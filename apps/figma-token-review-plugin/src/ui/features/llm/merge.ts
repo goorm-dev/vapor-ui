@@ -3,40 +3,59 @@ import type {
     Conformant,
     EvaluateOutput,
     EvaluateSummary,
-    LlmPassJudgment,
     ScanPayload,
     SchemaMode,
     Violation,
     ViolationType,
 } from '~/common/schemas';
 import type { TextStyleSchema } from '~/ui/lib/loaders/typography';
+import type { TargetLookup } from '~/ui/lib/rubric';
 
 import type { LlmColorJudgment, LlmJudgments, LlmTypoJudgment } from './parse';
 
 export type CategoryDet = { violations: Violation[]; conformant: Conformant[]; total: number };
+
+export type { TargetLookup };
 
 export type MergeArgs = {
     deterministic: Record<Category, CategoryDet>;
     llm: LlmJudgments;
     schemaMode: SchemaMode;
     textStyleSchema: TextStyleSchema;
+    targets: TargetLookup;
 };
 
 const AXIS_TO_TYPE: Record<LlmTypoJudgment['axis'], ViolationType> = {
     hierarchy: 'typo-hierarchy',
     role: 'typo-role-misfit',
-    viewport: 'typo-viewport-misfit',
 };
 
-function heuristicTypo(j: LlmTypoJudgment, schema: TextStyleSchema): Violation {
+// LLM 이 FAIL 로 emit 했지만 reasoning 안에서 스스로 "PASS 로 재판단 / emit 불필요" 로 취소하는 경우.
+// 프롬프트 위반이지만 실제로 발생하므로 안전망으로 여기서 드롭한다.
+const PASS_CANCEL_RE =
+    /(pass\s*(?:로|은|는|이|가|처럼|처리|판정)?\s*(?:재판단|판정|처리|해석)|emit\s*(?:불필요|금지|하지\s*(?:마|말|않)))/i;
+
+function isSelfCancelled(reasoning: string): boolean {
+    return PASS_CANCEL_RE.test(reasoning);
+}
+
+function heuristicTypo(
+    j: LlmTypoJudgment,
+    schema: TextStyleSchema,
+    targets: TargetLookup,
+): Violation | null {
+    const t = targets.typography.get(j.nodeId);
+    if (!t) return null; // target 소실 = LLM 이 없는 nodeId 지어냄. 드롭.
+    if (isSelfCancelled(j.reasoning)) return null;
+
     const known = new Set(schema.order);
     const filtered = j.suggested.filter((s) => known.has(s));
     const message = j.matchedRule ? `[${j.matchedRule}] ${j.reasoning}` : j.reasoning;
     return {
         nodeId: j.nodeId,
-        name: j.name,
+        name: targets.nameByNodeId.get(j.nodeId) ?? '',
         property: 'textStyle',
-        token: j.token,
+        token: t.textStyle,
         value: null,
         type: AXIS_TO_TYPE[j.axis],
         severity: 'high',
@@ -47,12 +66,16 @@ function heuristicTypo(j: LlmTypoJudgment, schema: TextStyleSchema): Violation {
     };
 }
 
-function heuristicColor(j: LlmColorJudgment): Violation {
+function heuristicColor(j: LlmColorJudgment, targets: TargetLookup): Violation | null {
+    const key = `${j.nodeId}:${j.property}`;
+    const t = targets.color.get(key);
+    if (!t) return null;
+    if (isSelfCancelled(j.reasoning)) return null;
     return {
         nodeId: j.nodeId,
-        name: j.name,
+        name: targets.nameByNodeId.get(j.nodeId) ?? '',
         property: j.property,
-        token: j.token,
+        token: t.token,
         value: null,
         type: 'semantic-misfit',
         severity: 'high',
@@ -63,16 +86,44 @@ function heuristicColor(j: LlmColorJudgment): Violation {
     };
 }
 
+const CONFIDENCE_RANK = { HIGH: 3, MED: 2, LOW: 1 } as const;
+
+/**
+ * 결정론 evaluator 는 extract 단계에서 groupBy 로 동일 사용처를 한 카드로 묶는다.
+ * LLM 은 nodeId 별 개별 target 을 판정하므로 같은 (name, type, property, token) 조합에
+ * 여러 nodeId FAIL 이 쏟아지면 카드가 중복된다. 결정론과 동일한 시각적 취급을 위해
+ * merge 단계에서 다시 그룹화한다.
+ */
+function groupLlmViolations(vs: Violation[]): Violation[] {
+    const map = new Map<string, Violation>();
+    for (const v of vs) {
+        const key = `${v.name}|${v.type}|${v.property}|${v.token ?? ''}`;
+        const g = map.get(key);
+        if (!g) {
+            map.set(key, { ...v, nodeIds: [v.nodeId], count: 1, suggested: [...v.suggested] });
+            continue;
+        }
+        g.nodeIds!.push(v.nodeId);
+        g.count = (g.count ?? 1) + 1;
+        for (const s of v.suggested) if (!g.suggested.includes(s)) g.suggested.push(s);
+        const curConf = g.confidence ?? 'LOW';
+        const newConf = v.confidence ?? 'LOW';
+        if (CONFIDENCE_RANK[newConf] > CONFIDENCE_RANK[curConf]) {
+            g.confidence = newConf;
+            g.message = v.message; // 대표 message 는 최고 confidence 판정에서 취한다.
+        }
+    }
+    return [...map.values()];
+}
+
 function summarize(
     violations: Violation[],
     conformant: Conformant[],
     total: number,
 ): EvaluateSummary {
-    // severity 축: origin/confidence 무관, severity 만으로 분류
     const high = violations.filter((v) => v.severity === 'high').length;
     const infos = violations.filter((v) => v.severity === 'info').length;
 
-    // 자신도(confidence) 축: LLM 판정에서만 의미 있음, severity 와 겹침 허용
     const heuristics = violations.filter((v) => v.origin === 'llm').length;
     const lowConfidence = violations.filter(
         (v) => v.origin === 'llm' && v.confidence !== 'HIGH',
@@ -92,39 +143,28 @@ function summarize(
     };
 }
 
-function typoPassJudgments(judgments: LlmTypoJudgment[]): LlmPassJudgment[] {
-    return judgments
-        .filter((j) => j.verdict === 'PASS')
-        .map((j) => ({
-            nodeId: j.nodeId,
-            name: j.name,
-            token: j.token,
-            axis: j.axis,
-            matchedRule: j.matchedRule,
-            reasoning: j.reasoning,
-            confidence: j.confidence,
-        }));
-}
-
 export function mergeScanPayload(args: MergeArgs): ScanPayload {
-    const { deterministic, llm, schemaMode, textStyleSchema } = args;
+    const { deterministic, llm, schemaMode, textStyleSchema, targets } = args;
 
-    const colorHeuristics = llm.semanticColor
-        .filter((j) => j.verdict === 'FAIL')
-        .map(heuristicColor);
-    const typoHeuristics = llm.typography
-        .filter((j) => j.verdict === 'FAIL')
-        .map((j) => heuristicTypo(j, textStyleSchema));
-    const typoPasses = typoPassJudgments(llm.typography);
+    const colorHeuristics = groupLlmViolations(
+        llm.semanticColor
+            .map((j) => heuristicColor(j, targets))
+            .filter((v): v is Violation => v !== null),
+    );
+    const typoHeuristics = groupLlmViolations(
+        llm.typography
+            .map((j) => heuristicTypo(j, textStyleSchema, targets))
+            .filter((v): v is Violation => v !== null),
+    );
 
-    const buildOutput = (
-        cat: Category,
-        extra: Violation[],
-        passJudgments?: LlmPassJudgment[],
-    ): EvaluateOutput => {
+    const buildOutput = (cat: Category, extra: Violation[]): EvaluateOutput => {
         const d = deterministic[cat];
         const violations = [...d.violations, ...extra];
-        const flagged = new Set(extra.map((v) => `${v.nodeId}:${v.property}`));
+        const flagged = new Set<string>();
+        for (const v of extra) {
+            const ids = v.nodeIds && v.nodeIds.length > 0 ? v.nodeIds : [v.nodeId];
+            for (const id of ids) flagged.add(`${id}:${v.property}`);
+        }
         // 각 노드는 독립 판정 대상이므로 그룹 conformant 를 nodeIds 단위로 펼친다.
         // LLM 이 특정 nodeId 만 FAIL 로 뒤집으면 그 노드만 conformant 에서 제외하고 형제는 유지한다.
         const flatConformant: Conformant[] = d.conformant.flatMap((c) => {
@@ -136,7 +176,6 @@ export function mergeScanPayload(args: MergeArgs): ScanPayload {
             violations,
             conformant,
             summary: summarize(violations, conformant, d.total),
-            ...(passJudgments && passJudgments.length > 0 ? { passJudgments } : {}),
         };
     };
 
@@ -144,7 +183,7 @@ export function mergeScanPayload(args: MergeArgs): ScanPayload {
         color: buildOutput('color', colorHeuristics),
         space: buildOutput('space', []),
         dimension: buildOutput('dimension', []),
-        typography: buildOutput('typography', typoHeuristics, typoPasses),
+        typography: buildOutput('typography', typoHeuristics),
         borderRadius: buildOutput('borderRadius', []),
         shadow: buildOutput('shadow', []),
         schemaMode,

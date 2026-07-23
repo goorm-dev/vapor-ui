@@ -3,11 +3,25 @@ import type { NodeInfo } from '~/common/schemas';
 import { shouldSkipNode } from './filters';
 import { classifyTextNode } from './text';
 
+/** LLM 판정에 무의미한 벡터·리프 도형. nodeTree 에서 제외. */
+const NOISE_LEAF_TYPES: ReadonlySet<string> = new Set([
+    'VECTOR',
+    'LINE',
+    'ELLIPSE',
+    'POLYGON',
+    'STAR',
+    'BOOLEAN_OPERATION',
+]);
+
+const TEXT_CHAR_CAP = 30;
+
 /**
  * LLM 컨텍스트용 노드 트리를 DFS 로 평탄화.
  * - 숨겨진 노드/하위 제외
  * - `shouldSkipNode` 이름 필터에 걸린 노드는 자기 자신은 스킵하되 자식은 원래 부모 밑에 이어 붙임
- * - TEXT 노드는 characters(60자 컷) + textStyle 부착
+ * - NOISE_LEAF_TYPES(벡터/리프 도형) 는 자기 스킵 + 자식은 스크린샷에 이미 반영되므로 무시
+ * - TEXT 노드는 characters(30자 컷) + textStyle 부착
+ * - 위치·크기(x/y/w/h) 는 스크린샷이 대체. childIds 는 parentId 의 역함수 → 생략.
  */
 export async function walkTree(root: SceneNode): Promise<NodeInfo[]> {
     const out: NodeInfo[] = [];
@@ -27,21 +41,19 @@ export async function walkTree(root: SceneNode): Promise<NodeInfo[]> {
             continue;
         }
 
+        // 노이즈 리프 도형은 자기 자신·자식 모두 스킵. 시각 정보는 스크린샷에 있음.
+        if (NOISE_LEAF_TYPES.has(node.type)) continue;
+
         const info: NodeInfo = {
             id: node.id,
             type: node.type,
             name: node.name,
             parentId,
-            childIds: children.map((c) => c.id),
-            x: 'x' in node ? (node as { x: number }).x : 0,
-            y: 'y' in node ? (node as { y: number }).y : 0,
-            w: 'width' in node ? (node as { width: number }).width : 0,
-            h: 'height' in node ? (node as { height: number }).height : 0,
         };
 
         if (node.type === 'TEXT') {
             const textNode = node as TextNode;
-            info.characters = (textNode.characters || '').slice(0, 60);
+            info.characters = (textNode.characters || '').slice(0, TEXT_CHAR_CAP);
 
             try {
                 const { textStyle } = await classifyTextNode(textNode);

@@ -9,11 +9,8 @@ export type AnthropicMessagesResponse = {
 
 export type LlmTypoJudgment = {
     nodeId: string;
-    name: string;
-    token: string;
-    verdict: 'PASS' | 'FAIL';
     confidence: Confidence;
-    axis: 'hierarchy' | 'role' | 'viewport';
+    axis: 'hierarchy' | 'role';
     matchedRule: string;
     reasoning: string;
     suggested: string[];
@@ -21,10 +18,7 @@ export type LlmTypoJudgment = {
 
 export type LlmColorJudgment = {
     nodeId: string;
-    name: string;
     property: 'fill' | 'fill-on-text' | 'stroke';
-    token: string;
-    verdict: 'PASS' | 'FAIL';
     confidence: Confidence;
     reasoning: string;
     suggested: string[];
@@ -58,11 +52,8 @@ function isTypoJudgment(v: unknown): v is LlmTypoJudgment {
     const o = v as Record<string, unknown>;
     return (
         typeof o.nodeId === 'string' &&
-        typeof o.name === 'string' &&
-        typeof o.token === 'string' &&
-        (o.verdict === 'PASS' || o.verdict === 'FAIL') &&
         (o.confidence === 'HIGH' || o.confidence === 'MED' || o.confidence === 'LOW') &&
-        (o.axis === 'hierarchy' || o.axis === 'role' || o.axis === 'viewport') &&
+        (o.axis === 'hierarchy' || o.axis === 'role') &&
         typeof o.matchedRule === 'string' &&
         typeof o.reasoning === 'string' &&
         Array.isArray(o.suggested)
@@ -74,10 +65,7 @@ function isColorJudgment(v: unknown): v is LlmColorJudgment {
     const o = v as Record<string, unknown>;
     return (
         typeof o.nodeId === 'string' &&
-        typeof o.name === 'string' &&
-        typeof o.token === 'string' &&
         (o.property === 'fill' || o.property === 'fill-on-text' || o.property === 'stroke') &&
-        (o.verdict === 'PASS' || o.verdict === 'FAIL') &&
         (o.confidence === 'HIGH' || o.confidence === 'MED' || o.confidence === 'LOW') &&
         typeof o.reasoning === 'string' &&
         Array.isArray(o.suggested)

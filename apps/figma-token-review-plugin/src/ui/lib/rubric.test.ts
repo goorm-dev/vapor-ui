@@ -68,16 +68,37 @@ describe('buildLlmInput', () => {
                 { nodeId: '2', name: 'h', property: 'textStyle', token: 'subtitle1' } as Conformant,
             ],
         };
-        const input = buildLlmInput({
+        const { input } = buildLlmInput({
             extract,
             deterministicConformant: conformant,
-            frameName: 'frame',
             colorSchema,
             textStyleSchema,
             nodeTree: [],
         });
         expect(input.judgmentTargets.semanticColor.map((t) => t.nodeId)).toEqual(['1']);
         expect(input.judgmentTargets.typography.map((t) => t.nodeId)).toEqual(['2']);
+    });
+
+    it('targets lookup 은 nodeId(+property) 로 원본 target 을 복원한다', () => {
+        const conformant = {
+            color: [
+                { nodeId: '1', name: 't', property: 'fill-on-text', token: fgKey } as Conformant,
+            ],
+            typography: [
+                { nodeId: '2', name: 'h', property: 'textStyle', token: 'subtitle1' } as Conformant,
+            ],
+        };
+        const { targets } = buildLlmInput({
+            extract,
+            deterministicConformant: conformant,
+            colorSchema,
+            textStyleSchema,
+            nodeTree: [],
+        });
+        expect(targets.typography.get('2')?.textStyle).toBe('subtitle1');
+        expect(targets.color.get('1:fill-on-text')?.token).toBe(fgKey);
+        expect(targets.nameByNodeId.get('1')).toBe('t');
+        expect(targets.nameByNodeId.get('2')).toBe('h');
     });
 
     it('rubric 서브셋은 실제 등장한 토큰만 담는다', () => {
@@ -89,30 +110,53 @@ describe('buildLlmInput', () => {
                 { nodeId: '2', name: 'h', property: 'textStyle', token: 'subtitle1' } as Conformant,
             ],
         };
-        const input = buildLlmInput({
+        const { input } = buildLlmInput({
             extract,
             deterministicConformant: conformant,
-            frameName: 'frame',
             colorSchema,
             textStyleSchema,
             nodeTree: [],
         });
         expect(Object.keys(input.rubric.color)).toEqual([fgKey]);
-        // textStyle rubric 는 스키마 전체(16개)를 포함하므로 subtitle1 포함 여부 확인
         expect(input.rubric.textStyle['subtitle1']).toBeDefined();
         expect(Object.keys(input.rubric.textStyle).length).toBe(textStyleSchema.order.length);
     });
 
-    it('결정론 실패 노드는 판정 대상에서 제외', () => {
-        // conformant에 없는 nodeId '3'은 제외되어야 함
+    it('rubric.textStyle 항목은 rank/when/avoid 만 담는다 (description/totalRanks 제거)', () => {
+        const { input } = buildLlmInput({
+            extract,
+            deterministicConformant: { color: [], typography: [] },
+            colorSchema,
+            textStyleSchema,
+            nodeTree: [],
+        });
+        const first = Object.values(input.rubric.textStyle)[0]!;
+        expect(Object.keys(first).sort()).toEqual(['avoid', 'rank', 'when']);
+    });
+
+    it('rubric.color 항목은 when/avoid 만 담는다 (role/description 제거)', () => {
         const conformant = {
-            color: [],
+            color: [
+                { nodeId: '1', name: 't', property: 'fill-on-text', token: fgKey } as Conformant,
+            ],
             typography: [],
         };
-        const input = buildLlmInput({
+        const { input } = buildLlmInput({
             extract,
             deterministicConformant: conformant,
-            frameName: 'frame',
+            colorSchema,
+            textStyleSchema,
+            nodeTree: [],
+        });
+        const entry = input.rubric.color[fgKey]!;
+        expect(Object.keys(entry).sort()).toEqual(['avoid', 'when']);
+    });
+
+    it('결정론 실패 노드는 판정 대상에서 제외', () => {
+        const conformant = { color: [], typography: [] };
+        const { input } = buildLlmInput({
+            extract,
+            deterministicConformant: conformant,
             colorSchema,
             textStyleSchema,
             nodeTree: [],
@@ -120,23 +164,22 @@ describe('buildLlmInput', () => {
         expect(input.judgmentTargets.semanticColor).toHaveLength(0);
         expect(input.judgmentTargets.typography).toHaveLength(0);
         expect(Object.keys(input.rubric.color)).toHaveLength(0);
-        // textStyle rubric 는 conformant 여부와 무관하게 스키마 전체를 포함
         expect(Object.keys(input.rubric.textStyle).length).toBe(textStyleSchema.order.length);
     });
 
-    it('context 필드가 올바르게 채워진다', () => {
+    it('context 는 schemaMode/viewport/totalRanks 만 담고 frameName 은 없다', () => {
         const conformant = { color: [], typography: [] };
-        const input = buildLlmInput({
+        const { input } = buildLlmInput({
             extract,
             deterministicConformant: conformant,
-            frameName: 'MyFrame',
             colorSchema,
             textStyleSchema,
             nodeTree: [],
         });
         expect(input.context.schemaMode).toBe('light');
         expect(input.context.viewport).toBe('pc');
-        expect(input.context.frameName).toBe('MyFrame');
+        expect(input.context.totalRanks).toBe(textStyleSchema.order.length);
+        expect((input.context as Record<string, unknown>).frameName).toBeUndefined();
     });
 
     it('nodeTree가 LlmInput에 그대로 복사된다', () => {
@@ -146,33 +189,58 @@ describe('buildLlmInput', () => {
                 type: 'FRAME',
                 name: 'Root',
                 parentId: null,
-                childIds: ['c'],
-                x: 0,
-                y: 0,
-                w: 100,
-                h: 200,
             },
             {
                 id: 'c',
                 type: 'TEXT',
                 name: 'Caption',
                 parentId: 'r',
-                childIds: [],
-                x: 10,
-                y: 10,
-                w: 80,
-                h: 20,
             },
         ];
-        const input = buildLlmInput({
+        const { input } = buildLlmInput({
             extract,
             deterministicConformant: { color: [], typography: [] },
-            frameName: 'F',
             colorSchema,
             textStyleSchema,
             nodeTree,
         });
         expect(input.nodeTree).toEqual(nodeTree);
+    });
+
+    it('typography target 은 nodeId/textStyle 만 담고 name/characters 를 담지 않는다', () => {
+        const conformant = {
+            color: [],
+            typography: [
+                { nodeId: '2', name: 'h', property: 'textStyle', token: 'subtitle1' } as Conformant,
+            ],
+        };
+        const { input } = buildLlmInput({
+            extract,
+            deterministicConformant: conformant,
+            colorSchema,
+            textStyleSchema,
+            nodeTree: [],
+        });
+        const target = input.judgmentTargets.typography[0]!;
+        expect(Object.keys(target).sort()).toEqual(['nodeId', 'textStyle']);
+    });
+
+    it('color target 은 nodeId/property/token 만 담고 name 을 담지 않는다', () => {
+        const conformant = {
+            color: [
+                { nodeId: '1', name: 't', property: 'fill-on-text', token: fgKey } as Conformant,
+            ],
+            typography: [],
+        };
+        const { input } = buildLlmInput({
+            extract,
+            deterministicConformant: conformant,
+            colorSchema,
+            textStyleSchema,
+            nodeTree: [],
+        });
+        const target = input.judgmentTargets.semanticColor[0]!;
+        expect(Object.keys(target).sort()).toEqual(['nodeId', 'property', 'token']);
     });
 
     it('같은 스타일 그룹의 형제 노드는 각각 별도의 LLM target 으로 펼쳐진다', () => {
@@ -213,10 +281,9 @@ describe('buildLlmInput', () => {
             ],
             typography: [],
         };
-        const input = buildLlmInput({
+        const { input } = buildLlmInput({
             extract: groupedExtract,
             deterministicConformant: conformant,
-            frameName: 'frame',
             colorSchema,
             textStyleSchema,
             nodeTree: [],
@@ -273,10 +340,9 @@ describe('buildLlmInput', () => {
             ],
             typography: [],
         };
-        const input = buildLlmInput({
+        const { input } = buildLlmInput({
             extract: twoPaintExtract,
             deterministicConformant: conformant,
-            frameName: 'frame',
             colorSchema,
             textStyleSchema,
             nodeTree: [],
@@ -290,10 +356,9 @@ describe('buildLlmInput', () => {
 
     it('textStyleRubric 는 스키마 전체 스타일을 포함한다 (사용/미사용 무관)', () => {
         const schema = loadTextStyleSchema();
-        const input = buildLlmInput({
+        const { input } = buildLlmInput({
             extract: makeEmptyExtract(),
             deterministicConformant: { color: [], typography: [] },
-            frameName: 'frame',
             colorSchema: loadColorSchema('light'),
             textStyleSchema: schema,
             nodeTree: [],

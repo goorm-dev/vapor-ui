@@ -12,23 +12,17 @@ describe('parseLlmResponse', () => {
                         typography: [
                             {
                                 nodeId: '1',
-                                name: 'h',
-                                token: 'subtitle1',
-                                verdict: 'PASS',
                                 confidence: 'HIGH',
                                 axis: 'hierarchy',
-                                matchedRule: '',
-                                reasoning: '맞음',
-                                suggested: [],
+                                matchedRule: 'x',
+                                reasoning: '위계 이탈',
+                                suggested: ['heading4'],
                             },
                         ],
                         semanticColor: [
                             {
                                 nodeId: '2',
-                                name: 'alert',
                                 property: 'fill',
-                                token: 'colors.background.danger.100',
-                                verdict: 'FAIL',
                                 confidence: 'MED',
                                 reasoning: '경고가 아닌 정보 자리',
                                 suggested: ['colors.background.hint.100'],
@@ -39,7 +33,7 @@ describe('parseLlmResponse', () => {
             ],
         };
         const result = parseLlmResponse(response);
-        expect(result.typography[0].verdict).toBe('PASS');
+        expect(result.typography[0].axis).toBe('hierarchy');
         expect(result.semanticColor[0].suggested).toEqual(['colors.background.hint.100']);
     });
 
@@ -98,9 +92,6 @@ describe('parseLlmResponse', () => {
                         typography: [
                             {
                                 nodeId: '1',
-                                name: 'h',
-                                token: 'subtitle1',
-                                verdict: 'PASS',
                                 confidence: 'HIGH',
                                 matchedRule: '',
                                 reasoning: '맞음',
@@ -115,7 +106,7 @@ describe('parseLlmResponse', () => {
         expect(() => parseLlmResponse(response)).toThrow(LlmParseError);
     });
 
-    it('typography item 의 axis 가 3-value union 밖이면 LlmParseError', () => {
+    it('typography item 의 axis 가 2-value union 밖이면 LlmParseError', () => {
         const response = {
             content: [
                 {
@@ -124,11 +115,8 @@ describe('parseLlmResponse', () => {
                         typography: [
                             {
                                 nodeId: '1',
-                                name: 'h',
-                                token: 'subtitle1',
-                                verdict: 'FAIL',
                                 confidence: 'MED',
-                                axis: 'unknown',
+                                axis: 'viewport',
                                 matchedRule: 'x',
                                 reasoning: 'nope',
                                 suggested: [],
@@ -151,9 +139,6 @@ describe('parseLlmResponse', () => {
                         typography: [
                             {
                                 nodeId: '1',
-                                name: 'h',
-                                token: 'subtitle1',
-                                verdict: 'PASS',
                                 confidence: 'HIGH',
                                 axis: 'role',
                                 matchedRule: '',
@@ -181,9 +166,6 @@ describe('parseLlmResponse', () => {
                         semanticColor: [
                             {
                                 nodeId: '1',
-                                name: 'x',
-                                token: 'tok',
-                                verdict: 'PASS',
                                 confidence: 'HIGH',
                                 reasoning: 'ok',
                                 suggested: [],

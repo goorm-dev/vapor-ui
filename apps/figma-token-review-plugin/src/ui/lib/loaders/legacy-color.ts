@@ -40,7 +40,10 @@ function rgbStringToHex(v: string): string | null {
     if (!v || v === '-') return null;
     const m = v.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
     if (!m) return null;
-    const toHex = (n: string) => Math.max(0, Math.min(255, Number(n))).toString(16).padStart(2, '0');
+    const toHex = (n: string) =>
+        Math.max(0, Math.min(255, Number(n)))
+            .toString(16)
+            .padStart(2, '0');
     return `#${toHex(m[1])}${toHex(m[2])}${toHex(m[3])}`;
 }
 

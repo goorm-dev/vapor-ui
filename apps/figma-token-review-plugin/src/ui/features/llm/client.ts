@@ -32,7 +32,7 @@ export type PostOptions = {
     tags?: string[];
 };
 
-const DEFAULT_TIMEOUT_MS = 60_000;
+const DEFAULT_TIMEOUT_MS = 90_000;
 const RATE_LIMIT_RETRY_DELAY_MS = 2_000;
 
 export async function postLiteLLM(

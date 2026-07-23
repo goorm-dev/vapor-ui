@@ -83,7 +83,7 @@ describe('captureScreenshot', () => {
 });
 
 describe('walkTree', () => {
-    it('emits parent before children, skips 🟨/🔶 subtrees, populates xywh', async () => {
+    it('emits parent before children, skips 🟨/🔶 subtrees, keeps only id/type/name/parentId', async () => {
         const leaf = {
             id: 'l',
             type: 'TEXT',
@@ -124,10 +124,30 @@ describe('walkTree', () => {
         expect(ids).not.toContain('s');
         expect(tree[0]?.id).toBe('r');
         const leafInfo = tree.find((n) => n.id === 'l')!;
-        expect(leafInfo).toMatchObject({ parentId: 'r', childIds: [], x: 5, y: 6, w: 7, h: 8 });
+        expect(leafInfo.parentId).toBe('r');
+        // 기하 필드(x/y/w/h)와 childIds 는 스크린샷/parentId 로 대체되어 nodeTree 에서 제외
+        expect((leafInfo as Record<string, unknown>).x).toBeUndefined();
+        expect((leafInfo as Record<string, unknown>).childIds).toBeUndefined();
     });
 
-    it('walkTree TEXT 노드는 characters(60자 컷) 와 textStyle 을 담는다', async () => {
+    it('walkTree 는 벡터·리프 도형(VECTOR/LINE/ELLIPSE 등) 을 자기·자식 모두 스킵한다', async () => {
+        const vectorChild = {
+            id: 'v',
+            type: 'VECTOR',
+            name: 'icon',
+            children: [],
+        } as any;
+        const root = {
+            id: 'r',
+            type: 'FRAME',
+            name: 'Root',
+            children: [vectorChild],
+        } as any;
+        const tree = await walkTree(root);
+        expect(tree.map((n) => n.id)).not.toContain('v');
+    });
+
+    it('walkTree TEXT 노드는 characters(30자 컷) 와 textStyle 을 담는다', async () => {
         (globalThis as any).figma = {
             getStyleByIdAsync: vi.fn().mockResolvedValue({
                 name: 'body2',
@@ -148,7 +168,7 @@ describe('walkTree', () => {
         });
         const tree = await walkTree(frame);
         const text = tree.find((n) => n.id === 't1')!;
-        expect(text.characters).toBe('a'.repeat(60));
+        expect(text.characters).toBe('a'.repeat(30));
         expect(text.textStyle).toBe('body2');
     });
 

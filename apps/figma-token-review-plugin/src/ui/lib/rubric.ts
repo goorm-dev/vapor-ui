@@ -1,17 +1,19 @@
-import type { Conformant, NodeInfo, RawExtract, Role } from '~/common/schemas';
+import type { Conformant, NodeInfo, RawExtract } from '~/common/schemas';
 import type { ColorSchema } from '~/ui/lib/loaders/color';
 import type { TextStyleSchema } from '~/ui/lib/loaders/typography';
 
+/**
+ * TypographyTarget / ColorTarget 은 LLM 응답 재구성 lookup 에도 쓰인다.
+ * LLM 은 name/token/textStyle 을 다시 echo 하지 않으므로, merge 는 nodeId(+property) 로
+ * 이 target 을 찾아 Violation.token / property 를 복원한다.
+ */
 export type TypographyTarget = {
     nodeId: string;
-    name: string;
-    characters: string;
     textStyle: string;
 };
 
 export type ColorTarget = {
     nodeId: string;
-    name: string;
     property: 'fill' | 'fill-on-text' | 'stroke';
     token: string;
 };
@@ -19,20 +21,20 @@ export type ColorTarget = {
 export type ColorMetaSubset = {
     when: string[];
     avoid: string[];
-    role: Role | null;
-    description: string | null;
 };
 
 export type TextStyleMetaSubset = {
     rank: number;
-    totalRanks: number;
     when: string[];
     avoid: string[];
-    description: string | null;
 };
 
 export type LlmInput = {
-    context: { schemaMode: 'light' | 'dark'; viewport: string; frameName: string };
+    context: {
+        schemaMode: 'light' | 'dark';
+        viewport: string;
+        totalRanks: number;
+    };
     judgmentTargets: { typography: TypographyTarget[]; semanticColor: ColorTarget[] };
     rubric: {
         textStyle: Record<string, TextStyleMetaSubset>;
@@ -44,15 +46,28 @@ export type LlmInput = {
 export type BuildLlmInputArgs = {
     extract: RawExtract;
     deterministicConformant: { color: Conformant[]; typography: Conformant[] };
-    frameName: string;
     colorSchema: ColorSchema;
     textStyleSchema: TextStyleSchema;
     nodeTree: NodeInfo[];
 };
 
-export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
-    const { extract, deterministicConformant, frameName, colorSchema, textStyleSchema, nodeTree } =
-        args;
+/**
+ * merge 가 LLM 응답의 nodeId(+property) → target(=token 등) 을 되찾기 위한 lookup.
+ * runLlmEvaluation 안에서 buildLlmInput 과 함께 만들어 mergeScanPayload 로 넘겨진다.
+ */
+export type TargetLookup = {
+    typography: Map<string, TypographyTarget>;
+    color: Map<string, ColorTarget>;
+    nameByNodeId: Map<string, string>;
+};
+
+export type BuildLlmInputResult = {
+    input: LlmInput;
+    targets: TargetLookup;
+};
+
+export function buildLlmInput(args: BuildLlmInputArgs): BuildLlmInputResult {
+    const { extract, deterministicConformant, colorSchema, textStyleSchema, nodeTree } = args;
 
     // After groupBy in extract.ts, items have nodeIds: string[] instead of nodeId.
     // Build a map from each individual nodeId to its grouped entry.
@@ -67,16 +82,17 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
         for (const id of ids) typoByNode.set(id, t);
     }
 
+    const nameByNodeId = new Map<string, string>();
+    for (const [id, entry] of colorByNode) nameByNodeId.set(id, entry.name);
+    for (const [id, entry] of typoByNode) nameByNodeId.set(id, entry.name);
+
     const semanticColorTargets: ColorTarget[] = [];
+    const colorTargetIndex = new Map<string, ColorTarget>();
     const usedColorTokens = new Set<string>();
     for (const conf of deterministicConformant.color) {
         const u = colorByNode.get(conf.nodeId);
         if (!u || !conf.token) continue;
-        // 시맨틱 토큰만 의미 판정 대상 (primitive/unknown 제외)
         if (!colorSchema.semantic[conf.token]) continue;
-        // conf.property 는 결정론 평가가 이미 property/token 쌍을 정확히 기록한 값.
-        // colorByNode 는 nodeId 만으로 키잉하므로 fill/stroke 두 색이 같은 노드에 붙으면
-        // 뒤 항목이 앞을 덮어 u.property 가 오염된다. 반드시 conf.property 를 사용해야 함.
         if (
             conf.property !== 'fill' &&
             conf.property !== 'fill-on-text' &&
@@ -84,34 +100,29 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
         ) {
             continue;
         }
-        // 같은 스타일·토큰이라도 위치·부모 컨텍스트가 달라 판정이 흔들릴 수 있으므로
-        // 그룹 대표 하나만 LLM 태우고 형제에 상속하지 않고, nodeIds 를 펼쳐 각 노드를 개별 target 으로 보낸다.
         const ids = conf.nodeIds && conf.nodeIds.length > 0 ? conf.nodeIds : [conf.nodeId];
         for (const id of ids) {
-            const perNode = colorByNode.get(id);
-            semanticColorTargets.push({
+            const target: ColorTarget = {
                 nodeId: id,
-                name: perNode?.name ?? u.name,
                 property: conf.property,
                 token: conf.token,
-            });
+            };
+            semanticColorTargets.push(target);
+            colorTargetIndex.set(`${id}:${conf.property}`, target);
         }
         usedColorTokens.add(conf.token);
     }
 
     const typographyTargets: TypographyTarget[] = [];
+    const typoTargetIndex = new Map<string, TypographyTarget>();
     for (const conf of deterministicConformant.typography) {
         const u = typoByNode.get(conf.nodeId);
         if (!u || !conf.token) continue;
         const ids = conf.nodeIds && conf.nodeIds.length > 0 ? conf.nodeIds : [conf.nodeId];
         for (const id of ids) {
-            const perNode = typoByNode.get(id);
-            typographyTargets.push({
-                nodeId: id,
-                name: perNode?.name ?? u.name,
-                characters: perNode?.characters ?? u.characters,
-                textStyle: conf.token,
-            });
+            const target: TypographyTarget = { nodeId: id, textStyle: conf.token };
+            typographyTargets.push(target);
+            typoTargetIndex.set(id, target);
         }
     }
 
@@ -122,8 +133,6 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
         colorRubric[t] = {
             when: meta.when,
             avoid: meta.avoid,
-            role: meta.role,
-            description: meta.description,
         };
     }
 
@@ -133,17 +142,28 @@ export function buildLlmInput(args: BuildLlmInputArgs): LlmInput {
         const meta = textStyleSchema.styles[name];
         textStyleRubric[name] = {
             rank: meta.rank,
-            totalRanks,
             when: meta.when,
             avoid: meta.avoid,
-            description: meta.description,
         };
     }
 
-    return {
-        context: { schemaMode: extract.schemaMode, viewport: extract.viewport, frameName },
+    const input: LlmInput = {
+        context: {
+            schemaMode: extract.schemaMode,
+            viewport: extract.viewport,
+            totalRanks,
+        },
         judgmentTargets: { typography: typographyTargets, semanticColor: semanticColorTargets },
         rubric: { textStyle: textStyleRubric, color: colorRubric },
         nodeTree,
+    };
+
+    return {
+        input,
+        targets: {
+            typography: typoTargetIndex,
+            color: colorTargetIndex,
+            nameByNodeId,
+        },
     };
 }

@@ -24,7 +24,6 @@ export type RunLlmEvaluationOptions = {
     apiKey: string;
     baseUrl?: string;
     model?: string;
-    frameName?: string;
     extraTags?: string[];
 };
 
@@ -52,7 +51,6 @@ export async function runLlmEvaluation(
 
     const env: LlmEnv = { baseUrl, apiKey };
     const model = options.model ?? importMetaModel() ?? DEFAULT_MODEL;
-    const frameName = options.frameName ?? '';
 
     const colorSchema = loadColorSchema(extract.schemaMode);
     const dim = loadDimensionSchemas();
@@ -92,13 +90,12 @@ export async function runLlmEvaluation(
         det[key].violations = applyRecommendations(det[key].violations, ctx);
     }
 
-    const llmInput = buildLlmInput({
+    const { input: llmInput, targets } = buildLlmInput({
         extract,
         deterministicConformant: {
             color: det.color.conformant,
             typography: det.typography.conformant,
         },
-        frameName,
         colorSchema,
         textStyleSchema,
         nodeTree: llmContext.nodeTree,
@@ -114,6 +111,7 @@ export async function runLlmEvaluation(
         llm: judgments,
         schemaMode: extract.schemaMode,
         textStyleSchema,
+        targets,
     };
 
     return mergeScanPayload(mergeArgs);
