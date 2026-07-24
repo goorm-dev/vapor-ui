@@ -18,7 +18,8 @@ export type UiMsg =
     | { type: 'resize'; width: number; height: number }
     | { type: 'api-key:get' }
     | { type: 'api-key:set'; value: string }
-    | { type: 'api-key:clear' };
+    | { type: 'api-key:clear' }
+    | { type: 'close' };
 
 export type CodeMsg =
     | { type: 'selection'; state: SelectionState }
