@@ -5,7 +5,6 @@ import { forwardRef, useRef } from 'react';
 import { Input as BaseInput } from '@base-ui/react/input';
 import { useControlled } from '@base-ui/utils/useControlled';
 
-import { useInputGroup } from '~/components/input-group';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -34,7 +33,7 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
     ]);
 
     const { invalid, size } = variantProps;
-    const { disabled, readOnly, maxLength, required } = otherProps;
+    const { disabled, readOnly, required } = otherProps;
 
     const handleChange = (value: string, event: TextInput.ChangeEventDetails) => {
         setValue(value);
@@ -50,15 +49,15 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
         state: 'value',
     });
 
-    useInputGroup({ value, maxLength });
-
     const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
 
     return (
         <BaseInput
             ref={ref}
             {...(isControlled ? { value } : { defaultValue })}
-            aria-invalid={invalid}
+            // aria-invalid 는 truthy 일 때만 넘긴다. 항상 넘기면 Base UI Field 가 검증으로 계산한
+            // aria-invalid 를 덮어써 Field 연동이 깨진다.
+            {...(invalid ? { 'aria-invalid': true } : {})}
             onValueChange={handleChange}
             className={cn(styles.root({ invalid, size }), className)}
             {...dataAttrs}

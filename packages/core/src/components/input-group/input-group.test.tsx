@@ -1,240 +1,198 @@
-import React from 'react';
-
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { axe } from 'vitest-axe';
 
 import { InputGroup } from '.';
-import { TextInput } from '../text-input';
+import { Field } from '../field';
 
+/**
+ * 이 스위트는 jsdom 레이어의 책임만 검증한다 — 접근성, DOM 속성(data-*, aria-invalid, :disabled),
+ * disabled/readOnly 의 래퍼 전파. 시각 기하(테두리·focus 링·:has 반응)는 Storybook/Playwright 담당.
+ */
 describe('InputGroup', () => {
-    describe('functionality', () => {
-        it('should display character count when TextInput has value', async () => {
-            render(
+    describe('accessibility & structure', () => {
+        it('should have no a11y violations', async () => {
+            const { container } = render(
                 <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} />
-                    <InputGroup.Counter />
+                    <InputGroup.LeadingAddon>$</InputGroup.LeadingAddon>
+                    <InputGroup.Input placeholder="Amount" aria-label="Amount" />
+                    <InputGroup.TrailingAddon>
+                        <InputGroup.Button aria-label="clear">x</InputGroup.Button>
+                    </InputGroup.TrailingAddon>
                 </InputGroup.Root>,
             );
 
-            const input = screen.getByPlaceholderText('Enter text');
-            await userEvent.type(input, 'hello');
-
-            const counter = screen.getByText('5/10');
-            expect(counter).toBeInTheDocument();
+            expect(await axe(container)).toHaveNoViolations();
         });
 
-        it('should update character count as user types', async () => {
+        it('should not set role by default (single input + decoration is not a group)', () => {
             render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} />
-                    <InputGroup.Counter data-testid="counter" />
+                <InputGroup.Root data-testid="group">
+                    <InputGroup.Input placeholder="Search" />
                 </InputGroup.Root>,
             );
 
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(input, 'h');
-            expect(counter).toHaveTextContent('1/10');
-
-            await userEvent.type(input, 'ello');
-            expect(counter).toHaveTextContent('5/10');
-
-            await userEvent.type(input, ' world');
-            expect(counter).toHaveTextContent('10/10');
+            expect(screen.getByTestId('group')).not.toHaveAttribute('role');
         });
 
-        it('should show only current count when no maxLength is provided', async () => {
+        it('should forward a consumer-provided role', () => {
             render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" />
-                    <InputGroup.Counter data-testid="counter" />
+                <InputGroup.Root data-testid="group" role="group">
+                    <InputGroup.Input placeholder="Search" />
                 </InputGroup.Root>,
             );
 
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(input, 'hello');
-
-            expect(counter).toHaveTextContent('5');
+            expect(screen.getByTestId('group')).toHaveAttribute('role', 'group');
         });
 
-        it('should work with custom Count render prop', async () => {
+        it('should render addon slots around the input', () => {
             render(
                 <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={20} />
-                    <InputGroup.Counter data-testid="counter">
-                        {({ count, maxLength }) => `${count} of ${maxLength} characters`}
-                    </InputGroup.Counter>
+                    <InputGroup.LeadingAddon>$</InputGroup.LeadingAddon>
+                    <InputGroup.Input placeholder="Amount" />
+                    <InputGroup.TrailingAddon>
+                        <InputGroup.Button aria-label="clear">x</InputGroup.Button>
+                    </InputGroup.TrailingAddon>
                 </InputGroup.Root>,
             );
 
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
+            expect(screen.getByText('$')).toBeInTheDocument();
+            expect(screen.getByPlaceholderText('Amount')).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: 'clear' })).toBeInTheDocument();
+        });
+    });
 
-            await userEvent.type(input, 'test');
-
-            expect(counter).toHaveTextContent('4 of 20 characters');
+    describe('visual state (Root data-* only)', () => {
+        it('should reflect disabled on the Root as data-disabled', () => {
+            render(<InputGroup.Root data-testid="group" disabled />);
+            expect(screen.getByTestId('group')).toHaveAttribute('data-disabled');
         });
 
-        it('should handle backspace and deletion correctly', async () => {
+        it('should reflect readOnly on the Root as data-readonly', () => {
+            render(<InputGroup.Root data-testid="group" readOnly />);
+            expect(screen.getByTestId('group')).toHaveAttribute('data-readonly');
+        });
+
+        it('should NOT set state data-* when the corresponding prop is falsy', () => {
+            render(<InputGroup.Root data-testid="group" />);
+            const group = screen.getByTestId('group');
+            expect(group).not.toHaveAttribute('data-disabled');
+            expect(group).not.toHaveAttribute('data-readonly');
+        });
+    });
+
+    describe('state propagation via wrappers', () => {
+        it('should disable Input and Button when the group is disabled', () => {
             render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} />
-                    <InputGroup.Counter data-testid="counter" />
+                <InputGroup.Root disabled>
+                    <InputGroup.Input placeholder="amount" />
+                    <InputGroup.TrailingAddon>
+                        <InputGroup.Button aria-label="clear">x</InputGroup.Button>
+                    </InputGroup.TrailingAddon>
                 </InputGroup.Root>,
             );
 
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(input, 'hello');
-            expect(counter).toHaveTextContent('5/10');
-
-            await userEvent.keyboard('{Backspace}{Backspace}');
-            expect(counter).toHaveTextContent('3/10');
+            expect(screen.getByPlaceholderText('amount')).toBeDisabled();
+            expect(screen.getByRole('button', { name: 'clear' })).toBeDisabled();
         });
 
-        it('should show 0 count initially', () => {
+        it('should not let a child re-enable itself against a disabled group (OR, group wins)', () => {
             render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} />
-                    <InputGroup.Counter data-testid="counter" />
+                <InputGroup.Root disabled>
+                    <InputGroup.Input placeholder="amount" disabled={false} />
                 </InputGroup.Root>,
             );
 
-            const counter = screen.getByTestId('counter');
-            expect(counter).toHaveTextContent('0/10');
+            expect(screen.getByPlaceholderText('amount')).toBeDisabled();
         });
 
-        it('should work with defaultValue from TextInput', () => {
+        it('should apply readOnly to Input only, leaving Button interactive', () => {
             render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} defaultValue="initial" />
-                    <InputGroup.Counter data-testid="counter" />
+                <InputGroup.Root readOnly>
+                    <InputGroup.Input placeholder="amount" />
+                    <InputGroup.TrailingAddon>
+                        <InputGroup.Button aria-label="clear">x</InputGroup.Button>
+                    </InputGroup.TrailingAddon>
                 </InputGroup.Root>,
             );
 
-            const counter = screen.getByTestId('counter');
-            expect(counter).toHaveTextContent('7/10');
+            expect(screen.getByPlaceholderText('amount')).toHaveAttribute('readonly');
+            const button = screen.getByRole('button', { name: 'clear' });
+            expect(button).not.toBeDisabled();
+            expect(button).not.toHaveAttribute('readonly');
         });
 
-        it('should handle multiple InputGroups independently', async () => {
+        it('should render standalone (outside a group) without throwing', () => {
+            render(<InputGroup.Input placeholder="solo" />);
+            const input = screen.getByPlaceholderText('solo');
+            expect(input).toBeInTheDocument();
+            expect(input).not.toBeDisabled();
+        });
+    });
+
+    describe('invalid is not propagated', () => {
+        it('should NOT put aria-invalid on the Input when only the group signals disabled', () => {
             render(
-                <div>
+                <InputGroup.Root disabled>
+                    <InputGroup.Input placeholder="amount" />
+                </InputGroup.Root>,
+            );
+
+            expect(screen.getByPlaceholderText('amount')).not.toHaveAttribute('aria-invalid');
+        });
+
+        it('should put aria-invalid only when invalid is set on the control itself', () => {
+            render(
+                <InputGroup.Root>
+                    <InputGroup.Input placeholder="amount" invalid />
+                </InputGroup.Root>,
+            );
+
+            expect(screen.getByPlaceholderText('amount')).toHaveAttribute('aria-invalid', 'true');
+        });
+    });
+
+    describe('Field integration', () => {
+        it('should expose aria-invalid on the inner input when Field validation fails', async () => {
+            const user = userEvent.setup();
+            render(
+                <Field.Root
+                    validationMode="onChange"
+                    validate={(value) => (value === 'bad' ? 'invalid' : null)}
+                >
                     <InputGroup.Root>
-                        <TextInput placeholder="First input" maxLength={5} />
-                        <InputGroup.Counter data-testid="count1" />
+                        <InputGroup.Input placeholder="Search" />
                     </InputGroup.Root>
-                    <InputGroup.Root>
-                        <TextInput placeholder="Second input" maxLength={10} />
-                        <InputGroup.Counter data-testid="count2" />
-                    </InputGroup.Root>
-                </div>,
+                    <Field.Error />
+                </Field.Root>,
             );
 
-            const input1 = screen.getByPlaceholderText('First input');
-            const input2 = screen.getByPlaceholderText('Second input');
+            const input = screen.getByPlaceholderText('Search');
+            await user.type(input, 'bad');
 
-            await userEvent.type(input1, 'hi');
-            await userEvent.type(input2, 'hello');
-
-            expect(screen.getByTestId('count1')).toHaveTextContent('2/5');
-            expect(screen.getByTestId('count2')).toHaveTextContent('5/10');
+            // Field 가 검증 실패로 자식 input 에 aria-invalid 를 붙이고,
+            // Root 는 이를 :has([aria-invalid='true']) 로 잡는다(테두리 반응은 Storybook 검증).
+            await waitFor(() => expect(input).toHaveAttribute('aria-invalid', 'true'));
         });
 
-        it('should work with controlled TextInput component', () => {
-            const ControlledComponent = () => {
-                const [value, setValue] = React.useState('initial');
-
-                return (
-                    <InputGroup.Root>
-                        <TextInput
-                            placeholder="Controlled input"
-                            maxLength={15}
-                            value={value}
-                            onValueChange={setValue}
-                        />
-                        <InputGroup.Counter data-testid="counter" />
-                    </InputGroup.Root>
-                );
-            };
-
-            render(<ControlledComponent />);
-
-            const counter = screen.getByTestId('counter');
-            expect(counter).toHaveTextContent('7/15');
-        });
-
-        it('should count space characters correctly', async () => {
+        it('should mark the inner input as disabled when Field is disabled', () => {
             render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={20} />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
+                <Field.Root disabled>
+                    <InputGroup.Root>
+                        <InputGroup.Input placeholder="Search" />
+                    </InputGroup.Root>
+                </Field.Root>,
             );
 
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            // Type text with multiple spaces
-            await userEvent.type(input, 'hello   world');
-            expect(counter).toHaveTextContent('13/20');
-
-            // Add more spaces
-            await userEvent.type(input, '    ');
-            expect(counter).toHaveTextContent('17/20');
-
-            // Clear input and type spaces at the beginning
-            await userEvent.clear(input);
-            await userEvent.type(input, '  hello world');
-            expect(counter).toHaveTextContent('13/20');
+            expect(screen.getByPlaceholderText('Search')).toBeDisabled();
         });
+    });
 
-        it('should support static ReactNode children', async () => {
-            render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} />
-                    <InputGroup.Counter data-testid="counter">
-                        <span>Custom counter content</span>
-                    </InputGroup.Counter>
-                </InputGroup.Root>,
-            );
-
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            // Should display static content regardless of input
-            expect(counter).toHaveTextContent('Custom counter content');
-
-            await userEvent.type(input, 'hello');
-            expect(counter).toHaveTextContent('Custom counter content');
-        });
-
-        it('should support both function and static children types', () => {
-            const { rerender } = render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} defaultValue="test" />
-                    <InputGroup.Counter data-testid="counter">
-                        {({ count, maxLength }) => `Dynamic: ${count}/${maxLength}`}
-                    </InputGroup.Counter>
-                </InputGroup.Root>,
-            );
-
-            const counter = screen.getByTestId('counter');
-            expect(counter).toHaveTextContent('Dynamic: 4/10');
-
-            // Rerender with static children
-            rerender(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} defaultValue="test" />
-                    <InputGroup.Counter data-testid="counter">Static content</InputGroup.Counter>
-                </InputGroup.Root>,
-            );
-
-            expect(counter).toHaveTextContent('Static content');
+    describe('composition', () => {
+        it('should support the render prop on Root', () => {
+            render(<InputGroup.Root data-testid="group" render={<section />} />);
+            expect(screen.getByTestId('group').tagName).toBe('SECTION');
         });
     });
 });

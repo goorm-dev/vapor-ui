@@ -1,63 +1,67 @@
 'use client';
 
-import { forwardRef, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useMemo } from 'react';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
+import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { Assign, VaporUIComponentProps } from '~/utils/types';
+import type { VaporUIComponentProps } from '~/utils/types';
 
+import { Button } from '../button';
+import { TextInput } from '../text-input';
+import type { RootVariants } from './input-group.css';
 import * as styles from './input-group.css';
 
-/* -------------------------------------------------------------------------------------------------
- * InputGroup Context
- * -----------------------------------------------------------------------------------------------*/
+interface InputGroupContextValue {
+    disabled?: boolean;
+    readOnly?: boolean;
+}
 
-type FieldValue = string;
-type FieldMaxLength = number;
-
-type InputGroupSharedProps = {
-    value: FieldValue;
-    maxLength?: FieldMaxLength;
-    setValue: (value: FieldValue) => void;
-    setMaxLength: (maxLength: FieldMaxLength) => void;
-};
-
-export const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupSharedProps>({
-    name: 'InputGroup',
-    hookName: 'useInputGroup',
-    providerName: 'InputGroupProvider',
+const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupContextValue>({
+    name: 'InputGroupContext',
+    providerName: 'InputGroup.Root',
+    hookName: 'useInputGroupContext',
     strict: false,
 });
 
-/* -------------------------------------------------------------------------------------------------
- * InputGroup Root
- * -----------------------------------------------------------------------------------------------*/
-
+/**
+ *
+ * Groups a text input with leading and trailing addons or buttons into a single field, and shares its `disabled` and `readOnly` state with the controls inside. Renders a `<div>` element.
+ */
 export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((props, ref) => {
     const { className, render, ...componentProps } = resolveStyles(props);
 
-    const [value, setValue] = useState<FieldValue>('');
-    const [maxLength, setMaxLength] = useState<FieldMaxLength | undefined>();
+    const [{ size = 'md', disabled = false, readOnly = false }, otherProps] =
+        createSplitProps<InputGroupRoot.VariantProps>()(componentProps, [
+            'size',
+            'disabled',
+            'readOnly',
+        ]);
 
-    const contextValue: InputGroupSharedProps = useMemo(
-        () => ({
-            value,
-            maxLength,
-            setValue,
-            setMaxLength,
-        }),
-        [value, maxLength],
+    const dataAttrs = createDataAttributes({ disabled, readOnly });
+
+    const state: InputGroupRoot.State = useMemo(
+        () => ({ disabled, readOnly }),
+        [disabled, readOnly],
+    );
+
+    const contextValue = useMemo<InputGroupContextValue>(
+        () => ({ disabled, readOnly }),
+        [disabled, readOnly],
     );
 
     const element = useRenderElement({
         ref,
+        state,
         render,
         defaultTagName: 'div',
         props: {
-            className: cn(styles.root, className),
-            ...componentProps,
+            className: cn(styles.root({ size }), className),
+            ...dataAttrs,
+            ...otherProps,
         },
     });
 
@@ -65,92 +69,106 @@ export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((
 });
 InputGroupRoot.displayName = 'InputGroup.Root';
 
+/**
+ *
+ * The primary input of the group, inheriting the group's shared `disabled` and `readOnly` state. Renders an `<input>` element by default.
+ */
+export const InputGroupInput = forwardRef<HTMLElement, InputGroupInput.Props>((props, ref) => {
+    const { className, render, ...componentProps } = resolveStyles(props);
+    const group = useInputGroupContext();
+
+    const disabled = (componentProps.disabled as boolean | undefined) || group?.disabled;
+    const readOnly = (componentProps.readOnly as boolean | undefined) || group?.readOnly;
+
+    return useRenderElement({
+        ref,
+        render: render ?? <TextInput />,
+        props: { ...componentProps, className: cn(styles.input, className), disabled, readOnly },
+    });
+});
+InputGroupInput.displayName = 'InputGroup.Input';
+
 /* -------------------------------------------------------------------------------------------------
- * InputGroup Count
+ * InputGroup.Button — 그룹 내 인터랙티브 버튼 래퍼. 기본 render 는 Button,
+ * 아이콘 버튼은 render={<IconButton size=.../>}, Select 편입은 render={<Select.Trigger/>} 로.
+ * 아이콘 크기는 그룹이 강제하지 않는다 — render 대상이 size prop 으로 스스로 정한다.
+ * context 의 disabled 만 OR 병합한다(readOnly 미소비 → password 토글·clear 는 readOnly 에서 생존).
  * -----------------------------------------------------------------------------------------------*/
 
-export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.Props>(
-    (props, ref) => {
-        const {
-            render,
-            className,
-            children: childrenProp,
-            ...componentProps
-        } = resolveStyles(props);
+/**
+ *
+ * An interactive button inside the group, such as a clear or password-toggle control, inheriting the group's shared `disabled` state. Renders a `<button>` element by default.
+ */
+export const InputGroupButton = forwardRef<HTMLElement, InputGroupButton.Props>((props, ref) => {
+    const { className, render, children, ...componentProps } = resolveStyles(props);
+    const group = useInputGroupContext();
 
-        const { value, maxLength } = useInputGroupContext();
+    const disabled = (componentProps.disabled as boolean | undefined) || group?.disabled;
 
-        const content = generateCounterContent({
-            maxLength,
-            count: value.length,
-        });
+    return useRenderElement({
+        ref,
+        render: render ?? <Button />,
+        props: { ...componentProps, className: cn(styles.button, className), disabled, children },
+    });
+});
+InputGroupButton.displayName = 'InputGroup.Button';
 
-        const children =
-            typeof childrenProp === 'function'
-                ? childrenProp({ count: value.length, maxLength, value })
-                : (childrenProp ?? content);
+// 부가요소 슬롯. 그룹 내부 시각은 input-group.css.ts 의 후손 오버라이드가 전담한다.
+const createAddon = (displayName: string) => {
+    const Addon = forwardRef<HTMLSpanElement, InputGroupAddon.Props>((props, ref) => {
+        const { className, render, ...componentProps } = resolveStyles(props);
 
         return useRenderElement({
             ref,
             render,
             defaultTagName: 'span',
             props: {
-                className: cn(styles.counter, className),
-                children,
+                className: cn(styles.addon, className),
                 ...componentProps,
             },
         });
-    },
-);
-InputGroupCounter.displayName = 'InputGroup.Counter';
-
-/* -----------------------------------------------------------------------------------------------*/
-
-type CounterContentOptions = {
-    count: number;
-    maxLength?: number;
+    });
+    Addon.displayName = displayName;
+    return Addon;
 };
 
-const generateCounterContent = ({ count, maxLength }: CounterContentOptions) => {
-    return maxLength ? `${count}/${maxLength}` : `${count}`;
-};
-
-/* -----------------------------------------------------------------------------------------------*/
-
-type UseInputGroupOptions = {
-    value?: FieldValue;
-    maxLength?: FieldMaxLength;
-};
-
-export function useInputGroup({ value, maxLength }: UseInputGroupOptions) {
-    const { setValue, setMaxLength } = useInputGroupContext() ?? {};
-
-    useEffect(() => {
-        if (setMaxLength && maxLength !== undefined) {
-            setMaxLength(maxLength);
-        }
-    }, [setMaxLength, maxLength]);
-
-    useEffect(() => {
-        if (setValue && value !== undefined) {
-            setValue(String(value));
-        }
-    }, [setValue, value]);
-}
+/**
+ *
+ * A non-interactive slot rendered before the input for an icon or short text label. Renders a `<span>` element.
+ */
+export const InputGroupLeadingAddon = createAddon('InputGroup.LeadingAddon');
+/**
+ *
+ * A non-interactive slot rendered after the input for an icon or short text label. Renders a `<span>` element.
+ */
+export const InputGroupTrailingAddon = createAddon('InputGroup.TrailingAddon');
 
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace InputGroupRoot {
-    export type State = {};
-    export type Props = VaporUIComponentProps<'div', State>;
+    export type VariantProps = RootVariants;
+    export interface State {
+        [key: string]: unknown;
+        /** Whether the group shows its disabled visual. */
+        disabled: boolean;
+        /** Whether the group shows its read-only visual. */
+        readOnly: boolean;
+    }
+    export interface Props extends VaporUIComponentProps<'div', State>, VariantProps {}
 }
 
-export namespace InputGroupCounter {
-    type RenderProps = { count: number; maxLength?: number; value: string };
-    type ChildrenProps = {
-        children?: React.ReactNode | ((props: RenderProps) => React.ReactNode);
-    };
-
+export namespace InputGroupInput {
     export type State = {};
-    export type Props = Assign<VaporUIComponentProps<'span', State>, ChildrenProps>;
+    /** invalid 는 render 대상(기본 TextInput)의 variant 로 넘어간다 — 이 컨트롤 자신이 aria-invalid 를 소유. */
+    export type Props = VaporUIComponentProps<'input', State> & { invalid?: boolean };
+}
+
+export namespace InputGroupButton {
+    export type State = {};
+    export type Props = VaporUIComponentProps<'button', State>;
+}
+
+export namespace InputGroupAddon {
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }
