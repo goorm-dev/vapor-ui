@@ -1,0 +1,56 @@
+export type Scope =
+    | 'foreground'
+    | 'background'
+    | 'border'
+    | 'dimension'
+    | 'space'
+    | 'borderRadius'
+    | 'shadow';
+
+export const PROPERTY_SCOPE: Record<string, readonly Scope[]> = {
+    color: ['foreground'],
+    fill: ['foreground'],
+    stroke: ['foreground'],
+    'background-color': ['background'],
+    background: ['background'],
+    'border-color': ['border'],
+    'border-top-color': ['border'],
+    'border-right-color': ['border'],
+    'border-bottom-color': ['border'],
+    'border-left-color': ['border'],
+    'outline-color': ['border'],
+    width: ['dimension'],
+    'min-width': ['dimension'],
+    'max-width': ['dimension'],
+    height: ['dimension'],
+    'min-height': ['dimension'],
+    'max-height': ['dimension'],
+    gap: ['space'],
+    'row-gap': ['space'],
+    'column-gap': ['space'],
+    padding: ['space'],
+    'padding-top': ['space'],
+    'padding-right': ['space'],
+    'padding-bottom': ['space'],
+    'padding-left': ['space'],
+    'padding-inline': ['space'],
+    'padding-block': ['space'],
+    margin: ['space'],
+    'margin-top': ['space'],
+    'margin-right': ['space'],
+    'margin-bottom': ['space'],
+    'margin-left': ['space'],
+    'margin-inline': ['space'],
+    'margin-block': ['space'],
+    inset: ['space'],
+    top: ['space'],
+    right: ['space'],
+    bottom: ['space'],
+    left: ['space'],
+    'border-radius': ['borderRadius'],
+    'border-top-left-radius': ['borderRadius'],
+    'border-top-right-radius': ['borderRadius'],
+    'border-bottom-left-radius': ['borderRadius'],
+    'border-bottom-right-radius': ['borderRadius'],
+    'box-shadow': ['shadow'],
+};
