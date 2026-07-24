@@ -52,10 +52,10 @@ export const link = componentRecipe({
 
 export const icon = componentRecipe({
     base: {
-        color: vars.color.foreground.hint[100],
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        color: vars.color.foreground.hint[100],
     },
 
     defaultVariants: { size: 'md' },

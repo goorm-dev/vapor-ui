@@ -185,13 +185,13 @@ export const header = componentStyle({
 
 export const body = componentStyle({
     flex: 1,
-    paddingInline: vars.size.space[150],
     paddingBlock: vars.size.space[100],
+    paddingInline: vars.size.space[150],
     height: '100%',
     maxHeight: 'unset',
 });
 
 export const footer = componentStyle({
-    paddingInline: vars.size.space[150],
     paddingBlock: vars.size.space[100],
+    paddingInline: vars.size.space[150],
 });

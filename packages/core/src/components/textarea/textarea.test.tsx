@@ -10,6 +10,7 @@ describe('Textarea', () => {
 
     test('should have no a11y violations', async () => {
         const rendered = render(
+            // eslint-disable-next-line jsx-a11y/label-has-associated-control
             <label>
                 <Textarea />
                 Label

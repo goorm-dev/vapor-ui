@@ -61,14 +61,14 @@ const running = keyframes({
 export const indicator = componentRecipe({
     base: [
         {
+            transformOrigin: 'center',
+            animation: `1.7s cubic-bezier(0.43, 0.14, 0.39, 0.76) 0s infinite forwards ${running}`,
             cx: '50%',
             cy: '50%',
             r: calc.subtract('50%', '2px'),
             strokeLinecap: 'round',
             fill: 'none',
             strokeDasharray: '80 100',
-            animation: `1.7s cubic-bezier(0.43, 0.14, 0.39, 0.76) 0s infinite forwards ${running}`,
-            transformOrigin: 'center',
         },
     ],
 

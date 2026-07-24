@@ -89,8 +89,8 @@ export const description = componentStyle({
 
 export const header = componentStyle({
     display: 'flex',
-    alignItems: 'center',
     flexShrink: 0,
+    alignItems: 'center',
     gap: vars.size.space['150'],
     paddingBlock: 0,
     paddingInline: vars.size.space['300'],

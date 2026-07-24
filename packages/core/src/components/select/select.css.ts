@@ -18,8 +18,8 @@ export const trigger = componentRecipe({
             alignItems: 'center',
             justifyContent: 'space-between',
 
-            boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
             borderRadius: vars.size.borderRadius['300'],
+            boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
 
             backgroundColor: vars.color.background.overlay[100],
 

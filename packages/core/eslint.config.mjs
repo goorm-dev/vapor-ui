@@ -3,10 +3,19 @@ import { configs as reactPackage } from '@repo/eslint-config/react-package';
 import { configs as storybook } from '@repo/eslint-config/storybook';
 import { configs as vanillaExtract } from '@repo/eslint-config/vanilla-extract';
 
+/** @type {import('eslint').Linter.Config[]} */
 export default [
     ...reactPackage,
-    ...vanillaExtract,
     ...storybook,
+    ...vanillaExtract,
+    {
+        settings: {
+            'vanilla-extract': {
+                style: ['componentStyle'],
+                recipe: ['componentRecipe'],
+            },
+        },
+    },
     {
         files: ['**/*.tsx'],
         ignores: ['**/*.*.tsx'],
