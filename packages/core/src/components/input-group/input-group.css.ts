@@ -1,4 +1,4 @@
-import { createVar, fallbackVar, globalStyle } from '@vanilla-extract/css';
+import { createVar, fallbackVar, globalStyle, style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { layers } from '~/styles/layers.css';
@@ -34,21 +34,20 @@ export const root = componentRecipe({
             vars: { [boxShadowColor]: vars.color.border.normal },
 
             selectors: {
-                [`${when.invalid('&[data-invalid]')}, ${when.invalid(`&:has([aria-invalid='true'])`)}`]:
-                    {
-                        vars: { [boxShadowColor]: vars.color.border.danger },
-                    },
+                // invalid 는 Root prop 이 아니라 자식 컨트롤의 aria-invalid 로만 켠다(시각 = 테두리).
+                [when.invalid(`&:has([aria-invalid='true'])`)]: {
+                    vars: { [boxShadowColor]: vars.color.border.danger },
+                },
                 [`${when.readonly()}`]: { backgroundColor: vars.color.gray['200'] },
                 [`${DISABLED}`]: { opacity: 0.32 },
             },
         },
     ],
 
-    defaultVariants: { size: 'md', disabled: false, invalid: false, readOnly: false },
+    defaultVariants: { size: 'md', disabled: false, readOnly: false },
 
     variants: {
         disabled: { true: {}, false: {} },
-        invalid: { true: {}, false: {} },
         readOnly: { true: {}, false: {} },
 
         size: {
@@ -79,8 +78,7 @@ export const root = componentRecipe({
                 paddingInline: vars.size.space[150],
                 fontSize: vars.typography.fontSize['075'],
                 vars: {
-                    // ponytail: 28px는 dimension 토큰에 없음(24↔32 공백). 토큰 추가는 별도 논의.
-                    [compactButtonSize]: '1.75rem',
+                    [compactButtonSize]: vars.size.dimension['350'],
                     [compactIconSize]: vars.size.dimension['250'],
                     [inputHeight]: vars.size.dimension['500'],
                     [addonGap]: vars.size.space['000'],
@@ -104,9 +102,8 @@ export const root = componentRecipe({
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
 export type InputGroupSize = NonNullable<RootVariants['size']>;
 
-const rootBase = root.classNames.base;
-
 const HAS_PADDED_CONTROL = `&:has(button, [role='combobox'])`;
+const SELECT_TRIGGER = `[role='combobox']`;
 
 export const addon = componentStyle({
     display: 'inline-flex',
@@ -119,7 +116,11 @@ export const addon = componentStyle({
     },
 });
 
-globalStyle(`${rootBase} :is(input, textarea)`, {
+// InputGroup.Input 이 렌더 대상(기본 TextInput)에 얹는 로컬 클래스.
+// 컨트롤을 naked화(자체 테두리·배경 제거)하고 그룹 높이에 맞춘다 — 그룹의 포커스 링은 Root 의
+// form-within 이 그리므로 컨트롤 자신의 boxShadow 는 지운다.
+// utilities 레이어로 컨트롤 자신의 스타일(components 레이어)을 이긴다 — button 과 동일 패턴.
+export const input = style({
     '@layer': {
         [layers.utilities]: {
             flex: 1,
@@ -127,59 +128,41 @@ globalStyle(`${rootBase} :is(input, textarea)`, {
             boxShadow: 'none',
             backgroundColor: 'transparent',
             paddingInline: vars.size.space['050'],
+            minWidth: 0,
+            height: inputHeight,
             fontSize: 'inherit',
         },
     },
 });
 
-globalStyle(`${rootBase} :is(input, textarea):is(:focus, :hover)`, {
-    '@layer': {
-        [layers.utilities]: { boxShadow: 'none' },
-    },
-});
-
-globalStyle(`${rootBase} input`, {
-    '@layer': {
-        [layers.utilities]: { height: inputHeight },
-    },
-});
-
-const ICON_BUTTON = `button:not([role='combobox'])`;
-const SELECT_TRIGGER = `[role='combobox']`;
-
-globalStyle(`${rootBase} ${ICON_BUTTON}`, {
+// InputGroup.Button 이 렌더 대상(Button/IconButton/Select.Trigger)에 얹는 로컬 클래스.
+// 시각 밀도에 맞춰 높이를 그룹 기준으로 누른다. Select.Trigger 로 편입될 때만(role=combobox)
+// naked화해 그룹의 addon 처럼 녹아들게 한다 — 일반 Button/IconButton 은 자기 시각을 유지.
+// utilities 레이어로 컨트롤 자신의 스타일(components 레이어)을 이긴다.
+export const button = style({
     '@layer': {
         [layers.utilities]: {
-            width: compactButtonSize,
             height: compactButtonSize,
             minHeight: compactButtonSize,
-        },
-    },
-});
-globalStyle(`${rootBase} ${ICON_BUTTON} > :is(svg, img)`, {
-    '@layer': {
-        [layers.utilities]: {
-            width: compactIconSize,
-            height: compactIconSize,
-        },
-    },
-});
-
-globalStyle(`${addon} > :is(svg, img)`, {
-    '@layer': {
-        [layers.utilities]: {
-            width: compactIconSize,
-            height: compactIconSize,
+            selectors: {
+                [`&${SELECT_TRIGGER}`]: {
+                    boxShadow: 'none',
+                    backgroundColor: 'transparent',
+                    paddingInline: vars.size.space['050'],
+                },
+            },
         },
     },
 });
 
-globalStyle(`${rootBase} ${SELECT_TRIGGER}`, {
+// icon-button 아이콘을 그룹 밀도에 맞춘다(sm/md 16, lg 20, xl 24). icon-button 의
+// max(16px,50%)(components 레이어)를 utilities 로 덮는다. 앵커가 button 로컬 클래스라
+// 그룹 밖으로 전파되지 않는다. Select.Trigger(combobox) 는 chevron 을 자체 렌더하므로 제외.
+globalStyle(`${button}:not(${SELECT_TRIGGER}) > :is(svg, img)`, {
     '@layer': {
         [layers.utilities]: {
-            boxShadow: 'none',
-            backgroundColor: 'transparent',
-            paddingInline: vars.size.space['050'],
+            width: compactIconSize,
+            height: compactIconSize,
         },
     },
 });
