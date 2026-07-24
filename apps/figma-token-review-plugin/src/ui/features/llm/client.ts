@@ -18,11 +18,16 @@ export class LlmHttpError extends Error {
 }
 
 export class LlmTimeoutError extends Error {
-    constructor(message = 'LLM 호출 timeout (60s)') {
+    constructor(message = 'LLM 호출 timeout') {
         super(message);
         this.name = 'LlmTimeoutError';
     }
 }
+
+export type LlmProgress = {
+    phase: 'thinking' | 'finalizing';
+    estimatedDurationMs?: number;
+};
 
 export type PostOptions = {
     env: LlmEnv;
@@ -30,23 +35,31 @@ export type PostOptions = {
     timeoutMs?: number;
     fetchImpl?: typeof fetch;
     tags?: string[];
+    onProgress?: (progress: LlmProgress) => void;
 };
 
-const DEFAULT_TIMEOUT_MS = 90_000;
+const DEFAULT_TIMEOUT_MS = 300_000;
 const RATE_LIMIT_RETRY_DELAY_MS = 2_000;
 
 export async function postLiteLLM(
     request: AnthropicMessagesRequest,
     options: PostOptions,
 ): Promise<AnthropicMessagesResponse> {
-    const { env, signal, timeoutMs = DEFAULT_TIMEOUT_MS, fetchImpl = fetch, tags } = options;
+    const {
+        env,
+        signal,
+        timeoutMs = DEFAULT_TIMEOUT_MS,
+        fetchImpl = fetch,
+        tags,
+        onProgress,
+    } = options;
 
     try {
-        return await postOnce(request, env, signal, timeoutMs, fetchImpl, tags);
+        return await postOnce(request, env, signal, timeoutMs, fetchImpl, tags, onProgress);
     } catch (err) {
         if (err instanceof LlmHttpError && err.status === 429) {
             await delay(RATE_LIMIT_RETRY_DELAY_MS, signal);
-            return postOnce(request, env, signal, timeoutMs, fetchImpl, tags);
+            return postOnce(request, env, signal, timeoutMs, fetchImpl, tags, onProgress);
         }
         throw err;
     }
@@ -59,6 +72,7 @@ async function postOnce(
     timeoutMs: number,
     fetchImpl: typeof fetch,
     tags: string[] | undefined,
+    onProgress: ((p: LlmProgress) => void) | undefined,
 ): Promise<AnthropicMessagesResponse> {
     const controller = new AbortController();
 
@@ -71,6 +85,11 @@ async function postOnce(
     const upstreamAbort = () => controller.abort(signal?.reason);
     signal?.addEventListener('abort', upstreamAbort);
 
+    const cleanup = () => {
+        clearTimeout(timer);
+        signal?.removeEventListener('abort', upstreamAbort);
+    };
+
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${env.apiKey}`,
@@ -80,6 +99,8 @@ async function postOnce(
     if (tags && tags.length > 0) {
         headers['x-litellm-tags'] = tags.join(',');
     }
+
+    onProgress?.({ phase: 'thinking' });
 
     let res: Response;
 
@@ -91,19 +112,27 @@ async function postOnce(
             signal: controller.signal,
         });
     } catch (err) {
+        cleanup();
         if (timedOut) throw new LlmTimeoutError();
         throw err;
-    } finally {
-        clearTimeout(timer);
-        signal?.removeEventListener('abort', upstreamAbort);
     }
 
     if (!res.ok) {
         const bodyText = await res.text().catch(() => '');
+        cleanup();
         throw new LlmHttpError(`LiteLLM ${res.status}`, res.status, bodyText);
     }
 
-    return (await res.json()) as AnthropicMessagesResponse;
+    try {
+        const json = (await res.json()) as AnthropicMessagesResponse;
+        onProgress?.({ phase: 'finalizing' });
+        return json;
+    } catch (err) {
+        if (timedOut) throw new LlmTimeoutError();
+        throw err;
+    } finally {
+        cleanup();
+    }
 }
 
 function delay(ms: number, signal?: AbortSignal): Promise<void> {

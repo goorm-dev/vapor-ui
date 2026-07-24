@@ -24,6 +24,7 @@ export async function evaluateExtract(
         const payload = await runLlmEvaluation(msg.payload.extract, msg.payload.llmContext, {
             signal: controller.signal,
             apiKey,
+            onProgress: (progress) => scanActions.progress(msg.requestId, progress),
         });
         if (activeEvaluation !== controller) return;
         scanActions.result(payload, msg.requestId);

@@ -105,7 +105,7 @@ export function buildRequest(
 
     return {
         model,
-        max_tokens: 10000,
+        max_tokens: 30000,
         system: [
             { type: 'text', text: SYSTEM_BASE },
             { type: 'text', text: SEMANTIC_GUIDE, cache_control: { type: 'ephemeral' } },

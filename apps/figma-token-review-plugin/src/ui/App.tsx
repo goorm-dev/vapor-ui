@@ -45,7 +45,7 @@ function renderScan(state: ScanState, openSettings: () => void) {
         case 'idle':
             return <HomePage onOpenSettings={openSettings} />;
         case 'loading':
-            return <Loader />;
+            return <Loader progress={state.progress} />;
         case 'clean':
             return <SuccessPage />;
         case 'success':

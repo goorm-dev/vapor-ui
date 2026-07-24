@@ -12,7 +12,7 @@ import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
 import { applyRecommendations } from '~/ui/lib/recommend';
 import { buildLlmInput } from '~/ui/lib/rubric';
 
-import type { LlmEnv } from './client';
+import type { LlmEnv, LlmProgress } from './client';
 import { LlmHttpError, LlmTimeoutError, postLiteLLM } from './client';
 import type { CategoryDet, MergeArgs } from './merge';
 import { mergeScanPayload } from './merge';
@@ -25,11 +25,23 @@ export type RunLlmEvaluationOptions = {
     baseUrl?: string;
     model?: string;
     extraTags?: string[];
+    onProgress?: (progress: LlmProgress) => void;
 };
 
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
 const APP_TAG = 'app:figma-token-review-plugin';
 const FEATURE_TAG = 'feature:scan';
+
+/**
+ * LLM 소요시간 추정. 관측치 2점 선형 회귀:
+ *   (11 targets, 25s), (157 targets, 96s) → base 20s + 0.5s/target
+ */
+const ESTIMATE_BASE_MS = 20_000;
+const ESTIMATE_PER_TARGET_MS = 500;
+
+export function estimateLlmDurationMs(targetCount: number): number {
+    return ESTIMATE_BASE_MS + ESTIMATE_PER_TARGET_MS * Math.max(0, targetCount);
+}
 
 export class MissingApiKeyError extends Error {
     constructor() {
@@ -103,7 +115,22 @@ export async function runLlmEvaluation(
 
     const request = buildRequest(llmInput, llmContext.screenshotB64, model);
     const tags = [APP_TAG, FEATURE_TAG, `model:${model}`, ...(options.extraTags ?? [])];
-    const response = await postLiteLLM(request, { env, signal: options.signal, tags });
+
+    const targetCount =
+        llmInput.judgmentTargets.typography.length +
+        llmInput.judgmentTargets.semanticColor.length;
+    const estimatedDurationMs = estimateLlmDurationMs(targetCount);
+    const upstream = options.onProgress;
+    const onProgress: ((p: LlmProgress) => void) | undefined = upstream
+        ? (p) => upstream({ ...p, estimatedDurationMs })
+        : undefined;
+
+    const response = await postLiteLLM(request, {
+        env,
+        signal: options.signal,
+        tags,
+        onProgress,
+    });
     const judgments = parseLlmResponse(response);
 
     const mergeArgs: MergeArgs = {
@@ -131,3 +158,4 @@ function importMetaString(key: string): string | undefined {
 }
 
 export { LlmHttpError, LlmTimeoutError, LlmParseError };
+export type { LlmProgress };

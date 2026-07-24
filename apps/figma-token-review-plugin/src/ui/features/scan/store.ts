@@ -2,6 +2,7 @@ import type { RequestId } from '~/common/messages';
 import type { ScanPayload } from '~/common/schemas';
 
 import { createStore } from '../../shared/create-store';
+import type { LlmProgress } from '../llm';
 
 /**
  * 마지막 scan 시점의 frame snapshot. 재검사 gating(선택 이탈 감지) 용도로 유지된다.
@@ -12,10 +13,15 @@ type LastScanned = {
     lastScannedFrameName: string | null;
 };
 
+export type LoadingProgress = {
+    startedAt: number;
+    llm: LlmProgress | null;
+};
+
 export type ScanState = LastScanned &
     (
         | { kind: 'idle' }
-        | { kind: 'loading'; requestId: RequestId }
+        | { kind: 'loading'; requestId: RequestId; progress: LoadingProgress }
         | { kind: 'clean' }
         | { kind: 'success'; payload: ScanPayload }
     );
@@ -32,8 +38,17 @@ export const scanActions = {
         scanStore.setState({
             kind: 'loading',
             requestId,
+            progress: { startedAt: Date.now(), llm: null },
             lastScannedFrameId: frameId,
             lastScannedFrameName: frameName,
+        });
+    },
+    progress(requestId: RequestId, llm: LlmProgress) {
+        const state = scanStore.getState();
+        if (state.kind !== 'loading' || state.requestId !== requestId) return;
+        scanStore.setState({
+            ...state,
+            progress: { ...state.progress, llm },
         });
     },
     result(payload: ScanPayload, requestId: RequestId) {
