@@ -5,12 +5,10 @@ import { axe } from 'vitest-axe';
 
 import { InputGroup } from '.';
 import { Field } from '../field';
-import { IconButton } from '../icon-button';
-import { TextInput } from '../text-input';
 
 /**
  * 이 스위트는 jsdom 레이어의 책임만 검증한다 — 접근성, DOM 속성(data-*, aria-invalid, :disabled),
- * 상태가 자식에 전파되지 '않음'. 시각 기하(테두리·focus 링·:has 반응)는 Storybook/Playwright 담당.
+ * disabled/readOnly 의 래퍼 전파. 시각 기하(테두리·focus 링·:has 반응)는 Storybook/Playwright 담당.
  */
 describe('InputGroup', () => {
     describe('accessibility & structure', () => {
@@ -18,9 +16,9 @@ describe('InputGroup', () => {
             const { container } = render(
                 <InputGroup.Root>
                     <InputGroup.LeadingAddon>$</InputGroup.LeadingAddon>
-                    <TextInput placeholder="Amount" aria-label="Amount" />
+                    <InputGroup.Input placeholder="Amount" aria-label="Amount" />
                     <InputGroup.TrailingAddon>
-                        <IconButton aria-label="clear">x</IconButton>
+                        <InputGroup.Button aria-label="clear">x</InputGroup.Button>
                     </InputGroup.TrailingAddon>
                 </InputGroup.Root>,
             );
@@ -31,7 +29,7 @@ describe('InputGroup', () => {
         it('should not set role by default (single input + decoration is not a group)', () => {
             render(
                 <InputGroup.Root data-testid="group">
-                    <TextInput placeholder="Search" />
+                    <InputGroup.Input placeholder="Search" />
                 </InputGroup.Root>,
             );
 
@@ -41,7 +39,7 @@ describe('InputGroup', () => {
         it('should forward a consumer-provided role', () => {
             render(
                 <InputGroup.Root data-testid="group" role="group">
-                    <TextInput placeholder="Search" />
+                    <InputGroup.Input placeholder="Search" />
                 </InputGroup.Root>,
             );
 
@@ -52,9 +50,9 @@ describe('InputGroup', () => {
             render(
                 <InputGroup.Root>
                     <InputGroup.LeadingAddon>$</InputGroup.LeadingAddon>
-                    <TextInput placeholder="Amount" />
+                    <InputGroup.Input placeholder="Amount" />
                     <InputGroup.TrailingAddon>
-                        <IconButton aria-label="clear">x</IconButton>
+                        <InputGroup.Button aria-label="clear">x</InputGroup.Button>
                     </InputGroup.TrailingAddon>
                 </InputGroup.Root>,
             );
@@ -71,11 +69,6 @@ describe('InputGroup', () => {
             expect(screen.getByTestId('group')).toHaveAttribute('data-disabled');
         });
 
-        it('should reflect invalid on the Root as data-invalid', () => {
-            render(<InputGroup.Root data-testid="group" invalid />);
-            expect(screen.getByTestId('group')).toHaveAttribute('data-invalid');
-        });
-
         it('should reflect readOnly on the Root as data-readonly', () => {
             render(<InputGroup.Root data-testid="group" readOnly />);
             expect(screen.getByTestId('group')).toHaveAttribute('data-readonly');
@@ -85,20 +78,78 @@ describe('InputGroup', () => {
             render(<InputGroup.Root data-testid="group" />);
             const group = screen.getByTestId('group');
             expect(group).not.toHaveAttribute('data-disabled');
-            expect(group).not.toHaveAttribute('data-invalid');
             expect(group).not.toHaveAttribute('data-readonly');
         });
+    });
 
-        it('should NOT propagate group state to inner controls', () => {
+    describe('state propagation via wrappers', () => {
+        it('should disable Input and Button when the group is disabled', () => {
             render(
-                <InputGroup.Root disabled invalid>
-                    <TextInput placeholder="Search" />
+                <InputGroup.Root disabled>
+                    <InputGroup.Input placeholder="amount" />
+                    <InputGroup.TrailingAddon>
+                        <InputGroup.Button aria-label="clear">x</InputGroup.Button>
+                    </InputGroup.TrailingAddon>
                 </InputGroup.Root>,
             );
 
-            const input = screen.getByPlaceholderText('Search');
+            expect(screen.getByPlaceholderText('amount')).toBeDisabled();
+            expect(screen.getByRole('button', { name: 'clear' })).toBeDisabled();
+        });
+
+        it('should not let a child re-enable itself against a disabled group (OR, group wins)', () => {
+            render(
+                <InputGroup.Root disabled>
+                    <InputGroup.Input placeholder="amount" disabled={false} />
+                </InputGroup.Root>,
+            );
+
+            expect(screen.getByPlaceholderText('amount')).toBeDisabled();
+        });
+
+        it('should apply readOnly to Input only, leaving Button interactive', () => {
+            render(
+                <InputGroup.Root readOnly>
+                    <InputGroup.Input placeholder="amount" />
+                    <InputGroup.TrailingAddon>
+                        <InputGroup.Button aria-label="clear">x</InputGroup.Button>
+                    </InputGroup.TrailingAddon>
+                </InputGroup.Root>,
+            );
+
+            expect(screen.getByPlaceholderText('amount')).toHaveAttribute('readonly');
+            const button = screen.getByRole('button', { name: 'clear' });
+            expect(button).not.toBeDisabled();
+            expect(button).not.toHaveAttribute('readonly');
+        });
+
+        it('should render standalone (outside a group) without throwing', () => {
+            render(<InputGroup.Input placeholder="solo" />);
+            const input = screen.getByPlaceholderText('solo');
+            expect(input).toBeInTheDocument();
             expect(input).not.toBeDisabled();
-            expect(input).not.toHaveAttribute('aria-invalid');
+        });
+    });
+
+    describe('invalid is not propagated', () => {
+        it('should NOT put aria-invalid on the Input when only the group signals disabled', () => {
+            render(
+                <InputGroup.Root disabled>
+                    <InputGroup.Input placeholder="amount" />
+                </InputGroup.Root>,
+            );
+
+            expect(screen.getByPlaceholderText('amount')).not.toHaveAttribute('aria-invalid');
+        });
+
+        it('should put aria-invalid only when invalid is set on the control itself', () => {
+            render(
+                <InputGroup.Root>
+                    <InputGroup.Input placeholder="amount" invalid />
+                </InputGroup.Root>,
+            );
+
+            expect(screen.getByPlaceholderText('amount')).toHaveAttribute('aria-invalid', 'true');
         });
     });
 
@@ -111,7 +162,7 @@ describe('InputGroup', () => {
                     validate={(value) => (value === 'bad' ? 'invalid' : null)}
                 >
                     <InputGroup.Root>
-                        <TextInput placeholder="Search" />
+                        <InputGroup.Input placeholder="Search" />
                     </InputGroup.Root>
                     <Field.Error />
                 </Field.Root>,
@@ -129,7 +180,7 @@ describe('InputGroup', () => {
             render(
                 <Field.Root disabled>
                     <InputGroup.Root>
-                        <TextInput placeholder="Search" />
+                        <InputGroup.Input placeholder="Search" />
                     </InputGroup.Root>
                 </Field.Root>,
             );
