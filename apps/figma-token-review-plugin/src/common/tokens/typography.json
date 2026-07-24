@@ -1,0 +1,61 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+    "typography": {
+        "fontFamily": {
+            "$type": "fontFamily",
+            "sans": { "$value": ["Pretendard", "sans-serif"] },
+            "code": { "$value": ["FiraCode", "monospace"] }
+        },
+        "fontWeight": {
+            "$type": "fontWeight",
+            "$description": "Font weight scale.",
+            "400": { "$value": 400 },
+            "500": { "$value": 500 },
+            "700": { "$value": 700 },
+            "800": { "$value": 800 }
+        },
+        "fontSize": {
+            "$type": "dimension",
+            "$description": "Font size scale. The number is a scale index, not a px value.",
+            "025": { "$value": { "value": 10, "unit": "px" } },
+            "050": { "$value": { "value": 12, "unit": "px" } },
+            "075": { "$value": { "value": 14, "unit": "px" } },
+            "100": { "$value": { "value": 16, "unit": "px" } },
+            "200": { "$value": { "value": 18, "unit": "px" } },
+            "300": { "$value": { "value": 20, "unit": "px" } },
+            "400": { "$value": { "value": 24, "unit": "px" } },
+            "500": { "$value": { "value": 32, "unit": "px" } },
+            "600": { "$value": { "value": 38, "unit": "px" } },
+            "700": { "$value": { "value": 48, "unit": "px" } },
+            "800": { "$value": { "value": 64, "unit": "px" } },
+            "900": { "$value": { "value": 80, "unit": "px" } },
+            "1000": { "$value": { "value": 120, "unit": "px" } }
+        },
+        "lineHeight": {
+            "$type": "number",
+            "$description": "Line height scale. The number is a scale index, not a px value.",
+            "025": { "$value": 1.4 },
+            "050": { "$value": 1.5 },
+            "075": { "$value": 1.57142 },
+            "100": { "$value": 1.5 },
+            "200": { "$value": 1.44444 },
+            "300": { "$value": 1.5 },
+            "400": { "$value": 1.5 },
+            "500": { "$value": 1.5 },
+            "600": { "$value": 1.47368 },
+            "700": { "$value": 1.2916 },
+            "800": { "$value": 1.3125 },
+            "900": { "$value": 1.3 },
+            "1000": { "$value": 1.3 }
+        },
+        "letterSpacing": {
+            "$type": "dimension",
+            "$description": "Letter spacing scale. The number is a scale index, not a px value.",
+            "000": { "$value": { "value": 0, "unit": "px" } },
+            "100": { "$value": { "value": -0.1, "unit": "px" } },
+            "200": { "$value": { "value": -0.2, "unit": "px" } },
+            "300": { "$value": { "value": -0.3, "unit": "px" } },
+            "400": { "$value": { "value": -0.4, "unit": "px" } }
+        }
+    }
+}

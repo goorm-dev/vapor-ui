@@ -1,0 +1,89 @@
+name: "PR Storybook Preview"
+
+on:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+            - closed
+        paths:
+            - "packages/core/**"
+            - "apps/storybook/**"
+
+permissions:
+    contents: write
+    pull-requests: write
+
+concurrency:
+    group: pr-storybook-${{ github.event.number }}
+    cancel-in-progress: true
+
+env:
+    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
+jobs:
+    deploy-preview:
+        if: github.event.action != 'closed'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              uses: ./.github/composite/install
+
+            - name: Build Storybook
+              run: pnpm build:storybook
+
+            - name: Deploy to gh-pages
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./apps/storybook/storybook-static
+                  destination_dir: pr-${{ github.event.number }}
+                  keep_files: true
+                  commit_message: "chore(preview): deploy storybook for PR #${{ github.event.number }}"
+
+            - name: Comment preview link
+              uses: marocchino/sticky-pull-request-comment@v2
+              with:
+                  header: storybook-preview
+                  message: |
+                      Storybook preview deployed.
+
+                      Link: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr-${{ github.event.number }}/
+
+                      Commit: ${{ github.event.pull_request.head.sha }}
+
+    cleanup-preview:
+        if: github.event.action == 'closed'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout gh-pages
+              uses: actions/checkout@v4
+              with:
+                  ref: gh-pages
+                  fetch-depth: 0
+
+            - name: Remove PR folder
+              run: |
+                  set -e
+                  DIR="pr-${{ github.event.number }}"
+                  if [ -d "$DIR" ]; then
+                      git config user.name "github-actions[bot]"
+                      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                      git rm -rf "$DIR"
+                      git commit -m "chore(preview): cleanup PR #${{ github.event.number }}"
+                      git push origin gh-pages
+                  else
+                      echo "No preview folder for PR #${{ github.event.number }}"
+                  fi
+
+            - name: Comment cleanup
+              uses: marocchino/sticky-pull-request-comment@v2
+              with:
+                  header: storybook-preview
+                  message: |
+                      Storybook preview removed (PR closed).
