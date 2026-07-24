@@ -59,5 +59,4 @@ describe('postLiteLLM', () => {
         const parsed = JSON.parse(capturedBody);
         expect(parsed.stream).toBeUndefined();
     });
-
 });

@@ -117,8 +117,7 @@ export async function runLlmEvaluation(
     const tags = [APP_TAG, FEATURE_TAG, `model:${model}`, ...(options.extraTags ?? [])];
 
     const targetCount =
-        llmInput.judgmentTargets.typography.length +
-        llmInput.judgmentTargets.semanticColor.length;
+        llmInput.judgmentTargets.typography.length + llmInput.judgmentTargets.semanticColor.length;
     const estimatedDurationMs = estimateLlmDurationMs(targetCount);
     const upstream = options.onProgress;
     const onProgress: ((p: LlmProgress) => void) | undefined = upstream
