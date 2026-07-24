@@ -1,6 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { Badge, Box, Button, Collapsible, HStack, Tabs, Text, VStack } from '@vapor-ui/core';
+import {
+    Badge,
+    Box,
+    Button,
+    Collapsible,
+    Dialog,
+    HStack,
+    Tabs,
+    Text,
+    VStack,
+} from '@vapor-ui/core';
 import { ChevronUpOutlineIcon, RefreshOutlineIcon, UppercaseIcon } from '@vapor-ui/icons';
 
 import type { EvaluateOutput, ScanPayload, SchemaMode, Violation } from '~/common/schemas';
@@ -151,15 +161,11 @@ function getViolationCounts(payload: ScanPayload): Record<TabKey, number> {
 
 const toastError = (title: string) => toastManager.add({ title, colorPalette: 'danger' });
 
-/**
- * 재검사 버튼 활성화 규칙
- * - 스캔된 프레임 밖으로 selection이 한 번이라도 벗어난 뒤, 다시 어떤 프레임이든 선택된 상태.
- * - 스캔 직후 그대로 남아 있는 동안엔 disabled.
- */
 function SelectedFrameHeader() {
-    const { state, start } = useScan();
+    const { start } = useScan();
     const { selection, buildAction } = useSelection();
-    const handleRescan = buildAction({
+
+    const runRescan = buildAction({
         frame: (sel) => start(sel.id, sel.name),
         none: () => toastError('프레임을 1개 선택해 주세요.'),
         multi: () => toastError('프레임을 1개만 선택해 주세요.'),
@@ -168,15 +174,10 @@ function SelectedFrameHeader() {
     });
 
     const isFrame = selection.kind === 'frame';
-    const scannedFrameId = state.lastScannedFrameId;
-    const isOnScannedFrame = isFrame && selection.id === scannedFrameId;
 
-    const [hasLeftScannedFrame, setHasLeftScannedFrame] = useState(false);
-    useEffect(() => {
-        if (!isOnScannedFrame) setHasLeftScannedFrame(true);
-    }, [isOnScannedFrame]);
-
-    const canRescan = isFrame && hasLeftScannedFrame;
+    const handleConfirm = () => {
+        runRescan();
+    };
 
     return (
         <HStack
@@ -199,10 +200,29 @@ function SelectedFrameHeader() {
                 </Text>
             </VStack>
 
-            <Button disabled={!canRescan} onClick={handleRescan}>
-                <RefreshOutlineIcon />
-                재검사하기
-            </Button>
+            <Dialog.Root>
+                <Dialog.Trigger render={<Button />}>
+                    <RefreshOutlineIcon />
+                    재검사하기
+                </Dialog.Trigger>
+
+                <Dialog.Popup>
+                    <Dialog.Header>
+                        <Dialog.Title>재검사 하시겠어요?</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <Dialog.Description>기존 검사 결과는 모두 삭제됩니다.</Dialog.Description>
+                    </Dialog.Body>
+                    <Dialog.Footer $css={{ justifyContent: 'flex-end', gap: '$200' }}>
+                        <Dialog.Close render={<Button colorPalette="secondary" variant="ghost" />}>
+                            취소
+                        </Dialog.Close>
+                        <Dialog.Close render={<Button onClick={handleConfirm} />}>
+                            재검사
+                        </Dialog.Close>
+                    </Dialog.Footer>
+                </Dialog.Popup>
+            </Dialog.Root>
         </HStack>
     );
 }
