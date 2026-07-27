@@ -24,7 +24,13 @@ describe('dimension rules', () => {
         expect(widthRule.guards?.every((g) => g.test(node, ctx()))).toBe(true);
         const out = await widthRule.extract(node, ctx());
         expect(out).toEqual([
-            { property: 'width', value: '320px', token: null, appliedToken: null, tokenStatus: 'raw' },
+            {
+                property: 'width',
+                value: '320px',
+                token: null,
+                appliedToken: null,
+                tokenStatus: 'raw',
+            },
         ]);
     });
 

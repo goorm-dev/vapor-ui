@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { ExtractCtx } from './types';
 import { isText, notRoot, notVectorLike, sizingFixed } from './guards';
+import type { ExtractCtx } from './types';
 
 const ctx = (over: Partial<ExtractCtx> = {}): ExtractCtx => ({
     rootId: 'root',
@@ -30,8 +30,12 @@ describe('guards', () => {
     it('sizingFixed: 해당 축이 FIXED 일 때만 통과, 가드명에 축 포함', () => {
         const g = sizingFixed('layoutSizingHorizontal');
         expect(g.name).toBe('sizingFixed:layoutSizingHorizontal');
-        expect(g.test({ layoutSizingHorizontal: 'FIXED' } as unknown as SceneNode, ctx())).toBe(true);
-        expect(g.test({ layoutSizingHorizontal: 'HUG' } as unknown as SceneNode, ctx())).toBe(false);
+        expect(g.test({ layoutSizingHorizontal: 'FIXED' } as unknown as SceneNode, ctx())).toBe(
+            true,
+        );
+        expect(g.test({ layoutSizingHorizontal: 'HUG' } as unknown as SceneNode, ctx())).toBe(
+            false,
+        );
         expect(g.test({} as SceneNode, ctx())).toBe(false);
     });
 });

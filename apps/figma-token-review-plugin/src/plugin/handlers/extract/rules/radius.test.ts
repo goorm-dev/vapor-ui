@@ -27,7 +27,11 @@ describe('radiusRule', () => {
     });
 
     it('cornerRadius 가 mixed(비숫자)면 미방출', async () => {
-        const node = { id: 'n', name: 'Card', cornerRadius: Symbol('mixed') } as unknown as SceneNode;
+        const node = {
+            id: 'n',
+            name: 'Card',
+            cornerRadius: Symbol('mixed'),
+        } as unknown as SceneNode;
         expect(await rule.extract(node, ctx())).toEqual([]);
     });
 });

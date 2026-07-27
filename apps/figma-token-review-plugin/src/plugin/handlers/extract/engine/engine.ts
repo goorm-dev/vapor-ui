@@ -1,10 +1,4 @@
-import type {
-    AnyExtractionRule,
-    ExtractCtx,
-    NodeFacts,
-    OverrideFilter,
-    RuleTrace,
-} from './types';
+import type { AnyExtractionRule, ExtractCtx, NodeFacts, OverrideFilter, RuleTrace } from './types';
 
 export const passes = (filter: OverrideFilter, ...keys: readonly string[]): boolean =>
     filter === null || keys.some((k) => filter.has(k));
@@ -31,7 +25,11 @@ async function runOne(
     collectTrace: boolean,
 ): Promise<RuleOutcome> {
     if (!passes(ctx.filter, ...rule.filterKeys)) {
-        return { rule, emissions: [], trace: collectTrace ? { rule: rule.name, skipped: 'filter' } : null };
+        return {
+            rule,
+            emissions: [],
+            trace: collectTrace ? { rule: rule.name, skipped: 'filter' } : null,
+        };
     }
 
     const failed = (rule.guards ?? []).find((g) => !g.test(node, ctx));

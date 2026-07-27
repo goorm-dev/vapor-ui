@@ -82,8 +82,7 @@ export function fillColorsRule(): ExtractionRule<'colors'> {
             const bv: any = (node as any).boundVariables || {};
             const fillProperty: ColorProperty =
                 node.type === 'TEXT' || isVectorLike(node) ? 'text' : 'fill';
-            const textBackground =
-                node.type === 'TEXT' ? classifyBackground(node) : null;
+            const textBackground = node.type === 'TEXT' ? classifyBackground(node) : null;
             const textShot =
                 node.type === 'TEXT'
                     ? await captureTextShot(node as TextNode, textBackground)

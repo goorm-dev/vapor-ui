@@ -20,7 +20,13 @@ const spaceRule = (over: Partial<AnyExtractionRule> = {}): AnyExtractionRule =>
         category: 'spaces',
         filterKeys: ['itemSpacing'],
         extract: async () => [
-            { property: 'gap', value: '8px', token: 'space-100', appliedToken: null, tokenStatus: 'ok' },
+            {
+                property: 'gap',
+                value: '8px',
+                token: 'space-100',
+                appliedToken: null,
+                tokenStatus: 'ok',
+            },
         ],
         ...over,
     }) as AnyExtractionRule;
@@ -93,13 +99,27 @@ describe('runRules', () => {
             name: 'test:slow',
             extract: async () => {
                 await new Promise((r) => setTimeout(r, 20));
-                return [{ property: 'gap', value: '1px', token: null, appliedToken: null, tokenStatus: 'raw' }];
+                return [
+                    {
+                        property: 'gap',
+                        value: '1px',
+                        token: null,
+                        appliedToken: null,
+                        tokenStatus: 'raw',
+                    },
+                ];
             },
         });
         const fast = spaceRule({
             name: 'test:fast',
             extract: async () => [
-                { property: 'gap', value: '2px', token: null, appliedToken: null, tokenStatus: 'raw' },
+                {
+                    property: 'gap',
+                    value: '2px',
+                    token: null,
+                    appliedToken: null,
+                    tokenStatus: 'raw',
+                },
             ],
         });
         const { facts } = await runRules(node, ctx(), [slow, fast]);
