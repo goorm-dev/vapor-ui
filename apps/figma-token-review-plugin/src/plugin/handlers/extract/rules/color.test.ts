@@ -33,7 +33,7 @@ describe('color rules', () => {
         expect(rule.filterKeys).toEqual(['fills']);
     });
 
-    it('TEXT fill → property text', async () => {
+    it('TEXT fill → property text, background transparent, hex #000000, tokenStatus raw', async () => {
         const node = {
             id: 'n1',
             name: 'Label',
@@ -45,6 +45,10 @@ describe('color rules', () => {
         } as unknown as SceneNode;
         const out = await fillColorsRule().extract(node, ctx());
         expect(out[0]?.property).toBe('text');
+        // classifyBackground(node) with parent=null walks no ancestors → returns transparent
+        expect(out[0]?.background).toEqual({ kind: 'transparent', hex: null });
+        expect(out[0]?.hex).toBe('#000000');
+        expect(out[0]?.tokenStatus).toBe('raw');
     });
 
     it('FRAME raw SOLID fill → property fill, hex lowercase', async () => {
