@@ -2,7 +2,7 @@ import type { Rule } from 'eslint';
 
 import { matchAllowlist } from '~/utils/allowlist-matcher';
 import { parseDeclarationValue } from '~/utils/css-value-parser';
-import { segmentDistanceFromSegments } from '~/utils/segment-distance';
+import { segmentDistance } from '~/utils/segment-distance';
 import { TOKEN_INDEX } from '~/utils/token-index';
 
 interface Options {
@@ -15,8 +15,9 @@ function findCandidates(name: string): string[] {
     if (!bucket) return [];
 
     const scored: Array<{ name: string; dist: number }> = [];
+
     for (const entry of bucket) {
-        const d = segmentDistanceFromSegments(segs, entry.segments);
+        const d = segmentDistance(segs, entry.segments);
         if (d !== null) scored.push({ name: entry.name, dist: d });
     }
 
