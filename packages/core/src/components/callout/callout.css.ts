@@ -55,11 +55,11 @@ export const root = componentRecipe({
 });
 
 export const icon = componentStyle({
-    flex: '0 0 auto',
-    height: vars.typography.lineHeight['075'],
     display: 'flex',
+    flex: '0 0 auto',
     alignItems: 'center',
     justifyContent: 'center',
+    height: vars.typography.lineHeight['075'],
 });
 
 export type CalloutVariants = NonNullable<RecipeVariants<typeof root>>;
