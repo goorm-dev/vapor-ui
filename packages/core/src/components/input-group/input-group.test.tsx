@@ -5,6 +5,7 @@ import { axe } from 'vitest-axe';
 
 import { InputGroup } from '.';
 import { Field } from '../field';
+import { Select } from '../select';
 
 /**
  * 이 스위트는 jsdom 레이어의 책임만 검증한다 — 접근성, DOM 속성(data-*, aria-invalid, :disabled),
@@ -117,10 +118,37 @@ describe('InputGroup', () => {
                 </InputGroup.Root>,
             );
 
-            expect(screen.getByPlaceholderText('amount')).toHaveAttribute('readonly');
+            const input = screen.getByPlaceholderText('amount');
+            expect(input).toHaveAttribute('readonly');
+            // data-readonly 가 곧 Root 의 :has([data-readonly]) 배경 시각의 앵커다.
+            expect(input).toHaveAttribute('data-readonly');
             const button = screen.getByRole('button', { name: 'clear' });
             expect(button).not.toBeDisabled();
             expect(button).not.toHaveAttribute('readonly');
+        });
+
+        it('should disable IconButton when the group is disabled, but not apply readOnly to it', () => {
+            const { rerender } = render(
+                <InputGroup.Root disabled>
+                    <InputGroup.Input placeholder="amount" />
+                    <InputGroup.TrailingAddon>
+                        <InputGroup.IconButton aria-label="clear">x</InputGroup.IconButton>
+                    </InputGroup.TrailingAddon>
+                </InputGroup.Root>,
+            );
+            expect(screen.getByRole('button', { name: 'clear' })).toBeDisabled();
+
+            rerender(
+                <InputGroup.Root readOnly>
+                    <InputGroup.Input placeholder="amount" />
+                    <InputGroup.TrailingAddon>
+                        <InputGroup.IconButton aria-label="clear">x</InputGroup.IconButton>
+                    </InputGroup.TrailingAddon>
+                </InputGroup.Root>,
+            );
+            const iconButton = screen.getByRole('button', { name: 'clear' });
+            expect(iconButton).not.toBeDisabled();
+            expect(iconButton).not.toHaveAttribute('readonly');
         });
 
         it('should render standalone (outside a group) without throwing', () => {
@@ -186,6 +214,26 @@ describe('InputGroup', () => {
             );
 
             expect(screen.getByPlaceholderText('Search')).toBeDisabled();
+        });
+    });
+
+    describe('readOnly visual anchor (:has([data-readonly]) source)', () => {
+        // Root 의 readOnly 배경은 값 컨트롤의 data-readonly 를 :has() 로 관찰해 켠다.
+        // Select 는 그룹으로 전파받지 않고 Select.Root 에 직접 readOnly 를 받으며, 그때 편입된
+        // Trigger 가 data-readonly 를 방출해야 같은 셀렉터가 그룹 배경까지 커버한다.
+        it('should emit data-readonly on the embedded Select trigger when Select.Root is readOnly', () => {
+            render(
+                <InputGroup.Root>
+                    <Select.Root readOnly placeholder="Currency">
+                        <InputGroup.Input placeholder="amount" />
+                        <InputGroup.TrailingAddon>
+                            <InputGroup.Button render={<Select.Trigger />} />
+                        </InputGroup.TrailingAddon>
+                    </Select.Root>
+                </InputGroup.Root>,
+            );
+
+            expect(screen.getByRole('combobox')).toHaveAttribute('data-readonly');
         });
     });
 

@@ -4,4 +4,5 @@ export {
     InputGroupTrailingAddon as TrailingAddon,
     InputGroupInput as Input,
     InputGroupButton as Button,
+    InputGroupIconButton as IconButton,
 } from './input-group';

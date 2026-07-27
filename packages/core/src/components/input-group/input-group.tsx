@@ -11,6 +11,7 @@ import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Button } from '../button';
+import { IconButton } from '../icon-button';
 import { TextInput } from '../text-input';
 import type { RootVariants } from './input-group.css';
 import * as styles from './input-group.css';
@@ -89,9 +90,11 @@ export const InputGroupInput = forwardRef<HTMLElement, InputGroupInput.Props>((p
 InputGroupInput.displayName = 'InputGroup.Input';
 
 /* -------------------------------------------------------------------------------------------------
- * InputGroup.Button — 그룹 내 인터랙티브 버튼 래퍼. 기본 render 는 Button,
- * 아이콘 버튼은 render={<IconButton size=.../>}, Select 편입은 render={<Select.Trigger/>} 로.
- * 아이콘 크기는 그룹이 강제하지 않는다 — render 대상이 size prop 으로 스스로 정한다.
+ * InputGroup.Button / InputGroup.IconButton — 그룹 내 인터랙티브 버튼 래퍼.
+ * 둘 다 addon 슬롯 안에 nesting 되며 layer/상태 정의를 공유한다(4-layer 전부 render 대상이 소유).
+ * Button 은 기본 render=Button, IconButton 은 기본 render=IconButton(compact 아이콘). Select 편입은
+ * <InputGroup.Button render={<Select.Trigger/>}> 로. 높이는 그룹이 compact 로 강제하되, 그 외
+ * 시각(면·hover)은 render 대상이 유지한다 — Button/IconButton 은 surface-stripped 대상이 아니다.
  * context 의 disabled 만 OR 병합한다(readOnly 미소비 → password 토글·clear 는 readOnly 에서 생존).
  * -----------------------------------------------------------------------------------------------*/
 
@@ -112,6 +115,31 @@ export const InputGroupButton = forwardRef<HTMLElement, InputGroupButton.Props>(
     });
 });
 InputGroupButton.displayName = 'InputGroup.Button';
+
+/**
+ *
+ * A compact icon button inside the group, such as a clear or password-toggle control, inheriting the group's shared `disabled` state. Renders an `IconButton` (a `<button>`) sized to the group's compact density by default.
+ */
+export const InputGroupIconButton = forwardRef<HTMLElement, InputGroupIconButton.Props>(
+    (props, ref) => {
+        const { className, render, children, ...componentProps } = resolveStyles(props);
+        const group = useInputGroupContext();
+
+        const disabled = (componentProps.disabled as boolean | undefined) || group?.disabled;
+
+        return useRenderElement({
+            ref,
+            render: render ?? <IconButton />,
+            props: {
+                ...componentProps,
+                className: cn(styles.button, className),
+                disabled,
+                children,
+            },
+        });
+    },
+);
+InputGroupIconButton.displayName = 'InputGroup.IconButton';
 
 // 부가요소 슬롯. 그룹 내부 시각은 input-group.css.ts 의 후손 오버라이드가 전담한다.
 const createAddon = (displayName: string) => {
@@ -166,6 +194,14 @@ export namespace InputGroupInput {
 export namespace InputGroupButton {
     export type State = {};
     export type Props = VaporUIComponentProps<'button', State>;
+}
+
+export namespace InputGroupIconButton {
+    export type State = {};
+    // IconButton 의 variant/colorPalette/shape/size 는 그대로 노출하되, render 만 그룹 래퍼가
+    // 소비하는 제네릭 시그니처로 교체한다(IconButton.Props 의 render 는 Button state 에 묶여 있어
+    // useRenderElement 와 어긋난다).
+    export type Props = Omit<IconButton.Props, 'render'> & Pick<InputGroupButton.Props, 'render'>;
 }
 
 export namespace InputGroupAddon {

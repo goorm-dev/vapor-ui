@@ -34,11 +34,15 @@ export const root = componentRecipe({
             vars: { [boxShadowColor]: vars.color.border.normal },
 
             selectors: {
-                // invalid 는 Root prop 이 아니라 자식 컨트롤의 aria-invalid 로만 켠다(시각 = 테두리).
+                // invalid·readOnly 는 Root prop 이 아니라 값 컨트롤의 상태를 :has() 로 관찰해 켠다.
+                // 그려지는 면이 Root 하나뿐이라(값 컨트롤은 surface-stripped) 시각은 그룹 레벨이 필연.
+                // invalid → 자식 aria-invalid(테두리 danger), readOnly → 자식 data-readonly(배경 gray).
                 [when.invalid(`&:has([aria-invalid='true'])`)]: {
                     vars: { [boxShadowColor]: vars.color.border.danger },
                 },
-                [`${when.readonly()}`]: { backgroundColor: vars.color.gray['200'] },
+                [when.readonly(`&:has([data-readonly])`)]: {
+                    backgroundColor: vars.color.gray['200'],
+                },
                 [`${DISABLED}`]: { opacity: 0.32 },
             },
         },
@@ -159,6 +163,18 @@ export const button = style({
 // max(16px,50%)(components 레이어)를 utilities 로 덮는다. 앵커가 button 로컬 클래스라
 // 그룹 밖으로 전파되지 않는다. Select.Trigger(combobox) 는 chevron 을 자체 렌더하므로 제외.
 globalStyle(`${button}:not(${SELECT_TRIGGER}) > :is(svg, img)`, {
+    '@layer': {
+        [layers.utilities]: {
+            width: compactIconSize,
+            height: compactIconSize,
+        },
+    },
+});
+
+// addon 에 직접 든 bare 아이콘(예: leading 검색 아이콘)도 IconButton 아이콘과 같은
+// compactIconSize 로 맞춘다. `>` 직접 자식만 잡으므로 addon 안에 nesting 된 버튼의 아이콘
+// (addon > button > svg)은 위 button 규칙이 전담하고 여기선 건드리지 않는다.
+globalStyle(`${addon} > :is(svg, img)`, {
     '@layer': {
         [layers.utilities]: {
             width: compactIconSize,

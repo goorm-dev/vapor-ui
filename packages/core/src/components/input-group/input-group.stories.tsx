@@ -80,12 +80,13 @@ export const TestBed: Story = {
             <InputGroup.Root>
                 <InputGroup.Input placeholder="trailing iconButton" />
                 <InputGroup.TrailingAddon>
-                    <InputGroup.Button
+                    <InputGroup.IconButton
                         aria-label="search"
-                        render={<IconButton variant="ghost" colorPalette="contrast" />}
+                        variant="ghost"
+                        colorPalette="contrast"
                     >
                         <SearchOutlineIcon />
-                    </InputGroup.Button>
+                    </InputGroup.IconButton>
                 </InputGroup.TrailingAddon>
             </InputGroup.Root>
 
@@ -104,18 +105,20 @@ export const TestBed: Story = {
                 </InputGroup.LeadingAddon>
                 <InputGroup.Input type="password" placeholder="multiple trailing elements" />
                 <InputGroup.TrailingAddon>
-                    <InputGroup.Button
+                    <InputGroup.IconButton
                         aria-label="Toggle visibility"
-                        render={<IconButton variant="ghost" colorPalette="contrast" />}
+                        variant="ghost"
+                        colorPalette="contrast"
                     >
                         <ViewOnOutlineIcon />
-                    </InputGroup.Button>
-                    <InputGroup.Button
+                    </InputGroup.IconButton>
+                    <InputGroup.IconButton
                         aria-label="Filter"
-                        render={<IconButton variant="ghost" colorPalette="contrast" />}
+                        variant="ghost"
+                        colorPalette="contrast"
                     >
                         <FilterOutlineIcon />
-                    </InputGroup.Button>
+                    </InputGroup.IconButton>
                 </InputGroup.TrailingAddon>
             </InputGroup.Root>
 
@@ -144,12 +147,13 @@ export const TestBed: Story = {
                 <InputGroup.LeadingAddon>@</InputGroup.LeadingAddon>
                 <InputGroup.Input placeholder="disabled" />
                 <InputGroup.TrailingAddon>
-                    <InputGroup.Button
+                    <InputGroup.IconButton
                         aria-label="clear"
-                        render={<IconButton variant="ghost" colorPalette="contrast" />}
+                        variant="ghost"
+                        colorPalette="contrast"
                     >
                         <CloseOutlineIcon />
-                    </InputGroup.Button>
+                    </InputGroup.IconButton>
                 </InputGroup.TrailingAddon>
             </InputGroup.Root>
 
@@ -157,6 +161,21 @@ export const TestBed: Story = {
             <InputGroup.Root readOnly>
                 <InputGroup.LeadingAddon>@</InputGroup.LeadingAddon>
                 <InputGroup.Input value="read only" />
+            </InputGroup.Root>
+
+            {/* readOnly + Select — 그룹이 아니라 Select.Root 에 직접. Trigger 의 data-readonly 를
+                Root 가 :has([data-readonly]) 로 잡아 그룹 배경까지 gray 로 커버 */}
+            <InputGroup.Root>
+                <Select.Root readOnly placeholder="Currency" value="usd">
+                    <InputGroup.Input value="1000" readOnly />
+                    <InputGroup.TrailingAddon>
+                        <InputGroup.Button render={<Select.Trigger />} />
+                    </InputGroup.TrailingAddon>
+                    <Select.Popup>
+                        <Select.Item value="usd">USD</Select.Item>
+                        <Select.Item value="krw">KRW</Select.Item>
+                    </Select.Popup>
+                </Select.Root>
             </InputGroup.Root>
 
             {/* Field 검증 — aria-invalid 를 :has 로 잡아 테두리 danger */}

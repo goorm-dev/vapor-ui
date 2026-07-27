@@ -1,4 +1,4 @@
-import { IconButton, InputGroup, VStack } from '@vapor-ui/core';
+import { InputGroup, VStack } from '@vapor-ui/core';
 import { CopyOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
 
 export default function InputGroupAddon() {
@@ -30,12 +30,13 @@ export default function InputGroupAddon() {
             <InputGroup.Root>
                 <InputGroup.Input defaultValue="https://vapor-ui.dev" />
                 <InputGroup.TrailingAddon>
-                    <InputGroup.Button
+                    <InputGroup.IconButton
                         aria-label="Copy link"
-                        render={<IconButton variant="ghost" colorPalette="contrast" />}
+                        variant="ghost"
+                        colorPalette="contrast"
                     >
                         <CopyOutlineIcon />
-                    </InputGroup.Button>
+                    </InputGroup.IconButton>
                 </InputGroup.TrailingAddon>
             </InputGroup.Root>
         </VStack>

@@ -1,4 +1,4 @@
-import { HStack, IconButton, InputGroup, Text, VStack } from '@vapor-ui/core';
+import { HStack, InputGroup, Text, VStack } from '@vapor-ui/core';
 import { CloseOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
 
 const SIZES = ['sm', 'md', 'lg', 'xl'] as const;
@@ -17,12 +17,13 @@ export default function InputGroupSize() {
                         </InputGroup.LeadingAddon>
                         <InputGroup.Input placeholder={size} />
                         <InputGroup.TrailingAddon>
-                            <InputGroup.Button
+                            <InputGroup.IconButton
                                 aria-label="clear"
-                                render={<IconButton variant="ghost" colorPalette="contrast" />}
+                                variant="ghost"
+                                colorPalette="contrast"
                             >
                                 <CloseOutlineIcon />
-                            </InputGroup.Button>
+                            </InputGroup.IconButton>
                         </InputGroup.TrailingAddon>
                     </InputGroup.Root>
                 </HStack>

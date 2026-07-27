@@ -13,7 +13,7 @@ description: 'InputGroup은 입력 필드(TextInput)를 아이콘·라벨·버�
 ```
 </Demo>
 
-그룹이 통합하는 시각(테두리·배경 제거, 높이 정렬)을 적용받으려면 입력과 버튼을 각각 `InputGroup.Input`과 `InputGroup.Button`으로 감싸야 합니다. 래퍼 없이 `TextInput`이나 `IconButton` 같은 컨트롤을 그룹 안에 직접 넣으면 그룹이 스타일을 통합하지 않으며, 이때는 각 컨트롤의 시각을 직접 맞춰야 합니다.
+그룹이 통합하는 시각(테두리·배경 제거, 높이 정렬)을 적용받으려면 입력과 버튼을 각각 `InputGroup.Input`과 `InputGroup.Button`으로 감싸야 합니다. 아이콘 버튼(clear·비밀번호 토글 등)은 compact 크기로 자동 정렬되는 `InputGroup.IconButton`을 쓰면 됩니다. 래퍼 없이 `TextInput`이나 `IconButton` 같은 컨트롤을 그룹 안에 직접 넣으면 그룹이 스타일을 통합하지 않으며, 이때는 각 컨트롤의 시각을 직접 맞춰야 합니다.
 
 ## Examples
 
@@ -48,6 +48,8 @@ description: 'InputGroup은 입력 필드(TextInput)를 아이콘·라벨·버�
 ### States
 
 `disabled`, `invalid`, `readOnly`는 그룹의 시각 상태를 켭니다. 기능 차단·접근성은 각 입력 컨트롤에 직접 지정합니다.
+
+그룹은 하나의 논리적 필드입니다. 시각(테두리·배경)은 값 컨트롤의 상태를 관찰해 그룹 표면 하나에만 반영되므로, 서로 독립적으로 검증되는 값 두 개를 한 그룹에 넣지 않습니다. 그룹 안에 `Select`를 편입할 때 `disabled`, `readOnly`는 그룹이 아니라 `Select.Root`에 직접 지정합니다. 그때 편입된 트리거가 방출하는 상태를 그룹이 감지해 배경까지 함께 맞춥니다.
 
 <Demo name="input-group/input-group-states">
 ```json doc-gen:file
