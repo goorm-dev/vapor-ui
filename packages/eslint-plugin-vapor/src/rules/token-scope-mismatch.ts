@@ -73,7 +73,8 @@ export const tokenScopeMismatchRule: Rule.RuleModule = {
                             const m = TOKEN_INDEX.tokenMeta.get(n);
                             if (
                                 m?.kind === 'semantic' &&
-                                expectedScopes.includes(m.scope as Scope)
+                                expectedScopes.includes(m.scope as Scope) &&
+                                m.hexDark === meta.hexDark
                             ) {
                                 candidates.push(n);
                             }

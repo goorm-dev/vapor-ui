@@ -108,12 +108,15 @@ function walkPrimitiveColors(b: IndexBuilder, json: unknown, mode: 'light' | 'da
             const existing = b.meta.get(name);
             const tokenMeta = existing ?? { name, kind: 'primitive', scope: 'primitive' };
 
-            if (mode === 'light') b.meta.set(name, { ...tokenMeta, hex });
-            else b.meta.set(name, { ...tokenMeta, hexDark: hex });
-
-            pushIndex(b.hexIndex, hex, name);
+            if (mode === 'light') {
+                b.meta.set(name, { ...tokenMeta, hex });
+                pushIndex(b.hexIndex, hex, name);
+            } else {
+                b.meta.set(name, { ...tokenMeta, hexDark: hex });
+            }
         }
     };
+
     // top-level object has `colors: { ... }` per spec
     const root = (json as { colors?: unknown }).colors;
     visit(root, []);
@@ -160,10 +163,13 @@ function walkSemanticColors(
             const existing = b.meta.get(name);
             const base = existing ?? { name, kind: 'semantic' as TokenKind, scope };
 
-            if (mode === 'light') b.meta.set(name, { ...base, hex });
-            else b.meta.set(name, { ...base, hexDark: hex });
-
-            if (hex) pushIndex(b.hexIndex, hex, name);
+            if (mode === 'light') {
+                b.meta.set(name, { ...base, hex });
+                // Light values only — see walkPrimitiveColors.
+                if (hex) pushIndex(b.hexIndex, hex, name);
+            } else {
+                b.meta.set(name, { ...base, hexDark: hex });
+            }
         }
     };
 

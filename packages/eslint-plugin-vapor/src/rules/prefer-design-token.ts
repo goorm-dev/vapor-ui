@@ -90,7 +90,11 @@ export const preferDesignTokenRule: Rule.RuleModule = {
                                 const m = TOKEN_INDEX.tokenMeta.get(n);
                                 return (
                                     m?.kind === 'semantic' &&
-                                    expectedScopes.includes(m.scope as Scope)
+                                    expectedScopes.includes(m.scope as Scope) &&
+                                    // Swapping tokens must not change the rendered
+                                    // color in dark mode either — byHex only
+                                    // guarantees the light values match.
+                                    m.hexDark === meta.hexDark
                                 );
                             })
                             .slice(0, maxSuggestions);
