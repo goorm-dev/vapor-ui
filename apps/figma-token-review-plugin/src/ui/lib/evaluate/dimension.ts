@@ -18,6 +18,7 @@ export function evaluateDimension(
             origin: 'rule' as const,
             message: '',
             suggested: [] as string[],
+            wasDs: u.wasDs,
         };
 
         if (u.tokenStatus === 'raw') {

@@ -11,7 +11,7 @@ import type {
     Viewport,
 } from '~/common/schemas';
 
-import { isDsInstance, shouldSkipNode } from './filters';
+import { isDsInstance, shouldSkipNode, wasDsComponent } from './filters';
 import { groupBy } from './group-by';
 import { captureScreenshot } from './screenshot';
 import { detectSchemaMode } from './variables';
@@ -54,13 +54,24 @@ type DsScope = { overrideMap: Map<string, ReadonlySet<string>> } | null;
 
 function buildOverrideMap(instance: InstanceNode): Map<string, ReadonlySet<string>> {
     const map = new Map<string, ReadonlySet<string>>();
-    const overrides = (instance as unknown as {
-        overrides?: Array<{ id: string; overriddenFields: string[] }>;
-    }).overrides;
+    const overrides = (
+        instance as unknown as {
+            overrides?: Array<{ id: string; overriddenFields: string[] }>;
+        }
+    ).overrides;
 
     if (!overrides) return map;
     for (const o of overrides) map.set(o.id, new Set(o.overriddenFields));
     return map;
+}
+
+function tagWasDs(facts: NodeFacts): void {
+    for (const c of facts.colors) c.wasDs = true;
+    for (const t of facts.typography) t.wasDs = true;
+    for (const s of facts.spaces) s.wasDs = true;
+    for (const d of facts.dimensions) d.wasDs = true;
+    for (const r of facts.radii) r.wasDs = true;
+    for (const s of facts.shadows) s.wasDs = true;
 }
 
 async function auditNode(
@@ -71,6 +82,7 @@ async function auditNode(
 ): Promise<void> {
     sink.visited++;
     const facts = await collectNodeFacts(node, ctx, filter);
+    if (await wasDsComponent(node)) tagWasDs(facts);
     sink.merge(facts);
 }
 
@@ -84,12 +96,13 @@ async function traverse(
 
     // 🟨 / 🔶 — 자신은 건너뛰고 자식만 순회.
     if (shouldSkipNode(node.name)) {
-        if ('children' in node) for (const ch of node.children) await traverse(ch, ctx, sink, scope);
+        if ('children' in node)
+            for (const ch of node.children) await traverse(ch, ctx, sink, scope);
         return;
     }
 
     // Rule 1 — 💙 DS 인스턴스: override 된 필드만 감사, 하위는 DS scope 진입.
-    if (isDsInstance(node)) {
+    if (await isDsInstance(node)) {
         const map = buildOverrideMap(node as InstanceNode);
         const selfFields = map.get(node.id) ?? new Set<string>();
 
@@ -118,7 +131,8 @@ async function traverse(
         if (fields && fields.size > 0) {
             await auditNode(node, ctx, sink, fields);
         }
-        if ('children' in node) for (const ch of node.children) await traverse(ch, ctx, sink, scope);
+        if ('children' in node)
+            for (const ch of node.children) await traverse(ch, ctx, sink, scope);
         return;
     }
 

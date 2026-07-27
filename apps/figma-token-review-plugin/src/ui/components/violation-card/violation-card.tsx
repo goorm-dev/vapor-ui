@@ -83,6 +83,7 @@ export function ViolationCard({ violation, schemaMode }: ViolationCardProps) {
                         message={violation.message}
                         severity={violation.severity}
                         confidence={violation.confidence}
+                        wasDs={violation.wasDs}
                     />
                 </VStack>
             </Card.Body>

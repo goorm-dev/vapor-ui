@@ -58,6 +58,7 @@ export function evaluateColor(
             origin: 'rule' as const,
             message: '',
             suggested,
+            wasDs: u.wasDs,
         };
 
         // 1. raw: 변수 바인딩 없이 직접 입력된 색상

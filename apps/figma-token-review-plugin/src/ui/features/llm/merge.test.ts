@@ -23,6 +23,7 @@ function makeTargets(overrides: Partial<TargetLookup> = {}): TargetLookup {
         typography: overrides.typography ?? new Map<string, TypographyTarget>(),
         color: overrides.color ?? new Map<string, ColorTarget>(),
         nameByNodeId: overrides.nameByNodeId ?? new Map<string, string>(),
+        wasDsNodeIds: overrides.wasDsNodeIds ?? new Set<string>(),
     };
 }
 

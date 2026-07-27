@@ -59,6 +59,8 @@ export type TargetLookup = {
     typography: Map<string, TypographyTarget>;
     color: Map<string, ColorTarget>;
     nameByNodeId: Map<string, string>;
+    /** detach된 💙 DS 컴포넌트 하위에서 발견된 노드 id 집합. LLM Violation 뱃지 노출용. */
+    wasDsNodeIds: Set<string>;
 };
 
 export type BuildLlmInputResult = {
@@ -85,6 +87,10 @@ export function buildLlmInput(args: BuildLlmInputArgs): BuildLlmInputResult {
     const nameByNodeId = new Map<string, string>();
     for (const [id, entry] of colorByNode) nameByNodeId.set(id, entry.name);
     for (const [id, entry] of typoByNode) nameByNodeId.set(id, entry.name);
+
+    const wasDsNodeIds = new Set<string>();
+    for (const [id, entry] of colorByNode) if (entry.wasDs) wasDsNodeIds.add(id);
+    for (const [id, entry] of typoByNode) if (entry.wasDs) wasDsNodeIds.add(id);
 
     const semanticColorTargets: ColorTarget[] = [];
     const colorTargetIndex = new Map<string, ColorTarget>();
@@ -164,6 +170,7 @@ export function buildLlmInput(args: BuildLlmInputArgs): BuildLlmInputResult {
             typography: typoTargetIndex,
             color: colorTargetIndex,
             nameByNodeId,
+            wasDsNodeIds,
         },
     };
 }

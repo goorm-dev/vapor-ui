@@ -65,6 +65,8 @@ export type Violation = {
     message: string;
     suggested: string[];
     confidence?: Confidence; // only when origin === 'llm'
+    /** 원본이 💙 DS 컴포넌트였으나 detach된 노드 (재컴포넌트화 포함). 리포트 뱃지 노출용. */
+    wasDs?: boolean;
 };
 
 export type Conformant = {
@@ -138,6 +140,8 @@ export type ColorUsage = {
     background: ColorBackground | null;
     /** TEXT 노드 fill 에 붙는 메타. fontSize/isBold 는 WCAG large-text 판정용, PNG 는 배경이 ambiguous 일 때만 첨부. */
     textShot?: TextShot;
+    /** 원본이 💙 DS 컴포넌트였으나 detach된 노드에서 온 usage. */
+    wasDs?: boolean;
 };
 
 export type TextShot = {
@@ -170,6 +174,7 @@ export type TypographyUsage = {
     appliedStatus: AppliedStatus;
     overriddenFields: string[];
     resolved: TypographyResolved;
+    wasDs?: boolean;
 };
 
 export type SpaceUsage = {
@@ -187,6 +192,7 @@ export type SpaceUsage = {
     value: string;
     token: string | null;
     tokenStatus: TokenStatus;
+    wasDs?: boolean;
 };
 
 export type DimensionUsage = {
@@ -196,6 +202,7 @@ export type DimensionUsage = {
     value: string;
     token: string | null;
     tokenStatus: TokenStatus;
+    wasDs?: boolean;
 };
 
 export type RadiusUsage = {
@@ -204,6 +211,7 @@ export type RadiusUsage = {
     value: string;
     token: string | null;
     tokenStatus: TokenStatus;
+    wasDs?: boolean;
 };
 
 export type ShadowUsage = {
@@ -212,6 +220,7 @@ export type ShadowUsage = {
     value: string;
     token: string | null;
     tokenStatus: TokenStatus;
+    wasDs?: boolean;
 };
 
 export type RawExtractStats = {

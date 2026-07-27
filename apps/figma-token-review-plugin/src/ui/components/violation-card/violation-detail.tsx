@@ -8,9 +8,10 @@ type ViolationDetailProps = {
     message: string;
     severity: Severity;
     confidence?: Confidence;
+    wasDs?: boolean;
 };
 
-export function ViolationDetail({ message, severity, confidence }: ViolationDetailProps) {
+export function ViolationDetail({ message, severity, confidence, wasDs }: ViolationDetailProps) {
     const severityMap = SEVERITY_MAP[severity];
     const confidenceMap = confidence ? CONFIDENCE_MAP[confidence] : null;
 
@@ -26,6 +27,11 @@ export function ViolationDetail({ message, severity, confidence }: ViolationDeta
                         AI 추천: {confidenceMap.label}
                     </Badge>
                 )}
+                {wasDs ? (
+                    <Badge size="sm" shape="pill" colorPalette="warning">
+                        detached
+                    </Badge>
+                ) : null}
             </HStack>
             <Text typography="body2" foreground="normal-200" $css={{ textAlign: 'left' }}>
                 {message}

@@ -19,9 +19,27 @@ export function shouldSkipNode(name: string) {
     return SKIP_PREFIXES.some((p) => name.startsWith(p));
 }
 
-/** 💙 프리픽스가 붙은 DS 라이브러리 컴포넌트 인스턴스. */
-export function isDsInstance(node: SceneNode): boolean {
-    return node.type === 'INSTANCE' && node.name.startsWith(DS_PREFIX);
+/**
+ * 💙 프리픽스가 붙었고 실제 DS 라이브러리 원본을 참조하는 인스턴스.
+ * detach 후 로컬로 재컴포넌트화된 인스턴스(remote=false) 는 제외한다.
+ */
+export async function isDsInstance(node: SceneNode): Promise<boolean> {
+    if (node.type !== 'INSTANCE' || !node.name.startsWith(DS_PREFIX)) return false;
+    const main = await (node as InstanceNode).getMainComponentAsync();
+    return main?.remote === true;
+}
+
+/**
+ * 원래 💙 DS 컴포넌트였으나 detach된 노드 후보.
+ * - detach된 frame/group/component (type ≠ INSTANCE, 이름은 Figma가 보존)
+ * - detach 후 로컬 컴포넌트로 재컴포넌트화된 인스턴스 (remote=false)
+ * 감사 스코프는 일반 노드와 동일(전체 감사), 리포트 뱃지 노출용 태그.
+ */
+export async function wasDsComponent(node: SceneNode): Promise<boolean> {
+    if (!node.name.startsWith(DS_PREFIX)) return false;
+    if (node.type !== 'INSTANCE') return true;
+    const main = await (node as InstanceNode).getMainComponentAsync();
+    return main?.remote === false;
 }
 
 /**

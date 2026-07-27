@@ -63,6 +63,7 @@ function heuristicTypo(
         message,
         suggested: filtered,
         confidence: j.confidence,
+        wasDs: targets.wasDsNodeIds.has(j.nodeId) || undefined,
     };
 }
 
@@ -83,6 +84,7 @@ function heuristicColor(j: LlmColorJudgment, targets: TargetLookup): Violation |
         message: j.reasoning,
         suggested: j.suggested,
         confidence: j.confidence,
+        wasDs: targets.wasDsNodeIds.has(j.nodeId) || undefined,
     };
 }
 
@@ -105,6 +107,7 @@ function groupLlmViolations(vs: Violation[]): Violation[] {
         }
         g.nodeIds!.push(v.nodeId);
         g.count = (g.count ?? 1) + 1;
+        if (v.wasDs) g.wasDs = true;
         for (const s of v.suggested) if (!g.suggested.includes(s)) g.suggested.push(s);
         const curConf = g.confidence ?? 'LOW';
         const newConf = v.confidence ?? 'LOW';
