@@ -11,12 +11,12 @@ import type {
     Viewport,
 } from '~/common/schemas';
 
-import { shouldSkipNode } from './filters';
+import { isDsInstance, shouldSkipNode } from './filters';
 import { groupBy } from './group-by';
 import { captureScreenshot } from './screenshot';
 import { detectSchemaMode } from './variables';
 import { collectNodeFacts } from './visitor';
-import type { NodeFacts, VisitCtx } from './visitor';
+import type { NodeFacts, OverrideFilter, VisitCtx } from './visitor';
 import { walkTree } from './walk-tree';
 
 /**
@@ -45,16 +45,86 @@ class FactSink {
     }
 }
 
-async function traverse(node: SceneNode, ctx: VisitCtx, sink: FactSink): Promise<void> {
+/**
+ * 💙 DS 인스턴스 아래로 들어갔을 때 유지되는 감사 문맥.
+ * overrideMap: 해당 인스턴스와 하위 노드의 override 필드 맵 (`InstanceNode.overrides`).
+ * DS 하위 노드는 이 맵에 등재된 필드만 감사 대상이 된다.
+ */
+type DsScope = { overrideMap: Map<string, ReadonlySet<string>> } | null;
+
+function buildOverrideMap(instance: InstanceNode): Map<string, ReadonlySet<string>> {
+    const map = new Map<string, ReadonlySet<string>>();
+    const overrides = (instance as unknown as {
+        overrides?: Array<{ id: string; overriddenFields: string[] }>;
+    }).overrides;
+
+    if (!overrides) return map;
+    for (const o of overrides) map.set(o.id, new Set(o.overriddenFields));
+    return map;
+}
+
+async function auditNode(
+    node: SceneNode,
+    ctx: VisitCtx,
+    sink: FactSink,
+    filter: OverrideFilter,
+): Promise<void> {
+    sink.visited++;
+    const facts = await collectNodeFacts(node, ctx, filter);
+    sink.merge(facts);
+}
+
+async function traverse(
+    node: SceneNode,
+    ctx: VisitCtx,
+    sink: FactSink,
+    scope: DsScope,
+): Promise<void> {
     if (node.visible === false) return;
+
+    // 🟨 / 🔶 — 자신은 건너뛰고 자식만 순회.
     if (shouldSkipNode(node.name)) {
-        if ('children' in node) for (const ch of node.children) await traverse(ch, ctx, sink);
+        if ('children' in node) for (const ch of node.children) await traverse(ch, ctx, sink, scope);
         return;
     }
-    sink.visited++;
-    const facts = await collectNodeFacts(node, ctx);
-    sink.merge(facts);
-    if ('children' in node) for (const ch of node.children) await traverse(ch, ctx, sink);
+
+    // Rule 1 — 💙 DS 인스턴스: override 된 필드만 감사, 하위는 DS scope 진입.
+    if (isDsInstance(node)) {
+        const map = buildOverrideMap(node as InstanceNode);
+        const selfFields = map.get(node.id) ?? new Set<string>();
+
+        if (selfFields.size > 0) {
+            await auditNode(node, ctx, sink, selfFields);
+        }
+
+        for (const ch of (node as InstanceNode).children) {
+            await traverse(ch, ctx, sink, { overrideMap: map });
+        }
+        return;
+    }
+
+    // Rule 2 — DS 하위에서 프리픽스 없는 인스턴스: 로컬 컴포넌트로 간주해 전체 감사.
+    if (scope && node.type === 'INSTANCE') {
+        await auditNode(node, ctx, sink, null);
+        for (const ch of (node as InstanceNode).children) {
+            await traverse(ch, ctx, sink, null);
+        }
+        return;
+    }
+
+    // DS 하위의 구조적(비 인스턴스) 노드: overrideMap 에 등재된 필드만 감사.
+    if (scope) {
+        const fields = scope.overrideMap.get(node.id);
+        if (fields && fields.size > 0) {
+            await auditNode(node, ctx, sink, fields);
+        }
+        if ('children' in node) for (const ch of node.children) await traverse(ch, ctx, sink, scope);
+        return;
+    }
+
+    // 일반 노드: 전체 감사.
+    await auditNode(node, ctx, sink, null);
+    if ('children' in node) for (const ch of node.children) await traverse(ch, ctx, sink, null);
 }
 
 function inferViewport(width: number): Viewport {
@@ -110,7 +180,7 @@ export async function extractFrame(
     const schemaMode = await detectSchemaMode(rootScene);
 
     const sink = new FactSink();
-    await traverse(rootScene, ctx, sink);
+    await traverse(rootScene, ctx, sink, null);
 
     const extract: RawExtract = {
         schemaMode,

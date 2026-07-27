@@ -2,11 +2,20 @@
  * 노드 순회 시 무시/특수 취급할 대상 판별.
  */
 
-const SKIP_PREFIXES = ['💙', '🟨', '🔶'] as const;
+/** DS(vapor) 라이브러리 컴포넌트를 표시하는 이모지 프리픽스. */
+export const DS_PREFIX = '💙';
+
+/** 자기 자신은 스캔하지 않되 자식은 계속 순회하는 대상. */
+const SKIP_PREFIXES = ['🟨', '🔶'] as const;
 
 /** 이모지 접두 규칙에 의해 검사에서 제외되는 노드. 자식은 순회하되 자신은 건너뛴다. */
 export function shouldSkipNode(name: string) {
     return SKIP_PREFIXES.some((p) => name.startsWith(p));
+}
+
+/** 💙 프리픽스가 붙은 DS 라이브러리 컴포넌트 인스턴스. */
+export function isDsInstance(node: SceneNode): boolean {
+    return node.type === 'INSTANCE' && node.name.startsWith(DS_PREFIX);
 }
 
 /**

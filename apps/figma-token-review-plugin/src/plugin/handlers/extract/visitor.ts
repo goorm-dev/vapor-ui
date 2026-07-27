@@ -39,6 +39,15 @@ export type VisitCtx = {
     viewport: Viewport;
 };
 
+/**
+ * 💙 DS 인스턴스 하위에서 특정 필드만 감사 대상으로 좁힐 때 사용.
+ * null = 전체 감사 (제약 없음).
+ */
+export type OverrideFilter = ReadonlySet<string> | null;
+
+const passes = (filter: OverrideFilter, ...keys: string[]): boolean =>
+    filter === null || keys.some((k) => filter.has(k));
+
 const EMPTY_FACTS: NodeFacts = {
     colors: [],
     typography: [],
@@ -52,16 +61,20 @@ const EMPTY_FACTS: NodeFacts = {
  * 노드 하나에 대한 6개 카테고리 사실을 수집한다. 병렬 실행.
  * 순회(자식 traversal) 는 호출부(index.ts) 책임.
  */
-export async function collectNodeFacts(node: SceneNode, ctx: VisitCtx): Promise<NodeFacts> {
+export async function collectNodeFacts(
+    node: SceneNode,
+    ctx: VisitCtx,
+    filter: OverrideFilter = null,
+): Promise<NodeFacts> {
     const bv: any = (node as any).boundVariables || {};
     const bvRecord = bv as Record<string, { id: string }> | undefined;
     const [colors, typography, spaces, dimensions, radius, shadows] = await Promise.all([
-        collectColors(node, bv),
-        collectTypography(node, ctx.viewport),
-        collectSpaces(node, bvRecord),
-        collectDimensions(node, ctx.rootId, bvRecord),
-        collectRadius(node, bvRecord),
-        collectShadows(node),
+        collectColors(node, bv, filter),
+        collectTypography(node, ctx.viewport, filter),
+        collectSpaces(node, bvRecord, filter),
+        collectDimensions(node, ctx.rootId, bvRecord, filter),
+        collectRadius(node, bvRecord, filter),
+        collectShadows(node, filter),
     ]);
 
     return {
@@ -82,35 +95,46 @@ export async function collectNodeFacts(node: SceneNode, ctx: VisitCtx): Promise<
 async function collectColors(
     node: SceneNode,
     bv: any,
+    filter: OverrideFilter,
 ): Promise<(ColorUsage & { nodeId: string })[]> {
+    const doFills = passes(filter, 'fills');
+    const doStrokes = passes(filter, 'strokes');
+    if (!doFills && !doStrokes) return [];
+
     const fillProperty: ColorProperty =
         node.type === 'TEXT' || isVectorLike(node) ? 'text' : 'fill';
 
     // TEXT 노드 fill 은 배경 분류 후 필요할 때만 부모 PNG 를 캡처. text-contrast 판정용.
-    const textBackground = node.type === 'TEXT' ? classifyBackground(node) : null;
+    const textBackground = node.type === 'TEXT' && doFills ? classifyBackground(node) : null;
     const textShot =
-        node.type === 'TEXT' ? await captureTextShot(node as TextNode, textBackground) : undefined;
+        node.type === 'TEXT' && doFills
+            ? await captureTextShot(node as TextNode, textBackground)
+            : undefined;
 
     const out: (ColorUsage & { nodeId: string })[] = [];
 
-    await extractPaints(
-        node,
-        (node as TextNode).fills,
-        bv.fills || [],
-        fillProperty,
-        textShot,
-        textBackground,
-        out,
-    );
-    await extractPaints(
-        node,
-        (node as TextNode).strokes,
-        bv.strokes || [],
-        'stroke',
-        undefined,
-        null,
-        out,
-    );
+    if (doFills) {
+        await extractPaints(
+            node,
+            (node as TextNode).fills,
+            bv.fills || [],
+            fillProperty,
+            textShot,
+            textBackground,
+            out,
+        );
+    }
+    if (doStrokes) {
+        await extractPaints(
+            node,
+            (node as TextNode).strokes,
+            bv.strokes || [],
+            'stroke',
+            undefined,
+            null,
+            out,
+        );
+    }
 
     return out;
 }
@@ -171,11 +195,22 @@ async function extractPaints(
 // Typography (TEXT 노드 한정)
 // ---------------------------------------------------------------------------
 
+const TYPOGRAPHY_KEYS = [
+    'characters',
+    'fontName',
+    'fontSize',
+    'lineHeight',
+    'letterSpacing',
+    'textStyleId',
+] as const;
+
 async function collectTypography(
     node: SceneNode,
     viewport: Viewport,
+    filter: OverrideFilter,
 ): Promise<(TypographyUsage & { nodeId: string }) | null> {
     if (node.type !== 'TEXT') return null;
+    if (!passes(filter, ...TYPOGRAPHY_KEYS)) return null;
 
     const textNode = node as TextNode;
     const { appliedStatus, textStyle, overriddenFields, seg } = await classifyTextNode(textNode);
@@ -211,6 +246,7 @@ const PADDING_FIELDS: readonly PaddingField[] = [
 async function collectSpaces(
     node: SceneNode,
     bvRecord: Record<string, { id: string }> | undefined,
+    filter: OverrideFilter,
 ): Promise<SpaceUsage[]> {
     const out: SpaceUsage[] = [];
 
@@ -218,6 +254,7 @@ async function collectSpaces(
     const dirs: PaddingDir[] = [];
 
     for (const f of PADDING_FIELDS) {
+        if (!passes(filter, f)) continue;
         const v = (node as any)[f];
         if (typeof v !== 'number') continue;
 
@@ -237,19 +274,21 @@ async function collectSpaces(
     }
 
     // gap (itemSpacing)
-    const gapValue = (node as any).itemSpacing;
+    if (passes(filter, 'itemSpacing')) {
+        const gapValue = (node as any).itemSpacing;
 
-    if (typeof gapValue === 'number') {
-        const { token, status } = await readBoundToken(bvRecord, 'itemSpacing');
+        if (typeof gapValue === 'number') {
+            const { token, status } = await readBoundToken(bvRecord, 'itemSpacing');
 
-        out.push({
-            nodeId: node.id,
-            name: node.name,
-            property: 'gap',
-            value: `${gapValue}px`,
-            token,
-            tokenStatus: status,
-        });
+            out.push({
+                nodeId: node.id,
+                name: node.name,
+                property: 'gap',
+                value: `${gapValue}px`,
+                token,
+                tokenStatus: status,
+            });
+        }
     }
     return out;
 }
@@ -262,6 +301,7 @@ async function collectDimensions(
     node: SceneNode,
     rootId: string,
     bvRecord: Record<string, { id: string }> | undefined,
+    filter: OverrideFilter,
 ): Promise<DimensionUsage[]> {
     if (isVectorLike(node) || node.id === rootId) return [];
 
@@ -272,6 +312,7 @@ async function collectDimensions(
     ] as const;
 
     for (const { property, sizing } of fields) {
+        if (!passes(filter, property)) continue;
         const rawValue: unknown = (node as any)[property];
 
         if (typeof rawValue !== 'number') continue;
@@ -307,7 +348,9 @@ const RADIUS_BINDING_FIELDS = [
 async function collectRadius(
     node: SceneNode,
     bvRecord: Record<string, { id: string }> | undefined,
+    filter: OverrideFilter,
 ): Promise<RadiusUsage | null> {
+    if (!passes(filter, ...RADIUS_BINDING_FIELDS)) return null;
     const cr = (node as FrameNode).cornerRadius;
     if (typeof cr !== 'number') return null;
 
@@ -339,7 +382,8 @@ async function collectRadius(
 // Shadow (effect-style level binding)
 // ---------------------------------------------------------------------------
 
-async function collectShadows(node: SceneNode): Promise<ShadowUsage[]> {
+async function collectShadows(node: SceneNode, filter: OverrideFilter): Promise<ShadowUsage[]> {
+    if (!passes(filter, 'effects', 'effectStyleId')) return [];
     const effects: any[] = Array.isArray((node as any).effects) ? (node as any).effects : [];
     const shadows = effects.filter(
         (eff: any) => eff.type === 'DROP_SHADOW' || eff.type === 'INNER_SHADOW',
