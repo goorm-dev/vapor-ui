@@ -21,12 +21,12 @@ export const root = componentRecipe({
 
         {
             display: 'inline-flex',
+            flexWrap: 'nowrap',
             alignItems: 'center',
-            justifyContent: 'center',
 
+            justifyContent: 'center',
             border: 'none',
             borderRadius: vars.size.borderRadius['300'],
-            flexWrap: 'nowrap',
             textWrap: 'nowrap',
             selectors: {
                 [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
