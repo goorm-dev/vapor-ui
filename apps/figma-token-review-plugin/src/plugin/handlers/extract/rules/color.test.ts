@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { ExtractCtx } from '../engine/types';
 import { captureTextShot } from '../text';
 import { toToken, walk } from '../variables';
 import { fillColorsRule, strokeColorsRule } from './color';
@@ -13,13 +14,12 @@ vi.mock('../text', () => ({
     captureTextShot: vi.fn(),
 }));
 
-const ctx = () =>
-    ({
-        rootId: 'root',
-        viewport: 'pc' as const,
-        boundVariables: undefined,
-        filter: null,
-    }) as any;
+const ctx = (): ExtractCtx => ({
+    rootId: 'root',
+    viewport: 'pc' as const,
+    boundVariables: undefined,
+    filter: null,
+});
 
 describe('color rules', () => {
     beforeEach(() => {
