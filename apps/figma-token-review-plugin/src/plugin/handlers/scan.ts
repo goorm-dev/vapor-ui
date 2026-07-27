@@ -2,7 +2,7 @@ import { postToUi } from '~/common/messages';
 import type { RequestId } from '~/common/messages';
 
 import { on } from '../messages';
-import { extractFrame } from './extract';
+import { extractFrame } from '../models/extract';
 
 let activeRequestId: RequestId | null = null;
 
