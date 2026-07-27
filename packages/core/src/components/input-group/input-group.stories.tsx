@@ -30,7 +30,6 @@ const meta: Meta<typeof InputGroup.Root> = {
     argTypes: {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
         disabled: { control: 'boolean' },
-        readOnly: { control: 'boolean' },
     },
     tags: ['autodocs'],
 };
@@ -157,10 +156,20 @@ export const TestBed: Story = {
                 </InputGroup.TrailingAddon>
             </InputGroup.Root>
 
-            {/* readOnly — Input 만 읽기전용, 버튼은 생존 */}
-            <InputGroup.Root readOnly>
+            {/* readOnly — 값 컨트롤이 소유. Root 는 자식의 data-readonly 를 :has() 로 관찰해 감색 */}
+            <InputGroup.Root>
                 <InputGroup.LeadingAddon>@</InputGroup.LeadingAddon>
-                <InputGroup.Input value="read only" />
+                <InputGroup.Input value="read only" readOnly />
+            </InputGroup.Root>
+
+            {/* 보조 버튼만 disabled — 값 컨트롤은 멀쩡하므로 그룹이 흐려지면 안 된다 */}
+            <InputGroup.Root>
+                <InputGroup.Input placeholder="clear disabled while empty" />
+                <InputGroup.TrailingAddon>
+                    <InputGroup.IconButton aria-label="clear" variant="ghost" disabled>
+                        <CloseOutlineIcon />
+                    </InputGroup.IconButton>
+                </InputGroup.TrailingAddon>
             </InputGroup.Root>
 
             {/* readOnly + Select — 그룹이 아니라 Select.Root 에 직접. Trigger 의 data-readonly 를

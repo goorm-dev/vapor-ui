@@ -16,9 +16,10 @@ import { TextInput } from '../text-input';
 import type { RootVariants } from './input-group.css';
 import * as styles from './input-group.css';
 
+// context 는 disabled 만 나른다. readOnly 는 값 컨트롤이 소유한다 — 그룹이 내려보내면 clear 처럼
+// 값을 바꾸는 버튼까지 어떻게 다룰지 그룹이 판단해야 하는데, 그건 앱만 아는 정보다.
 interface InputGroupContextValue {
     disabled?: boolean;
-    readOnly?: boolean;
 }
 
 const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupContextValue>({
@@ -30,29 +31,20 @@ const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupConte
 
 /**
  *
- * Groups a text input with leading and trailing addons or buttons into a single field, and shares its `disabled` and `readOnly` state with the controls inside. Renders a `<div>` element.
+ * Groups a text input with leading and trailing addons or buttons into a single field, and shares its `disabled` state with the controls inside. Renders a `<div>` element.
  */
 export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((props, ref) => {
     const { className, render, ...componentProps } = resolveStyles(props);
 
-    const [{ size = 'md', disabled = false, readOnly = false }, otherProps] =
-        createSplitProps<InputGroupRoot.VariantProps>()(componentProps, [
-            'size',
-            'disabled',
-            'readOnly',
-        ]);
+    const [{ size = 'md', disabled = false }, otherProps] = createSplitProps<
+        InputGroupRoot.VariantProps & Pick<InputGroupRoot.Props, 'disabled'>
+    >()(componentProps, ['size', 'disabled']);
 
-    const dataAttrs = createDataAttributes({ disabled, readOnly });
+    const dataAttrs = createDataAttributes({ disabled });
 
-    const state: InputGroupRoot.State = useMemo(
-        () => ({ disabled, readOnly }),
-        [disabled, readOnly],
-    );
+    const state: InputGroupRoot.State = useMemo(() => ({ disabled }), [disabled]);
 
-    const contextValue = useMemo<InputGroupContextValue>(
-        () => ({ disabled, readOnly }),
-        [disabled, readOnly],
-    );
+    const contextValue = useMemo<InputGroupContextValue>(() => ({ disabled }), [disabled]);
 
     const element = useRenderElement({
         ref,
@@ -72,19 +64,18 @@ InputGroupRoot.displayName = 'InputGroup.Root';
 
 /**
  *
- * The primary input of the group, inheriting the group's shared `disabled` and `readOnly` state. Renders an `<input>` element by default.
+ * The primary input of the group, inheriting the group's shared `disabled` state. Renders an `<input>` element by default.
  */
 export const InputGroupInput = forwardRef<HTMLElement, InputGroupInput.Props>((props, ref) => {
     const { className, render, ...componentProps } = resolveStyles(props);
     const group = useInputGroupContext();
 
     const disabled = (componentProps.disabled as boolean | undefined) || group?.disabled;
-    const readOnly = (componentProps.readOnly as boolean | undefined) || group?.readOnly;
 
     return useRenderElement({
         ref,
         render: render ?? <TextInput />,
-        props: { ...componentProps, className: cn(styles.input, className), disabled, readOnly },
+        props: { ...componentProps, className: cn(styles.input, className), disabled },
     });
 });
 InputGroupInput.displayName = 'InputGroup.Input';
@@ -95,7 +86,9 @@ InputGroupInput.displayName = 'InputGroup.Input';
  * Button 은 기본 render=Button, IconButton 은 기본 render=IconButton(compact 아이콘). Select 편입은
  * <InputGroup.Button render={<Select.Trigger/>}> 로. 높이는 그룹이 compact 로 강제하되, 그 외
  * 시각(면·hover)은 render 대상이 유지한다 — Button/IconButton 은 surface-stripped 대상이 아니다.
- * context 의 disabled 만 OR 병합한다(readOnly 미소비 → password 토글·clear 는 readOnly 에서 생존).
+ * context 의 disabled 만 OR 병합한다. readOnly 는 소비하지 않는다 — 기준은 "값을 바꾸는가"다.
+ * copy·password 토글처럼 값을 안 바꾸는 버튼은 readOnly 에서 살아야 하고, clear 처럼 값을 바꾸는
+ * 버튼은 앱이 직접 disabled 를 준다(그룹은 어느 버튼이 값을 바꾸는지 알 수 없다).
  * -----------------------------------------------------------------------------------------------*/
 
 /**
@@ -179,10 +172,11 @@ export namespace InputGroupRoot {
         [key: string]: unknown;
         /** Whether the group shows its disabled visual. */
         disabled: boolean;
-        /** Whether the group shows its read-only visual. */
-        readOnly: boolean;
     }
-    export interface Props extends VaporUIComponentProps<'div', State>, VariantProps {}
+    export interface Props extends VaporUIComponentProps<'div', State>, VariantProps {
+        /** Whether the whole field is disabled. Shared with the controls inside through context. */
+        disabled?: boolean;
+    }
 }
 
 export namespace InputGroupInput {

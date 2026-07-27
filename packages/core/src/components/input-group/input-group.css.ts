@@ -14,7 +14,25 @@ const compactIconSize = createVar('input-group-compact-icon-size');
 const inputHeight = createVar('input-group-input-height');
 const addonGap = createVar('input-group-addon-gap');
 
-const DISABLED = `&[data-disabled], &:has(:disabled)`;
+// "그룹의 값이 꺼졌다"를 잡는 앵커들. Root 는 disabled 의 소유자(자기 prop)이면서 관찰자이기도
+// 하다 — <Field.Root disabled> 는 Root 에 prop 을 주지 않고 값 컨트롤만 끄기 때문에, 자식을 안 보면
+// "비활성인데 멀쩡해 보이는" 그룹이 된다(컨트롤 자신의 감광은 styles.input 의 opacity:1 이 지운다).
+//
+// `:disabled` 는 닫힌 집합(button·input·select·textarea·fieldset·optgroup·option)에만 매칭되므로
+// 값을 담지 않는 셋(button·option·optgroup)을 빼면 남는 건 값 컨트롤뿐이다. 열거가 아니라 여집합이라
+// render 로 뭐가 들어와도 새지 않는다(폼 요소가 아니면 :disabled 에 애초에 안 걸린다).
+// - button 제외: 보조 버튼(clear·copy)이 꺼졌다고 그룹이 흐려지면 안 된다. "값이 비어서 clear off"가
+//   가장 흔한 패턴이라 오탐이면 멀쩡한 입력창까지 감광된다.
+// - option/optgroup 제외: 네이티브 <select> 의 placeholder(`<option disabled>`)는 값과 무관하다.
+// - fieldset 은 남긴다: 꺼진 fieldset 안의 값 컨트롤도 함께 :disabled 라 어차피 같은 결과다.
+// 편입 Select 트리거는 button 이지만 값의 일부라 별도 절로 되살린다(readOnly 의 :has 와 대칭).
+export const VALUE_DISABLED = [
+    `:has(:disabled:not(button):not(option):not(optgroup))`,
+    `:has([role='combobox']:disabled)`,
+];
+
+const DISABLED = ['&[data-disabled]', ...VALUE_DISABLED.map((sel) => `&${sel}`)].join(', ');
+const NOT_VALUE_DISABLED = VALUE_DISABLED.map((sel) => `:not(${sel})`).join('');
 
 export const root = componentRecipe({
     base: [
@@ -37,23 +55,24 @@ export const root = componentRecipe({
                 // invalid·readOnly 는 Root prop 이 아니라 값 컨트롤의 상태를 :has() 로 관찰해 켠다.
                 // 그려지는 면이 Root 하나뿐이라(값 컨트롤은 surface-stripped) 시각은 그룹 레벨이 필연.
                 // invalid → 자식 aria-invalid(테두리 danger), readOnly → 자식 data-readonly(배경 gray).
-                [when.invalid(`&:has([aria-invalid='true'])`)]: {
+                // when.* 이 붙이는 :not([data-disabled]) 는 Root prop 발 disabled 만 막으므로,
+                // 값 컨트롤발 disabled 도 같은 결과를 내도록 NOT_VALUE_DISABLED 를 덧붙인다.
+                // readOnly 는 invalid 를 가리지 않는다 — readOnly 필드는 제출되므로 오류를 지우면
+                // "틀렸는데 볼 수도 고칠 수도 없는" 상태가 된다(배경색 vs 테두리색이라 겹치지도 않음).
+                [`${when.invalid(`&:has([aria-invalid='true'])`)}${NOT_VALUE_DISABLED}`]: {
                     vars: { [boxShadowColor]: vars.color.border.danger },
                 },
-                [when.readonly(`&:has([data-readonly])`)]: {
+                [`${when.readonly(`&:has([data-readonly])`)}${NOT_VALUE_DISABLED}`]: {
                     backgroundColor: vars.color.gray['200'],
                 },
-                [`${DISABLED}`]: { opacity: 0.32 },
+                [DISABLED]: { opacity: 0.32, pointerEvents: 'none' },
             },
         },
     ],
 
-    defaultVariants: { size: 'md', disabled: false, readOnly: false },
+    defaultVariants: { size: 'md' },
 
     variants: {
-        disabled: { true: {}, false: {} },
-        readOnly: { true: {}, false: {} },
-
         size: {
             sm: {
                 height: vars.size.dimension['300'],
