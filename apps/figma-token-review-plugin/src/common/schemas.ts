@@ -128,23 +128,32 @@ export type ColorBackground = {
     hex: string | null;
 };
 
-export type ColorUsage = {
+/** 모든 Usage 공통: 발생 노드 식별 정보. */
+export type NodeRef = {
     nodeId: string;
-    nodeIds?: string[];
-    count?: number;
     name: string;
-    property: ColorProperty;
-    token: string | null;
-    /** Variable Mode 로 semantic 을 래핑한 경우 실제 노드에 바인딩된 outer variable 이름. */
-    appliedToken?: string | null;
-    hex: string | null;
-    tokenStatus: TokenStatus;
-    background: ColorBackground | null;
-    /** TEXT 노드 fill 에 붙는 메타. fontSize/isBold 는 WCAG large-text 판정용, PNG 는 배경이 ambiguous 일 때만 첨부. */
-    textShot?: TextShot;
     /** 원본이 💙 DS 컴포넌트였으나 detach된 노드에서 온 usage. */
     wasDs?: boolean;
 };
+
+/** 토큰 해석 결과 공통 묶음. */
+export type TokenInfo = {
+    token: string | null;
+    /** Variable Mode 로 semantic 을 래핑한 경우 실제 노드에 바인딩된 outer variable 이름. */
+    appliedToken?: string | null;
+    tokenStatus: TokenStatus;
+};
+
+export type ColorUsage = NodeRef &
+    TokenInfo & {
+        nodeIds?: string[];
+        count?: number;
+        property: ColorProperty;
+        hex: string | null;
+        background: ColorBackground | null;
+        /** TEXT 노드 fill 에 붙는 메타. fontSize/isBold 는 WCAG large-text 판정용, PNG 는 배경이 ambiguous 일 때만 첨부. */
+        textShot?: TextShot;
+    };
 
 export type TextShot = {
     fontSize: number;
@@ -165,70 +174,44 @@ export type TypographyResolved = {
     fontName: unknown;
 };
 
-export type TypographyUsage = {
-    nodeId: string;
+export type TypographyUsage = NodeRef & {
     nodeIds?: string[];
     count?: number;
-    name: string;
     characters: string;
     textStyle: string | null;
     viewport: Viewport;
     appliedStatus: AppliedStatus;
     overriddenFields: string[];
     resolved: TypographyResolved;
-    wasDs?: boolean;
 };
 
-export type SpaceUsage = {
-    nodeId: string;
-    name: string;
-    property:
-        | 'padding'
-        | 'paddingTop'
-        | 'paddingRight'
-        | 'paddingBottom'
-        | 'paddingLeft'
-        | 'paddingVertical'
-        | 'paddingHorizontal'
-        | 'gap';
-    value: string;
-    token: string | null;
-    /** Variable Mode 로 semantic 을 래핑한 경우 실제 노드에 바인딩된 outer variable 이름. */
-    appliedToken?: string | null;
-    tokenStatus: TokenStatus;
-    wasDs?: boolean;
-};
+export type SpaceUsage = NodeRef &
+    TokenInfo & {
+        property:
+            | 'padding'
+            | 'paddingTop'
+            | 'paddingRight'
+            | 'paddingBottom'
+            | 'paddingLeft'
+            | 'paddingVertical'
+            | 'paddingHorizontal'
+            | 'gap';
+        value: string;
+    };
 
-export type DimensionUsage = {
-    nodeId: string;
-    name: string;
-    property: 'width' | 'height';
-    value: string;
-    token: string | null;
-    /** Variable Mode 로 semantic 을 래핑한 경우 실제 노드에 바인딩된 outer variable 이름. */
-    appliedToken?: string | null;
-    tokenStatus: TokenStatus;
-    wasDs?: boolean;
-};
+export type DimensionUsage = NodeRef &
+    TokenInfo & {
+        property: 'width' | 'height';
+        value: string;
+    };
 
-export type RadiusUsage = {
-    nodeId: string;
-    name: string;
-    value: string;
-    token: string | null;
-    /** Variable Mode 로 semantic 을 래핑한 경우 실제 노드에 바인딩된 outer variable 이름. */
-    appliedToken?: string | null;
-    tokenStatus: TokenStatus;
-    wasDs?: boolean;
-};
+export type RadiusUsage = NodeRef & TokenInfo & { value: string };
 
-export type ShadowUsage = {
-    nodeId: string;
-    name: string;
-    value: string;
+/** shadow 는 effect-style 단일 조회라 appliedToken 이 없다 — TokenInfo 미상속. */
+export type ShadowUsage = NodeRef & {
     token: string | null;
     tokenStatus: TokenStatus;
-    wasDs?: boolean;
+    value: string;
 };
 
 export type RawExtractStats = {
