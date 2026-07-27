@@ -30,7 +30,6 @@ const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupConte
 });
 
 /**
- *
  * Groups a text input with leading and trailing addons or buttons into a single field, and shares its `disabled` state with the controls inside. Renders a `<div>` element.
  */
 export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((props, ref) => {
@@ -63,7 +62,6 @@ export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((
 InputGroupRoot.displayName = 'InputGroup.Root';
 
 /**
- *
  * The primary input of the group, inheriting the group's shared `disabled` state. Renders an `<input>` element by default.
  */
 export const InputGroupInput = forwardRef<HTMLElement, InputGroupInput.Props>((props, ref) => {
@@ -92,7 +90,6 @@ InputGroupInput.displayName = 'InputGroup.Input';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- *
  * An interactive button inside the group, such as a clear or password-toggle control, inheriting the group's shared `disabled` state. Renders a `<button>` element by default.
  */
 export const InputGroupButton = forwardRef<HTMLElement, InputGroupButton.Props>((props, ref) => {
@@ -110,7 +107,6 @@ export const InputGroupButton = forwardRef<HTMLElement, InputGroupButton.Props>(
 InputGroupButton.displayName = 'InputGroup.Button';
 
 /**
- *
  * A compact icon button inside the group, such as a clear or password-toggle control, inheriting the group's shared `disabled` state. Renders an `IconButton` (a `<button>`) sized to the group's compact density by default.
  */
 export const InputGroupIconButton = forwardRef<HTMLElement, InputGroupIconButton.Props>(
@@ -154,12 +150,10 @@ const createAddon = (displayName: string) => {
 };
 
 /**
- *
  * A non-interactive slot rendered before the input for an icon or short text label. Renders a `<span>` element.
  */
 export const InputGroupLeadingAddon = createAddon('InputGroup.LeadingAddon');
 /**
- *
  * A non-interactive slot rendered after the input for an icon or short text label. Renders a `<span>` element.
  */
 export const InputGroupTrailingAddon = createAddon('InputGroup.TrailingAddon');
