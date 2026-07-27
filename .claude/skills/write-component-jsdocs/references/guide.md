@@ -44,7 +44,6 @@ export const root = componentRecipe({
     variants: {
         /**
          * Visual style of the button.
-         * @default 'fill'
          */
         variant: { fill: {}, outline: {}, ghost: {} },
     },
@@ -60,10 +59,7 @@ When custom props are defined via an `interface`, write JSDoc on the **interface
 export interface DialogRootProps
     extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
-     *
      * Closes the dialog when the overlay is clicked.
-     * @default true
-     */
     closeOnClickOverlay?: boolean;
 }
 
@@ -163,23 +159,58 @@ Do not write content on the line immediately after `/**`. Even single-line comme
 
 The JSDoc block directly above the component declaration. It's the first thing a developer reads on the documentation site.
 
+### Wording patterns by component role
+
+**Top-level / standalone component** — One sentence: `"A [noun phrase] for/that [purpose]."` Focus on what it is and when to use it. End with the rendered HTML element.
+
+```tsx
+/**
+ * A component for toggling between related panels on the same page. Renders a `<div>` element.
+ */
+
+/**
+ * A popup that opens on top of the entire page. Doesn't render its own HTML element.
+ */
+```
+
+**Compound sub-component** — One sentence: `"A/An [noun] that [role/behavior]. Renders a \`<x>\` element."`
+
+```tsx
+/**
+ * An individual interactive tab button that toggles the corresponding panel. Renders a `<button>` element.
+ */
+
+/**
+ * A panel displayed when the corresponding tab is active. Renders a `<div>` element.
+ */
+
+/**
+ * An accessible label that is automatically associated with the select trigger. Renders a `<label>` element.
+ */
+```
+
+**Root / wrapper (no HTML element)** — Use `"Groups [parts]."` or `"Assembles [parts]."` and end with `"Doesn't render its own HTML element."`
+
+```tsx
+/**
+ * Groups all parts of the dialog. Doesn't render its own HTML element.
+ */
+
+/**
+ * Assembles the tooltip component parts. Doesn't render its own HTML element.
+ */
+```
+
 ### Rules
 
 **1. Write the summary on a single line**
 
 No line breaks inside the summary. Separate sentences with `.` only.
 
-```tsx
-/**
- * Button component for user interactions. Use for primary actions such as form submission, dialog triggers, and navigation.
- */
-export function Button(props: ButtonProps) { ... }
-```
-
 **2. Write for a developer who has never seen this component**
 
 - No internal system names, team slang, or implementation details.
-- Order: "what it is" → "when to use it".
+- Order: "what it is / what it does" → rendered HTML element.
 
 ```tsx
 // ❌ implementation detail leaks
@@ -189,7 +220,7 @@ export function Button(props: ButtonProps) { ... }
 
 // ✅ user perspective
 /**
- * Button component for user interactions.
+ * A button that submits forms and triggers actions. Renders a `<button>` element.
  */
 ```
 
@@ -205,23 +236,23 @@ Fragments read poorly when rendered as-is on the documentation site.
 
 // ✅ complete sentence
 /**
- * Button component for user interactions.
+ * A button that submits forms and triggers actions. Renders a `<button>` element.
  */
 ```
 
 **4. State the rendered HTML element**
 
-End the summary with the element the component renders by default. Wrap the HTML tag in backticks. For components that don't render their own HTML element (Providers, Context wrappers), say so explicitly.
+End the summary with the element the component renders by default. Wrap the HTML tag in backticks. For components that don't render their own HTML element (Root, Provider, Context wrappers), end with `"Doesn't render its own HTML element."`
 
 ```tsx
 // renders a specific element
 /**
- * Button component for user interactions. Renders a `<button>` element.
+ * A button that submits forms and triggers actions. Renders a `<button>` element.
  */
 
 // renders no HTML element of its own
 /**
- * Provides theme context to its children. Doesn't render its own HTML element.
+ * Groups all parts of the dialog. Doesn't render its own HTML element.
  */
 ```
 
@@ -243,6 +274,90 @@ interface ButtonProps {
     variant?: 'fill' | 'outline' | 'ghost';
 }
 ```
+
+### Wording patterns by prop category
+
+Follow these patterns consistently — they match Base UI's documentation style and ensure a uniform developer experience.
+
+**Boolean props** — Use `"Whether [subject] [condition/state]."`:
+
+```tsx
+/**
+ * Whether the component should ignore user interaction.
+ */
+disabled?: boolean;
+
+/**
+ * Whether the user should be unable to tick or untick the checkbox.
+ */
+readOnly?: boolean;
+
+/**
+ * Whether the checkbox is initially ticked.
+ */
+defaultChecked?: boolean;
+```
+
+**Event handlers** — Use `"Event handler called when [exact condition]."`:
+
+```tsx
+// ❌ vague
+/**
+ * Called when the value changes.
+ */
+onChange?: (value: string) => void;
+
+// ✅ precise trigger
+/**
+ * Event handler called when the value of the select changes.
+ */
+onValueChange?: (value: string) => void;
+
+/**
+ * Event handler called when the checkbox is ticked or unticked.
+ */
+onCheckedChange?: (checked: boolean) => void;
+
+/**
+ * Event handler called when the dialog is opened or closed.
+ */
+onOpenChange?: (open: boolean) => void;
+```
+
+**Numeric props** — State the unit inline; add range or special values where relevant:
+
+```tsx
+/**
+ * Distance between the anchor and the popup, in pixels.
+ */
+sideOffset?: number;
+
+/**
+ * Delay before auto-dismissing, in milliseconds. Set to `0` to disable auto-dismiss.
+ */
+autoCloseMs?: number;
+```
+
+**render / className / style** — Use these fixed phrases verbatim:
+
+```tsx
+/**
+ * Allows you to replace the component's HTML element with a different tag, or compose it with another component.
+ */
+render?: React.ReactElement | ((props: object) => React.ReactElement);
+
+/**
+ * CSS class applied to the element, or a function that returns a class based on the component's state.
+ */
+className?: string | ((state: Root.State) => string);
+
+/**
+ * Style applied to the element, or a function that returns a style object based on the component's state.
+ */
+style?: React.CSSProperties | ((state: Root.State) => React.CSSProperties);
+```
+
+> Note: `render`, `className`, and `style` are inherited from Base UI primitives in most vapor-ui components. Only write JSDoc on them if your component overrides or extends their behavior.
 
 ### Rules
 
@@ -270,16 +385,12 @@ Explain what happens when the prop is set — especially when it interacts with 
 
 ```tsx
 /**
- *
  * Disables the button, blocking all interactions and dimming its appearance. Automatically set to `true` when `loading` is `true`.
- * @default false
  */
 disabled?: boolean;
 
 /**
- *
  * Shows a spinner and disables the button while `true`.
- * @default false
  */
 loading?: boolean;
 ```
@@ -295,7 +406,7 @@ autoCloseMs?: number;
 
 **4. Specify the exact trigger condition for event handlers**
 
-Don't stop at "click handler" — say precisely when it fires.
+Use the `"Event handler called when …"` pattern. Don't stop at "click handler" — say precisely when it fires.
 
 ```tsx
 // ❌ vague
@@ -306,7 +417,7 @@ onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 
 // ✅ exact trigger
 /**
- * Called when the button is clicked or activated via Enter or Space key.
+ * Event handler called when the button is clicked or activated via Enter or Space key.
  */
 onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 ```
