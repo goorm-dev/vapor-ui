@@ -12,4 +12,4 @@
 </InputGroup.TrailingAddon>
 ```
 
-또한 `readOnly` 시각을 `invalid`와 대칭으로 맞췄습니다. 그룹 배경(gray)은 이제 값 컨트롤의 `data-readonly`를 `:has()`로 관찰해 켜집니다. `<InputGroup.Root readOnly>`는 그대로 동작하고, 그룹에 편입한 `<Select.Root readOnly>`의 읽기전용 상태도 그룹 배경이 함께 반영합니다.
+또한 `readOnly` 시각을 `invalid`와 대칭으로 맞췄습니다. 그룹 배경(gray)은 이제 값 컨트롤의 `data-readonly`를 `:has()`로 관찰해 켜집니다. `<InputGroup.Input readOnly />`는 물론, 그룹에 편입한 `<Select.Root readOnly>`의 읽기전용 상태도 그룹 배경이 함께 반영합니다.
