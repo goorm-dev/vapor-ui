@@ -117,6 +117,12 @@ export const preferDesignTokenRule: Rule.RuleModule = {
                             })),
                         });
                     } else if (part.type === 'hex') {
+                        // Raw values in a var() fallback are the author's
+                        // last-resort literal for when the variable is not
+                        // defined — replacing them with another var() would
+                        // defeat that purpose. Token references in fallbacks
+                        // are still validated by the other rules.
+                        if (part.inFallback) return;
                         if (
                             ignoreValues.has(part.raw.toLowerCase()) ||
                             ignoreValues.has(part.normalized)
@@ -164,6 +170,8 @@ export const preferDesignTokenRule: Rule.RuleModule = {
                             })),
                         });
                     } else if (part.type === 'dimension') {
+                        // Same as hex: fallback literals are intentional.
+                        if (part.inFallback) return;
                         if (part.unit !== 'px') return;
                         if (ignoreValues.has(part.raw.toLowerCase())) return;
                         if (!isFoundationScope(expectedScopes)) return;

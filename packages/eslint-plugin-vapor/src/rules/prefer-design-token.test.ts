@@ -45,6 +45,10 @@ ruleTester.run('prefer-design-token', preferDesignTokenRule, {
         // border shorthand: the 1px width part must not trigger the
         // dimension branch (border scope is not a foundation scope).
         { code: '.x { border: 1px solid var(--vapor-color-border-normal); }' },
+        // Raw values in a var() fallback are the author's intentional
+        // last-resort literal — never rewritten to a token
+        { code: '.x { color: var(--brand-color, #0958c9); }' },
+        { code: '.x { width: var(--custom-width, 12px); }' },
     ],
     invalid: [
         // C-1: primitive token with semantic upgrade available

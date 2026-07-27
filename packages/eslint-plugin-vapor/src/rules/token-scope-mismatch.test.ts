@@ -33,7 +33,9 @@ ruleTester.run('token-scope-mismatch', tokenScopeMismatchRule, {
         { code: '.x { border: 1px solid var(--vapor-color-border-normal); }' },
         // border shorthand: size token = width usage — no borderWidth scope
         // exists to validate against, must not be flagged as a mismatch
-        { code: '.x { border: var(--vapor-size-space-100) solid var(--vapor-color-border-normal); }' },
+        {
+            code: '.x { border: var(--vapor-size-space-100) solid var(--vapor-color-border-normal); }',
+        },
     ],
     invalid: [
         // background-scope token on color property (expects foreground)
@@ -75,6 +77,22 @@ ruleTester.run('token-scope-mismatch', tokenScopeMismatchRule, {
                             output: '.x { color: var(--vapor-color-foreground-contrast-200); }',
                         },
                     ],
+                },
+            ],
+        },
+        // Token reference inside a var() fallback is still scope-checked
+        // (raw fallback literals are exempt, token usage is not)
+        {
+            code: '.x { color: var(--brand-color, var(--vapor-color-background-primary-100)); }',
+            errors: [
+                {
+                    messageId: 'scopeMismatch',
+                    data: {
+                        token: '--vapor-color-background-primary-100',
+                        tokenScope: 'background',
+                        property: 'color',
+                        expectedScopes: 'foreground',
+                    },
                 },
             ],
         },
