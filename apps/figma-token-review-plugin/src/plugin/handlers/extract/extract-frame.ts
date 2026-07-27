@@ -156,6 +156,7 @@ const colorKey = (e: ColorUsage & { nodeId: string }): string =>
         e.name,
         e.property,
         e.token,
+        e.appliedToken ?? null,
         e.hex,
         e.tokenStatus,
         e.background ? e.background.kind : null,

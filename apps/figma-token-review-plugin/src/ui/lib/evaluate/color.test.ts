@@ -37,6 +37,40 @@ describe('evaluateColor', () => {
         expect(result.violations[0].type).toBe('unknown-token');
     });
 
+    it('Variable Mode wrap primitive (semantic 없음) → violation.token = appliedToken 표시', () => {
+        // Button 이 💙 Test variable 을 통해 #ffffff 를 사용 — semantic 미도달 시나리오.
+        const result = evaluateColor(
+            [
+                usage({
+                    tokenStatus: 'unknown',
+                    token: null,
+                    appliedToken: 'Test',
+                    hex: '#ffffff',
+                    property: 'text',
+                }),
+            ],
+            schema,
+        );
+        expect(result.violations[0].type).toBe('unknown-token');
+        expect(result.violations[0].token).toBe('Test');
+    });
+
+    it('raw hex 는 violation.token=null (appliedToken 무시)', () => {
+        const result = evaluateColor(
+            [
+                usage({
+                    tokenStatus: 'raw',
+                    token: null,
+                    appliedToken: null,
+                    hex: '#ff0000',
+                }),
+            ],
+            schema,
+        );
+        expect(result.violations[0].type).toBe('token-not-used');
+        expect(result.violations[0].token).toBeNull();
+    });
+
     it('do-not-use 플래그가 박힌 토큰은 do-not-use 로 잡는다', () => {
         // status=do-not-use 가 있는 token 키를 schema 에서 골라 입력
         const doNotUseKey = Object.entries(schema.semantic).find(

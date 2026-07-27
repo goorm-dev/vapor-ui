@@ -6,6 +6,7 @@ export type PaddingDir = {
     field: PaddingField;
     value: number;
     token: string | null;
+    appliedToken: string | null;
     status: TokenStatus;
 };
 

@@ -47,13 +47,16 @@ export function evaluateColor(
         const value = u.hex;
         const legacy = suggestLegacyReplacement({ token: u.token, hex: u.hex, property });
         const suggested: string[] = legacy ? [legacy] : [];
+        // 검사는 원본(semantic) token 기준. 카드 표시는 실제 노드에 바인딩된
+        // Variable Mode outer 이름(appliedToken) 우선.
+        const displayToken = u.appliedToken ?? u.token;
         const base = {
             nodeId: u.nodeId,
             nodeIds: u.nodeIds,
             count: u.count,
             name: u.name,
             property,
-            token: u.token,
+            token: displayToken,
             value,
             origin: 'rule' as const,
             message: '',
@@ -65,6 +68,7 @@ export function evaluateColor(
         if (u.tokenStatus === 'raw') {
             violations.push({
                 ...base,
+                token: null,
                 type: 'token-not-used',
                 severity: 'high',
                 message: 'HEX 값 대신 디자인 토큰 사용을 고려하세요.',

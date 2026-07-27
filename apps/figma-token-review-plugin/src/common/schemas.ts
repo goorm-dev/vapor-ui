@@ -135,6 +135,8 @@ export type ColorUsage = {
     name: string;
     property: ColorProperty;
     token: string | null;
+    /** Variable Mode 로 semantic 을 래핑한 경우 실제 노드에 바인딩된 outer variable 이름. */
+    appliedToken?: string | null;
     hex: string | null;
     tokenStatus: TokenStatus;
     background: ColorBackground | null;
@@ -191,6 +193,8 @@ export type SpaceUsage = {
         | 'gap';
     value: string;
     token: string | null;
+    /** Variable Mode 로 semantic 을 래핑한 경우 실제 노드에 바인딩된 outer variable 이름. */
+    appliedToken?: string | null;
     tokenStatus: TokenStatus;
     wasDs?: boolean;
 };
@@ -201,6 +205,8 @@ export type DimensionUsage = {
     property: 'width' | 'height';
     value: string;
     token: string | null;
+    /** Variable Mode 로 semantic 을 래핑한 경우 실제 노드에 바인딩된 outer variable 이름. */
+    appliedToken?: string | null;
     tokenStatus: TokenStatus;
     wasDs?: boolean;
 };
@@ -210,6 +216,8 @@ export type RadiusUsage = {
     name: string;
     value: string;
     token: string | null;
+    /** Variable Mode 로 semantic 을 래핑한 경우 실제 노드에 바인딩된 outer variable 이름. */
+    appliedToken?: string | null;
     tokenStatus: TokenStatus;
     wasDs?: boolean;
 };

@@ -104,30 +104,57 @@ export async function walk(
     return { chain, finalHex };
 }
 
-/** semantic 항목까지 도달했으면 스키마 키 반환. 없으면 unknown. */
+/**
+ * semantic 항목까지 도달했으면 스키마 키 반환. 없으면 unknown.
+ *
+ * `appliedToken` 은 노드에 실제로 바인딩된 outer variable 이름(chain[0]) — semantic 미도달 시에도
+ * 노드에 어떤 이름이 붙어있는지 표시하기 위해 함께 반환. 카드 UI 는 위반 시 이 이름을 우선한다.
+ */
 export function toToken(chain: TierChainEntry[]): {
     token: string | null;
+    appliedToken: string | null;
     tokenStatus: TokenStatus;
 } {
+    if (chain.length === 0) return { token: null, appliedToken: null, tokenStatus: 'unknown' };
+
+    const appliedToken = stripLeadingPrefix(chain[0].name);
     const sem = chain.find((c) => c.tier === 'semantic');
-    if (!sem) return { token: null, tokenStatus: 'unknown' };
+    if (!sem) return { token: null, appliedToken, tokenStatus: 'unknown' };
 
     const key = toSchemaKey(sem.name);
-    return key ? { token: key, tokenStatus: 'ok' } : { token: null, tokenStatus: 'unknown' };
+    return key
+        ? { token: key, appliedToken, tokenStatus: 'ok' }
+        : { token: null, appliedToken, tokenStatus: 'unknown' };
 }
 
-/** boundVariables 의 단일 필드 → 토큰 키. 바인딩 없으면 'raw'. */
+/**
+ * boundVariables 의 단일 필드 → 토큰 키. 바인딩 없으면 'raw'.
+ *
+ * Variable Mode 로 component-tier variable 이 semantic 을 alias 한 경우에도
+ * 체인을 끝까지 따라가 semantic-tier 이름을 반환한다 (color 경로의 walk+toToken 과 동일 규칙).
+ * semantic 도달 실패 시 chain[0] 이름을 fallback 으로 반환하여 downstream 의
+ * `token in schema.tokens` 미스매치가 그대로 unknown-token 위반으로 처리되도록 한다.
+ *
+ * `appliedToken` 은 노드에 실제로 바인딩된 outer variable 이름(chain[0]) 이다.
+ * 검사(validation)는 `token`(=원본 semantic) 기준이지만, 위반 카드 UI 는
+ * 실제로 요소에 적용된 이름을 보여야 하므로 별도 필드로 노출한다.
+ */
 export async function readBoundToken(
+    node: SceneNode,
     bound: Record<string, { id: string }> | undefined,
     field: string,
-): Promise<{ token: string | null; status: TokenStatus }> {
+): Promise<{ token: string | null; appliedToken: string | null; status: TokenStatus }> {
     const ref = bound?.[field];
-    if (!ref) return { token: null, status: 'raw' };
+    if (!ref) return { token: null, appliedToken: null, status: 'raw' };
 
-    const variable = await getVariableWithRemoteDefense(ref.id);
-    if (!variable) return { token: null, status: 'unknown' };
+    const { chain } = await walk(node, ref.id);
+    if (chain.length === 0) return { token: null, appliedToken: null, status: 'unknown' };
 
-    return { token: stripLeadingPrefix(variable.name), status: 'ok' };
+    const appliedToken = stripLeadingPrefix(chain[0].name);
+    const sem = chain.find((c) => c.tier === 'semantic');
+    if (sem) return { token: stripLeadingPrefix(sem.name), appliedToken, status: 'ok' };
+
+    return { token: appliedToken, appliedToken, status: 'ok' };
 }
 
 /**

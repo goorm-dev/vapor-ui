@@ -160,13 +160,14 @@ async function extractPaints(
         if (p && p.visible === false) continue;
 
         const { chain, finalHex } = await walk(node, a.id);
-        const { token, tokenStatus } = toToken(chain);
+        const { token, appliedToken, tokenStatus } = toToken(chain);
 
         sink.push({
             nodeId: node.id,
             name: node.name,
             property,
             token,
+            appliedToken,
             hex: finalHex,
             background: bgFor,
             tokenStatus,
@@ -258,8 +259,8 @@ async function collectSpaces(
         const v = (node as any)[f];
         if (typeof v !== 'number') continue;
 
-        const { token, status } = await readBoundToken(bvRecord, f);
-        dirs.push({ field: f, value: v, token, status });
+        const { token, appliedToken, status } = await readBoundToken(node, bvRecord, f);
+        dirs.push({ field: f, value: v, token, appliedToken, status });
     }
 
     for (const { property, source } of derivePaddingEmissions(dirs)) {
@@ -269,6 +270,7 @@ async function collectSpaces(
             property,
             value: `${source.value}px`,
             token: source.token,
+            appliedToken: source.appliedToken,
             tokenStatus: source.status,
         });
     }
@@ -278,7 +280,11 @@ async function collectSpaces(
         const gapValue = (node as any).itemSpacing;
 
         if (typeof gapValue === 'number') {
-            const { token, status } = await readBoundToken(bvRecord, 'itemSpacing');
+            const { token, appliedToken, status } = await readBoundToken(
+                node,
+                bvRecord,
+                'itemSpacing',
+            );
 
             out.push({
                 nodeId: node.id,
@@ -286,6 +292,7 @@ async function collectSpaces(
                 property: 'gap',
                 value: `${gapValue}px`,
                 token,
+                appliedToken,
                 tokenStatus: status,
             });
         }
@@ -318,7 +325,7 @@ async function collectDimensions(
         if (typeof rawValue !== 'number') continue;
         if ((node as any)[sizing] !== 'FIXED') continue;
 
-        const { token, status } = await readBoundToken(bvRecord, property);
+        const { token, appliedToken, status } = await readBoundToken(node, bvRecord, property);
 
         out.push({
             nodeId: node.id,
@@ -326,6 +333,7 @@ async function collectDimensions(
             property,
             value: `${rawValue}px`,
             token,
+            appliedToken,
             tokenStatus: status,
         });
     }
@@ -357,13 +365,15 @@ async function collectRadius(
     // Figma uniform cornerRadius 는 boundVariables.cornerRadius 없이 corner 필드에 바인딩될 수 있어
     // 5개 필드를 우선순위대로 훑는다.
     let token: string | null = null;
+    let appliedToken: string | null = null;
     let status: TokenStatus = 'raw';
 
     for (const cf of RADIUS_BINDING_FIELDS) {
-        const r = await readBoundToken(bvRecord, cf);
+        const r = await readBoundToken(node, bvRecord, cf);
 
         if (r.status !== 'raw') {
             token = r.token;
+            appliedToken = r.appliedToken;
             status = r.status;
             break;
         }
@@ -374,6 +384,7 @@ async function collectRadius(
         name: node.name,
         value: `${cr}px`,
         token,
+        appliedToken,
         tokenStatus: status,
     };
 }

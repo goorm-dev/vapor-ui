@@ -9,11 +9,12 @@ export function evaluateDimension(
     const conformant: Conformant[] = [];
 
     for (const u of usages) {
+        const displayToken = u.appliedToken ?? u.token;
         const base = {
             nodeId: u.nodeId,
             name: u.name,
             property: u.property,
-            token: u.token,
+            token: displayToken,
             value: u.value,
             origin: 'rule' as const,
             message: '',
@@ -24,6 +25,7 @@ export function evaluateDimension(
         if (u.tokenStatus === 'raw') {
             violations.push({
                 ...base,
+                token: null,
                 type: 'token-not-used',
                 severity: 'high',
                 message: `${u.property}에 raw value(${u.value})가 직접 입력되었습니다.`,

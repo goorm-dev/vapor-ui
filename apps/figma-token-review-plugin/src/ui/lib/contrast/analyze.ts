@@ -224,7 +224,7 @@ export async function evaluateTextContrast(usages: ColorUsage[]): Promise<Violat
                 count: u.count,
                 name: u.name,
                 property: 'fill-on-text',
-                token: u.token,
+                token: u.appliedToken ?? u.token,
                 value: u.hex,
                 origin: 'rule',
                 type: 'text-contrast-low',
