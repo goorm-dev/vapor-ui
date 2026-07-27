@@ -5,6 +5,12 @@
 /** DS(vapor) 라이브러리 컴포넌트를 표시하는 이모지 프리픽스. */
 export const DS_PREFIX = '💙';
 
+/**
+ * 🔶InteractionLayer/{variant} — hover/active/focus 상태를 투명 오버레이로 표현하는 컴포넌트.
+ * 실제 배경색이 아니므로 배경 판정·스크린샷·픽셀 샘플링 모두에서 제외 대상.
+ */
+export const INTERACTION_LAYER_PREFIX = '🔶InteractionLayer';
+
 /** 자기 자신은 스캔하지 않되 자식은 계속 순회하는 대상. */
 const SKIP_PREFIXES = ['🟨', '🔶'] as const;
 
@@ -16,6 +22,15 @@ export function shouldSkipNode(name: string) {
 /** 💙 프리픽스가 붙은 DS 라이브러리 컴포넌트 인스턴스. */
 export function isDsInstance(node: SceneNode): boolean {
     return node.type === 'INSTANCE' && node.name.startsWith(DS_PREFIX);
+}
+
+/**
+ * 🔶InteractionLayer/ 프리픽스를 가진 노드 여부.
+ * 이 레이어는 hover/focus/active 상태를 투명하게 겹쳐 표현하므로
+ * 배경 판정과 스크린샷·픽셀 샘플링에서 시각적으로 제거해야 한다.
+ */
+export function isInteractionLayer(node: Pick<SceneNode, 'name'>): boolean {
+    return typeof node.name === 'string' && node.name.startsWith(INTERACTION_LAYER_PREFIX);
 }
 
 /**

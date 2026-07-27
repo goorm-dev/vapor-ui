@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- Figma paint shape lookups are intentionally loose. */
 import type { ColorBackground } from '~/common/schemas';
 
+import { isInteractionLayer } from './filters';
+
 /** Figma RGB{0..1} → CSS hex '#rrggbb'. Alpha 는 무시 (별도 판단). */
 export function rgbaToHex(c: any): string | null {
     if (!c) return null;
@@ -47,11 +49,19 @@ export function isVisiblePaint(p: any): boolean {
  * - SOLID 아닌 fill(그라디언트/이미지) 또는 반투명 스택 → `ambiguous`
  * - SOLID + opaque → `white` (`#ffffff`) 또는 `other`
  * - fill 없이 PAGE 도달 → `transparent`
+ *
+ * 🔶InteractionLayer 조상은 실제 배경이 아니라 hover/focus 오버레이이므로
+ * fill 을 무시하고 상위로 계속 올라간다. (fg-grade-mismatch 오탐 방지)
  */
 export function classifyBackground(node: SceneNode): ColorBackground {
     let cur: any = node.parent;
 
     while (cur && cur.type !== 'PAGE') {
+        if (isInteractionLayer(cur)) {
+            cur = cur.parent;
+            continue;
+        }
+
         const nodeOpaque = ('opacity' in cur ? cur.opacity : 1) === 1;
         const fills = 'fills' in cur && Array.isArray(cur.fills) ? cur.fills : [];
         const visible = fills.find(isVisiblePaint);

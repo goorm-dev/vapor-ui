@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- Figma seg/style shapes are intentionally loose. */
 import type { ColorBackground } from '~/common/schemas';
 
+import { isInteractionLayer } from './filters';
+import { exportWithoutInteractionLayers } from './hide-interaction-layers';
+
 export type TextClassification = {
     appliedStatus: 'styled-clean' | 'styled-override' | 'var-only' | 'raw' | 'mixed';
     textStyle: string | null;
@@ -130,7 +133,7 @@ export async function captureTextShot(
 
     let bytes: Uint8Array;
     try {
-        bytes = await ancestor.exportAsync({
+        bytes = await exportWithoutInteractionLayers(ancestor, {
             format: 'PNG',
             constraint: { type: 'SCALE', value: CAPTURE_SCALE },
         });
@@ -162,6 +165,11 @@ type ExportableAncestor = SceneNode & {
 function findBackgroundAncestor(node: SceneNode): ExportableAncestor | null {
     let cur: any = node.parent;
     while (cur && cur.type !== 'PAGE' && cur.type !== 'DOCUMENT') {
+        // 🔶InteractionLayer 는 hover/focus 오버레이라 실제 배경이 아님.
+        if (isInteractionLayer(cur)) {
+            cur = cur.parent;
+            continue;
+        }
         const hasFills = 'fills' in cur && Array.isArray(cur.fills);
         const visible = hasFills ? cur.fills.find((p: any) => p && p.visible !== false) : null;
         const canExport = typeof cur.exportAsync === 'function' && !!cur.absoluteBoundingBox;
