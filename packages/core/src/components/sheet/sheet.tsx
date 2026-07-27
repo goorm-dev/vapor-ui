@@ -1,16 +1,19 @@
 'use client';
 
 import type { ReactElement, RefObject } from 'react';
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 
+import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
 import { useRenderElement } from '~/hooks/use-render-element';
+import { useResizeHandle } from '~/hooks/use-resize-handle';
 import type { TransitionStatus } from '~/hooks/use-transition-status';
 import { useTransitionStatus } from '~/hooks/use-transition-status';
+import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
@@ -33,6 +36,9 @@ type RootContext = {
     setMounted: React.Dispatch<React.SetStateAction<boolean>>;
     transitionStatus: TransitionStatus;
     popupRef: RefObject<HTMLDivElement | null>;
+    /** Owned by Sheet.Popup — undefined until the popup mounts and reports its id. */
+    popupId: string | undefined;
+    setPopupId: (id: string | undefined) => void;
 };
 
 const [SheetRootProvider, useSheetRootContext] = createContext<RootContext>({
@@ -88,8 +94,22 @@ export const SheetRoot = ({
         onOpenChange?.(open, eventDetails);
     };
 
+    // Sheet.Popup owns id generation and reports it here (RadioGroup.Label pattern),
+    // so ResizeHandle's aria-controls always mirrors the actual DOM id.
+    const [popupId, setPopupId] = useState<string>();
+
     return (
-        <SheetRootProvider value={{ open, mounted, setMounted, transitionStatus, popupRef }}>
+        <SheetRootProvider
+            value={{
+                open,
+                mounted,
+                setMounted,
+                transitionStatus,
+                popupRef,
+                popupId,
+                setPopupId,
+            }}
+        >
             <Dialog.Root open={open} onOpenChange={handleOpenChange} {...props} />
         </SheetRootProvider>
     );
@@ -175,18 +195,25 @@ SheetPositionerPrimitive.displayName = 'Sheet.PositionerPrimitive';
 
 export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitive.Props>(
     (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
+        const { className, id: idProp, ...componentProps } = resolveStyles(props);
 
-        const { popupRef } = useSheetRootContext();
+        const { popupRef, setPopupId } = useSheetRootContext();
         const { side = 'right' } = useSheetPositionerContext();
 
         const composedRef = composeRefs(popupRef, ref);
+
+        const id = useVaporId(idProp);
+        useIsoLayoutEffect(() => {
+            setPopupId(id);
+            return () => setPopupId(undefined);
+        }, [id, setPopupId]);
 
         const dataAttr = createDataAttributes({ side });
 
         return (
             <BaseDialog.Popup
                 ref={composedRef}
+                id={id}
                 className={cn(styles.popup, className)}
                 {...dataAttr}
                 {...componentProps}
@@ -232,6 +259,97 @@ export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     },
 );
 SheetPopup.displayName = 'Sheet.Popup';
+
+/* -------------------------------------------------------------------------------------------------
+ * Sheet.ResizeHandle
+ * -----------------------------------------------------------------------------------------------*/
+
+const RESIZE_STEP = 16; // px per arrow key press (spec default)
+
+export const SheetResizeHandle = forwardRef<HTMLDivElement, SheetResizeHandle.Props>(
+    (props, ref) => {
+        const {
+            render,
+            step = RESIZE_STEP,
+            disabled = false,
+            className,
+            onPointerDown,
+            onKeyDown,
+            ...componentProps
+        } = resolveStyles(props);
+
+        const { popupRef, popupId } = useSheetRootContext();
+        const { side = 'right' } = useSheetPositionerContext();
+
+        const { size, bounds, orientation, dimension, handleProps } = useResizeHandle({
+            targetRef: popupRef,
+            side,
+            step,
+            disabled,
+        });
+
+        const dimensionLabel = dimension;
+
+        // Keyboard semantics live on the inner grip; the outer strip is drag-only.
+        const gripRef = useRef<HTMLDivElement>(null);
+
+        const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+            onPointerDown?.(event);
+            // Snapshot after the user handler: only the hook runs between here and the
+            // check below, so a false→true flip can only mean the hook accepted the drag.
+            // A user preventDefault() (drag veto) is captured in the snapshot and ignored.
+            const wasPrevented = event.defaultPrevented;
+            handleProps.onPointerDown(event);
+            // Drag can start anywhere on the strip, so mirror the hook's accept signal
+            // to move focus to the keyboard grip — but skip it when the drag was rejected.
+            if (!wasPrevented && event.defaultPrevented)
+                gripRef.current?.focus({ preventScroll: true });
+        };
+
+        const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+            onKeyDown?.(event);
+            handleProps.onKeyDown(event);
+        };
+
+        const sideProps = {
+            'data-side': side,
+            ...(disabled && { 'data-disabled': '' }),
+        };
+
+        // The grip is the public element: user props (render/className/style/ref/...)
+        // land here so the affordance is customizable like any other sub-component.
+        // The outer strip stays an internal drag surface.
+        const grip = useRenderElement({
+            ref: [ref, gripRef],
+            render: render || <div />,
+            state: { side, disabled },
+            props: {
+                role: 'slider',
+                'aria-orientation': orientation,
+                'aria-label': `Resize sheet ${dimensionLabel}`,
+                'aria-controls': popupId,
+                'aria-valuemin': Math.round(bounds.min),
+                // Omit valuemax when the CSS max never resolved to px (unbounded).
+                ...(Number.isFinite(bounds.max) && { 'aria-valuemax': Math.round(bounds.max) }),
+                'aria-valuenow': Math.round(size),
+                'aria-valuetext': `${dimensionLabel} ${Math.round(size)} pixels`,
+                'aria-disabled': disabled || undefined,
+                tabIndex: disabled ? -1 : 0,
+                ...sideProps,
+                onKeyDown: handleKeyDown,
+                className: cn(styles.resizeHandleGrip, className),
+                ...componentProps,
+            },
+        });
+
+        return (
+            <div {...sideProps} onPointerDown={handlePointerDown} className={styles.resizeHandle}>
+                {grip}
+            </div>
+        );
+    },
+);
+SheetResizeHandle.displayName = 'Sheet.ResizeHandle';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Header
@@ -284,7 +402,7 @@ SheetDescription.displayName = 'Sheet.Description';
 
 export namespace SheetRoot {
     export type State = {};
-    export type Props = Omit<Dialog.Root.Props, 'size'>;
+    export interface Props extends Omit<Dialog.Root.Props, 'size'> {}
 
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
     export type Actions = BaseDialog.Root.Actions;
@@ -349,6 +467,29 @@ export interface SheetPopupProps extends SheetPopupPrimitive.Props {
 export namespace SheetPopup {
     export type State = SheetPopupPrimitive.State;
     export type Props = SheetPopupProps;
+}
+
+export interface SheetResizeHandleState {
+    /** The side of the sheet relative to the viewport. */
+    side: 'top' | 'right' | 'bottom' | 'left';
+
+    /** Whether resizing is disabled. */
+    disabled: boolean;
+}
+
+export namespace SheetResizeHandle {
+    export type State = SheetResizeHandleState;
+    export interface Props extends VaporUIComponentProps<'div', State> {
+        /**
+         * Pixels adjusted per arrow-key press.
+         * @default 16
+         */
+        step?: number;
+        /**
+         * Blocks drag and keyboard resizing.
+         */
+        disabled?: boolean;
+    }
 }
 
 export namespace SheetHeader {

@@ -20,12 +20,12 @@ export const root = componentRecipe({
             justifyContent: 'center',
             gap: vars.size.space[100],
 
-            boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
-
-            backgroundColor: vars.color.background.canvas[100],
+            transitionDuration: '0.2s',
 
             transitionProperty: 'background-color, box-shadow',
-            transitionDuration: '0.2s',
+
+            boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
+            backgroundColor: vars.color.background.canvas[100],
 
             padding: vars.size.space['000'],
             overflow: 'hidden',
