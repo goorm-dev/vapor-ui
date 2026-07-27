@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { passes, runRules } from './engine';
 import type { AnyExtractionRule, ExtractCtx } from './types';
@@ -109,5 +109,20 @@ describe('runRules', () => {
     it('trace 옵션 없으면 trace 는 빈 배열', async () => {
         const { trace } = await runRules(node, ctx(), [spaceRule()]);
         expect(trace).toEqual([]);
+    });
+
+    it('trace off + throwing rule → console.warn 호출, 다른 규칙 결과는 유지', async () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const bad = spaceRule({
+            name: 'test:bad',
+            extract: async () => {
+                throw new Error('silent-boom');
+            },
+        });
+        const { facts } = await runRules(node, ctx(), [bad, spaceRule()]);
+        expect(warnSpy).toHaveBeenCalledOnce();
+        expect(warnSpy.mock.calls[0][0]).toContain('[extract] rule "test:bad" failed on node n1:');
+        expect(facts.spaces).toHaveLength(1);
+        warnSpy.mockRestore();
     });
 });

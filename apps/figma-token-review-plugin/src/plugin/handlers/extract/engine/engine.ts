@@ -52,12 +52,15 @@ async function runOne(
         };
     } catch (err) {
         // 규칙 하나의 실패가 노드 전체 추출을 죽이지 않는다.
+        const msg = err instanceof Error ? err.message : String(err);
+        if (!collectTrace) {
+            // trace off 여도 규칙 실패는 관측 가능해야 함
+            console.warn(`[extract] rule "${rule.name}" failed on node ${node.id}:`, msg);
+        }
         return {
             rule,
             emissions: [],
-            trace: collectTrace
-                ? { rule: rule.name, error: err instanceof Error ? err.message : String(err) }
-                : null,
+            trace: collectTrace ? { rule: rule.name, error: msg } : null,
         };
     }
 }
