@@ -10,6 +10,8 @@ interface Options {
     ignoreProperties?: readonly string[];
 }
 
+const SIZE_SCOPES: ReadonlySet<Scope> = new Set<Scope>(['dimension', 'space', 'borderRadius']);
+
 export const tokenScopeMismatchRule: Rule.RuleModule = {
     meta: {
         type: 'problem',
@@ -63,6 +65,8 @@ export const tokenScopeMismatchRule: Rule.RuleModule = {
 
                     const tokenScope = meta.scope as Scope;
                     if (expectedScopes.includes(tokenScope)) continue;
+
+                    if (property === 'border' && SIZE_SCOPES.has(tokenScope)) continue;
 
                     // Gather candidates: same-value tokens in expected scopes
                     let candidates: string[] = [];

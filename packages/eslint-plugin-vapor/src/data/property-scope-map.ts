@@ -13,6 +13,7 @@ export const PROPERTY_SCOPE: Record<string, readonly Scope[]> = {
     stroke: ['foreground'],
     'background-color': ['background'],
     background: ['background'],
+    border: ['border'],
     'border-color': ['border'],
     'border-top-color': ['border'],
     'border-right-color': ['border'],

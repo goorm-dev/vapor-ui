@@ -29,6 +29,11 @@ ruleTester.run('token-scope-mismatch', tokenScopeMismatchRule, {
         { code: '.x { color: var(--vapor-color-blue-600); }' },
         // Non-var value: no parts to check
         { code: '.x { color: red; }' },
+        // border shorthand: border-scope token is the correct scope
+        { code: '.x { border: 1px solid var(--vapor-color-border-normal); }' },
+        // border shorthand: size token = width usage — no borderWidth scope
+        // exists to validate against, must not be flagged as a mismatch
+        { code: '.x { border: var(--vapor-size-space-100) solid var(--vapor-color-border-normal); }' },
     ],
     invalid: [
         // background-scope token on color property (expects foreground)
@@ -70,6 +75,22 @@ ruleTester.run('token-scope-mismatch', tokenScopeMismatchRule, {
                             output: '.x { color: var(--vapor-color-foreground-contrast-200); }',
                         },
                     ],
+                },
+            ],
+        },
+        // border shorthand: foreground-scope color token — wrong scope.
+        // No border-scope token shares fg-primary's hex → plain scopeMismatch.
+        {
+            code: '.x { border: 1px solid var(--vapor-color-foreground-primary-100); }',
+            errors: [
+                {
+                    messageId: 'scopeMismatch',
+                    data: {
+                        token: '--vapor-color-foreground-primary-100',
+                        tokenScope: 'foreground',
+                        property: 'border',
+                        expectedScopes: 'border',
+                    },
                 },
             ],
         },

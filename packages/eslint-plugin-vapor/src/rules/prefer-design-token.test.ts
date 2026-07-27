@@ -39,6 +39,12 @@ ruleTester.run('prefer-design-token', preferDesignTokenRule, {
         // white stays #ffffff in dark, but background-canvas/overlay change.
         // No dark-safe candidate → no report.
         { code: '.x { background-color: var(--vapor-color-white); }' },
+        // border shorthand: red-500 shares its light hex with border-danger
+        // but their dark values differ — no dark-safe candidate → no report.
+        { code: '.x { border: 1px solid var(--vapor-color-red-500); }' },
+        // border shorthand: the 1px width part must not trigger the
+        // dimension branch (border scope is not a foundation scope).
+        { code: '.x { border: 1px solid var(--vapor-color-border-normal); }' },
     ],
     invalid: [
         // C-1: primitive token with semantic upgrade available
@@ -140,6 +146,28 @@ ruleTester.run('prefer-design-token', preferDesignTokenRule, {
                             messageId: 'replaceWithToken',
                             data: { candidate: '--vapor-size-space-100' },
                             output: '.x { padding: 12px var(--vapor-size-space-100); }',
+                        },
+                    ],
+                },
+            ],
+        },
+        // border shorthand: raw hex color part → border-scope semantic token;
+        // the 1px width part is ignored
+        {
+            code: '.x { border: 1px solid #db3643; }',
+            errors: [
+                {
+                    messageId: 'preferToken',
+                    data: {
+                        candidate: '--vapor-color-border-danger',
+                        rawValue: '#db3643',
+                        property: 'border',
+                    },
+                    suggestions: [
+                        {
+                            messageId: 'replaceWithToken',
+                            data: { candidate: '--vapor-color-border-danger' },
+                            output: '.x { border: 1px solid var(--vapor-color-border-danger); }',
                         },
                     ],
                 },
