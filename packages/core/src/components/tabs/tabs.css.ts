@@ -48,10 +48,10 @@ export const root = componentRecipe({
 export const list = componentRecipe({
     base: {
         position: 'relative',
+        isolation: 'isolate',
         gap: vars.size.space[100],
-        borderBottom: listBorderBottom,
         borderRight: listBorderRight,
-        isolation: 'isolate', // NOTE: Creates a new stacking context to manage z-index only within the Tabs component.
+        borderBottom: listBorderBottom, // NOTE: Creates a new stacking context to manage z-index only within the Tabs component.
     },
 
     defaultVariants: { variant: 'line', orientation: 'horizontal' },
@@ -95,11 +95,11 @@ export const button = componentRecipe({
         typography({ style: 'subtitle1' }),
         {
             position: 'relative',
+            zIndex: 1,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: vars.size.space['075'],
-            zIndex: 1,
 
             selectors: {
                 '&[data-active]': {
@@ -157,29 +157,29 @@ export const button = componentRecipe({
 export const indicator = componentRecipe({
     base: {
         position: 'absolute',
+        zIndex: 0,
         transitionDuration: '100ms',
         transitionTimingFunction: 'ease-in-out',
-        zIndex: 0,
     },
 
     defaultVariants: { orientation: 'horizontal', variant: 'line' },
     variants: {
         orientation: {
             horizontal: {
-                left: 0,
                 bottom: indicatorBottomPosition,
+                left: 0,
                 transform: `translateX(var(${EXTERNAL_VARS.activeTabLeft}))`,
+                transitionProperty: 'transform, width',
                 width: `var(${EXTERNAL_VARS.activeTabWidth})`,
                 height: indicatorHorizontalHeight,
-                transitionProperty: 'transform, width',
             },
             vertical: {
                 top: 0,
                 right: indicatorRightPosition,
                 transform: `translateY(var(${EXTERNAL_VARS.activeTabTop}))`,
-                height: `var(${EXTERNAL_VARS.activeTabHeight})`,
-                width: indicatorVerticalWidth,
                 transitionProperty: 'transform, height',
+                width: indicatorVerticalWidth,
+                height: `var(${EXTERNAL_VARS.activeTabHeight})`,
             },
         },
         variant: {
@@ -193,8 +193,8 @@ export const indicator = componentRecipe({
                 },
             },
             fill: {
-                backgroundColor: vars.color.background.primary['100'],
                 borderRadius: vars.size.borderRadius[300],
+                backgroundColor: vars.color.background.primary['100'],
                 vars: {
                     [indicatorBottomPosition]: '0',
                     [indicatorRightPosition]: '0',
