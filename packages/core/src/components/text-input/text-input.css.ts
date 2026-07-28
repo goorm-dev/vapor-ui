@@ -14,8 +14,8 @@ export const root = componentRecipe({
 
         {
             outline: 0,
-            boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
             borderRadius: vars.size.borderRadius['300'],
+            boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
             backgroundColor: vars.color.background.canvas[100],
             paddingBlock: vars.size.space['000'],
 
@@ -25,7 +25,7 @@ export const root = componentRecipe({
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
                 [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
                 [when.readonly()]: { backgroundColor: vars.color.gray['200'] },
-                [when.disabled()]: { pointerEvents: 'none', opacity: 0.32 },
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
 

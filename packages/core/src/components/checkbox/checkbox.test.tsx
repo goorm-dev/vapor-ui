@@ -199,6 +199,17 @@ describe('Checkbox', () => {
 
             expect(checkbox).toHaveAttribute('aria-invalid', 'true');
         });
+
+        it('should propagate the invalid state to the indicator', async () => {
+            const rendered = render(
+                <Checkbox.Root id="checkbox" aria-label={LABEL_TEXT} invalid>
+                    <Checkbox.IndicatorPrimitive data-testid="indicator" />
+                </Checkbox.Root>,
+            );
+            const indicator = rendered.getByTestId('indicator');
+
+            expect(indicator).toHaveAttribute('data-invalid');
+        });
     });
 
     describe('prop: indeterminate', () => {
@@ -233,6 +244,17 @@ describe('Checkbox', () => {
 
             expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
         });
+
+        it('should propagate the indeterminate state to the indicator', async () => {
+            const rendered = render(
+                <Checkbox.Root id="checkbox" aria-label={LABEL_TEXT} indeterminate>
+                    <Checkbox.IndicatorPrimitive data-testid="indicator" />
+                </Checkbox.Root>,
+            );
+            const indicator = rendered.getByTestId('indicator');
+
+            expect(indicator).toHaveAttribute('data-indeterminate');
+        });
     });
 
     describe('prop: disabled', () => {
@@ -260,6 +282,17 @@ describe('Checkbox', () => {
             await userEvent.click(checkbox);
             expect(onCheckedChange).not.toHaveBeenCalled();
             expect(checkbox).not.toBeChecked();
+        });
+
+        it('should propagate the disabled state to the indicator', async () => {
+            const rendered = render(
+                <Checkbox.Root id="checkbox" aria-label={LABEL_TEXT} disabled>
+                    <Checkbox.IndicatorPrimitive data-testid="indicator" />
+                </Checkbox.Root>,
+            );
+            const indicator = rendered.getByTestId('indicator');
+
+            expect(indicator).toHaveAttribute('data-disabled');
         });
     });
 
@@ -307,6 +340,17 @@ describe('Checkbox', () => {
 
             await userEvent.tab();
             expect(nextButton).toHaveFocus();
+        });
+
+        it('should propagate the readOnly state to the indicator', async () => {
+            const rendered = render(
+                <Checkbox.Root id="checkbox" aria-label={LABEL_TEXT} readOnly>
+                    <Checkbox.IndicatorPrimitive data-testid="indicator" />
+                </Checkbox.Root>,
+            );
+            const indicator = rendered.getByTestId('indicator');
+
+            expect(indicator).toHaveAttribute('data-readonly');
         });
     });
 });
