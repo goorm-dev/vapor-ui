@@ -14,10 +14,6 @@ export default {
             control: { type: 'inline-radio' },
             options: ['sm', 'md', 'lg', 'xl'],
         },
-        variant: {
-            control: { type: 'inline-radio' },
-            options: ['default', 'accent'],
-        },
         disabled: {
             control: { type: 'boolean' },
         },
@@ -59,7 +55,7 @@ export const Default: Story = {
 export const TestBed: Story = {
     render: (args) => {
         return (
-            <Grid.Root templateColumns="repeat(4, 1fr)" templateRows="auto" $css={{ gap: '$100' }}>
+            <Grid.Root templateColumns="repeat(2, 1fr)" templateRows="auto" $css={{ gap: '$100' }}>
                 <Grid.Item>
                     <VStack $css={{ gap: '$100', alignItems: 'flex-start' }}>
                         {renderCases({ size: 'sm' })}
@@ -75,24 +71,6 @@ export const TestBed: Story = {
                         {renderCases({ size: 'md', disabled: true })}
                         {renderCases({ size: 'lg', disabled: true })}
                         {renderCases({ size: 'xl', disabled: true })}
-                    </VStack>
-                </Grid.Item>
-
-                <Grid.Item>
-                    <VStack $css={{ gap: '$100', alignItems: 'flex-start' }}>
-                        {renderCases({ variant: 'accent', size: 'sm' })}
-                        {renderCases({ variant: 'accent', size: 'md' })}
-                        {renderCases({ variant: 'accent', size: 'lg' })}
-                        {renderCases({ variant: 'accent', size: 'xl' })}
-                    </VStack>
-                </Grid.Item>
-
-                <Grid.Item>
-                    <VStack $css={{ gap: '$100', alignItems: 'flex-start' }}>
-                        {renderCases({ variant: 'accent', size: 'sm', disabled: true })}
-                        {renderCases({ variant: 'accent', size: 'md', disabled: true })}
-                        {renderCases({ variant: 'accent', size: 'lg', disabled: true })}
-                        {renderCases({ variant: 'accent', size: 'xl', disabled: true })}
                     </VStack>
                 </Grid.Item>
 
@@ -124,9 +102,9 @@ export const TestBed: Story = {
     },
 };
 
-const renderCases = ({ size, variant, disabled }: ToggleGroup.Root.Props) => {
+const renderCases = ({ size, disabled }: ToggleGroup.Root.Props) => {
     return (
-        <ToggleGroup.Root size={size} variant={variant} value={['item3']} disabled={disabled}>
+        <ToggleGroup.Root size={size} value={['item3']} disabled={disabled}>
             <Toggle value="item1">
                 <HeartIcon />
             </Toggle>

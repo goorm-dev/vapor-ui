@@ -10,10 +10,9 @@ export const root = componentRecipe({
         gap: vars.size.space['050'],
     },
 
-    defaultVariants: { size: 'md', variant: 'default' },
+    defaultVariants: { size: 'md' },
     variants: {
         size: { sm: {}, md: {}, lg: {}, xl: {} },
-        variant: { default: {}, accent: {} },
     },
 });
 
