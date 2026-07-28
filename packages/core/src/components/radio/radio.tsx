@@ -5,6 +5,7 @@ import { forwardRef } from 'react';
 import { Radio as BaseRadio } from '@base-ui/react/radio';
 
 import { useRenderElement } from '~/hooks/use-render-element';
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -45,7 +46,7 @@ export const RadioRoot = forwardRef<HTMLElement, RadioRoot.Props>((props, ref) =
     return (
         <BaseRadio.Root
             ref={ref}
-            aria-invalid={invalid}
+            {...createAriaAttribute('invalid', invalid)}
             className={cn(styles.root({ size, invalid }), className)}
             {...dataAttrs}
             {...otherProps}

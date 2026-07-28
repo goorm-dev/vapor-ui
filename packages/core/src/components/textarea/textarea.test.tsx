@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 
+import { Field } from '../field';
 import { Textarea } from './textarea';
 
 describe('Textarea', () => {
@@ -278,6 +279,52 @@ describe('Textarea', () => {
 
             line = textarea.value.split('\n').length;
             expect(textarea.style.height).toBe(`${lineHeight * line + paddingBlock}px`);
+        });
+    });
+
+    describe('aria-invalid', () => {
+        test('has the attribute when invalid is set', () => {
+            const rendered = render(<Textarea invalid />);
+
+            expect(rendered.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
+        });
+
+        test('omits the attribute when invalid is not set', () => {
+            const rendered = render(<Textarea />);
+
+            expect(rendered.getByRole('textbox')).not.toHaveAttribute('aria-invalid');
+        });
+
+        test('keeps aria-invalid computed by Field validation', async () => {
+            const rendered = render(
+                <Field.Root name="message" validationMode="onBlur" validate={() => 'Too short'}>
+                    <Field.Label>Message</Field.Label>
+                    <Textarea />
+                    <Field.Error>Too short</Field.Error>
+                </Field.Root>,
+            );
+
+            const textarea = rendered.getByRole('textbox');
+            await userEvent.type(textarea, 'hi');
+            await userEvent.tab();
+
+            expect(textarea).toHaveAttribute('aria-invalid', 'true');
+        });
+
+        test('does not clobber Field validation with explicit invalid={false}', async () => {
+            const rendered = render(
+                <Field.Root name="message" validationMode="onBlur" validate={() => 'Too short'}>
+                    <Field.Label>Message</Field.Label>
+                    <Textarea invalid={false} />
+                    <Field.Error>Too short</Field.Error>
+                </Field.Root>,
+            );
+
+            const textarea = rendered.getByRole('textbox');
+            await userEvent.type(textarea, 'hi');
+            await userEvent.tab();
+
+            expect(textarea).toHaveAttribute('aria-invalid', 'true');
         });
     });
 });

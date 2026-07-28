@@ -61,6 +61,10 @@ export const trigger = componentRecipe({
             },
         },
 
+        /**
+         * Whether the control is in an error state. If a `Field` marks the control invalid, that state is kept — this prop can add the error state but never remove it.
+         * @default false
+         */
         invalid: { true: {}, false: {} },
     },
 });

@@ -6,6 +6,7 @@ import { Input as BaseInput } from '@base-ui/react/input';
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useInputGroup } from '~/components/input-group';
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -58,9 +59,7 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
         <BaseInput
             ref={ref}
             {...(isControlled ? { value } : { defaultValue })}
-            // true일 때만 키를 추가 — aria-invalid 키가 존재하기만 해도(값이 false/undefined여도)
-            // Base UI가 Field 검증에서 계산한 aria-invalid를 덮어써 버린다
-            {...(invalid && { 'aria-invalid': true })}
+            {...createAriaAttribute('invalid', invalid)}
             onValueChange={handleChange}
             className={cn(styles.root({ invalid, size }), className)}
             {...dataAttrs}

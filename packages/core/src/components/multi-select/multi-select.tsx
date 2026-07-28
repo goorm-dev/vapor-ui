@@ -8,6 +8,7 @@ import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -77,8 +78,8 @@ export const MultiSelectTriggerPrimitive = forwardRef<
             ref={ref}
             render={render}
             nativeButton={nativeButton}
-            aria-invalid={invalid || undefined}
-            aria-required={required || undefined}
+            {...createAriaAttribute('invalid', invalid)}
+            {...createAriaAttribute('required', required)}
             className={cn(styles.trigger({ size, invalid }), className)}
             {...dataAttrs}
             {...componentProps}

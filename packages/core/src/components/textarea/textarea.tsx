@@ -7,6 +7,7 @@ import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useInputGroup } from '~/components/input-group/input-group';
 import { useRenderElement } from '~/hooks/use-render-element';
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -72,7 +73,7 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         render: render || <BaseField.Control render={<textarea />} />,
         props: {
             ...(isControlled ? { value } : { defaultValue }),
-            'aria-invalid': invalid,
+            ...createAriaAttribute('invalid', invalid),
             onValueChange: handleValueChange,
             className: cn(styles.textarea(variantProps), className),
             ...otherProps,

@@ -8,6 +8,7 @@ import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -18,7 +19,13 @@ import type { RootVariants } from './radio-group.css';
 import * as styles from './radio-group.css';
 
 type RadioGroupVariants = RootVariants;
-type RadioGroupSharedProps = RadioGroupVariants & { invalid?: boolean };
+type RadioGroupSharedProps = RadioGroupVariants & {
+    /**
+     * Whether the control is in an error state. If a `Field` marks the control invalid, that state is kept — this prop can add the error state but never remove it.
+     * @default false
+     */
+    invalid?: boolean;
+};
 
 type RadioGroupContext = RadioGroupSharedProps & {
     setLabelElementId?: (id?: string) => void;
@@ -54,7 +61,7 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((
             <BaseRadioGroup
                 ref={ref}
                 aria-labelledby={labelElementId}
-                aria-invalid={invalid}
+                {...createAriaAttribute('invalid', invalid)}
                 className={cn(styles.root(), className)}
                 {...dataAttrs}
                 {...otherProps}

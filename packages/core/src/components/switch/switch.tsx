@@ -6,6 +6,7 @@ import { Switch as BaseSwitch } from '@base-ui/react/switch';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -49,8 +50,8 @@ export const SwitchRoot = forwardRef<HTMLElement, SwitchRoot.Props>((props, ref)
         <SwitchProvider value={variantProps}>
             <BaseSwitch.Root
                 ref={ref}
-                aria-required={required}
-                aria-invalid={invalid}
+                {...createAriaAttribute('required', required)}
+                {...createAriaAttribute('invalid', invalid)}
                 className={cn(styles.control({ size }), className)}
                 {...dataAttrs}
                 {...otherProps}
