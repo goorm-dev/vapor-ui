@@ -36,8 +36,6 @@ export const Default: Story = {
                     <HeartIcon />
                 </Toggle>
 
-                <ToggleGroup.Separator />
-
                 <Toggle value="item4">
                     <HeartIcon />
                 </Toggle>
@@ -85,8 +83,6 @@ export const TestBed: Story = {
                         <HeartIcon />
                     </Toggle>
 
-                    <ToggleGroup.Separator />
-
                     <Toggle value="item4" variant="accent">
                         <HeartIcon />
                     </Toggle>
@@ -108,11 +104,9 @@ const renderCases = ({ size, disabled }: ToggleGroup.Root.Props) => {
             <Toggle value="item1">
                 <HeartIcon />
             </Toggle>
-            <ToggleGroup.Separator />
             <Toggle value="item2">
                 <HeartIcon />
             </Toggle>
-            <ToggleGroup.Separator />
             <Toggle value="item3">
                 <HeartIcon />
             </Toggle>
