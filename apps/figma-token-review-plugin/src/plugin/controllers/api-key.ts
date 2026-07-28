@@ -7,7 +7,7 @@ async function emit(): Promise<void> {
     sendApiKeyState({ hasKey: key !== null, key });
 }
 
-export default function initApiKey(): void {
+export function initApiKey(): void {
     on('api-key:get', async () => {
         await emit();
     });

@@ -1,11 +1,13 @@
+import type { RequestId } from '~/common/messages';
+
 import { on } from '../messages';
 import { resolveSceneNodes } from '../models/node-lookup';
 import { sendFocusError, sendFocusResult } from '../views/ui-port';
 import { focusNodes } from '../views/viewport';
 
-let activeRequestId: string | null = null;
+let activeRequestId: RequestId | null = null;
 
-export default function initFocus(): void {
+export function initFocus(): void {
     on('focus', async (msg) => {
         if (msg.type !== 'focus') return;
 

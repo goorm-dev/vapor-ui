@@ -1,11 +1,13 @@
+import type { RequestId } from '~/common/messages';
+
 import { on } from '../messages';
 import { extractFrame } from '../models/extract';
 import { getScanTarget } from '../models/node-lookup';
 import { sendExtractError, sendExtractResult } from '../views/ui-port';
 
-let activeRequestId: string | null = null;
+let activeRequestId: RequestId | null = null;
 
-export default function initScan(): void {
+export function initScan(): void {
     on('scan', async (msg) => {
         if (msg.type !== 'scan') return;
 
@@ -13,10 +15,10 @@ export default function initScan(): void {
         activeRequestId = requestId;
 
         try {
-            const node = await getScanTarget(msg.frameId);
+            const target = await getScanTarget(msg.frameId);
             if (activeRequestId !== requestId) return;
 
-            if (!node) {
+            if (!target) {
                 sendExtractError(requestId, '선택한 프레임 또는 인스턴스를 찾을 수 없습니다.');
                 return;
             }

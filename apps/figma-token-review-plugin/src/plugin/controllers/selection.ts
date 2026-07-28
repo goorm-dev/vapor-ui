@@ -6,7 +6,7 @@ function emit(): void {
     sendSelection(computeSelection());
 }
 
-export default function initSelection(): void {
+export function initSelection(): void {
     emit();
 
     // figma.on 은 controllers 에서 1건 허용 — selectionchange 이벤트는
