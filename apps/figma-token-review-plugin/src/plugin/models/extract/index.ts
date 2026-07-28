@@ -1,1 +1,1 @@
-export { extractFrame, __testables } from './extract-frame';
+export { extractFrame } from './extract-frame';

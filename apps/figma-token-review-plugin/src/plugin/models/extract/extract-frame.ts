@@ -221,5 +221,3 @@ export async function extractFrame(
     return { extract, llmContext: { screenshotB64, nodeTree } };
 }
 
-// 기존 테스트가 import 하는 내부 유틸.
-export const __testables = { captureScreenshot, walkTree };
