@@ -20,11 +20,10 @@ export const Toggle = forwardRef<HTMLButtonElement, Toggle.Props>((props, ref) =
         'variant',
     ]);
 
-    const { size: contextSize, variant: contextVariant } = useToggleGroupContext();
-    const { size: sizeProp, variant: variantProp } = variantsProps;
+    const { size: contextSize } = useToggleGroupContext();
+    const { size: sizeProp, variant } = variantsProps;
 
     const size = sizeProp || contextSize;
-    const variant = variantProp || contextVariant;
 
     const childrenRender = createRender(childrenProp);
     const children = useRenderElement({
