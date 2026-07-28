@@ -8,12 +8,6 @@ import type { TextShot } from '../text';
 import { captureTextShot } from '../text';
 import { toToken, walk } from '../variables';
 
-/**
- * Ported from visitor.ts extractPaints (lines 142-192).
- * Iterates bound alias entries (walk + toToken) then raw SOLID paints.
- * Invisible-paint skip and bound[i] exclusion preserved exactly.
- * Emits without nodeId/name — engine stamps those.
- */
 async function readPaints(
     node: SceneNode,
     paints: any,
@@ -27,7 +21,6 @@ async function readPaints(
     const bgFor = property === 'text' ? textBackground : null;
     const out: EmissionOf['colors'][] = [];
 
-    // 1) 변수 바인딩된 paint: alias 체인 추적으로 토큰 해석
     for (let i = 0; i < bound.length; i++) {
         const a = bound[i];
         if (!a || !a.id) continue;
@@ -49,7 +42,6 @@ async function readPaints(
         });
     }
 
-    // 2) 바인딩 없는 SOLID paint: raw
     if (!paintList) return out;
 
     paintList.forEach((p: any, i: number) => {
@@ -67,12 +59,6 @@ async function readPaints(
     return out;
 }
 
-/**
- * fills 채널 추출 규칙.
- * TEXT/벡터 노드 fill → property = 'text' + textShot/textBackground 첨부.
- * 일반 fill → property = 'fill'.
- * Ported from collectColors doFills branch (visitor.ts:116-126).
- */
 export function fillColorsRule(): ExtractionRule<'colors'> {
     return {
         name: 'color:fill',
@@ -99,11 +85,6 @@ export function fillColorsRule(): ExtractionRule<'colors'> {
     };
 }
 
-/**
- * strokes 채널 추출 규칙.
- * property = 'stroke', textShot/textBackground 없음.
- * Ported from collectColors doStrokes branch (visitor.ts:127-136).
- */
 export function strokeColorsRule(): ExtractionRule<'colors'> {
     return {
         name: 'color:stroke',

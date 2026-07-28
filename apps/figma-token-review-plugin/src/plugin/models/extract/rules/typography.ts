@@ -12,11 +12,6 @@ export const TYPOGRAPHY_KEYS = [
     'textStyleId',
 ] as const;
 
-/**
- * Ported from visitor.ts collectTypography (lines 199-234).
- * Guards: isText — TEXT 노드 한정.
- * resolved 의 각 필드는 seg 존재 여부에 따라 seg 값 또는 null (visitor.ts:227-232 원본 그대로).
- */
 export function typographyRule(): ExtractionRule<'typography'> {
     return {
         name: 'typography',

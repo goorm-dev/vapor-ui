@@ -12,9 +12,6 @@ export const PADDING_FIELDS: readonly PaddingField[] = [
     'paddingLeft',
 ];
 
-/**
- * gap (itemSpacing) 단일 필드 추출 — tokenField 패턴.
- */
 export const gapRule: ExtractionRule<'spaces'> = tokenField({
     name: 'space:gap',
     category: 'spaces',
@@ -22,10 +19,7 @@ export const gapRule: ExtractionRule<'spaces'> = tokenField({
     field: 'itemSpacing',
 });
 
-/**
- * padding 4방향 추출 + derivePaddingEmissions 로 최소 표현 축약.
- * 팩토리 함수로 노출해 RULES 테이블에서 호출 시점에 인스턴스를 생성한다.
- */
+// 4방향 동시 참조로 shorthand 축약 — 방향별 tokenField 로 분리 불가.
 export function paddingRule(): ExtractionRule<'spaces'> {
     return composite({
         name: 'space:padding',

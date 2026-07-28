@@ -63,10 +63,7 @@ async function runOne(
     }
 }
 
-/**
- * 규칙 테이블 실행: 필터 → 가드 → extract → nodeId/name 스탬핑 → 병합.
- * 규칙은 병렬 실행하되 병합은 테이블 순서 — 결과 순서가 결정적이어야 downstream dedup 이 안정적.
- */
+/** 병렬 실행, 병합은 테이블 순서 유지 — downstream dedup 안정성. */
 export async function runRules(
     node: SceneNode,
     ctx: ExtractCtx,

@@ -2,12 +2,7 @@ import { postToUi } from '~/common/messages';
 import type { ApiKeyState, RequestId } from '~/common/messages';
 import type { LlmContext, RawExtract, SelectionState } from '~/common/schemas';
 
-/**
- * plugin → UI 통신 전담 view.
- * controllers 는 postToUi 를 직접 호출하지 않고 반드시 이 모듈을 경유한다 —
- * 메시지 타입과 발송 지점을 한 파일에서 추적 가능하게 유지하기 위함.
- */
-
+/** controllers 는 postToUi 직접 호출 불가 — 발송 지점 SSOT. */
 export type ExtractPayload = { extract: RawExtract; llmContext: LlmContext };
 
 export function sendExtractResult(requestId: RequestId, payload: ExtractPayload): void {

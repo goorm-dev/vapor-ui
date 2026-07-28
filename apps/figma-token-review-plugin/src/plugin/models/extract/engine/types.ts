@@ -37,10 +37,7 @@ export type ExtractCtx = {
     viewport: Viewport;
     /** node.boundVariables — 규칙마다 재파싱하지 않도록 캐시. */
     boundVariables: Record<string, { id: string }> | undefined;
-    /**
-     * 엔진이 rule.filterKeys 로 규칙 전체를 게이트하지만,
-     * padding 처럼 규칙 내부에서 방향별 세분 필터가 필요한 reader 를 위해 노출.
-     */
+    /** 규칙 내부 세분 필터용 (예: padding 4방향) — filterKeys 게이트 후 reader 에 전달. */
     filter: OverrideFilter;
 };
 

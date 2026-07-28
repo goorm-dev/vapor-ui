@@ -1,7 +1,6 @@
 import { readBoundToken } from '../variables';
 import type { EmissionOf, ExtractCtx, ExtractionRule, FactCategory, NodeGuard } from './types';
 
-/** Figma px 값을 CSS 문자열로. */
 export const px = (v: number): string => `${v}px`;
 
 type ScalarCategory = 'spaces' | 'dimensions';
@@ -14,10 +13,6 @@ type PropertyOf<C extends ScalarCategory> = C extends 'spaces'
     ? EmissionOf['spaces']['property']
     : EmissionOf['dimensions']['property'];
 
-/**
- * "숫자 필드 하나 + boundVariables 토큰 해석 + 포맷" 패턴의 완전 선언 규칙.
- * gap/width/height 처럼 필드 하나가 emission 하나로 떨어지는 경우 전용.
- */
 export function tokenField<C extends ScalarCategory>(opts: {
     name: string;
     category: C;
@@ -56,10 +51,6 @@ export function tokenField<C extends ScalarCategory>(opts: {
     };
 }
 
-/**
- * 복합 규칙: 선언부(카테고리/필터키/가드)만 테이블에 노출하고
- * 로직은 순수 reader 함수로 격리한다.
- */
 export function composite<C extends FactCategory>(opts: {
     name: string;
     category: C;

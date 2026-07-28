@@ -3,11 +3,7 @@ import type { ExtractionRule } from '../engine/types';
 import { shadowToCss } from '../paint';
 import { readEffectStyleToken } from '../variables';
 
-/**
- * Ported from visitor.ts collectShadows (lines 396-414).
- * DROP_SHADOW / INNER_SHADOW effect 만 수집.
- * 노드당 effectStyleId 는 1개 → 토큰 1회 조회로 모든 shadow 항목이 공유.
- */
+/** 노드당 effectStyleId 는 1개 → 토큰 1회 조회로 모든 shadow 항목이 공유. */
 export function shadowRule(): ExtractionRule<'shadows'> {
     return {
         name: 'shadow',
@@ -23,7 +19,6 @@ export function shadowRule(): ExtractionRule<'shadows'> {
 
             if (shadows.length === 0) return [];
 
-            // 노드당 effectStyleId 는 1개 → 토큰 1회 조회로 모든 shadow 항목이 공유.
             const { token, status } = await readEffectStyleToken(node);
             return shadows.map((eff: any) => ({
                 value: shadowToCss(eff),

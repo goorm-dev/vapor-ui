@@ -13,10 +13,7 @@ export type VisitCtx = {
     viewport: Viewport;
 };
 
-/**
- * 노드 하나에 대한 카테고리별 사실 수집 — RULES 테이블을 엔진으로 실행.
- * 순회(자식 traversal) 는 호출부(extract-frame.ts) 책임.
- */
+/** 순회는 호출부(extract-frame.ts) 책임. */
 export async function collectNodeFacts(
     node: SceneNode,
     ctx: VisitCtx,
