@@ -16,7 +16,7 @@ export const [ToggleGroupProvider, useToggleGroupContext] = createContext<Toggle
     name: 'ToggleGroup',
     hookName: 'useToggleGroupContext',
     providerName: 'ToggleGroupProvider',
-    defaultValue: { size: 'md', variant: 'default' },
+    defaultValue: { size: 'md' },
     strict: false,
 });
 
@@ -28,7 +28,6 @@ export const ToggleGroupRoot = forwardRef<HTMLDivElement, ToggleGroupRoot.Props>
     const { className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ToggleGroupVariants>()(componentProps, [
         'size',
-        'variant',
     ]);
 
     return (
