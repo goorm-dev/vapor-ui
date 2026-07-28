@@ -24,19 +24,21 @@ src/
 
 `figma.*` API만 접근. DOM/window 없음. Vite가 `code.ts`를 entry로 단일 번들 생성.
 
-- **`code.ts`** _(entry)_ — UI 표시 + 크기 복원 + 핸들러 init + 메시지 라우터 시작.
-- **`messages.ts`** — `postToUi` 래퍼 + 핸들러 등록(`on(type, handler)`) + `figma.ui.onmessage` 부착. 응답에 requestId echo.
-- **`handlers/`** — 메시지 종류별 핸들러.
+- **`code.ts`** _(entry)_ — UI 표시 + controllers init + 메시지 라우터 시작.
+- **`messages.ts`** — 핸들러 등록(`on(type, handler)`) + `figma.ui.onmessage` 부착.
 
-| 파일           | 책임                                                          |
-| -------------- | ------------------------------------------------------------- |
-| `selection.ts` | 초기 emit + `selectionchange` 구독 + `request-selection` 응답 |
-| `scan.ts`      | in-flight scan cancel, `extract.ts` 호출, 결과 echo           |
-| `extract.ts`   | 프레임 추출 (`extractFrame`)                                  |
-| `focus.ts`     | 노드 id 리스트 resolve, viewport 이동, missing 카운트 응답    |
-| `resize.ts`    | `figma.ui.resize` 적용.                                       |
+역할별 3레이어. import 방향: `code.ts → controllers → { models, views }`.
 
-새 메시지 추가 = `handlers/<name>.ts` 1개 + `code.ts`에 init 한 줄.
+| 레이어         | 책임                                                                        | 파일                                                            |
+| -------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `controllers/` | 메시지별 흐름 제어 (requestId 경합 가드, 분기). `figma.*`/`postToUi` 직접 호출 금지 | `scan` `focus` `selection` `api-key` `resize`                    |
+| `views/`       | UI 통신 + 인터페이스 부수효과                                                | `ui-port`(postToUi 래퍼) `viewport`(포커스 이동) `window`(리사이즈) |
+| `models/`      | 도메인 로직 + figma 데이터 접근                                              | `extract/`(규칙 기반 추출) `selection` `api-key-store` `node-lookup` |
+
+`models/extract/` 는 규칙 레지스트리 구조: `rules/index.ts` 의 RULES 테이블 선언 + `engine/` 실행 엔진(필터/가드 중앙 판정, 규칙 단위 에러 격리).
+
+새 메시지 추가 = `controllers/<name>.ts` 1개 + 필요한 model/view 함수 + `code.ts`에 init 한 줄.
+새 추출 필드 추가 = `models/extract/rules/` 에 규칙 행 추가.
 
 ---
 
@@ -145,9 +147,9 @@ ui/
 
 ```
 [사용자 액션]
-   └─> features/scan.use-scan.start ─postToCode─> plugin/messages ─dispatch─> handlers/scan
-                                                                                  └─ figma API
-                                                                                  └─ postToUi(requestId)
+   └─> features/scan.use-scan.start ─postToCode─> plugin/messages ─dispatch─> controllers/scan
+                                                                                  └─ models (figma API)
+                                                                                  └─ views/ui-port (requestId)
    <── window.message ── features/messaging/bridge (단일 listener)
                               └─ handle() ─ scan/selection store action (requestId 매칭 후 set)
                                                   └─ useSyncExternalStore notify
@@ -157,6 +159,6 @@ ui/
 특별 경로
 
 - **extract-result → LLM 평가**: `features/messaging/bridge.handle` → `evaluate.evaluateExtract` → `features/llm.runLlmEvaluation` → `scanActions.result`.
-- **selection 변화**: plugin `figma.on('selectionchange')` → `handlers/selection` emit → `selectionStore` set → 모든 구독 컴포넌트.
+- **selection 변화**: plugin `figma.on('selectionchange')` → `controllers/selection` emit → `selectionStore` set → 모든 구독 컴포넌트.
 - **focus 토스트**: bridge가 `isActiveFocus()`로 stale 차단.
 - **resize**: UI rAF 큐 → sandbox apply
