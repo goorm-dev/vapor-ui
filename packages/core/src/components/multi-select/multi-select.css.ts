@@ -21,7 +21,7 @@ export const trigger = componentRecipe({
             borderRadius: vars.size.borderRadius['300'],
             boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
 
-            backgroundColor: vars.color.background.overlay[100],
+            backgroundColor: vars.color.background['overlay-100'],
 
             width: '100%',
 
@@ -73,7 +73,7 @@ export const value = componentRecipe({
             gap: vars.size.space['050'],
 
             selectors: {
-                '&[data-placeholder]': { color: vars.color.foreground.hint[100] },
+                '&[data-placeholder]': { color: vars.color.foreground['hint-100'] },
             },
         },
     ],
@@ -178,7 +178,7 @@ export const popup = componentStyle({
     border: `1px solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: vars.shadow.md,
-    backgroundColor: vars.color.background.overlay[100],
+    backgroundColor: vars.color.background['overlay-100'],
 
     padding: vars.size.space['050'],
     minWidth: 'max(var(--anchor-width), 12.5rem)',

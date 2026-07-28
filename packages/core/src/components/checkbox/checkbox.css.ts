@@ -25,7 +25,7 @@ export const root = componentRecipe({
             transitionProperty: 'background-color, box-shadow',
 
             boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
-            backgroundColor: vars.color.background.canvas[100],
+            backgroundColor: vars.color.background['canvas-100'],
 
             padding: vars.size.space['000'],
             overflow: 'hidden',
@@ -33,12 +33,12 @@ export const root = componentRecipe({
             selectors: {
                 '&[data-checked], &[data-indeterminate]': {
                     boxShadow: 'none',
-                    backgroundColor: vars.color.background.primary[200],
+                    backgroundColor: vars.color.background['primary-200'],
                 },
 
                 [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
                 [`${when.invalid('&[data-invalid][data-checked]')}, ${when.invalid('&[data-invalid][data-indeterminate]')}`]:
-                    { boxShadow: 'none', backgroundColor: vars.color.background.danger[200] },
+                    { boxShadow: 'none', backgroundColor: vars.color.background['danger-200'] },
 
                 [when.readonly()]: { backgroundColor: vars.color.gray['200'] },
                 [`${when.readonly()}:active::before`]: { opacity: 0.08 },

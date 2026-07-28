@@ -21,7 +21,7 @@ export const trigger = componentRecipe({
             borderRadius: vars.size.borderRadius['300'],
             boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
 
-            backgroundColor: vars.color.background.overlay[100],
+            backgroundColor: vars.color.background['overlay-100'],
 
             selectors: {
                 [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
@@ -71,7 +71,7 @@ export const value = componentRecipe({
         {
             whiteSpace: 'nowrap',
             selectors: {
-                '&[data-placeholder]': { color: vars.color.foreground.hint[100] },
+                '&[data-placeholder]': { color: vars.color.foreground['hint-100'] },
             },
         },
     ],
@@ -138,7 +138,7 @@ export const popup = componentStyle({
 
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background.overlay[100],
+    backgroundColor: vars.color.background['overlay-100'],
     padding: vars.size.space['050'],
     minWidth: 'max(var(--anchor-width), 12.5rem)',
 
