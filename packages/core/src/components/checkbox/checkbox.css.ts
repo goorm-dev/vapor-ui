@@ -79,7 +79,7 @@ export const indicator = componentRecipe({
         color: vars.color.white,
         selectors: {
             [when.readonly()]: {
-                color: vars.color.foreground.hint['100'],
+                color: vars.color.foreground['hint-100'],
             },
         },
     },
@@ -115,7 +115,7 @@ export const icon = componentStyle({
         },
 
         [`${indicator.classNames.base}${when.readonly('[data-readonly]')} > &`]: {
-            stroke: vars.color.foreground.hint['100'],
+            stroke: vars.color.foreground['hint-100'],
         },
     },
 });

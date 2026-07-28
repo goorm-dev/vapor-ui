@@ -772,7 +772,7 @@ const dataAttrs = createDataAttributes({ invalid });
                 primary: {
                     vars: {
                         [fg]: vars.color.foreground.inverse,
-                        [bg]: vars.color.background.primary[200],
+                        [bg]: vars.color.background['primary-200'],
                     },
                 },
                 secondary: {
@@ -821,7 +821,7 @@ const dataAttrs = createDataAttributes({ invalid });
 
     ```tsx
     // 색상 토큰
-    vars.color.background.primary[200];
+    vars.color.background['primary-200'];
     vars.color.foreground.inverse;
     vars.color.border.primary;
     vars.color.white;
