@@ -9,7 +9,6 @@ const ToggleGroupTest = (props: ToggleGroup.Root.Props) => (
     <ToggleGroup.Root {...props}>
         <Toggle value="a" aria-label="a" />
         <Toggle value="b" aria-label="b" />
-        <ToggleGroup.Separator />
         <Toggle value="c" aria-label="c" />
     </ToggleGroup.Root>
 );
