@@ -99,19 +99,19 @@ export const Default: Story = {
 
                         <Toolbar.Separator />
 
-                        <Toolbar.Group render={<ToggleGroup.Root variant="accent" />}>
+                        <Toolbar.Group render={<ToggleGroup.Root />}>
                             <TooltipButton description="Align Left">
-                                <Toolbar.Button render={<Toggle />}>
+                                <Toolbar.Button render={<Toggle variant="accent" />}>
                                     <AlignLeftOutlineIcon />
                                 </Toolbar.Button>
                             </TooltipButton>
                             <TooltipButton description="Align Center">
-                                <Toolbar.Button render={<Toggle />}>
+                                <Toolbar.Button render={<Toggle variant="accent" />}>
                                     <AlignCenterOutlineIcon />
                                 </Toolbar.Button>
                             </TooltipButton>
                             <TooltipButton description="Align Right">
-                                <Toolbar.Button render={<Toggle />}>
+                                <Toolbar.Button render={<Toggle variant="accent" />}>
                                     <AlignRightOutlineIcon />
                                 </Toolbar.Button>
                             </TooltipButton>
