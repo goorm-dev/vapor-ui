@@ -8,13 +8,6 @@ export const root = componentRecipe({
         display: 'inline-flex',
         alignItems: 'center',
         gap: vars.size.space['050'],
-
-        padding: vars.size.space['050'],
-
-        borderRadius: vars.size.borderRadius['400'],
-        border: '1px solid',
-        borderColor: vars.color.border.normal,
-        backgroundColor: vars.color.background.canvas[100],
     },
 
     defaultVariants: { size: 'md', variant: 'default' },
