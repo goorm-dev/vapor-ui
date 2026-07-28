@@ -12,9 +12,19 @@ export const root = componentRecipe({
         padding: vars.size.space['050'],
     },
 
-    defaultVariants: { size: 'md' },
+    defaultVariants: { variant: 'outline' },
     variants: {
-        size: { sm: {}, md: {}, lg: {}, xl: {} },
+        variant: {
+            outline: {
+                backgroundColor: vars.color.background.canvas[100],
+                borderRadius: vars.size.borderRadius[400],
+                border: '0.0625rem solid',
+                borderColor: vars.color.border.normal,
+            },
+            ghost: {
+                backgroundColor: 'transparent',
+            },
+        },
     },
 });
 
@@ -24,20 +34,25 @@ export const group = componentStyle({
     gap: vars.size.space['050'],
 });
 
-export const button = componentStyle({
-    // marginInline: vars.size.space['025'],
-});
-
-export const input = componentStyle({
-    // marginInline: vars.size.space['025'],
+export const item = componentRecipe({
+    base: {},
+    defaultVariants: { size: 'md' },
+    variants: {
+        size: {
+            sm: { height: vars.size.dimension['300'] },
+            md: { height: vars.size.dimension['400'] },
+            lg: { height: vars.size.dimension['500'] },
+            xl: { height: vars.size.dimension['600'] },
+        },
+    },
 });
 
 export const separator = componentStyle({
     width: '0.0625rem',
     alignSelf: 'stretch',
     marginBlock: vars.size.space['050'],
-    // marginInline: vars.size.space['025'],
     backgroundColor: vars.color.border.normal,
 });
 
 export type ToolbarRootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type ToolbarItemVariants = NonNullable<RecipeVariants<typeof item>>;
