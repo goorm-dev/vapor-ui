@@ -220,4 +220,3 @@ export async function extractFrame(
 
     return { extract, llmContext: { screenshotB64, nodeTree } };
 }
-

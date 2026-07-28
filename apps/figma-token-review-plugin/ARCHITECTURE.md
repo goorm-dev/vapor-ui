@@ -29,11 +29,11 @@ src/
 
 역할별 3레이어. import 방향: `code.ts → controllers → { models, views }`.
 
-| 레이어         | 책임                                                                        | 파일                                                            |
-| -------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `controllers/` | 메시지별 흐름 제어 (requestId 경합 가드, 분기). `figma.*`/`postToUi` 직접 호출 금지 | `scan` `focus` `selection` `api-key` `resize`                    |
-| `views/`       | UI 통신 + 인터페이스 부수효과                                                | `ui-port`(postToUi 래퍼) `viewport`(포커스 이동) `window`(리사이즈) |
-| `models/`      | 도메인 로직 + figma 데이터 접근                                              | `extract/`(규칙 기반 추출) `selection` `api-key-store` `node-lookup` |
+| 레이어         | 책임                                                                                | 파일                                                                 |
+| -------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `controllers/` | 메시지별 흐름 제어 (requestId 경합 가드, 분기). `figma.*`/`postToUi` 직접 호출 금지 | `scan` `focus` `selection` `api-key` `resize`                        |
+| `views/`       | UI 통신 + 인터페이스 부수효과                                                       | `ui-port`(postToUi 래퍼) `viewport`(포커스 이동) `window`(리사이즈)  |
+| `models/`      | 도메인 로직 + figma 데이터 접근                                                     | `extract/`(규칙 기반 추출) `selection` `api-key-store` `node-lookup` |
 
 `models/extract/` 는 규칙 레지스트리 구조: `rules/index.ts` 의 RULES 테이블 선언 + `engine/` 실행 엔진(필터/가드 중앙 판정, 규칙 단위 에러 격리).
 
