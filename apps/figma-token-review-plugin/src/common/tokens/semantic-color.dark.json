@@ -1,0 +1,796 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+    "colors": {
+        "background": {
+            "$type": "color",
+            "primary": {
+                "100": {
+                    "$description": "The subtle primary background to represent status, category, or selection state.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "background of element visually indicating current selection or active state with brand color",
+                                "non-interactive element showing status or category with subtle brand emphasis",
+                                "background of element conveying feedback or notification with brand color"
+                            ],
+                            "avoid": [
+                                "page or screen background → colors.background.canvas.100",
+                                "solid action elements background → colors.background.primary.200"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.blue.050}"
+                },
+                "200": {
+                    "$description": "The solid primary background for high-emphasis interactive action and brand-colored elements.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "solid fill background for interactive elements that require brand color emphasis",
+                                "brand color fill for non-interactive visual elements requiring strong brand presence"
+                            ],
+                            "avoid": [
+                                "page or screen background → colors.background.canvas.100",
+                                "status or category label background → colors.background.primary.100"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.blue.500}"
+                }
+            },
+            "contrast": {
+                "100": {
+                    "$description": "The subtle contrast background to intentionally draw attention to content by contrasting with the surrounding page surface.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "background of non-interactive element requiring intentional visual contrast against the page",
+                                "background of informational element that must stand out from the surrounding content"
+                            ],
+                            "avoid": [
+                                "elements requiring stronger visual separation → colors.background.contrast.200"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.800}"
+                },
+                "200": {
+                    "$description": "The solid high-emphasis background for elements requiring strong visual separation from the surrounding UI.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "background of element that must be visually distinct from all surrounding content",
+                                "high-emphasis background for elements requiring immediate user attention",
+                                "background of elements providing temporary or contextual information above the page layer"
+                            ],
+                            "avoid": [
+                                "elements requiring only subtle contrast → colors.background.contrast.100",
+                                "interactive variant-specific backgrounds → use variant-specific background tokens"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.300}"
+                }
+            },
+            "canvas": {
+                "100": {
+                    "$description": "The base-level canvas background for pages and bordered components.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "default background of all pages or screens",
+                                "base surface background for components with visible borders"
+                            ],
+                            "avoid": [
+                                "elevated surfaces such as sidebar or panel background → colors.background.canvas.200"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.background.canvas}"
+                },
+                "200": {
+                    "$description": "The solid secondary canvas background to differentiate background regions within a page.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "secondary page-level background area that needs visual separation from the primary canvas",
+                                "layout region requiring a subtle distinction between background layers without component-level context"
+                            ],
+                            "avoid": [
+                                "direct use as a component background → colors.background.secondary.100",
+                                "primary page background → colors.background.canvas.100"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.050}"
+                }
+            },
+            "secondary": {
+                "100": {
+                    "$description": "Do not use this token.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "status": "do-not-use",
+                            "reason": "No active use case defined.",
+                            "when": [],
+                            "avoid": []
+                        }
+                    },
+                    "$value": "{colors.gray.050}"
+                },
+                "200": {
+                    "$description": "The solid secondary background for components serving a supplementary role alongside primary elements.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "background of component serving a secondary role alongside primary-colored elements",
+                                "solid fill background for supplementary interactive elements"
+                            ],
+                            "avoid": [
+                                "standalone components requiring visibility without primary context → colors.background.contrast.200"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.200}"
+                }
+            },
+            "success": {
+                "100": {
+                    "$description": "The subtle success background for elements indicating positive or completed states.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "background of element indicating a successful or completed action",
+                                "subtle positive feedback or confirmation element background"
+                            ],
+                            "avoid": [],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.green.050}"
+                },
+                "200": {
+                    "$description": "The solid success background for elements indicating positive or completed states.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "solid fill background of element indicating a successful or completed action",
+                                "high-emphasis positive feedback or confirmation element background"
+                            ],
+                            "avoid": [],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.green.500}"
+                }
+            },
+            "warning": {
+                "100": {
+                    "$description": "The subtle warning background for elements requiring cautious user decision.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "background of element indicating an action that requires careful consideration",
+                                "subtle cautionary state background guiding deliberate user decision"
+                            ],
+                            "avoid": [
+                                "irreversible or destructive actions → colors.background.danger.100"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.orange.050}"
+                },
+                "200": {
+                    "$description": "The solid warning background for elements requiring cautious user decision.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "solid fill background of element indicating an action that requires careful consideration",
+                                "high-emphasis cautionary state background guiding deliberate user decision"
+                            ],
+                            "avoid": [
+                                "irreversible or destructive actions → colors.background.danger.200"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.orange.500}"
+                }
+            },
+            "danger": {
+                "100": {
+                    "$description": "The subtle danger background for elements indicating destructive or irreversible actions.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "background of element indicating a destructive or irreversible action",
+                                "subtle danger state background for high-risk user actions"
+                            ],
+                            "avoid": [
+                                "cautionary actions that do not involve irreversible risk → colors.background.warning.100"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.red.050}"
+                },
+                "200": {
+                    "$description": "The solid danger background for elements indicating destructive or irreversible actions.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "solid fill background of element indicating a destructive or irreversible action",
+                                "high-emphasis danger state background for high-risk user actions"
+                            ],
+                            "avoid": [
+                                "cautionary actions that do not involve irreversible risk → colors.background.warning.200"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.red.500}"
+                }
+            },
+            "hint": {
+                "100": {
+                    "$description": "The subtle hint background for elements providing general informational content.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "background of element providing general informational content to the user",
+                                "subtle background for non-critical informational elements"
+                            ],
+                            "avoid": [
+                                "elements requiring contrast emphasis against surrounding background → colors.background.contrast.100"
+                            ],
+                            "accessibility": {
+                                "role": "background"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.200}"
+                },
+                "200": {
+                    "$description": "Do not use this token.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "status": "do-not-use",
+                            "reason": "No active use case defined.",
+                            "when": [],
+                            "avoid": []
+                        }
+                    },
+                    "$value": "{colors.gray.600}"
+                }
+            }
+        },
+        "foreground": {
+            "$type": "color",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "gradeRules": {
+                        "100": "Use ONLY on pure white (#ffffff) or transparent backgrounds",
+                        "200": "Use on any surface that is not pure white (#ffffff), including near-white colored backgrounds"
+                    }
+                }
+            },
+            "primary": {
+                "100": {
+                    "$description": "The subtle primary foreground for brand-colored text and icons on white or transparent surfaces.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "brand-colored text or icon on white or transparent background",
+                                "subtle brand emphasis without a colored background"
+                            ],
+                            "avoid": [
+                                "use on canvas.200 or surfaces with non-white background color → colors.foreground.primary.200"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.blue.600}"
+                },
+                "200": {
+                    "$description": "The solid primary foreground for brand-colored text and icons on colored background surfaces.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "brand-colored text or icon on canvas.200 or a surface with non-white background color",
+                                "strong brand emphasis on a colored background surface"
+                            ],
+                            "avoid": [
+                                "use on white or transparent background → colors.foreground.primary.100"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.blue.700}"
+                }
+            },
+            "inverse": {
+                "$description": "The inverse foreground for text and icons on backgrounds where white ensures sufficient contrast.",
+                "$extensions": {
+                    "io.goorm.vapor": {
+                        "when": [
+                            "text or icon on backgrounds where white provides sufficient contrast against the background color"
+                        ],
+                        "avoid": [
+                            "light or pale backgrounds where dark text provides better readability → use contextual foreground tokens"
+                        ],
+                        "accessibility": {
+                            "role": "foreground",
+                            "minimumContrast": "4.5:1"
+                        }
+                    }
+                },
+                "$value": "{colors.white}"
+            },
+            "danger": {
+                "100": {
+                    "$description": "The subtle danger foreground for text and icons indicating destructive actions or error states.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon indicating a destructive or irreversible action such as deletion",
+                                "error message text or icon requiring user attention"
+                            ],
+                            "avoid": [
+                                "cautionary actions that do not involve danger → colors.foreground.warning.100"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.red.600}"
+                },
+                "200": {
+                    "$description": "The solid danger foreground for text and icons indicating destructive actions or error states on colored background surfaces.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon indicating a destructive or irreversible action on a non-white background",
+                                "error message text or icon on canvas.200 or tinted surface"
+                            ],
+                            "avoid": [
+                                "use on white or transparent background → colors.foreground.danger.100",
+                                "cautionary actions that do not involve danger → colors.foreground.warning.200"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.red.700}"
+                }
+            },
+            "hint": {
+                "100": {
+                    "$description": "The subtle hint foreground for text and icons in supplementary contexts where low emphasis is intended.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon in an empty or inactive state requiring minimal visual weight",
+                                "supplementary or helper text that needs to be perceived but not emphasized",
+                                "low-emphasis icon in a non-interactive context"
+                            ],
+                            "avoid": [
+                                "elements requiring emphasis → colors.foreground.normal.100 or colors.foreground.primary.100",
+                                "selected or active state text → colors.foreground.normal.100 or colors.foreground.primary.100"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.600}"
+                },
+                "200": {
+                    "$description": "The solid hint foreground for text and icons in supplementary contexts on colored background surfaces.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "placeholder or supplementary text on non-white or colored background",
+                                "low-emphasis text or icon on canvas.200 or tinted surface"
+                            ],
+                            "avoid": [
+                                "elements requiring emphasis → colors.foreground.normal.200 or colors.foreground.primary.200",
+                                "selected or active state text → colors.foreground.normal.200 or colors.foreground.primary.200"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.700}"
+                }
+            },
+            "normal": {
+                "100": {
+                    "$description": "The subtle normal foreground for default text and icons that users must perceive without brand color emphasis.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "default body text or label on white or transparent background",
+                                "essential text or icon that requires clear readability without brand color",
+                                "primary content text where neutral emphasis is sufficient"
+                            ],
+                            "avoid": [
+                                "supplementary or low-emphasis text → colors.foreground.hint.100",
+                                "brand-colored emphasis text → colors.foreground.primary.100",
+                                "highest-hierarchy title or heading requiring maximum visual prominence → colors.foreground.contrast.100"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.700}"
+                },
+                "200": {
+                    "$description": "The solid normal foreground for default text and icons that users must perceive on colored background surfaces.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "default body text or label on canvas.200 or non-white background",
+                                "essential text or icon requiring clear readability on a colored surface"
+                            ],
+                            "avoid": [
+                                "supplementary or low-emphasis text → colors.foreground.hint.200",
+                                "brand-colored emphasis text → colors.foreground.primary.200"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.900}"
+                }
+            },
+            "secondary": {
+                "100": {
+                    "$description": "The subtle secondary foreground for text and icons with supplementary emphasis.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon with lower visual hierarchy than the primary content on the same surface",
+                                "supplementary or descriptive text supporting a higher-hierarchy text element"
+                            ],
+                            "avoid": [
+                                "standalone elements requiring visibility without primary context → colors.foreground.contrast.100"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.700}"
+                },
+                "200": {
+                    "$description": "The solid secondary foreground for text and icons with supplementary emphasis on colored surfaces.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon with lower visual hierarchy than the primary content on a non-white background",
+                                "supplementary or descriptive text supporting a higher-hierarchy text element on canvas.200 or tinted surface"
+                            ],
+                            "avoid": [
+                                "standalone elements requiring visibility without primary context → colors.foreground.contrast.200"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.900}"
+                }
+            },
+            "success": {
+                "100": {
+                    "$description": "The subtle success foreground for text and icons indicating positive or completed states.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon indicating a successful or completed action on white or transparent background",
+                                "positive feedback or confirmation message text or icon"
+                            ],
+                            "avoid": [],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.green.600}"
+                },
+                "200": {
+                    "$description": "The solid success foreground for text and icons indicating positive or completed states on colored surfaces.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon indicating a successful or completed action on canvas.200 or non-white background",
+                                "positive feedback or confirmation message text or icon on colored surface"
+                            ],
+                            "avoid": [],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.green.700}"
+                }
+            },
+            "warning": {
+                "100": {
+                    "$description": "The subtle warning foreground for text and icons requiring cautious user decision.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon indicating an action that requires careful consideration on white or transparent background",
+                                "cautionary message text or icon guiding deliberate user decision"
+                            ],
+                            "avoid": [
+                                "irreversible or destructive actions → colors.foreground.danger.100"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.orange.600}"
+                },
+                "200": {
+                    "$description": "The solid warning foreground for text and icons requiring cautious user decision on colored surfaces.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon indicating an action that requires careful consideration on canvas.200 or non-white background",
+                                "cautionary message text or icon on colored surface"
+                            ],
+                            "avoid": [
+                                "irreversible or destructive actions → colors.foreground.danger.200"
+                            ],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.orange.700}"
+                }
+            },
+            "contrast": {
+                "100": {
+                    "$description": "The subtle contrast foreground for text and icons requiring visibility without primary context.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "highest-hierarchy title or heading text requiring maximum visual prominence on the page",
+                                "text or icon requiring clear visibility without accompanying primary-colored elements on white or transparent background"
+                            ],
+                            "avoid": [],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.200}"
+                },
+                "200": {
+                    "$description": "The solid contrast foreground for text and icons requiring visibility without primary context on colored surfaces.",
+                    "$extensions": {
+                        "io.goorm.vapor": {
+                            "when": [
+                                "text or icon requiring clear visibility without accompanying primary-colored elements on canvas.200 or non-white background"
+                            ],
+                            "avoid": [],
+                            "accessibility": {
+                                "role": "foreground",
+                                "minimumContrast": "4.5:1"
+                            }
+                        }
+                    },
+                    "$value": "{colors.gray.300}"
+                }
+            }
+        },
+        "border": {
+            "$type": "color",
+            "normal": {
+                "$description": "The base border for default outlines and structural boundaries of UI elements.",
+                "$extensions": {
+                    "io.goorm.vapor": {
+                        "when": [
+                            "default border for standard UI elements requiring a subtle structural boundary",
+                            "divider or separator between content areas that need visual separation without emphasis"
+                        ],
+                        "avoid": [
+                            "borders conveying interactive variant styles → use variant-specific border tokens (colors.border.primary, colors.border.secondary, colors.border.contrast)"
+                        ],
+                        "accessibility": {
+                            "role": "border"
+                        }
+                    }
+                },
+                "$value": "{colors.gray.300}"
+            },
+            "contrast": {
+                "$description": "The base high-contrast border for focused states and contrast-level outline styles.",
+                "$extensions": {
+                    "io.goorm.vapor": {
+                        "when": [
+                            "border of non-text-input interactive elements such as select, button in focused state via interaction layer",
+                            "border of UI elements requiring high contrast outline style"
+                        ],
+                        "avoid": [
+                            "focused state border of input-type elements → colors.border.primary",
+                            "non-contrast variant outline styles → use variant-specific border tokens (colors.border.primary, colors.border.secondary)"
+                        ],
+                        "accessibility": {
+                            "role": "border",
+                            "minimumContrast": "3:1"
+                        }
+                    }
+                },
+                "$value": "{colors.gray.400}"
+            },
+            "primary": {
+                "$description": "The base primary border for focused states of input-type interactive elements.",
+                "$extensions": {
+                    "io.goorm.vapor": {
+                        "when": ["border of text input or textarea elements in focused state"],
+                        "avoid": [
+                            "focused state of non-input interactive elements → colors.border.contrast",
+                            "default (unfocused) border of input elements → colors.border.normal"
+                        ],
+                        "accessibility": {
+                            "role": "border",
+                            "minimumContrast": "3:1"
+                        }
+                    }
+                },
+                "$value": "{colors.blue.400}"
+            },
+            "secondary": {
+                "$description": "The base secondary border for UI elements requiring supplementary boundary emphasis.",
+                "$extensions": {
+                    "io.goorm.vapor": {
+                        "when": [
+                            "border of elements serving a secondary role alongside primary interactive elements"
+                        ],
+                        "avoid": [],
+                        "accessibility": {
+                            "role": "border",
+                            "minimumContrast": "3:1"
+                        }
+                    }
+                },
+                "$value": "{colors.gray.200}"
+            },
+            "success": {
+                "$description": "The base success border for elements indicating positive or completed states.",
+                "$extensions": {
+                    "io.goorm.vapor": {
+                        "when": [
+                            "border of element indicating a successful or completed action",
+                            "border conveying a positive result to the user"
+                        ],
+                        "avoid": [
+                            "primary action elements → colors.border.primary",
+                            "elements used alongside primary elements → colors.border.secondary"
+                        ],
+                        "accessibility": {
+                            "role": "border",
+                            "minimumContrast": "3:1"
+                        }
+                    }
+                },
+                "$value": "{colors.green.400}"
+            },
+            "warning": {
+                "$description": "The base warning border for elements requiring cautious user decision.",
+                "$extensions": {
+                    "io.goorm.vapor": {
+                        "when": [
+                            "border of element indicating an action that requires careful consideration",
+                            "border conveying a cautionary state to guide deliberate user decision"
+                        ],
+                        "avoid": ["irreversible or destructive actions → colors.border.danger"],
+                        "accessibility": {
+                            "role": "border",
+                            "minimumContrast": "3:1"
+                        }
+                    }
+                },
+                "$value": "{colors.orange.400}"
+            },
+            "hint": {
+                "$description": "The base hint border for elements that visually imply clickable or tappable interaction.",
+                "$extensions": {
+                    "io.goorm.vapor": {
+                        "when": [
+                            "border of element that visually implies clickable or tappable interaction"
+                        ],
+                        "avoid": ["non-interactive elements → colors.border.normal"],
+                        "accessibility": {
+                            "role": "border",
+                            "minimumContrast": "4.5:1"
+                        }
+                    }
+                },
+                "$value": "{colors.gray.400}"
+            },
+            "danger": {
+                "$description": "The base danger border for elements indicating destructive or irreversible actions and error states.",
+                "$extensions": {
+                    "io.goorm.vapor": {
+                        "when": [
+                            "border of element indicating a destructive or irreversible action",
+                            "border conveying an error state to the user"
+                        ],
+                        "avoid": [
+                            "cautionary actions that do not involve irreversible risk → colors.border.warning"
+                        ],
+                        "accessibility": {
+                            "role": "border",
+                            "minimumContrast": "3:1"
+                        }
+                    }
+                },
+                "$value": "{colors.red.400}"
+            }
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "name": "figma-token-review-plugin",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts && cp manifest.json dist/",
+        "build:plugin": "vite build --config vite.config.plugin.ts",
+        "build:ui": "vite build --config vite.config.ui.ts",
+        "clean": "rimraf dist node_modules .turbo",
+        "dev": "vite build --watch --config vite.config.ui.ts & vite build --watch --config vite.config.plugin.ts",
+        "lint": "eslint ./src",
+        "predev:figma": "mkdir -p dist && cp manifest.json dist/",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "typecheck": "tsc -b --noEmit"
+    },
+    "dependencies": {
+        "@vapor-ui/core": "workspace:*",
+        "@vapor-ui/icons": "workspace:*",
+        "react": "catalog:",
+        "react-dom": "catalog:"
+    },
+    "devDependencies": {
+        "@figma/plugin-typings": "^1.125.0",
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@tailwindcss/vite": "^4.0.0",
+        "@types/node": "^26.1.0",
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
+        "@vitejs/plugin-react": "^4.3.0",
+        "@vitest/coverage-v8": "^3.2.6",
+        "eslint": "catalog:",
+        "rimraf": "^6.0.0",
+        "tailwindcss": "^4.0.0",
+        "typescript": "catalog:",
+        "vite": "^7.3.5",
+        "vite-plugin-singlefile": "^2.0.0",
+        "vitest": "^3.2.6"
+    }
+}

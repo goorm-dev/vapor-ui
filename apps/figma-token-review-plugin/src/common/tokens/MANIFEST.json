@@ -1,0 +1,45 @@
+{
+    "generatedAt": "2026-06-30",
+    "entries": {
+        "semantic-color.light.json": {
+            "source": "skills/figma-token-review/assets/semantic-color.light.json",
+            "sha256": "757c9953a03146a149c1df6547dae8f6eff8cbd61e18f2d27ad80b1a500f1592"
+        },
+        "semantic-color.dark.json": {
+            "source": "skills/figma-token-review/assets/semantic-color.dark.json",
+            "sha256": "f07ef140cb44a0b0e2c43a07375c7eb2e04383d12ddb661d86cd322e82edf18d"
+        },
+        "primitive-color.light.json": {
+            "source": "skills/figma-token-review/assets/primitive-color.light.json",
+            "sha256": "2eb16b567eebc23a22c5b256061d2b8af22e50756755602d7580f39d5023aca7"
+        },
+        "primitive-color.dark.json": {
+            "source": "skills/figma-token-review/assets/primitive-color.dark.json",
+            "sha256": "5b1a69ddce685bff4a6a9ea6c743b95061008c30591a58b45e93f64e6b55323e"
+        },
+        "text-style.json": {
+            "source": "skills/figma-token-review/assets/text-style.json",
+            "sha256": "7e786c78f5eb6d4a16a8eea1b0a9c14ec44e983ace2d85400ba9932b809a15c8"
+        },
+        "typography.json": {
+            "source": "skills/figma-token-review/assets/typography.json",
+            "sha256": "a178cac296b0210e4484729a2dc2f8eb25d4b7c12e39df6f93bf9b2176aebdbc"
+        },
+        "space.json": {
+            "source": "skills/token-lint/assets/space.json",
+            "sha256": "e1ce26b4f673fa432739eb5422ea7d5128f6da343f5fe31e0aad2257b5664343"
+        },
+        "dimension.json": {
+            "source": "skills/token-lint/assets/dimension.json",
+            "sha256": "a01fb0a5f85719fd212942eb7f2434949494ca1d539bb8070fa78d3b642d5c71"
+        },
+        "border-radius.json": {
+            "source": "skills/token-lint/assets/border-radius.json",
+            "sha256": "90b14e7e52752579ecb03d785b3082c31023ce7409a59011fc07bde04d45e118"
+        },
+        "shadow.json": {
+            "source": "skills/token-lint/assets/shadow.json",
+            "sha256": "ca0eba92ede054b3406f1ada250379b351231891313ac3a319392944a2330726"
+        }
+    }
+}

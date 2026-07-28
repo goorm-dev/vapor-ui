@@ -1,0 +1,213 @@
+import { describe, expect, it } from 'vitest';
+
+import type { TypographyUsage } from '~/common/schemas';
+import { evaluateTypography } from '~/ui/lib/evaluate/typography';
+import { loadTextStyleSchema } from '~/ui/lib/loaders/typography';
+
+const schema = loadTextStyleSchema();
+
+function usage(partial: Partial<TypographyUsage>): TypographyUsage {
+    return {
+        nodeId: 'n',
+        name: 'label',
+        characters: '안내',
+        textStyle: 'body2',
+        viewport: 'pc',
+        appliedStatus: 'styled-clean',
+        overriddenFields: [],
+        resolved: { fontSize: 14, lineHeight: {}, letterSpacing: {}, fontName: {} },
+        ...partial,
+    };
+}
+
+describe('evaluateTypography', () => {
+    it('appliedStatus=raw 는 typo-raw / high', () => {
+        const r = evaluateTypography([usage({ appliedStatus: 'raw', textStyle: null })], schema);
+        expect(r.violations[0].type).toBe('typo-raw');
+        expect(r.violations[0].severity).toBe('high');
+    });
+
+    it('styled-override 는 typo-styled-override / info', () => {
+        const r = evaluateTypography(
+            [usage({ appliedStatus: 'styled-override', overriddenFields: ['fontSize'] })],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('typo-styled-override');
+        expect(r.violations[0].severity).toBe('info');
+    });
+
+    it('styled-override message 에 overriddenFields 표시', () => {
+        const r = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'styled-override',
+                    overriddenFields: ['fontSize', 'lineHeight'],
+                }),
+            ],
+            schema,
+        );
+        expect(r.violations[0].message).toContain('fontSize');
+        expect(r.violations[0].message).toContain('lineHeight');
+    });
+
+    it('styled-clean 은 conformant', () => {
+        const r = evaluateTypography([usage({})], schema);
+        expect(r.violations.length).toBe(0);
+        expect(r.conformant.length).toBe(1);
+    });
+
+    it('스키마에 없는 textStyle → unknown-token / high', () => {
+        const r = evaluateTypography(
+            [usage({ textStyle: 'nonexistent-style-xyz', appliedStatus: 'styled-clean' })],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('unknown-token');
+        expect(r.violations[0].severity).toBe('high');
+    });
+
+    it('property 는 textStyle', () => {
+        const r = evaluateTypography([usage({ appliedStatus: 'raw', textStyle: null })], schema);
+        expect(r.violations[0].property).toBe('textStyle');
+    });
+
+    it('typo-raw 는 resolved.fontSize 와 일치하는 textStyle 이름을 suggested 에 담는다', () => {
+        // body2 는 14px 로 resolve 된다 (Task 2)
+        const r = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'raw',
+                    textStyle: null,
+                    resolved: { fontSize: 14, lineHeight: {}, letterSpacing: {}, fontName: {} },
+                }),
+            ],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('typo-raw');
+        expect(r.violations[0].suggested).toContain('body2');
+    });
+
+    it('typo-raw 의 fontSize 가 null 이면 suggested 빈 배열', () => {
+        const r = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'raw',
+                    textStyle: null,
+                    resolved: { fontSize: null, lineHeight: {}, letterSpacing: {}, fontName: {} },
+                }),
+            ],
+            schema,
+        );
+        expect(r.violations[0].suggested).toEqual([]);
+    });
+
+    it('typo-styled-override 는 바인딩된 textStyle 을 suggested 로 복원 제안한다', () => {
+        const r = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'styled-override',
+                    textStyle: 'body2',
+                    overriddenFields: ['fontSize'],
+                }),
+            ],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('typo-styled-override');
+        expect(r.violations[0].suggested).toEqual(['body2']);
+    });
+
+    it('unknown-token 은 suggested 빈 배열', () => {
+        const r = evaluateTypography(
+            [usage({ textStyle: 'nonexistent-style-xyz', appliedStatus: 'styled-clean' })],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('unknown-token');
+        expect(r.violations[0].suggested).toEqual([]);
+    });
+
+    it('token 필드는 textStyle 이름', () => {
+        const r = evaluateTypography([usage({ appliedStatus: 'raw', textStyle: null })], schema);
+        expect(r.violations[0].token).toBeNull();
+
+        const r2 = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'styled-override',
+                    textStyle: 'body2',
+                    overriddenFields: ['fontSize'],
+                }),
+            ],
+            schema,
+        );
+        expect(r2.violations[0].token).toBe('body2');
+    });
+
+    it('conformant token 필드는 textStyle 이름', () => {
+        const r = evaluateTypography(
+            [usage({ textStyle: 'body2', appliedStatus: 'styled-clean' })],
+            schema,
+        );
+        expect(r.conformant[0].token).toBe('body2');
+    });
+
+    it('typo-raw: fontSize 가 여러 textStyle 에 매핑되면 suggested 에 모두 포함된다', () => {
+        // fontSize=14 는 schema 에서 subtitle1·body2 두 스타일이 공유 (typography.fontSize.075 = 14px)
+        const r = evaluateTypography(
+            [
+                usage({
+                    appliedStatus: 'raw',
+                    textStyle: null,
+                    resolved: { fontSize: 14, lineHeight: {}, letterSpacing: {}, fontName: {} },
+                }),
+            ],
+            schema,
+        );
+        expect(r.violations[0].type).toBe('typo-raw');
+        expect(r.violations[0].suggested.length).toBeGreaterThanOrEqual(2);
+        expect(r.violations[0].suggested).toContain('subtitle1');
+        expect(r.violations[0].suggested).toContain('body2');
+    });
+
+    it('빈 usages → violations/conformant 모두 빔', () => {
+        const r = evaluateTypography([], schema);
+        expect(r.violations.length).toBe(0);
+        expect(r.conformant.length).toBe(0);
+    });
+
+    describe('viewport 결정론 규칙 (mobile + display*)', () => {
+        it('mobile 뷰포트 + display* → typo-viewport-misfit / high', () => {
+            const r = evaluateTypography(
+                [usage({ textStyle: 'display1', viewport: 'mobile' })],
+                schema,
+            );
+            expect(r.violations[0].type).toBe('typo-viewport-misfit');
+            expect(r.violations[0].severity).toBe('high');
+            expect(r.conformant.length).toBe(0);
+        });
+
+        it('mobile 뷰포트 + display* → suggested 는 heading1/heading2', () => {
+            const r = evaluateTypography(
+                [usage({ textStyle: 'display2', viewport: 'mobile' })],
+                schema,
+            );
+            expect(r.violations[0].suggested).toEqual(['heading1', 'heading2']);
+        });
+
+        it('pc 뷰포트 + display* → conformant (뷰포트 규칙 적용 안 함)', () => {
+            const r = evaluateTypography(
+                [usage({ textStyle: 'display1', viewport: 'pc' })],
+                schema,
+            );
+            expect(r.violations.length).toBe(0);
+            expect(r.conformant[0].token).toBe('display1');
+        });
+
+        it('mobile 뷰포트 + non-display → conformant', () => {
+            const r = evaluateTypography(
+                [usage({ textStyle: 'body2', viewport: 'mobile' })],
+                schema,
+            );
+            expect(r.violations.length).toBe(0);
+            expect(r.conformant.length).toBe(1);
+        });
+    });
+});
