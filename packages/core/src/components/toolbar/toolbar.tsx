@@ -104,6 +104,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButton.Props>(
         <BaseToolbar.Button
             ref={ref}
             render={element}
+            disabled={disabled}
             focusableWhenDisabled={focusableWhenDisabled}
             className={clsx(styles.item({ size }), className)}
             {...componentProps}
