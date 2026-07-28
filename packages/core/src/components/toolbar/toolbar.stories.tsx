@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react';
 import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -16,9 +17,11 @@ import { useRenderElement } from '~/hooks/use-render-element';
 import { Toolbar } from '.';
 import { Card } from '../card';
 import { Select } from '../select';
+import { Text } from '../text';
 import { Toggle } from '../toggle';
 import { ToggleGroup } from '../toggle-group';
 import { Tooltip } from '../tooltip';
+import { VStack } from '../v-stack';
 
 export default {
     title: 'Toolbar',
@@ -27,6 +30,17 @@ export default {
         Button: Toolbar.Button,
         Input: Toolbar.Input,
         Separator: Toolbar.Separator,
+    },
+    argTypes: {
+        disabled: { control: 'boolean' },
+        variant: {
+            control: 'inline-radio',
+            options: ['outline', 'ghost'],
+        },
+        size: {
+            control: 'inline-radio',
+            options: ['sm', 'md', 'lg', 'xl'],
+        },
     },
 } satisfies Meta<typeof Toolbar.Root>;
 
@@ -47,78 +61,190 @@ const selectItems: SelectItem[] = [
 
 export const Default: Story = {
     render: (args) => {
+        const [fontFamily, setFontFamily] = useState('');
+        const [fontSize, setFontSize] = useState<number>();
+
+        const handleValueChange = (value: string) => {
+            const parsedValue = value ? parseInt(value, 10) : 0;
+
+            if (isNaN(parsedValue)) return;
+
+            setFontSize(parsedValue);
+        };
+
         return (
-            <Toolbar.Root {...args}>
-                <TooltipButton description={<span>Bold</span>}>
-                    <Toolbar.Button render={<Toggle />}>
-                        <BoldOutlineIcon />
-                    </Toolbar.Button>
-                </TooltipButton>
-                <TooltipButton description="Italic">
-                    <Toolbar.Button render={<Toggle />}>
-                        <ItalicIcon />
-                    </Toolbar.Button>
-                </TooltipButton>
-                <TooltipButton description="Strike Through">
-                    <Toolbar.Button render={<Toggle />}>
-                        <StrikeOutlineIcon />
-                    </Toolbar.Button>
-                </TooltipButton>
-                <TooltipButton description="Underline">
-                    <Toolbar.Button render={<Toggle />}>
-                        <UnderlineOutlineIcon />
-                    </Toolbar.Button>
-                </TooltipButton>
+            <Card.Root>
+                <Card.Header>
+                    <Toolbar.Root {...args}>
+                        <TooltipButton description="Bold">
+                            <Toolbar.Button render={<Toggle />}>
+                                <BoldOutlineIcon />
+                            </Toolbar.Button>
+                        </TooltipButton>
+                        <TooltipButton description="Italic">
+                            <Toolbar.Button render={<Toggle />}>
+                                <ItalicIcon />
+                            </Toolbar.Button>
+                        </TooltipButton>
+                        <TooltipButton description="Strike Through">
+                            <Toolbar.Button render={<Toggle />}>
+                                <StrikeOutlineIcon />
+                            </Toolbar.Button>
+                        </TooltipButton>
+                        <TooltipButton description="Underline">
+                            <Toolbar.Button render={<Toggle />}>
+                                <UnderlineOutlineIcon />
+                            </Toolbar.Button>
+                        </TooltipButton>
 
-                <Toolbar.Separator />
+                        <Toolbar.Separator />
 
-                <ToggleGroup.Root>
-                    <TooltipButton description="Align Left">
-                        <Toolbar.Button render={<Toggle />}>
-                            <AlignLeftOutlineIcon />
-                        </Toolbar.Button>
-                    </TooltipButton>
-                    <TooltipButton description="Align Center">
-                        <Toolbar.Button render={<Toggle />}>
-                            <AlignCenterOutlineIcon />
-                        </Toolbar.Button>
-                    </TooltipButton>
-                    <TooltipButton description="Align Right">
-                        <Toolbar.Button render={<Toggle />}>
-                            <AlignRightOutlineIcon />
-                        </Toolbar.Button>
-                    </TooltipButton>
-                </ToggleGroup.Root>
+                        <Toolbar.Group render={<ToggleGroup.Root variant="accent" />}>
+                            <TooltipButton description="Align Left">
+                                <Toolbar.Button render={<Toggle />}>
+                                    <AlignLeftOutlineIcon />
+                                </Toolbar.Button>
+                            </TooltipButton>
+                            <TooltipButton description="Align Center">
+                                <Toolbar.Button render={<Toggle />}>
+                                    <AlignCenterOutlineIcon />
+                                </Toolbar.Button>
+                            </TooltipButton>
+                            <TooltipButton description="Align Right">
+                                <Toolbar.Button render={<Toggle />}>
+                                    <AlignRightOutlineIcon />
+                                </Toolbar.Button>
+                            </TooltipButton>
+                        </Toolbar.Group>
 
-                <Toolbar.Separator />
+                        <Toolbar.Separator />
 
-                <Toolbar.Input placeholder="Input" />
+                        <Toolbar.Input
+                            placeholder="font size(px)"
+                            value={fontSize}
+                            onValueChange={handleValueChange}
+                        />
 
-                <AlignSelect
-                    trigger={<Toolbar.Button />}
-                    items={selectItems}
-                    defaultValue="helvetica"
-                />
+                        <AlignSelect
+                            trigger={Toolbar.Button}
+                            items={selectItems}
+                            value={fontFamily}
+                            onValueChange={setFontFamily}
+                            placeholder="select font"
+                        />
 
-                <Toolbar.Separator />
+                        <Toolbar.Separator />
 
-                <Toolbar.Group>
-                    <Toolbar.Button>Button 1</Toolbar.Button>
-                    <Toolbar.Button>Button 2</Toolbar.Button>
-                    <Toolbar.Button>Button 3</Toolbar.Button>
-                </Toolbar.Group>
-            </Toolbar.Root>
+                        <Toolbar.Group>
+                            <Toolbar.Button>Button 1</Toolbar.Button>
+                            <Toolbar.Button>Button 2</Toolbar.Button>
+                            <Toolbar.Button>Button 3</Toolbar.Button>
+                        </Toolbar.Group>
+                    </Toolbar.Root>
+                </Card.Header>
+
+                <Card.Body>
+                    <p style={{ fontFamily, fontSize: `${fontSize}px` }}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
+                        Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies
+                        sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a,
+                        semper congue, euismod non, mi.
+                    </p>
+
+                    <p></p>
+                </Card.Body>
+            </Card.Root>
         );
     },
 };
 
-export const WithCard: Story = {
-    render: (args, ctx) => {
+const Component = (props: Toolbar.Root.Props) => {
+    return (
+        <Toolbar.Root {...props}>
+            <TooltipButton description="Bold">
+                <Toolbar.Button render={<Toggle />}>
+                    <BoldOutlineIcon />
+                </Toolbar.Button>
+            </TooltipButton>
+            <TooltipButton description="Italic">
+                <Toolbar.Button render={<Toggle />}>
+                    <ItalicIcon />
+                </Toolbar.Button>
+            </TooltipButton>
+            <TooltipButton description="Strike Through">
+                <Toolbar.Button render={<Toggle />}>
+                    <StrikeOutlineIcon />
+                </Toolbar.Button>
+            </TooltipButton>
+            <TooltipButton description="Underline">
+                <Toolbar.Button render={<Toggle />}>
+                    <UnderlineOutlineIcon />
+                </Toolbar.Button>
+            </TooltipButton>
+
+            <Toolbar.Separator />
+
+            <ToggleGroup.Root>
+                <TooltipButton description="Align Left">
+                    <Toolbar.Button render={<Toggle />}>
+                        <AlignLeftOutlineIcon />
+                    </Toolbar.Button>
+                </TooltipButton>
+                <TooltipButton description="Align Center">
+                    <Toolbar.Button render={<Toggle />}>
+                        <AlignCenterOutlineIcon />
+                    </Toolbar.Button>
+                </TooltipButton>
+                <TooltipButton description="Align Right">
+                    <Toolbar.Button render={<Toggle />}>
+                        <AlignRightOutlineIcon />
+                    </Toolbar.Button>
+                </TooltipButton>
+            </ToggleGroup.Root>
+
+            <Toolbar.Separator />
+
+            <Toolbar.Input placeholder="font size(px)" />
+
+            <AlignSelect
+                trigger={Toolbar.Button}
+                items={selectItems}
+                value=""
+                onValueChange={() => {}}
+                placeholder="select font"
+            />
+
+            <Toolbar.Separator />
+
+            <Toolbar.Group>
+                <Toolbar.Button>Button 1</Toolbar.Button>
+                <Toolbar.Button>Button 2</Toolbar.Button>
+                <Toolbar.Button>Button 3</Toolbar.Button>
+            </Toolbar.Group>
+        </Toolbar.Root>
+    );
+};
+
+export const TestBed: Story = {
+    render: () => {
         return (
-            <Card.Root>
-                <Card.Header>{Default.render?.(args, ctx)}</Card.Header>
-                <Card.Body>Test</Card.Body>
-            </Card.Root>
+            <VStack $css={{ gap: '1rem' }}>
+                <Text typography="heading5">Outline Size</Text>
+                <Component size="sm" />
+                <Component size="md" />
+                <Component size="lg" />
+                <Component size="xl" />
+
+                <Text typography="heading5">Ghost Size</Text>
+                <Component variant="ghost" size="sm" />
+                <Component variant="ghost" size="md" />
+                <Component variant="ghost" size="lg" />
+                <Component variant="ghost" size="xl" />
+
+                <Text typography="heading5">Disabled</Text>
+                <Component disabled />
+                <Component disabled variant="ghost" />
+            </VStack>
         );
     },
 };
@@ -142,21 +268,29 @@ const TooltipButton = ({ description, children, ...props }: TooltipButtonProps) 
 /* -----------------------------------------------------------------------------------------------*/
 
 interface AlignSelectProps {
-    trigger: React.ReactElement;
+    trigger: ComponentType<Toolbar.Button.Props>;
     items: SelectItem[];
-    defaultValue: string;
+    value: string;
+    onValueChange: (value: string) => void;
+    placeholder?: string;
 }
 
-const AlignSelect = ({ trigger: triggerProp, items, defaultValue }: AlignSelectProps) => {
-    const [font, setFont] = useState(defaultValue);
+const AlignSelect = ({
+    trigger: Trigger,
+    items,
+    value,
+    onValueChange,
+    placeholder,
+}: AlignSelectProps) => {
+    const [font, setFont] = useState(value);
     const handleFontChange = (value: string | null) => {
         setFont((prev) => value ?? prev);
+        onValueChange(value ?? '');
     };
 
     const trigger = useRenderElement({
-        render: triggerProp,
+        render: <Trigger render={<Select.TriggerPrimitive />} />,
         props: {
-            render: <Select.TriggerPrimitive />,
             children: (
                 <>
                     <Select.ValuePrimitive style={{ fontFamily: font }} />
@@ -167,7 +301,12 @@ const AlignSelect = ({ trigger: triggerProp, items, defaultValue }: AlignSelectP
     });
 
     return (
-        <Select.Root items={items} value={font} onValueChange={handleFontChange}>
+        <Select.Root
+            items={items}
+            value={font}
+            onValueChange={handleFontChange}
+            placeholder={placeholder}
+        >
             {trigger}
 
             <Select.Popup $css={{ minWidth: 'auto' }}>
