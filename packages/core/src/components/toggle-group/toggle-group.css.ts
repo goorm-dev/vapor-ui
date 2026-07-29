@@ -1,6 +1,6 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
-import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
+import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
 export const root = componentRecipe({
@@ -16,11 +16,4 @@ export const root = componentRecipe({
     },
 });
 
-export const separator = componentStyle({
-    width: '0.0625rem',
-    alignSelf: 'stretch',
-    marginBlock: vars.size.space['050'],
-    backgroundColor: vars.color.border.normal,
-});
-
-export type ToggleGroupVariants = NonNullable<RecipeVariants<typeof root>>;
+export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

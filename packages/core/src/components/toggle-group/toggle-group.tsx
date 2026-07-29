@@ -8,7 +8,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
-import type { ToggleGroupVariants } from './toggle-group.css';
+import type { RootVariants } from './toggle-group.css';
 import * as styles from './toggle-group.css';
 
 export const [ToggleGroupProvider, useToggleGroupContext] = createContext<ToggleGroupVariants>({
@@ -45,6 +45,8 @@ export const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroup.Props>((props,
 ToggleGroup.displayName = 'ToggleGroup';
 
 /* -----------------------------------------------------------------------------------------------*/
+
+type ToggleGroupVariants = RootVariants;
 
 export namespace ToggleGroup {
     export type State = BaseToggleGroup.State;
