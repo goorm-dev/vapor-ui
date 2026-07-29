@@ -5,15 +5,15 @@ import { axe } from 'vitest-axe';
 import { ToggleGroup } from '.';
 import { Toggle } from '../toggle';
 
-const ToggleGroupTest = (props: ToggleGroup.Root.Props) => (
-    <ToggleGroup.Root {...props}>
+const ToggleGroupTest = (props: ToggleGroup.Props) => (
+    <ToggleGroup {...props}>
         <Toggle value="a" aria-label="a" />
         <Toggle value="b" aria-label="b" />
         <Toggle value="c" aria-label="c" />
-    </ToggleGroup.Root>
+    </ToggleGroup>
 );
 
-describe('<ToggleGroup.Root>', () => {
+describe('<ToggleGroup>', () => {
     it('should have no a11y violations', async () => {
         const rendered = render(<ToggleGroupTest />);
         const result = await axe(rendered.container);
