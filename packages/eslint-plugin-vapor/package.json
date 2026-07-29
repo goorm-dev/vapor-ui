@@ -2,6 +2,11 @@
     "name": "eslint-plugin-vapor",
     "version": "1.0.0",
     "description": "ESLint configuration for Vapor UI projects",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "directory": "packages/eslint-plugin-vapor"
+    },
     "license": "MIT",
     "type": "module",
     "exports": {
