@@ -42,6 +42,10 @@ ruleTester.run('prefer-design-token', preferDesignTokenRule, {
         // border shorthand: red-500 shares its light hex with border-danger
         // but their dark values differ — no dark-safe candidate → no report.
         { code: '.x { border: 1px solid var(--vapor-color-red-500); }' },
+        // Raw hex #db3643 is red-500's LIGHT hex; red-500 (and border-danger
+        // that references it) have different dark values, so swapping in a
+        // token would silently change the dark render — no candidate.
+        { code: '.x { border: 1px solid #db3643; }' },
         // border shorthand: the 1px width part must not trigger the
         // dimension branch (border scope is not a foundation scope).
         { code: '.x { border: 1px solid var(--vapor-color-border-normal); }' },
@@ -72,27 +76,25 @@ ruleTester.run('prefer-design-token', preferDesignTokenRule, {
                 },
             ],
         },
-        // C-2: raw hex on background-color → semantic background token
+        // C-2: raw hex on background-color — background-canvas-100 / overlay-100
+        // share the light hex #ffffff but their DARK values differ, so they
+        // fail the dark-safety filter. Only `--vapor-color-white` (primitive
+        // white, dark-invariant) survives as a fallback candidate.
         {
             code: '.x { background-color: #ffffff; }',
             errors: [
                 {
                     messageId: 'preferToken',
                     data: {
-                        candidate: '--vapor-color-background-canvas-100',
+                        candidate: '--vapor-color-white',
                         rawValue: '#ffffff',
                         property: 'background-color',
                     },
                     suggestions: [
                         {
                             messageId: 'replaceWithToken',
-                            data: { candidate: '--vapor-color-background-canvas-100' },
-                            output: '.x { background-color: var(--vapor-color-background-canvas-100); }',
-                        },
-                        {
-                            messageId: 'replaceWithToken',
-                            data: { candidate: '--vapor-color-background-overlay-100' },
-                            output: '.x { background-color: var(--vapor-color-background-overlay-100); }',
+                            data: { candidate: '--vapor-color-white' },
+                            output: '.x { background-color: var(--vapor-color-white); }',
                         },
                     ],
                 },
@@ -150,28 +152,6 @@ ruleTester.run('prefer-design-token', preferDesignTokenRule, {
                             messageId: 'replaceWithToken',
                             data: { candidate: '--vapor-size-space-100' },
                             output: '.x { padding: 12px var(--vapor-size-space-100); }',
-                        },
-                    ],
-                },
-            ],
-        },
-        // border shorthand: raw hex color part → border-scope semantic token;
-        // the 1px width part is ignored
-        {
-            code: '.x { border: 1px solid #db3643; }',
-            errors: [
-                {
-                    messageId: 'preferToken',
-                    data: {
-                        candidate: '--vapor-color-border-danger',
-                        rawValue: '#db3643',
-                        property: 'border',
-                    },
-                    suggestions: [
-                        {
-                            messageId: 'replaceWithToken',
-                            data: { candidate: '--vapor-color-border-danger' },
-                            output: '.x { border: 1px solid var(--vapor-color-border-danger); }',
                         },
                     ],
                 },

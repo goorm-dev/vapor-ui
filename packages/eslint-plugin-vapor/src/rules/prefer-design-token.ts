@@ -129,20 +129,28 @@ export const preferDesignTokenRule: Rule.RuleModule = {
                         )
                             return;
                         if (!isColorScope(expectedScopes)) return;
+                        // Raw hex has no dark-mode variant — the browser
+                        // renders the literal identically in both modes.
+                        // Candidate tokens must therefore match on `hexDark`
+                        // too, or swapping them silently shifts dark render.
                         const semantic = (TOKEN_INDEX.byHex.get(part.normalized) ?? []).filter(
                             (n) => {
                                 const m = TOKEN_INDEX.tokenMeta.get(n);
                                 return (
                                     m?.kind === 'semantic' &&
-                                    expectedScopes.includes(m.scope as Scope)
+                                    expectedScopes.includes(m.scope as Scope) &&
+                                    m.hexDark === part.normalized
                                 );
                             },
                         );
                         const primitives =
                             semantic.length === 0
-                                ? (TOKEN_INDEX.byHex.get(part.normalized) ?? []).filter(
-                                      (n) => TOKEN_INDEX.tokenMeta.get(n)?.kind === 'primitive',
-                                  )
+                                ? (TOKEN_INDEX.byHex.get(part.normalized) ?? []).filter((n) => {
+                                      const m = TOKEN_INDEX.tokenMeta.get(n);
+                                      return (
+                                          m?.kind === 'primitive' && m.hexDark === part.normalized
+                                      );
+                                  })
                                 : [];
                         const candidates = (semantic.length ? semantic : primitives).slice(
                             0,

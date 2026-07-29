@@ -47,6 +47,14 @@ function nameFromPath(prefix: string, path: readonly string[]): string {
     return `--vapor-${[prefix, ...path].filter(Boolean).join('-')}`;
 }
 
+function isDoNotUse(node: unknown): boolean {
+    const ext = (node as { $extensions?: Record<string, unknown> } | null)?.$extensions;
+    const vapor = (ext as { 'io.goorm.vapor'?: { status?: string } } | undefined)?.[
+        'io.goorm.vapor'
+    ];
+    return vapor?.status === 'do-not-use';
+}
+
 function pushIndex<K>(map: Map<K, string[]>, key: K, name: string): void {
     const list = map.get(key) ?? [];
     if (!list.includes(name)) list.push(name);
@@ -142,6 +150,8 @@ function walkSemanticColors(
             return;
         }
 
+        if (isDoNotUse(obj)) return;
+
         const ref = obj.$value.trim();
         if (ref.startsWith('{') && ref.endsWith('}')) {
             const refPath = ref.slice(1, -1).split('.');
@@ -182,6 +192,7 @@ function walkShadow(b: IndexBuilder, json: unknown): void {
 
     for (const [k, v] of Object.entries(root)) {
         if (k.startsWith('$') || !v || typeof v !== 'object') continue;
+        if (isDoNotUse(v)) continue;
 
         const name = `--vapor-shadow-${k}`;
         b.canonical.add(name);
