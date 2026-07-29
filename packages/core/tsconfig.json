@@ -1,11 +1,22 @@
 {
-    "files": [],
-    "references": [
-        {
-            "path": "./tsconfig.base.json"
+    "extends": "@repo/typescript-config/react-library",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "strict": true,
+        "allowJs": false,
+        "baseUrl": ".",
+        "paths": {
+            "~/*": ["./src/*"]
         },
-        {
-            "path": "./tsconfig.test.json"
-        }
-    ]
+        "types": ["node", "vitest-axe/extend-expect", "vitest/globals", "@vitest/browser/context"]
+    },
+    "include": [
+        "src",
+        "__tests__",
+        "playwright.config.ts",
+        "playwright.merge.ts",
+        "rolldown.config.ts",
+        "vitest.config.ts"
+    ],
+    "exclude": ["dist", "build", "node_modules"]
 }

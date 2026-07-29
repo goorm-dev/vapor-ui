@@ -68,13 +68,9 @@ const identifiers = ({ hash, filePath, debugId }: IdentifiersOptions) => {
 };
 
 const plugins = {
-    vanillaExtract: vanillaExtractPlugin({
-        esbuildOptions: { tsconfig: './tsconfig.base.json' },
-        identifiers,
-    }),
+    vanillaExtract: vanillaExtractPlugin({ identifiers }),
     depsExternal: depsExternalPlugin(),
     dts: dtsPlugin({
-        tsconfig: './tsconfig.base.json',
         emitDtsOnly: true,
         compilerOptions: {
             declaration: true,
