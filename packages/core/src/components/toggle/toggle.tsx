@@ -9,7 +9,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
-import { useToggleGroupContext } from '../toggle-group';
+import { useToggleGroupContext } from '../toggle-group/toggle-group';
 import * as styles from './toggle.css';
 import type { RootVariants } from './toggle.css';
 
@@ -44,6 +44,7 @@ export const Toggle = forwardRef<HTMLButtonElement, Toggle.Props>((props, ref) =
         </BaseToggle>
     );
 });
+Toggle.displayName = 'Toggle';
 
 /* -----------------------------------------------------------------------------------------------*/
 

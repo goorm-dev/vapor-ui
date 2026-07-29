@@ -20,10 +20,10 @@ export const [ToggleGroupProvider, useToggleGroupContext] = createContext<Toggle
 });
 
 /* -------------------------------------------------------------------------------------------------
- * ToggleGroup.Root
+ * ToggleGroup
  * -----------------------------------------------------------------------------------------------*/
 
-export const ToggleGroupRoot = forwardRef<HTMLDivElement, ToggleGroupRoot.Props>((props, ref) => {
+export const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroup.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ToggleGroupVariants>()(componentProps, [
         'size',
@@ -42,10 +42,11 @@ export const ToggleGroupRoot = forwardRef<HTMLDivElement, ToggleGroupRoot.Props>
         </ToggleGroupProvider>
     );
 });
+ToggleGroup.displayName = 'ToggleGroup';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export namespace ToggleGroupRoot {
+export namespace ToggleGroup {
     export type State = BaseToggleGroup.State;
     export type Props = VaporUIComponentProps<typeof BaseToggleGroup, State> & ToggleGroupVariants;
 }
