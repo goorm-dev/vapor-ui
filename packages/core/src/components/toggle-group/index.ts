@@ -1,1 +1,1 @@
-export * from './index.parts';
+export * from './toggle-group';
