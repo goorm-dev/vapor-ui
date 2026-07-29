@@ -1,0 +1,76 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+    "shadow": {
+        "$type": "shadow",
+        "sm": {
+            "$description": "Do not use — no active use case defined.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "status": "do-not-use",
+                    "reason": "No active use case defined.",
+                    "when": [],
+                    "avoid": []
+                }
+            },
+            "$value": {
+                "offsetX": { "value": 0, "unit": "px" },
+                "offsetY": { "value": 1, "unit": "px" },
+                "blur": { "value": 3, "unit": "px" },
+                "spread": { "value": 0, "unit": "px" },
+                "color": "rgba(0, 0, 0, 0.2)"
+            }
+        },
+        "md": {
+            "$description": "The most common shadow. Used when an interface element requires clear separation from the background.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "independent element requiring user action",
+                        "element that must be perceived first by the user",
+                        "element temporarily emphasized by interaction such as focus or selection"
+                    ],
+                    "avoid": ["icons", "text"]
+                }
+            },
+            "$value": {
+                "offsetX": { "value": 0, "unit": "px" },
+                "offsetY": { "value": 4, "unit": "px" },
+                "blur": { "value": 10, "unit": "px" },
+                "spread": { "value": 0, "unit": "px" },
+                "color": "rgba(0, 0, 0, 0.2)"
+            }
+        },
+        "lg": {
+            "$description": "Represents a higher elevation than `md`. Used when separation from an interface element that already has a shadow applied is required.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["element that appears above another element with a shadow applied"],
+                    "avoid": ["general shadow use → `md`"]
+                }
+            },
+            "$value": {
+                "offsetX": { "value": 0, "unit": "px" },
+                "offsetY": { "value": 4, "unit": "px" },
+                "blur": { "value": 16, "unit": "px" },
+                "spread": { "value": 0, "unit": "px" },
+                "color": "rgba(0, 0, 0, 0.2)"
+            }
+        },
+        "xl": {
+            "$description": "Used for the strongest separation between page and content. Represents the greatest perceived distance between elements.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["modal-type overlay content that appears above the page"],
+                    "avoid": ["elements that are not overlay content"]
+                }
+            },
+            "$value": {
+                "offsetX": { "value": 0, "unit": "px" },
+                "offsetY": { "value": 16, "unit": "px" },
+                "blur": { "value": 32, "unit": "px" },
+                "spread": { "value": 0, "unit": "px" },
+                "color": "rgba(0, 0, 0, 0.2)"
+            }
+        }
+    }
+}
