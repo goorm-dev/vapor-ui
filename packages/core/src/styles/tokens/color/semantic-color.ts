@@ -21,55 +21,54 @@ export const LIGHT_SEMANTIC_COLORS = {
         // primary
         'primary-100': colorRef('blue', '100'),
         'primary-200': colorRef('blue', '500'),
-        primary: colorRef('blue', '500'),
         'primary-weak': colorRef('blue', '100'),
+        primary: colorRef('blue', '500'),
 
         // secondary
         'secondary-100': colorRef('gray', '050'),
         'secondary-200': colorRef('gray', '100'),
-        secondary: colorRef('gray', '100'),
         'secondary-weak': colorRef('gray', '050'),
+        secondary: colorRef('gray', '100'),
 
         // success
         'success-100': colorRef('green', '100'),
         'success-200': colorRef('green', '500'),
-        success: colorRef('green', '500'),
         'success-weak': colorRef('green', '100'),
+        success: colorRef('green', '500'),
 
         // warning
         'warning-100': colorRef('orange', '100'),
         'warning-200': colorRef('orange', '500'),
-        warning: colorRef('orange', '500'),
         'warning-weak': colorRef('orange', '100'),
+        warning: colorRef('orange', '500'),
 
         // danger
         'danger-100': colorRef('red', '100'),
         'danger-200': colorRef('red', '500'),
-        danger: colorRef('red', '500'),
         'danger-weak': colorRef('red', '100'),
+        danger: colorRef('red', '500'),
 
         // hint
         'hint-100': colorRef('gray', '100'),
         'hint-200': colorRef('gray', '600'),
-        hint: colorRef('gray', '600'),
         'hint-weak': colorRef('gray', '100'),
+        hint: colorRef('gray', '600'),
 
         // contrast
         'contrast-100': colorRef('gray', '300'),
         'contrast-200': colorRef('gray', '800'),
-        contrast: colorRef('gray', '800'),
         'contrast-weak': colorRef('gray', '500'),
+        contrast: colorRef('gray', '800'),
 
         // canvas
         'canvas-100': canvasRef(),
         'canvas-200': colorRef('gray', '050'),
+        'overlay-100': canvasRef(),
         'canvas-base': canvasRef(),
         'canvas-sunken': colorRef('gray', '050'),
         'canvas-raised': '#FAFAFA',
         'canvas-dim': 'rgba(0, 0, 0, 0.32)',
         'canvas-overlay': canvasRef(),
-
-        'overlay-100': canvasRef(),
     },
     foreground: {
         // primary
@@ -78,7 +77,7 @@ export const LIGHT_SEMANTIC_COLORS = {
         primary: colorRef('blue', '600'),
         'primary-strong': colorRef('blue', '700'),
 
-        // secondary (v2 default = 기존 normal-100 값, 별도 값)
+        // secondary
         'secondary-100': colorRef('gray', '800'),
         'secondary-200': colorRef('gray', '900'),
         secondary: colorRef('gray', '700'),
@@ -101,12 +100,12 @@ export const LIGHT_SEMANTIC_COLORS = {
         danger: colorRef('red', '600'),
         'danger-strong': colorRef('red', '700'),
 
-        // hint (v2 값 조정: gray-500)
+        // hint
         'hint-100': colorRef('gray', '600'),
         'hint-200': colorRef('gray', '700'),
         hint: colorRef('gray', '500'),
 
-        // contrast (v2 값 조정: light=black)
+        // contrast
         'contrast-100': colorRef('gray', '800'),
         'contrast-200': colorRef('gray', '900'),
         contrast: baseRef('black'),
@@ -116,7 +115,7 @@ export const LIGHT_SEMANTIC_COLORS = {
         'normal-200': colorRef('gray', '900'),
         normal: colorRef('gray', '900'),
 
-        // inverse (light=white)
+        // inverse
         inverse: baseRef('white'),
 
         // static
@@ -140,55 +139,54 @@ export const DARK_SEMANTIC_COLORS = {
         // primary
         'primary-100': colorRef('blue', '050'),
         'primary-200': colorRef('blue', '500'),
-        primary: colorRef('blue', '500'),
         'primary-weak': colorRef('blue', '100'),
+        primary: colorRef('blue', '500'),
 
         // secondary
         'secondary-100': colorRef('gray', '050'),
         'secondary-200': colorRef('gray', '200'),
-        secondary: colorRef('gray', '200'),
         'secondary-weak': colorRef('gray', '100'),
+        secondary: colorRef('gray', '200'),
 
         // success
         'success-100': colorRef('green', '050'),
         'success-200': colorRef('green', '500'),
-        success: colorRef('green', '500'),
         'success-weak': colorRef('green', '100'),
+        success: colorRef('green', '500'),
 
         // warning
         'warning-100': colorRef('orange', '050'),
         'warning-200': colorRef('orange', '500'),
-        warning: colorRef('orange', '500'),
         'warning-weak': colorRef('orange', '100'),
+        warning: colorRef('orange', '500'),
 
         // danger
         'danger-100': colorRef('red', '050'),
         'danger-200': colorRef('red', '500'),
-        danger: colorRef('red', '500'),
         'danger-weak': colorRef('red', '100'),
+        danger: colorRef('red', '500'),
 
         // hint
         'hint-100': colorRef('gray', '200'),
         'hint-200': colorRef('gray', '600'),
-        hint: colorRef('gray', '600'),
         'hint-weak': colorRef('gray', '200'),
+        hint: colorRef('gray', '600'),
 
-        // contrast (v2 값 조정: dark default = gray-500)
+        // contrast
         'contrast-100': colorRef('gray', '800'),
         'contrast-200': colorRef('gray', '300'),
-        contrast: colorRef('gray', '500'),
         'contrast-weak': colorRef('gray', '800'),
+        contrast: colorRef('gray', '500'),
 
         // canvas
         'canvas-100': canvasRef(),
         'canvas-200': colorRef('gray', '050'),
+        'overlay-100': colorRef('gray', '100'),
         'canvas-base': canvasRef(),
         'canvas-sunken': colorRef('gray', '050'),
         'canvas-raised': '#1F1F1F',
         'canvas-dim': 'rgba(0, 0, 0, 0.32)',
         'canvas-overlay': colorRef('gray', '100'),
-
-        'overlay-100': colorRef('gray', '100'),
     },
     foreground: {
         // primary
@@ -220,12 +218,12 @@ export const DARK_SEMANTIC_COLORS = {
         danger: colorRef('red', '600'),
         'danger-strong': colorRef('red', '700'),
 
-        // hint (v2 값 조정: gray-500)
+        // hint
         'hint-100': colorRef('gray', '600'),
         'hint-200': colorRef('gray', '700'),
         hint: colorRef('gray', '500'),
 
-        // contrast (v2 값 조정: dark = white)
+        // contrast
         'contrast-100': colorRef('gray', '200'),
         'contrast-200': colorRef('gray', '300'),
         contrast: baseRef('white'),
@@ -235,7 +233,7 @@ export const DARK_SEMANTIC_COLORS = {
         'normal-200': colorRef('gray', '900'),
         normal: colorRef('gray', '900'),
 
-        // inverse (dark=black, v2 값 변경)
+        // inverse
         inverse: baseRef('black'),
 
         // static
