@@ -14,7 +14,8 @@ export const ariaLabelOnNavigationRule: Rule.RuleModule = {
         },
         fixable: undefined,
         messages: {
-            missingAriaLabel: "The '{{ componentName }}' requires an 'aria-label' prop.",
+            missingAriaLabel:
+                "'{{ componentName }}'에는 접근성을 위한 'aria-label' prop이 필요합니다.",
         },
     },
     create(context) {
