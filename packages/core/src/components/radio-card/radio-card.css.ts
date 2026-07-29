@@ -15,13 +15,13 @@ export const root = componentRecipe({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            textAlign: 'center',
-            boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
             borderRadius: vars.size.borderRadius[300],
-            color: vars.color.foreground.normal[200],
+            boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
             cursor: 'pointer',
             paddingBlock: '0.3125rem',
             paddingInline: vars.size.space['150'],
+            textAlign: 'center',
+            color: vars.color.foreground.normal[200],
 
             selectors: {
                 '&[data-checked]': { vars: { [boxShadowColor]: vars.color.border.primary } },

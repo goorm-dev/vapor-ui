@@ -63,10 +63,10 @@ export const fallback = componentRecipe({
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%',
-        height: '100%',
-
         backgroundColor: fallbackBgVar,
+        width: '100%',
+
+        height: '100%',
         color: vars.color.foreground.inverse,
     },
 
@@ -77,28 +77,28 @@ export const fallback = componentRecipe({
          */
         size: {
             sm: {
-                fontSize: vars.typography.fontSize['050'],
                 lineHeight: vars.typography.lineHeight['050'],
-                fontWeight: vars.typography.fontWeight['500'],
                 letterSpacing: vars.typography.letterSpacing['000'],
+                fontSize: vars.typography.fontSize['050'],
+                fontWeight: vars.typography.fontWeight['500'],
             },
             md: {
-                fontSize: vars.typography.fontSize['075'],
                 lineHeight: vars.typography.lineHeight['075'],
-                fontWeight: vars.typography.fontWeight['500'],
                 letterSpacing: vars.typography.letterSpacing['100'],
+                fontSize: vars.typography.fontSize['075'],
+                fontWeight: vars.typography.fontWeight['500'],
             },
             lg: {
-                fontSize: vars.typography.fontSize['200'],
                 lineHeight: vars.typography.lineHeight['200'],
-                fontWeight: vars.typography.fontWeight['700'],
                 letterSpacing: vars.typography.letterSpacing['100'],
+                fontSize: vars.typography.fontSize['200'],
+                fontWeight: vars.typography.fontWeight['700'],
             },
             xl: {
-                fontSize: vars.typography.fontSize['300'],
                 lineHeight: vars.typography.lineHeight['300'],
-                fontWeight: vars.typography.fontWeight['700'],
                 letterSpacing: vars.typography.letterSpacing['200'],
+                fontSize: vars.typography.fontSize['300'],
+                fontWeight: vars.typography.fontWeight['700'],
             },
         },
     },
