@@ -8,6 +8,6 @@
         },
         "lib": ["es2017", "dom"]
     },
-    "include": ["src", "src/main.ts"],
+    "include": ["src", "__tests__", "tsup.config.ts"],
     "exclude": ["dist", "build", "node_modules"]
 }

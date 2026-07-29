@@ -8,6 +8,6 @@
         },
         "lib": ["es2017", "dom"]
     },
-    "include": ["src"],
+    "include": ["src", "__tests__", "tsup.config.ts", "vitest.config.ts"],
     "exclude": ["dist", "build", "node_modules"]
 }

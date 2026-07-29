@@ -6,6 +6,6 @@
             "@vapor-ui/core/*": ["../../packages/core/src/*"]
         }
     },
-    "include": [".storybook/**/*"],
+    "include": [".storybook", "vite.config.ts"],
     "exclude": ["node_modules", "storybook-static"]
 }

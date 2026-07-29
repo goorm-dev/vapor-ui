@@ -4,7 +4,6 @@
         "moduleDetection": "force",
         "target": "esnext",
         "outDir": "./dist",
-        "rootDir": "./src",
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
@@ -13,10 +12,11 @@
         "declarationMap": true,
         "sourceMap": true,
         "jsx": "react-jsx",
+        "types": ["node", "jest"],
         "paths": {
             "~/*": ["./src/*"]
         }
     },
-    "include": ["src/**/*"],
+    "include": ["src", "tsup.config.ts"],
     "exclude": ["node_modules", "dist", "**/__testfixtures__/**"]
 }
