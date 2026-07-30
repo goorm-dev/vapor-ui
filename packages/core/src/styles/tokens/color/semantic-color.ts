@@ -175,8 +175,8 @@ export const DARK_SEMANTIC_COLORS = {
         // contrast
         'contrast-100': colorRef('gray', '800'),
         'contrast-200': colorRef('gray', '300'),
-        'contrast-weak': colorRef('gray', '800'),
-        contrast: colorRef('gray', '500'),
+        'contrast-weak': colorRef('gray', '700'),
+        contrast: colorRef('gray', '800'),
 
         // canvas
         'canvas-100': canvasRef(),
