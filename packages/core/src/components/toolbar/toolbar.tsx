@@ -1,5 +1,7 @@
+import type { ChangeEvent } from 'react';
 import { forwardRef } from 'react';
 
+import type { BaseUIEvent } from '@base-ui/react';
 import { Toolbar as BaseToolbar } from '@base-ui/react';
 
 import { useRenderElement } from '~/hooks/use-render-element';
@@ -18,7 +20,7 @@ const [ToolbarProvider, useToolbarContext] = createContext<ToolbarContext>({
     name: 'Toolbar',
     hookName: 'useToolbarContext',
     providerName: 'ToolbarProvider',
-    defaultValue: { disabled: false, size: 'md', variant: 'outline' },
+    defaultValue: { size: 'md', variant: 'outline' },
 });
 
 /* -------------------------------------------------------------------------------------------------
@@ -26,7 +28,7 @@ const [ToolbarProvider, useToolbarContext] = createContext<ToolbarContext>({
  * -----------------------------------------------------------------------------------------------*/
 
 export const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarRoot.Props>((props, ref) => {
-    const { disabled, className, ...componentProps } = resolveStyles(props);
+    const { className, ...componentProps } = resolveStyles(props);
 
     const [variantProps, otherProps] = createSplitProps<ToolbarVariants>()(componentProps, [
         'variant',
@@ -35,16 +37,10 @@ export const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarRoot.Props>((props,
 
     const { variant } = variantProps;
 
-    const contextValue = {
-        disabled,
-        ...variantProps,
-    };
-
     return (
-        <ToolbarProvider value={contextValue}>
+        <ToolbarProvider value={variantProps}>
             <BaseToolbar.Root
                 ref={ref}
-                disabled={disabled}
                 className={cn(styles.root({ variant }), className)}
                 {...otherProps}
                 orientation="horizontal"
@@ -72,27 +68,11 @@ ToolbarGroup.displayName = 'ToolbarGroup';
  * -----------------------------------------------------------------------------------------------*/
 
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButton.Props>((props, ref) => {
-    const {
-        render,
-        disabled: disabledProp = false,
-        focusableWhenDisabled,
-        className,
-        ...componentProps
-    } = resolveStyles(props);
-    const { disabled: contextDisabled, size } = useToolbarContext();
+    const { render, className, ...componentProps } = resolveStyles(props);
+    const { size } = useToolbarContext();
 
-    const disabled = disabledProp ?? contextDisabled ?? false;
-    const focusable = focusableWhenDisabled ?? !disabled;
-
-    const state = {
-        disabled,
-        focusable,
-        orientation: 'horizontal',
-    } satisfies ToolbarButton.State;
-
-    const element = useRenderElement<typeof state, HTMLButtonElement>({
+    const element = useRenderElement<ToolbarState, HTMLButtonElement>({
         render: render ?? <Button variant="ghost" colorPalette="secondary" />,
-        state,
         props: { size },
     });
 
@@ -100,8 +80,6 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButton.Props>(
         <BaseToolbar.Button
             ref={ref}
             render={element}
-            disabled={disabled}
-            focusableWhenDisabled={focusableWhenDisabled}
             className={cn(styles.item({ size }), className)}
             {...componentProps}
         />
@@ -114,33 +92,16 @@ ToolbarButton.displayName = 'ToolbarButton';
  * -----------------------------------------------------------------------------------------------*/
 
 export const ToolbarInput = forwardRef<HTMLInputElement, ToolbarInput.Props>((props, ref) => {
-    const {
-        render,
-        disabled: disabledProp,
-        focusableWhenDisabled,
-        onChange,
-        onValueChange,
-        className,
-        ...componentProps
-    } = resolveStyles(props);
-    const handleValueChange = (value: string) => {
-        onValueChange?.(value);
+    const { render, onChange, onValueChange, className, ...componentProps } = resolveStyles(props);
+    const { size } = useToolbarContext();
+
+    const handleValueChange = (e: BaseUIEvent<ChangeEvent<HTMLInputElement>>) => {
+        onChange?.(e);
+        onValueChange?.(e.target.value);
     };
 
-    const { disabled: contextDisabled, size } = useToolbarContext();
-
-    const disabled = disabledProp ?? contextDisabled ?? false;
-    const focusable = focusableWhenDisabled ?? !disabled;
-
-    const state = {
-        disabled,
-        focusable,
-        orientation: 'horizontal',
-    } satisfies ToolbarInput.State;
-
-    const element = useRenderElement<typeof state, HTMLInputElement>({
+    const element = useRenderElement<ToolbarState, HTMLInputElement>({
         render: render ?? <TextInput size={size} />,
-        state,
         props: { size },
     });
 
@@ -148,13 +109,8 @@ export const ToolbarInput = forwardRef<HTMLInputElement, ToolbarInput.Props>((pr
         <BaseToolbar.Input
             ref={ref}
             render={element}
-            disabled={disabled}
-            focusableWhenDisabled={focusableWhenDisabled}
             className={cn(styles.item({ size }), className)}
-            onChange={(e) => {
-                onChange?.(e);
-                handleValueChange(e.target.value);
-            }}
+            onChange={handleValueChange}
             {...componentProps}
         />
     );
@@ -182,7 +138,12 @@ ToolbarSeparator.displayName = 'ToolbarSeparator';
 /* -----------------------------------------------------------------------------------------------*/
 
 type ToolbarVariants = ToolbarRootVariants & ToolbarItemVariants;
-type ToolbarContext = ToolbarVariants & { disabled?: boolean };
+type ToolbarContext = ToolbarVariants;
+type ToolbarState = {
+    disabled: ToolbarButton.State['disabled'];
+    focusable: ToolbarButton.State['focusable'];
+    orientation: ToolbarButton.State['orientation'];
+};
 
 export interface ToolbarRootProps extends Omit<
     VaporUIComponentProps<typeof BaseToolbar.Root, ToolbarRoot.State>,
