@@ -1,9 +1,9 @@
 import { forwardRef } from 'react';
 
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
-import clsx from 'clsx';
 
 import { useRenderElement } from '~/hooks/use-render-element';
+import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -37,7 +37,7 @@ export const Toggle = forwardRef<HTMLButtonElement, Toggle.Props>((props, ref) =
     return (
         <BaseToggle
             ref={ref}
-            className={clsx(styles.root({ size, variant }), className)}
+            className={cn(styles.root({ size, variant }), className)}
             {...otherProps}
         >
             {children}

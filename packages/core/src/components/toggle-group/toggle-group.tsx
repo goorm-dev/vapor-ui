@@ -1,9 +1,9 @@
 import { forwardRef } from 'react';
 
 import { ToggleGroup as BaseToggleGroup } from '@base-ui/react/toggle-group';
-import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -33,7 +33,7 @@ export const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroup.Props>((props,
         <ToggleGroupProvider value={variantsProps}>
             <BaseToggleGroup
                 ref={ref}
-                className={clsx(styles.root(variantsProps), className)}
+                className={cn(styles.root(variantsProps), className)}
                 {...otherProps}
                 // `aria-orientation` is not allowed on `role="group"`; strip it until the upstream
                 // fix ships. See https://github.com/mui/base-ui/pull/4628.
