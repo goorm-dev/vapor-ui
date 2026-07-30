@@ -17,6 +17,6 @@
             "~/*": ["./src/*"]
         }
     },
-    "include": ["src", "tsup.config.ts"],
+    "include": ["."],
     "exclude": ["node_modules", "dist", "**/__testfixtures__/**"]
 }
