@@ -1,6 +1,8 @@
 /**
  * Config unit tests
  */
+import { existsSync } from 'node:fs';
+
 import { defaultExtractorConfig as config } from '~/config/defaults';
 import { resolveComponentInclude } from '~/config/resolve';
 
@@ -9,6 +11,13 @@ describe('config', () => {
         expect(config.filterExternal).toBe(true);
         expect(config.filterHtml).toBe(true);
         expect(config.filterSprinkles).toBe(true);
+    });
+
+    it.each([
+        ['inputPath', config.inputPath],
+        ['tsconfig', config.tsconfig],
+    ])('%s 경로 존재 확인', (_, targetPath) => {
+        expect(existsSync(targetPath), `missing: ${targetPath}`).toBe(true);
     });
 });
 
