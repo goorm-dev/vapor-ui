@@ -37,6 +37,7 @@ export * from './components/textarea';
 export * from './components/theme-provider';
 export * from './components/toggle';
 export * from './components/toggle-group';
+export * from './components/toolbar';
 export * from './components/tooltip';
 export * from './components/toast';
 export * from './components/v-stack';
