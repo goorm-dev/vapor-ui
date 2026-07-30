@@ -76,6 +76,21 @@ export const Default: Story = {
             <Card.Root>
                 <Card.Header>
                     <Toolbar.Root {...args}>
+                        <Toolbar.Input
+                            placeholder="font size(px)"
+                            value={fontSize}
+                            onValueChange={handleValueChange}
+                        />
+                        <AlignSelect
+                            trigger={Toolbar.Button}
+                            items={selectItems}
+                            value={fontFamily}
+                            onValueChange={setFontFamily}
+                            placeholder="select font"
+                        />
+
+                        <Toolbar.Separator />
+
                         <TooltipButton description="Bold">
                             <Toolbar.Button render={<Toggle />}>
                                 <BoldOutlineIcon />
@@ -116,22 +131,6 @@ export const Default: Story = {
                                 </Toolbar.Button>
                             </TooltipButton>
                         </Toolbar.Group>
-
-                        <Toolbar.Separator />
-
-                        <Toolbar.Input
-                            placeholder="font size(px)"
-                            value={fontSize}
-                            onValueChange={handleValueChange}
-                        />
-
-                        <AlignSelect
-                            trigger={Toolbar.Button}
-                            items={selectItems}
-                            value={fontFamily}
-                            onValueChange={setFontFamily}
-                            placeholder="select font"
-                        />
 
                         <Toolbar.Separator />
 
