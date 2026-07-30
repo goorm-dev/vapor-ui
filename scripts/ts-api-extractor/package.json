@@ -22,9 +22,9 @@
         "build": "tsup",
         "dev": "tsup --watch",
         "lint": "eslint ./src",
-        "test": "vitest",
-        "test:coverage": "vitest run --coverage",
-        "test:run": "vitest run",
+        "test": "vitest --run",
+        "test:coverage": "vitest --coverage",
+        "test:watch": "vitest",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
