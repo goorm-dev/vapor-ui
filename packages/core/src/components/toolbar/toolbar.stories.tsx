@@ -99,7 +99,7 @@ export const Default: Story = {
 
                         <Toolbar.Separator />
 
-                        <Toolbar.Group render={<ToggleGroup.Root />}>
+                        <Toolbar.Group render={<ToggleGroup />}>
                             <TooltipButton description="Align Left">
                                 <Toolbar.Button render={<Toggle variant="accent" />}>
                                     <AlignLeftOutlineIcon />
@@ -184,7 +184,7 @@ const Component = (props: Toolbar.Root.Props) => {
 
             <Toolbar.Separator />
 
-            <ToggleGroup.Root>
+            <ToggleGroup>
                 <TooltipButton description="Align Left">
                     <Toolbar.Button render={<Toggle />}>
                         <AlignLeftOutlineIcon />
@@ -200,7 +200,7 @@ const Component = (props: Toolbar.Root.Props) => {
                         <AlignRightOutlineIcon />
                     </Toolbar.Button>
                 </TooltipButton>
-            </ToggleGroup.Root>
+            </ToggleGroup>
 
             <Toolbar.Separator />
 
