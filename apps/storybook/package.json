@@ -14,7 +14,7 @@
         "react-dom": "catalog:"
     },
     "devDependencies": {
-        "@eslint/js": "^9.39.4",
+        "@eslint/js": "^9.39.5",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@storybook/addon-docs": "^9.1.20",
