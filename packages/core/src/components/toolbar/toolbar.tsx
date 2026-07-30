@@ -173,7 +173,7 @@ export const ToolbarSeparator = forwardRef<HTMLDivElement, ToolbarSeparator.Prop
             ref={ref}
             className={cn(styles.separator, className)}
             {...componentProps}
-            orientation="horizontal"
+            orientation="vertical"
         />
     );
 });
