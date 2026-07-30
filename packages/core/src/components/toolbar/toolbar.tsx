@@ -1,10 +1,10 @@
 import { forwardRef } from 'react';
 
 import { Toolbar as BaseToolbar } from '@base-ui/react';
-import clsx from 'clsx';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -45,7 +45,7 @@ export const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarRoot.Props>((props,
             <BaseToolbar.Root
                 ref={ref}
                 disabled={disabled}
-                className={clsx(styles.root({ variant }), className)}
+                className={cn(styles.root({ variant }), className)}
                 {...otherProps}
                 orientation="horizontal"
             />
@@ -62,11 +62,7 @@ export const ToolbarGroup = forwardRef<HTMLDivElement, ToolbarGroup.Props>((prop
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
-        <BaseToolbar.Group
-            ref={ref}
-            className={clsx(styles.group, className)}
-            {...componentProps}
-        />
+        <BaseToolbar.Group ref={ref} className={cn(styles.group, className)} {...componentProps} />
     );
 });
 ToolbarGroup.displayName = 'ToolbarGroup';
@@ -106,7 +102,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButton.Props>(
             render={element}
             disabled={disabled}
             focusableWhenDisabled={focusableWhenDisabled}
-            className={clsx(styles.item({ size }), className)}
+            className={cn(styles.item({ size }), className)}
             {...componentProps}
         />
     );
@@ -154,7 +150,7 @@ export const ToolbarInput = forwardRef<HTMLInputElement, ToolbarInput.Props>((pr
             render={element}
             disabled={disabled}
             focusableWhenDisabled={focusableWhenDisabled}
-            className={clsx(styles.item({ size }), className)}
+            className={cn(styles.item({ size }), className)}
             onChange={(e) => {
                 onChange?.(e);
                 handleValueChange(e.target.value);
@@ -175,7 +171,7 @@ export const ToolbarSeparator = forwardRef<HTMLDivElement, ToolbarSeparator.Prop
     return (
         <BaseToolbar.Separator
             ref={ref}
-            className={clsx(styles.separator, className)}
+            className={cn(styles.separator, className)}
             {...componentProps}
             orientation="horizontal"
         />
