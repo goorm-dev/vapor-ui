@@ -255,7 +255,7 @@ importers:
         version: link:../../packages/icons
       '@vercel/analytics':
         specifier: ^1.6.1
-        version: 1.6.1(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react@19.2.8)
+        version: 1.6.1(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react@19.2.8)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -264,19 +264,19 @@ importers:
         version: 3.1.3
       fumadocs-core:
         specifier: 16.8.11
-        version: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
+        version: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
       fumadocs-docgen:
         specifier: 3.0.10
-        version: 3.0.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/estree@1.0.9)(@types/hast@3.0.4)(@types/mdast@4.0.4)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(mdast-util-mdx@3.0.0)
+        version: 3.0.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/estree@1.0.9)(@types/hast@3.0.4)(@types/mdast@4.0.4)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(mdast-util-mdx@3.0.0)
       fumadocs-mdx:
         specifier: 14.3.2
-        version: 14.3.2(@types/mdast@4.0.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react@19.2.8)(vite@8.1.4(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0))
+        version: 14.3.2(@types/mdast@4.0.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react@19.2.8)(vite@8.1.4(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0))
       fumadocs-typescript:
         specifier: 5.2.6
-        version: 5.2.6(c6a496d930dfca1cd7774f39e1292726)
+        version: 5.2.6(00593d23cc74218aa7762aa7d8da6f36)
       fumadocs-ui:
         specifier: npm:@fumadocs/base-ui@16.8.11
-        version: '@fumadocs/base-ui@16.8.11(@date-fns/tz@1.4.1)(@tailwindcss/oxide@4.2.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.2.4)'
+        version: '@fumadocs/base-ui@16.8.11(@date-fns/tz@1.4.1)(@tailwindcss/oxide@4.2.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.2.4)'
       fuse.js:
         specifier: ^7.3.0
         version: 7.3.0
@@ -287,8 +287,8 @@ importers:
         specifier: ^3.0.4
         version: 3.0.4
       next:
-        specifier: 16.2.7
-        version: 16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
+        specifier: 16.2.11
+        version: 16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
       react:
         specifier: 'catalog:'
         version: 19.2.8
@@ -322,7 +322,7 @@ importers:
     devDependencies:
       '@fumadocs/mdx-remote':
         specifier: 1.4.10
-        version: 1.4.10(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(react@19.2.8)
+        version: 1.4.10(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(react@19.2.8)
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -1764,14 +1764,8 @@ packages:
   '@emnapi/core@1.8.1':
     resolution: {integrity: sha512-AvT9QFpxK0Zd8J0jopedNm+w/2fIzvtPKPjqyw9jwvBaReTTqPBk9Hixaz7KbjimP+QNz605/XnjFcDAL2pqBg==}
 
-  '@emnapi/runtime@1.10.0':
-    resolution: {integrity: sha512-ewvYlk86xUoGI0zQRNq/mC+16R1QeDlKQy21Ki3oSYXNgLb45GV1P6A0M+/s6nyCuNDqe5VpaY84BzXGwVbwFA==}
-
   '@emnapi/runtime@1.11.1':
     resolution: {integrity: sha512-vgj7R3y3Wgx24IQaGPA/R6YFXLHVMOZ0uVEyIQPaWs+rd1AzfEMXlAC22FYwO1XkKR6NPsq7mUandH8oIRdZFw==}
-
-  '@emnapi/runtime@1.8.1':
-    resolution: {integrity: sha512-mehfKSMWjjNol8659Z8KxEMrdSJDDot5SXMq00dM8BN4o+CLNXQ0xH2V7EchNHV4RmbZLmmPdEaXZc5H2FXmDg==}
 
   '@emnapi/wasi-threads@1.1.0':
     resolution: {integrity: sha512-WI0DdZ8xFSbgMjR1sFsKABJ/C5OnRrjT06JXbZKexJGrDuPTzZdDYfFlsgcCXCyf+suG5QU2e/y1Wo2V/OapLQ==}
@@ -2851,60 +2845,60 @@ packages:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
 
-  '@next/env@16.2.7':
-    resolution: {integrity: sha512-tMJizPlj6ZYpBMMdK8S0LJufrP4QTdR6pcv9KQ/bVETPAmg0j1mlHE9G2c38UyGHxoBapgwuj7XjbGJ2RcDFOg==}
+  '@next/env@16.2.11':
+    resolution: {integrity: sha512-0do5A3BJ2gxWr0ZCMcD6BhW+e595jyxdTl3rXTS6lOtD8ektMiW6CO+EPwt1Eca1DBnm90r/7GdiKWBKxH++DA==}
 
   '@next/eslint-plugin-next@15.5.19':
     resolution: {integrity: sha512-Ctwb4qYuMbHN/1oXLlTdMchwG8h8Xzwq+wGZZMgF3o6+uwyBKAI2c96bdOsl+C62PaUD0Jkh+QpNkhUeDlam0Q==}
 
-  '@next/swc-darwin-arm64@16.2.7':
-    resolution: {integrity: sha512-vm1EDI/pVaBNNiychmxk3fft+OhQPVD9cIM/tReLZIQ3TfQ4kqI9DwKk00dzuS1ulC7icbrzCFrmRRlk9PfNdw==}
+  '@next/swc-darwin-arm64@16.2.11':
+    resolution: {integrity: sha512-wryL4pjKmDwGv2ox6+GZDFxvmtSRLqApBR8kL1j4+vhB7Z5vJC/zAnXpiR9Xkfzl0AS8WLMnsuGV/UKI67/rrw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@16.2.7':
-    resolution: {integrity: sha512-O3IRSv1ZBL1zs0WrIgefTEcTKFVn+ryxBNe54erJ6KsD+2f/Mmt7g2jOYh8PSBdUwPtKQJuCsTMlZ7tIu2AcsQ==}
+  '@next/swc-darwin-x64@16.2.11':
+    resolution: {integrity: sha512-aZl2j4f/fLyjQvOhv0Oe9UaMAQHolYpKhctsoYzplSumKJKPUmgjcf6545aBtysLTcu994TREd0+pSgNE4ohmg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@16.2.7':
-    resolution: {integrity: sha512-Re6PZtjBDd0aMU+VcZcC/PrIvj4WhrjDYtMhhCVQamWN4L90EVP0pcEOBQD25prSlw7OzNw5QpHLWMilRLsRNw==}
+  '@next/swc-linux-arm64-gnu@16.2.11':
+    resolution: {integrity: sha512-5jEriyEnH/LWFy27L2ZG0XaLlyEJIjhsImEsiS9P563PKEVp2BVups/xfOucIrsvVntp11oNcZwjHvaDPYVB5g==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-arm64-musl@16.2.7':
-    resolution: {integrity: sha512-qyogG9QtBzWxgJfeGBvOEHI3851gTfCF3wLZ5RDLTBJGAmE9p1qDwKCOdrBrvBzRvYDT+gUDp72pzlSEfAXgNA==}
+  '@next/swc-linux-arm64-musl@16.2.11':
+    resolution: {integrity: sha512-eIjcpx2fnnFSSkZDbTxy74KnokUXDjfoLClpWelfgHLf621aTqswhwXQ7GkD5K5rplrS6LZ/Bj+mVuvzluBOEg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@next/swc-linux-x64-gnu@16.2.7':
-    resolution: {integrity: sha512-Vhe4ZDuBpmMogrGi5D4R2Kq4JAQlj6+wvgaFYy31zfES0zPmt6TLA+cuYpM/OLrPZjo2MYQTHVqNUSCR6+fDZQ==}
+  '@next/swc-linux-x64-gnu@16.2.11':
+    resolution: {integrity: sha512-8WgzpaWMs46qJT9kiV47cje86L0x/Mu9t8/Gwj+pnbgW3rETVfCnaScPjlYUwNScpOozdcIMHWmAvuZJUonR2w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-x64-musl@16.2.7':
-    resolution: {integrity: sha512-srvian89JahFLw1YLBEuhvPJ0DO5lpUeJQMXy4xYo7g628ZlNgXdNkqoxSAv9OYrBfByh6vxISMwW/mRbzCY+g==}
+  '@next/swc-linux-x64-musl@16.2.11':
+    resolution: {integrity: sha512-I3UgPds7G4ZYnTb/H+5GBGuUT2DhAk6j0mL6A4s63RjFs74wB2hOWP0vaxsK+3NJraExt3eYEPQ/UtT0x/64Nw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@next/swc-win32-arm64-msvc@16.2.7':
-    resolution: {integrity: sha512-GX3wvLpULFuRFJzwHaKfm7QZJ18F4ZSuxlPJ96BoBglCzBmdSjyeBKF+ZhWhvL/ckxNfLnNa7bsObO2ipYpszw==}
+  '@next/swc-win32-arm64-msvc@16.2.11':
+    resolution: {integrity: sha512-n89CjtcThnjrwgJMAiI5xbqwLY51zvwC9tSlArmVndAJLYVl9T9UAdlkXTmZvE++idoXe8KdglQlhNRdUp1c6g==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@16.2.7':
-    resolution: {integrity: sha512-J4WlM72NMk076Qsg0jTdK3SNXatlSdnjW7L7oNGLst1tAGjHrJh/FYi+pw9wyIjEtGRKDNzD0zuiY16oWYWVaw==}
+  '@next/swc-win32-x64-msvc@16.2.11':
+    resolution: {integrity: sha512-md8CLNggS1Dx9pUgApzps5uAf+N8GN9xywzmNx9vHAWo94HtBwCCqkSnhIrdfQe83Dhz8Lfo/20Nb1Zxal092w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -7598,8 +7592,8 @@ packages:
       react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
       react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
 
-  next@16.2.7:
-    resolution: {integrity: sha512-eMJxgjRzBaj3olkP4cBamHDXL79A8FC6u1GcsO1D1Tsx8bw/LLXUJCaoajVxtnhD3A1IJqIT8IcRJjgBIPJq4w==}
+  next@16.2.11:
+    resolution: {integrity: sha512-B339zaqbyK8cmxhoAvLrcwoabwCP1wz21zSzfqxqXAemTu2BXnH7tQnfcglKv1vnMUIDBc+Hth7XODQriTZiRQ==}
     engines: {node: '>=20.9.0'}
     hasBin: true
     peerDependencies:
@@ -11129,17 +11123,7 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@emnapi/runtime@1.10.0':
-    dependencies:
-      tslib: 2.8.1
-    optional: true
-
   '@emnapi/runtime@1.11.1':
-    dependencies:
-      tslib: 2.8.1
-    optional: true
-
-  '@emnapi/runtime@1.8.1':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -11486,12 +11470,12 @@ snapshots:
 
   '@floating-ui/utils@0.2.11': {}
 
-  '@fumadocs/base-ui@16.8.11(@date-fns/tz@1.4.1)(@tailwindcss/oxide@4.2.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.2.4)':
+  '@fumadocs/base-ui@16.8.11(@date-fns/tz@1.4.1)(@tailwindcss/oxide@4.2.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.2.4)':
     dependencies:
       '@base-ui/react': 1.6.0(@date-fns/tz@1.4.1)(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@fumadocs/tailwind': 0.0.5(@tailwindcss/oxide@4.2.4)(tailwindcss@4.2.4)
       class-variance-authority: 0.7.1
-      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
+      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
       lucide-react: 1.14.0(react@19.2.8)
       motion: 12.38.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       next-themes: 0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -11506,7 +11490,7 @@ snapshots:
     optionalDependencies:
       '@types/mdx': 2.0.14
       '@types/react': 19.2.17
-      next: 16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
+      next: 16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
     transitivePeerDependencies:
       - '@date-fns/tz'
       - '@emotion/is-prop-valid'
@@ -11514,10 +11498,10 @@ snapshots:
       - date-fns
       - tailwindcss
 
-  '@fumadocs/mdx-remote@1.4.10(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(react@19.2.8)':
+  '@fumadocs/mdx-remote@1.4.10(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(react@19.2.8)':
     dependencies:
       '@mdx-js/mdx': 3.1.1
-      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
+      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
       js-yaml: 4.1.1
       react: 19.2.8
       unified: 11.0.5
@@ -11629,7 +11613,7 @@ snapshots:
 
   '@img/sharp-wasm32@0.34.5':
     dependencies:
-      '@emnapi/runtime': 1.10.0
+      '@emnapi/runtime': 1.11.1
     optional: true
 
   '@img/sharp-win32-arm64@0.34.5':
@@ -12084,7 +12068,7 @@ snapshots:
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
       '@emnapi/core': 1.8.1
-      '@emnapi/runtime': 1.8.1
+      '@emnapi/runtime': 1.11.1
       '@tybys/wasm-util': 0.10.1
     optional: true
 
@@ -12102,34 +12086,34 @@ snapshots:
       '@tybys/wasm-util': 0.10.3
     optional: true
 
-  '@next/env@16.2.7': {}
+  '@next/env@16.2.11': {}
 
   '@next/eslint-plugin-next@15.5.19':
     dependencies:
       fast-glob: 3.3.1
 
-  '@next/swc-darwin-arm64@16.2.7':
+  '@next/swc-darwin-arm64@16.2.11':
     optional: true
 
-  '@next/swc-darwin-x64@16.2.7':
+  '@next/swc-darwin-x64@16.2.11':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@16.2.7':
+  '@next/swc-linux-arm64-gnu@16.2.11':
     optional: true
 
-  '@next/swc-linux-arm64-musl@16.2.7':
+  '@next/swc-linux-arm64-musl@16.2.11':
     optional: true
 
-  '@next/swc-linux-x64-gnu@16.2.7':
+  '@next/swc-linux-x64-gnu@16.2.11':
     optional: true
 
-  '@next/swc-linux-x64-musl@16.2.7':
+  '@next/swc-linux-x64-musl@16.2.11':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@16.2.7':
+  '@next/swc-win32-arm64-msvc@16.2.11':
     optional: true
 
-  '@next/swc-win32-x64-msvc@16.2.7':
+  '@next/swc-win32-x64-msvc@16.2.11':
     optional: true
 
   '@noble/hashes@1.8.0': {}
@@ -14045,9 +14029,9 @@ snapshots:
       - tsx
       - yaml
 
-  '@vercel/analytics@1.6.1(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react@19.2.8)':
+  '@vercel/analytics@1.6.1(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react@19.2.8)':
     optionalDependencies:
-      next: 16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
+      next: 16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
       react: 19.2.8
 
   '@vitejs/plugin-react@5.2.0(vite@7.3.5(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0))':
@@ -15697,7 +15681,7 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3):
+  fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3):
     dependencies:
       '@orama/orama': 3.1.18
       estree-util-value-to-estree: 3.5.0
@@ -15724,18 +15708,18 @@ snapshots:
       '@types/mdast': 4.0.4
       '@types/react': 19.2.17
       lucide-react: 1.14.0(react@19.2.8)
-      next: 16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
+      next: 16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
       zod: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
-  fumadocs-docgen@3.0.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/estree@1.0.9)(@types/hast@3.0.4)(@types/mdast@4.0.4)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(mdast-util-mdx@3.0.0):
+  fumadocs-docgen@3.0.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/estree@1.0.9)(@types/hast@3.0.4)(@types/mdast@4.0.4)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(mdast-util-mdx@3.0.0):
     dependencies:
       estree-util-to-js: 2.0.0
       estree-util-value-to-estree: 3.5.0
-      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
+      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
       npm-to-yarn: 3.0.1
       oxc-transform: 0.124.0(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
       unified: 11.0.5
@@ -15751,14 +15735,14 @@ snapshots:
       - '@emnapi/core'
       - '@emnapi/runtime'
 
-  fumadocs-mdx@14.3.2(@types/mdast@4.0.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react@19.2.8)(vite@8.1.4(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0)):
+  fumadocs-mdx@14.3.2(@types/mdast@4.0.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react@19.2.8)(vite@8.1.4(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0)):
     dependencies:
       '@mdx-js/mdx': 3.1.1
       '@standard-schema/spec': 1.1.0
       chokidar: 5.0.0
       esbuild: 0.28.1
       estree-util-value-to-estree: 3.5.0
-      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
+      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
       js-yaml: 4.1.1
       mdast-util-mdx: 3.0.0
       mdast-util-to-markdown: 2.1.2
@@ -15775,16 +15759,16 @@ snapshots:
       '@types/mdast': 4.0.4
       '@types/mdx': 2.0.14
       '@types/react': 19.2.17
-      next: 16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
+      next: 16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0)
       react: 19.2.8
       vite: 8.1.4(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(tsx@4.21.0)
     transitivePeerDependencies:
       - supports-color
 
-  fumadocs-typescript@5.2.6(c6a496d930dfca1cd7774f39e1292726):
+  fumadocs-typescript@5.2.6(00593d23cc74218aa7762aa7d8da6f36):
     dependencies:
       estree-util-value-to-estree: 3.5.0
-      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
+      fumadocs-core: 16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
       hast-util-to-estree: 3.1.3
       hast-util-to-jsx-runtime: 2.3.6
       react: 19.2.8
@@ -15800,7 +15784,7 @@ snapshots:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
       '@types/react': 19.2.17
-      fumadocs-ui: '@fumadocs/base-ui@16.8.11(@date-fns/tz@1.4.1)(@tailwindcss/oxide@4.2.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.2.4)'
+      fumadocs-ui: '@fumadocs/base-ui@16.8.11(@date-fns/tz@1.4.1)(@tailwindcss/oxide@4.2.4)(@types/mdx@2.0.14)(@types/react@19.2.17)(fumadocs-core@16.8.11(@mdx-js/mdx@3.1.1)(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.17)(lucide-react@1.14.0(react@19.2.8))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.2.4)'
     transitivePeerDependencies:
       - supports-color
 
@@ -17549,9 +17533,9 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
-  next@16.2.7(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0):
+  next@16.2.11(@babel/core@7.28.4)(@playwright/test@1.60.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.99.0):
     dependencies:
-      '@next/env': 16.2.7
+      '@next/env': 16.2.11
       '@swc/helpers': 0.5.15
       baseline-browser-mapping: 2.10.19
       caniuse-lite: 1.0.30001791
@@ -17560,14 +17544,14 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
       styled-jsx: 5.1.6(@babel/core@7.28.4)(react@19.2.8)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 16.2.7
-      '@next/swc-darwin-x64': 16.2.7
-      '@next/swc-linux-arm64-gnu': 16.2.7
-      '@next/swc-linux-arm64-musl': 16.2.7
-      '@next/swc-linux-x64-gnu': 16.2.7
-      '@next/swc-linux-x64-musl': 16.2.7
-      '@next/swc-win32-arm64-msvc': 16.2.7
-      '@next/swc-win32-x64-msvc': 16.2.7
+      '@next/swc-darwin-arm64': 16.2.11
+      '@next/swc-darwin-x64': 16.2.11
+      '@next/swc-linux-arm64-gnu': 16.2.11
+      '@next/swc-linux-arm64-musl': 16.2.11
+      '@next/swc-linux-x64-gnu': 16.2.11
+      '@next/swc-linux-x64-musl': 16.2.11
+      '@next/swc-win32-arm64-msvc': 16.2.11
+      '@next/swc-win32-x64-msvc': 16.2.11
       '@playwright/test': 1.60.0
       sass: 1.99.0
       sharp: 0.34.5
