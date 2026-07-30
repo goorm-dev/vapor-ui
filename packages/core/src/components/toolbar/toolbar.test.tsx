@@ -180,7 +180,7 @@ describe('<Toolbar.Input />', () => {
 });
 
 describe('<Toolbar.Separator />', () => {
-    it('should force `aria-orientation="horizontal"`', () => {
+    it('should force `aria-orientation="vertical"`', () => {
         const rendered = render(
             <Toolbar.Root>
                 <Toolbar.Button>A</Toolbar.Button>
@@ -190,6 +190,6 @@ describe('<Toolbar.Separator />', () => {
         );
         const separator = rendered.getByRole('separator');
 
-        expect(separator).toHaveAttribute('aria-orientation', 'horizontal');
+        expect(separator).toHaveAttribute('aria-orientation', 'vertical');
     });
 });
