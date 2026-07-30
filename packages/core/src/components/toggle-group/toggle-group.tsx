@@ -1,14 +1,14 @@
 import { forwardRef } from 'react';
 
 import { ToggleGroup as BaseToggleGroup } from '@base-ui/react/toggle-group';
-import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
-import type { ToggleGroupVariants } from './toggle-group.css';
+import type { RootVariants } from './toggle-group.css';
 import * as styles from './toggle-group.css';
 
 export const [ToggleGroupProvider, useToggleGroupContext] = createContext<ToggleGroupVariants>({
@@ -20,10 +20,10 @@ export const [ToggleGroupProvider, useToggleGroupContext] = createContext<Toggle
 });
 
 /* -------------------------------------------------------------------------------------------------
- * ToggleGroup.Root
+ * ToggleGroup
  * -----------------------------------------------------------------------------------------------*/
 
-export const ToggleGroupRoot = forwardRef<HTMLDivElement, ToggleGroupRoot.Props>((props, ref) => {
+export const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroup.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ToggleGroupVariants>()(componentProps, [
         'size',
@@ -33,7 +33,7 @@ export const ToggleGroupRoot = forwardRef<HTMLDivElement, ToggleGroupRoot.Props>
         <ToggleGroupProvider value={variantsProps}>
             <BaseToggleGroup
                 ref={ref}
-                className={clsx(styles.root(variantsProps), className)}
+                className={cn(styles.root(variantsProps), className)}
                 {...otherProps}
                 // `aria-orientation` is not allowed on `role="group"`; strip it until the upstream
                 // fix ships. See https://github.com/mui/base-ui/pull/4628.
@@ -42,10 +42,13 @@ export const ToggleGroupRoot = forwardRef<HTMLDivElement, ToggleGroupRoot.Props>
         </ToggleGroupProvider>
     );
 });
+ToggleGroup.displayName = 'ToggleGroup';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export namespace ToggleGroupRoot {
+type ToggleGroupVariants = RootVariants;
+
+export namespace ToggleGroup {
     export type State = BaseToggleGroup.State;
     export type Props = VaporUIComponentProps<typeof BaseToggleGroup, State> & ToggleGroupVariants;
 }

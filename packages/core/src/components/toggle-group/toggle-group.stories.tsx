@@ -8,7 +8,7 @@ import { VStack } from '../v-stack';
 
 export default {
     title: 'ToggleGroup',
-    component: ToggleGroup.Root,
+    component: ToggleGroup,
     argTypes: {
         size: {
             control: { type: 'inline-radio' },
@@ -18,14 +18,14 @@ export default {
             control: { type: 'boolean' },
         },
     },
-} satisfies Meta<typeof ToggleGroup.Root>;
+} satisfies Meta<typeof ToggleGroup>;
 
-type Story = StoryObj<typeof ToggleGroup.Root>;
+type Story = StoryObj<typeof ToggleGroup>;
 
 export const Default: Story = {
     render: (args) => {
         return (
-            <ToggleGroup.Root {...args}>
+            <ToggleGroup {...args}>
                 <Toggle value="item1">
                     <HeartIcon />
                 </Toggle>
@@ -45,7 +45,7 @@ export const Default: Story = {
                 <Toggle value="item6">
                     <HeartIcon />
                 </Toggle>
-            </ToggleGroup.Root>
+            </ToggleGroup>
         );
     },
 };
@@ -72,7 +72,7 @@ export const TestBed: Story = {
                     </VStack>
                 </Grid.Item>
 
-                <ToggleGroup.Root {...args} value={['item3', 'item4']}>
+                <ToggleGroup {...args} value={['item3', 'item4']}>
                     <Toggle value="item1">
                         <HeartIcon />
                     </Toggle>
@@ -92,15 +92,15 @@ export const TestBed: Story = {
                     <Toggle value="item6" variant="accent">
                         <HeartIcon />
                     </Toggle>
-                </ToggleGroup.Root>
+                </ToggleGroup>
             </Grid.Root>
         );
     },
 };
 
-const renderCases = ({ size, disabled }: ToggleGroup.Root.Props) => {
+const renderCases = ({ size, disabled }: ToggleGroup.Props) => {
     return (
-        <ToggleGroup.Root size={size} value={['item3']} disabled={disabled}>
+        <ToggleGroup size={size} value={['item3']} disabled={disabled}>
             <Toggle value="item1">
                 <HeartIcon />
             </Toggle>
@@ -110,6 +110,6 @@ const renderCases = ({ size, disabled }: ToggleGroup.Root.Props) => {
             <Toggle value="item3">
                 <HeartIcon />
             </Toggle>
-        </ToggleGroup.Root>
+        </ToggleGroup>
     );
 };

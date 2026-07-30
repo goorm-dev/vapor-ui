@@ -135,7 +135,17 @@ const createOutput = ({ dir, format, extension, ...outputOptions }) => {
         // Customize asset file names
         // e.g., 'src/styles/foo.css' -> 'styles/foo.css'
         assetFileNames: (assetInfo) => {
-            return assetInfo.name.replace(/^src\//, '');
+            const srcRoot = path.resolve('src');
+            const original = assetInfo.originalFileName;
+
+            if (original && path.isAbsolute(original)) {
+                const rel = path.relative(srcRoot, original);
+                if (rel && !rel.startsWith('..')) {
+                    return rel.split(path.sep).join('/');
+                }
+            }
+
+            return (original ?? assetInfo.name).replace(/^src\//, '');
         },
 
         ...outputOptions,

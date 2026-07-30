@@ -14,18 +14,18 @@ export const root = componentRecipe({
     base: [
         interaction({ scale: 'light' }),
         {
+            aspectRatio: '1 / 1',
             display: 'inline-flex',
             alignItems: 'center',
+
             justifyContent: 'center',
 
-            aspectRatio: '1 / 1',
-
-            backgroundColor: vars.color.background.canvas[100],
             borderRadius: vars.size.borderRadius['300'],
+            backgroundColor: vars.color.background.canvas[100],
 
             selectors: {
-                '&[data-pressed]': { backgroundColor: variables.backgroundColor },
-                [when.disabled()]: { pointerEvents: 'none', opacity: 0.32 },
+                [when.pressed()]: { backgroundColor: variables.backgroundColor },
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
             },
         },
     ],
@@ -33,10 +33,10 @@ export const root = componentRecipe({
     defaultVariants: { size: 'md', variant: 'default' },
     variants: {
         size: {
-            sm: { height: vars.size.dimension['300'], gap: vars.size.space['075'] },
-            md: { height: vars.size.dimension['400'], gap: vars.size.space['075'] },
-            lg: { height: vars.size.dimension['500'], gap: vars.size.space['075'] },
-            xl: { height: vars.size.dimension['600'], gap: vars.size.space['100'] },
+            sm: { gap: vars.size.space['075'], height: vars.size.dimension['300'] },
+            md: { gap: vars.size.space['075'], height: vars.size.dimension['400'] },
+            lg: { gap: vars.size.space['075'], height: vars.size.dimension['500'] },
+            xl: { gap: vars.size.space['100'], height: vars.size.dimension['600'] },
         },
         variant: {
             default: {
