@@ -66,8 +66,8 @@ export const LIGHT_SEMANTIC_COLORS = {
         'overlay-100': canvasRef(),
         'canvas-base': canvasRef(),
         'canvas-sunken': colorRef('gray', '050'),
-        'canvas-raised': '#FAFAFA',
-        'canvas-dim': 'rgba(0, 0, 0, 0.32)',
+        'canvas-raised': '#FAFAFA', // TODO: primitive 토큰 반영 필요
+        'canvas-dim': 'rgba(0, 0, 0, 0.32)', // TODO: primitive 토큰 반영 필요
         'canvas-overlay': canvasRef(),
     },
     foreground: {
@@ -184,8 +184,8 @@ export const DARK_SEMANTIC_COLORS = {
         'overlay-100': colorRef('gray', '100'),
         'canvas-base': canvasRef(),
         'canvas-sunken': colorRef('gray', '050'),
-        'canvas-raised': '#1F1F1F',
-        'canvas-dim': 'rgba(0, 0, 0, 0.32)',
+        'canvas-raised': '#1F1F1F', // TODO: primitive 토큰 반영 변경 필요
+        'canvas-dim': 'rgba(0, 0, 0, 0.32)', // TODO: primitive 토큰 반영 변경 필요
         'canvas-overlay': colorRef('gray', '100'),
     },
     foreground: {
