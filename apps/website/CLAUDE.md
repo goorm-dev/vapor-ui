@@ -12,8 +12,8 @@ It is updated to match the current website code and the public API exposed by `@
 
 ---
 
-- **Package Manager**: PNPM v10.5.1+
-- **Node.js**: v20.19+
+- **Package Manager**: pnpm 10.33.4 (pinned via root `packageManager`)
+- **Node.js**: 20.20.2+ (see root `.nvmrc`)
 - **Linting & Formatting**: Use ESLint v9+ and Prettier v3.3+. IDE integration and Git Hook setup are recommended.
 
 # 2. Git & Version Control
