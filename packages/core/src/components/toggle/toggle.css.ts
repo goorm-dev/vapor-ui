@@ -40,17 +40,17 @@ export const root = componentRecipe({
         },
         variant: {
             default: {
-                color: vars.color.foreground.hint[200],
+                color: vars.color.foreground['hint-200'],
 
                 vars: {
-                    [variables.backgroundColor]: vars.color.background.hint[100],
+                    [variables.backgroundColor]: vars.color.background['hint-100'],
                 },
             },
             accent: {
-                color: vars.color.foreground.primary[100],
+                color: vars.color.foreground['primary-100'],
 
                 vars: {
-                    [variables.backgroundColor]: vars.color.background.primary[100],
+                    [variables.backgroundColor]: vars.color.background['primary-100'],
                 },
             },
         },
