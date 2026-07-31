@@ -20,12 +20,12 @@ export const root = componentRecipe({
             justifyContent: 'center',
             gap: vars.size.space[100],
 
+            transitionDuration: '0.2s',
+            transitionProperty: 'background-color, box-shadow',
             borderRadius: 9999,
+
             boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
             backgroundColor: vars.color.background.canvas[100],
-
-            transitionProperty: 'background-color, box-shadow',
-            transitionDuration: '0.2s',
 
             cursor: 'pointer',
 
@@ -75,13 +75,13 @@ export const root = componentRecipe({
 
 export const indicator = componentStyle({
     position: 'absolute',
-    transitionProperty: 'background-color, box-shadow, scale',
-    transitionDuration: '0.2s',
     inset: 0,
-    scale: 0,
+    transitionDuration: '0.2s',
+    transitionProperty: 'background-color, box-shadow, scale',
     border: 'none',
     borderRadius: '9999px',
     backgroundColor: vars.color.white,
+    scale: 0,
 
     selectors: {
         '&[data-checked]': { scale: 0.5 },

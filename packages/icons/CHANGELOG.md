@@ -1,5 +1,13 @@
 # @vapor-ui/icons
 
+## 1.2.1
+
+### Etc.
+
+- Update icons from Figma ([#608](https://github.com/goorm-dev/vapor-ui/pull/608)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **Updated Basic Icons:** `CopyOutlineIcon`
+
 ## 1.2.0
 
 ### Etc.
