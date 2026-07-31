@@ -117,11 +117,9 @@ export const popup = componentStyle({
 export const resizeHandle = componentStyle({
     position: 'absolute',
     zIndex: 1,
-
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-
     touchAction: 'none',
 
     selectors: {
