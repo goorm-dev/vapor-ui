@@ -7,6 +7,11 @@
         "jscodeshift",
         "codemod"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "directory": "packages/codemod"
+    },
     "main": "dist/src/index.mjs",
     "bin": {
         "vapor-codemod": "./dist/bin/cli.mjs"
@@ -38,13 +43,13 @@
         "@types/is-git-clean": "^1.1.2",
         "@types/jest": "^29.5.14",
         "@types/jscodeshift": "^17.3.0",
-        "@types/node": "^20.19.42",
+        "@types/node": "^20.19.43",
         "@vapor-ui/core": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
         "eslint": "catalog:",
         "jest": "^30.3.0",
         "rimraf": "^6.1.3",
-        "ts-jest": "^29.4.11",
+        "ts-jest": "^29.4.12",
         "tsup": "^8.5.1"
     },
     "engines": {

@@ -20,14 +20,14 @@ export const root = componentRecipe({
 
         display: 'flex',
 
-        width: 'fit-content',
-        padding: padding,
-
         border: '1px solid',
-        borderColor: vars.color.border.secondary,
         borderRadius: vars.size.borderRadius['300'],
 
+        borderColor: vars.color.border.secondary,
         backgroundColor: vars.color.gray['100'],
+        padding: padding,
+
+        width: 'fit-content',
     },
 
     defaultVariants: { size: 'md' },
@@ -59,16 +59,16 @@ export const item = componentRecipe({
             zIndex: 1,
 
             display: 'flex',
-            justifyContent: 'center',
             alignItems: 'center',
-
-            height: vars.size.dimension['400'],
-            padding: `0 ${vars.size.space['200']}`,
+            justifyContent: 'center',
 
             borderRadius: vars.size.borderRadius['300'],
-
             backgroundColor: 'transparent',
+
             cursor: 'pointer',
+
+            padding: `0 ${vars.size.space['200']}`,
+            height: vars.size.dimension['400'],
 
             selectors: {
                 [when.disabled()]: {
@@ -84,18 +84,18 @@ export const item = componentRecipe({
         size: {
             sm: {
                 gap: vars.size.space['050'],
-                height: vars.size.dimension['300'],
                 paddingInline: vars.size.space['100'],
+                height: vars.size.dimension['300'],
             },
             md: {
                 gap: vars.size.space['075'],
-                height: vars.size.dimension['400'],
                 paddingInline: vars.size.space['150'],
+                height: vars.size.dimension['400'],
             },
             lg: {
                 gap: vars.size.space['100'],
-                height: vars.size.dimension['500'],
                 paddingInline: vars.size.space['200'],
+                height: vars.size.dimension['500'],
             },
         },
     },
@@ -103,8 +103,8 @@ export const item = componentRecipe({
 
 export const iconItem = componentRecipe({
     base: {
-        padding: 0,
         aspectRatio: '1 / 1',
+        padding: 0,
     },
 
     defaultVariants: { size: 'md' },
@@ -119,23 +119,23 @@ export const iconItem = componentRecipe({
 
 export const indicator = componentStyle({
     position: 'absolute',
+    zIndex: 0,
     top: padding,
     bottom: padding,
+
     left: 0,
-
     transform: `translateX(${variables.indicatorLeft})`,
-    width: `${variables.indicatorWidth}`,
 
-    transitionProperty: 'transform, width',
     transitionDuration: '200ms',
+    transitionProperty: 'transform, width',
     transitionTimingFunction: 'cubic-bezier(0, 0, 0.6, 1)',
 
-    backgroundColor: vars.color.background.canvas['100'],
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.secondary}`,
+    backgroundColor: vars.color.background.canvas['100'],
 
-    zIndex: 0,
     pointerEvents: 'none',
+    width: `${variables.indicatorWidth}`,
 });
 
 export type RootVariants = NonNullable<Parameters<typeof root>[0]>;

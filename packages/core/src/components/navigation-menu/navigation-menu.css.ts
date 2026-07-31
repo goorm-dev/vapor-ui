@@ -46,7 +46,7 @@ export const link = componentRecipe({
                     color: vars.color.foreground.primary[200],
                 },
 
-                [when.disabled()]: { pointerEvents: 'none', opacity: 0.32 },
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
             },
         },
     ],
@@ -113,8 +113,8 @@ const durationVar = createVar('duration');
 const easingVar = createVar('easing');
 
 export const positioner = componentStyle({
-    transitionProperty: 'top, left, right, bottom',
     transitionDuration: durationVar,
+    transitionProperty: 'top, left, right, bottom',
     transitionTimingFunction: easingVar,
     width: 'var(--positioner-width)',
     height: 'var(--positioner-height)',
@@ -126,42 +126,42 @@ export const positioner = componentStyle({
 });
 
 export const popup = componentStyle({
-    outline: `1px solid ${vars.color.border.normal}`,
+    transformOrigin: 'var(--transform-origin)',
 
+    transitionDuration: durationVar,
+    transitionProperty: 'opacity, transform, width, height',
+
+    transitionTimingFunction: easingVar,
+
+    outline: `1px solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius[300],
     boxShadow: vars.shadow.md,
-
     backgroundColor: vars.color.background.overlay[100],
-
-    transformOrigin: 'var(--transform-origin)',
-    transitionProperty: 'opacity, transform, width, height',
-    transitionDuration: durationVar,
-    transitionTimingFunction: easingVar,
 
     width: 'var(--popup-width)',
     height: 'var(--popup-height)',
 
     selectors: {
         '&[data-starting-style], &[data-ending-style]': {
-            opacity: 0,
             transform: 'scale(0.9)',
+            opacity: 0,
         },
         '&[data-ending-style]': {
-            transitionTimingFunction: 'ease',
             transitionDuration: '0.15s',
+            transitionTimingFunction: 'ease',
         },
     },
 });
 
 export const content = componentStyle({
-    width: '100%',
-    height: '100%',
-
-    paddingBlock: vars.size.space[150],
-    paddingInline: vars.size.space[200],
-
-    whiteSpace: 'nowrap',
     transition: `opacity calc(${durationVar} * 0.5) ease, transform ${durationVar} ${easingVar}`,
+    paddingBlock: vars.size.space[150],
+
+    paddingInline: vars.size.space[200],
+    width: '100%',
+
+    height: '100%',
+    whiteSpace: 'nowrap',
 
     selectors: {
         '&[data-starting-style], &[data-ending-style]': {
@@ -184,16 +184,16 @@ export const content = componentStyle({
 
 export const viewport = componentStyle({
     position: 'relative',
-    overflow: 'hidden',
     width: '100%',
     height: '100%',
+    overflow: 'hidden',
 });
 
 export const arrow = componentStyle({
     display: 'flex',
-    color: vars.color.background.overlay[100],
-
     transition: `left ${durationVar} ${easingVar}`,
+
+    color: vars.color.background.overlay[100],
 
     selectors: {
         '&[data-side="top"]': {
