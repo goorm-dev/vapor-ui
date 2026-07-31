@@ -68,7 +68,7 @@
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {
-        "@playwright/test": "^1.61.1",
+        "@playwright/test": "^1.62.1",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@rollup/plugin-alias": "^5.1.1",
@@ -88,7 +88,7 @@
         "@vitest/coverage-v8": "catalog:",
         "autoprefixer": "^10.5.4",
         "eslint": "catalog:",
-        "happy-dom": "^20.10.6",
+        "happy-dom": "^20.11.1",
         "postcss": "^8.5.23",
         "react": "catalog:",
         "react-dom": "catalog:",
