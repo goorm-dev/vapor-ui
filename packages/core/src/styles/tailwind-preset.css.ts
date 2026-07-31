@@ -19,14 +19,7 @@ import {
  * @see https://tailwindcss.com/docs/theme#theme-variable-namespaces
  */
 type TailwindThemeNamespace =
-    | 'color'
-    | 'spacing'
-    | 'radius'
-    | 'font'
-    | 'text'
-    | 'font-weight'
-    | 'leading'
-    | 'tracking';
+    'color' | 'spacing' | 'radius' | 'font' | 'text' | 'font-weight' | 'leading' | 'tracking';
 
 /* -------------------------------------------------------------------------------------------------
  * @theme layer
