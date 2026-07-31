@@ -21,7 +21,7 @@ export const root = componentRecipe({
             justifyContent: 'center',
 
             borderRadius: vars.size.borderRadius['300'],
-            backgroundColor: vars.color.background.canvas[100],
+            backgroundColor: vars.color.background['canvas-100'],
 
             selectors: {
                 [when.pressed()]: { backgroundColor: variables.backgroundColor },
