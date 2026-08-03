@@ -36,7 +36,7 @@ describe('callLlm', () => {
         vi.useFakeTimers();
         vi.mocked(fetch).mockResolvedValue({ ok: false, status: 503 } as Response);
 
-        const pending = callLlm([{ role: 'user', content: 'hello' }]);
+        const pending = callLlm([{ role: 'user', content: 'hello' }], { model: 'claude-sonnet-4-6' });
         await vi.runAllTimersAsync();
         const result = await pending;
 
@@ -48,7 +48,7 @@ describe('callLlm', () => {
     it('does not retry 4xx', async () => {
         vi.mocked(fetch).mockResolvedValue({ ok: false, status: 400 } as Response);
 
-        const result = await callLlm([{ role: 'user', content: 'hello' }]);
+        const result = await callLlm([{ role: 'user', content: 'hello' }], { model: 'claude-sonnet-4-6' });
 
         expect(vi.mocked(fetch)).toHaveBeenCalledOnce();
         expect(result.statusCode).toBe(400);
@@ -60,7 +60,7 @@ describe('callLlm', () => {
             json: async () => ({ choices: [{ message: { content: 'plain text' } }] }),
         } as Response);
 
-        await callLlm([{ role: 'user', content: 'hello' }]);
+        await callLlm([{ role: 'user', content: 'hello' }], { model: 'claude-sonnet-4-6' });
 
         const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
             response_format?: { type: string };
@@ -75,6 +75,7 @@ describe('callLlm', () => {
         } as Response);
 
         await callLlm([{ role: 'user', content: 'hello' }], {
+            model: 'claude-sonnet-4-6',
             jsonSchema: {
                 name: 'test_response',
                 schema: {

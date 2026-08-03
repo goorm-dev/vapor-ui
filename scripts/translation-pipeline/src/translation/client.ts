@@ -10,7 +10,7 @@ export interface LlmCallResult {
 }
 
 export interface LlmCallOptions {
-    model?: string;
+    model: string;
     jsonSchema?: { name: string; schema: object };
 }
 
@@ -31,7 +31,7 @@ function delay(ms: number): Promise<void> {
 
 export async function callLlm(
     messages: LlmMessage[],
-    options: LlmCallOptions = {},
+    options: LlmCallOptions,
 ): Promise<LlmCallResult> {
     let result = await callLlmOnce(messages, options);
     for (const wait of RETRY_DELAYS_MS) {
@@ -44,7 +44,7 @@ export async function callLlm(
 
 async function callLlmOnce(
     messages: LlmMessage[],
-    options: LlmCallOptions = {},
+    options: LlmCallOptions,
 ): Promise<LlmCallResult> {
     const baseUrl = process.env['LITELLM_BASE_URL'];
     const apiKey = process.env['LITELLM_API_KEY'];
@@ -69,7 +69,7 @@ async function callLlmOnce(
                     'X-Client-Id': 'vapor-ui-translation-pipeline',
                 },
                 body: JSON.stringify({
-                    model: options.model ?? 'claude-sonnet-4-6',
+                    model: options.model,
                     messages,
                     ...(options.jsonSchema
                         ? {

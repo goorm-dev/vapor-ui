@@ -163,9 +163,9 @@ export async function translatePropsInfo(
     // ── 캐시 조회 ──
     const missing: TranslationUnit[] = [];
     for (const representative of representatives) {
-        const cacheEntry = cacheStore.get(makeCacheKey(representative.source));
-        if (cacheEntry) {
-            fanOut(representative, makeOutcome(representative, cacheEntry.translated, 'cache_hit'));
+        const cached = cacheStore.get(makeCacheKey(representative.source));
+        if (cached !== undefined) {
+            fanOut(representative, makeOutcome(representative, cached, 'cache_hit'));
         } else {
             missing.push(representative);
         }
@@ -208,10 +208,7 @@ export async function translatePropsInfo(
         for (const [unit, outcome] of processed.outcomes) {
             fanOut(unit, outcome);
             if (outcome.assurance === 'verified') {
-                cacheStore.set(makeCacheKey(unit.source), {
-                    source: unit.source,
-                    translated: outcome.translated,
-                });
+                cacheStore.set(makeCacheKey(unit.source), outcome.translated);
             }
         }
     });

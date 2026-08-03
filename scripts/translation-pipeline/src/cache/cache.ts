@@ -11,12 +11,8 @@ import {
 // v2 reflects the LLM JSON-mode lifecycle. Older cache entries are not reused.
 export const CACHE_VERSION = 'v2';
 
-export interface CacheEntry {
-    source: string;
-    translated: string;
-}
-
-export type CacheStore = Map<string, CacheEntry>;
+/** 키가 해시라 원문은 담지 않는다 — 값은 번역문 하나뿐이다. */
+export type CacheStore = Map<string, string>;
 
 export function makeCacheKey(source: string): string {
     return createHash('sha256')
@@ -39,14 +35,11 @@ export function loadCache(outputDir: string): CacheStore {
     if (!existsSync(filePath)) return new Map();
     try {
         const raw = JSON.parse(readFileSync(filePath, 'utf-8')) as Record<string, unknown>;
-        const valid = Object.entries(raw).filter(
-            ([, value]) =>
-                typeof value === 'object' &&
-                value !== null &&
-                typeof (value as CacheEntry).source === 'string' &&
-                typeof (value as CacheEntry).translated === 'string',
-        ) as [string, CacheEntry][];
-        return new Map(valid);
+        return new Map(
+            Object.entries(raw).filter(
+                (entry): entry is [string, string] => typeof entry[1] === 'string',
+            ),
+        );
     } catch {
         return new Map();
     }

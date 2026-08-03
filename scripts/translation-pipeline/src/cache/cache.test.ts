@@ -3,7 +3,6 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { CacheEntry } from '~/cache/cache';
 import { loadCache, makeCacheKey, saveCache } from '~/cache/cache';
 
 function makeTmpDir(): string {
@@ -43,15 +42,14 @@ describe('loadCache', () => {
 
     it('returns populated Map when valid cache file exists', () => {
         const dir = makeTmpDir();
-        const entry: CacheEntry = {
-            source: 'hello',
-            translated: '안녕',
-        };
         const k = key('hello');
-        fs.writeFileSync(path.join(dir, '.translation-cache.json'), JSON.stringify({ [k]: entry }));
+        fs.writeFileSync(
+            path.join(dir, '.translation-cache.json'),
+            JSON.stringify({ [k]: '안녕' }),
+        );
 
         const store = loadCache(dir);
-        expect(store.get(k)).toEqual(entry);
+        expect(store.get(k)).toBe('안녕');
         fs.rmSync(dir, { recursive: true });
     });
 
@@ -75,20 +73,12 @@ describe('saveCache / loadCache roundtrip', () => {
     });
 
     it('written cache can be read back', () => {
-        const store = new Map<string, CacheEntry>();
         const k = key('hello');
-        store.set(k, {
-            source: 'hello',
-            translated: '안녕',
-        });
+        const store = new Map([[k, '안녕']]);
 
         saveCache(tmpDir, store);
-        const loaded = loadCache(tmpDir);
 
-        expect(loaded.get(k)).toEqual({
-            source: 'hello',
-            translated: '안녕',
-        });
+        expect(loadCache(tmpDir).get(k)).toBe('안녕');
     });
 
     it('does not throw when outputDir is empty string', () => {

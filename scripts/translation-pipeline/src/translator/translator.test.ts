@@ -67,15 +67,7 @@ describe('translatePropsInfo', () => {
     it('translates only cache misses, in a single cross-component batch', async () => {
         const cachedKey = cacheModule.makeCacheKey('Click handler callback.');
         vi.spyOn(cacheModule, 'loadCache').mockReturnValue(
-            new Map([
-                [
-                    cachedKey,
-                    {
-                        source: 'Click handler callback.',
-                        translated: '캐시된 콜백 설명입니다.',
-                    },
-                ],
-            ]),
+            new Map([[cachedKey, '캐시된 콜백 설명입니다.']]),
         );
         const translateSpy = vi.spyOn(translationModule, 'translateUnits');
 
@@ -173,12 +165,7 @@ describe('translatePropsInfo', () => {
 
         const savedStore = saveCacheSpy.mock.calls[0]?.[1];
         expect(savedStore?.size).toBe(1);
-        expect(Array.from(savedStore?.values() ?? [])).toEqual([
-            {
-                source: 'A button component.',
-                translated: 'Button 컴포넌트입니다.',
-            },
-        ]);
+        expect(Array.from(savedStore?.values() ?? [])).toEqual(['Button 컴포넌트입니다.']);
     });
 
     it('marks all units as degraded with batch_mqm_failed when batch MQM response is invalid', async () => {
