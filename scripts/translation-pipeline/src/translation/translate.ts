@@ -1,7 +1,7 @@
 import { DEFAULT_TRANSLATION_MODEL } from '~/defaults';
 import { callLlm } from '~/translation/client';
 import { parseLlmJson } from '~/translation/json';
-import type { TranslationUnit } from '~/types';
+import { type TranslationUnit, getTranslationUnitKey } from '~/types';
 
 const SYSTEM_PROMPT = `You are a professional Korean translator for design-system API documentation. Respond ONLY with valid JSON.
 
@@ -25,8 +25,10 @@ Style rules (translations are evaluated against these — write the Korean text 
     abstract-noun subjects   → rewrite with the component or developer as the subject
 - Translate prop/component descriptions as instructions to the developer ("…을 지정합니다", "…을 설정합니다"), not as third-person reports about the API.
 
+Each unit carries the name of the component it belongs to. Echo every unit's id back exactly as given.
+
 Return exactly this JSON shape:
-{"translations":[{"id":"component.description","translated":"Korean translation"}]}`;
+{"translations":[{"id":"12:component.description","translated":"Korean translation"}]}`;
 
 interface TranslationResponseItem {
     id: string;
@@ -71,7 +73,7 @@ function validateTranslations(
     units: TranslationUnit[],
     translations: TranslationResponseItem[],
 ): Map<string, string> {
-    const expectedIds = new Set(units.map((unit) => unit.id));
+    const expectedIds = new Set(units.map(getTranslationUnitKey));
     const seen = new Set<string>();
     const result = new Map<string, string>();
 
@@ -90,29 +92,31 @@ function validateTranslations(
     }
 
     for (const unit of units) {
-        if (!seen.has(unit.id)) {
-            throw new Error(`Missing translation id: ${unit.id}`);
+        const key = getTranslationUnitKey(unit);
+        if (!seen.has(key)) {
+            throw new Error(`Missing translation id: ${key}`);
         }
     }
 
     return result;
 }
 
-export async function translateComponentUnits(
-    componentName: string,
-    units: TranslationUnit[],
-): Promise<Map<string, string>> {
+/**
+ * 컴포넌트를 섞은 횡단 배치를 번역한다. 컴포넌트 컨텍스트는 유닛별 `componentName`으로 전달한다
+ * (중복 제거 후에는 컴포넌트가 배치 단위로서 의미가 없다 — KAN-11).
+ */
+export async function translateUnits(units: TranslationUnit[]): Promise<Map<string, string>> {
     if (units.length === 0) {
         return new Map();
     }
 
     const request = {
-        componentName,
-        units: units.map(({ id, kind, ownerName, source }) => ({
-            id,
-            kind,
-            ownerName,
-            source,
+        units: units.map((unit) => ({
+            id: getTranslationUnitKey(unit),
+            kind: unit.kind,
+            ownerName: unit.ownerName,
+            componentName: unit.componentName,
+            source: unit.source,
         })),
     };
 

@@ -1,0 +1,54 @@
+{
+    "name": "Textarea",
+    "props": [
+        {
+            "name": "autoResize",
+            "type": ["boolean"],
+            "required": false,
+            "defaultValue": "false"
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "required": false,
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "required": false,
+            "description": "The default value of the textarea. Use when uncontrolled.",
+            "defaultValue": ""
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: string, event: Textarea.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the value of the textarea changes."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": false,
+            "description": "The value of the textarea. Use when controlled."
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: TextareaState) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement | ((props: HTMLProps, state: TextareaState) => ReactElement)"],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

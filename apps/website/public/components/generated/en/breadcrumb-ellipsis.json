@@ -1,0 +1,21 @@
+{
+    "name": "BreadcrumbEllipsis",
+    "props": [
+        {
+            "name": "className",
+            "type": [
+                "string | ((state: BreadcrumbEllipsisPrimitive.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: BreadcrumbEllipsisPrimitive.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

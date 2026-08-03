@@ -1,0 +1,43 @@
+{
+    "name": "FloatingBarPopupPrimitive",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string | ((state: FloatingBar.Popup.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "finalFocus",
+            "type": [
+                "false | true | React.RefObject<HTMLElement | null> | ((closeType: InteractionType) => (boolean | void | HTMLElement | null))"
+            ],
+            "required": false,
+            "description": "Determines the element to focus when the popover is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "initialFocus",
+            "type": [
+                "false | true | React.RefObject<HTMLElement | null> | ((openType: InteractionType) => (boolean | void | HTMLElement | null))"
+            ],
+            "required": false,
+            "description": "Determines the element to focus when the popover is opened.\nBy default, focus moves to the first tabbable element inside the popup, except when the popover\nis opened by touch — then the popup itself is focused to avoid opening the virtual keyboard.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (first tabbable element or popup).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: FloatingBar.Popup.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: FloatingBar.Popup.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

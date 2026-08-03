@@ -63,7 +63,35 @@ function readResponseCost(response: Response, data: Record<string, unknown>): nu
     return undefined;
 }
 
+/** 재시도 지연(ms). 429/5xx/타임아웃만 재시도한다 — 4xx는 재시도해도 같은 답이다 (KAN-11). */
+const RETRY_DELAYS_MS = [1_000, 4_000];
+
+function isRetryable(result: LlmCallResult): boolean {
+    if (result.statusCode !== undefined) {
+        return result.statusCode === 429 || result.statusCode >= 500;
+    }
+    // statusCode가 없는 실패는 네트워크 오류·타임아웃(AbortError)
+    return result.error !== undefined && result.error.startsWith('fetch failed');
+}
+
+function delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function callLlm(
+    messages: LlmMessage[],
+    options: LlmCallOptions = {},
+): Promise<LlmCallResult> {
+    let result = await callLlmOnce(messages, options);
+    for (const wait of RETRY_DELAYS_MS) {
+        if (result.content !== null || !isRetryable(result)) return result;
+        await delay(wait);
+        result = await callLlmOnce(messages, options);
+    }
+    return result;
+}
+
+async function callLlmOnce(
     messages: LlmMessage[],
     options: LlmCallOptions = {},
 ): Promise<LlmCallResult> {
@@ -86,6 +114,8 @@ export async function callLlm(
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${apiKey}`,
+                    // TokenHub(사내 LLM 게이트웨이) 필수 집계 라벨. 일반 LiteLLM proxy는 무시한다.
+                    'X-Client-Id': 'vapor-ui-translation-pipeline',
                 },
                 body: JSON.stringify({
                     model: options.model ?? 'claude-sonnet-4-6',

@@ -1,14 +1,21 @@
 import { DEFAULT_POSTPROCESS_MODEL, DEFAULT_VALIDATION_MODEL } from '~/defaults';
 import { callLlm } from '~/translation/client';
 import { parseLlmJson } from '~/translation/json';
-import type { MqmError, MqmResult, TranslationOutcome, TranslationUnit } from '~/types';
+import {
+    type MqmError,
+    type MqmResult,
+    type PreservationViolation,
+    type TranslationOutcome,
+    type TranslationUnit,
+    getTranslationUnitKey,
+} from '~/types';
+import { checkPreservation, describeViolation } from '~/validation/preserve';
 import {
     MQM_CATEGORY_VALUES,
     MQM_EVALUATOR_PROMPT,
     MQM_SEVERITY_VALUES,
 } from '~/validation/validator';
 
-const MQM_BATCH_SIZE = 10;
 const POSTPROCESS_BATCH_SIZE = 10;
 
 // ─── Batch MQM ───────────────────────────────────────────────────────────────
@@ -16,9 +23,10 @@ const POSTPROCESS_BATCH_SIZE = 10;
 const BATCH_MQM_SYSTEM_PROMPT = `${MQM_EVALUATOR_PROMPT}
 
 Batch mode:
-You will receive multiple translation units. Evaluate each unit independently.
+You will receive multiple translation units, possibly from different components.
+Evaluate each unit independently and echo its id back exactly as given.
 Respond with EXACTLY this JSON shape and nothing else:
-{"evaluations":[{"id":"component.description","verdict":"PASS","errors":[]}]}`;
+{"evaluations":[{"id":"12:component.description","verdict":"PASS","errors":[]}]}`;
 
 const MQM_ERROR_SCHEMA = {
     type: 'object',
@@ -101,7 +109,7 @@ function validateBatchEvaluations(units: TranslationUnit[], evaluations: unknown
 
     try {
         const items = reconcileById(
-            units.map((unit) => unit.id),
+            units.map(getTranslationUnitKey),
             evaluations as BatchEvaluationItem[],
         );
         return {
@@ -120,20 +128,18 @@ function validateBatchEvaluations(units: TranslationUnit[], evaluations: unknown
 }
 
 async function validateBatchWithMqm(
-    componentName: string,
     units: TranslationUnit[],
     translations: Map<string, string>,
 ): Promise<BatchMqmResult> {
     if (units.length === 0) return { ok: true, evaluations: new Map() };
 
     const request = {
-        componentName,
         units: units.map((unit) => ({
-            id: unit.id,
+            id: getTranslationUnitKey(unit),
             kind: unit.kind,
             ownerName: unit.ownerName,
             source: unit.source,
-            translated: translations.get(unit.id) ?? '',
+            translated: translations.get(getTranslationUnitKey(unit)) ?? '',
         })),
     };
 
@@ -169,14 +175,15 @@ async function validateBatchWithMqm(
 
 const BATCH_POSTPROCESS_SYSTEM_PROMPT = `You are a professional Korean translator and post-editor for a design system documentation site.
 
-You will receive failed translation units with their English source text, initial Korean translation, and MQM error feedback.
+You will receive failed translation units with their English source text, initial Korean translation, MQM error feedback, and string-preservation violations detected by a deterministic checker.
 
 Rules:
-1. Fix every MQM error listed for each unit.
-2. Do not change parts that are not covered by any error unless required for grammar.
-3. Never translate or alter PascalCase component names, camelCase prop names, quoted enum values, inline code, token names, URLs, or markdown formatting.
-4. Respond ONLY with JSON in this exact shape:
-{"translations":[{"id":"component.description","translated":"final Korean text"}]}`;
+1. Fix every MQM error and every preservation violation listed for each unit.
+2. A preservation violation means a string that must appear verbatim in the Korean text is missing or altered. Restore it exactly as it appears in the source.
+3. Do not change parts that are not covered by any error unless required for grammar.
+4. Never translate or alter PascalCase component names, camelCase prop names, quoted enum values, inline code, token names, URLs, or markdown formatting.
+5. Respond ONLY with JSON in this exact shape, echoing each id exactly as given:
+{"translations":[{"id":"12:component.description","translated":"final Korean text"}]}`;
 
 const BATCH_POSTPROCESS_RESPONSE_SCHEMA = {
     type: 'object',
@@ -202,6 +209,7 @@ interface BatchPostprocessInput {
     unit: TranslationUnit;
     initialTranslation: string;
     errors: MqmError[];
+    violations: PreservationViolation[];
 }
 
 interface BatchPostprocessSuccess {
@@ -230,7 +238,7 @@ function validateBatchTranslations(
 
     try {
         const items = reconcileById(
-            inputs.map((input) => input.unit.id),
+            inputs.map((input) => getTranslationUnitKey(input.unit)),
             translations as { id: string; translated: string }[],
         );
         for (const item of items.values()) {
@@ -249,20 +257,20 @@ function validateBatchTranslations(
 }
 
 async function postprocessBatchWithLlm(
-    componentName: string,
     inputs: BatchPostprocessInput[],
 ): Promise<BatchPostprocessResult> {
     if (inputs.length === 0) return { ok: true, translations: new Map() };
 
     const request = {
-        componentName,
-        units: inputs.map(({ unit, initialTranslation, errors }) => ({
-            id: unit.id,
+        units: inputs.map(({ unit, initialTranslation, errors, violations }) => ({
+            id: getTranslationUnitKey(unit),
             kind: unit.kind,
             ownerName: unit.ownerName,
+            componentName: unit.componentName,
             source: unit.source,
             initialTranslation,
             errors,
+            preservationViolations: violations.map(describeViolation),
         })),
     };
 
@@ -327,6 +335,24 @@ function finalOutcome(
     };
 }
 
+/**
+ * 문자열 보존을 끝까지 못 지킨 유닛은 한국어를 버리고 영어 원문을 그대로 쓴다 (KAN-10).
+ * 잘못된 식별자·코드가 들어간 한국어보다 영어가 낫다.
+ */
+export function preservationFallbackOutcome(
+    unit: TranslationUnit,
+    violations: PreservationViolation[],
+): TranslationOutcome {
+    return {
+        id: unit.id,
+        translated: unit.source,
+        assurance: 'unverified',
+        reportable: true,
+        reason: 'preservation_fallback',
+        violations,
+    };
+}
+
 function degradedOutcome(
     unit: TranslationUnit,
     translated: string,
@@ -353,118 +379,152 @@ function chunkArray<T>(items: T[], size: number): T[][] {
     return chunks;
 }
 
-// ─── Component Batch Lifecycle ────────────────────────────────────────────────
+// ─── Batch Lifecycle ──────────────────────────────────────────────────────────
 
 interface FailedUnit {
     unit: TranslationUnit;
     initialTranslation: string;
-    initialEvaluation: MqmResult;
+    errors: MqmError[];
+    violations: PreservationViolation[];
 }
 
-export interface ComponentLifecycleResult {
+export interface BatchLifecycleResult {
     outcomes: [TranslationUnit, TranslationOutcome][];
     batchFailureReasons: string[];
 }
 
-export async function processComponentLifecycle(
-    componentName: string,
+function requireTranslation(translations: Map<string, string>, unit: TranslationUnit): string {
+    const translated = translations.get(getTranslationUnitKey(unit));
+    if (translated === undefined) {
+        throw new Error(`Missing translation for unit id: ${getTranslationUnitKey(unit)}`);
+    }
+    return translated;
+}
+
+/**
+ * 한 MQM 배치의 수명주기: 결정론 보존 체크 + MQM → 후편집 → 재검사.
+ * 배치는 컴포넌트를 섞은 횡단 배치다 (KAN-11).
+ */
+export async function processBatchLifecycle(
     units: TranslationUnit[],
     translations: Map<string, string>,
-): Promise<ComponentLifecycleResult> {
+): Promise<BatchLifecycleResult> {
     const outcomes: [TranslationUnit, TranslationOutcome][] = [];
     const batchFailureReasons: string[] = [];
 
-    for (const mqmChunk of chunkArray(units, MQM_BATCH_SIZE)) {
-        const initialResult = await validateBatchWithMqm(componentName, mqmChunk, translations);
+    const violationsByKey = new Map<string, PreservationViolation[]>(
+        units.map((unit) => [
+            getTranslationUnitKey(unit),
+            checkPreservation(unit.source, requireTranslation(translations, unit)),
+        ]),
+    );
+    const violationsOf = (unit: TranslationUnit): PreservationViolation[] =>
+        violationsByKey.get(getTranslationUnitKey(unit)) ?? [];
 
-        if (!initialResult.ok) {
-            batchFailureReasons.push(
-                `${componentName}: initial batch MQM invalid: ${initialResult.reason}`,
-            );
-            for (const unit of mqmChunk) {
-                const translated = translations.get(unit.id);
-                if (translated === undefined) {
-                    throw new Error(`Missing translation for unit id: ${unit.id}`);
-                }
-                outcomes.push([unit, degradedOutcome(unit, translated, 'batch_mqm_failed')]);
+    const initialResult = await validateBatchWithMqm(units, translations);
+
+    if (!initialResult.ok) {
+        batchFailureReasons.push(`initial batch MQM invalid: ${initialResult.reason}`);
+        for (const unit of units) {
+            const violations = violationsOf(unit);
+            outcomes.push([
+                unit,
+                violations.length > 0
+                    ? preservationFallbackOutcome(unit, violations)
+                    : degradedOutcome(
+                          unit,
+                          requireTranslation(translations, unit),
+                          'batch_mqm_failed',
+                      ),
+            ]);
+        }
+        return { outcomes, batchFailureReasons };
+    }
+
+    const failedUnits: FailedUnit[] = [];
+    for (const unit of units) {
+        const key = getTranslationUnitKey(unit);
+        const translated = requireTranslation(translations, unit);
+        const evaluation = initialResult.evaluations.get(key);
+        if (evaluation === undefined) {
+            throw new Error(`Missing batch MQM result for id: ${key}`);
+        }
+        const violations = violationsOf(unit);
+        if (evaluation.verdict === 'PASS' && violations.length === 0) {
+            outcomes.push([unit, initialPassOutcome(unit, translated)]);
+            continue;
+        }
+        failedUnits.push({
+            unit,
+            initialTranslation: translated,
+            errors: evaluation.errors,
+            violations,
+        });
+    }
+
+    for (const failedChunk of chunkArray(failedUnits, POSTPROCESS_BATCH_SIZE)) {
+        const postprocess = await postprocessBatchWithLlm(failedChunk);
+
+        if (!postprocess.ok) {
+            batchFailureReasons.push(`batch postprocess invalid: ${postprocess.reason}`);
+            for (const failed of failedChunk) {
+                outcomes.push([
+                    failed.unit,
+                    failed.violations.length > 0
+                        ? preservationFallbackOutcome(failed.unit, failed.violations)
+                        : degradedOutcome(
+                              failed.unit,
+                              failed.initialTranslation,
+                              'batch_postprocess_failed',
+                              failed.errors,
+                          ),
+                ]);
             }
             continue;
         }
 
-        const failedUnits: FailedUnit[] = [];
-        for (const unit of mqmChunk) {
-            const translated = translations.get(unit.id);
-            const initialEvaluation = initialResult.evaluations.get(unit.id);
-            if (translated === undefined || initialEvaluation === undefined) {
-                throw new Error(`Missing batch MQM result for id: ${unit.id}`);
-            }
-            if (initialEvaluation.verdict === 'PASS') {
-                outcomes.push([unit, initialPassOutcome(unit, translated)]);
+        // 후편집 결과를 결정론 체크로 먼저 걸러낸다 — 실패하면 MQM 판정과 무관하게 영어 폴백.
+        const recheckable: FailedUnit[] = [];
+        for (const failed of failedChunk) {
+            const key = getTranslationUnitKey(failed.unit);
+            const postprocessed = postprocess.translations.get(key) ?? failed.initialTranslation;
+            const violations = checkPreservation(failed.unit.source, postprocessed);
+            if (violations.length > 0) {
+                outcomes.push([failed.unit, preservationFallbackOutcome(failed.unit, violations)]);
                 continue;
             }
-            failedUnits.push({ unit, initialTranslation: translated, initialEvaluation });
+            recheckable.push(failed);
         }
 
-        for (const failedChunk of chunkArray(failedUnits, POSTPROCESS_BATCH_SIZE)) {
-            const postprocess = await postprocessBatchWithLlm(
-                componentName,
-                failedChunk.map(({ unit, initialTranslation, initialEvaluation }) => ({
-                    unit,
-                    initialTranslation,
-                    errors: initialEvaluation.errors,
-                })),
-            );
+        if (recheckable.length === 0) continue;
 
-            if (!postprocess.ok) {
-                batchFailureReasons.push(
-                    `${componentName}: batch postprocess invalid: ${postprocess.reason}`,
-                );
-                for (const { unit, initialTranslation } of failedChunk) {
-                    outcomes.push([
-                        unit,
-                        degradedOutcome(
-                            unit,
-                            initialTranslation,
-                            'batch_postprocess_failed',
-                            initialResult.evaluations.get(unit.id)?.errors,
-                        ),
-                    ]);
-                }
-                continue;
-            }
+        const finalResult = await validateBatchWithMqm(
+            recheckable.map(({ unit }) => unit),
+            postprocess.translations,
+        );
 
-            const finalResult = await validateBatchWithMqm(
-                componentName,
-                failedChunk.map(({ unit }) => unit),
-                postprocess.translations,
-            );
-
-            if (!finalResult.ok) {
-                batchFailureReasons.push(
-                    `${componentName}: final batch MQM invalid: ${finalResult.reason}`,
-                );
-                for (const { unit, initialTranslation } of failedChunk) {
-                    const postprocessed =
-                        postprocess.translations.get(unit.id) ?? initialTranslation;
-                    outcomes.push([
-                        unit,
-                        degradedOutcome(unit, postprocessed, 'batch_final_mqm_failed'),
-                    ]);
-                }
-                continue;
-            }
-
-            for (const failed of failedChunk) {
-                const translated = postprocess.translations.get(failed.unit.id);
-                const finalEvaluation = finalResult.evaluations.get(failed.unit.id);
-                if (translated === undefined || finalEvaluation === undefined) {
-                    throw new Error(`Missing final batch MQM result for id: ${failed.unit.id}`);
-                }
+        if (!finalResult.ok) {
+            batchFailureReasons.push(`final batch MQM invalid: ${finalResult.reason}`);
+            for (const failed of recheckable) {
+                const key = getTranslationUnitKey(failed.unit);
+                const postprocessed =
+                    postprocess.translations.get(key) ?? failed.initialTranslation;
                 outcomes.push([
                     failed.unit,
-                    finalOutcome(failed.unit, translated, finalEvaluation),
+                    degradedOutcome(failed.unit, postprocessed, 'batch_final_mqm_failed'),
                 ]);
             }
+            continue;
+        }
+
+        for (const failed of recheckable) {
+            const key = getTranslationUnitKey(failed.unit);
+            const translated = postprocess.translations.get(key);
+            const finalEvaluation = finalResult.evaluations.get(key);
+            if (translated === undefined || finalEvaluation === undefined) {
+                throw new Error(`Missing final batch MQM result for id: ${key}`);
+            }
+            outcomes.push([failed.unit, finalOutcome(failed.unit, translated, finalEvaluation)]);
         }
     }
 

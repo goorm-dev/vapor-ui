@@ -1,0 +1,36 @@
+{
+    "name": "CheckboxIndicatorPrimitive",
+    "props": [
+        {
+            "name": "className",
+            "type": [
+                "string | ((state: Checkbox.IndicatorPrimitive.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "keepMounted",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to keep the element in the DOM when the checkbox is not checked.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: Checkbox.IndicatorPrimitive.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Checkbox.IndicatorPrimitive.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

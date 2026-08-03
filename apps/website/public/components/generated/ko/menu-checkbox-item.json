@@ -1,0 +1,100 @@
+{
+    "name": "MenuCheckboxItem",
+    "props": [
+        {
+            "name": "checked",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "체크박스 항목이 현재 선택되어 있는지 여부를 지정합니다.\n\n비제어 체크박스 항목을 렌더링하려면 `defaultChecked` prop을 사용하십시오."
+        },
+        {
+            "name": "defaultChecked",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "체크박스 항목의 초기 선택 여부를 지정합니다.\n\n제어 체크박스 항목을 렌더링하려면 `checked` prop을 사용하십시오."
+        },
+        {
+            "name": "onCheckedChange",
+            "type": [
+                "(checked: boolean, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void"
+            ],
+            "required": false,
+            "description": "체크박스 항목이 선택되거나 해제될 때 호출되는 이벤트 핸들러입니다."
+        },
+        {
+            "name": "className",
+            "type": [
+                "string | ((state: Menu.CheckboxItem.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 CSS 클래스를 지정합니다. 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "closeOnClick",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "항목을 클릭했을 때 메뉴를 닫을지 여부를 지정합니다."
+        },
+        {
+            "name": "disabled",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부를 설정합니다."
+        },
+        {
+            "name": "id",
+            "type": [
+                "string"
+            ],
+            "required": false
+        },
+        {
+            "name": "label",
+            "type": [
+                "string"
+            ],
+            "required": false,
+            "description": "키보드 텍스트 탐색 중 항목을 매칭할 때 사용할 텍스트 레이블을 재정의합니다."
+        },
+        {
+            "name": "nativeButton",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "`render` prop으로 컴포넌트를 교체할 때 네이티브 `<button>` 요소를 렌더링할지 여부를 설정합니다.\n렌더링되는 요소가 네이티브 버튼인 경우 `true`로 설정합니다."
+        },
+        {
+            "name": "onClick",
+            "type": [
+                "(event: BaseUIEvent<React.MouseEvent<HTMLDivElement, MouseEvent>>) => void"
+            ],
+            "required": false,
+            "description": "메뉴 항목의 클릭 핸들러를 지정합니다."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: Menu.CheckboxItem.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 스타일을 지정합니다. 컴포넌트의 상태를 기반으로 스타일 객체를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Menu.CheckboxItem.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 때 사용합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 전달할 수 있습니다."
+        }
+    ]
+}

@@ -1,0 +1,1202 @@
+{
+  "0892c47ad737bcdb0d43823b5e1361c59b319de0eee49266138eac925c8d7019": {
+    "source": "How long to wait before opening the tooltip. Specified in milliseconds.",
+    "translated": "툴팁을 열기 전 대기 시간을 밀리초 단위로 지정합니다."
+  },
+  "787b9326096ea589bfc0f74611223a6c6521f284a3e0f8a50f12ea6f7cf37812": {
+    "source": "A handle to associate the trigger with a tooltip.",
+    "translated": "트리거를 툴팁과 연결할 핸들을 지정합니다."
+  },
+  "c869e7649dc96801ebb88fe9b8be5b47286ad880d1a7abc1aad189794c90ca48": {
+    "source": "A payload to pass to the tooltip when it is opened.",
+    "translated": "툴팁이 열릴 때 전달할 페이로드를 지정합니다."
+  },
+  "bf45320f6d86bee74c0fbfe94beb55275ad6a63f2de7a1ff8ebf41ac7ba4187d": {
+    "source": "If `true`, the tooltip will not open when interacting with this trigger.\nNote that this doesn't apply the `disabled` attribute to the trigger element.\nIf you want to disable the trigger element itself, you can pass the `disabled` prop to the trigger element via the `render` prop.",
+    "translated": "`true`로 설정하면 이 트리거와 상호작용해도 툴팁이 열리지 않습니다.\n이 prop은 트리거 엘리먼트에 `disabled` 속성을 적용하지 않습니다.\n트리거 엘리먼트 자체를 비활성화하려면 `render` prop을 통해 트리거 엘리먼트에 `disabled` prop을 전달할 수 있습니다."
+  },
+  "6e9f74de635fbd7bec991f0474ca5dee86be545135de6a32f101784dcf25efb0": {
+    "source": "Fallback part of the avatar shown when the image fails to load or is not provided. Displays initials derived from the `alt` text. Renders a `<span>` element.",
+    "translated": "이미지 로드에 실패하거나 이미지가 제공되지 않을 때 표시되는 아바타의 폴백 파트입니다. `alt` 텍스트에서 추출한 이니셜을 표시합니다. `<span>` 요소를 렌더링합니다."
+  },
+  "f39299b61ce003a4ac07d8b8388efa764ba303541040f54ec524d1bebcf10052": {
+    "source": "CSS class applied to the element, or a function that returns a class based on the component’s state.",
+    "translated": "요소에 적용할 CSS 클래스를 지정합니다. 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수도 사용할 수 있습니다."
+  },
+  "4e3fd224045cd0284d4bb7b80972952644e0d119329a819068972bb969f3e0b6": {
+    "source": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state.",
+    "translated": "요소에 적용할 스타일을 지정합니다. 컴포넌트의 상태를 기반으로 스타일 객체를 반환하는 함수도 사용할 수 있습니다."
+  },
+  "e9aea99f49886f5bc3a678ee759c77b157e68a7d41cdf97a13e4023c2666471f": {
+    "source": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.",
+    "translated": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 때 사용합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 전달할 수 있습니다."
+  },
+  "b91836fe86d3c0117bf2b13112ec420f257c86475c6192f8a3644b5fe3a8f598": {
+    "source": "Image part of the avatar that renders the profile picture. Renders an `<img>` element.",
+    "translated": "프로필 사진을 렌더링하는 아바타의 이미지 파트입니다. `<img>` 요소를 렌더링합니다."
+  },
+  "48150681ddf890f9917a5dc8ddf6dc734e9352ac3738e74d7118c794488b086b": {
+    "source": "Avatar component for displaying a user's profile image with an automatic initial-based fallback. Renders a `<span>` element.",
+    "translated": "사용자의 프로필 이미지를 표시하며, 이미지가 없을 경우 이니셜 기반의 폴백을 자동으로 표시하는 Avatar 컴포넌트입니다. `<span>` 요소를 렌더링합니다."
+  },
+  "d8d39067f2b776beadd2546e7d8e63f2c77281c47bd6d866032445b75a8ab0f7": {
+    "source": "Shape of the avatar border radius. Default: `'square'`",
+    "translated": "아바타 테두리 반경의 모양을 지정합니다. 기본값: `'square'`"
+  },
+  "c9f19fb937e874883a7304d687570aa190446f4e3c7a2cc16e3a59815798ddd0": {
+    "source": "Size of the avatar. Controls the width, height, and border radius. Default: `'md'`\nSize of the fallback content. Controls the font size, line height, font weight, and letter spacing. Default: `'md'`",
+    "translated": "아바타의 크기를 지정합니다. 너비, 높이, 테두리 반경을 설정합니다. 기본값: `'md'`\n폴백 콘텐츠의 크기를 지정합니다. 폰트 크기, 행간, 폰트 굵기, 자간을 설정합니다. 기본값: `'md'`"
+  },
+  "fde5c6a64460d3d7da070237a683fa5530fd6a300e629abe9d598268f262f2b5": {
+    "source": "Callback fired when the loading status changes.",
+    "translated": "로딩 상태가 변경될 때 호출되는 콜백입니다."
+  },
+  "139bdc5083b4cd28a09fe75dc411e6569517b87f7426faa9530ac9f0be977aec": {
+    "source": "How long to wait before showing the fallback. Specified in milliseconds.",
+    "translated": "폴백을 표시하기 전 대기 시간을 밀리초 단위로 지정합니다."
+  },
+  "78f474ad91dbb36bc336c328a1ec4767bfd38a404f0bea242a79988e4bca58b2": {
+    "source": "Button component for triggering actions. Use for primary actions such as form submission, dialog triggers, and navigation. Renders a `<button>` element.",
+    "translated": "액션을 트리거하는 Button 컴포넌트입니다. 폼 제출, 다이얼로그 트리거, 네비게이션 등 주요 액션에 사용합니다. `<button>` 요소를 렌더링합니다."
+  },
+  "2cb66d740cc16cd8811bd2d2be9eabc47751481dbb343f93258aa63ecf51134a": {
+    "source": "Color palette applied to the button. Controls the background, text, and border colors for all visual variants. Default: `'primary'`",
+    "translated": "버튼에 적용할 색상 팔레트를 지정합니다. 모든 시각적 variant의 배경, 텍스트, 테두리 색상을 설정합니다. 기본값: `'primary'`"
+  },
+  "d125e29d4a861a40d7be09be7cf1cc7713fed7285b6406807375198c463a4902": {
+    "source": "Size of the button, controlling height, padding, and typography. Default: `'md'`",
+    "translated": "버튼의 크기를 지정합니다. 높이, 패딩, 타이포그래피를 설정합니다. 기본값: `'md'`"
+  },
+  "01d9466c30108c7f89e11e676c69a1a26c2bbc6347d926d09f8a8ba9c064bb19": {
+    "source": "Visual style of the button. Default: `'fill'`",
+    "translated": "버튼의 시각적 스타일을 지정합니다. 기본값: `'fill'`"
+  },
+  "9b5c0e9a15278c7f7d3e6e4d80fbdd00811ba6fb0d9f2896628eddaf1f68e1bd": {
+    "source": "Whether the button should be focusable when disabled.",
+    "translated": "버튼이 비활성화 상태일 때 포커스 가능 여부를 지정합니다."
+  },
+  "f322a26f1b0b63a7205c0883c6cce122943c6d91b1e5478cf1de33365cfe2f11": {
+    "source": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`).",
+    "translated": "`render` prop으로 요소를 교체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링할지 여부를 지정합니다.\n렌더링할 요소가 버튼이 아닌 경우(예: `<div>`) `false`로 설정합니다."
+  },
+  "9c920079170c5641a3fceafa373e3ea368b0262087436da9186f2a11bc662eca": {
+    "source": "Whether to keep the element in the DOM when the checkbox is not checked.",
+    "translated": "체크박스가 선택되지 않은 상태일 때 요소를 DOM에 유지할지 여부를 지정합니다."
+  },
+  "a6095df3d9c24b6dace72fccbb0e3f6967f43314501c02836d88d3784c7ba918": {
+    "source": "Whether the checkbox is currently ticked.\n\nTo render an uncontrolled checkbox, use the `defaultChecked` prop instead.",
+    "translated": "체크박스의 현재 선택 여부를 지정합니다.\n\n비제어 체크박스로 렌더링하려면 `defaultChecked` prop을 사용합니다."
+  },
+  "c63b7387a764e59d91d2cb55a0a9926d3f6b4e3d6987bfa77f07fedb1eb4304b": {
+    "source": "Whether the checkbox is initially ticked.\n\nTo render a controlled checkbox, use the `checked` prop instead.",
+    "translated": "체크박스의 초기 선택 여부를 지정합니다.\n\n제어 체크박스로 렌더링하려면 `checked` prop을 사용합니다."
+  },
+  "cba664a6a404205524abea92949ed71f3c3783cb7ce81367297c09f843a0fce5": {
+    "source": "Event handler called when the checkbox is ticked or unticked.",
+    "translated": "체크박스가 선택되거나 해제될 때 호출되는 이벤트 핸들러입니다."
+  },
+  "7ccd6b47eb88a9221686cf540a7baa5e6453e575dc0c365c8e7c76991be37abb": {
+    "source": "The value of the selected checkbox.",
+    "translated": "선택된 체크박스의 값을 지정합니다."
+  },
+  "a6680fadd424fffa7bbb05dc74bdd8729f023f0a570481c043879a4edcad97f7": {
+    "source": "Whether the component should ignore user interaction.",
+    "translated": "컴포넌트가 사용자 상호작용을 무시할지 여부를 설정합니다."
+  },
+  "8f359c6ee7aa110546ddb03a3b3cc4862a682f9631c037659bb482fe02a2a122": {
+    "source": "Identifies the form that owns the hidden input.\nUseful when the checkbox is rendered outside the form.",
+    "translated": "숨겨진 input을 소유하는 폼을 식별합니다.\n체크박스가 폼 외부에 렌더링될 때 유용합니다."
+  },
+  "1fd20020d3d0727d1f41907fe272699b8a8f0a33aa8380ad9e82ee56d4ca2cd3": {
+    "source": "The id of the input element.",
+    "translated": "input 요소의 id를 지정합니다."
+  },
+  "cebe7e14d8a2dcbf443b9a36637bf36994bf1a5904567725d2c6edf5b2458fd0": {
+    "source": "Whether the checkbox is in a mixed state: neither ticked, nor unticked.",
+    "translated": "체크박스가 혼합 상태(선택도, 미선택도 아닌 상태)인지 여부를 설정합니다."
+  },
+  "b9e081bae989ef27d2f4248250356a3e0baaf750a7dfa312ebc64adb37d9871f": {
+    "source": "A ref to access the hidden `<input>` element.",
+    "translated": "숨겨진 `<input>` 요소에 접근하기 위한 ref를 지정합니다."
+  },
+  "7f13a4f4af92b2b1fc4a0d158dbdb68c34c03c806270bf80455484863b6ff20a": {
+    "source": "Identifies the field when a form is submitted.",
+    "translated": "폼이 제출될 때 필드를 식별하는 이름을 지정합니다."
+  },
+  "cd3fa7cfb237fef8dca9ce75f185749cb92601e3741590732a49d435d2cb824f": {
+    "source": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+    "translated": "`render` prop으로 컴포넌트를 교체할 때 네이티브 `<button>` 요소를 렌더링할지 여부를 설정합니다.\n렌더링되는 요소가 네이티브 버튼인 경우 `true`로 설정합니다."
+  },
+  "4e7e40eb2b1997d213661791459a6c5cba6be0b70eb6db9e0071965e09ae0712": {
+    "source": "Whether the checkbox controls a group of child checkboxes.\n\nMust be used in a [Checkbox Group](https://base-ui.com/react/components/checkbox-group).",
+    "translated": "이 체크박스가 하위 체크박스 그룹을 관리하는지 여부를 설정합니다.\n\n[Checkbox Group](https://base-ui.com/react/components/checkbox-group) 내에서 사용해야 합니다."
+  },
+  "9feb026e127c40b60ed493fc757be23e1e5605dfc42b324fd979242e94ba6afb": {
+    "source": "Whether the user should be unable to tick or untick the checkbox.",
+    "translated": "사용자가 체크박스를 선택하거나 해제할 수 없도록 할지 여부를 설정합니다."
+  },
+  "4efc6c51360ce4f22abe3fffbd701f3fffb8939d11679a0d936af5f7b6f03bd2": {
+    "source": "Whether the user must tick the checkbox before submitting a form.",
+    "translated": "폼을 제출하기 전에 사용자가 반드시 체크박스를 선택해야 하는지 여부를 설정합니다."
+  },
+  "9af5af93aa708c182b1035b18de935fe4a3f3b266b7f4a4b5489c0a81c074bde": {
+    "source": "The value submitted with the form when the checkbox is unchecked.\nBy default, unchecked checkboxes do not submit any value, matching native checkbox behavior.",
+    "translated": "체크박스가 선택 해제된 상태에서 폼과 함께 제출되는 값을 지정합니다.\n기본적으로 선택 해제된 체크박스는 네이티브 체크박스 동작과 동일하게 값을 제출하지 않습니다."
+  },
+  "153181b3a457b691cf4c7e3b7f9c6de8bb4128d0170ae5e241ab109805804d76": {
+    "source": "Allows the browser's built-in page search to find and expand the panel contents.\n\nOverrides the `keepMounted` prop and uses `hidden=\"until-found\"`\nto hide the element without removing it from the DOM.",
+    "translated": "브라우저의 기본 페이지 검색 기능으로 패널 내용을 찾고 펼칠 수 있도록 허용합니다.\n\n`keepMounted` prop을 재정의하며, `hidden=\"until-found\"`를 사용해 DOM에서 요소를 제거하지 않고 숨깁니다."
+  },
+  "7dfede63bef05cac7fa3f81846af55657b7ddfe2bfe46684a63f7913285dac66": {
+    "source": "Whether to keep the element in the DOM while the panel is hidden.\nThis prop is ignored when `hiddenUntilFound` is used.",
+    "translated": "패널이 숨겨진 동안 요소를 DOM에 유지할지 여부를 설정합니다.\n`hiddenUntilFound`를 사용하는 경우 이 prop은 무시됩니다."
+  },
+  "c443a2781996681b5a5e3a027439f33e5d9662d67a0154e5c7682a0cd0f32eb8": {
+    "source": "Whether the collapsible panel is initially open.\n\nTo render a controlled collapsible, use the `open` prop instead.",
+    "translated": "콜랩서블 패널의 초기 열림 여부를 설정합니다.\n\n제어 컴포넌트로 렌더링하려면 `open` prop을 사용합니다."
+  },
+  "d926f28a406cabec6581069b230fc3624beb4938dcb8deed4afdd356c5cab0b9": {
+    "source": "Event handler called when the panel is opened or closed.",
+    "translated": "패널이 열리거나 닫힐 때 호출되는 이벤트 핸들러를 지정합니다."
+  },
+  "e246fcd45883c837ce1fc868bc2685de2ed9bc5bea3321f11d1275fa2b19f6ad": {
+    "source": "Whether the collapsible panel is currently open.\n\nTo render an uncontrolled collapsible, use the `defaultOpen` prop instead.",
+    "translated": "콜랩서블 패널의 현재 열림 여부를 설정합니다.\n\n비제어 컴포넌트로 렌더링하려면 `defaultOpen` prop을 사용합니다."
+  },
+  "81a7db372cc6fa7df5adce3c83ee1e6f9a0a3a31761409fcf5381f7a24226a1b": {
+    "source": "Scrollable main content area of the dialog. Renders a `<div>` element.",
+    "translated": "다이얼로그의 스크롤 가능한 주요 콘텐츠 영역입니다. `<div>` 요소를 렌더링합니다."
+  },
+  "325b66bb2588b90bd72e3386e9fef2ad7b05a35e775b477637e35dd22a3649e8": {
+    "source": "Button that closes the dialog when activated. Renders a `<button>` element.",
+    "translated": "활성화 시 다이얼로그를 닫는 버튼입니다. `<button>` 요소를 렌더링합니다."
+  },
+  "2e5b3a143c08cb726a3b98493660874b9ef3a3ccf7b022969f6534b305703032": {
+    "source": "Paragraph that provides supplementary text for the dialog, linked to the dialog panel for assistive technologies. Renders a `<p>` element.",
+    "translated": "다이얼로그의 보조 텍스트를 제공하는 단락으로, 보조 기술을 위해 다이얼로그 패널과 연결됩니다. `<p>` 요소를 렌더링합니다."
+  },
+  "eb108772bebf626772a44b25194f2dc1276ef92c51fc3761eb5090e8702e739f": {
+    "source": "Bottom section of the dialog, typically containing action buttons. Renders a `<div>` element.",
+    "translated": "다이얼로그의 하단 영역으로, 일반적으로 액션 버튼을 포함합니다. `<div>` 요소를 렌더링합니다."
+  },
+  "c826f95b61968602288354d9155f5d74069b184f8847ac00b947bb2a4a2141e8": {
+    "source": "Top section of the dialog, typically containing the title and a close button. Renders a `<div>` element.",
+    "translated": "다이얼로그의 상단 영역으로, 일반적으로 제목과 닫기 버튼을 포함합니다. `<div>` 요소를 렌더링합니다."
+  },
+  "409d9696d6915f29b9fcb45fada8255acf2faea3958cffc2455d8777bfdca131": {
+    "source": "Semi-transparent backdrop rendered behind the dialog popup. Renders a `<div>` element.",
+    "translated": "다이얼로그 팝업 뒤에 렌더링되는 반투명 배경입니다. `<div>` 요소를 렌더링합니다."
+  },
+  "1be494971ee6f6992afad7fd01cf756c2edd96d643d6552757322326231bcf5d": {
+    "source": "Whether the backdrop is forced to render even when nested.",
+    "translated": "중첩된 경우에도 배경을 강제로 렌더링할지 여부를 지정합니다."
+  },
+  "f6f5386369101c269bd0f5596d3596099e53c9e22f75efdad011a69e40c324a4": {
+    "source": "The dialog panel itself, centered on screen. Size is controlled by the `size` prop on `Dialog.Root`. Renders a `<div>` element.",
+    "translated": "화면 중앙에 배치되는 다이얼로그 패널입니다. 크기는 `Dialog.Root`의 `size` prop으로 설정합니다. `<div>` 요소를 렌더링합니다."
+  },
+  "9cc3cc8d1b2776cce38827e62aaa85869739141d1c0bbab7596f051af1a6a117": {
+    "source": "Determines the element to focus when the dialog is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing.",
+    "translated": "다이얼로그가 닫힐 때 포커스를 이동할 요소를 지정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작(트리거 또는 이전에 포커스된 요소)에 따라 포커스를 이동합니다.\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 인터랙션 타입(`mouse`, `touch`, `pen`, `keyboard`)을 인자로 호출합니다.\n  포커스할 요소를 반환하거나, `true`를 반환하면 기본 동작을 사용하고, `null`을 반환하면 기본 동작으로 폴백하며, `false`/`undefined`를 반환하면 아무것도 하지 않습니다."
+  },
+  "fc8b8f2fb2b344d6f835fd5dd0b201dd358012617da168e6275627c3d64bbb18": {
+    "source": "Determines the element to focus when the dialog is opened.\nBy default, focus moves to the first tabbable element inside the popup, except when the dialog\nis opened by touch — then the popup itself is focused to avoid opening the virtual keyboard.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (first tabbable element or popup).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing.",
+    "translated": "다이얼로그가 열릴 때 포커스를 이동할 요소를 지정합니다.\n기본적으로 팝업 내부의 첫 번째 탭 가능한 요소로 포커스가 이동하지만, 터치로 다이얼로그가 열린 경우에는 가상 키보드가 열리지 않도록 팝업 자체에 포커스가 설정됩니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작(첫 번째 탭 가능한 요소 또는 팝업)에 따라 포커스를 이동합니다.\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 인터랙션 타입(`mouse`, `touch`, `pen`, `keyboard`)을 인자로 호출합니다.\n  포커스할 요소를 반환하거나, `true`를 반환하면 기본 동작을 사용하고, `null`을 반환하면 기본 동작으로 폴백하며, `false`/`undefined`를 반환하면 아무것도 하지 않습니다."
+  },
+  "0be0ac6ca1bb119bfea01d19d1994f86946df7d2a585c65c735d1ea4b7a93339": {
+    "source": "Convenience wrapper that composes `Dialog.PortalPrimitive`, `Dialog.OverlayPrimitive`, and `Dialog.PopupPrimitive` into a single element. Use `portalElement` or `overlayElement` to replace individual parts. Renders a `<div>` element.",
+    "translated": "`Dialog.PortalPrimitive`, `Dialog.OverlayPrimitive`, `Dialog.PopupPrimitive`를 하나의 요소로 합성한 편의 래퍼입니다. `portalElement` 또는 `overlayElement`를 사용하여 개별 부분을 교체할 수 있습니다. `<div>` 요소를 렌더링합니다."
+  },
+  "73d8bd5c226714561a68769e1068d1dc0f3e18d0570651b6b30b878923ca25c2": {
+    "source": "Replaces the default `Dialog.OverlayPrimitive`. Use to customise backdrop appearance or behavior.",
+    "translated": "기본 `Dialog.OverlayPrimitive`를 교체합니다. 배경의 외형이나 동작을 커스터마이징할 때 사용합니다."
+  },
+  "14c5c2d68fc0430bcd386f13d3365c058f4c643dcf5aec0d2e88b2a6f1144578": {
+    "source": "Replaces the default `Dialog.PortalPrimitive`. Use to customise portal container behavior.",
+    "translated": "기본 `Dialog.PortalPrimitive`를 교체합니다. 포털 컨테이너의 동작을 커스터마이징할 때 사용합니다."
+  },
+  "dd61656139ddcb015afd9b4146750fe5f039324f9e044f9206aad4afd0e89bb4": {
+    "source": "Portal container that renders dialog content outside the normal DOM hierarchy. Renders a `<div>` element.",
+    "translated": "다이얼로그 콘텐츠를 일반 DOM 계층 구조 외부에 렌더링하는 포털 컨테이너입니다. `<div>` 요소를 렌더링합니다."
+  },
+  "9fb15ae1a30ff673367c15b5c8e2d7462db664438f2b4e1c5ec7c9210846a27f": {
+    "source": "A parent element to render the portal element into.",
+    "translated": "포털 요소를 렌더링할 부모 요소를 지정합니다."
+  },
+  "40d04e2579931a0fa30c3f5686484cec4f32fc7cb44860fd5a80a7cc835d08a8": {
+    "source": "Whether to keep the portal mounted in the DOM while the popup is hidden.",
+    "translated": "팝업이 숨겨진 동안 포털을 DOM에 마운트된 상태로 유지할지 여부를 지정합니다."
+  },
+  "e626e81d9f6b05a5892ab309e741538d4cccc37bdb2c868e753d47f3d8cf9755": {
+    "source": "Root of the Dialog compound component. Manages open state and provides size context to sub-parts. Doesn't render its own HTML element.",
+    "translated": "Dialog 복합 컴포넌트의 루트입니다. 열림 상태를 관리하고 하위 파트에 크기 컨텍스트를 제공합니다. 자체 HTML 요소를 렌더링하지 않습니다."
+  },
+  "ec7b284ed0ad9588e21854829803881c0048ece19cbd51a32cae7192adabdba3": {
+    "source": "Width of the dialog popup. Default: `'md'`",
+    "translated": "다이얼로그 팝업의 너비를 지정합니다. 기본값: `'md'`"
+  },
+  "80b0679878b82843524b791c0f5370a5f90cfd8b6d1b34861e0d0e236aa8ab0e": {
+    "source": "Whether the dialog is initially open.\n\nTo render a controlled dialog, use the `open` prop instead.",
+    "translated": "다이얼로그의 초기 열림 여부를 지정합니다.\n\n제어 컴포넌트로 사용하려면 `open` prop을 사용하십시오."
+  },
+  "335ea1e958a8aa845eb54a76a8c1720a47800993e5e5fc4523a6c6437b81639c": {
+    "source": "Event handler called when the dialog is opened or closed.",
+    "translated": "다이얼로그가 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
+  },
+  "e612ba525cfe3423cbcb719156f017e624ecdf89dcd538896724f7dc98216ea6": {
+    "source": "Whether the dialog is currently open.",
+    "translated": "다이얼로그의 현재 열림 여부를 지정합니다."
+  },
+  "8372bddddf1a095c3c01f4ce8a4d9bbb9a229ca421f4bf2011e0e846cecb2c41": {
+    "source": "When `true`, clicking the overlay closes the dialog. Default: `true`",
+    "translated": "`true`이면 오버레이를 클릭할 때 다이얼로그를 닫습니다. 기본값: `true`"
+  },
+  "dd90889544a897f39ab12cf301767ca432c5b14e96c8ecff06f282f4b4577078": {
+    "source": "A ref to imperative actions.\n- `unmount`: Manually unmounts the dialog.\nCall this after any externally controlled closing animation finishes.\n- `close`: Closes the dialog imperatively when called.",
+    "translated": "명령형 액션에 대한 ref를 지정합니다.\n- `unmount`: 다이얼로그를 수동으로 언마운트합니다.\n외부에서 제어하는 닫기 애니메이션이 완료된 후 호출하십시오.\n- `close`: 호출 시 다이얼로그를 명령형으로 닫습니다."
+  },
+  "e02eed7697516f0238ee4d908920984f982580314e0b4514308ffd242d14c7bd": {
+    "source": "The content of the dialog.\nThis can be a regular React node or a render function that receives the `payload` of the active trigger.",
+    "translated": "다이얼로그의 콘텐츠를 지정합니다.\n일반 React 노드이거나, 활성 트리거의 `payload`를 받는 렌더 함수를 사용할 수 있습니다."
+  },
+  "f7c09ba78f7ee7eaf230e4c653048c594c90026c5f45f10485e4182b59dee7c2": {
+    "source": "ID of the trigger that the dialog is associated with.\nThis is useful in conjunction with the `defaultOpen` prop to create an initially open dialog.",
+    "translated": "다이얼로그와 연결할 트리거의 ID를 지정합니다.\n`defaultOpen` prop과 함께 사용하면 초기에 열린 상태의 다이얼로그를 만들 때 유용합니다."
+  },
+  "d93a9678eb14e43861f784384791a1dec5b8a45d8e09085e9e8f94ee6c73a432": {
+    "source": "A handle to associate the dialog with a trigger.\nIf specified, allows external triggers to control the dialog's open state.\nCan be created with the Dialog.createHandle() method.",
+    "translated": "다이얼로그를 트리거와 연결할 핸들을 지정합니다.\n지정하면 외부 트리거에서 다이얼로그의 열림 상태를 설정할 수 있습니다.\n`Dialog.createHandle()` 메서드로 생성할 수 있습니다."
+  },
+  "2edbe0477a5b282a03a26bea365ce1d1013f455de9dcd0c023ffaedf39a506b8": {
+    "source": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.\n\nWhen `modal` is `true` or `'trap-focus'`, render `<Dialog.Close>` inside `<Dialog.Popup>` so\ntouch screen readers can escape the popup.",
+    "translated": "다이얼로그가 열릴 때 모달 상태로 진입할지 여부를 지정합니다.\n- `true`: 사용자 인터랙션이 다이얼로그 내부로 제한됩니다. 포커스가 트랩되고, 문서 페이지 스크롤이 잠기며, 외부 요소에 대한 포인터 인터랙션이 비활성화됩니다.\n- `false`: 문서 나머지 영역과의 사용자 인터랙션이 허용됩니다.\n- `'trap-focus'`: 포커스가 다이얼로그 내부에 트랩되지만, 문서 페이지 스크롤은 잠기지 않으며 외부 포인터 인터랙션도 유지됩니다.\n\n`modal`이 `true` 또는 `'trap-focus'`일 때, 터치 스크린 리더가 팝업에서 벗어날 수 있도록 `<Dialog.Popup>` 내부에 `<Dialog.Close>`를 렌더링하십시오."
+  },
+  "965e140c6a643a24148ac410e2eaf6ec91e3e685124b24e459c447226c7c2132": {
+    "source": "Event handler called after any animations complete when the dialog is opened or closed.",
+    "translated": "다이얼로그가 열리거나 닫힐 때 모든 애니메이션이 완료된 후 호출되는 이벤트 핸들러를 지정합니다."
+  },
+  "329605b74b25f4c8efa966a884b8dc61ca09f9094ec33d21fe32fe3f8e15cf34": {
+    "source": "ID of the trigger that the dialog is associated with.\nThis is useful in conjunction with the `open` prop to create a controlled dialog.\nThere's no need to specify this prop when the dialog is uncontrolled (that is, when the `open` prop is not set).",
+    "translated": "다이얼로그와 연결할 트리거의 ID를 지정합니다.\n`open` prop과 함께 사용하면 제어 모드의 다이얼로그를 만들 때 유용합니다.\n비제어 모드(즉, `open` prop을 설정하지 않은 경우)에서는 이 prop을 지정할 필요가 없습니다."
+  },
+  "01e40c47c713bc5604c3d24777435988cb674519028c8f1aba22bee38b1a0803": {
+    "source": "Heading element that labels the dialog for assistive technologies. Renders an `<h2>` element.",
+    "translated": "보조 기술을 위해 다이얼로그에 레이블을 지정하는 제목 요소입니다. `<h2>` 요소를 렌더링합니다."
+  },
+  "0b289222e8610e17f151c08cad395f27dda2c14491e9d43cad928fe3a9ae5942": {
+    "source": "Button that opens the dialog when activated. Renders a `<button>` element.",
+    "translated": "활성화하면 다이얼로그를 여는 버튼입니다. `<button>` 요소를 렌더링합니다."
+  },
+  "64066597871a68863115999c33388db1c1b66a70b77e8d88d61d9ba76c139515": {
+    "source": "A handle to associate the trigger with a dialog.\nCan be created with the Dialog.createHandle() method.",
+    "translated": "트리거를 다이얼로그와 연결할 핸들을 지정합니다.\n`Dialog.createHandle()` 메서드로 생성할 수 있습니다."
+  },
+  "c1f74bb0fb53b1c79f8a06e2d1c09057a6463efc9602379a9a956d0ee189500b": {
+    "source": "ID of the trigger. In addition to being forwarded to the rendered element,\nit is also used to specify the active trigger for the dialog in controlled mode (with the DialogRoot `triggerId` prop).",
+    "translated": "트리거의 ID를 지정합니다. 렌더링된 요소에 전달되는 것 외에도,\n제어 모드에서 다이얼로그의 활성 트리거를 지정하는 데 사용됩니다(DialogRoot의 `triggerId` prop)."
+  },
+  "65fd6cc39eb4672a550ad570c993241b64f8a7022247b0a6dd24bdc2358073e8": {
+    "source": "A payload to pass to the dialog when it is opened.",
+    "translated": "다이얼로그가 열릴 때 전달할 payload를 지정합니다."
+  },
+  "b7eed446568f5e19c57bad870497a72dd0688396cc5385a74bbc19f6d93b7c22": {
+    "source": "Determines whether to show the error message according to the field’s\n[ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).",
+    "translated": "필드의 [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState)에 따라 오류 메시지를 표시할지 여부를 지정합니다."
+  },
+  "51c9c9f2a97a70130de96831dad9f6255974dbc156cc1c7b22dd080788a81b84": {
+    "source": "Whether the wrapped control should ignore user interaction.\nThe `disabled` prop on `<Field.Root>` takes precedence over this.",
+    "translated": "래핑된 컨트롤이 사용자 인터랙션을 무시할지 여부를 지정합니다.\n`<Field.Root>`의 `disabled` prop이 이 값보다 우선합니다."
+  },
+  "2d642446e13e46e3f4804aa04cf9c892aa52e175a177225f99583729f9445ccb": {
+    "source": "Whether the component renders a native `<label>` element when replacing it via the `render` prop.\nSet to `false` if the rendered element is not a label (for example, `<div>`).\n\nThis is useful to avoid inheriting label behaviors on `<button>` controls (such as `<Select.Trigger>` and `<Combobox.Trigger>`), including avoiding `:hover` on the button when hovering the label, and preventing clicks on the label from firing on the button.",
+    "translated": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<label>` 요소를 렌더링할지 여부를 지정합니다.\n렌더링되는 요소가 label이 아닌 경우(예: `<div>`) `false`로 설정하십시오.\n\n이 옵션은 `<button>` 컨트롤(예: `<Select.Trigger>`, `<Combobox.Trigger>`)에서 label 동작이 상속되는 것을 방지할 때 유용합니다. 레이블에 호버할 때 버튼에 `:hover`가 적용되는 현상이나, 레이블 클릭이 버튼에 전달되는 현상을 방지할 수 있습니다."
+  },
+  "47fde45a1fe367bec6c93f3fd71a963bff75c30ab61edf18d108a05b467e2917": {
+    "source": "The content of the submenu.",
+    "translated": "서브메뉴의 콘텐츠를 지정합니다."
+  },
+  "1f0c9e03e6912230d92897d6d1800f79e7cea253f43c18df940d3bc74feff2de": {
+    "source": "How long to wait before closing the menu that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop.",
+    "translated": "호버로 열린 메뉴를 닫기 전에 대기할 시간을 지정합니다.\n밀리초 단위로 설정합니다.\n\n`openOnHover` prop이 필요합니다."
+  },
+  "6075644064932aa4f95570dfe788f74fe159f7e9ef3c95a5551204506f9fab0a": {
+    "source": "How long to wait before the menu may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
+    "translated": "호버 시 메뉴를 열기 전에 대기할 시간을 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다."
+  },
+  "89379cda9187ee43c2f97222af7f050a619d9ff7bb01a5f52295fbf8175bc9a2": {
+    "source": "Whether the menu should also open when the trigger is hovered.",
+    "translated": "트리거를 호버할 때도 메뉴를 열지 여부를 설정합니다."
+  },
+  "5c2de435665ad021d1475cea42c35315653038981d656809a32e3111ba46c188": {
+    "source": "A handle to associate the trigger with a menu.",
+    "translated": "트리거를 메뉴와 연결하는 핸들을 지정합니다."
+  },
+  "f45f4ef11e0387a160e1c64ddf9dee4845c03fec45864cc8eb875912ac1c7c5f": {
+    "source": "A payload to pass to the menu when it is opened.",
+    "translated": "메뉴가 열릴 때 메뉴에 전달할 페이로드를 지정합니다."
+  },
+  "28e9f58be4162b0d417a096d858b55f6eae2f89ae9cbe3fb590012831607eb3d": {
+    "source": "Whether to keep the HTML element in the DOM when the item is not selected.",
+    "translated": "항목이 선택되지 않은 상태에서도 HTML 요소를 DOM에 유지할지 여부를 설정합니다."
+  },
+  "2a9afbcd453624a23e26668b0a1badc7b17f07d91ed9964dccae49c88cbe78c5": {
+    "source": "A unique value that identifies this select item.",
+    "translated": "이 셀렉트 항목을 식별하는 고유한 값을 지정합니다."
+  },
+  "d002a262442dc105925de971a98738d431f91c7085bdc35cd1d1346ca62be41c": {
+    "source": "Specifies the text label to use when the item is matched during keyboard text navigation.\n\nDefaults to the item text content if not provided.",
+    "translated": "키보드 텍스트 탐색 중 항목이 매칭될 때 사용할 텍스트 레이블을 지정합니다.\n\n제공하지 않으면 항목의 텍스트 콘텐츠가 기본값으로 사용됩니다."
+  },
+  "af8164c288a6662910ec17a5b7db702586787ec866875c3b3f10d50490505508": {
+    "source": "Determines the element to focus when the select popup is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing.",
+    "translated": "셀렉트 팝업이 닫힐 때 포커스를 이동할 요소를 설정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작(트리거 또는 이전에 포커스된 요소)에 따라 포커스를 이동합니다.\n- `RefObject`: 해당 ref 요소로 포커스를 이동합니다.\n- `function`: 상호작용 유형(`mouse`, `touch`, `pen`, `keyboard`)과 함께 호출됩니다.\n  포커스할 요소를 반환하거나, 기본 동작을 사용하려면 `true`를, 아무 작업도 하지 않으려면 `false` 또는 `undefined`를 반환합니다."
+  },
+  "b8e29410497323014561d307c7332a38eb091f577254e82aee62c469284e5fdf": {
+    "source": "A Custom element for MultiSelect.PortalPrimitive. If not provided, the default MultiSelect.PortalPrimitive will be rendered.",
+    "translated": "MultiSelect.PortalPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 MultiSelect.PortalPrimitive가 렌더링됩니다."
+  },
+  "6e3df2ba0c974fc6a7b240f1f358feda0069fd0369f6848b8fa1e92ff9063a8f": {
+    "source": "A Custom element for MultiSelect.PositionerPrimitive. If not provided, the default MultiSelect.PositionerPrimitive will be rendered.",
+    "translated": "MultiSelect.PositionerPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 MultiSelect.PositionerPrimitive가 렌더링됩니다."
+  },
+  "01dbcfc81416a2bdaee2c9f4fb8b0aa64b571eb76667cb650cca49bf4f74e123": {
+    "source": "Whether the positioner overlaps the trigger so the selected item's text is aligned with the trigger's value text. This only applies to mouse input and is automatically disabled if there is not enough space.",
+    "translated": "포지셔너가 트리거와 겹쳐서 선택된 항목의 텍스트가 트리거의 값 텍스트와 정렬되도록 할지 여부를 지정합니다. 이 옵션은 마우스 입력에만 적용되며, 공간이 충분하지 않으면 자동으로 비활성화됩니다."
+  },
+  "42a7c167a77b30d59f8fe926a4050c5e86f7c7c7eb1fedb85d4d7954029b4309": {
+    "source": "Whether the select popup is initially open.\n\nTo render a controlled select popup, use the `open` prop instead.",
+    "translated": "셀렉트 팝업의 초기 열림 여부를 지정합니다.\n\n제어 방식으로 렌더링하려면 `open` prop을 사용하십시오."
+  },
+  "61e306aed515ef6972fec60b9fdb3d679a55fe21802bd772652e025d11ef384d": {
+    "source": "The uncontrolled value of the select when it's initially rendered.\n\nTo render a controlled select, use the `value` prop instead.",
+    "translated": "셀렉트가 처음 렌더링될 때의 비제어 값을 지정합니다.\n\n제어 방식으로 렌더링하려면 `value` prop을 사용하십시오."
+  },
+  "ce264c3d44083f7f991ff61222471d44ed09e69c3ec49c80e54b3ace8bb6bc34": {
+    "source": "Event handler called when the select popup is opened or closed.",
+    "translated": "셀렉트 팝업이 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
+  },
+  "9611075cb9992675d2e5b8b73c33d434f7af1cb919e36c51fd998bb502493f47": {
+    "source": "Event handler called when the value of the select changes.",
+    "translated": "셀렉트의 값이 변경될 때 호출되는 이벤트 핸들러입니다."
+  },
+  "af493470b5bcce11de2c4d80574b030165255a479e55c3d3a0b07f7cc8e6a8eb": {
+    "source": "Whether the select popup is currently open.",
+    "translated": "셀렉트 팝업의 현재 열림 여부를 지정합니다."
+  },
+  "d0be1cd449b88b3f222923dea2b58849e88b7c0f2d1d27438359406341ea5a78": {
+    "source": "The value of the select. Use when controlled.",
+    "translated": "셀렉트의 값을 지정합니다. 제어 방식으로 사용할 때 설정합니다."
+  },
+  "0907b01697e81d37c683f4b21f84a06cfc41f22852fc7240349c53b925397734": {
+    "source": "A ref to imperative actions.\n- `unmount`: Manually unmounts the select.\nCall this after any externally controlled closing animation finishes.",
+    "translated": "명령형 액션에 대한 ref를 지정합니다.\n- `unmount`: 셀렉트를 수동으로 언마운트합니다.\n외부에서 제어하는 닫힘 애니메이션이 완료된 후 호출하십시오."
+  },
+  "5be9ac10e0df2e0ebb24722376123f0de0f631f29ffc1021cae79edb828fee7e": {
+    "source": "Provides a hint to the browser for autofill.",
+    "translated": "브라우저 자동 완성에 대한 힌트를 제공합니다."
+  },
+  "b1d6f0647c3394b6cbce51b67d39d5b2da1f982be38ab2924894a51549382ca5": {
+    "source": "Identifies the form that owns the hidden input.\nUseful when the select is rendered outside the form.",
+    "translated": "숨겨진 input을 소유하는 폼을 식별합니다.\n셀렉트가 폼 외부에 렌더링될 때 유용합니다."
+  },
+  "a0b0a5fc461293de99fb7366f8ca29e1fed56317e1788515df0e459a7c2016b3": {
+    "source": "The id of the Select.",
+    "translated": "Select의 id를 지정합니다."
+  },
+  "9456f1f8cb63212454c1d175dcc10945b89dfe7fd6c0b1365e68bd1b7068fc0d": {
+    "source": "A ref to access the hidden input element.",
+    "translated": "숨겨진 input 요소에 접근하기 위한 ref를 지정합니다."
+  },
+  "8d734c44d0e421732943ba6fbcb6261ffe626fab905ee65d6751118ca02cc775": {
+    "source": "Custom comparison logic used to determine if a select item value matches the current selected value. Useful when item values are objects without matching referentially.\nDefaults to `Object.is` comparison.",
+    "translated": "셀렉트 항목의 값이 현재 선택된 값과 일치하는지 판단하는 커스텀 비교 로직을 지정합니다. 항목 값이 참조가 일치하지 않는 객체일 때 유용합니다.\n기본값은 `Object.is` 비교입니다."
+  },
+  "74360c801b257fd0f88311dfd7df09bf012f5dde5879f8e228c5b03f3b82870a": {
+    "source": "Data structure of the items rendered in the select popup.\nWhen specified, `<Select.Value>` renders the label of the selected item instead of the raw value.",
+    "translated": "셀렉트 팝업에 렌더링되는 항목의 데이터 구조를 지정합니다.\n지정하면 `<Select.Value>`가 원시 값 대신 선택된 항목의 레이블을 렌더링합니다."
+  },
+  "6f1bef58bdd4b1f0050b497d3333279ed58bd06905e783f557cf7df511548cb6": {
+    "source": "When the item values are objects (`<Select.Item value={object}>`), this function converts the object value to a string representation for display in the trigger.\nIf the shape of the object is `{ value, label }`, the label will be used automatically without needing to specify this prop.",
+    "translated": "항목 값이 객체인 경우(`<Select.Item value={object}>`), 이 함수는 객체 값을 트리거에 표시할 문자열로 변환합니다.\n객체의 형태가 `{ value, label }`이면 이 prop을 지정하지 않아도 label이 자동으로 사용됩니다."
+  },
+  "d38d5bb833db84ca70d013873b24e8275b7c99901fa56111f8daa722b4636877": {
+    "source": "When the item values are objects (`<Select.Item value={object}>`), this function converts the object value to a string representation for form submission.\nIf the shape of the object is `{ value, label }`, the value will be used automatically without needing to specify this prop.",
+    "translated": "항목 값이 객체인 경우(`<Select.Item value={object}>`), 이 함수는 객체 값을 폼 제출 시 사용할 문자열로 변환합니다.\n객체의 형태가 `{ value, label }`이면 이 prop을 지정하지 않아도 value가 자동으로 사용됩니다."
+  },
+  "70cabd2c9610340e57acf0b3221df40048fd79ea23b8eb1127f86343d945a91b": {
+    "source": "Determines if the select enters a modal state when open.\n- `true`: user interaction is limited to the select: document page scroll is locked and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.",
+    "translated": "셀렉트가 열릴 때 모달 상태로 진입할지 여부를 설정합니다.\n- `true`: 사용자 인터랙션이 셀렉트로 제한되며, 문서 페이지 스크롤이 잠기고 외부 요소에 대한 포인터 인터랙션이 비활성화됩니다.\n- `false`: 나머지 문서와의 사용자 인터랙션이 허용됩니다."
+  },
+  "35850dd8b63349a85adbc973cd592eb8bfded0b7ee32cb2607ace6c1e0297616": {
+    "source": "Event handler called after any animations complete when the select popup is opened or closed.",
+    "translated": "셀렉트 팝업이 열리거나 닫힐 때 모든 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
+  },
+  "b7470b39b00eb18fff94e24fbae08ae9660ed1f1600c925593d57770252e6213": {
+    "source": "Whether the user should be unable to choose a different option from the select popup.",
+    "translated": "사용자가 셀렉트 팝업에서 다른 옵션을 선택할 수 없도록 할지 여부를 지정합니다."
+  },
+  "f5926c620e82ec4a990de2971afa2bb7ad362ca32acc7e6c1d3e95fbe87d29e4": {
+    "source": "Whether the user must choose a value before submitting a form.",
+    "translated": "폼을 제출하기 전에 사용자가 반드시 값을 선택해야 하는지 여부를 지정합니다."
+  },
+  "f17f93b2739dd838c76a8e46a4b77200c500720a1386750a1b36bf922ac8ae5b": {
+    "source": "Accepts a function that returns a `ReactNode` to format the selected value.",
+    "translated": "선택된 값을 형식화하는 `ReactNode`를 반환하는 함수를 지정합니다."
+  },
+  "a64184fd27ef3a0c486a33034e51000811bdc55d3a450777472e615216744f26": {
+    "source": "The placeholder value to display when no value is selected.\nThis is overridden by `children` if specified, or by a null item's label in `items`.",
+    "translated": "값이 선택되지 않았을 때 표시할 플레이스홀더 값을 지정합니다.\n`children`이 지정된 경우 또는 `items`의 null 항목 레이블이 있는 경우 해당 값으로 대체됩니다."
+  },
+  "2e5572bea6caaff35700a5fc7261d57c02cfe8aa189100915915261f9dc77537": {
+    "source": "Whether to keep the content mounted in the DOM while the popup is closed.\nEnsures the content is present during server-side rendering for web crawlers.",
+    "translated": "팝업이 닫혀 있는 동안 콘텐츠를 DOM에 유지할지 여부를 지정합니다.\n웹 크롤러를 위한 서버 사이드 렌더링 시 콘텐츠가 존재하도록 보장합니다."
+  },
+  "def6e473e1090a742ce6f7812a6726622f2a6fa601c7b788ca1e60cb39c81a41": {
+    "source": "A unique value that identifies this navigation menu item.\nIf no value is provided, a unique ID will be generated automatically.\nUse when controlling the navigation menu programmatically.",
+    "translated": "이 내비게이션 메뉴 항목을 식별하는 고유 값을 지정합니다.\n값을 지정하지 않으면 고유 ID가 자동으로 생성됩니다.\n내비게이션 메뉴를 프로그래밍 방식으로 조작할 때 사용합니다."
+  },
+  "2bc1fb5ca9ec8678746d562b9618686345deed5f057c603930bb0d75e180627f": {
+    "source": "Whether the link is the currently active page.",
+    "translated": "링크가 현재 활성화된 페이지인지 여부를 지정합니다."
+  },
+  "0858bffe12eca5ca471336b8cbeed1dc7382d0ff34ca00348eb599a5d7012f0a": {
+    "source": "Whether to close the navigation menu when the link is clicked.",
+    "translated": "링크를 클릭했을 때 내비게이션 메뉴를 닫을지 여부를 지정합니다."
+  },
+  "9c610bf9e3e3d7b0098988975784362a332e82dbd02f97b5fd33eae137514eb1": {
+    "source": "The uncontrolled value of the item that should be initially selected.\n\nTo render a controlled navigation menu, use the `value` prop instead.",
+    "translated": "초기에 선택될 항목의 비제어 값을 지정합니다.\n\n제어 내비게이션 메뉴를 렌더링하려면 `value` prop을 사용하십시오."
+  },
+  "a1e9e0c80b02a821470f5908fc31b7236c0d91aa11e14c81fbfcc27a2bb63536": {
+    "source": "Callback fired when the value changes.",
+    "translated": "값이 변경될 때 호출되는 콜백입니다."
+  },
+  "e8ccb08a6c5a59af51f4b7972948b3544bb107c49e629ba57e822a94ac2e2de2": {
+    "source": "The controlled value of the navigation menu item that should be currently open.\nWhen non-nullish, the menu will be open. When nullish, the menu will be closed.\n\nTo render an uncontrolled navigation menu, use the `defaultValue` prop instead.",
+    "translated": "현재 열려 있어야 하는 내비게이션 메뉴 항목의 제어 값을 지정합니다.\nnull이 아닌 값이면 메뉴가 열리고, null이면 메뉴가 닫힙니다.\n\n비제어 내비게이션 메뉴를 렌더링하려면 `defaultValue` prop을 사용하십시오."
+  },
+  "2f7767379271ea90756f9bd171132c537e235f1a05d4155801e99b49fc69c37c": {
+    "source": "A ref to imperative actions.",
+    "translated": "명령형 액션에 대한 ref를 지정합니다."
+  },
+  "0a64923cdec4f472799ffd22f884562a7fdaf4a674937a18011f3816a1db86ac": {
+    "source": "How long to wait before closing the navigation popup. Specified in milliseconds.",
+    "translated": "내비게이션 팝업을 닫기 전에 대기할 시간을 지정합니다. 밀리초 단위로 설정합니다."
+  },
+  "f566bff7169a81aade12ec5523b08dc62438a71cbcaa1d7fe6c6ec553d933072": {
+    "source": "How long to wait before opening the navigation popup. Specified in milliseconds.",
+    "translated": "내비게이션 팝업을 열기 전에 대기할 시간을 지정합니다. 밀리초 단위로 설정합니다."
+  },
+  "f9816e3280e71771196cf5610fbdb30436ce6572a95c17ee5e49b739f46ebda9": {
+    "source": "Event handler called after any animations complete when the navigation menu is closed.",
+    "translated": "내비게이션 메뉴가 닫힐 때 모든 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
+  },
+  "8c8004175d641edfab915a23e4c9ebea0815c3317c1d33360da8626566a6abb0": {
+    "source": "The orientation of the navigation menu.",
+    "translated": "내비게이션 메뉴의 방향을 지정합니다."
+  },
+  "edee5502c677d6b58afd4da5ea3e05888338251e6098987ccb315337d6ed4d8b": {
+    "source": "A Custom element for NavigationMenu.PopupPrimitive. If not provided, the default NavigationMenu.PopupPrimitive will be rendered.",
+    "translated": "NavigationMenu.PopupPrimitive에 사용할 커스텀 엘리먼트를 지정합니다. 지정하지 않으면 기본 NavigationMenu.PopupPrimitive가 렌더링됩니다."
+  },
+  "402cbd5435ebf7af99161a7b92cbe76f9211567af06a89e3a30ed6814871a96f": {
+    "source": "A Custom element for NavigationMenu.PortalPrimitive. If not provided, the default NavigationMenu.PortalPrimitive will be rendered.",
+    "translated": "NavigationMenu.PortalPrimitive에 사용할 커스텀 엘리먼트를 지정합니다. 지정하지 않으면 기본 NavigationMenu.PortalPrimitive가 렌더링됩니다."
+  },
+  "cd934e3e9eed53090c521590ed7290c8f37a5e4282799fcfd94ffbe28c5f2892": {
+    "source": "A Custom element for NavigationMenu.PositionerPrimitive. If not provided, the default NavigationMenu.PositionerPrimitive will be rendered.",
+    "translated": "NavigationMenu.PositionerPrimitive에 사용할 커스텀 엘리먼트를 지정합니다. 지정하지 않으면 기본 NavigationMenu.PositionerPrimitive가 렌더링됩니다."
+  },
+  "469c843f07be2693540e63fb0c025ef798fc0f070c61f59c53dac5b646327cb6": {
+    "source": "The controlled page number of the items that should be displayed.",
+    "translated": "표시할 항목의 제어 페이지 번호를 지정합니다."
+  },
+  "16ae9c6c075f4ad69df7a77d06273c0285db7dfefcf717bbc86f1000d7c92977": {
+    "source": "The total number of pages.",
+    "translated": "전체 페이지 수를 지정합니다."
+  },
+  "8eeb50a5e251c476a0cf8fc5ed399a2018f4773fcc1f9030f33c5eadccd8776b": {
+    "source": "Event handler called when the selected page of the pagination changes.",
+    "translated": "페이지네이션의 선택된 페이지가 변경될 때 호출되는 이벤트 핸들러입니다."
+  },
+  "f3369a236d1437c632033e6c64dfb566825dd9a530c628c2bd96ea7992584c35": {
+    "source": "The number of page items to show for the start and end pages.",
+    "translated": "시작 및 끝 페이지에 표시할 페이지 항목 수를 지정합니다."
+  },
+  "483810a1af2911910a9359237d0998e7ef0d160c6d4507baad7e186a9df26776": {
+    "source": "The default selected page of the paginations. Use when uncontrolled.",
+    "translated": "페이지네이션의 기본 선택 페이지를 지정합니다. 비제어 방식으로 사용할 때 설정합니다."
+  },
+  "c93a242f6a1ac899dc3eaeba9c5ae3dec85890371572aa52039105bb9aa4c5a9": {
+    "source": "The selected page of the paginations. Use when controlled.",
+    "translated": "페이지네이션의 선택된 페이지를 지정합니다. 제어 방식으로 사용할 때 설정합니다."
+  },
+  "0de07dad02fb161c63e58d3c0411942ff8515f4083511f58cf15c648cf37e504": {
+    "source": "The number of page items to show on each side of the current page item.",
+    "translated": "현재 페이지 항목 양쪽에 표시할 페이지 항목 수를 지정합니다."
+  },
+  "11c6fe98608a4c0e84827dab6f43fbd312cb11af71111d7199bd82326b545083": {
+    "source": "A Custom element for Popover.PortalPrimitive. If not provided, the default Popover.PortalPrimitive will be rendered.",
+    "translated": "Popover.PortalPrimitive에 사용할 커스텀 엘리먼트를 지정합니다. 지정하지 않으면 기본 Popover.PortalPrimitive가 렌더링됩니다."
+  },
+  "bf841943f784fae8f65a8e08fa32a42b29472adcdd6883dc1f96a877a0870f18": {
+    "source": "A Custom element for Popover.PositionerPrimitive. If not provided, the default Popover.PositionerPrimitive will be rendered.",
+    "translated": "Popover.PositionerPrimitive에 사용할 커스텀 엘리먼트를 지정합니다. 지정하지 않으면 기본 Popover.PositionerPrimitive가 렌더링됩니다."
+  },
+  "0e88a326d92b068e553232725a75d665af56d37643a47cd047f24b1e4994bd30": {
+    "source": "The unique identifying value of the radio in a group.",
+    "translated": "그룹 내에서 라디오를 고유하게 식별하는 값을 지정합니다."
+  },
+  "1c43cad988361d942e6cd335b9f92ef8fc16f6c4aefb298071bbdda3cd5a3112": {
+    "source": "Whether the user should be unable to select the radio button.",
+    "translated": "사용자가 라디오 버튼을 선택할 수 없도록 할지 여부를 지정합니다."
+  },
+  "2fe454aad1adb448fa2433586ba5a167271675c1a8205e14a7792d88af8c1ae0": {
+    "source": "The uncontrolled value of the radio button that should be initially selected.\n\nTo render a controlled radio group, use the `value` prop instead.",
+    "translated": "초기에 선택될 라디오 버튼의 비제어 값을 지정합니다.\n\n제어 방식의 라디오 그룹을 렌더링하려면 `value` prop을 사용하십시오."
+  },
+  "5976cd36e80b8b469850ad3508c77e84a1ad3283d3c8d7eb78cfb9ceb3a2e9b1": {
+    "source": "Identifies the form that owns the radio inputs.\nUseful when the radio group is rendered outside the form.",
+    "translated": "라디오 입력을 소유하는 폼을 식별합니다.\n라디오 그룹이 폼 외부에 렌더링될 때 유용합니다."
+  },
+  "65f764798292cca8b387a68d5eff09c4dd436319b224d182cd34451693a5cebb": {
+    "source": "Whether the user should be unable to select a different radio button in the group.",
+    "translated": "사용자가 그룹 내에서 다른 라디오 버튼을 선택할 수 없도록 할지 여부를 지정합니다."
+  },
+  "e15c2d3c0fc7c03b7c20ba6e18c55de74d4bf2c3964ed101a8f726ad667640ef": {
+    "source": "Whether to keep the HTML element in the DOM when the radio button is inactive.",
+    "translated": "라디오 버튼이 비활성 상태일 때 HTML 엘리먼트를 DOM에 유지할지 여부를 지정합니다."
+  },
+  "4ad4b4de46431e7fd1c7fc89016ecde28771041eae28ca1b8ed1e85b2865b069": {
+    "source": "An icon-only variant of SegmentedControl.Item with square proportions. Use when a segment contains only an icon and no label text. Renders a `<button>` element.",
+    "translated": "정사각형 비율의 아이콘 전용 SegmentedControl.Item 변형입니다. 세그먼트에 아이콘만 있고 레이블 텍스트가 없을 때 사용합니다. `<button>` 엘리먼트를 렌더링합니다."
+  },
+  "343a08e48238d40daec188d7376a56e52ff9c88a7d1434f68b91e2fcf29d4529": {
+    "source": "The value of the item. This is used to determine which item is selected. It should be unique within the SegmentedControl.",
+    "translated": "항목의 값을 지정합니다. 어떤 항목이 선택되었는지 판단하는 데 사용되며, SegmentedControl 내에서 고유해야 합니다."
+  },
+  "624f1c511f1efbb38633da44747a03081f56344ef24ce5bbc2c1c181385a1793": {
+    "source": "The sliding selection indicator for SegmentedControl. Automatically positions and sizes itself to highlight the currently selected segment. Renders a `<div>` element.",
+    "translated": "SegmentedControl의 슬라이딩 선택 인디케이터입니다. 현재 선택된 세그먼트를 강조하도록 위치와 크기를 자동으로 조정합니다. `<div>` 엘리먼트를 렌더링합니다."
+  },
+  "3933eb60932e8c6d4b1df80f992d5aa544059f6615aa130ce47be1ae7626ca91": {
+    "source": "An individual selectable segment within a SegmentedControl. Use for text-based or mixed content segments. Renders a `<button>` element.",
+    "translated": "SegmentedControl 내에서 개별적으로 선택 가능한 세그먼트입니다. 텍스트 기반 또는 혼합 콘텐츠 세그먼트에 사용합니다. `<button>` 엘리먼트를 렌더링합니다."
+  },
+  "4b03cab4cfe6444d2f7b74e5ef14301e4fd2bd4719a2a2b18b30c72e0a80a234": {
+    "source": "Primitive root component for SegmentedControl without a built-in indicator. Use when you need full control over indicator rendering by supplying a custom `SegmentedControlIndicatorPrimitive`. Renders a `<div>` element.",
+    "translated": "내장 인디케이터가 없는 SegmentedControl의 프리미티브 루트 컴포넌트입니다. 커스텀 `SegmentedControlIndicatorPrimitive`를 제공하여 인디케이터 렌더링을 완전히 직접 다루고 싶을 때 사용합니다. `<div>` 엘리먼트를 렌더링합니다."
+  },
+  "4d9236a98d8a279164003343821087840e42b806527644dd34f241d7c7d978f5": {
+    "source": "The default value of the SegmentedControl. This is used when you want the SegmentedControl to manage its own state. It should be the value of one of the SegmentedControl.Item components.",
+    "translated": "SegmentedControl의 기본값을 지정합니다. SegmentedControl이 자체적으로 상태를 관리하도록 할 때 사용하며, SegmentedControl.Item 컴포넌트 중 하나의 값이어야 합니다."
+  },
+  "4c5a69acb97ce1ce6517b452469196074cf664546a5b4253aa63d695b3c39b6a": {
+    "source": "Callback fired when the value of the SegmentedControl changes. It receives the new value and the original change event details from the underlying RadioGroup component. This is useful for handling side effects when the user selects a different segment.",
+    "translated": "SegmentedControl의 값이 변경될 때 호출되는 콜백입니다. 새 값과 하위 RadioGroup 컴포넌트의 원래 변경 이벤트 정보를 전달받습니다. 사용자가 다른 세그먼트를 선택할 때 부수 효과를 처리할 때 유용합니다."
+  },
+  "3d72aecc732dd95c15ec21a08033ec993cc86d5c244280a4a53404a9a792ac17": {
+    "source": "The controlled value of the SegmentedControl. This should be used in conjunction with `onValueChange` to update the value when the user interacts with the SegmentedControl.",
+    "translated": "SegmentedControl의 제어 값을 지정합니다. 사용자가 SegmentedControl과 상호작용할 때 값을 업데이트하려면 `onValueChange`와 함께 사용해야 합니다."
+  },
+  "1a8d5353e0ed36cdac24d64a57c10ff991329930c4d747fd99be61ff446f6cba": {
+    "source": "Root component for SegmentedControl. Renders a group of selectable segments with a sliding indicator. Use `SegmentedControlRootPrimitive` when you need to supply a custom indicator element. Renders a `<div>` element.",
+    "translated": "SegmentedControl의 루트 컴포넌트입니다. 슬라이딩 인디케이터와 함께 선택 가능한 세그먼트 그룹을 렌더링합니다. 커스텀 인디케이터 요소를 직접 제공해야 할 경우에는 `SegmentedControlRootPrimitive`를 사용하십시오. `<div>` 요소를 렌더링합니다."
+  },
+  "3acc2312fd26fcb0767d51ee19b783283c9f3fdeffe37c3fba6fbaca68a669f8": {
+    "source": "A Custom element for SegmentedControl.IndicatorPrimitive. If not provided, the default SegmentedControl.IndicatorPrimitive will be rendered.",
+    "translated": "SegmentedControl.IndicatorPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 SegmentedControl.IndicatorPrimitive가 렌더링됩니다."
+  },
+  "33786f761c1aacbe2333fe33f6e0e02fde62a5d727fa81f6098c385bc7cd14ae": {
+    "source": "Whether the field's value has been changed from its initial value.\nUseful when the field state is controlled by an external library.",
+    "translated": "필드의 값이 초기값에서 변경되었는지 여부를 지정합니다.\n외부 라이브러리에서 필드 상태를 관리할 때 유용합니다."
+  },
+  "e7813400c7fe7a09e069eb5b009ac6bd4657889f16bcc0fea3ecb3d575fa2d9e": {
+    "source": "Whether the component should ignore user interaction.\nTakes precedence over the `disabled` prop on the `<Field.Control>` component.",
+    "translated": "컴포넌트가 사용자 인터랙션을 무시할지 여부를 지정합니다.\n`<Field.Control>` 컴포넌트의 `disabled` prop보다 우선합니다."
+  },
+  "fbb6be4b1a8d8a3ce584fb4c7a0e9f5fe26ea89beab149d1cf8e906db313af82": {
+    "source": "Whether the field is invalid.\nUseful when the field state is controlled by an external library.",
+    "translated": "필드가 유효하지 않은 상태인지 여부를 지정합니다.\n외부 라이브러리에서 필드 상태를 관리할 때 유용합니다."
+  },
+  "cf9f135847099bff10173d08b8627c8de6fdd51fa8513633200751760b0cfedc": {
+    "source": "Identifies the field when a form is submitted.\nTakes precedence over the `name` prop on the `<Field.Control>` component.",
+    "translated": "폼을 제출할 때 필드를 식별하는 이름을 지정합니다.\n`<Field.Control>` 컴포넌트의 `name` prop보다 우선합니다."
+  },
+  "8804ee3812b0b376285685c13b34d0c4aaeb3e73a37850613af3d7da913f3066": {
+    "source": "Whether the field has been touched.\nUseful when the field state is controlled by an external library.",
+    "translated": "필드가 터치된 상태인지 여부를 지정합니다.\n외부 라이브러리에서 필드 상태를 관리할 때 유용합니다."
+  },
+  "0b6b71027a4ba4607432fd971052100ca2ee7933f4b707c7ad85419cf5de2bde": {
+    "source": "A function for custom validation. Return a string or an array of strings with\nthe error message(s) if the value is invalid, or `null` if the value is valid.\nAsynchronous functions are supported, but they do not prevent form submission\nwhen using `validationMode=\"onSubmit\"`.",
+    "translated": "커스텀 유효성 검사를 위한 함수입니다. 값이 유효하지 않으면 오류 메시지 문자열 또는 문자열 배열을 반환하고, 값이 유효하면 `null`을 반환합니다.\n비동기 함수도 지원되지만, `validationMode=\"onSubmit\"`을 사용하는 경우 폼 제출을 막지 않습니다."
+  },
+  "3bffb8f42bcfdb2c06886d37e4886bd044cee00dad5b1bc38d3e8db48a912e7b": {
+    "source": "How long to wait between `validate` callbacks if\n`validationMode=\"onChange\"` is used. Specified in milliseconds.",
+    "translated": "`validationMode=\"onChange\"`를 사용할 때 `validate` 콜백 사이의 대기 시간을 설정합니다. 밀리초 단위로 지정합니다."
+  },
+  "b41e206ec1eb49f05922d5fd8af2ce9f342842b8ef9c0848fd1626b78f3053ca": {
+    "source": "Determines whether to show the success message according to the field’s\n[ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).",
+    "translated": "필드의 [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState)에 따라 성공 메시지 표시 여부를 설정합니다."
+  },
+  "7b9819431b709c21974539df7ccca93f709a712ac8d3fb423abce2d67fb2c611": {
+    "source": "Determines the element to focus when the popover is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing.",
+    "translated": "팝오버가 닫힐 때 포커스를 이동할 요소를 설정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작(트리거 또는 이전에 포커스된 요소)에 따라 포커스를 이동합니다.\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 인터랙션 유형(`mouse`, `touch`, `pen`, `keyboard`)과 함께 호출됩니다.\n  포커스할 요소를 반환하거나, 기본 동작을 사용하려면 `true`, 기본 동작으로 폴백하려면 `null`, 아무 작업도 하지 않으려면 `false`/`undefined`를 반환합니다."
+  },
+  "76139f7d204fece34f5b44062268cad0408ac944000f5f69578b17a8826209e5": {
+    "source": "Determines the element to focus when the popover is opened.\nBy default, focus moves to the first tabbable element inside the popup, except when the popover\nis opened by touch — then the popup itself is focused to avoid opening the virtual keyboard.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (first tabbable element or popup).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing.",
+    "translated": "팝오버가 열릴 때 포커스를 이동할 요소를 설정합니다.\n기본적으로 팝업 내부의 첫 번째 탭 가능한 요소로 포커스가 이동하지만, 터치로 팝오버가 열린 경우에는 가상 키보드 열림을 방지하기 위해 팝업 자체에 포커스를 설정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작(첫 번째 탭 가능한 요소 또는 팝업)에 따라 포커스를 이동합니다.\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 인터랙션 유형(`mouse`, `touch`, `pen`, `keyboard`)과 함께 호출됩니다.\n  포커스할 요소를 반환하거나, 기본 동작을 사용하려면 `true`, 기본 동작으로 폴백하려면 `null`, 아무 작업도 하지 않으려면 `false`/`undefined`를 반환합니다."
+  },
+  "b073900f18ee98795149caca43cd18f22ba553ae7651708b59b2e4344b87c4c8": {
+    "source": "A Custom element for FloatingBar.PortalPrimitive. If not provided, the default FloatingBar.PortalPrimitive will be rendered.",
+    "translated": "FloatingBar.PortalPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 FloatingBar.PortalPrimitive가 렌더링됩니다."
+  },
+  "359b5b20c77260046b246d5da5e2e03668fdcf4d7e752f983a013be9961fa7ed": {
+    "source": "How to align the popup relative to the specified side.",
+    "translated": "지정된 side를 기준으로 팝업의 정렬 방식을 설정합니다."
+  },
+  "c3f78e7d9dabead7e77334e4aee09875ac09e5d1458dce3e1530e8360b2b0191": {
+    "source": "Additional offset along the alignment axis in pixels.\nAlso accepts a function that returns the offset to read the dimensions of the anchor\nand positioner elements, along with its side and alignment.\n\nThe function takes a `data` object parameter with the following properties:\n- `data.anchor`: the dimensions of the anchor element with properties `width` and `height`.\n- `data.positioner`: the dimensions of the positioner element with properties `width` and `height`.\n- `data.side`: which side of the anchor element the positioner is aligned against.\n- `data.align`: how the positioner is aligned relative to the specified side.",
+    "translated": "정렬 축 방향의 추가 오프셋을 픽셀 단위로 설정합니다.\n앵커 및 포지셔너 요소의 크기와 side, align 정보를 읽어 오프셋을 반환하는 함수도 허용합니다.\n\n함수는 다음 프로퍼티를 가진 `data` 객체를 매개변수로 받습니다:\n- `data.anchor`: 앵커 요소의 크기로, `width`와 `height` 프로퍼티를 포함합니다.\n- `data.positioner`: 포지셔너 요소의 크기로, `width`와 `height` 프로퍼티를 포함합니다.\n- `data.side`: 포지셔너가 정렬된 앵커 요소의 side를 나타냅니다.\n- `data.align`: 지정된 side를 기준으로 포지셔너가 정렬된 방식을 나타냅니다."
+  },
+  "ec63396c7e19b03adcc724d48b1d507ec20ed2e88fa1801d80b8f1012880642b": {
+    "source": "An element to position the popup against.\nBy default, the popup will be positioned against the trigger.",
+    "translated": "팝업을 배치할 기준 요소를 설정합니다.\n기본적으로 트리거를 기준으로 팝업이 배치됩니다."
+  },
+  "c43af9dd26a38449b16130cc347a7529b376d70b3e6b1acc7c86deff20f30abe": {
+    "source": "Minimum distance to maintain between the arrow and the edges of the popup.\n\nUse it to prevent the arrow element from hanging out of the rounded corners of a popup.",
+    "translated": "화살표와 팝업 모서리 사이의 최소 거리를 설정합니다.\n\n팝업의 둥근 모서리 바깥으로 화살표 요소가 벗어나지 않도록 할 때 사용합니다."
+  },
+  "edb81ae37e45a12bf0ee3f422700b37fbff1df80475999fa897849f204e19504": {
+    "source": "Determines how to handle collisions when positioning the popup.\n\n`side` controls overflow on the preferred placement axis (`top`/`bottom` or `left`/`right`):\n- `'flip'`: keep the requested side when it fits; otherwise try the opposite side\n  (`top` and `bottom`, or `left` and `right`).\n- `'shift'`: never change side; keep the requested side and move the popup within\n  the clipping boundary so it stays visible.\n- `'none'`: do not correct side-axis overflow.\n\n`align` controls overflow on the alignment axis (`start`/`center`/`end`):\n- `'flip'`: keep side, but swap `start` and `end` when the requested alignment overflows.\n- `'shift'`: keep side and requested alignment, then nudge the popup along the\n  alignment axis to fit.\n- `'none'`: do not correct alignment-axis overflow.\n\n`fallbackAxisSide` controls fallback behavior on the perpendicular axis when the\npreferred axis cannot fit:\n- `'start'`: allow perpendicular fallback and try the logical start side first\n  (`top` before `bottom`, or `left` before `right` in LTR).\n- `'end'`: allow perpendicular fallback and try the logical end side first\n  (`bottom` before `top`, or `right` before `left` in LTR).\n- `'none'`: do not fallback to the perpendicular axis.\n\nWhen `side` is `'shift'`, explicitly setting `align` only supports `'shift'` or `'none'`.\nIf `align` is omitted, it defaults to `'flip'`.",
+    "translated": "팝업을 배치할 때 충돌을 처리하는 방식을 설정합니다.\n\n`side`는 선호하는 배치 축(`top`/`bottom` 또는 `left`/`right`)의 오버플로를 처리합니다:\n- `'flip'`: 요청한 side가 맞으면 유지하고, 맞지 않으면 반대 side(`top`과 `bottom`, 또는 `left`와 `right`)를 시도합니다.\n- `'shift'`: side를 변경하지 않고 요청한 side를 유지하면서 클리핑 경계 내에서 팝업을 이동시켜 보이도록 합니다.\n- `'none'`: side 축 오버플로를 보정하지 않습니다.\n\n`align`은 정렬 축(`start`/`center`/`end`)의 오버플로를 처리합니다:\n- `'flip'`: side는 유지하되, 요청한 정렬이 오버플로되면 `start`와 `end`를 교체합니다.\n- `'shift'`: side와 요청한 정렬을 유지하면서 팝업을 정렬 축을 따라 조금씩 이동시켜 맞춥니다.\n- `'none'`: 정렬 축 오버플로를 보정하지 않습니다.\n\n`fallbackAxisSide`는 선호 축이 맞지 않을 때 수직 축의 폴백 동작을 처리합니다:\n- `'start'`: 수직 축 폴백을 허용하고 논리적 시작 side를 먼저 시도합니다(LTR에서 `bottom` 전에 `top`, 또는 `right` 전에 `left`).\n- `'end'`: 수직 축 폴백을 허용하고 논리적 끝 side를 먼저 시도합니다(LTR에서 `top` 전에 `bottom`, 또는 `left` 전에 `right`).\n- `'none'`: 수직 축으로 폴백하지 않습니다.\n\n`side`가 `'shift'`인 경우, `align`을 명시적으로 설정하면 `'shift'` 또는 `'none'`만 지원됩니다.\n`align`을 생략하면 기본값은 `'flip'`입니다."
+  },
+  "5da0f47d4ae176f6975905c1ebc39f2d02d508bfd9c98cfde5e3c663935a8b3d": {
+    "source": "An element or a rectangle that delimits the area that the popup is confined to.",
+    "translated": "팝업이 벗어나지 않도록 제한할 영역을 나타내는 요소 또는 사각형을 설정합니다."
+  },
+  "d2c8d50202183506586efa9cfdda33da7942a6c3f7b176172bfac6694d202261": {
+    "source": "Additional space to maintain from the edge of the collision boundary.",
+    "translated": "충돌 경계 모서리로부터 유지할 추가 여백을 설정합니다."
+  },
+  "8948c66ddb0e86978e0cefbd1d658cdb43e9013145637e14aebe219f51c51a26": {
+    "source": "Whether to disable the popup from tracking any layout shift of its positioning anchor.",
+    "translated": "팝업이 배치 앵커의 레이아웃 변화를 추적하지 않도록 설정할지 여부를 지정합니다."
+  },
+  "11f96c1b9fb1b644c56d20e2980379f6a7f4b55023d76456c5c390503918efce": {
+    "source": "Determines which CSS `position` property to use.",
+    "translated": "사용할 CSS `position` 속성을 설정합니다."
+  },
+  "f5f995547088bed773ab1be317ca9554cc1ce071075f503bd6c6795289bd1a7c": {
+    "source": "Which side of the anchor element to align the popup against.\nMay automatically change to avoid collisions.",
+    "translated": "팝업을 앵커 요소의 어느 side에 배치할지 설정합니다.\n충돌을 피하기 위해 자동으로 변경될 수 있습니다."
+  },
+  "2a6910fce8a132a654d3e86b0bbe896cf75c3c05fc6dd98be05f47bda45c3ef1": {
+    "source": "Distance between the anchor and the popup in pixels.\nAlso accepts a function that returns the distance to read the dimensions of the anchor\nand positioner elements, along with its side and alignment.\n\nThe function takes a `data` object parameter with the following properties:\n- `data.anchor`: the dimensions of the anchor element with properties `width` and `height`.\n- `data.positioner`: the dimensions of the positioner element with properties `width` and `height`.\n- `data.side`: which side of the anchor element the positioner is aligned against.\n- `data.align`: how the positioner is aligned relative to the specified side.",
+    "translated": "앵커와 팝업 사이의 거리를 픽셀 단위로 설정합니다.\n앵커 및 포지셔너 요소의 크기와 side, align 정보를 읽어 거리를 반환하는 함수도 허용합니다.\n\n함수는 다음 프로퍼티를 가진 `data` 객체를 매개변수로 받습니다:\n- `data.anchor`: 앵커 요소의 크기로, `width`와 `height` 프로퍼티를 포함합니다.\n- `data.positioner`: 포지셔너 요소의 크기로, `width`와 `height` 프로퍼티를 포함합니다.\n- `data.side`: 포지셔너가 정렬된 앵커 요소의 side를 나타냅니다.\n- `data.align`: 지정된 side를 기준으로 포지셔너가 정렬된 방식을 나타냅니다."
+  },
+  "0db168fe79ce97fbf36596087881857d3fde90f731e59df8d46ac82b166ced21": {
+    "source": "Whether to maintain the popup in the viewport after\nthe anchor element was scrolled out of view.",
+    "translated": "앵커 요소가 스크롤되어 뷰포트 밖으로 벗어난 후에도 팝업을 뷰포트 내에 유지할지 여부를 설정합니다."
+  },
+  "7af7b7eb8f3f937836b42372b197eac3e65275a4d31cfd749c033bfa4931da17": {
+    "source": "Whether the popover is initially open.\n\nTo render a controlled popover, use the `open` prop instead.",
+    "translated": "팝오버의 초기 열림 상태를 설정합니다.\n\n제어 컴포넌트로 렌더링하려면 `open` prop을 사용하십시오."
+  },
+  "704634879bf85a41feb3446bf0c16e82a187b5104234c89e301602bbf21b3b1d": {
+    "source": "Event handler called when the popover is opened or closed.",
+    "translated": "팝오버가 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
+  },
+  "1e85ed87a812dc7a2e7e3563b7b4194a806e84d1abc1f0516f74a1fdf3c8265a": {
+    "source": "Whether the popover is currently open.",
+    "translated": "팝오버가 현재 열려 있는지 여부를 지정합니다."
+  },
+  "f3c0b4a09477ee09183423ec759a0b3e66b66a4c103c830251f48a72e3e0650c": {
+    "source": "A ref to imperative actions.\n- `unmount`: Manually unmounts the popover.\nCall this after any externally controlled closing animation finishes.\n- `close`: Closes the popover imperatively when called.",
+    "translated": "명령형 액션에 대한 ref입니다.\n- `unmount`: 팝오버를 수동으로 언마운트합니다.\n외부에서 제어하는 닫기 애니메이션이 완료된 후 호출하십시오.\n- `close`: 호출 시 팝오버를 명령형으로 닫습니다."
+  },
+  "1fdd952e518350f148a6be0ca2d4400fc4aa071b50d4a4b1dc7afdb7febef7fd": {
+    "source": "The content of the popover.\nThis can be a regular React node or a render function that receives the `payload` of the active trigger.",
+    "translated": "팝오버의 콘텐츠를 지정합니다.\n일반 React 노드 또는 활성 트리거의 `payload`를 인수로 받는 렌더 함수를 사용할 수 있습니다."
+  },
+  "6f0483fe6b8ad3a03b31a52825791e500b25a1452ac2986e88d6dc8a2a2b7a1d": {
+    "source": "ID of the trigger that the popover is associated with.\nThis is useful in conjunction with the `defaultOpen` prop to create an initially open popover.",
+    "translated": "팝오버와 연결할 트리거의 ID를 지정합니다.\n`defaultOpen` prop과 함께 사용하여 초기에 열린 상태의 팝오버를 만들 때 유용합니다."
+  },
+  "bfd7598680fbe226b42b8313c7ee255271c81c3da2b5925b5c0296f8e148ed71": {
+    "source": "A handle to associate the popover with a trigger.\nIf specified, allows external triggers to control the popover's open state.",
+    "translated": "팝오버를 트리거와 연결하기 위한 핸들을 지정합니다.\n지정하면 외부 트리거에서 팝오버의 열림 상태를 제어할 수 있습니다."
+  },
+  "20ad7dd5a83a8819a6cff431bce76d08a6e417c213be3efd1c0103ed971c62e9": {
+    "source": "Determines if the popover enters a modal state when open.\n- `true`: user interaction is limited to the popover: document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the popover, but document page scroll is not locked and pointer interactions outside of it remain enabled.\n\nWhen `modal` is `true`, focus trapping is enabled only if `<Popover.Close>` is rendered\ninside `<Popover.Popup>`. It can be visually hidden with your own CSS if needed, such as\nTailwind's `sr-only` utility.\n\nWhen `modal` is `'trap-focus'`, render `<Popover.Close>` inside `<Popover.Popup>` so touch\nscreen readers can escape the popup.",
+    "translated": "팝오버가 열릴 때 모달 상태로 전환할지 여부를 설정합니다.\n- `true`: 사용자 상호작용이 팝오버 내부로 제한됩니다. 문서 페이지 스크롤이 잠기고 외부 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 영역과 상호작용할 수 있습니다.\n- `'trap-focus'`: 포커스가 팝오버 내부에 갇히지만, 문서 페이지 스크롤은 잠기지 않으며 팝오버 외부의 포인터 상호작용도 유지됩니다.\n\n`modal`이 `true`인 경우, `<Popover.Popup>` 내부에 `<Popover.Close>`가 렌더링될 때만 포커스 트래핑이 활성화됩니다. 필요하다면 Tailwind의 `sr-only` 유틸리티 등 직접 작성한 CSS로 시각적으로 숨길 수 있습니다.\n\n`modal`이 `'trap-focus'`인 경우, 터치 스크린 리더가 팝업을 벗어날 수 있도록 `<Popover.Popup>` 내부에 `<Popover.Close>`를 렌더링하십시오."
+  },
+  "dc790b85a3514d91180d52dd76a21bef01a6e52e55325ff2640ed63627bf3da7": {
+    "source": "Event handler called after any animations complete when the popover is opened or closed.",
+    "translated": "팝오버가 열리거나 닫힐 때 모든 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
+  },
+  "fa2907b185ea1104e41881fc050e84e801c4fcd4babe7d3f06e837eaa7166e0d": {
+    "source": "ID of the trigger that the popover is associated with.\nThis is useful in conjunction with the `open` prop to create a controlled popover.\nThere's no need to specify this prop when the popover is uncontrolled (that is, when the `open` prop is not set).",
+    "translated": "팝오버와 연결할 트리거의 ID를 지정합니다.\n`open` prop과 함께 사용하여 제어 팝오버를 만들 때 유용합니다.\n비제어 팝오버(즉, `open` prop을 설정하지 않은 경우)에서는 이 prop을 지정할 필요가 없습니다."
+  },
+  "064374ae5a9f5ff039108e7aea3abf6db1e2e238e101b6169491618f145191da": {
+    "source": "How long to wait before closing the popover that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop.",
+    "translated": "호버로 열린 팝오버를 닫기까지 대기할 시간을 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다."
+  },
+  "d9d4d407ce56ca0e8919ef60ee2fe09610b15ce79d78fdd53cc43eaf4707fe65": {
+    "source": "How long to wait before the popover may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
+    "translated": "호버 시 팝오버가 열리기까지 대기할 시간을 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다."
+  },
+  "3f3ca54ecef3dc6994933a1dce14ad6334a185649b6d56fd8101125b0afe079b": {
+    "source": "A handle to associate the trigger with a popover.",
+    "translated": "트리거를 팝오버와 연결하기 위한 핸들을 지정합니다."
+  },
+  "494d1c551a34f06bc85f6774e8a220bd456186953a8a19ea3dda8b6af52d3650": {
+    "source": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`).\nWhether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
+    "translated": "`render` prop으로 요소를 교체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부를 지정합니다.\n렌더링되는 요소가 버튼이 아닌 경우(예: `<div>`) `false`로 설정하십시오."
+  },
+  "9f88a6686944c2a14bdb8839dfa39b7e2b93b1c317da6221440f467d84501671": {
+    "source": "Whether the popover should also open when the trigger is hovered.",
+    "translated": "트리거에 호버할 때 팝오버도 열릴지 여부를 지정합니다."
+  },
+  "2280fab02c388b15e0c3f5ff9d4766c87bea466a6b6004d44a0d00e0fc079365": {
+    "source": "A payload to pass to the popover when it is opened.",
+    "translated": "팝오버가 열릴 때 전달할 페이로드를 지정합니다."
+  },
+  "63fcd6cfd28463c52823002f2599ac7a3f79e17eb399cb5de97f4f0c4598fd8c": {
+    "source": "A ref to imperative actions.\n- `validate`: Validates all fields when called. Optionally pass a field name to validate a single field.",
+    "translated": "명령형 액션에 대한 ref입니다.\n- `validate`: 호출 시 모든 필드의 유효성을 검사합니다. 단일 필드만 검사하려면 필드 이름을 선택적으로 전달할 수 있습니다."
+  },
+  "d60ff9be94b706dc50d9a4db7cfa596a5f35e4e5bfcc190f48fc5814671dc6f8": {
+    "source": "Validation errors returned externally, typically after submission by a server or a form action.\nThis should be an object where keys correspond to the `name` attribute on `<Field.Root>`,\nand values correspond to error(s) related to that field.",
+    "translated": "외부에서 반환된 유효성 검사 오류를 지정합니다. 일반적으로 서버 또는 폼 액션의 제출 후 반환됩니다.\n키는 `<Field.Root>`의 `name` 속성에 대응하고, 값은 해당 필드와 관련된 오류에 대응하는 객체여야 합니다."
+  },
+  "c8c025c3570443d182a5d6d904be22670a791cbffd7d30ddf47d73910380bddd": {
+    "source": "Event handler called when the form is submitted.\n`preventDefault()` is called on the native submit event when used.",
+    "translated": "폼이 제출될 때 호출되는 이벤트 핸들러입니다.\n사용 시 네이티브 submit 이벤트에 `preventDefault()`가 호출됩니다."
+  },
+  "18260b9a84425c9508633e57452ba3a615f0d57e94bdd923d5f89bda2f144671": {
+    "source": "Determines when the form should be validated.\nThe `validationMode` prop on `<Field.Root>` takes precedence over this.\n\n- `onSubmit` (default): validates the field when the form is submitted, afterwards fields will re-validate on change.\n- `onBlur`: validates a field when it loses focus.\n- `onChange`: validates the field on every change to its value.",
+    "translated": "폼의 유효성 검사 시점을 설정합니다.\n`<Field.Root>`의 `validationMode` prop이 이 값보다 우선합니다.\n\n- `onSubmit` (기본값): 폼 제출 시 필드의 유효성을 검사하며, 이후 변경 시마다 재검사합니다.\n- `onBlur`: 필드가 포커스를 잃을 때 유효성을 검사합니다.\n- `onChange`: 필드 값이 변경될 때마다 유효성을 검사합니다."
+  },
+  "54656b2636f03cb69f7a7c1af78fef60782ef688282d5a5332fe646f1b1802ff": {
+    "source": "Whether to keep the HTML element in the DOM when the checkbox item is not checked.",
+    "translated": "체크박스 항목이 선택되지 않은 상태일 때 HTML 요소를 DOM에 유지할지 여부를 지정합니다."
+  },
+  "b49a545e1aa5f17246a7d36bd898840342ab3874e9cf0e4f70373bdc488e939f": {
+    "source": "Whether the checkbox item is currently ticked.\n\nTo render an uncontrolled checkbox item, use the `defaultChecked` prop instead.",
+    "translated": "체크박스 항목이 현재 선택되어 있는지 여부를 지정합니다.\n\n비제어 체크박스 항목을 렌더링하려면 `defaultChecked` prop을 사용하십시오."
+  },
+  "086843d6e91aa086383be23e91d35465103e10ec099761fcf6a45e2bccff8a1e": {
+    "source": "Whether the checkbox item is initially ticked.\n\nTo render a controlled checkbox item, use the `checked` prop instead.",
+    "translated": "체크박스 항목의 초기 선택 여부를 지정합니다.\n\n제어 체크박스 항목을 렌더링하려면 `checked` prop을 사용하십시오."
+  },
+  "3bc85fa42433e30572161b5c04cd1ac255cd20519128eb24b71d510c3d0706b3": {
+    "source": "Event handler called when the checkbox item is ticked or unticked.",
+    "translated": "체크박스 항목이 선택되거나 해제될 때 호출되는 이벤트 핸들러입니다."
+  },
+  "e7631fa87de376172786acb319af765f116ee286a59536d18d3b722d0f886e52": {
+    "source": "Whether to close the menu when the item is clicked.",
+    "translated": "항목을 클릭했을 때 메뉴를 닫을지 여부를 지정합니다."
+  },
+  "a315203a917e037f6ead0cd04d98201be04346c4982f47e2777a89c43adcbfeb": {
+    "source": "Overrides the text label to use when the item is matched during keyboard text navigation.",
+    "translated": "키보드 텍스트 탐색 중 항목을 매칭할 때 사용할 텍스트 레이블을 재정의합니다."
+  },
+  "56c7b00683c831724f7597ac861c0caccad153400917c22e42526f8ec005b8d2": {
+    "source": "The click handler for the menu item.",
+    "translated": "메뉴 항목의 클릭 핸들러를 지정합니다."
+  },
+  "2a6825ff91bec0b943b1ab2f0ad77778f3de9d1cc908993d48207af5e046b2da": {
+    "source": "The content of the component.",
+    "translated": "컴포넌트의 콘텐츠를 지정합니다."
+  },
+  "bc782e2e216040065c1e8416a414066807ead4f7e3c4024d81904d1799ea0d59": {
+    "source": "Determines the element to focus when the menu is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing.",
+    "translated": "메뉴가 닫힐 때 포커스를 이동할 요소를 설정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작(트리거 또는 이전에 포커스된 요소)에 따라 포커스를 이동합니다.\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 인터랙션 유형(`mouse`, `touch`, `pen`, `keyboard`)을 인수로 받아 호출됩니다. 포커스할 요소를 반환하거나, 기본 동작을 사용하려면 `true`를, 아무 작업도 하지 않으려면 `false` 또는 `undefined`를 반환합니다."
+  },
+  "2d5858936f8ec9f19214591bf2857810a561d0f59626419d47ba537434834bb3": {
+    "source": "A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered.",
+    "translated": "Menu.PortalPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 Menu.PortalPrimitive가 렌더링됩니다."
+  },
+  "4e3e8f93f105cdba53c91118695a0b9794016996386e3dff7a57bb828b0713d4": {
+    "source": "A Custom element for Menu.PositionerPrimitive. If not provided, the default Menu.PositionerPrimitive will be rendered.",
+    "translated": "Menu.PositionerPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 Menu.PositionerPrimitive가 렌더링됩니다."
+  },
+  "a2d55c2fd7ff20f9bc66f55a1fc3170d2854d9125dc5f002acea847f91a538d8": {
+    "source": "The uncontrolled value of the radio item that should be initially selected.\n\nTo render a controlled radio group, use the `value` prop instead.",
+    "translated": "초기에 선택될 라디오 항목의 비제어 값을 지정합니다.\n\n제어 라디오 그룹을 렌더링하려면 `value` prop을 사용하십시오."
+  },
+  "39534cc6ff05af5d7da49f08eb2216dcbb0d942deeaf30a3421d079e9df04f33": {
+    "source": "Function called when the selected value changes.",
+    "translated": "선택된 값이 변경될 때 호출되는 함수를 지정합니다."
+  },
+  "1c01bf026a7e09a43d5b02fa206c457cc381dd180c5cf278ef9d57d6d6c7a017": {
+    "source": "The controlled value of the radio item that should be currently selected.\n\nTo render an uncontrolled radio group, use the `defaultValue` prop instead.",
+    "translated": "현재 선택되어야 할 라디오 항목의 제어 값을 지정합니다.\n\n비제어 라디오 그룹을 렌더링하려면 `defaultValue` prop을 사용하십시오."
+  },
+  "501774fcc6eb463dc48aa0413e4eb9ca95f1a3597b1ba563c98b78e4e737ccd1": {
+    "source": "Whether to keep the HTML element in the DOM when the radio item is inactive.",
+    "translated": "라디오 항목이 비활성 상태일 때 HTML 요소를 DOM에 유지할지 여부를 지정합니다."
+  },
+  "c038d5966545a6ad1f9706c370c7b30babca36aa72e35f7601afb48f17b5a68e": {
+    "source": "Value of the radio item.\nThis is the value that will be set in the MenuRadioGroup when the item is selected.",
+    "translated": "라디오 항목의 값을 지정합니다.\n항목이 선택될 때 MenuRadioGroup에 설정될 값입니다."
+  },
+  "c0cce2b40d05376174c36cd82378541109d26134cdbb5e7bfd143f9725cf64df": {
+    "source": "Whether the menu is initially open.\n\nTo render a controlled menu, use the `open` prop instead.",
+    "translated": "메뉴의 초기 열림 여부를 지정합니다.\n\n제어 메뉴를 렌더링하려면 `open` prop을 사용하십시오."
+  },
+  "f51cc5c8b603977ad7cd3651471ff6888f2dfbec675de32fa183472207a1a574": {
+    "source": "Event handler called when the menu is opened or closed.",
+    "translated": "메뉴가 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
+  },
+  "8940c21be1cb0a9f37533598e5775adc4bb1afce98bc0f3b266a30b924a37089": {
+    "source": "Whether the menu is currently open.",
+    "translated": "메뉴가 현재 열려 있는지 여부를 지정합니다."
+  },
+  "d34571a493d6e64aed97dedf799246f902313aea63ce9c3b3dab9762732834a3": {
+    "source": "A ref to imperative actions.\n- `unmount`: Manually unmounts the menu.\n  Call this after any externally controlled closing animation finishes.\n- `close`: When specified, the menu can be closed imperatively.",
+    "translated": "명령형 액션에 대한 ref를 지정합니다.\n- `unmount`: 메뉴를 수동으로 언마운트합니다. 외부에서 제어하는 닫힘 애니메이션이 완료된 후 호출하십시오.\n- `close`: 지정하면 메뉴를 명령형으로 닫을 수 있습니다."
+  },
+  "d7f224468c6d0f0e1728bf3c5206003852fda36b67c412008c0337b3eb597d3d": {
+    "source": "When in a submenu, determines whether pressing the Escape key\ncloses the entire menu, or only the current child menu.",
+    "translated": "서브메뉴에서 Escape 키를 눌렀을 때 전체 메뉴를 닫을지, 현재 자식 메뉴만 닫을지를 설정합니다."
+  },
+  "0ad99e1fa9c504e0f2851284753dd5e140a632fd2db7232767ad89e88ab9d583": {
+    "source": "A handle to associate the menu with a trigger.\nIf specified, allows external triggers to control the menu's open state.",
+    "translated": "메뉴를 트리거와 연결하는 핸들입니다.\n지정하면 외부 트리거가 메뉴의 열림 상태를 설정할 수 있습니다."
+  },
+  "cfdcba8f9c7f9a7d1614c1192be1b4b649ae7cd90f9154edb52a8a324f17b6f0": {
+    "source": "Whether moving the pointer over items should highlight them.\nDisabling this prop allows CSS `:hover` to be differentiated from the `:focus` (`data-highlighted`) state.",
+    "translated": "포인터를 항목 위로 이동할 때 해당 항목을 강조 표시할지 여부를 설정합니다.\n이 prop을 비활성화하면 CSS `:hover`와 `:focus`(`data-highlighted`) 상태를 구분할 수 있습니다."
+  },
+  "7479b1c2e79ae9c0b07f31c69a9eeec5b00fbb7c76335c10f0407b41f72da61e": {
+    "source": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
+    "translated": "화살표 키로 목록의 끝에 도달했을 때 키보드 포커스를 첫 번째 항목으로 순환할지 여부를 설정합니다."
+  },
+  "867aabf41871fb48442afde66bccbe26995b3b72b67ced6e96434d2014d45723": {
+    "source": "Determines if the menu enters a modal state when open.\n- `true`: user interaction is limited to the menu: document page scroll is locked and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.",
+    "translated": "메뉴가 열릴 때 모달 상태로 진입할지 여부를 설정합니다.\n- `true`: 사용자 상호작용이 메뉴로 제한되며, 문서 페이지 스크롤이 잠기고 외부 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과의 사용자 상호작용이 허용됩니다."
+  },
+  "bf280e21b8ae9b10fa7b57c9f94152c9de401f57c72f71fce16fb5456a7dd4fc": {
+    "source": "Event handler called after any animations complete when the menu is closed.",
+    "translated": "메뉴가 닫힐 때 모든 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
+  },
+  "4941b0df703c1c1ad32951956b13c30f6e1d98425044ff696469200b0402dcee": {
+    "source": "The visual orientation of the menu.\nControls whether roving focus uses up/down or left/right arrow keys.",
+    "translated": "메뉴의 시각적 방향을 설정합니다.\n로빙 포커스가 위/아래 또는 왼쪽/오른쪽 화살표 키를 사용할지 결정합니다."
+  },
+  "efdb97a5741102e3d73e0cbf008a9da4312324f4b3309c40aec22674bb75a47e": {
+    "source": "The orientation of the separator.",
+    "translated": "구분선의 방향을 설정합니다."
+  },
+  "f55c4d941fc19e2c85f76ec03d55042d2251a1b80373930007e8cefe85cd8fe3": {
+    "source": "Style applied to the element, or a function that returns a style object based on the component’s state.",
+    "translated": "요소에 적용할 스타일 객체, 또는 컴포넌트의 상태를 기반으로 스타일 객체를 반환하는 함수를 지정합니다."
+  },
+  "3d948b1e3c9551b0f511ce88cd2e969c7aa55212000ef39b9d4818353844197e": {
+    "source": "A ref to imperative actions.\n- `validate`: Validates the field when called.",
+    "translated": "명령형 액션에 대한 ref를 지정합니다.\n- `validate`: 호출 시 필드의 유효성을 검사합니다."
+  },
+  "68244cbd30ec744a8a67bf8ccbfe40995cb325e9a396e972a8b518d44e5bddb0": {
+    "source": "Determines when the field should be validated.\nThis takes precedence over the `validationMode` prop on `<Form>`.\n\n- `onSubmit`: triggers validation when the form is submitted, and re-validates on change after submission.\n- `onBlur`: triggers validation when the control loses focus.\n- `onChange`: triggers validation on every change to the control value.",
+    "translated": "필드의 유효성 검사 시점을 설정합니다.\n`<Form>`의 `validationMode` prop보다 이 값이 우선 적용됩니다.\n\n- `onSubmit`: 폼이 제출될 때 유효성을 검사하며, 제출 후 변경 시 재검사합니다.\n- `onBlur`: 컨트롤이 포커스를 잃을 때 유효성을 검사합니다.\n- `onChange`: 컨트롤 값이 변경될 때마다 유효성을 검사합니다."
+  },
+  "f0087957c183bd1a1194d7dd224481b622c049d68a7ce055fa7a8e6e4d4f6abb": {
+    "source": "A Custom element for Select.PortalPrimitive. If not provided, the default Select.PortalPrimitive will be rendered.",
+    "translated": "Select.PortalPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 Select.PortalPrimitive가 렌더링됩니다."
+  },
+  "bbfc6e1c47e2029d5908b37f2a245b7f81c0e4434711ada9636abc17618d282d": {
+    "source": "A Custom element for Select.PositionerPrimitive. If not provided, the default Select.PositionerPrimitive will be rendered.",
+    "translated": "Select.PositionerPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 Select.PositionerPrimitive가 렌더링됩니다."
+  },
+  "e02e4b413598c1299ce6c97aa219c8a5b8198d8da72a094c7f71f87558f260a4": {
+    "source": "A Custom element for Sheet.OverlayPrimitive. If not provided, the default Sheet.OverlayPrimitive will be rendered.",
+    "translated": "Sheet.OverlayPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 Sheet.OverlayPrimitive가 렌더링됩니다."
+  },
+  "5d3150bf44b513625547e71bf8f1db3342bf637a66b8ea8df75d04af51b272c4": {
+    "source": "A Custom element for Sheet.PortalPrimitive. If not provided, the default Sheet.PortalPrimitive will be rendered.",
+    "translated": "Sheet.PortalPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 Sheet.PortalPrimitive가 렌더링됩니다."
+  },
+  "69177c7c101797eeb364f882ce47ac20e49ad3c05d605649d64be9eb1326e781": {
+    "source": "A Custom element for Sheet.PositionerPrimitive. If not provided, the default Sheet.PositionerPrimitive will be rendered.",
+    "translated": "Sheet.PositionerPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 Sheet.PositionerPrimitive가 렌더링됩니다."
+  },
+  "03b9de2e6dbc6421b8a1348eb6a6c0c4b586e258642fb12d4c684331e6d9a727": {
+    "source": "A placeholder element that indicates content is loading. Renders a `<div>` element.",
+    "translated": "콘텐츠가 로딩 중임을 나타내는 플레이스홀더 요소입니다. `<div>` 요소를 렌더링합니다."
+  },
+  "bcc495432fc6d1595263ae4dca1d1f5d9491224519bbba492c8ccd4568a34c1f": {
+    "source": "Controls the animation style of the skeleton.",
+    "translated": "Skeleton의 애니메이션 스타일을 설정합니다."
+  },
+  "6410cf67a5ac565e18bd45ef048909cd16917805d6e10aa81f9082d11f7c9bd3": {
+    "source": "Controls the border radius of the skeleton.",
+    "translated": "Skeleton의 테두리 반경을 설정합니다."
+  },
+  "fbe641d4f3a2c4d0eb13fa42d9783be9e80a42ddff98494ce492710408a35a80": {
+    "source": "Controls the height of the skeleton.",
+    "translated": "Skeleton의 높이를 설정합니다."
+  },
+  "8270d5561c1866af9539e57a8a8e5bb9e120e3dd5997059dc9b8f34d4c46b287": {
+    "source": "Animated loading indicator for representing an in-progress async operation. Renders a `<span>` element.",
+    "translated": "비동기 작업이 진행 중임을 나타내는 로딩 애니메이션 인디케이터입니다. `<span>` 요소를 렌더링합니다."
+  },
+  "b81c9606ce72fffa37797a8aa9d593f5887b27f34d6a91fe901f1ce8d8b44e19": {
+    "source": "Controls the stroke color of the spinning arc. Use `inherit` when placing the spinner on a colored or filled background; the stroke color will inherit from the parent element's `color` property.",
+    "translated": "스피너 호(arc)의 획 색상을 설정합니다. 색상이 있거나 채워진 배경 위에 스피너를 배치할 때는 `inherit`을 사용하십시오. 이 경우 획 색상은 부모 요소의 `color` 속성을 상속합니다."
+  },
+  "fba30cc504e29b86d509824d68a7b56ea28ee70a0b89c62a3574c344fcf112a4": {
+    "source": "Controls the overall dimensions of the spinner.",
+    "translated": "Spinner의 전체 크기를 설정합니다."
+  },
+  "f047244a21c70214947d235021a31ac9399e414bbfe6155acfb8893532101861": {
+    "source": "Whether the switch is currently active.\n\nTo render an uncontrolled switch, use the `defaultChecked` prop instead.",
+    "translated": "스위치의 현재 활성화 여부를 설정합니다.\n\n비제어 스위치를 렌더링하려면 `defaultChecked` prop을 사용하십시오."
+  },
+  "353c4b25434468d4dafb5ecce8a243d9be10ebc80ddc67cdcaa12d09e0652b18": {
+    "source": "Whether the switch is initially active.\n\nTo render a controlled switch, use the `checked` prop instead.",
+    "translated": "스위치의 초기 활성화 여부를 설정합니다.\n\n제어 스위치를 렌더링하려면 `checked` prop을 사용하십시오."
+  },
+  "2fd07d88fe8fcb435ffbe02c9917946d8f1f8bd20ee186f2a685920b4a5ff9a7": {
+    "source": "Event handler called when the switch is activated or deactivated.",
+    "translated": "스위치가 활성화되거나 비활성화될 때 호출되는 이벤트 핸들러입니다."
+  },
+  "de9629e6746de5a9d1469df9db47d087e1f4fbe2801033c2c289ae61910f1bd0": {
+    "source": "The value submitted with the form when the switch is on.\nBy default, switch submits the \"on\" value, matching native checkbox behavior.",
+    "translated": "스위치가 켜진 상태일 때 폼과 함께 제출되는 값을 설정합니다.\n기본적으로 네이티브 체크박스 동작과 동일하게 `\"on\"` 값을 제출합니다."
+  },
+  "495bbc3f8bdcced68eac3a1165eadfe6bf71027f48f64f35f9dd38a987bb8d55": {
+    "source": "Identifies the form that owns the hidden input.\nUseful when the switch is rendered outside the form.",
+    "translated": "숨겨진 input을 소유하는 폼을 식별합니다.\n스위치가 폼 외부에 렌더링될 때 유용합니다."
+  },
+  "a5f1e8f8f946ae85e73f9b9729ec4686868acd7cbf9ffc9cc5edabe54b89c56a": {
+    "source": "The id of the hidden input element.\n\nWhen `nativeButton` is `true`, the id is applied to the root element.",
+    "translated": "숨겨진 input 요소의 id를 지정합니다.\n\n`nativeButton`이 `true`이면 id는 루트 요소에 적용됩니다."
+  },
+  "970451a67926e5c92b6a06ecdd741f93d3dcb2e7eadea937f90e5d0a14c64ba1": {
+    "source": "Whether the user should be unable to activate or deactivate the switch.",
+    "translated": "사용자가 스위치를 활성화하거나 비활성화할 수 없도록 설정합니다."
+  },
+  "71121281434f31893ed185ba512707ea5982da5468900e42f94b0ef75376406a": {
+    "source": "Whether the user must activate the switch before submitting a form.",
+    "translated": "폼을 제출하기 전에 사용자가 스위치를 반드시 활성화해야 하는지 여부를 지정합니다."
+  },
+  "ac4ccdcb82b44e93f6dbf432c27f8a0165dc5c8bf4baf982639ab8f60a0dbfad": {
+    "source": "The value submitted with the form when the switch is off.\nBy default, unchecked switches do not submit any value, matching native checkbox behavior.",
+    "translated": "스위치가 꺼진 상태일 때 폼과 함께 제출할 값을 지정합니다.\n기본적으로 체크되지 않은 스위치는 네이티브 체크박스 동작과 동일하게 아무 값도 제출하지 않습니다."
+  },
+  "63745420645aa1af08ecaaf3795a56a5e200e6b00c85801a3b7aac2f666401fa": {
+    "source": "The value of the Tab.",
+    "translated": "Tab의 값을 지정합니다."
+  },
+  "b2b4d540391efdcc86a2b8cd37cfb00e826b7e0911282344809e976b228da4e5": {
+    "source": "Whether the Tab is disabled.\n\nIf a first Tab on a `<Tabs.List>` is disabled, it won't initially be selected.\nInstead, the next enabled Tab will be selected.\nHowever, it does not work like this during server-side rendering, as it is not known\nduring pre-rendering which Tabs are disabled.\nTo work around it, ensure that `defaultValue` or `value` on `<Tabs.Root>` is set to an enabled Tab's value.",
+    "translated": "Tab의 비활성화 여부를 지정합니다.\n\n`<Tabs.List>`의 첫 번째 Tab이 비활성화된 경우 초기에 선택되지 않으며, 다음 활성화된 Tab이 선택됩니다.\n단, 서버 사이드 렌더링 중에는 사전 렌더링 시점에 어떤 Tab이 비활성화되어 있는지 알 수 없으므로 이 방식이 적용되지 않습니다.\n이 문제를 해결하려면 `<Tabs.Root>`의 `defaultValue` 또는 `value`를 활성화된 Tab의 값으로 설정하십시오."
+  },
+  "c27c3d498a572ef7ddeed9bed50e25d55a9dc0a2a318b51d12f12ebf4bd10737": {
+    "source": "Whether to render itself before React hydrates.\nThis minimizes the time that the indicator isn't visible after server-side rendering.",
+    "translated": "React 하이드레이션 전에 렌더링할지 여부를 지정합니다.\n이 옵션을 사용하면 서버 사이드 렌더링 후 인디케이터가 표시되지 않는 시간을 최소화합니다."
+  },
+  "ae06a08a7693239f78b92696444ac35769701c28073b2be2fa2e60e1d6a23c00": {
+    "source": "A Custom element for Tabs.IndicatorPrimitive. If not provided, the default Tabs.IndicatorPrimitive will be rendered.",
+    "translated": "Tabs.IndicatorPrimitive에 사용할 커스텀 요소를 지정합니다. 제공하지 않으면 기본 Tabs.IndicatorPrimitive가 렌더링됩니다."
+  },
+  "ca072414cda83a1a4a2149ec99def109fd89a0f2d4c10ca02b3a680224732f11": {
+    "source": "The value of the TabPanel. It will be shown when the Tab with the corresponding value is active.",
+    "translated": "TabPanel의 값을 지정합니다. 대응하는 값을 가진 Tab이 활성화될 때 표시됩니다."
+  },
+  "5cd29606d89a5ca912ca3834db7d5593c07c9efe6fe7990f6f652fa38e737f42": {
+    "source": "Whether to keep the HTML element in the DOM while the panel is hidden.",
+    "translated": "패널이 숨겨진 상태에서도 HTML 요소를 DOM에 유지할지 여부를 지정합니다."
+  },
+  "da8cb1e45e08a742602478b23c6f29dddbf41e18a14c6b0ed24b216d7aad2370": {
+    "source": "The default value. Use when the component is not controlled.\nWhen the value is `null`, no Tab will be active.",
+    "translated": "기본값을 지정합니다. 비제어 컴포넌트로 사용할 때 설정합니다.\n값이 `null`이면 활성화된 Tab이 없습니다."
+  },
+  "6e9179ef9ed417e578295a4b23531f50301250d78c9ca9a9dede554fc5805f3f": {
+    "source": "Callback invoked when new value is being set.\n\nThe event `reason` is `'none'` for user-initiated changes, such as a click\nor keyboard navigation; `'initial'` for the first automatic selection or\nfallback in uncontrolled roots when `defaultValue` is omitted or\n`undefined`, including when the implicit initial value is disabled or\nmissing; `'disabled'` for automatic fallback when the selected tab becomes\ndisabled in uncontrolled roots; or `'missing'` for automatic fallback when\nthe selected tab is removed, or when an explicit `defaultValue` never\nmatches a mounted tab in uncontrolled roots.\n\nFor automatic changes, the selected value can be `null` when no enabled Tab\nis available as a fallback.\n\nAutomatic changes cannot be canceled; calling `eventDetails.cancel()` for\n`'initial'`, `'disabled'`, or `'missing'` has no effect.",
+    "translated": "새 값이 설정될 때 호출되는 콜백입니다.\n\n이벤트 `reason`은 클릭이나 키보드 탐색 등 사용자가 직접 변경한 경우 `'none'`, 비제어 루트에서 `defaultValue`가 생략되거나 `undefined`일 때의 최초 자동 선택 또는 폴백(암묵적 초기값이 비활성화되었거나 존재하지 않는 경우 포함)인 경우 `'initial'`, 비제어 루트에서 선택된 탭이 비활성화되어 자동 폴백이 발생한 경우 `'disabled'`, 선택된 탭이 제거되었거나 비제어 루트에서 명시적인 `defaultValue`가 마운트된 탭과 일치하지 않는 경우 `'missing'`입니다.\n\n자동 변경 시 활성화할 수 있는 Tab이 없으면 선택된 값이 `null`일 수 있습니다.\n\n자동 변경은 취소할 수 없으며, `'initial'`, `'disabled'`, `'missing'`에 대해 `eventDetails.cancel()`을 호출해도 효과가 없습니다."
+  },
+  "a18e63fd9dc6517901d63c59b62b4e69b73b71f9ad83b08900e9c7e9791c05ad": {
+    "source": "The value of the currently active `Tab`. Use when the component is controlled.\nWhen the value is `null`, no Tab will be active.",
+    "translated": "현재 활성화된 `Tab`의 값을 지정합니다. 제어 컴포넌트로 사용할 때 설정합니다.\n값이 `null`이면 활성화된 Tab이 없습니다."
+  },
+  "f6880b6240b0cecfe787d64a2129cc621b5d49e2b4d6814e46e27492f2474210": {
+    "source": "Whether to automatically change the active tab on arrow key focus.\nOtherwise, tabs will be activated using <kbd>Enter</kbd> or <kbd>Space</kbd> key press.",
+    "translated": "방향키로 포커스를 이동할 때 활성 탭을 자동으로 변경할지 여부를 지정합니다.\n이 옵션을 사용하지 않으면 <kbd>Enter</kbd> 또는 <kbd>Space</kbd> 키를 눌러 탭을 활성화합니다."
+  },
+  "63e88d800c05d9d10eb74f2b0ad49de1dcbb9b70cb72a2742dd7054e1f4f5744": {
+    "source": "The component orientation (layout flow direction).",
+    "translated": "컴포넌트의 방향(레이아웃 흐름 방향)을 지정합니다."
+  },
+  "37b9a4e8fa3a37462dfe87ad27a5b352d6dbd4e249be92a40ab39e4cab5a4a6d": {
+    "source": "The default value of the input. Use when uncontrolled.",
+    "translated": "input의 기본값을 지정합니다. 비제어 방식으로 사용할 때 설정합니다."
+  },
+  "8144831b0af2ba4a75752622ac5f227a2da152a67a954274dd041eb2d57e5512": {
+    "source": "Event handler called when the selected value of the input changes.",
+    "translated": "input의 선택된 값이 변경될 때 호출되는 이벤트 핸들러입니다."
+  },
+  "5a4296658dd5386f2d85dce1cf820ed6b887873ef23523cbb09cffa76ca29e47": {
+    "source": "The value of the input. Use when controlled.",
+    "translated": "input의 값을 지정합니다. 제어 방식으로 사용할 때 설정합니다."
+  },
+  "2330adfe69dfeea80341c3593e3f9dd066f3bea611521473ef98b6eeb273a391": {
+    "source": "The type of the input element. It determines the kind of data that can be entered.",
+    "translated": "input 요소의 타입을 지정합니다. 입력할 수 있는 데이터의 종류를 결정합니다."
+  },
+  "29cacda013200fb6a58c05a7b6645f8aa6112024a747ba2570b226ca5a63706c": {
+    "source": "The default value of the textarea. Use when uncontrolled.",
+    "translated": "textarea의 기본값을 지정합니다. 비제어 방식으로 사용할 때 설정합니다."
+  },
+  "a4a1850dde771284fd3cdd69dc3c697609dc42edb3d250d2b821cc8284c37d9b": {
+    "source": "Event handler called when the value of the textarea changes.",
+    "translated": "textarea의 값이 변경될 때 호출되는 이벤트 핸들러입니다."
+  },
+  "2335aa6a1109222a59a2d869e30595781534163f125bb8068b0742fd49d75942": {
+    "source": "The value of the textarea. Use when controlled.",
+    "translated": "textarea의 값을 설정합니다. 제어 컴포넌트로 사용할 때 지정합니다."
+  },
+  "80140335b9fc23ca76b39b8e68d1ae1855e808041183b95f4b22695358bcfd7b": {
+    "source": "A global manager for toasts to use outside of a React component.",
+    "translated": "React 컴포넌트 외부에서 토스트를 사용하기 위한 전역 매니저입니다."
+  },
+  "e513c0d578b69b1fbdec8479d89aaccdef5ca8c2a742992838ed95ce73b2f682": {
+    "source": "The maximum number of toasts that can be displayed at once.\nWhen the limit is exceeded, the oldest toasts are marked as `limited` (via the `data-limited`\nattribute) rather than removed, so they can be hidden or animated out.",
+    "translated": "한 번에 표시할 수 있는 토스트의 최대 개수를 설정합니다.\n한도를 초과하면 가장 오래된 토스트가 제거되지 않고 `limited` 상태로 표시되며(`data-limited` 속성을 통해), 숨기거나 애니메이션으로 사라지게 할 수 있습니다."
+  },
+  "6ced99669d3deafc5ea519b44b76fcc519e35b08987579d9a595315b94d57dd7": {
+    "source": "The default amount of time (in ms) before a toast is auto dismissed.\nA value of `0` will prevent the toast from being dismissed automatically.",
+    "translated": "토스트가 자동으로 닫히기까지의 기본 시간(밀리초)을 설정합니다.\n`0`으로 설정하면 토스트가 자동으로 닫히지 않습니다."
+  },
+  "d9ea5200e3f543509bdbabc989befb89ba2d10750af371a206a36f8df256e82b": {
+    "source": "Direction(s) in which the toast can be swiped to dismiss.",
+    "translated": "토스트를 닫을 때 스와이프할 수 있는 방향을 설정합니다."
+  },
+  "f13fd9ec29c0e40dcfe1d0bd7188a58dbeee6a45d49a8cc63d4a376635d1d57a": {
+    "source": "The pressed state of the toggle group represented by an array of\nthe values of all pressed toggle buttons.\nThis is the uncontrolled counterpart of `value`.",
+    "translated": "눌린 상태인 모든 토글 버튼의 값으로 구성된 배열로 토글 그룹의 초기 눌림 상태를 설정합니다.\n`value`의 비제어 방식 대응 prop입니다."
+  },
+  "68722b02e740687486c8df052e1fec069fae5cfdca282447aded08910afd6e5e": {
+    "source": "Callback fired when the pressed states of the toggle group changes.",
+    "translated": "토글 그룹의 눌림 상태가 변경될 때 호출되는 콜백입니다."
+  },
+  "a2ed39d06c5f1591a4d49a68f2513177751778e57212b40b35a10f921988baf0": {
+    "source": "The pressed state of the toggle group represented by an array of\nthe values of all pressed toggle buttons.\nThis is the controlled counterpart of `defaultValue`.",
+    "translated": "눌린 상태인 모든 토글 버튼의 값으로 구성된 배열로 토글 그룹의 눌림 상태를 설정합니다.\n`defaultValue`의 제어 방식 대응 prop입니다."
+  },
+  "ec6f1652211fa1f6fa35acfd289c2a7d6fffb72fc56437fae5418f8ec8420c32": {
+    "source": "Whether the toggle group should ignore user interaction.",
+    "translated": "토글 그룹이 사용자 인터랙션을 무시할지 여부를 설정합니다."
+  },
+  "1955dd5f24e69be38ae4f5ed2943f0813d492ff42ababdfa5f2851142820b706": {
+    "source": "When `false` only one item in the group can be pressed. If any item in\nthe group becomes pressed, the others will become unpressed.\nWhen `true` multiple items can be pressed.",
+    "translated": "`false`이면 그룹 내에서 하나의 항목만 눌린 상태가 될 수 있습니다. 다른 항목이 눌리면 기존에 눌린 항목은 해제됩니다.\n`true`이면 여러 항목을 동시에 눌린 상태로 설정할 수 있습니다."
+  },
+  "5ec6c02af69bc6012e87cdb7574803fdacaed81a5073c99e53551ec75b1b8fbb": {
+    "source": "Whether the toggle button is currently pressed.\nThis is the uncontrolled counterpart of `pressed`.",
+    "translated": "토글 버튼의 초기 눌림 상태를 설정합니다.\n`pressed`의 비제어 방식 대응 prop입니다."
+  },
+  "08582c8db41ddd67b086c1406141bdde46b43ffb2956386d88a2222d1782dd50": {
+    "source": "Callback fired when the pressed state is changed.",
+    "translated": "눌림 상태가 변경될 때 호출되는 콜백입니다."
+  },
+  "ea1b2efeea5c7a9df3ac6e9d3be4827670127509050d401e614ab236f50ef594": {
+    "source": "Whether the toggle button is currently pressed.\nThis is the controlled counterpart of `defaultPressed`.",
+    "translated": "토글 버튼의 현재 눌림 상태를 설정합니다.\n`defaultPressed`의 제어 방식 대응 prop입니다."
+  },
+  "52e7c05b4cd1d1a6e7dacf04d88932b431fac02e2284ad9a42b98dcb81e0aa26": {
+    "source": "A unique string that identifies the toggle when used\ninside a toggle group.",
+    "translated": "토글 그룹 내에서 해당 토글을 식별하는 고유 문자열을 지정합니다."
+  },
+  "a61b3ca0df673338c2590b44cf80f521d5860908e9f1776b3675ce18423dbb5a": {
+    "source": "When `true` the item is disabled.",
+    "translated": "`true`이면 해당 항목을 비활성화합니다."
+  },
+  "c3e2cb655e35e28ee10109b2ca776e32d7f83cfb080297c67fce8a55082f895c": {
+    "source": "When `true` the item remains focusable when disabled.",
+    "translated": "`true`이면 비활성화된 상태에서도 항목에 포커스를 받을 수 있도록 설정합니다."
+  },
+  "cf78b5ead3ac30c5f891532427806726d8a88eadefb9288046d3de31972cbcc9": {
+    "source": "When `true` all toolbar items in the group are disabled.",
+    "translated": "`true`이면 그룹 내 모든 툴바 항목을 비활성화합니다."
+  },
+  "e04087706aeb0a159f90dd7c2f4945ad02603fee39da8dfb0cf0c396ea294df1": {
+    "source": "Callback fired when the value of the Input changes. It receives the new value and the original change event details from the underlying BaseToolbar.Input component.",
+    "translated": "Input의 값이 변경될 때 호출되는 콜백입니다. 새 값과 하위 BaseToolbar.Input 컴포넌트에서 전달된 원본 change 이벤트 정보를 받습니다."
+  },
+  "785b662f71b327b4a68be39f09e0068ed21629779d4794aa8130a277809d8669": {
+    "source": "If `true`, using keyboard navigation will wrap focus to the other end of the toolbar once the end is reached.",
+    "translated": "`true`이면 키보드 탐색 시 툴바의 끝에 도달했을 때 포커스가 반대쪽 끝으로 순환되도록 설정합니다."
+  },
+  "16b4a16884fc90fdcec9cd7e47c6143834f3f934e76cdf6d480e38523eec692c": {
+    "source": "A custom element for Tooltip.PortalPrimitive. If not provided, the default Tooltip.PortalPrimitive will be rendered.",
+    "translated": "Tooltip.PortalPrimitive에 사용할 커스텀 엘리먼트를 지정합니다. 지정하지 않으면 기본 Tooltip.PortalPrimitive가 렌더링됩니다."
+  },
+  "537e22f83af88636a23320cf61794677feebcf48251b93922a1327bc7841aade": {
+    "source": "A custom element for Tooltip.PositionerPrimitive. If not provided, the default Tooltip.PositionerPrimitive will be rendered.",
+    "translated": "Tooltip.PositionerPrimitive에 사용할 커스텀 엘리먼트를 지정합니다. 지정하지 않으면 기본 Tooltip.PositionerPrimitive가 렌더링됩니다."
+  },
+  "a2a1a55e1fbfadf1af282602f34ea1d7e55e1686390047390c9d45278f3b43b8": {
+    "source": "Whether the tooltip is initially open.\n\nTo render a controlled tooltip, use the `open` prop instead.",
+    "translated": "툴팁의 초기 열림 여부를 지정합니다.\n\n제어 툴팁을 렌더링하려면 `open` prop을 사용하십시오."
+  },
+  "8e180561208daee902ff1e8926475b96e386a5a68db08ac4a367f8a89c9c02cb": {
+    "source": "Event handler called when the tooltip is opened or closed.",
+    "translated": "툴팁이 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
+  },
+  "b3b0d3beb8119e5d058741df06c5299b5b7816655c5c51dc676b587fc8344692": {
+    "source": "Whether the tooltip is currently open.",
+    "translated": "툴팁의 현재 열림 여부를 지정합니다."
+  },
+  "3a0eefab199a95e75d5a65662aa7be9fc5e4391baae1e0587defe53ae661649b": {
+    "source": "A ref to imperative actions.\n- `unmount`: Unmounts the tooltip popup.\n- `close`: Closes the tooltip imperatively when called.",
+    "translated": "명령형 액션에 대한 ref를 지정합니다.\n- `unmount`: 툴팁 팝업을 언마운트합니다.\n- `close`: 호출 시 툴팁을 명령형으로 닫습니다."
+  },
+  "02dfccf46e5acc98e5ce1a4bb8b3ff28bea1aab7c84e9226c5b4de7308cd2b1d": {
+    "source": "The content of the tooltip.\nThis can be a regular React node or a render function that receives the `payload` of the active trigger.",
+    "translated": "툴팁의 콘텐츠를 지정합니다.\n일반 React 노드 또는 활성 트리거의 `payload`를 받는 렌더 함수를 전달할 수 있습니다."
+  },
+  "e3300ae90d1e43c5357326bb1e89bbd4cf14bf939a094c22c395da0932b8edae": {
+    "source": "ID of the trigger that the tooltip is associated with.\nThis is useful in conjunction with the `defaultOpen` prop to create an initially open tooltip.",
+    "translated": "툴팁과 연결할 트리거의 ID를 지정합니다.\n초기에 열린 상태의 툴팁을 만들 때 `defaultOpen` prop과 함께 사용하면 유용합니다."
+  },
+  "f0caf5ff93e91033ffec06b07efb05296a355287aaa32dbb510f650984fc20d1": {
+    "source": "Whether the tooltip is disabled.",
+    "translated": "툴팁의 비활성화 여부를 지정합니다."
+  },
+  "fda0667949d67b23f3c18ac7e517a75323d9186bdd6cfbc18fd73d9d18d35dc0": {
+    "source": "Whether the tooltip contents can be hovered without closing the tooltip.",
+    "translated": "툴팁이 닫히지 않은 상태에서 툴팁 콘텐츠를 호버할 수 있는지 여부를 지정합니다."
+  },
+  "928fa9fe30c0037e3a52de001e740424dff470d6b67e05987400308f0abc16d3": {
+    "source": "A handle to associate the tooltip with a trigger.\nIf specified, allows external triggers to control the tooltip's open state.\nCan be created with the Tooltip.createHandle() method.",
+    "translated": "툴팁을 트리거와 연결할 핸들을 지정합니다.\n지정하면 외부 트리거에서 툴팁의 열림 상태를 설정할 수 있습니다.\nTooltip.createHandle() 메서드로 생성할 수 있습니다."
+  },
+  "65fef8e866ab96325b620cf48588574bc1703d295a8793b627813c400eea4041": {
+    "source": "Event handler called after any animations complete when the tooltip is opened or closed.",
+    "translated": "툴팁이 열리거나 닫힐 때 모든 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
+  },
+  "1ec8473d582c0bbb6360c7019edeb9d8a2580ae637b9abf68507bad483848d8c": {
+    "source": "Determines which axis the tooltip should track the cursor on.",
+    "translated": "툴팁이 커서를 추적할 축을 지정합니다."
+  },
+  "0554b40f08c25e5c321d271c0d309e274c56219780f273cdc93829d20615ca66": {
+    "source": "ID of the trigger that the tooltip is associated with.\nThis is useful in conjunction with the `open` prop to create a controlled tooltip.\nThere's no need to specify this prop when the tooltip is uncontrolled (that is, when the `open` prop is not set).",
+    "translated": "툴팁과 연결할 트리거의 ID를 지정합니다.\n제어 툴팁을 만들 때 `open` prop과 함께 사용하면 유용합니다.\n비제어 툴팁(즉, `open` prop을 설정하지 않은 경우)에서는 이 prop을 지정할 필요가 없습니다."
+  },
+  "4f79b720e62c05d407f34ec63d13b52393b916ccb410763ea031cf4e7437c67b": {
+    "source": "How long to wait before closing the tooltip. Specified in milliseconds.",
+    "translated": "툴팁을 닫기 전 대기 시간을 밀리초 단위로 지정합니다."
+  },
+  "7cb7621b35546cc0128972ea6894bfbbc7bf951ee3942fc942d473958509fc70": {
+    "source": "Whether the tooltip should close when this trigger is clicked.",
+    "translated": "이 트리거를 클릭했을 때 툴팁을 닫을지 여부를 지정합니다."
+  },
+  "faeea086178f19b50e797f0d88465ea3d8ffc06dda89b45f367ae1db63f1ff3d": {
+    "source": "The placeholder value to display when no value is selected.\nThis is overridden by `children` of Select.Value if specified, or by a null item's label in `items`.",
+    "translated": "값이 선택되지 않은 경우 표시할 플레이스홀더 값을 설정합니다.\nSelect.Value의 `children`이 지정된 경우 또는 `items`에서 null 항목의 레이블이 지정된 경우 이 값은 무시됩니다."
+  }
+}

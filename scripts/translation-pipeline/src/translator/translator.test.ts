@@ -4,7 +4,7 @@ import * as cacheModule from '~/cache/cache';
 import * as clientModule from '~/translation/client';
 import * as translationModule from '~/translation/translate';
 import { translatePropsInfo } from '~/translator/translator';
-import type { TranslatableDoc } from '~/types';
+import { type TranslatableDoc, getTranslationUnitKey } from '~/types';
 
 const sampleProps: TranslatableDoc[] = [
     {
@@ -19,11 +19,14 @@ const sampleProps: TranslatableDoc[] = [
 ];
 
 function mockTranslations(translations: Record<string, string>): void {
-    vi.spyOn(translationModule, 'translateComponentUnits').mockImplementation(
-        async (_componentName, units) => {
-            return new Map(units.map((unit) => [unit.id, translations[unit.id] ?? unit.source]));
-        },
-    );
+    vi.spyOn(translationModule, 'translateUnits').mockImplementation(async (units) => {
+        return new Map(
+            units.map((unit) => [
+                getTranslationUnitKey(unit),
+                translations[unit.id] ?? unit.source,
+            ]),
+        );
+    });
 }
 
 function mockBatchMqmPass(): void {
@@ -37,17 +40,12 @@ function mockBatchMqmPass(): void {
                     verdict: 'PASS',
                     errors: [],
                 }));
-                return {
-                    content: JSON.stringify({ evaluations }),
-                    inputTokens: 0,
-                    outputTokens: 0,
-                    cost: 0,
-                };
+                return { content: JSON.stringify({ evaluations }) };
             }
         } catch {
             // not JSON — fall through
         }
-        return { content: '{}', inputTokens: 0, outputTokens: 0, cost: 0 };
+        return { content: '{}' };
     });
 }
 
@@ -66,7 +64,7 @@ describe('translatePropsInfo', () => {
         vi.restoreAllMocks();
     });
 
-    it('sends one component-scoped JSON translation request containing only cache misses', async () => {
+    it('translates only cache misses, in a single cross-component batch', async () => {
         const cachedKey = cacheModule.makeCacheKey('Click handler callback.');
         vi.spyOn(cacheModule, 'loadCache').mockReturnValue(
             new Map([
@@ -79,15 +77,16 @@ describe('translatePropsInfo', () => {
                 ],
             ]),
         );
-        const translateSpy = vi.spyOn(translationModule, 'translateComponentUnits');
+        const translateSpy = vi.spyOn(translationModule, 'translateUnits');
 
         const result = await translatePropsInfo(sampleProps, '/tmp/cache');
 
         expect(translateSpy).toHaveBeenCalledOnce();
-        expect(translateSpy).toHaveBeenCalledWith('Button', [
+        expect(translateSpy).toHaveBeenCalledWith([
             expect.objectContaining({
                 id: 'component.description',
                 source: 'A button component.',
+                componentName: 'Button',
             }),
         ]);
         expect(result.props[0].description).toBe('Button 컴포넌트입니다.');
@@ -135,17 +134,14 @@ describe('translatePropsInfo', () => {
                 return {
                     content: JSON.stringify({
                         evaluations: [
-                            { id: 'component.description', verdict: 'PASS', errors: [] },
+                            { id: '0:component.description', verdict: 'PASS', errors: [] },
                             {
-                                id: 'props[0].onClick.description',
+                                id: '0:props[0].onClick.description',
                                 verdict: 'FAIL',
                                 errors: [initialError],
                             },
                         ],
                     }),
-                    inputTokens: 0,
-                    outputTokens: 0,
-                    cost: 0,
                 };
             }
             if (llmCallCount === 2) {
@@ -153,29 +149,23 @@ describe('translatePropsInfo', () => {
                     content: JSON.stringify({
                         translations: [
                             {
-                                id: 'props[0].onClick.description',
+                                id: '0:props[0].onClick.description',
                                 translated: '수정되어도 검증 실패한 번역',
                             },
                         ],
                     }),
-                    inputTokens: 0,
-                    outputTokens: 0,
-                    cost: 0,
                 };
             }
             return {
                 content: JSON.stringify({
                     evaluations: [
                         {
-                            id: 'props[0].onClick.description',
+                            id: '0:props[0].onClick.description',
                             verdict: 'FAIL',
                             errors: [finalError],
                         },
                     ],
                 }),
-                inputTokens: 0,
-                outputTokens: 0,
-                cost: 0,
             };
         });
 
@@ -216,7 +206,7 @@ describe('translatePropsInfo', () => {
     it('marks a chunk degraded when batch MQM omits an expected id', async () => {
         vi.spyOn(clientModule, 'callLlm').mockResolvedValue({
             content: JSON.stringify({
-                evaluations: [{ id: 'component.description', verdict: 'PASS', errors: [] }],
+                evaluations: [{ id: '0:component.description', verdict: 'PASS', errors: [] }],
             }),
         });
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
@@ -228,7 +218,7 @@ describe('translatePropsInfo', () => {
             unverified: 2,
         });
         expect(result.batchFallbacks[0]?.reason).toContain(
-            'Missing response id: props[0].onClick.description',
+            'Missing response id: 0:props[0].onClick.description',
         );
     });
 
@@ -242,7 +232,7 @@ describe('translatePropsInfo', () => {
                     content: JSON.stringify({
                         evaluations: [
                             {
-                                id: 'component.description',
+                                id: '0:component.description',
                                 verdict: 'FAIL',
                                 errors: [
                                     {
@@ -256,13 +246,10 @@ describe('translatePropsInfo', () => {
                             },
                         ],
                     }),
-                    inputTokens: 0,
-                    outputTokens: 0,
-                    cost: 0,
                 };
             }
             // batch postprocess: invalid JSON
-            return { content: 'not-valid-json', inputTokens: 0, outputTokens: 0, cost: 0 };
+            return { content: 'not-valid-json' };
         });
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
@@ -277,38 +264,100 @@ describe('translatePropsInfo', () => {
         });
     });
 
-    it('lets component B hit the cache produced earlier in the run by component A', async () => {
+    it('translates a source shared by two components exactly once', async () => {
         const sharedSource = 'Click handler callback.';
         const propsWithSharedSource: TranslatableDoc[] = [
             { name: 'Button', props: [{ name: 'onClick', description: sharedSource }] },
             { name: 'IconButton', props: [{ name: 'onClick', description: sharedSource }] },
         ];
 
-        vi.spyOn(cacheModule, 'loadCache').mockReturnValue(new Map());
         const translateSpy = vi
-            .spyOn(translationModule, 'translateComponentUnits')
-            .mockImplementation(async (_componentName, units) => {
-                return new Map(units.map((unit) => [unit.id, '클릭 핸들러 콜백.']));
+            .spyOn(translationModule, 'translateUnits')
+            .mockImplementation(async (units) => {
+                return new Map(
+                    units.map((unit) => [getTranslationUnitKey(unit), '클릭 핸들러 콜백.']),
+                );
             });
 
-        await translatePropsInfo(propsWithSharedSource, '/tmp/cache');
+        const result = await translatePropsInfo(propsWithSharedSource, '/tmp/cache');
 
-        expect(translateSpy).toHaveBeenCalledTimes(1);
-        expect(translateSpy.mock.calls[0]?.[0]).toBe('Button');
+        expect(translateSpy).toHaveBeenCalledOnce();
+        expect(translateSpy.mock.calls[0]?.[0]).toHaveLength(1);
+        expect(result.props[0].props[0].description).toBe('클릭 핸들러 콜백.');
+        expect(result.props[1].props[0].description).toBe('클릭 핸들러 콜백.');
     });
 
-    it('saves cache once per component, not only at the end', async () => {
+    it('saves the cache once per run, after the MQM phase', async () => {
         const twoTranslatables: TranslatableDoc[] = [
             { name: 'A', description: 'first', props: [] },
             { name: 'B', description: 'second', props: [] },
         ];
         const saveCacheSpy = vi.spyOn(cacheModule, 'saveCache').mockImplementation(() => undefined);
-        vi.spyOn(translationModule, 'translateComponentUnits').mockImplementation(
-            async (_componentName, units) => new Map(units.map((unit) => [unit.id, '번역'])),
+        vi.spyOn(translationModule, 'translateUnits').mockImplementation(
+            async (units) => new Map(units.map((unit) => [getTranslationUnitKey(unit), '번역'])),
         );
 
         await translatePropsInfo(twoTranslatables, '/tmp/cache');
 
-        expect(saveCacheSpy).toHaveBeenCalledTimes(2);
+        expect(saveCacheSpy).toHaveBeenCalledOnce();
+        expect(saveCacheSpy.mock.calls[0]?.[1].size).toBe(2);
+    });
+
+    it('falls back to English when post-editing cannot restore a dropped code span', async () => {
+        const props: TranslatableDoc[] = [
+            {
+                name: 'Button',
+                description: 'Renders a `<button>` element.',
+                props: [],
+            },
+        ];
+        mockTranslations({ 'component.description': '버튼 요소를 렌더링합니다.' });
+        // MQM은 PASS를 주지만 결정론 체크가 코드 스팬 누락을 잡고, 후편집도 복구하지 못한다.
+        vi.spyOn(clientModule, 'callLlm').mockImplementation(async (messages) => {
+            const content = messages.find((m) => m.role === 'user')?.content ?? '';
+            const parsed = JSON.parse(content) as { units: { id: string }[] };
+            if (content.includes('initialTranslation')) {
+                return {
+                    content: JSON.stringify({
+                        translations: parsed.units.map(({ id }) => ({
+                            id,
+                            translated: '여전히 코드 스팬이 없습니다.',
+                        })),
+                    }),
+                };
+            }
+            return {
+                content: JSON.stringify({
+                    evaluations: parsed.units.map(({ id }) => ({
+                        id,
+                        verdict: 'PASS',
+                        errors: [],
+                    })),
+                }),
+            };
+        });
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+        const result = await translatePropsInfo(props, '/tmp/cache');
+
+        expect(result.props[0].description).toBe('Renders a `<button>` element.');
+        expect(result.componentReports[0].unverifiedOutcomes[0]).toMatchObject({
+            reason: 'preservation_fallback',
+            assurance: 'unverified',
+            violations: [{ rule: 'backtick_span', expected: '`<button>`' }],
+        });
+    });
+
+    it('falls back to English when a translation batch throws', async () => {
+        vi.spyOn(translationModule, 'translateUnits').mockRejectedValue(new Error('gateway down'));
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+        const result = await translatePropsInfo(sampleProps.slice(0, 1), '/tmp/cache');
+
+        expect(result.props[0].description).toBe('A button component.');
+        expect(result.componentReports[0].unverifiedOutcomes).toEqual(
+            expect.arrayContaining([expect.objectContaining({ reason: 'translation_failed' })]),
+        );
+        expect(result.batchFallbacks[0]?.reason).toContain('gateway down');
     });
 });

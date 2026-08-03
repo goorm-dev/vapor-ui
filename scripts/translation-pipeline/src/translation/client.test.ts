@@ -35,6 +35,28 @@ describe('callLlm', () => {
         expect(body.response_format).toEqual({ type: 'json_object' });
     });
 
+    it('retries 5xx twice with backoff, then gives up', async () => {
+        vi.useFakeTimers();
+        vi.mocked(fetch).mockResolvedValue({ ok: false, status: 503 } as Response);
+
+        const pending = callLlm([{ role: 'user', content: 'hello' }]);
+        await vi.runAllTimersAsync();
+        const result = await pending;
+
+        expect(vi.mocked(fetch)).toHaveBeenCalledTimes(3);
+        expect(result.statusCode).toBe(503);
+        vi.useRealTimers();
+    });
+
+    it('does not retry 4xx', async () => {
+        vi.mocked(fetch).mockResolvedValue({ ok: false, status: 400 } as Response);
+
+        const result = await callLlm([{ role: 'user', content: 'hello' }]);
+
+        expect(vi.mocked(fetch)).toHaveBeenCalledOnce();
+        expect(result.statusCode).toBe(400);
+    });
+
     it('omits response_format for text calls', async () => {
         vi.mocked(fetch).mockResolvedValueOnce({
             ok: true,

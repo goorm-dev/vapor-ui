@@ -1,0 +1,53 @@
+{
+    "name": "Badge",
+    "props": [
+        {
+            "name": "colorPalette",
+            "type": [
+                "primary",
+                "success",
+                "warning",
+                "danger",
+                "hint",
+                "contrast"
+            ],
+            "required": false,
+            "defaultValue": "primary"
+        },
+        {
+            "name": "shape",
+            "type": [
+                "square",
+                "pill"
+            ],
+            "required": false,
+            "defaultValue": "square"
+        },
+        {
+            "name": "size",
+            "type": [
+                "sm",
+                "md",
+                "lg"
+            ],
+            "required": false,
+            "defaultValue": "md"
+        },
+        {
+            "name": "className",
+            "type": [
+                "string | ((state: Badge.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 CSS 클래스를 지정합니다. 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Badge.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 때 사용합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 전달할 수 있습니다."
+        }
+    ]
+}

@@ -1,0 +1,61 @@
+{
+    "name": "Form",
+    "props": [
+        {
+            "name": "className",
+            "type": [
+                "string | ((state: Form.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 CSS 클래스를 지정합니다. 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "actionsRef",
+            "type": [
+                "React.RefObject<FormActions | null>"
+            ],
+            "required": false,
+            "description": "명령형 액션에 대한 ref입니다.\n- `validate`: 호출 시 모든 필드의 유효성을 검사합니다. 단일 필드만 검사하려면 필드 이름을 선택적으로 전달할 수 있습니다."
+        },
+        {
+            "name": "errors",
+            "type": [
+                "Errors"
+            ],
+            "required": false,
+            "description": "외부에서 반환된 유효성 검사 오류를 지정합니다. 일반적으로 서버 또는 폼 액션의 제출 후 반환됩니다.\n키는 `<Field.Root>`의 `name` 속성에 대응하고, 값은 해당 필드와 관련된 오류에 대응하는 객체여야 합니다."
+        },
+        {
+            "name": "onFormSubmit",
+            "type": [
+                "(formValues: Form.SubmitEventDetails, eventDetails: Form.SubmitEventDetails) => void"
+            ],
+            "required": false,
+            "description": "폼이 제출될 때 호출되는 이벤트 핸들러입니다.\n사용 시 네이티브 submit 이벤트에 `preventDefault()`가 호출됩니다."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: Form.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 스타일을 지정합니다. 컴포넌트의 상태를 기반으로 스타일 객체를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "validationMode",
+            "type": [
+                "FormValidationMode"
+            ],
+            "required": false,
+            "description": "폼의 유효성 검사 시점을 설정합니다.\n`<Field.Root>`의 `validationMode` prop이 이 값보다 우선합니다.\n\n- `onSubmit` (기본값): 폼 제출 시 필드의 유효성을 검사하며, 이후 변경 시마다 재검사합니다.\n- `onBlur`: 필드가 포커스를 잃을 때 유효성을 검사합니다.\n- `onChange`: 필드 값이 변경될 때마다 유효성을 검사합니다."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Form.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 때 사용합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 전달할 수 있습니다."
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "name": "DialogHeader",
+    "description": "Top section of the dialog, typically containing the title and a close button. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string | ((state: DialogHeader.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: DialogHeader.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

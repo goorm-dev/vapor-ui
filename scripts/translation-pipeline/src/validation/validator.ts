@@ -6,10 +6,6 @@ Evaluate the Korean translation of a JSDoc comment using the MQM taxonomy below.
 
 Use one of these categories exactly:
 
-Standard dimensions:
-- Terminology/Component name inconsistency — PascalCase component names (e.g. Breadcrumb, Button, TextInput) are translated, romanized, or rendered inconsistently; the original English spelling must be preserved exactly
-- Terminology/Token name altered — design token names are translated, altered, or normalized
-- Terminology/Prop name mistranslated — camelCase prop names (e.g. asChild, onClick, isDisabled) or quoted enum values (e.g. "sm", "ghost") are translated, romanized, or altered; HTML/ARIA attributes (e.g. aria-label, data-state) must also be preserved exactly
 - Accuracy/Mistranslation — source meaning is distorted or communicated differently
 - Accuracy/Omission — important source information is missing
 - Accuracy/Addition — information not present in the source is added
@@ -17,17 +13,11 @@ Standard dimensions:
 - Fluency/Style inconsistency — tone and voice are inconsistent within the docs
 - Fluency/Grammatical error — grammar error in Korean
 
-Design-system specific dimensions:
-- Markup & Code/Code block translated — text inside code blocks or inline code is translated or altered
-- Markup & Code/Link / anchor broken — hrefs, anchors, or link targets are damaged
-- Markup & Code/Markdown structure altered — heading, table, list, emphasis, or inline-code structure is changed
-- Cross-reference/Inter-page inconsistency — the same term is translated differently across pages
-- Cross-reference/See also mismatch — related-document link text no longer matches its target
-- Locale/Number / unit format — number or unit formatting is wrong for Korean docs
-- Locale/Directional text — LTR/RTL directionality is broken
+Do NOT report code-span, identifier, URL, or markdown-structure preservation problems — a separate
+deterministic checker owns those. Judge only meaning and Korean fluency.
 
 Severity:
-- critical: a developer could implement incorrectly, or a mandatory rule is violated. Examples: prop/type mistranslation, code block translation, broken markdown/code structure.
+- critical: a developer could implement incorrectly. Example: the described behavior is inverted.
 - major: seriously harms understanding or trust. Examples: behavior description distorted, important explanation omitted, non-source content added.
 - minor: lowers expression quality but does not block understanding. Examples: awkward literal phrasing, typo, style inconsistency.
 
@@ -36,22 +26,12 @@ If no errors exist, return errors as an empty array.`;
 
 // MqmCategory 유니온에서 파생 — 카테고리 추가/삭제는 types.ts 한 곳에서만
 export const MQM_CATEGORY_VALUES = [
-    'Terminology/Component name inconsistency',
-    'Terminology/Token name altered',
-    'Terminology/Prop name mistranslated',
     'Accuracy/Mistranslation',
     'Accuracy/Omission',
     'Accuracy/Addition',
     'Fluency/Unnatural phrasing',
     'Fluency/Style inconsistency',
     'Fluency/Grammatical error',
-    'Markup & Code/Code block translated',
-    'Markup & Code/Link / anchor broken',
-    'Markup & Code/Markdown structure altered',
-    'Cross-reference/Inter-page inconsistency',
-    'Cross-reference/See also mismatch',
-    'Locale/Number / unit format',
-    'Locale/Directional text',
 ] satisfies MqmCategory[];
 
 export const MQM_SEVERITY_VALUES = ['minor', 'major', 'critical'] satisfies MqmError['severity'][];

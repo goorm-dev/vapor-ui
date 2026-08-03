@@ -1,0 +1,51 @@
+{
+    "name": "SheetTrigger",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string | ((state: Sheet.Trigger.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "handle",
+            "type": ["DialogHandle<unknown>"],
+            "required": false,
+            "description": "A handle to associate the trigger with a dialog.\nCan be created with the Dialog.createHandle() method."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "ID of the trigger. In addition to being forwarded to the rendered element,\nit is also used to specify the active trigger for the dialog in controlled mode (with the DialogRoot `triggerId` prop)."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
+        },
+        {
+            "name": "payload",
+            "type": ["unknown"],
+            "required": false,
+            "description": "A payload to pass to the dialog when it is opened."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: Sheet.Trigger.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Sheet.Trigger.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

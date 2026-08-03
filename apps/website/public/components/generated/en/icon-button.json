@@ -1,0 +1,63 @@
+{
+    "name": "IconButton",
+    "props": [
+        {
+            "name": "colorPalette",
+            "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
+            "required": false,
+            "description": "Color palette applied to the button. Controls the background, text, and border colors for all visual variants. Default: `'primary'`"
+        },
+        {
+            "name": "shape",
+            "type": ["circle", "square"],
+            "required": false,
+            "defaultValue": "square"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Size of the button, controlling height, padding, and typography. Default: `'md'`"
+        },
+        {
+            "name": "variant",
+            "type": ["fill", "outline", "ghost"],
+            "required": false,
+            "description": "Visual style of the button. Default: `'fill'`"
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: IconButton.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "focusableWhenDisabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the button should be focusable when disabled."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: IconButton.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: IconButton.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

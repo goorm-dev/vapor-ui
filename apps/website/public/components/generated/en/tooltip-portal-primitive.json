@@ -1,0 +1,41 @@
+{
+    "name": "TooltipPortalPrimitive",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string | ((state: Tooltip.PortalPrimitive.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "container",
+            "type": [
+                "HTMLElement | ShadowRoot | React.RefObject<HTMLElement | ShadowRoot | null> | null"
+            ],
+            "required": false,
+            "description": "A parent element to render the portal element into."
+        },
+        {
+            "name": "keepMounted",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to keep the portal mounted in the DOM while the popup is hidden."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: Tooltip.PortalPrimitive.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Tooltip.PortalPrimitive.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

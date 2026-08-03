@@ -1,0 +1,26 @@
+{
+    "name": "InputGroupCounter",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null | string | number | bigint | false | true | ReactElement | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | ((props: RenderProps) => ReactNode)"
+            ],
+            "required": false
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: InputGroupCounter.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: InputGroupCounter.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

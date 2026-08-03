@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { translateComponentUnits } from '~/translation/translate';
+import { translateUnits } from '~/translation/translate';
 import type { TranslationUnit } from '~/types';
 
 const units: TranslationUnit[] = [
@@ -10,6 +10,7 @@ const units: TranslationUnit[] = [
         ownerName: 'Button',
         source: 'A button component.',
         componentIndex: 0,
+        componentName: 'Button',
     },
     {
         id: 'props[0].size.description',
@@ -17,6 +18,7 @@ const units: TranslationUnit[] = [
         ownerName: 'size',
         source: 'Controls the size.',
         componentIndex: 0,
+        componentName: 'Button',
         propIndex: 0,
     },
 ];
@@ -28,7 +30,7 @@ function mockFetchContent(content: string): void {
     } as Response);
 }
 
-describe('translateComponentUnits', () => {
+describe('translateUnits', () => {
     beforeEach(() => {
         vi.stubGlobal('fetch', vi.fn());
         vi.stubEnv('LITELLM_BASE_URL', 'https://litellm.internal');
@@ -45,18 +47,18 @@ describe('translateComponentUnits', () => {
         mockFetchContent(
             JSON.stringify({
                 translations: [
-                    { id: 'component.description', translated: 'Button 컴포넌트입니다.' },
-                    { id: 'props[0].size.description', translated: '크기를 지정합니다.' },
+                    { id: '0:component.description', translated: 'Button 컴포넌트입니다.' },
+                    { id: '0:props[0].size.description', translated: '크기를 지정합니다.' },
                 ],
             }),
         );
 
-        const result = await translateComponentUnits('Button', units);
+        const result = await translateUnits(units);
 
         expect(result).toEqual(
             new Map([
-                ['component.description', 'Button 컴포넌트입니다.'],
-                ['props[0].size.description', '크기를 지정합니다.'],
+                ['0:component.description', 'Button 컴포넌트입니다.'],
+                ['0:props[0].size.description', '크기를 지정합니다.'],
             ]),
         );
 
@@ -69,20 +71,20 @@ describe('translateComponentUnits', () => {
         expect(body.response_format?.type).toBe('json_schema');
         expect(body.response_format?.json_schema?.strict).toBe(true);
         expect(body.messages.at(-1)?.content).toContain('"componentName":"Button"');
-        expect(body.messages.at(-1)?.content).toContain('"id":"props[0].size.description"');
+        expect(body.messages.at(-1)?.content).toContain('"id":"0:props[0].size.description"');
     });
 
     it('sends a system prompt that includes MQM-mirrored style rules', async () => {
         mockFetchContent(
             JSON.stringify({
                 translations: [
-                    { id: 'component.description', translated: 'Button 컴포넌트입니다.' },
-                    { id: 'props[0].size.description', translated: '크기를 지정합니다.' },
+                    { id: '0:component.description', translated: 'Button 컴포넌트입니다.' },
+                    { id: '0:props[0].size.description', translated: '크기를 지정합니다.' },
                 ],
             }),
         );
 
-        await translateComponentUnits('Button', units);
+        await translateUnits(units);
 
         const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
             messages: { role: string; content: string }[];
@@ -107,18 +109,18 @@ describe('translateComponentUnits', () => {
         mockFetchContent(`\`\`\`json
 ${JSON.stringify({
     translations: [
-        { id: 'component.description', translated: 'Button 컴포넌트입니다.' },
-        { id: 'props[0].size.description', translated: '크기를 지정합니다.' },
+        { id: '0:component.description', translated: 'Button 컴포넌트입니다.' },
+        { id: '0:props[0].size.description', translated: '크기를 지정합니다.' },
     ],
 })}
 \`\`\``);
 
-        const result = await translateComponentUnits('Button', units);
+        const result = await translateUnits(units);
 
         expect(result).toEqual(
             new Map([
-                ['component.description', 'Button 컴포넌트입니다.'],
-                ['props[0].size.description', '크기를 지정합니다.'],
+                ['0:component.description', 'Button 컴포넌트입니다.'],
+                ['0:props[0].size.description', '크기를 지정합니다.'],
             ]),
         );
     });
@@ -126,12 +128,12 @@ ${JSON.stringify({
     it('throws when an expected id is missing', async () => {
         mockFetchContent(
             JSON.stringify({
-                translations: [{ id: 'component.description', translated: 'Button입니다.' }],
+                translations: [{ id: '0:component.description', translated: 'Button입니다.' }],
             }),
         );
 
-        await expect(translateComponentUnits('Button', units)).rejects.toThrow(
-            /Missing translation id: props\[0\]\.size\.description/,
+        await expect(translateUnits(units)).rejects.toThrow(
+            /Missing translation id: 0:props\[0\]\.size\.description/,
         );
     });
 
@@ -139,15 +141,15 @@ ${JSON.stringify({
         mockFetchContent(
             JSON.stringify({
                 translations: [
-                    { id: 'component.description', translated: 'Button입니다.' },
-                    { id: 'component.description', translated: '중복입니다.' },
-                    { id: 'props[0].size.description', translated: '크기입니다.' },
+                    { id: '0:component.description', translated: 'Button입니다.' },
+                    { id: '0:component.description', translated: '중복입니다.' },
+                    { id: '0:props[0].size.description', translated: '크기입니다.' },
                 ],
             }),
         );
 
-        await expect(translateComponentUnits('Button', units)).rejects.toThrow(
-            /Duplicate translation id: component\.description/,
+        await expect(translateUnits(units)).rejects.toThrow(
+            /Duplicate translation id: 0:component\.description/,
         );
     });
 
@@ -155,15 +157,15 @@ ${JSON.stringify({
         mockFetchContent(
             JSON.stringify({
                 translations: [
-                    { id: 'component.description', translated: 'Button입니다.' },
-                    { id: 'props[0].size.description', translated: '크기입니다.' },
-                    { id: 'props[9].ghost.description', translated: '알 수 없음' },
+                    { id: '0:component.description', translated: 'Button입니다.' },
+                    { id: '0:props[0].size.description', translated: '크기입니다.' },
+                    { id: '0:props[9].ghost.description', translated: '알 수 없음' },
                 ],
             }),
         );
 
-        await expect(translateComponentUnits('Button', units)).rejects.toThrow(
-            /Unknown translation id: props\[9\]\.ghost\.description/,
+        await expect(translateUnits(units)).rejects.toThrow(
+            /Unknown translation id: 0:props\[9\]\.ghost\.description/,
         );
     });
 
@@ -171,14 +173,14 @@ ${JSON.stringify({
         mockFetchContent(
             JSON.stringify({
                 translations: [
-                    { id: 'component.description', translated: '' },
-                    { id: 'props[0].size.description', translated: '크기입니다.' },
+                    { id: '0:component.description', translated: '' },
+                    { id: '0:props[0].size.description', translated: '크기입니다.' },
                 ],
             }),
         );
 
-        await expect(translateComponentUnits('Button', units)).rejects.toThrow(
-            /Empty translation for id: component\.description/,
+        await expect(translateUnits(units)).rejects.toThrow(
+            /Empty translation for id: 0:component\.description/,
         );
     });
 
@@ -186,15 +188,15 @@ ${JSON.stringify({
         mockFetchContent(
             JSON.stringify({
                 translations: [
-                    { id: 'component.description', translated: 'A button component.' },
-                    { id: 'props[0].size.description', translated: 'Controls the size.' },
+                    { id: '0:component.description', translated: 'A button component.' },
+                    { id: '0:props[0].size.description', translated: 'Controls the size.' },
                 ],
             }),
         );
 
-        const result = await translateComponentUnits('Button', units);
+        const result = await translateUnits(units);
 
-        expect(result.get('component.description')).toBe('A button component.');
-        expect(result.get('props[0].size.description')).toBe('Controls the size.');
+        expect(result.get('0:component.description')).toBe('A button component.');
+        expect(result.get('0:props[0].size.description')).toBe('Controls the size.');
     });
 });

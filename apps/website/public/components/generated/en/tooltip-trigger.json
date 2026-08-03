@@ -1,0 +1,63 @@
+{
+    "name": "TooltipTrigger",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string | ((state: Tooltip.Trigger.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before closing the tooltip. Specified in milliseconds."
+        },
+        {
+            "name": "closeOnClick",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the tooltip should close when this trigger is clicked."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before opening the tooltip. Specified in milliseconds."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "If `true`, the tooltip will not open when interacting with this trigger.\nNote that this doesn't apply the `disabled` attribute to the trigger element.\nIf you want to disable the trigger element itself, you can pass the `disabled` prop to the trigger element via the `render` prop."
+        },
+        {
+            "name": "handle",
+            "type": ["TooltipHandle<unknown>"],
+            "required": false,
+            "description": "A handle to associate the trigger with a tooltip."
+        },
+        {
+            "name": "payload",
+            "type": ["unknown"],
+            "required": false,
+            "description": "A payload to pass to the tooltip when it is opened."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: Tooltip.Trigger.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Tooltip.Trigger.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

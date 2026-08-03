@@ -1,22 +1,29 @@
 import { type CacheStore, loadCache, makeCacheKey, saveCache } from '~/cache/cache';
 import { type ComponentReport, buildComponentReports } from '~/report/report';
-import { translateComponentUnits } from '~/translation/translate';
-import { processComponentLifecycle } from '~/translator/batch-lifecycle';
-import type { TranslatableDoc, TranslationOutcome, TranslationUnit } from '~/types';
+import { translateUnits } from '~/translation/translate';
+import { processBatchLifecycle } from '~/translator/batch-lifecycle';
+import {
+    type TranslatableDoc,
+    type TranslationOutcome,
+    type TranslationUnit,
+    getTranslationUnitKey,
+} from '~/types';
 
 const TRANSLATION_BATCH_SIZE = 20;
+/** 60초 타임아웃 × 실측 81 tok/s ÷ 유닛당 출력 토큰 ÷ 안전계수 2 (KAN-11) */
+const MQM_BATCH_SIZE = 74;
+const BATCH_CONCURRENCY = 16;
+
+export { getTranslationUnitKey };
 
 // ─── Translation Units ────────────────────────────────────────────────────────
-
-export function getTranslationUnitKey(unit: TranslationUnit): string {
-    return `${unit.componentIndex}:${unit.id}`;
-}
 
 export function collectTranslationUnits(props: TranslatableDoc[]): TranslationUnit[] {
     const units: TranslationUnit[] = [];
 
     for (let componentIndex = 0; componentIndex < props.length; componentIndex++) {
         const component = props[componentIndex];
+        const componentName = component.name;
         if (component.description) {
             units.push({
                 id: 'component.description',
@@ -24,6 +31,7 @@ export function collectTranslationUnits(props: TranslatableDoc[]): TranslationUn
                 ownerName: component.name,
                 source: component.description,
                 componentIndex,
+                componentName,
             });
         }
 
@@ -36,6 +44,7 @@ export function collectTranslationUnits(props: TranslatableDoc[]): TranslationUn
                     ownerName: prop.name,
                     source: prop.description,
                     componentIndex,
+                    componentName,
                     propIndex,
                 });
             }
@@ -87,12 +96,24 @@ function cacheHitOutcome(unit: TranslationUnit, translated: string): Translation
     };
 }
 
-function groupByComponent(units: TranslationUnit[]): Map<number, TranslationUnit[]> {
-    const groups = new Map<number, TranslationUnit[]>();
+/** 번역 콜 자체가 실패한 유닛은 영어 원문을 그대로 쓴다 — 한 배치가 전체 실행을 죽이지 않도록. */
+function translationFailedOutcome(unit: TranslationUnit): TranslationOutcome {
+    return {
+        id: unit.id,
+        translated: unit.source,
+        assurance: 'unverified',
+        reportable: true,
+        reason: 'translation_failed',
+    };
+}
+
+/** 같은 원문을 공유하는 유닛들. 74.3%가 중복이므로 고유 원문만 번역한다 (KAN-11). */
+function groupBySource(units: TranslationUnit[]): Map<string, TranslationUnit[]> {
+    const groups = new Map<string, TranslationUnit[]>();
     for (const unit of units) {
-        const current = groups.get(unit.componentIndex) ?? [];
+        const current = groups.get(unit.source) ?? [];
         current.push(unit);
-        groups.set(unit.componentIndex, current);
+        groups.set(unit.source, current);
     }
     return groups;
 }
@@ -103,6 +124,21 @@ function chunkArray<T>(items: T[], size: number): T[][] {
         chunks.push(items.slice(index, index + size));
     }
     return chunks;
+}
+
+/** 손으로 만든 워커 풀 — 의존성 하나(meow)를 유지하기 위해 p-limit을 쓰지 않는다. */
+async function forEachWithConcurrency<T>(
+    items: T[],
+    limit: number,
+    task: (item: T) => Promise<void>,
+): Promise<void> {
+    let cursor = 0;
+    const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+        while (cursor < items.length) {
+            await task(items[cursor++]);
+        }
+    });
+    await Promise.all(workers);
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────────
@@ -147,59 +183,76 @@ export async function translatePropsInfo(
     }
 
     const outcomes = new Map<string, TranslationOutcome>();
-    const componentGroups = groupByComponent(units);
     const batchFallbacks: BatchFallbackEntry[] = [];
 
-    const componentEntries = [...componentGroups.entries()];
-    const totalComponents = componentEntries.length;
-    let componentCount = 0;
+    // ── 중복 제거: 고유 원문 하나당 대표 유닛 하나 ──
+    const groups = groupBySource(units);
+    const representatives = [...groups.values()].map((group) => group[0]);
+    progress(`deduplicated: ${units.length} text(s) → ${representatives.length} unique source(s)`);
 
-    for (const [componentIndex, componentUnits] of componentEntries) {
-        const componentName = props[componentIndex]?.name ?? `component#${componentIndex}`;
-        componentCount++;
-        progress(`[${componentCount}/${totalComponents}] ${componentName}`);
-        const missUnits: TranslationUnit[] = [];
+    const fanOut = (representative: TranslationUnit, outcome: TranslationOutcome): void => {
+        for (const unit of groups.get(representative.source) ?? []) {
+            outcomes.set(getTranslationUnitKey(unit), { ...outcome, id: unit.id });
+        }
+    };
 
-        for (const unit of componentUnits) {
-            const cacheEntry = cacheStore.get(makeCacheKey(unit.source));
-            if (cacheEntry) {
-                outcomes.set(
-                    getTranslationUnitKey(unit),
-                    cacheHitOutcome(unit, cacheEntry.translated),
-                );
-            } else {
-                missUnits.push(unit);
+    // ── 캐시 조회 ──
+    const missing: TranslationUnit[] = [];
+    for (const representative of representatives) {
+        const cacheEntry = cacheStore.get(makeCacheKey(representative.source));
+        if (cacheEntry) {
+            fanOut(representative, cacheHitOutcome(representative, cacheEntry.translated));
+        } else {
+            missing.push(representative);
+        }
+    }
+    progress(`cache: ${representatives.length - missing.length} hit, ${missing.length} miss`);
+
+    // ── 1단계: 번역 전수 ──
+    const translations = new Map<string, string>();
+    const translationBatches = chunkArray(missing, TRANSLATION_BATCH_SIZE);
+    progress(`translating ${missing.length} source(s) in ${translationBatches.length} batch(es)`);
+
+    await forEachWithConcurrency(translationBatches, BATCH_CONCURRENCY, async (batch) => {
+        try {
+            for (const [key, translated] of await translateUnits(batch)) {
+                translations.set(key, translated);
+            }
+        } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            batchFallbacks.push({
+                componentName: batch[0]?.componentName ?? '-',
+                reason: `translation batch failed: ${message}`,
+            });
+            for (const unit of batch) {
+                fanOut(unit, translationFailedOutcome(unit));
             }
         }
+    });
 
-        if (missUnits.length > 0) {
-            for (const componentChunk of chunkArray(missUnits, TRANSLATION_BATCH_SIZE)) {
-                const translations = await translateComponentUnits(componentName, componentChunk);
+    // ── 2단계: MQM 전수 (컴포넌트 횡단 배치) ──
+    const translatedUnits = missing.filter((unit) => translations.has(getTranslationUnitKey(unit)));
+    const mqmBatches = chunkArray(translatedUnits, MQM_BATCH_SIZE);
+    progress(`evaluating ${translatedUnits.length} source(s) in ${mqmBatches.length} batch(es)`);
 
-                const processed = await processComponentLifecycle(
-                    componentName,
-                    componentChunk,
-                    translations,
-                );
-                for (const reason of processed.batchFailureReasons) {
-                    batchFallbacks.push({ componentName, reason });
-                }
-
-                for (const [unit, outcome] of processed.outcomes) {
-                    outcomes.set(getTranslationUnitKey(unit), outcome);
-                    if (outcome.assurance === 'verified') {
-                        cacheStore.set(makeCacheKey(unit.source), {
-                            source: unit.source,
-                            translated: outcome.translated,
-                        });
-                    }
-                }
+    await forEachWithConcurrency(mqmBatches, BATCH_CONCURRENCY, async (batch) => {
+        const processed = await processBatchLifecycle(batch, translations);
+        for (const reason of processed.batchFailureReasons) {
+            batchFallbacks.push({ componentName: batch[0]?.componentName ?? '-', reason });
+        }
+        for (const [unit, outcome] of processed.outcomes) {
+            fanOut(unit, outcome);
+            if (outcome.assurance === 'verified') {
+                cacheStore.set(makeCacheKey(unit.source), {
+                    source: unit.source,
+                    translated: outcome.translated,
+                });
             }
         }
+    });
 
-        if (cacheOutputDir) {
-            saveCache(cacheOutputDir, cacheStore);
-        }
+    if (cacheOutputDir) {
+        saveCache(cacheOutputDir, cacheStore);
     }
 
     if (batchFallbacks.length > 0) {

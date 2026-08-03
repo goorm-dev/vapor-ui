@@ -1,0 +1,36 @@
+{
+    "name": "ToastProviderPrimitive",
+    "props": [
+        {
+            "name": "toastManager",
+            "type": [
+                "ToastManager"
+            ],
+            "required": false,
+            "description": "React 컴포넌트 외부에서 토스트를 사용하기 위한 전역 매니저입니다."
+        },
+        {
+            "name": "children",
+            "type": [
+                "ReactNode"
+            ],
+            "required": false
+        },
+        {
+            "name": "limit",
+            "type": [
+                "number"
+            ],
+            "required": false,
+            "description": "한 번에 표시할 수 있는 토스트의 최대 개수를 설정합니다.\n한도를 초과하면 가장 오래된 토스트가 제거되지 않고 `limited` 상태로 표시되며(`data-limited` 속성을 통해), 숨기거나 애니메이션으로 사라지게 할 수 있습니다."
+        },
+        {
+            "name": "timeout",
+            "type": [
+                "number"
+            ],
+            "required": false,
+            "description": "토스트가 자동으로 닫히기까지의 기본 시간(밀리초)을 설정합니다.\n`0`으로 설정하면 토스트가 자동으로 닫히지 않습니다."
+        }
+    ]
+}

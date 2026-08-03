@@ -1,0 +1,71 @@
+{
+    "name": "Text",
+    "props": [
+        {
+            "name": "foreground",
+            "type": [
+                "white",
+                "inverse",
+                "primary-100",
+                "primary-200",
+                "secondary-100",
+                "success-100",
+                "success-200",
+                "warning-100",
+                "warning-200",
+                "danger-100",
+                "danger-200",
+                "hint-100",
+                "hint-200",
+                "contrast-100",
+                "contrast-200",
+                "secondary-200",
+                "normal-100",
+                "normal-200"
+            ],
+            "required": false,
+            "defaultValue": "normal-200"
+        },
+        {
+            "name": "typography",
+            "type": [
+                "body1",
+                "display1",
+                "display2",
+                "display3",
+                "display4",
+                "heading1",
+                "heading2",
+                "heading3",
+                "heading4",
+                "heading5",
+                "heading6",
+                "subtitle1",
+                "subtitle2",
+                "body2",
+                "body3",
+                "body4",
+                "code1",
+                "code2"
+            ],
+            "required": false,
+            "defaultValue": "body1"
+        },
+        {
+            "name": "className",
+            "type": [
+                "string | ((state: Text.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 CSS 클래스를 지정합니다. 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Text.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 때 사용합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 전달할 수 있습니다."
+        }
+    ]
+}

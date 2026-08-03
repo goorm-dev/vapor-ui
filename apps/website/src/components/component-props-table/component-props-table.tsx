@@ -36,7 +36,11 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
     React.useEffect(() => {
         const loadComponentData = async () => {
             try {
-                const response = await fetch(`/components/generated/${componentName}.json`);
+                // ko가 있으면 ko, 없으면 en으로 폴백한다 (번역 파이프라인 산출물)
+                const korean = await fetch(`/components/generated/ko/${componentName}.json`);
+                const response = korean.ok
+                    ? korean
+                    : await fetch(`/components/generated/en/${componentName}.json`);
                 if (!response.ok) {
                     throw new Error(`Failed to load component data for ${componentName}`);
                 }

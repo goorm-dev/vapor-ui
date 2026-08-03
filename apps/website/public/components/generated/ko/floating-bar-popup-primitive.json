@@ -1,0 +1,45 @@
+{
+    "name": "FloatingBarPopupPrimitive",
+    "props": [
+        {
+            "name": "className",
+            "type": [
+                "string | ((state: FloatingBar.Popup.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 CSS 클래스를 지정합니다. 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "finalFocus",
+            "type": [
+                "false | true | React.RefObject<HTMLElement | null> | ((closeType: InteractionType) => (boolean | void | HTMLElement | null))"
+            ],
+            "required": false,
+            "description": "팝오버가 닫힐 때 포커스를 이동할 요소를 설정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작(트리거 또는 이전에 포커스된 요소)에 따라 포커스를 이동합니다.\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 인터랙션 유형(`mouse`, `touch`, `pen`, `keyboard`)과 함께 호출됩니다.\n  포커스할 요소를 반환하거나, 기본 동작을 사용하려면 `true`, 기본 동작으로 폴백하려면 `null`, 아무 작업도 하지 않으려면 `false`/`undefined`를 반환합니다."
+        },
+        {
+            "name": "initialFocus",
+            "type": [
+                "false | true | React.RefObject<HTMLElement | null> | ((openType: InteractionType) => (boolean | void | HTMLElement | null))"
+            ],
+            "required": false,
+            "description": "팝오버가 열릴 때 포커스를 이동할 요소를 설정합니다.\n기본적으로 팝업 내부의 첫 번째 탭 가능한 요소로 포커스가 이동하지만, 터치로 팝오버가 열린 경우에는 가상 키보드 열림을 방지하기 위해 팝업 자체에 포커스를 설정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작(첫 번째 탭 가능한 요소 또는 팝업)에 따라 포커스를 이동합니다.\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 인터랙션 유형(`mouse`, `touch`, `pen`, `keyboard`)과 함께 호출됩니다.\n  포커스할 요소를 반환하거나, 기본 동작을 사용하려면 `true`, 기본 동작으로 폴백하려면 `null`, 아무 작업도 하지 않으려면 `false`/`undefined`를 반환합니다."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: FloatingBar.Popup.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 스타일을 지정합니다. 컴포넌트의 상태를 기반으로 스타일 객체를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: FloatingBar.Popup.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 때 사용합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 전달할 수 있습니다."
+        }
+    ]
+}

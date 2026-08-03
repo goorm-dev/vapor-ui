@@ -1,0 +1,22 @@
+{
+    "name": "DialogHeader",
+    "description": "다이얼로그의 상단 영역으로, 일반적으로 제목과 닫기 버튼을 포함합니다. `<div>` 요소를 렌더링합니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": [
+                "string | ((state: DialogHeader.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 CSS 클래스를 지정합니다. 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: DialogHeader.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 때 사용합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 전달할 수 있습니다."
+        }
+    ]
+}

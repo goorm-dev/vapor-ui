@@ -71,6 +71,10 @@ describe('renderReport', () => {
             verifiedCount: 1,
             unverifiedCount: 1,
             cachedCount: 0,
+            passRate: 0.5,
+            reasonCounts: {},
+            categoryCounts: {},
+            violationCounts: {},
             batchFallbacks: [],
             components: [
                 {
@@ -233,6 +237,7 @@ describe('buildComponentReports', () => {
             ownerName: 'Button',
             source: 'A button component.',
             componentIndex: 0,
+            componentName: 'Button',
         },
         {
             id: 'props[0].size.description',
@@ -240,6 +245,7 @@ describe('buildComponentReports', () => {
             ownerName: 'size',
             source: 'Controls the size.',
             componentIndex: 0,
+            componentName: 'Button',
             propIndex: 0,
         },
     ];

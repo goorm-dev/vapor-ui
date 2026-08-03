@@ -1,7 +1,13 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import type { MqmError, TranslatableDoc, TranslationOutcome, TranslationUnit } from '~/types';
+import {
+    type MqmError,
+    type TranslatableDoc,
+    type TranslationOutcome,
+    type TranslationUnit,
+    getTranslationUnitKey,
+} from '~/types';
 
 export interface ComponentReport {
     name: string;
@@ -24,12 +30,16 @@ export interface TranslationReport {
     verifiedCount: number;
     unverifiedCount: number;
     cachedCount: number;
+    /** 실행 전체 PASS율 (verified / total) */
+    passRate: number;
+    /** 실패 사유별 건수 */
+    reasonCounts: Record<string, number>;
+    /** MQM 카테고리별 오류 건수 */
+    categoryCounts: Record<string, number>;
+    /** 결정론 보존 규칙별 위반 건수 */
+    violationCounts: Record<string, number>;
     components: ComponentReport[];
     batchFallbacks: BatchFallbackReportEntry[];
-}
-
-function getTranslationUnitKey(unit: TranslationUnit): string {
-    return `${unit.componentIndex}:${unit.id}`;
 }
 
 export function buildComponentReports(
@@ -58,17 +68,41 @@ export function buildComponentReports(
     });
 }
 
+function tally(values: string[]): Record<string, number> {
+    const counts: Record<string, number> = {};
+    for (const value of values) {
+        counts[value] = (counts[value] ?? 0) + 1;
+    }
+    return counts;
+}
+
 export function buildReport(
     components: ComponentReport[],
     batchFallbacks: BatchFallbackReportEntry[] = [],
 ): TranslationReport {
+    const totalTexts = components.reduce((sum, component) => sum + component.totalTexts, 0);
+    const verifiedCount = components.reduce((sum, component) => sum + component.verified, 0);
+    const reportedOutcomes = components.flatMap((component) => component.unverifiedOutcomes);
+
     return {
         generatedAt: new Date().toISOString(),
         totalComponents: components.length,
-        totalTexts: components.reduce((sum, component) => sum + component.totalTexts, 0),
-        verifiedCount: components.reduce((sum, component) => sum + component.verified, 0),
+        totalTexts,
+        verifiedCount,
         unverifiedCount: components.reduce((sum, component) => sum + component.unverified, 0),
         cachedCount: components.reduce((sum, component) => sum + component.cached, 0),
+        passRate: totalTexts === 0 ? 1 : verifiedCount / totalTexts,
+        reasonCounts: tally(reportedOutcomes.map((outcome) => outcome.reason)),
+        categoryCounts: tally(
+            reportedOutcomes.flatMap((outcome) =>
+                (outcome.errors ?? []).map((error) => error.category),
+            ),
+        ),
+        violationCounts: tally(
+            reportedOutcomes.flatMap((outcome) =>
+                (outcome.violations ?? []).map((violation) => violation.rule),
+            ),
+        ),
         components,
         batchFallbacks,
     };
@@ -105,6 +139,19 @@ function renderMqmErrors(title: string, errors: MqmError[]): string[] {
     ];
 }
 
+function renderDistribution(title: string, counts: Record<string, number>): string[] {
+    const rows = Object.entries(counts).sort(([, a], [, b]) => b - a);
+    if (rows.length === 0) return [];
+    return [
+        `${title}:`,
+        '',
+        '| Key | Count |',
+        '|---|---:|',
+        ...rows.map(([key, count]) => `| ${key} | ${count} |`),
+        '',
+    ];
+}
+
 function renderUnverifiedDetail(component: ComponentReport, outcome: TranslationOutcome): string {
     const lines = [
         `### ${component.name} — ${outcome.id}`,
@@ -115,6 +162,17 @@ function renderUnverifiedDetail(component: ComponentReport, outcome: Translation
 
     if (outcome.errors && outcome.errors.length > 0) {
         lines.push('', ...renderMqmErrors('MQM errors', outcome.errors));
+    }
+
+    if (outcome.violations && outcome.violations.length > 0) {
+        lines.push(
+            '',
+            'Preservation violations:',
+            '',
+            ...outcome.violations.map(
+                (violation) => `- ${violation.rule}: ${inlineCode(violation.expected)}`,
+            ),
+        );
     }
 
     return lines.join('\n');
@@ -139,7 +197,18 @@ export function renderReport(report: TranslationReport): string {
         `| Verified | ${report.verifiedCount} |`,
         `| Unverified | ${report.unverifiedCount} |`,
         `| Cached | ${report.cachedCount} |`,
+        `| Pass rate | ${(report.passRate * 100).toFixed(1)}% |`,
         `| Batch fallbacks | ${report.batchFallbacks.length} |`,
+        '',
+        '## Failure Distribution',
+        '',
+        ...(Object.keys(report.reasonCounts).length === 0
+            ? ['No reportable failures.']
+            : [
+                  ...renderDistribution('By reason', report.reasonCounts),
+                  ...renderDistribution('By MQM category', report.categoryCounts),
+                  ...renderDistribution('By preservation rule', report.violationCounts),
+              ]),
         '',
         '## Batch Fallbacks',
         '',

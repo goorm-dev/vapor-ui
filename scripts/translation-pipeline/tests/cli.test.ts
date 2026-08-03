@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { run } from '~/cli/run';
 import * as clientModule from '~/translation/client';
 import * as translationModule from '~/translation/translate';
+import { getTranslationUnitKey } from '~/types';
 
 const validEnv = {
     LITELLM_API_KEY: 'test-key',
@@ -51,15 +52,20 @@ describe('E2E: CLI → translator → 파일 출력', () => {
         writeInputFile(inputDir);
 
         // LLM 호출 직전 모듈만 fixture로 대체
-        vi.spyOn(translationModule, 'translateComponentUnits').mockImplementation(
-            async (_componentName, units) =>
-                new Map(units.map((unit) => [unit.id, `[ko]${unit.source}`])),
+        vi.spyOn(translationModule, 'translateUnits').mockImplementation(
+            async (units) =>
+                new Map(
+                    units.map((unit) => [
+                        getTranslationUnitKey(unit),
+                        `[ko]${unit.source}`,
+                    ]),
+                ),
         );
         vi.spyOn(clientModule, 'callLlm').mockResolvedValue({
             content: JSON.stringify({
                 evaluations: [
-                    { id: 'component.description', verdict: 'PASS', errors: [] },
-                    { id: 'props[0].size.description', verdict: 'PASS', errors: [] },
+                    { id: '0:component.description', verdict: 'PASS', errors: [] },
+                    { id: '0:props[0].size.description', verdict: 'PASS', errors: [] },
                 ],
             }),
         });
@@ -109,11 +115,11 @@ describe('E2E: CLI → translator → 파일 출력', () => {
         };
 
         // translate: 초기 번역 반환
-        vi.spyOn(translationModule, 'translateComponentUnits').mockImplementation(
-            async (_componentName, units) =>
+        vi.spyOn(translationModule, 'translateUnits').mockImplementation(
+            async (units) =>
                 new Map(
                     units.map((unit) => [
-                        unit.id,
+                        getTranslationUnitKey(unit),
                         unit.id === 'props[0].size.description'
                             ? '버튼의 크기를 제어합니다.'
                             : `[ko]${unit.source}`,
@@ -129,9 +135,9 @@ describe('E2E: CLI → translator → 파일 출력', () => {
                 return {
                     content: JSON.stringify({
                         evaluations: [
-                            { id: 'component.description', verdict: 'PASS', errors: [] },
+                            { id: '0:component.description', verdict: 'PASS', errors: [] },
                             {
-                                id: 'props[0].size.description',
+                                id: '0:props[0].size.description',
                                 verdict: 'FAIL',
                                 errors: [mqmError],
                             },
@@ -147,7 +153,7 @@ describe('E2E: CLI → translator → 파일 출력', () => {
                     content: JSON.stringify({
                         translations: [
                             {
-                                id: 'props[0].size.description',
+                                id: '0:props[0].size.description',
                                 translated: '버튼의 크기를 지정합니다.',
                             },
                         ],
@@ -160,7 +166,7 @@ describe('E2E: CLI → translator → 파일 출력', () => {
             // 최종 MQM: PASS
             return {
                 content: JSON.stringify({
-                    evaluations: [{ id: 'props[0].size.description', verdict: 'PASS', errors: [] }],
+                    evaluations: [{ id: '0:props[0].size.description', verdict: 'PASS', errors: [] }],
                 }),
                 inputTokens: 0,
                 outputTokens: 0,

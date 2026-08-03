@@ -1,0 +1,29 @@
+{
+    "name": "VStack",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string | ((state: VStack.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "inline",
+            "type": ["boolean"],
+            "required": false
+        },
+        {
+            "name": "reverse",
+            "type": ["boolean"],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Flex.State) => ReactElement) | ((props: HTMLProps, state: Box.State) => ReactElement) | ((props: HTMLProps, state: VStack.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

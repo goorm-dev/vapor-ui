@@ -1,0 +1,62 @@
+{
+    "name": "TextInput",
+    "props": [
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "required": false,
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "required": false,
+            "description": "The default value of the input. Use when uncontrolled.",
+            "defaultValue": ""
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: string, event: TextInput.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the selected value of the input changes."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": false,
+            "description": "The value of the input. Use when controlled."
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: TextInput.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "type",
+            "type": ["search", "text", "tel", "url", "email", "password"],
+            "required": false,
+            "description": "The type of the input element. It determines the kind of data that can be entered."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: TextInput.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement | ((props: HTMLProps, state: TextInput.State) => ReactElement)"],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

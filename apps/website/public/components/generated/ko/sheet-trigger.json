@@ -1,0 +1,61 @@
+{
+    "name": "SheetTrigger",
+    "props": [
+        {
+            "name": "className",
+            "type": [
+                "string | ((state: Sheet.Trigger.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 CSS 클래스를 지정합니다. 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "handle",
+            "type": [
+                "DialogHandle<unknown>"
+            ],
+            "required": false,
+            "description": "트리거를 다이얼로그와 연결할 핸들을 지정합니다.\n`Dialog.createHandle()` 메서드로 생성할 수 있습니다."
+        },
+        {
+            "name": "id",
+            "type": [
+                "string"
+            ],
+            "required": false,
+            "description": "트리거의 ID를 지정합니다. 렌더링된 요소에 전달되는 것 외에도,\n제어 모드에서 다이얼로그의 활성 트리거를 지정하는 데 사용됩니다(DialogRoot의 `triggerId` prop)."
+        },
+        {
+            "name": "nativeButton",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "`render` prop으로 요소를 교체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링할지 여부를 지정합니다.\n렌더링할 요소가 버튼이 아닌 경우(예: `<div>`) `false`로 설정합니다."
+        },
+        {
+            "name": "payload",
+            "type": [
+                "unknown"
+            ],
+            "required": false,
+            "description": "다이얼로그가 열릴 때 전달할 payload를 지정합니다."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: Sheet.Trigger.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용할 스타일을 지정합니다. 컴포넌트의 상태를 기반으로 스타일 객체를 반환하는 함수도 사용할 수 있습니다."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Sheet.Trigger.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 때 사용합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 전달할 수 있습니다."
+        }
+    ]
+}

@@ -1,0 +1,39 @@
+{
+    "name": "Skeleton",
+    "description": "A placeholder element that indicates content is loading. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "animation",
+            "type": ["none", "shimmer", "pulse"],
+            "required": false,
+            "description": "Controls the animation style of the skeleton.",
+            "defaultValue": "shimmer"
+        },
+        {
+            "name": "shape",
+            "type": ["square", "rounded"],
+            "required": false,
+            "description": "Controls the border radius of the skeleton.",
+            "defaultValue": "rounded"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Controls the height of the skeleton.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: Skeleton.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement | ((props: HTMLProps, state: Skeleton.State) => ReactElement)"],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

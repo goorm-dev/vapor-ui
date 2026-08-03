@@ -1,0 +1,129 @@
+{
+    "name": "CheckboxRoot",
+    "props": [
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "required": false,
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["md", "lg"],
+            "required": false,
+            "defaultValue": "md"
+        },
+        {
+            "name": "checked",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the checkbox is currently ticked.\n\nTo render an uncontrolled checkbox, use the `defaultChecked` prop instead."
+        },
+        {
+            "name": "defaultChecked",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the checkbox is initially ticked.\n\nTo render a controlled checkbox, use the `checked` prop instead."
+        },
+        {
+            "name": "onCheckedChange",
+            "type": ["(checked: boolean, eventDetails: Checkbox.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the checkbox is ticked or unticked."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": false,
+            "description": "The value of the selected checkbox."
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: CheckboxRootState) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction."
+        },
+        {
+            "name": "form",
+            "type": ["string"],
+            "required": false,
+            "description": "Identifies the form that owns the hidden input.\nUseful when the checkbox is rendered outside the form."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "The id of the input element."
+        },
+        {
+            "name": "indeterminate",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the checkbox is in a mixed state: neither ticked, nor unticked."
+        },
+        {
+            "name": "inputRef",
+            "type": ["Ref<HTMLInputElement>"],
+            "required": false,
+            "description": "A ref to access the hidden `<input>` element."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "Identifies the field when a form is submitted."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button."
+        },
+        {
+            "name": "parent",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the checkbox controls a group of child checkboxes.\n\nMust be used in a [Checkbox Group](https://base-ui.com/react/components/checkbox-group)."
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user should be unable to tick or untick the checkbox."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user must tick the checkbox before submitting a form."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: CheckboxRootState) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "uncheckedValue",
+            "type": ["string"],
+            "required": false,
+            "description": "The value submitted with the form when the checkbox is unchecked.\nBy default, unchecked checkboxes do not submit any value, matching native checkbox behavior."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: CheckboxRootState) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

@@ -1,0 +1,215 @@
+{
+    "name": "SelectRoot",
+    "props": [
+        {
+            "name": "invalid",
+            "type": [
+                "boolean"
+            ],
+            "required": false
+        },
+        {
+            "name": "size",
+            "type": [
+                "sm",
+                "md",
+                "lg",
+                "xl"
+            ],
+            "required": false
+        },
+        {
+            "name": "defaultOpen",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "셀렉트 팝업의 초기 열림 여부를 지정합니다.\n\n제어 방식으로 렌더링하려면 `open` prop을 사용하십시오."
+        },
+        {
+            "name": "defaultValue",
+            "type": [
+                "Value",
+                "null"
+            ],
+            "required": false,
+            "description": "셀렉트가 처음 렌더링될 때의 비제어 값을 지정합니다.\n\n제어 방식으로 렌더링하려면 `value` prop을 사용하십시오."
+        },
+        {
+            "name": "onOpenChange",
+            "type": [
+                "(open: boolean, eventDetails: Select.Root.ChangeEventDetails) => void"
+            ],
+            "required": false,
+            "description": "셀렉트 팝업이 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
+        },
+        {
+            "name": "onValueChange",
+            "type": [
+                "(value: Value | null, eventDetails: Select.Root.ChangeEventDetails) => void"
+            ],
+            "required": false,
+            "description": "셀렉트의 값이 변경될 때 호출되는 이벤트 핸들러입니다."
+        },
+        {
+            "name": "open",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "셀렉트 팝업의 현재 열림 여부를 지정합니다."
+        },
+        {
+            "name": "value",
+            "type": [
+                "Value",
+                "null"
+            ],
+            "required": false,
+            "description": "셀렉트의 값을 지정합니다. 제어 방식으로 사용할 때 설정합니다."
+        },
+        {
+            "name": "placeholder",
+            "type": [
+                "ReactNode"
+            ],
+            "required": false,
+            "description": "값이 선택되지 않은 경우 표시할 플레이스홀더 값을 설정합니다.\nSelect.Value의 `children`이 지정된 경우 또는 `items`에서 null 항목의 레이블이 지정된 경우 이 값은 무시됩니다."
+        },
+        {
+            "name": "actionsRef",
+            "type": [
+                "React.RefObject<SelectRootActions | null>"
+            ],
+            "required": false,
+            "description": "명령형 액션에 대한 ref를 지정합니다.\n- `unmount`: 셀렉트를 수동으로 언마운트합니다.\n외부에서 제어하는 닫힘 애니메이션이 완료된 후 호출하십시오."
+        },
+        {
+            "name": "autoComplete",
+            "type": [
+                "string"
+            ],
+            "required": false,
+            "description": "브라우저 자동 완성에 대한 힌트를 제공합니다."
+        },
+        {
+            "name": "children",
+            "type": [
+                "ReactNode"
+            ],
+            "required": false
+        },
+        {
+            "name": "disabled",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부를 설정합니다."
+        },
+        {
+            "name": "form",
+            "type": [
+                "string"
+            ],
+            "required": false,
+            "description": "숨겨진 input을 소유하는 폼을 식별합니다.\n셀렉트가 폼 외부에 렌더링될 때 유용합니다."
+        },
+        {
+            "name": "highlightItemOnHover",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "포인터를 항목 위로 이동할 때 해당 항목을 강조 표시할지 여부를 설정합니다.\n이 prop을 비활성화하면 CSS `:hover`와 `:focus`(`data-highlighted`) 상태를 구분할 수 있습니다."
+        },
+        {
+            "name": "id",
+            "type": [
+                "string"
+            ],
+            "required": false,
+            "description": "Select의 id를 지정합니다."
+        },
+        {
+            "name": "inputRef",
+            "type": [
+                "Ref<HTMLInputElement>"
+            ],
+            "required": false,
+            "description": "숨겨진 input 요소에 접근하기 위한 ref를 지정합니다."
+        },
+        {
+            "name": "isItemEqualToValue",
+            "type": [
+                "(itemValue: Value, value: Value) => boolean"
+            ],
+            "required": false,
+            "description": "셀렉트 항목의 값이 현재 선택된 값과 일치하는지 판단하는 커스텀 비교 로직을 지정합니다. 항목 값이 참조가 일치하지 않는 객체일 때 유용합니다.\n기본값은 `Object.is` 비교입니다."
+        },
+        {
+            "name": "items",
+            "type": [
+                "Record<string, React.ReactNode> | readonly { label: React.ReactNode; value: any; }[] | readonly Group<any>[]"
+            ],
+            "required": false,
+            "description": "셀렉트 팝업에 렌더링되는 항목의 데이터 구조를 지정합니다.\n지정하면 `<Select.Value>`가 원시 값 대신 선택된 항목의 레이블을 렌더링합니다."
+        },
+        {
+            "name": "itemToStringLabel",
+            "type": [
+                "(itemValue: Value) => string"
+            ],
+            "required": false,
+            "description": "항목 값이 객체인 경우(`<Select.Item value={object}>`), 이 함수는 객체 값을 트리거에 표시할 문자열로 변환합니다.\n객체의 형태가 `{ value, label }`이면 이 prop을 지정하지 않아도 label이 자동으로 사용됩니다."
+        },
+        {
+            "name": "itemToStringValue",
+            "type": [
+                "(itemValue: Value) => string"
+            ],
+            "required": false,
+            "description": "항목 값이 객체인 경우(`<Select.Item value={object}>`), 이 함수는 객체 값을 폼 제출 시 사용할 문자열로 변환합니다.\n객체의 형태가 `{ value, label }`이면 이 prop을 지정하지 않아도 value가 자동으로 사용됩니다."
+        },
+        {
+            "name": "modal",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "셀렉트가 열릴 때 모달 상태로 진입할지 여부를 설정합니다.\n- `true`: 사용자 인터랙션이 셀렉트로 제한되며, 문서 페이지 스크롤이 잠기고 외부 요소에 대한 포인터 인터랙션이 비활성화됩니다.\n- `false`: 나머지 문서와의 사용자 인터랙션이 허용됩니다."
+        },
+        {
+            "name": "name",
+            "type": [
+                "string"
+            ],
+            "required": false,
+            "description": "폼이 제출될 때 필드를 식별하는 이름을 지정합니다."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": [
+                "(open: boolean) => void"
+            ],
+            "required": false,
+            "description": "셀렉트 팝업이 열리거나 닫힐 때 모든 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
+        },
+        {
+            "name": "readOnly",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "사용자가 셀렉트 팝업에서 다른 옵션을 선택할 수 없도록 할지 여부를 지정합니다."
+        },
+        {
+            "name": "required",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "폼을 제출하기 전에 사용자가 반드시 값을 선택해야 하는지 여부를 지정합니다."
+        }
+    ]
+}

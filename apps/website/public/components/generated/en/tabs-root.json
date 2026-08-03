@@ -1,0 +1,78 @@
+{
+    "name": "TabsRoot",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false
+        },
+        {
+            "name": "variant",
+            "type": ["line", "fill"],
+            "required": false
+        },
+        {
+            "name": "defaultValue",
+            "type": ["any"],
+            "required": false,
+            "description": "The default value. Use when the component is not controlled.\nWhen the value is `null`, no Tab will be active."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: any, eventDetails: Tabs.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Callback invoked when new value is being set.\n\nThe event `reason` is `'none'` for user-initiated changes, such as a click\nor keyboard navigation; `'initial'` for the first automatic selection or\nfallback in uncontrolled roots when `defaultValue` is omitted or\n`undefined`, including when the implicit initial value is disabled or\nmissing; `'disabled'` for automatic fallback when the selected tab becomes\ndisabled in uncontrolled roots; or `'missing'` for automatic fallback when\nthe selected tab is removed, or when an explicit `defaultValue` never\nmatches a mounted tab in uncontrolled roots.\n\nFor automatic changes, the selected value can be `null` when no enabled Tab\nis available as a fallback.\n\nAutomatic changes cannot be canceled; calling `eventDetails.cancel()` for\n`'initial'`, `'disabled'`, or `'missing'` has no effect."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": false,
+            "description": "The value of the currently active `Tab`. Use when the component is controlled.\nWhen the value is `null`, no Tab will be active."
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: Tabs.Root.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "activateOnFocus",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to automatically change the active tab on arrow key focus.\nOtherwise, tabs will be activated using <kbd>Enter</kbd> or <kbd>Space</kbd> key press."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the Tab is disabled.\n\nIf a first Tab on a `<Tabs.List>` is disabled, it won't initially be selected.\nInstead, the next enabled Tab will be selected.\nHowever, it does not work like this during server-side rendering, as it is not known\nduring pre-rendering which Tabs are disabled.\nTo work around it, ensure that `defaultValue` or `value` on `<Tabs.Root>` is set to an enabled Tab's value."
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys."
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "The component orientation (layout flow direction).",
+            "defaultValue": "horizontal"
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: Tabs.Root.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement | ((props: HTMLProps, state: Tabs.Root.State) => ReactElement)"],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}
