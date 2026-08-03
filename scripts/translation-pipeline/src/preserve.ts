@@ -1,4 +1,4 @@
-import type { PreservationViolation } from '~/types';
+import type { PreservationViolation } from '~/domain';
 
 /**
  * 결정론 문자열 보존 체크 (KAN-10).

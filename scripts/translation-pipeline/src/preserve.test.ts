@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { checkPreservation } from '~/validation/preserve';
+import { checkPreservation } from '~/preserve';
 
 describe('checkPreservation', () => {
     it('passes when every code span, identifier, URL, and structure survives', () => {

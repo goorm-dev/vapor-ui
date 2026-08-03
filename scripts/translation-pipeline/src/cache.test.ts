@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { loadCache, makeCacheKey, saveCache } from '~/cache/cache';
+import { loadCache, makeCacheKey, saveCache } from '~/cache';
 
 function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'cache-test-'));

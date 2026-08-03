@@ -1,18 +1,18 @@
-import { type CacheStore, loadCache, makeCacheKey, saveCache } from '~/cache/cache';
+import { type CacheStore, loadCache, makeCacheKey, saveCache } from '~/cache';
 import {
     type BatchFallbackEntry,
     type ComponentReport,
     buildComponentReports,
-} from '~/report/report';
-import { translateUnits } from '~/translation/translate';
-import { processBatchLifecycle } from '~/translator/batch-lifecycle';
+} from '~/report';
+import { translateUnits } from '~/translate';
+import { processBatchLifecycle } from '~/batch/lifecycle';
 import {
     type TranslatableDoc,
     type TranslationOutcome,
     type TranslationUnit,
     getTranslationUnitKey,
     makeOutcome,
-} from '~/types';
+} from '~/domain';
 import { chunkArray, errorMessage } from '~/util';
 
 const TRANSLATION_BATCH_SIZE = 20;

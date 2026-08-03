@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { translateUnits } from '~/translation/translate';
-import type { TranslationUnit } from '~/types';
+import { translateUnits } from '~/translate';
+import type { TranslationUnit } from '~/domain';
 
 const units: TranslationUnit[] = [
     {

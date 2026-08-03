@@ -7,7 +7,7 @@ import {
     type TranslationOutcome,
     type TranslationUnit,
     getTranslationUnitKey,
-} from '~/types';
+} from '~/domain';
 import { errorMessage } from '~/util';
 
 export interface ComponentReport {

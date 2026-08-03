@@ -1,4 +1,4 @@
-import { callLlm } from '~/translation/client';
+import { callLlm } from '~/client';
 import { errorMessage } from '~/util';
 
 export type BatchResult<T> = { ok: true; value: T } | { ok: false; reason: string };

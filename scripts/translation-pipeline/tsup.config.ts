@@ -12,7 +12,7 @@ export default defineConfig({
             '~': path.resolve(__dirname, './src'),
         };
     },
-    entry: ['src/cli/index.ts'],
+    entry: ['src/cli.ts'],
     dts: false,
     outDir: 'dist/cli',
     banner: {

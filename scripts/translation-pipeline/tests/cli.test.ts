@@ -3,25 +3,23 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { run } from '~/cli/run';
-import * as clientModule from '~/translation/client';
-import * as translationModule from '~/translation/translate';
-import { getTranslationUnitKey } from '~/types';
-
-const validEnv = {
-    LITELLM_API_KEY: 'test-key',
-    LITELLM_BASE_URL: 'https://example.test',
-};
+import { run } from '~/run';
+import * as clientModule from '~/client';
+import * as translationModule from '~/translate';
+import { getTranslationUnitKey } from '~/domain';
 
 describe('E2E: CLI → translator → 파일 출력', () => {
     let workDir: string;
 
     beforeEach(() => {
         workDir = mkdtempSync(join(tmpdir(), 'e2e-test-'));
+        vi.stubEnv('LITELLM_API_KEY', 'test-key');
+        vi.stubEnv('LITELLM_BASE_URL', 'https://example.test');
     });
 
     afterEach(() => {
         rmSync(workDir, { recursive: true, force: true });
+        vi.unstubAllEnvs();
         vi.restoreAllMocks();
     });
 
@@ -54,12 +52,7 @@ describe('E2E: CLI → translator → 파일 출력', () => {
         // LLM 호출 직전 모듈만 fixture로 대체
         vi.spyOn(translationModule, 'translateUnits').mockImplementation(
             async (units) =>
-                new Map(
-                    units.map((unit) => [
-                        getTranslationUnitKey(unit),
-                        `[ko]${unit.source}`,
-                    ]),
-                ),
+                new Map(units.map((unit) => [getTranslationUnitKey(unit), `[ko]${unit.source}`])),
         );
         vi.spyOn(clientModule, 'callLlm').mockResolvedValue({
             content: JSON.stringify({
@@ -70,7 +63,7 @@ describe('E2E: CLI → translator → 파일 출력', () => {
             }),
         });
 
-        const result = await run(['--input', inputDir, '--output', outputDir], { env: validEnv });
+        const result = await run(['--input', inputDir, '--output', outputDir]);
 
         // ko/ 파일 생성 확인
         expect(result.writtenFiles).toHaveLength(1);
@@ -166,7 +159,9 @@ describe('E2E: CLI → translator → 파일 출력', () => {
             // 최종 MQM: PASS
             return {
                 content: JSON.stringify({
-                    evaluations: [{ id: '0:props[0].size.description', verdict: 'PASS', errors: [] }],
+                    evaluations: [
+                        { id: '0:props[0].size.description', verdict: 'PASS', errors: [] },
+                    ],
                 }),
                 inputTokens: 0,
                 outputTokens: 0,
@@ -174,7 +169,7 @@ describe('E2E: CLI → translator → 파일 출력', () => {
             };
         });
 
-        const result = await run(['--input', inputDir, '--output', outputDir], { env: validEnv });
+        const result = await run(['--input', inputDir, '--output', outputDir]);
 
         const koPath = join(outputDir, 'ko', 'button.json');
         const koContent = JSON.parse(readFileSync(koPath, 'utf-8')) as {

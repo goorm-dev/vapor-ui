@@ -1,6 +1,6 @@
 import { callBatch } from '~/batch-call';
 import { DEFAULT_TRANSLATION_MODEL } from '~/defaults';
-import { type TranslationUnit, getTranslationUnitKey } from '~/types';
+import { type TranslationUnit, getTranslationUnitKey } from '~/domain';
 
 const SYSTEM_PROMPT = `You are a professional Korean translator for design-system API documentation. Respond ONLY with valid JSON.
 

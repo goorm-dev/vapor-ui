@@ -1,16 +1,12 @@
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { parseCliArgs, run } from '~/cli/run';
-import type { TranslateResult } from '~/translator/translator';
-import type { TranslatableDoc, TranslationOutcome } from '~/types';
-
-const validEnv = {
-    LITELLM_API_KEY: 'test-key',
-    LITELLM_BASE_URL: 'https://example.test',
-};
+import type { TranslatableDoc, TranslationOutcome } from '~/domain';
+import { parseCliArgs, run } from '~/run';
+import * as translatorModule from '~/translator';
+import type { TranslateResult } from '~/translator';
 
 function passthroughRunner(docs: TranslatableDoc[]): Promise<TranslateResult> {
     const translatedProps = docs.map((doc) => ({
@@ -52,42 +48,41 @@ describe('cli run', () => {
 
     beforeEach(() => {
         workDir = mkdtempSync(join(tmpdir(), 'translation-pipeline-cli-'));
+        vi.stubEnv('LITELLM_API_KEY', 'test-key');
+        vi.stubEnv('LITELLM_BASE_URL', 'https://example.test');
+        vi.spyOn(translatorModule, 'translatePropsInfo').mockImplementation(passthroughRunner);
     });
 
     afterEach(() => {
         rmSync(workDir, { recursive: true, force: true });
+        vi.unstubAllEnvs();
+        vi.restoreAllMocks();
     });
 
     it('throws when --input is missing', async () => {
-        await expect(run(['--output', join(workDir, 'out')], { env: validEnv })).rejects.toThrow(
-            /--input/,
-        );
+        await expect(run(['--output', join(workDir, 'out')])).rejects.toThrow(/--input/);
     });
 
     it('throws when --output is missing', async () => {
-        await expect(run(['--input', join(workDir, 'en')], { env: validEnv })).rejects.toThrow(
-            /--output/,
-        );
+        await expect(run(['--input', join(workDir, 'en')])).rejects.toThrow(/--output/);
     });
 
     it('throws when LITELLM_API_KEY is missing', async () => {
+        vi.stubEnv('LITELLM_API_KEY', '');
         const inputDir = join(workDir, 'en');
         mkdirSync(inputDir, { recursive: true });
-        await expect(
-            run(['--input', inputDir, '--output', join(workDir, 'out')], {
-                env: { LITELLM_BASE_URL: 'https://example.test' },
-            }),
-        ).rejects.toThrow(/LITELLM_API_KEY/);
+        await expect(run(['--input', inputDir, '--output', join(workDir, 'out')])).rejects.toThrow(
+            /LITELLM_API_KEY/,
+        );
     });
 
     it('throws when LITELLM_BASE_URL is missing', async () => {
+        vi.stubEnv('LITELLM_BASE_URL', '');
         const inputDir = join(workDir, 'en');
         mkdirSync(inputDir, { recursive: true });
-        await expect(
-            run(['--input', inputDir, '--output', join(workDir, 'out')], {
-                env: { LITELLM_API_KEY: 'test-key' },
-            }),
-        ).rejects.toThrow(/LITELLM_BASE_URL/);
+        await expect(run(['--input', inputDir, '--output', join(workDir, 'out')])).rejects.toThrow(
+            /LITELLM_BASE_URL/,
+        );
     });
 
     it('reads EN JSON files and writes ko/ + .i18n-report.md', async () => {
@@ -110,10 +105,7 @@ describe('cli run', () => {
         };
         writeFileSync(join(inputDir, 'button.json'), JSON.stringify(button), 'utf-8');
 
-        const result = await run(['--input', inputDir, '--output', outputDir], {
-            env: validEnv,
-            runPipeline: passthroughRunner,
-        });
+        const result = await run(['--input', inputDir, '--output', outputDir]);
 
         expect(result.writtenFiles).toHaveLength(1);
         const koPath = join(outputDir, 'ko', 'button.json');
@@ -138,10 +130,7 @@ describe('cli run', () => {
 
     it('throws when input directory does not exist', async () => {
         await expect(
-            run(['--input', join(workDir, 'missing'), '--output', join(workDir, 'out')], {
-                env: validEnv,
-                runPipeline: passthroughRunner,
-            }),
+            run(['--input', join(workDir, 'missing'), '--output', join(workDir, 'out')]),
         ).rejects.toThrow(/Input directory does not exist/);
     });
 });

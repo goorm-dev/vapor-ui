@@ -3,9 +3,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { buildComponentReports, buildReport, renderReport, writeReport } from '~/report/report';
-import type { ComponentReport, TranslationReport } from '~/report/report';
-import type { TranslatableDoc, TranslationOutcome, TranslationUnit } from '~/types';
+import { buildComponentReports, buildReport, renderReport, writeReport } from '~/report';
+import type { ComponentReport, TranslationReport } from '~/report';
+import type { TranslatableDoc, TranslationOutcome, TranslationUnit } from '~/domain';
 
 function makeTmpDir(): string {
     return fs.mkdtempSync(path.join(os.tmpdir(), 'report-test-'));

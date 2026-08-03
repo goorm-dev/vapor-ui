@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 
-import { run } from '~/cli/run';
+import { run } from '~/run';
 import { errorMessage } from '~/util';
 
 const envPath = path.resolve(process.cwd(), '.env');

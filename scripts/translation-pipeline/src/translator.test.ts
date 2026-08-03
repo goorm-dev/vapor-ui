@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as cacheModule from '~/cache/cache';
-import * as clientModule from '~/translation/client';
-import * as translationModule from '~/translation/translate';
-import { translatePropsInfo } from '~/translator/translator';
-import { type TranslatableDoc, getTranslationUnitKey } from '~/types';
+import * as cacheModule from '~/cache';
+import * as clientModule from '~/client';
+import * as translationModule from '~/translate';
+import { translatePropsInfo } from '~/translator';
+import { type TranslatableDoc, getTranslationUnitKey } from '~/domain';
 
 const sampleProps: TranslatableDoc[] = [
     {

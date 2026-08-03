@@ -15,7 +15,7 @@ pnpm --filter @vapor-ui/translation-pipeline lint
 pnpm --filter @vapor-ui/translation-pipeline test:run
 
 # Run a single test file
-pnpm --filter @vapor-ui/translation-pipeline test:run -- src/translator/translator.test.ts
+pnpm --filter @vapor-ui/translation-pipeline test:run -- src/translator.test.ts
 
 # Run tests with coverage
 pnpm --filter @vapor-ui/translation-pipeline test:coverage
@@ -24,35 +24,45 @@ pnpm --filter @vapor-ui/translation-pipeline test:coverage
 pnpm --filter @vapor-ui/translation-pipeline build
 ```
 
-Path alias `~` maps to `src/`. (`~/types` → `src/types.ts`)
+Path alias `~` maps to `src/`. (`~/domain` → `src/domain.ts`)
 
 ## Architecture
 
 ### Core Flow
 
 ```
-cli/run.ts
-  → translator/translator.ts          # dedupe → cache → phase 1 translate → phase 2 evaluate
-      → translation/translate.ts      # LLM initial translation (cross-component batch of 20)
-      → translator/batch-lifecycle.ts # preservation check + MQM → postprocess → recheck
-          → validation/preserve.ts    # deterministic string-preservation checks
-          → validation/validator.ts   # MQM prompt and error shape
-  → report/report.ts                  # renders .i18n-report.md
+cli.ts                          # entry point: .env loading + error handler
+  → run.ts                      # orchestrator: CLI parsing · env check · stage order
+      → input.ts                # ① read en/*.json → TranslatableDoc[]
+      → translator.ts           # dedupe → cache → phase 1 translate → phase 2 evaluate
+          → translate.ts        # ② LLM initial translation (cross-component batch of 20)
+          → batch/lifecycle.ts  # ③ preservation check + MQM → postprocess → recheck
+              → batch/mqm.ts        # batch MQM prompt · schema · call
+              → batch/postprocess.ts # batch post-edit prompt · schema · call
+              → preserve.ts         # deterministic string-preservation checks
+      → output.ts               # ④ merge into raw JSON · write ko/*.json · prettier
+      → report.ts               # ⑤ renders .i18n-report.md
+
+batch-call.ts                   # shared LLM batch protocol: schema call + JSON parse + id reconcile
+client.ts                       # LLM transport: retries + 60s timeout
 ```
 
 ### Module Boundaries
 
-- **`cli/run.ts`**: Owns all file I/O. Normalizes input to `TranslatableDoc[]`, writes `ko/*.json`. No LLM logic.
-- **`translator/translator.ts`**: Deduplicates by source string, decides cache hit/miss, forms cross-component batches, runs the two phases with a hand-rolled worker pool, merges outcomes back into JSON. Does not call LLM directly.
-- **`translator/batch-lifecycle.ts`**: Runs one MQM batch: deterministic preservation check + batch MQM → batch postprocess → preservation recheck → final MQM. Only called from `translator.ts`.
-- **`validation/preserve.ts`**: Deterministic checks only — no LLM. Owns code spans, bare identifiers, URLs, markdown structure.
-- **`translation/client.ts`**: Single wrapper for LiteLLM `/chat/completions`. Every LLM call goes through this file.
-- **`types.ts`**: `MqmCategory` union is the single source of truth. Adding or removing a category here causes a compile error in `validator.ts` via the `satisfies` check on `MQM_CATEGORY_VALUES`. Also owns `getTranslationUnitKey` and `makeOutcome` — `assurance`/`reportable` are derived from `reason` in `REASON_META`, nowhere else.
-- **`util.ts`**: `chunkArray` and `reconcileById` — shared by `translate.ts`, `translator.ts`, and `batch-lifecycle.ts`.
+- **`run.ts`**: Call order only — CLI flags, env check, then each stage in turn. No logic of its own.
+- **`input.ts` · `output.ts`**: Own all file I/O. `input.ts` normalizes en JSON to `TranslatableDoc[]`; `output.ts` merges translations back into the raw JSON and writes `ko/*.json`. No LLM logic.
+- **`translator.ts`**: Deduplicates by source string, decides cache hit/miss, forms cross-component batches, runs the two phases with a hand-rolled worker pool, merges outcomes back into JSON. Does not call LLM directly.
+- **`batch/lifecycle.ts`**: Runs one MQM batch: deterministic preservation check + batch MQM → batch postprocess → preservation recheck → final MQM. Only called from `translator.ts`. The recheck is not its own module — it is a second call into `batch/mqm.ts` and `preserve.ts`.
+- **`batch/mqm.ts` · `batch/postprocess.ts`**: One LLM step each — prompt, JSON schema, and the `callBatch` invocation. `batch/_types.ts` holds the types that only circulate inside `batch/`.
+- **`batch-call.ts`**: The shared shell for every batch LLM call — schema call → content check → JSON parse → id reconcile. Lives at the root because both stage ② (`translate.ts`) and stage ③ (`batch/`) use it.
+- **`preserve.ts`**: Deterministic checks only — no LLM. Owns code spans, bare identifiers, URLs, markdown structure.
+- **`client.ts`**: Single wrapper for LiteLLM `/chat/completions`. Every LLM call goes through this file.
+- **`domain.ts`**: Types that flow between stages. `MqmCategory` union is the single source of truth. Adding or removing a category here causes a compile error in `batch/mqm.ts` via the `satisfies` check on `MQM_CATEGORY_VALUES`. Also owns `getTranslationUnitKey` and `makeOutcome` — `assurance`/`reportable` are derived from `reason` in `REASON_META`, nowhere else.
+- **`util.ts`**: `chunkArray` and `errorMessage` only — anything with a single consumer belongs next to that consumer.
 
 ### Design Constraints — Read Before Modifying
 
-**MQM mirroring rule**: The Style rules in `translate.ts` and the `Fluency/Unnatural phrasing` criteria in `validator.ts` intentionally contain the same content. Changing one requires changing the other. If they diverge, the initial MQM will fail more often, increasing postprocess cost.
+**MQM mirroring rule**: The Style rules in `translate.ts` and the `Fluency/Unnatural phrasing` criteria in `batch/mqm.ts` intentionally contain the same content. Changing one requires changing the other. If they diverge, the initial MQM will fail more often, increasing postprocess cost.
 
 **Batch id must be the unit key**: batches mix components, and `unit.id` (`props[0].size.description`) is only unique _within_ a component. Every request/response id is `getTranslationUnitKey(unit)` (`${componentIndex}:${id}`). Using the bare id makes `reconcileById` silently map results onto the wrong unit.
 
@@ -70,6 +80,6 @@ cli/run.ts
 
 ### Test Structure
 
-All LLM calls are replaced with `vi.mock('~/translation/client')`. No test hits a real API. `tests/cli.test.ts` creates a tmp directory and validates the full file I/O pipeline end-to-end.
+All LLM calls are replaced with `vi.mock('~/client')`. No test hits a real API. `tests/cli.test.ts` creates a tmp directory and validates the full file I/O pipeline end-to-end. Env vars are injected with `vi.stubEnv` — there is no DI hole in the production interface for tests to reach through.
 
-Coverage excludes `src/cli/**` and `src/**/types.ts`. Thresholds: 70% lines/functions/statements, 65% branches.
+Coverage excludes the I/O shell (`src/cli.ts`, `src/run.ts`, `src/input.ts`, `src/output.ts`). Thresholds: 70% lines/functions/statements, 65% branches.

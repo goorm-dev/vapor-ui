@@ -5,7 +5,7 @@
     "description": "LLM-based JSON translation pipeline with MQM quality gating",
     "type": "module",
     "bin": {
-        "translation-pipeline": "./dist/cli/index.js"
+        "translation-pipeline": "./dist/cli/cli.js"
     },
     "files": [
         "dist"

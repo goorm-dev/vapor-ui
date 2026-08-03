@@ -16,7 +16,7 @@ export interface TranslatableDoc {
 /**
  * LLM 판정이 실제로 신뢰 가능한 축만 남긴 6종 (KAN-10).
  * 문자열 보존(코드 스팬·식별자·URL·마크다운 구조)은 LLM이 아니라
- * `validation/preserve.ts`의 결정론 체크가 담당한다.
+ * `preserve.ts`의 결정론 체크가 담당한다.
  */
 export type MqmCategory =
     | 'Accuracy/Mistranslation'
@@ -32,11 +32,6 @@ export interface MqmError {
     source_span: string;
     mt_span: string;
     explanation: string;
-}
-
-export interface MqmResult {
-    verdict: 'PASS' | 'FAIL';
-    errors: MqmError[];
 }
 
 export type TranslationUnitKind = 'component.description' | 'prop.description';
