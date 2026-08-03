@@ -65,7 +65,7 @@ async function callLlmOnce(
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${apiKey}`,
-                    // TokenHub(사내 LLM 게이트웨이) 필수 집계 라벨. 일반 LiteLLM proxy는 무시한다.
+                    // 게이트웨이 사용량 집계용 라벨. 요구하지 않는 프록시는 무시한다.
                     'X-Client-Id': 'vapor-ui-translation-pipeline',
                 },
                 body: JSON.stringify({
