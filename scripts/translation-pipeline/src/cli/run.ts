@@ -6,6 +6,7 @@ import { basename, join, resolve } from 'node:path';
 import { buildReport, writeReport } from '~/report/report';
 import { translatePropsInfo } from '~/translator/translator';
 import type { TranslatableDoc } from '~/types';
+import { errorMessage } from '~/util';
 
 export interface CliOptions {
     input: string;
@@ -95,8 +96,7 @@ function readInputDocs(inputDir: string): InputDoc[] {
         try {
             raw = JSON.parse(readFileSync(filePath, 'utf-8'));
         } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            throw new Error(`Failed to parse ${fileName}: ${message}`);
+            throw new Error(`Failed to parse ${fileName}: ${errorMessage(error)}`);
         }
 
         const doc = normalizeDoc(raw, fileName);
@@ -191,8 +191,7 @@ function formatWithPrettier(filePaths: string[]): void {
     try {
         execFileSync('npx', ['prettier', '--write', ...filePaths], { stdio: 'inherit' });
     } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.warn(`Prettier formatting skipped: ${message}`);
+        console.warn(`Prettier formatting skipped: ${errorMessage(error)}`);
     }
 }
 

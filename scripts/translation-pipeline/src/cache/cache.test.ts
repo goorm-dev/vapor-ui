@@ -30,10 +30,6 @@ describe('makeCacheKey', () => {
 });
 
 describe('loadCache', () => {
-    it('returns empty Map when outputDir is empty string', () => {
-        expect(loadCache('')).toEqual(new Map());
-    });
-
     it('returns empty Map when cache file does not exist', () => {
         const dir = makeTmpDir();
         expect(loadCache(dir)).toEqual(new Map());
@@ -79,10 +75,6 @@ describe('saveCache / loadCache roundtrip', () => {
         saveCache(tmpDir, store);
 
         expect(loadCache(tmpDir).get(k)).toBe('안녕');
-    });
-
-    it('does not throw when outputDir is empty string', () => {
-        expect(() => saveCache('', new Map())).not.toThrow();
     });
 
     it('does not throw when outputDir is unwritable (logs warning instead)', () => {

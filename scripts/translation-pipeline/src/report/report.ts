@@ -8,6 +8,7 @@ import {
     type TranslationUnit,
     getTranslationUnitKey,
 } from '~/types';
+import { errorMessage } from '~/util';
 
 export interface ComponentReport {
     name: string;
@@ -243,13 +244,11 @@ export function renderReport(report: TranslationReport): string {
 }
 
 export function writeReport(report: TranslationReport, outputDir: string): void {
-    if (!outputDir) return;
     try {
         const filePath = join(outputDir, '.i18n-report.md');
         mkdirSync(dirname(filePath), { recursive: true });
         writeFileSync(filePath, renderReport(report), 'utf-8');
     } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.warn(`[report] Failed to write i18n report: ${message}`);
+        console.warn(`[report] Failed to write i18n report: ${errorMessage(error)}`);
     }
 }

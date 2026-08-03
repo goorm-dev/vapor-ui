@@ -7,6 +7,7 @@ import {
     DEFAULT_TRANSLATION_MODEL,
     DEFAULT_VALIDATION_MODEL,
 } from '~/defaults';
+import { errorMessage } from '~/util';
 
 // v2 reflects the LLM JSON-mode lifecycle. Older cache entries are not reused.
 export const CACHE_VERSION = 'v2';
@@ -30,7 +31,6 @@ export function makeCacheKey(source: string): string {
 }
 
 export function loadCache(outputDir: string): CacheStore {
-    if (!outputDir) return new Map();
     const filePath = join(outputDir, '.translation-cache.json');
     if (!existsSync(filePath)) return new Map();
     try {
@@ -46,16 +46,14 @@ export function loadCache(outputDir: string): CacheStore {
 }
 
 export function saveCache(outputDir: string, store: CacheStore): void {
-    if (!outputDir) return;
     try {
         const filePath = join(outputDir, '.translation-cache.json');
         mkdirSync(dirname(filePath), { recursive: true });
         const obj = Object.fromEntries(store);
         writeFileSync(filePath, JSON.stringify(obj, null, 2), 'utf-8');
     } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
         console.warn(
-            `[cache] Failed to save translation cache: ${message}. Continuing without cache.`,
+            `[cache] Failed to save translation cache: ${errorMessage(error)}. Continuing without cache.`,
         );
     }
 }

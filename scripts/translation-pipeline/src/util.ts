@@ -6,6 +6,10 @@ export function chunkArray<T>(items: T[], size: number): T[][] {
     return chunks;
 }
 
+export function errorMessage(error: unknown): string {
+    return error instanceof Error ? error.message : String(error);
+}
+
 /**
  * LLM이 echo한 id 목록을 기대 id 집합과 대조한다. 하나라도 어긋나면 던진다 —
  * 조용한 오매핑보다 배치 실패가 낫다.

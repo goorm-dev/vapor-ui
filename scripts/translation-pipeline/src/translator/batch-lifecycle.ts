@@ -10,7 +10,7 @@ import {
     getTranslationUnitKey,
     makeOutcome,
 } from '~/types';
-import { chunkArray, reconcileById } from '~/util';
+import { chunkArray, errorMessage, reconcileById } from '~/util';
 import { checkPreservation, describeViolation } from '~/validation/preserve';
 import {
     MQM_CATEGORY_VALUES,
@@ -103,8 +103,7 @@ async function callBatch<Item extends { id: string }>(
         }
         return { ok: true, value: reconcileById(expectedIds, items as Item[]) };
     } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        return { ok: false, reason: message };
+        return { ok: false, reason: errorMessage(error) };
     }
 }
 

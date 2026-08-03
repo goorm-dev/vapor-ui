@@ -182,11 +182,6 @@ describe('writeReport', () => {
         fs.rmSync(tmpDir, { recursive: true, force: true });
     });
 
-    it('does nothing when outputDir is empty string', () => {
-        const report = buildReport([]);
-        expect(() => writeReport(report, '')).not.toThrow();
-    });
-
     it('writes .i18n-report.md to outputDir', () => {
         const report = buildReport([
             {

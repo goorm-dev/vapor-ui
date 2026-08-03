@@ -19,35 +19,31 @@ function unique(values: string[]): string[] {
     return [...new Set(values)];
 }
 
-function matchAll(text: string, pattern: RegExp): string[] {
-    return text.match(pattern) ?? [];
-}
-
 function stripBacktickSpans(text: string): string {
     return text.replace(BACKTICK_SPAN, ' ');
 }
 
 /** 줄머리 마크다운 마커의 순서 + 코드펜스 개수 = 구조 시그니처 */
-export function markdownSignature(text: string): string {
+function markdownSignature(text: string): string {
     const markers = text
         .split('\n')
         .map((line) => line.match(MARKDOWN_LINE_MARKER)?.[1] ?? '')
         .filter(Boolean);
-    const fences = matchAll(text, /```/g).length;
+    const fences = (text.match(/```/g) ?? []).length;
     return `${markers.join('|')}::${fences}`;
 }
 
 export function checkPreservation(source: string, translated: string): PreservationViolation[] {
     const violations: PreservationViolation[] = [];
 
-    for (const span of unique(matchAll(source, BACKTICK_SPAN))) {
+    for (const span of unique(source.match(BACKTICK_SPAN) ?? [])) {
         if (!translated.includes(span)) {
             violations.push({ rule: 'backtick_span', expected: span });
         }
     }
 
     // 문장 끝 구두점은 URL이 아니다
-    const urls = unique(matchAll(source, URL)).map((url) => url.replace(/[.,;:!?]+$/, ''));
+    const urls = unique(source.match(URL) ?? []).map((url) => url.replace(/[.,;:!?]+$/, ''));
     for (const url of urls) {
         if (!translated.includes(url)) {
             violations.push({ rule: 'url', expected: url });
@@ -55,7 +51,7 @@ export function checkPreservation(source: string, translated: string): Preservat
     }
 
     const bareSource = stripBacktickSpans(source);
-    for (const identifier of unique(matchAll(bareSource, MULTI_HUMP_IDENTIFIER))) {
+    for (const identifier of unique(bareSource.match(MULTI_HUMP_IDENTIFIER) ?? [])) {
         if (!translated.includes(identifier)) {
             violations.push({ rule: 'identifier', expected: identifier });
         }

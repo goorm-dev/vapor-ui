@@ -13,18 +13,17 @@ import {
     getTranslationUnitKey,
     makeOutcome,
 } from '~/types';
-import { chunkArray } from '~/util';
+import { chunkArray, errorMessage } from '~/util';
 
 const TRANSLATION_BATCH_SIZE = 20;
 /** 60초 타임아웃 × 실측 81 tok/s ÷ 유닛당 출력 토큰 ÷ 안전계수 2 (KAN-11) */
 const MQM_BATCH_SIZE = 74;
 const BATCH_CONCURRENCY = 16;
 
-export { getTranslationUnitKey };
 
 // ─── Translation Units ────────────────────────────────────────────────────────
 
-export function collectTranslationUnits(props: TranslatableDoc[]): TranslationUnit[] {
+function collectTranslationUnits(props: TranslatableDoc[]): TranslationUnit[] {
     const units: TranslationUnit[] = [];
 
     for (let componentIndex = 0; componentIndex < props.length; componentIndex++) {
@@ -60,7 +59,7 @@ export function collectTranslationUnits(props: TranslatableDoc[]): TranslationUn
     return units;
 }
 
-export function applyTranslationOutcomes(
+function applyTranslationOutcomes(
     props: TranslatableDoc[],
     units: TranslationUnit[],
     outcomes: Map<string, TranslationOutcome>,
@@ -120,7 +119,6 @@ async function forEachWithConcurrency<T>(
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
-export type { BatchFallbackEntry };
 
 export interface TranslateResult {
     props: TranslatableDoc[];
@@ -183,10 +181,9 @@ export async function translatePropsInfo(
                 translations.set(key, translated);
             }
         } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
             batchFallbacks.push({
                 componentName: batch[0]?.componentName ?? '-',
-                reason: `translation batch failed: ${message}`,
+                reason: `translation batch failed: ${errorMessage(error)}`,
             });
             for (const unit of batch) {
                 // 번역 콜이 실패한 유닛은 영어 원문을 그대로 쓴다 — 배치 하나가 실행 전체를 죽이지 않게.
