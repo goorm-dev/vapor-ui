@@ -28,6 +28,16 @@ interface ComponentPropsTableProps {
     componentName: string;
 }
 
+const LOCALE_PREFERENCE = ['ko', 'en'] as const;
+
+const fetchComponentData = async (componentName: string): Promise<ComponentData> => {
+    for (const locale of LOCALE_PREFERENCE) {
+        const response = await fetch(`/components/generated/${locale}/${componentName}.json`);
+        if (response.ok) return response.json();
+    }
+    throw new Error(`Failed to load component data for ${componentName}`);
+};
+
 export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps) => {
     const [componentData, setComponentData] = React.useState<ComponentData | null>(null);
     const [loading, setLoading] = React.useState(true);
@@ -36,16 +46,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
     React.useEffect(() => {
         const loadComponentData = async () => {
             try {
-                // ko가 있으면 ko, 없으면 en으로 폴백한다 (번역 파이프라인 산출물)
-                const korean = await fetch(`/components/generated/ko/${componentName}.json`);
-                const response = korean.ok
-                    ? korean
-                    : await fetch(`/components/generated/en/${componentName}.json`);
-                if (!response.ok) {
-                    throw new Error(`Failed to load component data for ${componentName}`);
-                }
-                const data = await response.json();
-                setComponentData(data);
+                setComponentData(await fetchComponentData(componentName));
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Unknown error');
             } finally {

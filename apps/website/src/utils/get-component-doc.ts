@@ -14,23 +14,19 @@ interface ComponentDoc {
     props: PropDef[];
 }
 
+const LOCALE_PREFERENCE = ['ko', 'en'] as const;
+
+const findComponentDocPath = (componentName: string) =>
+    LOCALE_PREFERENCE.map((locale) =>
+        path.join(process.cwd(), 'public', 'components/generated', locale, `${componentName}.json`),
+    ).find((candidate) => fs.existsSync(candidate));
+
 export const replaceComponentDoc = (text: string) => {
     return text.replace(
         /<ComponentPropsTable\s+componentName="([^"]+)"\s*\/>/g,
         (_, componentName: string) => {
             try {
-                // ko가 있으면 ko, 없으면 en으로 폴백한다 (번역 파이프라인 산출물)
-                const jsonPath = ['ko', 'en']
-                    .map((locale) =>
-                        path.join(
-                            process.cwd(),
-                            'public',
-                            'components/generated',
-                            locale,
-                            `${componentName}.json`,
-                        ),
-                    )
-                    .find((candidate) => fs.existsSync(candidate));
+                const jsonPath = findComponentDocPath(componentName);
 
                 if (!jsonPath) {
                     return `> ⚠️ Spec file not found: \`${componentName}.json\``;
