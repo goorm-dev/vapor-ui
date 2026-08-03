@@ -1,0 +1,35 @@
+{
+    "name": "Skeleton",
+    "displayName": "Skeleton",
+    "description": "콘텐츠가 로딩 중임을 나타내는 placeholder 요소입니다. `<div>` 요소를 렌더링합니다.",
+    "props": [
+        {
+            "name": "animation",
+            "type": ["none", "shimmer", "pulse"],
+            "required": false,
+            "description": "skeleton의 애니메이션 스타일을 제어합니다.\n\n- `shimmer`: 빛이 스치는 효과\n- `pulse`: 깜빡이는 효과\n- `none`: 애니메이션 비활성화",
+            "defaultValue": "shimmer"
+        },
+        {
+            "name": "shape",
+            "type": ["square", "rounded"],
+            "required": false,
+            "description": "skeleton의 테두리 반경을 제어합니다.",
+            "defaultValue": "rounded"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "skeleton의 높이를 제어합니다.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "component의 HTML element를 다른 태그로 교체하거나 다른 component와 조합할 수 있습니다.\n\nReactElement 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "defaultElement": "div"
+}

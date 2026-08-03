@@ -1,0 +1,115 @@
+{
+    "name": "PositionerPrimitive",
+    "displayName": "Tooltip.PositionerPrimitive",
+    "description": "툴팁을 트리거 요소에 대해 위치시킵니다. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "sticky",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "앵커 요소가 뷰포트 밖으로 스크롤된 후에도 팝업을 뷰포트에 유지할지 여부입니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "anchor",
+            "type": [
+                "null",
+                "Element",
+                "VirtualElement",
+                "RefObject<Element | null>",
+                "() => Element | VirtualElement | null"
+            ],
+            "required": false,
+            "description": "팝업을 위치시킬 앵커 요소입니다.\n기본적으로 팝업은 트리거에 대해 위치합니다."
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "align",
+            "type": ["center", "end", "start"],
+            "required": false,
+            "description": "지정된 측면을 기준으로 팝업을 정렬하는 방법입니다.",
+            "defaultValue": "center"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
+        },
+        {
+            "name": "side",
+            "type": ["bottom", "left", "right", "top", "inline-end", "inline-start"],
+            "required": false,
+            "description": "팝업을 정렬할 앵커 요소의 측면입니다.\n충돌을 피하기 위해 자동으로 변경될 수 있습니다.",
+            "defaultValue": "top"
+        },
+        {
+            "name": "positionMethod",
+            "type": ["absolute", "fixed"],
+            "required": false,
+            "description": "사용할 CSS `position` 속성을 결정합니다.",
+            "defaultValue": "absolute"
+        },
+        {
+            "name": "sideOffset",
+            "type": ["number", "OffsetFunction"],
+            "required": false,
+            "description": "앵커와 팝업 사이의 거리(픽셀)입니다.\n앵커 및 포지셔너 요소의 치수와 측면 및 정렬을 읽기 위해 거리를 반환하는 함수도 허용합니다.\n\n함수는 다음 속성을 가진 `data` 객체 매개변수를 받습니다:\n- `data.anchor`: `width` 및 `height` 속성을 가진 앵커 요소의 치수\n- `data.positioner`: `width` 및 `height` 속성을 가진 포지셔너 요소의 치수\n- `data.side`: 포지셔너가 정렬되는 앵커 요소의 측면\n- `data.align`: 지정된 측면을 기준으로 포지셔너가 정렬되는 방법",
+            "defaultValue": "0"
+        },
+        {
+            "name": "alignOffset",
+            "type": ["number", "OffsetFunction"],
+            "required": false,
+            "description": "정렬 축을 따른 추가 오프셋(픽셀)입니다.\n앵커 및 포지셔너 요소의 치수와 측면 및 정렬을 읽기 위해 오프셋을 반환하는 함수도 허용합니다.\n\n함수는 다음 속성을 가진 `data` 객체 매개변수를 받습니다:\n- `data.anchor`: `width` 및 `height` 속성을 가진 앵커 요소의 치수\n- `data.positioner`: `width` 및 `height` 속성을 가진 포지셔너 요소의 치수\n- `data.side`: 포지셔너가 정렬되는 앵커 요소의 측면\n- `data.align`: 지정된 측면을 기준으로 포지셔너가 정렬되는 방법",
+            "defaultValue": "0"
+        },
+        {
+            "name": "collisionBoundary",
+            "type": [
+                "Element",
+                "clipping-ancestors",
+                "Element[]",
+                "{ x: number; y: number; height: number; width: number; }"
+            ],
+            "required": false,
+            "description": "팝업이 제한되는 영역을 구분하는 요소 또는 사각형입니다.",
+            "defaultValue": "clipping-ancestors"
+        },
+        {
+            "name": "collisionPadding",
+            "type": [
+                "number",
+                "{ bottom?: number | undefined; left?: number | undefined; right?: number | undefined; top?: number | undefined; }"
+            ],
+            "required": false,
+            "description": "충돌 경계의 가장자리로부터 유지할 추가 공간입니다.",
+            "defaultValue": "5"
+        },
+        {
+            "name": "arrowPadding",
+            "type": ["number"],
+            "required": false,
+            "description": "화살표와 팝업 가장자리 사이에 유지할 최소 거리입니다.\n\n팝업의 둥근 모서리 밖으로 화살표 요소가 튀어나오는 것을 방지하는 데 사용합니다.",
+            "defaultValue": "5"
+        },
+        {
+            "name": "trackAnchor",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "팝업이 위치 앵커의 레이아웃 이동을 추적할지 여부입니다.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "collisionAvoidance",
+            "type": ["SideFlipMode", "SideShiftMode"],
+            "required": false,
+            "description": "팝업을 배치할 때 충돌을 처리하는 방법을 결정합니다."
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{
+    "name": "Portal",
+    "displayName": "FloatingBar.Portal",
+    "description": "FloatingBar의 포탈 요소로, FloatingBar의 내용을 별도의 DOM 노드에 렌더링하는 역할을 합니다. HTML `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "container",
+            "type": ["HTMLElement", "() => HTMLElement", "null"],
+            "defaultValue": "document.body",
+            "description": "FloatingBar가 렌더링될 컨테이너 요소를 지정합니다. null을 전달하면 포탈을 사용하지 않고 인라인으로 렌더링합니다."
+        },
+        {
+            "name": "keepMounted",
+            "type": ["boolean"],
+            "defaultValue": "false",
+            "description": "FloatingBar가 닫혀있을 때도 DOM에 마운트된 상태를 유지할지 여부를 설정합니다."
+        }
+    ]
+}

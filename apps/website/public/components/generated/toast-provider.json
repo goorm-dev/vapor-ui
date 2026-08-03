@@ -1,0 +1,31 @@
+{
+    "name": "Provider",
+    "displayName": "Toast.Provider",
+    "description": "Toast의 모든 하위 컴포넌트를 그룹화하고 Toast 상태를 관리하는 프로바이더입니다. 내부적으로 `ProviderPrimitive`, `PortalPrimitive`, `ViewportPrimitive`가 통합되어 있습니다.",
+    "props": [
+        {
+            "name": "toastManager",
+            "type": ["ToastManager"],
+            "required": true,
+            "description": "Toast의 상태를 관리하는 ToastManager 인스턴스입니다."
+        },
+        {
+            "name": "timeout",
+            "type": ["number"],
+            "required": false,
+            "description": "Toast가 자동으로 닫히기까지의 시간(밀리초)입니다.",
+            "defaultValue": "4000"
+        },
+        {
+            "name": "limit",
+            "type": ["number"],
+            "required": false,
+            "description": "동시에 표시할 수 있는 최대 Toast 개수입니다."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "required": false
+        }
+    ]
+}
