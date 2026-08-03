@@ -7,7 +7,6 @@ import type {
 } from 'ts-morph';
 import { ModuleDeclarationKind, ts } from 'ts-morph';
 
-import type { ParseConfig } from '~/models/config';
 import type { BaseUiTypeMap, ParsedComponent, ParsedProp } from '~/models/pipeline';
 import { resolveType } from '~/resolve';
 import { buildBaseUiTypeMap } from '~/resolve/base-ui-mapper';
@@ -67,11 +66,10 @@ function extractParsedProp(
     declNode: Node,
     baseUiMap: BaseUiTypeMap,
     defaultValues: Record<string, string>,
-    verbose?: boolean,
 ): ParsedProp {
     const name = symbol.getName();
     const typeResult = cleanType(
-        resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode, verbose),
+        resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode),
     );
 
     const typeString =
@@ -93,7 +91,6 @@ function extractParsedComponent(
     sourceFile: SourceFile,
     namespace: ModuleDeclaration,
     baseUiMap: BaseUiTypeMap,
-    options: ParseConfig,
 ): ParsedComponent | null {
     const namespaceName = namespace.getName();
     const exportedProps = findExportedInterfaceProps(namespace);
@@ -117,13 +114,9 @@ function extractParsedComponent(
         declaredPropNames,
     );
 
-    if (options.verbose) {
-        console.error(`[verbose] ${namespaceName}: ${allSymbols.length} symbols`);
-    }
-
     const props = allSymbols.map((symbol) => {
         const declNode = symbol.getDeclarations()[0] ?? exportedProps;
-        return extractParsedProp(symbol, declNode, baseUiMap, defaultValues, options.verbose);
+        return extractParsedProp(symbol, declNode, baseUiMap, defaultValues);
     });
 
     return {
@@ -133,27 +126,14 @@ function extractParsedComponent(
     };
 }
 
-const DEFAULT_PARSE_CONFIG: ParseConfig = {
-    verbose: undefined,
-};
-
-export function parseSourceFile(
-    sourceFile: SourceFile,
-    options: ParseConfig = DEFAULT_PARSE_CONFIG,
-): ParsedComponent[] {
+export function parseSourceFile(sourceFile: SourceFile): ParsedComponent[] {
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
     const namespaces = getExportedNamespaces(sourceFile);
     const parsedComponents: ParsedComponent[] = [];
 
-    if (options.verbose) {
-        console.error(
-            `[verbose] Found ${namespaces.length} namespaces in ${sourceFile.getFilePath()}`,
-        );
-    }
-
     for (const namespace of namespaces) {
         try {
-            const parsed = extractParsedComponent(sourceFile, namespace, baseUiMap, options);
+            const parsed = extractParsedComponent(sourceFile, namespace, baseUiMap);
             if (parsed) {
                 parsedComponents.push(parsed);
             }

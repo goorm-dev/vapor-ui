@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { loadExtractorConfig } from '~/config/loader';
+import { extractorConfig } from '~/config/defaults';
 import type { ExtractorConfig } from '~/config/schema';
 import { findComponentFiles, findFileByComponentName } from '~/stages/scan';
 
@@ -58,25 +58,13 @@ async function resolveTargetFiles(
 }
 
 export async function resolveOptions({
-    configPath,
     component,
 }: {
     component?: string;
-    configPath?: string;
 }): Promise<ResolvedCliOptions> {
-    const loadedConfig = await loadExtractorConfig({
-        configPath: configPath,
-    });
+    const absolutePath = resolvePath(extractorConfig);
+    const tsconfigPath = path.resolve(process.cwd(), extractorConfig.tsconfig);
+    const targetFiles = await resolveTargetFiles(absolutePath, component, extractorConfig);
 
-    const absolutePath = resolvePath(loadedConfig);
-
-    const cwd = process.cwd();
-    const tsconfigPath = path.resolve(cwd, loadedConfig.tsconfig);
-    const targetFiles = await resolveTargetFiles(absolutePath, component, loadedConfig);
-
-    return {
-        tsconfigPath,
-        targetFiles,
-        config: loadedConfig,
-    };
+    return { tsconfigPath, targetFiles, config: extractorConfig };
 }

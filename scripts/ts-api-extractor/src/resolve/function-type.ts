@@ -39,25 +39,14 @@ export function resolveFunctionType(type: Type, ctx: ResolverContext): string {
             }
 
             const paramType = param.getTypeAtLocation(decl);
-            return `${paramName}: ${ctx.resolveType(paramType, ctx.baseUiMap, ctx.contextNode, ctx.verbose)}`;
+            return `${paramName}: ${ctx.resolveType(paramType, ctx.baseUiMap, ctx.contextNode)}`;
         }
 
         const paramType = param.getTypeAtLocation(node);
-        const resolvedParamType = ctx.resolveType(
-            paramType,
-            ctx.baseUiMap,
-            ctx.contextNode,
-            ctx.verbose,
-        );
-        return `${paramName}: ${resolvedParamType}`;
+        return `${paramName}: ${ctx.resolveType(paramType, ctx.baseUiMap, ctx.contextNode)}`;
     });
 
-    const resolvedReturnType = ctx.resolveType(
-        returnType,
-        ctx.baseUiMap,
-        ctx.contextNode,
-        ctx.verbose,
-    );
+    const resolvedReturnType = ctx.resolveType(returnType, ctx.baseUiMap, ctx.contextNode);
     const wrappedReturn = resolvedReturnType.includes(' | ')
         ? `(${resolvedReturnType})`
         : resolvedReturnType;

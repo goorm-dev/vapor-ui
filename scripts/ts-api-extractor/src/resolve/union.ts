@@ -13,7 +13,7 @@ export function resolveUnionWithFunction(type: Type, ctx: ResolverContext): stri
     return type
         .getUnionTypes()
         .map((member) => {
-            const resolved = ctx.resolveType(member, ctx.baseUiMap, ctx.contextNode, ctx.verbose);
+            const resolved = ctx.resolveType(member, ctx.baseUiMap, ctx.contextNode);
             return member.getCallSignatures().length > 0 ? `(${resolved})` : resolved;
         })
         .join(' | ');

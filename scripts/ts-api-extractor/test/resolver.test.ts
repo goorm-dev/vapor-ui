@@ -9,12 +9,12 @@
 import { Project } from 'ts-morph';
 
 import type { BaseUiTypeMap } from '~/models/pipeline';
+import { resolveType } from '~/resolve';
 import {
-    resolveType,
     simplifyForwardRefType,
     simplifyNodeModulesImports,
     simplifyReactElementGeneric,
-} from '~/resolve';
+} from '~/resolve/shared';
 
 // ============================================================
 // String Simplification Utilities

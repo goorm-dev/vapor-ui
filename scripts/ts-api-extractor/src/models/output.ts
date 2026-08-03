@@ -1,5 +1,4 @@
 import type { ExtractorConfig } from '~/config/schema';
-import type { ComponentModel, ParsedComponent } from '~/models/pipeline';
 
 // ──────────────────────────────────────────────────────────────
 // JSON output format
@@ -27,11 +26,4 @@ export interface ExtractInput {
     tsconfigPath: string;
     targetFiles: string[];
     config: ExtractorConfig;
-}
-
-export interface ExtractOutput {
-    parsed: ParsedComponent[];
-    models: ComponentModel[];
-    props: PropsInfoJson[];
-    writtenFiles: string[];
 }

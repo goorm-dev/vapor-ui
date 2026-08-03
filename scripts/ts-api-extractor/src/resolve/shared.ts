@@ -7,19 +7,13 @@ export const TYPE_FORMAT_FLAGS =
     TypeFormatFlags.NoTruncation |
     TypeFormatFlags.WriteTypeArgumentsOfSignature;
 
-export type ResolveTypeFn = (
-    type: Type,
-    baseUiMap?: BaseUiTypeMap,
-    contextNode?: Node,
-    verbose?: boolean,
-) => string;
+export type ResolveTypeFn = (type: Type, baseUiMap?: BaseUiTypeMap, contextNode?: Node) => string;
 
 export interface ResolverContext {
     type: Type;
     rawText: string;
     baseUiMap?: BaseUiTypeMap;
     contextNode?: Node;
-    verbose?: boolean;
     resolveType: ResolveTypeFn;
 }
 

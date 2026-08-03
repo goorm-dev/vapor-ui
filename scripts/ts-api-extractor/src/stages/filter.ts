@@ -58,10 +58,8 @@ export function shouldIncludeProp(
     name: string,
     source: PropSource,
     options: FilterConfig,
-    includeSet: Set<string>,
     htmlWhitelist: Set<string>,
 ): boolean {
-    if (includeSet.has(name)) return true;
     if (htmlWhitelist.has(name)) return true;
     if (options.filterExternal && (source === 'react' || source === 'dom' || source === 'external'))
         return false;
@@ -75,12 +73,11 @@ export function filterParsedComponents(
     components: ParsedComponent[],
     options: FilterConfig,
 ): ParsedComponent[] {
-    const includeSet = new Set(options.include ?? []);
     const htmlWhitelist = new Set(options.includeHtml ?? []);
     return components.map((component) => ({
         ...component,
         props: component.props.filter((prop) =>
-            shouldIncludeProp(prop.name, prop.source, options, includeSet, htmlWhitelist),
+            shouldIncludeProp(prop.name, prop.source, options, htmlWhitelist),
         ),
     }));
 }

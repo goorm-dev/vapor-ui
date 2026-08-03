@@ -12,26 +12,12 @@ const BASE_OPTIONS: FilterConfig = {
 };
 
 describe('shouldIncludeProp', () => {
-    describe('includeSet priority', () => {
-        it('always includes props present in includeSet', () => {
-            const result = shouldIncludeProp(
-                'className',
-                'react' as PropSource,
-                { ...BASE_OPTIONS, filterExternal: true },
-                new Set(['className']),
-                new Set(),
-            );
-            expect(result).toBe(true);
-        });
-    });
-
     describe('includeHtml whitelist', () => {
         it('includes whitelisted html-like props even when filterHtml is on', () => {
             const result = shouldIncludeProp(
                 'ariaLabel',
                 'project' as PropSource,
                 { ...BASE_OPTIONS, filterHtml: true, includeHtml: ['ariaLabel'] },
-                new Set(),
                 new Set(['ariaLabel']),
             );
             expect(result).toBe(true);
@@ -45,7 +31,6 @@ describe('shouldIncludeProp', () => {
                 'react' as PropSource,
                 { ...BASE_OPTIONS, filterExternal: true },
                 new Set(),
-                new Set(),
             );
             expect(result).toBe(false);
         });
@@ -56,7 +41,6 @@ describe('shouldIncludeProp', () => {
                 'react' as PropSource,
                 { ...BASE_OPTIONS, filterExternal: false },
                 new Set(),
-                new Set(),
             );
             expect(result).toBe(true);
         });
@@ -66,7 +50,6 @@ describe('shouldIncludeProp', () => {
                 'size',
                 'project' as PropSource,
                 { ...BASE_OPTIONS, filterExternal: true },
-                new Set(),
                 new Set(),
             );
             expect(result).toBe(true);
@@ -80,7 +63,6 @@ describe('shouldIncludeProp', () => {
                 'project' as PropSource,
                 { ...BASE_OPTIONS, filterHtml: true },
                 new Set(),
-                new Set(),
             );
             expect(result).toBe(false);
         });
@@ -91,7 +73,6 @@ describe('shouldIncludeProp', () => {
                 'project' as PropSource,
                 { ...BASE_OPTIONS, filterHtml: true },
                 new Set(),
-                new Set(),
             );
             expect(result).toBe(false);
         });
@@ -101,7 +82,6 @@ describe('shouldIncludeProp', () => {
                 'data-testid',
                 'project' as PropSource,
                 { ...BASE_OPTIONS, filterHtml: false },
-                new Set(),
                 new Set(),
             );
             expect(result).toBe(true);
@@ -115,7 +95,6 @@ describe('shouldIncludeProp', () => {
                 'sprinkles' as PropSource,
                 { ...BASE_OPTIONS, filterSprinkles: true },
                 new Set(),
-                new Set(),
             );
             expect(result).toBe(false);
         });
@@ -126,7 +105,6 @@ describe('shouldIncludeProp', () => {
                 'project' as PropSource,
                 { ...BASE_OPTIONS, filterSprinkles: true },
                 new Set(),
-                new Set(),
             );
             expect(result).toBe(false);
         });
@@ -136,7 +114,6 @@ describe('shouldIncludeProp', () => {
                 'color',
                 'sprinkles' as PropSource,
                 { ...BASE_OPTIONS, filterSprinkles: false },
-                new Set(),
                 new Set(),
             );
             expect(result).toBe(true);
@@ -150,7 +127,6 @@ describe('shouldIncludeProp', () => {
                 'project' as PropSource,
                 BASE_OPTIONS,
                 new Set(),
-                new Set(),
             );
             expect(result).toBe(true);
         });
@@ -160,7 +136,6 @@ describe('shouldIncludeProp', () => {
                 'size',
                 'project' as PropSource,
                 BASE_OPTIONS,
-                new Set(),
                 new Set(),
             );
             expect(result).toBe(true);

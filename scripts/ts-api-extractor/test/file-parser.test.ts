@@ -113,7 +113,7 @@ describe('parseSourceFile → transform pipeline', () => {
         expect(dataTestIdProp).toBeUndefined();
     });
 
-    it('respects include option for html-like props', () => {
+    it('respects includeHtml option for html-like props', () => {
         const root = createFixtureRoot();
         const { componentFile } = writeFixtureFiles(root);
         const project = createProject();
@@ -122,9 +122,9 @@ describe('parseSourceFile → transform pipeline', () => {
         const parsed = parseSourceFile(sourceFile);
         const filterConfig: FilterConfig = {
             filterExternal: false,
-            filterHtml: false,
+            filterHtml: true,
             filterSprinkles: false,
-            include: ['data-testid'],
+            includeHtml: ['data-testid'],
         };
         const filtered = filterParsedComponents(parsed, filterConfig);
         const props = componentsToJson(parsedComponentsToModels(filtered));

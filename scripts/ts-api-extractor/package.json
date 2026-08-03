@@ -4,13 +4,6 @@
     "private": true,
     "description": "TypeScript AST-based API extractor for documentation generation",
     "type": "module",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
-        }
-    },
-    "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "bin": {
         "ts-api-extractor": "./dist/cli/index.js"

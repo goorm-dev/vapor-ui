@@ -11,26 +11,20 @@ async function runCli(): Promise<void> {
 
   Options
     --component, -n   Component name to process (default: all components)
-    --config          Config file path
 
   Examples
     $ ts-api-extractor
     $ ts-api-extractor --component Tabs
-    $ ts-api-extractor --config ./docs-extractor.config.mjs
 `,
         {
             importMeta: import.meta,
             flags: {
                 component: { type: 'string', shortFlag: 'n' },
-                config: { type: 'string' },
             },
         },
     );
 
-    const resolved = await resolveOptions({
-        component: cli.flags.component,
-        configPath: cli.flags.config,
-    });
+    const resolved = await resolveOptions({ component: cli.flags.component });
 
     extract({
         tsconfigPath: resolved.tsconfigPath,
