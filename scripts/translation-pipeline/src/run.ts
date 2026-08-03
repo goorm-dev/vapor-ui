@@ -61,7 +61,6 @@ function requireEnv(name: string): void {
 export async function run(argv: string[]): Promise<RunResult> {
     const cliOptions = parseCliArgs(argv);
 
-    requireEnv('LITELLM_API_KEY');
     requireEnv('LITELLM_BASE_URL');
 
     const inputDir = resolve(cliOptions.input);

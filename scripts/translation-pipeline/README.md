@@ -25,15 +25,14 @@ pnpm --filter website translate  # translate only
 ## Requirements
 
 - Node.js >= 20.20.2
-- LiteLLM API key and endpoint (see team credentials doc)
+- An OpenAI-compatible LLM endpoint (see team credentials doc)
 
 ## Environment Variables
 
 Must be set before running the CLI. The CLI automatically reads `.env` in the current working directory.
 
 ```bash
-LITELLM_API_KEY=<api key>
-LITELLM_BASE_URL=<litellm endpoint>
+LITELLM_BASE_URL=<endpoint>
 ```
 
 ## CLI Options

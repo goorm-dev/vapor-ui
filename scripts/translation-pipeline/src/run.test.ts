@@ -48,7 +48,6 @@ describe('cli run', () => {
 
     beforeEach(() => {
         workDir = mkdtempSync(join(tmpdir(), 'translation-pipeline-cli-'));
-        vi.stubEnv('LITELLM_API_KEY', 'test-key');
         vi.stubEnv('LITELLM_BASE_URL', 'https://example.test');
         vi.spyOn(translatorModule, 'translatePropsInfo').mockImplementation(passthroughRunner);
     });
@@ -65,15 +64,6 @@ describe('cli run', () => {
 
     it('throws when --output is missing', async () => {
         await expect(run(['--input', join(workDir, 'en')])).rejects.toThrow(/--output/);
-    });
-
-    it('throws when LITELLM_API_KEY is missing', async () => {
-        vi.stubEnv('LITELLM_API_KEY', '');
-        const inputDir = join(workDir, 'en');
-        mkdirSync(inputDir, { recursive: true });
-        await expect(run(['--input', inputDir, '--output', join(workDir, 'out')])).rejects.toThrow(
-            /LITELLM_API_KEY/,
-        );
     });
 
     it('throws when LITELLM_BASE_URL is missing', async () => {

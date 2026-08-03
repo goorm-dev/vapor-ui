@@ -13,7 +13,6 @@ describe('E2E: CLI → translator → 파일 출력', () => {
 
     beforeEach(() => {
         workDir = mkdtempSync(join(tmpdir(), 'e2e-test-'));
-        vi.stubEnv('LITELLM_API_KEY', 'test-key');
         vi.stubEnv('LITELLM_BASE_URL', 'https://example.test');
     });
 

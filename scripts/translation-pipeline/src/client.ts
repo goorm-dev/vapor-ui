@@ -47,12 +47,8 @@ async function callLlmOnce(
     options: LlmCallOptions,
 ): Promise<LlmCallResult> {
     const baseUrl = process.env['LITELLM_BASE_URL'];
-    const apiKey = process.env['LITELLM_API_KEY'];
     if (!baseUrl) {
         return { content: null, error: 'LITELLM_BASE_URL is not set' };
-    }
-    if (!apiKey) {
-        return { content: null, error: 'LITELLM_API_KEY is not set' };
     }
 
     try {
@@ -64,7 +60,6 @@ async function callLlmOnce(
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${apiKey}`,
                     // 게이트웨이 사용량 집계용 라벨. 요구하지 않는 프록시는 무시한다.
                     'X-Client-Id': 'vapor-ui-translation-pipeline',
                 },

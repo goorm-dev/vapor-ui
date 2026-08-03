@@ -34,7 +34,6 @@ describe('translateUnits', () => {
     beforeEach(() => {
         vi.stubGlobal('fetch', vi.fn());
         vi.stubEnv('LITELLM_BASE_URL', 'https://litellm.internal');
-        vi.stubEnv('LITELLM_API_KEY', 'test-key');
     });
 
     afterEach(() => {
