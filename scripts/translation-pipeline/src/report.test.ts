@@ -12,7 +12,7 @@ function makeTmpDir(): string {
 }
 
 const unverifiedOutcome = {
-    id: 'component.description',
+    key: 'Button:(description)',
     translated: 'Button 컴포넌트.',
     assurance: 'unverified' as const,
     reportable: true,
@@ -26,6 +26,7 @@ const unverifiedOutcome = {
             explanation: '어색합니다.',
         },
     ],
+    violations: [],
 };
 
 describe('buildReport', () => {
@@ -136,16 +137,16 @@ describe('renderReport', () => {
                 },
             ],
             [
-                { componentName: 'Button', reason: 'batch MQM invalid: missing id "x"' },
-                { componentName: 'Button', reason: 'batch postprocess invalid' },
+                'batch MQM invalid: missing id "x"',
+                'batch postprocess invalid',
             ],
         );
         const output = renderReport(report);
         expect(output).toContain('| Batch fallbacks | 2 |');
         expect(output).toContain('2 chunk(s) were marked unverified.');
-        expect(output).toContain('| Component | Reason |');
-        expect(output).toContain('| Button | batch MQM invalid: missing id "x" |');
-        expect(output).toContain('| Button | batch postprocess invalid |');
+        expect(output).toContain('| Reason |');
+        expect(output).toContain('| batch MQM invalid: missing id "x" |');
+        expect(output).toContain('| batch postprocess invalid |');
     });
 
     it('renders details only for reportable unverified outcomes', () => {
@@ -163,7 +164,7 @@ describe('renderReport', () => {
         const output = renderReport(report);
 
         expect(output).toContain('## Unverified Details');
-        expect(output).toContain('### Button — component.description');
+        expect(output).toContain('### Button:(description)');
         expect(output).toContain('Reason: `quality_gate_failed`');
         expect(output).toContain('Output: `Button 컴포넌트.`');
         expect(output).toContain('MQM errors');
@@ -220,6 +221,7 @@ describe('buildComponentReports', () => {
     const props: TranslatableDoc[] = [
         {
             name: 'Button',
+            displayName: 'Button',
             description: 'A button component.',
             props: [{ name: 'size', description: 'Controls the size.' }, { name: 'disabled' }],
         },
@@ -227,44 +229,40 @@ describe('buildComponentReports', () => {
 
     const units: TranslationUnit[] = [
         {
-            id: 'component.description',
             kind: 'component.description',
-            ownerName: 'Button',
+            componentDisplayName: 'Button',
             source: 'A button component.',
-            componentIndex: 0,
-            componentName: 'Button',
         },
         {
-            id: 'props[0].size.description',
             kind: 'prop.description',
-            ownerName: 'size',
+            componentDisplayName: 'Button',
+            propName: 'size',
             source: 'Controls the size.',
-            componentIndex: 0,
-            componentName: 'Button',
-            propIndex: 0,
         },
     ];
 
     it('summarizes verified, unverified, and cached outcomes per component', () => {
         const outcomes = new Map<string, TranslationOutcome>([
             [
-                '0:component.description',
+                'A button component.',
                 {
-                    id: 'component.description',
                     translated: '캐시된 번역',
                     assurance: 'verified',
                     reportable: false,
                     reason: 'cache_hit',
+                    errors: [],
+                    violations: [],
                 },
             ],
             [
-                '0:props[0].size.description',
+                'Controls the size.',
                 {
-                    id: 'props[0].size.description',
                     translated: '크기를 지정합니다.',
                     assurance: 'unverified',
                     reportable: false,
                     reason: 'batch_mqm_failed',
+                    errors: [],
+                    violations: [],
                 },
             ],
         ]);

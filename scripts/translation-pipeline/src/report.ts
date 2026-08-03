@@ -10,18 +10,17 @@ import {
 } from '~/domain';
 import { errorMessage } from '~/util';
 
+export interface ReportedOutcome extends TranslationOutcome {
+    key: string;
+}
+
 export interface ComponentReport {
     name: string;
     totalTexts: number;
     verified: number;
     unverified: number;
     cached: number;
-    unverifiedOutcomes: TranslationOutcome[];
-}
-
-export interface BatchFallbackEntry {
-    componentName: string;
-    reason: string;
+    unverifiedOutcomes: ReportedOutcome[];
 }
 
 export interface TranslationReport {
@@ -31,16 +30,12 @@ export interface TranslationReport {
     verifiedCount: number;
     unverifiedCount: number;
     cachedCount: number;
-    /** 실행 전체 PASS율 (verified / total) */
     passRate: number;
-    /** 실패 사유별 건수 */
     reasonCounts: Record<string, number>;
-    /** MQM 카테고리별 오류 건수 */
     categoryCounts: Record<string, number>;
-    /** 결정론 보존 규칙별 위반 건수 */
     violationCounts: Record<string, number>;
     components: ComponentReport[];
-    batchFallbacks: BatchFallbackEntry[];
+    batchFallbacks: string[];
 }
 
 export function buildComponentReports(
@@ -48,14 +43,19 @@ export function buildComponentReports(
     units: TranslationUnit[],
     outcomes: Map<string, TranslationOutcome>,
 ): ComponentReport[] {
-    return props.map((component, componentIndex) => {
-        const componentUnits = units.filter((unit) => unit.componentIndex === componentIndex);
+    return props.map((component) => {
+        const componentUnits = units.filter(
+            (unit) => unit.componentDisplayName === component.displayName,
+        );
         const componentOutcomes = componentUnits
-            .map((unit) => outcomes.get(getTranslationUnitKey(unit)))
-            .filter((outcome): outcome is TranslationOutcome => outcome !== undefined);
+            .map((unit) => {
+                const outcome = outcomes.get(unit.source);
+                return outcome && { ...outcome, key: getTranslationUnitKey(unit) };
+            })
+            .filter((outcome): outcome is ReportedOutcome => outcome !== undefined);
 
         return {
-            name: component.name,
+            name: component.displayName,
             totalTexts: componentUnits.length,
             verified: componentOutcomes.filter((outcome) => outcome.assurance === 'verified')
                 .length,
@@ -79,7 +79,7 @@ function tally(values: string[]): Record<string, number> {
 
 export function buildReport(
     components: ComponentReport[],
-    batchFallbacks: BatchFallbackEntry[] = [],
+    batchFallbacks: string[] = [],
 ): TranslationReport {
     const totalTexts = components.reduce((sum, component) => sum + component.totalTexts, 0);
     const verifiedCount = components.reduce((sum, component) => sum + component.verified, 0);
@@ -95,13 +95,11 @@ export function buildReport(
         passRate: totalTexts === 0 ? 1 : verifiedCount / totalTexts,
         reasonCounts: tally(reportedOutcomes.map((outcome) => outcome.reason)),
         categoryCounts: tally(
-            reportedOutcomes.flatMap((outcome) =>
-                (outcome.errors ?? []).map((error) => error.category),
-            ),
+            reportedOutcomes.flatMap((outcome) => outcome.errors.map((error) => error.category)),
         ),
         violationCounts: tally(
             reportedOutcomes.flatMap((outcome) =>
-                (outcome.violations ?? []).map((violation) => violation.rule),
+                outcome.violations.map((violation) => violation.rule),
             ),
         ),
         components,
@@ -153,19 +151,19 @@ function renderDistribution(title: string, counts: Record<string, number>): stri
     ];
 }
 
-function renderUnverifiedDetail(component: ComponentReport, outcome: TranslationOutcome): string {
+function renderUnverifiedDetail(outcome: ReportedOutcome): string {
     const lines = [
-        `### ${component.name} — ${outcome.id}`,
+        `### ${outcome.key}`,
         '',
         `Reason: ${inlineCode(outcome.reason)}`,
         `Output: ${inlineCode(outcome.translated)}`,
     ];
 
-    if (outcome.errors && outcome.errors.length > 0) {
+    if (outcome.errors.length > 0) {
         lines.push('', ...renderMqmErrors('MQM errors', outcome.errors));
     }
 
-    if (outcome.violations && outcome.violations.length > 0) {
+    if (outcome.violations.length > 0) {
         lines.push(
             '',
             'Preservation violations:',
@@ -181,7 +179,7 @@ function renderUnverifiedDetail(component: ComponentReport, outcome: Translation
 
 export function renderReport(report: TranslationReport): string {
     const details = report.components.flatMap((component) =>
-        component.unverifiedOutcomes.map((outcome) => renderUnverifiedDetail(component, outcome)),
+        component.unverifiedOutcomes.map(renderUnverifiedDetail),
     );
 
     const lines = [
@@ -218,11 +216,9 @@ export function renderReport(report: TranslationReport): string {
             : [
                   `${report.batchFallbacks.length} chunk(s) were marked unverified.`,
                   '',
-                  '| Component | Reason |',
-                  '|---|---|',
-                  ...report.batchFallbacks.map(
-                      (entry) => `| ${entry.componentName} | ${escapeTableCell(entry.reason)} |`,
-                  ),
+                  '| Reason |',
+                  '|---|',
+                  ...report.batchFallbacks.map((reason) => `| ${escapeTableCell(reason)} |`),
               ]),
         '',
         '## Component Summary',

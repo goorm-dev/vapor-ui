@@ -13,27 +13,19 @@ import { chunkArray } from '~/util';
 
 const POSTPROCESS_BATCH_SIZE = 10;
 
-function finalOutcome(
-    unit: TranslationUnit,
-    translated: string,
-    finalEvaluation: MqmResult,
-): TranslationOutcome {
+function finalOutcome(translated: string, finalEvaluation: MqmResult): TranslationOutcome {
     return finalEvaluation.verdict === 'PASS'
-        ? makeOutcome(unit, translated, 'quality_gate_passed')
-        : makeOutcome(unit, translated, 'quality_gate_failed', {
+        ? makeOutcome(translated, 'quality_gate_passed')
+        : makeOutcome(translated, 'quality_gate_failed', {
               errors: finalEvaluation.errors,
           });
 }
 
-/**
- * 문자열 보존을 끝까지 못 지킨 유닛은 한국어를 버리고 영어 원문을 그대로 쓴다 (KAN-10).
- * 잘못된 식별자·코드가 들어간 한국어보다 영어가 낫다.
- */
 function preservationFallbackOutcome(
     unit: TranslationUnit,
     violations: PreservationViolation[],
 ): TranslationOutcome {
-    return makeOutcome(unit, unit.source, 'preservation_fallback', { violations });
+    return makeOutcome(unit.source, 'preservation_fallback', { violations });
 }
 
 function requireTranslation(translations: Map<string, string>, unit: TranslationUnit): string {
@@ -44,10 +36,6 @@ function requireTranslation(translations: Map<string, string>, unit: Translation
     return translated;
 }
 
-/**
- * 한 MQM 배치의 수명주기: 결정론 보존 체크 + MQM → 후편집 → 재검사.
- * 배치는 컴포넌트를 섞은 횡단 배치다 (KAN-11).
- */
 export async function processBatchLifecycle(
     units: TranslationUnit[],
     translations: Map<string, string>,
@@ -74,7 +62,7 @@ export async function processBatchLifecycle(
                 unit,
                 violations.length > 0
                     ? preservationFallbackOutcome(unit, violations)
-                    : makeOutcome(unit, requireTranslation(translations, unit), 'batch_mqm_failed'),
+                    : makeOutcome(requireTranslation(translations, unit), 'batch_mqm_failed'),
             ]);
         }
         return { outcomes, batchFailureReasons };
@@ -90,7 +78,7 @@ export async function processBatchLifecycle(
         }
         const violations = violationsOf(unit);
         if (evaluation.verdict === 'PASS' && violations.length === 0) {
-            outcomes.push([unit, makeOutcome(unit, translated, 'quality_gate_passed')]);
+            outcomes.push([unit, makeOutcome(translated, 'quality_gate_passed')]);
             continue;
         }
         failedUnits.push({
@@ -111,18 +99,14 @@ export async function processBatchLifecycle(
                     failed.unit,
                     failed.violations.length > 0
                         ? preservationFallbackOutcome(failed.unit, failed.violations)
-                        : makeOutcome(
-                              failed.unit,
-                              failed.initialTranslation,
-                              'batch_postprocess_failed',
-                              { errors: failed.errors },
-                          ),
+                        : makeOutcome(failed.initialTranslation, 'batch_postprocess_failed', {
+                              errors: failed.errors,
+                          }),
                 ]);
             }
             continue;
         }
 
-        // 후편집 결과를 결정론 체크로 먼저 걸러낸다 — 실패하면 MQM 판정과 무관하게 영어 폴백.
         const recheckable: FailedUnit[] = [];
         for (const failed of failedChunk) {
             const key = getTranslationUnitKey(failed.unit);
@@ -147,10 +131,7 @@ export async function processBatchLifecycle(
             for (const failed of recheckable) {
                 const key = getTranslationUnitKey(failed.unit);
                 const postprocessed = postprocess.value.get(key) ?? failed.initialTranslation;
-                outcomes.push([
-                    failed.unit,
-                    makeOutcome(failed.unit, postprocessed, 'batch_final_mqm_failed'),
-                ]);
+                outcomes.push([failed.unit, makeOutcome(postprocessed, 'batch_final_mqm_failed')]);
             }
             continue;
         }
@@ -162,7 +143,7 @@ export async function processBatchLifecycle(
             if (translated === undefined || finalEvaluation === undefined) {
                 throw new Error(`Missing final batch MQM result for id: ${key}`);
             }
-            outcomes.push([failed.unit, finalOutcome(failed.unit, translated, finalEvaluation)]);
+            outcomes.push([failed.unit, finalOutcome(translated, finalEvaluation)]);
         }
     }
 

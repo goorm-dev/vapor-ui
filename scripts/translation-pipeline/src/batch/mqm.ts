@@ -6,6 +6,7 @@ import {
     type MqmError,
     type TranslationUnit,
     getTranslationUnitKey,
+    getUnitOwnerName,
 } from '~/domain';
 
 const MQM_EVALUATOR_PROMPT = `You are a design-system documentation translation quality evaluator. Respond ONLY with a single JSON object — no explanation, no markdown, no code fences.
@@ -32,7 +33,6 @@ Severity:
 Write explanation in Korean. Keep category and severity values in English exactly as specified.
 If no errors exist, return errors as an empty array.`;
 
-// MqmCategory 유니온에서 파생 — 카테고리 추가/삭제는 domain.ts 한 곳에서만
 const MQM_CATEGORY_VALUES = [
     'Accuracy/Mistranslation',
     'Accuracy/Omission',
@@ -102,7 +102,7 @@ export async function validateBatchWithMqm(
         units: units.map((unit) => ({
             id: getTranslationUnitKey(unit),
             kind: unit.kind,
-            ownerName: unit.ownerName,
+            ownerName: getUnitOwnerName(unit),
             source: unit.source,
             translated: translations.get(getTranslationUnitKey(unit)) ?? '',
         })),

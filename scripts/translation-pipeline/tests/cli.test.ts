@@ -3,10 +3,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { run } from '~/run';
 import * as clientModule from '~/client';
-import * as translationModule from '~/translate';
 import { getTranslationUnitKey } from '~/domain';
+import { run } from '~/run';
+import * as translationModule from '~/translate';
 
 describe('E2E: CLI → translator → 파일 출력', () => {
     let workDir: string;
@@ -56,8 +56,8 @@ describe('E2E: CLI → translator → 파일 출력', () => {
         vi.spyOn(clientModule, 'callLlm').mockResolvedValue({
             content: JSON.stringify({
                 evaluations: [
-                    { id: '0:component.description', verdict: 'PASS', errors: [] },
-                    { id: '0:props[0].size.description', verdict: 'PASS', errors: [] },
+                    { id: 'Button:(description)', verdict: 'PASS', errors: [] },
+                    { id: 'Button:size', verdict: 'PASS', errors: [] },
                 ],
             }),
         });
@@ -112,7 +112,7 @@ describe('E2E: CLI → translator → 파일 출력', () => {
                 new Map(
                     units.map((unit) => [
                         getTranslationUnitKey(unit),
-                        unit.id === 'props[0].size.description'
+                        unit.kind === 'prop.description' && unit.propName === 'size'
                             ? '버튼의 크기를 제어합니다.'
                             : `[ko]${unit.source}`,
                     ]),
@@ -127,9 +127,9 @@ describe('E2E: CLI → translator → 파일 출력', () => {
                 return {
                     content: JSON.stringify({
                         evaluations: [
-                            { id: '0:component.description', verdict: 'PASS', errors: [] },
+                            { id: 'Button:(description)', verdict: 'PASS', errors: [] },
                             {
-                                id: '0:props[0].size.description',
+                                id: 'Button:size',
                                 verdict: 'FAIL',
                                 errors: [mqmError],
                             },
@@ -145,7 +145,7 @@ describe('E2E: CLI → translator → 파일 출력', () => {
                     content: JSON.stringify({
                         translations: [
                             {
-                                id: '0:props[0].size.description',
+                                id: 'Button:size',
                                 translated: '버튼의 크기를 지정합니다.',
                             },
                         ],
@@ -159,7 +159,7 @@ describe('E2E: CLI → translator → 파일 출력', () => {
             return {
                 content: JSON.stringify({
                     evaluations: [
-                        { id: '0:props[0].size.description', verdict: 'PASS', errors: [] },
+                        { id: 'Button:size', verdict: 'PASS', errors: [] },
                     ],
                 }),
                 inputTokens: 0,
@@ -181,5 +181,131 @@ describe('E2E: CLI → translator → 파일 출력', () => {
         // 리포트에 검증됨으로 기록 (unverified 없음)
         const reportContent = readFileSync(result.reportPath, 'utf-8');
         expect(reportContent).toContain('No reportable unverified translations.');
+    });
+});
+
+/**
+ * 특성화 테스트 — 유닛 식별 방식을 바꿔도 산출물이 같아야 한다.
+ *
+ * mock은 요청에 실린 id를 그대로 echo하므로 키 형식을 모른다. 그래서 식별 방식이
+ * `componentIndex:id`에서 `componentDisplayName:propName`으로 바뀌어도 이 테스트는 통과해야 한다.
+ */
+describe('E2E: 동명 컴포넌트 · 중복 원문', () => {
+    let workDir: string;
+
+    beforeEach(() => {
+        workDir = mkdtempSync(join(tmpdir(), 'e2e-identity-'));
+        vi.stubEnv('LITELLM_BASE_URL', 'https://example.test');
+    });
+
+    afterEach(() => {
+        rmSync(workDir, { recursive: true, force: true });
+        vi.unstubAllEnvs();
+        vi.restoreAllMocks();
+    });
+
+    /** 요청의 id를 그대로 되돌려주는 mock — 키 형식에 의존하지 않는다. */
+    function mockLlmEchoingIds(): void {
+        vi.spyOn(clientModule, 'callLlm').mockImplementation(async (messages, options) => {
+            const request = JSON.parse(messages[1].content) as {
+                units: { id: string; source?: string }[];
+            };
+            if (options.jsonSchema?.name === 'batch_mqm_response') {
+                return {
+                    content: JSON.stringify({
+                        evaluations: request.units.map((unit) => ({
+                            id: unit.id,
+                            verdict: 'PASS',
+                            errors: [],
+                        })),
+                    }),
+                };
+            }
+            // translation_response · batch_postprocess_response 둘 다 translations[]
+            return {
+                content: JSON.stringify({
+                    translations: request.units.map((unit) => ({
+                        id: unit.id,
+                        translated: `[ko]${unit.source ?? ''}`,
+                    })),
+                }),
+            };
+        });
+    }
+
+    function writeIdentityFixture(inputDir: string): void {
+        mkdirSync(inputDir, { recursive: true });
+        const docs: Record<string, unknown> = {
+            // name이 둘 다 'Root' — 이름만으로는 구별되지 않는다
+            'avatar-root.json': {
+                name: 'Root',
+                displayName: 'Avatar.Root',
+                description: 'An avatar root.',
+                props: [
+                    // select-root의 size와 원문이 같다 — 중복 제거 fan-out 경로
+                    {
+                        name: 'size',
+                        type: ['"sm"', '"md"'],
+                        required: false,
+                        description: 'The size.',
+                    },
+                ],
+            },
+            'select-root.json': {
+                name: 'Root',
+                displayName: 'Select.Root',
+                description: 'A select root.',
+                props: [
+                    {
+                        name: 'size',
+                        type: ['"sm"', '"md"'],
+                        required: false,
+                        description: 'The size.',
+                    },
+                    { name: 'disabled', type: ['boolean'], required: false },
+                ],
+            },
+            // displayName이 없는 문서 (실제 입력에 6개 있다) — name이 이미 정규화돼 있다
+            'spinner.json': { name: 'Spinner', description: 'A spinner.', props: [] },
+        };
+        for (const [fileName, content] of Object.entries(docs)) {
+            writeFileSync(join(inputDir, fileName), JSON.stringify(content), 'utf-8');
+        }
+    }
+
+    function readKo(outputDir: string, fileName: string) {
+        return JSON.parse(readFileSync(join(outputDir, 'ko', fileName), 'utf-8')) as {
+            name: string;
+            description?: string;
+            props: { name: string; description?: string; type?: string[] }[];
+        };
+    }
+
+    it('name이 겹치는 두 문서가 서로의 번역을 덮어쓰지 않는다', async () => {
+        const inputDir = join(workDir, 'en');
+        const outputDir = join(workDir, 'out');
+        writeIdentityFixture(inputDir);
+        mockLlmEchoingIds();
+
+        const result = await run(['--input', inputDir, '--output', outputDir]);
+        expect(result.writtenFiles).toHaveLength(3);
+
+        const avatar = readKo(outputDir, 'avatar-root.json');
+        const select = readKo(outputDir, 'select-root.json');
+
+        // 핵심: 두 'Root'의 컴포넌트 설명이 각자의 원문에서 나왔다
+        expect(avatar.description).toBe('[ko]An avatar root.');
+        expect(select.description).toBe('[ko]A select root.');
+
+        // 원문이 같은 prop은 양쪽 모두 채워진다 (중복 제거 후 fan-out)
+        expect(avatar.props[0].description).toBe('[ko]The size.');
+        expect(select.props[0].description).toBe('[ko]The size.');
+
+        // 번역 대상이 아닌 필드는 원본 유지
+        expect(select.props[0].type).toEqual(['"sm"', '"md"']);
+        expect(select.props[1].description).toBeUndefined();
+
+        // displayName이 없는 문서도 처리된다
+        expect(readKo(outputDir, 'spinner.json').description).toBe('[ko]A spinner.');
     });
 });

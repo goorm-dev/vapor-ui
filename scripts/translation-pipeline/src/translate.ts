@@ -1,6 +1,6 @@
 import { callBatch } from '~/batch-call';
 import { DEFAULT_TRANSLATION_MODEL } from '~/defaults';
-import { type TranslationUnit, getTranslationUnitKey } from '~/domain';
+import { type TranslationUnit, getTranslationUnitKey, getUnitOwnerName } from '~/domain';
 
 const SYSTEM_PROMPT = `You are a professional Korean translator for design-system API documentation. Respond ONLY with valid JSON.
 
@@ -54,10 +54,6 @@ const TRANSLATION_RESPONSE_SCHEMA = {
     },
 };
 
-/**
- * 컴포넌트를 섞은 횡단 배치를 번역한다. 컴포넌트 컨텍스트는 유닛별 `componentName`으로 전달한다
- * (중복 제거 후에는 컴포넌트가 배치 단위로서 의미가 없다 — KAN-11).
- */
 export async function translateUnits(units: TranslationUnit[]): Promise<Map<string, string>> {
     if (units.length === 0) {
         return new Map();
@@ -67,13 +63,12 @@ export async function translateUnits(units: TranslationUnit[]): Promise<Map<stri
         units: units.map((unit) => ({
             id: getTranslationUnitKey(unit),
             kind: unit.kind,
-            ownerName: unit.ownerName,
-            componentName: unit.componentName,
+            ownerName: getUnitOwnerName(unit),
+            componentName: unit.componentDisplayName,
             source: unit.source,
         })),
     };
 
-    // callBatch와 달리 여기서는 던진다 — translator.ts의 catch가 배치를 영어 폴백으로 격하시킨다.
     const result = await callBatch<TranslationResponseItem>(
         'llm-translation',
         SYSTEM_PROMPT,

@@ -1,7 +1,7 @@
 import { type BatchResult, callBatch } from '~/batch-call';
 import type { FailedUnit } from '~/batch/_types';
 import { DEFAULT_POSTPROCESS_MODEL } from '~/defaults';
-import { getTranslationUnitKey } from '~/domain';
+import { getTranslationUnitKey, getUnitOwnerName } from '~/domain';
 import { describeViolation } from '~/preserve';
 
 const BATCH_POSTPROCESS_SYSTEM_PROMPT = `You are a professional Korean translator and post-editor for a design system documentation site.
@@ -45,8 +45,8 @@ export async function postprocessBatchWithLlm(
         units: inputs.map(({ unit, initialTranslation, errors, violations }) => ({
             id: getTranslationUnitKey(unit),
             kind: unit.kind,
-            ownerName: unit.ownerName,
-            componentName: unit.componentName,
+            ownerName: getUnitOwnerName(unit),
+            componentName: unit.componentDisplayName,
             source: unit.source,
             initialTranslation,
             errors,

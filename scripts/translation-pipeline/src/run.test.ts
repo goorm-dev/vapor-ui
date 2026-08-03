@@ -3,29 +3,33 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { TranslatableDoc, TranslationOutcome } from '~/domain';
+import { type TranslatableDoc, makeUnitKey } from '~/domain';
 import { parseCliArgs, run } from '~/run';
 import * as translatorModule from '~/translator';
+import type { ReportedOutcome } from '~/report';
 import type { TranslateResult } from '~/translator';
 
 function passthroughRunner(docs: TranslatableDoc[]): Promise<TranslateResult> {
-    const translatedProps = docs.map((doc) => ({
-        ...doc,
-        description: doc.description ? `[ko]${doc.description}` : doc.description,
-        props: doc.props.map((prop) => ({
-            ...prop,
-            description: prop.description ? `[ko]${prop.description}` : prop.description,
-        })),
-    }));
+    const translations = new Map<string, string>();
+    for (const doc of docs) {
+        if (doc.description) {
+            translations.set(makeUnitKey(doc.displayName, null), `[ko]${doc.description}`);
+        }
+        for (const prop of doc.props) {
+            if (prop.description) {
+                translations.set(makeUnitKey(doc.displayName, prop.name), `[ko]${prop.description}`);
+            }
+        }
+    }
     const componentReports = docs.map((doc) => ({
-        name: doc.name,
+        name: doc.displayName,
         totalTexts: (doc.description ? 1 : 0) + doc.props.filter((p) => p.description).length,
         verified: (doc.description ? 1 : 0) + doc.props.filter((p) => p.description).length,
         unverified: 0,
         cached: 0,
-        unverifiedOutcomes: [] as TranslationOutcome[],
+        unverifiedOutcomes: [] as ReportedOutcome[],
     }));
-    return Promise.resolve({ props: translatedProps, componentReports, batchFallbacks: [] });
+    return Promise.resolve({ translations, componentReports, batchFallbacks: [] });
 }
 
 describe('parseCliArgs', () => {
@@ -49,7 +53,7 @@ describe('cli run', () => {
     beforeEach(() => {
         workDir = mkdtempSync(join(tmpdir(), 'translation-pipeline-cli-'));
         vi.stubEnv('LITELLM_BASE_URL', 'https://example.test');
-        vi.spyOn(translatorModule, 'translatePropsInfo').mockImplementation(passthroughRunner);
+        vi.spyOn(translatorModule, 'translateDescriptions').mockImplementation(passthroughRunner);
     });
 
     afterEach(() => {

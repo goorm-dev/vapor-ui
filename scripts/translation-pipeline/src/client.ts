@@ -14,14 +14,12 @@ export interface LlmCallOptions {
     jsonSchema?: { name: string; schema: object };
 }
 
-/** 재시도 지연(ms). 429/5xx/타임아웃만 재시도한다 — 4xx는 재시도해도 같은 답이다 (KAN-11). */
 const RETRY_DELAYS_MS = [1_000, 4_000];
 
 function isRetryable(result: LlmCallResult): boolean {
     if (result.statusCode !== undefined) {
         return result.statusCode === 429 || result.statusCode >= 500;
     }
-    // statusCode가 없는 실패는 네트워크 오류·타임아웃(AbortError)
     return result.error !== undefined && result.error.startsWith('fetch failed');
 }
 
@@ -60,7 +58,6 @@ async function callLlmOnce(
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 게이트웨이 사용량 집계용 라벨. 요구하지 않는 프록시는 무시한다.
                     'X-Client-Id': 'vapor-ui-translation-pipeline',
                 },
                 body: JSON.stringify({

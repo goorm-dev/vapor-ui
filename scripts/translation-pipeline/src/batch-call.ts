@@ -16,10 +16,6 @@ function parseLlmJson(content: string): unknown {
     return JSON.parse(jsonContent);
 }
 
-/**
- * LLM이 echo한 id 목록을 기대 id 집합과 대조한다. 하나라도 어긋나면 던진다 —
- * 조용한 오매핑보다 배치 실패가 낫다.
- */
 function reconcileById<T extends { id: string }>(
     expectedIds: string[],
     items: T[],
@@ -38,10 +34,6 @@ function reconcileById<T extends { id: string }>(
     return result;
 }
 
-/**
- * LLM 배치 호출 한 번의 공통 껍데기: 호출 → content 확인 → JSON 파싱 → id 대조.
- * 어느 단계에서 깨져도 던지지 않고 `{ok:false, reason}`으로 내려 배치 단위 격하로 이어진다.
- */
 export async function callBatch<Item extends { id: string }>(
     label: string,
     systemPrompt: string,

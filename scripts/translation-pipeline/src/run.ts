@@ -4,7 +4,7 @@ import { join, resolve } from 'node:path';
 import { readInputDocs } from '~/input';
 import { applyTranslationsToRaw, formatWithPrettier, writeKoFiles } from '~/output';
 import { buildReport, writeReport } from '~/report';
-import { translatePropsInfo } from '~/translator';
+import { translateDescriptions } from '~/translator';
 
 export interface CliOptions {
     input: string;
@@ -67,12 +67,15 @@ export async function run(argv: string[]): Promise<RunResult> {
     const outputDir = resolve(cliOptions.output);
 
     const inputDocs = readInputDocs(inputDir);
-    const result = await translatePropsInfo(
+    const result = await translateDescriptions(
         inputDocs.map((entry) => entry.doc),
         outputDir,
     );
 
-    const writtenFiles = writeKoFiles(outputDir, applyTranslationsToRaw(inputDocs, result.props));
+    const writtenFiles = writeKoFiles(
+        outputDir,
+        applyTranslationsToRaw(inputDocs, result.translations),
+    );
     formatWithPrettier(writtenFiles);
 
     writeReport(buildReport(result.componentReports, result.batchFallbacks), outputDir);

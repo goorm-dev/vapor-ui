@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 
-import type { TranslatableDoc } from '~/domain';
+import { makeUnitKey } from '~/domain';
 import type { InputDoc } from '~/input';
 import { errorMessage } from '~/util';
 
@@ -12,30 +12,29 @@ interface OutputFile {
 }
 
 export function applyTranslationsToRaw(
-    rawDocs: Pick<InputDoc, 'raw' | 'fileName'>[],
-    translatedDocs: TranslatableDoc[],
+    inputDocs: Pick<InputDoc, 'raw' | 'fileName' | 'doc'>[],
+    translations: Map<string, string>,
 ): OutputFile[] {
-    return rawDocs.map((entry, index) => {
-        const translation = translatedDocs[index];
-        if (!translation) {
-            return { fileName: entry.fileName, content: entry.raw };
-        }
+    return inputDocs.map((entry) => {
+        const componentDisplayName = entry.doc.displayName;
         const merged: Record<string, unknown> = { ...entry.raw };
-        if (translation.description !== undefined) {
-            merged['description'] = translation.description;
+
+        const componentDescription = translations.get(makeUnitKey(componentDisplayName, null));
+        if (componentDescription !== undefined) {
+            merged['description'] = componentDescription;
         }
+
         const originalProps = Array.isArray(entry.raw['props']) ? entry.raw['props'] : [];
-        merged['props'] = originalProps.map((prop, propIndex) => {
+        merged['props'] = originalProps.map((prop) => {
             if (typeof prop !== 'object' || prop === null) return prop;
-            const translatedProp = translation.props[propIndex];
-            if (!translatedProp) return prop;
-            return {
-                ...(prop as Record<string, unknown>),
-                ...(translatedProp.description !== undefined
-                    ? { description: translatedProp.description }
-                    : {}),
-            };
+            const propName = (prop as Record<string, unknown>)['name'];
+            if (typeof propName !== 'string') return prop;
+            const translated = translations.get(makeUnitKey(componentDisplayName, propName));
+            return translated === undefined
+                ? prop
+                : { ...(prop as Record<string, unknown>), description: translated };
         });
+
         return { fileName: entry.fileName, content: merged };
     });
 }

@@ -2,18 +2,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as cacheModule from '~/cache';
 import * as clientModule from '~/client';
-import * as translationModule from '~/translate';
-import { translatePropsInfo } from '~/translator';
 import { type TranslatableDoc, getTranslationUnitKey } from '~/domain';
+import * as translationModule from '~/translate';
+import { translateDescriptions } from '~/translator';
 
 const sampleProps: TranslatableDoc[] = [
     {
         name: 'Button',
+        displayName: 'Button',
         description: 'A button component.',
         props: [{ name: 'onClick', description: 'Click handler callback.' }],
     },
     {
         name: 'Divider',
+        displayName: 'Divider',
         props: [],
     },
 ];
@@ -23,7 +25,7 @@ function mockTranslations(translations: Record<string, string>): void {
         return new Map(
             units.map((unit) => [
                 getTranslationUnitKey(unit),
-                translations[unit.id] ?? unit.source,
+                translations[getTranslationUnitKey(unit)] ?? unit.source,
             ]),
         );
     });
@@ -49,19 +51,49 @@ function mockBatchMqmPass(): void {
     });
 }
 
-describe('translatePropsInfo', () => {
+describe('translateDescriptions', () => {
     beforeEach(() => {
         vi.spyOn(cacheModule, 'loadCache').mockReturnValue(new Map());
         vi.spyOn(cacheModule, 'saveCache').mockImplementation(() => undefined);
         mockTranslations({
-            'component.description': 'Button 컴포넌트입니다.',
-            'props[0].onClick.description': '클릭 handler callback입니다.',
+            'Button:(description)': 'Button 컴포넌트입니다.',
+            'Button:onClick': '클릭 handler callback입니다.',
         });
         mockBatchMqmPass();
     });
 
     afterEach(() => {
         vi.restoreAllMocks();
+    });
+
+    it('returns a translations dictionary keyed by component identity and prop name', async () => {
+        const result = await translateDescriptions(sampleProps);
+
+        expect([...result.translations.keys()].sort()).toEqual([
+            'Button:(description)',
+            'Button:onClick',
+        ]);
+        expect(result.translations.get('Button:(description)')).toBe('Button 컴포넌트입니다.');
+        expect(result.translations.get('Button:onClick')).toBe('클릭 handler callback입니다.');
+    });
+
+    it('throws instead of silently overwriting when two units share a key', async () => {
+        const collidingDocs: TranslatableDoc[] = [
+            {
+                name: 'Root',
+                displayName: 'Select.Root',
+                props: [{ name: 'size', description: 'a' }],
+            },
+            {
+                name: 'Root',
+                displayName: 'Select.Root',
+                props: [{ name: 'size', description: 'b' }],
+            },
+        ];
+
+        await expect(translateDescriptions(collidingDocs)).rejects.toThrow(
+            /Duplicate translation unit key: Select\.Root:size/,
+        );
     });
 
     it('translates only cache misses, in a single cross-component batch', async () => {
@@ -71,22 +103,22 @@ describe('translatePropsInfo', () => {
         );
         const translateSpy = vi.spyOn(translationModule, 'translateUnits');
 
-        const result = await translatePropsInfo(sampleProps, '/tmp/cache');
+        const result = await translateDescriptions(sampleProps, '/tmp/cache');
 
         expect(translateSpy).toHaveBeenCalledOnce();
         expect(translateSpy).toHaveBeenCalledWith([
             expect.objectContaining({
-                id: 'component.description',
+                kind: 'component.description',
                 source: 'A button component.',
-                componentName: 'Button',
+                componentDisplayName: 'Button',
             }),
         ]);
-        expect(result.props[0].description).toBe('Button 컴포넌트입니다.');
-        expect(result.props[0].props[0].description).toBe('캐시된 콜백 설명입니다.');
+        expect(result.translations.get('Button:(description)')).toBe('Button 컴포넌트입니다.');
+        expect(result.translations.get('Button:onClick')).toBe('캐시된 콜백 설명입니다.');
     });
 
     it('keeps components with zero translation units in the report summary', async () => {
-        const result = await translatePropsInfo(sampleProps);
+        const result = await translateDescriptions(sampleProps);
 
         expect(result.componentReports).toEqual(
             expect.arrayContaining([
@@ -126,9 +158,9 @@ describe('translatePropsInfo', () => {
                 return {
                     content: JSON.stringify({
                         evaluations: [
-                            { id: '0:component.description', verdict: 'PASS', errors: [] },
+                            { id: 'Button:(description)', verdict: 'PASS', errors: [] },
                             {
-                                id: '0:props[0].onClick.description',
+                                id: 'Button:onClick',
                                 verdict: 'FAIL',
                                 errors: [initialError],
                             },
@@ -141,7 +173,7 @@ describe('translatePropsInfo', () => {
                     content: JSON.stringify({
                         translations: [
                             {
-                                id: '0:props[0].onClick.description',
+                                id: 'Button:onClick',
                                 translated: '수정되어도 검증 실패한 번역',
                             },
                         ],
@@ -152,7 +184,7 @@ describe('translatePropsInfo', () => {
                 content: JSON.stringify({
                     evaluations: [
                         {
-                            id: '0:props[0].onClick.description',
+                            id: 'Button:onClick',
                             verdict: 'FAIL',
                             errors: [finalError],
                         },
@@ -161,7 +193,7 @@ describe('translatePropsInfo', () => {
             };
         });
 
-        await translatePropsInfo(sampleProps.slice(0, 1), '/tmp/cache');
+        await translateDescriptions(sampleProps.slice(0, 1), '/tmp/cache');
 
         const savedStore = saveCacheSpy.mock.calls[0]?.[1];
         expect(savedStore?.size).toBe(1);
@@ -174,8 +206,13 @@ describe('translatePropsInfo', () => {
         });
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-        const result = await translatePropsInfo([
-            { name: 'Button', description: 'A button component.', props: [] },
+        const result = await translateDescriptions([
+            {
+                name: 'Button',
+                displayName: 'Button',
+                description: 'A button component.',
+                props: [],
+            },
         ]);
 
         expect(result.componentReports[0]).toMatchObject({
@@ -193,20 +230,18 @@ describe('translatePropsInfo', () => {
     it('marks a chunk degraded when batch MQM omits an expected id', async () => {
         vi.spyOn(clientModule, 'callLlm').mockResolvedValue({
             content: JSON.stringify({
-                evaluations: [{ id: '0:component.description', verdict: 'PASS', errors: [] }],
+                evaluations: [{ id: 'Button:(description)', verdict: 'PASS', errors: [] }],
             }),
         });
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-        const result = await translatePropsInfo(sampleProps.slice(0, 1));
+        const result = await translateDescriptions(sampleProps.slice(0, 1));
 
         expect(result.componentReports[0]).toMatchObject({
             verified: 0,
             unverified: 2,
         });
-        expect(result.batchFallbacks[0]?.reason).toContain(
-            'Missing response id: 0:props[0].onClick.description',
-        );
+        expect(result.batchFallbacks[0]).toContain('Missing response id: Button:onClick');
     });
 
     it('marks failed units as degraded with batch_postprocess_failed when batch postprocess response is invalid', async () => {
@@ -219,7 +254,7 @@ describe('translatePropsInfo', () => {
                     content: JSON.stringify({
                         evaluations: [
                             {
-                                id: '0:component.description',
+                                id: 'Button:(description)',
                                 verdict: 'FAIL',
                                 errors: [
                                     {
@@ -240,8 +275,13 @@ describe('translatePropsInfo', () => {
         });
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-        const result = await translatePropsInfo([
-            { name: 'Button', description: 'A button component.', props: [] },
+        const result = await translateDescriptions([
+            {
+                name: 'Button',
+                displayName: 'Button',
+                description: 'A button component.',
+                props: [],
+            },
         ]);
 
         expect(result.componentReports[0].unverifiedOutcomes[0]).toMatchObject({
@@ -254,8 +294,16 @@ describe('translatePropsInfo', () => {
     it('translates a source shared by two components exactly once', async () => {
         const sharedSource = 'Click handler callback.';
         const propsWithSharedSource: TranslatableDoc[] = [
-            { name: 'Button', props: [{ name: 'onClick', description: sharedSource }] },
-            { name: 'IconButton', props: [{ name: 'onClick', description: sharedSource }] },
+            {
+                name: 'Button',
+                displayName: 'Button',
+                props: [{ name: 'onClick', description: sharedSource }],
+            },
+            {
+                name: 'IconButton',
+                displayName: 'IconButton',
+                props: [{ name: 'onClick', description: sharedSource }],
+            },
         ];
 
         const translateSpy = vi
@@ -266,25 +314,25 @@ describe('translatePropsInfo', () => {
                 );
             });
 
-        const result = await translatePropsInfo(propsWithSharedSource, '/tmp/cache');
+        const result = await translateDescriptions(propsWithSharedSource, '/tmp/cache');
 
         expect(translateSpy).toHaveBeenCalledOnce();
         expect(translateSpy.mock.calls[0]?.[0]).toHaveLength(1);
-        expect(result.props[0].props[0].description).toBe('클릭 핸들러 콜백.');
-        expect(result.props[1].props[0].description).toBe('클릭 핸들러 콜백.');
+        expect(result.translations.get('Button:onClick')).toBe('클릭 핸들러 콜백.');
+        expect(result.translations.get('IconButton:onClick')).toBe('클릭 핸들러 콜백.');
     });
 
     it('saves the cache once per run, after the MQM phase', async () => {
         const twoTranslatables: TranslatableDoc[] = [
-            { name: 'A', description: 'first', props: [] },
-            { name: 'B', description: 'second', props: [] },
+            { name: 'A', displayName: 'A', description: 'first', props: [] },
+            { name: 'B', displayName: 'B', description: 'second', props: [] },
         ];
         const saveCacheSpy = vi.spyOn(cacheModule, 'saveCache').mockImplementation(() => undefined);
         vi.spyOn(translationModule, 'translateUnits').mockImplementation(
             async (units) => new Map(units.map((unit) => [getTranslationUnitKey(unit), '번역'])),
         );
 
-        await translatePropsInfo(twoTranslatables, '/tmp/cache');
+        await translateDescriptions(twoTranslatables, '/tmp/cache');
 
         expect(saveCacheSpy).toHaveBeenCalledOnce();
         expect(saveCacheSpy.mock.calls[0]?.[1].size).toBe(2);
@@ -294,11 +342,12 @@ describe('translatePropsInfo', () => {
         const props: TranslatableDoc[] = [
             {
                 name: 'Button',
+                displayName: 'Button',
                 description: 'Renders a `<button>` element.',
                 props: [],
             },
         ];
-        mockTranslations({ 'component.description': '버튼 요소를 렌더링합니다.' });
+        mockTranslations({ 'Button:(description)': '버튼 요소를 렌더링합니다.' });
         // MQM은 PASS를 주지만 결정론 체크가 코드 스팬 누락을 잡고, 후편집도 복구하지 못한다.
         vi.spyOn(clientModule, 'callLlm').mockImplementation(async (messages) => {
             const content = messages.find((m) => m.role === 'user')?.content ?? '';
@@ -325,9 +374,11 @@ describe('translatePropsInfo', () => {
         });
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-        const result = await translatePropsInfo(props, '/tmp/cache');
+        const result = await translateDescriptions(props, '/tmp/cache');
 
-        expect(result.props[0].description).toBe('Renders a `<button>` element.');
+        expect(result.translations.get('Button:(description)')).toBe(
+            'Renders a `<button>` element.',
+        );
         expect(result.componentReports[0].unverifiedOutcomes[0]).toMatchObject({
             reason: 'preservation_fallback',
             assurance: 'unverified',
@@ -339,12 +390,12 @@ describe('translatePropsInfo', () => {
         vi.spyOn(translationModule, 'translateUnits').mockRejectedValue(new Error('gateway down'));
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-        const result = await translatePropsInfo(sampleProps.slice(0, 1), '/tmp/cache');
+        const result = await translateDescriptions(sampleProps.slice(0, 1), '/tmp/cache');
 
-        expect(result.props[0].description).toBe('A button component.');
+        expect(result.translations.get('Button:(description)')).toBe('A button component.');
         expect(result.componentReports[0].unverifiedOutcomes).toEqual(
             expect.arrayContaining([expect.objectContaining({ reason: 'translation_failed' })]),
         );
-        expect(result.batchFallbacks[0]?.reason).toContain('gateway down');
+        expect(result.batchFallbacks[0]).toContain('gateway down');
     });
 });

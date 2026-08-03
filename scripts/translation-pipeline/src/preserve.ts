@@ -1,17 +1,7 @@
 import type { PreservationViolation } from '~/domain';
 
-/**
- * 결정론 문자열 보존 체크 (KAN-10).
- *
- * LLM 판정은 문자열 단위에서 신뢰도가 낮다는 조사 결과(KAN-12)에 따라,
- * "틀리면 개발자가 잘못 구현하는" 종류의 오류는 LLM이 아니라 여기서 잡는다.
- */
-
 const BACKTICK_SPAN = /`[^`\n]+`/g;
 const URL = /https?:\/\/[^\s)>\]"']+/g;
-// ponytail: 험프 2개 이상만 식별자로 본다. `Button`처럼 험프 하나인 컴포넌트명은
-// 평범한 영어 단어(Whether, This)와 구별할 수 없어 일부러 흘려보낸다.
-// 오탐이 문제되면 여기서 실제 컴포넌트·prop 이름 사전을 받도록 바꿀 것.
 const MULTI_HUMP_IDENTIFIER = /\b[A-Za-z][a-z0-9]*(?:[A-Z][a-z0-9]*)+\b/g;
 const MARKDOWN_LINE_MARKER = /^\s*(#{1,6}|[-*+]|\d+\.|>|\|)(?=\s|\|)/;
 
@@ -23,7 +13,6 @@ function stripBacktickSpans(text: string): string {
     return text.replace(BACKTICK_SPAN, ' ');
 }
 
-/** 줄머리 마크다운 마커의 순서 + 코드펜스 개수 = 구조 시그니처 */
 function markdownSignature(text: string): string {
     const markers = text
         .split('\n')
@@ -42,7 +31,6 @@ export function checkPreservation(source: string, translated: string): Preservat
         }
     }
 
-    // 문장 끝 구두점은 URL이 아니다
     const urls = unique(source.match(URL) ?? []).map((url) => url.replace(/[.,;:!?]+$/, ''));
     for (const url of urls) {
         if (!translated.includes(url)) {

@@ -9,10 +9,8 @@ import {
 } from '~/defaults';
 import { errorMessage } from '~/util';
 
-// v2 reflects the LLM JSON-mode lifecycle. Older cache entries are not reused.
 export const CACHE_VERSION = 'v2';
 
-/** 키가 해시라 원문은 담지 않는다 — 값은 번역문 하나뿐이다. */
 export type CacheStore = Map<string, string>;
 
 export function makeCacheKey(source: string): string {

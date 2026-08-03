@@ -14,59 +14,44 @@ export function readInputDocs(inputDir: string): InputDoc[] {
     if (!existsSync(inputDir)) {
         throw new Error(`Input directory does not exist: ${inputDir}`);
     }
-    const entries = readdirSync(inputDir, { withFileTypes: true })
-        .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
-        .map((entry) => entry.name)
-        .sort();
-
-    const docs: InputDoc[] = [];
-    for (const fileName of entries) {
-        const filePath = join(inputDir, fileName);
-        let raw: unknown;
-        try {
-            raw = JSON.parse(readFileSync(filePath, 'utf-8'));
-        } catch (error) {
-            throw new Error(`Failed to parse ${fileName}: ${errorMessage(error)}`);
-        }
-
-        const doc = normalizeDoc(raw, fileName);
-        docs.push({ doc, raw: raw as Record<string, unknown>, fileName });
-    }
-    return docs;
+    return readdirSync(inputDir)
+        .filter((name) => name.endsWith('.json'))
+        .sort()
+        .map((fileName) => {
+            let raw: unknown;
+            try {
+                raw = JSON.parse(readFileSync(join(inputDir, fileName), 'utf-8'));
+            } catch (error) {
+                throw new Error(`Failed to parse ${fileName}: ${errorMessage(error)}`);
+            }
+            return {
+                doc: toTranslatableDoc(raw, fileName),
+                raw: raw as Record<string, unknown>,
+                fileName,
+            };
+        });
 }
 
-function normalizeDoc(raw: unknown, fileName: string): TranslatableDoc {
-    if (typeof raw !== 'object' || raw === null) {
-        throw new Error(`${fileName}: expected an object at top level`);
-    }
-    const record = raw as Record<string, unknown>;
-    const name = record['name'];
-    if (typeof name !== 'string' || !name) {
-        throw new Error(`${fileName}: missing required string field "name"`);
-    }
-    const description =
-        typeof record['description'] === 'string' ? record['description'] : undefined;
-    const propsRaw = record['props'];
-    const props = Array.isArray(propsRaw)
-        ? propsRaw.map((prop, index) => normalizeProp(prop, fileName, index))
-        : [];
-    return { name, description, props };
-}
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+    typeof value === 'object' && value !== null;
 
-function normalizeProp(
-    raw: unknown,
-    fileName: string,
-    index: number,
-): TranslatableDoc['props'][number] {
-    if (typeof raw !== 'object' || raw === null) {
-        throw new Error(`${fileName}: props[${index}] is not an object`);
+const optionalString = (value: unknown) => (typeof value === 'string' ? value : undefined);
+
+function toTranslatableDoc(raw: unknown, fileName: string): TranslatableDoc {
+    if (!isRecord(raw) || typeof raw['name'] !== 'string' || !raw['name']) {
+        throw new Error(`${fileName}: not a component doc (missing string field "name")`);
     }
-    const record = raw as Record<string, unknown>;
-    const name = record['name'];
-    if (typeof name !== 'string' || !name) {
-        throw new Error(`${fileName}: props[${index}] missing "name"`);
-    }
-    const description =
-        typeof record['description'] === 'string' ? record['description'] : undefined;
-    return { name, description };
+    const propsRaw = Array.isArray(raw['props']) ? raw['props'] : [];
+    return {
+        name: raw['name'],
+        displayName: optionalString(raw['displayName']) ?? raw['name'],
+        description: optionalString(raw['description']),
+        props: propsRaw.map((entry) => {
+            const prop = isRecord(entry) ? entry : {};
+            return {
+                name: optionalString(prop['name']) ?? '',
+                description: optionalString(prop['description']),
+            };
+        }),
+    };
 }
