@@ -1,6 +1,5 @@
+import { type BatchResult, callBatch } from '~/batch-call';
 import { DEFAULT_POSTPROCESS_MODEL, DEFAULT_VALIDATION_MODEL } from '~/defaults';
-import { callLlm } from '~/translation/client';
-import { parseLlmJson } from '~/translation/json';
 import {
     type MqmError,
     type MqmResult,
@@ -10,7 +9,7 @@ import {
     getTranslationUnitKey,
     makeOutcome,
 } from '~/types';
-import { chunkArray, errorMessage, reconcileById } from '~/util';
+import { chunkArray } from '~/util';
 import { checkPreservation, describeViolation } from '~/validation/preserve';
 import {
     MQM_CATEGORY_VALUES,
@@ -63,49 +62,6 @@ const BATCH_MQM_RESPONSE_SCHEMA = {
         },
     },
 };
-
-type BatchResult<T> = { ok: true; value: T } | { ok: false; reason: string };
-
-/**
- * LLM 배치 호출 한 번의 공통 껍데기: 호출 → content 확인 → JSON 파싱 → id 대조.
- * 어느 단계에서 깨져도 던지지 않고 `{ok:false, reason}`으로 내려 배치 단위 격하로 이어진다.
- */
-async function callBatch<Item extends { id: string }>(
-    label: string,
-    systemPrompt: string,
-    model: string,
-    schema: { name: string; schema: object },
-    request: object,
-    expectedIds: string[],
-    field: string,
-): Promise<BatchResult<Map<string, Item>>> {
-    const result = await callLlm(
-        [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: JSON.stringify(request) },
-        ],
-        { model, jsonSchema: schema },
-    );
-
-    if (!result.content) {
-        const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
-        return { ok: false, reason: `[${label}] ${result.error ?? 'empty response'}${statusInfo}` };
-    }
-
-    try {
-        const parsed = parseLlmJson(result.content);
-        if (typeof parsed !== 'object' || parsed === null) {
-            return { ok: false, reason: `${label} response must be a JSON object` };
-        }
-        const items = (parsed as Record<string, unknown>)[field];
-        if (!Array.isArray(items)) {
-            return { ok: false, reason: `${label} response must contain ${field}[]` };
-        }
-        return { ok: true, value: reconcileById(expectedIds, items as Item[]) };
-    } catch (error) {
-        return { ok: false, reason: errorMessage(error) };
-    }
-}
 
 interface BatchEvaluationItem {
     id: string;

@@ -1,8 +1,6 @@
+import { callBatch } from '~/batch-call';
 import { DEFAULT_TRANSLATION_MODEL } from '~/defaults';
-import { callLlm } from '~/translation/client';
-import { parseLlmJson } from '~/translation/json';
 import { type TranslationUnit, getTranslationUnitKey } from '~/types';
-import { reconcileById } from '~/util';
 
 const SYSTEM_PROMPT = `You are a professional Korean translator for design-system API documentation. Respond ONLY with valid JSON.
 
@@ -56,33 +54,6 @@ const TRANSLATION_RESPONSE_SCHEMA = {
     },
 };
 
-function readTranslations(content: string): TranslationResponseItem[] {
-    const parsed = parseLlmJson(content);
-    if (typeof parsed !== 'object' || parsed === null) {
-        throw new Error('Translation response must be a JSON object');
-    }
-
-    const translations = (parsed as Record<string, unknown>).translations;
-    if (!Array.isArray(translations)) {
-        throw new Error('Translation response must contain translations[]');
-    }
-
-    return translations as TranslationResponseItem[];
-}
-
-function validateTranslations(
-    units: TranslationUnit[],
-    translations: TranslationResponseItem[],
-): Map<string, string> {
-    const items = reconcileById(units.map(getTranslationUnitKey), translations);
-    for (const item of items.values()) {
-        if (item.translated.trim().length === 0) {
-            throw new Error(`Empty translation for id: ${item.id}`);
-        }
-    }
-    return new Map([...items].map(([id, item]) => [id, item.translated]));
-}
-
 /**
  * 컴포넌트를 섞은 횡단 배치를 번역한다. 컴포넌트 컨텍스트는 유닛별 `componentName`으로 전달한다
  * (중복 제거 후에는 컴포넌트가 배치 단위로서 의미가 없다 — KAN-11).
@@ -102,21 +73,22 @@ export async function translateUnits(units: TranslationUnit[]): Promise<Map<stri
         })),
     };
 
-    const result = await callLlm(
-        [
-            { role: 'system', content: SYSTEM_PROMPT },
-            { role: 'user', content: JSON.stringify(request) },
-        ],
-        {
-            model: DEFAULT_TRANSLATION_MODEL,
-            jsonSchema: { name: 'translation_response', schema: TRANSLATION_RESPONSE_SCHEMA },
-        },
+    // callBatch와 달리 여기서는 던진다 — translator.ts의 catch가 배치를 영어 폴백으로 격하시킨다.
+    const result = await callBatch<TranslationResponseItem>(
+        'llm-translation',
+        SYSTEM_PROMPT,
+        DEFAULT_TRANSLATION_MODEL,
+        { name: 'translation_response', schema: TRANSLATION_RESPONSE_SCHEMA },
+        request,
+        units.map(getTranslationUnitKey),
+        'translations',
     );
+    if (!result.ok) throw new Error(result.reason);
 
-    if (!result.content) {
-        const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
-        throw new Error(`[llm-translation] ${result.error ?? 'empty response'}${statusInfo}`);
+    for (const item of result.value.values()) {
+        if (item.translated.trim().length === 0) {
+            throw new Error(`Empty translation for id: ${item.id}`);
+        }
     }
-
-    return validateTranslations(units, readTranslations(result.content));
+    return new Map([...result.value].map(([id, item]) => [id, item.translated]));
 }
