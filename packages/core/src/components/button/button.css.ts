@@ -80,8 +80,8 @@ export const root = componentRecipe({
         colorPalette: {
             primary: {
                 vars: {
-                    [variables.foreground]: vars.color.foreground.inverse,
-                    [variables.outlineForeground]: vars.color.foreground['primary-200'],
+                    [variables.foreground]: vars.color.white,
+                    [variables.outlineForeground]: vars.color.foreground['primary-100'],
                     [variables.ghostForeground]: vars.color.foreground['primary-100'],
                     [variables.background]: vars.color.background['primary-200'],
                     [variables.borderColor]: vars.color.border.primary,
@@ -90,7 +90,7 @@ export const root = componentRecipe({
             secondary: {
                 vars: {
                     [variables.foreground]: vars.color.foreground['secondary-200'],
-                    [variables.outlineForeground]: vars.color.foreground['secondary-200'],
+                    [variables.outlineForeground]: vars.color.foreground['secondary-100'],
                     [variables.ghostForeground]: vars.color.foreground['secondary-100'],
                     [variables.background]: vars.color.background['secondary-200'],
                     [variables.borderColor]: vars.color.border.secondary,
@@ -99,7 +99,7 @@ export const root = componentRecipe({
             success: {
                 vars: {
                     [variables.foreground]: vars.color.white,
-                    [variables.outlineForeground]: vars.color.foreground['success-200'],
+                    [variables.outlineForeground]: vars.color.foreground['success-100'],
                     [variables.ghostForeground]: vars.color.foreground['success-100'],
                     [variables.background]: vars.color.background['success-200'],
                     [variables.borderColor]: vars.color.border.success,
@@ -108,7 +108,7 @@ export const root = componentRecipe({
             warning: {
                 vars: {
                     [variables.foreground]: vars.color.white,
-                    [variables.outlineForeground]: vars.color.foreground['warning-200'],
+                    [variables.outlineForeground]: vars.color.foreground['warning-100'],
                     [variables.ghostForeground]: vars.color.foreground['warning-100'],
                     [variables.background]: vars.color.background['warning-200'],
                     [variables.borderColor]: vars.color.border.warning,
@@ -117,7 +117,7 @@ export const root = componentRecipe({
             danger: {
                 vars: {
                     [variables.foreground]: vars.color.white,
-                    [variables.outlineForeground]: vars.color.foreground['danger-200'],
+                    [variables.outlineForeground]: vars.color.foreground['danger-100'],
                     [variables.ghostForeground]: vars.color.foreground['danger-100'],
                     [variables.background]: vars.color.background['danger-200'],
                     [variables.borderColor]: vars.color.border.danger,
@@ -126,7 +126,7 @@ export const root = componentRecipe({
             contrast: {
                 vars: {
                     [variables.foreground]: vars.color.white,
-                    [variables.outlineForeground]: vars.color.foreground['contrast-200'],
+                    [variables.outlineForeground]: vars.color.foreground['contrast-100'],
                     [variables.ghostForeground]: vars.color.foreground['contrast-100'],
                     [variables.background]: vars.color.background['contrast-200'],
                     [variables.borderColor]: vars.color.border.contrast,
