@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 
-import { CliError, run } from '~/cli/run';
+import { run } from '~/cli/run';
 
 const envPath = path.resolve(process.cwd(), '.env');
 if (existsSync(envPath)) {
@@ -13,9 +13,7 @@ async function main(): Promise<void> {
 }
 
 function handleCliError(error: unknown): never {
-    const prefix = error instanceof CliError ? 'Error' : 'Unexpected error';
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(`${prefix}: ${message}`);
+    console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
 }
 

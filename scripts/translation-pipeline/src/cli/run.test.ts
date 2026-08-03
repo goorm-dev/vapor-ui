@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { CliError, parseCliArgs, run } from '~/cli/run';
+import { parseCliArgs, run } from '~/cli/run';
 import type { TranslateResult } from '~/translator/translator';
 import type { TranslatableDoc, TranslationOutcome } from '~/types';
 
@@ -38,13 +38,11 @@ describe('parseCliArgs', () => {
         expect(result).toEqual({ input: './en', output: './out' });
     });
 
-    it('throws CliError when --input is missing', () => {
-        expect(() => parseCliArgs(['--output', './out'])).toThrow(CliError);
+    it('throws when --input is missing', () => {
         expect(() => parseCliArgs(['--output', './out'])).toThrow(/--input/);
     });
 
-    it('throws CliError when --output is missing', () => {
-        expect(() => parseCliArgs(['--input', './en'])).toThrow(CliError);
+    it('throws when --output is missing', () => {
         expect(() => parseCliArgs(['--input', './en'])).toThrow(/--output/);
     });
 });
@@ -60,19 +58,19 @@ describe('cli run', () => {
         rmSync(workDir, { recursive: true, force: true });
     });
 
-    it('throws CliError when --input is missing', async () => {
+    it('throws when --input is missing', async () => {
         await expect(run(['--output', join(workDir, 'out')], { env: validEnv })).rejects.toThrow(
             /--input/,
         );
     });
 
-    it('throws CliError when --output is missing', async () => {
+    it('throws when --output is missing', async () => {
         await expect(run(['--input', join(workDir, 'en')], { env: validEnv })).rejects.toThrow(
             /--output/,
         );
     });
 
-    it('throws CliError when LITELLM_API_KEY is missing', async () => {
+    it('throws when LITELLM_API_KEY is missing', async () => {
         const inputDir = join(workDir, 'en');
         mkdirSync(inputDir, { recursive: true });
         await expect(
@@ -82,7 +80,7 @@ describe('cli run', () => {
         ).rejects.toThrow(/LITELLM_API_KEY/);
     });
 
-    it('throws CliError when LITELLM_BASE_URL is missing', async () => {
+    it('throws when LITELLM_BASE_URL is missing', async () => {
         const inputDir = join(workDir, 'en');
         mkdirSync(inputDir, { recursive: true });
         await expect(
@@ -138,12 +136,12 @@ describe('cli run', () => {
         expect(reportContent).toContain('| Button |');
     });
 
-    it('throws CliError when input directory does not exist', async () => {
+    it('throws when input directory does not exist', async () => {
         await expect(
             run(['--input', join(workDir, 'missing'), '--output', join(workDir, 'out')], {
                 env: validEnv,
                 runPipeline: passthroughRunner,
             }),
-        ).rejects.toThrow(CliError);
+        ).rejects.toThrow(/Input directory does not exist/);
     });
 });

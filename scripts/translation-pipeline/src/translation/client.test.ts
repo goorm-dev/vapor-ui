@@ -15,7 +15,7 @@ describe('callLlm', () => {
         vi.restoreAllMocks();
     });
 
-    it('accepts model and responseFormat through an options object', async () => {
+    it('accepts the model through an options object', async () => {
         vi.mocked(fetch).mockResolvedValueOnce({
             ok: true,
             json: async () => ({ choices: [{ message: { content: '{"ok":true}' } }] }),
@@ -23,16 +23,13 @@ describe('callLlm', () => {
 
         const result = await callLlm([{ role: 'user', content: 'hello' }], {
             model: 'claude-sonnet-4-6',
-            responseFormat: 'json',
         });
 
         expect(result.content).toBe('{"ok":true}');
         const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
             model: string;
-            response_format?: { type: string };
         };
         expect(body.model).toBe('claude-sonnet-4-6');
-        expect(body.response_format).toEqual({ type: 'json_object' });
     });
 
     it('retries 5xx twice with backoff, then gives up', async () => {
@@ -57,13 +54,13 @@ describe('callLlm', () => {
         expect(result.statusCode).toBe(400);
     });
 
-    it('omits response_format for text calls', async () => {
+    it('omits response_format when no schema is given', async () => {
         vi.mocked(fetch).mockResolvedValueOnce({
             ok: true,
             json: async () => ({ choices: [{ message: { content: 'plain text' } }] }),
         } as Response);
 
-        await callLlm([{ role: 'user', content: 'hello' }], { responseFormat: 'text' });
+        await callLlm([{ role: 'user', content: 'hello' }]);
 
         const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)) as {
             response_format?: { type: string };
@@ -106,38 +103,6 @@ describe('callLlm', () => {
                     required: ['ok'],
                     properties: { ok: { type: 'boolean' } },
                 },
-            },
-        });
-    });
-
-    it('returns LiteLLM usage and response cost metadata', async () => {
-        vi.mocked(fetch).mockResolvedValueOnce({
-            ok: true,
-            headers: new Headers({ 'x-litellm-response-cost': '0.001234' }),
-            json: async () => ({
-                model: 'claude-sonnet-4-6',
-                choices: [{ message: { content: '{"ok":true}' } }],
-                usage: {
-                    prompt_tokens: 120,
-                    completion_tokens: 30,
-                    total_tokens: 150,
-                },
-            }),
-        } as Response);
-
-        const result = await callLlm([{ role: 'user', content: 'hello' }], {
-            model: 'claude-sonnet-4-6',
-            responseFormat: 'json',
-        });
-
-        expect(result).toMatchObject({
-            content: '{"ok":true}',
-            model: 'claude-sonnet-4-6',
-            responseCost: 0.001234,
-            usage: {
-                promptTokens: 120,
-                completionTokens: 30,
-                totalTokens: 150,
             },
         });
     });

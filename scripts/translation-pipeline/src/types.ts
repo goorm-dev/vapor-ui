@@ -37,8 +37,6 @@ export interface MqmError {
 export interface MqmResult {
     verdict: 'PASS' | 'FAIL';
     errors: MqmError[];
-    /** LLM 호출 실패 또는 응답 파싱 실패로 인해 품질 게이트 결과를 신뢰할 수 없는 경우 */
-    unavailable?: true;
 }
 
 export type TranslationUnitKind = 'component.description' | 'prop.description';
@@ -81,6 +79,38 @@ export interface TranslationOutcome {
     reason: TranslationOutcomeReason;
     errors?: MqmError[];
     violations?: PreservationViolation[];
+}
+
+/** assurance·reportable은 reason의 함수다 — 여기 한 곳에서만 정한다. */
+const REASON_META: Record<TranslationOutcomeReason, AssuranceStatus> = {
+    cache_hit: 'verified',
+    quality_gate_passed: 'verified',
+    quality_gate_failed: 'unverified',
+    translation_failed: 'unverified',
+    preservation_fallback: 'unverified',
+    batch_mqm_failed: 'unverified',
+    batch_postprocess_failed: 'unverified',
+    batch_final_mqm_failed: 'unverified',
+};
+
+export function makeOutcome(
+    unit: TranslationUnit,
+    translated: string,
+    reason: TranslationOutcomeReason,
+    detail: { errors?: MqmError[]; violations?: PreservationViolation[] } = {},
+): TranslationOutcome {
+    const assurance = REASON_META[reason];
+    return {
+        id: unit.id,
+        translated,
+        assurance,
+        reportable: assurance === 'unverified',
+        reason,
+        ...(detail.errors && detail.errors.length > 0 ? { errors: detail.errors } : {}),
+        ...(detail.violations && detail.violations.length > 0
+            ? { violations: detail.violations }
+            : {}),
+    };
 }
 
 /** 결정론 문자열 보존 체크의 규칙 4종 (KAN-10) */

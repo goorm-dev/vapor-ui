@@ -1,5 +1,9 @@
 import { type CacheStore, loadCache, makeCacheKey, saveCache } from '~/cache/cache';
-import { type ComponentReport, buildComponentReports } from '~/report/report';
+import {
+    type BatchFallbackEntry,
+    type ComponentReport,
+    buildComponentReports,
+} from '~/report/report';
 import { translateUnits } from '~/translation/translate';
 import { processBatchLifecycle } from '~/translator/batch-lifecycle';
 import {
@@ -7,7 +11,9 @@ import {
     type TranslationOutcome,
     type TranslationUnit,
     getTranslationUnitKey,
+    makeOutcome,
 } from '~/types';
+import { chunkArray } from '~/util';
 
 const TRANSLATION_BATCH_SIZE = 20;
 /** 60초 타임아웃 × 실측 81 tok/s ÷ 유닛당 출력 토큰 ÷ 안전계수 2 (KAN-11) */
@@ -86,27 +92,6 @@ export function applyTranslationOutcomes(
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function cacheHitOutcome(unit: TranslationUnit, translated: string): TranslationOutcome {
-    return {
-        id: unit.id,
-        translated,
-        assurance: 'verified',
-        reportable: false,
-        reason: 'cache_hit',
-    };
-}
-
-/** 번역 콜 자체가 실패한 유닛은 영어 원문을 그대로 쓴다 — 한 배치가 전체 실행을 죽이지 않도록. */
-function translationFailedOutcome(unit: TranslationUnit): TranslationOutcome {
-    return {
-        id: unit.id,
-        translated: unit.source,
-        assurance: 'unverified',
-        reportable: true,
-        reason: 'translation_failed',
-    };
-}
-
 /** 같은 원문을 공유하는 유닛들. 74.3%가 중복이므로 고유 원문만 번역한다 (KAN-11). */
 function groupBySource(units: TranslationUnit[]): Map<string, TranslationUnit[]> {
     const groups = new Map<string, TranslationUnit[]>();
@@ -116,14 +101,6 @@ function groupBySource(units: TranslationUnit[]): Map<string, TranslationUnit[]>
         groups.set(unit.source, current);
     }
     return groups;
-}
-
-function chunkArray<T>(items: T[], size: number): T[][] {
-    const chunks: T[][] = [];
-    for (let index = 0; index < items.length; index += size) {
-        chunks.push(items.slice(index, index + size));
-    }
-    return chunks;
 }
 
 /** 손으로 만든 워커 풀 — 의존성 하나(meow)를 유지하기 위해 p-limit을 쓰지 않는다. */
@@ -143,10 +120,7 @@ async function forEachWithConcurrency<T>(
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
-export interface BatchFallbackEntry {
-    componentName: string;
-    reason: string;
-}
+export type { BatchFallbackEntry };
 
 export interface TranslateResult {
     props: TranslatableDoc[];
@@ -165,16 +139,6 @@ export async function translatePropsInfo(
 
     const units = collectTranslationUnits(props);
     progress(`starting ${props.length} component(s) — ${units.length} translatable text(s)`);
-
-    if (units.length === 0) {
-        const clonedProps = props.map((component) => ({
-            ...component,
-            props: component.props.map((prop) => ({ ...prop })),
-        }));
-        const componentReports = buildComponentReports(props, units, new Map());
-        progress(`done: ${props.length} component(s) — nothing to translate`);
-        return { props: clonedProps, componentReports, batchFallbacks: [] };
-    }
 
     const cacheOutputDir = outputDir ?? '';
     let cacheStore: CacheStore = new Map();
@@ -201,7 +165,7 @@ export async function translatePropsInfo(
     for (const representative of representatives) {
         const cacheEntry = cacheStore.get(makeCacheKey(representative.source));
         if (cacheEntry) {
-            fanOut(representative, cacheHitOutcome(representative, cacheEntry.translated));
+            fanOut(representative, makeOutcome(representative, cacheEntry.translated, 'cache_hit'));
         } else {
             missing.push(representative);
         }
@@ -225,7 +189,8 @@ export async function translatePropsInfo(
                 reason: `translation batch failed: ${message}`,
             });
             for (const unit of batch) {
-                fanOut(unit, translationFailedOutcome(unit));
+                // 번역 콜이 실패한 유닛은 영어 원문을 그대로 쓴다 — 배치 하나가 실행 전체를 죽이지 않게.
+                fanOut(unit, makeOutcome(unit, unit.source, 'translation_failed'));
             }
         }
     });

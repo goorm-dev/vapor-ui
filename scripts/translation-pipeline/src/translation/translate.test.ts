@@ -133,7 +133,7 @@ ${JSON.stringify({
         );
 
         await expect(translateUnits(units)).rejects.toThrow(
-            /Missing translation id: 0:props\[0\]\.size\.description/,
+            /Missing response id: 0:props\[0\]\.size\.description/,
         );
     });
 
@@ -149,7 +149,7 @@ ${JSON.stringify({
         );
 
         await expect(translateUnits(units)).rejects.toThrow(
-            /Duplicate translation id: 0:component\.description/,
+            /Duplicate response id: 0:component\.description/,
         );
     });
 
@@ -165,7 +165,7 @@ ${JSON.stringify({
         );
 
         await expect(translateUnits(units)).rejects.toThrow(
-            /Unknown translation id: 0:props\[9\]\.ghost\.description/,
+            /Unknown response id: 0:props\[9\]\.ghost\.description/,
         );
     });
 

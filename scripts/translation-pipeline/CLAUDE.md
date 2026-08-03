@@ -47,7 +47,8 @@ cli/run.ts
 - **`translator/batch-lifecycle.ts`**: Runs one MQM batch: deterministic preservation check + batch MQM → batch postprocess → preservation recheck → final MQM. Only called from `translator.ts`.
 - **`validation/preserve.ts`**: Deterministic checks only — no LLM. Owns code spans, bare identifiers, URLs, markdown structure.
 - **`translation/client.ts`**: Single wrapper for LiteLLM `/chat/completions`. Every LLM call goes through this file.
-- **`types.ts`**: `MqmCategory` union is the single source of truth. Adding or removing a category here causes a compile error in `validator.ts` via the `satisfies` check on `MQM_CATEGORIES`. Also owns `getTranslationUnitKey`.
+- **`types.ts`**: `MqmCategory` union is the single source of truth. Adding or removing a category here causes a compile error in `validator.ts` via the `satisfies` check on `MQM_CATEGORY_VALUES`. Also owns `getTranslationUnitKey` and `makeOutcome` — `assurance`/`reportable` are derived from `reason` in `REASON_META`, nowhere else.
+- **`util.ts`**: `chunkArray` and `reconcileById` — shared by `translate.ts`, `translator.ts`, and `batch-lifecycle.ts`.
 
 ### Design Constraints — Read Before Modifying
 

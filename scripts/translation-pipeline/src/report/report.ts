@@ -18,7 +18,7 @@ export interface ComponentReport {
     unverifiedOutcomes: TranslationOutcome[];
 }
 
-export interface BatchFallbackReportEntry {
+export interface BatchFallbackEntry {
     componentName: string;
     reason: string;
 }
@@ -39,7 +39,7 @@ export interface TranslationReport {
     /** 결정론 보존 규칙별 위반 건수 */
     violationCounts: Record<string, number>;
     components: ComponentReport[];
-    batchFallbacks: BatchFallbackReportEntry[];
+    batchFallbacks: BatchFallbackEntry[];
 }
 
 export function buildComponentReports(
@@ -50,7 +50,7 @@ export function buildComponentReports(
     return props.map((component, componentIndex) => {
         const componentUnits = units.filter((unit) => unit.componentIndex === componentIndex);
         const componentOutcomes = componentUnits
-            .map((unit) => outcomes.get(getTranslationUnitKey(unit)) ?? outcomes.get(unit.id))
+            .map((unit) => outcomes.get(getTranslationUnitKey(unit)))
             .filter((outcome): outcome is TranslationOutcome => outcome !== undefined);
 
         return {
@@ -78,7 +78,7 @@ function tally(values: string[]): Record<string, number> {
 
 export function buildReport(
     components: ComponentReport[],
-    batchFallbacks: BatchFallbackReportEntry[] = [],
+    batchFallbacks: BatchFallbackEntry[] = [],
 ): TranslationReport {
     const totalTexts = components.reduce((sum, component) => sum + component.totalTexts, 0);
     const verifiedCount = components.reduce((sum, component) => sum + component.verified, 0);

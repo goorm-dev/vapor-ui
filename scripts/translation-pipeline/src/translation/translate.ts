@@ -2,6 +2,7 @@ import { DEFAULT_TRANSLATION_MODEL } from '~/defaults';
 import { callLlm } from '~/translation/client';
 import { parseLlmJson } from '~/translation/json';
 import { type TranslationUnit, getTranslationUnitKey } from '~/types';
+import { reconcileById } from '~/util';
 
 const SYSTEM_PROMPT = `You are a professional Korean translator for design-system API documentation. Respond ONLY with valid JSON.
 
@@ -73,32 +74,13 @@ function validateTranslations(
     units: TranslationUnit[],
     translations: TranslationResponseItem[],
 ): Map<string, string> {
-    const expectedIds = new Set(units.map(getTranslationUnitKey));
-    const seen = new Set<string>();
-    const result = new Map<string, string>();
-
-    for (const translation of translations) {
-        if (!expectedIds.has(translation.id)) {
-            throw new Error(`Unknown translation id: ${translation.id}`);
-        }
-        if (seen.has(translation.id)) {
-            throw new Error(`Duplicate translation id: ${translation.id}`);
-        }
-        if (translation.translated.trim().length === 0) {
-            throw new Error(`Empty translation for id: ${translation.id}`);
-        }
-        seen.add(translation.id);
-        result.set(translation.id, translation.translated);
-    }
-
-    for (const unit of units) {
-        const key = getTranslationUnitKey(unit);
-        if (!seen.has(key)) {
-            throw new Error(`Missing translation id: ${key}`);
+    const items = reconcileById(units.map(getTranslationUnitKey), translations);
+    for (const item of items.values()) {
+        if (item.translated.trim().length === 0) {
+            throw new Error(`Empty translation for id: ${item.id}`);
         }
     }
-
-    return result;
+    return new Map([...items].map(([id, item]) => [id, item.translated]));
 }
 
 /**

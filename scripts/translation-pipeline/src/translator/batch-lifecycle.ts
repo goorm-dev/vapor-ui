@@ -8,7 +8,9 @@ import {
     type TranslationOutcome,
     type TranslationUnit,
     getTranslationUnitKey,
+    makeOutcome,
 } from '~/types';
+import { chunkArray, reconcileById } from '~/util';
 import { checkPreservation, describeViolation } from '~/validation/preserve';
 import {
     MQM_CATEGORY_VALUES,
@@ -62,38 +64,48 @@ const BATCH_MQM_RESPONSE_SCHEMA = {
     },
 };
 
-interface BatchMqmSuccess {
-    ok: true;
-    evaluations: Map<string, MqmResult>;
-}
+type BatchResult<T> = { ok: true; value: T } | { ok: false; reason: string };
 
-interface BatchMqmInvalid {
-    ok: false;
-    reason: string;
-}
-
-type BatchMqmResult = BatchMqmSuccess | BatchMqmInvalid;
-
-function invalidMqm(reason: string): BatchMqmInvalid {
-    return { ok: false, reason };
-}
-
-function reconcileById<T extends { id: string }>(
+/**
+ * LLM 배치 호출 한 번의 공통 껍데기: 호출 → content 확인 → JSON 파싱 → id 대조.
+ * 어느 단계에서 깨져도 던지지 않고 `{ok:false, reason}`으로 내려 배치 단위 격하로 이어진다.
+ */
+async function callBatch<Item extends { id: string }>(
+    label: string,
+    systemPrompt: string,
+    model: string,
+    schema: { name: string; schema: object },
+    request: object,
     expectedIds: string[],
-    items: T[],
-): Map<string, T> {
-    const expected = new Set(expectedIds);
-    const result = new Map<string, T>();
+    field: string,
+): Promise<BatchResult<Map<string, Item>>> {
+    const result = await callLlm(
+        [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: JSON.stringify(request) },
+        ],
+        { model, jsonSchema: schema },
+    );
 
-    for (const item of items) {
-        if (!expected.has(item.id)) throw new Error(`Unknown response id: ${item.id}`);
-        if (result.has(item.id)) throw new Error(`Duplicate response id: ${item.id}`);
-        result.set(item.id, item);
+    if (!result.content) {
+        const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
+        return { ok: false, reason: `[${label}] ${result.error ?? 'empty response'}${statusInfo}` };
     }
-    for (const id of expected) {
-        if (!result.has(id)) throw new Error(`Missing response id: ${id}`);
+
+    try {
+        const parsed = parseLlmJson(result.content);
+        if (typeof parsed !== 'object' || parsed === null) {
+            return { ok: false, reason: `${label} response must be a JSON object` };
+        }
+        const items = (parsed as Record<string, unknown>)[field];
+        if (!Array.isArray(items)) {
+            return { ok: false, reason: `${label} response must contain ${field}[]` };
+        }
+        return { ok: true, value: reconcileById(expectedIds, items as Item[]) };
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        return { ok: false, reason: message };
     }
-    return result;
 }
 
 interface BatchEvaluationItem {
@@ -102,36 +114,11 @@ interface BatchEvaluationItem {
     errors: MqmError[];
 }
 
-function validateBatchEvaluations(units: TranslationUnit[], evaluations: unknown): BatchMqmResult {
-    if (!Array.isArray(evaluations)) {
-        return invalidMqm('MQM batch response must contain evaluations[]');
-    }
-
-    try {
-        const items = reconcileById(
-            units.map(getTranslationUnitKey),
-            evaluations as BatchEvaluationItem[],
-        );
-        return {
-            ok: true,
-            evaluations: new Map(
-                [...items].map(([id, item]) => [
-                    id,
-                    { verdict: item.verdict, errors: item.errors },
-                ]),
-            ),
-        };
-    } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        return invalidMqm(message);
-    }
-}
-
 async function validateBatchWithMqm(
     units: TranslationUnit[],
     translations: Map<string, string>,
-): Promise<BatchMqmResult> {
-    if (units.length === 0) return { ok: true, evaluations: new Map() };
+): Promise<BatchResult<Map<string, MqmResult>>> {
+    if (units.length === 0) return { ok: true, value: new Map() };
 
     const request = {
         units: units.map((unit) => ({
@@ -143,32 +130,26 @@ async function validateBatchWithMqm(
         })),
     };
 
-    const result = await callLlm(
-        [
-            { role: 'system', content: BATCH_MQM_SYSTEM_PROMPT },
-            { role: 'user', content: JSON.stringify(request) },
-        ],
-        {
-            model: DEFAULT_VALIDATION_MODEL,
-            jsonSchema: { name: 'batch_mqm_response', schema: BATCH_MQM_RESPONSE_SCHEMA },
-        },
+    const result = await callBatch<BatchEvaluationItem>(
+        'batch-mqm',
+        BATCH_MQM_SYSTEM_PROMPT,
+        DEFAULT_VALIDATION_MODEL,
+        { name: 'batch_mqm_response', schema: BATCH_MQM_RESPONSE_SCHEMA },
+        request,
+        units.map(getTranslationUnitKey),
+        'evaluations',
     );
+    if (!result.ok) return result;
 
-    if (!result.content) {
-        const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
-        return invalidMqm(`[batch-mqm] ${result.error ?? 'empty response'}${statusInfo}`);
-    }
-
-    try {
-        const parsed = parseLlmJson(result.content);
-        if (typeof parsed !== 'object' || parsed === null) {
-            return invalidMqm('MQM batch response must be a JSON object');
-        }
-        return validateBatchEvaluations(units, (parsed as Record<string, unknown>).evaluations);
-    } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        return invalidMqm(`Failed to parse MQM batch response: ${message}`);
-    }
+    return {
+        ok: true,
+        value: new Map(
+            [...result.value].map(([id, item]) => [
+                id,
+                { verdict: item.verdict, errors: item.errors },
+            ]),
+        ),
+    };
 }
 
 // ─── Batch Postprocess ───────────────────────────────────────────────────────
@@ -212,54 +193,10 @@ interface BatchPostprocessInput {
     violations: PreservationViolation[];
 }
 
-interface BatchPostprocessSuccess {
-    ok: true;
-    translations: Map<string, string>;
-}
-
-interface BatchPostprocessInvalid {
-    ok: false;
-    reason: string;
-}
-
-type BatchPostprocessResult = BatchPostprocessSuccess | BatchPostprocessInvalid;
-
-function invalidPostprocess(reason: string): BatchPostprocessInvalid {
-    return { ok: false, reason };
-}
-
-function validateBatchTranslations(
-    inputs: BatchPostprocessInput[],
-    translations: unknown,
-): BatchPostprocessResult {
-    if (!Array.isArray(translations)) {
-        return invalidPostprocess('Postprocess batch response must contain translations[]');
-    }
-
-    try {
-        const items = reconcileById(
-            inputs.map((input) => getTranslationUnitKey(input.unit)),
-            translations as { id: string; translated: string }[],
-        );
-        for (const item of items.values()) {
-            if (item.translated.trim().length === 0) {
-                return invalidPostprocess(`Empty translation for id: ${item.id}`);
-            }
-        }
-        return {
-            ok: true,
-            translations: new Map([...items].map(([id, item]) => [id, item.translated])),
-        };
-    } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        return invalidPostprocess(message);
-    }
-}
-
 async function postprocessBatchWithLlm(
     inputs: BatchPostprocessInput[],
-): Promise<BatchPostprocessResult> {
-    if (inputs.length === 0) return { ok: true, translations: new Map() };
+): Promise<BatchResult<Map<string, string>>> {
+    if (inputs.length === 0) return { ok: true, value: new Map() };
 
     const request = {
         units: inputs.map(({ unit, initialTranslation, errors, violations }) => ({
@@ -274,109 +211,51 @@ async function postprocessBatchWithLlm(
         })),
     };
 
-    const result = await callLlm(
-        [
-            { role: 'system', content: BATCH_POSTPROCESS_SYSTEM_PROMPT },
-            { role: 'user', content: JSON.stringify(request) },
-        ],
-        {
-            model: DEFAULT_POSTPROCESS_MODEL,
-            jsonSchema: {
-                name: 'batch_postprocess_response',
-                schema: BATCH_POSTPROCESS_RESPONSE_SCHEMA,
-            },
-        },
+    const result = await callBatch<{ id: string; translated: string }>(
+        'batch-postprocess',
+        BATCH_POSTPROCESS_SYSTEM_PROMPT,
+        DEFAULT_POSTPROCESS_MODEL,
+        { name: 'batch_postprocess_response', schema: BATCH_POSTPROCESS_RESPONSE_SCHEMA },
+        request,
+        inputs.map((input) => getTranslationUnitKey(input.unit)),
+        'translations',
     );
+    if (!result.ok) return result;
 
-    if (!result.content) {
-        const statusInfo = result.statusCode !== undefined ? ` (HTTP ${result.statusCode})` : '';
-        return invalidPostprocess(
-            `[batch-postprocess] ${result.error ?? 'empty response'}${statusInfo}`,
-        );
-    }
-
-    try {
-        const parsed = parseLlmJson(result.content);
-        if (typeof parsed !== 'object' || parsed === null) {
-            return invalidPostprocess('Postprocess batch response must be a JSON object');
+    for (const item of result.value.values()) {
+        if (item.translated.trim().length === 0) {
+            return { ok: false, reason: `Empty translation for id: ${item.id}` };
         }
-        return validateBatchTranslations(inputs, (parsed as Record<string, unknown>).translations);
-    } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        return invalidPostprocess(`Failed to parse postprocess batch response: ${message}`);
     }
+    return {
+        ok: true,
+        value: new Map([...result.value].map(([id, item]) => [id, item.translated])),
+    };
 }
 
 // ─── Outcome Builders ─────────────────────────────────────────────────────────
-
-function initialPassOutcome(unit: TranslationUnit, translated: string): TranslationOutcome {
-    return {
-        id: unit.id,
-        translated,
-        assurance: 'verified',
-        reportable: false,
-        reason: 'quality_gate_passed',
-    };
-}
 
 function finalOutcome(
     unit: TranslationUnit,
     translated: string,
     finalEvaluation: MqmResult,
 ): TranslationOutcome {
-    const passed = finalEvaluation.verdict === 'PASS';
-    return {
-        id: unit.id,
-        translated,
-        assurance: passed ? 'verified' : 'unverified',
-        reportable: !passed,
-        reason: passed ? 'quality_gate_passed' : 'quality_gate_failed',
-        ...(passed ? {} : { errors: finalEvaluation.errors }),
-    };
+    return finalEvaluation.verdict === 'PASS'
+        ? makeOutcome(unit, translated, 'quality_gate_passed')
+        : makeOutcome(unit, translated, 'quality_gate_failed', {
+              errors: finalEvaluation.errors,
+          });
 }
 
 /**
  * 문자열 보존을 끝까지 못 지킨 유닛은 한국어를 버리고 영어 원문을 그대로 쓴다 (KAN-10).
  * 잘못된 식별자·코드가 들어간 한국어보다 영어가 낫다.
  */
-export function preservationFallbackOutcome(
+function preservationFallbackOutcome(
     unit: TranslationUnit,
     violations: PreservationViolation[],
 ): TranslationOutcome {
-    return {
-        id: unit.id,
-        translated: unit.source,
-        assurance: 'unverified',
-        reportable: true,
-        reason: 'preservation_fallback',
-        violations,
-    };
-}
-
-function degradedOutcome(
-    unit: TranslationUnit,
-    translated: string,
-    reason: 'batch_mqm_failed' | 'batch_postprocess_failed' | 'batch_final_mqm_failed',
-    errors: MqmError[] = [],
-): TranslationOutcome {
-    return {
-        id: unit.id,
-        translated,
-        assurance: 'unverified',
-        reportable: true,
-        reason,
-        ...(errors.length > 0 ? { errors } : {}),
-    };
-}
-
-// ─── Chunk Helper ─────────────────────────────────────────────────────────────
-
-function chunkArray<T>(items: T[], size: number): T[][] {
-    const chunks: T[][] = [];
-    for (let index = 0; index < items.length; index += size) {
-        chunks.push(items.slice(index, index + size));
-    }
-    return chunks;
+    return makeOutcome(unit, unit.source, 'preservation_fallback', { violations });
 }
 
 // ─── Batch Lifecycle ──────────────────────────────────────────────────────────
@@ -431,11 +310,7 @@ export async function processBatchLifecycle(
                 unit,
                 violations.length > 0
                     ? preservationFallbackOutcome(unit, violations)
-                    : degradedOutcome(
-                          unit,
-                          requireTranslation(translations, unit),
-                          'batch_mqm_failed',
-                      ),
+                    : makeOutcome(unit, requireTranslation(translations, unit), 'batch_mqm_failed'),
             ]);
         }
         return { outcomes, batchFailureReasons };
@@ -445,13 +320,13 @@ export async function processBatchLifecycle(
     for (const unit of units) {
         const key = getTranslationUnitKey(unit);
         const translated = requireTranslation(translations, unit);
-        const evaluation = initialResult.evaluations.get(key);
+        const evaluation = initialResult.value.get(key);
         if (evaluation === undefined) {
             throw new Error(`Missing batch MQM result for id: ${key}`);
         }
         const violations = violationsOf(unit);
         if (evaluation.verdict === 'PASS' && violations.length === 0) {
-            outcomes.push([unit, initialPassOutcome(unit, translated)]);
+            outcomes.push([unit, makeOutcome(unit, translated, 'quality_gate_passed')]);
             continue;
         }
         failedUnits.push({
@@ -472,11 +347,11 @@ export async function processBatchLifecycle(
                     failed.unit,
                     failed.violations.length > 0
                         ? preservationFallbackOutcome(failed.unit, failed.violations)
-                        : degradedOutcome(
+                        : makeOutcome(
                               failed.unit,
                               failed.initialTranslation,
                               'batch_postprocess_failed',
-                              failed.errors,
+                              { errors: failed.errors },
                           ),
                 ]);
             }
@@ -487,7 +362,7 @@ export async function processBatchLifecycle(
         const recheckable: FailedUnit[] = [];
         for (const failed of failedChunk) {
             const key = getTranslationUnitKey(failed.unit);
-            const postprocessed = postprocess.translations.get(key) ?? failed.initialTranslation;
+            const postprocessed = postprocess.value.get(key) ?? failed.initialTranslation;
             const violations = checkPreservation(failed.unit.source, postprocessed);
             if (violations.length > 0) {
                 outcomes.push([failed.unit, preservationFallbackOutcome(failed.unit, violations)]);
@@ -500,18 +375,17 @@ export async function processBatchLifecycle(
 
         const finalResult = await validateBatchWithMqm(
             recheckable.map(({ unit }) => unit),
-            postprocess.translations,
+            postprocess.value,
         );
 
         if (!finalResult.ok) {
             batchFailureReasons.push(`final batch MQM invalid: ${finalResult.reason}`);
             for (const failed of recheckable) {
                 const key = getTranslationUnitKey(failed.unit);
-                const postprocessed =
-                    postprocess.translations.get(key) ?? failed.initialTranslation;
+                const postprocessed = postprocess.value.get(key) ?? failed.initialTranslation;
                 outcomes.push([
                     failed.unit,
-                    degradedOutcome(failed.unit, postprocessed, 'batch_final_mqm_failed'),
+                    makeOutcome(failed.unit, postprocessed, 'batch_final_mqm_failed'),
                 ]);
             }
             continue;
@@ -519,8 +393,8 @@ export async function processBatchLifecycle(
 
         for (const failed of recheckable) {
             const key = getTranslationUnitKey(failed.unit);
-            const translated = postprocess.translations.get(key);
-            const finalEvaluation = finalResult.evaluations.get(key);
+            const translated = postprocess.value.get(key);
+            const finalEvaluation = finalResult.value.get(key);
             if (translated === undefined || finalEvaluation === undefined) {
                 throw new Error(`Missing final batch MQM result for id: ${key}`);
             }

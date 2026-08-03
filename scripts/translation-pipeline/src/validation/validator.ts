@@ -35,25 +35,3 @@ export const MQM_CATEGORY_VALUES = [
 ] satisfies MqmCategory[];
 
 export const MQM_SEVERITY_VALUES = ['minor', 'major', 'critical'] satisfies MqmError['severity'][];
-
-const MQM_CATEGORIES: Set<MqmCategory> = new Set(MQM_CATEGORY_VALUES);
-const MQM_SEVERITIES = new Set<MqmError['severity']>(MQM_SEVERITY_VALUES);
-
-export function isMqmError(value: unknown): value is MqmError {
-    if (typeof value !== 'object' || value === null) {
-        return false;
-    }
-
-    const error = value as Record<string, unknown>;
-    return (
-        typeof error.category === 'string' &&
-        MQM_CATEGORIES.has(error.category as MqmError['category']) &&
-        typeof error.severity === 'string' &&
-        MQM_SEVERITIES.has(error.severity as MqmError['severity']) &&
-        typeof error.source_span === 'string' &&
-        error.source_span.trim().length > 0 &&
-        typeof error.mt_span === 'string' &&
-        error.mt_span.trim().length > 0 &&
-        typeof error.explanation === 'string'
-    );
-}
