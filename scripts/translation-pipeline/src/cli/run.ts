@@ -1,17 +1,11 @@
 import meow from 'meow';
+import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 
 import { buildReport, writeReport } from '~/report/report';
 import { translatePropsInfo } from '~/translator/translator';
 import type { TranslatableDoc } from '~/types';
-
-export class CliError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'CliError';
-    }
-}
 
 export interface CliOptions {
     input: string;
@@ -62,10 +56,10 @@ export function parseCliArgs(argv: string[]): CliOptions {
     const output = cli.flags.output?.trim();
 
     if (!input) {
-        throw new CliError('Missing required option: --input');
+        throw new Error('Missing required option: --input');
     }
     if (!output) {
-        throw new CliError('Missing required option: --output');
+        throw new Error('Missing required option: --output');
     }
 
     return { input, output };
@@ -74,7 +68,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
 function requireEnv(env: NodeJS.ProcessEnv, name: string): string {
     const value = env[name]?.trim();
     if (!value) {
-        throw new CliError(`Missing required environment variable: ${name}`);
+        throw new Error(`Missing required environment variable: ${name}`);
     }
     return value;
 }
@@ -87,7 +81,7 @@ interface InputDoc {
 
 function readInputDocs(inputDir: string): InputDoc[] {
     if (!existsSync(inputDir)) {
-        throw new CliError(`Input directory does not exist: ${inputDir}`);
+        throw new Error(`Input directory does not exist: ${inputDir}`);
     }
     const entries = readdirSync(inputDir, { withFileTypes: true })
         .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
@@ -102,7 +96,7 @@ function readInputDocs(inputDir: string): InputDoc[] {
             raw = JSON.parse(readFileSync(filePath, 'utf-8'));
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
-            throw new CliError(`Failed to parse ${fileName}: ${message}`);
+            throw new Error(`Failed to parse ${fileName}: ${message}`);
         }
 
         const doc = normalizeDoc(raw, fileName);
@@ -113,12 +107,12 @@ function readInputDocs(inputDir: string): InputDoc[] {
 
 function normalizeDoc(raw: unknown, fileName: string): TranslatableDoc {
     if (typeof raw !== 'object' || raw === null) {
-        throw new CliError(`${fileName}: expected an object at top level`);
+        throw new Error(`${fileName}: expected an object at top level`);
     }
     const record = raw as Record<string, unknown>;
     const name = record['name'];
     if (typeof name !== 'string' || !name) {
-        throw new CliError(`${fileName}: missing required string field "name"`);
+        throw new Error(`${fileName}: missing required string field "name"`);
     }
     const description =
         typeof record['description'] === 'string' ? record['description'] : undefined;
@@ -135,12 +129,12 @@ function normalizeProp(
     index: number,
 ): TranslatableDoc['props'][number] {
     if (typeof raw !== 'object' || raw === null) {
-        throw new CliError(`${fileName}: props[${index}] is not an object`);
+        throw new Error(`${fileName}: props[${index}] is not an object`);
     }
     const record = raw as Record<string, unknown>;
     const name = record['name'];
     if (typeof name !== 'string' || !name) {
-        throw new CliError(`${fileName}: props[${index}] missing "name"`);
+        throw new Error(`${fileName}: props[${index}] missing "name"`);
     }
     const description =
         typeof record['description'] === 'string' ? record['description'] : undefined;
@@ -191,6 +185,17 @@ function writeKoFiles(
     return writtenFiles;
 }
 
+function formatWithPrettier(filePaths: string[]): void {
+    if (filePaths.length === 0) return;
+
+    try {
+        execFileSync('npx', ['prettier', '--write', ...filePaths], { stdio: 'inherit' });
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.warn(`Prettier formatting skipped: ${message}`);
+    }
+}
+
 export async function run(argv: string[], options: RunOptions = {}): Promise<RunResult> {
     const cliOptions = parseCliArgs(argv);
     const env = options.env ?? process.env;
@@ -209,6 +214,7 @@ export async function run(argv: string[], options: RunOptions = {}): Promise<Run
 
     const merged = applyTranslationsToRaw(inputDocs, result.props);
     const writtenFiles = writeKoFiles(outputDir, merged);
+    formatWithPrettier(writtenFiles);
 
     writeReport(buildReport(result.componentReports, result.batchFallbacks), outputDir);
     const reportPath = join(outputDir, '.i18n-report.md');

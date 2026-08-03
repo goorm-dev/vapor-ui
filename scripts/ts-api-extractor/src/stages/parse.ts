@@ -97,7 +97,17 @@ function extractParsedComponent(
 ): ParsedComponent | null {
     const namespaceName = namespace.getName();
     const exportedProps = findExportedInterfaceProps(namespace);
-    if (!exportedProps) return null;
+    if (!exportedProps) {
+        const asInterface = namespace
+            .getInterfaces()
+            .find((decl) => decl.getName() === 'Props' && decl.isExported());
+        if (asInterface) {
+            console.warn(
+                `[docs-extractor] Skipped ${namespaceName}: Props must be an exported type alias, not an interface`,
+            );
+        }
+        return null;
+    }
 
     const allSymbols = exportedProps.getType().getProperties();
     const declaredPropNames = new Set(allSymbols.map((symbol) => symbol.getName()));

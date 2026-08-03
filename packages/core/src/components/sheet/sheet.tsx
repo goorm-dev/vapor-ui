@@ -402,7 +402,7 @@ SheetDescription.displayName = 'Sheet.Description';
 
 export namespace SheetRoot {
     export type State = {};
-    export interface Props extends Omit<Dialog.Root.Props, 'size'> {}
+    export type Props = Omit<Dialog.Root.Props, 'size'>;
 
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
     export type Actions = BaseDialog.Root.Actions;
@@ -479,7 +479,7 @@ export interface SheetResizeHandleState {
 
 export namespace SheetResizeHandle {
     export type State = SheetResizeHandleState;
-    export interface Props extends VaporUIComponentProps<'div', State> {
+    export type Props = VaporUIComponentProps<'div', State> & {
         /**
          * Pixels adjusted per arrow-key press.
          * @default 16
@@ -489,7 +489,7 @@ export namespace SheetResizeHandle {
          * Blocks drag and keyboard resizing.
          */
         disabled?: boolean;
-    }
+    };
 }
 
 export namespace SheetHeader {

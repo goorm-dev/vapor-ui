@@ -4,9 +4,10 @@ import type { ExtractorConfig } from '~/config/schema';
  * Default extractor configuration.
  *
  * NOTE: Relative paths (inputPath, tsconfig, outputDir) are resolved against
- * `process.cwd()` at runtime. This configuration assumes the tool is invoked
- * from the repository root. For other invocation contexts, provide an explicit
- * config file (e.g. docs-extractor.config.mjs) with paths relative to that file.
+ * `process.cwd()`. These defaults assume the tool runs from `apps/website`
+ * (that is how `pnpm --filter website extract` invokes it). For other
+ * invocation contexts, provide an explicit config file
+ * (e.g. docs-extractor.config.mjs) with paths relative to that file.
  */
 export const defaultExtractorConfig: ExtractorConfig = {
     inputPath: '../../packages/core',

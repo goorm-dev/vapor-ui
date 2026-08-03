@@ -8,7 +8,7 @@
         "clean": "rm -rf node_modules .next .turbo .source",
         "dev": "next dev --turbo",
         "extract": "ts-api-extractor",
-        "i18n": "pnpm extract && pnpm translate",
+        "i18n": "pnpm -F @vapor-ui/ts-api-extractor -F @vapor-ui/translation-pipeline build && pnpm extract && pnpm translate",
         "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src",
         "start": "next start",
