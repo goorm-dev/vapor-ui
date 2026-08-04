@@ -758,15 +758,9 @@ const dataAttrs = createDataAttributes({ invalid });
                         height: vars.size.dimension['300'],
                     },
                 ],
-                md: [
-                    /* ... */
-                ],
-                lg: [
-                    /* ... */
-                ],
-                xl: [
-                    /* ... */
-                ],
+                md: [/* ... */],
+                lg: [/* ... */],
+                xl: [/* ... */],
             },
             colorPalette: {
                 primary: {
@@ -775,19 +769,13 @@ const dataAttrs = createDataAttributes({ invalid });
                         [bg]: vars.color.background.primary[200],
                     },
                 },
-                secondary: {
-                    /* ... */
-                },
+                secondary: {/* ... */},
                 // ...
             },
             variant: {
                 fill: { backgroundColor: bg, color: fg },
-                outline: {
-                    /* ... */
-                },
-                ghost: {
-                    /* ... */
-                },
+                outline: {/* ... */},
+                ghost: {/* ... */},
             },
         },
     });

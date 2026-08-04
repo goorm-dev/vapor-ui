@@ -1,11 +1,5 @@
 export type Scope =
-    | 'foreground'
-    | 'background'
-    | 'border'
-    | 'dimension'
-    | 'space'
-    | 'borderRadius'
-    | 'shadow';
+    'foreground' | 'background' | 'border' | 'dimension' | 'space' | 'borderRadius' | 'shadow';
 
 export const PROPERTY_SCOPE: Record<string, readonly Scope[]> = {
     color: ['foreground'],

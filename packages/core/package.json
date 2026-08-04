@@ -68,7 +68,7 @@
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {
-        "@playwright/test": "^1.60.0",
+        "@playwright/test": "^1.61.1",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@storybook/react-vite": "9.1.20",
@@ -76,7 +76,7 @@
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.2",
         "@testing-library/user-event": "^14.6.1",
-        "@types/node": "^22.19.20",
+        "@types/node": "^22.20.1",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "@vanilla-extract/rollup-plugin": "^1.5.4",
@@ -85,8 +85,8 @@
         "@vitest/coverage-v8": "catalog:",
         "autoprefixer": "^10.5.4",
         "eslint": "catalog:",
-        "happy-dom": "^20.9.0",
-        "postcss": "^8.5.23",
+        "happy-dom": "^20.10.6",
+        "postcss": "^8.5.25",
         "react": "catalog:",
         "react-dom": "catalog:",
         "rimraf": "^6.1.3",
