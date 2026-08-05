@@ -10,7 +10,7 @@ import type { ExtractorConfig } from '~/config/schema';
  */
 export const defaultExtractorConfig: ExtractorConfig = {
     inputPath: '../../packages/core',
-    tsconfig: '../../packages/core/tsconfig.json',
+    tsconfig: '../../packages/core/tsconfig.base.json',
     exclude: [],
     excludeDefaults: true,
     outputDir: '../../apps/website/public/components/generated',
