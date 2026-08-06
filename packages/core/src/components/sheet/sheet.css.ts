@@ -93,7 +93,7 @@ export const popup = componentStyle({
 
     borderRadius: 0,
     boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
-    backgroundColor: vars.color.background.overlay[100],
+    backgroundColor: vars.color.background['overlay-100'],
 
     selectors: {
         ...sideSelectors,
@@ -159,7 +159,7 @@ export const resizeHandleGrip = componentStyle([
     interaction(),
     {
         borderRadius: vars.size.borderRadius[300],
-        backgroundColor: vars.color.foreground.hint[100],
+        backgroundColor: vars.color.foreground['hint-100'],
 
         selectors: {
             '&[data-side="left"], &[data-side="right"]': {

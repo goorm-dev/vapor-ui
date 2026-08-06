@@ -16,10 +16,10 @@ export const root = componentRecipe({
     variants: {
         variant: {
             outline: {
-                backgroundColor: vars.color.background.canvas[100],
-                borderRadius: vars.size.borderRadius[400],
                 border: '0.0625rem solid',
+                borderRadius: vars.size.borderRadius[400],
                 borderColor: vars.color.border.normal,
+                backgroundColor: vars.color.background['canvas-100'],
             },
             ghost: {
                 backgroundColor: 'transparent',
@@ -48,10 +48,10 @@ export const item = componentRecipe({
 });
 
 export const separator = componentStyle({
-    width: '0.0625rem',
     alignSelf: 'stretch',
     marginBlock: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
+    width: '0.0625rem',
 });
 
 export type ToolbarRootVariants = NonNullable<RecipeVariants<typeof root>>;

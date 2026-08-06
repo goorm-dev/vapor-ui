@@ -36,7 +36,7 @@ export const popup = componentStyle({
     borderColor: vars.color.border.normal,
 
     boxShadow: vars.shadow.lg,
-    backgroundColor: vars.color.background.overlay[100],
+    backgroundColor: vars.color.background['overlay-100'],
     paddingBlock: vars.size.space['150'],
     paddingInline: vars.size.space['200'],
 

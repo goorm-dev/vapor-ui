@@ -124,13 +124,13 @@ export const root = componentRecipe({
     variants: {
         colorPalette: {
             danger: {
-                backgroundColor: vars.color.background.danger[200],
+                backgroundColor: vars.color.background['danger-200'],
             },
             success: {
-                backgroundColor: vars.color.background.success[200],
+                backgroundColor: vars.color.background['success-200'],
             },
             info: {
-                backgroundColor: vars.color.background.contrast[200],
+                backgroundColor: vars.color.background['contrast-200'],
             },
         },
     },
