@@ -7,6 +7,7 @@ import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -50,7 +51,7 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
         state: { invalid },
         render: <BaseCheckbox.Root />,
         props: {
-            'aria-invalid': invalid,
+            ...createAriaAttribute('invalid', invalid),
             indeterminate,
             className: cn(styles.root({ invalid, size }), className),
             children,

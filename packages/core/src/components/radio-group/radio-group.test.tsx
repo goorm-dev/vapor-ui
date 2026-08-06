@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
 import { RadioGroup } from '.';
+import { Field } from '../field';
 
 const OPTION_1 = 'Option 1';
 const OPTION_2 = 'Option 2';
@@ -276,6 +277,36 @@ describe('RadioGroup', () => {
 
         expect(radioA).toHaveAttribute('tabindex', '-1');
         expect(radioB).toHaveAttribute('tabindex', '0');
+    });
+
+    describe('prop: invalid', () => {
+        it('should have the `aria-invalid` attribute', () => {
+            const rendered = render(<RadioGroupTest invalid />);
+
+            expect(rendered.getByRole('radiogroup')).toHaveAttribute('aria-invalid', 'true');
+        });
+
+        it('should not have the `aria-invalid` attribute when `invalid` is not set', () => {
+            const rendered = render(<RadioGroupTest />);
+
+            expect(rendered.getByRole('radiogroup')).not.toHaveAttribute('aria-invalid');
+        });
+
+        it('should not clobber `aria-invalid` computed by Field validation', async () => {
+            const rendered = render(
+                <Field.Root name="plan" validationMode="onBlur" validate={() => 'Required'}>
+                    <RadioGroup.Root invalid={false}>
+                        <Radio.Root value="option1" aria-label={OPTION_1} />
+                    </RadioGroup.Root>
+                    <Field.Error>Required</Field.Error>
+                </Field.Root>,
+            );
+
+            await userEvent.click(rendered.getByRole('radio'));
+            await userEvent.tab();
+
+            expect(rendered.getByRole('radiogroup')).toHaveAttribute('aria-invalid', 'true');
+        });
     });
 });
 

@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
 import { Checkbox } from '.';
+import { Field } from '../field';
 
 describe('Checkbox', () => {
     afterEach(cleanup);
@@ -182,6 +183,21 @@ describe('Checkbox', () => {
             const checkbox = rendered.getByRole('checkbox');
 
             expect(checkbox).not.toHaveAttribute('aria-invalid');
+        });
+
+        it('should not clobber `aria-invalid` computed by Field validation', async () => {
+            const rendered = render(
+                <Field.Root name="terms" validationMode="onBlur" validate={() => 'Required'}>
+                    <Checkbox.Root aria-label={LABEL_TEXT} invalid={false} />
+                    <Field.Error>Required</Field.Error>
+                </Field.Root>,
+            );
+            const checkbox = rendered.getByRole('checkbox');
+
+            await userEvent.click(checkbox);
+            await userEvent.tab();
+
+            expect(checkbox).toHaveAttribute('aria-invalid', 'true');
         });
 
         it('should propagate the invalid state to the indicator', async () => {

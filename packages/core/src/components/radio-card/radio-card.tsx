@@ -4,6 +4,7 @@ import { forwardRef } from 'react';
 
 import { Radio as BaseRadio } from '@base-ui/react/radio';
 
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -30,7 +31,7 @@ export const RadioCard = forwardRef<HTMLElement, RadioCard.Props>((props, ref) =
     return (
         <BaseRadio.Root
             ref={ref}
-            aria-invalid={invalid}
+            {...createAriaAttribute('invalid', invalid)}
             className={cn(styles.root({ invalid }), className)}
             {...dataAttrs}
             {...otherProps}

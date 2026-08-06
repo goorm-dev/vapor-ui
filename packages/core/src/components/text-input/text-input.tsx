@@ -6,6 +6,7 @@ import { Input as BaseInput } from '@base-ui/react/input';
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useInputGroup } from '~/components/input-group';
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -58,7 +59,7 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
         <BaseInput
             ref={ref}
             {...(isControlled ? { value } : { defaultValue })}
-            aria-invalid={invalid}
+            {...createAriaAttribute('invalid', invalid)}
             onValueChange={handleChange}
             className={cn(styles.root({ invalid, size }), className)}
             {...dataAttrs}

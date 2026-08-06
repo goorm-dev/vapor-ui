@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
 import { Switch } from '.';
+import { Field } from '../field';
 
 describe('Switch', () => {
     afterEach(cleanup);
@@ -214,6 +215,49 @@ describe('Switch', () => {
 
             await userEvent.tab();
             expect(control).not.toHaveFocus();
+        });
+    });
+
+    describe('prop: invalid', () => {
+        it('should have the `aria-invalid` attribute', async () => {
+            const rendered = render(<SwitchTest invalid />);
+
+            expect(rendered.getByRole('switch')).toHaveAttribute('aria-invalid', 'true');
+        });
+
+        it('should not have the `aria-invalid` attribute when `invalid` is not set', async () => {
+            const rendered = render(<SwitchTest />);
+
+            expect(rendered.getByRole('switch')).not.toHaveAttribute('aria-invalid');
+        });
+
+        it('should not clobber `aria-invalid` computed by Field validation', async () => {
+            const rendered = render(
+                <Field.Root name="notify" validationMode="onBlur" validate={() => 'Required'}>
+                    <Switch.Root aria-label={LABEL_TEXT} invalid={false} />
+                    <Field.Error>Required</Field.Error>
+                </Field.Root>,
+            );
+            const control = rendered.getByRole('switch');
+
+            await userEvent.click(control);
+            await userEvent.tab();
+
+            expect(control).toHaveAttribute('aria-invalid', 'true');
+        });
+    });
+
+    describe('prop: required', () => {
+        it('should have the `aria-required` attribute', async () => {
+            const rendered = render(<SwitchTest required />);
+
+            expect(rendered.getByRole('switch')).toHaveAttribute('aria-required', 'true');
+        });
+
+        it('should not have the `aria-required` attribute when `required` is not set', async () => {
+            const rendered = render(<SwitchTest />);
+
+            expect(rendered.getByRole('switch')).not.toHaveAttribute('aria-required');
         });
     });
 });

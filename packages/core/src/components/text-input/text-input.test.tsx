@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 
+import { Field } from '../field';
 import { TextInput } from './text-input';
 
 const LABEL_TEXT = 'Label';
@@ -80,5 +81,38 @@ describe('TextInput', () => {
         const input = rendered.getByPlaceholderText(placeholderText);
 
         expect(input).toBeInTheDocument();
+    });
+
+    it('should keep aria-invalid computed by Field validation', async () => {
+        const rendered = render(
+            <Field.Root name="email" validationMode="onBlur">
+                <Field.Label>Email</Field.Label>
+                <TextInput type="email" required />
+                <Field.Error>Please enter a valid email</Field.Error>
+            </Field.Root>,
+        );
+
+        const input = rendered.getByRole('textbox');
+        await userEvent.type(input, 'not-an-email');
+        await userEvent.tab();
+
+        expect(rendered.getByText('Please enter a valid email')).toBeInTheDocument();
+        expect(input).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    it('should not clobber Field validation with explicit invalid={false}', async () => {
+        const rendered = render(
+            <Field.Root name="email" validationMode="onBlur">
+                <Field.Label>Email</Field.Label>
+                <TextInput type="email" required invalid={false} />
+                <Field.Error>Please enter a valid email</Field.Error>
+            </Field.Root>,
+        );
+
+        const input = rendered.getByRole('textbox');
+        await userEvent.type(input, 'not-an-email');
+        await userEvent.tab();
+
+        expect(input).toHaveAttribute('aria-invalid', 'true');
     });
 });

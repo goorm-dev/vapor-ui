@@ -8,6 +8,7 @@ import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
+import { createAriaAttribute } from '~/utils/aria-attributes';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -54,7 +55,7 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((
             <BaseRadioGroup
                 ref={ref}
                 aria-labelledby={labelElementId}
-                aria-invalid={invalid}
+                {...createAriaAttribute('invalid', invalid)}
                 className={cn(styles.root(), className)}
                 {...dataAttrs}
                 {...otherProps}
