@@ -82,6 +82,26 @@ export const interaction = componentRecipe({
                     },
                 },
             },
+            // form 과 동일하되, 래퍼가 자식의 포커스를 대신 그리는 경우(input-group 같은 박스)
+            'form-within': {
+                transition: 'box-shadow 150ms cubic-bezier(.4,0,.2,1)',
+
+                selectors: {
+                    '&:focus-within': {
+                        boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.primary}`,
+                    },
+                },
+
+                '@media': {
+                    '(hover: hover)': {
+                        selectors: {
+                            '&:hover:not(:focus-within)': {
+                                boxShadow: `inset 0 0 0 0.0625rem color-mix(in srgb, ${vars.color.gray[900]} 32%, transparent)`,
+                            },
+                        },
+                    },
+                },
+            },
             roving: {
                 selectors: {
                     '&[data-highlighted]::before': { opacity: 0.08 },

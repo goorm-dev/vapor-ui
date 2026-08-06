@@ -13,6 +13,7 @@ export const DIMENSION = {
     '225': calc.multiply(scaleFactorVar, '18px'),
     '250': calc.multiply(scaleFactorVar, '20px'),
     '300': calc.multiply(scaleFactorVar, '24px'),
+    '350': calc.multiply(scaleFactorVar, '28px'),
     '400': calc.multiply(scaleFactorVar, '32px'),
     '500': calc.multiply(scaleFactorVar, '40px'),
     '600': calc.multiply(scaleFactorVar, '48px'),
