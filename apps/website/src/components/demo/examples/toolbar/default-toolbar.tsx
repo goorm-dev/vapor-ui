@@ -16,11 +16,8 @@ export default function DefaultToolbar() {
     const [fontSize, setFontSize] = useState<number>();
 
     const handleValueChange = (value: string) => {
-        const parsedValue = value ? parseInt(value, 10) : 0;
-
-        if (isNaN(parsedValue)) return;
-
-        setFontSize(parsedValue);
+        const parsedValue = value ? parseInt(value, 10) : NaN;
+        setFontSize(isNaN(parsedValue) ? 16 : parsedValue);
     };
 
     return (
@@ -43,22 +40,22 @@ export default function DefaultToolbar() {
                     <Toolbar.Separator />
 
                     <TooltipButton description="Bold">
-                        <Toolbar.Button render={<Toggle />}>
+                        <Toolbar.Button render={<Toggle aria-label="Bold" />}>
                             <BoldOutlineIcon />
                         </Toolbar.Button>
                     </TooltipButton>
                     <TooltipButton description="Italic">
-                        <Toolbar.Button render={<Toggle />}>
+                        <Toolbar.Button render={<Toggle aria-label="Italic" />}>
                             <ItalicIcon />
                         </Toolbar.Button>
                     </TooltipButton>
                     <TooltipButton description="Strike Through">
-                        <Toolbar.Button render={<Toggle />}>
+                        <Toolbar.Button render={<Toggle aria-label="Strike Through" />}>
                             <StrikeOutlineIcon />
                         </Toolbar.Button>
                     </TooltipButton>
                     <TooltipButton description="Underline">
-                        <Toolbar.Button render={<Toggle />}>
+                        <Toolbar.Button render={<Toggle aria-label="Underline" />}>
                             <UnderlineOutlineIcon />
                         </Toolbar.Button>
                     </TooltipButton>
@@ -67,17 +64,23 @@ export default function DefaultToolbar() {
 
                     <Toolbar.Group render={<ToggleGroup />}>
                         <TooltipButton description="Align Left">
-                            <Toolbar.Button render={<Toggle variant="accent" />}>
+                            <Toolbar.Button
+                                render={<Toggle variant="accent" aria-label="Align Left" />}
+                            >
                                 <AlignLeftOutlineIcon />
                             </Toolbar.Button>
                         </TooltipButton>
                         <TooltipButton description="Align Center">
-                            <Toolbar.Button render={<Toggle variant="accent" />}>
+                            <Toolbar.Button
+                                render={<Toggle variant="accent" aria-label="Align Center" />}
+                            >
                                 <AlignCenterOutlineIcon />
                             </Toolbar.Button>
                         </TooltipButton>
                         <TooltipButton description="Align Right">
-                            <Toolbar.Button render={<Toggle variant="accent" />}>
+                            <Toolbar.Button
+                                render={<Toggle variant="accent" aria-label="Align Right" />}
+                            >
                                 <AlignRightOutlineIcon />
                             </Toolbar.Button>
                         </TooltipButton>
@@ -119,7 +122,7 @@ const selectItems: SelectItem[] = [
     { value: 'Roboto', label: 'Roboto' },
     { value: 'Arial', label: 'Arial' },
     { value: 'Monospace', label: 'Monospace' },
-    { value: 'Monserrat', label: 'Monserrat' },
+    { value: 'Montserrat', label: 'Montserrat' },
 ];
 
 interface TooltipButtonProps {
