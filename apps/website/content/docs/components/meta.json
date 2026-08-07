@@ -48,6 +48,9 @@
         "(components)/text.mdx",
         "(components)/textarea.mdx",
         "(components)/toast.mdx",
+        "(components)/toggle.mdx",
+        "(components)/toggle-group.mdx",
+        "(components)/toolbar.mdx",
         "(components)/tooltip.mdx",
 
         "---UI Patterns---",
