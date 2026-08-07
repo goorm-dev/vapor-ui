@@ -4,9 +4,7 @@
 
 ### Css
 
--   - add redesigned design tokens ([#644](https://github.com/goorm-dev/vapor-ui/pull/644)) - Thanks [@noahchoii](https://github.com/noahchoii)!
-
-        - **Breaking Change**: inverse color tokens have been changed. In light mode, inverse is dark, in dark mode, inverse is light.
+- **Breaking Change**: inverse color tokens have been changed. In light mode, inverse is dark, in dark mode, inverse is light. ([#644](https://github.com/goorm-dev/vapor-ui/pull/644)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ### Toggle
 
