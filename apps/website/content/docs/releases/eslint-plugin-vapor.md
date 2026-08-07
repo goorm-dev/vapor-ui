@@ -7,7 +7,7 @@ description: 'eslint-plugin-vapor 패키지의 릴리즈 노트입니다.'
 
 ## 1.1.0
 
-### Etc.
+### Rules
 
 - add new rules related with usage of design-tokens ([#626](https://github.com/goorm-dev/vapor-ui/pull/626)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
