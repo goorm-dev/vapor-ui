@@ -242,6 +242,8 @@ export { default as ExploreIcon } from './ExploreIcon';
 export { default as DocktoBottomIcon } from './DocktoBottomIcon';
 export { default as RewardedAdsIcon } from './RewardedAdsIcon';
 export { default as LicenseIcon } from './LicenseIcon';
+export { default as IdIcon } from './IdIcon';
+export { default as DevicesIcon } from './DevicesIcon';
 export { default as CameraOutlineIcon } from './CameraOutlineIcon';
 export { default as ImageOutlineIcon } from './ImageOutlineIcon';
 export { default as NoImageOutlineIcon } from './NoImageOutlineIcon';
