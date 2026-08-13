@@ -67,13 +67,6 @@ jobs:
             VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         steps:
-            # This job does not check out the repository, so .nvmrc is unavailable.
-            # Only the Vercel CLI runs here, so the major version is enough.
-            - name: Install Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '24'
-
             - name: Install Vercel CLI
               run: npm install -g vercel@^50
 
