@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/core",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "description": "An open-source component library for building high-quality, accessible web applications. Features easy customization and AI-friendly components. Maintained by @goorm-dev.",
     "keywords": [
         "react",
@@ -75,7 +75,7 @@
         "@testing-library/dom": "^10.4.1",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.2",
-        "@testing-library/user-event": "^14.6.1",
+        "@testing-library/user-event": "^14.6.3",
         "@types/node": "^22.20.1",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
@@ -86,7 +86,7 @@
         "autoprefixer": "^10.5.4",
         "eslint": "catalog:",
         "happy-dom": "^20.10.6",
-        "postcss": "^8.5.25",
+        "postcss": "^8.5.26",
         "react": "catalog:",
         "react-dom": "catalog:",
         "rimraf": "^6.1.3",

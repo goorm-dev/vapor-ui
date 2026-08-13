@@ -14,28 +14,28 @@ export const root = componentRecipe({
     variants: {
         colorPalette: {
             primary: {
-                backgroundColor: vars.color.background.primary[100],
-                color: vars.color.foreground.primary[200],
+                backgroundColor: vars.color.background['primary-100'],
+                color: vars.color.foreground['primary-200'],
             },
             hint: {
-                backgroundColor: vars.color.background.hint[100],
-                color: vars.color.foreground.hint[200],
+                backgroundColor: vars.color.background['hint-100'],
+                color: vars.color.foreground['hint-200'],
             },
             danger: {
-                backgroundColor: vars.color.background.danger[100],
-                color: vars.color.foreground.danger[200],
+                backgroundColor: vars.color.background['danger-100'],
+                color: vars.color.foreground['danger-200'],
             },
             success: {
-                backgroundColor: vars.color.background.success[100],
-                color: vars.color.foreground.success[200],
+                backgroundColor: vars.color.background['success-100'],
+                color: vars.color.foreground['success-200'],
             },
             warning: {
-                backgroundColor: vars.color.background.warning[100],
-                color: vars.color.foreground.warning[200],
+                backgroundColor: vars.color.background['warning-100'],
+                color: vars.color.foreground['warning-200'],
             },
             contrast: {
-                backgroundColor: vars.color.background.contrast[100],
-                color: vars.color.foreground.contrast[200],
+                backgroundColor: vars.color.background['contrast-100'],
+                color: vars.color.foreground['contrast-200'],
             },
         },
 

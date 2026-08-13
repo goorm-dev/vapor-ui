@@ -67,7 +67,7 @@ export const fallback = componentRecipe({
         width: '100%',
 
         height: '100%',
-        color: vars.color.foreground.inverse,
+        color: vars.color.white,
     },
 
     defaultVariants: { size: 'md' },
