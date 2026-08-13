@@ -34,7 +34,7 @@
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
-        "@types/node": "^20.19.43",
+        "@types/node": "^24.13.3",
         "@vitest/coverage-v8": "catalog:",
         "eslint": "^9.39.5",
         "tsup": "^8.5.1",
@@ -46,6 +46,6 @@
         "typescript": ">=5.9.3"
     },
     "engines": {
-        "node": ">=20.20.2"
+        "node": ">=24.18.0 <25"
     }
 }
