@@ -1,5 +1,7 @@
 ---
-'@vapor-ui/icons': patch
+'@vapor-ui/icons': minor
 ---
 
-add new `IdIcon`, `DevicesIcon`
+Add new icons from Figma
+
+**New Basic Icons:** `IdIcon`, `DevicesIcon`
