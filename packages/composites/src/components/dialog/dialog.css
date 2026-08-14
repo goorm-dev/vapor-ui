@@ -1,0 +1,4 @@
+.content[data-scrollable] {
+    mask-image: linear-gradient(to top, transparent 0, black 20px);
+    mask-repeat: no-repeat;
+}
