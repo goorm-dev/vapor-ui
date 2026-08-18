@@ -249,8 +249,7 @@ const dtsBuild = {
             assetFileNames: undefined,
             exports: undefined,
 
-            entryFileNames: ({ name }) =>
-                `${name.replace(/\.css$/, '.css.vanilla')}.${extension}`,
+            entryFileNames: ({ name }) => `${name.replace(/\.css$/, '.css.vanilla')}.${extension}`,
         }),
     ),
 };
