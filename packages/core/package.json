@@ -15,7 +15,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "url": "git+https://github.com/goorm-dev/vapor-ui.git",
         "directory": "packages/core"
     },
     "license": "MIT",
@@ -24,16 +24,19 @@
         "**/*.css",
         "**/*.css.ts"
     ],
+    "type": "module",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
             "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
+            "require": "./dist/index.cjs",
+            "default": "./dist/index.js"
         },
         "./*": {
             "types": "./dist/components/*/index.d.ts",
             "import": "./dist/components/*/index.js",
-            "require": "./dist/components/*/index.cjs"
+            "require": "./dist/components/*/index.cjs",
+            "default": "./dist/components/*/index.js"
         },
         "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
         "./styles.css": "./dist/styles/themes.css.ts.vanilla.css"
@@ -105,6 +108,9 @@
     "peerDependencies": {
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
         "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    },
+    "engines": {
+        "node": ">=20"
     },
     "publishConfig": {
         "access": "public"
