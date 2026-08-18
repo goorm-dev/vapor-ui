@@ -180,7 +180,7 @@ export default defineConfig([
             exports: 'named',
 
             // e.g., 'styles/tailwind-preset.css' -> 'styles/tailwind-preset.css.vanilla.js'
-            entryFileNames: ({ name }) => `${name.replace(/\.css$/, '.css.vanilla')}.js`,
+            entryFileNames: ({ name }) => `${name.replace(/\.css$/, '.css.vanilla')}.mjs`,
             assetFileNames,
         },
     }),
@@ -202,12 +202,17 @@ export default defineConfig([
     bundle({
         plugins: [plugins.depsExternal, plugins.dts],
         output: {
-            format: 'esm',
-            strict: false,
-            exports: undefined,
-
             // e.g., 'button.css.d' -> 'button.css.vanilla.d.ts'
-            entryFileNames: ({ name }) => `${name.replace(/\.css\.d$/, '.css.vanilla.d')}.ts`,
+            entryFileNames: ({ name }) => `${name.replace(/\.css\.d$/, '.css.vanilla.d')}.mts`,
+        },
+    }),
+
+    // DTS Build
+    bundle({
+        plugins: [plugins.depsExternal, plugins.dts],
+        output: {
+            // e.g., 'button.css.d' -> 'button.css.vanilla.d.ts'
+            entryFileNames: ({ name }) => `${name.replace(/\.css\.d$/, '.css.vanilla.d')}.cts`,
         },
     }),
 ]);
