@@ -24,7 +24,7 @@ const baseElement = componentStyle({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: vars.size.borderRadius[300],
-    color: vars.color.foreground.normal[100],
+    color: vars.color.foreground['normal-100'],
 
     selectors: {
         [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
@@ -75,8 +75,8 @@ export const currentPage = componentRecipe({
     base: [
         baseElement,
         {
-            backgroundColor: vars.color.background.primary[100],
-            color: vars.color.foreground.primary[200],
+            backgroundColor: vars.color.background['primary-100'],
+            color: vars.color.foreground['primary-200'],
         },
     ],
     defaultVariants: { size: 'md' },
@@ -91,8 +91,8 @@ export const button = componentRecipe({
         {
             selectors: {
                 '&[data-current]': {
-                    backgroundColor: vars.color.background.primary[100],
-                    color: vars.color.foreground.primary[200],
+                    backgroundColor: vars.color.background['primary-100'],
+                    color: vars.color.foreground['primary-200'],
                 },
             },
         },

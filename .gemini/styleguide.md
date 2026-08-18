@@ -758,36 +758,24 @@ const dataAttrs = createDataAttributes({ invalid });
                         height: vars.size.dimension['300'],
                     },
                 ],
-                md: [
-                    /* ... */
-                ],
-                lg: [
-                    /* ... */
-                ],
-                xl: [
-                    /* ... */
-                ],
+                md: [/* ... */],
+                lg: [/* ... */],
+                xl: [/* ... */],
             },
             colorPalette: {
                 primary: {
                     vars: {
                         [fg]: vars.color.foreground.inverse,
-                        [bg]: vars.color.background.primary[200],
+                        [bg]: vars.color.background['primary-200'],
                     },
                 },
-                secondary: {
-                    /* ... */
-                },
+                secondary: {/* ... */},
                 // ...
             },
             variant: {
                 fill: { backgroundColor: bg, color: fg },
-                outline: {
-                    /* ... */
-                },
-                ghost: {
-                    /* ... */
-                },
+                outline: {/* ... */},
+                ghost: {/* ... */},
             },
         },
     });
@@ -821,7 +809,7 @@ const dataAttrs = createDataAttributes({ invalid });
 
     ```tsx
     // 색상 토큰
-    vars.color.background.primary[200];
+    vars.color.background['primary-200'];
     vars.color.foreground.inverse;
     vars.color.border.primary;
     vars.color.white;
