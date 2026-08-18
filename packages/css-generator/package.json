@@ -41,7 +41,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@vapor-ui/color-generator": "workspace:*"
+        "@vapor-ui/color-generator": "workspace:^"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
