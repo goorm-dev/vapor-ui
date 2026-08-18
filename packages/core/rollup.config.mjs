@@ -238,20 +238,21 @@ const dtsBuild = {
             target: compilerOptions.target || 'ESNext',
         }),
     ],
-    output: [
+    output: ['d.ts', 'd.cts'].map((extension) =>
         createOutput({
             dir: 'dist/',
             format: 'esm',
-            extension: 'd.ts',
+            extension,
 
             // --- overrides ---
             preserveModulesRoot: 'src',
             assetFileNames: undefined,
             exports: undefined,
 
-            entryFileNames: ({ name }) => `${name.replace(/\.css$/, '.css.vanilla')}.d.ts`,
+            entryFileNames: ({ name }) =>
+                `${name.replace(/\.css$/, '.css.vanilla')}.${extension}`,
         }),
-    ],
+    ),
 };
 
 export default [esmBuild, cjsBuild, dtsBuild];
