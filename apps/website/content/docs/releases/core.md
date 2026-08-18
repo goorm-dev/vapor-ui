@@ -5,8 +5,6 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
-## 1.5.1
-
 ## 1.5.0
 
 ### Css
