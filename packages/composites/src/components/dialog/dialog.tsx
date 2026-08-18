@@ -1,7 +1,5 @@
 'use client';
 
-import './dialog.css';
-
 import type { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -14,8 +12,69 @@ import { createSlots } from '~/utils/create-slots';
 const slots = createSlots({
     title: <DialogPrimitives.Title />,
     trigger: <DialogPrimitives.Trigger />,
-    description: <DialogPrimitives.Description $css={{ color: '$basic-gray-500' }} />,
+    description: <DialogPrimitives.Description />,
 });
+
+export const Dialog = ({
+    // functional
+    open,
+    defaultOpen,
+    onOpenChange,
+    container,
+    keepMounted,
+
+    // variants
+    size,
+
+    // slots
+    title,
+    description,
+    trigger,
+    footer,
+    children,
+}: Dialog.Props) => {
+    return (
+        <DialogPrimitives.Root
+            open={open}
+            defaultOpen={defaultOpen}
+            onOpenChange={onOpenChange}
+            size={size}
+        >
+            <slots.trigger render={trigger} />
+
+            <DialogPrimitives.PortalPrimitive container={container} keepMounted={keepMounted}>
+                <DialogPrimitives.OverlayPrimitive />
+
+                <DialogPrimitives.PopupPrimitive>
+                    <DialogPrimitives.Header
+                        $css={{
+                            justifyContent: 'space-between',
+                            alignItems: 'start',
+                            height: 'unset',
+                            paddingTop: '$300',
+                            paddingBottom: '$200',
+                            gap: '$200',
+                        }}
+                    >
+                        <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
+                            <slots.title render={title} />
+                            <slots.description
+                                render={description}
+                                $css={{ color: '$basic-gray-500' }}
+                            />
+                        </VStack>
+
+                        <CloseButton />
+                    </DialogPrimitives.Header>
+
+                    <Body>{children}</Body>
+
+                    {footer && <Footer {...footer} />}
+                </DialogPrimitives.PopupPrimitive>
+            </DialogPrimitives.PortalPrimitive>
+        </DialogPrimitives.Root>
+    );
+};
 
 type Slots = SlotProps<typeof slots, 'title'>;
 type RootProps = DialogPrimitives.Root.Props;
@@ -24,7 +83,7 @@ type PortalProps = DialogPrimitives.PortalPrimitive.Props;
 export interface DialogProps {
     /**
      * 다이얼로그 열림 상태(제어). 사용자가 결정을 내려야 하는 시점을 외부 상태로 동기화할 때 사용한다.
-     * 상태의 변경을 추적할 필요가 없다면 defaultOpen을 사용해라.
+     * 상태의 변경을 추적할 필요가 없다면 defaultOpen을 사용한다.
      */
     open?: RootProps['open'];
 
@@ -54,89 +113,50 @@ export interface DialogProps {
     keepMounted?: PortalProps['keepMounted'];
 
     /**
-     * Figma 아나토미: `Header/Title`. 다이얼로그의 목적을 한 문장으로 전달한다.
-     * @
+     * 다이얼로그의 크기를 변경한다.
+     * @default "md"
+     */
+    size?: RootProps['size'];
+
+    /**
+     * 다이얼로그의 목적을 한 문장으로 전달한다.
      */
     title: Slots['title'];
 
     /**
-     * Figma 아나토미: `Header/Description`. 결정에 필요한 부가 설명.
+     * 결정에 필요한 부가 설명.
      */
     description?: Slots['description'];
 
     /**
-     * Figma 아나토미: `Trigger`. 다이얼로그를 여는 진입 요소.
+     * 다이얼로그를 여는 진입 요소.
      * @example
      * <Dialog trigger={<Button>열기</Button>} />
      */
     trigger?: Slots['trigger'];
 
     /**
-     * Figma 아나토미: `Footer/Actions`. - assistiveButton, - actionButton
+     * 다이얼로그의 액션 요소들을 추가한다.
+     * @example
+     * <Dialog footer={{ actionButton: <Button>확인</Button> }} />
      */
     footer?: FooterProps;
 
     /**
-     * Figma 아나토미: `Body`. 폼·리스트·본문 콘텐츠 슬롯.
+     * 다이얼로그의 본문에 해당한다.
      */
     children?: ReactNode;
 }
 
-export const Dialog = ({
-    // functional
-    open,
-    defaultOpen,
-    onOpenChange,
-    container,
-    keepMounted,
-
-    // slots
-    title,
-    description,
-    trigger,
-    footer,
-    children,
-}: DialogProps) => {
-    return (
-        <DialogPrimitives.Root open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange}>
-            <slots.trigger render={trigger} />
-
-            <DialogPrimitives.PortalPrimitive container={container} keepMounted={keepMounted}>
-                <DialogPrimitives.OverlayPrimitive />
-
-                <DialogPrimitives.PopupPrimitive>
-                    <DialogPrimitives.Header
-                        $css={{
-                            justifyContent: 'space-between',
-                            alignItems: 'start',
-                            height: 'unset',
-                            paddingTop: '$300',
-                            paddingBottom: '$200',
-                            gap: '$200',
-                        }}
-                    >
-                        <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
-                            <slots.title render={title} />
-                            <slots.description render={description} />
-                        </VStack>
-
-                        <CloseButton />
-                    </DialogPrimitives.Header>
-
-                    <Body $css={{}}>{children}</Body>
-
-                    {footer && <Footer {...footer} />}
-                </DialogPrimitives.PopupPrimitive>
-            </DialogPrimitives.PortalPrimitive>
-        </DialogPrimitives.Root>
-    );
-};
+export namespace Dialog {
+    export type Props = DialogProps;
+}
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type BodyProps = Pick<DialogPrimitives.Body.Props, '$css' | 'children'>;
+type BodyProps = Pick<DialogPrimitives.Body.Props, 'children'>;
 
-const Body = ({ $css, children }: BodyProps) => {
+const Body = ({ children }: BodyProps) => {
     const bodyRef = useRef<HTMLDivElement>(null);
     const [overflowed, setOverflowed] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -165,12 +185,15 @@ const Body = ({ $css, children }: BodyProps) => {
         };
     }, []);
 
+    const scrollable = overflowed && !scrolled;
+
     return (
         <DialogPrimitives.Body
             ref={bodyRef}
-            className={'content'}
-            data-scrollable={(overflowed && !scrolled) || undefined}
-            $css={{ marginBottom: '$300', ...$css }}
+            $css={{
+                marginBottom: '$300',
+                maskImage: scrollable ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
+            }}
         >
             {children}
         </DialogPrimitives.Body>

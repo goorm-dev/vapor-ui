@@ -6,26 +6,34 @@ import { Dialog } from './dialog';
 export default {
     title: 'Composites/Dialog',
     component: Dialog,
+    argTypes: {
+        open: { control: 'boolean' },
+        title: { control: 'text' },
+        description: { control: 'text' },
+        size: { control: 'inline-radio', options: ['md', 'lg', 'xl'] },
+    },
 } satisfies Meta<typeof Dialog>;
 
 type Story = StoryObj<typeof Dialog>;
 
 export const Default: Story = {
-    render: () => {
+    args: {
+        title: '초대하기',
+        description: 'description',
+    },
+    render: (args) => {
         return (
             <Dialog
-                open
-                title="초대하기"
-                description="description"
                 trigger={<Button>hi</Button>}
-                // footer={{
-                //     actionButton: <Button>확인</Button>,
-                //     assistiveButton: (
-                //         <Button colorPalette="secondary" variant="ghost">
-                //             보조
-                //         </Button>
-                //     ),
-                // }}
+                footer={{
+                    actionButton: <Button>확인</Button>,
+                    assistiveButton: (
+                        <Button colorPalette="secondary" variant="ghost">
+                            보조
+                        </Button>
+                    ),
+                }}
+                {...args}
             >
                 <InviteForms />
             </Dialog>
