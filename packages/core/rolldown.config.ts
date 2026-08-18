@@ -2,7 +2,13 @@ import { vanillaExtractPlugin } from '@vanilla-extract/rollup-plugin';
 import fs from 'node:fs';
 import path from 'node:path';
 import { defineConfig } from 'rolldown';
-import type { OutputOptions, Plugin, RolldownOptions, RolldownPluginOption } from 'rolldown';
+import type {
+    OutputOptions,
+    Plugin,
+    PreRenderedAsset,
+    RolldownOptions,
+    RolldownPluginOption,
+} from 'rolldown';
 import { dts as dtsPlugin } from 'rolldown-plugin-dts';
 import depsExternalPlugin from 'rollup-plugin-node-externals';
 
@@ -128,10 +134,21 @@ const sharedResolve = {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
 };
 
-// e.g., 'src/styles/foo.css' -> 'styles/foo.css'
-const assetFileNames = (assetInfo: { name?: string }) => {
-    if (!assetInfo.name) return 'assets/[name]-[hash][extname]';
-    return assetInfo.name.replace(/^src\//, '');
+const SRC_ROOT = path.resolve('./src');
+const assetFileNames = (assetInfo: PreRenderedAsset) => {
+    const original = assetInfo.originalFileNames.at(0);
+
+    if (original && path.isAbsolute(original)) {
+        const rel = path.relative(SRC_ROOT, original);
+
+        if (rel && !rel.startsWith('..')) {
+            return rel.split(path.sep).join('/');
+        }
+    }
+
+    const name = original ?? assetInfo.names.at(0);
+    if (!name) return 'assets/[name]-[hash][extname]';
+    return name.replace(/^src\//, '');
 };
 
 type BundleOptions = { plugins: RolldownPluginOption; output: OutputOptions };
