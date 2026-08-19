@@ -8,7 +8,7 @@ import { defineConfig } from 'rolldown';
 const inputs = generateInputs([
     'src/index.ts',
     'src/components/**/*.{ts,tsx}',
-    '!src/components/**/*.{stories,test,spec}.*',
+    '!src/components/**/*.{figma,stories,test,spec}.*',
 ]);
 
 const resolve = {
@@ -27,7 +27,7 @@ export default defineConfig([
             strict: true,
             exports: 'named',
 
-            entryFileNames: '[name].js',
+            entryFileNames: '[name].mjs',
         },
     }),
 
@@ -49,9 +49,15 @@ export default defineConfig([
         input: inputs,
         plugins: [depsExternal(), dts()],
         output: {
-            format: 'esm',
-            strict: false,
-            exports: undefined,
+            entryFileNames: '[name].mts',
+        },
+    }),
+
+    bundle({
+        input: inputs,
+        plugins: [depsExternal(), dts()],
+        output: {
+            entryFileNames: '[name].cts',
         },
     }),
 ]);
