@@ -41,7 +41,7 @@ async function navigate(page, storybookUrl, id) {
 }
 
 const visualStories = filterStories(Object.values(manifest.entries));
-const BASE_URL = 'http://localhost:9999';
+const BASE_URL = 'http://localhost:8888';
 
 visualStories.forEach((story) => {
     test(story.id, async ({ page }, meta) => {

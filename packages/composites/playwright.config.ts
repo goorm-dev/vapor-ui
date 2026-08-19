@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const BASE_URL = 'http://localhost:9999';
+const BASE_URL = 'http://localhost:8888';
 
 export default defineConfig({
     snapshotPathTemplate: './__tests__/screenshots/{arg}-{projectName}-{platform}-{ext}',
@@ -23,7 +23,7 @@ export default defineConfig({
     workers: process.env.CI ? 2 : undefined,
 
     webServer: {
-        command: 'npx http-server -p 9999 ../../apps/storybook/storybook-static',
+        command: 'npx http-server -p 8888 ../../apps/storybook/storybook-static',
         url: BASE_URL,
         reuseExistingServer: false,
     },
