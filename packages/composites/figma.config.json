@@ -3,10 +3,7 @@
     "codeConnect": {
         "parser": "react",
         "language": "typescript",
-        "include": ["src/**/*.figma.ts"],
-        "paths": {
-            "~/*": ["./src/*"]
-        }
+        "include": ["src/**/*.figma.ts"]
     },
     "fileKey": "he4tiAGOKGPl0Fm56ZpJsy",
     "packageImportPath": "@vapor-ui/composites"
