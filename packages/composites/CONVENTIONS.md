@@ -48,7 +48,7 @@ type Slots = SlotProps<typeof slots, 'title'>;
 
 ## 2. 모든 prop에 JSDoc을 붙인다
 
-Props Table 자동 생성이 이 문자열을 그대로 사용한다. 시각(visual)·기능(functional)·슬롯(slot) 카테고리를 가리지 않고 모든 prop에 JSDoc을 작성한다.
+Props Table 자동 생성이 이 문자열을 그대로 사용한다. 시각(variants)·기능(functional)·슬롯(slot) 카테고리를 가리지 않고 모든 prop에 JSDoc을 작성한다.
 
 **규칙**
 
