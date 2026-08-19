@@ -16,6 +16,7 @@
     "scripts": {
         "build": "rimraf dist && tsc",
         "clean": "rimraf dist node_modules .turbo",
+        "lint": "eslint ./src",
         "dev": "tsc --watch"
     },
     "dependencies": {
@@ -25,6 +26,7 @@
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
+        "eslint": "catalog:",
         "rimraf": "^6.1.3",
         "rolldown": "^1.1.4",
         "rollup": "^4.62.4",
