@@ -47,6 +47,7 @@ export default defineConfig([
     // DTS Build
     bundle({
         input: inputs,
+        resolve,
         plugins: [depsExternal(), dts()],
         output: {
             entryFileNames: '[name].mts',
@@ -55,6 +56,7 @@ export default defineConfig([
 
     bundle({
         input: inputs,
+        resolve,
         plugins: [depsExternal(), dts()],
         output: {
             entryFileNames: '[name].cts',
