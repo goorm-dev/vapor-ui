@@ -11,7 +11,7 @@ export const cleanLayerDeclaration = (options: Options = {}): RolldownPlugin => 
         name: 'clean-css-layer-declarations',
 
         generateBundle(_options, bundle) {
-            const layerDeclarationRegex = /^@layer vapor.[a-zA-Z0-9_-]+;\s*/gm;
+            const layerDeclarationRegex = /^@layer vapor\.[a-zA-Z0-9_-]+;\s*/gm;
             const exceptions = ignores || ['styles/layers.css.ts.vanilla.css'];
 
             for (const fileName in bundle) {
