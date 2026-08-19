@@ -19,14 +19,7 @@ import {
  * @see https://tailwindcss.com/docs/theme#theme-variable-namespaces
  */
 type TailwindThemeNamespace =
-    | 'color'
-    | 'spacing'
-    | 'radius'
-    | 'font'
-    | 'text'
-    | 'font-weight'
-    | 'leading'
-    | 'tracking';
+    'color' | 'spacing' | 'radius' | 'font' | 'text' | 'font-weight' | 'leading' | 'tracking';
 
 /* -------------------------------------------------------------------------------------------------
  * @theme layer
@@ -175,5 +168,5 @@ semanticMappings.forEach(({ prefix, property, contractGroup, tokenGroup }) => {
 });
 
 globalStyle('@utility text-v-logo', {
-    color: vars.color.foreground.secondary[200],
+    color: vars.color.foreground['secondary-200'],
 });

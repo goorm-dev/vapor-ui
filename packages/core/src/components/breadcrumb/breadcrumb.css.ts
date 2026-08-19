@@ -27,7 +27,7 @@ export const link = componentRecipe({
         current: {
             false: [
                 {
-                    color: vars.color.foreground.hint[100],
+                    color: vars.color.foreground['hint-100'],
 
                     // NOTE: When the link interaction style is declared multiple times, consider separating it.
                     ':hover': {
@@ -35,16 +35,16 @@ export const link = componentRecipe({
                     },
                     ':focus-visible': {
                         outline: 'none',
-                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal[200]}`,
+                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground['normal-200']}`,
                     },
                     ':active': {
                         textDecoration: 'underline',
-                        textDecorationColor: vars.color.foreground.primary[100],
+                        textDecorationColor: vars.color.foreground['primary-100'],
                     },
                 },
             ],
             true: {
-                color: vars.color.foreground.primary[100],
+                color: vars.color.foreground['primary-100'],
             },
         },
     },
@@ -55,7 +55,7 @@ export const icon = componentRecipe({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: vars.color.foreground.hint[100],
+        color: vars.color.foreground['hint-100'],
     },
 
     defaultVariants: { size: 'md' },

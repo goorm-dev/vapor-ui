@@ -13,7 +13,7 @@ export const altTextOnAvatarRule: Rule.RuleModule = {
         },
         messages: {
             missingAlt:
-                "The '{{ componentName }}' must have an 'alt' prop when 'src' prop is used. It is important for accessibility to provide alternative text for images.",
+                "'{{ componentName }}'에 'src' prop을 사용할 때는 접근성을 위한 alt 속성(대체 텍스트)을 반드시 추가해주세요.",
         },
     },
     create(context) {
