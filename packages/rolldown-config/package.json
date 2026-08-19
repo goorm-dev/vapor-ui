@@ -15,8 +15,8 @@
     },
     "scripts": {
         "build": "rimraf dist && tsc",
-        "dev": "tsc --watch",
-        "clean": "rimraf dist node_modules .turbo"
+        "clean": "rimraf dist node_modules .turbo",
+        "dev": "tsc --watch"
     },
     "dependencies": {
         "rolldown-plugin-dts": "^0.27.1",

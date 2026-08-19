@@ -192,9 +192,7 @@ export namespace Dialog {
     export type Props = DialogProps;
 }
 
-const props: Dialog.Props = {
-    /* ... */
-};
+const props: Dialog.Props = {/* ... */};
 ```
 
 ## 6. 서브 컴포넌트는 `index.parts.ts`로 분리한다
