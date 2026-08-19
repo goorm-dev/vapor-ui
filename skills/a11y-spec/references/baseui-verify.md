@@ -29,13 +29,13 @@ SC마다 어떤 명령이 증거를 만드는지. **명령이 없는 칸은 실�
 
 ## 실전 함정 (실측에서 걸린 것)
 
-1. **ref는 페이지가 바뀌는 즉시 무효다.** Dialog를 열거나 Esc로 닫은 뒤 이전 `@eN`을 쓰면
-   엉뚱한 요소를 잡는다. 상태를 바꿨으면 **반드시 재스냅샷**한다.
+1. **ref는 페이지가 바뀌는 즉시 무효다.** Dialog를 열거나 Esc로 닫았으면 **재스냅샷 후**
+   새 `@eN`을 쓴다. 이전 ref는 엉뚱한 요소를 잡는다.
 2. **`eval`은 스코프가 호출 간에 유지된다.** `const a = ...`를 두 번 실행하면
    `Identifier 'a' has already been declared`로 죽는다. IIFE로 감싼다:
    `(()=>{ const a=...; return ... })()`
 3. **`box`가 아니라 `get box`다.** `styles`도 `get styles`.
-4. **`snapshot -i`는 인터랙티브 요소만** 보여주므로 role 검증에는 `snapshot -c`(전체)를 쓴다.
+4. **role 검증에는 `snapshot -c`(전체)를 쓴다.** `snapshot -i`는 인터랙티브 요소만 보여준다.
 
 ## 실측 예 — Dialog (2026-08-14)
 
@@ -43,44 +43,18 @@ SC마다 어떤 명령이 증거를 만드는지. **명령이 없는 칸은 실�
 agent-browser open https://base-ui.com/react/components/dialog
 agent-browser snapshot -i -c -s "main"     # 트리거 ref 확보
 agent-browser click @eN
-agent-browser snapshot -c
+agent-browser snapshot -c                  # role/이름/배경 소멸 확인
+agent-browser eval '(()=>{const d=document.querySelector("[role=dialog]");return {ariaModal:d.ariaModal,labelledby:d.getAttribute("aria-labelledby")}})()'
 ```
 
-열린 뒤 접근성 트리 전체:
+판정 근거는 **수단이 아니라 결과**다. 위 Dialog는 `role="dialog"` +
+`aria-labelledby`/`describedby`로 4.1.2를 충족하고, 배경이 트리에서 사라져 1.3.2를
+충족한다 — 단 수단은 `aria-modal`이 아니라 배경 `aria-hidden`이다(`ariaModal: null`,
+네이티브 `<dialog>` 미사용). **이 사실까지 적어야 판정이 방어된다.**
 
-```
-- generic
-  - dialog "Notifications"
-    - heading "Notifications" [level=2]
-    - button "Close"
-```
-
-DOM 속성:
-
-```json
-{
-    "tag": "DIV",
-    "role": "dialog",
-    "ariaModal": null,
-    "labelledby": "base-ui-_r_4q_",
-    "describedby": "base-ui-_r_4r_",
-    "nativeOpen": false
-}
-```
-
-판정:
-
-- **4.1.2 충족** — `role="dialog"` + `aria-labelledby`/`aria-describedby`가 실제 id를 가리킨다
-- **1.3.2 충족** — 배경 전체가 트리에서 사라졌다. 단 수단은 `aria-modal`이 **아니라**
-  배경 `aria-hidden`이다 (`ariaModal: null`, 네이티브 `<dialog>` 미사용). 성공 기준은
-  기술이 아니라 결과를 요구하므로 충족이지만, **이 사실이 판정의 근거다**
-- **2.4.3 충족** — Esc 후 `activeElement`가 트리거(`"View notifications"`)로 복귀
-- **2.1.2 충족** — 트랩 안에서 Tab 순회가 dialog 밖으로 안 나가고, Esc로 탈출된다
-
-⚠️ 위 결과는 데모의 기본 설정(`modal` 기본값)이다. `modal="trap-focus"`는 배경
-`aria-hidden`을 켜면서 백드롭을 끄므로 **AT에게만 배경이 숨겨진다** — 시각 사용자는 배경을
-클릭할 수 있는데 스크린리더 사용자는 존재를 모른다. 이 조합은 1.3.2 판정이 뒤집힌다.
-**prop 조합별로 따로 실측한다.**
+⚠️ **prop 조합별로 따로 실측한다.** 위 결과는 `modal` 기본값이다. `modal="trap-focus"`는
+배경 `aria-hidden`을 켜면서 백드롭을 끄므로 **AT에게만 배경이 숨겨진다** — 시각 사용자는
+배경을 클릭할 수 있는데 스크린리더 사용자는 존재를 모른다. 이 조합은 1.3.2 판정이 뒤집힌다.
 
 ## 리포트 표기
 
