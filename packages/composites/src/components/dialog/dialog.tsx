@@ -10,11 +10,11 @@ import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
 
 const slots = createSlots({
-    title: <DialogPrimitives.Title />,
-    trigger: <DialogPrimitives.Trigger />,
-    description: <DialogPrimitives.Description />,
-    assistive: <DialogPrimitives.Close />,
-    action: <DialogPrimitives.Close />,
+    title: DialogPrimitives.Title,
+    trigger: DialogPrimitives.Trigger,
+    description: DialogPrimitives.Description,
+    assistive: DialogPrimitives.Close,
+    action: DialogPrimitives.Close,
 });
 
 export const Dialog = ({
