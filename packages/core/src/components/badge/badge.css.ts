@@ -14,28 +14,28 @@ export const root = componentRecipe({
     variants: {
         colorPalette: {
             primary: {
-                backgroundColor: vars.color.background['primary-100'],
-                color: vars.color.foreground['primary-200'],
+                backgroundColor: vars.color.background['primary-weak'],
+                color: vars.color.foreground['primary-strong'],
             },
             hint: {
-                backgroundColor: vars.color.background['hint-100'],
-                color: vars.color.foreground['hint-200'],
+                backgroundColor: vars.color.background['hint-weak'],
+                color: vars.color.foreground['secondary'],
             },
             danger: {
-                backgroundColor: vars.color.background['danger-100'],
-                color: vars.color.foreground['danger-200'],
+                backgroundColor: vars.color.background['danger-weak'],
+                color: vars.color.foreground['danger-strong'],
             },
             success: {
-                backgroundColor: vars.color.background['success-100'],
-                color: vars.color.foreground['success-200'],
+                backgroundColor: vars.color.background['success-weak'],
+                color: vars.color.foreground['success-strong'],
             },
             warning: {
-                backgroundColor: vars.color.background['warning-100'],
-                color: vars.color.foreground['warning-200'],
+                backgroundColor: vars.color.background['warning-weak'],
+                color: vars.color.foreground['warning-strong'],
             },
             contrast: {
-                backgroundColor: vars.color.background['contrast-100'],
-                color: vars.color.foreground['contrast-200'],
+                backgroundColor: vars.color.background['contrast-weak'],
+                color: vars.color.foreground['normal'],
             },
         },
 

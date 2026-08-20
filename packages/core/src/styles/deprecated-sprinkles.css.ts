@@ -34,20 +34,53 @@ const bgColorTokens = {
     // Background colors
     'primary-100': colors.background['primary-100'],
     'primary-200': colors.background['primary-200'],
+    'primary-weak': colors.background['primary-weak'],
+    primary: colors.background['primary'],
+
     'secondary-100': colors.background['secondary-100'],
+    'secondary-200': colors.background['secondary-200'],
+    'secondary-weak': colors.background['secondary-weak'],
+    secondary: colors.background['secondary'],
+
+    // success
     'success-100': colors.background['success-100'],
     'success-200': colors.background['success-200'],
+    'success-weak': colors.background['success-weak'],
+    success: colors.background['success'],
+
+    // warning
     'warning-100': colors.background['warning-100'],
     'warning-200': colors.background['warning-200'],
+    'warning-weak': colors.background['warning-weak'],
+    warning: colors.background['warning'],
+
+    // danger
     'danger-100': colors.background['danger-100'],
     'danger-200': colors.background['danger-200'],
+    'danger-weak': colors.background['danger-weak'],
+    danger: colors.background['danger'],
+
+    // hint
     'hint-100': colors.background['hint-100'],
     'hint-200': colors.background['hint-200'],
+    'hint-weak': colors.background['hint-weak'],
+    hint: colors.background['hint'],
+
+    // contrast
     'contrast-100': colors.background['contrast-100'],
     'contrast-200': colors.background['contrast-200'],
+    'contrast-weak': colors.background['contrast-weak'],
+    contrast: colors.background['contrast'],
+
     'canvas-100': colors.background['canvas-100'],
     'canvas-200': colors.background['canvas-200'],
     'overlay-100': colors.background['overlay-100'],
+
+    'canvas-base': colors.background['canvas-base'],
+    'canvas-sunken': colors.background['canvas-sunken'],
+    'canvas-raised': colors.background['canvas-raised'],
+    'canvas-dim': colors.background['canvas-dim'],
+    'canvas-overlay': colors.background['canvas-overlay'],
 
     // Blue colors with prefix
     'blue-050': colors.blue['050'],
@@ -189,21 +222,45 @@ const bgColorTokens = {
 const colorTokens = {
     'primary-100': foreground['primary-100'],
     'primary-200': foreground['primary-200'],
+    primary: foreground['primary'],
+    'primary-strong': foreground['primary-strong'],
+
     'secondary-100': foreground['secondary-100'],
     'secondary-200': foreground['secondary-200'],
+    secondary: foreground['secondary'],
+
     'success-100': foreground['success-100'],
     'success-200': foreground['success-200'],
+    success: foreground['success'],
+    'success-strong': foreground['success-strong'],
+
     'warning-100': foreground['warning-100'],
     'warning-200': foreground['warning-200'],
+    warning: foreground['warning'],
+    'warning-strong': foreground['warning-strong'],
+
     'danger-100': foreground['danger-100'],
     'danger-200': foreground['danger-200'],
+    danger: foreground['danger'],
+    'danger-strong': foreground['danger-strong'],
+
     'hint-100': foreground['hint-100'],
     'hint-200': foreground['hint-200'],
+    hint: foreground['hint'],
+
     'contrast-100': foreground['contrast-100'],
     'contrast-200': foreground['contrast-200'],
+    contrast: foreground['contrast'],
+
     'normal-100': foreground['normal-100'],
     'normal-200': foreground['normal-200'],
+    normal: foreground['normal'],
+
     inverse: foreground.inverse,
+
+    white: white,
+    staticWhite: foreground.staticWhite,
+    staticBlack: foreground.staticBlack,
 };
 
 const borderColorTokens = {

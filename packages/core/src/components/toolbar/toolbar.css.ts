@@ -19,7 +19,7 @@ export const root = componentRecipe({
                 border: '0.0625rem solid',
                 borderRadius: vars.size.borderRadius[400],
                 borderColor: vars.color.border.normal,
-                backgroundColor: vars.color.background['canvas-100'],
+                backgroundColor: vars.color.background['canvas-base'],
             },
             ghost: {
                 backgroundColor: 'transparent',

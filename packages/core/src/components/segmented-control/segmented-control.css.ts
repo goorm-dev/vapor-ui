@@ -132,7 +132,7 @@ export const indicator = componentStyle({
 
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.secondary}`,
-    backgroundColor: vars.color.background['canvas-100'],
+    backgroundColor: vars.color.background['canvas-base'],
 
     pointerEvents: 'none',
     width: `${variables.indicatorWidth}`,

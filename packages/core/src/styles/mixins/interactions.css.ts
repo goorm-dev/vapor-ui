@@ -51,7 +51,7 @@ export const interaction = componentRecipe({
                 selectors: {
                     '&:active::before': { opacity: calc.multiply(ratio, 2) },
                     '&:focus-visible': {
-                        outline: `2px solid ${vars.color.foreground['normal-200']}`,
+                        outline: `2px solid ${vars.color.foreground['normal']}`,
                         outlineOffset: '2px',
                     },
                 },
