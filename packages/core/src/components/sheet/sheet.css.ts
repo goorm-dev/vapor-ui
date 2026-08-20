@@ -93,7 +93,7 @@ export const popup = componentStyle({
 
     borderRadius: 0,
     boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
-    backgroundColor: vars.color.background.overlay[100],
+    backgroundColor: vars.color.background['overlay-100'],
 
     selectors: {
         ...sideSelectors,
@@ -116,10 +116,10 @@ export const popup = componentStyle({
 // width/height directly for 1:1 direct manipulation (no transition).
 export const resizeHandle = componentStyle({
     position: 'absolute',
+    zIndex: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1,
     touchAction: 'none',
 
     selectors: {
@@ -127,15 +127,15 @@ export const resizeHandle = componentStyle({
         '&[data-side="left"], &[data-side="right"]': {
             top: 0,
             bottom: 0,
-            width: vars.size.dimension[300],
             cursor: 'col-resize',
+            width: vars.size.dimension[300],
         },
         // Horizontal sheets (top/bottom) → row-resize, full width.
         '&[data-side="top"], &[data-side="bottom"]': {
-            left: 0,
             right: 0,
-            height: vars.size.dimension[300],
+            left: 0,
             cursor: 'row-resize',
+            height: vars.size.dimension[300],
         },
         // Inner edge placement: handle sits on the side facing the viewport center.
         // The grip bar's thin axis pins to the sheet's exposed edge (the drag boundary),
@@ -158,8 +158,8 @@ export const resizeHandle = componentStyle({
 export const resizeHandleGrip = componentStyle([
     interaction(),
     {
-        backgroundColor: vars.color.foreground.hint[100],
         borderRadius: vars.size.borderRadius[300],
+        backgroundColor: vars.color.foreground['hint-100'],
 
         selectors: {
             '&[data-side="left"], &[data-side="right"]': {

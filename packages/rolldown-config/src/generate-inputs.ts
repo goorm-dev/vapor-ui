@@ -1,5 +1,6 @@
 import path from 'node:path';
-import { GlobOptions, globSync } from 'tinyglobby';
+import type { GlobOptions } from 'tinyglobby';
+import { globSync } from 'tinyglobby';
 
 type Files = string | readonly string[];
 

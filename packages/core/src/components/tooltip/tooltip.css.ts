@@ -8,7 +8,7 @@ export const popup = componentStyle([
         border: `0.0625rem solid ${vars.color.border.normal}`,
         borderRadius: vars.size.borderRadius['300'],
         boxShadow: vars.shadow.md,
-        backgroundColor: vars.color.background.contrast[200],
+        backgroundColor: vars.color.background['contrast-200'],
         paddingBlock: vars.size.space['075'],
         paddingInline: vars.size.space['100'],
         color: vars.color.white,
@@ -17,7 +17,7 @@ export const popup = componentStyle([
 
 export const arrow = componentStyle({
     display: 'flex',
-    color: vars.color.background.contrast[200],
+    color: vars.color.background['contrast-200'],
 
     selectors: {
         '&[data-side="top"]': {

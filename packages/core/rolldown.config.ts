@@ -51,7 +51,8 @@ export default defineConfig([
             strict: true,
             exports: 'named',
 
-            entryFileNames: '[name].js',
+            // e.g., 'styles/tailwind-preset.css' -> 'styles/tailwind-preset.css.vanilla.js'
+            entryFileNames: ({ name }) => `${name.replace(/\.css$/, '.css.vanilla')}.mjs`,
             assetFileNames,
         },
     }),
@@ -66,7 +67,7 @@ export default defineConfig([
             strict: true,
             exports: 'named',
 
-            entryFileNames: '[name].cjs',
+            entryFileNames: ({ name }) => `${name.replace(/\.css$/, '.css.vanilla')}.cjs`,
             assetFileNames,
         },
     }),
@@ -77,9 +78,16 @@ export default defineConfig([
         resolve,
         plugins: [depsExternal(), dts()],
         output: {
-            format: 'esm',
-            strict: false,
-            exports: undefined,
+            entryFileNames: ({ name }) => `${name.replace(/\.css\.d$/, '.css.vanilla.d')}.mts`,
+        },
+    }),
+
+    bundle({
+        input: inputs,
+        resolve,
+        plugins: [depsExternal(), dts()],
+        output: {
+            entryFileNames: ({ name }) => `${name.replace(/\.css\.d$/, '.css.vanilla.d')}.cts`,
         },
     }),
 ]);

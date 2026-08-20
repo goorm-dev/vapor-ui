@@ -10,9 +10,11 @@ import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
 
 const slots = createSlots({
-    title: <DialogPrimitives.Title />,
-    trigger: <DialogPrimitives.Trigger />,
-    description: <DialogPrimitives.Description />,
+    title: DialogPrimitives.Title,
+    trigger: DialogPrimitives.Trigger,
+    description: DialogPrimitives.Description,
+    assistive: DialogPrimitives.Close,
+    action: DialogPrimitives.Close,
 });
 
 export const Dialog = ({
@@ -30,9 +32,12 @@ export const Dialog = ({
     title,
     description,
     trigger,
-    footer,
+    assistive,
+    action,
     children,
 }: Dialog.Props) => {
+    const renderFooter = assistive || action;
+
     return (
         <DialogPrimitives.Root
             open={open}
@@ -67,9 +72,26 @@ export const Dialog = ({
                         <CloseButton />
                     </DialogPrimitives.Header>
 
-                    <Body>{children}</Body>
+                    <Body $css={{ paddingBottom: renderFooter ? '$000' : '$300' }}>{children}</Body>
 
-                    {footer && <Footer {...footer} />}
+                    {renderFooter && (
+                        <DialogPrimitives.Footer
+                            $css={{
+                                display: 'grid',
+                                gridTemplateAreas: '"assistive action"',
+                                paddingBottom: '$300',
+                            }}
+                        >
+                            <slots.assistive
+                                render={assistive}
+                                $css={{ gridArea: 'assistive', justifySelf: 'flex-start' }}
+                            />
+                            <slots.action
+                                render={action}
+                                $css={{ gridArea: 'action', justifySelf: 'flex-end' }}
+                            />
+                        </DialogPrimitives.Footer>
+                    )}
                 </DialogPrimitives.PopupPrimitive>
             </DialogPrimitives.PortalPrimitive>
         </DialogPrimitives.Root>
@@ -136,11 +158,18 @@ export interface DialogProps {
     trigger?: Slots['trigger'];
 
     /**
-     * 다이얼로그의 액션 요소들을 추가한다.
+     * 다이얼로그의 보조 액션을 처리하는 요소
      * @example
-     * <Dialog footer={{ actionButton: <Button>확인</Button> }} />
+     * <Dialog assistive={<Button colorPalette="secondary" variant="ghost"></Button>} />
      */
-    footer?: FooterProps;
+    assistive?: Slots['assistive'];
+
+    /**
+     * 다이얼로그의 주요 액션을 처리하는 요소
+     * @example
+     * <Dialog action={<Button></Button>} />
+     */
+    action?: Slots['action'];
 
     /**
      * 다이얼로그의 본문에 해당한다.
@@ -154,9 +183,7 @@ export namespace Dialog {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type BodyProps = Pick<DialogPrimitives.Body.Props, 'children'>;
-
-const Body = ({ children }: BodyProps) => {
+const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Props) => {
     const bodyRef = useRef<HTMLDivElement>(null);
     const [overflowed, setOverflowed] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -187,40 +214,15 @@ const Body = ({ children }: BodyProps) => {
 
     const scrollable = overflowed && !scrolled;
 
+    const $css = {
+        maskImage: scrollable ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
+        ...$cssProp,
+    } satisfies typeof $cssProp;
+
     return (
-        <DialogPrimitives.Body
-            ref={bodyRef}
-            $css={{
-                marginBottom: '$300',
-                maskImage: scrollable ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
-            }}
-        >
+        <DialogPrimitives.Body ref={bodyRef} $css={$css} {...props}>
             {children}
         </DialogPrimitives.Body>
-    );
-};
-
-/* -----------------------------------------------------------------------------------------------*/
-
-const footerSlots = createSlots({
-    assistiveButton: <DialogPrimitives.Close />,
-    actionButton: <DialogPrimitives.Close />,
-});
-
-type FooterProps = SlotProps<typeof footerSlots>;
-
-const Footer = ({ actionButton, assistiveButton }: FooterProps) => {
-    return (
-        <DialogPrimitives.Footer
-            $css={{
-                paddingTop: '$000',
-                paddingBottom: '$300',
-                justifyContent: 'space-between',
-            }}
-        >
-            <footerSlots.assistiveButton render={assistiveButton} />
-            <footerSlots.actionButton render={actionButton} />
-        </DialogPrimitives.Footer>
     );
 };
 

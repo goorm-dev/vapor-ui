@@ -36,12 +36,12 @@ async function navigate(page, storybookUrl, id) {
         await page.waitForLoadState('networkidle');
         await page.waitForSelector('#storybook-root');
     } catch (error) {
-        console.error(`Failed to navigate to story: ${id}`, error);
+        throw new Error(`Failed to navigate to story: ${id}`, error);
     }
 }
 
 const visualStories = filterStories(Object.values(manifest.entries));
-const BASE_URL = 'http://localhost:9999';
+const BASE_URL = 'http://localhost:8888';
 
 visualStories.forEach((story) => {
     test(story.id, async ({ page }, meta) => {

@@ -1,7 +1,7 @@
 'use client';
 
-import type { ReactElement, ReactNode } from 'react';
-import { Fragment, cloneElement, isValidElement } from 'react';
+import type { ComponentProps, ElementType, ReactElement, ReactNode } from 'react';
+import { Fragment, createElement, isValidElement } from 'react';
 
 const REACT_LAZY_TYPE = Symbol.for('react.lazy');
 
@@ -10,11 +10,13 @@ const isLazyElement = (value: unknown): boolean =>
     value !== null &&
     (value as { $$typeof?: symbol }).$$typeof === REACT_LAZY_TYPE;
 
-type SlotHost = ReactElement<{ render?: ReactElement; children?: ReactNode }>;
+type SlotHost = ElementType;
 
-type HostProps<H> = H extends ReactElement<infer P> ? P : never;
+type HostProps<H extends SlotHost> = ComponentProps<H>;
 
-type SlotComponentProps<H extends SlotHost> = HostProps<H>;
+type SlotComponentProps<H extends SlotHost> = Omit<HostProps<H>, 'render' | 'children'> & {
+    render?: ReactNode;
+};
 
 type SlotComponent<H extends SlotHost> = (props: SlotComponentProps<H>) => ReactElement | null;
 
@@ -39,7 +41,7 @@ export function createSlots<T extends Record<string, SlotHost>>(anatomy: T): Slo
             const isElement =
                 isLazyElement(payload) || (isValidElement(payload) && payload.type !== Fragment);
 
-            return cloneElement(host, {
+            return createElement(host, {
                 ...extra,
                 ...(isElement
                     ? { render: payload as ReactElement }
