@@ -32,12 +32,29 @@ Spinner의 크기를 설정합니다.
 
 ### Color Palette
 
-Spinner의 색상을 설정합니다. 다른 요소와 함께 사용될 때, `inverse` 속성을 사용하여 요소의 글자색과 통일하세요.
+Spinner의 색상을 설정합니다. 다른 요소와 함께 사용될 때, `inherit` 속성을 사용하여 요소의 글자색과 통일하세요.
 
 <Demo name="spinner/spinner-color">
 ```json doc-gen:file
 {
     "file": "./src/components/demo/examples/spinner/spinner-color.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Examples
+
+---
+
+### Accessibility
+
+Spinner는 `role="status"`와 기본 이름 `Loading`을 제공하지만, 로딩 상태에 따라 조건부로 마운트하면 스크린리더 발화가 보장되지 않습니다. 로딩 시작을 알리려면 `role="status"` 컨테이너를 항상 렌더링해 두고 그 안에서 Spinner를 조건부로 렌더링하세요. 로딩이 끝났을 때도 스피너를 제거하는 것만으로는 아무것도 발화되지 않으므로, 완료 메시지를 같은 컨테이너에 렌더링하거나 결과로 포커스를 이동해 알려야 합니다.
+
+<Demo name="spinner/spinner-accessibility">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/spinner/spinner-accessibility.tsx",
     "codeblock": true
 }
 ```
