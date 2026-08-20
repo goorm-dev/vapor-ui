@@ -42,8 +42,11 @@
 1. 이름이 위 예시에 있으면 그 행의 태그를 우선 채택한다.
 2. 없으면 판별 질문에 답해서 태그를 붙인다. **애매하면 붙인다** — 이 스킬의 출력은 명세지
    판정이 아니므로, 위양성(불필요한 SC 1건)이 위음성(놓친 SC 1건)보다 싸다.
-3. `interactive`가 붙으면 `pointer-target`도 거의 항상 붙는다 (키보드 전용 컴포넌트가 아닌 한).
-4. `modal`이 붙으면 `overlay`도 붙는다. `transient`가 붙으면 `overlay`도 붙는다.
-5. `text-input`·`form-control`이 붙으면 `validatable`을 붙일지 확인한다 —
+3. 복합(파트) 컴포넌트는 **파트와 그 기본 렌더 요소까지 판정 입력에 넣는다** — Dialog는
+   `Title`(`<h2>`)·`Description`(`<p>`)이 있어 `text`·`visible-label`이, `Close`가 아이콘
+   버튼으로 흔히 쓰여 `icon`이 붙는다.
+4. `interactive`가 붙으면 `pointer-target`도 거의 항상 붙는다 (키보드 전용 컴포넌트가 아닌 한).
+5. `modal`이 붙으면 `overlay`도 붙는다. `transient`가 붙으면 `overlay`도 붙는다.
+6. `text-input`·`form-control`이 붙으면 `validatable`을 붙일지 확인한다 —
    오류 상태를 안 갖는 폼 컨트롤은 드물다.
-6. 판정 결과를 문서 부록 A에 남긴다. 사용자가 반박할 수 있어야 한다.
+7. 판정 결과를 문서 부록 A에 남긴다. 사용자가 반박할 수 있어야 한다.
