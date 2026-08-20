@@ -36,8 +36,6 @@ export const Dialog = ({
     action,
     children,
 }: Dialog.Props) => {
-    const renderFooter = assistive || action;
-
     return (
         <DialogPrimitives.Root
             open={open}
@@ -51,47 +49,9 @@ export const Dialog = ({
                 <DialogPrimitives.OverlayPrimitive />
 
                 <DialogPrimitives.PopupPrimitive>
-                    <DialogPrimitives.Header
-                        $css={{
-                            justifyContent: 'space-between',
-                            alignItems: 'start',
-                            height: 'unset',
-                            paddingTop: '$300',
-                            paddingBottom: '$200',
-                            gap: '$200',
-                        }}
-                    >
-                        <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
-                            <slots.title render={title} />
-                            <slots.description
-                                render={description}
-                                $css={{ color: '$basic-gray-500' }}
-                            />
-                        </VStack>
-
-                        <CloseButton />
-                    </DialogPrimitives.Header>
-
-                    <Body $css={{ paddingBottom: renderFooter ? '$000' : '$300' }}>{children}</Body>
-
-                    {renderFooter && (
-                        <DialogPrimitives.Footer
-                            $css={{
-                                display: 'grid',
-                                gridTemplateAreas: '"assistive action"',
-                                paddingBottom: '$300',
-                            }}
-                        >
-                            <slots.assistive
-                                render={assistive}
-                                $css={{ gridArea: 'assistive', justifySelf: 'flex-start' }}
-                            />
-                            <slots.action
-                                render={action}
-                                $css={{ gridArea: 'action', justifySelf: 'flex-end' }}
-                            />
-                        </DialogPrimitives.Footer>
-                    )}
+                    <Header title={title} description={description} />
+                    <Body>{children}</Body>
+                    <Footer action={action} assistive={assistive} />
                 </DialogPrimitives.PopupPrimitive>
             </DialogPrimitives.PortalPrimitive>
         </DialogPrimitives.Root>
@@ -183,39 +143,61 @@ export namespace Dialog {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
+
+const Header = ({ title, description }: HeaderProps) => {
+    return (
+        <DialogPrimitives.Header
+            $css={{
+                position: 'relative',
+                display: 'grid',
+                gridTemplateColumns: '1fr 28px',
+                height: 'unset',
+                paddingTop: '$300',
+                paddingBottom: '$200',
+                gap: '$200',
+            }}
+        >
+            <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
+                <slots.title render={title} />
+                <slots.description render={description} $css={{ color: '$basic-gray-500' }} />
+            </VStack>
+
+            <CloseButton />
+        </DialogPrimitives.Header>
+    );
+};
+
+/* -----------------------------------------------------------------------------------------------*/
+
+const CloseButton = () => {
+    return (
+        <DialogPrimitives.Close
+            render={<IconButton size="xl" colorPalette="secondary" variant="ghost" />}
+            $css={{ position: 'absolute', top: '$150', right: '$150' }}
+        >
+            <CloseOutlineIcon />
+        </DialogPrimitives.Close>
+    );
+};
+
+/* -----------------------------------------------------------------------------------------------*/
+
 const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Props) => {
     const bodyRef = useRef<HTMLDivElement>(null);
     const [overflowed, setOverflowed] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
         const element = bodyRef.current;
         if (!element) return;
 
-        const update = () => {
-            const scrollable = element.scrollHeight - element.clientHeight > 1;
-            setOverflowed(element.scrollHeight - element.clientHeight > 1);
-
-            const scrolled = element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
-            setScrolled(scrollable && scrolled);
-        };
-
-        update();
-        element.addEventListener('scroll', update, { passive: true });
-
-        const resizeObserver = new ResizeObserver(update);
-        resizeObserver.observe(element);
-
-        return () => {
-            element.removeEventListener('scroll', update);
-            resizeObserver.disconnect();
-        };
+        setOverflowed(element.scrollHeight - element.clientHeight > 1);
     }, []);
 
-    const scrollable = overflowed && !scrolled;
-
     const $css = {
-        maskImage: scrollable ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
+        // maskImage: scrollable ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
+        maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
+        paddingBottom: overflowed ? '$250' : '$000',
         ...$cssProp,
     } satisfies typeof $cssProp;
 
@@ -228,10 +210,25 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const CloseButton = () => {
+interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {}
+
+const Footer = ({ action, assistive }: FooterProps) => {
+    const renderFooter = action || assistive;
+
     return (
-        <DialogPrimitives.Close render={<IconButton colorPalette="secondary" variant="ghost" />}>
-            <CloseOutlineIcon />
-        </DialogPrimitives.Close>
+        <DialogPrimitives.Footer
+            $css={{
+                display: 'grid',
+                gridTemplateAreas: '"assistive action"',
+                paddingTop: renderFooter ? '$200' : '$000',
+                paddingBottom: '$300',
+            }}
+        >
+            <slots.assistive
+                render={assistive}
+                $css={{ gridArea: 'assistive', justifySelf: 'flex-start' }}
+            />
+            <slots.action render={action} $css={{ gridArea: 'action', justifySelf: 'flex-end' }} />
+        </DialogPrimitives.Footer>
     );
 };
