@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, HStack, TextInput, VStack } from '@vapor-ui/core';
+import { Button, HStack, TextInput } from '@vapor-ui/core';
 
 import { Dialog } from './dialog';
 
@@ -23,297 +23,51 @@ export const Default: Story = {
     },
     render: (args) => {
         return (
-            <Dialog
-                trigger={<Button>hi</Button>}
-                footer={{
-                    actionButton: <Button>확인</Button>,
-                    assistiveButton: (
-                        <Button colorPalette="secondary" variant="ghost">
+            <>
+                <Dialog
+                    trigger={<Button>Default</Button>}
+                    action={<Button size="lg">확인</Button>}
+                    assistive={
+                        <Button size="lg" colorPalette="secondary" variant="ghost">
                             보조
                         </Button>
-                    ),
-                }}
-                {...args}
-            >
-                <InviteForms />
-            </Dialog>
+                    }
+                    {...args}
+                >
+                    <HStack $css={{ gap: '$150' }}>
+                        <TextInput
+                            placeholder="이메일 또는 이름을 입력하세요"
+                            size="lg"
+                            $css={{ width: '100%' }}
+                        />
+                        <Button size="lg" colorPalette="contrast">
+                            초대하기
+                        </Button>
+                    </HStack>
+                </Dialog>
+
+                <Dialog
+                    trigger={<Button>Scrollable</Button>}
+                    action={<Button size="lg">확인</Button>}
+                    assistive={
+                        <Button size="lg" colorPalette="secondary" variant="ghost">
+                            보조
+                        </Button>
+                    }
+                    {...args}
+                >
+                    <HStack $css={{ gap: '$150', height: '800px', backgroundColor: 'Beige' }}>
+                        <TextInput
+                            placeholder="이메일 또는 이름을 입력하세요"
+                            size="lg"
+                            $css={{ width: '100%' }}
+                        />
+                        <Button size="lg" colorPalette="contrast">
+                            초대하기
+                        </Button>
+                    </HStack>
+                </Dialog>
+            </>
         );
     },
-};
-
-const InviteForms = () => {
-    return (
-        <VStack $css={{ gap: '$100' }}>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$150' }}>
-                <TextInput
-                    placeholder="이메일 또는 이름을 입력하세요"
-                    size="lg"
-                    $css={{ width: '100%' }}
-                />
-                <Button size="lg" colorPalette="contrast">
-                    초대하기
-                </Button>
-            </HStack>
-            <HStack $css={{ gap: '$100' }}>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.kim
-                </Button>
-                <Button size="sm" colorPalette="secondary" variant="outline">
-                    + goorm.lee
-                </Button>
-            </HStack>
-        </VStack>
-    );
 };
