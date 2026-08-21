@@ -8,7 +8,7 @@ export const popup = componentStyle({
     borderRadius: vars.size.borderRadius[300],
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background['overlay-100'],
+    backgroundColor: vars.color.background['canvas-overlay'],
     paddingBlock: vars.size.space[150],
 
     paddingInline: vars.size.space[200],
@@ -24,7 +24,7 @@ export const arrow = componentStyle({
     width: vars.size.dimension[100],
 
     height: vars.size.dimension[200],
-    color: vars.color.background['overlay-100'], // It's background-color, but since it's an SVG, it's specified as color.
+    color: vars.color.background['canvas-overlay'], // It's background-color, but since it's an SVG, it's specified as color.
 
     selectors: {
         '&[data-side="top"]': {
