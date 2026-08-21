@@ -65,6 +65,7 @@ const basicColorTokens = {
     'basic-grape-900': colors.grape['900'],
 
     // Gray colors with prefix
+    'basic-gray-025': colors.gray['025'],
     'basic-gray-050': colors.gray['050'],
     'basic-gray-100': colors.gray['100'],
     'basic-gray-200': colors.gray['200'],
