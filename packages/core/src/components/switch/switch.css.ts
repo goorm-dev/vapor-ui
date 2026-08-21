@@ -21,7 +21,7 @@ export const control = componentRecipe({
 
             selectors: {
                 '&[data-checked]': {
-                    backgroundColor: vars.color.background['primary-200'],
+                    backgroundColor: vars.color.background['primary'],
                 },
 
                 [`${when.invalid()}:not(:focus-visible)`]: {
@@ -85,7 +85,7 @@ export const indicator = componentRecipe({
             },
             [when.readonly('&[data-readonly][data-checked]')]: {
                 boxShadow: 'none',
-                backgroundColor: vars.color.foreground['hint-100'],
+                backgroundColor: vars.color.foreground['hint'],
             },
         },
     },

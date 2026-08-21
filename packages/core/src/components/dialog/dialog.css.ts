@@ -41,7 +41,7 @@ export const popup = componentRecipe({
         borderRadius: vars.size.borderRadius[300],
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
 
-        backgroundColor: vars.color.background['overlay-100'],
+        backgroundColor: vars.color.background['canvas-overlay'],
         maxWidth: calc.subtract('100vw', calc.multiply(SPACING, 2)),
         maxHeight: '80vh', // TODO: Use constant z-index value
 
@@ -74,7 +74,7 @@ export const popup = componentRecipe({
 export const title = componentStyle({
     lineHeight: vars.typography.lineHeight['200'],
     letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal-200'],
+    color: vars.color.foreground['normal'],
     fontSize: vars.typography.fontSize['200'],
     fontWeight: vars.typography.fontWeight['700'],
 });
@@ -82,7 +82,7 @@ export const title = componentStyle({
 export const description = componentStyle({
     lineHeight: vars.typography.lineHeight['075'],
     letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal-200'],
+    color: vars.color.foreground['normal'],
     fontSize: vars.typography.fontSize['075'],
     fontWeight: vars.typography.fontWeight['400'],
 });

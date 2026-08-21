@@ -90,7 +90,7 @@ export const list = componentRecipe({
 
 export const button = componentRecipe({
     base: [
-        foregrounds({ color: 'normal-100' }),
+        foregrounds({ color: 'secondary' }),
         interaction({ scale: 'light' }),
         typography({ style: 'subtitle1' }),
         {
@@ -103,7 +103,7 @@ export const button = componentRecipe({
 
             selectors: {
                 '&[data-active]': {
-                    color: vars.color.foreground['primary-100'],
+                    color: vars.color.foreground['primary'],
                 },
 
                 [when.disabled()]: {
@@ -146,7 +146,7 @@ export const button = componentRecipe({
                 },
                 selectors: {
                     '&[data-active]': {
-                        color: vars.color.foreground['primary-100'],
+                        color: vars.color.foreground['primary'],
                     },
                 },
             },
@@ -194,7 +194,7 @@ export const indicator = componentRecipe({
             },
             fill: {
                 borderRadius: vars.size.borderRadius[300],
-                backgroundColor: vars.color.background['primary-100'],
+                backgroundColor: vars.color.background['primary-weak'],
                 vars: {
                     [indicatorBottomPosition]: '0',
                     [indicatorRightPosition]: '0',

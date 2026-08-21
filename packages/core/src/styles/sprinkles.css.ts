@@ -65,6 +65,7 @@ const basicColorTokens = {
     'basic-grape-900': colors.grape['900'],
 
     // Gray colors with prefix
+    'basic-gray-025': colors.gray['025'],
     'basic-gray-050': colors.gray['050'],
     'basic-gray-100': colors.gray['100'],
     'basic-gray-200': colors.gray['200'],
@@ -171,20 +172,53 @@ const backgroundColorTokens = {
     // Background colors
     'bg-primary-100': colors.background['primary-100'],
     'bg-primary-200': colors.background['primary-200'],
+    'bg-primary-weak': colors.background['primary-weak'],
+    'bg-primary': colors.background['primary'],
+
     'bg-secondary-100': colors.background['secondary-100'],
+    'bg-secondary-200': colors.background['secondary-200'],
+    'bg-secondary-weak': colors.background['secondary-weak'],
+    'bg-secondary': colors.background['secondary'],
+
+    // success
     'bg-success-100': colors.background['success-100'],
     'bg-success-200': colors.background['success-200'],
+    'bg-success-weak': colors.background['success-weak'],
+    'bg-success': colors.background['success'],
+
+    // warning
     'bg-warning-100': colors.background['warning-100'],
     'bg-warning-200': colors.background['warning-200'],
+    'bg-warning-weak': colors.background['warning-weak'],
+    'bg-warning': colors.background['warning'],
+
+    // danger
     'bg-danger-100': colors.background['danger-100'],
     'bg-danger-200': colors.background['danger-200'],
+    'bg-danger-weak': colors.background['danger-weak'],
+    'bg-danger': colors.background['danger'],
+
+    // hint
     'bg-hint-100': colors.background['hint-100'],
     'bg-hint-200': colors.background['hint-200'],
+    'bg-hint-weak': colors.background['hint-weak'],
+    'bg-hint': colors.background['hint'],
+
+    // contrast
     'bg-contrast-100': colors.background['contrast-100'],
     'bg-contrast-200': colors.background['contrast-200'],
+    'bg-contrast-weak': colors.background['contrast-weak'],
+    'bg-contrast': colors.background['contrast'],
+
     'bg-canvas-100': colors.background['canvas-100'],
     'bg-canvas-200': colors.background['canvas-200'],
     'bg-overlay-100': colors.background['overlay-100'],
+
+    'bg-canvas-base': colors.background['canvas-base'],
+    'bg-canvas-sunken': colors.background['canvas-sunken'],
+    'bg-canvas-raised': colors.background['canvas-raised'],
+    'bg-canvas-dim': colors.background['canvas-dim'],
+    'bg-canvas-overlay': colors.background['canvas-overlay'],
 };
 
 const colorTokens = {
@@ -192,21 +226,43 @@ const colorTokens = {
 
     'fg-primary-100': foreground['primary-100'],
     'fg-primary-200': foreground['primary-200'],
+    'fg-primary': foreground['primary'],
+    'fg-primary-strong': foreground['primary-strong'],
+
     'fg-secondary-100': foreground['secondary-100'],
     'fg-secondary-200': foreground['secondary-200'],
+    'fg-secondary': foreground['secondary'],
+
     'fg-success-100': foreground['success-100'],
     'fg-success-200': foreground['success-200'],
+    'fg-success': foreground['success'],
+    'fg-success-strong': foreground['success-strong'],
+
     'fg-warning-100': foreground['warning-100'],
     'fg-warning-200': foreground['warning-200'],
+    'fg-warning': foreground['warning'],
+    'fg-warning-strong': foreground['warning-strong'],
+
     'fg-danger-100': foreground['danger-100'],
     'fg-danger-200': foreground['danger-200'],
+    'fg-danger': foreground['danger'],
+    'fg-danger-strong': foreground['danger-strong'],
+
     'fg-hint-100': foreground['hint-100'],
     'fg-hint-200': foreground['hint-200'],
+    'fg-hint': foreground['hint'],
+
     'fg-contrast-100': foreground['contrast-100'],
     'fg-contrast-200': foreground['contrast-200'],
+    'fg-contrast': foreground['contrast'],
+
     'fg-normal-100': foreground['normal-100'],
     'fg-normal-200': foreground['normal-200'],
+    'fg-normal': foreground['normal'],
+
     'fg-inverse': foreground.inverse,
+    'fg-staticWhite': foreground.staticWhite,
+    'fg-staticBlack': foreground.staticBlack,
 };
 
 const borderColorTokens = {
