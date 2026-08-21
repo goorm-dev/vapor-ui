@@ -154,7 +154,6 @@ const Header = ({ title, description }: HeaderProps) => {
                 gridTemplateColumns: '1fr 28px',
                 height: 'unset',
                 paddingTop: '$300',
-                paddingBottom: '$200',
                 gap: '$200',
             }}
         >
@@ -195,11 +194,13 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
     }, []);
 
     const $css = {
-        // maskImage: scrollable ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
         maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
+        marginTop: '$200',
         paddingBottom: overflowed ? '$250' : '$000',
         ...$cssProp,
     } satisfies typeof $cssProp;
+
+    if (!children) return;
 
     return (
         <DialogPrimitives.Body ref={bodyRef} $css={$css} {...props}>
