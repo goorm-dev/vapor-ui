@@ -35,7 +35,7 @@ export const root = componentRecipe({
             },
             contrast: {
                 backgroundColor: vars.color.background['contrast-weak'],
-                color: vars.color.foreground['normal'],
+                color: vars.color.foreground['inverse'],
             },
         },
 

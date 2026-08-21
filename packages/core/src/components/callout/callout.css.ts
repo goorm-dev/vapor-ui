@@ -48,7 +48,7 @@ export const root = componentRecipe({
             contrast: {
                 border: `.0625rem solid ${vars.color.border.contrast}`,
                 backgroundColor: vars.color.background['contrast-weak'],
-                color: vars.color.foreground['normal'],
+                color: vars.color.foreground['inverse'],
             },
         },
     },
