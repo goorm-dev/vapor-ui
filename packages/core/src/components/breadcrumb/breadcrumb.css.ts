@@ -35,7 +35,7 @@ export const link = componentRecipe({
                     },
                     ':focus-visible': {
                         outline: 'none',
-                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground['normal']}`,
+                        boxShadow: `0 0 0 2px ${vars.color.background['canvas-base']}, 0 0 0 4px ${vars.color.foreground['normal']}`,
                     },
                     ':active': {
                         textDecoration: 'underline',
