@@ -58,7 +58,7 @@
         "prettier": "^3.9.6",
         "rimraf": "^6.1.3",
         "semver": "^7.8.5",
-        "turbo": "^2.10.10",
+        "turbo": "^2.10.11",
         "typescript": "catalog:"
     },
     "packageManager": "pnpm@10.34.5",
