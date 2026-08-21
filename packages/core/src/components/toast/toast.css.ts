@@ -130,7 +130,7 @@ export const root = componentRecipe({
                 backgroundColor: vars.color.background['success'],
             },
             info: {
-                backgroundColor: vars.color.background['contrast'],
+                backgroundColor: vars.color.background['contrast-200'],
             },
         },
     },
