@@ -53,7 +53,7 @@ export const item = componentRecipe({
     base: [
         interaction(),
         typography({ style: 'subtitle1' }),
-        foregrounds({ color: 'secondary-200' }),
+        foregrounds({ color: 'normal' }),
         {
             position: 'relative',
             zIndex: 1,

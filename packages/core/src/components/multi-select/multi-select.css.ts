@@ -65,7 +65,7 @@ export const trigger = componentRecipe({
 
 export const value = componentRecipe({
     base: [
-        foregrounds({ color: 'normal-200' }),
+        foregrounds({ color: 'normal' }),
         {
             display: 'flex',
             flexWrap: 'wrap',
@@ -117,7 +117,7 @@ export const value = componentRecipe({
  * @deprecated Use `data-placeholder` attribute on `MultiSelect.Value` instead.
  */
 export const placeholder = componentRecipe({
-    base: foregrounds({ color: 'hint-100' }),
+    base: foregrounds({ color: 'hint' }),
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -133,7 +133,7 @@ export const placeholder = componentRecipe({
 const icon = componentStyle({ display: 'flex', flexShrink: 0 });
 
 export const triggerIcon = componentRecipe({
-    base: [foregrounds({ color: 'hint-100' }), icon],
+    base: [foregrounds({ color: 'hint' }), icon],
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -159,7 +159,7 @@ export const triggerIcon = componentRecipe({
 });
 
 export const itemIndicator = componentStyle([
-    foregrounds({ color: 'normal-200' }),
+    foregrounds({ color: 'normal' }),
     icon,
     { width: vars.size.dimension['200'], height: vars.size.dimension['200'] },
 ]);
@@ -217,7 +217,7 @@ export const separator = componentStyle({
 
 export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
-    foregrounds({ color: 'hint-100' }),
+    foregrounds({ color: 'hint' }),
     {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],

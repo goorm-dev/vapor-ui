@@ -41,7 +41,7 @@ export const subPopup = popup;
 export const item = componentStyle([
     interaction({ type: 'roving' }),
     typography({ style: 'body2' }),
-    foregrounds({ color: 'normal-200' }),
+    foregrounds({ color: 'normal' }),
 
     {
         position: 'relative',
@@ -82,7 +82,7 @@ export const subTrigger = item;
 
 export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
-    foregrounds({ color: 'hint-200' }),
+    foregrounds({ color: 'secondary' }),
     {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],
@@ -92,7 +92,7 @@ export const groupLabel = componentStyle([
 ]);
 
 export const indicator = componentStyle([
-    foregrounds({ color: 'normal-200' }),
+    foregrounds({ color: 'normal' }),
     {
         position: 'absolute',
         top: '50%',

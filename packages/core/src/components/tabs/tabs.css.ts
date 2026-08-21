@@ -90,7 +90,7 @@ export const list = componentRecipe({
 
 export const button = componentRecipe({
     base: [
-        foregrounds({ color: 'normal-100' }),
+        foregrounds({ color: 'secondary' }),
         interaction({ scale: 'light' }),
         typography({ style: 'subtitle1' }),
         {
