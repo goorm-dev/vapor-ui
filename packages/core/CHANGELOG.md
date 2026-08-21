@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 1.5.1
+
+### Css
+
+- migrate V2 foundations ([#690](https://github.com/goorm-dev/vapor-ui/pull/690)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
 ## 1.5.0
 
 ### Css
