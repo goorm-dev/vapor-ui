@@ -22,9 +22,9 @@
         "build": "tsup",
         "dev": "tsup --watch",
         "lint": "eslint ./src",
-        "test": "vitest",
-        "test:coverage": "vitest run --coverage",
-        "test:run": "vitest run",
+        "test": "vitest --run",
+        "test:coverage": "vitest --coverage",
+        "test:watch": "vitest",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -36,9 +36,9 @@
         "@repo/eslint-config": "workspace:*",
         "@types/node": "^20.19.43",
         "@vitest/coverage-v8": "catalog:",
-        "eslint": "^9.39.5",
+        "eslint": "catalog:",
         "tsup": "^8.5.1",
-        "tsx": "^4.23.1",
+        "tsx": "^4.23.12",
         "typescript": "catalog:",
         "vitest": "catalog:"
     },

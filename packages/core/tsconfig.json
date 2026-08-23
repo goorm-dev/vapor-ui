@@ -8,6 +8,6 @@
         },
         "types": ["node", "vitest-axe/extend-expect", "vitest/globals", "@vitest/browser/context"]
     },
-    "include": ["src"],
+    "include": ["."],
     "exclude": ["dist", "build", "node_modules"]
 }

@@ -8,16 +8,20 @@ export const popup = componentStyle([
         border: `0.0625rem solid ${vars.color.border.normal}`,
         borderRadius: vars.size.borderRadius['300'],
         boxShadow: vars.shadow.md,
-        backgroundColor: vars.color.background.contrast[200],
+        // NOTE: Intentionally kept on legacy V1 tokens (`background.contrast-200`).
+        // The V2 counterpart is under internal design review — do not migrate until finalized.
+        backgroundColor: vars.color.background['contrast-200'],
         paddingBlock: vars.size.space['075'],
         paddingInline: vars.size.space['100'],
-        color: vars.color.white,
+        color: vars.color.foreground.staticWhite,
     },
 ]);
 
 export const arrow = componentStyle({
     display: 'flex',
-    color: vars.color.background.contrast[200],
+    // NOTE: Intentionally kept on legacy V1 tokens (`background.contrast-200`).
+    // The V2 counterpart is under internal design review — do not migrate until finalized.
+    color: vars.color.background['contrast-200'],
 
     selectors: {
         '&[data-side="top"]': {

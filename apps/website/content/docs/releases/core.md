@@ -5,6 +5,28 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
+## 1.5.1
+
+### Css
+
+- migrate V2 foundations ([#690](https://github.com/goorm-dev/vapor-ui/pull/690)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+## 1.5.0
+
+### Css
+
+- **Breaking Change**: inverse color tokens have been changed. In light mode, inverse is dark, in dark mode, inverse is light. ([#644](https://github.com/goorm-dev/vapor-ui/pull/644)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Toggle
+
+- add new `ToggleGroup` component ([#628](https://github.com/goorm-dev/vapor-ui/pull/628)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- add new `Toggle` component ([#628](https://github.com/goorm-dev/vapor-ui/pull/628)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Toolbar
+
+- add new `Toolbar` component ([#643](https://github.com/goorm-dev/vapor-ui/pull/643)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
 ## 1.4.0
 
 ### Sheet

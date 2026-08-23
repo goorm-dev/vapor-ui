@@ -1,3 +1,4 @@
+// @ts-check
 import { defineConfig } from '@vapor-ui/ts-api-extractor';
 
 export default defineConfig({

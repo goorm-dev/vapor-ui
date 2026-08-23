@@ -25,7 +25,7 @@ export const root = componentRecipe({
             borderRadius: 9999,
 
             boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
-            backgroundColor: vars.color.background.canvas[100],
+            backgroundColor: vars.color.background['canvas-base'],
 
             cursor: 'pointer',
 
@@ -34,13 +34,13 @@ export const root = componentRecipe({
             selectors: {
                 '&[data-checked]': {
                     boxShadow: 'none',
-                    backgroundColor: vars.color.background.primary[200],
+                    backgroundColor: vars.color.background['primary'],
                 },
 
                 [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
                 [when.invalid('&[data-invalid][data-checked]')]: {
                     boxShadow: 'none',
-                    backgroundColor: vars.color.background.danger[200],
+                    backgroundColor: vars.color.background['danger'],
                 },
 
                 [when.readonly()]: { backgroundColor: vars.color.gray['200'] },
@@ -80,13 +80,13 @@ export const indicator = componentStyle({
     transitionProperty: 'background-color, box-shadow, scale',
     border: 'none',
     borderRadius: '9999px',
-    backgroundColor: vars.color.white,
+    backgroundColor: vars.color.foreground.staticWhite,
     scale: 0,
 
     selectors: {
         '&[data-checked]': { scale: 0.5 },
         [when.readonly()]: {
-            backgroundColor: vars.color.foreground.hint[100],
+            backgroundColor: vars.color.foreground['hint'],
         },
     },
 });

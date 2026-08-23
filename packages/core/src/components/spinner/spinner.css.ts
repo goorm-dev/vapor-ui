@@ -79,7 +79,7 @@ export const indicator = componentRecipe({
          * @default 'primary'
          */
         colorPalette: {
-            primary: { stroke: vars.color.background.primary[200] },
+            primary: { stroke: vars.color.background['primary'] },
             inherit: { stroke: 'currentColor' },
         },
     },
