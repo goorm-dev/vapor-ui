@@ -72,6 +72,7 @@ export const LIGHT_SEMANTIC_COLORS = {
         'canvas-raised': colorRef('gray', '025'),
         'canvas-dim': baseRef('black'),
         'canvas-overlay': baseRef('white'),
+        'canvas-inverse': colorRef('gray', '800'),
     },
     foreground: {
         // primary
@@ -190,6 +191,7 @@ export const DARK_SEMANTIC_COLORS = {
         'canvas-raised': colorRef('gray', '100'),
         'canvas-dim': baseRef('black'),
         'canvas-overlay': colorRef('gray', '100'),
+        'canvas-inverse': colorRef('gray', '900'),
     },
     foreground: {
         // primary
