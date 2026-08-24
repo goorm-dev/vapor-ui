@@ -1,0 +1,22 @@
+{
+    "extends": "@repo/typescript-config/react-library",
+    "compilerOptions": {
+        "composite": true,
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": {
+            "~/*": ["./src/*"]
+        },
+        "types": ["node"]
+    },
+    "include": ["src"],
+    "exclude": [
+        "dist",
+        "build",
+        "node_modules",
+        "src/**/*.test.ts*",
+        "src/**/*.spec.ts*",
+        "__tests__/**/*.test.ts*",
+        "__tests__/**/*.spec.ts*"
+    ]
+}

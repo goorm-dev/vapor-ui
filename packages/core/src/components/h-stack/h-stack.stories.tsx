@@ -56,13 +56,13 @@ const CustomBox = ({ size = 50, ...props }: ComponentProps<typeof Box> & { size?
     return (
         <Box
             $css={{
-                backgroundColor: '$bg-primary-200',
+                backgroundColor: '$bg-primary',
                 width: `${size}px`,
                 height: `${size}px`,
                 border: '1px solid white',
                 textAlign: 'center',
                 alignContent: 'center',
-                color: '$fg-inverse',
+                color: '$basic-white',
             }}
             {...props}
         />

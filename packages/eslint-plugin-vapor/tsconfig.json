@@ -6,8 +6,10 @@
         "paths": {
             "~/*": ["./src/*"]
         },
-        "lib": ["es2017", "dom"]
+        "lib": ["es2017", "dom"],
+        "resolveJsonModule": true,
+        "esModuleInterop": true
     },
-    "include": ["src"],
+    "include": ["."],
     "exclude": ["dist", "build", "node_modules"]
 }

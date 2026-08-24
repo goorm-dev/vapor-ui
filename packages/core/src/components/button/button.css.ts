@@ -21,12 +21,12 @@ export const root = componentRecipe({
 
         {
             display: 'inline-flex',
+            flexWrap: 'nowrap',
             alignItems: 'center',
-            justifyContent: 'center',
 
+            justifyContent: 'center',
             border: 'none',
             borderRadius: vars.size.borderRadius['300'],
-            flexWrap: 'nowrap',
             textWrap: 'nowrap',
             selectors: {
                 [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
@@ -80,55 +80,55 @@ export const root = componentRecipe({
         colorPalette: {
             primary: {
                 vars: {
-                    [variables.foreground]: vars.color.foreground.inverse,
-                    [variables.outlineForeground]: vars.color.foreground.primary[200],
-                    [variables.ghostForeground]: vars.color.foreground.primary[100],
-                    [variables.background]: vars.color.background.primary[200],
+                    [variables.foreground]: vars.color.foreground.staticWhite,
+                    [variables.outlineForeground]: vars.color.foreground['primary'],
+                    [variables.ghostForeground]: vars.color.foreground['primary'],
+                    [variables.background]: vars.color.background['primary'],
                     [variables.borderColor]: vars.color.border.primary,
                 },
             },
             secondary: {
                 vars: {
-                    [variables.foreground]: vars.color.foreground.secondary[200],
-                    [variables.outlineForeground]: vars.color.foreground.secondary[200],
-                    [variables.ghostForeground]: vars.color.foreground.secondary[100],
-                    [variables.background]: vars.color.background.secondary[200],
+                    [variables.foreground]: vars.color.foreground['normal'],
+                    [variables.outlineForeground]: vars.color.foreground['secondary'],
+                    [variables.ghostForeground]: vars.color.foreground['secondary'],
+                    [variables.background]: vars.color.background['secondary'],
                     [variables.borderColor]: vars.color.border.secondary,
                 },
             },
             success: {
                 vars: {
-                    [variables.foreground]: vars.color.white,
-                    [variables.outlineForeground]: vars.color.foreground.success[200],
-                    [variables.ghostForeground]: vars.color.foreground.success[100],
-                    [variables.background]: vars.color.background.success[200],
+                    [variables.foreground]: vars.color.foreground.staticWhite,
+                    [variables.outlineForeground]: vars.color.foreground['success'],
+                    [variables.ghostForeground]: vars.color.foreground['success'],
+                    [variables.background]: vars.color.background['success'],
                     [variables.borderColor]: vars.color.border.success,
                 },
             },
             warning: {
                 vars: {
-                    [variables.foreground]: vars.color.white,
-                    [variables.outlineForeground]: vars.color.foreground.warning[200],
-                    [variables.ghostForeground]: vars.color.foreground.warning[100],
-                    [variables.background]: vars.color.background.warning[200],
+                    [variables.foreground]: vars.color.foreground.staticWhite,
+                    [variables.outlineForeground]: vars.color.foreground['warning'],
+                    [variables.ghostForeground]: vars.color.foreground['warning'],
+                    [variables.background]: vars.color.background['warning'],
                     [variables.borderColor]: vars.color.border.warning,
                 },
             },
             danger: {
                 vars: {
-                    [variables.foreground]: vars.color.white,
-                    [variables.outlineForeground]: vars.color.foreground.danger[200],
-                    [variables.ghostForeground]: vars.color.foreground.danger[100],
-                    [variables.background]: vars.color.background.danger[200],
+                    [variables.foreground]: vars.color.foreground.staticWhite,
+                    [variables.outlineForeground]: vars.color.foreground['danger'],
+                    [variables.ghostForeground]: vars.color.foreground['danger'],
+                    [variables.background]: vars.color.background['danger'],
                     [variables.borderColor]: vars.color.border.danger,
                 },
             },
             contrast: {
                 vars: {
-                    [variables.foreground]: vars.color.white,
-                    [variables.outlineForeground]: vars.color.foreground.contrast[200],
-                    [variables.ghostForeground]: vars.color.foreground.contrast[100],
-                    [variables.background]: vars.color.background.contrast[200],
+                    [variables.foreground]: vars.color.foreground.staticWhite,
+                    [variables.outlineForeground]: vars.color.foreground['secondary'],
+                    [variables.ghostForeground]: vars.color.foreground['secondary'],
+                    [variables.background]: vars.color.background['contrast'],
                     [variables.borderColor]: vars.color.border.contrast,
                 },
             },
@@ -144,7 +144,7 @@ export const root = componentRecipe({
             },
             outline: {
                 boxShadow: `inset 0 0 0 1px ${variables.borderColor}`,
-                backgroundColor: vars.color.background.canvas[100],
+                backgroundColor: vars.color.background['canvas-base'],
                 color: variables.outlineForeground,
             },
             ghost: {

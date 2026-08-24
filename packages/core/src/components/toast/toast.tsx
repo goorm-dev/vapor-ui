@@ -281,7 +281,7 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         const render = renderProp ?? (
             <IconButton
                 aria-label="Close Toast"
-                $css={{ color: '$fg-inverse' }}
+                $css={{ color: '$basic-white' }}
                 colorPalette="secondary"
                 variant="ghost"
             />

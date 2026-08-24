@@ -14,18 +14,18 @@ export const root = componentRecipe({
 
         {
             outline: 0,
-            boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
             borderRadius: vars.size.borderRadius['300'],
-            backgroundColor: vars.color.background.canvas[100],
+            boxShadow: `inset 0 0 0 0.0625rem ${boxShadowColor}`,
+            backgroundColor: vars.color.background['canvas-base'],
             paddingBlock: vars.size.space['000'],
 
-            color: vars.color.foreground.normal[200],
+            color: vars.color.foreground['normal'],
 
             selectors: {
-                '&::placeholder': { color: vars.color.foreground.hint[100] },
+                '&::placeholder': { color: vars.color.foreground['hint'] },
                 [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
                 [when.readonly()]: { backgroundColor: vars.color.gray['200'] },
-                [when.disabled()]: { pointerEvents: 'none', opacity: 0.32 },
+                [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
 

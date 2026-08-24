@@ -5,13 +5,35 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
+## 1.5.1
+
+### Css
+
+- migrate V2 foundations ([#690](https://github.com/goorm-dev/vapor-ui/pull/690)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+## 1.5.0
+
+### Css
+
+- **Breaking Change**: inverse color tokens have been changed. In light mode, inverse is dark, in dark mode, inverse is light. ([#644](https://github.com/goorm-dev/vapor-ui/pull/644)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Toggle
+
+- add new `ToggleGroup` component ([#628](https://github.com/goorm-dev/vapor-ui/pull/628)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- add new `Toggle` component ([#628](https://github.com/goorm-dev/vapor-ui/pull/628)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Toolbar
+
+- add new `Toolbar` component ([#643](https://github.com/goorm-dev/vapor-ui/pull/643)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
 ## 1.4.0
 
 ### Sheet
 
 - Add `Sheet.ResizeHandle` for edge drag-and-keyboard resizing. ([#634](https://github.com/goorm-dev/vapor-ui/pull/634)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Etc.
+### Checkbox
 
 - propagate `invalid` state to indicator element ([#618](https://github.com/goorm-dev/vapor-ui/pull/618)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 

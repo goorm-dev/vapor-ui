@@ -124,13 +124,15 @@ export const root = componentRecipe({
     variants: {
         colorPalette: {
             danger: {
-                backgroundColor: vars.color.background.danger[200],
+                backgroundColor: vars.color.background['danger'],
             },
             success: {
-                backgroundColor: vars.color.background.success[200],
+                backgroundColor: vars.color.background['success'],
             },
             info: {
-                backgroundColor: vars.color.background.contrast[200],
+                // NOTE: Intentionally kept on legacy V1 tokens (`background.contrast-200`).
+                // The V2 counterpart is under internal design review — do not migrate until finalized.
+                backgroundColor: vars.color.background['contrast-200'],
             },
         },
     },

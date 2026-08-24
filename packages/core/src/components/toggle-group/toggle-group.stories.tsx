@@ -1,0 +1,115 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { HeartIcon } from '@vapor-ui/icons';
+
+import { ToggleGroup } from '.';
+import { Grid } from '../grid';
+import { Toggle } from '../toggle';
+import { VStack } from '../v-stack';
+
+export default {
+    title: 'ToggleGroup',
+    component: ToggleGroup,
+    argTypes: {
+        size: {
+            control: { type: 'inline-radio' },
+            options: ['sm', 'md', 'lg', 'xl'],
+        },
+        disabled: {
+            control: { type: 'boolean' },
+        },
+    },
+} satisfies Meta<typeof ToggleGroup>;
+
+type Story = StoryObj<typeof ToggleGroup>;
+
+export const Default: Story = {
+    render: (args) => {
+        return (
+            <ToggleGroup {...args}>
+                <Toggle value="item1">
+                    <HeartIcon />
+                </Toggle>
+                <Toggle value="item2">
+                    <HeartIcon />
+                </Toggle>
+                <Toggle value="item3">
+                    <HeartIcon />
+                </Toggle>
+
+                <Toggle value="item4">
+                    <HeartIcon />
+                </Toggle>
+                <Toggle value="item5">
+                    <HeartIcon />
+                </Toggle>
+                <Toggle value="item6">
+                    <HeartIcon />
+                </Toggle>
+            </ToggleGroup>
+        );
+    },
+};
+
+export const TestBed: Story = {
+    render: (args) => {
+        return (
+            <Grid.Root templateColumns="repeat(2, 1fr)" templateRows="auto" $css={{ gap: '$100' }}>
+                <Grid.Item>
+                    <VStack $css={{ gap: '$100', alignItems: 'flex-start' }}>
+                        {renderCases({ size: 'sm' })}
+                        {renderCases({ size: 'md' })}
+                        {renderCases({ size: 'lg' })}
+                        {renderCases({ size: 'xl' })}
+                    </VStack>
+                </Grid.Item>
+
+                <Grid.Item>
+                    <VStack $css={{ gap: '$100', alignItems: 'flex-start' }}>
+                        {renderCases({ size: 'sm', disabled: true })}
+                        {renderCases({ size: 'md', disabled: true })}
+                        {renderCases({ size: 'lg', disabled: true })}
+                        {renderCases({ size: 'xl', disabled: true })}
+                    </VStack>
+                </Grid.Item>
+
+                <ToggleGroup {...args} value={['item3', 'item4']}>
+                    <Toggle value="item1">
+                        <HeartIcon />
+                    </Toggle>
+                    <Toggle value="item2" variant="accent">
+                        <HeartIcon />
+                    </Toggle>
+                    <Toggle value="item3">
+                        <HeartIcon />
+                    </Toggle>
+
+                    <Toggle value="item4" variant="accent">
+                        <HeartIcon />
+                    </Toggle>
+                    <Toggle value="item5">
+                        <HeartIcon />
+                    </Toggle>
+                    <Toggle value="item6" variant="accent">
+                        <HeartIcon />
+                    </Toggle>
+                </ToggleGroup>
+            </Grid.Root>
+        );
+    },
+};
+
+const renderCases = ({ size, disabled }: ToggleGroup.Props) => {
+    return (
+        <ToggleGroup size={size} value={['item3']} disabled={disabled}>
+            <Toggle value="item1">
+                <HeartIcon />
+            </Toggle>
+            <Toggle value="item2">
+                <HeartIcon />
+            </Toggle>
+            <Toggle value="item3">
+                <HeartIcon />
+            </Toggle>
+        </ToggleGroup>
+    );
+};

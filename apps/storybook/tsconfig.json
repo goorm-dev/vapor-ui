@@ -6,6 +6,6 @@
             "@vapor-ui/core/*": ["../../packages/core/src/*"]
         }
     },
-    "include": [".storybook/**/*"],
+    "include": [".", ".storybook/**/*"],
     "exclude": ["node_modules", "storybook-static"]
 }
