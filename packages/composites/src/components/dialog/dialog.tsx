@@ -200,7 +200,7 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
         ...$cssProp,
     } satisfies typeof $cssProp;
 
-    if (!children) return;
+    if (!children) return null;
 
     return (
         <DialogPrimitives.Body ref={bodyRef} $css={$css} {...props}>

@@ -31,9 +31,9 @@ import { createSlots } from '~/utils/create-slots';
 import type { SlotProps } from '~/utils/create-slots';
 
 const slots = createSlots({
-    title: <DialogPrimitives.Title />,
-    trigger: <DialogPrimitives.Trigger />,
-    description: <DialogPrimitives.Description />,
+    title: DialogPrimitives.Title,
+    trigger: DialogPrimitives.Trigger,
+    description: DialogPrimitives.Description,
 });
 
 // `title`은 필수, 나머지는 옵셔널
