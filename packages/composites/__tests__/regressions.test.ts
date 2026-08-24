@@ -36,7 +36,7 @@ async function navigate(page, storybookUrl, id) {
         await page.waitForLoadState('networkidle');
         await page.waitForSelector('#storybook-root');
     } catch (error) {
-        throw new Error(`Failed to navigate to story: ${id}`, error);
+        throw new Error(`Failed to navigate to story: ${id}`, { cause: error });
     }
 }
 
