@@ -1,6 +1,11 @@
+---
+paths:
+  - "packages/composites/**"
+---
+
 # Composites 컴포넌트 작성 컨벤션
 
-`@vapor-ui/composites`는 `@vapor-ui/core`의 primitive를 조합해 디자인 결정을 내재화한 완성형 컴포넌트를 제공한다. 아래 규칙은 이 패키지 안에서 컴포넌트를 새로 만들거나 수정할 때 공통으로 따르는 항목이다. 규칙의 배경과 상위 정책은 [`CLAUDE.md`](./CLAUDE.md)를 함께 참고한다.
+`@vapor-ui/composites`는 `@vapor-ui/core`의 primitive를 조합해 디자인 결정을 내재화한 완성형 컴포넌트를 제공한다. 아래 규칙은 이 패키지 안에서 컴포넌트를 새로 만들거나 수정할 때 공통으로 따르는 항목이다. 규칙의 배경과 상위 정책은 [`packages/composites/CLAUDE.md`](../../packages/composites/CLAUDE.md)를 함께 참고한다.
 
 목차
 
@@ -91,7 +96,7 @@ export interface DialogProps {
 
 ## 3. 스타일은 `$css` prop으로 작성한다
 
-Composites는 `className` / `style` 오버라이드를 소비자에게 노출하지 않는다(→ [`CLAUDE.md §8`](./CLAUDE.md)). 컴포넌트 내부 스타일은 `@vapor-ui/core` primitive가 제공하는 `$css` prop을 사용한다. `$css`는 디자인 토큰(`$300`, `$basic-gray-500` 등)을 지원하므로 하드코딩된 색상·간격 값을 사용하지 않는다.
+Composites는 `className` / `style` 오버라이드를 소비자에게 노출하지 않는다(→ [`CLAUDE.md §8`](../../packages/composites/CLAUDE.md)). 컴포넌트 내부 스타일은 `@vapor-ui/core` primitive가 제공하는 `$css` prop을 사용한다. `$css`는 디자인 토큰(`$300`, `$basic-gray-500` 등)을 지원하므로 하드코딩된 색상·간격 값을 사용하지 않는다.
 
 **규칙**
 
@@ -197,7 +202,7 @@ const props: Dialog.Props = {/* ... */};
 
 ## 6. 서브 컴포넌트는 `index.parts.ts`로 분리한다
 
-Flat 컴포넌트가 기본이지만, 아이템을 나열해야 하는 컴포넌트(예: `Select`)는 dot-notation 서브 컴포넌트(`Select.Root`, `Select.Option`)를 노출한다(→ [`CLAUDE.md §3`](./CLAUDE.md)). 이 경우 core 패키지와 동일하게 `index.parts.ts`로 부분들을 재수출하고, `index.ts`에서 namespace 형태로 export한다.
+Flat 컴포넌트가 기본이지만, 아이템을 나열해야 하는 컴포넌트(예: `Select`)는 dot-notation 서브 컴포넌트(`Select.Root`, `Select.Option`)를 노출한다(→ [`CLAUDE.md §3`](../../packages/composites/CLAUDE.md)). 이 경우 core 패키지와 동일하게 `index.parts.ts`로 부분들을 재수출하고, `index.ts`에서 namespace 형태로 export한다.
 
 **규칙**
 
