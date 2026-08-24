@@ -1,20 +1,21 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Dialog as DialogPrimitives, IconButton, VStack } from '@vapor-ui/core';
+import { Button, Dialog as DialogPrimitives, IconButton, VStack } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
+import type { AriaLabelProps } from '~/utils/types';
 
 const slots = createSlots({
     title: DialogPrimitives.Title,
     trigger: DialogPrimitives.Trigger,
     description: DialogPrimitives.Description,
-    assistive: DialogPrimitives.Close,
-    action: DialogPrimitives.Close,
+    assistive: Button,
+    action: Button,
 });
 
 export const Dialog = ({
@@ -24,6 +25,7 @@ export const Dialog = ({
     onOpenChange,
     container,
     keepMounted,
+    ariaLabels,
 
     // variants
     size,
@@ -36,11 +38,17 @@ export const Dialog = ({
     action,
     children,
 }: Dialog.Props) => {
+    const actionsRef = useRef<DialogPrimitives.Root.Actions>(null);
+    const close = useCallback(() => actionsRef.current?.close(), []);
+
+    const { close: closeLabel } = ariaLabels;
+
     return (
         <DialogPrimitives.Root
             open={open}
             defaultOpen={defaultOpen}
             onOpenChange={onOpenChange}
+            actionsRef={actionsRef}
             size={size}
         >
             <slots.trigger render={trigger} />
@@ -49,9 +57,9 @@ export const Dialog = ({
                 <DialogPrimitives.OverlayPrimitive />
 
                 <DialogPrimitives.PopupPrimitive>
-                    <Header title={title} description={description} />
+                    <Header title={title} description={description} closeLabel={closeLabel} />
                     <Body>{children}</Body>
-                    <Footer action={action} assistive={assistive} />
+                    <Footer action={action} assistive={assistive} close={close} />
                 </DialogPrimitives.PopupPrimitive>
             </DialogPrimitives.PortalPrimitive>
         </DialogPrimitives.Root>
@@ -59,6 +67,7 @@ export const Dialog = ({
 };
 
 type Slots = SlotProps<typeof slots, 'title'>;
+type AriaLabels = AriaLabelProps<'close'>;
 type RootProps = DialogPrimitives.Root.Props;
 type PortalProps = DialogPrimitives.PortalPrimitive.Props;
 
@@ -95,6 +104,13 @@ export interface DialogProps {
     keepMounted?: PortalProps['keepMounted'];
 
     /**
+     * 다이얼로그 내부 요소의 이름을 지정할 수 있는 aria-label을 전달 받는다.
+     * @example
+     * <Dialog ariaLabels={{ close: '닫기' }} />
+     */
+    ariaLabels: AriaLabels;
+
+    /**
      * 다이얼로그의 크기를 변경한다.
      * @default "md"
      */
@@ -118,18 +134,24 @@ export interface DialogProps {
     trigger?: Slots['trigger'];
 
     /**
-     * 다이얼로그의 보조 액션을 처리하는 요소
+     * 다이얼로그의 보조 액션. `close` 함수를 render prop으로 전달 받을 수 있다.
      * @example
-     * <Dialog assistive={<Button colorPalette="secondary" variant="ghost"></Button>} />
+     * // #1
+     * <Dialog assistive={<Dialog.Assistive>취소</Dialog.Assistive>} />
+     * // #2
+     * <Dialog assistive={(close) => <Dialog.Assistive onClick={() => close()} />} />
      */
-    assistive?: Slots['assistive'];
+    assistive?: Slots['assistive'] | ((close: () => void) => Slots['assistive']);
 
     /**
-     * 다이얼로그의 주요 액션을 처리하는 요소
+     * 다이얼로그의 주요 액션. `close` 함수를 render prop으로 전달 받을 수 있다.
      * @example
-     * <Dialog action={<Button></Button>} />
+     * // #1
+     * <Dialog action={<Dialog.Action>취소</Dialog.Action>} />
+     * // #2
+     * <Dialog action={(close) => <Dialog.Action onClick={() => close()} />} />
      */
-    action?: Slots['action'];
+    action?: Slots['action'] | ((close: () => void) => ReactNode);
 
     /**
      * 다이얼로그의 본문에 해당한다.
@@ -143,9 +165,11 @@ export namespace Dialog {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
+interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {
+    closeLabel: Dialog.Props['ariaLabels']['close'];
+}
 
-const Header = ({ title, description }: HeaderProps) => {
+const Header = ({ closeLabel, title, description }: HeaderProps) => {
     return (
         <DialogPrimitives.Header
             $css={{
@@ -162,18 +186,19 @@ const Header = ({ title, description }: HeaderProps) => {
                 <slots.description render={description} $css={{ color: '$basic-gray-500' }} />
             </VStack>
 
-            <CloseButton />
+            <CloseButton aria-label={closeLabel} />
         </DialogPrimitives.Header>
     );
 };
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const CloseButton = () => {
+const CloseButton = (props: DialogPrimitives.Close.Props) => {
     return (
         <DialogPrimitives.Close
             render={<IconButton size="xl" colorPalette="secondary" variant="ghost" />}
             $css={{ position: 'absolute', top: '$150', right: '$150' }}
+            {...props}
         >
             <CloseOutlineIcon />
         </DialogPrimitives.Close>
@@ -211,10 +236,15 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {}
+interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {
+    close: () => void;
+}
 
-const Footer = ({ action, assistive }: FooterProps) => {
-    const renderFooter = action || assistive;
+const Footer = ({ action: actionProp, assistive: assistiveProp, close }: FooterProps) => {
+    const renderFooter = actionProp || assistiveProp;
+
+    const assistive = typeof assistiveProp === 'function' ? assistiveProp(close) : assistiveProp;
+    const action = typeof actionProp === 'function' ? actionProp(close) : actionProp;
 
     return (
         <DialogPrimitives.Footer
@@ -233,3 +263,31 @@ const Footer = ({ action, assistive }: FooterProps) => {
         </DialogPrimitives.Footer>
     );
 };
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export const DialogAction = ({ children, ...props }: DialogAction.Props) => {
+    return (
+        <Button size="lg" colorPalette="primary" {...props}>
+            {children}
+        </Button>
+    );
+};
+
+export namespace DialogAction {
+    export type Props = Button.Props;
+}
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export const DialogAssistive = ({ children, ...props }: DialogAssistive.Props) => {
+    return (
+        <Button size="lg" colorPalette="secondary" variant="outline" {...props}>
+            {children}
+        </Button>
+    );
+};
+
+export namespace DialogAssistive {
+    export type Props = Button.Props;
+}
