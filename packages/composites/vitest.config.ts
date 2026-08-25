@@ -1,9 +1,8 @@
-import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-    plugins: [vanillaExtractPlugin() as never],
+    plugins: [],
     resolve: {
         alias: {
             '~': path.resolve(__dirname, 'src'),
