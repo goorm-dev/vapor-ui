@@ -13,7 +13,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "url": "git+https://github.com/goorm-dev/vapor-ui.git",
         "directory": "packages/css-generator"
     },
     "license": "MIT",
@@ -21,9 +21,14 @@
     "type": "module",
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
+            "import": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            },
+            "require": {
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
         }
     },
     "main": "./dist/index.cjs",
@@ -41,7 +46,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@vapor-ui/color-generator": "workspace:*"
+        "@vapor-ui/color-generator": "workspace:^"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",

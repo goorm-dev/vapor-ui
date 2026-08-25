@@ -4,16 +4,21 @@
     "description": "ESLint configuration for Vapor UI projects",
     "repository": {
         "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "url": "git+https://github.com/goorm-dev/vapor-ui.git",
         "directory": "packages/eslint-plugin-vapor"
     },
     "license": "MIT",
     "type": "module",
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
+            "import": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            },
+            "require": {
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
         }
     },
     "main": "./dist/index.cjs",
