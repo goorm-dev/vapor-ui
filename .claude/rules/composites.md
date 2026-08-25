@@ -1,6 +1,6 @@
 ---
 paths:
-  - "packages/composites/**"
+    - 'packages/composites/**'
 ---
 
 # Composites 컴포넌트 작성 컨벤션
@@ -15,6 +15,7 @@ paths:
 4. [Primitive prop은 인터페이스 내부에서 재정의한다](#4-primitive-prop은-인터페이스-내부에서-재정의한다)
 5. [타입은 TypeScript `namespace`로 노출한다](#5-타입은-typescript-namespace로-노출한다)
 6. [서브 컴포넌트는 `index.parts.ts`로 분리한다](#6-서브-컴포넌트는-indexpartsts로-분리한다)
+7. [Preset wrapper는 primitive prop을 전체 상속한다 (§4 예외)](#7-preset-wrapper는-primitive-prop을-전체-상속한다-4-예외)
 
 ---
 
@@ -49,7 +50,7 @@ type Slots = SlotProps<typeof slots, 'title'>;
 <slots.description render={description} $css={{ color: '$basic-gray-500' }} />
 ```
 
-> 서브 영역(예: `Footer`)이 자체 슬롯 세트를 가진다면 그 영역 스코프에 별도 `createSlots` 호출을 둔다. 컴포넌트 최상위와 뒤섞지 않는다.
+> 외부에 노출되는 서브 컴포넌트가 자체 슬롯 세트를 가진다면 그 서브 컴포넌트 스코프에 별도 `createSlots` 호출을 둔다. 컴포넌트 최상위와 뒤섞지 않는다. 반대로 `Header`, `Body`, `Footer`처럼 외부 API가 아닌 내부 아나토미 분리용 컴포넌트는 최상위 슬롯을 props drilling으로 전달한다.
 
 ## 2. 모든 prop에 JSDoc을 붙인다
 
@@ -202,7 +203,12 @@ const props: Dialog.Props = {/* ... */};
 
 ## 6. 서브 컴포넌트는 `index.parts.ts`로 분리한다
 
-Flat 컴포넌트가 기본이지만, 아이템을 나열해야 하는 컴포넌트(예: `Select`)는 dot-notation 서브 컴포넌트(`Select.Root`, `Select.Option`)를 노출한다(→ [`CLAUDE.md §3`](../../packages/composites/CLAUDE.md)). 이 경우 core 패키지와 동일하게 `index.parts.ts`로 부분들을 재수출하고, `index.ts`에서 namespace 형태로 export한다.
+Flat 컴포넌트가 기본이지만, 다음 두 경우에는 dot-notation 서브 컴포넌트를 노출한다.
+
+1. **아이템 반복 나열** — 사용자가 임의 개수의 아이템을 배치하는 컴포넌트(예: `Select` → `Select.Root`, `Select.Option`). (→ [`CLAUDE.md §3`](../../packages/composites/CLAUDE.md))
+2. **문맥 preset 부품 노출** — 부품이 고정 위치에 0~1회 렌더되지만, 컴포넌트 문맥에 맞는 스타일(size/colorPalette 등)이 사전 지정된 preset을 별도로 제공하는 컴포넌트(예: `Dialog` → `Dialog.Root`, `Dialog.Action`, `Dialog.Assistive`).
+
+두 경우 모두 core 패키지와 동일하게 `index.parts.ts`로 부분들을 재수출하고, `index.ts`에서 namespace 형태로 export한다.
 
 **규칙**
 
@@ -252,7 +258,50 @@ import { Select } from '@vapor-ui/composites';
 </Select.Root>;
 ```
 
-Flat 컴포넌트(예: `Dialog`)는 이 구조를 쓰지 않고 `export * from './dialog';` 한 줄만 둔다.
+위 두 경우에 해당하지 않는 flat 컴포넌트는 이 구조를 쓰지 않고 `export * from './<component>';` 한 줄만 둔다.
+
+## 7. Preset wrapper는 primitive prop을 전체 상속한다 (§4 예외)
+
+§6의 두 번째 케이스("문맥 preset 부품")에 해당하고 아래 판정 기준을 **전부** 만족하는 컴포넌트는 §4의 cherry-pick 원칙에서 벗어나, primitive prop을 `Omit`으로 preset key만 봉인한 형태로 그대로 상속한다. `Dialog.Action`, `Dialog.Assistive`가 이 케이스다.
+
+**판정 기준 (4개 모두 충족해야 예외 적용)**
+
+1. **Single-primitive** — 루트가 단일 `@vapor-ui/core` primitive를 그대로 렌더한다. 여러 primitive를 조합하지 않는다.
+2. **Defaults-only override** — `variant`, `size`, `colorPalette` 등 정적 default 값만 override한다. `onClick`, `ref`, `disabled`, `type` 같은 기능·상태 prop에는 개입하지 않는다.
+3. **Namespace-bound** — 부모 Composite의 dot-notation 부품으로만 노출한다. Top-level export 금지(`Dialog.Action`은 O, `DialogAction`을 별개 최상위 컴포넌트로 export하지 않는다).
+4. **No rename** — primitive prop을 Composites 도메인 이름으로 rename하지 않는다.
+
+하나라도 어긋나면 preset wrapper가 아니다. §4로 회귀해 cherry-pick한다.
+
+**타입 선언 — 봉인은 `Omit`으로**
+
+컴포넌트가 소유한 preset key를 `Omit`으로 제거해, 소비자가 preset을 override하지 못하도록 봉인한다. 그 외 기능 prop은 primitive의 JSDoc을 그대로 상속한다.
+
+**예시**
+
+```tsx
+export const DialogAssistive = ({ children, ...props }: DialogAssistive.Props) => {
+    return (
+        <Button size="lg" colorPalette="secondary" variant="outline" {...props}>
+            {children}
+        </Button>
+    );
+};
+
+export namespace DialogAssistive {
+    /**
+     * Dialog 문맥에 맞춰 `size`, `colorPalette`, `variant`를 고정한 보조 액션 버튼.
+     * 그 외 Button prop(`onClick`, `disabled`, `type`, `ref` 등)은 그대로 노출된다.
+     */
+    export type Props = Omit<Button.Props, 'size' | 'colorPalette' | 'variant'>;
+}
+```
+
+**왜 예외인가**
+
+- §4는 "여러 primitive를 조합·재해석하는 Composite가 원치 않는 primitive prop을 소비자에게 노출하는 것"을 막기 위한 규칙이다. Preset wrapper는 primitive와 1:1이므로 primitive의 모든 기능 prop이 소비자에게도 의미가 있다.
+- 판정 기준 2·3·4가 "wrapper가 defaults 이상으로 확장되지 못한다"는 것을 구조적으로 강제한다. wrapper에 로직·rename·다중 primitive가 추가되는 순간 이 컴포넌트는 더 이상 preset wrapper가 아니며, 자동으로 §4의 cherry-pick 요건으로 돌아간다.
+- `Omit`으로 preset key를 봉인하기 때문에 "Dialog.Action이 사실상 다른 Button이 되어버리는" 무질서한 override는 타입 레벨에서 차단된다.
 
 ---
 
@@ -266,3 +315,4 @@ Flat 컴포넌트(예: `Dialog`)는 이 구조를 쓰지 않고 `export * from '
 - [ ] Primitive prop을 노출할 때 로컬 alias를 만들고 인터페이스 내부에서 `Alias['prop']`으로 인덱싱했다.
 - [ ] `export namespace <Component> { export type Props = ... }` 패턴으로 타입을 노출했다.
 - [ ] 서브 컴포넌트가 있는 컴포넌트라면 `index.parts.ts`를 두고 `index.ts`에서 namespace로 재수출했다.
+- [ ] Preset wrapper라면 §7의 판정 기준 4개를 모두 만족하고, `Omit`으로 preset key를 봉인했다.

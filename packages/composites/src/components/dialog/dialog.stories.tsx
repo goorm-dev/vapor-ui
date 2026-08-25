@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, HStack, TextInput } from '@vapor-ui/core';
+import { Button, HStack, Text, TextInput, VStack } from '@vapor-ui/core';
 
 import { Dialog } from '.';
 
@@ -87,55 +87,64 @@ export const AsyncAction: Story = {
         ariaLabels: { close: '닫기' },
     },
     render: (args) => {
-        const AsyncSaveDialog = () => {
-            const [saving, setSaving] = useState(false);
-            const [failing, setFailing] = useState(false);
+        const [saving, setSaving] = useState(false);
+        const [failing, setFailing] = useState(false);
+        const [error, setError] = useState<string | null>(null);
 
-            return (
-                <Dialog.Root
-                    trigger={<Button>Async Action</Button>}
-                    assistive={(close) => (
-                        <Dialog.Assistive disabled={saving} onClick={close}>
-                            취소
-                        </Dialog.Assistive>
-                    )}
-                    action={(close) => (
-                        <Dialog.Action
-                            disabled={saving}
-                            onClick={async () => {
-                                setSaving(true);
-                                try {
-                                    await new Promise((resolve) => setTimeout(resolve, 1500));
-                                    if (failing) {
-                                        throw new Error('save failed');
-                                    }
-                                    close();
-                                } catch {
-                                    // 에러 시 열림 유지 → close 미호출
-                                } finally {
-                                    setSaving(false);
-                                }
-                            }}
-                        >
-                            {saving ? '저장 중...' : '저장'}
-                        </Dialog.Action>
-                    )}
-                    {...args}
-                >
-                    <HStack $css={{ gap: '$150' }}>
-                        <Button
-                            size="sm"
-                            colorPalette={failing ? 'danger' : 'secondary'}
-                            variant="outline"
-                            onClick={() => setFailing((v) => !v)}
-                        >
-                            {failing ? '실패 모드 ON' : '실패 모드 OFF'}
-                        </Button>
-                    </HStack>
-                </Dialog.Root>
-            );
+        const actionsRef = useRef<Dialog.Root.Actions>(null);
+
+        const save = () =>
+            new Promise<void>((resolve, reject) => {
+                setTimeout(() => {
+                    if (failing) {
+                        reject(new Error('저장에 실패했다. 잠시 후 다시 시도해라.'));
+                        return;
+                    }
+                    resolve();
+                }, 1500);
+            });
+
+        const handleClick = async () => {
+            setError(null);
+            setSaving(true);
+            try {
+                await save();
+                actionsRef.current?.close();
+            } catch (e) {
+                setError((e as Error).message);
+            } finally {
+                setSaving(false);
+            }
         };
 
-        return <AsyncSaveDialog />;
+        return (
+            <Dialog.Root
+                actionsRef={actionsRef}
+                trigger={<Button>Async Action</Button>}
+                assistive={<Dialog.Assistive disabled={saving}>취소</Dialog.Assistive>}
+                action={
+                    <Dialog.Action disabled={saving} closeOnClick={false} onClick={handleClick}>
+                        {saving ? '저장 중...' : '저장'}
+                    </Dialog.Action>
+                }
+                {...args}
+            >
+                <VStack $css={{ gap: '$150', alignItems: 'flex-start' }}>
+                    <Button
+                        size="sm"
+                        colorPalette={failing ? 'danger' : 'secondary'}
+                        variant="outline"
+                        onClick={() => setFailing((v) => !v)}
+                    >
+                        {failing ? '실패 모드 ON' : '실패 모드 OFF'}
+                    </Button>
+                    {error && (
+                        <Text typography="body2" foreground="danger">
+                            {error}
+                        </Text>
+                    )}
+                </VStack>
+            </Dialog.Root>
+        );
     },
 };

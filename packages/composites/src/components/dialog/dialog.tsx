@@ -1,7 +1,15 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
 import { Button, Dialog as DialogPrimitives, IconButton, VStack } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
@@ -9,6 +17,25 @@ import { CloseOutlineIcon } from '@vapor-ui/icons';
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
 import type { AriaLabelProps } from '~/utils/types';
+
+export interface DialogContext {
+    close: () => void;
+    ariaLabels: Dialog.Props['ariaLabels'];
+}
+
+export const DialogContext = createContext<DialogContext | undefined>(undefined);
+
+export function useDialogContext() {
+    const context = useContext<DialogContext | undefined>(DialogContext);
+    if (context === undefined) {
+        throw new Error(
+            'DialogContext is missing. Dialog parts must be placed within <Dialog.Root>.',
+        );
+    }
+    return context;
+}
+
+/* -----------------------------------------------------------------------------------------------*/
 
 const slots = createSlots({
     title: DialogPrimitives.Title,
@@ -23,6 +50,7 @@ export const Dialog = ({
     open,
     defaultOpen,
     onOpenChange,
+    actionsRef: actionsRefProp,
     container,
     keepMounted,
     ariaLabels,
@@ -39,30 +67,33 @@ export const Dialog = ({
     children,
 }: Dialog.Props) => {
     const actionsRef = useRef<DialogPrimitives.Root.Actions>(null);
-    const close = useCallback(() => actionsRef.current?.close(), []);
+    const mergedRef = actionsRefProp ?? actionsRef;
+    const close = useCallback(() => mergedRef.current?.close(), [mergedRef]);
 
-    const { close: closeLabel } = ariaLabels;
+    const context = useMemo<DialogContext>(() => ({ close, ariaLabels }), [close, ariaLabels]);
 
     return (
-        <DialogPrimitives.Root
-            open={open}
-            defaultOpen={defaultOpen}
-            onOpenChange={onOpenChange}
-            actionsRef={actionsRef}
-            size={size}
-        >
-            <slots.trigger render={trigger} />
+        <DialogContext.Provider value={context}>
+            <DialogPrimitives.Root
+                open={open}
+                defaultOpen={defaultOpen}
+                onOpenChange={onOpenChange}
+                actionsRef={mergedRef}
+                size={size}
+            >
+                <slots.trigger render={trigger} />
 
-            <DialogPrimitives.PortalPrimitive container={container} keepMounted={keepMounted}>
-                <DialogPrimitives.OverlayPrimitive />
+                <DialogPrimitives.PortalPrimitive container={container} keepMounted={keepMounted}>
+                    <DialogPrimitives.OverlayPrimitive />
 
-                <DialogPrimitives.PopupPrimitive>
-                    <Header title={title} description={description} closeLabel={closeLabel} />
-                    <Body>{children}</Body>
-                    <Footer action={action} assistive={assistive} close={close} />
-                </DialogPrimitives.PopupPrimitive>
-            </DialogPrimitives.PortalPrimitive>
-        </DialogPrimitives.Root>
+                    <DialogPrimitives.PopupPrimitive>
+                        <Header title={title} description={description} />
+                        <Body>{children}</Body>
+                        <Footer action={action} assistive={assistive} />
+                    </DialogPrimitives.PopupPrimitive>
+                </DialogPrimitives.PortalPrimitive>
+            </DialogPrimitives.Root>
+        </DialogContext.Provider>
     );
 };
 
@@ -92,6 +123,20 @@ export interface DialogProps {
     onOpenChange?: RootProps['onOpenChange'];
 
     /**
+     * 다이얼로그를 조작하기 위한 ref를 지정한다.
+     * @example
+     * const actionsRef = useRef<Dialog.Actions>(null);
+     * const handleSave = async (event: MouseEvent<HTMLButtonElement>) => {
+     *     event.preventDefault();
+     *
+     *     await save();
+     *     actionsRef.current?.close();
+     * };
+     * <Dialog actionsRef={actionsRef} action={<Dialog.Action onClick={handleSave} />} />
+     */
+    actionsRef?: RootProps['actionsRef'];
+
+    /**
      * Portal 대상 컨테이너. SSR·shadow DOM·특정 스택 컨텍스트에서 오버레이 위치 제어가 필요할 때만 지정한다.
      * @default document.body
      */
@@ -104,7 +149,7 @@ export interface DialogProps {
     keepMounted?: PortalProps['keepMounted'];
 
     /**
-     * 다이얼로그 내부 요소의 이름을 지정할 수 있는 aria-label을 전달 받는다.
+     * 다이얼로그 내부 요소의 aria-label을 지정한다.
      * @example
      * <Dialog ariaLabels={{ close: '닫기' }} />
      */
@@ -141,7 +186,7 @@ export interface DialogProps {
      * // #2
      * <Dialog assistive={(close) => <Dialog.Assistive onClick={() => close()} />} />
      */
-    assistive?: Slots['assistive'] | ((close: () => void) => Slots['assistive']);
+    assistive?: Slots['assistive'];
 
     /**
      * 다이얼로그의 주요 액션. `close` 함수를 render prop으로 전달 받을 수 있다.
@@ -151,7 +196,7 @@ export interface DialogProps {
      * // #2
      * <Dialog action={(close) => <Dialog.Action onClick={() => close()} />} />
      */
-    action?: Slots['action'] | ((close: () => void) => ReactNode);
+    action?: Slots['action'];
 
     /**
      * 다이얼로그의 본문에 해당한다.
@@ -160,16 +205,15 @@ export interface DialogProps {
 }
 
 export namespace Dialog {
+    export type Actions = DialogPrimitives.Root.Actions;
     export type Props = DialogProps;
 }
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {
-    closeLabel: Dialog.Props['ariaLabels']['close'];
-}
+interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
 
-const Header = ({ closeLabel, title, description }: HeaderProps) => {
+const Header = ({ title, description }: HeaderProps) => {
     return (
         <DialogPrimitives.Header
             $css={{
@@ -186,19 +230,22 @@ const Header = ({ closeLabel, title, description }: HeaderProps) => {
                 <slots.description render={description} $css={{ color: '$basic-gray-500' }} />
             </VStack>
 
-            <CloseButton aria-label={closeLabel} />
+            <CloseButton />
         </DialogPrimitives.Header>
     );
 };
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const CloseButton = (props: DialogPrimitives.Close.Props) => {
+const CloseButton = () => {
+    const { ariaLabels } = useDialogContext();
+    const { close: closeLabel } = ariaLabels;
+
     return (
         <DialogPrimitives.Close
+            aria-label={closeLabel}
             render={<IconButton size="xl" colorPalette="secondary" variant="ghost" />}
             $css={{ position: 'absolute', top: '$150', right: '$150' }}
-            {...props}
         >
             <CloseOutlineIcon />
         </DialogPrimitives.Close>
@@ -236,15 +283,10 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {
-    close: () => void;
-}
+interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {}
 
-const Footer = ({ action: actionProp, assistive: assistiveProp, close }: FooterProps) => {
-    const renderFooter = actionProp || assistiveProp;
-
-    const assistive = typeof assistiveProp === 'function' ? assistiveProp(close) : assistiveProp;
-    const action = typeof actionProp === 'function' ? actionProp(close) : actionProp;
+const Footer = ({ action, assistive }: FooterProps) => {
+    const renderFooter = action || assistive;
 
     return (
         <DialogPrimitives.Footer
@@ -266,28 +308,78 @@ const Footer = ({ action: actionProp, assistive: assistiveProp, close }: FooterP
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const DialogAction = ({ children, ...props }: DialogAction.Props) => {
+export const DialogAction = ({
+    closeOnClick = true,
+    onClick,
+    children,
+    ...props
+}: DialogAction.Props) => {
+    const { close } = useDialogContext();
+    const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
+        onClick?.(event);
+
+        if (event.defaultPrevented) return;
+        if (!closeOnClick) return;
+        close();
+    };
+
     return (
-        <Button size="lg" colorPalette="primary" {...props}>
+        <Button size="lg" colorPalette="primary" onClick={handleClick} {...props}>
             {children}
         </Button>
     );
 };
 
+interface DialogActionProps extends Button.Props {
+    /**
+     * 클릭 시 다이얼로그를 자동으로 닫을지 여부.
+     * @default true
+     */
+    closeOnClick?: boolean;
+}
+
 export namespace DialogAction {
-    export type Props = Button.Props;
+    export type Props = DialogActionProps;
 }
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const DialogAssistive = ({ children, ...props }: DialogAssistive.Props) => {
+export const DialogAssistive = ({
+    closeOnClick = true,
+    onClick,
+    children,
+    ...props
+}: DialogAssistive.Props) => {
+    const { close } = useDialogContext();
+    const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
+        onClick?.(event);
+
+        if (event.defaultPrevented) return;
+        if (!closeOnClick) return;
+        close();
+    };
+
     return (
-        <Button size="lg" colorPalette="secondary" variant="outline" {...props}>
+        <Button
+            size="lg"
+            colorPalette="secondary"
+            variant="outline"
+            onClick={handleClick}
+            {...props}
+        >
             {children}
         </Button>
     );
 };
 
+interface DialogAssistiveProps extends Button.Props {
+    /**
+     * 클릭 시 다이얼로그를 자동으로 닫을지 여부.
+     * @default true
+     */
+    closeOnClick?: boolean;
+}
+
 export namespace DialogAssistive {
-    export type Props = Button.Props;
+    export type Props = DialogAssistiveProps;
 }
