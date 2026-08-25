@@ -324,7 +324,7 @@ export const DialogAction = ({
     );
 };
 
-interface DialogActionProps extends Button.Props {
+interface DialogActionProps extends Omit<Button.Props, 'size' | 'colorPalette' | 'variant'> {
     /**
      * 클릭 시 다이얼로그를 자동으로 닫을지 여부.
      * @default true
@@ -366,7 +366,7 @@ export const DialogAssistive = ({
     );
 };
 
-interface DialogAssistiveProps extends Button.Props {
+interface DialogAssistiveProps extends Omit<Button.Props, 'size' | 'colorPalette' | 'variant'> {
     /**
      * 클릭 시 다이얼로그를 자동으로 닫을지 여부.
      * @default true
