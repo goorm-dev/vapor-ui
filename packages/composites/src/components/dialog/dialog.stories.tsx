@@ -80,6 +80,39 @@ export const Default: Story = {
     },
 };
 
+export const ManualClose: Story = {
+    args: {
+        title: '반복 액션',
+        ariaLabels: { close: '닫기' },
+    },
+    render: (args) => {
+        const [count, setCount] = useState(0);
+
+        return (
+            <Dialog.Root
+                trigger={<Button>Close On Click</Button>}
+                assistive={
+                    <Dialog.Assistive closeOnClick={false} onClick={() => setCount(0)}>
+                        초기화
+                    </Dialog.Assistive>
+                }
+                action={
+                    <Dialog.Action closeOnClick={false} onClick={() => setCount((v) => v + 1)}>
+                        누른 횟수: {count}
+                    </Dialog.Action>
+                }
+                {...args}
+            >
+                <Text typography="body2">
+                    closeOnClick 속성은 Action, Assistive 버튼의 기본 닫기 동작을 제거합니다.
+                    <br />이 경우, Dialog의 닫기 동작을 직접 추가하려면 actionsRef 속성을
+                    이용하세요.
+                </Text>
+            </Dialog.Root>
+        );
+    },
+};
+
 export const AsyncAction: Story = {
     args: {
         title: '변경사항 저장',
