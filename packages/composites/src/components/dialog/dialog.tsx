@@ -179,22 +179,16 @@ export interface DialogProps {
     trigger?: Slots['trigger'];
 
     /**
-     * 다이얼로그의 보조 액션. `close` 함수를 render prop으로 전달 받을 수 있다.
+     * 다이얼로그의 보조 액션 요소.
      * @example
-     * // #1
      * <Dialog.Root assistive={<Dialog.Assistive>취소</Dialog.Assistive>} />
-     * // #2
-     * <Dialog.Root assistive={(close) => <Dialog.Assistive onClick={() => close()} />} />
      */
     assistive?: Slots['assistive'];
 
     /**
-     * 다이얼로그의 주요 액션. `close` 함수를 render prop으로 전달 받을 수 있다.
+     * 다이얼로그의 주요 액션 요소.
      * @example
-     * // #1
      * <Dialog.Root action={<Dialog.Action>취소</Dialog.Action>} />
-     * // #2
-     * <Dialog.Root action={(close) => <Dialog.Action onClick={() => close()} />} />
      */
     action?: Slots['action'];
 
