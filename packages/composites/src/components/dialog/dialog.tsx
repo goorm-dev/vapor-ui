@@ -118,7 +118,7 @@ export interface DialogProps {
     /**
      * 열림 상태 변경 콜백. 트리거·오버레이·ESC 등 모든 닫힘 경로에서 호출된다.
      * @example
-     * <Dialog onOpenChange={(open) => setOpen(open)} />
+     * <Dialog.Root onOpenChange={(open) => setOpen(open)} />
      */
     onOpenChange?: RootProps['onOpenChange'];
 
@@ -132,7 +132,7 @@ export interface DialogProps {
      *     await save();
      *     actionsRef.current?.close();
      * };
-     * <Dialog actionsRef={actionsRef} action={<Dialog.Action onClick={handleSave} />} />
+     * <Dialog.Root actionsRef={actionsRef} action={<Dialog.Action onClick={handleSave} />} />
      */
     actionsRef?: RootProps['actionsRef'];
 
@@ -151,7 +151,7 @@ export interface DialogProps {
     /**
      * 다이얼로그 내부 요소의 aria-label을 지정한다.
      * @example
-     * <Dialog ariaLabels={{ close: '닫기' }} />
+     * <Dialog.Root ariaLabels={{ close: '닫기' }} />
      */
     ariaLabels: AriaLabels;
 
@@ -174,7 +174,7 @@ export interface DialogProps {
     /**
      * 다이얼로그를 여는 진입 요소.
      * @example
-     * <Dialog trigger={<Button>열기</Button>} />
+     * <Dialog.Root trigger={<Button>열기</Button>} />
      */
     trigger?: Slots['trigger'];
 
@@ -182,9 +182,9 @@ export interface DialogProps {
      * 다이얼로그의 보조 액션. `close` 함수를 render prop으로 전달 받을 수 있다.
      * @example
      * // #1
-     * <Dialog assistive={<Dialog.Assistive>취소</Dialog.Assistive>} />
+     * <Dialog.Root assistive={<Dialog.Assistive>취소</Dialog.Assistive>} />
      * // #2
-     * <Dialog assistive={(close) => <Dialog.Assistive onClick={() => close()} />} />
+     * <Dialog.Root assistive={(close) => <Dialog.Assistive onClick={() => close()} />} />
      */
     assistive?: Slots['assistive'];
 
@@ -192,9 +192,9 @@ export interface DialogProps {
      * 다이얼로그의 주요 액션. `close` 함수를 render prop으로 전달 받을 수 있다.
      * @example
      * // #1
-     * <Dialog action={<Dialog.Action>취소</Dialog.Action>} />
+     * <Dialog.Root action={<Dialog.Action>취소</Dialog.Action>} />
      * // #2
-     * <Dialog action={(close) => <Dialog.Action onClick={() => close()} />} />
+     * <Dialog.Root action={(close) => <Dialog.Action onClick={() => close()} />} />
      */
     action?: Slots['action'];
 
