@@ -36,7 +36,9 @@ export function createSlots<T extends Record<string, SlotHost>>(anatomy: T): Slo
             render: payload,
             ...extra
         }: { render?: ReactNode } & Record<string, unknown>) => {
-            if (!payload) return null;
+            if (payload === null || payload === undefined || typeof payload === 'boolean') {
+                return null;
+            }
 
             const isElement =
                 isLazyElement(payload) || (isValidElement(payload) && payload.type !== Fragment);
