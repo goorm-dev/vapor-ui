@@ -184,7 +184,7 @@ export const DARK_SEMANTIC_COLORS = {
 
         // canvas
         'canvas-100': colorRef('gray', '050'),
-        'canvas-200': colorRef('gray', '025'),
+        'canvas-200': colorRef('gray', '100'),
         'overlay-100': colorRef('gray', '100'),
         'canvas-base': colorRef('gray', '050'),
         'canvas-sunken': colorRef('gray', '025'),
