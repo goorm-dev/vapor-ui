@@ -27,12 +27,13 @@ const portalResetStyles = `
     position: relative;
     display: flex;
     justify-content: flex-start;
-    width: fit-content;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
     min-height: 320px;
     padding: 16px;
     box-sizing: border-box;
     transform: translateZ(0);
+    overflow: hidden;
 }
 .regression-cell [data-base-ui-portal] {
     position: static !important;
@@ -46,7 +47,9 @@ const portalResetStyles = `
     right: auto !important;
     bottom: auto !important;
     transform: none !important;
+    max-width: 100% !important;
     max-height: 100% !important;
+    box-sizing: border-box !important;
 }
 `;
 
@@ -191,6 +194,85 @@ export const cartesianRows = <T extends Record<string, readonly unknown[]>>(
     ) as CartesianRows<T>;
 };
 
+/* -----------------------------------------------------------------------------------------------
+ * Regression.Table
+ * -----------------------------------------------------------------------------------------------*/
+
+type RegressionCondition<Key extends PropertyKey = PropertyKey, Value = unknown> = {
+    key: Key;
+    label: ReactNode;
+    values: readonly Value[];
+    format: (value: Value) => ReactNode;
+};
+
+type AnyRegressionCondition = RegressionCondition<PropertyKey, unknown>;
+
+type RegressionRow<C extends readonly AnyRegressionCondition[]> = {
+    [K in C[number]['key']]: Extract<C[number], { key: K }>['values'][number];
+};
+
+type RegressionTableProps<C extends readonly AnyRegressionCondition[]> = {
+    conditions: C;
+    render: (row: RegressionRow<C>, container: HTMLElement | null) => ReactNode;
+};
+
+const RegressionTable = <const C extends readonly AnyRegressionCondition[]>({
+    conditions,
+    render,
+}: RegressionTableProps<C>) => {
+    const conditionMap = Object.fromEntries(
+        conditions.map((condition) => [condition.key, condition.values]),
+    );
+
+    const rows = cartesianRows(conditionMap) as RegressionRow<C>[];
+
+    return (
+        <RegressionRoot>
+            <RegressionColumnGroup>
+                {conditions.map((_, colIdx) => (
+                    <RegressionConditionColumn key={colIdx} />
+                ))}
+                <RegressionRenderColumn />
+            </RegressionColumnGroup>
+            <RegressionHeader>
+                <RegressionRow>
+                    {conditions.map((condition, colIdx) => (
+                        <RegressionHeading key={colIdx}>{condition.label}</RegressionHeading>
+                    ))}
+                    <RegressionHeading>render</RegressionHeading>
+                </RegressionRow>
+            </RegressionHeader>
+            <RegressionBody>
+                {rows.map((row, rowIdx) => (
+                    <RegressionRow key={rowIdx}>
+                        {conditions.map((condition, colIdx) => (
+                            <RegressionCondition key={colIdx}>
+                                {condition.format(row[condition.key as keyof RegressionRow<C>])}
+                            </RegressionCondition>
+                        ))}
+                        <RegressionRender>{(container) => render(row, container)}</RegressionRender>
+                    </RegressionRow>
+                ))}
+            </RegressionBody>
+            <Table.Footer>
+                <Table.Row>
+                    <Table.Cell
+                        colSpan={conditions.length + 1}
+                        $css={{
+                            padding: '10px 16px',
+                            border: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
+                            backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                        }}
+                    >
+                        총 {rows.length}개 케이스
+                    </Table.Cell>
+                </Table.Row>
+            </Table.Footer>
+        </RegressionRoot>
+    );
+};
+
 /* -----------------------------------------------------------------------------------------------*/
 
 export const Regression = {
@@ -204,4 +286,5 @@ export const Regression = {
     Heading: RegressionHeading,
     Condition: RegressionCondition,
     Render: RegressionRender,
+    Table: RegressionTable,
 };
