@@ -221,7 +221,7 @@ const Header = ({ title, description }: HeaderProps) => {
         >
             <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
                 <slots.title render={title} />
-                <slots.description render={description} $css={{ color: '$basic-gray-500' }} />
+                <slots.description render={description} $css={{ color: '$fg-hint' }} />
             </VStack>
 
             <CloseButton />
