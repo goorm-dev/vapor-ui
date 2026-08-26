@@ -17,6 +17,7 @@ export * from './components/h-stack';
 export * from './components/icon-button';
 export * from './components/input-group';
 export * from './components/menu';
+export * from './components/meter';
 export * from './components/multi-select';
 export * from './components/navigation-menu';
 export * from './components/pagination';
