@@ -1,6 +1,8 @@
 import { calc } from '@vanilla-extract/css-utils';
 
+import { foregrounds } from '~/styles/mixins/foreground.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
+import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
 export const overlay = componentStyle({
@@ -56,21 +58,15 @@ export const popup = componentStyle({
     },
 });
 
-export const title = componentStyle({
-    lineHeight: vars.typography.lineHeight['200'],
-    letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal'],
-    fontSize: vars.typography.fontSize['200'],
-    fontWeight: vars.typography.fontWeight['700'],
-});
+export const title = componentStyle([
+    typography({ style: 'heading5' }),
+    foregrounds({ color: 'normal' }),
+]);
 
-export const description = componentStyle({
-    lineHeight: vars.typography.lineHeight['075'],
-    letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal'],
-    fontSize: vars.typography.fontSize['075'],
-    fontWeight: vars.typography.fontWeight['400'],
-});
+export const description = componentStyle([
+    typography({ style: 'subtitle1' }),
+    foregrounds({ color: 'hint' }),
+]);
 
 export const body = componentStyle({
     paddingTop: vars.size.space[400],
