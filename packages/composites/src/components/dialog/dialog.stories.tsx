@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, HStack, Text, TextInput, VStack } from '@vapor-ui/core';
 
+import { Regression, cartesianRows } from '~/utils/regressions';
+
 import { Dialog } from '.';
 
 export default {
@@ -180,4 +182,104 @@ export const AsyncAction: Story = {
             </Dialog.Root>
         );
     },
+};
+
+/* -----------------------------------------------------------------------------------------------
+ * Test Bed
+ * ---------------------------------------------------------------------------------------------- */
+
+const SIZES = ['md', 'lg', 'xl'] as const;
+const DESCRIPTION_PRESENCE = [
+    '유사도 검사 결과를 다운받으시겠어요? 결과는 현재 표에 적용된 필터 기준으로 다운로드 됩니다.',
+    null,
+] as const;
+const SCROLL = [6, 2] as const;
+
+const props = {
+    ariaLabels: { close: '닫기' },
+    title: '제목은 여러 줄에 걸쳐 표시될 수가 있습니다. 제목은 여러 줄에 걸쳐 표시될 수가 있습니다. 제목은 여러 줄에 걸쳐 표시될 수가 있습니다.',
+    action: <Dialog.Action>확인</Dialog.Action>,
+    assistive: <Dialog.Assistive>보조</Dialog.Assistive>,
+} as const;
+
+const testBedRows = cartesianRows({
+    size: SIZES,
+    hasDescription: DESCRIPTION_PRESENCE,
+    hasScroll: SCROLL,
+});
+
+const dialogOverlayStripStyles = `
+.regression-cell [data-base-ui-portal] [role="dialog"] {
+    top: unset;
+    left: unset;
+    transform: unset;
+}
+`;
+
+const TestBedRender = () => {
+    return (
+        <>
+            <style>{dialogOverlayStripStyles}</style>
+            <Regression.Root>
+                <Regression.ColumnGroup>
+                    <Regression.ConditionColumn />
+                    <Regression.ConditionColumn />
+                    <Regression.ConditionColumn />
+                    <Regression.RenderColumn />
+                </Regression.ColumnGroup>
+                <Regression.Header>
+                    <Regression.Row>
+                        <Regression.Heading>size</Regression.Heading>
+                        <Regression.Heading>description</Regression.Heading>
+                        <Regression.Heading>scroll</Regression.Heading>
+                        <Regression.Heading>render</Regression.Heading>
+                    </Regression.Row>
+                </Regression.Header>
+                <Regression.Body>
+                    {testBedRows.map((row, idx) => (
+                        <Regression.Row key={idx}>
+                            <Regression.Condition>size = {row.size}</Regression.Condition>
+                            <Regression.Condition>
+                                description = {row.hasDescription ? 'O' : 'X'}
+                            </Regression.Condition>
+                            <Regression.Condition>
+                                scroll = {row.hasScroll ? 'O' : 'X'}
+                            </Regression.Condition>
+                            <Regression.Render>
+                                {(container) => (
+                                    <Dialog.Root
+                                        title={props.title}
+                                        description={row.hasDescription}
+                                        action={props.action}
+                                        assistive={props.assistive}
+                                        ariaLabels={props.ariaLabels}
+                                        size={row.size}
+                                        defaultOpen
+                                        container={container ?? undefined}
+                                    >
+                                        <HStack $css={{ maxHeight: '80px' }}>
+                                            <HStack $css={{ flexDirection: 'column', gap: '$150' }}>
+                                                {Array.from(
+                                                    { length: row.hasScroll },
+                                                    (_, index) => (
+                                                        <Text key={index} typography="heading5">
+                                                            내용물입니다.
+                                                        </Text>
+                                                    ),
+                                                )}
+                                            </HStack>
+                                        </HStack>
+                                    </Dialog.Root>
+                                )}
+                            </Regression.Render>
+                        </Regression.Row>
+                    ))}
+                </Regression.Body>
+            </Regression.Root>
+        </>
+    );
+};
+
+export const TestBed: Story = {
+    render: () => <TestBedRender />,
 };
