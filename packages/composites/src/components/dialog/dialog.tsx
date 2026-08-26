@@ -75,18 +75,23 @@ export const Dialog = ({
     return (
         <DialogContext.Provider value={context}>
             <DialogPrimitives.Root
+                data-parts="dialog-root"
                 open={open}
                 defaultOpen={defaultOpen}
                 onOpenChange={onOpenChange}
                 actionsRef={mergedRef}
                 size={size}
             >
-                <slots.trigger render={trigger} />
+                <slots.trigger data-parts="dialog-trigger" render={trigger} />
 
-                <DialogPrimitives.PortalPrimitive container={container} keepMounted={keepMounted}>
-                    <DialogPrimitives.OverlayPrimitive />
+                <DialogPrimitives.PortalPrimitive
+                    data-parts="dialog-portal"
+                    container={container}
+                    keepMounted={keepMounted}
+                >
+                    <DialogPrimitives.OverlayPrimitive data-parts="dialog-overlay" />
 
-                    <DialogPrimitives.PopupPrimitive>
+                    <DialogPrimitives.PopupPrimitive data-parts="dialog-popup">
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
                         <Footer action={action} assistive={assistive} />
@@ -210,6 +215,7 @@ interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
 const Header = ({ title, description }: HeaderProps) => {
     return (
         <DialogPrimitives.Header
+            data-parts="dialog-header"
             $css={{
                 position: 'relative',
                 display: 'grid',
@@ -220,8 +226,12 @@ const Header = ({ title, description }: HeaderProps) => {
             }}
         >
             <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
-                <slots.title render={title} />
-                <slots.description render={description} $css={{ color: '$basic-gray-500' }} />
+                <slots.title data-parts="dialog-title" render={title} />
+                <slots.description
+                    data-parts="dialog-description"
+                    render={description}
+                    $css={{ color: '$basic-gray-500' }}
+                />
             </VStack>
 
             <CloseButton />
@@ -237,6 +247,7 @@ const CloseButton = () => {
 
     return (
         <DialogPrimitives.Close
+            data-parts="dialog-close"
             aria-label={closeLabel}
             render={<IconButton size="xl" colorPalette="secondary" variant="ghost" />}
             $css={{ position: 'absolute', top: '$150', right: '$150' }}
@@ -269,7 +280,7 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
     if (!children) return null;
 
     return (
-        <DialogPrimitives.Body ref={bodyRef} $css={$css} {...props}>
+        <DialogPrimitives.Body ref={bodyRef} $css={$css} data-parts="dialog-body" {...props}>
             {children}
         </DialogPrimitives.Body>
     );
@@ -284,6 +295,7 @@ const Footer = ({ action, assistive }: FooterProps) => {
 
     return (
         <DialogPrimitives.Footer
+            data-parts="dialog-footer"
             $css={{
                 display: 'grid',
                 gridTemplateAreas: '"assistive action"',
@@ -292,10 +304,15 @@ const Footer = ({ action, assistive }: FooterProps) => {
             }}
         >
             <slots.assistive
+                data-parts="dialog-assistive"
                 render={assistive}
                 $css={{ gridArea: 'assistive', justifySelf: 'flex-start' }}
             />
-            <slots.action render={action} $css={{ gridArea: 'action', justifySelf: 'flex-end' }} />
+            <slots.action
+                data-parts="dialog-action"
+                render={action}
+                $css={{ gridArea: 'action', justifySelf: 'flex-end' }}
+            />
         </DialogPrimitives.Footer>
     );
 };
