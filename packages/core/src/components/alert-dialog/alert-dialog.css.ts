@@ -42,11 +42,12 @@ export const popup = componentStyle({
     boxShadow: vars.shadow.xl,
 
     backgroundColor: vars.color.background['canvas-overlay'],
+    width: '31.25rem',
+    minWidth: 'min-content',
     maxWidth: calc.subtract('100vw', calc.multiply(SPACING, 2)),
     maxHeight: '80vh',
 
     '@supports': {
-        '(max-width: 100svw)': { maxWidth: calc.subtract('100svw', calc.multiply(SPACING, 2)) },
         '(max-height: 80svh)': { maxHeight: '80svh' },
     },
 
