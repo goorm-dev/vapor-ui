@@ -1,5 +1,3 @@
-'use client';
-
 import type { ComponentProps, ElementType, ReactElement, ReactNode } from 'react';
 import { Fragment, createElement, isValidElement } from 'react';
 
