@@ -8,7 +8,7 @@ const targetComponent =
     process.argv.find((arg) => arg.startsWith('--component='))?.split('=')[1];
 
 const filterStories = (stories) => {
-    let filtered = stories.filter((story) => story.name === 'Test Bed');
+    let filtered = stories.filter((story) => story.name.startsWith('Test Bed'));
 
     if (targetComponent) {
         filtered = filtered.filter((story) =>

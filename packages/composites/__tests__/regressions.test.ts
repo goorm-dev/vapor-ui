@@ -9,7 +9,7 @@ const targetComponent =
 
 const filterStories = (stories) => {
     let filtered = stories.filter(
-        (story) => story.name === 'Test Bed' && story.title.startsWith('Composites/'),
+        (story) => story.name.startsWith('Test Bed') && story.title.startsWith('Composites/'),
     );
 
     if (targetComponent) {
