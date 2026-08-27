@@ -226,12 +226,8 @@ const Header = ({ title, description }: HeaderProps) => {
             }}
         >
             <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
-                <slots.title data-parts="dialog-title" render={title} />
-                <slots.description
-                    data-parts="dialog-description"
-                    render={description}
-                    $css={{ color: '$basic-gray-500' }}
-                />
+                <slots.title render={title} />
+                <slots.description render={description} $css={{ color: '$fg-hint' }} />
             </VStack>
 
             <CloseButton />
