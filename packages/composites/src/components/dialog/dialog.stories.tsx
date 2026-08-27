@@ -48,7 +48,6 @@ export const Default: Story = {
                 </Dialog.Root>
 
                 <Dialog.Root
-                    open
                     trigger={<Button>Scrollable</Button>}
                     action={<Dialog.Action>확인</Dialog.Action>}
                     assistive={<Dialog.Assistive>보조</Dialog.Assistive>}
@@ -192,13 +191,11 @@ const props = {
 } as const;
 
 const dialogOverlayStripStyles = `
-.regression-cell [data-base-ui-portal] [data-parts="dialog-popup"] {
+.regression-cell [data-slots="Dialog.Popup"] {
     top: unset;
     left: unset;
     transform: unset;
     max-width: 95%;
-}
-.regression-cell [data-parts="dialog-popup"] {
     max-height: 300px
 }
 `;
@@ -266,6 +263,11 @@ const TestBedRender = () => {
     );
 };
 
-export const TestBed: Story = {
+export const TestBed_Light: Story = {
+    render: () => <TestBedRender />,
+};
+
+export const TestBed_Dark: Story = {
+    globals: { appearance: 'dark' },
     render: () => <TestBedRender />,
 };
