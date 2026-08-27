@@ -1,0 +1,132 @@
+---
+title: 'ProgressBar'
+site_name: 'ProgressBar - Vapor Core'
+description: 'ProgressBar는 시작과 끝이 있는 작업이 얼마나 진행됐는지 보여줍니다. 디스크 사용량이나 점수처럼 고정된 척도의 측정값에는 사용하지 않습니다.'
+---
+
+<Demo name="progress-bar/default-progress-bar">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/progress-bar/default-progress-bar.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### Type
+
+채워지는 구간이 전달하는 의미를 설정합니다. `default` `warning`
+
+<Demo name="progress-bar/progress-bar-type">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/progress-bar/progress-bar-type.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Size
+
+Track의 높이를 설정합니다. `sm` `md` `lg`
+
+Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
+
+<Demo name="progress-bar/progress-bar-size">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/progress-bar/progress-bar-size.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Value Text
+
+`ProgressBar.Value`는 선언한 범위를 기준으로 값을 백분율로 환산해 보여줍니다. `min`과 `max`를 바꾸면 화면에 보이는 값과 보조기기가 읽는 값이 함께 따라옵니다.
+
+`getAriaValueText`로 문구를 직접 만들면 그 문자열이 `aria-valuetext`와 화면 텍스트에 동시에 쓰입니다. 두 청중이 서로 다른 값을 듣거나 보는 일이 없습니다.
+
+<Demo name="progress-bar/progress-bar-value-text">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/progress-bar/progress-bar-value-text.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Indeterminate
+
+`value`에 `null`을 넣으면 진행률을 알 수 없는 상태가 됩니다. 30% 폭의 세그먼트가 Track을 왕복하며, `aria-valuenow`는 쓰이지 않습니다.
+
+`prefers-reduced-motion: reduce`에서는 세그먼트가 멈춰 선 채로 표시됩니다.
+
+<Demo name="progress-bar/progress-bar-indeterminate">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/progress-bar/progress-bar-indeterminate.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Examples
+
+---
+
+### Completion Announcement
+
+`ProgressBar.Status`는 포커스를 옮기지 않고 완료나 실패를 알립니다.
+
+**`ProgressBar` 안이 아니라 형제로 두세요.** `role="progressbar"` 요소의 자식은 표현용으로 취급되어, 그 안에 놓인 라이브 리전은 접근성 트리에서 빠집니다. 메시지는 한 번만 넣으세요 — 값이 바뀔 때마다 갱신되는 라이브 리전은 스크린 리더를 뒤덮습니다.
+
+<Demo name="progress-bar/progress-bar-status">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/progress-bar/progress-bar-status.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Accessibility
+
+---
+
+- `ProgressBar.Label`을 넣거나 `ProgressBar.Root`에 `aria-label` 또는 `aria-labelledby`를 주세요. 이름이 없으면 보조기기가 숫자만 읽습니다. 개발 모드에서는 이름이 없을 때 콘솔 경고가 나옵니다.
+- 실패 사유나 다음 행동 같은 설명은 `aria-describedby`로 별도 요소를 연결하세요.
+- `min`이 `max`보다 크거나 같으면 개발 모드에서 경고를 남기고 0–100으로 되돌립니다.
+- 진행 상태만으로 의미를 전달하지 마세요. `type`은 색만 바꾸므로, 무슨 일이 일어났는지는 텍스트로 함께 알려야 합니다.
+
+## Props Table
+
+---
+
+### ProgressBar.Root
+
+<ComponentPropsTable componentName="progress-bar-root" />
+
+### ProgressBar.Label
+
+<ComponentPropsTable componentName="progress-bar-label" />
+
+### ProgressBar.Value
+
+<ComponentPropsTable componentName="progress-bar-value" />
+
+### ProgressBar.Track
+
+<ComponentPropsTable componentName="progress-bar-track" />
+
+### ProgressBar.Indicator
+
+<ComponentPropsTable componentName="progress-bar-indicator" />
+
+### ProgressBar.Status
+
+<ComponentPropsTable componentName="progress-bar-status" />

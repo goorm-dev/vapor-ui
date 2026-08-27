@@ -1,0 +1,22 @@
+{
+  "name": "ProgressBarStatus",
+  "description": "Announces completion or failure without moving focus. Renders a `<span>` element.\n\nRender it as a **sibling** of `ProgressBar`, never inside it: the children of a\n`role=\"progressbar\"` element are presentational, so a live region nested in one is dropped\nfrom the accessibility tree. Put the message in only once — a live region that fires on every\ntick floods the screen reader.",
+  "props": [
+    {
+      "name": "className",
+      "type": [
+        "string | ((state: ProgressBarStatus.State) => (string | undefined))"
+      ],
+      "required": false,
+      "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+    },
+    {
+      "name": "render",
+      "type": [
+        "ReactElement | ((props: HTMLProps, state: ProgressBarStatus.State) => ReactElement)"
+      ],
+      "required": false,
+      "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+    }
+  ]
+}
