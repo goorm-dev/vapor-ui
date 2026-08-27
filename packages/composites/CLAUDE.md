@@ -41,7 +41,7 @@
 ## 6. 테스트
 
 - 유닛 테스트는 `vitest`와 `@testing-library/react`로 작성한다. 각 컴포넌트 폴더 안에 함께 두고, core와 동일한 셋업을 사용한다.
-- 시각적 회귀 테스트는 `playwright`로 Storybook의 `Test Bed` 스토리를 캡처한다. `title`이 `Composites/`로 시작하는 스토리만 대상으로 삼는다. 기준 스크린샷은 `__tests__/screenshots/`에 둔다.
+- 시각적 회귀 테스트는 `apps/storybook`에서 단일 Playwright 스위트로 실행한다. `apps/storybook/__tests__/regressions.test.ts`가 `name.startsWith('Test Bed')`인 모든 스토리를 캡처하며, 기준 스크린샷은 `apps/storybook/__tests__/screenshots/`에 있다. composites 스토리는 `title`을 `Composites/<Name>` 형태로 두면 자동으로 포함된다.
 
 ## 7. Storybook
 
