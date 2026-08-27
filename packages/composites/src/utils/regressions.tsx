@@ -23,23 +23,11 @@ const RegressionRoot = ({ children }: { children: ReactNode }) => {
 };
 
 const portalResetStyles = `
-.regression-cell {
-    position: relative;
-    display: flex;
-    justify-content: flex-start;
-    width: 100%;
-    min-width: 0;
-    min-height: 320px;
-    padding: 16px;
-    box-sizing: border-box;
-    transform: translateZ(0);
-    overflow: hidden;
-}
-.regression-cell [data-base-ui-portal] {
+.regression-cell [data-slots$=".Portal"] {
     position: static !important;
     display: contents !important;
 }
-.regression-cell [data-base-ui-portal] > [data-open][role="presentation"] {
+.regression-cell [data-slots$=".Positioner"] {
     position: static !important;
     inset: auto !important;
     top: auto !important;
@@ -166,9 +154,24 @@ const RegressionRender = ({
                 textAlign: 'left',
             }}
         >
-            <div ref={setContainer} className="regression-cell">
+            <Box
+                ref={setContainer}
+                className="regression-cell"
+                $css={{
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    width: '100%',
+                    minWidth: 0,
+                    minHeight: '320px',
+                    padding: '16px',
+                    boxSizing: 'border-box',
+                    transform: 'translateZ(0)',
+                    overflow: 'hidden',
+                }}
+            >
                 {children}
-            </div>
+            </Box>
         </Table.Cell>
     );
 };
