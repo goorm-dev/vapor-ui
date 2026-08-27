@@ -49,7 +49,7 @@
         },
         {
             "name": "locale",
-            "type": ["Intl.LocalesArgument"],
+            "type": ["ko-KR", "ja-JP", "en-US"],
             "required": false,
             "description": "값을 형식화할 때 `Intl.NumberFormat`이 사용할 로케일\n\n기본값은 사용자 런타임의 로케일입니다."
         },

@@ -22,6 +22,12 @@ const MeterTest = ({ children, ...props }: Partial<Meter.Root.Props>) => (
 describe('Meter', () => {
     afterEach(cleanup);
 
+    it('should only accept supported locales', () => {
+        expectTypeOf<Meter.Root.Props['locale']>().toEqualTypeOf<
+            'ko-KR' | 'ja-JP' | 'en-US' | undefined
+        >();
+    });
+
     it('should have no a11y violations', async () => {
         const rendered = render(<MeterTest />);
         const result = await axe(rendered.container);
