@@ -7,8 +7,10 @@ on:
         - cron: '0 7 * * 4'
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+    # Fixed group, not keyed on github.ref: every run targets the same BRANCH_NAME
+    # regardless of the ref it was dispatched from, so runs must serialize.
+    group: ${{ github.workflow }}
+    cancel-in-progress: false
 
 env:
     BRANCH_NAME: sync-figma-icons
@@ -235,7 +237,7 @@ jobs:
                       fi
 
                       # Reuse the open PR if there is one; only its body needs refreshing
-                      EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --state open --json number --jq '.[0].number // empty')
+                      EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
                       if [[ -n "$EXISTING_PR" ]]; then
                           gh pr edit "$EXISTING_PR" --body-file pr_body.txt
                       else
@@ -251,7 +253,7 @@ jobs:
                   else
                       # No changes means main already matches Figma, so an open PR left over
                       # from an earlier run is stale and must not be merged.
-                      STALE_PR=$(gh pr list --head "$BRANCH_NAME" --state open --json number --jq '.[0].number // empty')
+                      STALE_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
                       if [[ -n "$STALE_PR" ]]; then
                           gh pr close "$STALE_PR" --comment "Closing: main already matches Figma, so this sync is no longer valid."
                       fi
