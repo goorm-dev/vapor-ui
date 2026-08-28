@@ -1,7 +1,6 @@
 import type {
     ArrowFunctionExpression,
     CallExpression,
-    Expression,
     JSXElement,
     Node,
     ObjectExpression,
@@ -11,12 +10,14 @@ import type {
     VariableDeclarator,
 } from '@oxc-project/types';
 import MagicString from 'magic-string';
+import path from 'node:path';
 import type { RolldownPlugin } from 'rolldown';
 
 const SLOT_ATTR = 'data-slots';
 const PRIMITIVE_SUFFIX = 'Primitive';
 const DEFAULT_INCLUDE = /\/src\/components\/.+\.tsx$/;
-const DISPLAY_NAME_MARKER = /\.displayName\s*=\s*['"]/;
+// Filename variant has no `.displayName` marker; gate on component shape.
+const COMPONENT_MARKER = /\b(forwardRef|useRenderElement)\b/;
 const HOC_CALLEES = new Set(['forwardRef', 'memo']);
 const NESTED_SCOPE = new Set([
     'ArrowFunctionExpression',
@@ -47,25 +48,25 @@ interface Options {
 }
 
 export const dataSlots = ({ include = DEFAULT_INCLUDE }: Options = {}): RolldownPlugin => ({
-    name: 'vapor-data-slots',
+    name: 'vapor-data-slots-filename',
     transform: {
         filter: {
             id: include,
-            code: DISPLAY_NAME_MARKER,
+            code: COMPONENT_MARKER,
         },
         handler(code, id) {
+            const namespace = deriveNamespace(id);
+            if (!namespace) return null;
+
             const program = this.parse(code, { lang: 'tsx' });
-            const { displayNames, declarators } = scanTopLevel(program);
-            if (displayNames.size === 0) return null;
+            const declarators = collectDeclarators(program);
+            if (declarators.size === 0) return null;
 
             const magic = new MagicString(code);
             let touched = false;
 
             for (const [name, declarator] of declarators) {
-                const raw = displayNames.get(name);
-                if (!raw) continue;
-
-                const slot = stripPrimitiveSuffix(raw);
+                const slot = deriveSlot(namespace, name);
                 if (!slot) continue;
 
                 const fn = resolveCallback(declarator);
@@ -83,34 +84,63 @@ export const dataSlots = ({ include = DEFAULT_INCLUDE }: Options = {}): Rolldown
     },
 });
 
-/* ── Top-level scan ──────────────────────────────────────────────────────── */
+/* -----------------------------------------------------------------------------------------------*/
 
-interface Scan {
-    displayNames: Map<string, string>;
-    declarators: Map<string, VariableDeclarator>;
+/** Extract namespace from an absolute tsx path. `radio-group.tsx` → `RadioGroup`. */
+function deriveNamespace(id: string): string | null {
+    const base = path.basename(id).replace(/\.tsx$/, '');
+    return pascalize(base);
 }
 
-function scanTopLevel(program: Program): Scan {
-    const displayNames = new Map<string, string>();
-    const declarators = new Map<string, VariableDeclarator>();
+/** kebab-case → PascalCase. Handles `-` and `_` boundaries. */
+function pascalize(input: string): string | null {
+    const segments = input.split(/[-_]+/).filter(Boolean);
+    if (segments.length === 0) return null;
+    return segments.map((seg) => seg[0].toUpperCase() + seg.slice(1)).join('');
+}
 
+/** Derive slot from `namespace` and top-level variable `name`.
+ *
+ *  Convention: variable MUST start with `namespace`. `rest` is the tail after
+ *  namespace. Trailing `Primitive` is stripped from `rest`. When `rest` is
+ *  empty (standalone with variable name === namespace) the slot is just the
+ *  namespace. Otherwise `${namespace}.${rest}`.
+ *
+ *  Variables not starting with namespace are skipped — probably internal
+ *  helpers, not public parts.
+ *
+ *  Examples (namespace='Dialog'):
+ *    DialogRoot              → Dialog.Root
+ *    DialogPortalPrimitive   → Dialog.Portal
+ *    Dialog                  → Dialog
+ *    someHelper              → null (skip) */
+function deriveSlot(namespace: string, name: string): string | null {
+    if (!name.startsWith(namespace)) return null;
+
+    const rest = stripPrimitiveSuffix(name.slice(namespace.length));
+    return rest ? `${namespace}.${rest}` : namespace;
+}
+
+/** Strip trailing `Primitive` unless the string equals `Primitive`. */
+function stripPrimitiveSuffix(rest: string): string {
+    if (!rest.endsWith(PRIMITIVE_SUFFIX)) return rest;
+    if (rest === PRIMITIVE_SUFFIX) return rest;
+    return rest.slice(0, -PRIMITIVE_SUFFIX.length);
+}
+
+/* -----------------------------------------------------------------------------------------------*/
+
+function collectDeclarators(program: Program): Map<string, VariableDeclarator> {
+    const declarators = new Map<string, VariableDeclarator>();
     for (const item of program.body) {
         const stmt = unwrapExport(item as Statement);
-
-        if (stmt.type === 'ExpressionStatement') {
-            const entry = readDisplayNameAssignment(stmt.expression);
-            if (entry) displayNames.set(entry.name, entry.value);
-            continue;
-        }
-
         if (stmt.type === 'VariableDeclaration') {
             for (const decl of stmt.declarations) {
                 if (decl.id.type === 'Identifier') declarators.set(decl.id.name, decl);
             }
         }
     }
-
-    return { displayNames, declarators };
+    return declarators;
 }
 
 function unwrapExport(item: Statement): Statement {
@@ -120,19 +150,7 @@ function unwrapExport(item: Statement): Statement {
     return item;
 }
 
-function readDisplayNameAssignment(expr: Expression): { name: string; value: string } | null {
-    if (expr.type !== 'AssignmentExpression' || expr.operator !== '=') return null;
-
-    const { left, right } = expr;
-    if (left.type !== 'MemberExpression' || left.computed) return null;
-    if (left.object.type !== 'Identifier') return null;
-    if (left.property.type !== 'Identifier' || left.property.name !== 'displayName') return null;
-    if (right.type !== 'Literal' || typeof right.value !== 'string') return null;
-
-    return { name: left.object.name, value: right.value };
-}
-
-/* ── Callback resolution ─────────────────────────────────────────────────── */
+/* -----------------------------------------------------------------------------------------------*/
 
 type Callback = ArrowFunctionExpression;
 
@@ -158,7 +176,7 @@ function resolveCallback(decl: VariableDeclarator): Callback | null {
     return first && first.type === 'ArrowFunctionExpression' ? first : null;
 }
 
-/* ── Injection dispatcher ────────────────────────────────────────────────── */
+/* -----------------------------------------------------------------------------------------------*/
 
 type RefCarrier = { kind: 'jsx'; element: JSXElement } | { kind: 'render'; call: CallExpression };
 
@@ -214,14 +232,14 @@ function renderOptionsHaveRef(call: CallExpression): boolean {
     return false;
 }
 
-/* ── Injection: JSX attribute ────────────────────────────────────────────── */
+/* -----------------------------------------------------------------------------------------------*/
 
 function injectJsxAttribute(element: JSXElement, slot: string, magic: MagicString): boolean {
     magic.appendLeft(element.openingElement.name.end, ` ${SLOT_ATTR}="${slot}"`);
     return true;
 }
 
-/* ── Injection: useRenderElement props ───────────────────────────────────── */
+/* -----------------------------------------------------------------------------------------------*/
 
 function injectIntoRenderElement(call: CallExpression, slot: string, magic: MagicString): boolean {
     const arg = call.arguments[0];
@@ -238,8 +256,6 @@ function injectIntoRenderElement(call: CallExpression, slot: string, magic: Magi
         return insertAtObjectHead(value, `'${SLOT_ATTR}': '${slot}'`, magic);
     }
 
-    // Non-literal props value (identifier, call, …) — wrap so our key wins
-    // and existing props still spread through.
     magic.appendLeft(value.start, `{ '${SLOT_ATTR}': '${slot}', ...(`);
     magic.appendRight(value.end, `) }`);
     return true;
@@ -262,7 +278,7 @@ function insertAtObjectHead(obj: ObjectExpression, entry: string, magic: MagicSt
     return true;
 }
 
-/* ── Same-scope body walk ────────────────────────────────────────────────── */
+/* -----------------------------------------------------------------------------------------------*/
 
 function walkScope(root: Node, visit: (node: Node) => void): void {
     const stack: unknown[] = [root];
@@ -279,13 +295,6 @@ function walkScope(root: Node, visit: (node: Node) => void): void {
 
         visit(node);
 
-        // JSX-aware descent:
-        // - always enter openingElement (attribute expressions live there).
-        // - descend into children ONLY when this element does not itself
-        //   carry `ref`. A Provider-style wrapper (`<Provider><Root ref={ref}/>
-        //   </Provider>`) has no ref on the outer node, so we need to reach
-        //   the inner `<Root>`. A ref-carrying outer (`<Popup ref={c}><Arrow
-        //   ref={a}/></Popup>`) owns the slot; ignore its subtree.
         if (node.type === 'JSXElement') {
             const jsx = node as JSXElement;
             if (jsx.openingElement) stack.push(jsx.openingElement);
@@ -298,20 +307,4 @@ function walkScope(root: Node, visit: (node: Node) => void): void {
             stack.push((node as unknown as Record<string, unknown>)[key]);
         }
     }
-}
-
-/* ── displayName normalisation ───────────────────────────────────────────── */
-
-function stripPrimitiveSuffix(displayName: string): string {
-    if (!displayName.endsWith(PRIMITIVE_SUFFIX)) return displayName;
-
-    const segments = displayName.split('.');
-    const last = segments[segments.length - 1];
-    if (last === PRIMITIVE_SUFFIX) return displayName;
-
-    const stripped = last.slice(0, -PRIMITIVE_SUFFIX.length);
-    if (!stripped) return displayName;
-
-    segments[segments.length - 1] = stripped;
-    return segments.join('.');
 }
