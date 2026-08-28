@@ -5,7 +5,7 @@
     "description": "An open-source component library for building high-quality, accessible web applications. Features easy customization and AI-friendly components. Maintained by @goorm-dev.",
     "repository": {
         "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git"
+        "url": "git+https://github.com/goorm-dev/vapor-ui.git"
     },
     "license": "MIT",
     "author": "Vapor Team <vapor.ui@goorm.io>",

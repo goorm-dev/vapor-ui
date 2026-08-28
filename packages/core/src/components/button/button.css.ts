@@ -125,7 +125,7 @@ export const root = componentRecipe({
             },
             contrast: {
                 vars: {
-                    [variables.foreground]: vars.color.foreground.staticWhite,
+                    [variables.foreground]: vars.color.foreground.inverse,
                     [variables.outlineForeground]: vars.color.foreground['secondary'],
                     [variables.ghostForeground]: vars.color.foreground['secondary'],
                     [variables.background]: vars.color.background['contrast'],
