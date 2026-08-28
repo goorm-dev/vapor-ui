@@ -69,7 +69,7 @@ AlertDialogOverlayPrimitive.displayName = 'AlertDialog.OverlayPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * The alert dialog panel itself, centered on screen. Size is controlled by the `size` prop on `AlertDialog.Root`. Renders a `<div>` element.
+ * The alert dialog panel itself, centered on screen. Renders a `<div>` element.
  */
 export const AlertDialogPopupPrimitive = forwardRef<
     HTMLDivElement,
