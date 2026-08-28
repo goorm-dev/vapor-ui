@@ -7,7 +7,7 @@ import { vars } from '~/styles/themes.css';
 export const root = componentStyle({
     display: 'grid',
     gridTemplateColumns: 'minmax(0, 1fr) auto',
-    alignItems: 'baseline',
+    alignItems: 'center',
     rowGap: vars.size.space['100'],
     width: '100%',
 });
@@ -16,7 +16,7 @@ export const track = componentRecipe({
     base: {
         gridColumn: '1 / 3',
         borderRadius: vars.size.borderRadius['900'],
-        backgroundColor: vars.color.border['normal'],
+        backgroundColor: vars.color.background['secondary'],
         overflow: 'hidden',
     },
 
@@ -54,14 +54,14 @@ export const indicator = componentRecipe({
 export const label = componentStyle({
     gridColumn: '1',
     color: vars.color.foreground['normal'],
-    ...typographyVariants.body2,
+    ...typographyVariants.subtitle1,
 });
 
 export const value = componentStyle({
     gridColumn: '2',
     textAlign: 'end',
-    color: vars.color.foreground['normal'],
-    ...typographyVariants.heading6,
+    color: vars.color.foreground['secondary'],
+    ...typographyVariants.subtitle1,
 });
 
 export type TrackVariants = NonNullable<RecipeVariants<typeof track>>;
