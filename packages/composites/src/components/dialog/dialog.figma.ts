@@ -1,4 +1,4 @@
-// url=https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2122-28984
+// url=https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2328-28106&t=xH7e3KuAX2DRDDhM-11
 // source=src/components/dialog/dialog.tsx
 // component=Dialog
 import figma from 'figma';
@@ -34,7 +34,7 @@ const footer = getProperties(instance, '(Footer)', {
 
 export default {
     example: figma.code`
-        <Dialog
+        <Dialog.Root
             size="${size}"
             title="${header.title}"
             ${header.hasDescription ? figma.code`description="${header.description}"` : ''}
@@ -42,7 +42,7 @@ export default {
             ${footer.hasFooter && footer.hasAssistive ? figma.code`assistive={${footer.assistive}}` : ''}
         >
             ${body.children}
-        </Dialog>
+        </Dialog.Root>
     `,
     imports: ['import { Dialog } from "@vapor-ui/composites"'],
     id: 'dialog',
