@@ -2,7 +2,6 @@ import { createGlobalVar, fallbackVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
-import { foregrounds } from '~/styles/mixins/foreground.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
@@ -125,14 +124,15 @@ export const root = componentRecipe({
         colorPalette: {
             danger: {
                 backgroundColor: vars.color.background['danger'],
+                color: vars.color.foreground.staticWhite,
             },
             success: {
                 backgroundColor: vars.color.background['success'],
+                color: vars.color.foreground.staticWhite,
             },
             info: {
-                // NOTE: Intentionally kept on legacy V1 tokens (`background.contrast-200`).
-                // The V2 counterpart is under internal design review — do not migrate until finalized.
-                backgroundColor: vars.color.background['contrast-200'],
+                backgroundColor: vars.color.background['canvas-inverse'],
+                color: vars.color.foreground.inverse,
             },
         },
     },
@@ -158,14 +158,8 @@ export const content = componentStyle({
     },
 });
 
-export const title = componentStyle([
-    foregrounds({ color: 'white' }),
-    typography({ style: 'subtitle1' }),
-]);
+export const title = componentStyle([{ color: 'inherit' }, typography({ style: 'subtitle1' })]);
 
-export const description = componentStyle([
-    foregrounds({ color: 'white' }),
-    typography({ style: 'body2' }),
-]);
+export const description = componentStyle([{ color: 'inherit' }, typography({ style: 'body2' })]);
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
