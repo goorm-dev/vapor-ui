@@ -80,6 +80,7 @@ export const body = componentStyle({
 export const footer = componentStyle({
     display: 'flex',
     alignItems: 'center',
+    gap: vars.size.space[100],
     padding: vars.size.space['300'],
     width: '100%',
 });

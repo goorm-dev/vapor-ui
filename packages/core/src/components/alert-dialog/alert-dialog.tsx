@@ -3,7 +3,7 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { AlertDialog as BaseAlertDialog } from '@base-ui/react';
+import { AlertDialog as BaseAlertDialog } from '@base-ui/react/alert-dialog';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { cn } from '~/utils/cn';
@@ -20,8 +20,8 @@ import * as styles from './alert-dialog.css';
 /**
  * Root of the AlertDialog compound component. Manages open state and provides size context to sub-parts. Doesn't render its own HTML element.
  */
-export const AlertDialogRoot = ({ children, ...props }: AlertDialogRoot.Props) => {
-    return <BaseAlertDialog.Root {...props}>{children}</BaseAlertDialog.Root>;
+export const AlertDialogRoot = (props: AlertDialogRoot.Props) => {
+    return <BaseAlertDialog.Root {...props} />;
 };
 
 /* -------------------------------------------------------------------------------------------------
