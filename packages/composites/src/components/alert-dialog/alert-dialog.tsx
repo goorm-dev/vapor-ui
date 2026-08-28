@@ -131,7 +131,7 @@ export interface AlertDialogProps {
     /**
      * 다이얼로그의 역할에 대한 시각적 힌트를 전달한다.
      */
-    icon: Slots['icon'];
+    icon?: Slots['icon'];
 
     /**
      * 다이얼로그의 목적을 한 문장으로 전달한다.
@@ -141,7 +141,7 @@ export interface AlertDialogProps {
     /**
      * 결정에 필요한 부가 설명.
      */
-    description?: Slots['description'];
+    description: Slots['description'];
 
     /**
      * 다이얼로그를 여는 진입 요소.
@@ -155,14 +155,14 @@ export interface AlertDialogProps {
      * @example
      * <AlertDialog.Root cancel={<AlertDialog.Cancel>취소</Dialog.Cancel>} />
      */
-    cancel?: Slots['cancel'];
+    cancel: Slots['cancel'];
 
     /**
      * 다이얼로그의 주요 액션 요소.
      * @example
      * <AlertDialog.Root action={<AlertDialog.Action>취소</Dialog.Action>} />
      */
-    action?: Slots['action'];
+    action: Slots['action'];
 
     /**
      * 다이얼로그의 본문에 해당한다.
@@ -171,6 +171,7 @@ export interface AlertDialogProps {
 }
 
 export namespace AlertDialogRoot {
+    export type ChangeEventDetails = AlertDialogPrimitives.Root.ChangeEventDetails;
     export type Actions = AlertDialogPrimitives.Root.Actions;
     export type Props = AlertDialogProps;
 }
