@@ -18,7 +18,7 @@ import * as styles from './alert-dialog.css';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Root of the AlertDialog compound component. Manages open state and provides size context to sub-parts. Doesn't render its own HTML element.
+ * Root of the AlertDialog compound component. Manages open state. Doesn't render its own HTML element.
  */
 export const AlertDialogRoot = (props: AlertDialogRoot.Props) => {
     return <BaseAlertDialog.Root {...props} />;
