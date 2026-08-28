@@ -21,7 +21,7 @@ export const root = componentRecipe({
             paddingBlock: '0.3125rem',
             paddingInline: vars.size.space['150'],
             textAlign: 'center',
-            color: vars.color.foreground['normal-200'],
+            color: vars.color.foreground['normal'],
 
             selectors: {
                 '&[data-checked]': { vars: { [boxShadowColor]: vars.color.border.primary } },

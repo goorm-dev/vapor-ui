@@ -1,1 +1,1 @@
-export * from './dialog';
+export * as Dialog from './index.parts';

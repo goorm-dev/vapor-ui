@@ -21,7 +21,7 @@ export const trigger = componentRecipe({
             borderRadius: vars.size.borderRadius['300'],
             boxShadow: `inset 0 0 0 1px ${boxShadowColor}`,
 
-            backgroundColor: vars.color.background['overlay-100'],
+            backgroundColor: vars.color.background['canvas-overlay'],
 
             selectors: {
                 [when.invalid()]: { vars: { [boxShadowColor]: vars.color.border.danger } },
@@ -67,11 +67,11 @@ export const trigger = componentRecipe({
 
 export const value = componentRecipe({
     base: [
-        foregrounds({ color: 'normal-200' }),
+        foregrounds({ color: 'normal' }),
         {
             whiteSpace: 'nowrap',
             selectors: {
-                '&[data-placeholder]': { color: vars.color.foreground['hint-100'] },
+                '&[data-placeholder]': { color: vars.color.foreground['hint'] },
             },
         },
     ],
@@ -90,12 +90,12 @@ export const value = componentRecipe({
 /**
  * @deprecated Use `data-placeholder` attribute on `Select.Value` instead.
  */
-export const placeholder = foregrounds({ color: 'hint-100' });
+export const placeholder = foregrounds({ color: 'hint' });
 
 export const icon = componentStyle({ display: 'flex', flexShrink: 0 });
 
 export const triggerIcon = componentRecipe({
-    base: [foregrounds({ color: 'hint-100' }), icon],
+    base: [foregrounds({ color: 'hint' }), icon],
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -120,7 +120,7 @@ export const triggerIcon = componentRecipe({
     },
 });
 
-export const itemIndicator = componentStyle([foregrounds({ color: 'normal-200' }), icon]);
+export const itemIndicator = componentStyle([foregrounds({ color: 'normal' }), icon]);
 
 export const positioner = componentStyle({
     position: 'relative',
@@ -138,7 +138,7 @@ export const popup = componentStyle({
 
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background['overlay-100'],
+    backgroundColor: vars.color.background['canvas-overlay'],
     padding: vars.size.space['050'],
     minWidth: 'max(var(--anchor-width), 12.5rem)',
 
@@ -178,7 +178,7 @@ export const separator = componentStyle({
 
 export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
-    foregrounds({ color: 'hint-100' }),
+    foregrounds({ color: 'hint' }),
     {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],

@@ -39,11 +39,11 @@ export const link = componentRecipe({
             width: '100%',
 
             textWrap: 'nowrap',
-            color: vars.color.foreground['normal-100'],
+            color: vars.color.foreground['secondary'],
 
             selectors: {
                 '&[data-active]': {
-                    color: vars.color.foreground['primary-200'],
+                    color: vars.color.foreground['primary-strong'],
                 },
 
                 [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
@@ -136,7 +136,7 @@ export const popup = componentStyle({
     outline: `1px solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius[300],
     boxShadow: vars.shadow.md,
-    backgroundColor: vars.color.background['overlay-100'],
+    backgroundColor: vars.color.background['canvas-overlay'],
 
     width: 'var(--popup-width)',
     height: 'var(--popup-height)',
@@ -193,7 +193,7 @@ export const arrow = componentStyle({
     display: 'flex',
     transition: `left ${durationVar} ${easingVar}`,
 
-    color: vars.color.background['overlay-100'],
+    color: vars.color.background['canvas-overlay'],
 
     selectors: {
         '&[data-side="top"]': {

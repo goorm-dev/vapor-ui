@@ -50,6 +50,12 @@ export const icon = componentStyle({
     height: '100%',
     animation: `1.8s linear 0s infinite forwards ${rotate}`,
     strokeWidth: strokeWidth,
+
+    '@media': {
+        '(prefers-reduced-motion: reduce)': {
+            animation: 'none',
+        },
+    },
 });
 
 const running = keyframes({
@@ -69,6 +75,12 @@ export const indicator = componentRecipe({
             strokeLinecap: 'round',
             fill: 'none',
             strokeDasharray: '80 100',
+
+            '@media': {
+                '(prefers-reduced-motion: reduce)': {
+                    animation: 'none',
+                },
+            },
         },
     ],
 
@@ -79,7 +91,7 @@ export const indicator = componentRecipe({
          * @default 'primary'
          */
         colorPalette: {
-            primary: { stroke: vars.color.background['primary-200'] },
+            primary: { stroke: vars.color.background['primary'] },
             inherit: { stroke: 'currentColor' },
         },
     },

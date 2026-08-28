@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/composites",
-    "version": "0.1.0",
+    "version": "0.0.0",
     "description": "",
     "keywords": [
         "react",
@@ -15,14 +15,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "url": "git+https://github.com/goorm-dev/vapor-ui.git",
         "directory": "packages/composites"
     },
     "license": "MIT",
     "author": "Vapor Team <vapor.ui@goorm.io>",
     "sideEffects": [
-        "**/*.css",
-        "**/*.css.ts"
+        "**/*.css"
     ],
     "exports": {
         ".": {
@@ -64,17 +63,15 @@
     },
     "dependencies": {
         "@base-ui/utils": "^0.3.1",
-        "@vanilla-extract/css": "^1.20.1",
-        "@vanilla-extract/recipes": "^0.5.7",
-        "@vapor-ui/icons": "workspace:*",
+        "@vapor-ui/icons": "workspace:^",
         "clsx": "^2.1.1"
     },
     "devDependencies": {
         "@figma/code-connect": "^2.0.0",
         "@playwright/test": "^1.60.0",
-        "@repo/eslint-config": "workspace:*",
-        "@repo/rolldown-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
+        "@repo/eslint-config": "workspace:^",
+        "@repo/rolldown-config": "workspace:^",
+        "@repo/typescript-config": "workspace:^",
         "@storybook/react-vite": "9.1.20",
         "@testing-library/dom": "^10.4.1",
         "@testing-library/jest-dom": "^6.9.1",
@@ -83,9 +80,7 @@
         "@types/node": "^22.19.20",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
-        "@vanilla-extract/rollup-plugin": "^1.5.3",
-        "@vanilla-extract/vite-plugin": "^5.2.2",
-        "@vapor-ui/core": "workspace:*",
+        "@vapor-ui/core": "workspace:^",
         "@vitest/browser": "^3.2.6",
         "@vitest/coverage-v8": "^3.2.6",
         "eslint": "catalog:",

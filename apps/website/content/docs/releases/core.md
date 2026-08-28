@@ -5,6 +5,12 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
+## 1.5.1
+
+### Css
+
+- migrate V2 foundations ([#690](https://github.com/goorm-dev/vapor-ui/pull/690)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
 ## 1.5.0
 
 ### Css

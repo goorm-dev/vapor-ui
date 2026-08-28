@@ -34,6 +34,7 @@ export default defineConfig([
     // CJS Build
     bundle({
         input: inputs,
+        resolve,
         plugins: [depsExternal(), cleanLayerDeclaration()],
         output: {
             format: 'cjs',
