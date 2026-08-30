@@ -39,12 +39,12 @@ export const indicator = componentRecipe({
         borderRadius: 'inherit',
     },
 
-    defaultVariants: { variant: 'default' },
+    defaultVariants: { type: 'default' },
     variants: {
         /**
          * Color of the filled portion of the meter.
          */
-        variant: {
+        type: {
             default: { backgroundColor: vars.color.background['primary'] },
             warning: { backgroundColor: vars.color.background['warning'] },
         },

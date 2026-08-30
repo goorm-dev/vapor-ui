@@ -41,13 +41,13 @@ export const TestBed: Story = {
         <VStack $css={{ gap: '$300', maxWidth: '24rem' }}>
             {(['sm', 'md', 'lg'] as const).map((size) => (
                 <VStack key={size} $css={{ gap: '$100' }}>
-                    {(['default', 'warning'] as const).map((variant) => (
+                    {(['default', 'warning'] as const).map((type) => (
                         <MeterExample
-                            key={variant}
+                            key={type}
                             size={size}
-                            variant={variant}
+                            type={type}
                             value={42}
-                            label={`${size} / ${variant}`}
+                            label={`${size} / ${type}`}
                         />
                     ))}
                 </VStack>

@@ -39,7 +39,7 @@ const [MeterProvider, useMeterContext] = createContext<MeterContext>({
 export const MeterRoot = forwardRef<HTMLDivElement, MeterRoot.Props>((props, ref) => {
     const { className, min = 0, max = 100, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<MeterSharedProps>()(componentProps, [
-        'variant',
+        'type',
         'size',
     ]);
 
@@ -132,12 +132,12 @@ MeterTrack.displayName = 'Meter.Track';
  */
 export const MeterIndicator = forwardRef<HTMLDivElement, MeterIndicator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
-    const { variant } = useMeterContext();
+    const { type } = useMeterContext();
 
     return (
         <BaseMeter.Indicator
             ref={ref}
-            className={cn(styles.indicator({ variant }), className)}
+            className={cn(styles.indicator({ type }), className)}
             {...componentProps}
         />
     );
