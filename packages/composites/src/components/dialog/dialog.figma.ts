@@ -35,6 +35,8 @@ const footer = getProperties(instance, '(Footer)', {
 export default {
     example: figma.code`
         <Dialog.Root
+            // trigger={} 트리거 요소를 입력하세요.
+            // ariaLabels={} 접근성을 위해 필수 라벨을 지정하세요. 
             size="${size}"
             title="${header.title}"
             ${header.hasDescription ? figma.code`description="${header.description}"` : ''}
