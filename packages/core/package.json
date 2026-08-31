@@ -72,7 +72,7 @@
         "@vanilla-extract/css-utils": "^0.1.6",
         "@vanilla-extract/dynamic": "^2.1.5",
         "@vanilla-extract/recipes": "^0.5.7",
-        "@vanilla-extract/sprinkles": "^1.7.0",
+        "@vanilla-extract/sprinkles": "^1.7.1",
         "@vapor-ui/hooks": "workspace:^",
         "@vapor-ui/icons": "workspace:^",
         "clsx": "^2.1.1",
