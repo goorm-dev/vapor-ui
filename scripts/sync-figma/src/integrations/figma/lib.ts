@@ -1,7 +1,7 @@
 import type { FigmaNodeType } from '../../icons/constants.js';
 import type { FigmaNode } from './api.js';
 import { getFileNodes, getImage } from './api.js';
-import { makeFlexibleColorIcon, remakeMaskStyle, svgToIconComponent } from './transforms.js';
+import { svgToIconComponent } from './svgr.js';
 
 type IconNode = FigmaNode & { parentId: string };
 type IconNodeWithUrl = IconNode & { url: string };
@@ -69,30 +69,26 @@ const getNodesWithUrl = async ({
 };
 
 /**
- * Convert svg files from Figma to React components.
+ * Convert an svg file from Figma into a React component.
  */
-const getIconJsx = async ({
+const getIconComponent = async ({
     url,
+    iconName,
     isColorIcon,
 }: {
     url: string;
+    iconName: string;
     isColorIcon: boolean;
 }): Promise<string> => {
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error(`Failed to fetch SVG: ${response.status} ${response.statusText}`);
     }
-    const svgDom = await response.text();
-    const IconComponent = svgToIconComponent(svgDom);
-    const NewIconComponent = remakeMaskStyle(IconComponent);
+    const svg = await response.text();
 
-    if (isColorIcon) {
-        return NewIconComponent;
-    } else {
-        return makeFlexibleColorIcon(NewIconComponent);
-    }
+    return svgToIconComponent({ svg, iconName, isColorIcon });
 };
 
 export type { IconNode, IconNodeWithUrl };
 
-export { filterDocumentByNodeType, getNodesWithUrl, getIconJsx };
+export { filterDocumentByNodeType, getNodesWithUrl, getIconComponent };

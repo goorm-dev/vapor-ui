@@ -28,12 +28,11 @@ import {
 } from '../src/icons/constants.js';
 import { ICON_TYPES } from '../src/icons/icon-types.js';
 import getIconComponentIndex from '../src/icons/templates/icon/icon-component-index.js';
-import getIconComponent from '../src/icons/templates/icon/icon-component.js';
 import getIconsIndex from '../src/icons/templates/icon/icons-index.js';
 import type { IconNode } from '../src/integrations/figma/lib.js';
 import {
     filterDocumentByNodeType,
-    getIconJsx,
+    getIconComponent,
     getNodesWithUrl,
 } from '../src/integrations/figma/lib.js';
 
@@ -48,12 +47,11 @@ function findRoot(dir: string): string {
 }
 const CURRENT_DIRECTORY = findRoot(path.dirname(fileURLToPath(import.meta.url)));
 const FIGMA_EMOJI_PREFIX_PATTERN = /❤️\s*/g;
+// Resolve the repo's prettier config so generated files match what `pnpm format` produces,
+// plugins (import sorting) included.
 const PRETTIER_OPTIONS = {
+    ...(await prettier.resolveConfig(path.join(CURRENT_DIRECTORY, 'packages/icons/src/index.ts'))),
     parser: 'typescript',
-    tabWidth: 4,
-    semi: true,
-    singleQuote: true,
-    printWidth: 100,
 };
 
 function normalizeIconName(name: string) {
@@ -142,8 +140,7 @@ try {
                 parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_NODE_ID) ||
                 parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_COUNTRY_NODE_ID);
 
-            const iconJsx = await getIconJsx({ url, isColorIcon });
-            const IconComponent = getIconComponent(iconName, iconJsx);
+            const IconComponent = await getIconComponent({ url, iconName, isColorIcon });
             const formattedComponent = await prettier.format(IconComponent, PRETTIER_OPTIONS);
 
             let shouldWrite = isNewIcon;
