@@ -219,6 +219,7 @@ const backgroundColorTokens = {
     'bg-canvas-raised': colors.background['canvas-raised'],
     'bg-canvas-dim': colors.background['canvas-dim'],
     'bg-canvas-overlay': colors.background['canvas-overlay'],
+    'bg-canvas-inverse': colors.background['canvas-inverse'],
 };
 
 const colorTokens = {
