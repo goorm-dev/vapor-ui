@@ -120,7 +120,6 @@ export { default as DocumentViewerIcon } from './DocumentViewerIcon';
 export { default as IntelliSensePropertyIcon } from './IntelliSensePropertyIcon';
 export { default as MarkModeIcon } from './MarkModeIcon';
 export { default as GuestIcon } from './GuestIcon';
-export { default as ProgrammingIcon } from './ProgrammingIcon';
 export { default as DebugContinueIcon } from './DebugContinueIcon';
 export { default as DebugIcon } from './DebugIcon';
 export { default as PortforwardingIcon } from './PortforwardingIcon';
@@ -431,7 +430,6 @@ export { default as TerminalWindowOutlineIcon } from './TerminalWindowOutlineIco
 export { default as IntelliSenseReferenceOutlineIcon } from './IntelliSenseReferenceOutlineIcon';
 export { default as IntelliSensePropertyOutlineIcon } from './IntelliSensePropertyOutlineIcon';
 export { default as MarkModeOutlineIcon } from './MarkModeOutlineIcon';
-export { default as ProgrammingOutlineIcon } from './ProgrammingOutlineIcon';
 export { default as GiftOutlineIcon } from './GiftOutlineIcon';
 export { default as SyllabusOutlineIcon } from './SyllabusOutlineIcon';
 export { default as SpinnerOutlineIcon } from './SpinnerOutlineIcon';
