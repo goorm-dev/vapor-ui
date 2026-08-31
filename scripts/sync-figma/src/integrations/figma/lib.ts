@@ -1,7 +1,7 @@
-import type { FigmaNodeType } from '../../icons/constants.js';
-import type { FigmaNode } from './api.js';
-import { getFileNodes, getImage } from './api.js';
-import { makeFlexibleColorIcon, remakeMaskStyle, svgToIconComponent } from './transforms.js';
+import type { FigmaNodeType } from '~/icons/constants';
+import type { FigmaNode } from './api';
+import { getFileNodes, getImage } from './api';
+import { makeFlexibleColorIcon, remakeMaskStyle, svgToIconComponent } from './transforms';
 
 type IconNode = FigmaNode & { parentId: string };
 type IconNodeWithUrl = IconNode & { url: string };

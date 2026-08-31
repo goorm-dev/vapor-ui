@@ -25,17 +25,17 @@ import {
     FIGMA_ICONS_SYMBOL_COLOR_COUNTRY_NODE_ID,
     FIGMA_ICONS_SYMBOL_COLOR_NODE_ID,
     FIGMA_NODE_TYPES,
-} from '../src/icons/constants.js';
-import { ICON_TYPES } from '../src/icons/icon-types.js';
-import getIconComponentIndex from '../src/icons/templates/icon/icon-component-index.js';
-import getIconComponent from '../src/icons/templates/icon/icon-component.js';
-import getIconsIndex from '../src/icons/templates/icon/icons-index.js';
-import type { IconNode } from '../src/integrations/figma/lib.js';
+} from '~/icons/constants';
+import { ICON_TYPES } from '~/icons/icon-types';
+import getIconComponentIndex from '~/icons/templates/icon/icon-component-index';
+import getIconComponent from '~/icons/templates/icon/icon-component';
+import getIconsIndex from '~/icons/templates/icon/icons-index';
+import type { IconNode } from '~/integrations/figma/lib';
 import {
     filterDocumentByNodeType,
     getIconJsx,
     getNodesWithUrl,
-} from '../src/integrations/figma/lib.js';
+} from '~/integrations/figma/lib';
 
 const TYPE = process.env.TYPE;
 

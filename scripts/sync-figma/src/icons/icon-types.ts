@@ -1,4 +1,4 @@
-import { FIGMA_ICONS_BASIC_NODE_IDS, FIGMA_ICONS_SYMBOL_NODE_IDS } from './constants.js';
+import { FIGMA_ICONS_BASIC_NODE_IDS, FIGMA_ICONS_SYMBOL_NODE_IDS } from './constants';
 
 /**
  * Script information by npm script

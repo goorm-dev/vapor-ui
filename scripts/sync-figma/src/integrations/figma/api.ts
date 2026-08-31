@@ -1,6 +1,6 @@
 import process from 'node:process';
 
-import type { FigmaNodeType } from '../../icons/constants.js';
+import type { FigmaNodeType } from '~/icons/constants';
 
 const headers = {
     'X-FIGMA-TOKEN': process.env.FIGMA_TOKEN ?? '',
