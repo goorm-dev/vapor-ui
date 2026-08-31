@@ -15,7 +15,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "url": "git+https://github.com/goorm-dev/vapor-ui.git",
         "directory": "packages/core"
     },
     "license": "MIT",
@@ -24,6 +24,7 @@
         "**/*.css",
         "**/*.css.ts"
     ],
+    "type": "module",
     "exports": {
         ".": {
             "import": {
@@ -72,20 +73,21 @@
         "@vanilla-extract/dynamic": "^2.1.5",
         "@vanilla-extract/recipes": "^0.5.7",
         "@vanilla-extract/sprinkles": "^1.7.0",
-        "@vapor-ui/hooks": "workspace:*",
-        "@vapor-ui/icons": "workspace:*",
+        "@vapor-ui/hooks": "workspace:^",
+        "@vapor-ui/icons": "workspace:^",
         "clsx": "^2.1.1",
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {
         "@playwright/test": "^1.62.1",
         "@repo/eslint-config": "workspace:*",
+        "@repo/rolldown-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@storybook/react-vite": "9.1.20",
         "@testing-library/dom": "^10.4.1",
         "@testing-library/jest-dom": "^6.9.1",
-        "@testing-library/react": "^16.3.2",
-        "@testing-library/user-event": "^14.6.5",
+        "@testing-library/react": "^16.3.3",
+        "@testing-library/user-event": "^14.6.6",
         "@types/node": "^22.20.1",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
@@ -110,6 +112,9 @@
     "peerDependencies": {
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
         "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    },
+    "engines": {
+        "node": ">=20"
     },
     "publishConfig": {
         "access": "public"

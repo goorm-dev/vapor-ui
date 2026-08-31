@@ -31,7 +31,7 @@ export const Spinner = forwardRef<HTMLSpanElement, Spinner.Props>((props, ref) =
             'aria-label': 'Loading',
             className: clsx(styles.root({ size }), className),
             children: (
-                <svg className={styles.icon}>
+                <svg aria-hidden className={styles.icon}>
                     <circle pathLength="100" className={styles.indicator({ colorPalette })} />
                 </svg>
             ),
