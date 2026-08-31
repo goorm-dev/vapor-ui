@@ -17,10 +17,10 @@
             "defaultValue": "md"
         },
         {
-            "name": "variant",
+            "name": "type",
             "type": ["default", "warning"],
             "required": false,
-            "description": "채워진 영역의 색상",
+            "description": "채워진 영역의 색상. 색만으로 상태를 알리지 않도록 레이블 문구에도 함께 적어 주세요.",
             "defaultValue": "default"
         },
         {

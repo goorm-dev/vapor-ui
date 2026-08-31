@@ -2,6 +2,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
 import { Meter } from '.';
+import * as styles from './meter.css';
 
 const LABEL_TEXT = 'Storage used';
 
@@ -66,6 +67,127 @@ describe('Meter', () => {
 
         render(<MeterTest value={4.2} format={{ style: 'unit', unit: 'gigabyte' }} />);
         expect(screen.getByRole('meter')).toHaveAttribute('aria-valuetext', '4.2 GB');
+    });
+
+    it('should let `getAriaValueText` replace the generated value text', () => {
+        render(
+            <MeterTest
+                value={4.2}
+                max={20}
+                format={{ style: 'unit', unit: 'gigabyte' }}
+                getAriaValueText={(formatted, value) => `${formatted} of 20 GB (${value})`}
+            />,
+        );
+
+        expect(screen.getByRole('meter')).toHaveAttribute(
+            'aria-valuetext',
+            '4.2 GB of 20 GB (4.2)',
+        );
+    });
+
+    it('should let `aria-valuetext` override the generated value text', () => {
+        render(<MeterTest value={42} aria-valuetext="42GB used out of 100GB" />);
+
+        expect(screen.getByRole('meter')).toHaveAttribute(
+            'aria-valuetext',
+            '42GB used out of 100GB',
+        );
+    });
+
+    it('should format the value with the given `locale`', () => {
+        render(
+            <MeterTest value={4.2} locale="ko-KR" format={{ style: 'unit', unit: 'gigabyte' }} />,
+        );
+
+        expect(screen.getByRole('meter')).toHaveAttribute('aria-valuetext', '4.2GB');
+    });
+
+    it('should hide the value text from assistive technology', () => {
+        render(<MeterTest value={42} />);
+
+        expect(screen.getByText('42%')).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    it('should not set `aria-labelledby` when no label is rendered', () => {
+        render(
+            <MeterTest aria-label={LABEL_TEXT}>
+                <Meter.Track>
+                    <Meter.Indicator />
+                </Meter.Track>
+            </MeterTest>,
+        );
+
+        expect(screen.getByRole('meter')).not.toHaveAttribute('aria-labelledby');
+    });
+
+    it('should point `aria-labelledby` at the rendered label', () => {
+        const { container } = render(<MeterTest />);
+        const labelledBy = screen.getByRole('meter').getAttribute('aria-labelledby');
+
+        expect(labelledBy).toBeTruthy();
+        expect(container.querySelector(`#${labelledBy}`)).toHaveTextContent(LABEL_TEXT);
+    });
+
+    it('should give each instance its own label id', () => {
+        const { container } = render(
+            <>
+                <MeterTest />
+                <MeterTest />
+                <MeterTest />
+            </>,
+        );
+
+        const ids = screen
+            .getAllByRole('meter')
+            .map((meter) => meter.getAttribute('aria-labelledby'));
+
+        expect(new Set(ids).size).toBe(ids.length);
+        ids.forEach((id) => {
+            expect(container.querySelector(`#${id}`)).toBeInTheDocument();
+        });
+    });
+
+    it('should use `aria-label` as the accessible name', () => {
+        render(
+            <MeterTest aria-label="Disk usage">
+                <Meter.Track>
+                    <Meter.Indicator />
+                </Meter.Track>
+            </MeterTest>,
+        );
+
+        expect(screen.getByRole('meter')).toHaveAccessibleName('Disk usage');
+    });
+
+    it('should use `aria-labelledby` as the accessible name', () => {
+        render(
+            <>
+                <h2 id="external-heading">Disk usage</h2>
+                <MeterTest aria-labelledby="external-heading">
+                    <Meter.Track>
+                        <Meter.Indicator />
+                    </Meter.Track>
+                </MeterTest>
+            </>,
+        );
+
+        expect(screen.getByRole('meter')).toHaveAccessibleName('Disk usage');
+    });
+
+    it('should apply `size` to the track and `type` to the indicator', () => {
+        render(
+            <MeterTest size="lg" type="warning" aria-label={LABEL_TEXT}>
+                <Meter.Track data-testid="track">
+                    <Meter.Indicator data-testid="indicator" />
+                </Meter.Track>
+            </MeterTest>,
+        );
+
+        expect(screen.getByTestId('track')).toHaveClass(styles.track({ size: 'lg' }));
+        expect(screen.getByTestId('indicator')).toHaveClass(styles.indicator({ type: 'warning' }));
+        expect(screen.getByTestId('indicator')).not.toHaveClass(
+            styles.indicator({ type: 'default' }),
+        );
     });
 
     describe('development warnings', () => {
