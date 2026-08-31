@@ -1,5 +1,4 @@
 {
-    "$schema": "https://raw.githubusercontent.com/figma/code-connect/main/schemas/figma.config.schema.json",
     "codeConnect": {
         "parser": "react",
         "language": "typescript",
