@@ -12,22 +12,22 @@ const instance = figma.selectedInstance;
 const size = instance.getEnum('size', { md: 'md', lg: 'lg', xl: 'xl' });
 
 const header = getProperties(instance, '(Header)', {
-    title: { kind: 'string', name: 'Title' },
-    description: { kind: 'string', name: 'Description' },
-    hasDescription: { kind: 'boolean', name: '(Has description)' },
+    title: { kind: 'string', name: 'title' },
+    description: { kind: 'string', name: 'description' },
+    hasDescription: { kind: 'boolean', name: '(has description)' },
 });
 
 const body = getProperties(instance, '(Body)', {
-    children: { kind: 'slot', name: '(Content)' },
+    children: { kind: 'slot', name: '(content)' },
 });
 
 const footer = getProperties(instance, '(Footer)', {
     hasFooter: {
         kind: 'enum',
-        name: '(Has footer)',
+        name: '(has footer)',
         options: { true: true, false: false },
     },
-    hasAssistive: { kind: 'boolean', name: '(Has assistive)' },
+    hasAssistive: { kind: 'boolean', name: '(has assistive)' },
     action: { kind: 'instance', name: 'Action' },
     assistive: { kind: 'instance', name: 'Assistive' },
 });
