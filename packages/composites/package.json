@@ -68,7 +68,7 @@
     },
     "devDependencies": {
         "@figma/code-connect": "^2.0.0",
-        "@playwright/test": "^1.60.0",
+        "@playwright/test": "^1.62.1",
         "@repo/eslint-config": "workspace:^",
         "@repo/rolldown-config": "workspace:^",
         "@repo/typescript-config": "workspace:^",
