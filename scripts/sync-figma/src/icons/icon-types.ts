@@ -3,7 +3,13 @@ import { FIGMA_ICONS_BASIC_NODE_IDS, FIGMA_ICONS_SYMBOL_NODE_IDS } from './const
 /**
  * Script information by npm script
  */
-const ICON_TYPES = {
+type IconType = {
+    id: string;
+    nodeIds: string[];
+    targetPath: string;
+};
+
+const ICON_TYPES: Record<string, IconType> = {
     basic: {
         id: 'basic',
         nodeIds: FIGMA_ICONS_BASIC_NODE_IDS,
@@ -15,5 +21,7 @@ const ICON_TYPES = {
         targetPath: 'packages/icons/src/components/symbol-icons',
     },
 };
+
+export type { IconType };
 
 export { ICON_TYPES };

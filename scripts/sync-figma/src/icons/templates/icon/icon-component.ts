@@ -1,4 +1,4 @@
-export default (IconName, Icon) => `
+export default (IconName: string, Icon: string) => `
 
 import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';

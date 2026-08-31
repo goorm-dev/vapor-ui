@@ -1,0 +1,10 @@
+{
+    "extends": "@repo/typescript-config/base",
+    "compilerOptions": {
+        "noEmit": true,
+        "target": "ES2023",
+        "lib": ["ES2023"],
+        "types": ["node"]
+    },
+    "include": ["commands", "src"]
+}

@@ -1,23 +1,38 @@
+import type { FigmaNodeType } from '../../icons/constants.js';
+import type { FigmaNode } from './api.js';
 import { getFileNodes, getImage } from './api.js';
 import { makeFlexibleColorIcon, remakeMaskStyle, svgToIconComponent } from './transforms.js';
+
+type IconNode = FigmaNode & { parentId: string };
+type IconNodeWithUrl = IconNode & { url: string };
 
 /**
  * Filter documents from Figma by specific Node Type.
  */
-const filterDocumentByNodeType = async ({ nodeType, fileKey, nodeIds, depth }) => {
+const filterDocumentByNodeType = async ({
+    nodeType,
+    fileKey,
+    nodeIds,
+    depth,
+}: {
+    nodeType: FigmaNodeType;
+    fileKey: string;
+    nodeIds: string;
+    depth?: number;
+}): Promise<IconNode[]> => {
     const { nodes } = await getFileNodes({
         fileKey,
         nodeIds,
         depth,
     });
-    const childrenNodes = [];
+    const childrenNodes: IconNode[] = [];
 
     for (const key in nodes) {
-        if (nodes.hasOwnProperty(key)) {
+        if (Object.hasOwn(nodes, key)) {
             const parent = nodes[key].document;
             const parentId = parent.id;
 
-            parent.children.forEach((child) => {
+            parent.children?.forEach((child) => {
                 childrenNodes.push({
                     ...child,
                     parentId: parentId,
@@ -33,7 +48,13 @@ const filterDocumentByNodeType = async ({ nodeType, fileKey, nodeIds, depth }) =
 /**
  * Get image URLs through the IDs of nodes received from Figma.
  */
-const getNodesWithUrl = async ({ nodes, fileKey }) => {
+const getNodesWithUrl = async ({
+    nodes,
+    fileKey,
+}: {
+    nodes: IconNode[];
+    fileKey: string;
+}): Promise<IconNodeWithUrl[]> => {
     const nodeIds = nodes.map((node) => node.id).join(',');
     const { images } = await getImage({
         fileKey,
@@ -50,7 +71,13 @@ const getNodesWithUrl = async ({ nodes, fileKey }) => {
 /**
  * Convert svg files from Figma to React components.
  */
-const getIconJsx = async ({ url, isColorIcon }) => {
+const getIconJsx = async ({
+    url,
+    isColorIcon,
+}: {
+    url: string;
+    isColorIcon: boolean;
+}): Promise<string> => {
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error(`Failed to fetch SVG: ${response.status} ${response.statusText}`);
@@ -65,5 +92,7 @@ const getIconJsx = async ({ url, isColorIcon }) => {
         return makeFlexibleColorIcon(NewIconComponent);
     }
 };
+
+export type { IconNode, IconNodeWithUrl };
 
 export { filterDocumentByNodeType, getNodesWithUrl, getIconJsx };

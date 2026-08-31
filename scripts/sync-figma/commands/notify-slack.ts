@@ -72,6 +72,6 @@ try {
     await sendWebhookMessage(SLACK_GDS_ALARM_WEBHOOK_URL, message);
     console.log('✅ Slack 알림이 성공적으로 전송되었습니다.');
 } catch (error) {
-    console.error('❌ Slack 알림 전송 중 오류 발생:', error.message);
+    console.error('❌ Slack 알림 전송 중 오류 발생:', error);
     process.exit(1);
 }

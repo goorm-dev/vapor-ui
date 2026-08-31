@@ -2,13 +2,12 @@
  * Sync icons from Figma to local React components
  *
  * Usage:
- *   node --env-file=.env ./commands/sync-icons.mjs
+ *   tsx --env-file=.env ./commands/sync-icons.ts
  *
  * Environment variables required:
  *   - FIGMA_TOKEN: Your Figma personal access token
  *   - TYPE: Icon type to sync ('basic' or 'symbol')
  *
- * Note: Node 20.6+ required for --env-file flag
  */
 import { camelCase, startCase } from 'lodash-es';
 import { createHash } from 'node:crypto';
@@ -31,6 +30,7 @@ import { ICON_TYPES } from '../src/icons/icon-types.js';
 import getIconComponentIndex from '../src/icons/templates/icon/icon-component-index.js';
 import getIconComponent from '../src/icons/templates/icon/icon-component.js';
 import getIconsIndex from '../src/icons/templates/icon/icons-index.js';
+import type { IconNode } from '../src/integrations/figma/lib.js';
 import {
     filterDocumentByNodeType,
     getIconJsx,
@@ -39,7 +39,7 @@ import {
 
 const TYPE = process.env.TYPE;
 
-function findRoot(dir) {
+function findRoot(dir: string): string {
     if (existsSync(path.join(dir, 'pnpm-workspace.yaml'))) return dir;
     const parent = path.dirname(dir);
     if (parent === dir)
@@ -56,7 +56,7 @@ const PRETTIER_OPTIONS = {
     printWidth: 100,
 };
 
-function normalizeIconName(name) {
+function normalizeIconName(name: string) {
     return startCase(camelCase(name.replace(FIGMA_EMOJI_PREFIX_PATTERN, ''))).replace(/ /g, '');
 }
 
@@ -67,31 +67,30 @@ if (!process.env.FIGMA_TOKEN) {
     process.exit(1);
 }
 
+if (!TYPE || !(TYPE in ICON_TYPES)) {
+    console.error(
+        pc.red(
+            ` GDS FIGMA EXPORT ERROR: TYPE must be one of ${Object.keys(ICON_TYPES).join(', ')}.`,
+        ),
+    );
+    process.exit(1);
+}
+
 try {
     const { nodeIds, targetPath } = ICON_TYPES[TYPE];
-    let FILE_KEY = FIGMA_ICONS_FILE_KEY;
+    const FILE_KEY = FIGMA_ICONS_FILE_KEY;
 
     // Get nodes (icons) set as COMPONENT in the file.
-    let components = [];
-    if (TYPE === 'basic' || TYPE === 'symbol') {
-        FILE_KEY = FIGMA_ICONS_FILE_KEY;
-        // Basic icons are composed of 2 frames, so nodeIds are in array form
-        for (const nodeId of nodeIds) {
-            const nodeComponents = await filterDocumentByNodeType({
-                nodeType: FIGMA_NODE_TYPES.Component,
-                fileKey: FILE_KEY,
-                nodeIds: nodeId,
-                depth: 1,
-            });
-            components = components.concat(nodeComponents);
-        }
-    } else {
-        components = await filterDocumentByNodeType({
+    // Each icon type spans several frames, so nodeIds are fetched one frame at a time.
+    let components: IconNode[] = [];
+    for (const nodeId of nodeIds) {
+        const nodeComponents = await filterDocumentByNodeType({
             nodeType: FIGMA_NODE_TYPES.Component,
             fileKey: FILE_KEY,
-            nodeIds,
+            nodeIds: nodeId,
             depth: 1,
         });
+        components = components.concat(nodeComponents);
     }
 
     const componentsInfo = {
@@ -121,10 +120,10 @@ try {
     // Convert svg code to React components through image URLs and save locally.
     console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `Converting to React components...`);
     const parentIconPath = path.join(CURRENT_DIRECTORY, targetPath);
-    const newIconNameArr = [];
-    const updatedIconNameArr = [];
+    const newIconNameArr: string[] = [];
+    const updatedIconNameArr: string[] = [];
     const limit = pLimit(10);
-    const md5 = (str) => createHash('md5').update(str).digest('hex');
+    const md5 = (str: string) => createHash('md5').update(str).digest('hex');
 
     const promiseCreateIcons = componentsWithUrl.map(({ name, url, parentId }) =>
         limit(async () => {
@@ -153,7 +152,7 @@ try {
                 await fs.mkdir(saveTargetPath, { recursive: true });
                 newIconNameArr.push(iconName);
             } else {
-                let existingContent = null;
+                let existingContent: string | null = null;
                 try {
                     existingContent = await fs.readFile(iconFilePath, 'utf8');
                 } catch {
@@ -184,7 +183,7 @@ try {
 
     // Detect and remove deleted icons
     console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `Checking for deleted icons...`);
-    const deletedIconNameArr = [];
+    const deletedIconNameArr: string[] = [];
     const figmaIconNames = new Set(componentsInfo.nameArr);
 
     // Get existing icon directories
