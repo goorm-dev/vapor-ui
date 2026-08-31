@@ -6,6 +6,31 @@ import { mergeConfig } from 'vite';
 
 const require = createRequire(import.meta.url);
 
+const CORE_SRC = path.resolve(__dirname, '../../../packages/core/src');
+const COMPOSITES_SRC = path.resolve(__dirname, '../../../packages/composites/src');
+
+const PACKAGE_SRC_MAP: { match: string; src: string }[] = [
+    { match: `/packages/composites/`, src: COMPOSITES_SRC },
+    { match: `/packages/core/`, src: CORE_SRC },
+];
+
+const tildeAlias = {
+    find: /^~\//,
+    replacement: '',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async customResolver(this: any, source: string, importer?: string) {
+        if (!importer) return null;
+
+        const owner = PACKAGE_SRC_MAP.find(({ match }) => importer.includes(match));
+        if (!owner) return null;
+
+        const target = path.resolve(owner.src, source);
+        const resolved = await this.resolve(target, importer, { skipSelf: true });
+
+        return resolved?.id ?? target;
+    },
+};
+
 const config: StorybookConfig = {
     stories: ['../../../packages/**!(node_modules|dist)/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
     addons: [getAbsolutePath('@storybook/addon-docs')],
@@ -30,12 +55,11 @@ const config: StorybookConfig = {
             ...config,
             resolve: {
                 ...config.resolve,
-                alias: {
-                    ...config.resolve?.alias,
-                    // ...convertTsConfigPathsToWebpackAliases(),
-                    '~': path.resolve(__dirname, '../../../packages/core/src'),
-                    '@vapor-ui/core': path.resolve(__dirname, '../../../packages/core/src'),
-                },
+                alias: [
+                    tildeAlias,
+                    { find: '@vapor-ui/core', replacement: CORE_SRC },
+                    { find: '@vapor-ui/composites', replacement: COMPOSITES_SRC },
+                ],
             },
 
             plugins: [
