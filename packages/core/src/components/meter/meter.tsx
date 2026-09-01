@@ -186,10 +186,7 @@ MeterValue.displayName = 'Meter.Value';
 
 export namespace MeterRoot {
     export type State = BaseMeter.Root.State;
-    export type Props = Omit<VaporUIComponentProps<typeof BaseMeter.Root, State>, 'locale'> &
-        MeterSharedProps & {
-            locale?: 'ko-KR' | 'ja-JP' | 'en-US';
-        };
+    export type Props = VaporUIComponentProps<typeof BaseMeter.Root, State> & MeterSharedProps;
 }
 
 export namespace MeterLabel {

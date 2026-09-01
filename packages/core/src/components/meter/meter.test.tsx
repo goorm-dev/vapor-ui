@@ -21,10 +21,15 @@ const MeterTest = ({ children, ...props }: Partial<Meter.Root.Props>) => (
 describe('Meter', () => {
     afterEach(cleanup);
 
-    it('should only accept supported locales', () => {
+    it('should keep the value-text path open on the root', () => {
         expectTypeOf<Meter.Root.Props['locale']>().toEqualTypeOf<
-            'ko-KR' | 'ja-JP' | 'en-US' | undefined
+            Intl.LocalesArgument | undefined
         >();
+        expectTypeOf<Meter.Root.Props['format']>().toEqualTypeOf<
+            Intl.NumberFormatOptions | undefined
+        >();
+        expectTypeOf<Meter.Root.Props>().toHaveProperty('getAriaValueText');
+        expectTypeOf<Meter.Root.Props>().toHaveProperty('aria-valuetext');
     });
 
     it('should have no a11y violations', async () => {

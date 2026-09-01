@@ -5,64 +5,87 @@
     "props": [
         {
             "name": "value",
-            "type": ["number"],
+            "type": [
+                "number"
+            ],
             "required": true,
             "description": "미터의 현재 값"
         },
         {
             "name": "size",
-            "type": ["sm", "md", "lg"],
+            "type": [
+                "sm",
+                "md",
+                "lg"
+            ],
             "required": false,
             "description": "미터의 크기. 트랙의 높이를 결정합니다.",
             "defaultValue": "md"
         },
         {
             "name": "type",
-            "type": ["default", "warning"],
+            "type": [
+                "default",
+                "warning"
+            ],
             "required": false,
             "description": "채워진 영역의 색상. 색만으로 상태를 알리지 않도록 레이블 문구에도 함께 적어 주세요.",
             "defaultValue": "default"
         },
         {
             "name": "className",
-            "type": ["string | ((state: Meter.Root.State) => (string | undefined))"],
+            "type": [
+                "string | ((state: Meter.Root.State) => (string | undefined))"
+            ],
             "required": false,
             "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "aria-valuetext",
-            "type": ["string"],
+            "type": [
+                "string"
+            ],
             "required": false,
             "description": "현재 값을 대신해 보조기술에 전달할 텍스트. 값에 따라 달라지는 텍스트가 필요하면 `getAriaValueText`를 사용하세요."
         },
         {
             "name": "format",
-            "type": ["Intl.NumberFormatOptions"],
+            "type": [
+                "Intl.NumberFormatOptions"
+            ],
             "required": false,
             "description": "값의 표시 형식을 지정하는 옵션"
         },
         {
             "name": "getAriaValueText",
-            "type": ["(formattedValue: string, value: number) => string"],
+            "type": [
+                "(formattedValue: string, value: number) => string"
+            ],
             "required": false,
             "description": "`aria-valuenow`(미터의 현재 값)를 대신할, 사람이 읽을 수 있는 텍스트를 반환하는 함수"
         },
         {
             "name": "locale",
-            "type": ["ko-KR", "ja-JP", "en-US"],
+            "type": [
+                "Intl.LocalesArgument"
+            ],
             "required": false,
             "description": "값을 형식화할 때 `Intl.NumberFormat`이 사용할 로케일\n\n기본값은 사용자 런타임의 로케일입니다."
         },
         {
             "name": "max",
-            "type": ["number"],
+            "type": [
+                "number"
+            ],
             "required": false,
             "description": "미터의 최대값",
             "defaultValue": "100"
         },
         {
             "name": "min",
-            "type": ["number"],
+            "type": [
+                "number"
+            ],
             "required": false,
             "description": "미터의 최소값",
             "defaultValue": "0"
