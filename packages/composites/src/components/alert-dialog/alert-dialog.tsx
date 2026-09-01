@@ -178,32 +178,17 @@ export namespace AlertDialogRoot {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const DEFAULT_ICON: Record<AlertDialogRoot.Props['type'], string> = {
-    critical: 'https://statics.goorm.io/gds/resources/images/light/error_warning.svg',
-    confirm: 'https://statics.goorm.io/gds/resources/images/light/info.svg',
-};
-
 interface BodyProps extends Pick<
     AlertDialogRoot.Props,
     'icon' | 'title' | 'description' | 'children'
 > {}
 
 const Body = ({ title, description, children }: BodyProps) => {
-    const { type } = useAlertDialogContext();
-    const icon = DEFAULT_ICON[type];
-
     return (
-        <AlertDialogPrimitives.Body render={<VStack />} $css={{ gap: '$250' }}>
-            <VStack $css={{ gap: '$150', alignItems: 'center' }}>
-                <slots.icon
-                    render={<img src={icon} alt="" />}
-                    $css={{ width: '80px', height: '60px' }}
-                />
-
-                <VStack $css={{ gap: '$050', alignItems: 'center' }}>
-                    <slots.title render={title} $css={{ textAlign: 'center' }} />
-                    <slots.description render={description} $css={{ textAlign: 'center' }} />
-                </VStack>
+        <AlertDialogPrimitives.Body render={<VStack />} $css={{ gap: '$200' }}>
+            <VStack $css={{ gap: '$075' }}>
+                <slots.title render={title} />
+                <slots.description render={description} />
             </VStack>
 
             {children}
