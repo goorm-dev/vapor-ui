@@ -1,7 +1,8 @@
-import type { FigmaNodeType } from '../../icons/constants.js';
-import type { FigmaNode } from './api.js';
-import { getFileNodes, getImage } from './api.js';
-import { svgToIconComponent } from './svgr.js';
+import type { FigmaNodeType } from '~/icons/constants';
+
+import type { FigmaNode } from './api';
+import { getFileNodes, getImage } from './api';
+import { svgToIconComponent } from './svgr';
 
 type IconNode = FigmaNode & { parentId: string };
 type IconNodeWithUrl = IconNode & { url: string };

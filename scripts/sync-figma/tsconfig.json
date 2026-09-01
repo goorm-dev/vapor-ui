@@ -1,6 +1,10 @@
 {
     "extends": "@repo/typescript-config/base",
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "~/*": ["./src/*"]
+        },
         "noEmit": true,
         "target": "ES2023",
         "lib": ["ES2023"],

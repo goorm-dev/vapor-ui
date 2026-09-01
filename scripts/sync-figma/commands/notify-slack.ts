@@ -13,7 +13,7 @@
  */
 import process from 'node:process';
 
-import { sendWebhookMessage } from '../src/integrations/slack/api.js';
+import { sendWebhookMessage } from '~/integrations/slack/api';
 
 const {
     SLACK_GDS_ALARM_WEBHOOK_URL,
