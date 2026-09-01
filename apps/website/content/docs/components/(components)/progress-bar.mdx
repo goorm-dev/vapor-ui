@@ -17,19 +17,6 @@ description: 'ProgressBar는 시작과 끝이 있는 작업이 얼마나 진행�
 
 ---
 
-### Type
-
-채워지는 구간이 전달하는 의미를 설정합니다. `default` `warning`
-
-<Demo name="progress-bar/progress-bar-type">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/progress-bar/progress-bar-type.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
 ### Size
 
 Track의 높이를 설정합니다. `sm` `md` `lg`
@@ -79,16 +66,16 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 
 ---
 
-### Completion Announcement
+### Description
 
-`ProgressBar.Status`는 포커스를 옮기지 않고 완료나 실패를 알립니다.
+`ProgressBar.Description`은 진행 상황을 말로 풀어 씁니다. 남은 용량, 실패 사유, 다음에 할 일 같은 것입니다. `aria-describedby`는 자동으로 이어지므로 `id`를 직접 붙일 필요가 없습니다. 직접 붙이면 그 `id`가 쓰입니다.
 
-**`ProgressBar` 안이 아니라 형제로 두세요.** `role="progressbar"` 요소의 자식은 표현용으로 취급되어, 그 안에 놓인 라이브 리전은 접근성 트리에서 빠집니다. 메시지는 한 번만 넣으세요 — 값이 바뀔 때마다 갱신되는 라이브 리전은 스크린 리더를 뒤덮습니다.
+`ProgressBar.Root`의 `type`을 `error`로 바꾸면 이 텍스트만 danger 색으로 바뀝니다. 막대 색은 그대로입니다.
 
-<Demo name="progress-bar/progress-bar-status">
+<Demo name="progress-bar/progress-bar-description">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/progress-bar/progress-bar-status.tsx",
+    "file": "./src/components/demo/examples/progress-bar/progress-bar-description.tsx",
     "codeblock": true
 }
 ```
@@ -99,9 +86,18 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 ---
 
 - `ProgressBar.Label`을 넣거나 `ProgressBar.Root`에 `aria-label` 또는 `aria-labelledby`를 주세요. 이름이 없으면 보조기기가 숫자만 읽습니다. 개발 모드에서는 이름이 없을 때 콘솔 경고가 나옵니다.
-- 실패 사유나 다음 행동 같은 설명은 `aria-describedby`로 별도 요소를 연결하세요.
+- 실패 사유나 다음 행동 같은 설명은 `ProgressBar.Description`에 넣으세요. **`type="error"`는 색만 바꿉니다** — 실패했다는 사실은 문구가 직접 말해야 합니다. 색만으로 오류를 전달하면 스크린 리더 사용자도, 빨강과 회색을 구별하지 못하는 사용자도 실패를 알 수 없습니다.
+- 값이 바뀌어도 보조기기는 아무 말도 하지 않습니다. 포커스를 받지 않는 위젯의 값 변화는 조용합니다. 완료나 실패를 알려야 한다면 `ProgressBar` **바깥에** 라이브 리전을 직접 두세요. `role="progressbar"` 요소의 자식은 표현용으로 취급되어 그 안의 라이브 리전은 접근성 트리에서 빠집니다.
+
+    ```tsx
+    <ProgressBar.Root value={value}>{/* ... */}</ProgressBar.Root>
+    <span role="status">{done ? '업로드 완료' : null}</span>
+    ```
+
+    메시지는 완료·실패 시점에 한 번만 넣으세요. 값이 바뀔 때마다 갱신되는 라이브 리전은 스크린 리더를 뒤덮습니다.
+
 - `min`이 `max`보다 크거나 같으면 개발 모드에서 경고를 남기고 0–100으로 되돌립니다.
-- 진행 상태만으로 의미를 전달하지 마세요. `type`은 색만 바꾸므로, 무슨 일이 일어났는지는 텍스트로 함께 알려야 합니다.
+- 진행 상황을 막대 길이만으로 전달하지 마세요. `ProgressBar.Value`나 `ProgressBar.Description`으로 텍스트를 함께 두면 확대 화면이나 저시력 환경에서도 값을 읽을 수 있습니다.
 
 ## Props Table
 
@@ -127,6 +123,6 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 
 <ComponentPropsTable componentName="progress-bar-indicator" />
 
-### ProgressBar.Status
+### ProgressBar.Description
 
-<ComponentPropsTable componentName="progress-bar-status" />
+<ComponentPropsTable componentName="progress-bar-description" />

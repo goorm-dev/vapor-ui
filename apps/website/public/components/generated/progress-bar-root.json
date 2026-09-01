@@ -17,9 +17,9 @@
     },
     {
       "name": "type",
-      "type": ["default", "warning"],
+      "type": ["default", "error"],
       "required": false,
-      "description": "Meaning carried by the filled portion. Default: `'default'`",
+      "description": "Tone of the description text. Default: `'default'`",
       "defaultValue": "default"
     },
     {

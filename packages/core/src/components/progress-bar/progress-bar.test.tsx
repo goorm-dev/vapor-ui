@@ -157,11 +157,76 @@ describe('<ProgressBar />', () => {
         });
     });
 
-    describe('Status', () => {
-        it('should announce without moving focus', () => {
-            const { getByRole } = render(<ProgressBar.Status>업로드 완료</ProgressBar.Status>);
+    describe('Description', () => {
+        const Described = (
+            props: Partial<ProgressBar.Root.Props> & { id?: string; description?: string },
+        ) => {
+            const {
+                id,
+                description = '10MB 중 4.2MB 전송했습니다',
+                value = 42,
+                ...rootProps
+            } = props;
 
-            expect(getByRole('status')).toHaveTextContent('업로드 완료');
+            return (
+                <ProgressBar.Root value={value} aria-label="파일 업로드" {...rootProps}>
+                    <ProgressBar.Track>
+                        <ProgressBar.Indicator />
+                    </ProgressBar.Track>
+                    <ProgressBar.Description id={id}>{description}</ProgressBar.Description>
+                </ProgressBar.Root>
+            );
+        };
+
+        it('should describe the bar with a generated id', async () => {
+            const { container } = render(<Described />);
+
+            await waitFor(() =>
+                expect(getBar(container)).toHaveAccessibleDescription('10MB 중 4.2MB 전송했습니다'),
+            );
+        });
+
+        it('should prefer an id supplied by the consumer', async () => {
+            const { container, getByText } = render(<Described id="upload-hint" />);
+
+            expect(getByText('10MB 중 4.2MB 전송했습니다')).toHaveAttribute('id', 'upload-hint');
+            await waitFor(() =>
+                expect(getBar(container)).toHaveAttribute(
+                    'aria-describedby',
+                    expect.stringContaining('upload-hint'),
+                ),
+            );
+        });
+
+        it('should append to a describedby the consumer wired up', async () => {
+            const { container } = render(
+                <>
+                    <span id="external">전송 중</span>
+                    <Described aria-describedby="external" id="upload-hint" />
+                </>,
+            );
+
+            await waitFor(() =>
+                expect(getBar(container)).toHaveAttribute(
+                    'aria-describedby',
+                    'external upload-hint',
+                ),
+            );
+        });
+
+        it('should leave describedby off when no Description is rendered', () => {
+            const { container } = render(<ProgressBarTest value={42} />);
+
+            expect(getBar(container)).not.toHaveAttribute('aria-describedby');
+        });
+
+        it('should take its tone from the Root type', () => {
+            const { getByText, rerender } = render(<Described />);
+            const defaultClass = getByText('10MB 중 4.2MB 전송했습니다').className;
+
+            rerender(<Described type="error" />);
+
+            expect(getByText('10MB 중 4.2MB 전송했습니다').className).not.toBe(defaultClass);
         });
     });
 });

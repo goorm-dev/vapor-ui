@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useEffect, useMemo, useRef } from 'react';
+import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { Progress as BaseProgress } from '@base-ui/react/progress';
 
@@ -11,18 +11,21 @@ import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 import { warn } from '~/utils/warn';
 
-import type { IndicatorVariants, TrackVariants } from './progress-bar.css';
+import type { DescriptionVariants, TrackVariants } from './progress-bar.css';
 import * as styles from './progress-bar.css';
 
 const DEFAULT_MIN = 0;
 const DEFAULT_MAX = 100;
 
-type Type = NonNullable<IndicatorVariants['type']>;
 type Size = NonNullable<TrackVariants['size']>;
+type Type = NonNullable<DescriptionVariants['type']>;
 
 interface ProgressBarContext {
-    type: Type;
     size: Size;
+    /** Tone of `ProgressBar.Description`. Nothing else on the bar reacts to it. */
+    type: Type;
+    /** Lets a mounted `ProgressBar.Description` hand its id to the Root. */
+    setDescriptionId: (id: string | undefined) => void;
     /** Value text derived from the declared range — the single source for both audiences. */
     formattedValue: string | null;
     /** Consumer-supplied value text. When present it wins over `formattedValue`. */
@@ -87,8 +90,8 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
     const {
         className,
         children,
-        type = 'default',
         size = 'md',
+        type = 'default',
         value,
         // Literals, not the constants below: the docs extractor prints the default verbatim.
         min: minProp = 0,
@@ -96,6 +99,7 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
         format,
         locale,
         getAriaValueText,
+        'aria-describedby': ariaDescribedBy,
         ...componentProps
     } = resolveStyles(props);
 
@@ -104,9 +108,10 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
     const formattedValue = formatValue(clampedValue, min, max, locale, format);
     const valueText = getAriaValueText?.(formattedValue, clampedValue);
 
+    const [descriptionId, setDescriptionId] = useState<string>();
     const contextValue = useMemo<ProgressBarContext>(
-        () => ({ type, size, formattedValue, valueText }),
-        [type, size, formattedValue, valueText],
+        () => ({ size, type, formattedValue, valueText, setDescriptionId }),
+        [size, type, formattedValue, valueText],
     );
 
     const rootRef = useRef<HTMLDivElement>(null);
@@ -123,6 +128,10 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
                 locale={locale}
                 getAriaValueText={OMIT_ARIA_VALUE_TEXT}
                 aria-valuetext={valueText}
+                // Appended, never replaced: a description the consumer wired up and ours both apply.
+                aria-describedby={
+                    [ariaDescribedBy, descriptionId].filter(Boolean).join(' ') || undefined
+                }
                 className={cn(styles.root, className)}
                 {...componentProps}
             >
@@ -186,12 +195,11 @@ ProgressBarTrack.displayName = 'ProgressBar.Track';
 export const ProgressBarIndicator = forwardRef<HTMLDivElement, ProgressBarIndicator.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
-        const { type } = useProgressBarContext();
 
         return (
             <BaseProgress.Indicator
                 ref={ref}
-                className={cn(styles.indicator({ type }), className)}
+                className={cn(styles.indicator, className)}
                 {...componentProps}
             />
         );
@@ -227,30 +235,45 @@ export const ProgressBarValue = forwardRef<HTMLSpanElement, ProgressBarValue.Pro
 ProgressBarValue.displayName = 'ProgressBar.Value';
 
 /* -------------------------------------------------------------------------------------------------
- * ProgressBar.Status
+ * ProgressBar.Description
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Announces completion or failure without moving focus. Renders a `<span>` element.
+ * Explains the progress in words — a failure reason, a next step. Renders a `<span>` element.
  *
- * Render it as a **sibling** of `ProgressBar`, never inside it: the children of a
- * `role="progressbar"` element are presentational, so a live region nested in one is dropped
- * from the accessibility tree. Put the message in only once — a live region that fires on every
- * tick floods the screen reader.
+ * It reaches assistive technology through `aria-describedby`, wired up automatically. Pass an
+ * `id` to use your own instead.
+ *
+ * `type="error"` on `ProgressBar.Root` only recolours this text, so the wording has to name the
+ * failure on its own — colour alone reaches neither a screen reader nor a user who cannot tell
+ * red from grey.
  */
-export const ProgressBarStatus = forwardRef<HTMLSpanElement, ProgressBarStatus.Props>(
+export const ProgressBarDescription = forwardRef<HTMLSpanElement, ProgressBarDescription.Props>(
     (props, ref) => {
-        const { render, ...componentProps } = resolveStyles(props);
+        const { className, render, id: idProp, ...componentProps } = resolveStyles(props);
+        const { type, setDescriptionId } = useProgressBarContext();
+
+        const fallbackId = useId();
+        const id = idProp ?? fallbackId;
+
+        useEffect(() => {
+            setDescriptionId(id);
+            return () => setDescriptionId(undefined);
+        }, [id, setDescriptionId]);
 
         return useRenderElement({
             ref,
             render,
             defaultTagName: 'span',
-            props: { role: 'status', ...componentProps },
+            props: {
+                id,
+                className: cn(styles.description({ type }), className),
+                ...componentProps,
+            },
         });
     },
 );
-ProgressBarStatus.displayName = 'ProgressBar.Status';
+ProgressBarDescription.displayName = 'ProgressBar.Description';
 
 /* -----------------------------------------------------------------------------------------------*/
 
@@ -297,8 +320,8 @@ export namespace ProgressBarRoot {
         VaporUIComponentProps<typeof BaseProgress.Root, State>,
         'getAriaValueText'
     > &
-        Partial<Pick<IndicatorVariants, 'type'>> &
-        Partial<Pick<TrackVariants, 'size'>> & {
+        Partial<Pick<TrackVariants, 'size'>> &
+        Partial<Pick<DescriptionVariants, 'type'>> & {
             /**
              * Returns the value text read by assistive technology. Without it no
              * `aria-valuetext` is written, and `aria-valuenow` carries the value on its own.
@@ -329,7 +352,7 @@ export namespace ProgressBarValue {
     export type Props = VaporUIComponentProps<typeof BaseProgress.Value, State>;
 }
 
-export namespace ProgressBarStatus {
+export namespace ProgressBarDescription {
     export type State = {};
     export type Props = VaporUIComponentProps<'span', State>;
 }

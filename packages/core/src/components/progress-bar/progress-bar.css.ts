@@ -22,31 +22,57 @@ export const root = componentStyle({
     display: 'grid',
     gridTemplateColumns: '1fr auto',
     alignItems: 'center',
-    rowGap: vars.size.space['000'],
+    rowGap: vars.size.space['100'],
     columnGap: vars.size.space['050'],
     width: '100%',
 });
 
-/** `body2` — the label sits below the value in the hierarchy. */
+/** `subtitle1` — the label and the value share one type style; only colour separates them. */
 export const label = componentStyle({
     minWidth: 0,
     lineHeight: vars.typography.lineHeight['075'],
     letterSpacing: vars.typography.letterSpacing['100'],
     color: vars.color.foreground['normal'],
     fontSize: vars.typography.fontSize['075'],
-    fontWeight: vars.typography.fontWeight['400'],
+    fontWeight: vars.typography.fontWeight['500'],
 });
 
-/** `heading6` — the value is the number the user is watching, so it leads. */
+/** `subtitle1` — one step back from the label, so the task name reads first. */
 export const value = componentStyle({
     justifySelf: 'end',
     minWidth: 0,
     textAlign: 'right',
-    lineHeight: vars.typography.lineHeight['100'],
+    lineHeight: vars.typography.lineHeight['075'],
     letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal'],
-    fontSize: vars.typography.fontSize['100'],
+    color: vars.color.foreground['secondary'],
+    fontSize: vars.typography.fontSize['075'],
     fontWeight: vars.typography.fontWeight['500'],
+});
+
+/**
+ * `subtitle1`, spanning the full width under the track. The colour is the only thing the
+ * `type` axis changes — the failure itself has to be said in the text (WCAG 2.2 SC 1.4.1).
+ */
+export const description = componentRecipe({
+    base: {
+        gridColumn: '1 / -1',
+        minWidth: 0,
+        lineHeight: vars.typography.lineHeight['075'],
+        letterSpacing: vars.typography.letterSpacing['100'],
+        fontSize: vars.typography.fontSize['075'],
+        fontWeight: vars.typography.fontWeight['500'],
+    },
+
+    defaultVariants: { type: 'default' },
+    variants: {
+        /**
+         * Tone of the description text. Default: `'default'`
+         */
+        type: {
+            default: { color: vars.color.foreground['secondary'] },
+            error: { color: vars.color.foreground['danger'] },
+        },
+    },
 });
 
 export const track = componentRecipe({
@@ -54,7 +80,7 @@ export const track = componentRecipe({
         position: 'relative',
         gridColumn: '1 / -1',
         borderRadius: vars.size.borderRadius['900'],
-        backgroundColor: vars.color.background['secondary-200'],
+        backgroundColor: vars.color.border['normal'],
         width: '100%',
         // Clips the moving indeterminate segment so it never escapes the track radius.
         overflow: 'hidden',
@@ -66,56 +92,40 @@ export const track = componentRecipe({
          * Size of the track. Controls its height. Default: `'md'`
          */
         size: {
-            sm: { height: vars.size.dimension['100'] },
-            md: { height: vars.size.dimension['150'] },
-            lg: { height: vars.size.dimension['200'] },
+            sm: { height: vars.size.dimension['050'] },
+            md: { height: vars.size.dimension['075'] },
+            lg: { height: vars.size.dimension['150'] },
         },
     },
 });
 
-export const indicator = componentRecipe({
-    base: {
-        borderRadius: 0,
-        height: 'inherit',
+export const indicator = componentStyle({
+    borderRadius: vars.size.borderRadius['900'],
+    backgroundImage: `linear-gradient(to right, ${vars.color.blue['200']}, ${vars.color.background['primary']})`,
+    height: 'inherit',
 
-        selectors: {
-            // base-ui gives the indicator no inline width when the value is null,
-            // which would otherwise render a full — and therefore complete-looking — bar.
-            '&[data-indeterminate]': {
-                position: 'absolute',
-                insetInlineStart: 0,
-                width: SEGMENT_WIDTH,
-                animation: `${sweep} 1.5s ease-in-out infinite`,
-            },
-        },
-
-        '@media': {
-            '(prefers-reduced-motion: reduce)': {
-                selectors: {
-                    '&[data-indeterminate]': {
-                        insetInlineStart: SEGMENT_REST,
-                        animation: 'none',
-                    },
-                },
-            },
+    selectors: {
+        // base-ui gives the indicator no inline width when the value is null,
+        // which would otherwise render a full — and therefore complete-looking — bar.
+        '&[data-indeterminate]': {
+            position: 'absolute',
+            insetInlineStart: 0,
+            width: SEGMENT_WIDTH,
+            animation: `${sweep} 1.5s ease-in-out infinite`,
         },
     },
 
-    defaultVariants: { type: 'default' },
-    variants: {
-        /**
-         * Meaning carried by the filled portion. Default: `'default'`
-         */
-        type: {
-            default: {
-                backgroundImage: `linear-gradient(to right, ${vars.color.blue['200']}, ${vars.color.background['primary']})`,
-            },
-            warning: {
-                backgroundImage: `linear-gradient(to right, ${vars.color.orange['200']}, ${vars.color.background['warning']})`,
+    '@media': {
+        '(prefers-reduced-motion: reduce)': {
+            selectors: {
+                '&[data-indeterminate]': {
+                    insetInlineStart: SEGMENT_REST,
+                    animation: 'none',
+                },
             },
         },
     },
 });
 
 export type TrackVariants = NonNullable<RecipeVariants<typeof track>>;
-export type IndicatorVariants = NonNullable<RecipeVariants<typeof indicator>>;
+export type DescriptionVariants = NonNullable<RecipeVariants<typeof description>>;

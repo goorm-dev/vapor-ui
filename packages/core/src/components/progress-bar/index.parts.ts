@@ -4,5 +4,5 @@ export {
     ProgressBarTrack as Track,
     ProgressBarIndicator as Indicator,
     ProgressBarValue as Value,
-    ProgressBarStatus as Status,
+    ProgressBarDescription as Description,
 } from './progress-bar';
