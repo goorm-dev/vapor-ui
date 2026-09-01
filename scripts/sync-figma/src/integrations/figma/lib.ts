@@ -1,4 +1,5 @@
 import type { FigmaNodeType } from '~/icons/constants';
+
 import type { FigmaNode } from './api';
 import { getFileNodes, getImage } from './api';
 import { makeFlexibleColorIcon, remakeMaskStyle, svgToIconComponent } from './transforms';
@@ -29,7 +30,12 @@ const filterDocumentByNodeType = async ({
 
     for (const key in nodes) {
         if (Object.hasOwn(nodes, key)) {
-            const parent = nodes[key].document;
+            const node = nodes[key];
+            if (!node) {
+                throw new Error(`Figma node not found: ${key}`);
+            }
+
+            const parent = node.document;
             const parentId = parent.id;
 
             parent.children?.forEach((child) => {
@@ -60,10 +66,14 @@ const getNodesWithUrl = async ({
         fileKey,
         nodeIds,
     });
-    const nodesWithUrl = nodes.map((item) => ({
-        ...item,
-        url: images[item.id],
-    }));
+    const nodesWithUrl = nodes.map((item) => {
+        const url = images[item.id];
+        if (!url) {
+            throw new Error(`Figma image URL missing for node: ${item.id} (${item.name})`);
+        }
+
+        return { ...item, url };
+    });
 
     return nodesWithUrl;
 };

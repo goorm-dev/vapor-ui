@@ -15,11 +15,11 @@ type FigmaNode = {
 };
 
 type GetFileNodesResponse = {
-    nodes: Record<string, { document: FigmaNode }>;
+    nodes: Record<string, { document: FigmaNode } | null>;
 };
 
 type GetImageResponse = {
-    images: Record<string, string>;
+    images: Record<string, string | null>;
 };
 
 /**

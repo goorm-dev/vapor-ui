@@ -27,15 +27,11 @@ import {
     FIGMA_NODE_TYPES,
 } from '~/icons/constants';
 import { ICON_TYPES } from '~/icons/icon-types';
-import getIconComponentIndex from '~/icons/templates/icon/icon-component-index';
 import getIconComponent from '~/icons/templates/icon/icon-component';
+import getIconComponentIndex from '~/icons/templates/icon/icon-component-index';
 import getIconsIndex from '~/icons/templates/icon/icons-index';
 import type { IconNode } from '~/integrations/figma/lib';
-import {
-    filterDocumentByNodeType,
-    getIconJsx,
-    getNodesWithUrl,
-} from '~/integrations/figma/lib';
+import { filterDocumentByNodeType, getIconJsx, getNodesWithUrl } from '~/integrations/figma/lib';
 
 const TYPE = process.env.TYPE;
 
@@ -67,7 +63,7 @@ if (!process.env.FIGMA_TOKEN) {
     process.exit(1);
 }
 
-if (!TYPE || !(TYPE in ICON_TYPES)) {
+if (!TYPE || !Object.hasOwn(ICON_TYPES, TYPE)) {
     console.error(
         pc.red(
             ` GDS FIGMA EXPORT ERROR: TYPE must be one of ${Object.keys(ICON_TYPES).join(', ')}.`,
