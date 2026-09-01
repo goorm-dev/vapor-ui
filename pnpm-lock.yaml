@@ -12,6 +12,9 @@ catalogs:
     '@types/react-dom':
       specifier: ^19.2.5
       version: 19.2.5
+    '@vitest/browser':
+      specifier: ^3.2.7
+      version: 3.2.7
     '@vitest/coverage-v8':
       specifier: ^3.2.7
       version: 3.2.7
@@ -537,7 +540,7 @@ importers:
         specifier: workspace:^
         version: link:../core
       '@vitest/browser':
-        specifier: ^3.2.6
+        specifier: ^3.2.7
         version: 3.2.7(playwright@1.62.1)(vite@8.2.1(@types/node@22.19.21)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.12))(vitest@3.2.7)
       '@vitest/coverage-v8':
         specifier: ^3.2.7
