@@ -75,6 +75,8 @@ export const title = componentStyle({
 `componentStyle` also accepts an array — pass mixin classNames alongside the style rule to compose them:
 
 ```ts
+import { typography } from '~/styles/mixins/typography.css';
+
 export const title = componentStyle([typography({ style: 'subtitle1' }), { gridColumn: '1' }]);
 ```
 
