@@ -11,9 +11,7 @@ export default function MeterRange() {
         >
             <Meter.Label>저장 공간</Meter.Label>
             <Meter.Value />
-            <Meter.Track>
-                <Meter.Indicator />
-            </Meter.Track>
+            <Meter.Track />
         </Meter.Root>
     );
 }

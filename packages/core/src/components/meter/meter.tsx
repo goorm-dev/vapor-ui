@@ -103,46 +103,68 @@ export const MeterLabel = forwardRef<HTMLSpanElement, MeterLabel.Props>((props, 
 MeterLabel.displayName = 'Meter.Label';
 
 /* -------------------------------------------------------------------------------------------------
- * Meter.Track
+ * Meter.TrackPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Represents the full range of the meter and contains the indicator. Renders a `<div>` element.
+ * Represents the full range of the meter without any indicator inside. Renders a `<div>` element.
  */
-export const MeterTrack = forwardRef<HTMLDivElement, MeterTrack.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-    const { size } = useMeterContext();
+export const MeterTrackPrimitive = forwardRef<HTMLDivElement, MeterTrackPrimitive.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+        const { size } = useMeterContext();
 
-    return (
-        <BaseMeter.Track
-            ref={ref}
-            className={cn(styles.track({ size }), className)}
-            {...componentProps}
-        />
-    );
-});
-MeterTrack.displayName = 'Meter.Track';
+        return (
+            <BaseMeter.Track
+                ref={ref}
+                className={cn(styles.track({ size }), className)}
+                {...componentProps}
+            />
+        );
+    },
+);
+MeterTrackPrimitive.displayName = 'Meter.TrackPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Meter.Indicator
+ * Meter.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
 /**
  * Fills the portion of the track that corresponds to the current value. Renders a `<div>` element.
  */
-export const MeterIndicator = forwardRef<HTMLDivElement, MeterIndicator.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-    const { type } = useMeterContext();
+export const MeterIndicatorPrimitive = forwardRef<HTMLDivElement, MeterIndicatorPrimitive.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+        const { type } = useMeterContext();
+
+        return (
+            <BaseMeter.Indicator
+                ref={ref}
+                className={cn(styles.indicator({ type }), className)}
+                {...componentProps}
+            />
+        );
+    },
+);
+MeterIndicatorPrimitive.displayName = 'Meter.IndicatorPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * Meter.Track
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Represents the full range of the meter and renders `Meter.IndicatorPrimitive` inside. Renders a `<div>` element.
+ */
+export const MeterTrack = forwardRef<HTMLDivElement, MeterTrack.Props>((props, ref) => {
+    const { children, ...componentProps } = props;
 
     return (
-        <BaseMeter.Indicator
-            ref={ref}
-            className={cn(styles.indicator({ type }), className)}
-            {...componentProps}
-        />
+        <MeterTrackPrimitive ref={ref} {...componentProps}>
+            {children ?? <MeterIndicatorPrimitive />}
+        </MeterTrackPrimitive>
     );
 });
-MeterIndicator.displayName = 'Meter.Indicator';
+MeterTrack.displayName = 'Meter.Track';
 
 /* -------------------------------------------------------------------------------------------------
  * Meter.Value
@@ -175,14 +197,19 @@ export namespace MeterLabel {
     export type Props = VaporUIComponentProps<typeof BaseMeter.Label, State>;
 }
 
-export namespace MeterTrack {
+export namespace MeterTrackPrimitive {
     export type State = BaseMeter.Track.State;
     export type Props = VaporUIComponentProps<typeof BaseMeter.Track, State>;
 }
 
-export namespace MeterIndicator {
+export namespace MeterIndicatorPrimitive {
     export type State = BaseMeter.Indicator.State;
     export type Props = VaporUIComponentProps<typeof BaseMeter.Indicator, State>;
+}
+
+export namespace MeterTrack {
+    export type State = MeterTrackPrimitive.State;
+    export type Props = MeterTrackPrimitive.Props;
 }
 
 export namespace MeterValue {

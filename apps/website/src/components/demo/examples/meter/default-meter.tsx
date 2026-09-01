@@ -5,9 +5,7 @@ export default function DefaultMeter() {
         <Meter.Root value={42} $css={{ maxWidth: '20rem' }}>
             <Meter.Label>저장 공간</Meter.Label>
             <Meter.Value />
-            <Meter.Track>
-                <Meter.Indicator />
-            </Meter.Track>
+            <Meter.Track />
         </Meter.Root>
     );
 }

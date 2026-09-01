@@ -20,9 +20,7 @@ export default function MeterAutoUpdate() {
             <Meter.Root value={value}>
                 <Meter.Label>CPU 사용률</Meter.Label>
                 <Meter.Value />
-                <Meter.Track>
-                    <Meter.Indicator />
-                </Meter.Track>
+                <Meter.Track />
             </Meter.Root>
 
             <Button variant="outline" size="sm" onClick={() => setRunning((prev) => !prev)}>

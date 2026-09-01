@@ -1,7 +1,8 @@
 export {
     MeterRoot as Root,
     MeterLabel as Label,
+    MeterTrackPrimitive as TrackPrimitive,
     MeterTrack as Track,
-    MeterIndicator as Indicator,
+    MeterIndicatorPrimitive as IndicatorPrimitive,
     MeterValue as Value,
 } from './meter';

@@ -6,17 +6,13 @@ export default function MeterType() {
             <Meter.Root value={42}>
                 <Meter.Label>저장 공간</Meter.Label>
                 <Meter.Value />
-                <Meter.Track>
-                    <Meter.Indicator />
-                </Meter.Track>
+                <Meter.Track />
             </Meter.Root>
 
             <Meter.Root type="warning" value={92}>
                 <Meter.Label>저장 공간 부족</Meter.Label>
                 <Meter.Value />
-                <Meter.Track>
-                    <Meter.Indicator />
-                </Meter.Track>
+                <Meter.Track />
             </Meter.Root>
         </VStack>
     );

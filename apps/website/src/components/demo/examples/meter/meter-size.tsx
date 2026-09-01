@@ -7,9 +7,7 @@ export default function MeterSize() {
                 <Meter.Root key={size} size={size} value={42}>
                     <Meter.Label>저장 공간 ({size})</Meter.Label>
                     <Meter.Value />
-                    <Meter.Track>
-                        <Meter.Indicator />
-                    </Meter.Track>
+                    <Meter.Track />
                 </Meter.Root>
             ))}
         </VStack>

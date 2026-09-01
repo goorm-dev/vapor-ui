@@ -11,9 +11,7 @@ const MeterTest = ({ children, ...props }: Partial<Meter.Root.Props>) => (
         {children ?? (
             <>
                 <Meter.Label>{LABEL_TEXT}</Meter.Label>
-                <Meter.Track>
-                    <Meter.Indicator />
-                </Meter.Track>
+                <Meter.Track />
                 <Meter.Value />
             </>
         )}
@@ -111,9 +109,7 @@ describe('Meter', () => {
     it('should not set `aria-labelledby` when no label is rendered', () => {
         render(
             <MeterTest aria-label={LABEL_TEXT}>
-                <Meter.Track>
-                    <Meter.Indicator />
-                </Meter.Track>
+                <Meter.Track />
             </MeterTest>,
         );
 
@@ -150,9 +146,7 @@ describe('Meter', () => {
     it('should use `aria-label` as the accessible name', () => {
         render(
             <MeterTest aria-label="Disk usage">
-                <Meter.Track>
-                    <Meter.Indicator />
-                </Meter.Track>
+                <Meter.Track />
             </MeterTest>,
         );
 
@@ -164,9 +158,7 @@ describe('Meter', () => {
             <>
                 <h2 id="external-heading">Disk usage</h2>
                 <MeterTest aria-labelledby="external-heading">
-                    <Meter.Track>
-                        <Meter.Indicator />
-                    </Meter.Track>
+                    <Meter.Track />
                 </MeterTest>
             </>,
         );
@@ -178,7 +170,7 @@ describe('Meter', () => {
         render(
             <MeterTest size="lg" type="warning" aria-label={LABEL_TEXT}>
                 <Meter.Track data-testid="track">
-                    <Meter.Indicator data-testid="indicator" />
+                    <Meter.IndicatorPrimitive data-testid="indicator" />
                 </Meter.Track>
             </MeterTest>,
         );
@@ -188,6 +180,28 @@ describe('Meter', () => {
         expect(screen.getByTestId('indicator')).not.toHaveClass(
             styles.indicator({ type: 'default' }),
         );
+    });
+
+    it('should render an indicator inside `Meter.Track` by default', () => {
+        render(
+            <MeterTest type="warning" aria-label={LABEL_TEXT}>
+                <Meter.Track data-testid="track" />
+            </MeterTest>,
+        );
+
+        const indicator = screen.getByTestId('track').firstElementChild;
+
+        expect(indicator).toHaveClass(styles.indicator({ type: 'warning' }));
+    });
+
+    it('should render no indicator when `Meter.TrackPrimitive` is used directly', () => {
+        render(
+            <MeterTest aria-label={LABEL_TEXT}>
+                <Meter.TrackPrimitive data-testid="track" />
+            </MeterTest>,
+        );
+
+        expect(screen.getByTestId('track')).toBeEmptyDOMElement();
     });
 
     describe('development warnings', () => {
@@ -210,9 +224,7 @@ describe('Meter', () => {
         it('should warn when the meter has no accessible name', () => {
             render(
                 <MeterTest>
-                    <Meter.Track>
-                        <Meter.Indicator />
-                    </Meter.Track>
+                    <Meter.Track />
                 </MeterTest>,
             );
 
@@ -221,12 +233,16 @@ describe('Meter', () => {
             );
         });
 
+        it('should stay silent when `Meter.Label` names the meter', () => {
+            render(<MeterTest />);
+
+            expect(warn).not.toHaveBeenCalled();
+        });
+
         it('should stay silent when only `aria-label` is given', () => {
             render(
                 <MeterTest aria-label={LABEL_TEXT}>
-                    <Meter.Track>
-                        <Meter.Indicator />
-                    </Meter.Track>
+                    <Meter.Track />
                 </MeterTest>,
             );
 

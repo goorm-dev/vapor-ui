@@ -1,7 +1,7 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
-import { typographyVariants } from '~/styles/mixins/typography.css';
+import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
 export const root = componentStyle({
@@ -51,18 +51,22 @@ export const indicator = componentRecipe({
     },
 });
 
-export const label = componentStyle({
-    gridColumn: '1',
-    color: vars.color.foreground['normal'],
-    ...typographyVariants.subtitle1,
-});
+export const label = componentStyle([
+    typography({ style: 'subtitle1' }),
+    {
+        gridColumn: '1',
+        color: vars.color.foreground['normal'],
+    },
+]);
 
-export const value = componentStyle({
-    gridColumn: '2',
-    textAlign: 'end',
-    color: vars.color.foreground['secondary'],
-    ...typographyVariants.subtitle1,
-});
+export const value = componentStyle([
+    typography({ style: 'subtitle1' }),
+    {
+        gridColumn: '2',
+        textAlign: 'end',
+        color: vars.color.foreground['secondary'],
+    },
+]);
 
 export type TrackVariants = NonNullable<RecipeVariants<typeof track>>;
 export type IndicatorVariants = NonNullable<RecipeVariants<typeof indicator>>;

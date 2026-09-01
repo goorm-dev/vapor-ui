@@ -8,7 +8,7 @@ export default {
     component: Meter.Root,
     argTypes: {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
-        variant: { control: 'inline-radio', options: ['default', 'warning'] },
+        type: { control: 'inline-radio', options: ['default', 'warning'] },
         value: { control: { type: 'range', min: 0, max: 100 } },
     },
 } as Meta<typeof Meter.Root>;
@@ -22,9 +22,7 @@ const MeterExample = ({
     <Meter.Root {...args}>
         <Meter.Label>{label}</Meter.Label>
         <Meter.Value />
-        <Meter.Track>
-            <Meter.Indicator />
-        </Meter.Track>
+        <Meter.Track />
     </Meter.Root>
 );
 
