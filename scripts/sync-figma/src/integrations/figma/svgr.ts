@@ -33,57 +33,22 @@ export default ${componentName};
 `;
 };
 
-const SHAPE_ELEMENTS = new Set([
-    'path',
-    'circle',
-    'ellipse',
-    'rect',
-    'line',
-    'polygon',
-    'polyline',
-]);
-
-/**
- * Figma leans on the root fill="none" to keep stroked shapes hollow, but mono icons have to
- * drop that fill so IconBase's colour can be inherited. Spell the intent out on the shape
- * itself first, otherwise the stroke ends up outlining a solid block.
- *
- * Only runs while the root fill="none" is still there, which is exactly the first pass:
- * on later passes removeAttrs has taken it away, and a shape that lost its own fill to
- * removeAttrs (fill="black" plus a stroke) must keep inheriting instead of turning hollow.
- */
-const keepStrokedShapesHollow: SvgoPlugin = {
-    name: 'keepStrokedShapesHollow',
-    fn: (root) => {
-        const svg = root.children.find((child) => 'name' in child && child.name === 'svg');
-        if (svg == null || !('attributes' in svg) || svg.attributes.fill !== 'none') return null;
-
-        return {
-            element: {
-                enter: (node) => {
-                    if (!SHAPE_ELEMENTS.has(node.name)) return;
-                    if (node.attributes.fill != null || node.attributes.stroke == null) return;
-
-                    node.attributes.fill = 'none';
-                },
-            },
-        };
-    },
-};
-
 const BLACK = /^(#000|#000000|black)$/i;
 
 /**
- * Figma hardcodes stroke="black" on the few stroked mono icons, which makes them ignore the
- * colour IconBase hands down. Point them at currentColor so stroke follows `color` like fill does.
+ * Figma paints mono icons with a literal black fill (and stroke on a few), which would ignore the
+ * colour IconBase hands down. Point both at currentColor; the root fill="none" Figma always emits
+ * stays put so stroked shapes keep inheriting `none` and stay hollow.
  */
-const strokeFollowsCurrentColor: SvgoPlugin = {
-    name: 'strokeFollowsCurrentColor',
+const blackFollowsCurrentColor: SvgoPlugin = {
+    name: 'blackFollowsCurrentColor',
     fn: () => ({
         element: {
             enter: (node) => {
-                if (BLACK.test(node.attributes.stroke ?? ''))
-                    node.attributes.stroke = 'currentColor';
+                for (const attr of ['fill', 'stroke'] as const) {
+                    if (BLACK.test(node.attributes[attr] ?? ''))
+                        node.attributes[attr] = 'currentColor';
+                }
             },
         },
     }),
@@ -117,18 +82,8 @@ const buildConfig = ({
                 name: 'prefixIds',
                 params: { prefix: `vapor-icons-${isColorIcon ? 'color' : 'mono'}-${iconName}` },
             },
-            // Mono icons take their colour from IconBase's fill, so the root fill="none"
-            // and every black fill have to go for it to be inherited.
-            ...(isColorIcon
-                ? []
-                : [
-                      keepStrokedShapesHollow,
-                      strokeFollowsCurrentColor,
-                      {
-                          name: 'removeAttrs' as const,
-                          params: { attrs: ['svg:fill:none', '*:fill:(#000|#000000|black)'] },
-                      },
-                  ]),
+            // Mono icons follow the consumer's `color`; colour icons keep Figma's palette.
+            ...(isColorIcon ? [] : [blackFollowsCurrentColor]),
         ],
     },
 });
