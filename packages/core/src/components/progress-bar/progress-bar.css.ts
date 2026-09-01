@@ -22,7 +22,9 @@ export const root = componentStyle({
     display: 'grid',
     gridTemplateColumns: '1fr auto',
     alignItems: 'center',
-    rowGap: vars.size.space['100'],
+    // The two row gaps differ (label area 8px, description 6px), so they are set on the
+    // rows themselves instead of a single `rowGap`.
+    rowGap: 0,
     columnGap: vars.size.space['050'],
     width: '100%',
 });
@@ -37,16 +39,16 @@ export const label = componentStyle({
     fontWeight: vars.typography.fontWeight['500'],
 });
 
-/** `subtitle1` — one step back from the label, so the task name reads first. */
+/** `body2` — one step back from the label, so the task name reads first. */
 export const value = componentStyle({
     justifySelf: 'end',
     minWidth: 0,
     textAlign: 'right',
     lineHeight: vars.typography.lineHeight['075'],
     letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['secondary'],
+    color: vars.color.foreground['hint'],
     fontSize: vars.typography.fontSize['075'],
-    fontWeight: vars.typography.fontWeight['500'],
+    fontWeight: vars.typography.fontWeight['400'],
 });
 
 /**
@@ -56,6 +58,7 @@ export const value = componentStyle({
 export const description = componentRecipe({
     base: {
         gridColumn: '1 / -1',
+        marginTop: vars.size.space['075'],
         minWidth: 0,
         lineHeight: vars.typography.lineHeight['075'],
         letterSpacing: vars.typography.letterSpacing['100'],
@@ -80,13 +83,18 @@ export const track = componentRecipe({
         position: 'relative',
         gridColumn: '1 / -1',
         borderRadius: vars.size.borderRadius['900'],
-        backgroundColor: vars.color.border['normal'],
+        backgroundColor: vars.color.background['secondary-200'],
         width: '100%',
         // Clips the moving indeterminate segment so it never escapes the track radius.
         overflow: 'hidden',
+
+        selectors: {
+            // Only a label area above it earns the gap — a track on its own starts at the top.
+            '&:not(:first-child)': { marginTop: vars.size.space['100'] },
+        },
     },
 
-    defaultVariants: { size: 'md' },
+    defaultVariants: { size: 'md', type: 'default' },
     variants: {
         /**
          * Size of the track. Controls its height. Default: `'md'`
@@ -95,6 +103,16 @@ export const track = componentRecipe({
             sm: { height: vars.size.dimension['050'] },
             md: { height: vars.size.dimension['075'] },
             lg: { height: vars.size.dimension['150'] },
+        },
+
+        /**
+         * Tone of the track. Default: `'default'`
+         */
+        type: {
+            default: {},
+            // The failure is over: the track dims and drops its indicator instead of
+            // showing a fill that would still read as progress.
+            error: { opacity: 0.32 },
         },
     },
 });

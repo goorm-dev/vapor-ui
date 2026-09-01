@@ -15,7 +15,8 @@
       "type": [
         "(formattedValue: string | null, value: number | null) => ReactNode"
       ],
-      "required": false
+      "required": false,
+      "description": "A function that renders the value text. Receives the formatted value and the raw value.\n\nWhen omitted, the text derived from the declared range — or `getAriaValueText` when it is set — is rendered."
     },
     {
       "name": "style",

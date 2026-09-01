@@ -22,7 +22,10 @@ type Type = NonNullable<DescriptionVariants['type']>;
 
 interface ProgressBarContext {
     size: Size;
-    /** Tone of `ProgressBar.Description`. Nothing else on the bar reacts to it. */
+    /**
+     * Tone of the bar: it recolours `ProgressBar.Description`, and on `'error'` also dims the
+     * track and drops the indicator.
+     */
     type: Type;
     /** Lets a mounted `ProgressBar.Description` hand its id to the Root. */
     setDescriptionId: (id: string | undefined) => void;
@@ -173,12 +176,12 @@ ProgressBarLabel.displayName = 'ProgressBar.Label';
  */
 export const ProgressBarTrack = forwardRef<HTMLDivElement, ProgressBarTrack.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
-    const { size } = useProgressBarContext();
+    const { size, type } = useProgressBarContext();
 
     return (
         <BaseProgress.Track
             ref={ref}
-            className={cn(styles.track({ size }), className)}
+            className={cn(styles.track({ size, type }), className)}
             {...componentProps}
         />
     );
@@ -191,10 +194,15 @@ ProgressBarTrack.displayName = 'ProgressBar.Track';
 
 /**
  * The filled portion of the track. Renders a `<div>` element.
+ *
+ * `type="error"` renders nothing — a fill would still read as progress on a task that failed.
  */
 export const ProgressBarIndicator = forwardRef<HTMLDivElement, ProgressBarIndicator.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
+        const { type } = useProgressBarContext();
+
+        if (type === 'error') return null;
 
         return (
             <BaseProgress.Indicator
@@ -244,9 +252,9 @@ ProgressBarValue.displayName = 'ProgressBar.Value';
  * It reaches assistive technology through `aria-describedby`, wired up automatically. Pass an
  * `id` to use your own instead.
  *
- * `type="error"` on `ProgressBar.Root` only recolours this text, so the wording has to name the
- * failure on its own — colour alone reaches neither a screen reader nor a user who cannot tell
- * red from grey.
+ * `type="error"` on `ProgressBar.Root` recolours this text and dims the track, but the wording
+ * still has to name the failure on its own — colour alone reaches neither a screen reader nor a
+ * user who cannot tell red from grey.
  */
 export const ProgressBarDescription = forwardRef<HTMLSpanElement, ProgressBarDescription.Props>(
     (props, ref) => {
