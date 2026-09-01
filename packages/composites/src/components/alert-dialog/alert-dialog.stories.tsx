@@ -7,7 +7,7 @@ export default {
     title: 'Composites/AlertDialog',
     component: AlertDialog.Root,
     argTypes: {
-        type: { control: 'inline-radio', options: ['critical', 'info'] },
+        type: { control: 'inline-radio', options: ['critical', 'confirm'] },
         title: { control: 'text' },
         description: { control: 'text' },
     },
@@ -16,15 +16,22 @@ export default {
 type Story = StoryObj<typeof AlertDialog.Root>;
 
 export const Default: Story = {
-    render: () => {
+    args: {
+        type: 'critical',
+        title: '이 항목을 삭제할까요?',
+        description: '삭제하면 되돌릴 수 없습니다. 연결된 기록도 함께 사라집니다.',
+    },
+    render: ({
+        action = <AlertDialog.Action>Remove</AlertDialog.Action>,
+        cancel = <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>,
+        ...args
+    }) => {
         return (
             <AlertDialog.Root
-                type="critical"
-                title="이 항목을 삭제할까요?"
-                description="삭제하면 되돌릴 수 없습니다. 연결된 기록도 함께 사라집니다."
                 trigger={<Button>트리거</Button>}
-                cancel={<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>}
-                action={<AlertDialog.Action>Remove</AlertDialog.Action>}
+                cancel={cancel}
+                action={action}
+                {...args}
             />
         );
     },

@@ -126,7 +126,7 @@ export interface AlertDialogProps {
      * 다이얼로그의 타입을 결정한다.
      * @default "critical"
      */
-    type: 'critical' | 'info';
+    type: 'critical' | 'confirm';
 
     /**
      * 다이얼로그의 역할에 대한 시각적 힌트를 전달한다.
@@ -180,7 +180,7 @@ export namespace AlertDialogRoot {
 
 const DEFAULT_ICON: Record<AlertDialogRoot.Props['type'], string> = {
     critical: 'https://statics.goorm.io/gds/resources/images/light/error_warning.svg',
-    info: 'https://statics.goorm.io/gds/resources/images/light/info.svg',
+    confirm: 'https://statics.goorm.io/gds/resources/images/light/info.svg',
 };
 
 interface BodyProps extends Pick<
