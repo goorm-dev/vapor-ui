@@ -14,7 +14,7 @@ export const root = componentStyle({
 
 export const track = componentRecipe({
     base: {
-        gridColumn: '1 / 3',
+        gridColumn: '1 / -1',
         borderRadius: vars.size.borderRadius['900'],
         backgroundColor: vars.color.background['secondary'],
         overflow: 'hidden',
@@ -54,7 +54,6 @@ export const indicator = componentRecipe({
 export const label = componentStyle([
     typography({ style: 'subtitle1' }),
     {
-        gridColumn: '1',
         color: vars.color.foreground['normal'],
     },
 ]);
@@ -62,7 +61,6 @@ export const label = componentStyle([
 export const value = componentStyle([
     typography({ style: 'subtitle1' }),
     {
-        gridColumn: '2',
         textAlign: 'end',
         color: vars.color.foreground['secondary'],
     },

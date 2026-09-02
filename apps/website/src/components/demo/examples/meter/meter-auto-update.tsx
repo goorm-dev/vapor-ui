@@ -9,7 +9,6 @@ export default function MeterAutoUpdate() {
     useEffect(() => {
         if (!running) return;
 
-        // 1초 간격 — 초당 3회를 넘기지 않는다.
         const id = setInterval(() => setValue((prev) => (prev + 7) % 101), 1000);
 
         return () => clearInterval(id);
