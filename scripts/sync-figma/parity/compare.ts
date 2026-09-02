@@ -1,21 +1,3 @@
-/**
- * Step 3 — compare our render against Figma's and report.
- *
- * Usage:
- *   tsx parity/compare.ts [--threshold=N]
- *
- * The metric is pixelmatch's diff pixel count. pixelmatch skips pixels it can explain as
- * antialiasing, which is what makes the count usable across two different rasterizers: on the
- * 578 mono icons measured 2026-09-02, 573 scored 0 and the rest scored 1.
- *
- * ONLY MONO ICONS ARE GATED. Figma and Chromium disagree far more on colour icons (flags, logos:
- * p90 50, max 289 diff pixels with nothing wrong), so those are reported and never failed.
- *
- * What this check does NOT catch: pixelmatch's antialiasing skip also hides a sub-pixel shift —
- * a synthetic 1px translation at 64px goes unnoticed on 345 of 1156 mono cases (measured). It
- * catches what a human would see, not every geometry change. Conversion-level regressions are
- * covered offline by src/integrations/figma/svgr.test.ts.
- */
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
@@ -26,14 +8,8 @@ import { PNG } from 'pngjs';
 import type { Manifest } from './lib';
 import { CACHE_DIR, MANIFEST, flags } from './lib';
 
-/** pixelmatch v7 threshold is an OKLab HyAB distance — do not copy pre-v7 (YIQ) numbers. */
 const PIXELMATCH_THRESHOLD = 0.1;
 
-/**
- * A mono icon fails above this many diff pixels. 1 is the measured maximum across 578 mono icons
- * at scale=4, so this is the tightest line with no false failure; a real defect is orders of
- * magnitude above it (a wrong icon reads in the thousands).
- */
 const DEFAULT_THRESHOLD = 1;
 
 type Row = {
@@ -88,8 +64,6 @@ for (const name of names) {
         continue;
     }
 
-    // Copy into fresh arrays: pixelmatch builds a Uint32Array view, and a pooled Buffer's
-    // byteOffset is not guaranteed to be 4-aligned.
     const a = new Uint8Array(figma.data);
     const b = new Uint8Array(code.data);
     const diff = new PNG({ width: figma.width, height: figma.height });
@@ -97,8 +71,7 @@ for (const name of names) {
         threshold: PIXELMATCH_THRESHOLD,
         diffMask: true,
     });
-    // Always write the diff mask, not just for failures: colour icons are never failed, so this
-    // is the only artifact there is to look at for them.
+
     await fs.writeFile(path.join(diffDir, `${name}.png`), PNG.sync.write(diff));
 
     rows.push({
@@ -181,9 +154,7 @@ if (failures.length) {
 }
 if (missing.length) console.error(pc.red(`missing renders:\n  ${missing.join('\n  ')}`));
 if (unclassified.length) {
-    console.error(
-        pc.red(`not in manifest (re-run parity:fetch):\n  ${unclassified.join('\n  ')}`),
-    );
+    console.error(pc.red(`not in manifest (re-run parity:fetch):\n  ${unclassified.join('\n  ')}`));
 }
 if (failures.length || missing.length || skipped.length || unclassified.length) {
     process.exitCode = 1;
