@@ -67,6 +67,11 @@ describe('extract', () => {
         });
     });
 
+    it('괄호 없는 SLOT 도 children 으로 매핑된다', () => {
+        const tree = root([node('(Body)', [{ name: 'content', type: 'SLOT' }])]);
+        expect(extract(tree)[0].entries).toEqual({ children: { kind: 'slot', name: 'content' } });
+    });
+
     it('비괄호 인스턴스는 조상 블록에 instance 로 붙고 하위는 탐색하지 않는다', () => {
         const tree = root([
             node(
