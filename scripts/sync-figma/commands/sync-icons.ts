@@ -65,7 +65,7 @@ if (!process.env.FIGMA_TOKEN) {
     process.exit(1);
 }
 
-if (!TYPE || !(TYPE in ICON_TYPES)) {
+if (!TYPE || !Object.hasOwn(ICON_TYPES, TYPE)) {
     console.error(
         pc.red(
             ` GDS FIGMA EXPORT ERROR: TYPE must be one of ${Object.keys(ICON_TYPES).join(', ')}.`,
