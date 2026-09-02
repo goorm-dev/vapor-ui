@@ -54,6 +54,7 @@
     "scripts": {
         "build": "rimraf dist && rolldown -c rolldown.config.ts",
         "clean": "rimraf dist node_modules .turbo",
+        "figma:gen": "node --env-file-if-exists=.env ./scripts/gen-code-connect/cli.mjs",
         "lint": "eslint ./src",
         "test": "vitest --run --passWithNoTests",
         "test:coverage": "vitest --coverage --passWithNoTests",
