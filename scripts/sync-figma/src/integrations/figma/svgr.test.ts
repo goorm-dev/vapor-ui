@@ -1,15 +1,5 @@
-/**
- * The conversion contract: what our SVGR + svgo config must do to Figma's SVG output.
- *
- * This covers the axis that used to be checked by rasterizing Figma's SVG export and diffing it
- * against our render — a pixel comparison could only ever re-test svgo, and this does it offline.
- * Whether the components look like Figma's own raster is a separate question, answered by
- * parity/ against Figma PNGs.
- *
- * Run: pnpm --filter @repo/sync-figma test
- */
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import { test } from 'vitest';
 
 import { svgToIconComponent } from './svgr';
 

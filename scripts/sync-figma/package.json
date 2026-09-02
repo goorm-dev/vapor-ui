@@ -14,7 +14,7 @@
         "parity:selfcheck": "tsx ./parity/selfcheck.ts",
         "sync-icons:basic": "TYPE=basic tsx --env-file-if-exists=.env ./commands/sync-icons.ts",
         "sync-icons:symbol": "TYPE=symbol tsx --env-file-if-exists=.env ./commands/sync-icons.ts",
-        "test": "tsx --test src/integrations/figma/svgr.test.ts",
+        "test": "vitest --run",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -39,6 +39,7 @@
         "react": "catalog:",
         "react-dom": "catalog:",
         "tsx": "^4.23.12",
-        "typescript": "catalog:"
+        "typescript": "catalog:",
+        "vitest": "catalog:"
     }
 }
