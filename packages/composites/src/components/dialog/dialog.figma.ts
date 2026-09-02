@@ -30,11 +30,11 @@ export default {
         <Dialog.Root
             // ariaLabels={} 닫기 버튼의 aria-label을 지정하세요.
             // trigger={} 트리거 요소를 입력하세요.
-            size="${popup.size}"
-            title="${header.title}"
-            description="${header.description}"
-            assistive={${footer.assistive}}
-            action={${footer.action}}
+            ${popup.size}
+            ${header.title}
+            ${header.description}
+            ${footer.assistive}
+            ${footer.action}
         >
             ${body.children}
         </Dialog.Root>
