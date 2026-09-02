@@ -2,29 +2,25 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const ThailandColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1328"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-ThailandColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1328)">
-            <path d="M20 13.3182H-4V16H20V13.3182Z" fill="#A51931" />
-            <path d="M20 0H-4V2.68182H20V0Z" fill="#A51931" />
-            <path d="M20 10.6418H-4V13.3182H20V10.6418Z" fill="white" />
-            <path d="M20 2.68182H-4V5.35819H20V2.68182Z" fill="white" />
-            <path d="M20 5.35815H-4V10.64H20V5.35815Z" fill="#2D2A4A" />
+        <g mask="url(#vapor-icons-color-ThailandColorIcon__a)">
+            <path fill="#A51931" d="M20 13.318H-4V16h24zM20 0H-4v2.682h24z" />
+            <path fill="#fff" d="M20 10.642H-4v2.676h24zm0-7.96H-4v2.676h24z" />
+            <path fill="#2D2A4A" d="M20 5.358H-4v5.282h24z" />
         </g>
     </IconBase>
 );
-
 export default ThailandColorIcon;
