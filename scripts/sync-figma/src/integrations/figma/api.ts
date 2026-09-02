@@ -15,11 +15,11 @@ type FigmaNode = {
 };
 
 type GetFileNodesResponse = {
-    nodes: Record<string, { document: FigmaNode } | null>;
+    nodes: Record<string, { document: FigmaNode }>;
 };
 
 type GetImageResponse = {
-    images: Record<string, string | null>;
+    images: Record<string, string>;
 };
 
 /**
@@ -55,13 +55,18 @@ const getImage = async ({
     fileKey,
     nodeIds,
     format = 'svg',
+    scale,
 }: {
     fileKey: string;
     nodeIds: string;
     format?: string;
+    /** Raster scale, 0.01 ~ 4. Ignored by Figma for `format=svg`. */
+    scale?: number;
 }): Promise<GetImageResponse> => {
     const result = await fetch(
-        `https://api.figma.com/v1/images/${fileKey}?ids=${nodeIds}&format=${format}&svg_include_id=false`,
+        `https://api.figma.com/v1/images/${fileKey}?ids=${nodeIds}&format=${format}&svg_include_id=false${
+            scale ? `&scale=${scale}` : ''
+        }`,
         {
             headers,
         },

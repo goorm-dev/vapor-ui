@@ -6,13 +6,9 @@
             "~/*": ["./src/*"]
         },
         "noEmit": true,
-        "baseUrl": ".",
-        "paths": {
-            "~/*": ["./src/*"]
-        },
         "target": "ES2023",
         "lib": ["ES2023"],
         "types": ["node"]
     },
-    "include": ["commands", "src"]
+    "include": ["commands", "parity", "src"]
 }
