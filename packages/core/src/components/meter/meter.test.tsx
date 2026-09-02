@@ -174,9 +174,10 @@ describe('Meter', () => {
     it('should apply `size` to the track and `type` to the indicator', () => {
         render(
             <MeterTest size="lg" type="warning" aria-label={LABEL_TEXT}>
-                <Meter.Track data-testid="track">
-                    <Meter.IndicatorPrimitive data-testid="indicator" />
-                </Meter.Track>
+                <Meter.Track
+                    data-testid="track"
+                    indicatorElement={<Meter.IndicatorPrimitive data-testid="indicator" />}
+                />
             </MeterTest>,
         );
 

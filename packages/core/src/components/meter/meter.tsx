@@ -1,6 +1,6 @@
 'use client';
 
-import type { RefObject } from 'react';
+import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useEffect, useRef } from 'react';
 
 import { Meter as BaseMeter } from '@base-ui/react/meter';
@@ -156,11 +156,11 @@ MeterIndicatorPrimitive.displayName = 'Meter.IndicatorPrimitive';
  * Represents the full range of the meter and renders `Meter.IndicatorPrimitive` inside. Renders a `<div>` element.
  */
 export const MeterTrack = forwardRef<HTMLDivElement, MeterTrack.Props>((props, ref) => {
-    const { children, ...componentProps } = props;
+    const { indicatorElement, ...componentProps } = props;
 
     return (
         <MeterTrackPrimitive ref={ref} {...componentProps}>
-            {children ?? <MeterIndicatorPrimitive />}
+            {indicatorElement ?? <MeterIndicatorPrimitive />}
         </MeterTrackPrimitive>
     );
 });
@@ -204,9 +204,16 @@ export namespace MeterIndicatorPrimitive {
     export type Props = VaporUIComponentProps<typeof BaseMeter.Indicator, State>;
 }
 
+export interface MeterTrackProps extends Omit<MeterTrackPrimitive.Props, 'children'> {
+    /**
+     * A Custom element for Meter.IndicatorPrimitive. If not provided, the default Meter.IndicatorPrimitive will be rendered.
+     */
+    indicatorElement?: ReactElement<MeterIndicatorPrimitive.Props>;
+}
+
 export namespace MeterTrack {
     export type State = MeterTrackPrimitive.State;
-    export type Props = MeterTrackPrimitive.Props;
+    export type Props = MeterTrackProps;
 }
 
 export namespace MeterValue {
