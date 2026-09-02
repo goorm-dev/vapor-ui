@@ -1,0 +1,205 @@
+[
+    {
+        "fileKey": "he4tiAGOKGPl0Fm56ZpJsy",
+        "nodeId": "2337:38499",
+        "name": "Dialog",
+        "properties": {},
+        "descendants": {
+            "INSTANCE[(Popup)]": {
+                "type": "INSTANCE",
+                "name": "(Popup)",
+                "mainComponentName": "(Popup)",
+                "references": {},
+                "properties": {
+                    "size": {
+                        "name": "size",
+                        "type": "VARIANT",
+                        "key": "size",
+                        "variantOptions": ["md"]
+                    }
+                },
+                "descendants": {
+                    "INSTANCE[(Header)]": {
+                        "type": "INSTANCE",
+                        "name": "(Header)",
+                        "mainComponentName": "(Header)",
+                        "references": {},
+                        "properties": {
+                            "title#2328:0": {
+                                "name": "title",
+                                "type": "TEXT",
+                                "key": "title#2328:0"
+                            },
+                            "(has description)#2328:1": {
+                                "name": "(has description)",
+                                "type": "BOOLEAN",
+                                "key": "(has description)#2328:1"
+                            },
+                            "description#2328:2": {
+                                "name": "description",
+                                "type": "TEXT",
+                                "key": "description#2328:2"
+                            }
+                        },
+                        "descendants": {
+                            "TEXT[Title]": {
+                                "type": "TEXT",
+                                "name": "Title",
+                                "nodeId": "2328:28293",
+                                "references": { "characters": "title#2328:0" }
+                            },
+                            "TEXT[Description]": {
+                                "type": "TEXT",
+                                "name": "Description",
+                                "nodeId": "2328:28294",
+                                "references": {
+                                    "visible": "(has description)#2328:1",
+                                    "characters": "description#2328:2"
+                                }
+                            },
+                            "INSTANCE[💙IconButton]": {
+                                "type": "INSTANCE",
+                                "name": "💙IconButton",
+                                "mainComponentName": "💙IconButton",
+                                "references": {},
+                                "properties": {
+                                    "size": {
+                                        "name": "size",
+                                        "type": "VARIANT",
+                                        "key": "size",
+                                        "variantOptions": ["xl"]
+                                    },
+                                    "variant": {
+                                        "name": "variant",
+                                        "type": "VARIANT",
+                                        "key": "variant",
+                                        "variantOptions": ["ghost"]
+                                    }
+                                },
+                                "descendants": {
+                                    "INSTANCE[🟨IconButton/SlotLayer]": {
+                                        "type": "INSTANCE",
+                                        "name": "🟨IconButton/SlotLayer",
+                                        "mainComponentName": "🟨IconButton/SlotLayer",
+                                        "references": {},
+                                        "properties": {
+                                            "Icon#31044:0": {
+                                                "name": "Icon",
+                                                "type": "INSTANCE_SWAP",
+                                                "key": "Icon#31044:0"
+                                            }
+                                        },
+                                        "descendants": {}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "INSTANCE[(Body)]": {
+                        "type": "INSTANCE",
+                        "name": "(Body)",
+                        "mainComponentName": "(Body)",
+                        "references": {},
+                        "properties": {
+                            "(content)#2260:77": {
+                                "name": "(content)",
+                                "type": "SLOT",
+                                "key": "(content)#2260:77"
+                            },
+                            "(scroll)": {
+                                "name": "(scroll)",
+                                "type": "VARIANT",
+                                "key": "(scroll)",
+                                "variantOptions": ["false"]
+                            }
+                        },
+                        "descendants": {}
+                    },
+                    "INSTANCE[(Footer)]": {
+                        "type": "INSTANCE",
+                        "name": "(Footer)",
+                        "mainComponentName": "(Footer)",
+                        "references": {},
+                        "properties": {
+                            "(has assistive)#2122:24": {
+                                "name": "(has assistive)",
+                                "type": "BOOLEAN",
+                                "key": "(has assistive)#2122:24"
+                            },
+                            "(has footer)": {
+                                "name": "(has footer)",
+                                "type": "VARIANT",
+                                "key": "(has footer)",
+                                "variantOptions": ["true"]
+                            }
+                        },
+                        "descendants": {
+                            "INSTANCE[Assistive]": {
+                                "type": "INSTANCE",
+                                "name": "Assistive",
+                                "mainComponentName": "Assistive",
+                                "references": { "visible": "(has assistive)#2122:24" },
+                                "properties": {
+                                    "assistive": {
+                                        "name": "assistive",
+                                        "type": "VARIANT",
+                                        "key": "assistive",
+                                        "variantOptions": ["button"]
+                                    }
+                                },
+                                "descendants": {
+                                    "INSTANCE[💙Button]": {
+                                        "type": "INSTANCE",
+                                        "name": "💙Button",
+                                        "mainComponentName": "💙Button",
+                                        "references": {},
+                                        "properties": {
+                                            "size": {
+                                                "name": "size",
+                                                "type": "VARIANT",
+                                                "key": "size",
+                                                "variantOptions": ["lg"]
+                                            }
+                                        },
+                                        "descendants": {}
+                                    }
+                                }
+                            },
+                            "INSTANCE[Action]": {
+                                "type": "INSTANCE",
+                                "name": "Action",
+                                "mainComponentName": "Action",
+                                "references": {},
+                                "properties": {
+                                    "action": {
+                                        "name": "action",
+                                        "type": "VARIANT",
+                                        "key": "action",
+                                        "variantOptions": ["button"]
+                                    }
+                                },
+                                "descendants": {
+                                    "INSTANCE[💙Button]": {
+                                        "type": "INSTANCE",
+                                        "name": "💙Button",
+                                        "mainComponentName": "💙Button",
+                                        "references": {},
+                                        "properties": {
+                                            "size": {
+                                                "name": "size",
+                                                "type": "VARIANT",
+                                                "key": "size",
+                                                "variantOptions": ["lg"]
+                                            }
+                                        },
+                                        "descendants": {}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+]
