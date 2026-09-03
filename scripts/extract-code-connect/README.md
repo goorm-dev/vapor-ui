@@ -21,13 +21,13 @@ pnpm <pkg> figma:gen "<figma-url>" [--force] [--from-json <p>] [--out <p>] [--ut
 
 CLI 는 현재 작업 디렉터리를 소비 패키지 루트로 본다.
 
-| 항목                   | 결정                                                                        |
-| ---------------------- | --------------------------------------------------------------------------- |
-| 출력 기본 경로         | `src/components/<kebab>/<kebab>.figma.ts`                                   |
-| `imports` 패키지명     | `figma.config.json` `packageImportPath` → 없으면 `package.json` `name`      |
-| `getProperties` import | `--utils` (기본 `src/utils/figma-utils`) 를 출력 파일 기준 상대경로로 변환  |
-| 루트 태그              | `src/components/<kebab>/index.parts.ts` 존재 → `<Pascal.Root>`              |
-| `FIGMA_TOKEN`          | 환경변수 → 없으면 `<cwd>/.env`. `--from-json` 이면 불필요                   |
+| 항목                   | 결정                                                                       |
+| ---------------------- | -------------------------------------------------------------------------- |
+| 출력 기본 경로         | `src/components/<kebab>/<kebab>.figma.ts`                                  |
+| `imports` 패키지명     | `figma.config.json` `packageImportPath` → 없으면 `package.json` `name`     |
+| `getProperties` import | `--utils` (기본 `src/utils/figma-utils`) 를 출력 파일 기준 상대경로로 변환 |
+| 루트 태그              | `src/components/<kebab>/index.parts.ts` 존재 → `<Pascal.Root>`             |
+| `FIGMA_TOKEN`          | 환경변수 → 없으면 `<cwd>/.env`. `--from-json` 이면 불필요                  |
 
 ## 새 패키지에 도입하기 (예: core)
 

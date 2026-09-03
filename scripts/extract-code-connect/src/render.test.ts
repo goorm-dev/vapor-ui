@@ -132,9 +132,7 @@ export default {
     });
 
     it('utilsImport 와 packageImportPath 를 그대로 쓴다', async () => {
-        const blocks: Block[] = [
-            { varName: 'r', instanceName: '(R)', entries: {}, todos: [] },
-        ];
+        const blocks: Block[] = [{ varName: 'r', instanceName: '(R)', entries: {}, todos: [] }];
         const out = await fmt(
             render({
                 blocks,

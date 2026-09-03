@@ -35,7 +35,9 @@ export function fromMcp(json: unknown): ComponentTree {
 }
 
 function isMcpNode(v: unknown): v is McpNode {
-    return typeof v === 'object' && v !== null && typeof (v as { name?: unknown }).name === 'string';
+    return (
+        typeof v === 'object' && v !== null && typeof (v as { name?: unknown }).name === 'string'
+    );
 }
 
 function toProps(properties: Record<string, McpProperty> = {}): Prop[] {
