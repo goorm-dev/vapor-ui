@@ -205,7 +205,8 @@ const Header = ({ title, description }: HeaderProps) => {
 interface BodyProps extends Pick<AlertDialogRoot.Props, 'children'> {}
 
 const Body = ({ children }: BodyProps) => {
-    if (!children) return null;
+    if (children === null || children === undefined) return null;
+    // if (!children) return null;
 
     return <AlertDialogPrimitives.Body>{children}</AlertDialogPrimitives.Body>;
 };
