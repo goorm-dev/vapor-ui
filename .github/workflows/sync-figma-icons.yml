@@ -295,7 +295,9 @@ jobs:
               with:
                   name: icon-parity-report
                   path: scripts/sync-figma/parity/.cache/report.*
-                  if-no-files-found: ignore
+                  # .cache is a hidden dir, excluded by default since v4.4
+                  include-hidden-files: true
+                  if-no-files-found: error
 
             - name: Comment Parity Failure on PR
               if: steps.parity.outcome == 'failure' && steps.create_pr.outputs.number != ''
