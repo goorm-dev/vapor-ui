@@ -1,7 +1,7 @@
 {
     "name": "IndicatorPrimitive",
     "displayName": "ProgressBar.IndicatorPrimitive",
-    "description": "Track에서 채워진 부분입니다. `<div>` 요소로 렌더링됩니다.\n\n`type=\"error\"`에서는 렌더링되지 않습니다. 실패한 작업에 채워진 막대가 남아 있으면 진행 중으로 읽히기 때문입니다.",
+    "description": "Track에서 채워진 부분입니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",

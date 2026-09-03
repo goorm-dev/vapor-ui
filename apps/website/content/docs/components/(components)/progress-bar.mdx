@@ -19,9 +19,7 @@ description: 'ProgressBar는 시작과 끝이 있는 작업의 진행 정도를 
 
 ### Size
 
-Track의 높이를 설정합니다. `sm` `md` `lg`
-
-Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
+Track의 높이를 설정합니다.
 
 <Demo name="progress-bar/progress-bar-size">
 ```json doc-gen:file
@@ -34,9 +32,7 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 
 ### Type
 
-작업의 상태를 나타냅니다. `default` `error`
-
-`error`는 Description을 danger 색으로 바꾸고 Track의 불투명도를 낮춥니다. Indicator는 그리지 않습니다. 실패한 작업에 채워진 막대가 남아 있으면 진행 중으로 읽히기 때문입니다. 실패했다는 사실은 Description 문구가 말해야 합니다.
+작업의 상태를 나타냅니다. 
 
 <Demo name="progress-bar/progress-bar-type">
 ```json doc-gen:file
@@ -49,9 +45,7 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 
 ### Value Text
 
-`ProgressBar.Value`는 선언한 범위를 기준으로 값을 백분율로 환산해 보여줍니다. `min`과 `max`를 바꾸면 화면의 값과 보조기기가 읽는 값이 함께 바뀝니다.
-
-`getAriaValueText`가 반환한 문자열은 `aria-valuetext`와 화면 텍스트에 동시에 쓰입니다. 두 청중이 다른 값을 듣거나 보는 일이 없습니다.
+`ProgressBar.Value`는 선언한 범위를 기준으로 값을 백분율로 환산해 보여줍니다.
 
 <Demo name="progress-bar/progress-bar-value-text">
 ```json doc-gen:file
@@ -65,8 +59,6 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 ### Indeterminate
 
 `value`가 `null`이면 진행률을 알 수 없는 상태입니다. 30% 폭의 세그먼트가 Track을 왕복하고 `aria-valuenow`는 쓰이지 않습니다.
-
-`prefers-reduced-motion: reduce`에서는 세그먼트가 멈춘 채로 표시됩니다.
 
 <Demo name="progress-bar/progress-bar-indeterminate">
 ```json doc-gen:file
@@ -83,7 +75,7 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 
 ### Description
 
-`ProgressBar.Description`은 진행 상황을 말로 풀어 씁니다. 남은 용량, 실패 사유, 다음에 할 일 같은 내용입니다. `aria-describedby`는 자동으로 연결됩니다. `id`를 직접 주면 그 값이 쓰입니다.
+`ProgressBar.Description`은 진행 상황을 말로 풀어 씁니다. 남은 용량, 실패 사유, 다음에 할 일 같은 내용입니다. 
 
 `ProgressBar.Root`의 `type`이 `error`이면 이 텍스트가 danger 색이 되고 막대는 흐린 Track만 남습니다.
 
@@ -102,35 +94,7 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 
 - `ProgressBar.Label`을 넣거나 `ProgressBar.Root`에 `aria-label` 또는 `aria-labelledby`를 주세요. 이름이 없으면 보조기기가 숫자만 읽습니다. 개발 모드에서는 콘솔 경고가 나옵니다.
 - 실패 사유나 다음 행동은 `ProgressBar.Description`에 적으세요. **`type="error"`는 겉모습만 바꿉니다.** 실패했다는 사실은 문구가 직접 말해야 합니다. 색과 흐려진 막대만으로는 스크린 리더 사용자도, 빨강과 회색을 구별하지 못하는 사용자도 실패를 알 수 없습니다.
-- 값이 바뀌어도 보조기기는 아무 말도 하지 않습니다. 완료나 실패를 알려야 하면 `ProgressBar` **바깥에** 라이브 리전을 두세요. `role="progressbar"` 요소의 자식은 표현용으로 취급됩니다. 그 안에 둔 라이브 리전은 접근성 트리에서 빠집니다.
-
-    ```tsx
-    <ProgressBar.Root value={value}>{/* ... */}</ProgressBar.Root>
-    <span role="status">{done ? '업로드 완료' : null}</span>
-    ```
-
-    메시지는 완료·실패 시점에 한 번만 넣으세요. 값이 바뀔 때마다 갱신되는 라이브 리전은 스크린 리더를 뒤덮습니다.
-
-- `min`이 `max`보다 크거나 같으면 개발 모드에서 경고를 남기고 0–100으로 되돌립니다.
 - 진행 상황을 막대 길이만으로 전달하지 마세요. `ProgressBar.Value`나 `ProgressBar.Description`으로 텍스트를 함께 두면 확대 화면이나 저시력 환경에서도 값을 읽을 수 있습니다.
-- 보이는 라벨과 `aria-label`을 같이 쓴다면 보이는 문구를 `aria-label` 안에 그대로 넣으세요. 음성 명령 사용자는 화면에 적힌 말을 부릅니다.
-- 색을 재정의하면 대비는 직접 책임져야 합니다. Label·Value·Description 텍스트는 배경 대비 4.5:1, Indicator는 Track 대비 3:1 이상이어야 합니다.
-- indeterminate 막대가 5초를 넘겨 돌고 다른 콘텐츠와 함께 움직인다면 멈추는 수단을 두세요. `prefers-reduced-motion`은 그 설정을 켠 사용자에게만 닿아 WCAG 2.2.2를 대신하지 못합니다. 정지 버튼은 `indicatorElement`로 넘긴 `ProgressBar.IndicatorPrimitive`의 애니메이션을 끄면 됩니다.
-
-    ```tsx
-    <ProgressBar.Track
-        indicatorElement={
-            <ProgressBar.IndicatorPrimitive style={paused ? { animation: 'none' } : undefined} />
-        }
-    />
-    <Button onClick={() => setPaused((prev) => !prev)}>{paused ? '재생' : '정지'}</Button>
-    ```
-
-- 막대를 넓게 보이려고 화면 방향을 가로로 고정하지 마세요. Track은 부모 너비를 따라가므로 세로 화면에서도 그대로 동작합니다.
-- "빨간 막대를 확인하세요"처럼 색·모양·위치만 가리키는 안내는 쓰지 마세요. 어떤 작업이 어떻게 됐는지 말로 적어야 합니다.
-- Label이나 Value 문구가 페이지 언어와 다르면 그 요소에 `lang`을 붙이세요. 스크린 리더가 엉뚱한 발음으로 읽습니다.
-- 진행 중에 3초를 넘는 소리를 낸다면 끄는 수단을 따로 두세요. 스크린 리더 사용자는 그 소리에 음성이 묻힙니다.
-- 백분율이 의미가 없는 작업에는 `getAriaValueText`로 실제 단위를 쓰세요. "파일 12개 중 3개", "40MB 중 12MB"가 "25%"보다 정확합니다.
 
 ## Props Table
 
@@ -149,8 +113,6 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 <ComponentPropsTable componentName="progress-bar-value" />
 
 ### ProgressBar.Track
-
-기본으로 `ProgressBar.IndicatorPrimitive`를 안에 그립니다. 인디케이터를 바꾸려면 `indicatorElement`에 직접 만든 요소를 넘깁니다. 인디케이터 없는 트랙은 `ProgressBar.TrackPrimitive`를 씁니다.
 
 <ComponentPropsTable componentName="progress-bar-track" />
 

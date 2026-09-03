@@ -1,7 +1,7 @@
 {
     "name": "Track",
     "displayName": "ProgressBar.Track",
-    "description": "작업의 전체 길이입니다. 안에 `ProgressBar.IndicatorPrimitive`를 렌더링합니다. `<div>` 요소로 렌더링됩니다.",
+    "description": "작업의 전체 길이입니다. 내부에 `ProgressBar.IndicatorPrimitive`를 렌더링합니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",

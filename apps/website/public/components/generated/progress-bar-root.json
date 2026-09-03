@@ -1,7 +1,7 @@
 {
     "name": "Root",
     "displayName": "ProgressBar.Root",
-    "description": "시작과 끝이 있는 작업의 진행 정도를 보여줍니다. `<div>` 요소로 렌더링됩니다.\n\n디스크 사용량이나 점수처럼 고정된 척도의 측정값에는 `Meter`를 사용합니다.",
+    "description": "시작과 끝이 있는 작업의 진행 정도를 보여줍니다. `<div>` 요소로 렌더링됩니다. 디스크 사용량이나 점수처럼 고정된 척도의 측정값에는 `Meter`를 사용합니다.",
     "props": [
         {
             "name": "value",

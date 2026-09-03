@@ -1,7 +1,7 @@
 {
     "name": "Value",
     "displayName": "ProgressBar.Value",
-    "description": "화면에 보이는 값 텍스트입니다. `<span>` 요소로 렌더링됩니다.\n\n스크린 리더가 듣는 값과 같은 값을 보여줍니다.",
+    "description": "화면에 보이는 값 텍스트입니다. `<span>` 요소로 렌더링됩니다. 스크린 리더가 듣는 값과 같은 값을 보여줍니다.",
     "props": [
         {
             "name": "className",
