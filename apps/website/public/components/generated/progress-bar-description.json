@@ -1,7 +1,7 @@
 {
     "name": "Description",
     "displayName": "ProgressBar.Description",
-    "description": "진행 상황을 말로 풀어 씁니다. 실패 사유나 다음에 할 일 같은 내용입니다. `<span>` 요소로 렌더링됩니다.\n\n`aria-describedby`로 보조기기에 자동 연결됩니다. `id`를 직접 주면 그 값이 쓰입니다.\n\n`ProgressBar.Root`의 `type=\"error\"`는 이 텍스트의 색만 바꿉니다. 실패했다는 사실은 문구가 직접 말해야 합니다.",
+    "description": "진행 상황을 말로 풀어 씁니다. 실패 사유나 다음에 할 일 같은 내용입니다. `<span>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",

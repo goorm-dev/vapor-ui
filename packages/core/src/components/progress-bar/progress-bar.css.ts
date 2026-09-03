@@ -2,6 +2,7 @@ import { keyframes } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
+import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
 /**
@@ -20,51 +21,40 @@ const SEGMENT_REST = '35%';
 
 export const root = componentStyle({
     display: 'grid',
-    gridTemplateColumns: '1fr auto',
+    gridTemplateColumns: 'minmax(0, 1fr) auto',
     alignItems: 'center',
-    // The two row gaps differ (label area 8px, description 6px), so they are set on the
-    // rows themselves instead of a single `rowGap`.
     rowGap: 0,
     columnGap: vars.size.space['050'],
     width: '100%',
 });
 
-/** `subtitle1` — the label and the value share one type style; only colour separates them. */
-export const label = componentStyle({
-    minWidth: 0,
-    lineHeight: vars.typography.lineHeight['075'],
-    letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal'],
-    fontSize: vars.typography.fontSize['075'],
-    fontWeight: vars.typography.fontWeight['500'],
-});
-
-/** `body2` — one step back from the label, so the task name reads first. */
-export const value = componentStyle({
-    justifySelf: 'end',
-    minWidth: 0,
-    textAlign: 'right',
-    lineHeight: vars.typography.lineHeight['075'],
-    letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['hint'],
-    fontSize: vars.typography.fontSize['075'],
-    fontWeight: vars.typography.fontWeight['400'],
-});
-
-/**
- * `subtitle1`, spanning the full width under the track. The colour is the only thing the
- * `type` axis changes — the failure itself has to be said in the text (WCAG 2.2 SC 1.4.1).
- */
-export const description = componentRecipe({
-    base: {
-        gridColumn: '1 / -1',
-        marginTop: vars.size.space['075'],
+export const label = componentStyle([
+    typography({ style: 'subtitle1' }),
+    {
         minWidth: 0,
-        lineHeight: vars.typography.lineHeight['075'],
-        letterSpacing: vars.typography.letterSpacing['100'],
-        fontSize: vars.typography.fontSize['075'],
-        fontWeight: vars.typography.fontWeight['500'],
+        color: vars.color.foreground['normal'],
     },
+]);
+
+export const value = componentStyle([
+    typography({ style: 'body2' }),
+    {
+        justifySelf: 'end',
+        minWidth: 0,
+        textAlign: 'right',
+        color: vars.color.foreground['hint'],
+    },
+]);
+
+export const description = componentRecipe({
+    base: [
+        typography({ style: 'subtitle1' }),
+        {
+            gridColumn: '1 / -1',
+            marginTop: vars.size.space['075'],
+            minWidth: 0,
+        },
+    ],
 
     defaultVariants: { type: 'default' },
     variants: {
@@ -85,11 +75,9 @@ export const track = componentRecipe({
         borderRadius: vars.size.borderRadius['900'],
         backgroundColor: vars.color.background['secondary-200'],
         width: '100%',
-        // Clips the moving indeterminate segment so it never escapes the track radius.
         overflow: 'hidden',
 
         selectors: {
-            // Only a label area above it earns the gap — a track on its own starts at the top.
             '&:not(:first-child)': { marginTop: vars.size.space['100'] },
         },
     },
@@ -110,8 +98,6 @@ export const track = componentRecipe({
          */
         type: {
             default: {},
-            // The failure is over: the track dims and drops its indicator instead of
-            // showing a fill that would still read as progress.
             error: { opacity: 0.32 },
         },
     },
@@ -123,8 +109,6 @@ export const indicator = componentStyle({
     height: 'inherit',
 
     selectors: {
-        // base-ui gives the indicator no inline width when the value is null,
-        // which would otherwise render a full — and therefore complete-looking — bar.
         '&[data-indeterminate]': {
             position: 'absolute',
             insetInlineStart: 0,
