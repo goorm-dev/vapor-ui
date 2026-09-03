@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 
-import { AlertDialog as AlertDialogPrimitives, Box, Button, VStack } from '@vapor-ui/core';
+import { AlertDialog as AlertDialogPrimitives, Button, VStack } from '@vapor-ui/core';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -26,7 +26,6 @@ export function useAlertDialogContext() {
 /* -----------------------------------------------------------------------------------------------*/
 
 const slots = createSlots({
-    icon: Box,
     title: AlertDialogPrimitives.Title,
     trigger: AlertDialogPrimitives.Trigger,
     description: AlertDialogPrimitives.Description,
@@ -36,18 +35,24 @@ const slots = createSlots({
 
 export const AlertDialogRoot = ({
     // functions
+    open,
+    onOpenChange,
+    defaultOpen,
     actionsRef: actionsRefProp,
+    container,
+    keepMounted,
 
     // variants
     type,
 
     // slots
     trigger,
-    icon,
+
     title,
     description,
     cancel,
     action,
+    children,
 }: AlertDialogRoot.Props) => {
     const actionsRef = useRef<AlertDialogPrimitives.Root.Actions>(null);
     const mergedRef = actionsRefProp ?? actionsRef;
@@ -57,13 +62,22 @@ export const AlertDialogRoot = ({
 
     return (
         <AlertDialogContext.Provider value={context}>
-            <AlertDialogPrimitives.Root actionsRef={mergedRef}>
+            <AlertDialogPrimitives.Root
+                open={open}
+                onOpenChange={onOpenChange}
+                defaultOpen={defaultOpen}
+                actionsRef={mergedRef}
+            >
                 <slots.trigger render={trigger} />
 
-                <AlertDialogPrimitives.PortalPrimitive>
+                <AlertDialogPrimitives.PortalPrimitive
+                    container={container}
+                    keepMounted={keepMounted}
+                >
                     <AlertDialogPrimitives.OverlayPrimitive />
                     <AlertDialogPrimitives.PopupPrimitive>
-                        <Body icon={icon} title={title} description={description} />
+                        <Header title={title} description={description} />
+                        <Body>{children}</Body>
                         <Footer action={action} cancel={cancel} />
                     </AlertDialogPrimitives.PopupPrimitive>
                 </AlertDialogPrimitives.PortalPrimitive>
@@ -129,11 +143,6 @@ export interface AlertDialogProps {
     type: 'critical' | 'confirm';
 
     /**
-     * 다이얼로그의 역할에 대한 시각적 힌트를 전달한다.
-     */
-    icon?: Slots['icon'];
-
-    /**
      * 다이얼로그의 목적을 한 문장으로 전달한다.
      */
     title: Slots['title'];
@@ -178,22 +187,27 @@ export namespace AlertDialogRoot {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface BodyProps extends Pick<
-    AlertDialogRoot.Props,
-    'icon' | 'title' | 'description' | 'children'
-> {}
+interface HeaderProps extends Pick<AlertDialogRoot.Props, 'title' | 'description'> {}
 
-const Body = ({ title, description, children }: BodyProps) => {
+const Header = ({ title, description }: HeaderProps) => {
     return (
-        <AlertDialogPrimitives.Body render={<VStack />} $css={{ gap: '$200' }}>
+        <AlertDialogPrimitives.Header render={<VStack />} $css={{ gap: '$200' }}>
             <VStack $css={{ gap: '$075' }}>
                 <slots.title render={title} />
                 <slots.description render={description} />
             </VStack>
-
-            {children}
-        </AlertDialogPrimitives.Body>
+        </AlertDialogPrimitives.Header>
     );
+};
+
+/* -----------------------------------------------------------------------------------------------*/
+
+interface BodyProps extends Pick<AlertDialogRoot.Props, 'children'> {}
+
+const Body = ({ children }: BodyProps) => {
+    if (!children) return null;
+
+    return <AlertDialogPrimitives.Body>{children}</AlertDialogPrimitives.Body>;
 };
 
 /* -----------------------------------------------------------------------------------------------*/
