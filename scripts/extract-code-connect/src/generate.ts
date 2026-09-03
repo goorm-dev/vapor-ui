@@ -1,94 +1,52 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { parseArgs } from 'node:util';
 import prettier from 'prettier';
 
 import { fromMcp } from './adapters/mcp';
 import { collectComponentSetIds, fromRest } from './adapters/rest';
 import type { RestComponentSetDoc, RestNodesResponse } from './adapters/rest';
+import type { CliContext } from './cli/context';
 import { extract } from './extract';
 import { parseFigmaUrl } from './figma-url';
 import type { ComponentTree } from './model';
 import { toKebab, toPascal } from './naming';
 import { render } from './render';
 
-export const USAGE = `Usage: extract-code-connect <figma-url> [--force] [--from-json <path>] [--out <path>] [--utils <path>]
-
-  <figma-url>        Figma design URL with node-id (component or component set)
-  --from-json <p>    Use a saved get_context_for_code_connect JSON instead of the REST API
-  --out <p>          Output path (default: src/components/<kebab>/<kebab>.figma.ts)
-  --utils <p>        Module that exports getProperties (default: src/utils/figma-utils)
-  --force            Overwrite an existing output file
-
-Paths are relative to the current working directory (the consuming package root).
-Env: FIGMA_TOKEN (required unless --from-json). Read from <cwd>/.env when present.`;
-
-export interface CliIo {
-    cwd?: string;
-    env?: NodeJS.ProcessEnv;
-    log?: (msg: string) => void;
-    warn?: (msg: string) => void;
-    error?: (msg: string) => void;
+export interface GenerateOptions {
+    /** node-id 를 포함한 Figma 디자인 URL */
+    url: string;
+    /** REST 대신 저장된 get_context_for_code_connect JSON 경로 (cwd 기준) */
+    fromJson?: string;
+    /** 출력 경로 (cwd 기준). 기본 `src/components/<kebab>/<kebab>.figma.ts` */
+    out?: string;
+    /** getProperties 를 export 하는 모듈 (cwd 기준) */
+    utils: string;
+    /** 기존 파일 덮어쓰기 허용 */
+    force: boolean;
 }
 
-/** 실패는 모두 잡아 `error(...)` 후 1 을 돌려준다. process.exit 는 bin.ts 만. */
-export async function main(argv: string[], io: CliIo = {}): Promise<number> {
-    const cwd = io.cwd ?? process.cwd();
-    const env = io.env ?? process.env;
-    const log = io.log ?? console.log;
-    const warn = io.warn ?? console.warn;
-    const error = io.error ?? console.error;
+/** Figma 컴포넌트 → `.figma.ts` 파일 생성. 사용자 오류는 Error throw (호출자가 exit code 로 변환). */
+export async function generate(opts: GenerateOptions, ctx: CliContext): Promise<void> {
+    const { cwd, env, log, warn } = ctx;
+    const { fileKey, nodeId } = parseFigmaUrl(opts.url);
 
-    try {
-        return await run(argv, { cwd, env, log, warn, error });
-    } catch (err) {
-        error(`error: ${err instanceof Error ? err.message : String(err)}`);
-        return 1;
-    }
-}
-
-type Ctx = Required<CliIo>;
-
-async function run(argv: string[], { cwd, env, log, warn, error }: Ctx): Promise<number> {
-    const { values, positionals } = parseArgs({
-        args: argv,
-        allowPositionals: true,
-        options: {
-            force: { type: 'boolean', default: false },
-            'from-json': { type: 'string' },
-            out: { type: 'string' },
-            utils: { type: 'string', default: 'src/utils/figma-utils' },
-            help: { type: 'boolean', short: 'h', default: false },
-        },
-    });
-
-    if (values.help || positionals.length !== 1) {
-        log(USAGE);
-        return values.help ? 0 : 1;
-    }
-
-    const url = positionals[0];
-    const { fileKey, nodeId } = parseFigmaUrl(url);
-
-    const { name, tree } = values['from-json']
-        ? fromMcp(readJson(path.resolve(cwd, values['from-json'])))
+    const { name, tree } = opts.fromJson
+        ? fromMcp(readJson(path.resolve(cwd, opts.fromJson)))
         : await loadFromRest(fileKey, nodeId, loadToken(cwd, env));
 
     const componentName = toPascal(name);
     const kebab = toKebab(name);
     const componentDir = path.join(cwd, 'src/components', kebab);
     const defaultOutPath = path.join(componentDir, `${kebab}.figma.ts`);
-    const outPath = values.out ? path.resolve(cwd, values.out) : defaultOutPath;
+    const outPath = opts.out ? path.resolve(cwd, opts.out) : defaultOutPath;
 
-    if (existsSync(outPath) && !values.force) {
-        error(`Refusing to overwrite ${path.relative(cwd, outPath)} (use --force)`);
-        return 1;
+    if (existsSync(outPath) && !opts.force) {
+        throw new Error(`Refusing to overwrite ${path.relative(cwd, outPath)} (use --force)`);
     }
 
     const blocks = extract(tree, { warn: (m) => warn(`warn: ${m}`) });
     if (blocks.length === 0) {
-        error('No parenthesized instances found; nothing to generate');
-        return 1;
+        throw new Error('No parenthesized instances found; nothing to generate');
     }
 
     // --out 이 소비 패키지 밖이면 utils import 는 기본 출력 위치 기준으로 계산한다.
@@ -101,11 +59,11 @@ async function run(argv: string[], { cwd, env, log, warn, error }: Ctx): Promise
 
     const raw = render({
         blocks,
-        url,
+        url: opts.url,
         componentName,
         kebab,
         hasParts: existsSync(path.join(componentDir, 'index.parts.ts')),
-        utilsImport: relativeImport(importAnchor, path.resolve(cwd, values.utils)),
+        utilsImport: relativeImport(importAnchor, path.resolve(cwd, opts.utils)),
         packageImportPath: resolvePackageImportPath(cwd),
     });
 
@@ -114,7 +72,6 @@ async function run(argv: string[], { cwd, env, log, warn, error }: Ctx): Promise
     mkdirSync(path.dirname(outPath), { recursive: true });
     writeFileSync(outPath, formatted, 'utf8');
     log(`Wrote ${path.relative(cwd, outPath)} (${blocks.length} blocks)`);
-    return 0;
 }
 
 /**

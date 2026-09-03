@@ -5,25 +5,28 @@
     "description": "Generate parserless Figma Code Connect templates (.figma.ts) from a Figma component",
     "type": "module",
     "bin": {
-        "extract-code-connect": "./dist/bin.js"
+        "extract-code-connect": "./bin/extract-code-connect.mjs"
     },
     "files": [
+        "bin",
         "dist"
     ],
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
-        "lint": "eslint src",
+        "lint": "eslint src bin",
         "test": "vitest --run",
         "test:watch": "vitest",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "prettier": "^3.9.6"
+        "prettier": "^3.9.6",
+        "yargs": "^18.1.0"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@types/node": "^22.20.1",
+        "@types/yargs": "^17.0.35",
         "eslint": "catalog:",
         "tsup": "^8.5.1",
         "typescript": "catalog:",

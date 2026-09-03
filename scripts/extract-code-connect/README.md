@@ -17,6 +17,8 @@ parserless Code Connect 템플릿 `<kebab>.figma.ts`를 생성하는 CLI.
 ```bash
 pnpm --filter @vapor-ui/extract-code-connect build   # 최초 1회 (turbo test/typecheck 는 자동 선행)
 pnpm <pkg> figma:gen "<figma-url>" [--force] [--from-json <p>] [--out <p>] [--utils <p>]
+pnpm <pkg> figma:gen --help      # 옵션 설명
+pnpm <pkg> figma:gen --version
 ```
 
 CLI 는 현재 작업 디렉터리를 소비 패키지 루트로 본다.
@@ -44,3 +46,8 @@ pnpm --filter @vapor-ui/extract-code-connect lint
 ```
 
 테스트는 구현 파일 옆 `<name>.test.ts`. fixture 는 `src/fixtures/`.
+
+엔트리는 `bin/extract-code-connect.mjs` (빌드 없는 shebang 파일, `dist/cli/index.js` 를 import).
+CLI 는 [yargs](https://yargs.js.org/) 기반. `src/cli/index.ts` 가 `CommandModule` 을 `.command()` 로 등록하고
+(`src/cli/cmdGenerate.ts` = `$0 <figma-url>`), 실제 생성 파이프라인은 `src/generate.ts`. 명령 추가 시
+`src/cli/cmd<Name>.ts` 를 만들고 `index.ts` 에 `.command(cmdName)` 한 줄을 더한다.
