@@ -2,27 +2,25 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const YemenColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1348"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-YemenColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1348)">
-            <path d="M20 0H-4V5.33273H20V0Z" fill="#CE1126" />
-            <path d="M20 5.3327H-4V10.6654H20V5.3327Z" fill="white" />
-            <path d="M20 10.6673H-4V16H20V10.6673Z" fill="black" />
+        <g mask="url(#vapor-icons-color-YemenColorIcon__a)">
+            <path fill="#CE1126" d="M20 0H-4v5.333h24z" />
+            <path fill="#fff" d="M20 5.333H-4v5.332h24z" />
+            <path fill="#000" d="M20 10.667H-4V16h24z" />
         </g>
     </IconBase>
 );
-
 export default YemenColorIcon;

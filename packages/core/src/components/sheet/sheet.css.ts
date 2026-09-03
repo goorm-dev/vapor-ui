@@ -12,8 +12,9 @@ export const overlay = componentStyle({
 
     transition: 'opacity 0.15s cubic-bezier(.45,1.005,0,1.005)',
 
+    opacity: 0.32,
     backdropFilter: 'blur(1.5px)',
-    backgroundColor: 'rgba(0, 0, 0, 32%)',
+    backgroundColor: vars.color.background['canvas-dim'],
 
     selectors: {
         '&[data-starting-style], &[data-ending-style]': {
