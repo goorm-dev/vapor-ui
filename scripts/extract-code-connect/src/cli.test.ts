@@ -103,6 +103,21 @@ describe('main', () => {
         expect(text).toContain("from '../../figma/helpers';");
     });
 
+    it('--out 이 cwd 밖이면 utils import 는 기본 출력 위치 기준이고 Prettier 설정은 cwd 에서 읽는다', async () => {
+        scaffoldConsumer();
+        const outside = mkdtempSync(path.join(os.tmpdir(), 'extract-code-connect-out-'));
+        try {
+            const o = io();
+            const out = path.join(outside, 'x.figma.ts');
+            expect(await main([url, '--from-json', fixture, '--out', out], o)).toBe(0);
+            const text = readFileSync(out, 'utf8');
+            expect(text).toContain("import { getProperties } from '../../utils/figma-utils';");
+            expect(o.warn).toHaveBeenCalledWith(expect.stringContaining('outside'));
+        } finally {
+            rmSync(outside, { recursive: true, force: true });
+        }
+    });
+
     it('figma.config.json 이 없으면 package.json name 을 imports 에 쓴다', async () => {
         scaffoldConsumer({ figmaConfig: false });
         await main([url, '--from-json', fixture], io());

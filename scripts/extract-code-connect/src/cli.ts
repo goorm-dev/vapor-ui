@@ -77,9 +77,8 @@ async function run(argv: string[], { cwd, env, log, warn, error }: Ctx): Promise
     const componentName = toPascal(name);
     const kebab = toKebab(name);
     const componentDir = path.join(cwd, 'src/components', kebab);
-    const outPath = values.out
-        ? path.resolve(cwd, values.out)
-        : path.join(componentDir, `${kebab}.figma.ts`);
+    const defaultOutPath = path.join(componentDir, `${kebab}.figma.ts`);
+    const outPath = values.out ? path.resolve(cwd, values.out) : defaultOutPath;
 
     if (existsSync(outPath) && !values.force) {
         error(`Refusing to overwrite ${path.relative(cwd, outPath)} (use --force)`);
@@ -92,17 +91,25 @@ async function run(argv: string[], { cwd, env, log, warn, error }: Ctx): Promise
         return 1;
     }
 
+    // --out 이 소비 패키지 밖이면 utils import 는 기본 출력 위치 기준으로 계산한다.
+    const importAnchor = isInside(cwd, outPath) ? outPath : defaultOutPath;
+    if (importAnchor !== outPath) {
+        warn(
+            `warn: --out is outside ${cwd}; utils import computed as if written to ${path.relative(cwd, defaultOutPath)}`,
+        );
+    }
+
     const raw = render({
         blocks,
         url,
         componentName,
         kebab,
         hasParts: existsSync(path.join(componentDir, 'index.parts.ts')),
-        utilsImport: relativeImport(outPath, path.resolve(cwd, values.utils)),
+        utilsImport: relativeImport(importAnchor, path.resolve(cwd, values.utils)),
         packageImportPath: resolvePackageImportPath(cwd),
     });
 
-    const formatted = await format(raw, outPath, warn);
+    const formatted = await format(raw, outPath, cwd, warn);
 
     mkdirSync(path.dirname(outPath), { recursive: true });
     writeFileSync(outPath, formatted, 'utf8');
@@ -154,7 +161,11 @@ function loadToken(cwd: string, env: NodeJS.ProcessEnv): string {
     return token;
 }
 
-async function loadFromRest(fileKey: string, nodeId: string, token: string): Promise<ComponentTree> {
+async function loadFromRest(
+    fileKey: string,
+    nodeId: string,
+    token: string,
+): Promise<ComponentTree> {
     const getNodes = async (ids: string[], depth?: number): Promise<RestNodesResponse> => {
         const params = new URLSearchParams({ ids: ids.join(',') });
         if (depth) params.set('depth', String(depth));
@@ -183,9 +194,14 @@ async function loadFromRest(fileKey: string, nodeId: string, token: string): Pro
     return fromRest(nodesJson, nodeId, setDocs);
 }
 
-/** Prettier: 출력 경로 기준 설정(모노레포 루트 .prettierrc.js). 플러그인 로드 실패 시 플러그인 없이 재시도. */
-async function format(raw: string, outPath: string, warn: (m: string) => void): Promise<string> {
-    const config = (await prettier.resolveConfig(outPath)) ?? {};
+/** Prettier: 소비 패키지(cwd) 기준 설정. 플러그인 로드 실패 시 플러그인 없이 재시도. */
+async function format(
+    raw: string,
+    outPath: string,
+    cwd: string,
+    warn: (m: string) => void,
+): Promise<string> {
+    const config = (await prettier.resolveConfig(path.join(cwd, 'package.json'))) ?? {};
     try {
         return await prettier.format(raw, { ...config, filepath: outPath });
     } catch (err) {
@@ -202,4 +218,10 @@ function readJson(file: string): unknown {
 
 function isRecord(v: unknown): v is Record<string, unknown> {
     return typeof v === 'object' && v !== null;
+}
+
+/** `child` 가 `dir` 안(또는 같음)인지. */
+function isInside(dir: string, child: string): boolean {
+    const rel = path.relative(dir, child);
+    return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel));
 }

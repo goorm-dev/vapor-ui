@@ -7,14 +7,16 @@
     "bin": {
         "extract-code-connect": "./dist/bin.js"
     },
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
+        "lint": "eslint src",
         "test": "vitest --run",
         "test:watch": "vitest",
-        "typecheck": "tsc --noEmit",
-        "lint": "eslint src"
+        "typecheck": "tsc --noEmit"
     },
     "dependencies": {
         "prettier": "^3.9.6"
