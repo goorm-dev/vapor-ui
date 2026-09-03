@@ -13,7 +13,7 @@
  */
 import process from 'node:process';
 
-import { sendWebhookMessage } from '../src/integrations/slack/api.js';
+import { sendWebhookMessage } from '~/integrations/slack/api';
 
 const {
     SLACK_GDS_ALARM_WEBHOOK_URL,
@@ -68,10 +68,5 @@ const message = {
     ],
 };
 
-try {
-    await sendWebhookMessage(SLACK_GDS_ALARM_WEBHOOK_URL, message);
-    console.log('✅ Slack 알림이 성공적으로 전송되었습니다.');
-} catch (error) {
-    console.error('❌ Slack 알림 전송 중 오류 발생:', error.message);
-    process.exit(1);
-}
+await sendWebhookMessage(SLACK_GDS_ALARM_WEBHOOK_URL, message);
+console.log('✅ Slack 알림이 성공적으로 전송되었습니다.');
