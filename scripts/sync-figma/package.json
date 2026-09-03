@@ -5,6 +5,8 @@
     "description": "Internal CLI scripts for syncing assets from Figma",
     "type": "module",
     "scripts": {
+        "format": "prettier --write \"./{commands,src}/**/*.{ts,md}\"",
+        "format:check": "prettier --check \"./{commands,src}/**/*.{ts,md}\"",
         "lint": "eslint ./commands ./src",
         "notify:slack": "tsx ./commands/notify-slack.ts",
         "sync-icons:basic": "TYPE=basic tsx --env-file-if-exists=.env ./commands/sync-icons.ts",
@@ -12,6 +14,9 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
+        "@svgr/core": "^8.1.0",
+        "@svgr/plugin-jsx": "^8.1.0",
+        "@svgr/plugin-svgo": "^8.1.0",
         "lodash-es": "^4.18.1",
         "p-limit": "^6.2.0",
         "picocolors": "^1.1.1",
