@@ -203,7 +203,7 @@ AlertDialogDescription.displayName = 'AlertDialog.Description';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Scrollable main content area of the alert dialog. Renders a `<div>` element.
+ * Top section of the dialog, typically containing the title and description. Renders a `<div>` element.
  */
 export const AlertDialogHeader = forwardRef<HTMLDivElement, AlertDialogHeader.Props>(
     (props, ref) => {
