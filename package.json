@@ -17,6 +17,7 @@
         "codemod": "pnpm --filter @vapor-ui/codemod",
         "color-generator": "pnpm --filter @vapor-ui/color-generator",
         "core": "pnpm --filter @vapor-ui/core",
+        "composites": "pnpm --filter @vapor-ui/composites",
         "css-generator": "pnpm --filter @vapor-ui/css-generator",
         "dev": "turbo dev",
         "figma-codegen-plugin": "pnpm --filter figma-codegen-plugin",
