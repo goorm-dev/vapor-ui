@@ -1,7 +1,7 @@
 {
     "name": "Value",
     "displayName": "ProgressBar.Value",
-    "description": "화면에 보이는 값 텍스트입니다. `<span>` 요소로 렌더링됩니다. 스크린 리더가 듣는 값과 같은 값을 보여줍니다.",
+    "description": "화면에 보이는 값 텍스트입니다. `<span>` 요소로 렌더링됩니다. `getAriaValueText`를 지정했다면 `children` 함수로 같은 텍스트를 보여 주세요.",
     "props": [
         {
             "name": "className",
@@ -17,7 +17,7 @@
                 "(formattedValue: string | null, value: number | null) => ReactNode"
             ],
             "required": false,
-            "description": "값 텍스트를 렌더링하는 함수입니다. 형식화된 값과 원래 값을 인수로 받습니다.\n\n생략하면 선언한 범위로 계산한 텍스트를, `getAriaValueText`가 있으면 그 반환값을 렌더링합니다."
+            "description": "값 텍스트를 렌더링하는 함수입니다. 형식화된 값과 원래 값을 인수로 받습니다.\n\n생략하면 선언한 범위로 계산한 백분율을 보여 줍니다."
         },
         {
             "name": "style",

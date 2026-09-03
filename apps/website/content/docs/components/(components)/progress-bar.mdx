@@ -47,6 +47,8 @@ Track의 높이를 설정합니다.
 
 `ProgressBar.Value`는 선언한 범위를 기준으로 값을 백분율로 환산해 보여줍니다.
 
+백분율 대신 다른 표현이 필요하면 두 곳을 함께 바꿉니다. `getAriaValueText`는 보조기기가 듣는 `aria-valuetext`를, `ProgressBar.Value`의 `children` 함수는 화면 텍스트를 정합니다. 한쪽만 바꾸면 보는 사람과 듣는 사람이 다른 값을 받습니다.
+
 <Demo name="progress-bar/progress-bar-value-text">
 ```json doc-gen:file
 {
@@ -78,6 +80,8 @@ Track의 높이를 설정합니다.
 `ProgressBar.Description`은 진행 상황을 말로 풀어 씁니다. 남은 용량, 실패 사유, 다음에 할 일 같은 내용입니다.
 
 `ProgressBar.Root`의 `type`이 `error`이면 이 텍스트가 danger 색이 되고 막대는 흐린 Track만 남습니다.
+
+단계마다 다른 문구가 필요하면 `render`나 `className` 함수의 두 번째 인수 `state.status`를 보세요. 값이 없으면 `indeterminate`, 최댓값에 닿으면 `complete`, 그 사이는 `progressing`입니다.
 
 <Demo name="progress-bar/progress-bar-description">
 ```json doc-gen:file

@@ -59,7 +59,8 @@ export const description = componentRecipe({
     defaultVariants: { type: 'default' },
     variants: {
         /**
-         * Tone of the description text. Default: `'default'`
+         * Tone of the description text.
+         * @default 'default'
          */
         type: {
             default: { color: vars.color.foreground['secondary'] },
@@ -85,7 +86,8 @@ export const track = componentRecipe({
     defaultVariants: { size: 'md', type: 'default' },
     variants: {
         /**
-         * Size of the track. Controls its height. Default: `'md'`
+         * Size of the track. Controls its height.
+         * @default 'md'
          */
         size: {
             sm: { height: vars.size.dimension['050'] },
@@ -94,7 +96,8 @@ export const track = componentRecipe({
         },
 
         /**
-         * Tone of the track. Default: `'default'`
+         * Tone of the track.
+         * @default 'default'
          */
         type: {
             default: {},

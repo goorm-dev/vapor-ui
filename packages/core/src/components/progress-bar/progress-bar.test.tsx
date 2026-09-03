@@ -93,29 +93,29 @@ describe('<ProgressBar />', () => {
             expect(getBar(container)).toHaveAttribute('aria-valuenow', '0');
         });
 
-        it('should fall back to 0–100 when the range is inverted', () => {
+        it('should warn and pass an inverted range through untouched', () => {
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const { container } = render(<ProgressBarTest value={50} min={100} max={0} />);
             const bar = getBar(container);
 
-            expect(bar).toHaveAttribute('aria-valuemin', '0');
-            expect(bar).toHaveAttribute('aria-valuemax', '100');
+            expect(bar).toHaveAttribute('aria-valuemin', '100');
+            expect(bar).toHaveAttribute('aria-valuemax', '0');
             expect(warn).toHaveBeenCalledWith(
-                'Vapor UI: ProgressBar received min={100} and max={0}. `min` must be less than `max`. Falling back to 0–100.',
+                'Vapor UI: ProgressBar received min={100} and max={0}. `min` must be less than `max` for the value to be meaningful.',
             );
 
             warn.mockRestore();
         });
 
-        it('should fall back to 0–100 when the range is empty', () => {
+        it('should warn when the range is empty', () => {
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const { container } = render(<ProgressBarTest value={50} min={20} max={20} />);
             const bar = getBar(container);
 
-            expect(bar).toHaveAttribute('aria-valuemin', '0');
-            expect(bar).toHaveAttribute('aria-valuemax', '100');
+            expect(bar).toHaveAttribute('aria-valuemin', '20');
+            expect(bar).toHaveAttribute('aria-valuemax', '20');
             expect(warn).toHaveBeenCalledWith(
-                'Vapor UI: ProgressBar received min={20} and max={20}. `min` must be less than `max`. Falling back to 0–100.',
+                'Vapor UI: ProgressBar received min={20} and max={20}. `min` must be less than `max` for the value to be meaningful.',
             );
 
             warn.mockRestore();
@@ -133,12 +133,23 @@ describe('<ProgressBar />', () => {
             expect(getBar(container)).not.toHaveAttribute('aria-valuetext');
         });
 
-        it('should announce and display the same text when one is supplied', () => {
+        it('should announce the supplied text and leave the visible value alone', () => {
             const { container, getByText } = render(
                 <ProgressBarTest value={3} max={8} getAriaValueText={() => '8개 중 3개'} />,
             );
 
             expect(getBar(container)).toHaveAttribute('aria-valuetext', '8개 중 3개');
+            expect(getByText('38%')).toBeInTheDocument();
+        });
+
+        it('should let a Value children function mirror the announced text', () => {
+            const { getByText } = render(
+                <ProgressBar.Root value={3} max={8} aria-label="파일 업로드">
+                    <ProgressBar.Value>{(_, value) => `8개 중 ${value}개`}</ProgressBar.Value>
+                    <ProgressBar.Track />
+                </ProgressBar.Root>,
+            );
+
             expect(getByText('8개 중 3개')).toBeInTheDocument();
         });
 
@@ -233,7 +244,7 @@ describe('<ProgressBar />', () => {
             );
 
             expect(getBar(container)).toHaveAttribute('aria-valuetext', '8단계 중 3');
-            expect(getByText('8단계 중 3')).toBeInTheDocument();
+            expect(getByText('3')).toBeInTheDocument();
         });
     });
 
@@ -447,6 +458,34 @@ describe('<ProgressBar />', () => {
             rerender(<Described type="error" />);
 
             expect(getByText('10MB 중 4.2MB 전송했습니다').className).not.toBe(defaultClass);
+        });
+
+        it('should strip its role so a render swap cannot leak a heading into the bar', () => {
+            const { getByText } = render(<Described />);
+
+            expect(getByText('10MB 중 4.2MB 전송했습니다')).toHaveAttribute('role', 'presentation');
+        });
+
+        it.each([
+            [null, 'indeterminate'],
+            [42, 'progressing'],
+            [100, 'complete'],
+            [150, 'complete'],
+        ])('should expose status to render when value is %s', (value, status) => {
+            const { getByTestId } = render(
+                <ProgressBar.Root value={value} aria-label="파일 업로드">
+                    <ProgressBar.Track />
+                    <ProgressBar.Description
+                        render={(props, state) => (
+                            <span {...props} data-testid="desc">
+                                {state.status}
+                            </span>
+                        )}
+                    />
+                </ProgressBar.Root>,
+            );
+
+            expect(getByTestId('desc')).toHaveTextContent(status);
         });
     });
 

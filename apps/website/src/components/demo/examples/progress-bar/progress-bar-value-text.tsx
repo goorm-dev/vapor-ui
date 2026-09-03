@@ -15,7 +15,7 @@ export default function ProgressBarValueText() {
                 getAriaValueText={(_, value) => `8개 중 ${value}개`}
             >
                 <ProgressBar.Label>파일 업로드</ProgressBar.Label>
-                <ProgressBar.Value />
+                <ProgressBar.Value>{(_, value) => `8개 중 ${value}개`}</ProgressBar.Value>
                 <ProgressBar.Track />
             </ProgressBar.Root>
         </VStack>

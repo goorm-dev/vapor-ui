@@ -44,10 +44,10 @@
         {
             "name": "getAriaValueText",
             "type": [
-                "(formattedValue: string | null, value: number | null) => string"
+                "(formattedValue: string, value: number | null) => string"
             ],
             "required": false,
-            "description": "보조기기가 읽을 값 텍스트를 반환합니다. 지정하지 않으면 `aria-valuetext`를 쓰지 않고 `aria-valuenow`만으로 값을 전달합니다.\n\n반환한 문자열은 화면에 보이는 `ProgressBar.Value` 텍스트로도 쓰입니다."
+            "description": "보조기기가 읽을 값 텍스트를 반환합니다. 지정하지 않으면 `aria-valuetext`를 쓰지 않고 `aria-valuenow`만으로 값을 전달합니다.\n\n화면에 보이는 텍스트는 바뀌지 않으니 `ProgressBar.Value`의 `children` 함수로 같은 텍스트를 맞춰 주세요."
         },
         {
             "name": "format",
