@@ -14,10 +14,11 @@ export const Default: Story = {
         <AlertDialog.Root {...args} onOpenChange={(open) => console.log(open)}>
             <AlertDialog.Trigger>hihi</AlertDialog.Trigger>
             <AlertDialog.Popup>
-                <AlertDialog.Body>
+                <AlertDialog.Header>
                     <AlertDialog.Title>다이얼로그입니다.</AlertDialog.Title>
                     <AlertDialog.Description>기본 형태의 다이얼로그입니다.</AlertDialog.Description>
-                </AlertDialog.Body>
+                </AlertDialog.Header>
+                <AlertDialog.Body>내용물을 입력해주세요.</AlertDialog.Body>
                 <AlertDialog.Footer>
                     <AlertDialog.Close render={<Button colorPalette="contrast">닫기</Button>} />
                 </AlertDialog.Footer>
