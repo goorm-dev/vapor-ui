@@ -41,7 +41,7 @@ export const TestBed: Story = {
                                 기본 형태의 다이얼로그입니다.
                             </AlertDialog.Description>
                         </AlertDialog.Body>
-                        <AlertDialog.Footer $css={{ flexDirection: 'column', gap: '$100' }}>
+                        <AlertDialog.Footer $css={{ flexDirection: 'column' }}>
                             <AlertDialog.Close
                                 render={<Button $css={{ width: '100%' }} colorPalette="danger" />}
                             >

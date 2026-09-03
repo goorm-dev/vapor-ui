@@ -25,7 +25,7 @@
         "react-dom": "catalog:"
     },
     "devDependencies": {
-        "@figma/plugin-typings": "^1.130.0",
+        "@figma/plugin-typings": "^1.132.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@tailwindcss/vite": "^4.3.3",

@@ -2,29 +2,28 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const CostaRicaColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1330"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-CostaRicaColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1330)">
-            <path d="M21.3345 0H-5.33276V2.57273H21.3345V0Z" fill="#002B7F" />
-            <path d="M21.3345 13.4272H-5.33276V16H21.3345V13.4272Z" fill="#002B7F" />
-            <path d="M21.3345 10.7636H-5.33276V13.4272H21.3345V10.7636Z" fill="white" />
-            <path d="M21.3345 2.57275H-5.33276V5.23638H21.3345V2.57275Z" fill="white" />
-            <path d="M21.3345 5.23639H-5.33276V10.7637H21.3345V5.23639Z" fill="#CE1126" />
+        <g mask="url(#vapor-icons-color-CostaRicaColorIcon__a)">
+            <path fill="#002B7F" d="M21.335 0H-5.334v2.573h26.667zm0 13.427H-5.334V16h26.667z" />
+            <path
+                fill="#fff"
+                d="M21.335 10.764H-5.334v2.663h26.667zm0-8.191H-5.334v2.663h26.667z"
+            />
+            <path fill="#CE1126" d="M21.335 5.236H-5.334v5.528h26.667z" />
         </g>
     </IconBase>
 );
-
 export default CostaRicaColorIcon;

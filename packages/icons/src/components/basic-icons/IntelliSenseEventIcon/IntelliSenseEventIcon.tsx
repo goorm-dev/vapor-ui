@@ -2,9 +2,11 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const IntelliSenseEventIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
-        <path d="M4.22607 2.05298C4.59388 2.05299 4.89209 2.35118 4.89209 2.71899V13.8918C4.89209 14.2597 4.59388 14.5578 4.22607 14.5579C3.85826 14.5579 3.56006 14.2597 3.56006 13.8918V2.71899C3.56006 2.35118 3.85826 2.05298 4.22607 2.05298ZM6.22314 2.87622C6.22315 2.50107 6.62076 2.25981 6.95361 2.43286L13.1011 5.62817C13.8192 6.00155 13.819 7.02897 13.1011 7.40259L6.95361 10.5999C6.62088 10.7728 6.22339 10.5314 6.22314 10.1565V2.87622Z" />
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
+        <path
+            fill="currentColor"
+            d="M4.226 2.053c.368 0 .666.298.666.666v11.173a.666.666 0 0 1-1.332 0V2.719c0-.368.298-.666.666-.666m1.997.823a.5.5 0 0 1 .73-.443l6.148 3.195a1 1 0 0 1 0 1.775L6.954 10.6a.5.5 0 0 1-.73-.444z"
+        />
     </IconBase>
 );
-
 export default IntelliSenseEventIcon;

@@ -1,4 +1,4 @@
-const sendWebhookMessage = async (webhookUrl, payload) => {
+const sendWebhookMessage = async (webhookUrl: string, payload: unknown) => {
     const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

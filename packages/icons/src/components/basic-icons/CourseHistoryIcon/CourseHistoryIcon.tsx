@@ -2,13 +2,13 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const CourseHistoryIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <path
+            fill="currentColor"
             fillRule="evenodd"
+            d="M4.5 11.75h7v-1.3h-7zm0-2.5h7v-1.3h-7zM3.3 13.2h9.4V6.5H3.3zm8.85-10.7V1.2h-1.3v1.3h-5.7V1.2h-1.3v1.3H2v12h12v-12z"
             clipRule="evenodd"
-            d="M4.5 11.75H11.5V10.45H4.5V11.75ZM4.5 9.25001H11.5V7.95001H4.5V9.25001ZM3.3 13.2H12.7V6.50001H3.3V13.2ZM12.15 2.50001V1.20001H10.85V2.50001H5.15V1.20001H3.85V2.50001H2V3.50001V6.50001V14.5H14V6.50001V3.50001V2.50001H12.15Z"
         />
     </IconBase>
 );
-
 export default CourseHistoryIcon;
