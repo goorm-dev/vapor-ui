@@ -115,12 +115,14 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 - 진행 상황을 막대 길이만으로 전달하지 마세요. `ProgressBar.Value`나 `ProgressBar.Description`으로 텍스트를 함께 두면 확대 화면이나 저시력 환경에서도 값을 읽을 수 있습니다.
 - 보이는 라벨과 `aria-label`을 같이 쓴다면 보이는 문구를 `aria-label` 안에 그대로 넣으세요. 음성 명령 사용자는 화면에 적힌 말을 부르는데, 접근 가능한 이름이 그 말과 다르면 대상을 잡지 못합니다.
 - 색을 재정의하면 대비는 직접 책임져야 합니다. Label·Value·Description 텍스트는 배경 대비 4.5:1, Indicator는 Track 대비 3:1을 넘겨야 합니다. 진행 정도를 알려주는 것은 두 면의 경계뿐입니다.
-- indeterminate 막대가 5초를 넘겨 돌고 페이지의 다른 콘텐츠와 함께 움직인다면 멈추거나 숨기는 수단을 두세요. `prefers-reduced-motion`은 그 설정을 켠 사용자에게만 닿기 때문에 WCAG 2.2.2를 대신하지 못합니다. 정지 버튼은 `ProgressBar.Indicator`의 애니메이션을 끄는 식으로 만듭니다.
+- indeterminate 막대가 5초를 넘겨 돌고 페이지의 다른 콘텐츠와 함께 움직인다면 멈추거나 숨기는 수단을 두세요. `prefers-reduced-motion`은 그 설정을 켠 사용자에게만 닿기 때문에 WCAG 2.2.2를 대신하지 못합니다. 정지 버튼은 `ProgressBar.Track`의 `indicatorElement`로 넘긴 `ProgressBar.IndicatorPrimitive`의 애니메이션을 끄는 식으로 만듭니다.
 
     ```tsx
-    <ProgressBar.Track>
-        <ProgressBar.Indicator style={paused ? { animation: 'none' } : undefined} />
-    </ProgressBar.Track>
+    <ProgressBar.Track
+        indicatorElement={
+            <ProgressBar.IndicatorPrimitive style={paused ? { animation: 'none' } : undefined} />
+        }
+    />
     <Button onClick={() => setPaused((prev) => !prev)}>{paused ? '재생' : '정지'}</Button>
     ```
 
@@ -148,11 +150,17 @@ Label과 Value의 글자 크기는 size와 무관하게 고정입니다.
 
 ### ProgressBar.Track
 
+`ProgressBar.Track`은 안에 `ProgressBar.IndicatorPrimitive`를 기본으로 그립니다. 인디케이터에 props를 주려면 `indicatorElement`로 직접 만든 요소를 넘기고, 인디케이터 없이 트랙만 쓰려면 `ProgressBar.TrackPrimitive`를 쓰세요.
+
 <ComponentPropsTable componentName="progress-bar-track" />
 
-### ProgressBar.Indicator
+### ProgressBar.TrackPrimitive
 
-<ComponentPropsTable componentName="progress-bar-indicator" />
+<ComponentPropsTable componentName="progress-bar-track-primitive" />
+
+### ProgressBar.IndicatorPrimitive
+
+<ComponentPropsTable componentName="progress-bar-indicator-primitive" />
 
 ### ProgressBar.Description
 

@@ -6,18 +6,14 @@ export default function ProgressBarType() {
             <ProgressBar.Root value={42}>
                 <ProgressBar.Label>report.pdf 업로드</ProgressBar.Label>
                 <ProgressBar.Value />
-                <ProgressBar.Track>
-                    <ProgressBar.Indicator />
-                </ProgressBar.Track>
+                <ProgressBar.Track />
                 <ProgressBar.Description>10MB 중 4.2MB를 전송했습니다.</ProgressBar.Description>
             </ProgressBar.Root>
 
             <ProgressBar.Root value={42} type="error">
                 <ProgressBar.Label>report.pdf 업로드</ProgressBar.Label>
                 <ProgressBar.Value />
-                <ProgressBar.Track>
-                    <ProgressBar.Indicator />
-                </ProgressBar.Track>
+                <ProgressBar.Track />
                 <ProgressBar.Description>
                     업로드에 실패했습니다. 파일이 10MB를 넘습니다.
                 </ProgressBar.Description>

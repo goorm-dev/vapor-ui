@@ -7,9 +7,7 @@ export default function ProgressBarSize() {
                 <ProgressBar.Root key={size} value={42} size={size}>
                     <ProgressBar.Label>{size}</ProgressBar.Label>
                     <ProgressBar.Value />
-                    <ProgressBar.Track>
-                        <ProgressBar.Indicator />
-                    </ProgressBar.Track>
+                    <ProgressBar.Track />
                 </ProgressBar.Root>
             ))}
         </VStack>

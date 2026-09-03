@@ -12,9 +12,7 @@ export default function ProgressBarDescription() {
             <ProgressBar.Root value={42} type={failed ? 'error' : 'default'}>
                 <ProgressBar.Label>report.pdf 업로드</ProgressBar.Label>
                 <ProgressBar.Value />
-                <ProgressBar.Track>
-                    <ProgressBar.Indicator />
-                </ProgressBar.Track>
+                <ProgressBar.Track />
                 <ProgressBar.Description>
                     {failed
                         ? '업로드에 실패했습니다. 파일이 10MB를 넘습니다.'

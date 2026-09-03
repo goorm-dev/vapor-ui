@@ -15,9 +15,7 @@ const Bar = (props: ProgressBar.Root.Props & { label: string; description?: stri
         <ProgressBar.Root {...rootProps}>
             <ProgressBar.Label>{label}</ProgressBar.Label>
             <ProgressBar.Value />
-            <ProgressBar.Track>
-                <ProgressBar.Indicator />
-            </ProgressBar.Track>
+            <ProgressBar.Track />
             {description ? <ProgressBar.Description>{description}</ProgressBar.Description> : null}
         </ProgressBar.Root>
     );
@@ -58,9 +56,7 @@ export const TestBed: StoryObj<typeof ProgressBar.Root> = {
 
             {/* 라벨 영역 없음: 이름은 aria-label 로만 준다 */}
             <ProgressBar.Root aria-label="라벨 없는 진행률" value={42}>
-                <ProgressBar.Track>
-                    <ProgressBar.Indicator />
-                </ProgressBar.Track>
+                <ProgressBar.Track />
             </ProgressBar.Root>
 
             {/* 좁은 폭에서 긴 라벨·긴 값이 접히는 모습 (text-resize-200 / reflow-320) */}

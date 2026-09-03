@@ -1,11 +1,11 @@
 {
-  "name": "ProgressBarTrack",
-  "description": "The full length of the task, with `ProgressBar.IndicatorPrimitive` rendered inside. Renders a `<div>` element.",
+  "name": "ProgressBarIndicatorPrimitive",
+  "description": "The filled portion of the track. Renders a `<div>` element.",
   "props": [
     {
       "name": "className",
       "type": [
-        "string | ((state: ProgressBar.Track.State) => (string | undefined))"
+        "string | ((state: ProgressBar.IndicatorPrimitive.State) => (string | undefined))"
       ],
       "required": false,
       "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
@@ -13,7 +13,7 @@
     {
       "name": "style",
       "type": [
-        "React.CSSProperties | ((state: ProgressBar.Track.State) => (React.CSSProperties | undefined))"
+        "React.CSSProperties | ((state: ProgressBar.IndicatorPrimitive.State) => (React.CSSProperties | undefined))"
       ],
       "required": false,
       "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
@@ -21,18 +21,10 @@
     {
       "name": "render",
       "type": [
-        "ReactElement | ((props: HTMLProps, state: ProgressBar.Track.State) => ReactElement)"
+        "ReactElement | ((props: HTMLProps, state: ProgressBar.IndicatorPrimitive.State) => ReactElement)"
       ],
       "required": false,
       "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
-    },
-    {
-      "name": "indicatorElement",
-      "type": [
-        "ReactElement<ProgressBar.IndicatorPrimitive.Props>"
-      ],
-      "required": false,
-      "description": "A custom element for `ProgressBar.IndicatorPrimitive`. If not provided, the default `ProgressBar.IndicatorPrimitive` will be rendered."
     }
   ]
 }

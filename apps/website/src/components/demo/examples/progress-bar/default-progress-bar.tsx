@@ -5,9 +5,7 @@ export default function DefaultProgressBar() {
         <ProgressBar.Root value={42} $css={{ width: '20rem' }}>
             <ProgressBar.Label>파일 업로드</ProgressBar.Label>
             <ProgressBar.Value />
-            <ProgressBar.Track>
-                <ProgressBar.Indicator />
-            </ProgressBar.Track>
+            <ProgressBar.Track />
         </ProgressBar.Root>
     );
 }

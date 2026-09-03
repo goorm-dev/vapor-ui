@@ -10,9 +10,7 @@ const ProgressBarTest = ({
     <ProgressBar.Root {...props}>
         {label === null ? null : <ProgressBar.Label>{label}</ProgressBar.Label>}
         <ProgressBar.Value />
-        <ProgressBar.Track>
-            <ProgressBar.Indicator />
-        </ProgressBar.Track>
+        <ProgressBar.Track />
     </ProgressBar.Root>
 );
 
@@ -217,6 +215,42 @@ describe('<ProgressBar />', () => {
         });
     });
 
+    describe('Track', () => {
+        it('should render an indicator inside `ProgressBar.Track` by default', () => {
+            const { container } = render(<ProgressBarTest value={42} />);
+
+            expect(getIndicator(container)).toHaveStyle({ width: '42%' });
+        });
+
+        it('should render the custom `indicatorElement` instead of the default indicator', () => {
+            const { getByTestId } = render(
+                <ProgressBar.Root value={42} aria-label="파일 업로드">
+                    <ProgressBar.Track
+                        data-testid="track"
+                        indicatorElement={
+                            <ProgressBar.IndicatorPrimitive data-testid="indicator" />
+                        }
+                    />
+                </ProgressBar.Root>,
+            );
+
+            const track = getByTestId('track');
+            expect(track.childElementCount).toBe(1);
+            expect(track.firstElementChild).toBe(getByTestId('indicator'));
+            expect(getByTestId('indicator')).toHaveStyle({ width: '42%' });
+        });
+
+        it('should render no indicator when `ProgressBar.TrackPrimitive` is used directly', () => {
+            const { getByTestId } = render(
+                <ProgressBar.Root value={42} aria-label="파일 업로드">
+                    <ProgressBar.TrackPrimitive data-testid="track" />
+                </ProgressBar.Root>,
+            );
+
+            expect(getByTestId('track')).toBeEmptyDOMElement();
+        });
+    });
+
     describe('type="error"', () => {
         it('should render no indicator', () => {
             const { container } = render(<ProgressBarTest value={42} type="error" />);
@@ -314,9 +348,7 @@ describe('<ProgressBar />', () => {
 
             return (
                 <ProgressBar.Root value={value} aria-label="파일 업로드" {...rootProps}>
-                    <ProgressBar.Track>
-                        <ProgressBar.Indicator />
-                    </ProgressBar.Track>
+                    <ProgressBar.Track />
                     <ProgressBar.Description id={id}>{description}</ProgressBar.Description>
                 </ProgressBar.Root>
             );

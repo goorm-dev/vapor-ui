@@ -1,11 +1,11 @@
 {
-  "name": "ProgressBarIndicator",
-  "description": "The filled portion of the track. Renders a `<div>` element.",
+  "name": "ProgressBarTrackPrimitive",
+  "description": "The full length of the task without any indicator inside. Renders a `<div>` element.",
   "props": [
     {
       "name": "className",
       "type": [
-        "string | ((state: ProgressBar.Indicator.State) => (string | undefined))"
+        "string | ((state: ProgressBar.TrackPrimitive.State) => (string | undefined))"
       ],
       "required": false,
       "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
@@ -13,7 +13,7 @@
     {
       "name": "style",
       "type": [
-        "React.CSSProperties | ((state: ProgressBar.Indicator.State) => (React.CSSProperties | undefined))"
+        "React.CSSProperties | ((state: ProgressBar.TrackPrimitive.State) => (React.CSSProperties | undefined))"
       ],
       "required": false,
       "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
@@ -21,7 +21,7 @@
     {
       "name": "render",
       "type": [
-        "ReactElement | ((props: HTMLProps, state: ProgressBar.Indicator.State) => ReactElement)"
+        "ReactElement | ((props: HTMLProps, state: ProgressBar.TrackPrimitive.State) => ReactElement)"
       ],
       "required": false,
       "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."

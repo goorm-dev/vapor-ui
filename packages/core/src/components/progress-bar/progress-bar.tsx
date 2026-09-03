@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactElement } from 'react';
 import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { Progress as BaseProgress } from '@base-ui/react/progress';
@@ -168,13 +169,16 @@ export const ProgressBarLabel = forwardRef<HTMLSpanElement, ProgressBarLabel.Pro
 ProgressBarLabel.displayName = 'ProgressBar.Label';
 
 /* -------------------------------------------------------------------------------------------------
- * ProgressBar.Track
+ * ProgressBar.TrackPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * The full length of the task. Renders a `<div>` element.
+ * The full length of the task without any indicator inside. Renders a `<div>` element.
  */
-export const ProgressBarTrack = forwardRef<HTMLDivElement, ProgressBarTrack.Props>((props, ref) => {
+export const ProgressBarTrackPrimitive = forwardRef<
+    HTMLDivElement,
+    ProgressBarTrackPrimitive.Props
+>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const { size, type } = useProgressBarContext();
 
@@ -186,10 +190,10 @@ export const ProgressBarTrack = forwardRef<HTMLDivElement, ProgressBarTrack.Prop
         />
     );
 });
-ProgressBarTrack.displayName = 'ProgressBar.Track';
+ProgressBarTrackPrimitive.displayName = 'ProgressBar.TrackPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * ProgressBar.Indicator
+ * ProgressBar.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
 /**
@@ -197,23 +201,42 @@ ProgressBarTrack.displayName = 'ProgressBar.Track';
  *
  * `type="error"` renders nothing — a fill would still read as progress on a task that failed.
  */
-export const ProgressBarIndicator = forwardRef<HTMLDivElement, ProgressBarIndicator.Props>(
-    (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
-        const { type } = useProgressBarContext();
+export const ProgressBarIndicatorPrimitive = forwardRef<
+    HTMLDivElement,
+    ProgressBarIndicatorPrimitive.Props
+>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+    const { type } = useProgressBarContext();
 
-        if (type === 'error') return null;
+    if (type === 'error') return null;
 
-        return (
-            <BaseProgress.Indicator
-                ref={ref}
-                className={cn(styles.indicator, className)}
-                {...componentProps}
-            />
-        );
-    },
-);
-ProgressBarIndicator.displayName = 'ProgressBar.Indicator';
+    return (
+        <BaseProgress.Indicator
+            ref={ref}
+            className={cn(styles.indicator, className)}
+            {...componentProps}
+        />
+    );
+});
+ProgressBarIndicatorPrimitive.displayName = 'ProgressBar.IndicatorPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * ProgressBar.Track
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * The full length of the task, with `ProgressBar.IndicatorPrimitive` rendered inside. Renders a `<div>` element.
+ */
+export const ProgressBarTrack = forwardRef<HTMLDivElement, ProgressBarTrack.Props>((props, ref) => {
+    const { indicatorElement, ...componentProps } = props;
+
+    return (
+        <ProgressBarTrackPrimitive ref={ref} {...componentProps}>
+            {indicatorElement ?? <ProgressBarIndicatorPrimitive />}
+        </ProgressBarTrackPrimitive>
+    );
+});
+ProgressBarTrack.displayName = 'ProgressBar.Track';
 
 /* -------------------------------------------------------------------------------------------------
  * ProgressBar.Value
@@ -345,14 +368,27 @@ export namespace ProgressBarLabel {
     export type Props = VaporUIComponentProps<typeof BaseProgress.Label, State>;
 }
 
-export namespace ProgressBarTrack {
+export namespace ProgressBarTrackPrimitive {
     export type State = BaseProgress.Track.State;
     export type Props = VaporUIComponentProps<typeof BaseProgress.Track, State>;
 }
 
-export namespace ProgressBarIndicator {
+export namespace ProgressBarIndicatorPrimitive {
     export type State = BaseProgress.Indicator.State;
     export type Props = VaporUIComponentProps<typeof BaseProgress.Indicator, State>;
+}
+
+export interface ProgressBarTrackProps extends Omit<ProgressBarTrackPrimitive.Props, 'children'> {
+    /**
+     * A custom element for `ProgressBar.IndicatorPrimitive`. If not provided, the default
+     * `ProgressBar.IndicatorPrimitive` will be rendered.
+     */
+    indicatorElement?: ReactElement<ProgressBarIndicatorPrimitive.Props>;
+}
+
+export namespace ProgressBarTrack {
+    export type State = ProgressBarTrackPrimitive.State;
+    export type Props = ProgressBarTrackProps;
 }
 
 export namespace ProgressBarValue {

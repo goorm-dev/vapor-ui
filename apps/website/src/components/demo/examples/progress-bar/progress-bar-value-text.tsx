@@ -6,9 +6,7 @@ export default function ProgressBarValueText() {
             <ProgressBar.Root value={15} min={10} max={20}>
                 <ProgressBar.Label>디스크 검사</ProgressBar.Label>
                 <ProgressBar.Value />
-                <ProgressBar.Track>
-                    <ProgressBar.Indicator />
-                </ProgressBar.Track>
+                <ProgressBar.Track />
             </ProgressBar.Root>
 
             <ProgressBar.Root
@@ -18,9 +16,7 @@ export default function ProgressBarValueText() {
             >
                 <ProgressBar.Label>파일 업로드</ProgressBar.Label>
                 <ProgressBar.Value />
-                <ProgressBar.Track>
-                    <ProgressBar.Indicator />
-                </ProgressBar.Track>
+                <ProgressBar.Track />
             </ProgressBar.Root>
         </VStack>
     );
