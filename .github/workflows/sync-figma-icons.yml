@@ -258,17 +258,19 @@ jobs:
                       # No changes means main already matches Figma, so an open PR left over
                       # from an earlier run is stale and must not be merged.
                       STALE_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
-                      if [[ -n "$STALE_PR" ]]; then
+                      # Only main can judge staleness — a dispatch from another branch compares against that branch.
+                      if [[ -n "$STALE_PR" && "${{ github.ref_name }}" == "main" ]]; then
                           gh pr close "$STALE_PR" --comment "Closing: main already matches Figma, so this sync is no longer valid."
                       fi
                   fi
 
             # Visual check only — SVG-to-JSX conversion is covered offline by vitest.
-            # Basic icons only: they are monochrome, and Figma's and Chromium's rasterizers
-            # antialias colour icons differently enough to drown any real signal.
-            - name: Check Icon Parity (basic)
+            # compare.ts gates monochrome icons only: Figma's and Chromium's rasterizers antialias
+            # colour icons differently enough to drown any real signal, so those are reported ungated.
+            # Manual dispatch always runs it so the check itself can be exercised without a diff.
+            - name: Check Icon Parity
               id: parity
-              if: env.has_changes == 'true'
+              if: env.has_changes == 'true' || github.event_name == 'workflow_dispatch'
               continue-on-error: true
               env:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
@@ -276,6 +278,7 @@ jobs:
                   pnpm --filter @vapor-ui/icons build
                   pnpm --filter @repo/sync-figma exec playwright install --with-deps chromium
                   pnpm --filter @repo/sync-figma parity:fetch --type=basic
+                  pnpm --filter @repo/sync-figma parity:fetch --type=symbol
                   pnpm --filter @repo/sync-figma parity:render
                   pnpm --filter @repo/sync-figma parity:compare
 
@@ -299,7 +302,7 @@ jobs:
                   {
                       echo "## ⚠️ 아이콘 시각 검증 실패"
                       echo ""
-                      echo "동기화된 basic(monochrome) 아이콘이 Figma 렌더링과 다릅니다. 아이콘을 확인해 주세요."
+                      echo "동기화된 monochrome 아이콘이 Figma 렌더링과 다릅니다. 아이콘을 확인해 주세요."
                       echo ""
                       echo "🖼️ **[시각 diff 보기](${{ steps.parity_report.outputs.artifact-url }})** — 다운로드 후 \`report.html\`을 열면 실패한 아이콘마다 Figma / 코드 / diff 이미지가 나란히 보입니다."
                       echo ""
