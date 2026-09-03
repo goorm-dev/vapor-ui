@@ -261,6 +261,9 @@ jobs:
                       # Only main can judge staleness — a dispatch from another branch compares against that branch.
                       if [[ -n "$STALE_PR" && "${{ github.ref_name }}" == "main" ]]; then
                           gh pr close "$STALE_PR" --comment "Closing: main already matches Figma, so this sync is no longer valid."
+                      elif [[ -n "$STALE_PR" ]]; then
+                          # Feature-branch dispatch: let the parity report land on the open sync PR.
+                          echo "number=$STALE_PR" >> $GITHUB_OUTPUT
                       fi
                   fi
 
@@ -280,7 +283,8 @@ jobs:
                   pnpm --filter @repo/sync-figma parity:fetch --type=basic
                   pnpm --filter @repo/sync-figma parity:fetch --type=symbol
                   pnpm --filter @repo/sync-figma parity:render
-                  pnpm --filter @repo/sync-figma parity:compare
+                  # TEMPORARY: --gate-color fails colour icons too, only to exercise the report path.
+                  pnpm --filter @repo/sync-figma parity:compare --gate-color
 
             # report.html inlines the Figma / code / diff PNGs of every failing icon, so the
             # artifact is one file that opens in a browser.

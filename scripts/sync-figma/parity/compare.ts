@@ -23,6 +23,8 @@ type Row = {
 
 const args = flags();
 const threshold = Number(args.threshold ?? DEFAULT_THRESHOLD);
+// Colour icons are rasterizer noise, not signal — gate them only to exercise the failure path.
+const gateColor = args['gate-color'] === 'true';
 
 const baselineDir = path.join(CACHE_DIR, 'baseline');
 const codeDir = path.join(CACHE_DIR, 'render');
@@ -80,7 +82,7 @@ for (const name of names) {
         isColorIcon: entry.isColorIcon,
         width: figma.width,
         height: figma.height,
-        failed: !entry.isColorIcon && diffPixels > threshold,
+        failed: (gateColor || !entry.isColorIcon) && diffPixels > threshold,
     });
 }
 
