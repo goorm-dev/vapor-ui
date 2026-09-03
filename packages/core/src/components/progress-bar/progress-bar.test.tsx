@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import { cleanup, render, waitFor } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
@@ -64,6 +66,17 @@ describe('<ProgressBar />', () => {
 
             expect(ids[0]).toBeTruthy();
             expect(ids[0]).not.toBe(ids[1]);
+        });
+
+        it('should forward a callback ref to the progressbar element', () => {
+            const ref = vi.fn();
+            const { container } = render(
+                <ProgressBar.Root value={42} aria-label="파일 업로드" ref={ref}>
+                    <ProgressBar.Track />
+                </ProgressBar.Root>,
+            );
+
+            expect(ref).toHaveBeenCalledWith(getBar(container));
         });
     });
 
@@ -142,6 +155,15 @@ describe('<ProgressBar />', () => {
             const { container } = render(<ProgressBarTest value={null} />);
 
             expect(container.querySelector('[aria-hidden="true"]')).toHaveTextContent('');
+        });
+
+        it('should flag the indicator as indeterminate and give it no fill width', () => {
+            const { container } = render(<ProgressBarTest value={null} />);
+            const indicator = getIndicator(container)!;
+
+            // The sweep is keyed off `data-indeterminate`; an inline width would read as a fill.
+            expect(indicator).toHaveAttribute('data-indeterminate');
+            expect(indicator.style.width).toBe('');
         });
     });
 
@@ -251,6 +273,20 @@ describe('<ProgressBar />', () => {
         });
     });
 
+    describe('size', () => {
+        it('should default to md', () => {
+            const { container } = render(<ProgressBarTest value={42} />);
+
+            expect(getTrack(container)!.className).toMatch(/size_md/);
+        });
+
+        it.each(['sm', 'md', 'lg'] as const)('should mark the track with size="%s"', (size) => {
+            const { container } = render(<ProgressBarTest value={42} size={size} />);
+
+            expect(getTrack(container)!.className).toMatch(new RegExp(`size_${size}`));
+        });
+    });
+
     describe('type="error"', () => {
         it('should render no indicator', () => {
             const { container } = render(<ProgressBarTest value={42} type="error" />);
@@ -306,6 +342,14 @@ describe('<ProgressBar />', () => {
             const { container } = render(<ProgressBarTest value={42} label="백업 진행률" />);
 
             expect(getBar(container)).toHaveAccessibleName('백업 진행률');
+        });
+
+        it('should keep the Label text as the name when aria-label is also supplied', () => {
+            const { container } = render(
+                <ProgressBarTest value={42} label="파일 업로드" aria-label="Upload" />,
+            );
+
+            expect(getBar(container)).toHaveAccessibleName('파일 업로드');
         });
 
         it('should not warn when aria-labelledby points outside the component', async () => {
@@ -404,5 +448,86 @@ describe('<ProgressBar />', () => {
 
             expect(getByText('10MB 중 4.2MB 전송했습니다').className).not.toBe(defaultClass);
         });
+    });
+
+    describe('Value', () => {
+        it('should hand the formatted and raw value to a `children` function', () => {
+            const children = vi.fn(
+                (formatted: string | null, value: number | null) => `${formatted} (${value})`,
+            );
+            const { getByText } = render(
+                <ProgressBar.Root value={15} min={10} max={20} aria-label="파일 업로드">
+                    <ProgressBar.Value>{children}</ProgressBar.Value>
+                    <ProgressBar.Track />
+                </ProgressBar.Root>,
+            );
+
+            expect(children).toHaveBeenCalledWith('50%', 15);
+            expect(getByText('50% (15)')).toBeInTheDocument();
+        });
+    });
+
+    describe('shared props', () => {
+        const shared = {
+            'data-testid': 'part',
+            className: 'custom',
+            style: { color: 'rgb(1, 2, 3)' },
+            render: <section />,
+        };
+
+        const parts: Record<string, () => ReactElement> = {
+            Root: () => (
+                <ProgressBar.Root value={42} aria-label="파일 업로드" {...shared}>
+                    <ProgressBar.Track />
+                </ProgressBar.Root>
+            ),
+            Label: () => (
+                <ProgressBar.Root value={42}>
+                    <ProgressBar.Label {...shared}>파일 업로드</ProgressBar.Label>
+                    <ProgressBar.Track />
+                </ProgressBar.Root>
+            ),
+            Value: () => (
+                <ProgressBar.Root value={42} aria-label="파일 업로드">
+                    <ProgressBar.Value {...shared} />
+                    <ProgressBar.Track />
+                </ProgressBar.Root>
+            ),
+            Track: () => (
+                <ProgressBar.Root value={42} aria-label="파일 업로드">
+                    <ProgressBar.Track {...shared} />
+                </ProgressBar.Root>
+            ),
+            TrackPrimitive: () => (
+                <ProgressBar.Root value={42} aria-label="파일 업로드">
+                    <ProgressBar.TrackPrimitive {...shared} />
+                </ProgressBar.Root>
+            ),
+            IndicatorPrimitive: () => (
+                <ProgressBar.Root value={42} aria-label="파일 업로드">
+                    <ProgressBar.Track
+                        indicatorElement={<ProgressBar.IndicatorPrimitive {...shared} />}
+                    />
+                </ProgressBar.Root>
+            ),
+            Description: () => (
+                <ProgressBar.Root value={42} aria-label="파일 업로드">
+                    <ProgressBar.Track />
+                    <ProgressBar.Description {...shared}>설명</ProgressBar.Description>
+                </ProgressBar.Root>
+            ),
+        };
+
+        it.each(Object.keys(parts))(
+            'should pass className, style and render through `ProgressBar.%s`',
+            (name) => {
+                const { getByTestId } = render(parts[name]());
+                const part = getByTestId('part');
+
+                expect(part.tagName).toBe('SECTION');
+                expect(part).toHaveClass('custom');
+                expect(part).toHaveStyle({ color: 'rgb(1, 2, 3)' });
+            },
+        );
     });
 });
