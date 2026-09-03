@@ -2,4 +2,4 @@
 '@vapor-ui/core': minor
 ---
 
-add `ProgressBar` component
+add new `ProgressBar` component
