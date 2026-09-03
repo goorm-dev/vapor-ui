@@ -135,6 +135,40 @@ for (const [label, list] of [
 }
 await fs.writeFile(path.join(CACHE_DIR, 'report.md'), lines.join('\n') + '\n');
 
+// Self-contained HTML (images inlined) so a CI artifact opens with no extra files.
+// Only failing rows carry images; the plain lists below cover the other failure causes.
+const dataUri = async (file: string) =>
+    `data:image/png;base64,${(await fs.readFile(file)).toString('base64')}`;
+const cell = async (dir: string, name: string) =>
+    `<td><img src="${await dataUri(path.join(dir, `${name}.png`))}"></td>`;
+const htmlRows = await Promise.all(
+    failures.map(
+        async (row) =>
+            `<tr><th>${row.name}<br><small>${row.diffPixels} px</small></th>` +
+            (await cell(baselineDir, row.name)) +
+            (await cell(codeDir, row.name)) +
+            (await cell(diffDir, row.name)) +
+            '</tr>',
+    ),
+);
+const htmlList = (label: string, list: string[]) =>
+    list.length
+        ? `<h2>${label} (${list.length})</h2><ul>${list.map((i) => `<li>${i}</li>`).join('')}</ul>`
+        : '';
+await fs.writeFile(
+    path.join(CACHE_DIR, 'report.html'),
+    `<!doctype html><meta charset="utf-8"><title>Icon parity report</title>
+<style>
+body{font:14px system-ui;margin:2rem}th{text-align:left;padding:.5rem 1rem}
+td{padding:.5rem;background:repeating-conic-gradient(#eee 0 25%,#fff 0 50%) 0 0/16px 16px}
+img{display:block;width:128px;height:128px;image-rendering:pixelated}
+</style>
+<h1>Icon parity report</h1>
+<p>${failures.length} of ${mono.length} mono icons over ${threshold} diff pixels.</p>
+<table><tr><th></th><th>Figma</th><th>Code</th><th>Diff</th></tr>${htmlRows.join('')}</table>
+${htmlList('missing renders', missing)}${htmlList('skipped (size mismatch)', skipped)}${htmlList('not in manifest', unclassified)}`,
+);
+
 console.log(
     `${rows.length}/${names.length} compared — mono ${mono.length} (worst ${worst(mono)}), ` +
         `colour ${color.length} (worst ${worst(color)}, ungated), ` +

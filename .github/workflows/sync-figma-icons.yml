@@ -177,6 +177,7 @@ jobs:
                   fi
 
             - name: Create Pull Request
+              id: create_pr
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
@@ -240,13 +241,16 @@ jobs:
                       EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
                       if [[ -n "$EXISTING_PR" ]]; then
                           gh pr edit "$EXISTING_PR" --body-file pr_body.txt
+                          PR_NUMBER="$EXISTING_PR"
                       else
-                          gh pr create \
+                          PR_URL=$(gh pr create \
                           --title "feat: sync icons from Figma" \
                           --body-file pr_body.txt \
                           --base main \
-                          --head "$BRANCH_NAME"
+                          --head "$BRANCH_NAME")
+                          PR_NUMBER="${PR_URL##*/}"
                       fi
+                      echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
                       # Clean up temporary file
                       rm -f pr_body.txt
@@ -258,6 +262,57 @@ jobs:
                           gh pr close "$STALE_PR" --comment "Closing: main already matches Figma, so this sync is no longer valid."
                       fi
                   fi
+
+            # Visual check only — SVG-to-JSX conversion is covered offline by vitest.
+            # Basic icons only: they are monochrome, and Figma's and Chromium's rasterizers
+            # antialias colour icons differently enough to drown any real signal.
+            - name: Check Icon Parity (basic)
+              id: parity
+              if: env.has_changes == 'true'
+              continue-on-error: true
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+              run: |
+                  pnpm --filter @vapor-ui/icons build
+                  pnpm --filter @repo/sync-figma exec playwright install --with-deps chromium
+                  pnpm --filter @repo/sync-figma parity:fetch --type=basic
+                  pnpm --filter @repo/sync-figma parity:render
+                  pnpm --filter @repo/sync-figma parity:compare
+
+            # report.html inlines the Figma / code / diff PNGs of every failing icon, so the
+            # artifact is one file that opens in a browser.
+            - name: Upload Parity Report
+              id: parity_report
+              if: steps.parity.outcome == 'failure'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: icon-parity-report
+                  path: scripts/sync-figma/parity/.cache/report.*
+                  if-no-files-found: ignore
+
+            - name: Comment Parity Failure on PR
+              if: steps.parity.outcome == 'failure' && steps.create_pr.outputs.number != ''
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  REPORT=scripts/sync-figma/parity/.cache/report.md
+                  {
+                      echo "## ⚠️ 아이콘 시각 검증 실패"
+                      echo ""
+                      echo "동기화된 basic(monochrome) 아이콘이 Figma 렌더링과 다릅니다. 아이콘을 확인해 주세요."
+                      echo ""
+                      echo "🖼️ **[시각 diff 보기](${{ steps.parity_report.outputs.artifact-url }})** — 다운로드 후 \`report.html\`을 열면 실패한 아이콘마다 Figma / 코드 / diff 이미지가 나란히 보입니다."
+                      echo ""
+                      # GitHub caps a comment at 65536 chars; the report lists up to 60 rows.
+                      [[ -f "$REPORT" ]] && head -c 60000 "$REPORT"
+                      echo ""
+                      echo "[워크플로 실행 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                  } > parity_comment.txt
+                  gh pr comment "${{ steps.create_pr.outputs.number }}" --body-file parity_comment.txt
+
+            - name: Fail if Icon Parity Failed
+              if: steps.parity.outcome == 'failure'
+              run: exit 1
 
             - name: Notify Slack on Failure
               if: failure()
