@@ -28,7 +28,7 @@
         "@types/lodash-es": "^4.17.12",
         "@types/node": "^22.20.1",
         "eslint": "catalog:",
-        "tsx": "^4.23.12",
+        "tsx": "^4.23.13",
         "typescript": "catalog:"
     }
 }
