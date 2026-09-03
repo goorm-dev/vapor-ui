@@ -4,8 +4,8 @@ const svgToIconComponent = (svgDom: string) =>
     svgDom
         .toString()
         .replace(/(?<=<svg[^>]*)\s+(width|height)="[^"]*"/g, '')
-        .replace(/^\<svg/gm, '<IconBase')
-        .replace(/\<\/svg\>/gm, '</IconBase>')
+        .replace(/^<svg/gm, '<IconBase')
+        .replace(/<\/svg>/gm, '</IconBase>')
         .replace(/\s\w*:\w*="/gm, (w) => ' ' + camelCase(w) + '="')
         .replace(/\s\w*-\w*="/gm, (w) => ' ' + camelCase(w) + '="')
         .replace(/>/, ' {...props} >');
