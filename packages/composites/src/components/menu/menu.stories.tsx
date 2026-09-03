@@ -9,6 +9,13 @@ import { Menu } from '.';
 export default {
     title: 'Composites/Menu',
     component: Menu.Root,
+    argTypes: {
+        defaultOpen: { control: 'boolean' },
+        modal: { control: 'boolean' },
+        isDisabled: { control: 'boolean' },
+        side: { control: 'inline-radio', options: ['top', 'bottom', 'left', 'right'] },
+        align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
+    },
 } satisfies Meta<typeof Menu.Root>;
 
 type Story = StoryObj<typeof Menu.Root>;
@@ -16,32 +23,43 @@ type Story = StoryObj<typeof Menu.Root>;
 export const Default: Story = {
     render: (args) => {
         return (
-            <Menu.Root trigger={<Button>Menu Trigger</Button>} open {...args}>
-                <Menu.Group label="label">
-                    <Menu.Item label="item 1" />
-                    <Menu.Item label="item 2" leading={<PlusOutlineIcon />} />
-                    <Menu.Item
-                        label="item 3"
-                        leading={<PlusOutlineIcon />}
-                        trailing={<ChevronDoubleRightOutlineIcon />}
-                    />
-                    <Menu.Item label="item 4" trailing={<ChevronDoubleRightOutlineIcon />} />
-                </Menu.Group>
+            <div style={{ width: '100%', textAlign: 'center' }}>
+                <Menu.Root trigger={<Button>Menu Trigger</Button>} defaultOpen {...args}>
+                    <Menu.Group label="label">
+                        <Menu.Item label="item 1" onClick={() => alert('clicked item 1')} />
+                        <Menu.Item
+                            label="item 2"
+                            leading={<PlusOutlineIcon />}
+                            onClick={() => alert('clicked item 2')}
+                        />
+                        <Menu.Item
+                            label="item 3"
+                            leading={<PlusOutlineIcon />}
+                            trailing={<ChevronDoubleRightOutlineIcon />}
+                            onClick={() => alert('clicked item 3')}
+                        />
+                        <Menu.Item
+                            label="item 4"
+                            trailing={<ChevronDoubleRightOutlineIcon />}
+                            onClick={() => alert('clicked item 4')}
+                        />
+                    </Menu.Group>
 
-                <Menu.CheckGroup mode="single" label="single group">
-                    <Menu.CheckItem label="single 1" value="single 1" />
-                    <Menu.CheckItem label="single 2" value="single 2" />
-                    <Menu.CheckItem label="single 3" value="single 3" />
-                    <Menu.CheckItem label="single 4" value="single 4" />
-                </Menu.CheckGroup>
+                    <Menu.CheckGroup mode="single" label="single group">
+                        <Menu.CheckItem label="single 1" value="single 1" />
+                        <Menu.CheckItem label="single 2" value="single 2" />
+                        <Menu.CheckItem label="single 3" value="single 3" />
+                        <Menu.CheckItem label="single 4" value="single 4" />
+                    </Menu.CheckGroup>
 
-                <Menu.CheckGroup mode="multiple" label="multiple group">
-                    <Menu.CheckItem label="multiple 1" value="multiple 1" />
-                    <Menu.CheckItem label="multiple 2" value="multiple 2" />
-                    <Menu.CheckItem label="multiple 3" value="multiple 3" />
-                    <Menu.CheckItem label="multiple 4" value="multiple 4" />
-                </Menu.CheckGroup>
-            </Menu.Root>
+                    <Menu.CheckGroup mode="multiple" label="multiple group">
+                        <Menu.CheckItem label="multiple 1" value="multiple 1" />
+                        <Menu.CheckItem label="multiple 2" value="multiple 2" />
+                        <Menu.CheckItem label="multiple 3" value="multiple 3" />
+                        <Menu.CheckItem label="multiple 4" value="multiple 4" />
+                    </Menu.CheckGroup>
+                </Menu.Root>
+            </div>
         );
     },
 };
