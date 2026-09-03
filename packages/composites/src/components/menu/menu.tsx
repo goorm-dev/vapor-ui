@@ -173,9 +173,9 @@ const itemSlots = createSlots({
     label: Box,
 });
 
-export const MenuItem = ({ label, leading, trailing }: MenuItem.Props) => {
+export const MenuItem = ({ label, leading, trailing, onClick }: MenuItem.Props) => {
     return (
-        <MenuPrimitives.Item>
+        <MenuPrimitives.Item onClick={onClick}>
             <itemSlots.leading render={leading} />
             <itemSlots.label render={label} $css={{ flex: 1 }} />
             <itemSlots.trailing render={trailing} />
