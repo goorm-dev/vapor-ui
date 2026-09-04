@@ -7,7 +7,9 @@ on:
             - opened
             - synchronize
         paths:
-            - packages/core/**
+            - packages/core/src/**
+            - packages/composites/src/**
+            - apps/storybook/**
 
 permissions:
     id-token: write
@@ -63,20 +65,20 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Install Playwright Browsers
-              run: pnpm core exec playwright install ${{ matrix.shard.project }}
+              run: pnpm storybook exec playwright install ${{ matrix.shard.project }}
 
             - name: Build Storybook(cached)
               run: pnpm build:storybook
 
             - name: Run Playwright tests
-              run: pnpm core test:regressions --project="${{ matrix.shard.name }}"
+              run: pnpm storybook test:regressions --project="${{ matrix.shard.name }}"
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
               uses: actions/upload-artifact@v4
               with:
                   name: blob-report-${{ matrix.shard.name }}
-                  path: packages/core/blob-report
+                  path: apps/storybook/blob-report
                   retention-days: 1
 
     merge-reports:
@@ -97,13 +99,13 @@ jobs:
                   merge-multiple: true
 
             - name: Merge into HTML Report
-              run: pnpm core exec playwright merge-reports -c ./playwright.merge.ts ../../all-blob-reports
+              run: pnpm storybook exec playwright merge-reports -c ./playwright.merge.ts ../../all-blob-reports
 
             - name: Upload HTML report
               uses: actions/upload-artifact@v4
               with:
                   name: html-report--attempt-${{ github.run_attempt }}
-                  path: packages/core/__tests__/report
+                  path: apps/storybook/__tests__/report
                   retention-days: 14
 
             - name: Configure AWS Credentials
@@ -121,13 +123,13 @@ jobs:
             - name: Upload Report to S3
               run: |
                   aws s3 rm s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
-                  aws s3 cp './packages/core/__tests__/report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
+                  aws s3 cp './apps/storybook/__tests__/report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
 
             - name: Post Test Result
               id: playwright-summary
               uses: daun/playwright-report-summary@v3
               with:
-                  report-file: ./packages/core/__tests__/report/index.json
+                  report-file: ./apps/storybook/__tests__/report/index.json
                   report-url: http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html
                   create-comment: false
 
