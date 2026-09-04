@@ -2,39 +2,29 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const SaintVincentAndTheGrenadinesColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1422"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-SaintVincentAndTheGrenadinesColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1422)">
-            <path d="M1.91273 0H-4V16H1.91273V0Z" fill="#002175" />
-            <path d="M20 0H14.0873V16H20V0Z" fill="#007D2A" />
-            <path d="M14.0873 0H1.91273V16H14.0873V0Z" fill="#FCD11C" />
+        <g mask="url(#vapor-icons-color-SaintVincentAndTheGrenadinesColorIcon__a)">
+            <path fill="#002175" d="M1.913 0H-4v16h5.913z" />
+            <path fill="#007D2A" d="M20 0h-5.913v16H20z" />
+            <path fill="#FCD11C" d="M14.087 0H1.913v16h12.174z" />
             <path
-                d="M8.41271 8L9.9818 10.7564L11.5491 8L9.9818 5.24182L8.41271 8Z"
                 fill="#007D2A"
-            />
-            <path
-                d="M4.46545 8L6.03454 10.7564L7.60182 8L6.03454 5.24182L4.46545 8Z"
-                fill="#007D2A"
-            />
-            <path
-                d="M6.43994 11.5546L8.00721 14.3127L9.57631 11.5546L8.00721 8.79639L6.43994 11.5546Z"
-                fill="#007D2A"
+                d="m8.413 8 1.569 2.756L11.549 8 9.982 5.242zM4.465 8l1.57 2.756L7.602 8 6.035 5.242zm1.975 3.555 1.567 2.758 1.57-2.758-1.57-2.759z"
             />
         </g>
     </IconBase>
 );
-
 export default SaintVincentAndTheGrenadinesColorIcon;

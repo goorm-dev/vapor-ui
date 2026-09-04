@@ -24,7 +24,7 @@ export const root = componentRecipe({
         borderRadius: vars.size.borderRadius['300'],
 
         borderColor: vars.color.border.secondary,
-        backgroundColor: vars.color.gray['100'],
+        backgroundColor: vars.color.background['secondary'],
         padding: padding,
 
         width: 'fit-content',
@@ -53,7 +53,7 @@ export const item = componentRecipe({
     base: [
         interaction(),
         typography({ style: 'subtitle1' }),
-        foregrounds({ color: 'secondary-200' }),
+        foregrounds({ color: 'normal' }),
         {
             position: 'relative',
             zIndex: 1,
@@ -132,7 +132,7 @@ export const indicator = componentStyle({
 
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.secondary}`,
-    backgroundColor: vars.color.background['canvas-100'],
+    backgroundColor: vars.color.background['canvas-base'],
 
     pointerEvents: 'none',
     width: `${variables.indicatorWidth}`,

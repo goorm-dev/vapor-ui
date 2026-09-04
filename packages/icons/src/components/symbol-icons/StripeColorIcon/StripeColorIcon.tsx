@@ -2,22 +2,23 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const StripeColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-        <g clipPath="url(#clip0_4394_229)">
-            <path fillRule="evenodd" clipRule="evenodd" d="M0 0H16V16H0V0Z" fill="#635BFF" />
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
+        <g
+            fillRule="evenodd"
+            clipPath="url(#vapor-icons-color-StripeColorIcon__a)"
+            clipRule="evenodd"
+        >
+            <path fill="#635BFF" d="M0 0h16v16H0z" />
             <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M7.37601 6.22001C7.37601 5.84401 7.68401 5.69601 8.19601 5.69601C8.93201 5.69601 9.86001 5.92001 10.596 6.31601V4.04401C9.79201 3.72401 9.00001 3.60001 8.20001 3.60001C6.23601 3.60001 4.93201 4.62401 4.93201 6.33601C4.93201 9.00401 8.60801 8.58001 8.60801 9.73201C8.60801 10.176 8.22001 10.32 7.68001 10.32C6.87601 10.32 5.85201 9.99201 5.04001 9.54801V11.848C5.94001 12.236 6.84801 12.4 7.68001 12.4C9.69201 12.4 11.076 11.404 11.076 9.67201C11.06 6.79201 7.37601 7.30401 7.37601 6.22001Z"
-                fill="white"
+                fill="#fff"
+                d="M7.376 6.22c0-.376.308-.524.82-.524.736 0 1.664.224 2.4.62V4.044A6.4 6.4 0 0 0 8.2 3.6c-1.964 0-3.268 1.024-3.268 2.736 0 2.668 3.676 2.244 3.676 3.396 0 .444-.388.588-.928.588-.804 0-1.828-.328-2.64-.772v2.3c.9.388 1.808.552 2.64.552 2.012 0 3.396-.996 3.396-2.728-.016-2.88-3.7-2.368-3.7-3.452"
             />
         </g>
         <defs>
-            <clipPath id="clip0_4394_229">
-                <rect width="16" height="16" fill="white" />
+            <clipPath id="vapor-icons-color-StripeColorIcon__a">
+                <path fill="#fff" d="M0 0h16v16H0z" />
             </clipPath>
         </defs>
     </IconBase>
 );
-
 export default StripeColorIcon;

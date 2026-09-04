@@ -3,7 +3,11 @@
     "tasks": {
         "build:storybook": {
             "dependsOn": ["^build:storybook"],
-            "inputs": [".storybook/**", "../../packages/core/src/**"],
+            "inputs": [
+                ".storybook/**",
+                "../../packages/core/src/**",
+                "../../packages/composites/src/**"
+            ],
             "outputs": ["storybook-static/**"]
         }
     }

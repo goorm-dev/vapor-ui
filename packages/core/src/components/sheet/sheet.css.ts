@@ -12,8 +12,9 @@ export const overlay = componentStyle({
 
     transition: 'opacity 0.15s cubic-bezier(.45,1.005,0,1.005)',
 
+    opacity: 0.32,
     backdropFilter: 'blur(1.5px)',
-    backgroundColor: 'rgba(0, 0, 0, 32%)',
+    backgroundColor: vars.color.background['canvas-dim'],
 
     selectors: {
         '&[data-starting-style], &[data-ending-style]': {
@@ -93,7 +94,7 @@ export const popup = componentStyle({
 
     borderRadius: 0,
     boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
-    backgroundColor: vars.color.background['overlay-100'],
+    backgroundColor: vars.color.background['canvas-overlay'],
 
     selectors: {
         ...sideSelectors,
@@ -159,7 +160,7 @@ export const resizeHandleGrip = componentStyle([
     interaction(),
     {
         borderRadius: vars.size.borderRadius[300],
-        backgroundColor: vars.color.foreground['hint-100'],
+        backgroundColor: vars.color.foreground['hint'],
 
         selectors: {
             '&[data-side="left"], &[data-side="right"]': {

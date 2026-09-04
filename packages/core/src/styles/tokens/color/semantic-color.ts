@@ -5,12 +5,15 @@ type ColorName = Exclude<keyof typeof LIGHT_BASIC_COLORS, 'background' | 'black'
 
 /** 색상 단계(shade) 타입 */
 type ColorShade = keyof (typeof LIGHT_BASIC_COLORS)['blue'];
+type GrayColorShade = keyof (typeof LIGHT_BASIC_COLORS)['gray'];
 
 /** 기본 색상 이름 타입 (black, white) */
 type BaseColorName = keyof typeof BASE_BASIC_COLORS;
 
-const colorRef = <C extends ColorName, S extends ColorShade>(color: C, shade: S) =>
-    `var(--vapor-color-${color}-${shade})` as const;
+const colorRef = <C extends ColorName, S extends (C extends 'gray' ? GrayColorShade : ColorShade)>(
+    color: C,
+    shade: S,
+) => `var(--vapor-color-${color}-${shade})` as const;
 
 const baseRef = <C extends BaseColorName>(color: C) => `var(--vapor-color-${color})` as const;
 
@@ -64,11 +67,12 @@ export const LIGHT_SEMANTIC_COLORS = {
         'canvas-100': canvasRef(),
         'canvas-200': colorRef('gray', '050'),
         'overlay-100': canvasRef(),
-        'canvas-base': canvasRef(),
+        'canvas-base': baseRef('white'),
         'canvas-sunken': colorRef('gray', '050'),
-        'canvas-raised': '#FAFAFA', // TODO: primitive 토큰 반영 필요
-        'canvas-dim': 'rgba(0, 0, 0, 0.32)', // TODO: primitive 토큰 반영 필요
-        'canvas-overlay': canvasRef(),
+        'canvas-raised': colorRef('gray', '025'),
+        'canvas-dim': baseRef('black'),
+        'canvas-overlay': baseRef('white'),
+        'canvas-inverse': colorRef('gray', '800'),
     },
     foreground: {
         // primary
@@ -179,14 +183,15 @@ export const DARK_SEMANTIC_COLORS = {
         contrast: colorRef('gray', '800'),
 
         // canvas
-        'canvas-100': canvasRef(),
-        'canvas-200': colorRef('gray', '050'),
+        'canvas-100': colorRef('gray', '050'),
+        'canvas-200': colorRef('gray', '100'),
         'overlay-100': colorRef('gray', '100'),
-        'canvas-base': canvasRef(),
-        'canvas-sunken': colorRef('gray', '050'),
-        'canvas-raised': '#1F1F1F', // TODO: primitive 토큰 반영 변경 필요
-        'canvas-dim': 'rgba(0, 0, 0, 0.32)', // TODO: primitive 토큰 반영 변경 필요
+        'canvas-base': colorRef('gray', '050'),
+        'canvas-sunken': colorRef('gray', '025'),
+        'canvas-raised': colorRef('gray', '100'),
+        'canvas-dim': baseRef('black'),
         'canvas-overlay': colorRef('gray', '100'),
+        'canvas-inverse': colorRef('gray', '900'),
     },
     foreground: {
         // primary

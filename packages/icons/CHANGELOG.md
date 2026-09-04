@@ -1,5 +1,13 @@
 # @vapor-ui/icons
 
+## 1.3.0
+
+### Icons
+
+- Add new icons from Figma ([#673](https://github.com/goorm-dev/vapor-ui/pull/673)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+    **New Basic Icons:** `IdIcon`, `DevicesIcon`
+
 ## 1.2.1
 
 ### Etc.

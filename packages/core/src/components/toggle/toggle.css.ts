@@ -21,7 +21,7 @@ export const root = componentRecipe({
             justifyContent: 'center',
 
             borderRadius: vars.size.borderRadius['300'],
-            backgroundColor: vars.color.background['canvas-100'],
+            backgroundColor: vars.color.background['canvas-base'],
 
             selectors: {
                 [when.pressed()]: { backgroundColor: variables.backgroundColor },
@@ -40,17 +40,17 @@ export const root = componentRecipe({
         },
         variant: {
             default: {
-                color: vars.color.foreground['hint-200'],
+                color: vars.color.foreground['secondary'],
 
                 vars: {
-                    [variables.backgroundColor]: vars.color.background['hint-100'],
+                    [variables.backgroundColor]: vars.color.background['hint-weak'],
                 },
             },
             accent: {
-                color: vars.color.foreground['primary-100'],
+                color: vars.color.foreground['primary'],
 
                 vars: {
-                    [variables.backgroundColor]: vars.color.background['primary-100'],
+                    [variables.backgroundColor]: vars.color.background['primary-weak'],
                 },
             },
         },
