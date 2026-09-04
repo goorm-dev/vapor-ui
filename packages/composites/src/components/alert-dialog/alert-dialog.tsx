@@ -54,9 +54,9 @@ export const AlertDialogRoot = ({
     action,
     children,
 }: AlertDialogRoot.Props) => {
-    const actionsRef = useRef<AlertDialogPrimitives.Root.Actions>(null);
-    const mergedRef = actionsRefProp ?? actionsRef;
-    const close = useCallback(() => mergedRef.current?.close(), [mergedRef]);
+    const fallbackActionsRef = useRef<AlertDialogPrimitives.Root.Actions>(null);
+    const actionsRef = actionsRefProp ?? fallbackActionsRef;
+    const close = useCallback(() => actionsRef.current?.close(), [actionsRef]);
 
     const context = useMemo<AlertDialogContext>(() => ({ close, type }), [close, type]);
 
@@ -66,7 +66,7 @@ export const AlertDialogRoot = ({
                 open={open}
                 onOpenChange={onOpenChange}
                 defaultOpen={defaultOpen}
-                actionsRef={mergedRef}
+                actionsRef={actionsRef}
             >
                 <slots.trigger render={trigger} />
 
@@ -169,7 +169,7 @@ export interface AlertDialogProps {
     /**
      * 다이얼로그의 주요 액션 요소.
      * @example
-     * <AlertDialog.Root action={<AlertDialog.Action>취소</Dialog.Action>} />
+     * <AlertDialog.Root action={<AlertDialog.Action>삭제</Dialog.Action>} />
      */
     action: Slots['action'];
 
