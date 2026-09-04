@@ -98,6 +98,7 @@
         "autoprefixer": "^10.5.4",
         "eslint": "catalog:",
         "happy-dom": "^20.11.1",
+        "http-server": "^14.1.1",
         "postcss": "^8.5.26",
         "react": "catalog:",
         "react-dom": "catalog:",
