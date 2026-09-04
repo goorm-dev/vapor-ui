@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactElement, RefObject } from 'react';
-import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { Progress as BaseProgress } from '@base-ui/react/progress';
 
@@ -20,7 +20,8 @@ type Status = BaseProgress.Root.State['status'];
 
 interface ProgressBarContext extends Required<ProgressBarVariants> {
     status: Status;
-    setDescriptionId: (id: string | undefined) => void;
+    /** Registers a `ProgressBar.Description` id; the returned function unregisters it. */
+    registerDescription: (id: string) => () => void;
     /** Set by `ProgressBar.Label` so the root can warn when the bar has no accessible name. */
     hasLabelRef: RefObject<boolean>;
 }
@@ -66,11 +67,15 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
     const status: Status =
         clampedValue == null ? 'indeterminate' : clampedValue === max ? 'complete' : 'progressing';
 
-    const [descriptionId, setDescriptionId] = useState<string>();
+    const [descriptionIds, setDescriptionIds] = useState<string[]>([]);
+    const registerDescription = useCallback((id: string) => {
+        setDescriptionIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
+        return () => setDescriptionIds((ids) => ids.filter((each) => each !== id));
+    }, []);
     const hasLabelRef = useRef(false);
     const contextValue = useMemo<ProgressBarContext>(
-        () => ({ size, type, status, setDescriptionId, hasLabelRef }),
-        [size, type, status],
+        () => ({ size, type, status, registerDescription, hasLabelRef }),
+        [size, type, status, registerDescription],
     );
 
     const ariaLabel = componentProps['aria-label'];
@@ -104,7 +109,7 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
                 getAriaValueText={getAriaValueText ?? OMIT_ARIA_VALUE_TEXT}
                 // Appended, never replaced: a description the consumer wired up and ours both apply.
                 aria-describedby={
-                    [ariaDescribedBy, descriptionId].filter(Boolean).join(' ') || undefined
+                    [ariaDescribedBy, ...descriptionIds].filter(Boolean).join(' ') || undefined
                 }
                 className={cn(styles.root, className)}
                 {...componentProps}
@@ -247,15 +252,12 @@ ProgressBarValue.displayName = 'ProgressBar.Value';
 export const ProgressBarDescription = forwardRef<HTMLSpanElement, ProgressBarDescription.Props>(
     (props, ref) => {
         const { className, render, id: idProp, ...componentProps } = resolveStyles(props);
-        const { type, status, setDescriptionId } = useProgressBarContext();
+        const { type, status, registerDescription } = useProgressBarContext();
 
         const fallbackId = useId();
         const id = idProp ?? fallbackId;
 
-        useEffect(() => {
-            setDescriptionId(id);
-            return () => setDescriptionId(undefined);
-        }, [id, setDescriptionId]);
+        useEffect(() => registerDescription(id), [id, registerDescription]);
 
         return useRenderElement({
             ref,

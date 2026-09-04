@@ -445,6 +445,29 @@ describe('<ProgressBar />', () => {
             );
         });
 
+        it('should keep every mounted Description and drop only the one that unmounts', async () => {
+            const Twice = ({ second = true }: { second?: boolean }) => (
+                <ProgressBar.Root value={42} aria-label="파일 업로드">
+                    <ProgressBar.Track />
+                    <ProgressBar.Description id="first">첫 설명</ProgressBar.Description>
+                    {second && (
+                        <ProgressBar.Description id="second">둘째 설명</ProgressBar.Description>
+                    )}
+                </ProgressBar.Root>
+            );
+            const { container, rerender } = render(<Twice />);
+
+            await waitFor(() =>
+                expect(getBar(container)).toHaveAttribute('aria-describedby', 'first second'),
+            );
+
+            rerender(<Twice second={false} />);
+
+            await waitFor(() =>
+                expect(getBar(container)).toHaveAttribute('aria-describedby', 'first'),
+            );
+        });
+
         it('should leave describedby off when no Description is rendered', () => {
             const { container } = render(<ProgressBarTest value={42} />);
 
