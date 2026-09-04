@@ -7,7 +7,7 @@
 ---
 
 - **Package Manager**: PNPM (workspace 기반 모노레포)
-- **Node.js**: `>=24.18.0 <25` (`.nvmrc`, `package.json` engines 기준)
+- **Node.js**: `>=24` (`.nvmrc`, `package.json` engines 기준)
 - **UI Primitives**: `@base-ui/react` (Accessible unstyled components)
 - **Styling**: Vanilla Extract (`@vanilla-extract/css`, `@vanilla-extract/recipes`)
 - **Testing**: Vitest + React Testing Library + vitest-axe

@@ -61,8 +61,8 @@
         "turbo": "^2.10.9",
         "typescript": "catalog:"
     },
-    "packageManager": "pnpm@10.34.5",
+    "packageManager": "pnpm@11.21.0",
     "engines": {
-        "node": ">=24.18.0 <25"
+        "node": ">=24"
     }
 }
