@@ -5,10 +5,6 @@ import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-/**
- * The segment only changes position — never brightness or hue — so no flash event
- * can occur (WCAG 2.3.1). See `reports/progressbar-design.md` §3.6.
- */
 const sweep = keyframes({
     '0%': { transform: 'translateX(-100%)' },
     '100%': { transform: 'translateX(333.33%)' },
