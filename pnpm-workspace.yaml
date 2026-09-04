@@ -4,6 +4,14 @@ packages:
     - scripts/ts-api-extractor
     - scripts/sync-figma
 
+engineStrict: true
+
+allowBuilds:
+    '@parcel/watcher': true
+    esbuild: true
+    sharp: true
+    unrs-resolver: true
+
 # Unified React 19 for entire monorepo
 # Libraries (packages/*) maintain peerDependencies for React 17/18/19 compatibility
 catalog:

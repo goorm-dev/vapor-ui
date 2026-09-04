@@ -8,7 +8,7 @@ export default defineConfig([
         format: ['esm'],
         sourcemap: true,
         splitting: false,
-        target: 'node20', // matches package.json engines (>=20.19)
+        target: 'node24',
         esbuildOptions(options) {
             options.alias = {
                 '~': path.resolve(__dirname, './src'),
@@ -24,7 +24,7 @@ export default defineConfig([
         format: ['esm'],
         sourcemap: true,
         splitting: false,
-        target: 'node20', // matches package.json engines (>=20.19)
+        target: 'node24',
         esbuildOptions(options) {
             options.alias = {
                 '~': path.resolve(__dirname, './src'),

@@ -50,7 +50,7 @@
         "@changesets/cli": "^2.31.1",
         "@changesets/get-github-info": "^0.8.0",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@types/node": "^22.20.1",
+        "@types/node": "^24.13.3",
         "dotenv": "^17.4.2",
         "husky": "^9.1.7",
         "lodash-es": "^4.18.1",
@@ -61,8 +61,8 @@
         "turbo": "^2.10.12",
         "typescript": "catalog:"
     },
-    "packageManager": "pnpm@10.34.5",
+    "packageManager": "pnpm@11.21.0",
     "engines": {
-        "node": ">=20.20.2"
+        "node": ">=24"
     }
 }
