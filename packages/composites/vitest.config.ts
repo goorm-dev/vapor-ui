@@ -12,7 +12,7 @@ export default defineConfig({
         noExternal: ['@vapor-ui/icons', '@vapor-ui/core'],
     },
     test: {
-        setupFiles: ['./__tests__/setup-tests.ts'],
+        setupFiles: ['./vitest.setup.ts'],
         environment: 'happy-dom',
         exclude: ['node_modules', 'dist'],
         include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],

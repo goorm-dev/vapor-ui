@@ -61,7 +61,6 @@
         "lint": "eslint ./src",
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",
-        "test:regressions": "playwright test -c ./playwright.config.ts",
         "test:watch": "vitest",
         "typecheck": "tsc --noEmit"
     },
@@ -79,7 +78,6 @@
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {
-        "@playwright/test": "^1.62.1",
         "@repo/eslint-config": "workspace:*",
         "@repo/rolldown-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",

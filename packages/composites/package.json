@@ -57,7 +57,6 @@
         "lint": "eslint ./src",
         "test": "vitest --run --passWithNoTests",
         "test:coverage": "vitest --coverage --passWithNoTests",
-        "test:regressions": "playwright test -c ./playwright.config.ts",
         "test:watch": "vitest --passWithNoTests",
         "typecheck": "tsc --noEmit"
     },
@@ -68,7 +67,6 @@
     },
     "devDependencies": {
         "@figma/code-connect": "^2.0.0",
-        "@playwright/test": "^1.62.1",
         "@repo/eslint-config": "workspace:^",
         "@repo/rolldown-config": "workspace:^",
         "@repo/typescript-config": "workspace:^",

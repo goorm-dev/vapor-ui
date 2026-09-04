@@ -7,7 +7,8 @@
         "build:storybook": "STORYBOOK_SKIP_DOCGEN=1 storybook build",
         "clean": "rimraf dist node_modules .turbo",
         "dev": "storybook dev -p 9009",
-        "lint": "eslint ./.storybook"
+        "lint": "eslint ./.storybook",
+        "test:regressions": "playwright test -c ./playwright.config.ts"
     },
     "dependencies": {
         "react": "catalog:",
@@ -15,6 +16,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.39.5",
+        "@playwright/test": "^1.62.1",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@storybook/addon-docs": "^9.1.20",
@@ -26,6 +28,7 @@
         "@vitejs/plugin-react": "^5.2.0",
         "eslint": "catalog:",
         "globals": "^16.5.0",
+        "http-server": "^14.1.1",
         "storybook": "^9.1.20",
         "typescript": "catalog:",
         "typescript-eslint": "^8.65.0",
