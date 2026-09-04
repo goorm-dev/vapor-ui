@@ -28,7 +28,11 @@ const FIGMA_NODE_TYPES = {
     Frame: 'FRAME',
     Component: 'COMPONENT',
     ComponentSet: 'COMPONENT_SET',
-};
+} as const;
+
+type FigmaNodeType = (typeof FIGMA_NODE_TYPES)[keyof typeof FIGMA_NODE_TYPES];
+
+export type { FigmaNodeType };
 
 export {
     FIGMA_ICONS_FILE_KEY,

@@ -2,13 +2,13 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const SplitIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <path
+            fill="currentColor"
             fillRule="evenodd"
+            d="M10.883 8.922c-2.586 2.939-5.031 3.808-6.71 3.994l5.37-6.104 1.803 1.585zm.796-1.964 2.972-3.38-2.252-1.98-2.973 3.379L1.5 13.986s5.041 1.84 10.36-4.206l1.32-1.501z"
             clipRule="evenodd"
-            d="M10.8828 8.9219C8.29676 11.8609 5.85176 12.7299 4.17276 12.9159L9.54276 6.8119L11.3458 8.3969L10.8828 8.9219ZM11.6788 6.9579L14.6508 3.5789L12.3988 1.5979L9.42576 4.9769L1.49976 13.9859C1.49976 13.9859 6.54076 15.8259 11.8598 9.7799L13.1798 8.2789L11.6788 6.9579Z"
         />
     </IconBase>
 );
-
 export default SplitIcon;

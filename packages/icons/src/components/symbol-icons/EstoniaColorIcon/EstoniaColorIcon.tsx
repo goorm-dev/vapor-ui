@@ -2,31 +2,29 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const EstoniaColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1298"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-EstoniaColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1298)">
-            <path d="M20.4128 10.4146H-4.69629V15.9782H20.4128V10.4146Z" fill="white" />
+        <g mask="url(#vapor-icons-color-EstoniaColorIcon__a)">
+            <path fill="#fff" d="M20.413 10.415h-25.11v5.563h25.11z" />
             <path
-                d="M7.99999 16.1818C3.48909 16.1818 -0.181824 12.5109 -0.181824 7.99999C-0.181824 3.48909 3.48909 -0.181824 7.99999 -0.181824C12.5109 -0.181824 16.1818 3.48909 16.1818 7.99999C16.1818 12.5109 12.5109 16.1818 7.99999 16.1818ZM7.99999 0.181813C3.68909 0.181813 0.181813 3.68909 0.181813 7.99999C0.181813 12.3109 3.68909 15.8182 7.99999 15.8182C12.3109 15.8182 15.8182 12.3109 15.8182 7.99999C15.8182 3.68909 12.3109 0.181813 7.99999 0.181813Z"
                 fill="#F2F2F0"
+                d="M8 16.182C3.49 16.182-.182 12.51-.182 8S3.49-.182 8-.182 16.182 3.489 16.182 8c0 4.51-3.671 8.182-8.182 8.182m0-16C3.69.182.182 3.689.182 8c0 4.31 3.507 7.818 7.818 7.818 4.31 0 7.818-3.507 7.818-7.818C15.818 3.69 12.311.182 8 .182"
             />
-            <path d="M20.4128 0H-4.69629V5.32546H20.4128V0Z" fill="#0072CE" />
-            <path d="M20.4128 5.32544H-4.69629V10.6509H20.4128V5.32544Z" fill="black" />
+            <path fill="#0072CE" d="M20.413 0h-25.11v5.325h25.11z" />
+            <path fill="#000" d="M20.413 5.325h-25.11v5.326h25.11z" />
         </g>
     </IconBase>
 );
-
 export default EstoniaColorIcon;
