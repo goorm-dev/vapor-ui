@@ -28,6 +28,7 @@
         "@vitejs/plugin-react": "^5.2.0",
         "eslint": "catalog:",
         "globals": "^16.5.0",
+        "http-server": "^14.1.1",
         "storybook": "^9.1.20",
         "typescript": "catalog:",
         "typescript-eslint": "^8.65.0",
