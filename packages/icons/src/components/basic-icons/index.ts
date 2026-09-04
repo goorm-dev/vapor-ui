@@ -1,9 +1,5 @@
 export { default as VariableIcon } from './VariableIcon';
-export { default as SplitIcon } from './SplitIcon';
-export { default as ReplaceIcon } from './ReplaceIcon';
-export { default as CourseHistoryIcon } from './CourseHistoryIcon';
 export { default as ClassIcon } from './ClassIcon';
-export { default as CodevisorIcon } from './CodevisorIcon';
 export { default as CursorshareoffIcon } from './CursorshareoffIcon';
 export { default as CursorshareonIcon } from './CursorshareonIcon';
 export { default as ViewOnIcon } from './ViewOnIcon';
@@ -554,3 +550,7 @@ export { default as Heading2OutlineIcon } from './Heading2OutlineIcon';
 export { default as Heading1OutlineIcon } from './Heading1OutlineIcon';
 export { default as Heading4OutlineIcon } from './Heading4OutlineIcon';
 export { default as TriangleOutlineIcon } from './TriangleOutlineIcon';
+export { default as SplitIcon } from './SplitIcon';
+export { default as ReplaceIcon } from './ReplaceIcon';
+export { default as CourseHistoryIcon } from './CourseHistoryIcon';
+export { default as CodevisorIcon } from './CodevisorIcon';

@@ -2,35 +2,33 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const AzerbaijanColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1418"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-AzerbaijanColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1418)">
-            <path d="M24 10.6673H-8V16H24V10.6673Z" fill="#3D9D32" />
-            <path d="M24 0H-8V5.33273H24V0Z" fill="#00BAE5" />
-            <path d="M24 5.3327H-8V10.6654H24V5.3327Z" fill="#EE2436" />
+        <g mask="url(#vapor-icons-color-AzerbaijanColorIcon__a)">
+            <path fill="#3D9D32" d="M24 10.667H-8V16h32z" />
+            <path fill="#00BAE5" d="M24 0H-8v5.333h32z" />
+            <path fill="#EE2436" d="M24 5.333H-8v5.332h32z" />
             <path
-                d="M8.10726 10.0273C6.98726 10.0273 6.07998 9.12002 6.07998 8.00002C6.07998 6.88002 6.98726 5.97274 8.10726 5.97274C8.5418 5.97274 8.94363 6.11093 9.27454 6.34366C8.82545 5.85456 8.18362 5.54547 7.46725 5.54547C6.11271 5.54547 5.01453 6.64365 5.01453 7.9982C5.01453 9.35274 6.11271 10.4509 7.46725 10.4509C8.18362 10.4509 8.82545 10.1418 9.27454 9.65275C8.94363 9.88548 8.5418 10.0237 8.10726 10.0237V10.0273Z"
-                fill="white"
+                fill="#fff"
+                d="M8.107 10.027a2.027 2.027 0 1 1 1.168-3.683 2.45 2.45 0 0 0-1.808-.799 2.453 2.453 0 0 0 0 4.906c.717 0 1.358-.31 1.808-.798-.331.232-.733.37-1.168.37z"
             />
             <path
-                d="M10.0272 6.72729L10.2709 7.41093L10.9272 7.10002L10.6145 7.75638L11.3 8.00002L10.6145 8.24366L10.9272 8.90002L10.2709 8.58911L10.0272 9.27275L9.78358 8.58911L9.12722 8.90002L9.43814 8.24366L8.75269 8.00002L9.43814 7.75638L9.12722 7.10002L9.78358 7.41093L10.0272 6.72729Z"
-                fill="white"
+                fill="#fff"
+                d="m10.027 6.727.244.684.656-.311-.312.656L11.3 8l-.686.244.313.656-.656-.31-.244.683-.243-.684-.657.311.311-.656L8.753 8l.685-.244-.31-.656.656.31z"
             />
         </g>
     </IconBase>
 );
-
 export default AzerbaijanColorIcon;

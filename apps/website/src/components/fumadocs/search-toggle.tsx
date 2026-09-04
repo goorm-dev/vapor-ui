@@ -6,7 +6,6 @@ import { SearchOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 import type { ButtonProps } from 'fumadocs-ui/components/ui/button';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
-import { useI18n } from 'fumadocs-ui/contexts/i18n';
 import { useSearchContext } from 'fumadocs-ui/contexts/search';
 
 interface SearchToggleProps extends Omit<ComponentProps<'button'>, 'color'>, ButtonProps {
@@ -52,7 +51,6 @@ export function LargeSearchToggle({
     hideIfDisabled?: boolean;
 }) {
     const { enabled, hotKey, setOpenSearch } = useSearchContext();
-    const { text } = useI18n();
 
     if (hideIfDisabled && !enabled) return null;
 
@@ -70,7 +68,7 @@ export function LargeSearchToggle({
             }}
         >
             <SearchOutlineIcon className="size-4" />
-            {text.search}
+            Search
             <div className="ms-auto inline-flex gap-0.5">
                 {hotKey.map((k, i) => (
                     <kbd key={i} className="bg-fd-background rounded-md border px-1.5">

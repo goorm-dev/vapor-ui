@@ -2,9 +2,11 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const XIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
-        <path d="M12.1627 1.5H14.368L9.55 7.00667L15.218 14.5H10.78L7.304 9.95533L3.32667 14.5H1.12L6.27333 8.61L0.835999 1.5H5.38667L8.52867 5.654L12.1627 1.5ZM11.3887 13.18H12.6107L4.72267 2.75067H3.41133L11.3887 13.18Z" />
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
+        <path
+            fill="currentColor"
+            d="M12.163 1.5h2.205L9.55 7.007l5.668 7.493H10.78L7.304 9.955 3.327 14.5H1.12l5.153-5.89L.836 1.5h4.55L8.53 5.654zm-.774 11.68h1.222L4.723 2.75H3.41z"
+        />
     </IconBase>
 );
-
 export default XIcon;
