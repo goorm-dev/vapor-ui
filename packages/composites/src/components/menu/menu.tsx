@@ -122,7 +122,7 @@ export interface MenuRootProps {
     trigger?: Slots['trigger'];
 
     /**
-     * 팝업 내부에 렌더될 메뉴 항목들.
+     * 그룹 내부에 표시할 요소.
      */
     children: ReactNode;
 }
@@ -156,7 +156,7 @@ export interface MenuGroupProps {
     label: GroupSlots['label'];
 
     /**
-     * 그룹에 포함되는 메뉴 항목들.
+     * 그룹 내부에 표시할 요소.
      */
     children: ReactNode;
 }
@@ -173,9 +173,12 @@ const itemSlots = createSlots({
     label: Box,
 });
 
-export const MenuItem = ({ label, leading, trailing, onClick }: MenuItem.Props) => {
+export const MenuItem = ({ variant, label, leading, trailing, onClick }: MenuItem.Props) => {
     return (
-        <MenuPrimitives.Item onClick={onClick}>
+        <MenuPrimitives.Item
+            onClick={onClick}
+            $css={{ color: variant === 'critical' ? '$fg-danger' : '$fg-normal' }}
+        >
             <itemSlots.leading render={leading} />
             <itemSlots.label render={label} $css={{ flex: 1 }} />
             <itemSlots.trailing render={trailing} />
@@ -188,11 +191,17 @@ type ItemProps = MenuPrimitives.Item.Props;
 
 export interface MenuItemProps {
     /**
-     * 항목 클릭 시 호출된다.
+     * 항목 클릭 시 호출되는 이벤트 핸들러.
      * @example
      * <Menu.Item onClick={handleSelect} label="Copy" />
      */
     onClick: ItemProps['onClick'];
+
+    /**
+     * 메뉴 아이템의 시각적 위계를 결정한다.
+     * @default "default"
+     */
+    variant?: 'default' | 'critical';
 
     /**
      * 항목 좌측에 표시되는 요소. 주로 아이콘을 배치한다.
@@ -336,7 +345,7 @@ export interface MenuSingleCheckGroupProps {
     label: CheckGroupSlots['label'];
 
     /**
-     * 그룹에 포함되는 CheckItem들.
+     * 그룹 내부에 표시할 요소.
      */
     children: ReactNode;
 }
@@ -371,7 +380,7 @@ export interface MenuMultipleCheckGroupProps {
     label: CheckGroupSlots['label'];
 
     /**
-     * 그룹에 포함되는 CheckItem들.
+     * 그룹 내부에 표시할 요소.
      */
     children: ReactNode;
 }
@@ -450,4 +459,49 @@ export interface MenuCheckItemProps {
 
 export namespace MenuCheckItem {
     export type Props = MenuCheckItemProps;
+}
+
+/* -----------------------------------------------------------------------------------------------*/
+
+const submenuSlots = createSlots({
+    trigger: MenuPrimitives.SubmenuTriggerItem,
+});
+
+export const MenuSubmenu = ({ trigger, children }: MenuSubmenu.Props) => {
+    return (
+        <MenuPrimitives.SubmenuRoot>
+            <submenuSlots.trigger render={trigger} />
+
+            <MenuPrimitives.PortalPrimitive>
+                <MenuPrimitives.PositionerPrimitive side="right" sideOffset={0}>
+                    <MenuPrimitives.SubmenuPopupPrimitive>
+                        {children}
+                    </MenuPrimitives.SubmenuPopupPrimitive>
+                </MenuPrimitives.PositionerPrimitive>
+            </MenuPrimitives.PortalPrimitive>
+        </MenuPrimitives.SubmenuRoot>
+    );
+};
+
+type SubmenuSlots = SlotProps<typeof submenuSlots>;
+
+export interface MenuSubmenuProps extends Omit<MenuRoot.Props, keyof Slots> {
+    /**
+     * 중첩 메뉴를 여는 아이템의 레이블. React Element를 전달하여 커스텀할 수도 있다.
+     * @example
+     * // #1
+     * <Menu.Submenu trigger="중첩 메뉴 열기" />
+     * // #2
+     * <Menu.Submenu trigger={<Menu.Item right={<HeartIcon />} />} />
+     */
+    trigger: SubmenuSlots['trigger'];
+
+    /**
+     * 중첩 메뉴 내부에 표시할 요소.
+     */
+    children: ReactNode;
+}
+
+export namespace MenuSubmenu {
+    export type Props = MenuSubmenuProps;
 }

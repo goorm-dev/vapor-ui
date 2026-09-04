@@ -43,7 +43,22 @@ export const Default: Story = {
                             trailing={<ChevronDoubleRightOutlineIcon />}
                             onClick={() => alert('clicked item 4')}
                         />
+                        <Menu.Item
+                            label="item 5"
+                            trailing={<ChevronDoubleRightOutlineIcon />}
+                            variant="critical"
+                            onClick={() => alert('clicked item 5')}
+                        />
                     </Menu.Group>
+
+                    <Menu.Submenu trigger="label">
+                        <Menu.CheckGroup mode="multiple" label="multiple group">
+                            <Menu.CheckItem label="multiple 1" value="multiple 1" />
+                            <Menu.CheckItem label="multiple 2" value="multiple 2" />
+                            <Menu.CheckItem label="multiple 3" value="multiple 3" />
+                            <Menu.CheckItem label="multiple 4" value="multiple 4" />
+                        </Menu.CheckGroup>
+                    </Menu.Submenu>
 
                     <Menu.CheckGroup mode="single" label="single group">
                         <Menu.CheckItem label="single 1" value="single 1" />
