@@ -20,7 +20,7 @@ type MeterSharedProps = MeterVariants;
 
 type MeterContext = MeterSharedProps & {
     /** Set by `Meter.Label` so the root can warn when the meter has no accessible name. */
-    labelledRef: RefObject<boolean>;
+    hasLabelRef: RefObject<boolean>;
 };
 
 const [MeterProvider, useMeterContext] = createContext<MeterContext>({
@@ -43,7 +43,7 @@ export const MeterRoot = forwardRef<HTMLDivElement, MeterRoot.Props>((props, ref
         'size',
     ]);
 
-    const labelledRef = useRef(false);
+    const hasLabelRef = useRef(false);
     const ariaLabel = otherProps['aria-label'];
     const ariaLabelledBy = otherProps['aria-labelledby'];
 
@@ -56,7 +56,7 @@ export const MeterRoot = forwardRef<HTMLDivElement, MeterRoot.Props>((props, ref
             );
         }
 
-        if (!labelledRef.current && !ariaLabel && !ariaLabelledBy) {
+        if (!hasLabelRef.current && !ariaLabel && !ariaLabelledBy) {
             warn(
                 'Meter has no accessible name. Render a `Meter.Label`, or pass `aria-label` / `aria-labelledby` to `Meter.Root`.',
             );
@@ -64,7 +64,7 @@ export const MeterRoot = forwardRef<HTMLDivElement, MeterRoot.Props>((props, ref
     }, [min, max, ariaLabel, ariaLabelledBy]);
 
     return (
-        <MeterProvider value={{ ...variantProps, labelledRef }}>
+        <MeterProvider value={{ ...variantProps, hasLabelRef }}>
             <BaseMeter.Root
                 ref={ref}
                 min={min}
@@ -86,15 +86,15 @@ MeterRoot.displayName = 'Meter.Root';
  */
 export const MeterLabel = forwardRef<HTMLSpanElement, MeterLabel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
-    const { labelledRef } = useMeterContext();
+    const { hasLabelRef } = useMeterContext();
 
     useEffect(() => {
-        labelledRef.current = true;
+        hasLabelRef.current = true;
 
         return () => {
-            labelledRef.current = false;
+            hasLabelRef.current = false;
         };
-    }, [labelledRef]);
+    }, [hasLabelRef]);
 
     return (
         <BaseMeter.Label ref={ref} className={cn(styles.label, className)} {...componentProps} />

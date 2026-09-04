@@ -61,7 +61,6 @@ export const label = componentStyle([
 export const value = componentStyle([
     typography({ style: 'subtitle1' }),
     {
-        textAlign: 'end',
         color: vars.color.foreground['secondary'],
     },
 ]);
