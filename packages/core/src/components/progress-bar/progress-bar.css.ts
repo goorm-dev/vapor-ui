@@ -31,7 +31,6 @@ export const root = componentStyle({
 export const label = componentStyle([
     typography({ style: 'subtitle1' }),
     {
-        minWidth: 0,
         color: vars.color.foreground['normal'],
     },
 ]);
@@ -39,9 +38,6 @@ export const label = componentStyle([
 export const value = componentStyle([
     typography({ style: 'body2' }),
     {
-        justifySelf: 'end',
-        minWidth: 0,
-        textAlign: 'right',
         color: vars.color.foreground['hint'],
     },
 ]);
