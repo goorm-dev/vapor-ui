@@ -16,7 +16,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.39.5",
-        "@playwright/test": "^1.62.1",
+        "@playwright/test": "^1.63.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@storybook/addon-docs": "^9.1.20",
@@ -31,7 +31,7 @@
         "http-server": "^14.1.1",
         "storybook": "^9.1.20",
         "typescript": "catalog:",
-        "typescript-eslint": "^8.65.0",
+        "typescript-eslint": "^8.69.0",
         "vite": "catalog:"
     }
 }

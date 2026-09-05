@@ -29,10 +29,10 @@
         "eslint-plugin-react-hooks": "^5.2.0",
         "eslint-plugin-storybook": "^9.1.20",
         "globals": "^16.5.0",
-        "typescript-eslint": "^8.65.0"
+        "typescript-eslint": "^8.69.0"
     },
     "peerDependencies": {
-        "eslint": ">=9.39.5",
+        "eslint": ">=10.10.0",
         "typescript": ">=5.9.3"
     }
 }
