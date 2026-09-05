@@ -5,6 +5,22 @@ description: '@vapor-ui/icons 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/icons
 
+## 1.3.1
+
+### Icons
+
+- regenerate icon components with the SVGR + svgo pipeline ([#722](https://github.com/goorm-dev/vapor-ui/pull/722)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Etc.
+
+- Update icons from Figma ([#706](https://github.com/goorm-dev/vapor-ui/pull/706)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **Updated Basic Icons:** `TriangleOutlineIcon`
+
+    **Removed:**
+
+    - Basic Icons: `ProgrammingIcon`, `ProgrammingOutlineIcon`
+
 ## 1.3.0
 
 ### Icons
