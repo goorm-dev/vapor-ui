@@ -1,5 +1,27 @@
 # @vapor-ui/core
 
+## 1.6.0
+
+### Core
+
+- align component backgrounds with the canvas token hierarchy and expose `bg-canvas-inverse` in sprinkles ([#698](https://github.com/goorm-dev/vapor-ui/pull/698)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Spinner
+
+- respect `prefers-reduced-motion` and hide decorative svg from assistive technology ([#689](https://github.com/goorm-dev/vapor-ui/pull/689)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Etc.
+
+- add data-slots for all components ([#703](https://github.com/goorm-dev/vapor-ui/pull/703)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- add new `AlertDialog` components ([#704](https://github.com/goorm-dev/vapor-ui/pull/704)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- apply `canvas-inverse` tokens to the tooltip/toast component. ([#696](https://github.com/goorm-dev/vapor-ui/pull/696)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.3.1
+
 ## 1.5.1
 
 ### Css
