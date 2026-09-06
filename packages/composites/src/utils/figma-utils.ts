@@ -34,7 +34,7 @@ export function findChild(
  * Returns `undefined` when the value is missing (e.g. instance not found).
  */
 function readRawValue(target: AnyProp, spec: PropSpec): AnyProp {
-    if (spec.visibleWhen && target.getBoolean(spec.visibleWhen) === false) return undefined;
+    if (spec.visibleWhen && target.getBoolean(spec.visibleWhen) === false) return;
 
     switch (spec.kind) {
         case 'string':
