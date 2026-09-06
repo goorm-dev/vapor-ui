@@ -12,8 +12,8 @@ const popup = getProperties(instance, '(Popup)', {
 });
 
 const header = getProperties(instance, '(Header)', {
-    description: { kind: 'string', name: 'description' },
     title: { kind: 'string', name: 'title' },
+    description: { kind: 'string', name: 'description', visibleWhen: '(has description)' },
 });
 
 const body = getProperties(instance, '(Body)', {
@@ -21,7 +21,7 @@ const body = getProperties(instance, '(Body)', {
 });
 
 const footer = getProperties(instance, '(Footer)', {
-    assistive: { kind: 'instance', name: 'Assistive' },
+    assistive: { kind: 'instance', name: 'Assistive', visibleWhen: '(has assistive)' },
     action: { kind: 'instance', name: 'Action' },
 });
 
@@ -29,8 +29,8 @@ export default {
     example: figma.code`
         <Dialog.Root
             ${popup.size}
-            ${header.description}
             ${header.title}
+            ${header.description}
             ${footer.assistive}
             ${footer.action}
         >
