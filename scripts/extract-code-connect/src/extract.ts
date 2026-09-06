@@ -1,5 +1,9 @@
-import type { Block, Spec, TreeNode } from './model';
+import type { Block, Prop, Spec, TreeNode } from './model';
 import { isNamedInstance, isParen, lowerFirst, stripParens } from './naming';
+
+function withGate(spec: Spec, prop: Prop): Spec {
+    return prop.visibleWhen ? { ...spec, visibleWhen: prop.visibleWhen } : spec;
+}
 
 export interface ExtractOptions {
     warn?: (msg: string) => void;
@@ -42,7 +46,9 @@ export function extract(
                 );
                 continue;
             }
-            addEntry(parentBlock, lowerFirst(child.name), { kind: 'instance', name: child.name });
+            const spec: Spec = { kind: 'instance', name: child.name };
+            if (child.visibleWhen) spec.visibleWhen = child.visibleWhen;
+            addEntry(parentBlock, lowerFirst(child.name), spec);
         }
     };
 
@@ -60,24 +66,28 @@ function toBlock(node: TreeNode): Block {
 
     for (const prop of node.props) {
         if (prop.type === 'SLOT') {
-            addEntry(block, 'children', { kind: 'slot', name: prop.name });
+            addEntry(block, 'children', withGate({ kind: 'slot', name: prop.name }, prop));
             continue;
         }
         if (isParen(prop.name)) continue;
 
         switch (prop.type) {
             case 'TEXT':
-                addEntry(block, prop.name, { kind: 'string', name: prop.name });
+                addEntry(block, prop.name, withGate({ kind: 'string', name: prop.name }, prop));
                 break;
             case 'BOOLEAN':
-                addEntry(block, prop.name, { kind: 'boolean', name: prop.name });
+                addEntry(block, prop.name, withGate({ kind: 'boolean', name: prop.name }, prop));
                 break;
             case 'VARIANT': {
                 const options = prop.variantOptions ?? [];
                 if (options.length === 0) {
                     throw new Error(`No variant options for '${prop.name}' in '${node.name}'`);
                 }
-                addEntry(block, prop.name, { kind: 'enum', name: prop.name, options });
+                addEntry(
+                    block,
+                    prop.name,
+                    withGate({ kind: 'enum', name: prop.name, options }, prop),
+                );
                 break;
             }
             case 'INSTANCE_SWAP':

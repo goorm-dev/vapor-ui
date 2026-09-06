@@ -18,6 +18,11 @@ export interface RestNode extends RestComponentSetDoc {
     name: string;
     componentId?: string;
     componentProperties?: Record<string, RestComponentProperty>;
+    /**
+     * 이 레이어의 특정 속성이 소속 컴포넌트 property 에 bind 된 관계.
+     * 대표 키: `characters`, `visible`. 값은 대상 컴포넌트 property 의 raw key (`#id` 포함).
+     */
+    componentPropertyReferences?: Record<string, string>;
     children?: RestNode[];
 }
 
@@ -53,12 +58,21 @@ export function fromRest(
     const entry = getEntry(nodesJson, nodeId);
     const doc = entry.document;
 
-    const toNode = (n: RestNode): TreeNode => ({
-        kind: 'INSTANCE',
-        name: n.name,
-        props: toProps(n, entry.components, setDocs),
-        children: instanceChildren(n).map(toNode),
-    });
+    const toNode = (n: RestNode): TreeNode => {
+        const visibility = collectTextVisibility(n);
+        const node: TreeNode = {
+            kind: 'INSTANCE',
+            name: n.name,
+            props: toProps(n, entry.components, setDocs, visibility),
+            children: instanceChildren(n).map((child) => {
+                const built = toNode(child);
+                const visRef = child.componentPropertyReferences?.visible;
+                if (visRef) built.visibleWhen = stripPropId(visRef);
+                return built;
+            }),
+        };
+        return node;
+    };
 
     return {
         name: doc.name,
@@ -89,10 +103,32 @@ function walk(node: RestNode, visit: (n: RestNode) => void): void {
     for (const c of node.children ?? []) walk(c, visit);
 }
 
+/**
+ * 이 INSTANCE 안 TEXT 레이어들의 `componentPropertyReferences` 를 걸어
+ * (characters key → visible key) 매핑을 만든다. 중첩 INSTANCE 서브트리는 스코프가 다르므로 스킵.
+ */
+function collectTextVisibility(instance: RestNode): Map<string, string> {
+    const map = new Map<string, string>();
+    const walkChildren = (n: RestNode): void => {
+        for (const child of n.children ?? []) {
+            if (child.type === 'INSTANCE') continue;
+            if (child.type === 'TEXT') {
+                const chars = child.componentPropertyReferences?.characters;
+                const vis = child.componentPropertyReferences?.visible;
+                if (chars && vis) map.set(chars, vis);
+            }
+            walkChildren(child);
+        }
+    };
+    walkChildren(instance);
+    return map;
+}
+
 function toProps(
     instance: RestNode,
     components: RestNodeEntry['components'],
     setDocs: Record<string, RestComponentSetDoc>,
+    visibility: Map<string, string>,
 ): Prop[] {
     const setId = instance.componentId
         ? components?.[instance.componentId]?.componentSetId
@@ -106,6 +142,8 @@ function toProps(
             prop.variantOptions = defs[rawName]?.variantOptions ??
                 defs[name]?.variantOptions ?? [String(p.value)];
         }
+        const visRef = visibility.get(rawName);
+        if (visRef) prop.visibleWhen = stripPropId(visRef);
         return prop;
     });
 }

@@ -158,6 +158,62 @@ export default {
         expect(out).toContain("// TODO: INSTANCE_SWAP 'Icon' is not supported by getProperties");
     });
 
+    it('visibleWhen 이 있으면 spec 뒤에 필드로 붙는다', async () => {
+        const blocks: Block[] = [
+            {
+                varName: 'header',
+                instanceName: '(Header)',
+                entries: {
+                    description: {
+                        kind: 'string',
+                        name: 'description',
+                        visibleWhen: '(has description)',
+                    },
+                },
+                todos: [],
+            },
+            {
+                varName: 'footer',
+                instanceName: '(Footer)',
+                entries: {
+                    assistive: {
+                        kind: 'instance',
+                        name: 'Assistive',
+                        visibleWhen: '(has assistive)',
+                    },
+                    action: { kind: 'instance', name: 'Action' },
+                },
+                todos: [],
+            },
+            {
+                varName: 'popup',
+                instanceName: '(Popup)',
+                entries: {
+                    size: {
+                        kind: 'enum',
+                        name: 'size',
+                        options: ['md'],
+                        visibleWhen: '(has size)',
+                    },
+                },
+                todos: [],
+            },
+        ];
+        const out = await fmt(
+            render({ ...base, blocks, componentName: 'X', kebab: 'x', hasParts: false }),
+        );
+        expect(out).toContain(
+            "description: { kind: 'string', name: 'description', visibleWhen: '(has description)' }",
+        );
+        expect(out).toContain(
+            "assistive: { kind: 'instance', name: 'Assistive', visibleWhen: '(has assistive)' }",
+        );
+        expect(out).toContain("action: { kind: 'instance', name: 'Action' }");
+        expect(out).toContain(
+            "size: { kind: 'enum', name: 'size', options: { md: 'md' }, visibleWhen: '(has size)' }",
+        );
+    });
+
     it('식별자가 아닌 enum 옵션은 key 를 인용한다', async () => {
         const blocks: Block[] = [
             {

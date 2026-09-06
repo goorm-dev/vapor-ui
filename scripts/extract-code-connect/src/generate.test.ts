@@ -88,6 +88,19 @@ describe('generate', () => {
         expect(c.log).toHaveBeenCalledWith(expect.stringContaining('dialog.figma.ts'));
     });
 
+    it('Figma 자식 레이어의 visibility bind 를 visibleWhen 필드로 emit 한다', async () => {
+        scaffoldConsumer();
+        await generate(opts(), ctx());
+        const text = readFileSync(path.join(cwd, 'src/components/dialog/dialog.figma.ts'), 'utf8');
+        expect(text).toContain(
+            "description: { kind: 'string', name: 'description', visibleWhen: '(has description)' }",
+        );
+        expect(text).toContain(
+            "assistive: { kind: 'instance', name: 'Assistive', visibleWhen: '(has assistive)' }",
+        );
+        expect(text).toContain("action: { kind: 'instance', name: 'Action' }");
+    });
+
     it('--out 깊이가 다르면 utils 상대 경로가 바뀌고, 디렉터리는 자동 생성된다', async () => {
         scaffoldConsumer();
         await generate(opts({ out: 'src/deep/er/x.figma.ts' }), ctx());

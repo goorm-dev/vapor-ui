@@ -49,4 +49,38 @@ describe('fromMcp', () => {
         ]);
         expect(blocks[0].entries.size).toEqual({ kind: 'enum', name: 'size', options: ['md'] });
     });
+
+    it('TEXT 자식의 visibility bind 를 해당 컴포넌트 속성의 visibleWhen 으로 옮긴다', () => {
+        const { tree } = fromMcp(dialogMcp);
+        const header = tree.children[0].children[0];
+        const description = header.props.find((p) => p.name === 'description');
+        expect(description?.visibleWhen).toBe('(has description)');
+        const title = header.props.find((p) => p.name === 'title');
+        expect(title?.visibleWhen).toBeUndefined();
+    });
+
+    it('INSTANCE 자식의 visibility bind 를 자식 TreeNode 의 visibleWhen 으로 옮긴다', () => {
+        const { tree } = fromMcp(dialogMcp);
+        const footer = tree.children[0].children[2];
+        const assistive = footer.children.find((c) => c.name === 'Assistive');
+        expect(assistive?.visibleWhen).toBe('(has assistive)');
+        const action = footer.children.find((c) => c.name === 'Action');
+        expect(action?.visibleWhen).toBeUndefined();
+    });
+
+    it('extract 를 통과해도 visibleWhen 이 Spec 에 유지된다', () => {
+        const { tree } = fromMcp(dialogMcp);
+        const blocks = extract(tree, { warn: () => {} });
+        expect(blocks[1].entries.description).toEqual({
+            kind: 'string',
+            name: 'description',
+            visibleWhen: '(has description)',
+        });
+        expect(blocks[3].entries.assistive).toEqual({
+            kind: 'instance',
+            name: 'Assistive',
+            visibleWhen: '(has assistive)',
+        });
+        expect(blocks[3].entries.action).toEqual({ kind: 'instance', name: 'Action' });
+    });
 });

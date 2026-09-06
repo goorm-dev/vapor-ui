@@ -2,25 +2,18 @@ import figma from 'figma';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyProp = any;
+
 type PropSpec =
-    | { kind: 'string'; name: string }
-    | { kind: 'boolean'; name: string }
-    | { kind: 'slot'; name: string }
-    | { kind: 'enum'; name: string; options: Record<string, unknown> }
-    | { kind: 'instance'; name: string };
+    | { kind: 'string'; name: string; visibleWhen?: string }
+    | { kind: 'boolean'; name: string; visibleWhen?: string }
+    | { kind: 'slot'; name: string; visibleWhen?: string }
+    | { kind: 'enum'; name: string; options: Record<string, unknown>; visibleWhen?: string }
+    | { kind: 'instance'; name: string; visibleWhen?: string };
 
 /**
  * Descend into a nested INSTANCE child of `parent` by name.
  * Returns the INSTANCE ref (chainable into `getProperties` / `findChild`),
  * or `undefined` when the child is missing or not an INSTANCE.
- *
- * Use when a component is wrapped in an anatomy layer (e.g. `(Popup)` around
- * `(Header)` / `(Body)` / `(Footer)`) and you need to read properties from
- * the inner instances.
- *
- * @param parent        Parent instance/component to search inside.
- * @param instanceName  Direct-child instance name (e.g. '(Popup)').
- * @returns             Child INSTANCE ref, or `undefined`.
  */
 export function findChild(
     parent: AnyProp,
@@ -41,6 +34,8 @@ export function findChild(
  * Returns `undefined` when the value is missing (e.g. instance not found).
  */
 function readRawValue(target: AnyProp, spec: PropSpec): AnyProp {
+    if (spec.visibleWhen && target.getBoolean(spec.visibleWhen) === false) return undefined;
+
     switch (spec.kind) {
         case 'string':
             return target.getString(spec.name);
@@ -63,20 +58,6 @@ function readRawValue(target: AnyProp, spec: PropSpec): AnyProp {
  * Read multiple properties from a nested INSTANCE inside `parent` and return
  * them **pre-rendered as JSX attribute fragments**, keyed by the code prop name.
  *
- * Each key in `specs` is the code prop name. Every non-`slot` value is rendered
- * with `figma.helpers.react.renderProp(key, value)`:
- *
- * - `undefined` / `''`      → `''` (attribute omitted — safe for optional props)
- * - `string`                → ` key="value"`
- * - `boolean`               → ` key` or `''`
- * - `ResultSection[]`       → ` key={<pill>}` (or fragment-wrapped when > 1)
- *
- * `slot` values are passed through `renderChildren` and stay raw so they can be
- * interpolated as element children.
- *
- * All keys are always present, so a missing target instance yields `''` for
- * every attribute instead of the literal string `undefined`.
- *
  * @example
  * const footer = getProperties(instance, '(Footer)', {
  *     assistive: { kind: 'instance', name: 'Assistive' },
@@ -84,10 +65,6 @@ function readRawValue(target: AnyProp, spec: PropSpec): AnyProp {
  * });
  * figma.code`<Dialog.Root${footer.assistive}${footer.action}>${body.children}</Dialog.Root>`;
  *
- * @param parent        Parent instance/component to search inside.
- * @param instanceName  Direct-child instance name (e.g. '(Header)').
- * @param specs         Map of code prop name → figma property descriptor.
- * @returns             Map of code prop name → rendered attribute (or raw slot).
  */
 export function getProperties<K extends string>(
     parent: AnyProp,

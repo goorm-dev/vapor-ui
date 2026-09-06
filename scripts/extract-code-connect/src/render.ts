@@ -79,9 +79,10 @@ function renderBlock(block: Block): string {
 }
 
 function renderSpec(spec: Spec): string {
+    const gate = spec.visibleWhen ? `, visibleWhen: ${q(spec.visibleWhen)}` : '';
     if (spec.kind === 'enum') {
         const options = spec.options.map((o) => `${key(o)}: ${q(o)}`).join(', ');
-        return `{ kind: 'enum', name: ${q(spec.name)}, options: { ${options} } }`;
+        return `{ kind: 'enum', name: ${q(spec.name)}, options: { ${options} }${gate} }`;
     }
-    return `{ kind: ${q(spec.kind)}, name: ${q(spec.name)} }`;
+    return `{ kind: ${q(spec.kind)}, name: ${q(spec.name)}${gate} }`;
 }

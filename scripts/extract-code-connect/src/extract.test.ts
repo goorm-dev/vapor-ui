@@ -151,4 +151,52 @@ describe('extract', () => {
         ]);
         expect(() => extract(tree)).toThrow(/no variant options/i);
     });
+
+    it('Prop.visibleWhen 은 Spec.visibleWhen 으로 전파된다', () => {
+        const tree = root([
+            node('(Header)', [
+                { name: 'title', type: 'TEXT' },
+                {
+                    name: 'description',
+                    type: 'TEXT',
+                    visibleWhen: '(has description)',
+                },
+            ]),
+        ]);
+        const [block] = extract(tree);
+        expect(block.entries.description).toEqual({
+            kind: 'string',
+            name: 'description',
+            visibleWhen: '(has description)',
+        });
+        expect(block.entries.title).toEqual({ kind: 'string', name: 'title' });
+    });
+
+    it('TreeNode.visibleWhen 은 instance Spec.visibleWhen 으로 전파된다', () => {
+        const tree = root([
+            node(
+                '(Footer)',
+                [],
+                [
+                    {
+                        kind: 'INSTANCE',
+                        name: 'Assistive',
+                        props: [],
+                        children: [],
+                        visibleWhen: '(has assistive)',
+                    },
+                    node('Action'),
+                ],
+            ),
+        ]);
+        const [block] = extract(tree);
+        expect(block.entries).toEqual({
+            assistive: {
+                kind: 'instance',
+                name: 'Assistive',
+                visibleWhen: '(has assistive)',
+            },
+            action: { kind: 'instance', name: 'Action' },
+        });
+    });
 });
