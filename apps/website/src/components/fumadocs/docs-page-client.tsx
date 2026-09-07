@@ -30,7 +30,6 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from 'fumadocs-ui/components/ui/collapsible';
-import { useI18n } from 'fumadocs-ui/contexts/i18n';
 import { useTreeContext, useTreePath } from 'fumadocs-ui/contexts/tree';
 import { useFooterItems } from 'fumadocs-ui/utils/use-footer-items';
 
@@ -96,7 +95,6 @@ export function PageTOCPopover({ children, className, ...rest }: ComponentProps<
 }
 
 export function PageTOCPopoverTrigger({ className, ...props }: ComponentProps<'button'>) {
-    const { text } = useI18n();
     const { open } = use(TocPopoverContext)!;
     const items = useTOCItems();
     const active = useActiveAnchor();
@@ -129,7 +127,7 @@ export function PageTOCPopoverTrigger({ className, ...props }: ComponentProps<'b
                         showItem && 'pointer-events-none -translate-y-full opacity-0',
                     )}
                 >
-                    {path?.name ?? text.toc}
+                    {path?.name ?? 'On this page'}
                 </span>
                 <span
                     className={clsx(
@@ -221,7 +219,6 @@ export function PageLastUpdate({
     date: value,
     ...props
 }: Omit<ComponentProps<'p'>, 'children'> & { date: Date }) {
-    const { text } = useI18n();
     const [date, setDate] = useState('');
 
     useEffect(() => {
@@ -231,7 +228,7 @@ export function PageLastUpdate({
 
     return (
         <p {...props} className={clsx('text-fd-muted-foreground text-sm', props.className)}>
-            {text.lastUpdate} {date}
+            Last updated on {date}
         </p>
     );
 }
@@ -279,7 +276,6 @@ export function PageFooter({ items, ...props }: FooterProps) {
 }
 
 function FooterItem({ index, item }: { item: Item; index: 0 | 1 }) {
-    const { text } = useI18n();
     const Icon = index === 0 ? ChevronLeftOutlineIcon : ChevronRightOutlineIcon;
 
     return (
@@ -300,7 +296,7 @@ function FooterItem({ index, item }: { item: Item; index: 0 | 1 }) {
                 <p>{item.name}</p>
             </div>
             <p className="text-fd-muted-foreground truncate">
-                {item.description ?? (index === 0 ? text.previousPage : text.nextPage)}
+                {item.description ?? (index === 0 ? 'Previous Page' : 'Next Page')}
             </p>
         </Link>
     );

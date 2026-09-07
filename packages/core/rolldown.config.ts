@@ -1,6 +1,7 @@
 import { bundle, generateInputs } from '@repo/rolldown-config';
 import {
     cleanLayerDeclaration,
+    dataSlots,
     depsExternal,
     dts,
     identifiers,
@@ -40,19 +41,28 @@ const resolve = {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
 };
 
+const replaceFileName = (name: string, ext: string) => {
+    return `${name.replace(/\.css$/, '.css.vanilla')}.${ext}`;
+};
+
 export default defineConfig([
     // ESM Build
     bundle({
         input: inputs,
         resolve,
-        plugins: [depsExternal(), vanillaExtractPlugin({ identifiers }), cleanLayerDeclaration()],
+        plugins: [
+            depsExternal(),
+            dataSlots(),
+            vanillaExtractPlugin({ identifiers }),
+            cleanLayerDeclaration(),
+        ],
         output: {
             format: 'esm',
             strict: true,
             exports: 'named',
 
             // e.g., 'styles/tailwind-preset.css' -> 'styles/tailwind-preset.css.vanilla.js'
-            entryFileNames: ({ name }) => `${name.replace(/\.css$/, '.css.vanilla')}.mjs`,
+            entryFileNames: ({ name }) => replaceFileName(name, 'mjs'),
             assetFileNames,
         },
     }),
@@ -61,13 +71,18 @@ export default defineConfig([
     bundle({
         input: inputs,
         resolve,
-        plugins: [depsExternal(), vanillaExtractPlugin({ identifiers }), cleanLayerDeclaration()],
+        plugins: [
+            depsExternal(),
+            dataSlots(),
+            vanillaExtractPlugin({ identifiers }),
+            cleanLayerDeclaration(),
+        ],
         output: {
             format: 'cjs',
             strict: true,
             exports: 'named',
 
-            entryFileNames: ({ name }) => `${name.replace(/\.css$/, '.css.vanilla')}.cjs`,
+            entryFileNames: ({ name }) => replaceFileName(name, 'cjs'),
             assetFileNames,
         },
     }),
@@ -78,7 +93,7 @@ export default defineConfig([
         resolve,
         plugins: [depsExternal(), dts()],
         output: {
-            entryFileNames: ({ name }) => `${name.replace(/\.css\.d$/, '.css.vanilla.d')}.mts`,
+            entryFileNames: ({ name }) => replaceFileName(name, 'mts'),
         },
     }),
 
@@ -87,7 +102,7 @@ export default defineConfig([
         resolve,
         plugins: [depsExternal(), dts()],
         output: {
-            entryFileNames: ({ name }) => `${name.replace(/\.css\.d$/, '.css.vanilla.d')}.cts`,
+            entryFileNames: ({ name }) => replaceFileName(name, 'cts'),
         },
     }),
 ]);
