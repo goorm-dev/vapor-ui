@@ -1,16 +1,17 @@
 {
-    "name": "@repo/sync-figma",
+    "name": "@repo/icon-extractor",
     "version": "0.0.1",
     "private": true,
-    "description": "Internal CLI scripts for syncing assets from Figma",
+    "description": "Internal tool that extracts icons from Figma and generates @vapor-ui/icons components",
     "type": "module",
     "scripts": {
-        "format": "prettier --write \"./{commands,src}/**/*.{ts,md}\"",
-        "format:check": "prettier --check \"./{commands,src}/**/*.{ts,md}\"",
-        "lint": "eslint ./commands ./src",
-        "notify:slack": "tsx ./commands/notify-slack.ts",
-        "sync-icons:basic": "TYPE=basic tsx --env-file-if-exists=.env ./commands/sync-icons.ts",
-        "sync-icons:symbol": "TYPE=symbol tsx --env-file-if-exists=.env ./commands/sync-icons.ts",
+        "extract": "tsx --env-file-if-exists=.env ./src/cli.ts",
+        "format": "prettier --write \"./src/**/*.{ts,md}\"",
+        "format:check": "prettier --check \"./src/**/*.{ts,md}\"",
+        "lint": "eslint ./src",
+        "notify:slack": "tsx ./src/slack/notify.ts",
+        "sync-icons:basic": "pnpm extract --type=basic",
+        "sync-icons:symbol": "pnpm extract --type=symbol",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {

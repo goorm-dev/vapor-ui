@@ -1,5 +1,4 @@
 import type { Config } from '@svgr/core';
-import { transform } from '@svgr/core';
 
 type SvgoPlugin = Extract<
     NonNullable<NonNullable<Config['svgoConfig']>['plugins']>[number],
@@ -88,14 +87,4 @@ const buildConfig = ({
     },
 });
 
-const svgToIconComponent = ({
-    svg,
-    iconName,
-    isColorIcon,
-}: {
-    svg: string;
-    iconName: string;
-    isColorIcon: boolean;
-}) => transform(svg, buildConfig({ iconName, isColorIcon }), { componentName: iconName });
-
-export { svgToIconComponent };
+export { buildConfig };

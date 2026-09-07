@@ -31,7 +31,7 @@ jobs:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
               run: |
                   echo "🚀 Syncing basic icons"
-                  pnpm --filter @repo/sync-figma sync-icons:basic | tee basic_sync_output.txt
+                  pnpm --filter @repo/icon-extractor sync-icons:basic | tee basic_sync_output.txt
 
                   # Extract sync results from output
                   NEW_BASIC=$(grep "FIGMA_SYNC_NEW_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
@@ -48,7 +48,7 @@ jobs:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
               run: |
                   echo "🚀 Syncing symbol icons"
-                  pnpm --filter @repo/sync-figma sync-icons:symbol | tee symbol_sync_output.txt
+                  pnpm --filter @repo/icon-extractor sync-icons:symbol | tee symbol_sync_output.txt
 
                   # Extract sync results from output
                   NEW_SYMBOL=$(grep "FIGMA_SYNC_NEW_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
@@ -262,7 +262,7 @@ jobs:
             - name: Notify Slack on Failure
               if: failure()
               run: |
-                  WORKFLOW_STATUS=failure pnpm --filter @repo/sync-figma notify:slack
+                  WORKFLOW_STATUS=failure pnpm --filter @repo/icon-extractor notify:slack
               env:
                   SLACK_GDS_ALARM_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
                   GITHUB_REPOSITORY: ${{ github.repository }}
