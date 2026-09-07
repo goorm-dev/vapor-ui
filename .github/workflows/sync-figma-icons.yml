@@ -18,6 +18,9 @@ env:
 jobs:
     sync-figma-icons:
         runs-on: ubuntu-latest
+        outputs:
+            has_changes: ${{ steps.commit.outputs.has_changes }}
+            pr_number: ${{ steps.create_pr.outputs.number }}
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
@@ -60,10 +63,13 @@ jobs:
                   echo "deleted_icons=$DELETED_SYMBOL" >> $GITHUB_OUTPUT
 
             - name: Create branch and commit changes
+              id: commit
               run: |
                   # Check if there are changes in the icons directory
                   if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
+                      # GITHUB_ENV for the later steps in this job, GITHUB_OUTPUT for the parity job.
                       echo "has_changes=true" >> $GITHUB_ENV
+                      echo "has_changes=true" >> $GITHUB_OUTPUT
 
                       git config --local user.email "action@github.com"
                       git config --local user.name "GitHub Action"
@@ -254,15 +260,48 @@ jobs:
                       # No changes means main already matches Figma, so an open PR left over
                       # from an earlier run is stale and must not be merged.
                       STALE_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
-                      if [[ -n "$STALE_PR" ]]; then
+                      # Only main can judge staleness — a dispatch from another branch compared
+                      # Figma against that branch, so "no changes" says nothing about the sync PR.
+                      if [[ -n "$STALE_PR" && "${{ github.ref_name }}" == "main" ]]; then
                           gh pr close "$STALE_PR" --comment "Closing: main already matches Figma, so this sync is no longer valid."
+                      elif [[ -n "$STALE_PR" ]]; then
+                          # Feature-branch dispatch: let the parity report land on the open sync PR.
+                          echo "number=$STALE_PR" >> $GITHUB_OUTPUT
                       fi
                   fi
 
+    # The gate, the report and the PR comment all live in icon-parity.yml so this entry point
+    # and the pull_request one can never drift apart.
+    #
+    # This call cannot be dropped in favour of that pull_request trigger: the sync PR is opened
+    # and pushed with GITHUB_TOKEN, and GitHub raises no workflow events for those, so the sync
+    # PR would otherwise never be checked. For the same reason there is no double run here.
+    #
+    # Manual dispatch always runs it, so the check can be exercised without a Figma diff.
+    parity:
+        name: Parity
+        needs: sync-figma-icons
+        if: needs.sync-figma-icons.outputs.has_changes == 'true' || github.event_name == 'workflow_dispatch'
+        uses: ./.github/workflows/icon-parity.yml
+        secrets: inherit
+        with:
+            pr-number: ${{ needs.sync-figma-icons.outputs.pr_number }}
+
+    notify:
+        name: Notify Slack
+        needs: [sync-figma-icons, parity]
+        # A skipped parity job is not a failure, so this only fires on a real one.
+        if: failure()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
             - name: Notify Slack on Failure
-              if: failure()
-              run: |
-                  WORKFLOW_STATUS=failure pnpm --filter @repo/icon-extractor notify:slack
+              run: WORKFLOW_STATUS=failure pnpm --filter @repo/icon-extractor notify:slack
               env:
                   SLACK_GDS_ALARM_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
                   GITHUB_REPOSITORY: ${{ github.repository }}

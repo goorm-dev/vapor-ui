@@ -1,0 +1,111 @@
+name: '[CI] Icon Parity'
+
+# Renders every icon component in Chromium and compares it to Figma's own PNG.
+# Gate values (64px canvas, pixelmatch threshold 0.3 / includeAA, fail above 2 diff px)
+# are measured, not guessed — scripts/icon-extractor/src/parity/CALIBRATION.md.
+#
+# Two entry points share this one job so the gate and the report live in one place:
+#   - pull_request: any change that can alter how an icon rasterizes
+#   - workflow_call: the weekly Figma sync, on the PR it just opened
+
+on:
+    workflow_dispatch:
+    workflow_call:
+        inputs:
+            pr-number:
+                description: 'PR to comment the report on. Empty means report to the log only.'
+                type: string
+                required: false
+    pull_request:
+        paths:
+            - packages/icons/src/**
+            - scripts/icon-extractor/src/parity/**
+            - scripts/icon-extractor/src/transformer/**
+            - scripts/icon-extractor/src/config.ts
+            - scripts/icon-extractor/icon-extractor.config.json
+            - .github/workflows/icon-parity.yml
+
+permissions:
+    contents: read
+    pull-requests: write
+
+concurrency:
+    group: icon-parity-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    parity:
+        name: Icon Parity
+        runs-on: ubuntu-latest
+        # Forks get no FIGMA_TOKEN, so there is no baseline to compare against.
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+            CACHE: scripts/icon-extractor/src/parity/.cache
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
+            - name: Build icons
+              run: pnpm --filter @vapor-ui/icons build
+
+            - name: Install Chromium
+              run: pnpm --filter @repo/icon-extractor exec playwright install --with-deps chromium
+
+            # Colour icons are fetched and reported but not gated: Figma and Chromium antialias
+            # them differently enough (worst 164 px) to drown any real signal.
+            - name: Compare against Figma
+              id: compare
+              continue-on-error: true
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+              run: |
+                  pnpm --filter @repo/icon-extractor parity:fetch --type=basic
+                  pnpm --filter @repo/icon-extractor parity:fetch --type=symbol
+                  pnpm --filter @repo/icon-extractor parity:render
+                  pnpm --filter @repo/icon-extractor parity:compare
+
+            # report.html inlines the Figma / code / diff PNG of every failing icon, so the
+            # artifact is one file that opens in a browser with nothing else attached.
+            - name: Upload report
+              id: report
+              if: steps.compare.outcome == 'failure'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: icon-parity-report
+                  path: ${{ env.CACHE }}/report.*
+                  # .cache is hidden, and upload-artifact excludes hidden paths since v4.4.
+                  include-hidden-files: true
+                  if-no-files-found: error
+
+            - name: Comment on PR
+              if: steps.compare.outcome == 'failure' && (inputs.pr-number || github.event.pull_request.number)
+              uses: marocchino/sticky-pull-request-comment@v2
+              with:
+                  number: ${{ inputs.pr-number || github.event.pull_request.number }}
+                  header: icon-parity
+                  message: |
+                      ## ⚠️ 아이콘 시각 검증 실패
+
+                      아이콘이 Figma 렌더링과 다릅니다. 판정 기준은 `scripts/icon-extractor/src/parity/CALIBRATION.md`에 있습니다.
+
+                      🖼️ **[시각 diff 보기](${{ steps.report.outputs.artifact-url }})** — 내려받아 `report.html`을 열면 실패한 아이콘마다 Figma / 코드 / diff가 나란히 보입니다.
+
+                      [워크플로 실행 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            - name: Report summary
+              if: always()
+              run: |
+                  # The full table is in the artifact; the summary carries the headline counts.
+                  # GitHub caps a summary at 1 MB and the report lists at most 60 rows.
+                  if [[ -f "$CACHE/report.md" ]]; then
+                      head -c 60000 "$CACHE/report.md" >> "$GITHUB_STEP_SUMMARY"
+                  else
+                      echo 'No parity report — the comparison never ran.' >> "$GITHUB_STEP_SUMMARY"
+                  fi
+
+            - name: Fail if parity failed
+              if: steps.compare.outcome == 'failure'
+              run: exit 1
