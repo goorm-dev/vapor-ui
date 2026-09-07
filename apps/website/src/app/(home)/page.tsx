@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
 import {
     AiSmartieIcon,
@@ -10,6 +8,7 @@ import {
     SearchOutlineIcon,
     StarIcon,
 } from '@vapor-ui/icons';
+import { useSearchContext } from 'fumadocs-ui/contexts/search';
 import Link from 'next/link';
 
 import { ChromeWindow } from '~/components/chrome-window';
@@ -19,7 +18,6 @@ import {
     LocalTabsContent,
     LocalTabsList,
 } from '~/components/local-tabs/local-tabs';
-import DefaultSearchDialog from '~/components/search/search';
 import { VAPOR_BANNER_URL } from '~/constants/image-urls';
 import { CustomThemeProvider, useCustomTheme } from '~/providers';
 
@@ -159,7 +157,7 @@ const ThemeSection = () => {
     );
 };
 export default function HomePage() {
-    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const { setOpenSearch } = useSearchContext();
     const { resolvedTheme } = useTheme();
 
     return (
@@ -183,7 +181,6 @@ export default function HomePage() {
                                     : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--vapor-color-canvas, #23272E) 100%)',
                         }}
                     />
-                    <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
 
                     <div className="flex flex-col items-center gap-4 self-stretch">
                         <div className="flex flex-col items-center gap-10 self-stretch">
@@ -237,7 +234,7 @@ export default function HomePage() {
                             <button
                                 type="button"
                                 className="max-w-[720px] w-full rounded-v-400 flex flex-col items-center gap-4 bg-[rgba(0,0,0,0.16)] border border-v-normal shadow-[var(--vapor-shadow-100)] p-3 md:p-4"
-                                onClick={() => setIsSearchOpen(true)}
+                                onClick={() => setOpenSearch(true)}
                             >
                                 <div className="flex items-center w-full px-6 h-12 justify-between rounded-v-300 border border-v-normal bg-v-overlay-100">
                                     <div className="flex items-center gap-v-100">

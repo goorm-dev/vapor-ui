@@ -2,27 +2,25 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const ChadColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1264"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-ChadColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1264)">
-            <path d="M4.63645 0H-2.09082V16H4.63645V0Z" fill="#002164" />
-            <path d="M11.3636 0H4.63635V16H11.3636V0Z" fill="#FECC00" />
-            <path d="M18.0909 0H11.3636V16H18.0909V0Z" fill="#C7042C" />
+        <g mask="url(#vapor-icons-color-ChadColorIcon__a)">
+            <path fill="#002164" d="M4.636 0H-2.09v16h6.727z" />
+            <path fill="#FECC00" d="M11.364 0H4.636v16h6.728z" />
+            <path fill="#C7042C" d="M18.09 0h-6.726v16h6.727z" />
         </g>
     </IconBase>
 );
-
 export default ChadColorIcon;

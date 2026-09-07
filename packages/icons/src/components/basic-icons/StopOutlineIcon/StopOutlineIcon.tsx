@@ -2,9 +2,11 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const StopOutlineIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
-        <path d="M4 10.6667V5.33333C4 4.96667 4.13056 4.65278 4.39167 4.39167C4.65278 4.13056 4.96667 4 5.33333 4H10.6667C11.0333 4 11.3472 4.13056 11.6083 4.39167C11.8694 4.65278 12 4.96667 12 5.33333V10.6667C12 11.0333 11.8694 11.3472 11.6083 11.6083C11.3472 11.8694 11.0333 12 10.6667 12H5.33333C4.96667 12 4.65278 11.8694 4.39167 11.6083C4.13056 11.3472 4 11.0333 4 10.6667ZM5.33333 10.6667H10.6667V5.33333H5.33333V10.6667Z" />
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
+        <path
+            fill="currentColor"
+            d="M4 10.667V5.333q0-.55.392-.941Q4.783 4 5.333 4h5.334q.55 0 .941.392.392.391.392.941v5.334q0 .55-.392.941a1.28 1.28 0 0 1-.941.392H5.333q-.55 0-.941-.392A1.28 1.28 0 0 1 4 10.667m1.333 0h5.334V5.333H5.333z"
+        />
     </IconBase>
 );
-
 export default StopOutlineIcon;

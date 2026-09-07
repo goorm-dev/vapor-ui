@@ -2,33 +2,31 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const SenegalColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1260"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-SenegalColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1260)">
-            <path d="M4 0H-4V16H4V0Z" fill="#00853F" />
-            <path d="M12 0H4V16H12V0Z" fill="#FDEF42" />
-            <path d="M20 0H12V16H20V0Z" fill="#E31B23" />
+        <g mask="url(#vapor-icons-color-SenegalColorIcon__a)">
+            <path fill="#00853F" d="M4 0h-8v16h8z" />
+            <path fill="#FDEF42" d="M12 0H4v16h8z" />
+            <path fill="#E31B23" d="M20 0h-8v16h8z" />
             <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M7.99991 5.36365L8.59082 7.18183H10.5017L8.95623 8.30546L9.54714 10.1236L7.99991 9.00001L6.45446 10.1236L7.0435 8.30546L5.49805 7.18183H7.409L7.99991 5.36365Z"
                 fill="#00853F"
+                fillRule="evenodd"
+                d="m8 5.364.59 1.818h1.912L8.956 8.305l.591 1.819L8 9l-1.546 1.124.59-1.819-1.546-1.123H7.41z"
+                clipRule="evenodd"
             />
         </g>
     </IconBase>
 );
-
 export default SenegalColorIcon;

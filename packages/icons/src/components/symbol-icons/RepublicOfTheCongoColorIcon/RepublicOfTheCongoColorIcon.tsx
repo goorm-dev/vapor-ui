@@ -2,27 +2,25 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const RepublicOfTheCongoColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1258"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-RepublicOfTheCongoColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1258)">
-            <path d="M4 16H20V0L4 16Z" fill="#DA1A35" />
-            <path d="M12 0L-4 16H4L20 0H12Z" fill="#FBDE4A" />
-            <path d="M-4 0V16L12 0H-4Z" fill="#009543" />
+        <g mask="url(#vapor-icons-color-RepublicOfTheCongoColorIcon__a)">
+            <path fill="#DA1A35" d="M4 16h16V0z" />
+            <path fill="#FBDE4A" d="M12 0-4 16h8L20 0z" />
+            <path fill="#009543" d="M-4 0v16L12 0z" />
         </g>
     </IconBase>
 );
-
 export default RepublicOfTheCongoColorIcon;

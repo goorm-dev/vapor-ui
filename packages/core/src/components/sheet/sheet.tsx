@@ -120,21 +120,27 @@ SheetRoot.displayName = 'Sheet.Root';
  * Sheet.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetTrigger = Dialog.Trigger;
+export const SheetTrigger = forwardRef<HTMLButtonElement, SheetTrigger.Props>((props, ref) => (
+    <Dialog.Trigger ref={ref} {...props} />
+));
 SheetTrigger.displayName = 'Sheet.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Close
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetClose = Dialog.Close;
+export const SheetClose = forwardRef<HTMLButtonElement, SheetClose.Props>((props, ref) => (
+    <Dialog.Close ref={ref} {...props} />
+));
 SheetClose.displayName = 'Sheet.Close';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.OverlayPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetOverlayPrimitive = Dialog.OverlayPrimitive;
+export const SheetOverlayPrimitive = forwardRef<HTMLDivElement, SheetOverlayPrimitive.Props>(
+    (props, ref) => <Dialog.OverlayPrimitive ref={ref} {...props} />,
+);
 SheetOverlayPrimitive.displayName = 'Sheet.OverlayPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -142,11 +148,7 @@ SheetOverlayPrimitive.displayName = 'Sheet.OverlayPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 export const SheetPortalPrimitive = forwardRef<HTMLDivElement, SheetPortalPrimitive.Props>(
-    (props, ref) => {
-        const componentProps = resolveStyles(props);
-
-        return <Dialog.PortalPrimitive ref={ref} {...componentProps} />;
-    },
+    (props, ref) => <Dialog.PortalPrimitive ref={ref} {...props} />,
 );
 SheetPortalPrimitive.displayName = 'Sheet.PortalPrimitive';
 
@@ -388,14 +390,18 @@ SheetFooter.displayName = 'Sheet.Footer';
  * Sheet.Title
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetTitle = Dialog.Title;
+export const SheetTitle = forwardRef<HTMLHeadingElement, SheetTitle.Props>((props, ref) => (
+    <Dialog.Title ref={ref} {...props} />
+));
 SheetTitle.displayName = 'Sheet.Title';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Description
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetDescription = Dialog.Description;
+export const SheetDescription = forwardRef<HTMLParagraphElement, SheetDescription.Props>(
+    (props, ref) => <Dialog.Description ref={ref} {...props} />,
+);
 SheetDescription.displayName = 'Sheet.Description';
 
 /* -----------------------------------------------------------------------------------------------*/

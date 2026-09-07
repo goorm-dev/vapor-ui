@@ -1,7 +1,16 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["config:recommended", "group:monorepos", ":dependencyDashboard"],
-    "ignoreDeps": ["fumadocs-*", "@fumadics/*", "@adobe/leonardo-contrast-colors"],
+    "ignoreDeps": [
+        "@fumadocs/mdx-remote",
+        "fumadocs-core",
+        "fumadocs-docgen",
+        "fumadocs-mdx",
+        "fumadocs-typescript",
+        "fumadocs-ui",
+        "@fumadics/*",
+        "@adobe/leonardo-contrast-colors"
+    ],
     "baseBranchPatterns": ["main"],
     "rebaseWhen": "behind-base-branch",
     "labels": ["type: dependencies"],

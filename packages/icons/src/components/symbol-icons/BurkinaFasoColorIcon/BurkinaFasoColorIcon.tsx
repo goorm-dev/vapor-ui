@@ -2,32 +2,30 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const BurkinaFasoColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1315"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-BurkinaFasoColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1315)">
-            <path d="M22.3908 -1.59271H-6.38916V8.00002H22.3908V-1.59271Z" fill="#EF2B2D" />
-            <path d="M22.3908 8.00006H-6.38916V17.5928H22.3908V8.00006Z" fill="#009E49" />
+        <g mask="url(#vapor-icons-color-BurkinaFasoColorIcon__a)">
+            <path fill="#EF2B2D" d="M22.39-1.593H-6.39V8h28.78z" />
+            <path fill="#009E49" d="M22.39 8H-6.39v9.593h28.78z" />
             <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M8.00013 4.83459L8.70921 7.01823H11.0055L9.14742 8.36733L9.85826 10.551L8.00013 9.20187L6.14191 10.551L6.85285 8.36733L4.99463 7.01823H7.29106L8.00013 4.83459Z"
                 fill="#FCD116"
+                fillRule="evenodd"
+                d="m8 4.835.71 2.183h2.295l-1.858 1.35.711 2.183L8 9.201l-1.858 1.35.71-2.184-1.857-1.349H7.29z"
+                clipRule="evenodd"
             />
         </g>
     </IconBase>
 );
-
 export default BurkinaFasoColorIcon;

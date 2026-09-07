@@ -2,35 +2,29 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const SyriaColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1441"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-SyriaColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1441)">
-            <path d="M20 0H-4V5.33273H20V0Z" fill="#CE1126" />
-            <path d="M20 5.33276H-4V10.6655H20V5.33276Z" fill="white" />
-            <path d="M20 10.6672H-4V16H20V10.6672Z" fill="black" />
+        <g mask="url(#vapor-icons-color-SyriaColorIcon__a)">
+            <path fill="#CE1126" d="M20 0H-4v5.333h24z" />
+            <path fill="#fff" d="M20 5.333H-4v5.333h24z" />
+            <path fill="#000" d="M20 10.667H-4V16h24z" />
             <path
-                d="M12.0037 5.99091L11.5055 7.52181H9.89648L11.1983 8.46909L10.7001 9.99999L12.0037 9.05454L13.3056 9.99999L12.8092 8.46909L14.111 7.52181H12.5019L12.0037 5.99091Z"
                 fill="#007A3D"
-            />
-            <path
-                d="M4.498 7.51271L3.99982 5.97998L3.50346 7.51271H1.89258L3.19438 8.45816L2.69802 9.98907L3.99982 9.04361L5.30349 9.98907L4.80531 8.45816L6.10711 7.51271H4.498Z"
-                fill="#007A3D"
+                d="m12.004 5.99-.498 1.532h-1.61l1.302.947L10.7 10l1.304-.945 1.302.945-.497-1.53 1.302-.948h-1.61zM4.498 7.513 4 5.98l-.497 1.533h-1.61l1.301.945-.496 1.531L4 9.044l1.303.945-.498-1.53 1.302-.946z"
             />
         </g>
     </IconBase>
 );
-
 export default SyriaColorIcon;

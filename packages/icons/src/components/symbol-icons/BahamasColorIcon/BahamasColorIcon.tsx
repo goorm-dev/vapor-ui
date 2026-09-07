@@ -2,33 +2,30 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const BahamasColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1319"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-BahamasColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1319)">
-            <path d="M27.6455 10.7018H-4.35449V16H27.6455V10.7018Z" fill="#00788C" />
-            <path d="M27.6455 0H-4.35449V5.29818H27.6455V0Z" fill="#00788C" />
-            <path d="M27.6455 5.29816H-4.35449V10.7H27.6455V5.29816Z" fill="#FFC828" />
+        <g mask="url(#vapor-icons-color-BahamasColorIcon__a)">
+            <path fill="#00788C" d="M27.646 10.702h-32V16h32zm0-10.702h-32v5.298h32z" />
+            <path fill="#FFC828" d="M27.646 5.298h-32V10.7h32z" />
             <path
+                fill="#000"
                 fillRule="evenodd"
+                d="M-4.354 16 9.387 8-4.354 0z"
                 clipRule="evenodd"
-                d="M-4.35449 16L9.38734 8L-4.35449 0V16Z"
-                fill="black"
             />
         </g>
     </IconBase>
 );
-
 export default BahamasColorIcon;

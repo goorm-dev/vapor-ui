@@ -120,7 +120,7 @@ export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPri
         return <PaginationProvider value={context}>{element}</PaginationProvider>;
     },
 );
-PaginationRootPrimitive.displayName = 'PaginationRootPrimitive.Root';
+PaginationRootPrimitive.displayName = 'Pagination.RootPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Pagination.ListPrimitive

@@ -24,7 +24,7 @@ export const root = componentRecipe({
         borderRadius: vars.size.borderRadius['300'],
 
         borderColor: vars.color.border.secondary,
-        backgroundColor: vars.color.gray['100'],
+        backgroundColor: vars.color.background['secondary'],
         padding: padding,
 
         width: 'fit-content',
