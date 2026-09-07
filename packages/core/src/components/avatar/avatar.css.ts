@@ -8,6 +8,7 @@ const radii = createVar('border-radius');
 
 export const root = componentRecipe({
     base: {
+        position: 'relative',
         display: 'inline-flex',
         flexShrink: 0,
         alignItems: 'center',
@@ -60,6 +61,8 @@ export const fallbackBgVar = createVar('fallback-background-color');
 
 export const fallback = componentRecipe({
     base: {
+        position: 'absolute',
+        inset: 0,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -105,10 +108,18 @@ export const fallback = componentRecipe({
 });
 
 export const image = componentStyle({
+    position: 'absolute',
+    inset: 0,
     display: 'inline',
     objectFit: 'cover',
     width: '100%',
     height: '100%',
+
+    selectors: {
+        '&[data-loading], &[data-error]': {
+            visibility: 'hidden',
+        },
+    },
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

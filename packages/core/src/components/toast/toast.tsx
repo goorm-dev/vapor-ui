@@ -301,7 +301,7 @@ ToastClosePrimitive.displayName = 'Toast.ClosePrimitive';
 export interface UseToastManager {
     toasts: ToastObjectType<AnyProp>[];
     add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
-    update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
+    update: <Data extends object>(id: string, options: ToastManagerUpdate<Data>) => void;
     close: (id: string) => void;
     promise: <Value, Data extends object>(
         promise: Promise<Value>,
@@ -335,6 +335,10 @@ export interface ToastManagerUpdateOptions<Data extends object> extends Partial<
     ToastManagerAddOptions<Data>
 > {}
 
+export type ToastManagerUpdate<Data extends object> =
+    | ToastManagerUpdateOptions<Data>
+    | ((prevToast: ToastObjectType<Data> & { id: string }) => ToastManagerUpdateOptions<Data>);
+
 export interface ToastManagerPromiseOptions<Value, Data extends object> extends BasePromiseOptions {
     loading: string | ToastManagerUpdateOptions<Data>;
     success:
@@ -355,7 +359,7 @@ export interface ToastManager extends BaseToastManager {
         }) => void,
     ) => () => void;
     add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
-    update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
+    update: <Data extends object>(id: string, options: ToastManagerUpdate<Data>) => void;
     close: (id?: string) => void;
     promise: <Value, Data extends object>(
         promise: Promise<Value>,
