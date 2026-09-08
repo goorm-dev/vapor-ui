@@ -1,0 +1,204 @@
+{
+  "slug": "alert-dialog",
+  "section": "overview",
+  "frameNodeId": "2213:40238",
+  "sectionTitle": "Overview",
+  "blocks": [
+    {
+      "id": "3051:58780",
+      "group": "Properties",
+      "variant": "basic",
+      "title": null,
+      "subtitle": "Type",
+      "description": "다이얼로그의 유형을 결정하는 속성입니다. 두 가지 속성을 가지고 있습니다. (Wraning / Confirm)",
+      "raw": {
+        "sectionTitle": null,
+        "sectionSubtitle": "Type",
+        "sectionSubtitleReading": null,
+        "body": "다이얼로그의 유형을 결정하는 속성입니다. 두 가지 속성을 가지고 있습니다. (Wraning / Confirm)"
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": "I3051:58780;3027:8766;3051:60166",
+          "type": "(Popup)",
+          "description": null,
+          "code": {
+            "source": "figma-mcp",
+            "component": null,
+            "importPath": null,
+            "snippet": "import { Button } from \"@vapor-ui/core\"\n\nexport default function Popup() {\n  return (\n    <div className=\"content-stretch drop-shadow-[0px_16px_16px_rgba(0,0,0,0.2)] flex flex-col items-start overflow-clip relative rounded-[var(--vapor-size-borderRadius-400,12px)] size-full\" data-node-id=\"I3051:58780;3027:8766;3051:60166\" data-name=\"(Popup)\">\n      <div className=\"bg-[var(--vapor-color-background-overlay-100,white)] content-stretch flex flex-col gap-[var(--vapor-size-space-250,20px)] items-center pb-[var(--vapor-size-space-000,0px)] pt-[var(--vapor-size-space-300,24px)] px-[var(--vapor-size-space-300,24px)] relative shrink-0 w-full\" data-node-id=\"I3051:58780;3027:8766;3051:60166;2797:48154\" data-name=\"(Header)\">\n        <div className=\"[word-break:break-word] content-stretch flex flex-col gap-[var(--vapor-size-space-075,6px)] items-start relative shrink-0 tracking-[var(--vapor-typography-letterSpacing-100,-0.1px)] w-full\" data-node-id=\"I3051:58780;3027:8766;3051:60166;2797:48154;2797:47389\" data-name=\"Text area\">\n          <p className=\"font-[family-name:var(--vapor-typography-fontFamily-sans,'Pretendard:bold')] font-[var(--vapor-typography-fontWeight-700,normal)] leading-[var(--vapor-typography-lineHeight-200,26px)] relative shrink-0 text-[color:var(--vapor-color-foreground-normal-200,#262626)] text-[length:var(--vapor-typography-fontSize-200,18px)] w-full\" data-node-id=\"I3051:58780;3027:8766;3051:60166;2797:48154;2797:47390\">\n            Title\n          </p>\n          <p className=\"font-[family-name:var(--vapor-typography-fontFamily-sans,'Pretendard:medium')] font-[var(--vapor-typography-fontWeight-500,normal)] leading-[var(--vapor-typography-lineHeight-075,22px)] relative shrink-0 text-[color:var(--vapor-color-foreground-hint-100,#767676)] text-[length:var(--vapor-typography-fontSize-075,14px)] w-full\" data-node-id=\"I3051:58780;3027:8766;3051:60166;2797:48154;2797:47391\">\n            Description\n          </p>\n        </div>\n      </div>\n      <div className=\"bg-[var(--vapor-color-background-overlay-100,white)] content-stretch flex flex-col gap-[var(--vapor-size-space-000,0px)] h-0 items-center px-[var(--vapor-size-space-300,24px)] py-[var(--vapor-size-space-000,0px)] relative shrink-0 w-full\" data-node-id=\"I3051:58780;3027:8766;3051:60166;2835:38497\" data-name=\"(Body)\" />\n      <div className=\"bg-[var(--vapor-color-background-overlay-100,white)] content-stretch flex gap-[var(--vapor-size-space-100,8px)] items-center justify-end p-[var(--vapor-size-space-300,24px)] relative shrink-0 w-full\" data-node-id=\"I3051:58780;3027:8766;3051:60166;2213:40201\" data-name=\"(Footer)\">\n        <div className=\"content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative\" data-node-id=\"I3051:58780;3027:8766;3051:60166;2213:40201;2359:50557\" data-name=\"Cancel\">\n          <CodeConnectSnippet data-node-id=\"I3051:58780;3027:8766;3051:60166;2213:40201;2359:50557;2213:40234\" data-name=\"💙Button\" data-snippet-language=\"React\">\n            <Button size=\"lg\" colorPalette=\"secondary\" variant=\"fill\">\n              {/* Code Connect Logic Instance */}\n            </Button>\n          </CodeConnectSnippet>\n        </div>\n        <div className=\"content-stretch flex flex-[1_0_0] items-start min-w-px relative\" data-node-id=\"I3051:58780;3027:8766;3051:60166;2213:40201;2359:50558\" data-name=\"Action\">\n          <CodeConnectSnippet data-node-id=\"I3051:58780;3027:8766;3051:60166;2213:40201;2359:50558;2213:40229\" data-name=\"💙Button\" data-snippet-language=\"React\">\n            <Button size=\"lg\" colorPalette=\"danger\" variant=\"fill\">\n              {/* Code Connect Logic Instance */}\n            </Button>\n          </CodeConnectSnippet>\n        </div>\n      </div>\n    </div>\n  );\n}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3051:57956",
+      "group": "Properties",
+      "variant": "basic",
+      "title": null,
+      "subtitle": "Title",
+      "description": "다이얼로그를 설명하는 속성입니다.",
+      "raw": {
+        "sectionTitle": null,
+        "sectionSubtitle": "Title",
+        "sectionSubtitleReading": null,
+        "body": "다이얼로그를 설명하는 속성입니다."
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": "I3051:57956;3027:8766;3051:57983",
+          "type": "AlertDialog",
+          "description": null,
+          "code": {
+            "source": "figma-mcp",
+            "component": null,
+            "importPath": null,
+            "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3051:57956;3027:8766;3051:57983\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"Description\" title=\"Title\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3051:57957",
+      "group": "Properties",
+      "variant": "basic",
+      "title": null,
+      "subtitle": "Description",
+      "description": "다이얼로그의 설명을 보충하는 속성입니다.",
+      "raw": {
+        "sectionTitle": null,
+        "sectionSubtitle": "Description",
+        "sectionSubtitleReading": null,
+        "body": "다이얼로그의 설명을 보충하는 속성입니다."
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": "I3051:57957;3027:8766;3051:57987",
+          "type": "AlertDialog",
+          "description": null,
+          "code": {
+            "source": "figma-mcp",
+            "component": null,
+            "importPath": null,
+            "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3051:57957;3027:8766;3051:57987\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"Description\" title=\"Title\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3051:57958",
+      "group": "Properties",
+      "variant": "basic",
+      "title": null,
+      "subtitle": "Action button",
+      "description": "작성예정",
+      "raw": {
+        "sectionTitle": null,
+        "sectionSubtitle": "Action button",
+        "sectionSubtitleReading": null,
+        "body": "작성예정"
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": "I3051:57958;3027:8766;3051:57994",
+          "type": "AlertDialog",
+          "description": null,
+          "code": {
+            "source": "figma-mcp",
+            "component": null,
+            "importPath": null,
+            "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3051:57958;3027:8766;3051:57994\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"Description\" title=\"Title\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3051:57959",
+      "group": "Properties",
+      "variant": "basic",
+      "title": null,
+      "subtitle": "Cancel button",
+      "description": "작성예정",
+      "raw": {
+        "sectionTitle": null,
+        "sectionSubtitle": "Cancel button",
+        "sectionSubtitleReading": null,
+        "body": "작성예정"
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": "I3051:57959;3027:8766;3051:57998",
+          "type": "AlertDialog",
+          "description": null,
+          "code": {
+            "source": "figma-mcp",
+            "component": null,
+            "importPath": null,
+            "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3051:57959;3027:8766;3051:57998\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"Description\" title=\"Title\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3062:63147",
+      "group": "Properties",
+      "variant": "basic",
+      "title": null,
+      "subtitle": "Height",
+      "description": "알럿 다이얼로그의 최대 높이(Max-height)는 전체 화면 높이의 80%로 설정됩니다.",
+      "raw": {
+        "sectionTitle": null,
+        "sectionSubtitle": "Height",
+        "sectionSubtitleReading": null,
+        "body": "알럿 다이얼로그의 최대 높이(Max-height)는 전체 화면 높이의 80%로 설정됩니다."
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": "I3062:63147;3027:8766;3062:63142",
+          "type": "AlertDialog",
+          "description": null,
+          "code": {
+            "source": "figma-mcp",
+            "component": null,
+            "importPath": null,
+            "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3062:63147;3027:8766;3062:63142\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"Description\" title=\"Title\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3051:58825",
+      "group": "Properties",
+      "variant": "basic",
+      "title": null,
+      "subtitle": "Close behaivor",
+      "description": "알럿 다이얼로그는 푸터의 Cancel 버튼으로만 닫을 수 있습니다.",
+      "raw": {
+        "sectionTitle": null,
+        "sectionSubtitle": "Close behaivor",
+        "sectionSubtitleReading": null,
+        "body": "알럿 다이얼로그는 푸터의 Cancel 버튼으로만 닫을 수 있습니다."
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": "I3051:58825;3027:8766;3051:59523",
+          "type": "AlertDialog",
+          "description": null,
+          "code": {
+            "source": "figma-mcp",
+            "component": null,
+            "importPath": null,
+            "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3051:58825;3027:8766;3051:59523\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"Description\" title=\"Title\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+          }
+        }
+      ]
+    }
+  ]
+}
