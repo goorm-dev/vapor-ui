@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * CLI:
- *   node .claude/skills/extract-frame-sections/scripts/extract.mjs <pageUrl> [slug] [--alias name=value]...
+ *   node .claude/skills/extract-vapor-docs/scripts/extract.mjs <pageUrl> [slug] [--alias name=value]...
  *
  * `<pageUrl>` must point at a Figma page (CANVAS) — usually obtained by right-clicking a
  * page in the Figma sidebar and choosing "Copy link". If it points at a frame instead,
@@ -18,7 +18,10 @@
  *   `--alias Size=Properties`
  * folds a sibling "Size" frame under the "Properties" group in the emitted JSON.
  *
- * Requires FIGMA_TOKEN in the environment.
+ * Requires FIGMA_TOKEN in the environment. Load it from repo-root .env with
+ * Node's native --env-file flag; do NOT export in shell or install dotenv:
+ *   node --env-file="$(git rev-parse --show-toplevel)/.env" \
+ *     .claude/skills/extract-vapor-docs/scripts/extract.mjs "<pageUrl>" [slug] [--alias ...]
  */
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
@@ -47,7 +50,7 @@ const SECTION_FILENAMES = {
 function usage(extra) {
     if (extra) console.error(extra);
     console.error(
-        'Usage: node .claude/skills/extract-frame-sections/scripts/extract.mjs <pageUrl> [slug] [--alias name=value]...',
+        'Usage: node .claude/skills/extract-vapor-docs/scripts/extract.mjs <pageUrl> [slug] [--alias name=value]...',
     );
     process.exit(1);
 }
@@ -173,7 +176,10 @@ async function main() {
     const token = process.env.FIGMA_TOKEN;
     if (!token) {
         console.error(
-            'FIGMA_TOKEN not set. Export it before running: `export FIGMA_TOKEN=figd_...`',
+            'FIGMA_TOKEN not set. Add it to <repo-root>/.env and run with:\n' +
+                '  node --env-file="$(git rev-parse --show-toplevel)/.env" \\\n' +
+                '    .claude/skills/extract-vapor-docs/scripts/extract.mjs "<pageUrl>" [slug] [--alias ...]\n' +
+                'Get a token at https://www.figma.com/settings (Personal access tokens, scope: File content read).',
         );
         process.exit(1);
     }
