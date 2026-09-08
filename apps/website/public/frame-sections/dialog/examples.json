@@ -1,0 +1,77 @@
+{
+  "slug": "dialog",
+  "section": "examples",
+  "frameNodeId": "2213:38681",
+  "sectionTitle": "Examples",
+  "blocks": [
+    {
+      "id": "3027:12044",
+      "group": null,
+      "variant": "split",
+      "title": "Form",
+      "subtitle": "사용자의 정보 입력이 필요할 경우 사용하세요",
+      "description": "사용자의 입력 없이는 다음 단계를 진행할 수 없을 때 다이얼로그를 사용하여 \n즉각적인 응답을 요구합니다.",
+      "raw": {
+        "sectionTitle": "Form",
+        "sectionSubtitle": "사용자의 정보 입력이 필요할 경우 사용하세요",
+        "sectionSubtitleReading": null,
+        "body": "사용자의 입력 없이는 다음 단계를 진행할 수 없을 때 다이얼로그를 사용하여 \n즉각적인 응답을 요구합니다."
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": "I3027:12044;3027:11896;3027:12390",
+          "type": "Dialog",
+          "description": null,
+          "code": null
+        }
+      ]
+    },
+    {
+      "id": "3027:12616",
+      "group": null,
+      "variant": "split",
+      "title": "Information",
+      "subtitle": "작업과 관련된 정보를 제공할 때 사용하세요",
+      "description": "관련 정보를 제공할 때는 사용자가 취해야 할 액션을 포함하지 않습니다.\n콘텐츠가 길어질 경우 스크롤을 추가해서 사용하세요. ",
+      "raw": {
+        "sectionTitle": "Information",
+        "sectionSubtitle": "작업과 관련된 정보를 제공할 때 사용하세요",
+        "sectionSubtitleReading": null,
+        "body": "관련 정보를 제공할 때는 사용자가 취해야 할 액션을 포함하지 않습니다.\n콘텐츠가 길어질 경우 스크롤을 추가해서 사용하세요. "
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": "I3027:12616;3027:11896;3027:12672",
+          "type": "Dialog",
+          "description": null,
+          "code": null
+        }
+      ]
+    },
+    {
+      "id": "3027:12738",
+      "group": null,
+      "variant": "split",
+      "title": "Custom",
+      "subtitle": "작성예정",
+      "description": "원하는 데이터를 충분히 표현하기 어렵다면 Custom dialog를 사용하세요.",
+      "raw": {
+        "sectionTitle": "Custom",
+        "sectionSubtitle": "작성예정",
+        "sectionSubtitleReading": null,
+        "body": "원하는 데이터를 충분히 표현하기 어렵다면 Custom dialog를 사용하세요."
+      },
+      "samples": [
+        {
+          "label": null,
+          "nodeId": null,
+          "type": null,
+          "description": null,
+          "code": null
+        }
+      ]
+    }
+  ]
+}
