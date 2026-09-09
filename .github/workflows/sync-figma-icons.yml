@@ -26,6 +26,11 @@ jobs:
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
+              with:
+                  # Sync from main whatever ref dispatched this run. The commit below is based on
+                  # the checked-out ref, so a feature branch would drag its own diff into the
+                  # pull request.
+                  ref: main
 
             - name: Install
               uses: ./.github/composite/install
@@ -62,12 +67,9 @@ jobs:
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
 
-                  # Ensure we have the latest main branch
-                  git fetch origin main
-                  git checkout main
-                  git pull origin main
-
-                  # Reset the fixed branch onto the latest main, discarding whatever it held.
+                  # Reset the fixed branch onto the checked-out main, discarding whatever it held.
+                  # `switch -C` only renames the current HEAD, so the generated icons cross over
+                  # untouched — a `checkout` or `pull` here would refuse to overwrite them.
                   # Safe because the sync script rewrites every icon from Figma each run.
                   git switch -C "$BRANCH_NAME"
 
