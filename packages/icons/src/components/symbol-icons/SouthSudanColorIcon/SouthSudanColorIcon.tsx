@@ -2,40 +2,34 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const SouthSudanColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1272"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-SouthSudanColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1272)">
-            <path d="M-1.17822 16H30.8218V11.18H7.14724L-1.17822 16Z" fill="#078930" />
-            <path d="M-1.17822 0L7.16357 4.82H30.8218V0H-1.17822Z" fill="black" />
-            <path d="M8.52899 5.61091H30.8218V4.82001H7.16357L8.52899 5.61091Z" fill="white" />
-            <path d="M7.14746 11.18H30.822V10.3891H8.5111L7.14746 11.18Z" fill="white" />
+        <g mask="url(#vapor-icons-color-SouthSudanColorIcon__a)">
+            <path fill="#078930" d="M-1.178 16h32v-4.82H7.147z" />
+            <path fill="#000" d="m-1.178 0 8.342 4.82h23.658V0z" />
+            <path fill="#fff" d="M8.529 5.61h22.293v-.79H7.164zm-1.382 5.57h23.675v-.79H8.512z" />
+            <path fill="#DA121A" d="m12.65 7.993-4.14 2.396h22.312V5.611H8.529z" />
             <path
-                d="M12.6507 7.99271L8.51074 10.3891H30.8216V5.6109H8.52885L12.6507 7.99271Z"
-                fill="#DA121A"
-            />
-            <path
-                d="M8.51088 10.3891L12.6509 7.99272L8.52899 5.61091L7.16357 4.82L-1.17822 0V4.82V5.61091V10.3891V11.18V16L7.14724 11.18L8.51088 10.3891Z"
                 fill="#0F47AF"
+                d="m8.51 10.39 4.14-2.397L8.53 5.61l-1.366-.79L-1.178 0v16l8.325-4.82z"
             />
             <path
-                d="M5.57631 9.55817L3.74543 8.96L2.61084 10.5182L2.61262 8.5909L0.781738 7.99271L2.61448 7.39999L2.61626 5.47272L3.7472 7.03273L5.57995 6.44L4.44536 7.99817L5.57631 9.55817Z"
                 fill="#FCDD09"
+                d="m5.576 9.558-1.83-.598-1.135 1.558.002-1.927-1.831-.598L2.614 7.4l.002-1.927 1.131 1.56L5.58 6.44 4.445 7.998z"
             />
         </g>
     </IconBase>
 );
-
 export default SouthSudanColorIcon;

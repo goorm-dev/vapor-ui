@@ -2,13 +2,13 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const FunctionOutlineIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <path
+            fill="currentColor"
             fillRule="evenodd"
+            d="M7.995 13.13a5.465 5.465 0 1 0 0-10.93 5.465 5.465 0 0 0 0 10.93m0 1.2a6.665 6.665 0 1 0 0-13.33 6.665 6.665 0 0 0 0 13.33M6.69 5.36v1.2h2.4v1.2h-2.4v3.4h-1.2v-7h5.1v1.2z"
             clipRule="evenodd"
-            d="M7.99508 13.13C11.0133 13.13 13.4601 10.6832 13.4601 7.665C13.4601 4.64676 11.0133 2.2 7.99508 2.2C4.97684 2.2 2.53008 4.64676 2.53008 7.665C2.53008 10.6832 4.97684 13.13 7.99508 13.13ZM7.99508 14.33C11.6761 14.33 14.6601 11.346 14.6601 7.665C14.6601 3.98402 11.6761 1 7.99508 1C4.3141 1 1.33008 3.98402 1.33008 7.665C1.33008 11.346 4.3141 14.33 7.99508 14.33ZM6.69023 5.36003V6.56006H9.09014V7.76006H6.69023V11.16H5.49023V4.16003H6.09014H6.69023H10.5901V5.36003H6.69023Z"
         />
     </IconBase>
 );
-
 export default FunctionOutlineIcon;

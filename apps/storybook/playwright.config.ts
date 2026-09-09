@@ -23,7 +23,7 @@ export default defineConfig({
     workers: process.env.CI ? 2 : undefined,
 
     webServer: {
-        command: 'npx http-server -p 9999 ../../apps/storybook/storybook-static',
+        command: 'npx http-server -p 9999 ./storybook-static',
         url: BASE_URL,
         reuseExistingServer: false,
     },

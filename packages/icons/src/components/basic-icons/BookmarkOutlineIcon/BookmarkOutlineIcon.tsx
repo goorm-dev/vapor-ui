@@ -2,13 +2,13 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const BookmarkOutlineIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <path
+            fill="currentColor"
             fillRule="evenodd"
+            d="m8 11.591 3.783 1.58a.2.2 0 0 0 .277-.184V3a.2.2 0 0 0-.2-.2H4.14a.2.2 0 0 0-.2.2v9.988a.2.2 0 0 0 .277.184zM8 13l3.281 1.371a1.5 1.5 0 0 0 2.079-1.384V3a1.5 1.5 0 0 0-1.5-1.5H4.14A1.5 1.5 0 0 0 2.64 3v9.988a1.5 1.5 0 0 0 2.078 1.383z"
             clipRule="evenodd"
-            d="M8.00003 11.591L11.7825 13.1719C11.9143 13.227 12.0596 13.1302 12.0596 12.9874V3C12.0596 2.88954 11.9701 2.8 11.8596 2.8H4.13965C4.02919 2.8 3.93965 2.88954 3.93965 3V12.9875C3.93965 13.1303 4.085 13.2271 4.21676 13.172L8.00003 11.591ZM8 13L11.2812 14.3713C12.2695 14.7844 13.3596 14.0584 13.3596 12.9874V3C13.3596 2.17157 12.6881 1.5 11.8596 1.5H4.13965C3.31122 1.5 2.63965 2.17157 2.63965 3V12.9875C2.63965 14.0585 3.72979 14.7844 4.71801 14.3715L8 13Z"
         />
     </IconBase>
 );
-
 export default BookmarkOutlineIcon;

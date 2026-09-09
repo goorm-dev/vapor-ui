@@ -2,13 +2,13 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const KakaoIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <path
+            fill="currentColor"
             fillRule="evenodd"
+            d="M14.496 7.527c0-2.797-2.908-5.064-6.496-5.064S1.504 4.73 1.504 7.527c0 1.78 1.178 3.345 2.96 4.248l-.552 2.275c-.127.402-.018.42.292.256l2.728-1.784q.531.07 1.068.068c3.588 0 6.496-2.267 6.496-5.063"
             clipRule="evenodd"
-            d="M14.4963 7.52692C14.4963 4.72981 11.5878 2.46292 8 2.46292C4.4122 2.46292 1.50373 4.73043 1.50373 7.52692C1.50373 9.30628 2.68234 10.8716 4.46417 11.7749L3.9123 14.0504C3.78485 14.4519 3.89436 14.4699 4.20432 14.3059L6.93152 12.5222C7.28586 12.5678 7.64275 12.5905 8 12.5903C11.5878 12.5903 14.4963 10.3234 14.4963 7.52692Z"
         />
     </IconBase>
 );
-
 export default KakaoIcon;

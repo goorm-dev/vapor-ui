@@ -7,7 +7,6 @@ import { TOCProvider, TOCScrollArea } from 'fumadocs-ui/components/toc';
 import * as TocClerk from 'fumadocs-ui/components/toc/clerk';
 import * as TocDefault from 'fumadocs-ui/components/toc/default';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
-import { I18nLabel } from 'fumadocs-ui/contexts/i18n';
 
 import type { BreadcrumbProps, FooterProps } from './docs-page-client';
 import {
@@ -164,7 +163,7 @@ export function CustomDocsPage({
                             id="toc-title"
                         >
                             <AlignCenterOutlineIcon className="size-4" />
-                            <I18nLabel label="toc" />
+                            On this page
                         </h3>
                         <TOCScrollArea>
                             {tocOptions.style === 'clerk' ? (
@@ -206,7 +205,7 @@ export function EditOnGitHub(props: ComponentProps<'a'>) {
             {props.children ?? (
                 <>
                     <EditOutlineIcon className="size-3.5" />
-                    <I18nLabel label="editOnGithub" />
+                    Edit on GitHub
                 </>
             )}
         </a>

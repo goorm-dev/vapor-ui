@@ -2,16 +2,12 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const ProductHuntColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
+        <path fill="#DA552F" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
         <path
-            d="M16 8C16 12.4184 12.4184 16 8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8Z"
-            fill="#DA552F"
-        />
-        <path
-            d="M9.0668 8H6.8V5.6H9.0668C9.7292 5.6 10.2668 6.1372 10.2668 6.8C10.2668 7.4628 9.7292 8 9.0668 8ZM9.0668 4H5.2V12H6.8V9.6H9.0668C10.6132 9.6 11.8668 8.3464 11.8668 6.8C11.8668 5.2536 10.6132 4 9.0668 4Z"
-            fill="white"
+            fill="#fff"
+            d="M9.067 8H6.8V5.6h2.267a1.2 1.2 0 0 1 0 2.4m0-4H5.2v8h1.6V9.6h2.267a2.8 2.8 0 1 0 0-5.6"
         />
     </IconBase>
 );
-
 export default ProductHuntColorIcon;
