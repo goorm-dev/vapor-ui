@@ -17,9 +17,11 @@ import clsx from 'clsx';
 import { usePathname } from 'fumadocs-core/framework';
 import Link from 'fumadocs-core/link';
 import type { SidebarTabWithProps } from 'fumadocs-ui/components/sidebar/tabs/dropdown';
-import { SidebarTabsDropdown, isTabActive } from 'fumadocs-ui/components/sidebar/tabs/dropdown';
+import { SidebarTabsDropdown } from 'fumadocs-ui/components/sidebar/tabs/dropdown';
 import { Popover, PopoverContent, PopoverTrigger } from 'fumadocs-ui/components/ui/popover';
+import { useTreePath } from 'fumadocs-ui/contexts/tree';
 import type { LinkItemType, MenuItemType } from 'fumadocs-ui/layouts/shared';
+import { isLayoutTabActive } from 'fumadocs-ui/layouts/shared';
 import { useIsScrollTop } from 'fumadocs-ui/utils/use-is-scroll-top';
 
 export function normalize(urlOrPath: string) {
@@ -242,6 +244,7 @@ export function LayoutHeaderTabs({
     ...props
 }: LayoutHeaderTabsProps) {
     const pathname = usePathname();
+    const path = useTreePath();
     const filteredOptions = useMemo(() => {
         if (!options) return undefined;
 
@@ -253,8 +256,10 @@ export function LayoutHeaderTabs({
     }, [options, pathname, filterByPathname]);
 
     const selectedIdx = useMemo(() => {
-        return filteredOptions?.findLastIndex((option) => isTabActive(option, pathname));
-    }, [filteredOptions, pathname]);
+        return filteredOptions?.findLastIndex((option) =>
+            isLayoutTabActive(option, path, pathname),
+        );
+    }, [filteredOptions, path, pathname]);
 
     return (
         <div className={clsx('flex flex-row items-end gap-6', className)} {...props}>
