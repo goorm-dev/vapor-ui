@@ -1,54 +1,54 @@
 {
-  "slug": "dialog",
-  "section": "related",
-  "frameNodeId": "2541:35048",
-  "sectionTitle": "Related components",
-  "blocks": [
-    {
-      "id": "3035:15317",
-      "group": "Dialog vs Alert Dialog",
-      "variant": "basic",
-      "title": "Dialog",
-      "subtitle": null,
-      "description": "사용자로부터 폼 입력을 받아야 하거나, 작업과 관련된 정보를 보여줄 때\nDialog를 사용합니다.",
-      "raw": {
-        "sectionTitle": null,
-        "sectionSubtitle": "Dialog",
-        "sectionSubtitleReading": null,
-        "body": "사용자로부터 폼 입력을 받아야 하거나, 작업과 관련된 정보를 보여줄 때\nDialog를 사용합니다."
-      },
-      "samples": [
+    "slug": "dialog",
+    "section": "related",
+    "frameNodeId": "2541:35048",
+    "sectionTitle": "Related components",
+    "blocks": [
         {
-          "label": null,
-          "nodeId": "I3035:15317;3027:8766;3035:15456",
-          "type": "Dialog",
-          "description": null,
-          "code": null
-        }
-      ]
-    },
-    {
-      "id": "3035:15364",
-      "group": "Dialog vs Alert Dialog",
-      "variant": "basic",
-      "title": "Alert Dialog",
-      "subtitle": null,
-      "description": "사용자의 결정을 한 번 더 확인하거나, 되돌릴 수 없는 작업을 수행하기 전\nAlert dialog를 사용합니다.",
-      "raw": {
-        "sectionTitle": null,
-        "sectionSubtitle": "Alert Dialog",
-        "sectionSubtitleReading": null,
-        "body": "사용자의 결정을 한 번 더 확인하거나, 되돌릴 수 없는 작업을 수행하기 전\nAlert dialog를 사용합니다."
-      },
-      "samples": [
+            "id": "3035:15317",
+            "group": "Dialog vs Alert Dialog",
+            "variant": "basic",
+            "title": "Dialog",
+            "subtitle": null,
+            "description": "사용자로부터 폼 입력을 받아야 하거나, 작업과 관련된 정보를 보여줄 때\nDialog를 사용합니다.",
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Dialog",
+                "sectionSubtitleReading": null,
+                "body": "사용자로부터 폼 입력을 받아야 하거나, 작업과 관련된 정보를 보여줄 때\nDialog를 사용합니다."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": "I3035:15317;3027:8766;3035:15456",
+                    "type": "Dialog",
+                    "description": null,
+                    "code": null
+                }
+            ]
+        },
         {
-          "label": null,
-          "nodeId": "I3035:15364;3027:8766;3035:15410",
-          "type": "AlertDialog",
-          "description": null,
-          "code": null
+            "id": "3035:15364",
+            "group": "Dialog vs Alert Dialog",
+            "variant": "basic",
+            "title": "Alert Dialog",
+            "subtitle": null,
+            "description": "사용자의 결정을 한 번 더 확인하거나, 되돌릴 수 없는 작업을 수행하기 전\nAlert dialog를 사용합니다.",
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Alert Dialog",
+                "sectionSubtitleReading": null,
+                "body": "사용자의 결정을 한 번 더 확인하거나, 되돌릴 수 없는 작업을 수행하기 전\nAlert dialog를 사용합니다."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": "I3035:15364;3027:8766;3035:15410",
+                    "type": "AlertDialog",
+                    "description": null,
+                    "code": null
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

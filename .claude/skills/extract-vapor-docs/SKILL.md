@@ -6,10 +6,10 @@ disable-model-invocation: true
 
 # Extract Vapor Docs
 
-사용자가 넘긴 **Figma 페이지 URL** 하나로 4개 섹션 프레임을 자동 발견해 `apps/website/public/frame-sections/<slug>/<section>.json` 4개 파일을 생성한다. 정적 텍스트는 스크립트가 REST API로 결정론적으로 뽑고, 각 sample의 실제 코드 산출은 이 스킬이 Figma MCP로 채운다. **스킬 하위 config 파일 없음** — 대상 프레임은 페이지 안 최상위에서 이름으로 자동 매칭한다.
+사용자가 넘긴 **Figma 페이지 URL** 하나로 4개 섹션 프레임을 자동 발견해 `apps/website/public/composites/<slug>/<section>.json` 4개 파일을 생성한다. 정적 텍스트는 스크립트가 REST API로 결정론적으로 뽑고, 각 sample의 실제 코드 산출은 이 스킬이 Figma MCP로 채운다. **스킬 하위 config 파일 없음** — 대상 프레임은 페이지 안 최상위에서 이름으로 자동 매칭한다.
 
 - 스크립트: `.claude/skills/extract-vapor-docs/scripts/{extract.mjs, blocks.mjs, rest.mjs}`
-- 출력: `apps/website/public/frame-sections/<slug>/{overview,best-practices,examples,related}.json`
+- 출력: `apps/website/public/composites/<slug>/{overview,best-practices,examples,related}.json`
 
 관련: [[frame-sections-pipeline]] · [[composite-guide-pipeline]] (별개 파이프라인).
 
@@ -17,10 +17,10 @@ disable-model-invocation: true
 
 이 스킬은 Figma를 두 경로로 호출하고, 각 경로가 **서로 다른 자격증명**을 쓴다. Step 2가 REST 축을, Step 3가 MCP 축을 소비한다 — 한 축만 있으면 반대편 Step에서 곧바로 실패한다.
 
-| 축            | 자격증명                                       | 발급 위치                                                                                      | 사용 지점                                                                 | 없으면                                        |
-| ------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | --------------------------------------------- |
-| **MCP 세션**  | Claude Code ↔ Figma 데스크탑 앱 로그인 세션    | Figma 데스크탑 앱 로그인 → Claude Code에서 Figma MCP 서버 연결                                 | Step 0 (`whoami`), Step 3 (`get_code_connect_map` / `get_design_context`) | Step 3에서 `sample.code`를 못 채움            |
-| **REST 토큰** | `FIGMA_TOKEN` (Personal Access Token)          | figma.com → Settings → Security → Personal access tokens → Generate (scope: File content read) | Step 2 (`scripts/extract.mjs` → `api.figma.com/v1/files/...`)             | Step 2 스크립트가 첫 REST 호출에서 401로 죽음 |
+| 축            | 자격증명                                    | 발급 위치                                                                                      | 사용 지점                                                                 | 없으면                                        |
+| ------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | --------------------------------------------- |
+| **MCP 세션**  | Claude Code ↔ Figma 데스크탑 앱 로그인 세션 | Figma 데스크탑 앱 로그인 → Claude Code에서 Figma MCP 서버 연결                                 | Step 0 (`whoami`), Step 3 (`get_code_connect_map` / `get_design_context`) | Step 3에서 `sample.code`를 못 채움            |
+| **REST 토큰** | `FIGMA_TOKEN` (Personal Access Token)       | figma.com → Settings → Security → Personal access tokens → Generate (scope: File content read) | Step 2 (`scripts/extract.mjs` → `api.figma.com/v1/files/...`)             | Step 2 스크립트가 첫 REST 호출에서 401로 죽음 |
 
 둘은 서로를 **대체하지 못한다**. MCP 세션 토큰은 사용자에게 노출되지 않아 스크립트가 재사용할 수 없고, `FIGMA_TOKEN`은 REST 전용 스코프라 MCP tool을 인증하지 못한다. Step 0에서 MCP를 먼저 확인해 실패 시 즉시 중단하고, Step 2에서 REST 토큰이 없으면 스크립트가 자체 에러로 중단한다.
 

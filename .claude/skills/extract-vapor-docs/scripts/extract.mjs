@@ -12,7 +12,7 @@
  * (whitespace / casing must match). Any missing name is reported.
  *
  * `[slug]` defaults to the page's own name in kebab-case. Output goes to
- * `apps/website/public/frame-sections/<slug>/{overview,best-practices,examples,related}.json`.
+ * `apps/website/public/composites/<slug>/{overview,best-practices,examples,related}.json`.
  *
  * `--alias name=value` (repeatable) rewrites the walker's group name — e.g.
  *   `--alias Size=Properties`
@@ -32,7 +32,7 @@ import { fetchNodes, fetchPagesWithDirectChildren, parseDesignUrl } from './rest
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(SCRIPT_DIR, '../../../..');
-const OUTPUT_ROOT = 'apps/website/public/frame-sections';
+const OUTPUT_ROOT = 'apps/website/public/composites';
 
 const SECTION_TARGETS = {
     overview: 'Overview',
