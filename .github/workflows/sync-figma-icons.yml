@@ -6,6 +6,15 @@ on:
         # Run every Thursday at 4 PM KST (07:00 UTC)
         - cron: '0 7 * * 4'
 
+# The called parity workflow uploads to S3 over OIDC, and a called workflow cannot be granted
+# more than its caller holds — `id-token` is never in the default token, so it has to be asked
+# for here. Opening this block replaces the defaults, so the write scopes this job's own
+# commit / PR steps rely on have to be listed too.
+permissions:
+    contents: write
+    pull-requests: write
+    id-token: write
+
 concurrency:
     # Fixed group, not keyed on github.ref: every run targets the same BRANCH_NAME
     # regardless of the ref it was dispatched from, so runs must serialize.

@@ -25,9 +25,12 @@ on:
             - scripts/icon-extractor/icon-extractor.config.json
             - .github/workflows/icon-parity.yml
 
+# This block replaces the default permissions rather than adding to them, so `contents` and
+# `pull-requests` have to stay listed alongside the OIDC `id-token` the S3 upload needs.
 permissions:
     contents: read
     pull-requests: write
+    id-token: write
 
 concurrency:
     group: icon-parity-${{ github.event.pull_request.number || github.ref }}
@@ -67,44 +70,67 @@ jobs:
                   pnpm --filter @repo/icon-extractor parity:render
                   pnpm --filter @repo/icon-extractor parity:compare
 
-            # report.html inlines the Figma / code / diff PNG of every failing icon, so the
-            # artifact is one file that opens in a browser with nothing else attached.
-            - name: Upload report
-              id: report
-              if: steps.compare.outcome == 'failure'
-              uses: actions/upload-artifact@v4
+            # compare.ts already computed these, so read them back instead of re-deriving them
+            # from the rendered report.
+            - name: Read counts
+              id: counts
+              if: always()
+              run: |
+                  if [[ ! -f "$CACHE/report.json" ]]; then
+                      echo 'ran=false' >> "$GITHUB_OUTPUT"
+                      echo 'No parity report — the comparison never ran.' >> "$GITHUB_STEP_SUMMARY"
+                      exit 0
+                  fi
+                  {
+                      echo 'ran=true'
+                      jq -r '"total=\(.total)",
+                             "failed=\(.failed)",
+                             "threshold=\(.threshold)",
+                             "mono=\(.mono.count)",
+                             "mono_worst=\(.mono.worst)",
+                             "colour=\(.colour.count)",
+                             "colour_worst=\(.colour.worst)"' "$CACHE/report.json"
+                  } >> "$GITHUB_OUTPUT"
+
+            - name: Configure AWS credentials
+              if: steps.counts.outputs.ran == 'true'
+              uses: aws-actions/configure-aws-credentials@v4
               with:
-                  name: icon-parity-report
-                  path: ${{ env.CACHE }}/report.*
-                  # .cache is hidden, and upload-artifact excludes hidden paths since v4.4.
-                  include-hidden-files: true
-                  if-no-files-found: error
+                  role-to-assume: ${{ secrets.AWS_IAM_ROLE_NAME }}
+                  role-session-name: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            # report.html inlines the Figma / code / diff PNG of every failing icon, so one object
+            # is the whole report. `index.html` is the bucket website's default document.
+            - name: Upload report to S3
+              id: s3
+              if: steps.counts.outputs.ran == 'true'
+              run: |
+                  BRANCH=$(echo "${{ github.head_ref || github.ref_name }}" | tr '/' '-')
+                  KEY="icon-parity/$BRANCH/index.html"
+                  aws s3 cp "$CACHE/report.html" "s3://${{ secrets.BUCKET_NAME }}/$KEY"
+                  URL="http://${{ secrets.BUCKET_NAME }}/$KEY"
+                  echo "url=$URL" >> "$GITHUB_OUTPUT"
+                  # A dispatch run has no PR to comment on, so the link has to land somewhere.
+                  echo "[Icon parity report]($URL)" >> "$GITHUB_STEP_SUMMARY"
 
             - name: Comment on PR
-              if: steps.compare.outcome == 'failure' && (inputs.pr-number || github.event.pull_request.number)
+              if: steps.counts.outputs.ran == 'true' && (inputs.pr-number || github.event.pull_request.number)
               uses: marocchino/sticky-pull-request-comment@v2
               with:
                   number: ${{ inputs.pr-number || github.event.pull_request.number }}
                   header: icon-parity
                   message: |
-                      ## ⚠️ 아이콘 시각 검증 실패
+                      ${{ steps.compare.outcome == 'failure' && '🚫 **아이콘 시각 검증 실패**' || '✅ **아이콘 시각 검증 통과**' }}
 
-                      아이콘이 Figma 렌더링과 다릅니다. 판정 기준은 `scripts/icon-extractor/src/parity/CALIBRATION.md`에 있습니다.
+                      | 전체 | 게이트 대상 (mono) | 실패 | mono 최대 diff | 리포트 |
+                      | :--- | :--- | :--- | :--- | :--- |
+                      | ${{ steps.counts.outputs.total }} | ${{ steps.counts.outputs.mono }} | ${{ steps.counts.outputs.failed }} | ${{ steps.counts.outputs.mono_worst }} px | [열기 ↗︎](${{ steps.s3.outputs.url }}) |
 
-                      🖼️ **[시각 diff 보기](${{ steps.report.outputs.artifact-url }})** — 내려받아 `report.html`을 열면 실패한 아이콘마다 Figma / 코드 / diff가 나란히 보입니다.
+                      실패한 아이콘마다 Figma / 코드 / diff가 나란히 보입니다. 컬러 아이콘 ${{ steps.counts.outputs.colour }}개는 게이트 밖입니다 (최대 ${{ steps.counts.outputs.colour_worst }} px).
+                      판정 기준 `> ${{ steps.counts.outputs.threshold }} diff px`의 근거는 `scripts/icon-extractor/src/parity/lib.ts` 주석에 있습니다.
 
                       [워크플로 실행 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
-            - name: Report summary
-              if: always()
-              run: |
-                  # The full table is in the artifact; the summary carries the headline counts.
-                  # GitHub caps a summary at 1 MB and the report lists at most 60 rows.
-                  if [[ -f "$CACHE/report.md" ]]; then
-                      head -c 60000 "$CACHE/report.md" >> "$GITHUB_STEP_SUMMARY"
-                  else
-                      echo 'No parity report — the comparison never ran.' >> "$GITHUB_STEP_SUMMARY"
-                  fi
 
             - name: Fail if parity failed
               if: steps.compare.outcome == 'failure'

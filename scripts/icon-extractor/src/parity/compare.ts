@@ -92,12 +92,19 @@ rows.sort((x, y) => y.diffPixels - x.diffPixels);
 const failures = rows.filter((row) => row.failed);
 const mono = rows.filter((row) => !row.isColorIcon);
 const color = rows.filter((row) => row.isColorIcon);
+const worst = (group: Row[]) => Math.max(0, ...group.map((row) => row.diffPixels));
+
+// The headline counts live here, not only in the rendered page: the workflow reads them straight
+// out of this file for the PR comment. Re-parsing a rendered report to recover numbers we already
+// have is how the Playwright job ended up grepping its own markdown.
 const report = {
     threshold,
     pixelmatch: PIXELMATCH_OPTIONS,
     total: rows.length,
     expected: names.length,
     failed: failures.length,
+    mono: { count: mono.length, worst: worst(mono) },
+    colour: { count: color.length, worst: worst(color) },
     skipped,
     missing,
     unclassified,
@@ -105,42 +112,8 @@ const report = {
 };
 await fs.writeFile(path.join(CACHE_DIR, 'report.json'), JSON.stringify(report, null, 2));
 
-const worst = (group: Row[]) => Math.max(0, ...group.map((row) => row.diffPixels));
-const lines = [
-    `# Icon parity report`,
-    '',
-    `Our render vs Figma's own PNG, diff measured in pixelmatch pixels.`,
-    '',
-    `- gated: **${mono.length} mono** icons, fail above ${threshold} diff pixels — ` +
-        `${failures.length} failing, worst ${worst(mono)}`,
-    `- ungated: ${color.length} colour icons (Figma and Chromium disagree on these), ` +
-        `worst ${worst(color)}`,
-    ...(skipped.length ? [`- ${skipped.length} skipped (size mismatch)`] : []),
-    ...(missing.length ? [`- **${missing.length} MISSING** renders`] : []),
-    ...(unclassified.length ? [`- **${unclassified.length} not in manifest**`] : []),
-    '',
-    `| Icon | kind | diff px | size |`,
-    `| --- | --- | ---: | --- |`,
-    ...rows
-        .slice(0, 60)
-        .map(
-            (row) =>
-                `| ${row.name}${row.failed ? ' **FAIL**' : ''} | ` +
-                `${row.isColorIcon ? 'colour' : 'mono'} | ${row.diffPixels} | ` +
-                `${row.width}x${row.height} |`,
-        ),
-];
-for (const [label, list] of [
-    ['skipped', skipped],
-    ['missing', missing],
-    ['unclassified', unclassified],
-] as const) {
-    if (list.length) lines.push('', `### ${label}`, ...list.map((item) => `- ${item}`));
-}
-await fs.writeFile(path.join(CACHE_DIR, 'report.md'), lines.join('\n') + '\n');
-
-// Self-contained HTML (images inlined) so a CI artifact opens with no extra files.
-// Only failing rows carry images (an explicit --only shows every requested icon); the plain
+// Self-contained HTML (images inlined) so the one file the workflow uploads to S3 opens on its
+// own. Only failing rows carry images (an explicit --only shows every requested icon); the plain
 // lists below cover the other failure causes.
 const dataUri = async (file: string) =>
     `data:image/png;base64,${(await fs.readFile(file)).toString('base64')}`;
@@ -169,7 +142,8 @@ td{padding:.5rem;background:repeating-conic-gradient(#eee 0 25%,#fff 0 50%) 0 0/
 img{display:block;width:128px;height:128px;image-rendering:pixelated}
 </style>
 <h1>Icon parity report</h1>
-<p>${failures.length} of ${mono.length} mono icons over ${threshold} diff pixels.</p>
+<p>${failures.length} of ${mono.length} mono icons over ${threshold} diff pixels (worst ${worst(mono)}).<br>
+${color.length} colour icons are reported but not gated — Figma and Chromium disagree on these (worst ${worst(color)}).</p>
 <table><tr><th></th><th>Figma</th><th>Code</th><th>Diff</th></tr>${htmlRows.join('')}</table>
 ${htmlList('missing renders', missing)}${htmlList('skipped (size mismatch)', skipped)}${htmlList('not in manifest', unclassified)}`,
 );
@@ -181,7 +155,7 @@ console.log(
         (skipped.length ? `, ${skipped.length} skipped` : '') +
         (missing.length ? `, ${pc.red(`${missing.length} missing`)}` : ''),
 );
-console.log(`report: ${path.join(CACHE_DIR, 'report.md')}`);
+console.log(`report: ${path.join(CACHE_DIR, 'report.html')}`);
 console.log(`diffs:  ${diffDir} (${rows.length} PNGs)`);
 if (failures.length) {
     console.error(
