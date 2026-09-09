@@ -6,7 +6,15 @@ import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 
 import type { Manifest } from './lib';
-import { CACHE_DIR, DIFF_GATE, MANIFEST, PIXELMATCH_OPTIONS, flags, onlyFilter } from './lib';
+import {
+    CACHE_DIR,
+    DIFF_GATE,
+    MANIFEST,
+    PIXELMATCH_OPTIONS,
+    flags,
+    nameSet,
+    onlyFilter,
+} from './lib';
 
 type Row = {
     name: string;
@@ -22,6 +30,10 @@ const threshold = Number(args.threshold ?? DIFF_GATE);
 // Colour icons are rasterizer noise, not signal — gate them only to exercise the failure path.
 const gateColor = args['gate-color'] === 'true';
 const keep = onlyFilter(args.only);
+// `--show=A,B` adds rows to the page without narrowing what gets compared. The sync workflow
+// passes the icons it just changed, so a reviewer sees them next to Figma even on a green run.
+// `--only` cannot do this job: it drops every other icon out of the gate as well.
+const shown = args.show ? nameSet(args.show) : new Set<string>();
 
 const baselineDir = path.join(CACHE_DIR, 'baseline');
 const codeDir = path.join(CACHE_DIR, 'render');
@@ -94,9 +106,17 @@ const mono = rows.filter((row) => !row.isColorIcon);
 const color = rows.filter((row) => row.isColorIcon);
 const worst = (group: Row[]) => Math.max(0, ...group.map((row) => row.diffPixels));
 // What the HTML page will actually draw. An explicit --only shows every requested icon; otherwise
-// only failures carry images. The workflow uploads the page only when this is non-empty, so a
-// green run never hands a reviewer a link to an empty table.
-const drawn = args.only ? rows : failures;
+// failures first, then whatever --show asked for. The workflow uploads the page only when this is
+// non-empty, so a green run never hands a reviewer a link to an empty table.
+//
+// Failures lead so the cap can never hide one: a sync that regenerates every icon marks all 814 as
+// changed, and a page with 814 rows of inlined PNGs is several megabytes.
+const MAX_DRAWN = 60;
+const candidates = args.only
+    ? rows
+    : [...failures, ...rows.filter((row) => !row.failed && shown.has(row.name))];
+const drawn = candidates.slice(0, MAX_DRAWN);
+const folded = candidates.length - drawn.length;
 
 // The headline counts live here, not only in the rendered page: the workflow reads them straight
 // out of this file for the PR comment. Re-parsing a rendered report to recover numbers we already
@@ -126,7 +146,8 @@ const cell = async (dir: string, name: string) =>
 const htmlRows = await Promise.all(
     drawn.map(
         async (row) =>
-            `<tr><th>${row.name}<br><small>${row.diffPixels} px</small></th>` +
+            `<tr><th>${row.name}${row.failed ? ' <b>FAIL</b>' : ''}` +
+            `<br><small>${row.diffPixels} px</small></th>` +
             (await cell(baselineDir, row.name)) +
             (await cell(codeDir, row.name)) +
             (await cell(diffDir, row.name)) +
@@ -148,7 +169,9 @@ img{display:block;width:128px;height:128px;image-rendering:pixelated}
 <h1>Icon parity report</h1>
 <p>${failures.length} of ${mono.length} mono icons over ${threshold} diff pixels (worst ${worst(mono)}).<br>
 ${color.length} colour icons are reported but not gated — Figma and Chromium disagree on these (worst ${worst(color)}).</p>
+${shown.size ? '<p>Rows without <b>FAIL</b> are icons this sync changed. They are here for review, not because anything is wrong with them.</p>' : ''}
 <table><tr><th></th><th>Figma</th><th>Code</th><th>Diff</th></tr>${htmlRows.join('')}</table>
+${folded ? `<p>${folded} more row(s) not drawn — the page is capped at ${MAX_DRAWN}.</p>` : ''}
 ${htmlList('missing renders', missing)}${htmlList('skipped (size mismatch)', skipped)}${htmlList('not in manifest', unclassified)}`,
 );
 

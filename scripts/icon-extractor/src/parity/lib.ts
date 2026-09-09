@@ -58,12 +58,30 @@ function flags(): Record<string, string> {
     return out;
 }
 
-/** `--only=A,B` keeps just those icon names; without the flag everything passes. */
+/**
+ * `--only=A,B` keeps just those icon names; without the flag everything passes.
+ *
+ * Empty entries are dropped so a caller can pass a list stitched from several sources —
+ * `format('{0},{1}', ...)` in a workflow yields `A,,B` when one source is empty.
+ */
+function nameSet(list: string): Set<string> {
+    return new Set(list.split(',').filter(Boolean));
+}
+
 function onlyFilter(only: string | undefined): (name: string) => boolean {
     if (!only) return () => true;
-    const wanted = new Set(only.split(','));
+    const wanted = nameSet(only);
     return (name) => wanted.has(name);
 }
 
 export type { Manifest };
-export { CACHE_DIR, DIFF_GATE, MANIFEST, PARITY_DIR, PIXELMATCH_OPTIONS, flags, onlyFilter };
+export {
+    CACHE_DIR,
+    DIFF_GATE,
+    MANIFEST,
+    PARITY_DIR,
+    PIXELMATCH_OPTIONS,
+    flags,
+    nameSet,
+    onlyFilter,
+};

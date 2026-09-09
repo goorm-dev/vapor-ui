@@ -30,6 +30,9 @@ jobs:
         outputs:
             has_changes: ${{ steps.commit.outputs.has_changes }}
             pr_number: ${{ steps.create_pr.outputs.number }}
+            # New and updated icons get drawn on the parity report so the sync PR shows them next
+            # to Figma. Deleted ones are left out — there is no component left to render.
+            changed_icons: ${{ format('{0},{1},{2},{3}', steps.sync_basic.outputs.new_icons, steps.sync_basic.outputs.updated_icons, steps.sync_symbol.outputs.new_icons, steps.sync_symbol.outputs.updated_icons) }}
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
@@ -306,6 +309,7 @@ jobs:
         secrets: inherit
         with:
             pr-number: ${{ needs.sync-figma-icons.outputs.pr_number }}
+            changed-icons: ${{ needs.sync-figma-icons.outputs.changed_icons }}
 
     notify:
         name: Notify Slack

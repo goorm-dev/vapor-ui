@@ -16,6 +16,10 @@ on:
                 description: 'PR to comment the report on. Empty means report to the log only.'
                 type: string
                 required: false
+            changed-icons:
+                description: 'Comma-separated icons to draw on the report even when they pass.'
+                type: string
+                required: false
     pull_request:
         paths:
             - packages/icons/src/**
@@ -68,7 +72,10 @@ jobs:
                   pnpm --filter @repo/icon-extractor parity:fetch --type=basic
                   pnpm --filter @repo/icon-extractor parity:fetch --type=symbol
                   pnpm --filter @repo/icon-extractor parity:render
-                  pnpm --filter @repo/icon-extractor parity:compare
+                  # --show adds rows to the page; it does not narrow the gate. Empty on the
+                  # pull_request path, where the diff itself already says what changed.
+                  pnpm --filter @repo/icon-extractor parity:compare \
+                      --show="${{ inputs.changed-icons }}"
 
             # compare.ts already computed these, so read them back instead of re-deriving them
             # from the rendered report.
