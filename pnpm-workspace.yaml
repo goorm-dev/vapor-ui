@@ -3,6 +3,7 @@ packages:
     - packages/*
     - scripts/ts-api-extractor
     - scripts/sync-figma
+    - scripts/extract-code-connect
 
 # Unified React 19 for entire monorepo
 # Libraries (packages/*) maintain peerDependencies for React 17/18/19 compatibility

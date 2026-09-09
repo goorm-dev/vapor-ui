@@ -13,7 +13,7 @@ const popup = getProperties(instance, '(Popup)', {
 
 const header = getProperties(instance, '(Header)', {
     title: { kind: 'string', name: 'title' },
-    description: { kind: 'string', name: 'description' },
+    description: { kind: 'string', name: 'description', visibleWhen: '(has description)' },
 });
 
 const body = getProperties(instance, '(Body)', {
@@ -21,15 +21,13 @@ const body = getProperties(instance, '(Body)', {
 });
 
 const footer = getProperties(instance, '(Footer)', {
-    assistive: { kind: 'instance', name: 'Assistive' },
+    assistive: { kind: 'instance', name: 'Assistive', visibleWhen: '(has assistive)' },
     action: { kind: 'instance', name: 'Action' },
 });
 
 export default {
     example: figma.code`
         <Dialog.Root
-            // ariaLabels={} 닫기 버튼의 aria-label을 지정하세요.
-            // trigger={} 트리거 요소를 입력하세요.
             ${popup.size}
             ${header.title}
             ${header.description}
