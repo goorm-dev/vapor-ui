@@ -68,11 +68,7 @@ jobs:
                   pnpm --filter @repo/icon-extractor parity:fetch --type=basic
                   pnpm --filter @repo/icon-extractor parity:fetch --type=symbol
                   pnpm --filter @repo/icon-extractor parity:render
-                  # TEMPORARY — remove once the S3 report is confirmed to render its images.
-                  # `--only` draws every requested row whether it passes or fails, so a green run
-                  # still produces a page with Figma / code / diff images on it.
-                  pnpm --filter @repo/icon-extractor parity:compare \
-                      --only=DividerOutlineIcon,ImagePackOutlineIcon,AccessibilityOutlineIcon
+                  pnpm --filter @repo/icon-extractor parity:compare
 
             # compare.ts already computed these, so read them back instead of re-deriving them
             # from the rendered report.
@@ -89,11 +85,8 @@ jobs:
                       echo 'ran=true'
                       jq -r '"total=\(.total)",
                              "failed=\(.failed)",
-                             "threshold=\(.threshold)",
                              "mono=\(.mono.count)",
-                             "mono_worst=\(.mono.worst)",
-                             "colour=\(.colour.count)",
-                             "colour_worst=\(.colour.worst)"' "$CACHE/report.json"
+                             "mono_worst=\(.mono.worst)"' "$CACHE/report.json"
                   } >> "$GITHUB_OUTPUT"
 
             - name: Configure AWS credentials
@@ -111,7 +104,11 @@ jobs:
               if: steps.counts.outputs.ran == 'true'
               run: |
                   BRANCH=$(echo "${{ github.head_ref || github.ref_name }}" | tr '/' '-')
-                  KEY="icon-parity/$BRANCH/index.html"
+                  # Keyed on the run, not the branch alone: a branch-only key means a second run
+                  # today overwrites the page that an earlier PR comment still links to, so that
+                  # comment quietly starts showing a different run's result. `run_id` is unique
+                  # per run and already monotonic, so it sorts chronologically for free.
+                  KEY="icon-parity/$BRANCH/${{ github.run_id }}/index.html"
                   aws s3 cp "$CACHE/report.html" "s3://${{ secrets.BUCKET_NAME }}/$KEY"
                   URL="http://${{ secrets.BUCKET_NAME }}/$KEY"
                   echo "url=$URL" >> "$GITHUB_OUTPUT"
@@ -131,10 +128,11 @@ jobs:
                       | :--- | :--- | :--- | :--- | :--- |
                       | ${{ steps.counts.outputs.total }} | ${{ steps.counts.outputs.mono }} | ${{ steps.counts.outputs.failed }} | ${{ steps.counts.outputs.mono_worst }} px | [열기 ↗︎](${{ steps.s3.outputs.url }}) |
 
-                      실패한 아이콘마다 Figma / 코드 / diff가 나란히 보입니다. 컬러 아이콘 ${{ steps.counts.outputs.colour }}개는 게이트 밖입니다 (최대 ${{ steps.counts.outputs.colour_worst }} px).
-                      판정 기준 `> ${{ steps.counts.outputs.threshold }} diff px`의 근거는 `scripts/icon-extractor/src/parity/lib.ts` 주석에 있습니다.
-
                       [워크플로 실행 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                  # Same author as the visual-regression comment — both land on the same PR, and
+                  # the repo already reserves the default token for machine work rather than
+                  # anything a reviewer reads.
+                  GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
 
             - name: Fail if parity failed
               if: steps.compare.outcome == 'failure'
