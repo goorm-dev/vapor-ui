@@ -1,6 +1,10 @@
+import type {
+    GetFileNodesQueryParams,
+    GetFileNodesResponse,
+    GetImagesQueryParams,
+    GetImagesResponse,
+} from '@figma/rest-api-spec';
 import process from 'node:process';
-
-import type { GetFileNodesResponse, GetImageResponse } from './types';
 
 const BASE_URL = 'https://api.figma.com/v1';
 
@@ -35,33 +39,33 @@ const getFileNodes = ({
 }: {
     fileKey: string;
     nodeIds: string[];
-    depth?: number;
+    depth?: GetFileNodesQueryParams['depth'];
 }) =>
     request<GetFileNodesResponse>(
         `${BASE_URL}/files/${fileKey}/nodes?ids=${idList(nodeIds)}&depth=${depth}`,
     );
 
 /**
- * GET image
+ * GET images — renders the nodes and returns one export URL per node, not the asset itself.
  *
  * @link https://www.figma.com/developers/api#get-images-endpoint
  */
-const getImage = ({
+const getImages = ({
     fileKey,
     nodeIds,
-    format = 'svg',
+    format,
     scale,
 }: {
     fileKey: string;
     nodeIds: string[];
-    format?: string;
+    format: GetImagesQueryParams['format'];
     /** Raster scale, 0.01 ~ 4. Ignored by Figma for `format=svg`. */
-    scale?: number;
+    scale?: GetImagesQueryParams['scale'];
 }) =>
-    request<GetImageResponse>(
+    request<GetImagesResponse>(
         `${BASE_URL}/images/${fileKey}?ids=${idList(nodeIds)}&format=${format}&svg_include_id=false${
             scale ? `&scale=${scale}` : ''
         }`,
     );
 
-export { getFileNodes, getImage };
+export { getFileNodes, getImages };
