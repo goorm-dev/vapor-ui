@@ -62,12 +62,11 @@ jobs:
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
 
-                  # Ensure we have the latest main branch
-                  git fetch origin main
-                  git checkout main
-                  git pull origin main
-
-                  # Reset the fixed branch onto the latest main, discarding whatever it held.
+                  # Reset the fixed branch onto the ref this run checked out, discarding whatever
+                  # it held. `switch -C` only renames the current HEAD, so it carries the generated
+                  # files across untouched. Re-pulling main here would buy the few minutes of
+                  # freshness since checkout, at the cost of a merge that fails outright against a
+                  # working tree dirty with those files.
                   # Safe because the sync script rewrites every icon from Figma each run.
                   git switch -C "$BRANCH_NAME"
 
