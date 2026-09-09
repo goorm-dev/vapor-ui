@@ -54,7 +54,7 @@ const resolveSvgUrls = async ({
  * Download the SVG text behind an export URL.
  */
 const downloadSvg = async (url: string): Promise<string> => {
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: AbortSignal.timeout(30_000) });
     if (!response.ok) {
         throw new Error(`Failed to fetch SVG: ${response.status} ${response.statusText}`);
     }

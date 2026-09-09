@@ -4,9 +4,14 @@ import type { GetFileNodesResponse, GetImageResponse } from './types';
 
 const BASE_URL = 'https://api.figma.com/v1';
 
+// Node fetch has no default timeout: an upstream that stalls after sending headers would hang the
+// whole CI job. One wall-clock deadline covers both connect and body — responses here are small.
+const TIMEOUT_MS = 30_000;
+
 const request = async <T>(url: string): Promise<T> => {
     const result = await fetch(url, {
         headers: { 'X-FIGMA-TOKEN': process.env.FIGMA_TOKEN ?? '' },
+        signal: AbortSignal.timeout(TIMEOUT_MS),
     });
     if (!result.ok) {
         throw new Error(`Figma API error: ${result.status} ${result.statusText}`);

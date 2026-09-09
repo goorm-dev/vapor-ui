@@ -66,6 +66,8 @@ const message = {
     ],
 };
 
+// The webhook URL is a repo secret set by admins, not attacker input, so its protocol is not
+// validated here. Enforce `https:` if it ever becomes settable from a less trusted source.
 const response = await fetch(SLACK_GDS_ALARM_WEBHOOK_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
