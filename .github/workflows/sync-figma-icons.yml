@@ -72,7 +72,12 @@ jobs:
                   git switch -C "$BRANCH_NAME"
 
                   git add packages/icons/src/ .changeset/
-                  git commit -m "feat: sync icons from Figma
+                  # `--no-verify`: the generated icons and the changeset are already
+                  # prettier-formatted by the extractor, and the pull request gets linted by CI.
+                  # The pre-commit hook would lint 18 packages this commit never touches, and it
+                  # fails outright when the run is dispatched from a branch whose workspace layout
+                  # differs from main.
+                  git commit --no-verify -m "feat: sync icons from Figma
 
                   🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
