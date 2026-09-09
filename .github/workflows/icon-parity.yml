@@ -68,7 +68,11 @@ jobs:
                   pnpm --filter @repo/icon-extractor parity:fetch --type=basic
                   pnpm --filter @repo/icon-extractor parity:fetch --type=symbol
                   pnpm --filter @repo/icon-extractor parity:render
-                  pnpm --filter @repo/icon-extractor parity:compare
+                  # TEMPORARY — remove once the S3 report is confirmed to render its images.
+                  # `--only` draws every requested row whether it passes or fails, so a green run
+                  # still produces a page with Figma / code / diff images on it.
+                  pnpm --filter @repo/icon-extractor parity:compare \
+                      --only=DividerOutlineIcon,ImagePackOutlineIcon,AccessibilityOutlineIcon
 
             # compare.ts already computed these, so read them back instead of re-deriving them
             # from the rendered report.

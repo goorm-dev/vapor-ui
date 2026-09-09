@@ -192,6 +192,10 @@ jobs:
                   fi
 
             - name: Create Pull Request
+              # The `pr_number` job output reads this id. A missing step id is not an error in
+              # Actions — the expression just evaluates to empty — so losing it silently stopped
+              # the parity report from ever reaching the sync PR.
+              id: create_pr
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
@@ -255,13 +259,20 @@ jobs:
                       EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
                       if [[ -n "$EXISTING_PR" ]]; then
                           gh pr edit "$EXISTING_PR" --body-file pr_body.txt
+                          PR_NUMBER="$EXISTING_PR"
                       else
-                          gh pr create \
+                          # `gh pr create` prints the new PR's URL, whose last segment is its number.
+                          PR_URL=$(gh pr create \
                           --title "feat: sync icons from Figma" \
                           --body-file pr_body.txt \
                           --base main \
-                          --head "$BRANCH_NAME"
+                          --head "$BRANCH_NAME")
+                          PR_NUMBER="${PR_URL##*/}"
                       fi
+                      # The parity job needs this to know where to comment. Emitting it only on
+                      # the no-changes path left the normal case — a PR that just changed — with
+                      # no number at all.
+                      echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
                       # Clean up temporary file
                       rm -f pr_body.txt
