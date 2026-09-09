@@ -1,0 +1,64 @@
+{
+    "slug": "dialog",
+    "section": "related",
+    "frameNodeId": "2541:35048",
+    "sectionTitle": "Related components",
+    "blocks": [
+        {
+            "id": "3035:15317",
+            "group": "Dialog vs Alert Dialog",
+            "variant": "basic",
+            "title": null,
+            "subtitle": "Dialog",
+            "description": "사용자로부터 폼 입력을 받아야 하거나, 작업과 관련된 정보를 보여줄 때\nDialog를 사용합니다.",
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Dialog",
+                "sectionSubtitleReading": null,
+                "body": "사용자로부터 폼 입력을 받아야 하거나, 작업과 관련된 정보를 보여줄 때\nDialog를 사용합니다."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": "I3035:15317;3027:8766;3035:15456",
+                    "type": "Dialog",
+                    "description": null,
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"새 그룹 만들기\" action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3035:15364",
+            "group": "Dialog vs Alert Dialog",
+            "variant": "basic",
+            "title": null,
+            "subtitle": "Alert Dialog",
+            "description": "사용자의 결정을 한 번 더 확인하거나, 되돌릴 수 없는 작업을 수행하기 전\nAlert dialog를 사용합니다.",
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Alert Dialog",
+                "sectionSubtitleReading": null,
+                "body": "사용자의 결정을 한 번 더 확인하거나, 되돌릴 수 없는 작업을 수행하기 전\nAlert dialog를 사용합니다."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": "I3035:15364;3027:8766;3035:15410",
+                    "type": "AlertDialog",
+                    "description": null,
+                    "code": {
+                        "source": "code-connect",
+                        "component": "AlertDialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<AlertDialog.Root\n  type=\"critical\"\n  title=\"템플릿을 삭제하시겠어요?\"\n  description=\"템플릿을 삭제해도 이미 생성된 모집·설문폼은 유지됩니다.\"\n  cancel={/* … */}\n  action={/* … */}\n/>"
+                    }
+                }
+            ]
+        }
+    ]
+}
