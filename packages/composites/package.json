@@ -89,7 +89,7 @@
         "rolldown": "^1.1.4",
         "tinyglobby": "^0.2.17",
         "typescript": "catalog:",
-        "vitest": "^3.2.7"
+        "vitest": "^4.0.0"
     },
     "peerDependencies": {
         "@vapor-ui/core": "workspace:^",
