@@ -23,7 +23,12 @@
                     "nodeId": "I3027:12044;3027:11896;3027:12390",
                     "type": "Dialog",
                     "description": null,
-                    "code": null
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root\n  size=\"md\"\n  title=\"시험 설정 모드\"\n  description=\"아래 중 원하는 설정 모드를 선택한 후 시작해 주세요.\"\n  action={/* … */}\n>\n  {/* body */}\n</Dialog.Root>"
+                    }
                 }
             ]
         },
@@ -46,7 +51,12 @@
                     "nodeId": "I3027:12616;3027:11896;3027:12672",
                     "type": "Dialog",
                     "description": null,
-                    "code": null
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"문제 미리보기\">\n  {/* body */}\n</Dialog.Root>"
+                    }
                 }
             ]
         },

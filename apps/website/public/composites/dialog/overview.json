@@ -6,10 +6,10 @@
     "blocks": [
         {
             "id": "3027:10009",
-            "group": "Properties",
+            "group": "Size",
             "variant": "basic",
-            "title": "Size",
-            "subtitle": null,
+            "title": null,
+            "subtitle": "Size",
             "description": "3가지 사이즈 속성을 제공합니다. 다이얼로그 콘텐츠 양에 따라 가장 적합한 크기를 골라 사용합니다.",
             "raw": {
                 "sectionTitle": null,
@@ -23,7 +23,12 @@
                     "nodeId": "I3027:10009;3027:8766;3027:10027",
                     "type": "(Popup)",
                     "description": null,
-                    "code": null
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "// Raw Figma markup — (Popup) primitive, no Code Connect mapping\n// Refer to design tokens: --vapor-typography-*, --vapor-color-*, --vapor-size-*"
+                    }
                 }
             ]
         },
@@ -32,11 +37,11 @@
             "group": "Properties",
             "variant": "basic",
             "title": null,
-            "subtitle": null,
+            "subtitle": "Title",
             "description": "다이얼로그를 설명하는 속성입니다. 필수적으로 작성해야 하는 속성입니다.",
             "raw": {
                 "sectionTitle": null,
-                "sectionSubtitle": null,
+                "sectionSubtitle": "Title",
                 "sectionSubtitleReading": null,
                 "body": "다이얼로그를 설명하는 속성입니다. 필수적으로 작성해야 하는 속성입니다."
             },
@@ -46,7 +51,12 @@
                     "nodeId": "I3027:10306;3027:8766;3027:10299",
                     "type": "Dialog",
                     "description": null,
-                    "code": null
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"Title\" action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
                 }
             ]
         },
@@ -55,11 +65,11 @@
             "group": "Properties",
             "variant": "basic",
             "title": null,
-            "subtitle": null,
+            "subtitle": "Description",
             "description": "다이얼로그의 설명을 보충하는 속성입니다. 상황에 따라 디스크립션을 표시하지 않을 수 있습니다.",
             "raw": {
                 "sectionTitle": null,
-                "sectionSubtitle": null,
+                "sectionSubtitle": "Description",
                 "sectionSubtitleReading": null,
                 "body": "다이얼로그의 설명을 보충하는 속성입니다. 상황에 따라 디스크립션을 표시하지 않을 수 있습니다."
             },
@@ -69,7 +79,12 @@
                     "nodeId": "I3027:10693;3027:8766;3027:10692",
                     "type": "Dialog",
                     "description": null,
-                    "code": null
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"Title\" description=\"Description\" action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
                 }
             ]
         },
@@ -77,8 +92,8 @@
             "id": "3027:10740",
             "group": "Properties",
             "variant": "basic",
-            "title": "Action button",
-            "subtitle": null,
+            "title": null,
+            "subtitle": "Action button",
             "description": "작성예정",
             "raw": {
                 "sectionTitle": null,
@@ -92,7 +107,12 @@
                     "nodeId": "I3027:10740;3027:8766;3035:42497",
                     "type": "Dialog",
                     "description": null,
-                    "code": null
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"Title\" description=\"Description\" action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
                 }
             ]
         },
@@ -100,8 +120,8 @@
             "id": "3027:10787",
             "group": "Properties",
             "variant": "basic",
-            "title": "Assistive button",
-            "subtitle": null,
+            "title": null,
+            "subtitle": "Assistive button",
             "description": "작성예정",
             "raw": {
                 "sectionTitle": null,
@@ -115,16 +135,21 @@
                     "nodeId": "I3027:10787;3027:8766;3035:42538",
                     "type": "Dialog",
                     "description": null,
-                    "code": null
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"Title\" description=\"Description\" assistive={/* … */} action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
                 }
             ]
         },
         {
             "id": "3027:11135",
-            "group": "Properties",
+            "group": "작성예정",
             "variant": "basic",
-            "title": "Height",
-            "subtitle": null,
+            "title": null,
+            "subtitle": "Height",
             "description": "다이얼로그의 최대 높이(Max-height)는 전체 화면 높이의 80%로 설정됩니다.",
             "raw": {
                 "sectionTitle": null,
@@ -138,16 +163,21 @@
                     "nodeId": "I3027:11135;3027:8766;3027:11130",
                     "type": "Dialog",
                     "description": null,
-                    "code": null
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"Title\" description=\"Description\" action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
                 }
             ]
         },
         {
             "id": "3027:11551",
-            "group": "Properties",
+            "group": "작성예정",
             "variant": "basic",
-            "title": "Scroll behaivor",
-            "subtitle": null,
+            "title": null,
+            "subtitle": "Scroll behaivor",
             "description": "작성예정",
             "raw": {
                 "sectionTitle": null,

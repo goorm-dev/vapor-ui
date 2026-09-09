@@ -1,7 +1,8 @@
 dist
 .turbo
 node_modules
-
+public/**
+!public/**/*.json
 pnpm-lock.yaml
 **/.source
 

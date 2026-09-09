@@ -142,7 +142,7 @@ Sample {
 ## Step 4 — 검증
 
 1. 4개 JSON `sectionTitle` 값이 `"Overview"` / `"Best practices"` / `"Examples"` / `"Related components"`.
-2. `bestPractices.json`의 columns variant block은 `samples.length === 2`이고 각 `label`이 `"Do"`, `"Don't"`.
+2. `best-practices.json`의 columns variant block은 `samples.length === 2`이고 각 `label`이 `"Do"`, `"Don't"`.
 3. 모든 `samples[*].code`가 세팅되었거나 명시적으로 `null`.
 
 ## Notes — Overview의 Size 그룹 통일
