@@ -77,7 +77,9 @@ jobs:
               if: always()
               run: |
                   if [[ ! -f "$CACHE/report.json" ]]; then
-                      echo 'ran=false' >> "$GITHUB_OUTPUT"
+                      # rendered must be set here too: an unset output is '', and '' != '0'
+                      # would send the upload after a page that was never written.
+                      printf 'ran=false\nrendered=0\n' >> "$GITHUB_OUTPUT"
                       echo 'No parity report — the comparison never ran.' >> "$GITHUB_STEP_SUMMARY"
                       exit 0
                   fi
@@ -86,11 +88,13 @@ jobs:
                       jq -r '"total=\(.total)",
                              "failed=\(.failed)",
                              "mono=\(.mono.count)",
-                             "mono_worst=\(.mono.worst)"' "$CACHE/report.json"
+                             "mono_worst=\(.mono.worst)",
+                             "rendered=\(.rendered)"' "$CACHE/report.json"
                   } >> "$GITHUB_OUTPUT"
 
+            # A green run draws no rows, so there is no page worth an assume-role and an upload.
             - name: Configure AWS credentials
-              if: steps.counts.outputs.ran == 'true'
+              if: steps.counts.outputs.rendered != '0'
               uses: aws-actions/configure-aws-credentials@v4
               with:
                   role-to-assume: ${{ secrets.AWS_IAM_ROLE_NAME }}
@@ -101,7 +105,7 @@ jobs:
             # is the whole report. `index.html` is the bucket website's default document.
             - name: Upload report to S3
               id: s3
-              if: steps.counts.outputs.ran == 'true'
+              if: steps.counts.outputs.rendered != '0'
               run: |
                   BRANCH=$(echo "${{ github.head_ref || github.ref_name }}" | tr '/' '-')
                   # Keyed on the run, not the branch alone: a branch-only key means a second run
@@ -126,7 +130,7 @@ jobs:
 
                       | 전체 | 게이트 대상 (mono) | 실패 | mono 최대 diff | 리포트 |
                       | :--- | :--- | :--- | :--- | :--- |
-                      | ${{ steps.counts.outputs.total }} | ${{ steps.counts.outputs.mono }} | ${{ steps.counts.outputs.failed }} | ${{ steps.counts.outputs.mono_worst }} px | [열기 ↗︎](${{ steps.s3.outputs.url }}) |
+                      | ${{ steps.counts.outputs.total }} | ${{ steps.counts.outputs.mono }} | ${{ steps.counts.outputs.failed }} | ${{ steps.counts.outputs.mono_worst }} px | ${{ steps.counts.outputs.rendered != '0' && format('[열기 ↗︎]({0})', steps.s3.outputs.url) || '—' }} |
 
                       [워크플로 실행 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
                   # Same author as the visual-regression comment — both land on the same PR, and

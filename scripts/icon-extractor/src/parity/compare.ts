@@ -93,6 +93,10 @@ const failures = rows.filter((row) => row.failed);
 const mono = rows.filter((row) => !row.isColorIcon);
 const color = rows.filter((row) => row.isColorIcon);
 const worst = (group: Row[]) => Math.max(0, ...group.map((row) => row.diffPixels));
+// What the HTML page will actually draw. An explicit --only shows every requested icon; otherwise
+// only failures carry images. The workflow uploads the page only when this is non-empty, so a
+// green run never hands a reviewer a link to an empty table.
+const drawn = args.only ? rows : failures;
 
 // The headline counts live here, not only in the rendered page: the workflow reads them straight
 // out of this file for the PR comment. Re-parsing a rendered report to recover numbers we already
@@ -103,6 +107,7 @@ const report = {
     total: rows.length,
     expected: names.length,
     failed: failures.length,
+    rendered: drawn.length,
     mono: { count: mono.length, worst: worst(mono) },
     colour: { count: color.length, worst: worst(color) },
     skipped,
@@ -113,14 +118,13 @@ const report = {
 await fs.writeFile(path.join(CACHE_DIR, 'report.json'), JSON.stringify(report, null, 2));
 
 // Self-contained HTML (images inlined) so the one file the workflow uploads to S3 opens on its
-// own. Only failing rows carry images (an explicit --only shows every requested icon); the plain
-// lists below cover the other failure causes.
+// own. The plain lists below cover the failure causes that have no image to show.
 const dataUri = async (file: string) =>
     `data:image/png;base64,${(await fs.readFile(file)).toString('base64')}`;
 const cell = async (dir: string, name: string) =>
     `<td><img src="${await dataUri(path.join(dir, `${name}.png`))}"></td>`;
 const htmlRows = await Promise.all(
-    (args.only ? rows : failures).map(
+    drawn.map(
         async (row) =>
             `<tr><th>${row.name}<br><small>${row.diffPixels} px</small></th>` +
             (await cell(baselineDir, row.name)) +
