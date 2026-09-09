@@ -13,8 +13,6 @@
  */
 import process from 'node:process';
 
-import { sendWebhookMessage } from '~/integrations/slack/api';
-
 const {
     SLACK_GDS_ALARM_WEBHOOK_URL,
     WORKFLOW_STATUS,
@@ -26,6 +24,15 @@ const {
 
 if (!SLACK_GDS_ALARM_WEBHOOK_URL) {
     console.error('❌ 오류: SLACK_GDS_ALARM_WEBHOOK_URL 환경 변수가 설정되지 않았습니다.');
+    process.exit(1);
+}
+// The webhook URL carries its own credential in the path, so `http:` would put it on the wire in
+// cleartext. Never echo the value on failure: an uncaught URL parse error prints its input.
+if (
+    !URL.canParse(SLACK_GDS_ALARM_WEBHOOK_URL) ||
+    new URL(SLACK_GDS_ALARM_WEBHOOK_URL).protocol !== 'https:'
+) {
+    console.error('❌ 오류: SLACK_GDS_ALARM_WEBHOOK_URL은 https:// URL이어야 합니다.');
     process.exit(1);
 }
 
@@ -68,5 +75,12 @@ const message = {
     ],
 };
 
-await sendWebhookMessage(SLACK_GDS_ALARM_WEBHOOK_URL, message);
+const response = await fetch(SLACK_GDS_ALARM_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(message),
+});
+if (!response.ok) {
+    throw new Error(`Slack webhook error: ${response.status} ${response.statusText}`);
+}
 console.log('✅ Slack 알림이 성공적으로 전송되었습니다.');

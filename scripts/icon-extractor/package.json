@@ -1,0 +1,39 @@
+{
+    "name": "@repo/icon-extractor",
+    "version": "0.0.1",
+    "private": true,
+    "description": "Internal tool that extracts icons from Figma and generates @vapor-ui/icons components",
+    "type": "module",
+    "scripts": {
+        "extract": "tsx --env-file-if-exists=.env ./src/cli.ts",
+        "format": "prettier --write \"./src/**/*.{ts,md}\"",
+        "format:check": "prettier --check \"./src/**/*.{ts,md}\"",
+        "lint": "eslint ./src",
+        "notify:slack": "tsx ./src/slack/notify.ts",
+        "sync-icons:basic": "pnpm extract --type=basic",
+        "sync-icons:symbol": "pnpm extract --type=symbol",
+        "test": "vitest --run",
+        "typecheck": "tsc --noEmit",
+        "write-release-notes": "tsx ./src/summary/write-release-notes.ts"
+    },
+    "dependencies": {
+        "@svgr/core": "^8.1.0",
+        "@svgr/plugin-jsx": "^8.1.0",
+        "@svgr/plugin-svgo": "^8.1.0",
+        "lodash-es": "^4.18.1",
+        "p-limit": "^6.2.0",
+        "picocolors": "^1.1.1",
+        "prettier": "^3.9.6"
+    },
+    "devDependencies": {
+        "@figma/rest-api-spec": "^0.42.0",
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/lodash-es": "^4.17.12",
+        "@types/node": "^22.20.1",
+        "eslint": "catalog:",
+        "tsx": "^4.23.13",
+        "typescript": "catalog:",
+        "vitest": "catalog:"
+    }
+}
