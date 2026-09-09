@@ -1,8 +1,8 @@
 {
     "codeConnect": {
-        "parser": "react",
         "language": "typescript",
-        "include": ["src/**/*.figma.ts"]
+        "include": ["src/**/*.figma.ts"],
+        "label": "React"
     },
     "fileKey": "he4tiAGOKGPl0Fm56ZpJsy",
     "packageImportPath": "@vapor-ui/composites"
