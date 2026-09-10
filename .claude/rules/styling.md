@@ -122,6 +122,28 @@ const { variant, size, orientation } = useTabsContext();
 
 Context is used when the same variant value must style multiple sub-parts simultaneously. The sub-part's Props type uses `Omit` to remove Context-managed props, preventing users from passing them directly.
 
+#### Typing Root-owned variants
+
+Type the Root's variants from the recipe of the sub-part that actually consumes them. Do not declare a Root recipe just to host the type, and do not hand-write the union — the recipe is the single source and the type must follow it.
+
+Alias the derived type once in `*.tsx` and use that alias for both `Root.Props` and the Context:
+
+```ts
+// dialog.tsx — Root has no recipe; Popup consumes the variants
+type DialogVariants = DialogPopupVariants;
+type DialogContext = DialogVariants;
+
+// tabs.tsx — variants span two sub-parts
+type TabsVariants = ListVariants & ButtonVariants;
+
+// progress-bar.tsx — each sub-part contributes one key
+type ProgressBarVariants = Pick<TrackVariants, 'size'> & Pick<DescriptionVariants, 'type'>;
+```
+
+Only when the Root element itself is styled by the recipe (`Toolbar`, `RadioGroup`, `SegmentedControl`) does the alias come from `RootVariants`.
+
+Recipe variant keys are optional. If Root fills the defaults before writing to Context, type the Context as `Required<XxxVariants>` so sub-parts read them without re-applying defaults.
+
 ## CSS Variables — Component-scoped Tokens
 
 Use `createVar` to decouple color palette from visual variant within a single recipe. The palette variant sets the variable values; the visual variant consumes them — this avoids N×M `compoundVariants` for every palette × variant combination.
