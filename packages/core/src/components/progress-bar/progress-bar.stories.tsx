@@ -36,6 +36,9 @@ export const TestBed: StoryObj<typeof ProgressBar.Root> = {
             <Bar label="sm / default" size="sm" value={42} />
             <Bar label="md / default" size="md" value={42} />
             <Bar label="lg / default" size="lg" value={42} />
+            <Bar label="sm / indeterminate" size="sm" value={null} />
+            <Bar label="md / indeterminate" size="md" value={null} />
+            <Bar label="lg / indeterminate" size="lg" value={null} />
             <Bar label="sm / error" size="sm" value={42} type="error" />
             <Bar label="md / error" size="md" value={42} type="error" />
             <Bar

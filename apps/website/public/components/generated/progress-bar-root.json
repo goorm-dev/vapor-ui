@@ -30,7 +30,7 @@
                 "error"
             ],
             "required": false,
-            "description": "작업의 상태입니다. `error`는 Description을 danger 색으로 바꾸고 Track의 불투명도를 낮추며 Indicator를 그리지 않습니다.",
+            "description": "작업의 상태입니다. `error`는 Description을 danger 색으로 바꾸고 Indicator로 Track을 끝까지 채웁니다.",
             "defaultValue": "default"
         },
         {

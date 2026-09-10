@@ -1,7 +1,7 @@
 {
     "name": "IndicatorPrimitive",
     "displayName": "ProgressBar.IndicatorPrimitive",
-    "description": "Track에서 채워진 부분입니다. `<div>` 요소로 렌더링됩니다.",
+    "description": "Track에서 채워진 부분입니다. `type`이 `error`이면 Track을 끝까지 채웁니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",

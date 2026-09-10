@@ -1,11 +1,12 @@
 'use client';
 
 import type { ReactElement, RefObject } from 'react';
-import { forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Progress as BaseProgress } from '@base-ui/react/progress';
 
 import { useRenderElement } from '~/hooks/use-render-element';
+import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -181,7 +182,7 @@ ProgressBarTrackPrimitive.displayName = 'ProgressBar.TrackPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * The filled portion of the track, omitted entirely when `type` is `'error'` so a failed task never reads as progress. Renders a `<div>` element.
+ * The filled portion of the track, filling it end to end when `type` is `'error'`. Renders a `<div>` element.
  */
 export const ProgressBarIndicatorPrimitive = forwardRef<
     HTMLDivElement,
@@ -190,12 +191,10 @@ export const ProgressBarIndicatorPrimitive = forwardRef<
     const { className, ...componentProps } = resolveStyles(props);
     const { type } = useProgressBarContext();
 
-    if (type === 'error') return null;
-
     return (
         <BaseProgress.Indicator
             ref={ref}
-            className={cn(styles.indicator, className)}
+            className={cn(styles.indicator({ type }), className)}
             {...componentProps}
         />
     );
@@ -254,8 +253,7 @@ export const ProgressBarDescription = forwardRef<HTMLSpanElement, ProgressBarDes
         const { className, render, id: idProp, ...componentProps } = resolveStyles(props);
         const { type, status, registerDescription } = useProgressBarContext();
 
-        const fallbackId = useId();
-        const id = idProp ?? fallbackId;
+        const id = useVaporId(idProp);
 
         useEffect(() => registerDescription(id), [id, registerDescription]);
 
@@ -275,6 +273,7 @@ export const ProgressBarDescription = forwardRef<HTMLSpanElement, ProgressBarDes
         });
     },
 );
+
 ProgressBarDescription.displayName = 'ProgressBar.Description';
 
 /* -----------------------------------------------------------------------------------------------*/

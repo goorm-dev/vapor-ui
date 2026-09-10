@@ -299,11 +299,10 @@ describe('<ProgressBar />', () => {
     });
 
     describe('type="error"', () => {
-        it('should render no indicator', () => {
+        it('should fill the whole track with the indicator', () => {
             const { container } = render(<ProgressBarTest value={42} type="error" />);
 
-            expect(getTrack(container)).toBeInTheDocument();
-            expect(getIndicator(container)).toBeNull();
+            expect(getIndicator(container)!.className).toMatch(/type_error/);
         });
 
         it('should mark the track with the error variant', () => {

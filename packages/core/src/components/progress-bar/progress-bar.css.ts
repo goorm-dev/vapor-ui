@@ -5,15 +5,29 @@ import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
+/** Width of the indeterminate segment, as a share of the track. */
+const SEGMENT_WIDTH = 40;
+/**
+ * Where the segment's leading edge starts and ends a sweep, as a share of the track. It starts a
+ * tenth of the track clear of the left edge and ends well past the right, so each crossing is
+ * followed by a rest on an empty track.
+ */
+const SWEEP_FROM = -(SEGMENT_WIDTH + 10);
+const SWEEP_TO = 220;
+/** One sweep. Held constant so `SEGMENT_WIDTH` changes the distance covered, never the tempo. */
+const SWEEP_DURATION = '1.5s';
+
+// `translateX` resolves against the segment's own width, so a track-relative offset has to be
+// divided by that share to survive a change to `SEGMENT_WIDTH`.
+const toSegment = (track: number) => `${Number(((track / SEGMENT_WIDTH) * 100).toFixed(2))}%`;
+
 const sweep = keyframes({
-    '0%': { transform: 'translateX(-100%)' },
-    '100%': { transform: 'translateX(333.33%)' },
+    '0%': { transform: `translateX(${toSegment(SWEEP_FROM)})` },
+    '100%': { transform: `translateX(${toSegment(SWEEP_TO)})` },
 });
 
-/** Width of the indeterminate segment, as a share of the track. */
-const SEGMENT_WIDTH = '30%';
-/** Resting position of the segment when motion is reduced. */
-const SEGMENT_REST = '35%';
+/** Resting position of the segment when motion is reduced: centred in the track. */
+const SEGMENT_REST = `${(100 - SEGMENT_WIDTH) / 2}%`;
 
 export const root = componentStyle({
     display: 'grid',
@@ -93,31 +107,53 @@ export const track = componentRecipe({
          */
         type: {
             default: {},
-            error: { opacity: 0.32 },
+            error: {},
         },
     },
 });
 
-export const indicator = componentStyle({
-    borderRadius: vars.size.borderRadius['900'],
-    backgroundImage: `linear-gradient(to right, ${vars.color.blue['200']}, ${vars.color.background['primary']})`,
-    height: 'inherit',
+export const indicator = componentRecipe({
+    base: {
+        borderRadius: vars.size.borderRadius['900'],
+        backgroundColor: vars.color.background['primary'],
+        height: 'inherit',
 
-    selectors: {
-        '&[data-indeterminate]': {
-            position: 'absolute',
-            insetInlineStart: 0,
-            width: SEGMENT_WIDTH,
-            animation: `${sweep} 1.5s ease-in-out infinite`,
+        selectors: {
+            '&[data-indeterminate]': {
+                position: 'absolute',
+                insetInlineStart: 0,
+                width: `${SEGMENT_WIDTH}%`,
+                animation: `${sweep} ${SWEEP_DURATION} linear infinite`,
+            },
+        },
+
+        '@media': {
+            '(prefers-reduced-motion: reduce)': {
+                selectors: {
+                    '&[data-indeterminate]': {
+                        insetInlineStart: SEGMENT_REST,
+                        animation: 'none',
+                    },
+                },
+            },
         },
     },
 
-    '@media': {
-        '(prefers-reduced-motion: reduce)': {
-            selectors: {
-                '&[data-indeterminate]': {
-                    insetInlineStart: SEGMENT_REST,
-                    animation: 'none',
+    defaultVariants: { type: 'default' },
+    variants: {
+        /**
+         * Tone of the indicator.
+         * @default 'default'
+         */
+        type: {
+            default: {},
+            // base-ui writes `width` inline, so the fill rides on `min-width`, which outranks it
+            // without an `!important`.
+            error: {
+                backgroundColor: vars.color.background['danger'],
+                minWidth: '100%',
+                selectors: {
+                    '&[data-indeterminate]': { insetInlineStart: 0, animation: 'none' },
                 },
             },
         },
@@ -126,3 +162,4 @@ export const indicator = componentStyle({
 
 export type TrackVariants = NonNullable<RecipeVariants<typeof track>>;
 export type DescriptionVariants = NonNullable<RecipeVariants<typeof description>>;
+export type IndicatorVariants = NonNullable<RecipeVariants<typeof indicator>>;
