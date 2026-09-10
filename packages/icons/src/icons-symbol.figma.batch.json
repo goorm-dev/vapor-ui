@@ -1,0 +1,1295 @@
+{
+    "templateFile": "./icon.figma.batch.ts",
+    "components": [
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1349",
+            "component": "AfghanistanColorIcon",
+            "source": "src/components/symbol-icons/AfghanistanColorIcon/AfghanistanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1284",
+            "component": "AlbaniaColorIcon",
+            "source": "src/components/symbol-icons/AlbaniaColorIcon/AlbaniaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1363",
+            "component": "AlgeriaColorIcon",
+            "source": "src/components/symbol-icons/AlgeriaColorIcon/AlgeriaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1417",
+            "component": "AndorraColorIcon",
+            "source": "src/components/symbol-icons/AndorraColorIcon/AndorraColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1419",
+            "component": "AngolaColorIcon",
+            "source": "src/components/symbol-icons/AngolaColorIcon/AngolaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1414",
+            "component": "AntiguaAndBarbudaColorIcon",
+            "source": "src/components/symbol-icons/AntiguaAndBarbudaColorIcon/AntiguaAndBarbudaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1772-1028",
+            "component": "AppleIcon",
+            "source": "src/components/symbol-icons/AppleIcon/AppleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1446",
+            "component": "ArgentinaColorIcon",
+            "source": "src/components/symbol-icons/ArgentinaColorIcon/ArgentinaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1365",
+            "component": "ArmeniaColorIcon",
+            "source": "src/components/symbol-icons/ArmeniaColorIcon/ArmeniaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1318",
+            "component": "AustraliaColorIcon",
+            "source": "src/components/symbol-icons/AustraliaColorIcon/AustraliaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1300",
+            "component": "AustriaColorIcon",
+            "source": "src/components/symbol-icons/AustriaColorIcon/AustriaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-102",
+            "component": "AwsIcon",
+            "source": "src/components/symbol-icons/AwsIcon/AwsIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1418",
+            "component": "AzerbaijanColorIcon",
+            "source": "src/components/symbol-icons/AzerbaijanColorIcon/AzerbaijanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-108",
+            "component": "AzureIcon",
+            "source": "src/components/symbol-icons/AzureIcon/AzureIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1319",
+            "component": "BahamasColorIcon",
+            "source": "src/components/symbol-icons/BahamasColorIcon/BahamasColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1317",
+            "component": "BahrainColorIcon",
+            "source": "src/components/symbol-icons/BahrainColorIcon/BahrainColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1360",
+            "component": "BangladeshColorIcon",
+            "source": "src/components/symbol-icons/BangladeshColorIcon/BangladeshColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1366",
+            "component": "BarbadosColorIcon",
+            "source": "src/components/symbol-icons/BarbadosColorIcon/BarbadosColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1385",
+            "component": "BelarusColorIcon",
+            "source": "src/components/symbol-icons/BelarusColorIcon/BelarusColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1309",
+            "component": "BelgiumColorIcon",
+            "source": "src/components/symbol-icons/BelgiumColorIcon/BelgiumColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1346",
+            "component": "BelizeColorIcon",
+            "source": "src/components/symbol-icons/BelizeColorIcon/BelizeColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1268",
+            "component": "BeninColorIcon",
+            "source": "src/components/symbol-icons/BeninColorIcon/BeninColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1389",
+            "component": "BhutanColorIcon",
+            "source": "src/components/symbol-icons/BhutanColorIcon/BhutanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=561-494",
+            "component": "BitbucketIcon",
+            "source": "src/components/symbol-icons/BitbucketIcon/BitbucketIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1402-1015",
+            "component": "BlogColorIcon",
+            "source": "src/components/symbol-icons/BlogColorIcon/BlogColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1402-1011",
+            "component": "BlogIcon",
+            "source": "src/components/symbol-icons/BlogIcon/BlogIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1423",
+            "component": "BoliviaColorIcon",
+            "source": "src/components/symbol-icons/BoliviaColorIcon/BoliviaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1310",
+            "component": "BosniaAndHerzegovinaColorIcon",
+            "source": "src/components/symbol-icons/BosniaAndHerzegovinaColorIcon/BosniaAndHerzegovinaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1278",
+            "component": "BotswanaColorIcon",
+            "source": "src/components/symbol-icons/BotswanaColorIcon/BotswanaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1332",
+            "component": "BrazilColorIcon",
+            "source": "src/components/symbol-icons/BrazilColorIcon/BrazilColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1412",
+            "component": "BruneiColorIcon",
+            "source": "src/components/symbol-icons/BruneiColorIcon/BruneiColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1308",
+            "component": "BulgariaColorIcon",
+            "source": "src/components/symbol-icons/BulgariaColorIcon/BulgariaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1315",
+            "component": "BurkinaFasoColorIcon",
+            "source": "src/components/symbol-icons/BurkinaFasoColorIcon/BurkinaFasoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1269",
+            "component": "BurundiColorIcon",
+            "source": "src/components/symbol-icons/BurundiColorIcon/BurundiColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1378",
+            "component": "CambodiaColorIcon",
+            "source": "src/components/symbol-icons/CambodiaColorIcon/CambodiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1266",
+            "component": "CameroonColorIcon",
+            "source": "src/components/symbol-icons/CameroonColorIcon/CameroonColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1443",
+            "component": "CanadaColorIcon",
+            "source": "src/components/symbol-icons/CanadaColorIcon/CanadaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1277",
+            "component": "CapeVerdeColorIcon",
+            "source": "src/components/symbol-icons/CapeVerdeColorIcon/CapeVerdeColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1263",
+            "component": "CentralAfricanRepublicColorIcon",
+            "source": "src/components/symbol-icons/CentralAfricanRepublicColorIcon/CentralAfricanRepublicColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1264",
+            "component": "ChadColorIcon",
+            "source": "src/components/symbol-icons/ChadColorIcon/ChadColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=5310-75",
+            "component": "ChatgptIcon",
+            "source": "src/components/symbol-icons/ChatgptIcon/ChatgptIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1415",
+            "component": "ChileColorIcon",
+            "source": "src/components/symbol-icons/ChileColorIcon/ChileColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1370",
+            "component": "ChinaColorIcon",
+            "source": "src/components/symbol-icons/ChinaColorIcon/ChinaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1346-2954",
+            "component": "ChromeColorIcon",
+            "source": "src/components/symbol-icons/ChromeColorIcon/ChromeColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7474-157",
+            "component": "ChromeIcon",
+            "source": "src/components/symbol-icons/ChromeIcon/ChromeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1421",
+            "component": "ColombiaColorIcon",
+            "source": "src/components/symbol-icons/ColombiaColorIcon/ColombiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1259",
+            "component": "ComorosColorIcon",
+            "source": "src/components/symbol-icons/ComorosColorIcon/ComorosColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1333",
+            "component": "CookIslandsColorIcon",
+            "source": "src/components/symbol-icons/CookIslandsColorIcon/CookIslandsColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1330",
+            "component": "CostaRicaColorIcon",
+            "source": "src/components/symbol-icons/CostaRicaColorIcon/CostaRicaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1289",
+            "component": "CroatiaColorIcon",
+            "source": "src/components/symbol-icons/CroatiaColorIcon/CroatiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1407",
+            "component": "CubaColorIcon",
+            "source": "src/components/symbol-icons/CubaColorIcon/CubaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1288",
+            "component": "CyprusColorIcon",
+            "source": "src/components/symbol-icons/CyprusColorIcon/CyprusColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1439",
+            "component": "CzechRepublicColorIcon",
+            "source": "src/components/symbol-icons/CzechRepublicColorIcon/CzechRepublicColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1257",
+            "component": "DemocraticRepublicOfTheCongoColorIcon",
+            "source": "src/components/symbol-icons/DemocraticRepublicOfTheCongoColorIcon/DemocraticRepublicOfTheCongoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1299",
+            "component": "DenmarkColorIcon",
+            "source": "src/components/symbol-icons/DenmarkColorIcon/DenmarkColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7882-83",
+            "component": "DiscordColorIcon",
+            "source": "src/components/symbol-icons/DiscordColorIcon/DiscordColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3953-4",
+            "component": "DiscordIcon",
+            "source": "src/components/symbol-icons/DiscordIcon/DiscordIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1323",
+            "component": "DjiboutiColorIcon",
+            "source": "src/components/symbol-icons/DjiboutiColorIcon/DjiboutiColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-114",
+            "component": "DockerIcon",
+            "source": "src/components/symbol-icons/DockerIcon/DockerIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1442",
+            "component": "DominicaColorIcon",
+            "source": "src/components/symbol-icons/DominicaColorIcon/DominicaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1413",
+            "component": "DominicanRepublicColorIcon",
+            "source": "src/components/symbol-icons/DominicanRepublicColorIcon/DominicanRepublicColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1364",
+            "component": "EastTimorColorIcon",
+            "source": "src/components/symbol-icons/EastTimorColorIcon/EastTimorColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1433",
+            "component": "EcuadorColorIcon",
+            "source": "src/components/symbol-icons/EcuadorColorIcon/EcuadorColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1345",
+            "component": "EgyptColorIcon",
+            "source": "src/components/symbol-icons/EgyptColorIcon/EgyptColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1410",
+            "component": "ElSalvadorColorIcon",
+            "source": "src/components/symbol-icons/ElSalvadorColorIcon/ElSalvadorColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1267",
+            "component": "EquatorialGuineaColorIcon",
+            "source": "src/components/symbol-icons/EquatorialGuineaColorIcon/EquatorialGuineaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1405",
+            "component": "EritreaColorIcon",
+            "source": "src/components/symbol-icons/EritreaColorIcon/EritreaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1298",
+            "component": "EstoniaColorIcon",
+            "source": "src/components/symbol-icons/EstoniaColorIcon/EstoniaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1382",
+            "component": "EswatiniColorIcon",
+            "source": "src/components/symbol-icons/EswatiniColorIcon/EswatiniColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1375",
+            "component": "EthiopiaColorIcon",
+            "source": "src/components/symbol-icons/EthiopiaColorIcon/EthiopiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2679-151",
+            "component": "FacebookColorIcon",
+            "source": "src/components/symbol-icons/FacebookColorIcon/FacebookColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1772-1021",
+            "component": "FacebookIcon",
+            "source": "src/components/symbol-icons/FacebookIcon/FacebookIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4647-84",
+            "component": "FigmaColorIcon",
+            "source": "src/components/symbol-icons/FigmaColorIcon/FigmaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4647-83",
+            "component": "FigmaIcon",
+            "source": "src/components/symbol-icons/FigmaIcon/FigmaIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1427",
+            "component": "FijiColorIcon",
+            "source": "src/components/symbol-icons/FijiColorIcon/FijiColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1307",
+            "component": "FinlandColorIcon",
+            "source": "src/components/symbol-icons/FinlandColorIcon/FinlandColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1346-2955",
+            "component": "FirefoxColorIcon",
+            "source": "src/components/symbol-icons/FirefoxColorIcon/FirefoxColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1312",
+            "component": "FranceColorIcon",
+            "source": "src/components/symbol-icons/FranceColorIcon/FranceColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1254",
+            "component": "GabonColorIcon",
+            "source": "src/components/symbol-icons/GabonColorIcon/GabonColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1253",
+            "component": "GambiaColorIcon",
+            "source": "src/components/symbol-icons/GambiaColorIcon/GambiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-112",
+            "component": "GcpIcon",
+            "source": "src/components/symbol-icons/GcpIcon/GcpIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1357",
+            "component": "GeorgiaColorIcon",
+            "source": "src/components/symbol-icons/GeorgiaColorIcon/GeorgiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1301",
+            "component": "GermanyColorIcon",
+            "source": "src/components/symbol-icons/GermanyColorIcon/GermanyColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1393",
+            "component": "GhanaColorIcon",
+            "source": "src/components/symbol-icons/GhanaColorIcon/GhanaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4710-93",
+            "component": "GithubColorIcon",
+            "source": "src/components/symbol-icons/GithubColorIcon/GithubColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4-574",
+            "component": "GithubIcon",
+            "source": "src/components/symbol-icons/GithubIcon/GithubIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-110",
+            "component": "GitlabIcon",
+            "source": "src/components/symbol-icons/GitlabIcon/GitlabIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-87",
+            "component": "GoogleCalendarIcon",
+            "source": "src/components/symbol-icons/GoogleCalendarIcon/GoogleCalendarIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1772-1006",
+            "component": "GoogleColorIcon",
+            "source": "src/components/symbol-icons/GoogleColorIcon/GoogleColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7735-497",
+            "component": "GoogleIcon",
+            "source": "src/components/symbol-icons/GoogleIcon/GoogleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1386",
+            "component": "GreeceColorIcon",
+            "source": "src/components/symbol-icons/GreeceColorIcon/GreeceColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1424",
+            "component": "GrenadaColorIcon",
+            "source": "src/components/symbol-icons/GrenadaColorIcon/GrenadaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1440",
+            "component": "GuatemalaColorIcon",
+            "source": "src/components/symbol-icons/GuatemalaColorIcon/GuatemalaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1251",
+            "component": "GuineaBissauColorIcon",
+            "source": "src/components/symbol-icons/GuineaBissauColorIcon/GuineaBissauColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1252",
+            "component": "GuineaColorIcon",
+            "source": "src/components/symbol-icons/GuineaColorIcon/GuineaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1373",
+            "component": "GuyanaColorIcon",
+            "source": "src/components/symbol-icons/GuyanaColorIcon/GuyanaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1395",
+            "component": "HaitiColorIcon",
+            "source": "src/components/symbol-icons/HaitiColorIcon/HaitiColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1431",
+            "component": "HondurasColorIcon",
+            "source": "src/components/symbol-icons/HondurasColorIcon/HondurasColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1390",
+            "component": "HungaryColorIcon",
+            "source": "src/components/symbol-icons/HungaryColorIcon/HungaryColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1283",
+            "component": "IcelandColorIcon",
+            "source": "src/components/symbol-icons/IcelandColorIcon/IcelandColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1396",
+            "component": "IndiaColorIcon",
+            "source": "src/components/symbol-icons/IndiaColorIcon/IndiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1379",
+            "component": "IndonesiaColorIcon",
+            "source": "src/components/symbol-icons/IndonesiaColorIcon/IndonesiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1402-1014",
+            "component": "InstagramColorIcon",
+            "source": "src/components/symbol-icons/InstagramColorIcon/InstagramColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1402-1010",
+            "component": "InstagramIcon",
+            "source": "src/components/symbol-icons/InstagramIcon/InstagramIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2880-79",
+            "component": "IntellijColorIcon",
+            "source": "src/components/symbol-icons/IntellijColorIcon/IntellijColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1429",
+            "component": "IranColorIcon",
+            "source": "src/components/symbol-icons/IranColorIcon/IranColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1335",
+            "component": "IraqColorIcon",
+            "source": "src/components/symbol-icons/IraqColorIcon/IraqColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1285",
+            "component": "IrelandColorIcon",
+            "source": "src/components/symbol-icons/IrelandColorIcon/IrelandColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1338",
+            "component": "IsraelColorIcon",
+            "source": "src/components/symbol-icons/IsraelColorIcon/IsraelColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1293",
+            "component": "ItalyColorIcon",
+            "source": "src/components/symbol-icons/ItalyColorIcon/ItalyColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1321",
+            "component": "IvoryCoastColorIcon",
+            "source": "src/components/symbol-icons/IvoryCoastColorIcon/IvoryCoastColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1432",
+            "component": "JamaicaColorIcon",
+            "source": "src/components/symbol-icons/JamaicaColorIcon/JamaicaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1367",
+            "component": "JapanColorIcon",
+            "source": "src/components/symbol-icons/JapanColorIcon/JapanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-82",
+            "component": "JiraIcon",
+            "source": "src/components/symbol-icons/JiraIcon/JiraIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1316",
+            "component": "JordanColorIcon",
+            "source": "src/components/symbol-icons/JordanColorIcon/JordanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1346-2952",
+            "component": "JupyterColorIcon",
+            "source": "src/components/symbol-icons/JupyterColorIcon/JupyterColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3319-106",
+            "component": "JupyterlabColorIcon",
+            "source": "src/components/symbol-icons/JupyterlabColorIcon/JupyterlabColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7730-477",
+            "component": "JupyterlabIcon",
+            "source": "src/components/symbol-icons/JupyterlabIcon/JupyterlabIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1772-1020",
+            "component": "KakaoIcon",
+            "source": "src/components/symbol-icons/KakaoIcon/KakaoIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1444",
+            "component": "KazakhstanColorIcon",
+            "source": "src/components/symbol-icons/KazakhstanColorIcon/KazakhstanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1402",
+            "component": "KenyaColorIcon",
+            "source": "src/components/symbol-icons/KenyaColorIcon/KenyaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1344",
+            "component": "KiribatiColorIcon",
+            "source": "src/components/symbol-icons/KiribatiColorIcon/KiribatiColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1290",
+            "component": "KosovoColorIcon",
+            "source": "src/components/symbol-icons/KosovoColorIcon/KosovoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3304-87",
+            "component": "KrampolineIcon",
+            "source": "src/components/symbol-icons/KrampolineIcon/KrampolineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-116",
+            "component": "KubernatesIcon",
+            "source": "src/components/symbol-icons/KubernatesIcon/KubernatesIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1341",
+            "component": "KuwaitColorIcon",
+            "source": "src/components/symbol-icons/KuwaitColorIcon/KuwaitColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1354",
+            "component": "KyrgyzstanColorIcon",
+            "source": "src/components/symbol-icons/KyrgyzstanColorIcon/KyrgyzstanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1387",
+            "component": "LaosColorIcon",
+            "source": "src/components/symbol-icons/LaosColorIcon/LaosColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1302",
+            "component": "LatviaColorIcon",
+            "source": "src/components/symbol-icons/LatviaColorIcon/LatviaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1326",
+            "component": "LebanonColorIcon",
+            "source": "src/components/symbol-icons/LebanonColorIcon/LebanonColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1292",
+            "component": "LesothoColorIcon",
+            "source": "src/components/symbol-icons/LesothoColorIcon/LesothoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1280",
+            "component": "LiberiaColorIcon",
+            "source": "src/components/symbol-icons/LiberiaColorIcon/LiberiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1281",
+            "component": "LibyaColorIcon",
+            "source": "src/components/symbol-icons/LibyaColorIcon/LibyaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1303",
+            "component": "LiechtensteinColorIcon",
+            "source": "src/components/symbol-icons/LiechtensteinColorIcon/LiechtensteinColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7200-79",
+            "component": "LinkedinIcon",
+            "source": "src/components/symbol-icons/LinkedinIcon/LinkedinIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1384",
+            "component": "LithuaniaColorIcon",
+            "source": "src/components/symbol-icons/LithuaniaColorIcon/LithuaniaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1304",
+            "component": "LuxembourgColorIcon",
+            "source": "src/components/symbol-icons/LuxembourgColorIcon/LuxembourgColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1276",
+            "component": "MadagascarColorIcon",
+            "source": "src/components/symbol-icons/MadagascarColorIcon/MadagascarColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1426",
+            "component": "MalawiColorIcon",
+            "source": "src/components/symbol-icons/MalawiColorIcon/MalawiColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1347",
+            "component": "MalaysiaColorIcon",
+            "source": "src/components/symbol-icons/MalaysiaColorIcon/MalaysiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1411",
+            "component": "MaldivesColorIcon",
+            "source": "src/components/symbol-icons/MaldivesColorIcon/MaldivesColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1275",
+            "component": "MaliColorIcon",
+            "source": "src/components/symbol-icons/MaliColorIcon/MaliColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1313",
+            "component": "MaltaColorIcon",
+            "source": "src/components/symbol-icons/MaltaColorIcon/MaltaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1322",
+            "component": "MarshallIslandsColorIcon",
+            "source": "src/components/symbol-icons/MarshallIslandsColorIcon/MarshallIslandsColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1397",
+            "component": "MauritaniaColorIcon",
+            "source": "src/components/symbol-icons/MauritaniaColorIcon/MauritaniaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1271",
+            "component": "MauritiusColorIcon",
+            "source": "src/components/symbol-icons/MauritiusColorIcon/MauritiusColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8605-78",
+            "component": "MediumIcon",
+            "source": "src/components/symbol-icons/MediumIcon/MediumIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1400",
+            "component": "MexicoColorIcon",
+            "source": "src/components/symbol-icons/MexicoColorIcon/MexicoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1356",
+            "component": "MicronesiaColorIcon",
+            "source": "src/components/symbol-icons/MicronesiaColorIcon/MicronesiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1350",
+            "component": "MoldovaColorIcon",
+            "source": "src/components/symbol-icons/MoldovaColorIcon/MoldovaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1391",
+            "component": "MonacoColorIcon",
+            "source": "src/components/symbol-icons/MonacoColorIcon/MonacoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1381",
+            "component": "MongoliaColorIcon",
+            "source": "src/components/symbol-icons/MongoliaColorIcon/MongoliaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1314",
+            "component": "MontenegroColorIcon",
+            "source": "src/components/symbol-icons/MontenegroColorIcon/MontenegroColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1282",
+            "component": "MoroccoColorIcon",
+            "source": "src/components/symbol-icons/MoroccoColorIcon/MoroccoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1409",
+            "component": "MozambiqueColorIcon",
+            "source": "src/components/symbol-icons/MozambiqueColorIcon/MozambiqueColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1368",
+            "component": "MyanmarColorIcon",
+            "source": "src/components/symbol-icons/MyanmarColorIcon/MyanmarColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7730-478",
+            "component": "MysqlColorIcon",
+            "source": "src/components/symbol-icons/MysqlColorIcon/MysqlColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7730-479",
+            "component": "MysqlIcon",
+            "source": "src/components/symbol-icons/MysqlIcon/MysqlIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1270",
+            "component": "NamibiaColorIcon",
+            "source": "src/components/symbol-icons/NamibiaColorIcon/NamibiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1392",
+            "component": "NauruColorIcon",
+            "source": "src/components/symbol-icons/NauruColorIcon/NauruColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1404-1036",
+            "component": "NaverblogColorIcon",
+            "source": "src/components/symbol-icons/NaverblogColorIcon/NaverblogColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1404-1023",
+            "component": "NaverblogIcon",
+            "source": "src/components/symbol-icons/NaverblogIcon/NaverblogIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1772-1015",
+            "component": "NaverIcon",
+            "source": "src/components/symbol-icons/NaverIcon/NaverIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1327",
+            "component": "NepalColorIcon",
+            "source": "src/components/symbol-icons/NepalColorIcon/NepalColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1286",
+            "component": "NetherlandsColorIcon",
+            "source": "src/components/symbol-icons/NetherlandsColorIcon/NetherlandsColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1334",
+            "component": "NewZealandColorIcon",
+            "source": "src/components/symbol-icons/NewZealandColorIcon/NewZealandColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1380",
+            "component": "NicaraguaColorIcon",
+            "source": "src/components/symbol-icons/NicaraguaColorIcon/NicaraguaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1371",
+            "component": "NigerColorIcon",
+            "source": "src/components/symbol-icons/NigerColorIcon/NigerColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1428",
+            "component": "NigeriaColorIcon",
+            "source": "src/components/symbol-icons/NigeriaColorIcon/NigeriaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1329",
+            "component": "NiueColorIcon",
+            "source": "src/components/symbol-icons/NiueColorIcon/NiueColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1287",
+            "component": "NorthMacedoniaColorIcon",
+            "source": "src/components/symbol-icons/NorthMacedoniaColorIcon/NorthMacedoniaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1305",
+            "component": "NorwayColorIcon",
+            "source": "src/components/symbol-icons/NorwayColorIcon/NorwayColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-74",
+            "component": "NotionIcon",
+            "source": "src/components/symbol-icons/NotionIcon/NotionIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1339",
+            "component": "OmanColorIcon",
+            "source": "src/components/symbol-icons/OmanColorIcon/OmanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1346-2956",
+            "component": "OperaColorIcon",
+            "source": "src/components/symbol-icons/OperaColorIcon/OperaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1398",
+            "component": "PakistanColorIcon",
+            "source": "src/components/symbol-icons/PakistanColorIcon/PakistanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1324",
+            "component": "PalauColorIcon",
+            "source": "src/components/symbol-icons/PalauColorIcon/PalauColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1436",
+            "component": "PanamaColorIcon",
+            "source": "src/components/symbol-icons/PanamaColorIcon/PanamaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1325",
+            "component": "PapuaNewGuineaColorIcon",
+            "source": "src/components/symbol-icons/PapuaNewGuineaColorIcon/PapuaNewGuineaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1376",
+            "component": "ParaguayColorIcon",
+            "source": "src/components/symbol-icons/ParaguayColorIcon/ParaguayColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1772-1059",
+            "component": "PaycoIcon",
+            "source": "src/components/symbol-icons/PaycoIcon/PaycoIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4394-90",
+            "component": "PaypalColorIcon",
+            "source": "src/components/symbol-icons/PaypalColorIcon/PaypalColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1425",
+            "component": "PeruColorIcon",
+            "source": "src/components/symbol-icons/PeruColorIcon/PeruColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1404",
+            "component": "PhilippinesColorIcon",
+            "source": "src/components/symbol-icons/PhilippinesColorIcon/PhilippinesColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1353",
+            "component": "PolandColorIcon",
+            "source": "src/components/symbol-icons/PolandColorIcon/PolandColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1311",
+            "component": "PortugalColorIcon",
+            "source": "src/components/symbol-icons/PortugalColorIcon/PortugalColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1346-2957",
+            "component": "ProductHuntColorIcon",
+            "source": "src/components/symbol-icons/ProductHuntColorIcon/ProductHuntColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1336",
+            "component": "QatarColorIcon",
+            "source": "src/components/symbol-icons/QatarColorIcon/QatarColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1258",
+            "component": "RepublicOfTheCongoColorIcon",
+            "source": "src/components/symbol-icons/RepublicOfTheCongoColorIcon/RepublicOfTheCongoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1355",
+            "component": "RomaniaColorIcon",
+            "source": "src/components/symbol-icons/RomaniaColorIcon/RomaniaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1346-2953",
+            "component": "RstudioColorIcon",
+            "source": "src/components/symbol-icons/RstudioColorIcon/RstudioColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1351",
+            "component": "RussiaColorIcon",
+            "source": "src/components/symbol-icons/RussiaColorIcon/RussiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1279",
+            "component": "RwandaColorIcon",
+            "source": "src/components/symbol-icons/RwandaColorIcon/RwandaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1416",
+            "component": "SaintKittsAndNevisColorIcon",
+            "source": "src/components/symbol-icons/SaintKittsAndNevisColorIcon/SaintKittsAndNevisColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1445",
+            "component": "SaintLuciaColorIcon",
+            "source": "src/components/symbol-icons/SaintLuciaColorIcon/SaintLuciaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1422",
+            "component": "SaintVincentAndTheGrenadinesColorIcon",
+            "source": "src/components/symbol-icons/SaintVincentAndTheGrenadinesColorIcon/SaintVincentAndTheGrenadinesColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1383",
+            "component": "SamoaColorIcon",
+            "source": "src/components/symbol-icons/SamoaColorIcon/SamoaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1294",
+            "component": "SanMarinoColorIcon",
+            "source": "src/components/symbol-icons/SanMarinoColorIcon/SanMarinoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1291",
+            "component": "SaoTomeAndPrincipeColorIcon",
+            "source": "src/components/symbol-icons/SaoTomeAndPrincipeColorIcon/SaoTomeAndPrincipeColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1342",
+            "component": "SaudiArabiaColorIcon",
+            "source": "src/components/symbol-icons/SaudiArabiaColorIcon/SaudiArabiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1260",
+            "component": "SenegalColorIcon",
+            "source": "src/components/symbol-icons/SenegalColorIcon/SenegalColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-99",
+            "component": "SentryIcon",
+            "source": "src/components/symbol-icons/SentryIcon/SentryIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1343",
+            "component": "SerbiaColorIcon",
+            "source": "src/components/symbol-icons/SerbiaColorIcon/SerbiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1262",
+            "component": "SeychellesColorIcon",
+            "source": "src/components/symbol-icons/SeychellesColorIcon/SeychellesColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1256",
+            "component": "SierraLeoneColorIcon",
+            "source": "src/components/symbol-icons/SierraLeoneColorIcon/SierraLeoneColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1377",
+            "component": "SingaporeColorIcon",
+            "source": "src/components/symbol-icons/SingaporeColorIcon/SingaporeColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1402-1016",
+            "component": "SlackColorIcon",
+            "source": "src/components/symbol-icons/SlackColorIcon/SlackColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1402-1012",
+            "component": "SlackIcon",
+            "source": "src/components/symbol-icons/SlackIcon/SlackIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1296",
+            "component": "SlovakiaColorIcon",
+            "source": "src/components/symbol-icons/SlovakiaColorIcon/SlovakiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1297",
+            "component": "SloveniaColorIcon",
+            "source": "src/components/symbol-icons/SloveniaColorIcon/SloveniaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1369",
+            "component": "SolomonIslandsColorIcon",
+            "source": "src/components/symbol-icons/SolomonIslandsColorIcon/SolomonIslandsColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1273",
+            "component": "SomaliaColorIcon",
+            "source": "src/components/symbol-icons/SomaliaColorIcon/SomaliaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1274",
+            "component": "SouthAfricaColorIcon",
+            "source": "src/components/symbol-icons/SouthAfricaColorIcon/SouthAfricaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1401",
+            "component": "SouthKoreaColorIcon",
+            "source": "src/components/symbol-icons/SouthKoreaColorIcon/SouthKoreaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1272",
+            "component": "SouthSudanColorIcon",
+            "source": "src/components/symbol-icons/SouthSudanColorIcon/SouthSudanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1372",
+            "component": "SpainColorIcon",
+            "source": "src/components/symbol-icons/SpainColorIcon/SpainColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1374",
+            "component": "SriLankaColorIcon",
+            "source": "src/components/symbol-icons/SriLankaColorIcon/SriLankaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4649-78",
+            "component": "StorybookColorIcon",
+            "source": "src/components/symbol-icons/StorybookColorIcon/StorybookColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4649-77",
+            "component": "StorybookIcon",
+            "source": "src/components/symbol-icons/StorybookIcon/StorybookIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4394-229",
+            "component": "StripeColorIcon",
+            "source": "src/components/symbol-icons/StripeColorIcon/StripeColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4394-238",
+            "component": "StripeIcon",
+            "source": "src/components/symbol-icons/StripeIcon/StripeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1359",
+            "component": "SudanColorIcon",
+            "source": "src/components/symbol-icons/SudanColorIcon/SudanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1420",
+            "component": "SurinameColorIcon",
+            "source": "src/components/symbol-icons/SurinameColorIcon/SurinameColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1403",
+            "component": "SwedenColorIcon",
+            "source": "src/components/symbol-icons/SwedenColorIcon/SwedenColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1295",
+            "component": "SwitzerlandColorIcon",
+            "source": "src/components/symbol-icons/SwitzerlandColorIcon/SwitzerlandColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1441",
+            "component": "SyriaColorIcon",
+            "source": "src/components/symbol-icons/SyriaColorIcon/SyriaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1551-977",
+            "component": "TaegukColorIcon",
+            "source": "src/components/symbol-icons/TaegukColorIcon/TaegukColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1551-973",
+            "component": "TaegukIcon",
+            "source": "src/components/symbol-icons/TaegukIcon/TaegukIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1361",
+            "component": "TajikistanColorIcon",
+            "source": "src/components/symbol-icons/TajikistanColorIcon/TajikistanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1265",
+            "component": "TanzaniaColorIcon",
+            "source": "src/components/symbol-icons/TanzaniaColorIcon/TanzaniaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1328",
+            "component": "ThailandColorIcon",
+            "source": "src/components/symbol-icons/ThailandColorIcon/ThailandColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1408",
+            "component": "TogoColorIcon",
+            "source": "src/components/symbol-icons/TogoColorIcon/TogoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1331",
+            "component": "TongaColorIcon",
+            "source": "src/components/symbol-icons/TongaColorIcon/TongaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7007-77",
+            "component": "TrelloIcon",
+            "source": "src/components/symbol-icons/TrelloIcon/TrelloIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1406",
+            "component": "TrinidadAndTobagoColorIcon",
+            "source": "src/components/symbol-icons/TrinidadAndTobagoColorIcon/TrinidadAndTobagoColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1340",
+            "component": "TunisiaColorIcon",
+            "source": "src/components/symbol-icons/TunisiaColorIcon/TunisiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1362",
+            "component": "TurkeyColorIcon",
+            "source": "src/components/symbol-icons/TurkeyColorIcon/TurkeyColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1358",
+            "component": "TurkmenistanColorIcon",
+            "source": "src/components/symbol-icons/TurkmenistanColorIcon/TurkmenistanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1438",
+            "component": "TuvaluColorIcon",
+            "source": "src/components/symbol-icons/TuvaluColorIcon/TuvaluColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1306",
+            "component": "UgandaColorIcon",
+            "source": "src/components/symbol-icons/UgandaColorIcon/UgandaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1352",
+            "component": "UkraineColorIcon",
+            "source": "src/components/symbol-icons/UkraineColorIcon/UkraineColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1394",
+            "component": "UnitedArabEmiratesColorIcon",
+            "source": "src/components/symbol-icons/UnitedArabEmiratesColorIcon/UnitedArabEmiratesColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1337",
+            "component": "UnitedKingdomColorIcon",
+            "source": "src/components/symbol-icons/UnitedKingdomColorIcon/UnitedKingdomColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1399",
+            "component": "UnitedStatesColorIcon",
+            "source": "src/components/symbol-icons/UnitedStatesColorIcon/UnitedStatesColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1434",
+            "component": "UruguayColorIcon",
+            "source": "src/components/symbol-icons/UruguayColorIcon/UruguayColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1437",
+            "component": "UzbekistanColorIcon",
+            "source": "src/components/symbol-icons/UzbekistanColorIcon/UzbekistanColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1320",
+            "component": "VanuatuColorIcon",
+            "source": "src/components/symbol-icons/VanuatuColorIcon/VanuatuColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1435",
+            "component": "VaticanCityColorIcon",
+            "source": "src/components/symbol-icons/VaticanCityColorIcon/VaticanCityColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1430",
+            "component": "VenezuelaColorIcon",
+            "source": "src/components/symbol-icons/VenezuelaColorIcon/VenezuelaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1388",
+            "component": "VietnamColorIcon",
+            "source": "src/components/symbol-icons/VietnamColorIcon/VietnamColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1346-2958",
+            "component": "VscodeColorIcon",
+            "source": "src/components/symbol-icons/VscodeColorIcon/VscodeColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7730-475",
+            "component": "VscodeIcon",
+            "source": "src/components/symbol-icons/VscodeIcon/VscodeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6959-77",
+            "component": "XIcon",
+            "source": "src/components/symbol-icons/XIcon/XIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1348",
+            "component": "YemenColorIcon",
+            "source": "src/components/symbol-icons/YemenColorIcon/YemenColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7301-800",
+            "component": "YoutubeColorIcon",
+            "source": "src/components/symbol-icons/YoutubeColorIcon/YoutubeColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7301-806",
+            "component": "YoutubeIcon",
+            "source": "src/components/symbol-icons/YoutubeIcon/YoutubeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1261",
+            "component": "ZambiaColorIcon",
+            "source": "src/components/symbol-icons/ZambiaColorIcon/ZambiaColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9214-1255",
+            "component": "ZimbabweColorIcon",
+            "source": "src/components/symbol-icons/ZimbabweColorIcon/ZimbabweColorIcon.tsx"
+        }
+    ]
+}
