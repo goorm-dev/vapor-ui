@@ -422,7 +422,7 @@ export const MenuCheckItem = ({
 
     if (mode === 'single') {
         return (
-            <MenuPrimitives.RadioItem value={valueProp} onClick={onClick}>
+            <MenuPrimitives.RadioItem closeOnClick value={valueProp} onClick={onClick}>
                 <checkItemSlots.label render={label} />
                 <checkItemSlots.trailing render={trailing} />
             </MenuPrimitives.RadioItem>
@@ -433,6 +433,7 @@ export const MenuCheckItem = ({
 
     return (
         <MenuPrimitives.CheckboxItem
+            closeOnClick={false}
             checked={value.includes(valueProp)}
             onCheckedChange={() => handleValueChange(valueProp)}
             onClick={onClick}

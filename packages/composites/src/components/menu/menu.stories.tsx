@@ -22,6 +22,11 @@ type Story = StoryObj<typeof Menu.Root>;
 
 export const Default: Story = {
     render: (args) => {
+        const [single, setSingle] = useState<string>();
+        const [multi1, setMulti1] = useState<string[]>();
+        const [multi2, setMulti2] = useState<string[]>();
+        const [subMulti, setSubMulti] = useState<string[]>();
+
         return (
             <div style={{ width: '100%', textAlign: 'center' }}>
                 <Menu.Root trigger={<Button>Menu Trigger</Button>} defaultOpen {...args}>
@@ -52,7 +57,12 @@ export const Default: Story = {
                     </Menu.Group>
 
                     <Menu.Submenu trigger="label">
-                        <Menu.CheckGroup mode="multiple" label="multiple group">
+                        <Menu.CheckGroup
+                            mode="multiple"
+                            label="multiple group"
+                            value={subMulti}
+                            onValueChange={setSubMulti}
+                        >
                             <Menu.CheckItem label="multiple 1" value="multiple 1" />
                             <Menu.CheckItem label="multiple 2" value="multiple 2" />
                             <Menu.CheckItem label="multiple 3" value="multiple 3" />
@@ -60,14 +70,41 @@ export const Default: Story = {
                         </Menu.CheckGroup>
                     </Menu.Submenu>
 
-                    <Menu.CheckGroup mode="single" label="single group">
+                    <Menu.CheckGroup
+                        mode="single"
+                        label="single group"
+                        value={single}
+                        onValueChange={setSingle}
+                    >
                         <Menu.CheckItem label="single 1" value="single 1" />
                         <Menu.CheckItem label="single 2" value="single 2" />
                         <Menu.CheckItem label="single 3" value="single 3" />
                         <Menu.CheckItem label="single 4" value="single 4" />
                     </Menu.CheckGroup>
 
-                    <Menu.CheckGroup mode="multiple" label="multiple group">
+                    <Menu.CheckGroup
+                        mode="multiple"
+                        label="multiple group"
+                        value={multi1}
+                        onValueChange={setMulti1}
+                    >
+                        <Menu.CheckItem label="multiple 1" value="multiple 1" />
+                        <Menu.CheckItem label="multiple 2" value="multiple 2" />
+                        <Menu.CheckItem label="multiple 3" value="multiple 3" />
+                        <Menu.CheckItem label="multiple 4" value="multiple 4" />
+                    </Menu.CheckGroup>
+
+                    <Menu.Item label="multiple 1" onClick={console.log} />
+                    <Menu.Item label="multiple 2" onClick={console.log} />
+                    <Menu.Item label="multiple 3" onClick={console.log} />
+                    <Menu.Item label="multiple 4" onClick={console.log} />
+
+                    <Menu.CheckGroup
+                        mode="multiple"
+                        label="multiple group"
+                        value={multi2}
+                        onValueChange={setMulti2}
+                    >
                         <Menu.CheckItem label="multiple 1" value="multiple 1" />
                         <Menu.CheckItem label="multiple 2" value="multiple 2" />
                         <Menu.CheckItem label="multiple 3" value="multiple 3" />
