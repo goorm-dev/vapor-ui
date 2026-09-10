@@ -140,10 +140,16 @@ const groupSlots = createSlots({
 
 export const MenuGroup = ({ label, children }: MenuGroup.Props) => {
     return (
-        <MenuPrimitives.Group>
-            <groupSlots.label render={label} />
-            {children}
-        </MenuPrimitives.Group>
+        <>
+            <Separator />
+
+            <MenuPrimitives.Group>
+                <groupSlots.label render={label} />
+                {children}
+            </MenuPrimitives.Group>
+
+            <Separator />
+        </>
     );
 };
 
@@ -265,6 +271,8 @@ const SingleCheckGroup = ({
 
     return (
         <MenuCheckGroupContext.Provider value={context}>
+            <Separator />
+
             <MenuPrimitives.RadioGroup
                 value={value}
                 defaultValue={defaultValue}
@@ -273,6 +281,8 @@ const SingleCheckGroup = ({
                 <checkGroupSlots.label render={label} />
                 {children}
             </MenuPrimitives.RadioGroup>
+
+            <Separator />
         </MenuCheckGroupContext.Provider>
     );
 };
@@ -306,10 +316,14 @@ const MultipleCheckGroup = ({
 
     return (
         <MenuCheckGroupContext.Provider value={context}>
+            <Separator />
+
             <MenuPrimitives.Group>
                 <checkGroupSlots.label render={label} />
                 {children}
             </MenuPrimitives.Group>
+
+            <Separator />
         </MenuCheckGroupContext.Provider>
     );
 };
@@ -505,3 +519,20 @@ export interface MenuSubmenuProps extends Omit<MenuRoot.Props, keyof Slots> {
 export namespace MenuSubmenu {
     export type Props = MenuSubmenuProps;
 }
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export const Separator = () => {
+    return (
+        <MenuPrimitives.Separator
+            $css={{
+                display: {
+                    default: 'block',
+                    _firstChild: 'none',
+                    _lastChild: 'none',
+                    _adjacentToSeparator: 'none',
+                },
+            }}
+        />
+    );
+};
