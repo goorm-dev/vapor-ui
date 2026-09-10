@@ -68,10 +68,17 @@ export const description = componentStyle([
     foregrounds({ color: 'hint' }),
 ]);
 
-export const body = componentStyle({
-    paddingTop: vars.size.space[400],
-    paddingBottom: 0,
+export const header = componentStyle({
+    paddingTop: vars.size.space['300'],
+    paddingBottom: vars.size.space['000'],
     paddingInline: vars.size.space['300'],
+    width: '100%',
+    overflowY: 'auto',
+});
+
+export const body = componentStyle({
+    padding: vars.size.space['300'],
+    paddingBottom: vars.size.space['000'],
     width: '100%',
     overflowY: 'auto',
 });

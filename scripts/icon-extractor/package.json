@@ -16,7 +16,8 @@
         "sync-icons:basic": "pnpm extract --type=basic",
         "sync-icons:symbol": "pnpm extract --type=symbol",
         "test": "vitest --run",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "write-release-notes": "tsx ./src/summary/write-release-notes.ts"
     },
     "dependencies": {
         "@svgr/core": "^8.1.0",
@@ -28,6 +29,7 @@
         "prettier": "^3.9.6"
     },
     "devDependencies": {
+        "@figma/rest-api-spec": "^0.42.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/lodash-es": "^4.17.12",

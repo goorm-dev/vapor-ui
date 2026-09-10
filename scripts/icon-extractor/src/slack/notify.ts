@@ -26,6 +26,15 @@ if (!SLACK_GDS_ALARM_WEBHOOK_URL) {
     console.error('❌ 오류: SLACK_GDS_ALARM_WEBHOOK_URL 환경 변수가 설정되지 않았습니다.');
     process.exit(1);
 }
+// The webhook URL carries its own credential in the path, so `http:` would put it on the wire in
+// cleartext. Never echo the value on failure: an uncaught URL parse error prints its input.
+if (
+    !URL.canParse(SLACK_GDS_ALARM_WEBHOOK_URL) ||
+    new URL(SLACK_GDS_ALARM_WEBHOOK_URL).protocol !== 'https:'
+) {
+    console.error('❌ 오류: SLACK_GDS_ALARM_WEBHOOK_URL은 https:// URL이어야 합니다.');
+    process.exit(1);
+}
 
 const statusEmoji = WORKFLOW_STATUS === 'success' ? '✅' : '❌';
 const statusText = WORKFLOW_STATUS === 'success' ? '성공' : '실패';

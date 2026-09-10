@@ -26,14 +26,22 @@ const writeIcon = async (
     const componentFile = path.join(dir, `${iconName}.tsx`);
     const indexFile = path.join(dir, 'index.ts');
 
-    const formatted = await format(component, componentFile);
-    const existing = await fs.readFile(componentFile, 'utf8').catch(() => null);
-    if (existing === formatted) return 'unchanged';
+    const [formatted, formattedIndex] = await Promise.all([
+        format(component, componentFile),
+        format(iconComponentIndex(iconName), indexFile),
+    ]);
+    const [existing, existingIndex] = await Promise.all([
+        fs.readFile(componentFile, 'utf8').catch(() => null),
+        fs.readFile(indexFile, 'utf8').catch(() => null),
+    ]);
+    // Both files decide: a missing or stale `index.ts` would otherwise never be regenerated,
+    // and the entry index imports the folder, so one missing file breaks the whole build.
+    if (existing === formatted && existingIndex === formattedIndex) return 'unchanged';
 
     await fs.mkdir(dir, { recursive: true });
     await Promise.all([
         fs.writeFile(componentFile, formatted),
-        fs.writeFile(indexFile, await format(iconComponentIndex(iconName), indexFile)),
+        fs.writeFile(indexFile, formattedIndex),
     ]);
     return existing === null ? 'new' : 'updated';
 };

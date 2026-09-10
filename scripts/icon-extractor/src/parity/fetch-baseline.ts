@@ -18,7 +18,7 @@ import process from 'node:process';
 import pLimit from 'p-limit';
 import pc from 'picocolors';
 
-import { getImage } from '~/api/figma-client';
+import { getImages } from '~/api/figma-client';
 import { ICON_TYPE_NAMES, colorFrameIds, figma, iconTypes, isIconType } from '~/config';
 import { fetchIconNodes } from '~/downloader/svg-downloader';
 import { normalizeIconName } from '~/utils/icon-name';
@@ -94,7 +94,7 @@ const urls = new Map<string, string>();
 const renderFailed: string[] = [];
 for (let i = 0; i < missing.length; i += BATCH_SIZE) {
     const batch = missing.slice(i, i + BATCH_SIZE);
-    const { images } = await getImage({
+    const { images } = await getImages({
         fileKey: figma.fileKey,
         nodeIds: batch.map((icon) => icon.id),
         format: 'png',

@@ -61,3 +61,7 @@ docs/plans/
 
 # Icon parity check cache (baselines, renders, diffs)
 scripts/icon-extractor/src/parity/.cache/
+
+# Icon sync intermediates (see scripts/icon-extractor)
+.sync-summary/
+pr_body.md

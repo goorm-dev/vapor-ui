@@ -160,19 +160,25 @@ jobs:
                       DURATION="Unknown"
                   fi
 
+                  # Resolve commit SHA (PR head on pull_request, otherwise github.sha)
+                  SHA_FULL="${{ github.sha }}"
+                  SHA_SHORT="${SHA_FULL:0:7}"
+
                   echo "passed=$PASSED" >> $GITHUB_OUTPUT
                   echo "failed=$FAILED" >> $GITHUB_OUTPUT
                   echo "total=$TOTAL" >> $GITHUB_OUTPUT
                   echo "duration=$DURATION" >> $GITHUB_OUTPUT
+                  echo "sha_full=$SHA_FULL" >> $GITHUB_OUTPUT
+                  echo "sha_short=$SHA_SHORT" >> $GITHUB_OUTPUT
 
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
                       ${{ contains(needs.test.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
-                      | Tests | Passed | Failed | Duration | Report |
-                      | :---- | :----- | :----- | :------- | :----- |
-                      | ${{ steps.parse-results.outputs.total }} | ${{ steps.parse-results.outputs.passed }} | ${{ steps.parse-results.outputs.failed }} | ${{ steps.parse-results.outputs.duration }} | [Open report ↗︎](http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html) |
+                      | Tests | Passed | Failed | Duration | Commit | Report |
+                      | :---- | :----- | :----- | :------- | :----- | :----- |
+                      | ${{ steps.parse-results.outputs.total }} | ${{ steps.parse-results.outputs.passed }} | ${{ steps.parse-results.outputs.failed }} | ${{ steps.parse-results.outputs.duration }} | [`${{ steps.parse-results.outputs.sha_short }}`](https://github.com/${{ github.repository }}/commit/${{ steps.parse-results.outputs.sha_full }}) | [Open report ↗︎](http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html) |
 
                       [Click here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml) if you need to update snapshots.
 

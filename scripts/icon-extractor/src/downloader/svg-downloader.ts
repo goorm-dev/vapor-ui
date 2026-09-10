@@ -1,6 +1,5 @@
-import { getFileNodes, getImage } from '~/api/figma-client';
+import { getFileNodes, getImages } from '~/api/figma-client';
 import type { IconNode, IconNodeWithUrl } from '~/api/types';
-import { FIGMA_NODE_TYPES } from '~/api/types';
 import { assertSvg } from '~/verifier/svg-validator';
 
 /**
@@ -23,8 +22,10 @@ const fetchIconNodes = async ({
         if (!frame) {
             throw new Error(`Figma node not found: ${frameId}`);
         }
-        return (frame.document.children ?? [])
-            .filter((child) => child.type === FIGMA_NODE_TYPES.Component)
+        // `document` is the full node union; only container nodes carry `children`.
+        const children = 'children' in frame.document ? frame.document.children : [];
+        return children
+            .filter((child) => child.type === 'COMPONENT')
             .map((child) => ({ ...child, parentId: frameId }));
     });
 };
@@ -39,7 +40,11 @@ const resolveSvgUrls = async ({
     nodes: IconNode[];
     fileKey: string;
 }): Promise<IconNodeWithUrl[]> => {
-    const { images } = await getImage({ fileKey, nodeIds: nodes.map((node) => node.id) });
+    const { images } = await getImages({
+        fileKey,
+        nodeIds: nodes.map((node) => node.id),
+        format: 'svg',
+    });
 
     return nodes.map((node) => {
         const url = images[node.id];
@@ -54,7 +59,7 @@ const resolveSvgUrls = async ({
  * Download the SVG text behind an export URL.
  */
 const downloadSvg = async (url: string): Promise<string> => {
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: AbortSignal.timeout(30_000) });
     if (!response.ok) {
         throw new Error(`Failed to fetch SVG: ${response.status} ${response.statusText}`);
     }

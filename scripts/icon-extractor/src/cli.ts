@@ -4,7 +4,8 @@
  * Usage:
  *   tsx --env-file=.env ./src/cli.ts --type=basic|symbol
  *
- * Requires FIGMA_TOKEN. Ends with `FIGMA_SYNC_*=` lines that the sync workflow greps.
+ * Requires FIGMA_TOKEN. Records what changed in `.sync-summary/<type>.json`, which
+ * `write-release-notes` turns into the changeset and PR body.
  */
 import path from 'node:path';
 import process from 'node:process';
@@ -15,6 +16,7 @@ import { ICON_TYPE_NAMES, colorFrameIds, figma, iconTypes, isIconType } from '~/
 import { downloadSvg, fetchIconNodes, resolveSvgUrls } from '~/downloader/svg-downloader';
 import type { WriteResult } from '~/generator/component-generator';
 import { removeStaleIcons, writeIcon, writeIconsIndex } from '~/generator/component-generator';
+import { writeSyncSummary } from '~/summary/sync-summary';
 import { svgToIconComponent } from '~/transformer/svgr-transformer';
 import { REPO_ROOT } from '~/utils/file-system';
 import { normalizeIconName } from '~/utils/icon-name';
@@ -81,9 +83,5 @@ for (const name of deleted) log.warn(`🗑️  Deleted: ${name}`);
 await writeIconsIndex(targetDir, iconNames);
 log.info(`Sync complete for ${type} icons`);
 
-// Machine-readable summary for the workflow.
-const KEY = type.toUpperCase();
-if (created.length) console.log(`FIGMA_SYNC_NEW_ICONS_${KEY}=${created.join(',')}`);
-if (updated.length) console.log(`FIGMA_SYNC_UPDATED_ICONS_${KEY}=${updated.join(',')}`);
-if (deleted.length) console.log(`FIGMA_SYNC_DELETED_ICONS_${KEY}=${deleted.join(',')}`);
-console.log(`FIGMA_SYNC_TOTAL_${KEY}=${iconNames.length}`);
+// Handed to `write-release-notes` as a file: each icon type syncs in its own process.
+await writeSyncSummary(type, { created, updated, deleted, total: iconNames.length });
