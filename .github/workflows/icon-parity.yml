@@ -2,7 +2,8 @@ name: '[CI] Icon Parity'
 
 # Renders every icon component in Chromium and compares it to Figma's own PNG.
 # Gate values (64px canvas, pixelmatch threshold 0.3 / includeAA, fail above 2 diff px)
-# are measured, not guessed — scripts/icon-extractor/src/parity/CALIBRATION.md.
+# are measured, not guessed — each value carries its measurement in the comments of
+# scripts/icon-extractor/src/parity/lib.ts.
 #
 # Two entry points share this one job so the gate and the report live in one place:
 #   - pull_request: any change that can alter how an icon rasterizes
@@ -68,6 +69,10 @@ jobs:
               continue-on-error: true
               env:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  # Passed through env, never interpolated into the script: `${{ }}` is a text
+                  # substitution the runner performs before bash parses the file, so a value
+                  # holding `$(...)` would run as code even inside double quotes.
+                  CHANGED_ICONS: ${{ inputs.changed-icons }}
               run: |
                   pnpm --filter @repo/icon-extractor parity:fetch --type=basic
                   pnpm --filter @repo/icon-extractor parity:fetch --type=symbol
@@ -75,7 +80,7 @@ jobs:
                   # --show adds rows to the page; it does not narrow the gate. Empty on the
                   # pull_request path, where the diff itself already says what changed.
                   pnpm --filter @repo/icon-extractor parity:compare \
-                      --show="${{ inputs.changed-icons }}"
+                      --show="$CHANGED_ICONS"
 
             # compare.ts already computed these, so read them back instead of re-deriving them
             # from the rendered report.
@@ -113,8 +118,12 @@ jobs:
             - name: Upload report to S3
               id: s3
               if: steps.counts.outputs.rendered != '0'
+              env:
+                  # A branch name may contain `$`, `(` and backticks, so interpolating it into
+                  # the script would hand this step — which holds the AWS session — arbitrary code.
+                  BRANCH_REF: ${{ github.head_ref || github.ref_name }}
               run: |
-                  BRANCH=$(echo "${{ github.head_ref || github.ref_name }}" | tr '/' '-')
+                  BRANCH=$(echo "$BRANCH_REF" | tr '/' '-')
                   # Keyed on the run, not the branch alone: a branch-only key means a second run
                   # today overwrites the page that an earlier PR comment still links to, so that
                   # comment quietly starts showing a different run's result. `run_id` is unique

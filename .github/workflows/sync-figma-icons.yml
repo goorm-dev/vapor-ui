@@ -201,17 +201,19 @@ jobs:
               id: create_pr
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  # Every value below comes in through env rather than `${{ }}` inside the script:
+                  # the runner substitutes those as text before bash parses the file, so a value
+                  # holding `$(...)` would run as code even inside double quotes.
+                  NEW_BASIC_ICONS: ${{ steps.sync_basic.outputs.new_icons }}
+                  NEW_SYMBOL_ICONS: ${{ steps.sync_symbol.outputs.new_icons }}
+                  UPDATED_BASIC_ICONS: ${{ steps.sync_basic.outputs.updated_icons }}
+                  UPDATED_SYMBOL_ICONS: ${{ steps.sync_symbol.outputs.updated_icons }}
+                  DELETED_BASIC_ICONS: ${{ steps.sync_basic.outputs.deleted_icons }}
+                  DELETED_SYMBOL_ICONS: ${{ steps.sync_symbol.outputs.deleted_icons }}
+                  REF_NAME: ${{ github.ref_name }}
               run: |
                   # Check if the branch was pushed (indicates changes were found)
                   if [[ "${has_changes:-}" == "true" ]]; then
-                      # Prepare icon lists for PR body
-                      NEW_BASIC_ICONS="${{ steps.sync_basic.outputs.new_icons }}"
-                      NEW_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.new_icons }}"
-                      UPDATED_BASIC_ICONS="${{ steps.sync_basic.outputs.updated_icons }}"
-                      UPDATED_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.updated_icons }}"
-                      DELETED_BASIC_ICONS="${{ steps.sync_basic.outputs.deleted_icons }}"
-                      DELETED_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.deleted_icons }}"
-
                       # Determine version bump type for PR body
                       if [[ -n "$NEW_BASIC_ICONS" || -n "$NEW_SYMBOL_ICONS" ]]; then
                           VERSION_BUMP="Minor"
@@ -285,7 +287,7 @@ jobs:
                       STALE_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
                       # Only main can judge staleness — a dispatch from another branch compared
                       # Figma against that branch, so "no changes" says nothing about the sync PR.
-                      if [[ -n "$STALE_PR" && "${{ github.ref_name }}" == "main" ]]; then
+                      if [[ -n "$STALE_PR" && "$REF_NAME" == "main" ]]; then
                           gh pr close "$STALE_PR" --comment "Closing: main already matches Figma, so this sync is no longer valid."
                       elif [[ -n "$STALE_PR" ]]; then
                           # Feature-branch dispatch: let the parity report land on the open sync PR.

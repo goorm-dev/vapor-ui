@@ -27,6 +27,11 @@ type Row = {
 
 const args = flags();
 const threshold = Number(args.threshold ?? DIFF_GATE);
+// A non-numeric --threshold parses to NaN, and `diffPixels > NaN` is always false — the gate
+// would pass everything without a word, which is the one failure lib.ts warns about.
+if (!Number.isFinite(threshold) || threshold < 0) {
+    throw new Error(`--threshold must be a non-negative number (got ${args.threshold})`);
+}
 // Colour icons are rasterizer noise, not signal — gate them only to exercise the failure path.
 const gateColor = args['gate-color'] === 'true';
 const keep = onlyFilter(args.only);

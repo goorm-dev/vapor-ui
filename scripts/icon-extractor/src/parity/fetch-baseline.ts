@@ -91,6 +91,7 @@ for (const icon of wanted) {
 console.log(`${wanted.length} icons, ${missing.length} to download (scale ${scale})`);
 
 const urls = new Map<string, string>();
+const renderFailed: string[] = [];
 for (let i = 0; i < missing.length; i += BATCH_SIZE) {
     const batch = missing.slice(i, i + BATCH_SIZE);
     const { images } = await getImage({
@@ -103,9 +104,15 @@ for (let i = 0; i < missing.length; i += BATCH_SIZE) {
     for (const icon of batch) {
         // HTTP 200 does not mean every node rendered — nulls are per-node failures.
         const url = images[icon.id];
-        if (!url) console.warn(pc.yellow(`render failed: ${icon.name}`));
+        if (!url) renderFailed.push(icon.name);
         else urls.set(icon.name, url);
     }
+}
+// A warning would let the run go green with a smaller baseline, and compare.ts enumerates the
+// baseline to decide what to check — so a failed render would quietly drop that icon's gate.
+if (renderFailed.length) {
+    console.error(pc.red(`figma rendered no image for: ${renderFailed.join(', ')}`));
+    process.exit(1);
 }
 
 const concurrency = pLimit(10);
