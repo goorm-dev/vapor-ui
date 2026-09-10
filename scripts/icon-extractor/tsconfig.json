@@ -11,5 +11,5 @@
         "lib": ["ES2023"],
         "types": ["node", "vitest/globals"]
     },
-    "include": ["src", "icon-extractor.config.json"]
+    "include": ["src", "tests", "icon-extractor.config.json"]
 }

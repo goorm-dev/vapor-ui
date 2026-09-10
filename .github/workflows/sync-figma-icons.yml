@@ -6,6 +6,15 @@ on:
         # Run every Thursday at 4 PM KST (07:00 UTC)
         - cron: '0 7 * * 4'
 
+# The called parity workflow uploads to S3 over OIDC, and a called workflow cannot be granted
+# more than its caller holds — `id-token` is never in the default token, so it has to be asked
+# for here. Opening this block replaces the defaults, so the write scopes this job's own
+# commit / PR steps rely on have to be listed too.
+permissions:
+    contents: write
+    pull-requests: write
+    id-token: write
+
 concurrency:
     # Fixed group, not keyed on github.ref: every run targets the same BRANCH_NAME
     # regardless of the ref it was dispatched from, so runs must serialize.
@@ -23,6 +32,10 @@ jobs:
                 # The unspecified default is `bash -e`, which has no `pipefail`: a failing command
                 # on the left of a pipe would be reported as success.
                 shell: bash
+        outputs:
+            has_changes: ${{ steps.pr.outputs.has_changes }}
+            pr_number: ${{ steps.pr.outputs.number }}
+            changed_icons: ${{ steps.changed.outputs.icons }}
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
@@ -45,12 +58,25 @@ jobs:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
               run: pnpm --filter @repo/icon-extractor sync-icons:symbol
 
+            # New and updated icons get drawn on the parity report so the sync PR shows them next
+            # to Figma. Deleted ones are left out — there is no component left to render.
+            - name: List changed icons
+              id: changed
+              run: |
+                  ICONS=$(jq -rs '[.[] | .created[], .updated[]] | join(",")' \
+                      .sync-summary/basic.json .sync-summary/symbol.json)
+                  echo "icons=$ICONS" >> "$GITHUB_OUTPUT"
+
             # Reads what both syncs recorded and writes `.changeset/sync-icons-*.md` plus
             # `pr_body.md`. Untracked until the next step decides there is something to commit.
             - name: Write changeset and PR body
               run: pnpm --filter @repo/icon-extractor write-release-notes
 
             - name: Commit and open pull request
+              # The `pr_number` job output reads this id. A missing step id is not an error in
+              # Actions — the expression just evaluates to empty — so losing it silently stops
+              # the parity report from ever reaching the sync PR.
+              id: pr
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
@@ -63,6 +89,9 @@ jobs:
                       fi
                       exit 0
                   fi
+
+                  # The parity job gates on this.
+                  echo "has_changes=true" >> "$GITHUB_OUTPUT"
 
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
@@ -85,18 +114,52 @@ jobs:
                   EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
                   if [[ -n "$EXISTING_PR" ]]; then
                       gh pr edit "$EXISTING_PR" --body-file pr_body.md
+                      PR_NUMBER="$EXISTING_PR"
                   else
-                      gh pr create \
+                      # `gh pr create` prints the new PR's URL, whose last segment is its number.
+                      PR_URL=$(gh pr create \
                           --title "feat: sync icons from Figma" \
                           --body-file pr_body.md \
                           --base main \
-                          --head "$BRANCH_NAME"
+                          --head "$BRANCH_NAME")
+                      PR_NUMBER="${PR_URL##*/}"
                   fi
+                  # The parity job needs this to know where to comment.
+                  echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+    # The gate, the report and the PR comment all live in icon-parity.yml so this entry point
+    # and the pull_request one can never drift apart.
+    #
+    # This call cannot be dropped in favour of that pull_request trigger: the sync PR is opened
+    # and pushed with GITHUB_TOKEN, and GitHub raises no workflow events for those, so the sync
+    # PR would otherwise never be checked. For the same reason there is no double run here.
+    #
+    # Manual dispatch always runs it, so the check can be exercised without a Figma diff.
+    parity:
+        name: Parity
+        needs: sync-figma-icons
+        if: needs.sync-figma-icons.outputs.has_changes == 'true' || github.event_name == 'workflow_dispatch'
+        uses: ./.github/workflows/icon-parity.yml
+        secrets: inherit
+        with:
+            pr-number: ${{ needs.sync-figma-icons.outputs.pr_number }}
+            changed-icons: ${{ needs.sync-figma-icons.outputs.changed_icons }}
+
+    notify:
+        name: Notify Slack
+        needs: [sync-figma-icons, parity]
+        # A skipped parity job is not a failure, so this only fires on a real one.
+        if: failure()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
 
             - name: Notify Slack on Failure
-              if: failure()
-              run: |
-                  WORKFLOW_STATUS=failure pnpm --filter @repo/icon-extractor notify:slack
+              run: WORKFLOW_STATUS=failure pnpm --filter @repo/icon-extractor notify:slack
               env:
                   SLACK_GDS_ALARM_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
                   GITHUB_REPOSITORY: ${{ github.repository }}

@@ -1,0 +1,159 @@
+name: '[CI] Icon Parity'
+
+# Renders every icon component in Chromium and compares it to Figma's own PNG.
+# Gate values (64px canvas, pixelmatch threshold 0.3 / includeAA, fail above 2 diff px)
+# are measured, not guessed — each value carries its measurement in the comments of
+# scripts/icon-extractor/src/parity/lib.ts.
+#
+# Two entry points share this one job so the gate and the report live in one place:
+#   - pull_request: any change that can alter how an icon rasterizes
+#   - workflow_call: the weekly Figma sync, on the PR it just opened
+
+on:
+    workflow_dispatch:
+    workflow_call:
+        inputs:
+            pr-number:
+                description: 'PR to comment the report on. Empty means report to the log only.'
+                type: string
+                required: false
+            changed-icons:
+                description: 'Comma-separated icons to draw on the report even when they pass.'
+                type: string
+                required: false
+    pull_request:
+        paths:
+            - packages/icons/src/**
+            - scripts/icon-extractor/src/parity/**
+            - scripts/icon-extractor/src/transformer/**
+            - scripts/icon-extractor/src/config.ts
+            - scripts/icon-extractor/icon-extractor.config.json
+            - .github/workflows/icon-parity.yml
+
+# This block replaces the default permissions rather than adding to them, so `contents` and
+# `pull-requests` have to stay listed alongside the OIDC `id-token` the S3 upload needs.
+permissions:
+    contents: read
+    pull-requests: write
+    id-token: write
+
+concurrency:
+    group: icon-parity-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    parity:
+        name: Icon Parity
+        runs-on: ubuntu-latest
+        # Forks get no FIGMA_TOKEN, so there is no baseline to compare against.
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+            CACHE: scripts/icon-extractor/src/parity/.cache
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
+            - name: Build icons
+              run: pnpm --filter @vapor-ui/icons build
+
+            - name: Install Chromium
+              run: pnpm --filter @repo/icon-extractor exec playwright install --with-deps chromium
+
+            # Colour icons are fetched and reported but not gated: Figma and Chromium antialias
+            # them differently enough (worst 164 px) to drown any real signal.
+            - name: Compare against Figma
+              id: compare
+              continue-on-error: true
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  # Passed through env, never interpolated into the script: `${{ }}` is a text
+                  # substitution the runner performs before bash parses the file, so a value
+                  # holding `$(...)` would run as code even inside double quotes.
+                  CHANGED_ICONS: ${{ inputs.changed-icons }}
+              run: |
+                  pnpm --filter @repo/icon-extractor parity:fetch --type=basic
+                  pnpm --filter @repo/icon-extractor parity:fetch --type=symbol
+                  pnpm --filter @repo/icon-extractor parity:render
+                  # --show adds rows to the page; it does not narrow the gate. Empty on the
+                  # pull_request path, where the diff itself already says what changed.
+                  pnpm --filter @repo/icon-extractor parity:compare \
+                      --show="$CHANGED_ICONS"
+
+            # compare.ts already computed these, so read them back instead of re-deriving them
+            # from the rendered report.
+            - name: Read counts
+              id: counts
+              if: always()
+              run: |
+                  if [[ ! -f "$CACHE/report.json" ]]; then
+                      # rendered must be set here too: an unset output is '', and '' != '0'
+                      # would send the upload after a page that was never written.
+                      printf 'ran=false\nrendered=0\n' >> "$GITHUB_OUTPUT"
+                      echo 'No parity report — the comparison never ran.' >> "$GITHUB_STEP_SUMMARY"
+                      exit 0
+                  fi
+                  {
+                      echo 'ran=true'
+                      jq -r '"total=\(.total)",
+                             "failed=\(.failed)",
+                             "mono=\(.mono.count)",
+                             "mono_worst=\(.mono.worst)",
+                             "rendered=\(.rendered)"' "$CACHE/report.json"
+                  } >> "$GITHUB_OUTPUT"
+
+            # A green run draws no rows, so there is no page worth an assume-role and an upload.
+            - name: Configure AWS credentials
+              if: steps.counts.outputs.rendered != '0'
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: ${{ secrets.AWS_IAM_ROLE_NAME }}
+                  role-session-name: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            # report.html inlines the Figma / code / diff PNG of every failing icon, so one object
+            # is the whole report. `index.html` is the bucket website's default document.
+            - name: Upload report to S3
+              id: s3
+              if: steps.counts.outputs.rendered != '0'
+              env:
+                  # A branch name may contain `$`, `(` and backticks, so interpolating it into
+                  # the script would hand this step — which holds the AWS session — arbitrary code.
+                  BRANCH_REF: ${{ github.head_ref || github.ref_name }}
+              run: |
+                  BRANCH=$(echo "$BRANCH_REF" | tr '/' '-')
+                  # Keyed on the run, not the branch alone: a branch-only key means a second run
+                  # today overwrites the page that an earlier PR comment still links to, so that
+                  # comment quietly starts showing a different run's result. `run_id` is unique
+                  # per run and already monotonic, so it sorts chronologically for free.
+                  KEY="icon-parity/$BRANCH/${{ github.run_id }}/index.html"
+                  aws s3 cp "$CACHE/report.html" "s3://${{ secrets.BUCKET_NAME }}/$KEY"
+                  URL="http://${{ secrets.BUCKET_NAME }}/$KEY"
+                  echo "url=$URL" >> "$GITHUB_OUTPUT"
+                  # A dispatch run has no PR to comment on, so the link has to land somewhere.
+                  echo "[Icon parity report]($URL)" >> "$GITHUB_STEP_SUMMARY"
+
+            - name: Comment on PR
+              if: steps.counts.outputs.ran == 'true' && (inputs.pr-number || github.event.pull_request.number)
+              uses: marocchino/sticky-pull-request-comment@v2
+              with:
+                  number: ${{ inputs.pr-number || github.event.pull_request.number }}
+                  header: icon-parity
+                  message: |
+                      ${{ steps.compare.outcome == 'failure' && '🚫 **아이콘 시각 검증 실패**' || '✅ **아이콘 시각 검증 통과**' }}
+
+                      | 전체 | 게이트 대상 (mono) | 실패 | mono 최대 diff | 리포트 |
+                      | :--- | :--- | :--- | :--- | :--- |
+                      | ${{ steps.counts.outputs.total }} | ${{ steps.counts.outputs.mono }} | ${{ steps.counts.outputs.failed }} | ${{ steps.counts.outputs.mono_worst }} px | ${{ steps.counts.outputs.rendered != '0' && format('[열기 ↗︎]({0})', steps.s3.outputs.url) || '—' }} |
+
+                      [워크플로 실행 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                  # Same author as the visual-regression comment — both land on the same PR, and
+                  # the repo already reserves the default token for machine work rather than
+                  # anything a reviewer reads.
+                  GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
+
+            - name: Fail if parity failed
+              if: steps.compare.outcome == 'failure'
+              run: exit 1
