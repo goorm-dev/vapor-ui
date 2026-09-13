@@ -2,7 +2,9 @@ import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, Text, VStack } from '@vapor-ui/core';
-import { ChevronDoubleRightOutlineIcon, PlusOutlineIcon } from '@vapor-ui/icons';
+import { ChevronDoubleRightOutlineIcon, PlusOutlineIcon, TrashOutlineIcon } from '@vapor-ui/icons';
+
+import { Regression } from '~/utils/regressions';
 
 import { Menu } from '.';
 
@@ -56,7 +58,7 @@ export const Default: Story = {
                         />
                     </Menu.Group>
 
-                    <Menu.Submenu trigger="label">
+                    <Menu.Submenu trigger="label" defaultOpen>
                         <Menu.CheckGroup
                             mode="multiple"
                             label="multiple group"
@@ -168,4 +170,97 @@ export const Controlled: Story = {
             </VStack>
         );
     },
+};
+
+/* -----------------------------------------------------------------------------------------------
+ * Test Bed
+ * ---------------------------------------------------------------------------------------------- */
+
+const checkGroupValues = ['옵션 1', '옵션 2', '옵션 3'] as const;
+
+const TestBedRender = () => {
+    return (
+        <Regression.Table
+                conditions={[
+                    {
+                        key: 'checkGroupMode',
+                        label: 'checkGroup mode',
+                        values: ['single', 'multiple'] as const,
+                        format: (v) => `mode = ${v}`,
+                    },
+                    {
+                        key: 'hasSelection',
+                        label: 'selection',
+                        values: [true, false],
+                        format: (v) => `selection = ${v ? 'O' : 'X'}`,
+                    },
+                ]}
+                render={(row, container) => (
+                    <Menu.Root open onOpenChange={() => {}} container={container ?? undefined}>
+                        <Menu.Group label="액션">
+                            <Menu.Item label="복사" onClick={() => {}} />
+                            <Menu.Item
+                                label="붙여넣기"
+                                leading={<PlusOutlineIcon />}
+                                onClick={() => {}}
+                            />
+                            <Menu.Item
+                                label="링크 열기"
+                                trailing={<ChevronDoubleRightOutlineIcon />}
+                                onClick={() => {}}
+                            />
+                            <Menu.Item
+                                label="삭제"
+                                variant="critical"
+                                leading={<TrashOutlineIcon />}
+                                trailing={<ChevronDoubleRightOutlineIcon />}
+                                onClick={() => {}}
+                            />
+                        </Menu.Group>
+
+                        {row.checkGroupMode === 'single' ? (
+                            <Menu.CheckGroup
+                                mode="single"
+                                label="옵션"
+                                value={row.hasSelection ? checkGroupValues[0] : undefined}
+                            >
+                                {checkGroupValues.map((value) => (
+                                    <Menu.CheckItem key={value} label={value} value={value} />
+                                ))}
+                            </Menu.CheckGroup>
+                        ) : (
+                            <Menu.CheckGroup
+                                mode="multiple"
+                                label="옵션"
+                                value={
+                                    row.hasSelection
+                                        ? [checkGroupValues[0], checkGroupValues[1]]
+                                        : undefined
+                                }
+                            >
+                                {checkGroupValues.map((value) => (
+                                    <Menu.CheckItem key={value} label={value} value={value} />
+                                ))}
+                            </Menu.CheckGroup>
+                        )}
+
+                        <Menu.Submenu trigger="중첩 메뉴" open onOpenChange={() => {}}>
+                            <Menu.CheckGroup mode="multiple" label="하위 옵션">
+                                <Menu.CheckItem label="하위 1" value="하위 1" />
+                                <Menu.CheckItem label="하위 2" value="하위 2" />
+                            </Menu.CheckGroup>
+                        </Menu.Submenu>
+                    </Menu.Root>
+                )}
+        />
+    );
+};
+
+export const TestBed_Light: Story = {
+    render: () => <TestBedRender />,
+};
+
+export const TestBed_Dark: Story = {
+    globals: { appearance: 'dark' },
+    render: () => <TestBedRender />,
 };
