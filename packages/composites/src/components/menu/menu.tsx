@@ -536,16 +536,35 @@ const submenuSlots = createSlots({
     trigger: MenuPrimitives.SubmenuTriggerItem,
 });
 
-export const MenuSubmenu = ({ trigger, children }: MenuSubmenu.Props) => {
-    return (
-        <MenuPrimitives.SubmenuRoot>
-            <submenuSlots.trigger
-                render={trigger}
-                // $css={{ padding: '$100', paddingLeft: '$150' }}
-            />
+export const MenuSubmenu = ({
+    // functional
+    open,
+    defaultOpen,
+    onOpenChange,
+    actionsRef,
+    container,
 
-            <MenuPrimitives.PortalPrimitive>
-                <MenuPrimitives.PositionerPrimitive side="right" sideOffset={0}>
+    // variants
+    isDisabled,
+    side = 'right',
+    align,
+
+    // slots
+    trigger,
+    children,
+}: MenuSubmenu.Props) => {
+    return (
+        <MenuPrimitives.SubmenuRoot
+            open={open}
+            defaultOpen={defaultOpen}
+            onOpenChange={onOpenChange}
+            actionsRef={actionsRef}
+            disabled={isDisabled}
+        >
+            <submenuSlots.trigger render={trigger} />
+
+            <MenuPrimitives.PortalPrimitive container={container}>
+                <MenuPrimitives.PositionerPrimitive side={side} sideOffset={0} align={align}>
                     <MenuPrimitives.SubmenuPopupPrimitive>
                         {children}
                     </MenuPrimitives.SubmenuPopupPrimitive>
@@ -557,7 +576,7 @@ export const MenuSubmenu = ({ trigger, children }: MenuSubmenu.Props) => {
 
 type SubmenuSlots = SlotProps<typeof submenuSlots>;
 
-export interface MenuSubmenuProps extends Omit<MenuRoot.Props, keyof Slots> {
+export interface MenuSubmenuProps extends Omit<MenuRoot.Props, keyof Slots | 'modal'> {
     /**
      * 중첩 메뉴를 여는 아이템의 레이블. React Element를 전달하여 커스텀할 수도 있다.
      * @example
