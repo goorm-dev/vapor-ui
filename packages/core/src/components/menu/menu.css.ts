@@ -49,15 +49,14 @@ export const item = componentStyle([
         display: 'flex',
         alignItems: 'center',
         alignSelf: 'stretch',
-        justifyContent: 'space-between',
         gap: vars.size.space['050'],
 
         border: 'none',
 
         borderRadius: vars.size.borderRadius['300'],
         cursor: 'pointer',
-        paddingRight: vars.size.space['150'],
-        paddingLeft: vars.size.space['250'],
+        paddingRight: vars.size.space['100'],
+        paddingLeft: vars.size.space['150'],
         paddingBlock: vars.size.space['050'],
 
         height: vars.size.dimension['400'],
@@ -80,28 +79,28 @@ export const separator = componentStyle({
 
 export const subTrigger = item;
 
+export const subTriggerIcon = componentStyle({
+    marginLeft: 'auto',
+});
+
 export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
     foregrounds({ color: 'secondary' }),
     {
-        paddingTop: vars.size.space['100'],
-        paddingRight: vars.size.space['050'],
+        paddingTop: vars.size.space['075'],
+        paddingRight: vars.size.space['100'],
         paddingBottom: vars.size.space['050'],
-        paddingLeft: vars.size.space['250'],
+        paddingLeft: vars.size.space['150'],
     },
 ]);
 
 export const indicator = componentStyle([
     foregrounds({ color: 'normal' }),
     {
-        position: 'absolute',
-        top: '50%',
-        left: vars.size.space['050'],
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transform: 'translateY(-50%)',
-        width: vars.size.dimension['150'],
-        height: vars.size.dimension['150'],
+        width: vars.size.dimension['200'],
+        height: vars.size.dimension['200'],
     },
 ]);
