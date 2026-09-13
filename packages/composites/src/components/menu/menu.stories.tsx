@@ -194,9 +194,20 @@ const TestBedRender = () => {
                     values: [true, false],
                     format: (v) => `selection = ${v ? 'O' : 'X'}`,
                 },
+                {
+                    key: 'isDisabled',
+                    label: 'disabled',
+                    values: [false, true],
+                    format: (v) => `disabled = ${v ? 'O' : 'X'}`,
+                },
             ]}
             render={(row, container) => (
-                <Menu.Root open onOpenChange={() => {}} container={container ?? undefined}>
+                <Menu.Root
+                    open
+                    onOpenChange={() => {}}
+                    isDisabled={row.isDisabled}
+                    container={container ?? undefined}
+                >
                     <Menu.Group label="액션">
                         <Menu.Item label="복사" onClick={() => {}} />
                         <Menu.Item
