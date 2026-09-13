@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { Box, Menu as MenuPrimitives } from '@vapor-ui/core';
+import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -183,11 +184,16 @@ export const MenuItem = ({ variant, label, leading, trailing, onClick }: MenuIte
     return (
         <MenuPrimitives.Item
             onClick={onClick}
-            $css={{ color: variant === 'critical' ? '$fg-danger' : '$fg-normal' }}
+            $css={{
+                color: variant === 'critical' ? '$fg-danger' : '$fg-normal',
+                display: 'grid',
+                gridTemplateAreas: leading ? '"leading label trailing"' : '"label trailing"',
+                gridTemplateColumns: leading ? '1rem 1fr auto' : '1fr auto',
+            }}
         >
-            <itemSlots.leading render={leading} />
-            <itemSlots.label render={label} $css={{ flex: 1 }} />
-            <itemSlots.trailing render={trailing} />
+            <itemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
+            <itemSlots.label render={label} $css={{ flex: 1, gridArea: 'label' }} />
+            <itemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
         </MenuPrimitives.Item>
     );
 };
@@ -232,13 +238,23 @@ export namespace MenuItem {
 /* -----------------------------------------------------------------------------------------------*/
 
 type MenuCheckGroupContextValue =
-    | { mode: 'single' }
-    | { mode: 'multiple'; value: string[]; handleValueChange: (value: string) => void };
+    | {
+          mode: 'single';
+          hasSelection: boolean;
+      }
+    | {
+          mode: 'multiple';
+          hasSelection: boolean;
+          value: string[];
+          handleValueChange: (value: string) => void;
+      };
 
 const MenuCheckGroupContext = createContext<MenuCheckGroupContextValue | undefined>(undefined);
 
+const useOptionalMenuCheckGroupContext = () => useContext(MenuCheckGroupContext);
+
 const useMenuCheckGroupContext = () => {
-    const context = useContext(MenuCheckGroupContext);
+    const context = useOptionalMenuCheckGroupContext();
     if (context === undefined) {
         throw new Error(
             'MenuCheckGroupContext is missing. MenuCheckGroup parts must be placed within <Menu.CheckGroup>.',
@@ -261,23 +277,35 @@ export const MenuCheckGroup = (props: MenuCheckGroup.Props) => {
 };
 
 const SingleCheckGroup = ({
-    value,
+    value: valueProp,
     defaultValue,
     onValueChange,
     label,
     children,
 }: MenuSingleCheckGroupProps) => {
-    const context = useMemo<MenuCheckGroupContextValue>(() => ({ mode: 'single' }), []);
+    const [value, setValueState] = useControlled<string | undefined>({
+        name: 'MenuCheckGroup',
+        controlled: valueProp,
+        default: defaultValue,
+    });
+
+    const handleValueChange = useStableCallback((next: string) => {
+        onValueChange?.(next);
+        setValueState(next);
+    });
+
+    const hasSelection = !!value;
+
+    const context = useMemo<MenuCheckGroupContextValue>(
+        () => ({ mode: 'single', hasSelection }),
+        [hasSelection],
+    );
 
     return (
         <MenuCheckGroupContext.Provider value={context}>
             <Separator />
 
-            <MenuPrimitives.RadioGroup
-                value={value}
-                defaultValue={defaultValue}
-                onValueChange={onValueChange}
-            >
+            <MenuPrimitives.RadioGroup value={value} onValueChange={handleValueChange}>
                 <checkGroupSlots.label render={label} />
                 {children}
             </MenuPrimitives.RadioGroup>
@@ -309,9 +337,11 @@ const MultipleCheckGroup = ({
         setValueState(next);
     });
 
+    const hasSelection = !!value.length;
+
     const context = useMemo<MenuCheckGroupContextValue>(
-        () => ({ mode: 'multiple', value, handleValueChange }),
-        [value, handleValueChange],
+        () => ({ mode: 'multiple', hasSelection, value, handleValueChange }),
+        [hasSelection, value, handleValueChange],
     );
 
     return (
@@ -418,29 +448,53 @@ export const MenuCheckItem = ({
     trailing,
 }: MenuCheckItem.Props) => {
     const context = useMenuCheckGroupContext();
-    const { mode } = context;
+    const { mode, hasSelection } = context;
 
     if (mode === 'single') {
         return (
-            <MenuPrimitives.RadioItem closeOnClick value={valueProp} onClick={onClick}>
-                <checkItemSlots.label render={label} />
-                <checkItemSlots.trailing render={trailing} />
-            </MenuPrimitives.RadioItem>
+            <MenuPrimitives.RadioItemPrimitive
+                closeOnClick
+                value={valueProp}
+                onClick={onClick}
+                $css={{
+                    display: 'grid',
+                    gridTemplateAreas: hasSelection
+                        ? '"marker label trailing"'
+                        : '"label trailing"',
+                    gridTemplateColumns: hasSelection ? '1rem 1fr auto' : '1fr auto',
+                }}
+            >
+                <MenuPrimitives.RadioItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
+                    <ConfirmOutlineIcon />
+                </MenuPrimitives.RadioItemIndicatorPrimitive>
+
+                <checkItemSlots.label render={label} $css={{ gridArea: 'label' }} />
+                <checkItemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
+            </MenuPrimitives.RadioItemPrimitive>
         );
     }
 
     const { value, handleValueChange } = context;
 
     return (
-        <MenuPrimitives.CheckboxItem
-            closeOnClick={false}
+        <MenuPrimitives.CheckboxItemPrimitive
+            closeOnClick
             checked={value.includes(valueProp)}
             onCheckedChange={() => handleValueChange(valueProp)}
             onClick={onClick}
+            $css={{
+                display: 'grid',
+                gridTemplateAreas: hasSelection ? '"marker label trailing"' : '"label trailing"',
+                gridTemplateColumns: hasSelection ? '1rem 1fr auto' : '1fr auto',
+            }}
         >
-            <checkItemSlots.label render={label} />
-            <checkItemSlots.trailing render={trailing} />
-        </MenuPrimitives.CheckboxItem>
+            <MenuPrimitives.CheckboxItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
+                <ConfirmOutlineIcon />
+            </MenuPrimitives.CheckboxItemIndicatorPrimitive>
+
+            <checkItemSlots.label render={label} $css={{ gridArea: 'label' }} />
+            <checkItemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
+        </MenuPrimitives.CheckboxItemPrimitive>
     );
 };
 
@@ -485,7 +539,10 @@ const submenuSlots = createSlots({
 export const MenuSubmenu = ({ trigger, children }: MenuSubmenu.Props) => {
     return (
         <MenuPrimitives.SubmenuRoot>
-            <submenuSlots.trigger render={trigger} />
+            <submenuSlots.trigger
+                render={trigger}
+                // $css={{ padding: '$100', paddingLeft: '$150' }}
+            />
 
             <MenuPrimitives.PortalPrimitive>
                 <MenuPrimitives.PositionerPrimitive side="right" sideOffset={0}>
