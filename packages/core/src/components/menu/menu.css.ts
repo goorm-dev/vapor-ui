@@ -22,7 +22,7 @@ export const popup = componentStyle({
 
     backgroundColor: vars.color.background['canvas-overlay'],
     padding: vars.size.space['050'],
-    minWidth: 'max(var(--anchor-width), 12.5rem)',
+    minWidth: 'max(var(--anchor-width, 0px), 12.5rem)',
 
     overflowY: 'auto',
 
