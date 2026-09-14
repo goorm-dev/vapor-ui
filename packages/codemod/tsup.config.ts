@@ -5,6 +5,7 @@ export default defineConfig([
     {
         entry: { 'bin/cli': 'src/bin/cli.ts' },
         format: ['esm'],
+        target: 'node24',
         outDir: './dist',
         clean: true,
         sourcemap: false,
@@ -16,6 +17,7 @@ export default defineConfig([
     {
         entry: ['src/transforms/**/*.ts', '!src/**/*.test.ts', '!src/**/*.spec.ts'],
         format: ['esm'],
+        target: 'node24',
         outDir: './dist/transforms',
         clean: true,
         sourcemap: false,
