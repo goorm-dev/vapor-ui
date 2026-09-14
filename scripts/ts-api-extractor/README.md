@@ -20,15 +20,16 @@ This package automatically generates JSON documentation for `packages/core` comp
 Run from the monorepo root:
 
 ```bash
-# Build the extractor package
-pnpm --filter @vapor-ui/ts-api-extractor build
-
 # Run extraction from website (uses apps/website/docs-extractor.config.mjs)
 pnpm --filter website extract
 
 # Extract a specific component only
 pnpm --filter website extract --component Button
 ```
+
+There is no build step. The CLI runs straight from TypeScript source through `tsx`,
+and the package exports `./src/index.ts` so a config file can import `defineConfig`
+the same way. Only `pnpm install` is required.
 
 Run package tests:
 
@@ -203,7 +204,7 @@ src/
 │   └── config/loader.ts          #   find and import the config file
 │
 ├── app/extract.ts           # wiring only — no rules, no IO of its own
-└── index.ts                 # public API
+└── index.ts                 # public API (exported as source, no dist)
 ```
 
 Layer boundaries are enforced by ESLint (`eslint.config.mjs`): `domain/**` may not
@@ -217,7 +218,6 @@ import from `cli/` or `app/`.
 | Type check | `tsc --noEmit` | tsc    |
 | Lint       | `eslint`       | eslint |
 | Test       | `vitest`       | vitest |
-| Build      | `tsup`         | tsup   |
 
 ## Troubleshooting
 
@@ -237,7 +237,7 @@ import from `cli/` or `app/`.
 
 ### `module not found` when running from website
 
-- Run `pnpm install` after directory renames or workspace changes
+- Run `pnpm install` — `tsx` and the workspace link are set up by install, not by a build
 
 ## Future Extensions
 

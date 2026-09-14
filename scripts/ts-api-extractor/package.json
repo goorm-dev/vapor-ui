@@ -5,22 +5,9 @@
     "description": "TypeScript AST-based API extractor for documentation generation",
     "type": "module",
     "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
-        }
+        ".": "./src/index.ts"
     },
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "bin": {
-        "ts-api-extractor": "./dist/cli/index.js"
-    },
-    "files": [
-        "dist"
-    ],
     "scripts": {
-        "build": "tsup",
-        "dev": "tsup --watch",
         "lint": "eslint ./src",
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",
@@ -37,7 +24,6 @@
         "@types/node": "^20.19.43",
         "@vitest/coverage-v8": "catalog:",
         "eslint": "catalog:",
-        "tsup": "^8.5.1",
         "tsx": "^4.23.13",
         "typescript": "catalog:",
         "vitest": "catalog:"
