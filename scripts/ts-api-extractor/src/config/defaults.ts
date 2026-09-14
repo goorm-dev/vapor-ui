@@ -1,10 +1,8 @@
-import path from 'node:path';
-
 import type { ExtractorConfig } from '~/config/schema';
 
-const CORE_PATH = path.resolve(__dirname, '../../../packages/core');
-const CORE_TSCONFIG_PATH = path.resolve(CORE_PATH, 'tsconfig.json');
-const OUTPUT_DIR = path.resolve(__dirname, '../../../apps/website/public/components/generated');
+const CORE_PATH = 'packages/core';
+const CORE_TSCONFIG_PATH = 'packages/core/tsconfig.json';
+const OUTPUT_DIR = 'apps/website/public/components/generated';
 
 /**
  * Default extractor configuration.
