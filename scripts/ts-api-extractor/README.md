@@ -11,7 +11,8 @@ This package automatically generates JSON documentation for `packages/core` comp
 **Key characteristics:**
 
 - Location: `scripts/ts-api-extractor`
-- Architecture: function-first extraction pipeline (`scan -> parse -> resolve -> defaults -> filter -> transform -> write`)
+- Architecture: three layers (`cli` / `domain` / `infrastructure`) wired together by `app/extract.ts`
+- Pipeline: `scan -> parse -> resolve -> defaults -> filter -> transform -> write`
 - Primary usage: `pnpm --filter website extract`
 
 ## Quick Start
@@ -19,15 +20,16 @@ This package automatically generates JSON documentation for `packages/core` comp
 Run from the monorepo root:
 
 ```bash
-# Build the extractor package
-pnpm --filter @vapor-ui/ts-api-extractor build
-
 # Run extraction from website (uses apps/website/docs-extractor.config.mjs)
 pnpm --filter website extract
 
 # Extract a specific component only
 pnpm --filter website extract --component Button
 ```
+
+There is no build step. The CLI runs straight from TypeScript source through `tsx`,
+and the package exports `./src/index.ts` so a config file can import `defineConfig`
+the same way. Only `pnpm install` is required.
 
 Run package tests:
 
@@ -39,13 +41,12 @@ pnpm --filter @vapor-ui/ts-api-extractor test:run
 
 ## CLI Reference
 
-| Option        | Short | Description                                  |
-| ------------- | ----- | -------------------------------------------- |
-| `--component` | `-n`  | Extract a specific component file only       |
-| `--all`       | `-a`  | Bypass all filters (external/html/sprinkles) |
-| `--verbose`   | `-v`  | Enable verbose logging                       |
-| `--config`    | -     | Specify a config file path                   |
-| `--no-config` | -     | Disable config file loading                  |
+| Option        | Short | Description                            |
+| ------------- | ----- | -------------------------------------- |
+| `--component` | `-n`  | Extract a specific component file only |
+| `--config`    | -     | Specify a config file path             |
+
+`verbose` is a config-file option, not a CLI flag.
 
 ## Configuration
 
@@ -65,7 +66,11 @@ The CLI searches for these filenames (in order):
 1. CLI flags (highest)
 2. File specified via `--config`
 3. Default config file in current working directory
-4. `src/config/defaults.ts` (lowest)
+4. `src/domain/config/defaults.ts` (behavioral defaults only)
+
+`inputPath`, `tsconfig` and `outputDir` have **no defaults** — they depend on where
+the tool is invoked from, so a config file is required and extraction fails fast
+if any of the three is missing.
 
 ### Config Schema
 
@@ -78,7 +83,6 @@ export default defineConfig({
     exclude: [],
     excludeDefaults: true,
     outputDir: './public/components/generated',
-    languages: ['en'],
     filterExternal: true,
     filterHtml: true,
     filterSprinkles: true,
@@ -117,7 +121,8 @@ Each component generates a JSON file (`<kebab-case>.json`):
 Components are recognized based on this pattern:
 
 - File contains `export namespace <ComponentName>`
-- Namespace contains `export interface Props`
+- Namespace contains `export type Props = ...` (an exported type alias named `Props`;
+  an `interface Props` is not picked up)
 
 Files not matching this pattern are excluded from extraction.
 
@@ -126,7 +131,8 @@ Files not matching this pattern are excluded from extraction.
 ### Type Resolution
 
 - Parses ts-morph types to strings
-- Resolver plugin chain handles React/Base UI/function/union types
+- A chain of `Resolver` objects handles React/Base UI/function/union types; the
+  first one to return a non-null string wins (`type-printer/resolve-type.ts`)
 - Cleaner stage normalizes unions and abbreviates render callbacks
 
 ### Default Value Extraction
@@ -151,8 +157,8 @@ Props are filtered based on configuration:
 
 ## Extraction Pipeline
 
-1. Parse CLI flags (`--component`, `--all`, `--config`, `--no-config`, `--verbose`)
-2. Load and merge config (defaults + file config + flags)
+1. Parse CLI flags (`--component`, `--config`)
+2. Load and merge config (behavioral defaults + file config), failing if a path field is missing
 3. Scan target component files
 4. Initialize a ts-morph project from the configured `tsconfig`
 5. Parse exported namespaces and `Props` declarations (`interface` or `type`)
@@ -162,25 +168,48 @@ Props are filtered based on configuration:
 
 ## Architecture
 
-The package is organized around pipeline stages and pure transformation modules:
+Three layers. The folder a file lives in tells you which one it belongs to.
 
 ```text
-scripts/ts-api-extractor/
-├── src/
-│   ├── cli/                 # meow CLI entrypoint + option resolution
-│   ├── config/              # config schema, defaults, loader
-│   ├── models/              # parsed/model/json/extract types
-│   ├── resolve/             # guard-clause type resolver + base-ui mapper
-│   ├── rules/               # categorize, sort, normalize
-│   ├── extract.ts           # orchestrator (project init, IO, prettier)
-│   ├── extract-defaults.ts  # destructuring + recipe default extraction
-│   ├── filter.ts            # prop inclusion rules
-│   ├── parse.ts             # namespace/props parsing
-│   ├── scan.ts              # component file discovery
-│   ├── transform.ts         # parsed -> model -> json
-│   └── write.ts             # serialization + output planning
-└── dist/
+src/
+├── cli/                     # presentation — flags, exit codes, the only console.*
+│   ├── index.ts             #   meow entrypoint
+│   ├── options.ts           #   flags -> extract() inputs (no filesystem work)
+│   └── reporter.ts          #   the single Reporter implementation that prints
+│
+├── domain/                  # business — no ts-morph, no node:*, no console
+│   ├── model.ts             #   ParsedProp / PropModel / ComponentModel
+│   ├── output.ts            #   JSON shape + extract() input/output types
+│   ├── output-format.ts     #   how a component becomes a file (name + bytes)
+│   ├── stage-config.ts      #   per-stage config (ParseConfig, FilterConfig)
+│   ├── reporter.ts          #   output port implemented by cli/reporter.ts
+│   ├── errors.ts            #   ExtractorError (bad request, not a crash)
+│   ├── filter.ts            #   prop inclusion rules
+│   ├── transform.ts         #   parsed -> model
+│   ├── serialize.ts         #   model -> json
+│   ├── clean-type.ts        #   type-string normalization
+│   ├── file-name.ts         #   kebab-case
+│   ├── config/              #   schema, validation, merge, defaults, defineConfig
+│   └── rules/               #   categorize, sort, normalize
+│
+├── infrastructure/          # everything that touches the outside world
+│   ├── ts-morph/
+│   │   ├── component-reader.ts   #   namespace/Props -> ParsedComponent
+│   │   ├── default-values.ts     #   destructuring + recipe defaults
+│   │   ├── source-classifier.ts  #   where a symbol was declared
+│   │   └── type-printer/         #   the Resolver chain + base-ui mapper
+│   ├── fs/
+│   │   ├── component-scanner.ts  #   glob + target file resolution
+│   │   └── file-writer.ts        #   write bytes, run prettier
+│   └── config/loader.ts          #   find and import the config file
+│
+├── app/extract.ts           # wiring only — no rules, no IO of its own
+└── index.ts                 # public API (exported as source, no dist)
 ```
+
+Layer boundaries are enforced by ESLint (`eslint.config.mjs`): `domain/**` may not
+import `ts-morph`, `node:*`, `glob` or `meow`, and `infrastructure/**` may not
+import from `cli/` or `app/`.
 
 ## Quality Standards
 
@@ -189,7 +218,6 @@ scripts/ts-api-extractor/
 | Type check | `tsc --noEmit` | tsc    |
 | Lint       | `eslint`       | eslint |
 | Test       | `vitest`       | vitest |
-| Build      | `tsup`         | tsup   |
 
 ## Troubleshooting
 
@@ -209,12 +237,13 @@ scripts/ts-api-extractor/
 
 ### `module not found` when running from website
 
-- Run `pnpm install` after directory renames or workspace changes
+- Run `pnpm install` — `tsx` and the workspace link are set up by install, not by a build
 
 ## Future Extensions
 
+- Additional output formats: implement `OutputFormat` in `domain/output-format.ts`
+  and pass it to `extract({ format })`
 - External plugin injection for Resolver/Filter/Defaults
-- Additional output formats (MD, YAML)
 - Multi-config/profile support in CLI
 
 ## License
