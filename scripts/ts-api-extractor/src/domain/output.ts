@@ -33,6 +33,8 @@ export interface ExtractInput {
     reporter?: Reporter;
     /** Defaults to JSON. */
     format?: OutputFormat;
+    /** 이번 추출에 없는 기존 산출물을 지운다. 전체 추출일 때만 켠다. */
+    prune?: boolean;
 }
 
 export interface ExtractOutput {

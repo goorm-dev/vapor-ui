@@ -11,6 +11,10 @@
     "author": "Vapor Team <vapor.ui@goorm.io>",
     "type": "module",
     "scripts": {
+        "api-docs": "pnpm api-docs:extract && pnpm api-docs:translate",
+        "api-docs:extract": "pnpm --filter @vapor-ui/ts-api-extractor extract",
+        "api-docs:translate": "pnpm --filter @vapor-ui/ts-api-extractor translate",
+        "api-docs:verify": "pnpm --filter @vapor-ui/ts-api-extractor verify",
         "build": "turbo run build",
         "build:storybook": "turbo run build:storybook",
         "clean": "turbo run clean && rimraf node_modules .turbo",

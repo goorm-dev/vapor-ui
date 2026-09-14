@@ -8,11 +8,14 @@
         ".": "./src/index.ts"
     },
     "scripts": {
+        "extract": "cd ../../apps/website && tsx --tsconfig ../../scripts/ts-api-extractor/tsconfig.json ../../scripts/ts-api-extractor/src/cli/index.ts",
         "lint": "eslint ./src",
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",
         "test:watch": "vitest",
-        "typecheck": "tsc --noEmit"
+        "translate": "cd ../../apps/website && tsx --tsconfig ../../scripts/ts-api-extractor/tsconfig.json ../../scripts/ts-api-extractor/src/cli/translate.ts",
+        "typecheck": "tsc --noEmit",
+        "verify": "tsx --tsconfig tsconfig.json src/cli/verify.ts"
     },
     "dependencies": {
         "glob": "^10.5.0",
@@ -20,6 +23,7 @@
         "ts-morph": "^22.0.0"
     },
     "devDependencies": {
+        "@anthropic-ai/claude-agent-sdk": "^0.3.270",
         "@repo/eslint-config": "workspace:*",
         "@types/node": "^20.19.43",
         "@vitest/coverage-v8": "catalog:",
