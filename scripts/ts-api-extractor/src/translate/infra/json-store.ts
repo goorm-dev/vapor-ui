@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type { PropsInfoJson } from '~/models/output';
-import { serializePropsInfo } from '~/stages/write';
+import type { PropsInfoJson } from '~/domain/output';
+import { jsonOutputFormat } from '~/domain/output-format';
 import type { Dictionary } from '~/translate/core/document';
 import type { Terms } from '~/translate/core/rules';
 
@@ -33,7 +33,7 @@ export function readDocs(dir: string): DocFile[] {
 
 /** 추출 단계와 같은 직렬화를 쓴다 — 들여쓰기가 갈리면 전 파일이 diff로 뜬다. */
 export function writeDoc(fullPath: string, doc: PropsInfoJson): void {
-    fs.writeFileSync(fullPath, serializePropsInfo(doc), 'utf8');
+    fs.writeFileSync(fullPath, jsonOutputFormat.serialize(doc), 'utf8');
 }
 
 export function readDictionary(filePath: string): Map<string, string> {

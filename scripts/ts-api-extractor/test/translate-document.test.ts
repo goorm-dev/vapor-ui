@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { PropsInfoJson } from '~/models/output';
+import type { PropsInfoJson } from '~/domain/output';
 import { applyDictionary, collectUnits } from '~/translate/core/document';
 
 const doc: PropsInfoJson = {

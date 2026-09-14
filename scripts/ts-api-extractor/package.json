@@ -5,32 +5,17 @@
     "description": "TypeScript AST-based API extractor for documentation generation",
     "type": "module",
     "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
-        }
+        ".": "./src/index.ts"
     },
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "bin": {
-        "ts-api-extractor": "./dist/cli/index.js"
-    },
-    "files": [
-        "dist",
-        "terms.json",
-        "translations.ko.json"
-    ],
     "scripts": {
-        "build": "tsup",
-        "dev": "tsup --watch",
-        "extract": "cd ../.. && tsx --tsconfig scripts/ts-api-extractor/tsconfig.json scripts/ts-api-extractor/src/cli/index.ts",
+        "extract": "cd ../../apps/website && tsx --tsconfig ../../scripts/ts-api-extractor/tsconfig.json ../../scripts/ts-api-extractor/src/cli/index.ts",
         "lint": "eslint ./src",
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",
         "test:watch": "vitest",
-        "translate": "cd ../.. && tsx --tsconfig scripts/ts-api-extractor/tsconfig.json scripts/ts-api-extractor/src/cli/translate.ts",
+        "translate": "cd ../../apps/website && tsx --tsconfig ../../scripts/ts-api-extractor/tsconfig.json ../../scripts/ts-api-extractor/src/cli/translate.ts",
         "typecheck": "tsc --noEmit",
-        "verify": "cd ../.. && tsx --tsconfig scripts/ts-api-extractor/tsconfig.json scripts/ts-api-extractor/src/cli/verify.ts"
+        "verify": "tsx --tsconfig tsconfig.json src/cli/verify.ts"
     },
     "dependencies": {
         "glob": "^10.5.0",
@@ -43,7 +28,6 @@
         "@types/node": "^20.19.43",
         "@vitest/coverage-v8": "catalog:",
         "eslint": "catalog:",
-        "tsup": "^8.5.1",
         "tsx": "^4.23.13",
         "typescript": "catalog:",
         "vitest": "catalog:"

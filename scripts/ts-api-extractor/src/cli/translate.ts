@@ -2,7 +2,7 @@ import meow from 'meow';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { loadExtractorConfig } from '~/config/loader';
+import { loadExtractorConfig } from '~/infrastructure/config/loader';
 import { applyDictionary, collectUnits } from '~/translate/core/document';
 import { planTranslation } from '~/translate/core/plan';
 import type { Translator } from '~/translate/core/translator';

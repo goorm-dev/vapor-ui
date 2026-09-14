@@ -1,7 +1,9 @@
 import meow from 'meow';
 
-import { CliError, resolveOptions } from '~/cli/options';
-import { extract } from '~/extract';
+import { resolveOptions } from '~/cli/options';
+import { createConsoleReporter } from '~/cli/reporter';
+import { extract } from '~/app/extract';
+import { ExtractorError } from '~/domain/errors';
 
 async function runCli(): Promise<void> {
     const cli = meow(
@@ -36,13 +38,14 @@ async function runCli(): Promise<void> {
         tsconfigPath: resolved.tsconfigPath,
         targetFiles: resolved.targetFiles,
         config: resolved.config,
+        reporter: createConsoleReporter(resolved.config.verbose),
         // 하나만 뽑을 때 정리하면 나머지 문서가 전부 날아간다.
         prune: !cli.flags.component,
     });
 }
 
 function handleCliError(error: unknown): never {
-    const prefix = error instanceof CliError ? 'Error' : 'Unexpected error';
+    const prefix = error instanceof ExtractorError ? 'Error' : 'Unexpected error';
     const message = error instanceof Error ? error.message : String(error);
     console.error(`${prefix}: ${message}`);
     process.exit(1);

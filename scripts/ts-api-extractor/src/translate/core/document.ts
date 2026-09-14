@@ -1,4 +1,4 @@
-import type { PropsInfoJson } from '~/models/output';
+import type { PropsInfoJson } from '~/domain/output';
 
 /** 추출 JSON 안에서 번역 대상이 되는 설명문 한 곳. */
 export interface Unit {

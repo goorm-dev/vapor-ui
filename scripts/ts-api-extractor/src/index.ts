@@ -4,7 +4,7 @@
  * TypeScript AST-based API extractor for documentation generation.
  */
 
-export { defaultExtractorConfig as config } from '~/config/defaults';
-export { defineConfig } from '~/config/define-config';
-export { loadExtractorConfig, type LoadConfigOptions } from '~/config/loader';
-export type { ExtractorConfig } from '~/config/schema';
+export { defaultExtractorConfig as config } from '~/domain/config/defaults';
+export { defineConfig } from '~/domain/config/define-config';
+export { loadExtractorConfig, type LoadConfigOptions } from '~/infrastructure/config/loader';
+export type { ExtractorConfig } from '~/domain/config/schema';
