@@ -1,6 +1,6 @@
-import type { Resolver } from '~/infrastructure/ts-morph/type-printer/shared';
-
 import type { Type } from 'ts-morph';
+
+import type { Resolver } from '~/infrastructure/ts-morph/type-printer/shared';
 
 function isPrimitive(type: Type): boolean {
     return (

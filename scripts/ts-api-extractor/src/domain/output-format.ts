@@ -1,5 +1,5 @@
-import type { PropsInfoJson } from '~/domain/output';
 import { toKebabCase } from '~/domain/file-name';
+import type { PropsInfoJson } from '~/domain/output';
 
 /**
  * How one extracted component becomes one file on disk. Adding a format means

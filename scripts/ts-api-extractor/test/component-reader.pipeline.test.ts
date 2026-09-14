@@ -6,11 +6,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { ModuleKind, ModuleResolutionKind, Project, ScriptTarget } from 'ts-morph';
 
-import type { FilterConfig } from '~/domain/stage-config';
 import { filterParsedComponents } from '~/domain/filter';
-import { parseSourceFile } from '~/infrastructure/ts-morph/component-reader';
 import { componentsToJson } from '~/domain/serialize';
+import type { FilterConfig } from '~/domain/stage-config';
 import { parsedComponentsToModels } from '~/domain/transform';
+import { parseSourceFile } from '~/infrastructure/ts-morph/component-reader';
 
 function createProject(): Project {
     return new Project({

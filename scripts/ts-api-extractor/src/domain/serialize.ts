@@ -1,5 +1,5 @@
-import type { PropertyJson, PropsInfoJson } from '~/domain/output';
 import type { ComponentModel, PropModel } from '~/domain/model';
+import type { PropertyJson, PropsInfoJson } from '~/domain/output';
 
 export function propModelToJson(model: PropModel): PropertyJson {
     return {

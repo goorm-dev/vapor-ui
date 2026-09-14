@@ -2,15 +2,15 @@ import path from 'node:path';
 import { Project } from 'ts-morph';
 
 import { resolveComponentInclude } from '~/domain/config/resolve';
-import type { FilterConfig, ParseConfig } from '~/domain/stage-config';
-import type { ExtractInput, ExtractOutput } from '~/domain/output';
-import { silentReporter } from '~/domain/reporter';
 import { filterParsedComponents } from '~/domain/filter';
-import { parseSourceFile } from '~/infrastructure/ts-morph/component-reader';
-import { jsonOutputFormat, formatFileName } from '~/domain/output-format';
+import type { ExtractInput, ExtractOutput } from '~/domain/output';
+import { formatFileName, jsonOutputFormat } from '~/domain/output-format';
+import { silentReporter } from '~/domain/reporter';
 import { componentsToJson } from '~/domain/serialize';
+import type { FilterConfig, ParseConfig } from '~/domain/stage-config';
 import { parsedComponentsToModels } from '~/domain/transform';
 import { pruneStaleFiles, writeFiles } from '~/infrastructure/fs/file-writer';
+import { parseSourceFile } from '~/infrastructure/ts-morph/component-reader';
 
 export function extract(input: ExtractInput): ExtractOutput {
     const { config, reporter = silentReporter, format = jsonOutputFormat, prune = false } = input;

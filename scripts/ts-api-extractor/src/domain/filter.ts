@@ -3,8 +3,8 @@
  *
  * Determines which props to include/exclude from extraction output.
  */
-import type { FilterConfig } from '~/domain/stage-config';
 import type { ParsedComponent, PropSource } from '~/domain/model';
+import type { FilterConfig } from '~/domain/stage-config';
 
 const DEPRECATED_CSS_PROPS = new Set([
     '$css',
