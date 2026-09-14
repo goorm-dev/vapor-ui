@@ -40,7 +40,7 @@ cd vapor-ui
 git remote add upstream https://github.com/goorm-dev/vapor-ui.git
 ```
 
-2. Switch to the Node version in [.nvmrc](./.nvmrc) (`pnpm install` refuses to run on any other major version):
+2. Switch to the Node version in [.nvmrc](./.nvmrc) (`pnpm install` requires Node.js 24 or newer):
 
 ```bash
 nvm use   # or: fnm use
