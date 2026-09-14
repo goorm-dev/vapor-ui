@@ -44,7 +44,6 @@ export const root = componentRecipe({
     variants: {
         /**
          * Visual style of the button.
-         * @default 'fill'
          */
         variant: { fill: {}, outline: {}, ghost: {} },
     },
@@ -62,7 +61,6 @@ export interface DialogRootProps
     /**
      *
      * Closes the dialog when the overlay is clicked.
-     * @default true
      */
     closeOnClickOverlay?: boolean;
 }
@@ -272,14 +270,12 @@ Explain what happens when the prop is set — especially when it interacts with 
 /**
  *
  * Disables the button, blocking all interactions and dimming its appearance. Automatically set to `true` when `loading` is `true`.
- * @default false
  */
 disabled?: boolean;
 
 /**
  *
  * Shows a spinner and disables the button while `true`.
- * @default false
  */
 loading?: boolean;
 ```
@@ -309,6 +305,25 @@ onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
  * Called when the button is clicked or activated via Enter or Space key.
  */
 onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+```
+
+**5. Never document default values**
+
+Don't write the `@default` tag and don't write `Default:` inline. The extractor (`scripts/ts-api-extractor`) does not parse the `@default` tag; it reads `defaultValue` from the component function's destructuring defaults via the AST, so a default written in JSDoc is rendered twice in the docs table. Existing `@default` tags in the codebase stay as they are — just don't add new ones.
+
+```tsx
+// ❌ default duplicated in the docs table
+/**
+ * Disables the button, blocking all interactions.
+ * @default false
+ */
+disabled?: boolean;
+
+// ✅ extractor picks the default up from `disabled = false` in the component
+/**
+ * Disables the button, blocking all interactions.
+ */
+disabled?: boolean;
 ```
 
 ---
@@ -389,6 +404,7 @@ export function Button({ label, variant = 'fill', size = 'md', ...props }: Butto
 - [ ] Numeric props include unit and valid range
 - [ ] Props that interact with other props describe that interaction
 - [ ] Event handlers describe the exact trigger condition
+- [ ] No default values in descriptions — neither `@default` tags nor inline `Default:` text
 
 **Compound components**
 
