@@ -36,6 +36,8 @@ async function runCli(): Promise<void> {
         tsconfigPath: resolved.tsconfigPath,
         targetFiles: resolved.targetFiles,
         config: resolved.config,
+        // 하나만 뽑을 때 정리하면 나머지 문서가 전부 날아간다.
+        prune: !cli.flags.component,
     });
 }
 

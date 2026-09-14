@@ -58,7 +58,9 @@ export function extract(input: ExtractInput): ExtractOutput {
 
     console.error(`Done! Extracted ${props.length} components.`);
 
-    const writtenFiles = writePropsFiles(props, outputDir, (prop) => formatFileName(prop.name));
+    const writtenFiles = writePropsFiles(props, outputDir, (prop) => formatFileName(prop.name), {
+        prune: input.prune,
+    });
 
     return {
         parsed,
