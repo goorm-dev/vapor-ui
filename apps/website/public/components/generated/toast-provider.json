@@ -1,31 +1,37 @@
 {
-    "name": "Provider",
-    "displayName": "Toast.Provider",
-    "description": "Toast의 모든 하위 컴포넌트를 그룹화하고 Toast 상태를 관리하는 프로바이더입니다. 내부적으로 `ProviderPrimitive`, `PortalPrimitive`, `ViewportPrimitive`가 통합되어 있습니다.",
+    "name": "ToastProvider",
     "props": [
         {
             "name": "toastManager",
-            "type": ["ToastManager"],
-            "required": true,
-            "description": "Toast의 상태를 관리하는 ToastManager 인스턴스입니다."
-        },
-        {
-            "name": "timeout",
-            "type": ["number"],
+            "type": [
+                "ToastManager"
+            ],
             "required": false,
-            "description": "Toast가 자동으로 닫히기까지의 시간(밀리초)입니다.",
-            "defaultValue": "4000"
-        },
-        {
-            "name": "limit",
-            "type": ["number"],
-            "required": false,
-            "description": "동시에 표시할 수 있는 최대 Toast 개수입니다."
+            "description": "React 컴포넌트 외부에서 토스트를 사용하기 위한 전역 매니저입니다."
         },
         {
             "name": "children",
-            "type": ["ReactNode"],
+            "type": [
+                "ReactNode"
+            ],
             "required": false
+        },
+        {
+            "name": "limit",
+            "type": [
+                "number"
+            ],
+            "required": false,
+            "description": "한 번에 표시할 수 있는 토스트의 최대 개수입니다.\n이 제한을 초과하면 가장 오래된 토스트가 제거되는 대신 (`data-limited` 속성을 통해) `limited`로 표시되므로, 숨기거나 애니메이션으로 내보낼 수 있습니다."
+        },
+        {
+            "name": "timeout",
+            "type": [
+                "number"
+            ],
+            "required": false,
+            "description": "토스트가 자동으로 사라지기까지의 기본 시간(ms)입니다.\n값이 `0`이면 토스트가 자동으로 사라지지 않습니다.",
+            "defaultValue": "4000"
         }
     ]
 }

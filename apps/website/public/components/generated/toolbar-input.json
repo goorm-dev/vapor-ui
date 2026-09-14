@@ -3,32 +3,42 @@
     "props": [
         {
             "name": "defaultValue",
-            "type": ["string | number | readonly string[]"],
+            "type": [
+                "string | number | readonly string[]"
+            ],
             "required": false
         },
         {
             "name": "onValueChange",
-            "type": ["(value: string) => void"],
+            "type": [
+                "(value: string) => void"
+            ],
             "required": false,
-            "description": "Callback fired when the value of the Input changes. It receives the new value and the original change event details from the underlying BaseToolbar.Input component."
+            "description": "Input의 값이 변경될 때 실행되는 콜백입니다. 새로운 값과 내부의 BaseToolbar.Input 컴포넌트에서 전달된 원본 변경 이벤트 정보를 받습니다."
         },
         {
             "name": "className",
-            "type": ["string | ((state: Toolbar.Input.State) => (string | undefined))"],
+            "type": [
+                "string | ((state: Toolbar.Input.State) => (string | undefined))"
+            ],
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스이거나, 컴포넌트의 상태에 따라 클래스를 반환하는 함수입니다."
         },
         {
             "name": "disabled",
-            "type": ["boolean"],
+            "type": [
+                "boolean"
+            ],
             "required": false,
-            "description": "When `true` the item is disabled."
+            "description": "`true`이면 해당 항목이 비활성화됩니다."
         },
         {
             "name": "focusableWhenDisabled",
-            "type": ["boolean"],
+            "type": [
+                "boolean"
+            ],
             "required": false,
-            "description": "When `true` the item remains focusable when disabled."
+            "description": "`true`이면 비활성화된 상태에서도 해당 항목이 포커스를 받을 수 있습니다."
         },
         {
             "name": "style",
@@ -36,7 +46,7 @@
                 "React.CSSProperties | ((state: Toolbar.Input.State) => (React.CSSProperties | undefined))"
             ],
             "required": false,
-            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수입니다."
         },
         {
             "name": "render",
@@ -44,7 +54,7 @@
                 "ReactElement | ((props: HTMLProps, state: Toolbar.Input.State) => ReactElement)"
             ],
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있게 합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ]
 }

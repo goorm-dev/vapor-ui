@@ -1,43 +1,88 @@
 {
-    "name": "Root",
-    "displayName": "FloatingBar.Root",
-    "description": "FloatingBar의 루트 컨테이너로, 전체 FloatingBar 컴포넌트의 상태와 동작을 관리합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "name": "FloatingBarRoot",
     "props": [
         {
-            "name": "open",
-            "type": ["boolean"],
-            "defaultValue": "undefined",
-            "description": "FloatingBar의 열림 상태를 제어합니다. 이 prop이 제공되면 컴포넌트가 제어 모드로 동작합니다."
-        },
-        {
             "name": "defaultOpen",
-            "type": ["boolean"],
-            "defaultValue": "false",
-            "description": "FloatingBar의 초기 열림 상태를 설정합니다. 비제어 모드에서만 사용됩니다."
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "팝오버가 초기에 열려 있는지 여부입니다.\n\n제어되는 팝오버를 렌더링하려면 대신 `open` prop을 사용하세요."
         },
         {
             "name": "onOpenChange",
-            "type": ["(open: boolean, event?: Event, reason?: string) => void"],
-            "defaultValue": "undefined",
-            "description": "FloatingBar의 열림 상태가 변경될 때 호출되는 콜백 함수입니다. open 상태, 이벤트, 그리고 변경 이유를 인자로 받습니다."
+            "type": [
+                "(open: boolean, eventDetails: FloatingBar.Root.ChangeEventDetails) => void"
+            ],
+            "required": false,
+            "description": "팝오버가 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
+        },
+        {
+            "name": "open",
+            "type": [
+                "boolean"
+            ],
+            "required": false,
+            "description": "팝오버가 현재 열려 있는지 여부입니다."
+        },
+        {
+            "name": "actionsRef",
+            "type": [
+                "React.RefObject<PopoverRootActions | null>"
+            ],
+            "required": false,
+            "description": "명령형 동작에 대한 ref입니다.\n- `unmount`: popover를 수동으로 언마운트합니다.\n외부에서 제어하는 닫기 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 호출하면 popover를 명령형으로 닫습니다."
+        },
+        {
+            "name": "children",
+            "type": [
+                "null | string | number | bigint | false | true | ReactElement | Iterable<React.ReactNode> | React.ReactPortal | Promise<AwaitedReactNode> | ((arg: { payload: unknown; }) => ReactNode)"
+            ],
+            "required": false,
+            "description": "popover의 내용입니다.\n일반적인 React 노드이거나, 활성 트리거의 `payload`를 전달받는 렌더 함수일 수 있습니다."
+        },
+        {
+            "name": "defaultTriggerId",
+            "type": [
+                "string",
+                "null"
+            ],
+            "required": false,
+            "description": "popover와 연결된 트리거의 ID입니다.\n`defaultOpen` prop과 함께 사용하면 처음부터 열려 있는 popover를 만들 수 있어 유용합니다."
+        },
+        {
+            "name": "handle",
+            "type": [
+                "PopoverHandle<unknown>"
+            ],
+            "required": false,
+            "description": "popover를 트리거와 연결하는 핸들입니다.\n지정하면 외부 트리거가 popover의 열림 상태를 제어할 수 있습니다."
         },
         {
             "name": "modal",
-            "type": ["boolean", "{ trapFocus?: boolean }"],
-            "defaultValue": "true",
-            "description": "FloatingBar가 모달 형태로 동작할지 여부를 설정합니다. true일 때 배경을 클릭하면 FloatingBar가 닫히고 포커스 트랩이 적용됩니다."
+            "type": [
+                "boolean",
+                "\"trap-focus\""
+            ],
+            "required": false,
+            "description": "popover가 열릴 때 모달 상태로 전환되는지를 결정합니다.\n- `true`: 사용자 상호작용이 popover로 제한됩니다. 문서 페이지 스크롤이 잠기고, 외부 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과의 사용자 상호작용이 허용됩니다.\n- `'trap-focus'`: 포커스가 popover 내부에 갇히지만, 문서 페이지 스크롤은 잠기지 않고 외부의 포인터 상호작용도 계속 활성화된 상태로 유지됩니다.\n\n터치 기기에서 `true` 모달은 외부 탭을 차단하지만, 팝업이 뷰포트 너비를 거의 가득 채우지 않는 한 페이지는 스크롤 가능한 상태로 둡니다. 이는 네이티브 iOS 동작과 일치합니다.\n\n`modal`이 `true`일 때 포커스 가두기는 `<Popover.Close>`가 `<Popover.Popup>` 내부에 렌더링된 경우에만 활성화됩니다. 필요하다면 Tailwind의 `sr-only` 유틸리티처럼 직접 작성한 CSS로 시각적으로 숨길 수 있습니다.\n\n`modal`이 `'trap-focus'`일 때는 터치 스크린 리더가 팝업에서 빠져나올 수 있도록 `<Popover.Close>`를 `<Popover.Popup>` 내부에 렌더링하세요."
         },
         {
-            "name": "openOnHover",
-            "type": ["boolean"],
-            "defaultValue": "false",
-            "description": "마우스 호버 시 FloatingBar를 열지 여부를 설정합니다."
+            "name": "onOpenChangeComplete",
+            "type": [
+                "(open: boolean) => void"
+            ],
+            "required": false,
+            "description": "popover가 열리거나 닫힐 때 모든 애니메이션이 완료된 뒤에 호출되는 이벤트 핸들러입니다."
         },
         {
-            "name": "delay",
-            "type": ["number", "{ open?: number; close?: number }"],
-            "defaultValue": "0",
-            "description": "FloatingBar 열기/닫기 지연 시간을 밀리초 단위로 설정합니다."
+            "name": "triggerId",
+            "type": [
+                "string",
+                "null"
+            ],
+            "required": false,
+            "description": "popover와 연결된 트리거의 ID입니다.\n`open` prop과 함께 사용하면 제어되는 popover를 만들 수 있어 유용합니다.\npopover가 제어되지 않는 경우(즉, `open` prop이 설정되지 않은 경우)에는 이 prop을 지정할 필요가 없습니다."
         }
     ]
 }

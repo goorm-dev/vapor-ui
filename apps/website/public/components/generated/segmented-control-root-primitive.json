@@ -1,18 +1,24 @@
 {
     "name": "SegmentedControlRootPrimitive",
-    "description": "Primitive root component for SegmentedControl without a built-in indicator. Use when you need full control over indicator rendering by supplying a custom `SegmentedControlIndicatorPrimitive`. Renders a `<div>` element.",
+    "description": "내장 indicator가 없는 SegmentedControl의 primitive 루트 컴포넌트입니다. 커스텀 `SegmentedControlIndicatorPrimitive`를 제공하여 indicator 렌더링을 완전히 제어해야 할 때 사용합니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "size",
-            "type": ["sm", "md", "lg"],
+            "type": [
+                "sm",
+                "md",
+                "lg"
+            ],
             "required": false,
             "defaultValue": "md"
         },
         {
             "name": "defaultValue",
-            "type": ["string"],
+            "type": [
+                "string"
+            ],
             "required": false,
-            "description": "The default value of the SegmentedControl. This is used when you want the SegmentedControl to manage its own state. It should be the value of one of the SegmentedControl.Item components."
+            "description": "SegmentedControl의 기본값입니다. SegmentedControl이 자체적으로 상태를 관리하도록 하려는 경우에 사용됩니다. SegmentedControl.Item 컴포넌트 중 하나의 값이어야 합니다."
         },
         {
             "name": "onValueChange",
@@ -20,54 +26,71 @@
                 "(value: string, eventDetails: SegmentedControl.RootPrimitive.ChangeEventDetails) => void"
             ],
             "required": false,
-            "description": "Callback fired when the value of the SegmentedControl changes. It receives the new value and the original change event details from the underlying RadioGroup component. This is useful for handling side effects when the user selects a different segment."
+            "description": "SegmentedControl의 값이 변경될 때 호출되는 콜백입니다. 새 값과 내부 RadioGroup 컴포넌트에서 전달된 원본 변경 이벤트 상세 정보를 받습니다. 사용자가 다른 세그먼트를 선택할 때 부수 효과를 처리하는 데 유용합니다."
         },
         {
             "name": "value",
-            "type": ["string"],
+            "type": [
+                "string"
+            ],
             "required": false,
-            "description": "The controlled value of the SegmentedControl. This should be used in conjunction with `onValueChange` to update the value when the user interacts with the SegmentedControl."
+            "description": "SegmentedControl의 제어되는 값입니다. 사용자가 SegmentedControl과 상호작용할 때 값을 업데이트하려면 `onValueChange`와 함께 사용해야 합니다."
         },
         {
             "name": "className",
-            "type": ["string | ((state: SegmentedControl.Root.State) => (string | undefined))"],
-            "required": false
+            "type": [
+                "string | ((state: SegmentedControl.Root.State) => (string | undefined))"
+            ],
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스이거나, 컴포넌트의 상태에 따라 클래스를 반환하는 함수입니다."
         },
         {
             "name": "disabled",
-            "type": ["boolean"],
+            "type": [
+                "boolean"
+            ],
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "컴포넌트가 사용자 상호작용을 무시하는지 여부입니다."
         },
         {
             "name": "form",
-            "type": ["string"],
+            "type": [
+                "string"
+            ],
             "required": false,
-            "description": "Identifies the form that owns the radio inputs.\nUseful when the radio group is rendered outside the form."
+            "description": "radio input을 소유하는 폼을 식별합니다.\n라디오 그룹이 폼 외부에 렌더링될 때 유용합니다."
         },
         {
             "name": "inputRef",
-            "type": ["Ref<HTMLInputElement>"],
+            "type": [
+                "Ref<HTMLInputElement>"
+            ],
             "required": false,
-            "description": "A ref to access the hidden input element."
+            "description": "숨겨진 input 요소에 접근하기 위한 ref입니다."
         },
         {
             "name": "name",
-            "type": ["string"],
+            "type": [
+                "string"
+            ],
             "required": false,
-            "description": "Identifies the field when a form is submitted."
+            "description": "폼이 제출될 때 해당 필드를 식별합니다."
         },
         {
             "name": "readOnly",
-            "type": ["boolean"],
+            "type": [
+                "boolean"
+            ],
             "required": false,
-            "description": "Whether the user should be unable to select a different radio button in the group."
+            "description": "사용자가 그룹 내의 다른 라디오 버튼을 선택할 수 없어야 하는지 여부입니다."
         },
         {
             "name": "required",
-            "type": ["boolean"],
+            "type": [
+                "boolean"
+            ],
             "required": false,
-            "description": "Whether the user must choose a value before submitting a form."
+            "description": "폼을 제출하기 전에 사용자가 반드시 값을 선택해야 하는지 여부입니다."
         },
         {
             "name": "style",
@@ -75,7 +98,7 @@
                 "React.CSSProperties | ((state: SegmentedControl.Root.State) => (React.CSSProperties | undefined))"
             ],
             "required": false,
-            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수입니다."
         },
         {
             "name": "render",
@@ -83,7 +106,7 @@
                 "ReactElement | ((props: HTMLProps, state: SegmentedControl.Root.State) => ReactElement)"
             ],
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있게 합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ]
 }

@@ -3,21 +3,31 @@
     "props": [
         {
             "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
+            "type": [
+                "sm",
+                "md",
+                "lg",
+                "xl"
+            ],
             "required": false,
             "defaultValue": "md"
         },
         {
             "name": "variant",
-            "type": ["default", "accent"],
+            "type": [
+                "default",
+                "accent"
+            ],
             "required": false,
             "defaultValue": "default"
         },
         {
             "name": "defaultPressed",
-            "type": ["boolean"],
+            "type": [
+                "boolean"
+            ],
             "required": false,
-            "description": "Whether the toggle button is currently pressed.\nThis is the uncontrolled counterpart of `pressed`."
+            "description": "토글 버튼이 현재 눌려 있는지 여부입니다.\n`pressed`의 비제어 방식 대응 prop입니다."
         },
         {
             "name": "onPressedChange",
@@ -25,37 +35,47 @@
                 "(pressed: boolean, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element | undefined; }) => void"
             ],
             "required": false,
-            "description": "Callback fired when the pressed state is changed."
+            "description": "눌림 상태가 변경될 때 실행되는 콜백입니다."
         },
         {
             "name": "pressed",
-            "type": ["boolean"],
+            "type": [
+                "boolean"
+            ],
             "required": false,
-            "description": "Whether the toggle button is currently pressed.\nThis is the controlled counterpart of `defaultPressed`."
+            "description": "토글 버튼이 현재 눌려 있는지 여부입니다.\n`defaultPressed`의 제어 방식 대응 prop입니다."
         },
         {
             "name": "value",
-            "type": ["string"],
+            "type": [
+                "string"
+            ],
             "required": false,
-            "description": "A unique string that identifies the toggle when used\ninside a toggle group."
+            "description": "토글 그룹 안에서 사용될 때 해당 토글을 식별하는 고유한 문자열입니다."
         },
         {
             "name": "className",
-            "type": ["string | ((state: Toggle.State) => (string | undefined))"],
+            "type": [
+                "string | ((state: Toggle.State) => (string | undefined))"
+            ],
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스이거나, 컴포넌트의 상태에 따라 클래스를 반환하는 함수입니다."
         },
         {
             "name": "disabled",
-            "type": ["boolean"],
+            "type": [
+                "boolean"
+            ],
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "컴포넌트가 사용자 상호작용을 무시하는지 여부입니다."
         },
         {
             "name": "nativeButton",
-            "type": ["boolean"],
+            "type": [
+                "boolean"
+            ],
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
+            "description": "`render` prop으로 요소를 대체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부입니다.\n렌더링되는 요소가 버튼이 아니라면(예: `<div>`) `false`로 설정하세요."
         },
         {
             "name": "style",
@@ -63,13 +83,15 @@
                 "React.CSSProperties | ((state: Toggle.State) => (React.CSSProperties | undefined))"
             ],
             "required": false,
-            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수입니다."
         },
         {
             "name": "render",
-            "type": ["ReactElement | ((props: HTMLProps, state: Toggle.State) => ReactElement)"],
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Toggle.State) => ReactElement)"
+            ],
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있게 합니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ]
 }
