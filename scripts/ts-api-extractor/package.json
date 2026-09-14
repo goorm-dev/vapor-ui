@@ -21,6 +21,7 @@
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
+        "extract": "cd ../.. && tsx --tsconfig scripts/ts-api-extractor/tsconfig.json scripts/ts-api-extractor/src/cli/index.ts",
         "lint": "eslint ./src",
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",

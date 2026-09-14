@@ -11,6 +11,10 @@
     "author": "Vapor Team <vapor.ui@goorm.io>",
     "type": "module",
     "scripts": {
+        "api-docs": "pnpm api-docs:extract && pnpm api-docs:translate",
+        "api-docs:extract": "pnpm --filter @vapor-ui/ts-api-extractor extract",
+        "api-docs:translate": "node scripts/translate-api-docs/translate.mjs apps/website/public/components/generated",
+        "api-docs:verify": "node scripts/translate-api-docs/verify.mjs apps/website/public/components/generated scripts/translate-api-docs/translations.ko.json",
         "build": "turbo run build",
         "build:storybook": "turbo run build:storybook",
         "clean": "turbo run clean && rimraf node_modules .turbo",

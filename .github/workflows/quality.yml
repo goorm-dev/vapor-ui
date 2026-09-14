@@ -93,14 +93,11 @@ jobs:
             - name: Install
               uses: ./.github/composite/install
 
-            - name: Build extractor
-              run: pnpm --filter @vapor-ui/ts-api-extractor build
-
             # 영어 원문만 뽑는다. 번역은 로컬에서 하고 캐시를 커밋하므로 CI는 LLM을 호출하지 않는다.
             - name: Extract API docs (English)
               run: |
                   echo "export default { outputDir: '${{ runner.temp }}/api-en' };" > "${{ runner.temp }}/extract.config.mjs"
-                  node scripts/ts-api-extractor/dist/cli/index.js --config "${{ runner.temp }}/extract.config.mjs"
+                  pnpm api-docs:extract --config "${{ runner.temp }}/extract.config.mjs"
 
             - name: Verify translations are up to date
               run: node scripts/translate-api-docs/verify.mjs "${{ runner.temp }}/api-en" scripts/translate-api-docs/translations.ko.json
