@@ -3,9 +3,9 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { defaultExtractorConfig } from '~/domain/config/defaults';
-import { ExtractorError } from '~/domain/errors';
 import type { ExtractorConfig, PartialExtractorConfig } from '~/domain/config/schema';
 import { mergeConfig, validatePartialConfig } from '~/domain/config/schema';
+import { ExtractorError } from '~/domain/errors';
 
 /**
  * Config file search order. `.ts` is included for convenience but requires

@@ -8,13 +8,13 @@
  */
 import { Project } from 'ts-morph';
 
-import type { BaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/shared';
 import {
     resolveType,
     simplifyForwardRefType,
     simplifyNodeModulesImports,
     simplifyReactElementGeneric,
 } from '~/infrastructure/ts-morph/type-printer';
+import type { BaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/shared';
 
 // ============================================================
 // String Simplification Utilities

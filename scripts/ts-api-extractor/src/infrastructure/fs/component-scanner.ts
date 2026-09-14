@@ -77,7 +77,9 @@ export async function resolveTargetFiles(
 
     if (!file) {
         const available = files.map((f) => path.basename(f, '.tsx')).join(', ');
-        throw new ExtractorError(`Component '${componentName}' not found.\nAvailable: ${available}`);
+        throw new ExtractorError(
+            `Component '${componentName}' not found.\nAvailable: ${available}`,
+        );
     }
 
     return [file];

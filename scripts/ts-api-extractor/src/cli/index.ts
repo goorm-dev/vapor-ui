@@ -1,8 +1,8 @@
 import meow from 'meow';
 
+import { extract } from '~/app/extract';
 import { resolveOptions } from '~/cli/options';
 import { createConsoleReporter } from '~/cli/reporter';
-import { extract } from '~/app/extract';
 import { ExtractorError } from '~/domain/errors';
 
 async function runCli(): Promise<void> {

@@ -7,19 +7,19 @@ import type {
 } from 'ts-morph';
 import { ModuleDeclarationKind, ts } from 'ts-morph';
 
-import type { ParseConfig } from '~/domain/stage-config';
+import { cleanType } from '~/domain/clean-type';
 import type { ParsedComponent, ParsedProp } from '~/domain/model';
 import type { Reporter } from '~/domain/reporter';
-import { resolveType } from '~/infrastructure/ts-morph/type-printer';
-import { buildBaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/base-ui-mapper';
-import type { BaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/shared';
-import { cleanType } from '~/domain/clean-type';
+import type { ParseConfig } from '~/domain/stage-config';
+import { getDefaultValuesForNamespace } from '~/infrastructure/ts-morph/default-values';
 import {
     DeclarationSourceType,
     classifyPropSource,
     getDeclarationSourceType,
 } from '~/infrastructure/ts-morph/source-classifier';
-import { getDefaultValuesForNamespace } from '~/infrastructure/ts-morph/default-values';
+import { resolveType } from '~/infrastructure/ts-morph/type-printer';
+import { buildBaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/base-ui-mapper';
+import type { BaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/shared';
 
 function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: string) {
     return sourceFile
@@ -173,9 +173,7 @@ export function parseSourceFile(
     const namespaces = getExportedNamespaces(sourceFile);
     const parsedComponents: ParsedComponent[] = [];
 
-    options.reporter?.debug(
-        `Found ${namespaces.length} namespaces in ${sourceFile.getFilePath()}`,
-    );
+    options.reporter?.debug(`Found ${namespaces.length} namespaces in ${sourceFile.getFilePath()}`);
 
     for (const namespace of namespaces) {
         try {
