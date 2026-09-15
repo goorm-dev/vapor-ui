@@ -45,7 +45,9 @@ export const MenuRoot = ({
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} align={align}>
-                    <MenuPrimitives.PopupPrimitive>{children}</MenuPrimitives.PopupPrimitive>
+                    <MenuPrimitives.PopupPrimitive $css={{ transition: 'none' }}>
+                        {children}
+                    </MenuPrimitives.PopupPrimitive>
                 </MenuPrimitives.PositionerPrimitive>
             </MenuPrimitives.PortalPrimitive>
         </MenuPrimitives.Root>
@@ -181,14 +183,17 @@ const itemSlots = createSlots({
 });
 
 export const MenuItem = ({ variant, label, leading, trailing, onClick }: MenuItem.Props) => {
+    const gridTemplateAreas = `"${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
+    const gridTemplateColumns = `${leading ? '1rem' : ''} 1fr ${trailing ? 'auto' : ''}`;
+
     return (
         <MenuPrimitives.Item
             onClick={onClick}
             $css={{
                 color: variant === 'critical' ? '$fg-danger' : '$fg-normal',
                 display: 'grid',
-                gridTemplateAreas: leading ? '"leading label trailing"' : '"label trailing"',
-                gridTemplateColumns: leading ? '1rem 1fr auto' : '1fr auto',
+                gridTemplateAreas,
+                gridTemplateColumns,
             }}
         >
             <itemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
@@ -437,6 +442,7 @@ export namespace MenuCheckGroup {
 /* -----------------------------------------------------------------------------------------------*/
 
 const checkItemSlots = createSlots({
+    leading: Box,
     label: Box,
     trailing: Box,
 });
@@ -444,11 +450,14 @@ const checkItemSlots = createSlots({
 export const MenuCheckItem = ({
     value: valueProp,
     onClick,
+    leading,
     label,
     trailing,
 }: MenuCheckItem.Props) => {
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
+    const gridTemplateAreas = `"${hasSelection ? 'marker' : ''} ${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
+    const gridTemplateColumns = `${hasSelection ? '1rem' : ''} ${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
 
     if (mode === 'single') {
         return (
@@ -456,18 +465,13 @@ export const MenuCheckItem = ({
                 closeOnClick
                 value={valueProp}
                 onClick={onClick}
-                $css={{
-                    display: 'grid',
-                    gridTemplateAreas: hasSelection
-                        ? '"marker label trailing"'
-                        : '"label trailing"',
-                    gridTemplateColumns: hasSelection ? '1rem 1fr auto' : '1fr auto',
-                }}
+                $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns }}
             >
                 <MenuPrimitives.RadioItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
                     <ConfirmOutlineIcon />
                 </MenuPrimitives.RadioItemIndicatorPrimitive>
 
+                <checkItemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
                 <checkItemSlots.label render={label} $css={{ gridArea: 'label' }} />
                 <checkItemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
             </MenuPrimitives.RadioItemPrimitive>
@@ -482,16 +486,13 @@ export const MenuCheckItem = ({
             checked={value.includes(valueProp)}
             onCheckedChange={() => handleValueChange(valueProp)}
             onClick={onClick}
-            $css={{
-                display: 'grid',
-                gridTemplateAreas: hasSelection ? '"marker label trailing"' : '"label trailing"',
-                gridTemplateColumns: hasSelection ? '1rem 1fr auto' : '1fr auto',
-            }}
+            $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns }}
         >
             <MenuPrimitives.CheckboxItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
                 <ConfirmOutlineIcon />
             </MenuPrimitives.CheckboxItemIndicatorPrimitive>
 
+            <checkItemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
             <checkItemSlots.label render={label} $css={{ gridArea: 'label' }} />
             <checkItemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
         </MenuPrimitives.CheckboxItemPrimitive>
@@ -514,6 +515,11 @@ export interface MenuCheckItemProps {
      * <Menu.CheckItem onClick={handleClick} value="option-1" label="Option 1" />
      */
     onClick?: RadioItemProps['onClick'] | CheckboxItemProps['onClick'];
+
+    /**
+     * 항목 좌측에 표시되는 요소. 레이블을 보충 설명하기 위한 요소를 배치한다.
+     */
+    leading?: CheckItemSlots['leading'];
 
     /**
      * 항목의 텍스트 라벨.
