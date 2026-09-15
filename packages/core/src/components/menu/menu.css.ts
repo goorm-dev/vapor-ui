@@ -55,11 +55,8 @@ export const item = componentStyle([
 
         borderRadius: vars.size.borderRadius['300'],
         cursor: 'pointer',
-        paddingRight: vars.size.space['100'],
-        paddingLeft: vars.size.space['150'],
-        paddingBlock: vars.size.space['050'],
-
-        height: vars.size.dimension['400'],
+        paddingBlock: vars.size.space['100'],
+        paddingInline: vars.size.space['150'],
 
         selectors: {
             [when.disabled()]: {
