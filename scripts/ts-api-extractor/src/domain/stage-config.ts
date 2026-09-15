@@ -1,4 +1,4 @@
-import type { Reporter } from '~/domain/reporter';
+import type { Reporter } from '#domain/reporter';
 
 // ──────────────────────────────────────────────────────────────
 // Pipeline stage configs

@@ -6,7 +6,7 @@ import { Project } from 'ts-morph';
 import {
     findExportedInterfaceProps,
     getExportedNamespaces,
-} from '~/infrastructure/ts-morph/component-reader';
+} from '#infrastructure/ts-morph/component-reader';
 
 describe('getExportedNamespaces', () => {
     let project: Project;

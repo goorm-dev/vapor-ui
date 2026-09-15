@@ -1,4 +1,4 @@
-import type { ExtractorDefaults } from '~/domain/config/schema';
+import type { ExtractorDefaults } from '#domain/config/schema';
 
 /**
  * Behavioral defaults only.

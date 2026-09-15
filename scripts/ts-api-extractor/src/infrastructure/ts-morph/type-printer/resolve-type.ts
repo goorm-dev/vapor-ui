@@ -1,13 +1,13 @@
 import { type Node, type Type } from 'ts-morph';
 
-import type { Reporter } from '~/domain/reporter';
-import { baseUiResolver } from '~/infrastructure/ts-morph/type-printer/base-ui-type';
-import { functionTypeResolver } from '~/infrastructure/ts-morph/type-printer/function-type';
-import { importedTypeResolver } from '~/infrastructure/ts-morph/type-printer/imported-type';
-import { primitiveResolver } from '~/infrastructure/ts-morph/type-printer/primitive';
-import { reactAliasResolver } from '~/infrastructure/ts-morph/type-printer/react-alias';
-import { reactElementResolver } from '~/infrastructure/ts-morph/type-printer/react-element';
-import { refTypeResolver } from '~/infrastructure/ts-morph/type-printer/ref-type';
+import type { Reporter } from '#domain/reporter';
+import { baseUiResolver } from '#infrastructure/ts-morph/type-printer/base-ui-type';
+import { functionTypeResolver } from '#infrastructure/ts-morph/type-printer/function-type';
+import { importedTypeResolver } from '#infrastructure/ts-morph/type-printer/imported-type';
+import { primitiveResolver } from '#infrastructure/ts-morph/type-printer/primitive';
+import { reactAliasResolver } from '#infrastructure/ts-morph/type-printer/react-alias';
+import { reactElementResolver } from '#infrastructure/ts-morph/type-printer/react-element';
+import { refTypeResolver } from '#infrastructure/ts-morph/type-printer/ref-type';
 import {
     type BaseUiTypeMap,
     type Resolver,
@@ -15,8 +15,8 @@ import {
     TYPE_FORMAT_FLAGS,
     simplifyForwardRefType,
     simplifyReactElementGeneric,
-} from '~/infrastructure/ts-morph/type-printer/shared';
-import { unionWithFunctionResolver } from '~/infrastructure/ts-morph/type-printer/union';
+} from '#infrastructure/ts-morph/type-printer/shared';
+import { unionWithFunctionResolver } from '#infrastructure/ts-morph/type-printer/union';
 
 /**
  * Order matters: the first resolver that claims the type wins. Narrow, cheap

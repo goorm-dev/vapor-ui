@@ -5,7 +5,7 @@
  */
 import type { Symbol as TsSymbol } from 'ts-morph';
 
-import type { PropSource } from '~/domain/model';
+import type { PropSource } from '#domain/model';
 
 export enum DeclarationSourceType {
     PROJECT = 'project',

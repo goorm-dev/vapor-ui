@@ -5,7 +5,7 @@ import {
     DeclarationSourceType,
     getDeclarationSourceType,
     isExternalDeclaration,
-} from '~/infrastructure/ts-morph/source-classifier';
+} from '#infrastructure/ts-morph/source-classifier';
 
 describe('getDeclarationSourceType', () => {
     describe('PROJECT', () => {

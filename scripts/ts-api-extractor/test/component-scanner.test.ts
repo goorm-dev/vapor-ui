@@ -9,7 +9,7 @@ import {
     findComponentFiles,
     findFileByComponentName,
     normalizeComponentName,
-} from '~/infrastructure/fs/component-scanner';
+} from '#infrastructure/fs/component-scanner';
 
 describe('normalizeComponentName', () => {
     it('소문자로 변환', () => {

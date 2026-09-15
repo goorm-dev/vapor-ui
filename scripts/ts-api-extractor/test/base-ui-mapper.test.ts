@@ -9,7 +9,7 @@ import { ModuleKind, ModuleResolutionKind, Project, ScriptTarget } from 'ts-morp
 import {
     buildBaseUiTypeMap,
     resolveBaseUiType,
-} from '~/infrastructure/ts-morph/type-printer/base-ui-mapper';
+} from '#infrastructure/ts-morph/type-printer/base-ui-mapper';
 
 function createProject(): Project {
     return new Project({

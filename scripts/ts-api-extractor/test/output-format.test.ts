@@ -1,8 +1,8 @@
 /**
  * Filename utilities unit tests
  */
-import { toKebabCase } from '~/domain/file-name';
-import { formatFileName, jsonOutputFormat } from '~/domain/output-format';
+import { toKebabCase } from '#domain/file-name';
+import { formatFileName, jsonOutputFormat } from '#domain/output-format';
 
 describe('toKebabCase', () => {
     it('PascalCase → kebab-case', () => {

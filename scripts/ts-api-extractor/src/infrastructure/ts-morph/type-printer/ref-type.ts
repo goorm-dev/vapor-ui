@@ -1,4 +1,4 @@
-import type { Resolver } from '~/infrastructure/ts-morph/type-printer/shared';
+import type { Resolver } from '#infrastructure/ts-morph/type-printer/shared';
 
 function isRefType(typeText: string): boolean {
     return /^(React\.)?Ref<([^>]+)>(\s*\|\s*undefined)?$/.test(typeText);

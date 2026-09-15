@@ -6,15 +6,14 @@
  * - resolveType with ts-morph integration
  * - baseUiMap substitution priority
  */
-import { Project } from 'ts-morph';
-
+import { resolveType } from '#infrastructure/ts-morph/type-printer/resolve-type';
+import type { BaseUiTypeMap } from '#infrastructure/ts-morph/type-printer/shared';
 import {
-    resolveType,
     simplifyForwardRefType,
     simplifyNodeModulesImports,
     simplifyReactElementGeneric,
-} from '~/infrastructure/ts-morph/type-printer';
-import type { BaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/shared';
+} from '#infrastructure/ts-morph/type-printer/shared';
+import { Project } from 'ts-morph';
 
 // ============================================================
 // String Simplification Utilities

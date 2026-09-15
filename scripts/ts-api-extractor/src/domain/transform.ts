@@ -1,7 +1,7 @@
-import type { ComponentModel, ParsedComponent, ParsedProp, PropModel } from '~/domain/model';
-import { categorizeProp } from '~/domain/rules/categorize-prop';
-import { normalizeTypeStrings } from '~/domain/rules/normalize-types';
-import { sortProps } from '~/domain/rules/sort-props';
+import type { ComponentModel, ParsedComponent, ParsedProp, PropModel } from '#domain/model';
+import { categorizeProp } from '#domain/rules/categorize-prop';
+import { normalizeTypeStrings } from '#domain/rules/normalize-types';
+import { sortProps } from '#domain/rules/sort-props';
 
 export function parsedPropToModel(parsedProp: ParsedProp): PropModel {
     const required = !parsedProp.isOptional;

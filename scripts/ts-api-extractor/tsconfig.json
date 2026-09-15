@@ -7,10 +7,7 @@
         "types": ["vitest/globals"],
         "jsx": "preserve",
         "outDir": "./dist",
-        "baseUrl": ".",
-        "paths": {
-            "~/*": ["./src/*"]
-        },
+        "rootDir": ".",
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,

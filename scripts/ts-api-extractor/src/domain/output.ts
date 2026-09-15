@@ -1,7 +1,7 @@
-import type { ExtractorConfig } from '~/domain/config/schema';
-import type { ComponentModel, ParsedComponent } from '~/domain/model';
-import type { OutputFormat } from '~/domain/output-format';
-import type { Reporter } from '~/domain/reporter';
+import type { ExtractorConfig } from '#domain/config/schema';
+import type { ComponentModel, ParsedComponent } from '#domain/model';
+import type { OutputFormat } from '#domain/output-format';
+import type { Reporter } from '#domain/reporter';
 
 // ──────────────────────────────────────────────────────────────
 // JSON output format

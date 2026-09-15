@@ -1,16 +1,16 @@
 import path from 'node:path';
 import { Project } from 'ts-morph';
 
-import { resolveComponentInclude } from '~/domain/config/resolve';
-import { filterParsedComponents } from '~/domain/filter';
-import type { ExtractInput, ExtractOutput } from '~/domain/output';
-import { formatFileName, jsonOutputFormat } from '~/domain/output-format';
-import { silentReporter } from '~/domain/reporter';
-import { componentsToJson } from '~/domain/serialize';
-import type { FilterConfig, ParseConfig } from '~/domain/stage-config';
-import { parsedComponentsToModels } from '~/domain/transform';
-import { formatWithPrettier, writeFiles } from '~/infrastructure/fs/file-writer';
-import { parseSourceFile } from '~/infrastructure/ts-morph/component-reader';
+import { resolveComponentInclude } from '#domain/config/resolve';
+import { filterParsedComponents } from '#domain/filter';
+import type { ExtractInput, ExtractOutput } from '#domain/output';
+import { formatFileName, jsonOutputFormat } from '#domain/output-format';
+import { silentReporter } from '#domain/reporter';
+import { componentsToJson } from '#domain/serialize';
+import type { FilterConfig, ParseConfig } from '#domain/stage-config';
+import { parsedComponentsToModels } from '#domain/transform';
+import { formatWithPrettier, writeFiles } from '#infrastructure/fs/file-writer';
+import { parseSourceFile } from '#infrastructure/ts-morph/component-reader';
 
 export function extract(input: ExtractInput): ExtractOutput {
     const { config, reporter = silentReporter, format = jsonOutputFormat } = input;

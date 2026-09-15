@@ -1,7 +1,7 @@
 import type { Type } from 'ts-morph';
 
-import { resolveBaseUiType } from '~/infrastructure/ts-morph/type-printer/base-ui-mapper';
-import type { BaseUiTypeMap, Resolver } from '~/infrastructure/ts-morph/type-printer/shared';
+import { resolveBaseUiType } from '#infrastructure/ts-morph/type-printer/base-ui-mapper';
+import type { BaseUiTypeMap, Resolver } from '#infrastructure/ts-morph/type-printer/shared';
 
 function resolveMappedBaseUiType(type: Type, baseUiMap: BaseUiTypeMap): string | null {
     const directPath = resolveBaseUiType(type, baseUiMap);

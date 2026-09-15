@@ -1,4 +1,4 @@
-import type { Reporter } from '~/domain/reporter';
+import type { Reporter } from '#domain/reporter';
 
 /**
  * The only place in the package that touches the console.

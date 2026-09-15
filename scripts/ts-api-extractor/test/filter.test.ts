@@ -1,9 +1,9 @@
 /**
  * Prop filter unit tests
  */
-import { filterParsedComponents, shouldIncludeProp } from '~/domain/filter';
-import type { ParsedComponent, PropSource } from '~/domain/model';
-import type { FilterConfig } from '~/domain/stage-config';
+import { filterParsedComponents, shouldIncludeProp } from '#domain/filter';
+import type { ParsedComponent, PropSource } from '#domain/model';
+import type { FilterConfig } from '#domain/stage-config';
 
 const BASE_OPTIONS: FilterConfig = {
     filterExternal: false,

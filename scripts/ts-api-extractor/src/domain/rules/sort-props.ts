@@ -1,5 +1,5 @@
-import type { PropModel } from '~/domain/model';
-import { CATEGORY_ORDER } from '~/domain/rules/categorize-prop';
+import type { PropModel } from '#domain/model';
+import { CATEGORY_ORDER } from '#domain/rules/categorize-prop';
 
 export function sortProps(props: PropModel[]): PropModel[] {
     return [...props].sort((a, b) => {

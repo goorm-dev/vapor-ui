@@ -1,3 +1,16 @@
+import { cleanType } from '#domain/clean-type';
+import type { ParsedComponent, ParsedProp } from '#domain/model';
+import type { Reporter } from '#domain/reporter';
+import type { ParseConfig } from '#domain/stage-config';
+import { getDefaultValuesForNamespace } from '#infrastructure/ts-morph/default-values';
+import {
+    DeclarationSourceType,
+    classifyPropSource,
+    getDeclarationSourceType,
+} from '#infrastructure/ts-morph/source-classifier';
+import { buildBaseUiTypeMap } from '#infrastructure/ts-morph/type-printer/base-ui-mapper';
+import { resolveType } from '#infrastructure/ts-morph/type-printer/resolve-type';
+import type { BaseUiTypeMap } from '#infrastructure/ts-morph/type-printer/shared';
 import type {
     ModuleDeclaration,
     Node,
@@ -6,20 +19,6 @@ import type {
     TypeAliasDeclaration,
 } from 'ts-morph';
 import { ModuleDeclarationKind, ts } from 'ts-morph';
-
-import { cleanType } from '~/domain/clean-type';
-import type { ParsedComponent, ParsedProp } from '~/domain/model';
-import type { Reporter } from '~/domain/reporter';
-import type { ParseConfig } from '~/domain/stage-config';
-import { getDefaultValuesForNamespace } from '~/infrastructure/ts-morph/default-values';
-import {
-    DeclarationSourceType,
-    classifyPropSource,
-    getDeclarationSourceType,
-} from '~/infrastructure/ts-morph/source-classifier';
-import { resolveType } from '~/infrastructure/ts-morph/type-printer';
-import { buildBaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/base-ui-mapper';
-import type { BaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/shared';
 
 function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: string) {
     return sourceFile

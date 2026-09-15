@@ -7,6 +7,9 @@
     "exports": {
         ".": "./src/index.ts"
     },
+    "imports": {
+        "#*": "./src/*.ts"
+    },
     "scripts": {
         "lint": "eslint ./src",
         "test": "vitest --run",

@@ -1,4 +1,4 @@
-import type { PropCategory, PropSource } from '~/domain/model';
+import type { PropCategory, PropSource } from '#domain/model';
 
 export const CATEGORY_ORDER: Record<PropCategory, number> = {
     required: 0,

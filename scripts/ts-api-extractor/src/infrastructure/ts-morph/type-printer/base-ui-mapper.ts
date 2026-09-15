@@ -11,7 +11,7 @@
 import path from 'node:path';
 import { type SourceFile, SyntaxKind, type Type, type TypeAliasDeclaration } from 'ts-morph';
 
-import type { BaseUiTypeMap } from '~/infrastructure/ts-morph/type-printer/shared';
+import type { BaseUiTypeMap } from '#infrastructure/ts-morph/type-printer/shared';
 
 /**
  * Extract base-ui qualified path from Type object using AST.

@@ -1,4 +1,4 @@
-import type { ComponentExtractConfig } from '~/domain/config/schema';
+import type { ComponentExtractConfig } from '#domain/config/schema';
 
 function pathMatchesPattern(filePath: string, pattern: string): boolean {
     const normalizedFile = filePath.replace(/\\/g, '/');

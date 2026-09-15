@@ -1,6 +1,6 @@
 import type { Type } from 'ts-morph';
 
-import type { Resolver, ResolverContext } from '~/infrastructure/ts-morph/type-printer/shared';
+import type { Resolver, ResolverContext } from '#infrastructure/ts-morph/type-printer/shared';
 
 function isUnionWithFunction(type: Type): boolean {
     return (

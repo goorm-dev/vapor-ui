@@ -1,8 +1,8 @@
 import path from 'node:path';
 
-import type { ExtractorConfig } from '~/domain/config/schema';
-import { loadExtractorConfig } from '~/infrastructure/config/loader';
-import { resolveTargetFiles } from '~/infrastructure/fs/component-scanner';
+import type { ExtractorConfig } from '#domain/config/schema';
+import { loadExtractorConfig } from '#infrastructure/config/loader';
+import { resolveTargetFiles } from '#infrastructure/fs/component-scanner';
 
 export interface ResolvedCliOptions {
     tsconfigPath: string;

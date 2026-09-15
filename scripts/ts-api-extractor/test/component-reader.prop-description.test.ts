@@ -3,7 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import { getPropDescription } from '~/infrastructure/ts-morph/component-reader';
+import { getPropDescription } from '#infrastructure/ts-morph/component-reader';
 
 describe('getPropDescription', () => {
     let project: Project;

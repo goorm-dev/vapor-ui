@@ -3,7 +3,7 @@
  *
  * Tests for type string cleaning and simplification.
  */
-import { cleanType, splitTopLevelUnion } from '~/domain/clean-type';
+import { cleanType, splitTopLevelUnion } from '#domain/clean-type';
 
 describe('splitTopLevelUnion', () => {
     it('단순 union 분리', () => {

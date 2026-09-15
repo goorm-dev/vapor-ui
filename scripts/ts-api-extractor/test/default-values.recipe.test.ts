@@ -7,7 +7,7 @@ import {
     findRecipeUsageInComponent,
     getRecipeNameFromVariantsType,
     parseRecipeDefaultVariants,
-} from '~/infrastructure/ts-morph/default-values';
+} from '#infrastructure/ts-morph/default-values';
 
 describe('getRecipeNameFromVariantsType', () => {
     let project: Project;

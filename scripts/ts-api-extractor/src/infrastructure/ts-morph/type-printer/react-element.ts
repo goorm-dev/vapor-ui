@@ -1,7 +1,7 @@
 import type { Type } from 'ts-morph';
 
-import type { Resolver } from '~/infrastructure/ts-morph/type-printer/shared';
-import { extractPropsName } from '~/infrastructure/ts-morph/type-printer/shared';
+import type { Resolver } from '#infrastructure/ts-morph/type-printer/shared';
+import { extractPropsName } from '#infrastructure/ts-morph/type-printer/shared';
 
 function isReactElement(type: Type): boolean {
     const symbol = type.getSymbol() || type.getAliasSymbol();

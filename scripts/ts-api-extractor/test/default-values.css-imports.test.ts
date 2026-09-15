@@ -3,7 +3,7 @@
  */
 import { Project } from 'ts-morph';
 
-import { findCssImports, findVariantsTypeImports } from '~/infrastructure/ts-morph/default-values';
+import { findCssImports, findVariantsTypeImports } from '#infrastructure/ts-morph/default-values';
 
 describe('findCssImports', () => {
     let project: Project;

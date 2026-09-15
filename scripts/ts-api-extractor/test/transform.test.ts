@@ -6,8 +6,8 @@
  * - category classification
  * - type string parsing
  */
-import type { ParsedProp } from '~/domain/model';
-import { parsedComponentToModel, parsedPropToModel } from '~/domain/transform';
+import type { ParsedProp } from '#domain/model';
+import { parsedComponentToModel, parsedPropToModel } from '#domain/transform';
 
 describe('parsedPropToModel', () => {
     describe('required 계산', () => {

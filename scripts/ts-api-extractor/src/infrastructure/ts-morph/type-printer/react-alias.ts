@@ -1,7 +1,7 @@
 import type { Type } from 'ts-morph';
 
-import type { Resolver } from '~/infrastructure/ts-morph/type-printer/shared';
-import { PRESERVED_REACT_ALIASES } from '~/infrastructure/ts-morph/type-printer/shared';
+import type { Resolver } from '#infrastructure/ts-morph/type-printer/shared';
+import { PRESERVED_REACT_ALIASES } from '#infrastructure/ts-morph/type-printer/shared';
 
 function isReactAlias(type: Type): boolean {
     const aliasSymbol = type.getAliasSymbol();

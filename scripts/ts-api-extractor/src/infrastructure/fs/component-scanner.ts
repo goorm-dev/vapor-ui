@@ -2,8 +2,8 @@ import { glob } from 'glob';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type { ExtractorConfig } from '~/domain/config/schema';
-import { ExtractorError } from '~/domain/errors';
+import type { ExtractorConfig } from '#domain/config/schema';
+import { ExtractorError } from '#domain/errors';
 
 const DEFAULT_EXCLUDES = ['.stories.tsx', '.css.ts', '.test.tsx'];
 

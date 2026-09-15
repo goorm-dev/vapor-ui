@@ -1,6 +1,6 @@
 import { type Node, type Type, TypeFormatFlags } from 'ts-morph';
 
-import type { Reporter } from '~/domain/reporter';
+import type { Reporter } from '#domain/reporter';
 
 /**
  * Maps a base-ui type (by qualified path or symbol name) to the public vapor-ui
