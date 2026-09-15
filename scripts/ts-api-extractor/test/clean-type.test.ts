@@ -55,40 +55,37 @@ describe('splitTopLevelUnion', () => {
 
 describe('cleanType', () => {
     it('undefined 제거', () => {
-        const input = 'string | undefined';
-        const result = cleanType(input);
-        expect(result.type).toBe('string');
+        expect(cleanType('string | undefined')).toBe('string');
     });
 
     it('중복 타입 제거', () => {
-        const input = 'string | string | number';
-        const result = cleanType(input);
-        expect(result.type).toBe('string | number');
+        expect(cleanType('string | string | number')).toBe('string | number');
     });
 
-    it('string literal union → values 추출', () => {
-        const input = '"primary" | "secondary" | "danger"';
-        const result = cleanType(input);
-        expect(result.values).toEqual(['primary', 'secondary', 'danger']);
+    it('string literal union은 따옴표를 벗긴다', () => {
+        expect(cleanType('"primary" | "secondary" | "danger"')).toBe(
+            'primary | secondary | danger',
+        );
     });
 
-    it('mixed union → values는 원본 유지', () => {
-        const input = 'string | number';
-        const result = cleanType(input);
-        expect(result.values).toEqual(['string', 'number']);
+    it('string literal union에서 undefined를 먼저 걷어낸다', () => {
+        expect(cleanType('"sm" | "md" | undefined')).toBe('sm | md');
+    });
+
+    it('리터럴이 아닌 union은 그대로 둔다', () => {
+        expect(cleanType('string | number')).toBe('string | number');
+    });
+
+    it('리터럴이 섞인 union은 따옴표를 유지한다', () => {
+        expect(cleanType('"sm" | number')).toBe('"sm" | number');
     });
 
     it('render 콜백은 화살표 안쪽을 쪼개지 않고 통째로 보존한다', () => {
         const input =
             'undefined | ReactElement | ((props: HTMLProps, state: Button.State) => ReactElement)';
-        const result = cleanType(input);
 
-        expect(result.type).toBe(
+        expect(cleanType(input)).toBe(
             'ReactElement | ((props: HTMLProps, state: Button.State) => ReactElement)',
         );
-        expect(result.values).toEqual([
-            'ReactElement',
-            '((props: HTMLProps, state: Button.State) => ReactElement)',
-        ]);
     });
 });

@@ -104,14 +104,9 @@ function extractParsedProp(
     reporter?: Reporter,
 ): ParsedProp {
     const name = symbol.getName();
-    const typeResult = cleanType(
+    const typeString = cleanType(
         resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode, reporter),
     );
-
-    const typeString =
-        typeResult.values && typeResult.values.length > 0
-            ? typeResult.values.join(' | ')
-            : typeResult.type;
 
     return {
         name,
