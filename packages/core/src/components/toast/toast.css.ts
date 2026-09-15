@@ -1,4 +1,4 @@
-import { createGlobalVar, fallbackVar } from '@vanilla-extract/css';
+import { createGlobalVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
@@ -8,21 +8,21 @@ import { vars } from '~/styles/themes.css';
 
 export const inners = {
     gap: createGlobalVar('gap'),
-    peek: createGlobalVar('peek'),
-    scale: createGlobalVar('scale'),
-    shrink: createGlobalVar('shrink'),
-    height: createGlobalVar('height'),
     offsetY: createGlobalVar('offset-y'),
 };
 
 const outers = {
     index: 'var(--toast-index)',
-    frontmostHeight: 'var(--toast-frontmost-height)',
     height: 'var(--toast-height)',
     swipeMoveX: 'var(--toast-swipe-movement-x)',
     swipeMoveY: 'var(--toast-swipe-movement-y)',
     offsetY: 'var(--toast-offset-y)',
 };
+
+const slideTransform = (translateX: string) =>
+    `translateX(${translateX}) translateY(${inners.offsetY})`;
+
+const OFF_SCREEN_X = '28rem';
 
 export const viewport = componentStyle({
     position: 'fixed',
@@ -54,8 +54,7 @@ export const root = componentRecipe({
         bottom: 'auto',
         left: 'auto',
 
-        transform: `translateX(${outers.swipeMoveX}) translateY(calc(${outers.swipeMoveY} + (${outers.index} * ${inners.peek}) + (${inners.shrink} * ${inners.height}))) scale(${inners.scale})`,
-        transformOrigin: 'top center',
+        transform: slideTransform(outers.swipeMoveX),
         transition: 'transform 400ms, opacity 400ms, height 200ms, box-shadow 200ms',
 
         borderRadius: vars.size.borderRadius[300],
@@ -63,7 +62,7 @@ export const root = componentRecipe({
         backgroundClip: 'padding-box',
         padding: vars.size.space[200],
         width: '100%',
-        height: inners.height,
+        height: outers.height,
 
         userSelect: 'none',
 
@@ -74,11 +73,7 @@ export const root = componentRecipe({
         },
 
         vars: {
-            [inners.gap]: '0.75rem',
-            [inners.peek]: '0.5rem',
-            [inners.scale]: `calc(max(0, 1 - (${outers.index} * 0.05)))`,
-            [inners.shrink]: calc.subtract('1', inners.scale),
-            [inners.height]: fallbackVar(outers.frontmostHeight, outers.height),
+            [inners.gap]: vars.size.space[200],
             [inners.offsetY]: calc.add(
                 outers.offsetY,
                 calc.multiply(outers.index, inners.gap),
@@ -87,13 +82,8 @@ export const root = componentRecipe({
         },
 
         selectors: {
-            '&[data-expanded]': {
-                transform: `translateX(${outers.swipeMoveX}) translateY(${inners.offsetY})`,
-                height: outers.height,
-            },
-
             '&[data-starting-style], &[data-ending-style]': {
-                transform: 'translateY(-150%)',
+                transform: slideTransform(OFF_SCREEN_X),
                 opacity: 0,
             },
 
@@ -105,7 +95,7 @@ export const root = componentRecipe({
                 transform: `translateY(calc(${outers.swipeMoveY} - 150%))`,
             },
             '&[data-ending-style][data-swipe-direction="right"]': {
-                transform: `translateX(${calc.add(outers.swipeMoveX, '150%')}) translateY(${inners.offsetY})`,
+                transform: slideTransform(calc.add(outers.swipeMoveX, OFF_SCREEN_X)),
             },
 
             '&::after': {
@@ -143,19 +133,6 @@ export const content = componentStyle({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: vars.size.space[400],
-
-    transition: 'opacity 400ms',
-
-    '@media': {
-        '(prefers-reduced-motion: reduce)': {
-            transition: 'none',
-        },
-    },
-
-    selectors: {
-        '&[data-behind]': { opacity: 0 },
-        '&[data-expanded]': { opacity: 1 },
-    },
 });
 
 export const title = componentStyle([{ color: 'inherit' }, typography({ style: 'subtitle1' })]);
