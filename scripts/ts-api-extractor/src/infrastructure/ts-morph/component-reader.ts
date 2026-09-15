@@ -3,11 +3,7 @@ import type { ParsedComponent, ParsedProp } from '#domain/model';
 import type { Reporter } from '#domain/reporter';
 import type { ParseConfig } from '#domain/stage-config';
 import { getDefaultValuesForNamespace } from '#infrastructure/ts-morph/default-values';
-import {
-    DeclarationSourceType,
-    classifyPropSource,
-    getDeclarationSourceType,
-} from '#infrastructure/ts-morph/source-classifier';
+import { classifyPropSource, isProjectOwned } from '#infrastructure/ts-morph/source-classifier';
 import { buildBaseUiTypeMap } from '#infrastructure/ts-morph/type-printer/base-ui-mapper';
 import { resolveType } from '#infrastructure/ts-morph/type-printer/resolve-type';
 import type { BaseUiTypeMap } from '#infrastructure/ts-morph/type-printer/shared';
@@ -66,10 +62,7 @@ function readDoc(symbol: TsSymbol): string {
 }
 
 function isProjectDeclaration(declaration: Node): boolean {
-    return (
-        getDeclarationSourceType(declaration.getSourceFile().getFilePath()) ===
-        DeclarationSourceType.PROJECT
-    );
+    return isProjectOwned(declaration.getSourceFile().getFilePath());
 }
 
 /**

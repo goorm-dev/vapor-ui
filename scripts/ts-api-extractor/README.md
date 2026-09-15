@@ -164,7 +164,8 @@ Props are filtered based on configuration:
 5. Parse exported namespaces and `Props` declarations (`interface` or `type`)
 6. Resolve types, extract defaults, and filter props
 7. Transform parsed props into sorted component models
-8. Serialize models to JSON files and format them with Prettier
+8. Serialize models to JSON files
+9. The CLI formats the written files with Prettier
 
 ## Architecture
 
@@ -200,7 +201,7 @@ src/
 │   │   └── type-printer/         #   the Resolver chain + base-ui mapper
 │   ├── fs/
 │   │   ├── component-scanner.ts  #   glob + target file resolution
-│   │   └── file-writer.ts        #   write bytes, run prettier
+│   │   └── file-writer.ts        #   write bytes, run prettier (invoked by cli)
 │   └── config/loader.ts          #   find and import the config file
 │
 ├── app/extract.ts           # wiring only — no rules, no IO of its own

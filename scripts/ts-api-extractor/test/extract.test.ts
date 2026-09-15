@@ -1,0 +1,169 @@
+/**
+ * extract() assembly tests
+ *
+ * The unit tests cover each stage in isolation; this covers the wiring between
+ * them — tsconfig setup, config -> FilterConfig mapping, output file naming,
+ * bytes actually landing on disk, and recovery when one file fails.
+ */
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
+import { extract } from '#app/extract';
+import { defaultExtractorConfig } from '#domain/config/defaults';
+import type { ComponentExtractConfig, ExtractorConfig } from '#domain/config/schema';
+import type { Reporter } from '#domain/reporter';
+
+const TSCONFIG = JSON.stringify({
+    compilerOptions: {
+        target: 'ES2022',
+        module: 'ESNext',
+        moduleResolution: 'Bundler',
+        strict: true,
+        skipLibCheck: true,
+    },
+    include: ['**/*.ts', '**/*.tsx'],
+});
+
+const BADGE_SOURCE = `
+export namespace BadgeRoot {
+    export type Props = {
+        /** 뱃지 라벨 */
+        label: string;
+        /** 뱃지 크기 */
+        size?: 'sm' | 'md' | 'lg';
+        /** 스크린리더 레이블 */
+        'aria-label'?: string;
+    };
+}
+
+/** 상태를 표시하는 뱃지. */
+export const BadgeRoot = ({ size = 'md', ...props }: BadgeRoot.Props) => ({ size, ...props });
+`;
+
+interface Fixture {
+    root: string;
+    componentFile: string;
+    outputDir: string;
+}
+
+function createFixture(): Fixture {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ts-api-extractor-extract-'));
+    const componentFile = path.join(root, 'badge.tsx');
+
+    fs.writeFileSync(path.join(root, 'tsconfig.json'), TSCONFIG);
+    fs.writeFileSync(componentFile, BADGE_SOURCE);
+
+    return { root, componentFile, outputDir: path.join(root, 'out') };
+}
+
+function createConfig(fixture: Fixture, components: Record<string, ComponentExtractConfig> = {}) {
+    return {
+        ...defaultExtractorConfig,
+        inputPath: fixture.root,
+        tsconfig: path.join(fixture.root, 'tsconfig.json'),
+        outputDir: fixture.outputDir,
+        components,
+    } satisfies ExtractorConfig;
+}
+
+function createRecordingReporter(): Reporter & { warnings: string[] } {
+    const warnings: string[] = [];
+
+    return {
+        warnings,
+        info: () => {},
+        debug: () => {},
+        warn: (message) => {
+            warnings.push(message);
+        },
+    };
+}
+
+function runExtract(fixture: Fixture, options: Partial<Parameters<typeof extract>[0]> = {}) {
+    return extract({
+        tsconfigPath: path.join(fixture.root, 'tsconfig.json'),
+        targetFiles: [fixture.componentFile],
+        config: createConfig(fixture),
+        ...options,
+    });
+}
+
+describe('extract', () => {
+    let fixture: Fixture;
+
+    beforeEach(() => {
+        fixture = createFixture();
+    });
+
+    afterEach(() => {
+        fs.rmSync(fixture.root, { recursive: true, force: true });
+    });
+
+    it('컴포넌트당 kebab-case JSON 파일 하나를 쓴다', () => {
+        const result = runExtract(fixture);
+
+        expect(result.writtenFiles).toEqual([path.join(fixture.outputDir, 'badge-root.json')]);
+        expect(fs.existsSync(result.writtenFiles[0])).toBe(true);
+    });
+
+    it('디스크에 쓰인 바이트가 반환된 props와 일치한다', () => {
+        const result = runExtract(fixture);
+        const written = JSON.parse(fs.readFileSync(result.writtenFiles[0], 'utf8'));
+
+        expect(written).toEqual(result.props[0]);
+    });
+
+    it('설명·기본값·필수 여부를 끝까지 전달한다', () => {
+        const { props } = runExtract(fixture);
+
+        expect(props[0].name).toBe('BadgeRoot');
+        expect(props[0].description).toBe('상태를 표시하는 뱃지.');
+        expect(props[0].props).toEqual([
+            { name: 'label', type: ['string'], required: true, description: '뱃지 라벨' },
+            {
+                name: 'size',
+                type: ['sm', 'md', 'lg'],
+                required: false,
+                description: '뱃지 크기',
+                defaultValue: 'md',
+            },
+        ]);
+    });
+
+    it('filterHtml 설정이 필터 단계까지 전달된다', () => {
+        const names = runExtract(fixture).props[0].props.map((prop) => prop.name);
+        expect(names).not.toContain('aria-label');
+
+        const kept = extract({
+            tsconfigPath: path.join(fixture.root, 'tsconfig.json'),
+            targetFiles: [fixture.componentFile],
+            config: { ...createConfig(fixture), filterHtml: false },
+        });
+        expect(kept.props[0].props.map((prop) => prop.name)).toContain('aria-label');
+    });
+
+    it('components.include로 필터를 개별 해제할 수 있다', () => {
+        const result = extract({
+            tsconfigPath: path.join(fixture.root, 'tsconfig.json'),
+            targetFiles: [fixture.componentFile],
+            config: createConfig(fixture, { 'badge.tsx': { include: ['aria-label'] } }),
+        });
+
+        expect(result.props[0].props.map((prop) => prop.name)).toContain('aria-label');
+    });
+
+    it('읽을 수 없는 파일은 경고만 남기고 나머지를 계속 처리한다', () => {
+        const reporter = createRecordingReporter();
+
+        const result = runExtract(fixture, {
+            targetFiles: [path.join(fixture.root, 'missing.tsx'), fixture.componentFile],
+            reporter,
+        });
+
+        expect(result.props).toHaveLength(1);
+        expect(reporter.warnings).toEqual([
+            'Failed to extract props for missing: source file not found',
+        ]);
+    });
+});

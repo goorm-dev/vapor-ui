@@ -4,6 +4,7 @@ import { extract } from '#app/extract';
 import { resolveOptions } from '#cli/options';
 import { createConsoleReporter } from '#cli/reporter';
 import { ExtractorError } from '#domain/errors';
+import { formatWithPrettier } from '#infrastructure/fs/file-writer';
 
 async function runCli(): Promise<void> {
     const cli = meow(
@@ -34,12 +35,18 @@ async function runCli(): Promise<void> {
         configPath: cli.flags.config,
     });
 
-    extract({
+    const reporter = createConsoleReporter(resolved.config.verbose);
+
+    const { writtenFiles } = extract({
         tsconfigPath: resolved.tsconfigPath,
         targetFiles: resolved.targetFiles,
         config: resolved.config,
-        reporter: createConsoleReporter(resolved.config.verbose),
+        reporter,
     });
+
+    // Formatting is a CLI convenience, not part of extraction: it shells out to
+    // prettier, so keeping it here leaves extract() free of child_process.
+    formatWithPrettier(writtenFiles, reporter);
 }
 
 function handleCliError(error: unknown): never {
