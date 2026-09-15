@@ -94,8 +94,14 @@ export const root = componentRecipe({
             '&[data-ending-style][data-swipe-direction="up"]': {
                 transform: `translateY(calc(${outers.swipeMoveY} - 150%))`,
             },
+            '&[data-ending-style][data-swipe-direction="down"]': {
+                transform: `translateY(calc(${outers.swipeMoveY} + 150%))`,
+            },
             '&[data-ending-style][data-swipe-direction="right"]': {
                 transform: slideTransform(calc.add(outers.swipeMoveX, OFF_SCREEN_X)),
+            },
+            '&[data-ending-style][data-swipe-direction="left"]': {
+                transform: slideTransform(calc.subtract(outers.swipeMoveX, OFF_SCREEN_X)),
             },
 
             '&::after': {
