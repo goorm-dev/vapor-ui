@@ -17,7 +17,7 @@ export default {
     title: 'Composites/Menu',
     component: Menu.Root,
     argTypes: {
-        defaultOpen: { control: 'boolean' },
+        open: { control: 'boolean' },
         modal: { control: 'boolean' },
         isDisabled: { control: 'boolean' },
         side: { control: 'inline-radio', options: ['top', 'bottom', 'left', 'right'] },
@@ -171,7 +171,7 @@ export const Controlled: Story = {
 
 const checkGroupValues = ['옵션 1', '옵션 2', '옵션 3'] as const;
 
-const TestBedRender = () => {
+const TestBedRender = ({ open = true, ...props }: Menu.Root.Props) => {
     return (
         <Regression.Table
             conditions={[
@@ -196,10 +196,11 @@ const TestBedRender = () => {
             ]}
             render={(row, container) => (
                 <Menu.Root
-                    open
+                    open={open}
                     onOpenChange={() => {}}
                     isDisabled={row.isDisabled}
                     container={container ?? undefined}
+                    {...props}
                 >
                     <Menu.Group label="액션">
                         <Menu.Item label="복사" onClick={() => {}} />
@@ -261,10 +262,10 @@ const TestBedRender = () => {
 };
 
 export const TestBed_Light: Story = {
-    render: () => <TestBedRender />,
+    render: (args) => <TestBedRender {...args} />,
 };
 
 export const TestBed_Dark: Story = {
     globals: { appearance: 'dark' },
-    render: () => <TestBedRender />,
+    render: (args) => <TestBedRender {...args} />,
 };
