@@ -305,16 +305,6 @@ describe('<ProgressBar />', () => {
             expect(getIndicator(container)!.className).toMatch(/type_error/);
         });
 
-        it('should mark the track with the error variant', () => {
-            const { container, rerender } = render(<ProgressBarTest value={42} />);
-            const defaultClass = getTrack(container)!.className;
-
-            rerender(<ProgressBarTest value={42} type="error" />);
-
-            expect(getTrack(container)!.className).not.toBe(defaultClass);
-            expect(getTrack(container)!.className).toMatch(/type_error/);
-        });
-
         it('should keep the value in the accessibility tree', () => {
             const { container } = render(<ProgressBarTest value={42} type="error" />);
 

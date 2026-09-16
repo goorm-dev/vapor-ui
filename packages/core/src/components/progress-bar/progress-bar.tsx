@@ -21,7 +21,6 @@ type Status = BaseProgress.Root.State['status'];
 
 interface ProgressBarContext extends Required<ProgressBarVariants> {
     status: Status;
-    /** Registers a `ProgressBar.Description` id; the returned function unregisters it. */
     registerDescription: (id: string) => () => void;
     /** Set by `ProgressBar.Label` so the root can warn when the bar has no accessible name. */
     hasLabelRef: RefObject<boolean>;
@@ -165,12 +164,12 @@ export const ProgressBarTrackPrimitive = forwardRef<
     ProgressBarTrackPrimitive.Props
 >((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
-    const { size, type } = useProgressBarContext();
+    const { size } = useProgressBarContext();
 
     return (
         <BaseProgress.Track
             ref={ref}
-            className={cn(styles.track({ size, type }), className)}
+            className={cn(styles.track({ size }), className)}
             {...componentProps}
         />
     );

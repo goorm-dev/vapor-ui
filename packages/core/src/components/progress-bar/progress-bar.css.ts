@@ -5,29 +5,29 @@ import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
-/** Width of the indeterminate segment, as a share of the track. */
-const SEGMENT_WIDTH = 40;
-/**
- * Where the segment's leading edge starts and ends a sweep, as a share of the track. It starts a
- * tenth of the track clear of the left edge and ends well past the right, so each crossing is
- * followed by a rest on an empty track.
- */
-const SWEEP_FROM = -(SEGMENT_WIDTH + 10);
-const SWEEP_TO = 220;
-/** One sweep. Held constant so `SEGMENT_WIDTH` changes the distance covered, never the tempo. */
-const SWEEP_DURATION = '1.5s';
-
-// `translateX` resolves against the segment's own width, so a track-relative offset has to be
-// divided by that share to survive a change to `SEGMENT_WIDTH`.
-const toSegment = (track: number) => `${Number(((track / SEGMENT_WIDTH) * 100).toFixed(2))}%`;
+const INDETERMINATE_WIDTH = 40;
+const INDETERMINATE_REST = `${(100 - INDETERMINATE_WIDTH) / 2}%`;
 
 const sweep = keyframes({
-    '0%': { transform: `translateX(${toSegment(SWEEP_FROM)})` },
-    '100%': { transform: `translateX(${toSegment(SWEEP_TO)})` },
+    from: { transform: `translateX(-${INDETERMINATE_WIDTH + 10}cqw)` },
+    // Well past the right edge, so each crossing is followed by a rest on an empty track.
+    to: { transform: 'translateX(220cqw)' },
 });
 
-/** Resting position of the segment when motion is reduced: centred in the track. */
-const SEGMENT_REST = `${(100 - SEGMENT_WIDTH) / 2}%`;
+const SHIMMER_WIDTH = 'clamp(48px, 35cqw, 96px)';
+/**
+ * The band crosses the track at a constant 160px/s, so the period follows the track's width.
+ * `tan(atan2(a, b))` yields the ratio a/b as a number; Firefox 153 still rejects the plain
+ * `a / b`, which drops the declaration and leaves the duration at 0s.
+ */
+const SHIMMER_DURATION = `calc(tan(atan2(100cqw + ${SHIMMER_WIDTH}, 160px)) * 1s)`;
+// Tinting with a blue from the scale would darken the fill in dark mode, where the scale inverts.
+const SHIMMER_COLOR = `color-mix(in srgb, ${vars.color.foreground.staticWhite} 40%, transparent)`;
+
+const shimmer = keyframes({
+    from: { backgroundPositionX: `calc(-1 * ${SHIMMER_WIDTH})` },
+    to: { backgroundPositionX: '100cqw' },
+});
 
 export const root = componentStyle({
     display: 'grid',
@@ -83,13 +83,16 @@ export const track = componentRecipe({
         backgroundColor: vars.color.background['secondary-200'],
         width: '100%',
         overflow: 'hidden',
+        // Makes `1cqw` one percent of the track's width, for both animations below. A percentage
+        // would resolve against the indicator instead, whose width moves with the value.
+        containerType: 'inline-size',
 
         selectors: {
             '&:not(:first-child)': { marginTop: vars.size.space['100'] },
         },
     },
 
-    defaultVariants: { size: 'md', type: 'default' },
+    defaultVariants: { size: 'md' },
     variants: {
         /**
          * Size of the track. Controls its height.
@@ -99,15 +102,6 @@ export const track = componentRecipe({
             sm: { height: vars.size.dimension['050'] },
             md: { height: vars.size.dimension['075'] },
             lg: { height: vars.size.dimension['150'] },
-        },
-
-        /**
-         * Tone of the track.
-         * @default 'default'
-         */
-        type: {
-            default: {},
-            error: {},
         },
     },
 });
@@ -122,8 +116,8 @@ export const indicator = componentRecipe({
             '&[data-indeterminate]': {
                 position: 'absolute',
                 insetInlineStart: 0,
-                width: `${SEGMENT_WIDTH}%`,
-                animation: `${sweep} ${SWEEP_DURATION} linear infinite`,
+                width: `${INDETERMINATE_WIDTH}%`,
+                animation: `${sweep} 1.5s linear infinite`,
             },
         },
 
@@ -131,7 +125,7 @@ export const indicator = componentRecipe({
             '(prefers-reduced-motion: reduce)': {
                 selectors: {
                     '&[data-indeterminate]': {
-                        insetInlineStart: SEGMENT_REST,
+                        insetInlineStart: INDETERMINATE_REST,
                         animation: 'none',
                     },
                 },
@@ -146,7 +140,20 @@ export const indicator = componentRecipe({
          * @default 'default'
          */
         type: {
-            default: {},
+            default: {
+                '@media': {
+                    '(prefers-reduced-motion: no-preference)': {
+                        selectors: {
+                            '&[data-progressing]': {
+                                backgroundImage: `linear-gradient(90deg, transparent, ${SHIMMER_COLOR}, transparent)`,
+                                backgroundRepeat: 'no-repeat',
+                                backgroundSize: `${SHIMMER_WIDTH} 100%`,
+                                animation: `${shimmer} ${SHIMMER_DURATION} linear infinite`,
+                            },
+                        },
+                    },
+                },
+            },
             // base-ui writes `width` inline, so the fill rides on `min-width`, which outranks it
             // without an `!important`.
             error: {
@@ -162,4 +169,3 @@ export const indicator = componentRecipe({
 
 export type TrackVariants = NonNullable<RecipeVariants<typeof track>>;
 export type DescriptionVariants = NonNullable<RecipeVariants<typeof description>>;
-export type IndicatorVariants = NonNullable<RecipeVariants<typeof indicator>>;
