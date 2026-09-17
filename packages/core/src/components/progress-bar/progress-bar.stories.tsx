@@ -33,6 +33,11 @@ export const Default: StoryObj<typeof ProgressBar.Root> = {
 export const TestBed: StoryObj<typeof ProgressBar.Root> = {
     render: () => (
         <VStack gap="$300" style={{ width: 320 }}>
+            <Bar
+                label="아주 긴 파일명이라 줄바꿈이 일어날 수 있는 레이블 텍스트입니다. 업로드중입니다. pdf"
+                value={40}
+                description="업로드 중..."
+            />
             <Bar label="sm / default" size="sm" value={42} />
             <Bar label="md / default" size="md" value={42} />
             <Bar label="lg / default" size="lg" value={42} />

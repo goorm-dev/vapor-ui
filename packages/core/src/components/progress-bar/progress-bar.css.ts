@@ -28,9 +28,9 @@ const flow = keyframes({
 export const root = componentStyle({
     display: 'grid',
     gridTemplateColumns: 'minmax(0, 1fr) auto',
-    alignItems: 'center',
+    alignItems: 'start',
     rowGap: 0,
-    columnGap: vars.size.space['050'],
+    columnGap: vars.size.space['150'],
     width: '100%',
 
     vars: {
