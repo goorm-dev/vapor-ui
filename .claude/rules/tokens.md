@@ -40,16 +40,16 @@ same shape with the component slots empty, so there is never a second form to ch
 --vapor-{type}-[component]-[part]-{property}-[specialty]-[variant]-[modifier]-[scale]
 ```
 
-| Slot | Required | What goes in it |
-| --- | --- | --- |
-| `type` | yes | Foundation property: `color`, `size`, `typography`, `shadow` |
-| `component` | component tokens only | The component the token belongs to, one lowercase word (`progressbar`) |
-| `part` | when the part is separately addressable | The exported sub-part, spelled as it is exported (`Track` → `track`) |
-| `property` | yes | `background`, `foreground`, `border`, `interaction` — a closed list |
-| `specialty` | rarely | A subject that is not a library component (`canvas`, `link`, `logo`) |
-| `variant` | when not default | The meaning of the color (`primary`, `success`, `error`) |
-| `modifier` | rarely | A qualifier on the value's shape (`gradientFrom`, `gradientTo`) |
-| `scale` | when not default | Intensity: `bold`, *(omitted)*, `subtle`, `subtlest` |
+| Slot        | Required                                | What goes in it                                                        |
+| ----------- | --------------------------------------- | ---------------------------------------------------------------------- |
+| `type`      | yes                                     | Foundation property: `color`, `size`, `typography`, `shadow`           |
+| `component` | component tokens only                   | The component the token belongs to, one lowercase word (`progressbar`) |
+| `part`      | when the part is separately addressable | The exported sub-part, spelled as it is exported (`Track` → `track`)   |
+| `property`  | yes                                     | `background`, `foreground`, `border`, `interaction` — a closed list    |
+| `specialty` | rarely                                  | A subject that is not a library component (`canvas`, `link`, `logo`)   |
+| `variant`   | when not default                        | The meaning of the color (`primary`, `success`, `error`)               |
+| `modifier`  | rarely                                  | A qualifier on the value's shape (`gradientFrom`, `gradientTo`)        |
+| `scale`     | when not default                        | Intensity: `bold`, _(omitted)_, `subtle`, `subtlest`                   |
 
 ```text
 --vapor-color-background-primary-bold                                 foundation
