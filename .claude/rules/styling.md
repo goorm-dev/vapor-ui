@@ -1,5 +1,5 @@
 ---
-description: Vanilla Extract styling conventions for packages/core — style, recipe, CSS variables, Sprinkles
+description: Vanilla Extract styling conventions for packages/core — recipes, variant wiring, state selectors, sprinkles, layers
 paths:
     - 'packages/core/src/**/*.css.ts'
     - 'packages/core/src/**/*.tsx'
@@ -8,6 +8,8 @@ paths:
 # Styling Rules (`packages/core`)
 
 All styles use **Vanilla Extract** — zero-runtime, type-safe CSS-in-JS. No inline styles or CSS modules.
+
+Which token to reference, and how to name one, is in [`tokens.md`](./tokens.md).
 
 ## How Styling Works
 
@@ -56,6 +58,8 @@ export const root = componentRecipe({
 
 export type ButtonVariants = NonNullable<RecipeVariants<typeof root>>;
 ```
+
+The `variables.*` above are component-scoped CSS variables — see [`tokens.md`](./tokens.md).
 
 At build time, each variant value gets its own CSS class inside `@layer vapor.components`. At runtime, `styles.root({ variant, size })` returns the matching className strings — no CSS is generated at runtime.
 
@@ -144,29 +148,6 @@ Only when the Root element itself is styled by the recipe (`Toolbar`, `RadioGrou
 
 Recipe variant keys are optional. If Root fills the defaults before writing to Context, type the Context as `Required<XxxVariants>` so sub-parts read them without re-applying defaults.
 
-## CSS Variables — Component-scoped Tokens
-
-Use `createVar` to decouple color palette from visual variant within a single recipe. The palette variant sets the variable values; the visual variant consumes them — this avoids N×M `compoundVariants` for every palette × variant combination.
-
-```ts
-const variables = {
-    foreground: createVar('foreground'),
-    background: createVar('background'),
-    borderColor: createVar('border-color'),
-};
-
-variants: {
-    colorPalette: {
-        primary: { vars: { [variables.background]: vars.color.background.primary[200] } },
-        danger:  { vars: { [variables.background]: vars.color.background.danger[200] } },
-    },
-    variant: {
-        fill:  { backgroundColor: variables.background },   // consumes the var
-        ghost: { backgroundColor: 'transparent' },
-    },
-}
-```
-
 ## State Selectors
 
 Use `when` helpers from `~/styles/mixins/logical-states` for Base UI data-attribute states. Do not use CSS pseudo-classes like `:disabled` or `:checked` directly.
@@ -178,20 +159,6 @@ selectors: {
     [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
     [when.invalid()]:  { boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}` },
 }
-```
-
-## Design Tokens
-
-Always reference design tokens via the `vars` object from `~/styles/themes.css`. Never use hard-coded values.
-
-```ts
-// ✅
-color: vars.color.foreground.normal[200];
-padding: vars.size.space['150'];
-
-// ❌
-color: '#1a1a1a';
-padding: '12px';
 ```
 
 ## Sprinkles (`$css` prop)

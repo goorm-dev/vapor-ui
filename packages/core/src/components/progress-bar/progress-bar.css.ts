@@ -15,27 +15,14 @@ const sweep = keyframes({
 });
 
 /**
- * Component tokens, mirroring the `progressbar/indicator` variables in the design library.
- * They are declared on the root so a consumer can retheme a single bar by overriding them there.
+ * Component tokens for the indicator. They are declared on the root so a consumer can retheme a
+ * single bar by overriding them there. Names follow the token grammar in `.claude/rules/tokens.md`.
  */
 const tokens = {
-    indicatorPrimary: createGlobalVar('vapor-color-progressbar-indicator-background-primary'),
-    gradientStart: createGlobalVar(
-        'vapor-color-progressbar-indicator-background-primary-gradient-start',
-    ),
-    gradientMid1: createGlobalVar(
-        'vapor-color-progressbar-indicator-background-primary-gradient-mid-1',
-    ),
-    gradientMid2: createGlobalVar(
-        'vapor-color-progressbar-indicator-background-primary-gradient-mid-2',
-    ),
-    gradientMid3: createGlobalVar(
-        'vapor-color-progressbar-indicator-background-primary-gradient-mid-3',
-    ),
-    gradientEnd: createGlobalVar(
-        'vapor-color-progressbar-indicator-background-primary-gradient-end',
-    ),
-    indicatorDanger: createGlobalVar('vapor-color-progressbar-indicator-background-danger'),
+    background: createGlobalVar('vapor-color-progressbar-indicator-background'),
+    gradientFrom: createGlobalVar('vapor-color-progressbar-indicator-background-gradientFrom'),
+    gradientTo: createGlobalVar('vapor-color-progressbar-indicator-background-gradientTo'),
+    error: createGlobalVar('vapor-color-progressbar-indicator-background-error'),
 };
 
 // The gradient repeats every 50% of the image, which at 200% is exactly the indicator's width,
@@ -53,13 +40,10 @@ export const root = componentStyle({
     width: '100%',
 
     vars: {
-        [tokens.indicatorPrimary]: vars.color.background['primary'],
-        [tokens.gradientStart]: vars.color.blue['600'],
-        [tokens.gradientMid1]: vars.color.blue['300'],
-        [tokens.gradientMid2]: vars.color.blue['600'],
-        [tokens.gradientMid3]: vars.color.blue['300'],
-        [tokens.gradientEnd]: vars.color.blue['600'],
-        [tokens.indicatorDanger]: vars.color.background['danger'],
+        [tokens.background]: vars.color.background['primary'],
+        [tokens.gradientFrom]: vars.color.blue['600'],
+        [tokens.gradientTo]: vars.color.blue['300'],
+        [tokens.error]: vars.color.background['danger'],
     },
 });
 
@@ -135,7 +119,8 @@ export const indicator = componentRecipe({
     base: {
         transition: 'width 0.2s linear',
         borderRadius: vars.size.borderRadius['900'],
-        backgroundColor: tokens.indicatorPrimary,
+        // Shows through for the indeterminate band; the determinate gradient paints over it.
+        backgroundColor: tokens.background,
         height: 'inherit',
 
         selectors: {
@@ -143,7 +128,7 @@ export const indicator = componentRecipe({
                 position: 'absolute',
                 insetInlineStart: 0,
                 width: `${INDETERMINATE_WIDTH}%`,
-                animation: `${sweep} 1.5s linear infinite`,
+                animation: `${sweep} 2.2s linear infinite`,
             },
         },
 
@@ -170,7 +155,7 @@ export const indicator = componentRecipe({
                 selectors: {
                     // The indeterminate bar sweeps as a solid band, so it keeps the flat fill.
                     '&:not([data-indeterminate])': {
-                        backgroundImage: `linear-gradient(90deg, ${tokens.gradientStart} 0%, ${tokens.gradientMid1} 25%, ${tokens.gradientMid2} 50%, ${tokens.gradientMid3} 75%, ${tokens.gradientEnd} 100%)`,
+                        backgroundImage: `linear-gradient(90deg, ${tokens.gradientFrom} 0%, ${tokens.gradientTo} 25%, ${tokens.gradientFrom} 50%, ${tokens.gradientTo} 75%, ${tokens.gradientFrom} 100%)`,
                         backgroundSize: '200% 100%',
                         animation: `${flow} 1.2s linear infinite`,
                         backgroundPositionX: '100%',
@@ -192,7 +177,7 @@ export const indicator = componentRecipe({
             // base-ui writes `width` inline, so the fill rides on `min-width`, which outranks it
             // without an `!important`.
             error: {
-                backgroundColor: tokens.indicatorDanger,
+                backgroundColor: tokens.error,
                 minWidth: '100%',
                 selectors: {
                     '&[data-indeterminate]': { insetInlineStart: 0, animation: 'none' },
