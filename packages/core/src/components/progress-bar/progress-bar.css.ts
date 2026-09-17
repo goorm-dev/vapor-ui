@@ -1,4 +1,4 @@
-import { keyframes } from '@vanilla-extract/css';
+import { createGlobalVar, keyframes } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
@@ -14,19 +14,34 @@ const sweep = keyframes({
     to: { transform: 'translateX(220cqw)' },
 });
 
-const SHIMMER_WIDTH = 'clamp(48px, 35cqw, 96px)';
 /**
- * The band crosses the track at a constant 160px/s, so the period follows the track's width.
- * `tan(atan2(a, b))` yields the ratio a/b as a number; Firefox 153 still rejects the plain
- * `a / b`, which drops the declaration and leaves the duration at 0s.
+ * Component tokens, mirroring the `progressbar/indicator` variables in the design library.
+ * They are declared on the root so a consumer can retheme a single bar by overriding them there.
  */
-const SHIMMER_DURATION = `calc(tan(atan2(100cqw + ${SHIMMER_WIDTH}, 160px)) * 1s)`;
-// Tinting with a blue from the scale would darken the fill in dark mode, where the scale inverts.
-const SHIMMER_COLOR = `color-mix(in srgb, ${vars.color.foreground.staticWhite} 40%, transparent)`;
+const tokens = {
+    indicatorPrimary: createGlobalVar('vapor-color-progressbar-indicator-background-primary'),
+    gradientStart: createGlobalVar(
+        'vapor-color-progressbar-indicator-background-primary-gradient-start',
+    ),
+    gradientMid1: createGlobalVar(
+        'vapor-color-progressbar-indicator-background-primary-gradient-mid-1',
+    ),
+    gradientMid2: createGlobalVar(
+        'vapor-color-progressbar-indicator-background-primary-gradient-mid-2',
+    ),
+    gradientMid3: createGlobalVar(
+        'vapor-color-progressbar-indicator-background-primary-gradient-mid-3',
+    ),
+    gradientEnd: createGlobalVar(
+        'vapor-color-progressbar-indicator-background-primary-gradient-end',
+    ),
+    indicatorDanger: createGlobalVar('vapor-color-progressbar-indicator-background-danger'),
+};
 
-const shimmer = keyframes({
-    from: { backgroundPositionX: `calc(-1 * ${SHIMMER_WIDTH})` },
-    to: { backgroundPositionX: '100cqw' },
+// The gradient repeats every 50% of the image, which at 200% is exactly the indicator's width,
+// so one pass of the background across it loops seamlessly.
+const flow = keyframes({
+    to: { backgroundPositionX: '0%' },
 });
 
 export const root = componentStyle({
@@ -36,6 +51,16 @@ export const root = componentStyle({
     rowGap: 0,
     columnGap: vars.size.space['050'],
     width: '100%',
+
+    vars: {
+        [tokens.indicatorPrimary]: vars.color.background['primary'],
+        [tokens.gradientStart]: vars.color.blue['600'],
+        [tokens.gradientMid1]: vars.color.blue['300'],
+        [tokens.gradientMid2]: vars.color.blue['600'],
+        [tokens.gradientMid3]: vars.color.blue['300'],
+        [tokens.gradientEnd]: vars.color.blue['600'],
+        [tokens.indicatorDanger]: vars.color.background['danger'],
+    },
 });
 
 export const label = componentStyle([
@@ -108,8 +133,9 @@ export const track = componentRecipe({
 
 export const indicator = componentRecipe({
     base: {
+        transition: 'width 0.2s linear',
         borderRadius: vars.size.borderRadius['900'],
-        backgroundColor: vars.color.background['primary'],
+        backgroundColor: tokens.indicatorPrimary,
         height: 'inherit',
 
         selectors: {
@@ -141,14 +167,23 @@ export const indicator = componentRecipe({
          */
         type: {
             default: {
+                selectors: {
+                    // The indeterminate bar sweeps as a solid band, so it keeps the flat fill.
+                    '&:not([data-indeterminate])': {
+                        backgroundImage: `linear-gradient(90deg, ${tokens.gradientStart} 0%, ${tokens.gradientMid1} 25%, ${tokens.gradientMid2} 50%, ${tokens.gradientMid3} 75%, ${tokens.gradientEnd} 100%)`,
+                        backgroundSize: '200% 100%',
+                        animation: `${flow} 1.2s linear infinite`,
+                        backgroundPositionX: '100%',
+                    },
+                },
+
                 '@media': {
-                    '(prefers-reduced-motion: no-preference)': {
+                    '(prefers-reduced-motion: reduce)': {
                         selectors: {
-                            '&[data-progressing]': {
-                                backgroundImage: `linear-gradient(90deg, transparent, ${SHIMMER_COLOR}, transparent)`,
-                                backgroundRepeat: 'no-repeat',
-                                backgroundSize: `${SHIMMER_WIDTH} 100%`,
-                                animation: `${shimmer} ${SHIMMER_DURATION} linear infinite`,
+                            // Half a period in, so the fill rests mid-gradient rather than on a stop.
+                            '&:not([data-indeterminate])': {
+                                animation: 'none',
+                                backgroundPositionX: '50%',
                             },
                         },
                     },
@@ -157,7 +192,7 @@ export const indicator = componentRecipe({
             // base-ui writes `width` inline, so the fill rides on `min-width`, which outranks it
             // without an `!important`.
             error: {
-                backgroundColor: vars.color.background['danger'],
+                backgroundColor: tokens.indicatorDanger,
                 minWidth: '100%',
                 selectors: {
                     '&[data-indeterminate]': { insetInlineStart: 0, animation: 'none' },
