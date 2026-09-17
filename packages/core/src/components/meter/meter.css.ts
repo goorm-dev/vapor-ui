@@ -8,8 +8,8 @@ export const root = componentStyle({
     display: 'grid',
     gridTemplateColumns: 'minmax(0, 1fr) auto',
     alignItems: 'start',
-    columnGap: vars.size.space['150'],
     rowGap: vars.size.space['100'],
+    columnGap: vars.size.space['150'],
     width: '100%',
 });
 
