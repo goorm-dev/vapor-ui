@@ -50,6 +50,10 @@ export const TestBed: Story = {
                     ))}
                 </VStack>
             ))}
+            <MeterExample
+                value={42}
+                label="Storage used by all of your team workspaces and shared attachments this billing cycle"
+            />
         </VStack>
     ),
 };

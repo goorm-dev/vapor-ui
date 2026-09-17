@@ -7,7 +7,8 @@ import { vars } from '~/styles/themes.css';
 export const root = componentStyle({
     display: 'grid',
     gridTemplateColumns: 'minmax(0, 1fr) auto',
-    alignItems: 'center',
+    alignItems: 'start',
+    columnGap: vars.size.space['150'],
     rowGap: vars.size.space['100'],
     width: '100%',
 });
