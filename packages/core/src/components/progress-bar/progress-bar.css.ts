@@ -1,6 +1,7 @@
-import { createGlobalVar, keyframes } from '@vanilla-extract/css';
+import { createGlobalVar, globalStyle, keyframes } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
+import { layers } from '~/styles/layers.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
@@ -10,14 +11,9 @@ const INDETERMINATE_REST = `${(100 - INDETERMINATE_WIDTH) / 2}%`;
 
 const sweep = keyframes({
     from: { transform: `translateX(-${INDETERMINATE_WIDTH + 10}cqw)` },
-    // Well past the right edge, so each crossing is followed by a rest on an empty track.
     to: { transform: 'translateX(220cqw)' },
 });
 
-/**
- * Component tokens for the indicator. They are declared on the root so a consumer can retheme a
- * single bar by overriding them there. Names follow the token grammar in `.claude/rules/tokens.md`.
- */
 const tokens = {
     background: createGlobalVar('vapor-color-progressbar-indicator-background'),
     gradientFrom: createGlobalVar('vapor-color-progressbar-indicator-background-gradientFrom'),
@@ -25,8 +21,6 @@ const tokens = {
     error: createGlobalVar('vapor-color-progressbar-indicator-background-error'),
 };
 
-// The gradient repeats every 50% of the image, which at 200% is exactly the indicator's width,
-// so one pass of the background across it loops seamlessly.
 const flow = keyframes({
     to: { backgroundPositionX: '0%' },
 });
@@ -41,9 +35,29 @@ export const root = componentStyle({
 
     vars: {
         [tokens.background]: vars.color.background['primary'],
-        [tokens.gradientFrom]: vars.color.blue['600'],
-        [tokens.gradientTo]: vars.color.blue['300'],
         [tokens.error]: vars.color.background['danger'],
+    },
+});
+
+globalStyle(`:root, [data-vapor-theme='light']`, {
+    '@layer': {
+        [layers.theme]: {
+            vars: {
+                [tokens.gradientFrom]: vars.color.blue['600'],
+                [tokens.gradientTo]: vars.color.blue['300'],
+            },
+        },
+    },
+});
+
+globalStyle(`[data-vapor-theme='dark']`, {
+    '@layer': {
+        [layers.theme]: {
+            vars: {
+                [tokens.gradientFrom]: vars.color.blue['300'],
+                [tokens.gradientTo]: vars.color.blue['600'],
+            },
+        },
     },
 });
 
@@ -75,7 +89,6 @@ export const description = componentRecipe({
     variants: {
         /**
          * Tone of the description text.
-         * @default 'default'
          */
         type: {
             default: { color: vars.color.foreground['secondary'] },
@@ -92,8 +105,6 @@ export const track = componentRecipe({
         backgroundColor: vars.color.background['secondary-200'],
         width: '100%',
         overflow: 'hidden',
-        // Makes `1cqw` one percent of the track's width, for both animations below. A percentage
-        // would resolve against the indicator instead, whose width moves with the value.
         containerType: 'inline-size',
 
         selectors: {
@@ -105,7 +116,6 @@ export const track = componentRecipe({
     variants: {
         /**
          * Size of the track. Controls its height.
-         * @default 'md'
          */
         size: {
             sm: { height: vars.size.dimension['050'] },
@@ -119,7 +129,6 @@ export const indicator = componentRecipe({
     base: {
         transition: 'width 0.2s linear',
         borderRadius: vars.size.borderRadius['900'],
-        // Shows through for the indeterminate band; the determinate gradient paints over it.
         backgroundColor: tokens.background,
         height: 'inherit',
 
@@ -148,12 +157,10 @@ export const indicator = componentRecipe({
     variants: {
         /**
          * Tone of the indicator.
-         * @default 'default'
          */
         type: {
             default: {
                 selectors: {
-                    // The indeterminate bar sweeps as a solid band, so it keeps the flat fill.
                     '&:not([data-indeterminate])': {
                         backgroundImage: `linear-gradient(90deg, ${tokens.gradientFrom} 0%, ${tokens.gradientTo} 25%, ${tokens.gradientFrom} 50%, ${tokens.gradientTo} 75%, ${tokens.gradientFrom} 100%)`,
                         backgroundSize: '200% 100%',
@@ -165,7 +172,6 @@ export const indicator = componentRecipe({
                 '@media': {
                     '(prefers-reduced-motion: reduce)': {
                         selectors: {
-                            // Half a period in, so the fill rests mid-gradient rather than on a stop.
                             '&:not([data-indeterminate])': {
                                 animation: 'none',
                                 backgroundPositionX: '50%',
@@ -174,8 +180,6 @@ export const indicator = componentRecipe({
                     },
                 },
             },
-            // base-ui writes `width` inline, so the fill rides on `min-width`, which outranks it
-            // without an `!important`.
             error: {
                 backgroundColor: tokens.error,
                 minWidth: '100%',
