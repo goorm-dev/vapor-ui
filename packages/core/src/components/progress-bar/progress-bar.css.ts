@@ -39,6 +39,8 @@ export const root = componentStyle({
     },
 });
 
+// The gradient stops are ProgressBar-only tokens, so their light/dark values live here rather
+// than in `themes.css.ts`; the selectors mirror the ones `createGlobalTheme` uses there.
 globalStyle(`:root, [data-vapor-theme='light']`, {
     '@layer': {
         [layers.theme]: {

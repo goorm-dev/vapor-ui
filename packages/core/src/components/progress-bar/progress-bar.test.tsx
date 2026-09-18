@@ -3,7 +3,14 @@ import type { ReactElement } from 'react';
 import { cleanup, render, waitFor } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
+import { warn } from '~/utils/warn';
+
 import { ProgressBar } from '.';
+
+// `warn` de-duplicates by message for the whole module, so a real spy would only ever see the
+// first occurrence of each message in this file and every later `not.toHaveBeenCalled` would
+// pass vacuously.
+vi.mock('~/utils/warn', () => ({ warn: vi.fn() }));
 
 const ProgressBarTest = ({
     label = '파일 업로드',
@@ -28,6 +35,7 @@ const getIndicator = (container: HTMLElement) =>
 
 describe('<ProgressBar />', () => {
     afterEach(cleanup);
+    beforeEach(() => vi.mocked(warn).mockClear());
 
     it('should have no a11y violations', async () => {
         const { container } = render(<ProgressBarTest value={42} />);
@@ -94,31 +102,25 @@ describe('<ProgressBar />', () => {
         });
 
         it('should warn and pass an inverted range through untouched', () => {
-            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const { container } = render(<ProgressBarTest value={50} min={100} max={0} />);
             const bar = getBar(container);
 
             expect(bar).toHaveAttribute('aria-valuemin', '100');
             expect(bar).toHaveAttribute('aria-valuemax', '0');
             expect(warn).toHaveBeenCalledWith(
-                'Vapor UI: ProgressBar received min={100} and max={0}. `min` must be less than `max` for the value to be meaningful.',
+                'ProgressBar received min={100} and max={0}. `min` must be less than `max` for the value to be meaningful.',
             );
-
-            warn.mockRestore();
         });
 
         it('should warn when the range is empty', () => {
-            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const { container } = render(<ProgressBarTest value={50} min={20} max={20} />);
             const bar = getBar(container);
 
             expect(bar).toHaveAttribute('aria-valuemin', '20');
             expect(bar).toHaveAttribute('aria-valuemax', '20');
             expect(warn).toHaveBeenCalledWith(
-                'Vapor UI: ProgressBar received min={20} and max={20}. `min` must be less than `max` for the value to be meaningful.',
+                'ProgressBar received min={20} and max={20}. `min` must be less than `max` for the value to be meaningful.',
             );
-
-            warn.mockRestore();
         });
 
         it('should scale the value text by the declared range, not by 100', () => {
@@ -314,28 +316,22 @@ describe('<ProgressBar />', () => {
 
     describe('accessible name', () => {
         it('should warn when nothing names the progress bar', async () => {
-            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             render(<ProgressBarTest value={42} label={null} />);
 
             await waitFor(() =>
                 expect(warn).toHaveBeenCalledWith(
-                    'Vapor UI: ProgressBar has no accessible name. Render a `ProgressBar.Label`, or pass `aria-label` / `aria-labelledby` to `ProgressBar.Root`.',
+                    'ProgressBar has no accessible name. Render a `ProgressBar.Label`, or pass `aria-label` / `aria-labelledby` to `ProgressBar.Root`.',
                 ),
             );
-
-            warn.mockRestore();
         });
 
         it('should not warn when a Label is rendered', async () => {
-            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const { container } = render(<ProgressBarTest value={42} />);
 
             await waitFor(() => expect(getBar(container)).toHaveAccessibleName('파일 업로드'));
             await new Promise((resolve) => setTimeout(resolve, 0));
 
             expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('no accessible name'));
-
-            warn.mockRestore();
         });
 
         it('should take its name from the Label text', () => {
@@ -353,7 +349,6 @@ describe('<ProgressBar />', () => {
         });
 
         it('should not warn when aria-labelledby points outside the component', async () => {
-            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const { container } = render(
                 <>
                     <span id="external-name">파일 업로드</span>
@@ -364,18 +359,13 @@ describe('<ProgressBar />', () => {
 
             expect(getBar(container)).toHaveAccessibleName('파일 업로드');
             expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('no accessible name'));
-
-            warn.mockRestore();
         });
 
         it('should not warn when aria-label is supplied', async () => {
-            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             render(<ProgressBarTest value={42} label={null} aria-label="파일 업로드" />);
             await new Promise((resolve) => setTimeout(resolve, 0));
 
             expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('no accessible name'));
-
-            warn.mockRestore();
         });
     });
 
