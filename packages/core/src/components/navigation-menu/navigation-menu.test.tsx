@@ -180,7 +180,7 @@ describe('<NavigationMenu.Root />', () => {
             expect(screen.getByText(PANEL_LINK_1)).toBeInTheDocument();
         });
 
-        it('should focus the first item when the menu is opened via ArrowDown key', async () => {
+        it('should keep focus on the trigger when the menu is opened via ArrowDown key and move focus to the first item on Tab', async () => {
             const rendered = render(<NavigationMenuTest aria-label="Main" />);
             const trigger = rendered.getByRole('button', { name: TRIGGER_1 });
 
@@ -191,6 +191,10 @@ describe('<NavigationMenu.Root />', () => {
             await userEvent.keyboard('[ArrowDown]');
 
             expect(screen.getByText(PANEL_LINK_1)).toBeInTheDocument();
+            expect(trigger).toHaveFocus();
+
+            await userEvent.tab();
+
             expect(screen.getByText(PANEL_LINK_1)).toHaveFocus();
         });
 

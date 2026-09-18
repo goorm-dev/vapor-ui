@@ -315,7 +315,7 @@ type ToastOptions = { icon?: ReactElement<unknown>; close?: boolean; actionProps
 
 type ToastProps = ToastVariants & ToastOptions;
 
-type BaseToastObject<Data extends object> = Partial<BaseToast.Root.ToastObject<Data>>;
+type BaseToastObject<Data extends object> = BaseToast.Root.ToastObject<Data>;
 type ToastObject<Data extends object> = Omit<BaseToastObject<Data>, 'type' | 'actionProps'>;
 
 type ToastObjectType<Data extends object> = ToastObject<Data> & ToastProps;
@@ -332,7 +332,10 @@ export interface ToastManagerAddOptions<Data extends object> extends Omit<
 }
 
 export interface ToastManagerUpdateOptions<Data extends object> extends Partial<
-    ToastManagerAddOptions<Data>
+    Omit<
+        ToastObjectType<Data>,
+        'id' | 'ref' | 'height' | 'transitionStatus' | 'limited' | 'updateKey'
+    >
 > {}
 
 export interface ToastManagerPromiseOptions<Value, Data extends object> extends BasePromiseOptions {
@@ -355,7 +358,12 @@ export interface ToastManager extends BaseToastManager {
         }) => void,
     ) => () => void;
     add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
-    update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
+    update: <Data extends object>(
+        id: string,
+        options:
+            | ToastManagerUpdateOptions<Data>
+            | ((prevToast: ToastObjectType<Data>) => ToastManagerUpdateOptions<Data>),
+    ) => void;
     close: (id?: string) => void;
     promise: <Value, Data extends object>(
         promise: Promise<Value>,
