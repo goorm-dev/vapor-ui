@@ -1,7 +1,9 @@
 import meow from 'meow';
 
-import { CliError, resolveOptions } from '~/cli/options';
-import { extract } from '~/extract';
+import { extract } from '~/app/extract';
+import { resolveOptions } from '~/cli/options';
+import { createConsoleReporter } from '~/cli/reporter';
+import { ExtractorError } from '~/domain/errors';
 
 async function runCli(): Promise<void> {
     const cli = meow(
@@ -36,11 +38,12 @@ async function runCli(): Promise<void> {
         tsconfigPath: resolved.tsconfigPath,
         targetFiles: resolved.targetFiles,
         config: resolved.config,
+        reporter: createConsoleReporter(resolved.config.verbose),
     });
 }
 
 function handleCliError(error: unknown): never {
-    const prefix = error instanceof CliError ? 'Error' : 'Unexpected error';
+    const prefix = error instanceof ExtractorError ? 'Error' : 'Unexpected error';
     const message = error instanceof Error ? error.message : String(error);
     console.error(`${prefix}: ${message}`);
     process.exit(1);

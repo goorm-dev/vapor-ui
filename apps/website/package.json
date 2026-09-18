@@ -7,7 +7,7 @@
         "build": "next build",
         "clean": "rm -rf node_modules .next .turbo .source",
         "dev": "next dev --turbo",
-        "extract": "ts-api-extractor --config ./docs-extractor.config.mjs",
+        "extract": "tsx --tsconfig ../../scripts/ts-api-extractor/tsconfig.json ../../scripts/ts-api-extractor/src/cli/index.ts --config ./docs-extractor.config.mjs",
         "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src",
         "start": "next start",
@@ -63,6 +63,7 @@
         "postcss": "^8.5.26",
         "shiki": "^3.23.0",
         "tailwindcss": "^4.3.3",
+        "tsx": "^4.23.13",
         "typescript": "catalog:"
     }
 }
