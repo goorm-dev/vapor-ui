@@ -13,5 +13,8 @@ export default defineConfig({
         'button/button.tsx': {
             include: ['nativeButton'],
         },
+        'meter/meter.tsx': {
+            include: ['aria-valuetext'],
+        },
     },
 });
