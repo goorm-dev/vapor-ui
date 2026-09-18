@@ -4,5 +4,5 @@ export {
     MenuItem as Item,
     MenuCheckGroup as CheckGroup,
     MenuCheckItem as CheckItem,
-    MenuSubmenu as Submenu,
+    MenuSubmenuItem as SubmenuItem,
 } from './menu';

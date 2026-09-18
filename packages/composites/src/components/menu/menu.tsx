@@ -9,11 +9,36 @@ import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
 
-const slots = createSlots({
+interface MenuContextValue {
+    nested: true;
+}
+
+const MenuContext = createContext<MenuContextValue | undefined>(undefined);
+
+const useMenuContext = () => useContext(MenuContext);
+
+/* -----------------------------------------------------------------------------------------------*/
+
+const rootSlots = createSlots({
     trigger: MenuPrimitives.Trigger,
 });
 
-export const MenuRoot = ({
+const submenuSlots = createSlots({
+    trigger: MenuPrimitives.SubmenuTriggerItem,
+});
+
+export const MenuRoot = (props: MenuRoot.Props) => {
+    const parent = useMenuContext();
+    const contextValue = useMemo<MenuContextValue>(() => ({ nested: true }), []);
+
+    return (
+        <MenuContext.Provider value={contextValue}>
+            {parent === undefined ? <ParentMenu {...props} /> : <Submenu {...props} />}
+        </MenuContext.Provider>
+    );
+};
+
+const ParentMenu = ({
     // functional
     open,
     defaultOpen,
@@ -41,7 +66,7 @@ export const MenuRoot = ({
 
             disabled={isDisabled}
         >
-            <slots.trigger render={trigger} />
+            <rootSlots.trigger render={trigger} />
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} align={align}>
@@ -54,7 +79,45 @@ export const MenuRoot = ({
     );
 };
 
-type Slots = SlotProps<typeof slots>;
+const Submenu = ({
+    // functional
+    open,
+    defaultOpen,
+    onOpenChange,
+    actionsRef,
+    container,
+
+    // variants
+    isDisabled,
+    side = 'right',
+    align,
+
+    // slots
+    trigger,
+    children,
+}: MenuRoot.Props) => {
+    return (
+        <MenuPrimitives.SubmenuRoot
+            open={open}
+            defaultOpen={defaultOpen}
+            onOpenChange={onOpenChange}
+            actionsRef={actionsRef}
+            disabled={isDisabled}
+        >
+            <submenuSlots.trigger render={trigger} />
+
+            <MenuPrimitives.PortalPrimitive container={container}>
+                <MenuPrimitives.PositionerPrimitive side={side} sideOffset={0} align={align}>
+                    <MenuPrimitives.SubmenuPopupPrimitive $css={{ transition: 'none' }}>
+                        {children}
+                    </MenuPrimitives.SubmenuPopupPrimitive>
+                </MenuPrimitives.PositionerPrimitive>
+            </MenuPrimitives.PortalPrimitive>
+        </MenuPrimitives.SubmenuRoot>
+    );
+};
+
+type RootSlots = SlotProps<typeof rootSlots | typeof submenuSlots>;
 type RootProps = MenuPrimitives.Root.Props;
 type PositionerProps = MenuPrimitives.PositionerPrimitive.Props;
 type PortalProps = MenuPrimitives.PortalPrimitive.Props;
@@ -81,6 +144,7 @@ export interface MenuRootProps {
 
     /**
      * 메뉴가 모달로 동작할지 여부. `true`이면 열려 있는 동안 배경 인터랙션이 차단된다.
+     * 최상위 `Menu.Root`에서만 유효하며, 중첩된 `Menu.Root`에서는 무시된다.
      * @default true
      */
     modal?: RootProps['modal'];
@@ -119,10 +183,12 @@ export interface MenuRootProps {
 
     /**
      * 메뉴를 여는 진입 요소.
+     * - 최상위 `Menu.Root`에서는 `Trigger`로 렌더링된다.
+     * - 다른 `Menu.Root` 하위에서 사용되면 부모 메뉴의 아이템으로 동작하는 `SubmenuTrigger`로 렌더링된다.
      * @example
      * <Menu.Root trigger={<Button>메뉴 열기</Button>} />
      */
-    trigger?: Slots['trigger'];
+    trigger?: RootSlots['trigger'];
 
     /**
      * 그룹 내부에 표시할 요소.
@@ -538,69 +604,41 @@ export namespace MenuCheckItem {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const submenuSlots = createSlots({
-    trigger: MenuPrimitives.SubmenuTriggerItem,
+const submenuItemSlots = createSlots({
+    leading: Box,
+    label: Box,
 });
 
-export const MenuSubmenu = ({
-    // functional
-    open,
-    defaultOpen,
-    onOpenChange,
-    actionsRef,
-    container,
+export const MenuSubmenuItem = ({ leading, label }: MenuSubmenuItem.Props) => {
+    const gridTemplateAreas = `"${leading ? 'leading' : ''} label trailing"`;
+    const gridTemplateColumns = `${leading ? 'auto' : ''} 1fr auto`;
 
-    // variants
-    isDisabled,
-    side = 'right',
-    align,
-
-    // slots
-    trigger,
-    children,
-}: MenuSubmenu.Props) => {
     return (
-        <MenuPrimitives.SubmenuRoot
-            open={open}
-            defaultOpen={defaultOpen}
-            onOpenChange={onOpenChange}
-            actionsRef={actionsRef}
-            disabled={isDisabled}
+        <MenuPrimitives.SubmenuTriggerItem
+            $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns }}
         >
-            <submenuSlots.trigger render={trigger} />
-
-            <MenuPrimitives.PortalPrimitive container={container}>
-                <MenuPrimitives.PositionerPrimitive side={side} sideOffset={0} align={align}>
-                    <MenuPrimitives.SubmenuPopupPrimitive>
-                        {children}
-                    </MenuPrimitives.SubmenuPopupPrimitive>
-                </MenuPrimitives.PositionerPrimitive>
-            </MenuPrimitives.PortalPrimitive>
-        </MenuPrimitives.SubmenuRoot>
+            <submenuItemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
+            <submenuItemSlots.label render={label} $css={{ gridArea: 'label' }} />
+        </MenuPrimitives.SubmenuTriggerItem>
     );
 };
 
-type SubmenuSlots = SlotProps<typeof submenuSlots>;
+type SubmenuItemSlots = SlotProps<typeof submenuItemSlots>;
 
-export interface MenuSubmenuProps extends Omit<MenuRoot.Props, keyof Slots | 'modal'> {
+export interface MenuSubmenuItemProps {
     /**
-     * 중첩 메뉴를 여는 아이템의 레이블. React Element를 전달하여 커스텀할 수도 있다.
-     * @example
-     * // #1
-     * <Menu.Submenu trigger="중첩 메뉴 열기" />
-     * // #2
-     * <Menu.Submenu trigger={<Menu.Item right={<HeartIcon />} />} />
+     * 항목 좌측에 표시되는 요소. 레이블을 보충 설명하기 위한 요소를 배치한다.
      */
-    trigger: SubmenuSlots['trigger'];
+    leading?: SubmenuItemSlots['leading'];
 
     /**
-     * 중첩 메뉴 내부에 표시할 요소.
+     * 항목의 텍스트 라벨.
      */
-    children: ReactNode;
+    label: SubmenuItemSlots['label'];
 }
 
-export namespace MenuSubmenu {
-    export type Props = MenuSubmenuProps;
+export namespace MenuSubmenuItem {
+    export type Props = MenuSubmenuItemProps;
 }
 
 /* -----------------------------------------------------------------------------------------------*/

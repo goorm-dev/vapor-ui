@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, Text, VStack } from '@vapor-ui/core';
+import { Box, Button, Text, VStack } from '@vapor-ui/core';
 import {
     ChevronDoubleRightOutlineIcon,
     HeartIcon,
@@ -25,6 +25,14 @@ export default {
     },
 } satisfies Meta<typeof Menu.Root>;
 
+const Kbd = ({ children }: Box.Props) => {
+    return (
+        <Box $css={{ fontFamily: 'monospace', fontSize: '12px', color: '$fg-hint' }}>
+            {children}
+        </Box>
+    );
+};
+
 type Story = StoryObj<typeof Menu.Root>;
 
 export const Default: Story = {
@@ -38,16 +46,16 @@ export const Default: Story = {
                 <Menu.Root trigger={<Button>Menu Trigger</Button>} defaultOpen {...args}>
                     <Menu.Item
                         label="item 1"
-                        trailing={<ChevronDoubleRightOutlineIcon />}
+                        trailing={<Kbd>⌘ K</Kbd>}
                         onClick={() => alert('clicked item 1')}
                     />
                     <Menu.Item
                         label="item 2"
-                        trailing={<ChevronDoubleRightOutlineIcon />}
+                        trailing={<Kbd>⌥ ⌘ K</Kbd>}
                         onClick={() => alert('clicked item 2')}
                     />
 
-                    <Menu.Submenu trigger="label" defaultOpen>
+                    <Menu.Root trigger={<Menu.SubmenuItem label="Submenu Item" />}>
                         <Menu.CheckGroup
                             mode="multiple"
                             label="multiple group"
@@ -59,7 +67,7 @@ export const Default: Story = {
                             <Menu.CheckItem label="multiple 3" value="multiple 3" />
                             <Menu.CheckItem label="multiple 4" value="multiple 4" />
                         </Menu.CheckGroup>
-                    </Menu.Submenu>
+                    </Menu.Root>
 
                     <Menu.Group label="label">
                         <Menu.Item
@@ -249,12 +257,16 @@ const TestBedRender = ({ open = true, ...props }: Menu.Root.Props) => {
                         </Menu.CheckGroup>
                     )}
 
-                    <Menu.Submenu trigger="중첩 메뉴" open onOpenChange={() => {}}>
+                    <Menu.Root
+                        trigger={<Menu.SubmenuItem label="중첩 메뉴" />}
+                        open
+                        onOpenChange={() => {}}
+                    >
                         <Menu.CheckGroup mode="multiple" label="하위 옵션">
                             <Menu.CheckItem label="하위 1" value="하위 1" />
                             <Menu.CheckItem label="하위 2" value="하위 2" />
                         </Menu.CheckGroup>
-                    </Menu.Submenu>
+                    </Menu.Root>
                 </Menu.Root>
             )}
         />
