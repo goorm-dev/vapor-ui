@@ -1,0 +1,22 @@
+{
+    "figma": {
+        "fileKey": "DVgbt41m23pnHjAL8ZYsD3"
+    },
+    "iconTypes": {
+        "basic": {
+            "frames": [
+                { "id": "6638:464", "name": "fill" },
+                { "id": "6638:3186", "name": "outline" }
+            ],
+            "targetPath": "packages/icons/src/components/basic-icons"
+        },
+        "symbol": {
+            "frames": [
+                { "id": "2679:155", "name": "default" },
+                { "id": "2669:136", "name": "color", "color": true },
+                { "id": "9199:27825", "name": "color-country", "color": true }
+            ],
+            "targetPath": "packages/icons/src/components/symbol-icons"
+        }
+    }
+}

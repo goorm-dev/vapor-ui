@@ -1,14 +1,15 @@
 {
     "extends": "@repo/typescript-config/base",
     "compilerOptions": {
-        "noEmit": true,
         "baseUrl": ".",
         "paths": {
             "~/*": ["./src/*"]
         },
+        "noEmit": true,
+        "resolveJsonModule": true,
         "target": "ES2023",
         "lib": ["ES2023"],
-        "types": ["node"]
+        "types": ["node", "vitest/globals"]
     },
-    "include": ["commands", "src"]
+    "include": ["src", "icon-extractor.config.json"]
 }
