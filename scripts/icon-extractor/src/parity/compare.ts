@@ -110,8 +110,7 @@ const failures = rows.filter((row) => row.failed);
 const mono = rows.filter((row) => !row.isColorIcon);
 const color = rows.filter((row) => row.isColorIcon);
 const worst = (group: Row[]) => Math.max(0, ...group.map((row) => row.diffPixels));
-// What the HTML page will actually draw. An explicit --only shows every requested icon; otherwise
-// failures first, then whatever --show asked for. The workflow uploads the page only when this is
+// What the HTML page will actually draw. The workflow uploads the page only when this is
 // non-empty, so a green run never hands a reviewer a link to an empty table.
 //
 // Failures lead so the cap can never hide one: a sync that regenerates every icon marks all 814 as
@@ -124,8 +123,7 @@ const drawn = candidates.slice(0, MAX_DRAWN);
 const folded = candidates.length - drawn.length;
 
 // The headline counts live here, not only in the rendered page: the workflow reads them straight
-// out of this file for the PR comment. Re-parsing a rendered report to recover numbers we already
-// have is how the Playwright job ended up grepping its own markdown.
+// out of this file for the PR comment.
 const report = {
     threshold,
     pixelmatch: PIXELMATCH_OPTIONS,

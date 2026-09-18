@@ -1,11 +1,6 @@
 /**
  * Shared settings for the icon parity check: fetch a Figma PNG per icon, render our component
  * to a PNG the same size in Chromium, and count differing pixels with pixelmatch.
- *
- * The four values below (canvas size, includeAA, threshold, gate) were measured across all 594
- * mono icons, not guessed. Each carries the measurement that fixed it — read those before
- * changing one, because the failure they guard against is silent: a gate that is too loose
- * passes a shifted icon without a word.
  */
 import path from 'node:path';
 import process from 'node:process';

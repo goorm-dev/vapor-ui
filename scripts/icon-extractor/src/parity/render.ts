@@ -13,8 +13,11 @@ import { REPO_ROOT } from '~/utils/file-system';
 
 import { CACHE_DIR, flags, onlyFilter } from './lib';
 
+// The built bundle, not src: `pnpm --filter @vapor-ui/icons build` has to run first.
 const ICON_BUNDLE = path.join(REPO_ROOT, 'packages/icons/dist/index.js');
 
+// Mono icons follow `currentColor` (see transformer/svgr-config.ts) and Figma paints them black,
+// so any other colour here fails all 594 of them at once.
 const DEFAULT_COLOR = '#000';
 
 type RenderProps = {
@@ -25,6 +28,8 @@ type RenderProps = {
 
 async function rasterize(page: Page, svg: string, width: number, height: number): Promise<Buffer> {
     await page.setViewportSize({ width, height });
+    // Transparent throughout: the Figma baseline has an alpha channel, and a white backdrop would
+    // differ from it on every antialiased edge.
     await page.setContent(
         `<style>html,body{margin:0;padding:0;background:transparent}svg{display:block}</style>${svg}`,
     );
@@ -60,6 +65,8 @@ async function main() {
         }
 
         const baseline = PNG.sync.read(await fs.readFile(path.join(baselineDir, `${name}.png`)));
+        // Sized from the baseline rather than a constant — compare.ts skips any icon whose two
+        // PNGs differ in size, which would drop it out of the gate without failing.
         const markup = renderToStaticMarkup(
             createElement(Icon, {
                 width: baseline.width,
