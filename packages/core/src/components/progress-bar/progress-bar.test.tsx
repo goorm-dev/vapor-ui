@@ -7,9 +7,6 @@ import { warn } from '~/utils/warn';
 
 import { ProgressBar } from '.';
 
-// `warn` de-duplicates by message for the whole module, so a real spy would only ever see the
-// first occurrence of each message in this file and every later `not.toHaveBeenCalled` would
-// pass vacuously.
 vi.mock('~/utils/warn', () => ({ warn: vi.fn() }));
 
 const ProgressBarTest = ({
