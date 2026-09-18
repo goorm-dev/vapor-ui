@@ -6,7 +6,7 @@
  *
  * The baseline is a PNG on purpose: this check asks whether our components render the way FIGMA
  * renders them, so the reference has to come out of Figma's rasterizer. Comparing against Figma's
- * SVG export instead would only re-test svgo, which tests/svgr-transformer.test.ts covers
+ * SVG export instead would only re-test svgo, which src/transformer/svgr-transformer.test.ts covers
  * offline and for free.
  *
  * Already-downloaded icons are skipped, so changing `--scale` means clearing `.cache/baseline`

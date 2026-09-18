@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "extract": "tsx --env-file-if-exists=.env ./src/cli.ts",
-        "lint": "eslint ./src ./tests",
+        "lint": "eslint ./src",
         "notify:slack": "tsx ./src/slack/notify.ts",
         "parity:compare": "tsx ./src/parity/compare.ts",
         "parity:fetch": "tsx --env-file-if-exists=.env ./src/parity/fetch-baseline.ts",

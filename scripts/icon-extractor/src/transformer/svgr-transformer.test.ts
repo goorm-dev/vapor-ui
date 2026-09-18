@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'vitest';
 
-import { svgToIconComponent } from '~/transformer/svgr-transformer';
+import { svgToIconComponent } from './svgr-transformer';
 
 /** Shaped like Figma's export: root fill="none", black children, document-global mask id. */
 const MONO_SVG = `
