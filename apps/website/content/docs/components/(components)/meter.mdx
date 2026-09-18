@@ -13,6 +13,8 @@ description: 'Meter는 디스크 사용량이나 점수처럼 알려진 범위 �
 ```
 </Demo>
 
+`Meter.Label`과 `Meter.Value`는 한 줄에 놓이고 `Meter.Track`이 그 아래 전체 폭을 차지합니다. 이 배치는 자식 순서를 따르므로 `Meter.Value`는 `Meter.Track` 앞에 두세요. 뒤에 두면 값이 트랙 아래로 내려갑니다.
+
 `Meter.Label`은 보조기술에 전달되는 이름이기도 합니다. `저장 공간`, `CPU 사용률`처럼 **무엇을 재는 값인지**를 문구에 담으세요. 화면에 이름을 두지 않을 때는 `Meter.Label` 대신 `Meter.Root`에 `aria-label`을 주세요 — 둘을 함께 주면 `aria-label`이 무시됩니다.
 
 ## Property
