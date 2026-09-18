@@ -34,6 +34,7 @@
         "(components)/navigation-menu.mdx",
         "(components)/pagination.mdx",
         "(components)/popover.mdx",
+        "(components)/progress-bar.mdx",
         "(components)/radio-card.mdx",
         "(components)/radio.mdx",
         "(components)/select.mdx",
