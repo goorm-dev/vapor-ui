@@ -1,8 +1,12 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
+import { warn } from '~/utils/warn';
+
 import { Meter } from '.';
 import * as styles from './meter.css';
+
+vi.mock('~/utils/warn', () => ({ warn: vi.fn() }));
 
 const LABEL_TEXT = 'Storage used';
 
@@ -11,8 +15,8 @@ const MeterTest = ({ children, ...props }: Partial<Meter.Root.Props>) => (
         {children ?? (
             <>
                 <Meter.Label>{LABEL_TEXT}</Meter.Label>
-                <Meter.Track />
                 <Meter.Value />
+                <Meter.Track />
             </>
         )}
     </Meter.Root>
@@ -211,14 +215,8 @@ describe('Meter', () => {
     });
 
     describe('development warnings', () => {
-        let warn: ReturnType<typeof vi.spyOn>;
-
         beforeEach(() => {
-            warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        });
-
-        afterEach(() => {
-            warn.mockRestore();
+            vi.mocked(warn).mockClear();
         });
 
         it('should warn when `min` is not less than `max`', () => {
