@@ -43,6 +43,8 @@
     "scripts": {
         "build": "rimraf dist && tsup",
         "clean": "rimraf dist .turbo node_modules",
+        "figma:check": "figma connect publish --dry-run",
+        "figma:publish": "figma connect publish",
         "lint": "eslint ./src",
         "typecheck": "tsc --noEmit"
     },
@@ -50,6 +52,7 @@
         "clsx": "^2.1.1"
     },
     "devDependencies": {
+        "@figma/code-connect": "^2.0.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/react": "catalog:",

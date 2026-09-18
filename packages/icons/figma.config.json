@@ -1,0 +1,9 @@
+{
+    "codeConnect": {
+        "language": "typescript",
+        "include": ["src/**/*.figma.batch.json"],
+        "label": "React"
+    },
+    "fileKey": "DVgbt41m23pnHjAL8ZYsD3",
+    "packageImportPath": "@vapor-ui/icons"
+}
