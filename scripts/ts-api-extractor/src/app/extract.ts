@@ -9,11 +9,11 @@ import { silentReporter } from '~/domain/reporter';
 import { componentsToJson } from '~/domain/serialize';
 import type { FilterConfig, ParseConfig } from '~/domain/stage-config';
 import { parsedComponentsToModels } from '~/domain/transform';
-import { formatWithPrettier, writeFiles } from '~/infrastructure/fs/file-writer';
+import { pruneStaleFiles, writeFiles } from '~/infrastructure/fs/file-writer';
 import { parseSourceFile } from '~/infrastructure/ts-morph/component-reader';
 
 export function extract(input: ExtractInput): ExtractOutput {
-    const { config, reporter = silentReporter, format = jsonOutputFormat } = input;
+    const { config, reporter = silentReporter, format = jsonOutputFormat, prune = false } = input;
     const outputDir = path.resolve(process.cwd(), config.outputDir);
     const project = new Project({ tsConfigFilePath: input.tsconfigPath });
 
@@ -60,7 +60,7 @@ export function extract(input: ExtractInput): ExtractOutput {
         })),
     );
 
-    formatWithPrettier(writtenFiles, reporter);
+    if (prune) pruneStaleFiles(outputDir, writtenFiles, format.extension, reporter);
 
     return {
         parsed,

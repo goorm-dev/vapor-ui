@@ -1,0 +1,15 @@
+{
+    "$comment": "vapor-ui API 문서 번역 용어 사전. avoid에 걸린 표기는 검증에서 실패로 잡힌다. 실제 번역에서 갈린 것만 등재한다 — 예방적 등재 금지.",
+    "terms": [
+        { "term": "dialog", "use": "다이얼로그", "avoid": ["대화 상자", "대화상자"] },
+        { "term": "replace (요소 대체)", "use": "대체", "avoid": ["교체"] },
+        { "term": "fallback", "use": "폴백", "avoid": [] },
+        { "term": "prop", "use": "prop", "avoid": ["속성값"] }
+    ],
+    "sentencePatterns": [
+        { "en": "Whether ~", "ko": "~인지 여부입니다" },
+        { "en": "Renders a `<x>` element.", "ko": "`<x>` 요소를 렌더링합니다." },
+        { "en": "Allows you to ~", "ko": "~할 수 있습니다" },
+        { "en": "Event handler called when ~", "ko": "~할 때 호출되는 이벤트 핸들러입니다" }
+    ]
+}
