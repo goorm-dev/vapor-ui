@@ -57,7 +57,7 @@ SC마다 어떤 명령이 증거를 만드는지. **명령이 없는 칸은 `확
 | 2.4.3 초점 순서           | 열림 시 진입 지점 확인, `press Tab`/`Shift+Tab`으로 초점 가능 요소 전수 순회(순서가 의미·조작성 보존), 닫힘 후 트리거 복귀를 `eval`로 확인                                                                                        |
 | 2.4.7 초점 표시           | `press Tab` 후 `screenshot` — 포커스 링이 눈에 보이는지                                                                                                                                                                           |
 | 2.4.11 초점 가려지지 않음 | 포커스 요소와 저자 생성 고정 콘텐츠 전부(오버레이·sticky header/footer·non-modal 레이어)의 `get box`를 비교해 겹침 계산. 안 잰 겹침 상태는 `부분` 또는 `확인 불가`로 남긴다                                                       |
-| 2.5.8 타깃 크기           | `get box @eN` — width·height ≥ 24                                                                                                                                                                                                 |
+| 2.5.8 타깃 크기           | `get box @eN` — width·height ≥ 24. 미달이면 sc-map 2.5.8 행의 예외 5개를 각각 확인하고 해당 예외를 증거로 적는다. 어디에도 안 걸릴 때만 `미지원`                                                                                  |
 | 1.4.3 / 1.4.11 대비       | `screenshot`의 렌더된 픽셀에서 전경·배경색을 뽑아 대비비 계산. 투명도·그라디언트·이미지 배경이 끼면 `get styles` 값은 합성 결과가 아니다 — 단색·불투명 배경일 때만 `get styles @eN`으로 충분. 상태(hover·focus·disabled)별로 잰다 |
 | 1.4.13 호버 콘텐츠        | `hover` → 팝업 위로 포인터 이동 가능한지, Esc로 닫히는지, 호버 유지 중 안 닫히는지 3건                                                                                                                                            |
 | 4.1.3 상태 메시지         | `snapshot`에 `status`/`alert` role이 있는지 + 내용 변경 시 발화되는지                                                                                                                                                             |
@@ -81,11 +81,11 @@ agent-browser open https://base-ui.com/react/components/dialog
 agent-browser snapshot -i -c -s "main"     # 트리거 ref 확보
 agent-browser click @eN
 agent-browser snapshot -c                  # role/이름/배경 소멸 확인
-agent-browser eval '(()=>{const d=document.querySelector("[role=dialog]");return {ariaModal:d.ariaModal,labelledby:d.getAttribute("aria-labelledby")}})()'
+agent-browser eval '(()=>{const d=document.querySelector("[role=dialog]");return {ariaModal:d.ariaModal,labelledby:d.getAttribute("aria-labelledby"),describedby:d.getAttribute("aria-describedby")}})()'
 ```
 
 판정 근거는 **수단이 아니라 결과**다. 위 Dialog는 `role="dialog"` +
-`aria-labelledby`/`describedby`로 4.1.2를 충족하고, 배경이 트리에서 사라져 배경 은폐(2.1.2·모달
+`aria-labelledby`/`aria-describedby`로 4.1.2를 충족하고, 배경이 트리에서 사라져 배경 은폐(2.1.2·모달
 동작)를 확인한다 — 단 수단은 `aria-modal`도 네이티브 `<dialog>`도 아닌 배경
 `aria-hidden`이다(`ariaModal: null`). `지원 (다른 방식)`으로 적고 그 수단을 밝힌다. **이
 사실까지 적어야 판정이 방어된다.** 1.3.2는 배경 소멸로 판정하지 않는다 — 팝업 내부 순서(Title →
