@@ -244,7 +244,7 @@ export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTrigger
             >
                 {children}
 
-                <ChevronRightOutlineIcon />
+                <ChevronRightOutlineIcon className={styles.subTriggerIcon} />
             </BaseMenu.SubmenuTrigger>
         );
     },
@@ -368,9 +368,9 @@ export const MenuCheckboxItem = forwardRef<HTMLElement, MenuCheckboxItem.Props>(
 
     return (
         <MenuCheckboxItemPrimitive ref={ref} {...componentProps}>
-            {children}
-
             <MenuCheckboxItemIndicatorPrimitive />
+
+            {children}
         </MenuCheckboxItemPrimitive>
     );
 });
@@ -446,11 +446,9 @@ export const MenuRadioItem = forwardRef<HTMLElement, MenuRadioItem.Props>((props
 
     return (
         <MenuRadioItemPrimitive ref={ref} {...componentProps}>
-            {children}
+            <MenuRadioItemIndicatorPrimitive className={styles.indicator} />
 
-            <MenuRadioItemIndicatorPrimitive className={styles.indicator}>
-                <ConfirmOutlineIcon size="100%" />
-            </MenuRadioItemIndicatorPrimitive>
+            {children}
         </MenuRadioItemPrimitive>
     );
 });

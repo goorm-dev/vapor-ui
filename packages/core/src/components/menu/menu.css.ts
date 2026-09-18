@@ -22,7 +22,7 @@ export const popup = componentStyle({
 
     backgroundColor: vars.color.background['canvas-overlay'],
     padding: vars.size.space['050'],
-    minWidth: 'max(var(--anchor-width), 12.5rem)',
+    minWidth: '12.5rem',
 
     overflowY: 'auto',
 
@@ -49,18 +49,14 @@ export const item = componentStyle([
         display: 'flex',
         alignItems: 'center',
         alignSelf: 'stretch',
-        justifyContent: 'space-between',
         gap: vars.size.space['050'],
 
         border: 'none',
 
         borderRadius: vars.size.borderRadius['300'],
         cursor: 'pointer',
-        paddingRight: vars.size.space['150'],
-        paddingLeft: vars.size.space['250'],
-        paddingBlock: vars.size.space['050'],
-
-        height: vars.size.dimension['400'],
+        paddingBlock: vars.size.space['100'],
+        paddingInline: vars.size.space['150'],
 
         selectors: {
             [when.disabled()]: {
@@ -78,30 +74,30 @@ export const separator = componentStyle({
     height: '0.0625rem',
 });
 
-export const subTrigger = item;
+export const subTrigger = componentStyle([item, { paddingRight: vars.size.space['075'] }]);
+
+export const subTriggerIcon = componentStyle({
+    marginLeft: 'auto',
+});
 
 export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
     foregrounds({ color: 'secondary' }),
     {
-        paddingTop: vars.size.space['100'],
-        paddingRight: vars.size.space['050'],
+        paddingTop: vars.size.space['075'],
+        paddingRight: vars.size.space['100'],
         paddingBottom: vars.size.space['050'],
-        paddingLeft: vars.size.space['250'],
+        paddingLeft: vars.size.space['150'],
     },
 ]);
 
 export const indicator = componentStyle([
     foregrounds({ color: 'normal' }),
     {
-        position: 'absolute',
-        top: '50%',
-        left: vars.size.space['050'],
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transform: 'translateY(-50%)',
-        width: vars.size.dimension['150'],
-        height: vars.size.dimension['150'],
+        width: vars.size.dimension['200'],
+        height: vars.size.dimension['200'],
     },
 ]);
