@@ -8,6 +8,7 @@ export {
     AlertDialogTitle as Title,
     AlertDialogDescription as Description,
     AlertDialogClose as Close,
+    AlertDialogHeader as Header,
     AlertDialogBody as Body,
     AlertDialogFooter as Footer,
 } from './alert-dialog';
