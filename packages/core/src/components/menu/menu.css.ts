@@ -22,7 +22,7 @@ export const popup = componentStyle({
 
     backgroundColor: vars.color.background['canvas-overlay'],
     padding: vars.size.space['050'],
-    minWidth: 'max(var(--anchor-width, 0px), 12.5rem)',
+    minWidth: '12.5rem',
 
     overflowY: 'auto',
 
@@ -74,7 +74,7 @@ export const separator = componentStyle({
     height: '0.0625rem',
 });
 
-export const subTrigger = item;
+export const subTrigger = componentStyle([item, { paddingRight: vars.size.space['075'] }]);
 
 export const subTriggerIcon = componentStyle({
     marginLeft: 'auto',
