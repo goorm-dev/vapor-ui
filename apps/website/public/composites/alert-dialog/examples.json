@@ -1,0 +1,87 @@
+{
+    "slug": "alert-dialog",
+    "section": "examples",
+    "frameNodeId": "3051:57070",
+    "sectionTitle": "Examples",
+    "blocks": [
+        {
+            "id": "3051:57081",
+            "group": null,
+            "variant": "split",
+            "title": "Warning",
+            "subtitle": "삭제, 초기화 같이 되돌릴 수 없는 결정 전에 사용하세요",
+            "description": "삭제, 초기화 등 재생성이 불가한 작업이나 심각한 데이터 손실이 \n발생할 수 있는 작업에 사용합니다.",
+            "raw": {
+                "sectionTitle": "Warning",
+                "sectionSubtitle": "삭제, 초기화 같이 되돌릴 수 없는 결정 전에 사용하세요",
+                "sectionSubtitleReading": null,
+                "body": "삭제, 초기화 등 재생성이 불가한 작업이나 심각한 데이터 손실이 \n발생할 수 있는 작업에 사용합니다."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": "I3051:57081;3027:11896;3051:57260",
+                    "type": "AlertDialog",
+                    "description": null,
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3051:57081;3027:11896;3051:57260\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"템플릿을 삭제해도 이미 생성된 모집·설문폼은 유지됩니다.\" title=\"템플릿을 삭제하시겠어요?\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3051:57090",
+            "group": null,
+            "variant": "split",
+            "title": "Confirm",
+            "subtitle": "사용자의 결정을 실행하기 전, 내용을 확인할 때 사용하세요",
+            "description": "사용자가 결정한 내용을 한 번 더 확인시킬 때 사용합니다.",
+            "raw": {
+                "sectionTitle": "Confirm",
+                "sectionSubtitle": "사용자의 결정을 실행하기 전, 내용을 확인할 때 사용하세요",
+                "sectionSubtitleReading": null,
+                "body": "사용자가 결정한 내용을 한 번 더 확인시킬 때 사용합니다."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": "I3051:57090;3027:11896;3051:57311",
+                    "type": "AlertDialog",
+                    "description": null,
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3051:57090;3027:11896;3051:57311\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"confirm\" description=\"새 수료증이 발급되며, 이전 수료증은 더 이상 조회되지 않습니다.\" title=\"수료증을 재발급하시겠어요?\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3051:57097",
+            "group": null,
+            "variant": "split",
+            "title": "Custom",
+            "subtitle": "작성예정",
+            "description": "원하는 데이터를 충분히 표현하기 어렵다면 Custom alert dialog를 사용하세요.",
+            "raw": {
+                "sectionTitle": "Custom",
+                "sectionSubtitle": "작성예정",
+                "sectionSubtitleReading": null,
+                "body": "원하는 데이터를 충분히 표현하기 어렵다면 Custom alert dialog를 사용하세요."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": null,
+                    "type": null,
+                    "description": null,
+                    "code": null
+                }
+            ]
+        }
+    ]
+}

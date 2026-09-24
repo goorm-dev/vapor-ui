@@ -1,0 +1,128 @@
+{
+    "slug": "alert-dialog",
+    "section": "bestPractices",
+    "frameNodeId": "2213:40289",
+    "sectionTitle": "Best practices",
+    "blocks": [
+        {
+            "id": "3062:62037",
+            "group": "Do + Don't",
+            "variant": "columns",
+            "title": null,
+            "subtitle": "Button label",
+            "description": null,
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Button label",
+                "sectionSubtitleReading": null,
+                "body": null
+            },
+            "samples": [
+                {
+                    "label": "Do",
+                    "nodeId": "I3062:62037;3027:8906;3062:62235",
+                    "type": "AlertDialog",
+                    "description": "버튼을 눌렀을 때 어떤 결과가 나오는지 사용자가 예상할 수 있게 레이블을 작성하세요.",
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3062:62037;3027:8906;3062:62235\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"템플릿을 삭제해도 이미 생성된 모집·설문폼은 유지됩니다.\" title=\"템플릿을 삭제하시겠어요?\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                },
+                {
+                    "label": "Don't",
+                    "nodeId": "I3062:62037;3027:8914;3062:62279",
+                    "type": "AlertDialog",
+                    "description": "결과와 관련 없거나 [확인] 같은 모호한 레이블을 사용하지 마세요.",
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3062:62037;3027:8914;3062:62279\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"템플릿을 삭제해도 이미 생성된 모집·설문폼은 유지됩니다.\" title=\"템플릿을 삭제하시겠어요?\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3062:62333",
+            "group": "Do + Don't",
+            "variant": "columns",
+            "title": null,
+            "subtitle": "Description",
+            "description": null,
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Description",
+                "sectionSubtitleReading": null,
+                "body": null
+            },
+            "samples": [
+                {
+                    "label": "Do",
+                    "nodeId": "I3062:62333;3027:8906;3062:62481",
+                    "type": "AlertDialog",
+                    "description": "알럿 다이얼로그 실행 이후 발생할 잠재적 결과를 디스크립션에 작성하세요.",
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3062:62333;3027:8906;3062:62481\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"confirm\" description=\"새 수료증이 발급되며, 이전 수료증은 더 이상 조회되지 않습니다.\" title=\"수료증을 재발급하시겠어요?\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                },
+                {
+                    "label": "Don't",
+                    "nodeId": "I3062:62333;3027:8914;3062:62525",
+                    "type": "AlertDialog",
+                    "description": "잠재적 결과를 작성하지 않을 경우 사용자가 불안감을 느낄 수 있습니다.",
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3062:62333;3027:8914;3062:62525\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"confirm\" description=\"수료증을 발급합니다.\" title=\"수료증을 재발급하시겠어요?\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3062:62579",
+            "group": "Do + Don't",
+            "variant": "columns",
+            "title": null,
+            "subtitle": "Content",
+            "description": null,
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Content",
+                "sectionSubtitleReading": null,
+                "body": null
+            },
+            "samples": [
+                {
+                    "label": "Do",
+                    "nodeId": "I3062:62579;3027:8906;3062:62686",
+                    "type": "AlertDialog",
+                    "description": "콘텐츠가 필요할 경우 최소한의 정보만 사용하세요. 사용자가 콘텐츠가 아닌 본문에 \n집중할 수 있도록 합니다.",
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3062:62579;3027:8906;3062:62686\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"시험을 끝내면 시험실에 다시 입장할 수 없습니다.\" title=\"시험을 끝내시겠어요?\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                },
+                {
+                    "label": "Don't",
+                    "nodeId": "I3062:62579;3027:8914;3062:62741",
+                    "type": "AlertDialog",
+                    "description": "많은 양의 보조 콘텐츠를 담지 마세요. 콘텐츠 양이 많을 경우 페이지에서 내용을 보여준 후\nAlert dialog는 실행 확인용으로만 사용하세요.",
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3062:62579;3027:8914;3062:62741\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"confirm\" description=\"새 수료증이 발급되며, 이전 수료증은 더 이상 조회되지 않습니다.\" title=\"수료증을 재발급하시겠어요?\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                }
+            ]
+        }
+    ]
+}
