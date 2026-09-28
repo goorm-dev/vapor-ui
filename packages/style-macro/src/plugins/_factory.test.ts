@@ -1,6 +1,6 @@
-import type { AnyProp } from '~/model/types';
+import type { AnyProp } from '~/models/types';
 
-import plugin, { type VaporStyleOptions } from './unplugin';
+import plugin, { type VaporPluginOptions } from './_factory';
 
 function makeCtx() {
     return {
@@ -15,11 +15,8 @@ function makeCtx() {
     };
 }
 
-function getHooks(opts: VaporStyleOptions = {}): AnyProp {
-    return (plugin.raw as AnyProp)(
-        opts,
-        { framework: 'rollup', versions: {} },
-    );
+function getHooks(opts: VaporPluginOptions = {}): AnyProp {
+    return (plugin.raw as AnyProp)(opts, { framework: 'rollup', versions: {} });
 }
 
 function callHook(hook: AnyProp, ctx: AnyProp, ...args: AnyProp[]): AnyProp {
@@ -207,5 +204,54 @@ describe('unplugin — layer order (plugin option)', () => {
         const cssImports = out.code.match(/import "~vapor-style\/[a-f0-9]+\.css";?/g) ?? [];
         // only the css() CSS — no layer-order import
         expect(cssImports.length).toBe(1);
+    });
+});
+
+describe('unplugin — vite.transformIndexHtml (FOUC guard + layer order)', () => {
+    function getVite(opts: VaporPluginOptions = {}): AnyProp {
+        const hooks = getHooks(opts);
+        // vite adapter object exposes vite-specific hooks under `.vite`.
+        return hooks.vite;
+    }
+
+    it('injects only <style> layer-order tag when injectColorScheme is not set', () => {
+        const vite = getVite();
+        const html = '<!doctype html><html><head></head><body></body></html>';
+        const out = vite.transformIndexHtml.call(makeCtx(), html);
+        expect(out).toContain('<style>@layer ');
+        expect(out).not.toContain('<script>');
+    });
+
+    it('injects both <script> FOUC guard and <style> layer-order when injectColorScheme=true', () => {
+        const vite = getVite({ injectColorScheme: true });
+        const html = '<!doctype html><html><head></head><body></body></html>';
+        const out = vite.transformIndexHtml.call(makeCtx(), html);
+        expect(out).toContain('<script>');
+        expect(out).toContain('data-vapor-theme');
+        expect(out).toContain('<style>@layer ');
+        // <script> must sit BEFORE <style> so attribute is pinned before layer parsing.
+        expect(out.indexOf('<script>')).toBeLessThan(out.indexOf('<style>'));
+    });
+
+    it('honors custom ColorScheme opts', () => {
+        const vite = getVite({
+            injectColorScheme: {
+                storageKey: 'my-key',
+                attribute: 'data-my-theme',
+                defaultTheme: 'dark',
+            },
+        });
+        const html = '<!doctype html><html><head></head><body></body></html>';
+        const out = vite.transformIndexHtml.call(makeCtx(), html);
+        expect(out).toContain('"my-key"');
+        expect(out).toContain('"data-my-theme"');
+        expect(out).toContain('"dark"');
+    });
+
+    it('placement: injects directly after opening <head>', () => {
+        const vite = getVite({ injectColorScheme: true });
+        const html = '<!doctype html><html><head><title>t</title></head><body></body></html>';
+        const out = vite.transformIndexHtml.call(makeCtx(), html);
+        expect(out).toMatch(/<head>\s*<script>/);
     });
 });

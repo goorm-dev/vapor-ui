@@ -1,35 +1,18 @@
 import { createRequire } from 'node:module';
 
-import vaporStyle from '~/index';
-
-import next from './next';
-import rolldown from './rolldown';
-import vite from './vite';
-import webpack from './webpack';
+import { vaporNextPlugin } from './next';
+import { vaporRolldownPlugin } from './rolldown';
+import { vaporVitePlugin } from './vite';
+import { vaporWebpackPlugin } from './webpack';
 
 describe('adapter subpath default exports', () => {
     it.each([
-        ['vite', vite],
-        ['webpack', webpack],
-        ['rolldown', rolldown],
-        ['next', next],
+        ['vite', vaporVitePlugin],
+        ['webpack', vaporWebpackPlugin],
+        ['rolldown', vaporRolldownPlugin],
+        ['next', vaporNextPlugin],
     ])('%s exports a callable', (_name, adapter) => {
         expect(typeof adapter).toBe('function');
-    });
-});
-
-describe('merged default export', () => {
-    it('exposes every bundler adapter by name', () => {
-        expect(Object.keys(vaporStyle).sort()).toEqual(
-            ['esbuild', 'farm', 'next', 'rolldown', 'rollup', 'rspack', 'vite', 'webpack'].sort(),
-        );
-    });
-
-    it('every method is the same reference as its dedicated subpath', () => {
-        expect(vaporStyle.vite).toBe(vite);
-        expect(vaporStyle.webpack).toBe(webpack);
-        expect(vaporStyle.rolldown).toBe(rolldown);
-        expect(vaporStyle.next).toBe(next);
     });
 });
 
@@ -37,8 +20,8 @@ describe('unplugin-backed adapters return a plugin object', () => {
     // Adapters that return an inspectable plugin descriptor with a `name`
     // field (`{ name, ...hooks }` shape).
     it.each([
-        ['vite', vite],
-        ['rolldown', rolldown],
+        ['vite', vaporVitePlugin],
+        ['rolldown', vaporRolldownPlugin],
     ])('%s() returns a descriptor with `name`', (_name, adapter) => {
         const plugin = adapter();
         expect(plugin).toBeTypeOf('object');
@@ -49,11 +32,14 @@ describe('unplugin-backed adapters return a plugin object', () => {
     // webpack/rspack unplugin adapters return a plugin CLASS INSTANCE — the
     // `name` lives on the constructor or is set once `apply(compiler)` runs.
     // Assert instead on the `apply` hook every webpack-family plugin exposes.
-    it.each([['webpack', webpack]])('%s() returns an instance with apply()', (_name, adapter) => {
-        const plugin = adapter() as { apply?: unknown };
-        expect(plugin).toBeTypeOf('object');
-        expect(typeof plugin.apply).toBe('function');
-    });
+    it.each([['webpack', vaporWebpackPlugin]])(
+        '%s() returns an instance with apply()',
+        (_name, adapter) => {
+            const plugin = adapter() as { apply?: unknown };
+            expect(plugin).toBeTypeOf('object');
+            expect(typeof plugin.apply).toBe('function');
+        },
+    );
 });
 
 // Local structural view of NextConfig used to type-check assertions on the
@@ -66,15 +52,15 @@ type TestNextConfig = {
     turbopack?: { rules?: Record<string, unknown> };
 };
 
-describe('next() adapter', () => {
+describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => {
     it('returns the config verbatim shape when nothing to wire', () => {
         const input: TestNextConfig = { reactStrictMode: true };
-        const output = next(input, { mode: 'webpack' });
+        const output = vaporNextPlugin({ mode: 'webpack' })(input);
         expect(output).toMatchObject({ reactStrictMode: true });
     });
 
     it('wires webpack in `mode: webpack`', () => {
-        const output = next<TestNextConfig>({}, { mode: 'webpack' });
+        const output = vaporNextPlugin({ mode: 'webpack' })<TestNextConfig>({});
         expect(typeof output.webpack).toBe('function');
         expect(output.turbopack).toBeUndefined();
     });
@@ -95,7 +81,7 @@ describe('next() adapter', () => {
     })();
 
     it.skipIf(!turbopackBuilt)('wires turbopack in `mode: turbopack`', () => {
-        const output = next<TestNextConfig>({}, { mode: 'turbopack' });
+        const output = vaporNextPlugin({ mode: 'turbopack' })<TestNextConfig>({});
         expect(output.webpack).toBeUndefined();
         expect(output.turbopack?.rules).toBeTypeOf('object');
     });
@@ -107,23 +93,22 @@ describe('next() adapter', () => {
             c.plugins.push({ marker: 'user-plugin' });
             return c;
         };
-        const output = next<TestNextConfig>({ webpack: userWebpack }, { mode: 'webpack' });
+        const output = vaporNextPlugin({ mode: 'webpack' })<TestNextConfig>({
+            webpack: userWebpack,
+        });
         const config: { plugins?: unknown[] } = {};
         const returned = output.webpack?.(config, {}) as { plugins?: unknown[] } | undefined;
         expect(returned?.plugins).toContainEqual({ marker: 'user-plugin' });
     });
 
     it.skipIf(!turbopackBuilt)('merges into existing turbopack.rules without clobbering', () => {
-        const output = next<TestNextConfig>(
-            {
-                turbopack: {
-                    rules: {
-                        '*.svg': { loaders: ['svg-loader'] },
-                    },
+        const output = vaporNextPlugin({ mode: 'turbopack' })<TestNextConfig>({
+            turbopack: {
+                rules: {
+                    '*.svg': { loaders: ['svg-loader'] },
                 },
             },
-            { mode: 'turbopack' },
-        );
+        });
         expect(output.turbopack?.rules?.['*.svg']).toEqual({ loaders: ['svg-loader'] });
         const ruleKeys = Object.keys(output.turbopack?.rules ?? {});
         expect(ruleKeys.length).toBeGreaterThan(1);
@@ -137,13 +122,13 @@ describe('next() adapter', () => {
             // `require.resolve`. Still exercise the webpack branch below.
             if (turbopackBuilt) {
                 process.env.TURBOPACK = '1';
-                const turboOutput = next<TestNextConfig>({}, { mode: 'auto' });
+                const turboOutput = vaporNextPlugin({ mode: 'auto' })<TestNextConfig>({});
                 expect(turboOutput.turbopack?.rules).toBeTypeOf('object');
                 expect(turboOutput.webpack).toBeUndefined();
             }
 
             delete process.env.TURBOPACK;
-            const webpackOutput = next<TestNextConfig>({}, { mode: 'auto' });
+            const webpackOutput = vaporNextPlugin({ mode: 'auto' })<TestNextConfig>({});
             expect(typeof webpackOutput.webpack).toBe('function');
             expect(webpackOutput.turbopack).toBeUndefined();
         } finally {

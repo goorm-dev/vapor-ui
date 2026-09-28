@@ -1,4 +1,6 @@
-import type { VaporStyleOptions } from './unplugin';
+import type { ColorSchemeScriptOpts } from '~/helpers/fouc-script';
+
+import type { VaporPluginOptions } from './_factory';
 
 export const DEFAULT_LAYER_ORDER: readonly string[] = [
     'vapor-theme',
@@ -12,6 +14,7 @@ interface ResolvedOptions {
     include: (id: string) => boolean;
     hash: boolean;
     layerOrder: string[];
+    injectColorScheme: false | ColorSchemeScriptOpts;
 }
 
 export function defaultInclude(id: string): boolean {
@@ -20,12 +23,13 @@ export function defaultInclude(id: string): boolean {
     return /\.(?:tsx?|jsx?|mts|mjs|cts|cjs)$/.test(id);
 }
 
-export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
+export function resolveOptions(opts: VaporPluginOptions): ResolvedOptions {
     const {
         include = defaultInclude,
         themeStylesImport,
         hash = process.env.NODE_ENV === 'production',
         layerOrder = [...DEFAULT_LAYER_ORDER],
+        injectColorScheme = true,
     } = opts;
 
     return {
@@ -33,6 +37,12 @@ export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
         hash,
         layerOrder,
         themeStylesImport: themeStylesImport || null,
+        injectColorScheme:
+            injectColorScheme === false
+                ? false
+                : injectColorScheme === true
+                  ? {}
+                  : injectColorScheme,
     };
 }
 

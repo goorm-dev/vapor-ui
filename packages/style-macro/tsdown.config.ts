@@ -3,12 +3,7 @@ import { defineConfig } from 'tsdown';
 export default defineConfig({
     format: ['cjs', 'esm'],
     target: ['esnext', 'node18'],
-    entry: [
-        'src/index.ts',
-        'src/adapters/*.ts',
-        '!src/adapters/shared.ts',
-        '!src/adapters/*.{spec,test,test-d}.*',
-    ],
+    entry: ['src/index.ts', 'src/plugins/*.ts', '!src/**/_*.ts', '!src/**/*.{spec,test,test-d}.*'],
     outputOptions: {
         preserveModules: true,
         preserveModulesRoot: 'src',

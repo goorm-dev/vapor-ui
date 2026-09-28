@@ -1,9 +1,9 @@
-import { generateArbitraryValueSelector } from '~/model/class-name';
-import { composeContext, parseSelector } from '~/model/selector';
-import { expandShorthand } from '~/model/shorthand';
-import { resolveToken } from '~/model/tokens';
-import type { AnyProp, BuildError, IRRule } from '~/model/types';
-import { normalizeValue } from '~/model/value';
+import { generateArbitraryValueSelector } from '~/models/class-name';
+import { composeContext, parseSelector } from '~/models/selector';
+import { expandShorthand } from '~/models/shorthand';
+import { resolveToken } from '~/models/tokens';
+import type { AnyProp, BuildError, IRRule } from '~/models/types';
+import { normalizeValue } from '~/models/value';
 
 const IDENTIFIER_PROPS = new Set([
     'animation-name',
@@ -59,7 +59,11 @@ function extractStaticValue(node: AnyProp): string | number | null {
         if (typeof node.value === 'string' || typeof node.value === 'number') return node.value;
         return null;
     }
-    if (node.type === 'UnaryExpression' && node.operator === '-' && node.argument?.type === 'Literal') {
+    if (
+        node.type === 'UnaryExpression' &&
+        node.operator === '-' &&
+        node.argument?.type === 'Literal'
+    ) {
         if (typeof node.argument.value === 'number') return -node.argument.value;
     }
     if (node.type === 'TemplateLiteral' && node.expressions?.length === 0) {

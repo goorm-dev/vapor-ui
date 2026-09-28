@@ -1,18 +1,13 @@
-import { formatBuildError } from '~/compiler/code-frame';
-import { transform } from '~/compiler/transform';
+import { formatBuildError } from '~/compilers/code-frame';
+import { transform } from '~/compilers/transform';
 
-import { emitLayerOrderCss, resolveOptions } from './shared';
-import type { VaporStyleOptions } from './unplugin';
+import type { VaporPluginOptions } from './_factory';
+import { emitLayerOrderCss, resolveOptions } from './_options';
 
-/**
- * Turbopack passes a subset of the webpack loader-context to `.rules` loaders.
- * These are the fields we actually consume — narrow deliberately so we don't
- * accidentally depend on webpack-only extensions.
- */
 export interface TurbopackLoaderContext {
     resourcePath: string;
     resourceQuery?: string;
-    getOptions?: () => VaporStyleOptions;
+    getOptions?: () => VaporPluginOptions;
 }
 
 /**
@@ -24,22 +19,11 @@ function dataCssImport(css: string): string {
     return `import "data:text/css,${encodeURIComponent(css)}";`;
 }
 
-/**
- * Turbopack loader entrypoint.
- *
- * Transforms `styles` calls in the source and prepends `data:text/css` imports
- * for any CSS the transform emits (per-file rules, plus a `@layer` order
- * declaration when a `<ThemeProvider layer>` is seen).
- *
- * Source files with no `styles` occurrence are returned unmodified as a fast
- * path — the loader runs on every matched file in the project, so this early
- * exit is load-bearing.
- */
 export default async function vaporStyleTurbopackLoader(
     this: TurbopackLoaderContext,
     source: string,
 ): Promise<string> {
-    const rawOpts = this.getOptions ? this.getOptions() : ({} as VaporStyleOptions);
+    const rawOpts = this.getOptions ? this.getOptions() : ({} as VaporPluginOptions);
     const opts = resolveOptions(rawOpts);
 
     // Fast-path: no `css` in source → nothing to do.

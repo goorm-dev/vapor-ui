@@ -1,7 +1,7 @@
-import unplugin from './unplugin';
-import type { VaporStyleOptions } from './unplugin';
+import unplugin from './_factory';
+import type { VaporPluginOptions } from './_factory';
 
-export type { VaporStyleOptions };
+export type { VaporPluginOptions };
 
 /**
  * webpack plugin for @vapor-ui/style-macro. Also usable from
@@ -12,6 +12,6 @@ export type { VaporStyleOptions };
  *     import vaporStyle from '@vapor-ui/style-macro/webpack';
  *     module.exports = { plugins: [vaporStyle()] };
  */
-export default function vaporStyleWebpack(opts?: VaporStyleOptions) {
+export function vaporWebpackPlugin(opts?: VaporPluginOptions) {
     return unplugin.webpack(opts);
 }

@@ -1,8 +1,8 @@
 import MagicString from 'magic-string';
 import { parseSync } from 'oxc-parser';
 
-import type { ClassNameMode } from '~/model/class-name';
-import type { AnyProp, BuildError, IRRule } from '~/model/types';
+import type { ClassNameMode } from '~/models/class-name';
+import type { AnyProp, BuildError, IRRule } from '~/models/types';
 
 import { emitCss } from './emit-css';
 import { type DynamicCallSite, type InjectContext, injectJsxStyleForCall } from './jsx-inject';

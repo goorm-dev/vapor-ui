@@ -1,7 +1,7 @@
 import type MagicString from 'magic-string';
 
-import { dynamicVarName } from '~/model/class-name';
-import type { AnyProp, BuildError } from '~/model/types';
+import { dynamicVarName } from '~/models/class-name';
+import type { AnyProp, BuildError } from '~/models/types';
 
 export interface DynamicCallSite {
     /** call node (CallExpression). */
@@ -45,10 +45,7 @@ const WRAPPER_TYPES = new Set([
  * `style={{ '--slot': _resolveToken(prop, expr), ... }}` 를 삽입한다.
  * 이미 style prop 있으면 `_mergeStyle(existing, {...})` 로 감싼다.
  */
-export function injectJsxStyleForCall(
-    site: DynamicCallSite,
-    ctx: InjectContext,
-): InjectOutcome {
+export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext): InjectOutcome {
     const found = findJsxAttribute(site.call, site.parents);
     if ('error' in found) return { success: false, error: found.error };
 
@@ -118,10 +115,7 @@ interface FoundJsx {
     attribute: AnyProp | null;
 }
 
-function findJsxAttribute(
-    _call: AnyProp,
-    parents: AnyProp[],
-): FoundJsx | { error: BuildError } {
+function findJsxAttribute(_call: AnyProp, parents: AnyProp[]): FoundJsx | { error: BuildError } {
     // parents 는 walker 가 자식→부모 순으로 push 하고 pop 하는 스택 뒤로 push된 상태.
     // parents[len-1] 이 call 의 직계 부모. 위로 올라가며 JSXExpressionContainer 를 찾음.
     let i = parents.length - 1;

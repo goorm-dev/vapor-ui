@@ -1,7 +1,7 @@
 import { parseSync } from 'oxc-parser';
 import { describe, expect, it } from 'vitest';
 
-import type { AnyProp } from '~/model/types';
+import type { AnyProp } from '~/models/types';
 
 import { walk } from './oxc-walk';
 

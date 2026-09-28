@@ -1,6 +1,6 @@
 import { codeFrameColumns } from '@babel/code-frame';
 
-import type { BuildError } from '~/model/types';
+import type { BuildError } from '~/models/types';
 
 export function formatBuildError(err: BuildError, source: string, filename: string): string {
     const frame = codeFrameColumns(

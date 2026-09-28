@@ -1,17 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import type { IRRule } from '~/model/types';
+import type { IRRule } from '~/models/types';
 
 import { emitCss } from './emit-css';
 
-const rule = (o: Partial<IRRule> = {}): IRRule => ({
-    kind: 'static',
-    property: 'padding',
-    value: 'var(--vapor-size-space-400)',
-    rawValue: '$space-400',
-    selectorContext: 'base',
-    ...o,
-} as IRRule);
+const rule = (o: Partial<IRRule> = {}): IRRule =>
+    ({
+        kind: 'static',
+        property: 'padding',
+        value: 'var(--vapor-size-space-400)',
+        rawValue: '$space-400',
+        selectorContext: 'base',
+        ...o,
+    }) as IRRule;
 
 describe('emitCss', () => {
     it('emits default rules inside @layer vapor-utilities', () => {

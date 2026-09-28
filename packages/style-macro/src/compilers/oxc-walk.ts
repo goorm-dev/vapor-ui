@@ -1,4 +1,4 @@
-import type { AnyProp } from '~/model/types';
+import type { AnyProp } from '~/models/types';
 
 /**
  * Visitor 는 노드 방문 시 자기 자신을 제외한 조상 스택을 받는다 (top-down 구조).

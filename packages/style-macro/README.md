@@ -59,7 +59,7 @@ End users never see the manifest or `transform`. They `import { styles } from '@
 
 ## Contract (internal)
 
-`transform(source, opts)` is not part of the public entry — it lives in `src/transform.ts` and is consumed only by the bundled `./unplugin` adapter. Manifest is the only external contract; any package can supply tokens.
+`transform(source, opts)` is not part of the public entry — it lives in `src/transform.ts` and is consumed only by the bundled `'./_factory` adapter. Manifest is the only external contract; any package can supply tokens.
 
 ## Determinism
 

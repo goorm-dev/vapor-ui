@@ -1,6 +1,6 @@
-import { type ClassNameMode, buildClassName, dynamicVarName } from '~/model/class-name';
-import { composeSelector } from '~/model/selector';
-import type { IRRule } from '~/model/types';
+import { type ClassNameMode, buildClassName, dynamicVarName } from '~/models/class-name';
+import { composeSelector } from '~/models/selector';
+import type { IRRule } from '~/models/types';
 
 export interface EmitOutput {
     /** 방출된 CSS 전문. `@layer vapor-utilities { ... }` 블록. */

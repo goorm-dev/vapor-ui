@@ -1,9 +1,9 @@
+import type { VaporPluginOptions } from './_factory';
 import vaporStyleTurbopackLoader, { type TurbopackLoaderContext } from './turbopack';
-import type { VaporStyleOptions } from './unplugin';
 
 const DATA_CSS_IMPORT_RE = /import "data:text\/css,([^"]+)";?/g;
 
-function mkCtx(resourcePath: string, opts: VaporStyleOptions = {}): TurbopackLoaderContext {
+function mkCtx(resourcePath: string, opts: VaporPluginOptions = {}): TurbopackLoaderContext {
     return {
         resourcePath,
         getOptions: () => opts,
@@ -91,7 +91,7 @@ describe('turbopack', () => {
         const out = await run(ctx, src);
         const matches = Array.from(out.matchAll(DATA_CSS_IMPORT_RE));
         expect(matches.length).toBe(2);
-        const payloads = matches.map((m) => decodeURIComponent(m[1]!));
+        const payloads = matches.map((m) => decodeURIComponent((m as RegExpMatchArray)[1]!));
         const layerCss = payloads.find((c) => /^@layer [^{]+;\s*$/.test(c));
         expect(layerCss).toBeTruthy();
         expect(layerCss).toContain('vapor-theme');

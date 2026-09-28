@@ -1,7 +1,7 @@
-import unplugin from './unplugin';
-import type { VaporStyleOptions } from './unplugin';
+import unplugin from './_factory';
+import type { VaporPluginOptions } from './_factory';
 
-export type { VaporStyleOptions };
+export type { VaporPluginOptions };
 
 /**
  * Rolldown plugin for @vapor-ui/style-macro.
@@ -10,6 +10,6 @@ export type { VaporStyleOptions };
  *     import vaporStyle from '@vapor-ui/style-macro/rolldown';
  *     export default { plugins: [vaporStyle()] };
  */
-export default function vaporStyleRolldown(opts?: VaporStyleOptions) {
+export function vaporRolldownPlugin(opts?: VaporPluginOptions) {
     return unplugin.rolldown(opts);
 }
