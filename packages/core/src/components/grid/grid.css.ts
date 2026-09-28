@@ -12,7 +12,7 @@ export const root = componentRecipe({
         gridTemplateColumns: gridTemplateColumns,
     },
 
-    defaultVariants: { flow: 'row' },
+    defaultVariants: { flow: 'row', inline: false },
     variants: {
         inline: {
             true: { display: 'inline-grid' },
