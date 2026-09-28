@@ -19,9 +19,9 @@ const pulseKeyframes = keyframes({
 export const root = componentRecipe({
     base: {
         display: 'block',
-        overflow: 'hidden',
-        width: '100%',
         backgroundColor: vars.color.gray['100'],
+        width: '100%',
+        overflow: 'hidden',
 
         '@media': {
             '(prefers-reduced-motion: reduce)': {
@@ -61,8 +61,8 @@ export const root = componentRecipe({
             shimmer: {
                 backgroundImage: `linear-gradient(90deg, ${vars.color.gray['100']}, ${vars.color.gray['050']}, ${vars.color.gray['100']})`,
                 backgroundPosition: 'left -6.25rem top 0',
-                backgroundSize: '6.25rem 100%',
                 backgroundRepeat: 'no-repeat',
+                backgroundSize: '6.25rem 100%',
                 animation: `${shimmerKeyframes} 1s ease-in-out infinite`,
             },
             pulse: {

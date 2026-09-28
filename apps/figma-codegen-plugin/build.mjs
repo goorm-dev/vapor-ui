@@ -1,3 +1,4 @@
+// @ts-check
 import esbuild from 'esbuild';
 import { join } from 'path';
 import { dirname } from 'path';
@@ -8,6 +9,7 @@ const __dirname = dirname(__filename);
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+/** @type {import('esbuild').BuildOptions} */
 const baseConfig = {
     entryPoints: [join(__dirname, 'src/code.ts')],
     bundle: true,

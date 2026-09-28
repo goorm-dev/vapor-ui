@@ -8,6 +8,7 @@ export {
     SheetHeader as Header,
     SheetBody as Body,
     SheetFooter as Footer,
+    SheetResizeHandle as ResizeHandle,
 
     // primitives
     SheetPortalPrimitive as PortalPrimitive,

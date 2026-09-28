@@ -12,9 +12,7 @@ It is updated to match the current website code and the public API exposed by `@
 
 ---
 
-- **Package Manager**: PNPM v10.5.1+
-- **Node.js**: v20.19+
-- **Linting & Formatting**: Use ESLint v9+ and Prettier v3.3+. IDE integration and Git Hook setup are recommended.
+- Toolchain (pnpm, Node.js, ESLint, Prettier) follows the workspace root — see the root `CLAUDE.md`, `package.json` (`packageManager`), and `.nvmrc`. Do not duplicate version numbers here.
 
 # 2. Git & Version Control
 

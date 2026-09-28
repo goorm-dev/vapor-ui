@@ -1,5 +1,11 @@
 # eslint-plugin-vapor
 
+## 1.1.0
+
+### Rules
+
+- add new rules related with usage of design-tokens ([#626](https://github.com/goorm-dev/vapor-ui/pull/626)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
 ## 1.0.0
 
 ### Eslint Plugin Vapor

@@ -1,0 +1,14 @@
+{
+    "extends": "@repo/typescript-config/base",
+    "compilerOptions": {
+        "outDir": "dist",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "rewriteRelativeImportExtensions": true,
+        "allowImportingTsExtensions": true,
+        "target": "ES2022",
+        "declarationMap": false
+    },
+    "include": ["src/**/*"],
+    "exclude": ["dist", "node_modules"]
+}

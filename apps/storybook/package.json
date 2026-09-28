@@ -7,7 +7,8 @@
         "build:storybook": "STORYBOOK_SKIP_DOCGEN=1 storybook build",
         "clean": "rimraf dist node_modules .turbo",
         "dev": "storybook dev -p 9009",
-        "lint": "eslint ./.storybook"
+        "lint": "eslint ./.storybook",
+        "test:regressions": "playwright test -c ./playwright.config.ts"
     },
     "dependencies": {
         "@vapor-ui/core": "workspace:*",
@@ -16,7 +17,8 @@
         "react-dom": "catalog:"
     },
     "devDependencies": {
-        "@eslint/js": "^9.39.4",
+        "@eslint/js": "^9.39.5",
+        "@playwright/test": "^1.62.1",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@storybook/addon-docs": "^9.1.20",
@@ -24,13 +26,14 @@
         "@storybook/react-vite": "^9.1.20",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
-        "@vanilla-extract/vite-plugin": "^5.2.2",
+        "@vanilla-extract/vite-plugin": "^5.2.6",
         "@vitejs/plugin-react": "^5.2.0",
         "eslint": "catalog:",
         "globals": "^16.5.0",
+        "http-server": "^14.1.1",
         "storybook": "^9.1.20",
         "typescript": "catalog:",
-        "typescript-eslint": "^8.59.4",
-        "vite": "^7.3.5"
+        "typescript-eslint": "^8.65.0",
+        "vite": "catalog:"
     }
 }

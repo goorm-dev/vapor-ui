@@ -22,7 +22,7 @@ export const root = componentRecipe({
 });
 
 export const label = componentStyle([
-    foregrounds({ color: 'normal-100' }),
+    foregrounds({ color: 'secondary' }),
     typography({ style: 'subtitle2' }),
 ]);
 

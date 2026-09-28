@@ -1,3 +1,4 @@
+// @ts-check
 import { defineConfig } from '@vapor-ui/ts-api-extractor';
 
 export default defineConfig({
@@ -8,5 +9,12 @@ export default defineConfig({
     filterHtml: true,
     filterSprinkles: true,
     includeHtml: ['className'],
-    components: {},
+    components: {
+        'button/button.tsx': {
+            include: ['nativeButton'],
+        },
+        'meter/meter.tsx': {
+            include: ['aria-valuetext'],
+        },
+    },
 });

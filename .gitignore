@@ -50,5 +50,18 @@ storybook-static
 # docs
 /.source/
 
+# Claude local docs (reader-based: drafts & scratch, not team assets)
+CLAUDE.local.md
+handoff.md
+docs/research/
+docs/plans/
+
 # Worktrees
 .worktrees
+
+# Icon parity check cache (baselines, renders, diffs)
+scripts/icon-extractor/src/parity/.cache/
+
+# Icon sync intermediates (see scripts/icon-extractor)
+.sync-summary/
+pr_body.md

@@ -1,0 +1,20 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+    "size": {
+        "borderRadius": {
+            "$type": "dimension",
+            "$description": "Scale for border radius properties such as border-radius. The number is a scale index, not a px value.",
+            "000": { "$value": { "value": 0, "unit": "px" } },
+            "050": { "$value": { "value": 2, "unit": "px" } },
+            "100": { "$value": { "value": 4, "unit": "px" } },
+            "200": { "$value": { "value": 6, "unit": "px" } },
+            "300": { "$value": { "value": 8, "unit": "px" } },
+            "400": { "$value": { "value": 12, "unit": "px" } },
+            "500": { "$value": { "value": 16, "unit": "px" } },
+            "600": { "$value": { "value": 20, "unit": "px" } },
+            "700": { "$value": { "value": 24, "unit": "px" } },
+            "800": { "$value": { "value": 32, "unit": "px" } },
+            "900": { "$value": { "value": 40, "unit": "px" } }
+        }
+    }
+}

@@ -2,27 +2,25 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const IrelandColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1285"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-IrelandColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1285)">
-            <path d="M3.95983 0H-3.83838V16H3.95983V0Z" fill="#169B62" />
-            <path d="M19.5545 0H11.7563V16H19.5545V0Z" fill="#FF883E" />
-            <path d="M11.7582 0H3.95996V16H11.7582V0Z" fill="white" />
+        <g mask="url(#vapor-icons-color-IrelandColorIcon__a)">
+            <path fill="#169B62" d="M3.96 0h-7.798v16H3.96z" />
+            <path fill="#FF883E" d="M19.555 0h-7.799v16h7.799z" />
+            <path fill="#fff" d="M11.758 0H3.96v16h7.798z" />
         </g>
     </IconBase>
 );
-
 export default IrelandColorIcon;

@@ -2,29 +2,25 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const BotswanaColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1278"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-BotswanaColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1278)">
-            <path d="M20 10.0109H-4V16H20V10.0109Z" fill="#6DA9D2" />
-            <path d="M20 0H-4V5.98908H20V0Z" fill="#6DA9D2" />
-            <path d="M20 5.98907H-4V6.6509H20V5.98907Z" fill="white" />
-            <path d="M20 9.34912H-4V10.0109H20V9.34912Z" fill="white" />
-            <path d="M20 6.65088H-4V9.34908H20V6.65088Z" fill="black" />
+        <g mask="url(#vapor-icons-color-BotswanaColorIcon__a)">
+            <path fill="#6DA9D2" d="M20 10.01H-4V16h24zM20 0H-4v5.99h24z" />
+            <path fill="#fff" d="M20 5.99H-4v.66h24zm0 3.36H-4v.66h24z" />
+            <path fill="#000" d="M20 6.65H-4v2.7h24z" />
         </g>
     </IconBase>
 );
-
 export default BotswanaColorIcon;

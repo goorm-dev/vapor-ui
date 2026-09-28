@@ -1,0 +1,18 @@
+{
+    "extends": "@repo/typescript-config/react-library",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": {
+            "~/*": ["./src/*"]
+        },
+        "types": [
+            "node",
+            "vitest/globals",
+            "@vitest/browser/context",
+            "@figma/code-connect/figma-types"
+        ]
+    },
+    "include": ["."],
+    "exclude": ["dist", "build", "node_modules"]
+}

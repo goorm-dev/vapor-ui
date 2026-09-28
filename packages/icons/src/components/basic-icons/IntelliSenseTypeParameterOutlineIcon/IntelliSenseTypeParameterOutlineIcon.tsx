@@ -2,9 +2,11 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const IntelliSenseTypeParameterOutlineIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
-        <path d="M5.54248 5.04688L2.58936 8L5.54248 10.9521L4.62256 11.8721L0.751465 8L4.62256 4.12793L5.54248 5.04688ZM15.2495 8L11.3794 11.8721L10.4575 10.9521L13.4116 8L10.4575 5.04688L11.3794 4.12793L15.2495 8ZM9.97803 5.64941V6.81641H8.6499V11.1562H7.3501V6.81641H6.02295V5.64941H9.97803Z" />
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
+        <path
+            fill="currentColor"
+            d="M5.542 5.047 2.59 8l2.953 2.952-.92.92L.753 8l3.87-3.872zM15.25 8l-3.87 3.872-.923-.92L13.413 8l-2.955-2.953.922-.92zM9.978 5.65v1.166H8.65v4.34h-1.3v-4.34H6.023V5.65z"
+        />
     </IconBase>
 );
-
 export default IntelliSenseTypeParameterOutlineIcon;

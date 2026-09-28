@@ -1,0 +1,18 @@
+{
+    "extends": "@repo/typescript-config/react-library",
+    "compilerOptions": {
+        "composite": true,
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": { "~/*": ["./src/*"] },
+        "types": ["vitest-axe/extend-expect", "vitest/globals", "@vitest/browser/context"]
+    },
+    "include": [
+        "src/**/*.test.ts*",
+        "src/**/*.spec.ts*",
+        "__tests__/**/*.test.ts*",
+        "__tests__/**/*.spec.ts*"
+    ],
+    "exclude": ["dist", "build", "node_modules"],
+    "references": [{ "path": "./tsconfig.base.json" }]
+}

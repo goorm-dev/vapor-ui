@@ -2,13 +2,13 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const ChartPieIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <path
+            fill="currentColor"
             fillRule="evenodd"
+            d="M8.66 8.65v5.817a6.5 6.5 0 0 0 5.816-5.817zm0-1.3h5.816A6.5 6.5 0 0 0 8.66 1.533zm-1.3 7.117a6.5 6.5 0 0 1 0-12.934z"
             clipRule="evenodd"
-            d="M8.66025 8.64996V14.467C11.7303 14.162 14.1723 11.721 14.4763 8.64996H8.66025ZM8.66025 7.34996H14.4763C14.1723 4.27896 11.7303 1.83796 8.66025 1.53296V7.34996ZM7.35925 14.467C4.07525 14.141 1.51025 11.371 1.51025 7.99996C1.51025 4.62896 4.07525 1.85896 7.35925 1.53296V14.467Z"
         />
     </IconBase>
 );
-
 export default ChartPieIcon;

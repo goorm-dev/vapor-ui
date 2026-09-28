@@ -71,8 +71,8 @@ globalStyle('*', {
 globalStyle('html, body', {
     '@layer': {
         [layers.reset]: {
-            backgroundColor: vars.color.background.canvas[100],
-            color: vars.color.foreground.normal[200],
+            backgroundColor: vars.color.background['canvas-base'],
+            color: vars.color.foreground['normal'],
         },
     },
 });

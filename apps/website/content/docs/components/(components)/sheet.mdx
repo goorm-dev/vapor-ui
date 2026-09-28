@@ -73,6 +73,21 @@ Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정합니다
 ```
 </Demo>
 
+### Resizable
+
+Sheet의 크기를 자유자재로 조절하길 원한다면 `<Sheet.ResizeHandle />`을 사용하세요.
+
+조절 가능 영역을 제한하고 싶다면 `<Sheet.Popup />` 컴포넌트에 `min/max-height`, `min/max-width` 속성을 적용하세요.
+
+<Demo name="sheet/resizable-sheet">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/sheet/resizable-sheet.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
 ## Props Table
 
 ---
@@ -104,6 +119,10 @@ Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정합니다
 #### Sheet.PositionerPrimitive
 
 <ComponentPropsTable componentName="sheet-positioner-primitive" />
+
+### Sheet.ResizeHandle
+
+<ComponentPropsTable componentName="sheet-resize-handle" />
 
 ### Sheet.Header
 

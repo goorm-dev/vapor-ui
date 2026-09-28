@@ -2,34 +2,32 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const GuyanaColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1373"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-GuyanaColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1373)">
-            <path d="M24.1035 0H-2.56372V16H24.1035V0Z" fill="#009F47" />
-            <path d="M-2.56372 16L24.1035 8.04181L-2.56372 0V16Z" fill="white" />
-            <path d="M-2.56372 15.3564L21.7163 8.04183L-2.56372 0.643646V15.3564Z" fill="#FCD20F" />
-            <path d="M-2.56372 16L10.6981 8.04545L-2.56372 0V16Z" fill="black" />
+        <g mask="url(#vapor-icons-color-GuyanaColorIcon__a)">
+            <path fill="#009F47" d="M24.104 0H-2.564v16h26.668z" />
+            <path fill="#fff" d="m-2.564 16 26.668-7.958L-2.564 0z" />
+            <path fill="#FCD20F" d="m-2.564 15.356 24.28-7.314L-2.564.644z" />
+            <path fill="#000" d="m-2.564 16 13.262-7.955L-2.564 0z" />
             <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M-2.56372 15.1055L9.19809 8.04548L-2.56372 0.916382V15.1055Z"
                 fill="#CF0921"
+                fillRule="evenodd"
+                d="m-2.564 15.106 11.762-7.06L-2.564.915z"
+                clipRule="evenodd"
             />
         </g>
     </IconBase>
 );
-
 export default GuyanaColorIcon;

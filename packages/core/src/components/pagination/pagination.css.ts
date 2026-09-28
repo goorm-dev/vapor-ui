@@ -14,8 +14,8 @@ export const list = componentStyle({
 
 export const item = componentStyle({
     display: 'inline-flex',
-    alignItems: 'center',
     flexWrap: 'nowrap',
+    alignItems: 'center',
 });
 
 // Base style shared by all pagination elements
@@ -24,10 +24,10 @@ const baseElement = componentStyle({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: vars.size.borderRadius[300],
-    color: vars.color.foreground.normal[100],
+    color: vars.color.foreground['secondary'],
 
     selectors: {
-        [when.disabled()]: { pointerEvents: 'none', opacity: 0.32 },
+        [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
     },
 });
 
@@ -75,8 +75,8 @@ export const currentPage = componentRecipe({
     base: [
         baseElement,
         {
-            backgroundColor: vars.color.background.primary[100],
-            color: vars.color.foreground.primary[200],
+            backgroundColor: vars.color.background['primary-weak'],
+            color: vars.color.foreground['primary-strong'],
         },
     ],
     defaultVariants: { size: 'md' },
@@ -91,8 +91,8 @@ export const button = componentRecipe({
         {
             selectors: {
                 '&[data-current]': {
-                    backgroundColor: vars.color.background.primary[100],
-                    color: vars.color.foreground.primary[200],
+                    backgroundColor: vars.color.background['primary-weak'],
+                    color: vars.color.foreground['primary-strong'],
                 },
             },
         },

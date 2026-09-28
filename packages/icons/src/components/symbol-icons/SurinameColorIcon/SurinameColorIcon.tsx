@@ -2,33 +2,29 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const SurinameColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1420"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-SurinameColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1420)">
-            <path d="M20 12.8582H-4V16H20V12.8582Z" fill="#377E3F" />
-            <path d="M20 0H-4V3.14182H20V0Z" fill="#377E3F" />
-            <path d="M20 11.1709H-4V12.8582H20V11.1709Z" fill="white" />
-            <path d="M20 3.14185H-4V4.82911H20V3.14185Z" fill="white" />
-            <path d="M20 4.8291H-4V11.1709H20V4.8291Z" fill="#B40A2D" />
+        <g mask="url(#vapor-icons-color-SurinameColorIcon__a)">
+            <path fill="#377E3F" d="M20 12.858H-4V16h24zM20 0H-4v3.142h24z" />
+            <path fill="#fff" d="M20 11.17H-4v1.688h24zm0-8.028H-4v1.687h24z" />
+            <path fill="#B40A2D" d="M20 4.83H-4v6.34h24z" />
             <path
-                d="M8.72733 7.45456L8.02006 5.2782L7.31279 7.45456H5.02551L6.87642 8.80002L6.16915 10.9764L8.02006 9.63091L9.87279 10.9764L9.16551 8.80002L11.0164 7.45456H8.72733Z"
                 fill="#ECC81D"
+                d="M8.727 7.455 8.02 5.278l-.707 2.177H5.026L6.876 8.8l-.707 2.176L8.02 9.631l1.853 1.345L9.166 8.8l1.85-1.345z"
             />
         </g>
     </IconBase>
 );
-
 export default SurinameColorIcon;

@@ -2,27 +2,25 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const GermanyColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1301"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-GermanyColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1301)">
-            <path d="M21.1927 0H-5.47461V5.33273H21.1927V0Z" fill="black" />
-            <path d="M21.1927 5.3327H-5.47461V10.6654H21.1927V5.3327Z" fill="#D00000" />
-            <path d="M21.1927 10.6673H-5.47461V16H21.1927V10.6673Z" fill="#FFCE00" />
+        <g mask="url(#vapor-icons-color-GermanyColorIcon__a)">
+            <path fill="#000" d="M21.193 0H-5.475v5.333h26.668z" />
+            <path fill="#D00000" d="M21.193 5.333H-5.475v5.332h26.668z" />
+            <path fill="#FFCE00" d="M21.193 10.667H-5.475V16h26.668z" />
         </g>
     </IconBase>
 );
-
 export default GermanyColorIcon;

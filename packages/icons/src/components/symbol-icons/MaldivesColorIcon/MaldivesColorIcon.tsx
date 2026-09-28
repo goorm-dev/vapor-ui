@@ -2,30 +2,28 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const MaldivesColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1411"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-MaldivesColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1411)">
-            <path d="M20 0H-4V16H20V0Z" fill="#D30731" />
-            <path d="M16.0127 4.02905H-0.0127411V11.9709H16.0127V4.02905Z" fill="#007F37" />
+        <g mask="url(#vapor-icons-color-MaldivesColorIcon__a)">
+            <path fill="#D30731" d="M20 0H-4v16h24z" />
+            <path fill="#007F37" d="M16.013 4.029H-.013v7.942h16.026z" />
             <path
-                d="M7.35818 8.11271C7.35818 6.72907 8.37636 5.58544 9.70363 5.38544C9.56727 5.36544 9.42908 5.35089 9.28726 5.35089C7.76181 5.35089 6.52364 6.58726 6.52364 8.11453C6.52364 9.6418 7.75999 10.8782 9.28726 10.8782C9.42908 10.8782 9.56727 10.8636 9.70363 10.8436C8.37636 10.6418 7.35818 9.49999 7.35818 8.11635V8.11271Z"
-                fill="white"
+                fill="#fff"
+                d="M7.358 8.113a2.76 2.76 0 0 1 2.346-2.728 3 3 0 0 0-.417-.034 2.764 2.764 0 1 0 0 5.527q.212-.002.417-.034a2.76 2.76 0 0 1-2.346-2.728z"
             />
         </g>
     </IconBase>
 );
-
 export default MaldivesColorIcon;

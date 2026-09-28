@@ -94,6 +94,7 @@ export const TestBed: StoryObj<Sheet.Root.Props> = {
                 <Sheet.Root open={true} {...args}>
                     <Sheet.Trigger render={<Button variant="outline" />}>Open Sheet</Sheet.Trigger>
                     <Sheet.Popup>
+                        <Sheet.ResizeHandle />
                         <Sheet.Header
                             $css={{ justifyContent: 'space-between', alignItems: 'center' }}
                         >

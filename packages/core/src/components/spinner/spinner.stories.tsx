@@ -16,7 +16,7 @@ export default {
 
         colorPalette: {
             control: { type: 'inline-radio' },
-            options: ['primary', 'inverse'],
+            options: ['primary', 'inherit'],
         },
     },
 } satisfies Meta<typeof Spinner>;

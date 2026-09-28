@@ -2,58 +2,52 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const SouthAfricaColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1274"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-SouthAfricaColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1274)">
+        <g mask="url(#vapor-icons-color-SouthAfricaColorIcon__a)">
             <path
+                fill="#000"
                 fillRule="evenodd"
+                d="m3.025 9.624-1.598 1.065-3.218 2.146v-9.66L1.414 5.31l1.597 1.065 2.442 1.628z"
                 clipRule="evenodd"
-                d="M3.0253 9.62367L1.4272 10.6891L-1.79102 12.8346V3.17456L1.41442 5.31092L3.01083 6.37638L5.45259 8.00366L3.0253 9.62367Z"
-                fill="black"
             />
             <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M22.2091 0V5.3109H10.9691L3.0054 0H22.2091Z"
                 fill="#E1392D"
-            />
-            <path
                 fillRule="evenodd"
+                d="M22.21 0v5.31H10.97L3.004 0z"
                 clipRule="evenodd"
-                d="M22.2089 10.6891V16H3.01807L10.9817 10.6891H22.2089Z"
+            />
+            <path
                 fill="#000C8A"
+                fillRule="evenodd"
+                d="M22.209 10.69V16H3.019l7.963-5.31z"
+                clipRule="evenodd"
             />
             <path
-                d="M7.29625 8.00362L4.85627 6.37633L-1.79102 1.9436V3.17452L1.41442 5.31088L3.01083 6.37633L5.45259 8.00362L3.0253 9.62362L1.4272 10.6891L-1.79102 12.8345V14.0654L4.86896 9.62362L7.29625 8.00362Z"
                 fill="#FFB915"
+                d="m7.296 8.004-2.44-1.628-6.647-4.432v1.23l3.205 2.137 1.597 1.065 2.442 1.628-2.428 1.62-1.598 1.065-3.218 2.146v1.23l6.66-4.441z"
             />
             <path
-                d="M10.9691 5.3109L3.00541 0H1.1091L10.6709 6.37635H22.2091V5.3109H10.9691Z"
-                fill="white"
+                fill="#fff"
+                d="M10.97 5.31 3.004 0H1.11l9.562 6.376H22.21V5.311zm-.287 4.314L1.122 16h1.896l7.964-5.31h11.227V9.623z"
             />
             <path
-                d="M10.6834 9.62366L1.12158 16H3.01798L10.9816 10.6891H22.2089V9.62366H10.6834Z"
-                fill="white"
-            />
-            <path
-                d="M10.6708 6.37635L1.10902 0H-1.79102V1.94363L4.85627 6.37635L7.29625 8.00364L4.86896 9.62365L-1.79102 14.0655V16H1.12172L10.6835 9.62365H22.209V6.37635H10.6708Z"
                 fill="#007847"
+                d="M10.67 6.376 1.11 0h-2.9v1.944l6.647 4.432 2.44 1.628-2.427 1.62-6.66 4.442V16h2.913l9.562-6.376H22.21V6.376z"
             />
         </g>
     </IconBase>
 );
-
 export default SouthAfricaColorIcon;

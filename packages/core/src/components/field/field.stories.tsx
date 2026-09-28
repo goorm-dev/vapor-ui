@@ -79,7 +79,10 @@ export const TestBed: Story = {
                         validationMode="onChange"
                         {...fieldArgs}
                     >
-                        <Field.Description>non-required checkbox</Field.Description>
+                        <Text foreground="normal" typography="body2">
+                            non-required checkbox
+                        </Text>
+
                         <Field.Label $css={{ alignItems: 'center' }}>
                             <Checkbox.Root />
                             멘토님 강연 능력
@@ -97,7 +100,9 @@ export const TestBed: Story = {
                         validationMode="onChange"
                         {...fieldArgs}
                     >
-                        <Field.Description>required checkbox</Field.Description>
+                        <Text foreground="normal" typography="body2">
+                            required checkbox
+                        </Text>
 
                         <Field.Label $css={{ alignItems: 'center' }}>
                             <Checkbox.Root required />
@@ -106,6 +111,7 @@ export const TestBed: Story = {
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
                         <Field.Success match>✓ 강의 평가가 완료되었습니다</Field.Success>
                     </Field.Root>
+
                     {/* Switch Component Example */}
                     <Field.Root name="notifications" validationMode="onChange" {...fieldArgs}>
                         <Field.Label $css={{ alignItems: 'center' }}>
@@ -118,6 +124,7 @@ export const TestBed: Story = {
                         <Field.Error match>개인 정보 수신 동의가 필요합니다</Field.Error>
                         <Field.Success match>✓ 개인 정보 수신 동의가 완료되었습니다</Field.Success>
                     </Field.Root>
+
                     <Field.Root name="notifications2" validationMode="onChange" {...fieldArgs}>
                         <Field.Label $css={{ alignItems: 'center' }}>
                             이벤트성 광고 수신 동의 - non required
@@ -155,11 +162,9 @@ export const TestBed: Story = {
                         <Field.Error match>성별을 반드시 선택해주세요.</Field.Error>
                         <Field.Success match>✓ 성별이 선택되었습니다</Field.Success>
                     </Field.Root>
+
                     <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
-                        <Field.Label
-                            nativeLabel={false}
-                            render={<Text typography="subtitle2" foreground="normal-200" />}
-                        >
+                        <Field.Label nativeLabel={false} render={<Text typography="subtitle2" />}>
                             이름
                         </Field.Label>
                         <TextInput required />

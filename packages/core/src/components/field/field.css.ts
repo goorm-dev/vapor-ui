@@ -14,7 +14,7 @@ export const root = componentStyle({
 
 export const description = componentStyle([
     typography({ style: 'body2' }),
-    foregrounds({ color: 'hint-100' }),
+    foregrounds({ color: 'hint' }),
     {
         selectors: {
             [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
@@ -24,7 +24,7 @@ export const description = componentStyle([
 
 export const error = componentStyle([
     typography({ style: 'body2' }),
-    foregrounds({ color: 'danger-100' }),
+    foregrounds({ color: 'danger' }),
     {
         selectors: {
             [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
@@ -34,7 +34,7 @@ export const error = componentStyle([
 
 export const success = componentStyle([
     typography({ style: 'body2' }),
-    foregrounds({ color: 'success-100' }),
+    foregrounds({ color: 'success' }),
     {
         selectors: {
             [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
@@ -54,7 +54,7 @@ export const label = componentRecipe({
 
     defaultVariants: {
         typography: 'body2',
-        foreground: 'normal-100',
+        foreground: 'secondary',
     },
 
     variants: {

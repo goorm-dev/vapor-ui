@@ -109,7 +109,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                                     borderRadius: '$300',
                                     paddingInline: '$200',
                                     paddingBlock: '$100',
-                                    backgroundColor: '$bg-secondary-100',
+                                    backgroundColor: '$bg-secondary-weak',
                                 }}
                             >
                                 Panel

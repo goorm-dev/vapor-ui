@@ -3,10 +3,17 @@
     "description": "콘텐츠 로딩이나 데이터 처리 시 대기 상태를 표시합니다. `<span>` 요소를 렌더링합니다.",
     "props": [
         {
-            "name": "colorPalette",
-            "type": ["primary", "inverse"],
+            "name": "aria-label",
+            "type": ["string"],
             "required": false,
-            "description": "스피너의 색상을 제어합니다. 다른 요소 안에서 요소의 글자색과 색상을 일치시키려면 `inverse`를 사용하세요."
+            "description": "스피너가 무엇을 로딩 중인지 서술하는 접근 가능한 이름입니다. 지정하지 않으면 기본값 `Loading`이 발화되므로, 맥락에 맞는 라벨(예: `검색 결과 불러오는 중`)을 제공하는 것을 권장합니다.",
+            "defaultValue": "Loading"
+        },
+        {
+            "name": "colorPalette",
+            "type": ["primary", "inherit"],
+            "required": false,
+            "description": "스피너의 색상을 제어합니다. 다른 요소 안에서 요소의 글자색과 색상을 일치시키려면 `inherit`를 사용하세요."
         },
         {
             "name": "size",

@@ -18,16 +18,14 @@ export const SemanticColor = () => {
 
     return (
         <Box $css={{ paddingBlock: '$400' }}>
-            {SemanticColorData.map(
-                (colorGroup): ReactElement => (
-                    <Box key={colorGroup.title} $css={{ marginBottom: '$600' }}>
-                        <Text typography="heading5">
-                            {sectionTitles[colorGroup.title] || colorGroup.title}
-                        </Text>
-                        <ColorPalette colors={transformToColorSwatchItems([colorGroup])} />
-                    </Box>
-                ),
-            )}
+            {SemanticColorData.map((colorGroup): ReactElement => (
+                <Box key={colorGroup.title} $css={{ marginBottom: '$600' }}>
+                    <Text typography="heading5">
+                        {sectionTitles[colorGroup.title] || colorGroup.title}
+                    </Text>
+                    <ColorPalette colors={transformToColorSwatchItems([colorGroup])} />
+                </Box>
+            ))}
         </Box>
     );
 };

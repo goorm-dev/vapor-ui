@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { upperFirst } from '~/utils/string';
 
 import { HStack } from '../h-stack';
+import { VStack } from '../v-stack';
 import { Button } from './button';
 
 export default {
@@ -34,47 +35,47 @@ export const Default: Story = {
 
 export const TestBed: Story = {
     render: () => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <VStack $css={{ gap: '$400' }}>
+            <HStack $css={{ flexWrap: 'wrap', gap: '$200' }}>
+                <VStack $css={{ gap: '$100' }}>
                     <Buttons colorPalette="primary" />
                     <Buttons colorPalette="primary" disabled />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                </VStack>
+                <VStack $css={{ gap: '$100' }}>
                     <Buttons colorPalette="secondary" />
                     <Buttons colorPalette="secondary" disabled />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                </VStack>
+                <VStack $css={{ gap: '$100' }}>
                     <Buttons colorPalette="success" />
                     <Buttons colorPalette="success" disabled />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                </VStack>
+                <VStack $css={{ gap: '$100' }}>
                     <Buttons colorPalette="warning" />
                     <Buttons colorPalette="warning" disabled />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                </VStack>
+                <VStack $css={{ gap: '$100' }}>
                     <Buttons colorPalette="danger" />
                     <Buttons colorPalette="danger" disabled />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                </VStack>
+                <VStack $css={{ gap: '$100' }}>
                     <Buttons colorPalette="contrast" />
                     <Buttons colorPalette="contrast" disabled />
-                </div>
-            </div>
+                </VStack>
+            </HStack>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+            <HStack $css={{ flexWrap: 'wrap', gap: '$200' }}>
                 <Button size="sm">SM</Button>
                 <Button size="md">MD</Button>
                 <Button size="lg">LG</Button>
                 <Button size="xl">XL</Button>
-            </div>
-        </div>
+            </HStack>
+        </VStack>
     ),
 };
 
 const Buttons = ({ colorPalette, disabled }: Button.Props) => {
     return (
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <HStack $css={{ gap: '$100' }}>
             <Button colorPalette={colorPalette} disabled={disabled} variant="fill">
                 {upperFirst(`${colorPalette}`)}
             </Button>
@@ -84,6 +85,6 @@ const Buttons = ({ colorPalette, disabled }: Button.Props) => {
             <Button colorPalette={colorPalette} disabled={disabled} variant="outline">
                 {upperFirst(`${colorPalette}`)}
             </Button>
-        </div>
+        </HStack>
     );
 };

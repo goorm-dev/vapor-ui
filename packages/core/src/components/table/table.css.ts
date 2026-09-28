@@ -20,12 +20,12 @@ const tableData = componentStyle({
 
 export const heading = componentStyle([
     typography({ style: 'subtitle1' }),
-    foregrounds({ color: 'normal-100' }),
+    foregrounds({ color: 'secondary' }),
     tableData,
 ]);
 
 export const cell = componentStyle([
     typography({ style: 'body2' }),
-    foregrounds({ color: 'normal-200' }),
+    foregrounds({ color: 'normal' }),
     tableData,
 ]);

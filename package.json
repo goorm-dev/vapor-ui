@@ -5,7 +5,7 @@
     "description": "An open-source component library for building high-quality, accessible web applications. Features easy customization and AI-friendly components. Maintained by @goorm-dev.",
     "repository": {
         "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git"
+        "url": "git+https://github.com/goorm-dev/vapor-ui.git"
     },
     "license": "MIT",
     "author": "Vapor Team <vapor.ui@goorm.io>",
@@ -25,6 +25,7 @@
         "format:check": "pnpm format:package -c && prettier --check .",
         "format:package": "npx sort-package-json \"**/package.json\" --ignore \"**/node_modules\" \"dist\"",
         "hooks": "pnpm --filter @vapor-ui/hooks",
+        "icon-extractor": "pnpm --filter @repo/icon-extractor",
         "icons": "pnpm --filter @vapor-ui/icons",
         "lint": "turbo run lint",
         "prepare": "husky",
@@ -32,9 +33,8 @@
         "release:slack": "node scripts/changelog/slack.js",
         "start": "turbo run start",
         "storybook": "pnpm --filter storybook",
-        "sync-figma": "pnpm --filter @repo/sync-figma",
-        "sync-icons:basic": "pnpm --filter @repo/sync-figma sync-icons:basic",
-        "sync-icons:symbol": "pnpm --filter @repo/sync-figma sync-icons:symbol",
+        "sync-icons:basic": "pnpm --filter @repo/icon-extractor sync-icons:basic",
+        "sync-icons:symbol": "pnpm --filter @repo/icon-extractor sync-icons:symbol",
         "test": "turbo run test",
         "test:regressions": "turbo run test:regressions",
         "test:update-snapshots": "turbo run test:regressions -- --update-snapshots",
@@ -47,21 +47,21 @@
         "website": "pnpm --filter website"
     },
     "devDependencies": {
-        "@changesets/cli": "^2.31.0",
+        "@changesets/cli": "^2.31.1",
         "@changesets/get-github-info": "^0.8.0",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@types/node": "^22.19.20",
+        "@types/node": "^22.20.1",
         "dotenv": "^17.4.2",
         "husky": "^9.1.7",
         "lodash-es": "^4.18.1",
         "picocolors": "^1.1.1",
-        "prettier": "^3.8.3",
+        "prettier": "^3.9.6",
         "rimraf": "^6.1.3",
-        "semver": "^7.7.4",
-        "turbo": "^2.9.16",
+        "semver": "^7.8.5",
+        "turbo": "^2.10.12",
         "typescript": "catalog:"
     },
-    "packageManager": "pnpm@10.33.4",
+    "packageManager": "pnpm@10.34.5",
     "engines": {
         "node": ">=20.20.2"
     }

@@ -28,12 +28,11 @@
         ]
     },
     "include": [
-        "next-env.d.ts",
         "**/*.ts",
         "**/*.tsx",
-        ".next/types/**/*.ts",
+        "next-env.d.ts",
         "global.d.ts",
-        "docs-extractor.config.mjs",
+        ".next/types/**/*.ts",
         ".next/dev/types/**/*.ts"
     ],
     "exclude": ["node_modules"]

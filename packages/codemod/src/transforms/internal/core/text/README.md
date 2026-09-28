@@ -139,7 +139,7 @@ New typography options:
 
 - `display1`, `display2`, `display3`, `display4`: Display text styles
 - `code1`, `code2`: Code text styles
-- Existing: `heading1`~`heading4`, `body1`~`body4` (maintained)
+- Existing: `heading1`~~`heading4`, `body1`~~`body4` (maintained)
 
 ### Accessibility
 

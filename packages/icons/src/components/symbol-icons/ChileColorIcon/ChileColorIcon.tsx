@@ -2,32 +2,29 @@ import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
 const ChileColorIcon = (props: IconProps) => (
-    <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
         <mask
-            id="mask0_9214_1415"
-            style={{ maskType: 'luminance' }}
+            id="vapor-icons-color-ChileColorIcon__a"
+            width={16}
+            height={16}
+            x={0}
+            y={0}
             maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="16"
-            height="16"
+            style={{
+                maskType: 'luminance',
+            }}
         >
-            <path
-                d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
-                fill="white"
-            />
+            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
         </mask>
-        <g mask="url(#mask0_9214_1415)">
-            <path d="M24 0H7.98364V8.08909H24V0Z" fill="white" />
-            <path d="M7.98363 0H0V8.08909H7.98363V0Z" fill="#0039A6" />
-            <path d="M24 8.08911H7.98364V16H24V8.08911Z" fill="#D52B1E" />
-            <path d="M7.98363 8.08911H0V16H7.98363V8.08911Z" fill="#D52B1E" />
+        <g mask="url(#vapor-icons-color-ChileColorIcon__a)">
+            <path fill="#fff" d="M24 0H7.984v8.09H24z" />
+            <path fill="#0039A6" d="M7.984 0H0v8.09h7.984z" />
+            <path fill="#D52B1E" d="M24 8.09H7.984V16H24zm-16.016 0H0V16h7.984z" />
             <path
-                d="M4.44368 3.36001L3.99096 1.96729L3.53822 3.36001H2.07458L3.26004 4.22182L2.80732 5.61456L3.99096 4.75456L5.1764 5.61456L4.72368 4.22182L5.90914 3.36001H4.44368Z"
-                fill="white"
+                fill="#fff"
+                d="M4.444 3.36 3.99 1.967 3.538 3.36H2.075l1.185.862-.453 1.393 1.184-.86 1.185.86-.452-1.393 1.185-.862z"
             />
         </g>
     </IconBase>
 );
-
 export default ChileColorIcon;

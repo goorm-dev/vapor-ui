@@ -3,7 +3,7 @@ import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-    plugins: [vanillaExtractPlugin()],
+    plugins: [vanillaExtractPlugin() as never],
     resolve: {
         alias: {
             '~': path.resolve(__dirname, 'src'),
@@ -13,7 +13,7 @@ export default defineConfig({
         noExternal: ['@vapor-ui/icons'],
     },
     test: {
-        setupFiles: ['./__tests__/setup-tests.ts'],
+        setupFiles: ['./vitest.setup.ts'],
         environment: 'happy-dom',
         exclude: ['node_modules', 'dist'],
         include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],

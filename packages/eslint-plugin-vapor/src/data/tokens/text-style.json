@@ -1,0 +1,344 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+    "textStyle": {
+        "$type": "typography",
+        "display1": {
+            "$description": "The largest text style in the system. Recommended for use as a graphic element rather than readable text.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "hero section or marketing content headline on a landing page at the largest display scale"
+                    ],
+                    "avoid": [
+                        "mobile viewports → display2 or display3",
+                        "text requiring readability → display2 or display3"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.800}",
+                "fontSize": "{typography.fontSize.1000}",
+                "lineHeight": "{typography.lineHeight.1000}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "display2": {
+            "$description": "The largest readable display scale. Recommended for delivering strong marketing messages.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["hero section or marketing content headline on a landing page"],
+                    "avoid": [
+                        "mobile viewports → display4 or heading1",
+                        "more than one instance per page"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.800}",
+                "fontSize": "{typography.fontSize.900}",
+                "lineHeight": "{typography.lineHeight.900}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "display3": {
+            "$description": "The default readable display scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "hero section or marketing content headline on a landing page at medium display scale"
+                    ],
+                    "avoid": [
+                        "mobile viewports → display4 or heading1",
+                        "more than one instance per page"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.800}",
+                "fontSize": "{typography.fontSize.800}",
+                "lineHeight": "{typography.lineHeight.800}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "display4": {
+            "$description": "The smallest readable display scale. Can be applied to subsection titles when display2 or display3 is used on the same page.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "hero section or marketing content headline on a landing page at the smallest display scale",
+                        "subsection title beneath a display2 or display3 headline"
+                    ],
+                    "avoid": ["mobile viewports → heading1 or heading2"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.800}",
+                "fontSize": "{typography.fontSize.700}",
+                "lineHeight": "{typography.lineHeight.700}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "heading1": {
+            "$description": "The default section title scale for landing pages.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["section title on a landing page"],
+                    "avoid": [
+                        "general product UI → heading2 or heading3",
+                        "mobile viewports → heading2 or heading3"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.600}",
+                "lineHeight": "{typography.lineHeight.600}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "heading2": {
+            "$description": "The largest page title scale in general product UI. Recommended for delivering a specific message rather than a generic title.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "welcome message on an AI product home screen",
+                        "page title in a general product UI requiring stronger emphasis than heading3"
+                    ],
+                    "avoid": ["general informational page titles → heading3"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.500}",
+                "lineHeight": "{typography.lineHeight.500}",
+                "letterSpacing": "{typography.letterSpacing.400}"
+            }
+        },
+        "heading3": {
+            "$description": "The default page title scale in general product UI. Can be applied as a subtitle when heading1 or heading2 is used as the primary title.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "primary page title in a general product UI",
+                        "subtitle beneath heading1 or heading2"
+                    ],
+                    "avoid": ["marketing or high-emphasis messages → heading2"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.400}",
+                "lineHeight": "{typography.lineHeight.400}",
+                "letterSpacing": "{typography.letterSpacing.300}"
+            }
+        },
+        "heading4": {
+            "$description": "The smallest page title scale and the largest component title scale in general product UI.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "subtitle beneath a page title",
+                        "title of a dialog, card, or side navigation at the largest component heading scale"
+                    ],
+                    "avoid": ["primary page main title → heading3"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.300}",
+                "lineHeight": "{typography.lineHeight.300}",
+                "letterSpacing": "{typography.letterSpacing.200}"
+            }
+        },
+        "heading5": {
+            "$description": "The default component title scale for dialogs, cards, and side navigation.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "title of a dialog, card, or side navigation at the default component heading scale"
+                    ],
+                    "avoid": ["primary page main title → heading3"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.700}",
+                "fontSize": "{typography.fontSize.200}",
+                "lineHeight": "{typography.lineHeight.200}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "heading6": {
+            "$description": "The smallest component title scale for dialogs, cards, and side navigation. Also used as a label for extra-large components.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "title of a dialog, card, or side navigation at the smallest component heading scale",
+                        "label for an extra-large component"
+                    ],
+                    "avoid": ["cases requiring bold emphasis → heading5"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.500}",
+                "fontSize": "{typography.fontSize.100}",
+                "lineHeight": "{typography.lineHeight.100}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "subtitle1": {
+            "$description": "The default label scale. Used as a general label or for medium and large components.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["general label or label for medium and large components"],
+                    "avoid": ["body or paragraph text → body2"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.500}",
+                "fontSize": "{typography.fontSize.075}",
+                "lineHeight": "{typography.lineHeight.075}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "subtitle2": {
+            "$description": "The smallest label scale. Used as a supporting label beneath heading6 or subtitle1, or for small components.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["supporting label or label for small components"],
+                    "avoid": ["standalone use without accompanying text or component → subtitle1"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.500}",
+                "fontSize": "{typography.fontSize.050}",
+                "lineHeight": "{typography.lineHeight.050}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
+        },
+        "body1": {
+            "$description": "Recommended as supporting text for heading3 or heading4. Used for descriptive text in large components.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "supporting text beneath heading3 or heading4",
+                        "placeholder text in an extra-large component"
+                    ],
+                    "avoid": ["supporting text for heading5 or heading6 → body2 or body3"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.100}",
+                "lineHeight": "{typography.lineHeight.100}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "body2": {
+            "$description": "The default body text scale. Used for descriptive text in medium and large components.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "body or paragraph text",
+                        "placeholder text in medium or large components",
+                        "menu item or field description"
+                    ],
+                    "avoid": ["labels → subtitle1"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.075}",
+                "lineHeight": "{typography.lineHeight.075}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "body3": {
+            "$description": "The default caption scale. Used for descriptive text explaining titles, body, or images, and for small components.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": [
+                        "placeholder text in a small component",
+                        "caption text describing a title, body, or image"
+                    ],
+                    "avoid": ["standalone use without accompanying text or component → body2"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.050}",
+                "lineHeight": "{typography.lineHeight.050}",
+                "letterSpacing": "{typography.letterSpacing.100}"
+            }
+        },
+        "body4": {
+            "$description": "The smallest caption scale. Readability is not guaranteed; use sparingly.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["caption text in space-constrained contexts"],
+                    "avoid": ["captions users must read without difficulty → body3"]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.sans}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.025}",
+                "lineHeight": "{typography.lineHeight.025}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
+        },
+        "code1": {
+            "$description": "The default code text scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["code block or inline code at the default code scale"],
+                    "avoid": [
+                        "non-code text → body2",
+                        "replacing with sans-serif style is not permitted → always use fontFamily.code"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.code}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.075}",
+                "lineHeight": "{typography.lineHeight.075}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
+        },
+        "code2": {
+            "$description": "The smallest code text scale.",
+            "$extensions": {
+                "io.goorm.vapor": {
+                    "when": ["code block or inline code at the smallest code scale"],
+                    "avoid": [
+                        "large screen contexts → code1",
+                        "non-code text → body3",
+                        "replacing with sans-serif style is not permitted → always use fontFamily.code"
+                    ]
+                }
+            },
+            "$value": {
+                "fontFamily": "{typography.fontFamily.code}",
+                "fontWeight": "{typography.fontWeight.400}",
+                "fontSize": "{typography.fontSize.050}",
+                "lineHeight": "{typography.lineHeight.050}",
+                "letterSpacing": "{typography.letterSpacing.000}"
+            }
+        }
+    }
+}

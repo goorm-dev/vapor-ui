@@ -8,13 +8,11 @@ import { WARN } from './libs/constants.js';
 const plugins = { 'vanilla-extract': vanillaExtract };
 
 /** @type {import('eslint').Linter.Config} */
-const vanillaExtractConfig = { plugins };
+export const config = {
+    plugins,
+    files: ['**/*.css.ts'],
+    rules: { 'vanilla-extract/concentric-order': WARN },
+};
 
 /** @type {import("eslint").Linter.Config[]} */
-export const configs = [
-    vanillaExtractConfig,
-    {
-        files: ['**/*.css.ts'],
-        rules: { 'vanilla-extract/concentric-order': WARN },
-    },
-];
+export const configs = [config];

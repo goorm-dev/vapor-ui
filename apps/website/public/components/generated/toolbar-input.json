@@ -1,0 +1,50 @@
+{
+    "name": "ToolbarInput",
+    "props": [
+        {
+            "name": "defaultValue",
+            "type": ["string | number | readonly string[]"],
+            "required": false
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: string) => void"],
+            "required": false,
+            "description": "Callback fired when the value of the Input changes. It receives the new value and the original change event details from the underlying BaseToolbar.Input component."
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: Toolbar.Input.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "When `true` the item is disabled."
+        },
+        {
+            "name": "focusableWhenDisabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "When `true` the item remains focusable when disabled."
+        },
+        {
+            "name": "style",
+            "type": [
+                "React.CSSProperties | ((state: Toolbar.Input.State) => (React.CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Toolbar.Input.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}
