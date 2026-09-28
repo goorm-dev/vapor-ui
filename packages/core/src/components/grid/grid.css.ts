@@ -14,6 +14,10 @@ export const root = componentRecipe({
 
     defaultVariants: { flow: 'row' },
     variants: {
+        inline: {
+            true: { display: 'inline-grid' },
+            false: { display: 'grid' },
+        },
         flow: {
             row: { gridAutoFlow: 'row' },
             column: { gridAutoFlow: 'column' },

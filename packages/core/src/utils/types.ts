@@ -2,6 +2,8 @@ import type { ComponentPropsWithoutRef } from 'react';
 
 import type { useRender } from '@base-ui/react/use-render';
 
+import type { Sprinkles } from '~/styles/sprinkles.css';
+
 import type { ClassNameParams, StyleParams } from './stateful-props';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,7 +14,7 @@ export type Assign<T, U> = Omit<T, keyof U> & U;
 type OmitColorProp<ElementType extends React.ElementType> =
     string extends ComponentPropsWithoutRef<ElementType>['color'] ? 'color' : never;
 
-type CssProps = {};
+type CssProps = Sprinkles;
 
 export type Styles = {
     /**
