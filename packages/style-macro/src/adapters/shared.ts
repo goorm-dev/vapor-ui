@@ -1,6 +1,3 @@
-import type { ManifestShape } from '@vapor-ui/tokens';
-import { manifest as defaultManifest } from '@vapor-ui/tokens';
-
 import type { VaporStyleOptions } from './unplugin';
 
 export const DEFAULT_LAYER_ORDER: readonly string[] = [
@@ -11,7 +8,6 @@ export const DEFAULT_LAYER_ORDER: readonly string[] = [
 ];
 
 interface ResolvedOptions {
-    manifest: ManifestShape;
     themeStylesImport: string | null;
     include: (id: string) => boolean;
     hash: boolean;
@@ -26,7 +22,6 @@ export function defaultInclude(id: string): boolean {
 
 export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
     const {
-        manifest = defaultManifest,
         include = defaultInclude,
         themeStylesImport,
         hash = process.env.NODE_ENV === 'production',
@@ -34,7 +29,6 @@ export function resolveOptions(opts: VaporStyleOptions): ResolvedOptions {
     } = opts;
 
     return {
-        manifest,
         include,
         hash,
         layerOrder,

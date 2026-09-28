@@ -97,7 +97,6 @@ export default function vaporStyleNext<T extends object = object>(
         // (e.g. user-supplied `include`) and drop any undefined field so the
         // resulting object is a pure JSON object.
         const rawLoaderOptions: Record<string, unknown> = {
-            manifest: unpluginOpts.manifest,
             hash: unpluginOpts.hash,
             themeStylesImport: unpluginOpts.themeStylesImport,
             layerOrder: unpluginOpts.layerOrder,

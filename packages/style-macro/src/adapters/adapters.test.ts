@@ -2,23 +2,15 @@ import { createRequire } from 'node:module';
 
 import vaporStyle from '~/index';
 
-import esbuild from './esbuild';
-import farm from './farm';
 import next from './next';
 import rolldown from './rolldown';
-import rollup from './rollup';
-import rspack from './rspack';
 import vite from './vite';
 import webpack from './webpack';
 
 describe('adapter subpath default exports', () => {
     it.each([
         ['vite', vite],
-        ['rollup', rollup],
         ['webpack', webpack],
-        ['rspack', rspack],
-        ['esbuild', esbuild],
-        ['farm', farm],
         ['rolldown', rolldown],
         ['next', next],
     ])('%s exports a callable', (_name, adapter) => {
@@ -35,11 +27,7 @@ describe('merged default export', () => {
 
     it('every method is the same reference as its dedicated subpath', () => {
         expect(vaporStyle.vite).toBe(vite);
-        expect(vaporStyle.rollup).toBe(rollup);
         expect(vaporStyle.webpack).toBe(webpack);
-        expect(vaporStyle.rspack).toBe(rspack);
-        expect(vaporStyle.esbuild).toBe(esbuild);
-        expect(vaporStyle.farm).toBe(farm);
         expect(vaporStyle.rolldown).toBe(rolldown);
         expect(vaporStyle.next).toBe(next);
     });
@@ -50,9 +38,6 @@ describe('unplugin-backed adapters return a plugin object', () => {
     // field (`{ name, ...hooks }` shape).
     it.each([
         ['vite', vite],
-        ['rollup', rollup],
-        ['esbuild', esbuild],
-        ['farm', farm],
         ['rolldown', rolldown],
     ])('%s() returns a descriptor with `name`', (_name, adapter) => {
         const plugin = adapter();
@@ -64,10 +49,7 @@ describe('unplugin-backed adapters return a plugin object', () => {
     // webpack/rspack unplugin adapters return a plugin CLASS INSTANCE — the
     // `name` lives on the constructor or is set once `apply(compiler)` runs.
     // Assert instead on the `apply` hook every webpack-family plugin exposes.
-    it.each([
-        ['webpack', webpack],
-        ['rspack', rspack],
-    ])('%s() returns an instance with apply()', (_name, adapter) => {
+    it.each([['webpack', webpack]])('%s() returns an instance with apply()', (_name, adapter) => {
         const plugin = adapter() as { apply?: unknown };
         expect(plugin).toBeTypeOf('object');
         expect(typeof plugin.apply).toBe('function');

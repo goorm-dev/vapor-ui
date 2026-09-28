@@ -1,123 +1,154 @@
-import { type ClassNameMode, buildClassName } from '~/model/class-name';
-import type { ConditionKey, PseudoName, Tuple } from '~/model/types';
+import { type ClassNameMode, buildClassName, dynamicVarName } from '~/model/class-name';
+import { composeSelector } from '~/model/selector';
+import type { IRRule } from '~/model/types';
 
-const PSEUDO_ORDER: PseudoName[] = [
-    '_before',
-    '_after',
-    '_focus',
-    '_focusVisible',
-    '_focusWithin',
-    '_hover',
-    '_active',
-];
+export interface EmitOutput {
+    /** 방출된 CSS 전문. `@layer vapor-utilities { ... }` 블록. */
+    cssText: string;
+    /** rules 와 같은 순서·길이의 className. dedupe 를 통과한 뒤 재분배. */
+    classNamesPerRule: string[];
+    /** dynamic slot 목록 (P4 에서 쓰임). */
+    dynamicSlots: Array<{ slotId: string; sourceExpr: string; property: string }>;
+}
 
-const PSEUDO_SELECTOR: Record<PseudoName, string> = {
-    _before: '::before',
-    _after: '::after',
-    _hover: ':hover',
-    _focus: ':focus',
-    _focusVisible: ':focus-visible',
-    _focusWithin: ':focus-within',
-    _active: ':active',
-};
+interface Emitted {
+    cssRule: string;
+    atRulePath: string[];
+}
 
-function bucket(c: ConditionKey): 'default' | 'sm' | 'md' | 'lg' | 'raw' | 'pseudo' {
-    switch (c.kind) {
-        case 'default':
-            return 'default';
-        case 'named-bp':
-            return c.name;
-        case 'raw-media':
-            return 'raw';
-        case 'pseudo':
-            return 'pseudo';
+/** selectorContext 에서 앞쪽 at-rule 접두어와 leaf selector 분리. */
+function extractAtRulePrefix(selectorContext: string) {
+    let i = 0;
+    while (selectorContext[i] === '@') {
+        const parenStart = selectorContext.indexOf('(', i);
+        if (parenStart === -1) break;
+        let depth = 0;
+        let j = parenStart;
+        for (; j < selectorContext.length; j++) {
+            if (selectorContext[j] === '(') depth++;
+            else if (selectorContext[j] === ')') {
+                depth--;
+                if (depth === 0) {
+                    j++;
+                    break;
+                }
+            }
+        }
+        i = j;
     }
+    const atRule = i > 0 ? selectorContext.slice(0, i) : null;
+    const leaf = selectorContext.slice(i) || 'base';
+    return { atRule, leaf };
 }
 
-function dedupe(tuples: Tuple[], mode: ClassNameMode): Tuple[] {
-    const seen = new Map<string, Tuple>();
+function splitAtRules(prefix: string): string[] {
+    const units: string[] = [];
+    let i = 0;
+    while (i < prefix.length) {
+        const start = i;
+        const parenStart = prefix.indexOf('(', i);
+        if (parenStart === -1) break;
+        let depth = 0;
+        let j = parenStart;
+        for (; j < prefix.length; j++) {
+            if (prefix[j] === '(') depth++;
+            else if (prefix[j] === ')') {
+                depth--;
+                if (depth === 0) {
+                    j++;
+                    break;
+                }
+            }
+        }
+        units.push(prefix.slice(start, j));
+        i = j;
+    }
+    return units;
+}
 
-    for (const t of tuples) {
-        const key = buildClassName(t, mode);
+/** `@media(min-width:768px)` → `@media (min-width: 768px)` */
+function formatAtRule(condensed: string): string {
+    return condensed.replace(/@([a-zA-Z-]+)\(/, '@$1 (').replace(/:/g, ': ');
+}
 
-        if (!seen.has(key)) seen.set(key, t);
+function ruleKey(r: IRRule): string {
+    if (r.kind === 'static') return `s|${r.selectorContext}|${r.property}|${r.value}`;
+    return `d|${r.selectorContext}|${r.property}|${r.slotId}`;
+}
+
+export function emitCss(rules: IRRule[], mode: ClassNameMode = 'readable'): EmitOutput {
+    const classNamesPerRule: string[] = [];
+    const dynamicSlots: EmitOutput['dynamicSlots'] = [];
+    const seen = new Map<string, string>();
+    const emitted: Emitted[] = [];
+    const hashMode: 'dev' | 'prod' = mode === 'hashed' ? 'prod' : 'dev';
+
+    for (const rule of rules) {
+        const dedupKey = ruleKey(rule);
+        let cls = seen.get(dedupKey);
+
+        if (!cls) {
+            const finalValue =
+                rule.kind === 'static'
+                    ? rule.value
+                    : `var(${dynamicVarName(rule.slotId, hashMode)})`;
+            const rawValue = rule.kind === 'static' ? rule.rawValue : rule.sourceExpr;
+
+            cls = buildClassName(
+                {
+                    property: rule.property,
+                    value: finalValue,
+                    rawValue,
+                    selectorContext: rule.selectorContext,
+                },
+                mode,
+            );
+            seen.set(dedupKey, cls);
+
+            const { atRule, leaf } = extractAtRulePrefix(rule.selectorContext);
+            const selector = leaf === 'base' ? `.${cls}` : composeSelector(`.${cls}`, leaf);
+            const cssRule = `${selector} { ${rule.property}: ${finalValue} }`;
+            const atRulePath = atRule ? splitAtRules(atRule).map(formatAtRule) : [];
+            emitted.push({ cssRule, atRulePath });
+
+            if (rule.kind === 'dynamic') {
+                dynamicSlots.push({
+                    slotId: rule.slotId,
+                    sourceExpr: rule.sourceExpr,
+                    property: rule.property,
+                });
+            }
+        }
+        classNamesPerRule.push(cls);
     }
 
-    return [...seen.values()];
-}
-
-function ruleLine(t: Tuple, mode: ClassNameMode): string {
-    const cls = buildClassName(t, mode);
-    const sel = t.condition.kind === 'pseudo' ? `${cls}${PSEUDO_SELECTOR[t.condition.name]}` : cls;
-
-    return `    .${sel} { ${kebab(t.property)}: ${t.cssValue}; }`;
-}
-
-function kebab(p: string): string {
-    return p.replace(/([A-Z])/g, '-$1').toLowerCase();
-}
-
-export function emitCss(tuples: Tuple[], mode: ClassNameMode = 'readable'): string {
-    const unique = dedupe(tuples, mode);
-    const groups = {
-        default: [] as Tuple[],
-        sm: [] as Tuple[],
-        md: [] as Tuple[],
-        lg: [] as Tuple[],
-        raw: [] as Tuple[],
-        pseudo: [] as Tuple[],
-    };
-
-    for (const t of unique) groups[bucket(t.condition)].push(t);
-
-    // raw-media: sort by query string
-    groups.raw.sort((a, b) => {
-        if (a.condition.kind !== 'raw-media' || b.condition.kind !== 'raw-media') return 0;
-
-        return a.condition.query.localeCompare(b.condition.query);
-    });
-
-    // pseudo: enforce PSEUDO_ORDER
-    groups.pseudo.sort((a, b) => {
-        if (a.condition.kind !== 'pseudo' || b.condition.kind !== 'pseudo') return 0;
-
-        return PSEUDO_ORDER.indexOf(a.condition.name) - PSEUDO_ORDER.indexOf(b.condition.name);
-    });
-
-    // default / sm / md / lg buckets: preserve source order.
-    // `dedupe()` uses a Map keyed by className, whose iteration order is
-    // first-occurrence — so `unique` already reflects the order the user
-    // wrote each property in `styles({...})` (and across multiple calls in
-    // the same file). CSS cascade for equal-specificity classes = declaration
-    // order in the stylesheet, so honoring source order gives the user direct
-    // control (e.g. `all: 'unset'` before individual properties).
-    // Raw media and pseudo keep their explicit ordering above.
-
-    const lines: string[] = ['@layer vapor-utilities {'];
-    for (const t of groups.default) lines.push(ruleLine(t, mode));
-
-    const namedBpBlock = (name: 'sm' | 'md' | 'lg', arr: Tuple[]) => {
-        if (!arr.length) return;
-
-        lines.push(`    @media (--vapor-${name}) {`);
-        for (const t of arr) lines.push('    ' + ruleLine(t, mode));
-        lines.push('    }');
-    };
-
-    namedBpBlock('sm', groups.sm);
-    namedBpBlock('md', groups.md);
-    namedBpBlock('lg', groups.lg);
-
-    for (const t of groups.raw) {
-        if (t.condition.kind !== 'raw-media') continue;
-
-        lines.push(`    @media ${t.condition.query} {`);
-        lines.push('    ' + ruleLine(t, mode));
-        lines.push('    }');
+    const grouped = new Map<string, string[]>();
+    for (const { cssRule, atRulePath } of emitted) {
+        const key = atRulePath.join('|');
+        const arr = grouped.get(key) ?? [];
+        arr.push(cssRule);
+        grouped.set(key, arr);
     }
 
-    for (const t of groups.pseudo) lines.push(ruleLine(t, mode));
-    lines.push('}');
+    const chunks: string[] = ['@layer vapor-utilities;', '', '@layer vapor-utilities {'];
+    for (const [pathKey, ruleList] of Array.from(grouped.entries())) {
+        if (!pathKey) {
+            for (const r of ruleList) chunks.push(`  ${r}`);
+        } else {
+            const paths = pathKey.split('|');
+            let indent = '  ';
+            for (const p of paths) {
+                chunks.push(`${indent}${p} {`);
+                indent += '  ';
+            }
+            for (const r of ruleList) chunks.push(`${indent}${r}`);
+            for (let i = 0; i < paths.length; i++) {
+                indent = indent.slice(2);
+                chunks.push(`${indent}}`);
+            }
+        }
+    }
+    chunks.push('}');
 
-    return lines.join('\n') + '\n';
+    return { cssText: chunks.join('\n'), classNamesPerRule, dynamicSlots };
 }

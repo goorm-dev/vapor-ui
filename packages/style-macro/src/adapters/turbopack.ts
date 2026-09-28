@@ -42,13 +42,12 @@ export default async function vaporStyleTurbopackLoader(
     const rawOpts = this.getOptions ? this.getOptions() : ({} as VaporStyleOptions);
     const opts = resolveOptions(rawOpts);
 
-    // Fast-path: no `styles` in source → nothing to do.
-    if (!source.includes('styles')) return source;
+    // Fast-path: no `css` in source → nothing to do.
+    if (!source.includes('css')) return source;
 
     const result = transform({
         source,
         filename: this.resourcePath,
-        manifest: opts.manifest,
         hash: opts.hash,
     });
 

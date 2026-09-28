@@ -1,4 +1,5 @@
 import { parseSync } from 'oxc-parser';
+import { describe, expect, it } from 'vitest';
 
 import type { AnyProp } from '~/model/types';
 
@@ -17,16 +18,18 @@ describe('walk', () => {
         expect(order).toEqual(['g', 'h', 'f']);
     });
 
-    it('exposes the parent node to visitors', () => {
+    it('exposes the parent chain to visitors (ancestor stack)', () => {
         const source = 'const x = { a: 1 };';
         const ast = parseSync('t.ts', source, { sourceType: 'module', lang: 'ts' });
-        const parents: string[] = [];
+        const parents: string[][] = [];
         walk(ast.program, {
-            Property: (_node: AnyProp, parent: AnyProp) => {
-                parents.push(parent.type);
+            Property: (_node: AnyProp, chain: AnyProp[]) => {
+                parents.push(chain.map((n) => n.type));
             },
         });
-        expect(parents).toEqual(['ObjectExpression']);
+        // Property 의 조상은 ObjectExpression → VariableDeclarator → VariableDeclaration → Program.
+        expect(parents[0][parents[0].length - 1]).toBe('ObjectExpression');
+        expect(parents[0]).toContain('Program');
     });
 
     it('ignores non-node values in arrays', () => {

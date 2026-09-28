@@ -1,30 +1,12 @@
-import type { ManifestShape } from '~/model/types';
-
 import vaporStyleTurbopackLoader, { type TurbopackLoaderContext } from './turbopack';
 import type { VaporStyleOptions } from './unplugin';
-
-const MANIFEST: ManifestShape = {
-    version: '1',
-    tokens: {
-        color: { primary: '--vapor-color-primary' },
-        space: { '400': '--vapor-size-space-400', '200': '--vapor-size-space-200' },
-        dimension: {},
-        borderRadius: {},
-        shadow: {},
-        typography: {},
-    },
-    propertyScopes: {
-        padding: 'space',
-        color: 'color',
-    },
-};
 
 const DATA_CSS_IMPORT_RE = /import "data:text\/css,([^"]+)";?/g;
 
 function mkCtx(resourcePath: string, opts: VaporStyleOptions = {}): TurbopackLoaderContext {
     return {
         resourcePath,
-        getOptions: () => ({ manifest: MANIFEST, ...opts }),
+        getOptions: () => opts,
     };
 }
 
@@ -33,18 +15,18 @@ async function run(ctx: TurbopackLoaderContext, source: string) {
 }
 
 describe('turbopack', () => {
-    it('returns source unmodified when there is no styles call (fast path)', async () => {
+    it('returns source unmodified when there is no css() call (fast path)', async () => {
         const ctx = mkCtx('/src/plain.tsx');
         const src = `export const x = 1;`;
         const out = await run(ctx, src);
         expect(out).toBe(src);
     });
 
-    it('prepends exactly one data:text/css import when styles is used', async () => {
+    it('prepends exactly one data:text/css import when css() is used', async () => {
         const ctx = mkCtx('/src/A.tsx');
         const src = [
-            `import { styles } from '@vapor-ui/core';`,
-            `const cls = styles({ padding: '$400' });`,
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const cls = css({ padding: '$space-400' });`,
         ].join('\n');
         const out = await run(ctx, src);
         const cssImports = Array.from(out.matchAll(DATA_CSS_IMPORT_RE));
@@ -54,8 +36,8 @@ describe('turbopack', () => {
     it('encodes CSS into the data URI so decoding recovers the payload', async () => {
         const ctx = mkCtx('/src/B.tsx');
         const src = [
-            `import { styles } from '@vapor-ui/core';`,
-            `const cls = styles({ padding: '$400', color: '$primary' });`,
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const cls = css({ padding: '$space-400', color: '$fg-primary' });`,
         ].join('\n');
         const out = await run(ctx, src);
         const match = out.match(/import "data:text\/css,([^"]+)";?/);
@@ -67,8 +49,8 @@ describe('turbopack', () => {
     it('percent-encodes reserved CSS characters (semicolons, commas, quotes) so the URI stays valid', async () => {
         const ctx = mkCtx('/src/C.tsx');
         const src = [
-            `import { styles } from '@vapor-ui/core';`,
-            `const cls = styles({ padding: '$400', color: '$primary' });`,
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const cls = css({ padding: '$space-400', color: '$fg-primary' });`,
         ].join('\n');
         const out = await run(ctx, src);
         const match = out.match(/import "data:text\/css,([^"]+)";?/);
@@ -84,8 +66,8 @@ describe('turbopack', () => {
     it('emits themeStylesImport BEFORE the data:text/css import when option is set', async () => {
         const ctx = mkCtx('/src/D.tsx', { themeStylesImport: '@vapor-ui/core/styles.css' });
         const src = [
-            `import { styles } from '@vapor-ui/core';`,
-            `const cls = styles({ padding: '$200' });`,
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const cls = css({ padding: '$space-200' });`,
         ].join('\n');
         const out = await run(ctx, src);
         const themeIdx = out.indexOf(`import "@vapor-ui/core/styles.css";`);
@@ -100,8 +82,8 @@ describe('turbopack', () => {
         });
         const src = [
             `import { ThemeProvider } from '@vapor-ui/core';`,
-            `import { styles } from '@vapor-ui/core';`,
-            `const cls = styles({ padding: '$400' });`,
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const cls = css({ padding: '$space-400' });`,
             `export function App() {`,
             `  return <ThemeProvider>x</ThemeProvider>;`,
             `}`,
@@ -119,9 +101,9 @@ describe('turbopack', () => {
     it('throws when the transform reports a build error', async () => {
         const ctx = mkCtx('/src/err.tsx');
         const src = [
-            `import { styles } from '@vapor-ui/core';`,
-            // $999 is not in manifest → validation error
-            `const cls = styles({ padding: '$999' });`,
+            `import { css } from '@vapor-ui/style-macro';`,
+            // $999 is not in the hardcoded token table → validation error
+            `const cls = css({ padding: '$999' });`,
         ].join('\n');
         await expect(run(ctx, src)).rejects.toThrow();
     });

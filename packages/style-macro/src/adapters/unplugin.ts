@@ -1,4 +1,3 @@
-import type { ManifestShape } from '@vapor-ui/tokens';
 import { createHash } from 'node:crypto';
 import { createUnplugin } from 'unplugin';
 
@@ -123,7 +122,6 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
             const result = transform({
                 source: code,
                 filename,
-                manifest: opts.manifest,
                 hash: opts.hash,
             });
 
@@ -165,11 +163,6 @@ export default createUnplugin<VaporStyleOptions | undefined>((rawOpts) => {
 });
 
 export interface VaporStyleOptions {
-    /**
-     * Token manifest object. Defaults to the export from `@vapor-ui/tokens`.
-     * Pass a custom manifest to use an alternative token set.
-     */
-    manifest?: ManifestShape;
     /**
      * Optional side-effect import injected at the top of every file that uses
      * the macro. Set to a module specifier to auto-load extra CSS (e.g. legacy

@@ -1,109 +1,64 @@
 import MagicString from 'magic-string';
 import { parseSync } from 'oxc-parser';
 
-import { type ClassNameMode, buildClassName } from '~/model/class-name';
-import { classifyCondition } from '~/model/condition';
-import { shortenProperty } from '~/model/property-shorthand';
-import { resolveToken } from '~/model/tokens';
-import type { AnyProp, BuildError, ConditionKey, ManifestShape, Tuple } from '~/model/types';
+import type { ClassNameMode } from '~/model/class-name';
+import type { AnyProp, BuildError, IRRule } from '~/model/types';
 
 import { emitCss } from './emit-css';
+import { type DynamicCallSite, type InjectContext, injectJsxStyleForCall } from './jsx-inject';
 import { walk } from './oxc-walk';
-import { type RawEntry, type RawValue, parseCallArgs } from './parse-call';
-import { validateInput } from './validate-input';
+import { parseCallArg } from './parse-call';
 
 // ────────────────────────────────────────────────────────────────
-// Public API (unchanged — adapters keep importing `transform`)
+// Public API
 // ────────────────────────────────────────────────────────────────
 
-/**
- * Outcome of a single-file transform pass.
- *
- * Adapters consume this to decide what to write back to the bundler:
- * rewritten JS (`code`), a virtual CSS asset (`css`), the set of class
- * names actually referenced (`classes`), and layer-order injection hints
- * (`hasProviderImport`, `errors`).
- */
 export interface TransformResult {
-    /** Rewritten source. Identical to the input when the file had no `styles()` calls or when `errors` is non-empty. */
     code: string;
-    /** Generated stylesheet, or `null` when the file produced no rules. */
     css: string | null;
-    /** All class names referenced by rewritten call sites in this file (deduped). Adapters use this to prune unused rules across the graph. */
     classes: string[];
-    /**
-     * `true` when the source file imports the layer-owning `ThemeProvider`
-     * from `@vapor-ui/core` (or `@vapor-ui/core/theme-provider`). Adapters
-     * use this to decide whether to inject the layer-order CSS import into
-     * this file's dependency graph.
-     */
     hasProviderImport: boolean;
-    /** Build-time diagnostics. Non-empty means the file was left untouched (`code === source`, `css === null`). */
     errors: BuildError[];
 }
 
-/**
- * Configuration for a single-file transform pass.
- *
- * `source` + `filename` + `manifest` are required; everything else has a
- * sensible default. The macro is hardcoded to the `styles` export from
- * `@vapor-ui/core`, and the layer-owning `ThemeProvider` is detected from
- * `@vapor-ui/core` and `@vapor-ui/core/theme-provider` — there are no
- * overrides.
- */
 export interface TransformOpts {
-    /** Raw file contents to transform. */
     source: string;
-    /** Path used for parser diagnostics and sourcemap lookup. Does not need to exist on disk. */
     filename: string;
-    /** Design-token manifest that resolves `$token` references to CSS variables. */
-    manifest: ManifestShape;
-    /**
-     * When `true`, emit hashed class names instead of readable ones.
-     * Reduces bundle size in production; keep off during development for
-     * DevTools legibility.
-     * @default false
-     */
     hash?: boolean;
-
-    // TODO(roadmap): additional build-time options under review — do not
-    // implement in this refactor, but keep them on the radar so the shape
-    // of TransformOpts stays consistent when they land:
-    //   - prefix?: string        // class-name prefix for multi-tenant / embed scenarios
-    //   - lightningcss?: boolean // pipe generated CSS through Lightning CSS (nesting, autoprefix)
-    //   - minify?: boolean       // minify emitted CSS
 }
 
-/**
- * Transform a single file's source, rewriting `styles({...})` calls into
- * plain class-name strings and returning the CSS those calls produced.
- *
- * Thin wrapper over {@link Transformer} — adapters should call this
- * instead of instantiating the class directly.
- */
 export function transform(opts: TransformOpts): TransformResult {
     return new Transformer(opts).run();
 }
 
 // ────────────────────────────────────────────────────────────────
-// Transformer — owns per-file state, threads it through methods
+// Transformer
 // ────────────────────────────────────────────────────────────────
 
-const IMPORT_SOURCE = '@vapor-ui/core';
-const IMPORT_NAME = 'styles';
+const IMPORT_SOURCE = '@vapor-ui/style-macro';
+const IMPORT_NAME = 'css';
 const PROVIDER_SOURCES = new Set(['@vapor-ui/core', '@vapor-ui/core/theme-provider']);
 const PROVIDER_NAME = 'ThemeProvider';
 
+interface CallRecord {
+    node: AnyProp;
+    parents: AnyProp[];
+    rules: IRRule[];
+    ternaries: ReturnType<typeof parseCallArg>['ternaries'];
+}
+
 class Transformer {
     readonly #mode: ClassNameMode;
-
-    readonly #tuples: Tuple[] = [];
+    readonly #allRules: IRRule[] = [];
     readonly #classes = new Set<string>();
     readonly #errors: BuildError[] = [];
+    readonly #callSites: CallRecord[] = [];
 
     #bindingName: string | null = null;
     #hasProviderImport = false;
     #ms: MagicString | null = null;
+    #needResolveToken = false;
+    #needMergeStyle = false;
 
     constructor(private readonly opts: TransformOpts) {
         this.#mode = opts.hash ? 'hashed' : 'readable';
@@ -111,41 +66,121 @@ class Transformer {
 
     run(): TransformResult {
         const { source, filename } = this.opts;
-
         if (this.#shouldSkip()) return emptyResult(source);
 
-        const parsed = parseSync(filename, source, {
-            sourceType: 'module',
-            lang: 'tsx',
-        });
-
+        const parsed = parseSync(filename, source, { sourceType: 'module', lang: 'tsx' });
         if (parsed.errors?.length) return emptyResult(source);
 
         const program = parsed.program;
-
         this.#scanImports(program);
         this.#ms = new MagicString(source);
 
         walk(program, { CallExpression: this.#onCallExpression });
 
-        return this.#finalize();
-    }
+        if (this.#errors.length) {
+            return {
+                code: source,
+                css: null,
+                classes: [],
+                hasProviderImport: this.#hasProviderImport,
+                errors: this.#errors,
+            };
+        }
 
-    // ── pipeline stages ────────────────────────────────────────
+        const emitted = emitCss(this.#allRules, this.#mode);
+        let cursor = 0;
+
+        const injectCtx: InjectContext = {
+            ms: this.#ms!,
+            mode: this.#mode === 'hashed' ? 'prod' : 'dev',
+            injectedElements: new Set<number>(),
+        };
+
+        for (const call of this.#callSites) {
+            const count = call.rules.length;
+            const classNames = emitted.classNamesPerRule.slice(cursor, cursor + count);
+            cursor += count;
+            for (const c of classNames) this.#classes.add(c);
+
+            const dynamicSlots = call.rules
+                .map((r, i) =>
+                    r.kind === 'dynamic'
+                        ? {
+                              slotId: r.slotId,
+                              property: r.property,
+                              sourceExpr: r.sourceExpr,
+                              idx: i,
+                          }
+                        : null,
+                )
+                .filter((x): x is NonNullable<typeof x> => x !== null);
+
+            if (dynamicSlots.length > 0) {
+                const site: DynamicCallSite = {
+                    call: call.node,
+                    parents: call.parents,
+                    slots: dynamicSlots.map(({ slotId, property, sourceExpr }) => ({
+                        slotId,
+                        property,
+                        sourceExpr,
+                    })),
+                };
+                const outcome = injectJsxStyleForCall(site, injectCtx);
+                if (!outcome.success) {
+                    if (outcome.error) this.#errors.push(outcome.error);
+                    continue;
+                }
+                this.#needResolveToken = true;
+                if (outcome.usedMergeStyle) this.#needMergeStyle = true;
+
+                // call site 자체는 정적 부분 + dynamic 부분 통합 className string 으로 대체.
+                const uniq = Array.from(new Set(classNames)).sort().join(' ');
+                this.#ms!.overwrite(call.node.start, call.node.end, jsSingleQuoted(uniq));
+                continue;
+            }
+
+            if (call.ternaries.length > 0) {
+                this.#rewriteCallWithTernaries(call.node, call.rules, classNames, call.ternaries);
+            } else {
+                const uniq = Array.from(new Set(classNames)).sort().join(' ');
+                this.#ms!.overwrite(call.node.start, call.node.end, jsSingleQuoted(uniq));
+            }
+        }
+
+        if (this.#errors.length) {
+            return {
+                code: source,
+                css: null,
+                classes: [],
+                hasProviderImport: this.#hasProviderImport,
+                errors: this.#errors,
+            };
+        }
+
+        // runtime helper import 자동 삽입 (필요 시).
+        if (this.#needResolveToken || this.#needMergeStyle) {
+            this.#ensureRuntimeImport(program);
+        }
+
+        return {
+            code: this.#ms!.toString(),
+            css: this.#allRules.length ? emitted.cssText : null,
+            classes: [...this.#classes],
+            hasProviderImport: this.#hasProviderImport,
+            errors: [],
+        };
+    }
 
     #shouldSkip(): boolean {
         const { source } = this.opts;
-
         const hasMacro = source.includes(IMPORT_NAME);
         const hasProvider = source.includes(PROVIDER_NAME);
-
         return !hasMacro && !hasProvider;
     }
 
     #scanImports(program: AnyProp): void {
         for (const stmt of program.body) {
             if (stmt.type !== 'ImportDeclaration') continue;
-
             this.#scanImportDeclaration(stmt);
         }
     }
@@ -154,183 +189,103 @@ class Transformer {
         const src: string = stmt.source.value;
         const matchesMacro = src === IMPORT_SOURCE;
         const matchesProvider = PROVIDER_SOURCES.has(src);
-
         if (!matchesMacro && !matchesProvider) return;
 
         for (const spec of stmt.specifiers) {
-            this.#scanImportSpecifier(spec, matchesMacro, matchesProvider);
+            if (spec.type !== 'ImportSpecifier' || spec.imported?.type !== 'Identifier') continue;
+            if (matchesMacro && spec.imported.name === IMPORT_NAME) {
+                this.#bindingName = spec.local.name;
+            }
+            if (matchesProvider && spec.imported.name === PROVIDER_NAME) {
+                this.#hasProviderImport = true;
+            }
         }
     }
 
-    #scanImportSpecifier(spec: AnyProp, matchesMacro: boolean, matchesProvider: boolean): void {
-        if (spec.type !== 'ImportSpecifier' || spec.imported.type !== 'Identifier') return;
-
-        if (matchesMacro && spec.imported.name === IMPORT_NAME) {
-            this.#bindingName = spec.local.name;
-        }
-        if (matchesProvider && spec.imported.name === PROVIDER_NAME) {
-            this.#hasProviderImport = true;
-        }
-    }
-
-    #onCallExpression = (node: AnyProp): void => {
+    #onCallExpression = (node: AnyProp, parents: AnyProp[]): void => {
         if (!this.#bindingName) return;
-        if (node.callee.type !== 'Identifier' || node.callee.name !== this.#bindingName) return;
+        if (node.callee?.type !== 'Identifier' || node.callee.name !== this.#bindingName) return;
 
-        const arg = node.arguments[0];
-        if (!arg || arg.type !== 'ObjectExpression') {
-            this.#pushInvalidShape(node);
+        const arg = node.arguments?.[0];
+        const parsed = parseCallArg(arg, this.opts.source);
+        this.#errors.push(...parsed.errors);
+        if (parsed.errors.length) return;
+
+        // parents 는 walker 가 관리하는 라이브 스택. 저장 시 복사.
+        this.#callSites.push({
+            node,
+            parents: parents.slice(),
+            rules: parsed.rules,
+            ternaries: parsed.ternaries,
+        });
+        this.#allRules.push(...parsed.rules);
+    };
+
+    #rewriteCallWithTernaries(
+        node: AnyProp,
+        rules: IRRule[],
+        classNames: string[],
+        ternaries: ReturnType<typeof parseCallArg>['ternaries'],
+    ): void {
+        const tern = ternaries[0];
+        const idxs: number[] = [];
+        for (let i = 0; i < rules.length && idxs.length < 2; i++) {
+            if (rules[i].kind === 'static' && rules[i].property === tern.property) idxs.push(i);
+        }
+        if (idxs.length !== 2) {
+            const uniq = Array.from(new Set(classNames)).sort().join(' ');
+            this.#ms!.overwrite(node.start, node.end, jsSingleQuoted(uniq));
+            return;
+        }
+        const [i1, i2] = idxs;
+        const conseqCls = classNames[i1];
+        const altCls = classNames[i2];
+        const testSrc = this.opts.source.slice(tern.testStart, tern.testEnd);
+
+        const rest = classNames.filter((_, i) => i !== i1 && i !== i2);
+        const restLit = jsSingleQuoted(rest.sort().join(' '));
+
+        const expr =
+            rest.length > 0
+                ? `(${restLit} + ' ' + (${testSrc} ? ${jsSingleQuoted(conseqCls)} : ${jsSingleQuoted(altCls)}))`
+                : `(${testSrc} ? ${jsSingleQuoted(conseqCls)} : ${jsSingleQuoted(altCls)})`;
+
+        this.#ms!.overwrite(node.start, node.end, expr);
+    }
+
+    #ensureRuntimeImport(program: AnyProp): void {
+        // 이미 있는 `@vapor-ui/style-macro` import 를 재사용하거나 새로 삽입.
+        const specifiers: string[] = [];
+        if (this.#needResolveToken) specifiers.push('_resolveToken');
+        if (this.#needMergeStyle) specifiers.push('_mergeStyle');
+
+        // 기존 declaration 찾아 없는 specifier 만 추가.
+        for (const stmt of program.body) {
+            if (stmt.type !== 'ImportDeclaration') continue;
+            if (stmt.source.value !== IMPORT_SOURCE) continue;
+
+            const existing = new Set<string>();
+            for (const spec of stmt.specifiers) {
+                if (spec.type === 'ImportSpecifier' && spec.imported?.type === 'Identifier') {
+                    existing.add(spec.imported.name);
+                }
+            }
+            const toAdd = specifiers.filter((n) => !existing.has(n));
+            if (toAdd.length === 0) return;
+
+            // 마지막 specifier 뒤에 삽입.
+            const last = stmt.specifiers[stmt.specifiers.length - 1];
+            const insertPos = last.end;
+            const inject = `, ${toAdd.map((n) => `${n}`).join(', ')}`;
+            this.#ms!.appendLeft(insertPos, inject);
             return;
         }
 
-        const entries = parseCallArgs(arg);
-        const inputErrors = validateInput(entries, this.opts.manifest);
-        this.#errors.push(...inputErrors);
-
-        if (inputErrors.length) return;
-
-        const replacement = this.#buildReplacement(entries);
-        this.#ms!.overwrite(node.start, node.end, replacement);
-    };
-
-    #pushInvalidShape(node: AnyProp): void {
-        this.#errors.push({
-            code: 'invalid-input-shape',
-            message: 'styles() requires an object literal argument.',
-            loc: {
-                line: node.loc?.start.line ?? 1,
-                column: node.loc?.start.column ?? 0,
-            },
-        });
-    }
-
-    // ── replacement construction ───────────────────────────────
-
-    #buildReplacement(entries: RawEntry[]): string {
-        const parts: EntryPart[] = [];
-
-        for (const entry of entries) {
-            if (entry.error) continue;
-
-            const part = this.#buildEntryPart(entry);
-            if (part) parts.push(part);
-        }
-
-        return renderParts(parts);
-    }
-
-    #buildEntryPart(entry: RawEntry): EntryPart | null {
-        if (entry.value?.kind === 'ternary') return this.#buildTernaryPart(entry);
-        if (entry.conditions) return this.#buildConditionsPart(entry);
-        if (entry.value) return this.#buildStaticPart(entry);
-
-        return null;
-    }
-
-    #buildTernaryPart(entry: RawEntry): EntryPart {
-        const val = entry.value!;
-        const testNode = val.testNode as AnyProp;
-        const testSrc = this.opts.source.slice(testNode.start, testNode.end);
-        const conseqTuple = this.#tupleFor(entry.property, { kind: 'default' }, val.consequent!);
-        const altTuple = this.#tupleFor(entry.property, { kind: 'default' }, val.alternate!);
-
-        this.#tuples.push(conseqTuple, altTuple);
-
-        const conseqCls = buildClassName(conseqTuple, this.#mode);
-        const altCls = buildClassName(altTuple, this.#mode);
-
-        this.#classes.add(conseqCls);
-        this.#classes.add(altCls);
-
-        return {
-            kind: 'ternary',
-            expr: `(${testSrc} ? ${jsSingleQuoted(conseqCls)} : ${jsSingleQuoted(altCls)})`,
-        };
-    }
-
-    #buildConditionsPart(entry: RawEntry): EntryPart | null {
-        const classNames: string[] = [];
-
-        for (const c of entry.conditions!) {
-            const cond = classifyCondition(c.conditionKey);
-            if ('error' in cond) continue;
-
-            const tup = this.#tupleFor(entry.property, cond, c.value);
-            this.#tuples.push(tup);
-
-            const cls = buildClassName(tup, this.#mode);
-            classNames.push(cls);
-            this.#classes.add(cls);
-        }
-
-        if (!classNames.length) return null;
-
-        return { kind: 'static', value: classNames.sort().join(' ') };
-    }
-
-    #buildStaticPart(entry: RawEntry): EntryPart {
-        const tup = this.#tupleFor(entry.property, { kind: 'default' }, entry.value!);
-        this.#tuples.push(tup);
-
-        const cls = buildClassName(tup, this.#mode);
-        this.#classes.add(cls);
-
-        return { kind: 'static', value: cls };
-    }
-
-    #tupleFor(property: string, cond: ConditionKey, raw: RawValue): Tuple {
-        const propertyShort = shortenProperty(property);
-
-        if (raw.kind === 'literal') {
-            return {
-                property,
-                propertyShort,
-                valueShort: valueShortFromLiteral(raw.literal!),
-                cssValue: String(raw.literal),
-                condition: cond,
-            };
-        }
-
-        const res = resolveToken(this.opts.manifest, property, raw.token!);
-        if ('error' in res) throw new Error('validateInput should have caught this');
-
-        return {
-            property,
-            propertyShort,
-            valueShort: raw.token!,
-            cssValue: `var(${res.cssVar})`,
-            condition: cond,
-        };
-    }
-
-    // ── output ─────────────────────────────────────────────────
-
-    #finalize(): TransformResult {
-        if (this.#errors.length) {
-            return {
-                code: this.opts.source,
-                css: null,
-                classes: [],
-                hasProviderImport: this.#hasProviderImport,
-                errors: this.#errors,
-            };
-        }
-
-        return {
-            code: this.#ms!.toString(),
-            css: this.#tuples.length ? emitCss(this.#tuples, this.#mode) : null,
-            classes: [...this.#classes],
-            hasProviderImport: this.#hasProviderImport,
-            errors: [],
-        };
+        // 새 import 문 삽입.
+        const inject = `import { ${specifiers.join(', ')} } from '${IMPORT_SOURCE}';\n`;
+        this.#ms!.appendLeft(0, inject);
     }
 }
-
-// ────────────────────────────────────────────────────────────────
-// Module-level pure utils — no shared state, stay as functions
-// ────────────────────────────────────────────────────────────────
-
-type EntryPart = { kind: 'static'; value: string } | { kind: 'ternary'; expr: string };
 
 function jsSingleQuoted(value: string): string {
     return (
@@ -344,32 +299,6 @@ function jsSingleQuoted(value: string): string {
     );
 }
 
-function valueShortFromLiteral(literal: string | number): string {
-    return String(literal)
-        .replace(/[^a-z0-9]+/gi, '-')
-        .replace(/^-|-$/g, '');
-}
-
 function emptyResult(source: string): TransformResult {
     return { code: source, css: null, classes: [], hasProviderImport: false, errors: [] };
-}
-
-function renderParts(parts: EntryPart[]): string {
-    if (parts.length === 1) {
-        const p = parts[0];
-        return p.kind === 'static' ? jsSingleQuoted(p.value) : p.expr;
-    }
-
-    const allStatic = parts.every((p) => p.kind === 'static');
-    if (allStatic) {
-        const tokens = parts
-            .flatMap((p) => (p as { kind: 'static'; value: string }).value.split(/\s+/))
-            .filter(Boolean)
-            .sort();
-
-        return jsSingleQuoted(tokens.join(' '));
-    }
-
-    const frags = parts.map((p) => (p.kind === 'static' ? jsSingleQuoted(p.value) : p.expr));
-    return `[${frags.join(', ')}].filter(Boolean).join(' ')`;
 }

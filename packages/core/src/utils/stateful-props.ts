@@ -4,9 +4,7 @@ import { mergeProps } from '@base-ui/react';
 import clsx from 'clsx';
 
 export type StyleParams<State> =
-    | CSSProperties
-    | ((state: State) => CSSProperties | undefined)
-    | undefined;
+    CSSProperties | ((state: State) => CSSProperties | undefined) | undefined;
 
 export const resolveStyle = <State>(style: StyleParams<State>, state: State) => {
     if (typeof style === 'function') {

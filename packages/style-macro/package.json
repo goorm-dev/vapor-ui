@@ -1,7 +1,7 @@
 {
     "name": "@vapor-ui/style-macro",
     "version": "0.1.0",
-    "description": "Build-time macro powering @vapor-ui/core's styles function.",
+    "description": "Build-time atomic CSS-in-JS macro. Public API: `css()` from @vapor-ui/style-macro.",
     "license": "MIT",
     "type": "module",
     "sideEffects": false,
@@ -35,7 +35,6 @@
     },
     "dependencies": {
         "@babel/code-frame": "^7.29.7",
-        "@vapor-ui/tokens": "workspace:*",
         "csstype": "^3.2.3",
         "magic-string": "^0.30.21",
         "oxc-parser": "^0.138.0",

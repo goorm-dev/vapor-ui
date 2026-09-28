@@ -1,22 +1,6 @@
-import type { AnyProp, ManifestShape } from '~/model/types';
+import type { AnyProp } from '~/model/types';
 
 import plugin, { type VaporStyleOptions } from './unplugin';
-
-const MANIFEST: ManifestShape = {
-    version: '1',
-    tokens: {
-        color: { primary: '--vapor-color-primary' },
-        space: { '400': '--vapor-size-space-400', '200': '--vapor-size-space-200' },
-        dimension: {},
-        borderRadius: {},
-        shadow: {},
-        typography: {},
-    },
-    propertyScopes: {
-        padding: 'space',
-        color: 'color',
-    },
-};
 
 function makeCtx() {
     return {
@@ -33,7 +17,7 @@ function makeCtx() {
 
 function getHooks(opts: VaporStyleOptions = {}): AnyProp {
     return (plugin.raw as AnyProp)(
-        { manifest: MANIFEST, ...opts },
+        opts,
         { framework: 'rollup', versions: {} },
     );
 }
@@ -104,27 +88,27 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
             expect(out).toBeNull();
         });
 
-        it('prepends exactly one virtual CSS import per styles-bearing file', () => {
+        it('prepends exactly one virtual CSS import per css()-bearing file', () => {
             const hooks = getHooks();
             const ctx = makeCtx();
             const src = [
-                `import { styles } from '@vapor-ui/core';`,
-                `const cls = styles({ padding: '$400' });`,
+                `import { css } from '@vapor-ui/style-macro';`,
+                `const cls = css({ padding: '$space-400' });`,
             ].join('\n');
             const out = callHook(hooks.transform, ctx, src, '/src/A.tsx');
             expect(out).not.toBeNull();
             const cssImports = out.code.match(/import\s+"~vapor-style\/[a-f0-9]+\.css";?/g) ?? [];
             expect(cssImports.length).toBe(1);
             // Original named import must survive
-            expect(out.code).toContain(`import { styles } from '@vapor-ui/core';`);
+            expect(out.code).toContain(`import { css } from '@vapor-ui/style-macro';`);
         });
 
         it('emits a themeStylesImport before the virtual CSS import when option set', () => {
             const hooks = getHooks({ themeStylesImport: '@vapor-ui/core/styles.css' });
             const ctx = makeCtx();
             const src = [
-                `import { styles } from '@vapor-ui/core';`,
-                `const cls = styles({ padding: '$200' });`,
+                `import { css } from '@vapor-ui/style-macro';`,
+                `const cls = css({ padding: '$space-200' });`,
             ].join('\n');
             const out = callHook(hooks.transform, ctx, src, '/src/B.tsx');
             expect(out.code).toContain(`import "@vapor-ui/core/styles.css";`);
@@ -138,9 +122,9 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
             const hooks = getHooks();
             const ctx = makeCtx();
             const src = [
-                `import { styles } from '@vapor-ui/core';`,
-                // '$999' is not in the manifest → validation error
-                `const cls = styles({ padding: '$999' });`,
+                `import { css } from '@vapor-ui/style-macro';`,
+                // '$999' is not in the hardcoded token table → validation error
+                `const cls = css({ padding: '$999' });`,
             ].join('\n');
             expect(() => callHook(hooks.transform, ctx, src, '/src/err.tsx')).toThrow();
             expect(ctx.error).toHaveBeenCalledTimes(1);
@@ -152,8 +136,8 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
             const hooks = getHooks();
             const ctx = makeCtx();
             const src = [
-                `import { styles } from '@vapor-ui/core';`,
-                `const cls = styles({ padding: '$400', color: '$primary' });`,
+                `import { css } from '@vapor-ui/style-macro';`,
+                `const cls = css({ padding: '$space-400', color: '$fg-primary' });`,
             ].join('\n');
             const out = callHook(hooks.transform, ctx, src, '/src/C.tsx');
             const match = out.code.match(/import "(~vapor-style\/[a-f0-9]+\.css)";?/);
@@ -186,8 +170,8 @@ describe('unplugin — layer order (plugin option)', () => {
         const ctx = makeCtx();
         const src = [
             `import { ThemeProvider } from '@vapor-ui/core';`,
-            `import { styles } from '@vapor-ui/core';`,
-            `const cls = styles({ padding: '$400' });`,
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const cls = css({ padding: '$space-400' });`,
             `export function App() {`,
             `  return <ThemeProvider>x</ThemeProvider>;`,
             `}`,
@@ -212,16 +196,16 @@ describe('unplugin — layer order (plugin option)', () => {
         expect(layerImports.length).toBe(1);
     });
 
-    it('does not prepend layer CSS into files that only use styles() (no Provider import)', () => {
+    it('does not prepend layer CSS into files that only use css() (no Provider import)', () => {
         const hooks = getHooks();
         const ctx = makeCtx();
         const src = [
-            `import { styles } from '@vapor-ui/core';`,
-            `const cls = styles({ padding: '$400' });`,
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const cls = css({ padding: '$space-400' });`,
         ].join('\n');
         const out = callHook(hooks.transform, ctx, src, '/src/plain.tsx');
         const cssImports = out.code.match(/import "~vapor-style\/[a-f0-9]+\.css";?/g) ?? [];
-        // only the styles CSS — no layer-order import
+        // only the css() CSS — no layer-order import
         expect(cssImports.length).toBe(1);
     });
 });

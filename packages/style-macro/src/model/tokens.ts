@@ -1,33 +1,28 @@
-import type { ManifestShape, TokenScope } from './types';
-
-const SCOPES: TokenScope[] = [
-    'color',
-    'space',
-    'dimension',
-    'borderRadius',
-    'shadow',
-    'typography',
-];
+import { propertyToTokenAxis, tokens } from '~/tokens';
 
 export type ResolveResult =
     | { cssVar: string }
     | { error: 'unknown-token' | 'scope-mismatch' | 'unknown-property' };
 
-export function resolveToken(
-    manifest: ManifestShape,
-    property: string,
-    tokenName: string,
-): ResolveResult {
-    const scope = manifest.propertyScopes[property];
-    if (!scope) return { error: 'unknown-property' };
-    const bucket = manifest.tokens[scope];
-    const cssVar = bucket[tokenName];
+/**
+ * `$token` 참조를 CSS var 표현으로 해석. 소스는 `~/tokens` 하드코딩 맵.
+ * property는 camelCase 기준.
+ */
+export function resolveToken(property: string, tokenName: string): ResolveResult {
+    const axis = (propertyToTokenAxis as Record<string, string>)[property];
+    if (!axis) return { error: 'unknown-property' };
+
+    const bucket = (tokens as Record<string, Record<string, string>>)[axis];
+    const cssVar = bucket?.[tokenName];
+
     if (!cssVar) {
-        for (const otherScope of SCOPES) {
-            if (otherScope === scope) continue;
-            if (manifest.tokens[otherScope][tokenName]) return { error: 'scope-mismatch' };
+        for (const other of Object.keys(tokens)) {
+            if (other === axis) continue;
+            const otherBucket = (tokens as Record<string, Record<string, string>>)[other];
+            if (otherBucket[tokenName]) return { error: 'scope-mismatch' };
         }
         return { error: 'unknown-token' };
     }
+
     return { cssVar };
 }

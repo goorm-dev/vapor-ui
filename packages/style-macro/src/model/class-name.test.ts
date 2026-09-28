@@ -1,81 +1,101 @@
-import { buildClassName } from './class-name';
+import { describe, expect, it } from 'vitest';
+
+import { buildClassName, generateArbitraryValueSelector } from './class-name';
 import type { Tuple } from './types';
 
-const t = (overrides: Partial<Tuple>): Tuple => ({
+const t = (overrides: Partial<Tuple> = {}): Tuple => ({
     property: 'padding',
-    propertyShort: 'p',
-    valueShort: '400',
-    cssValue: 'var(--vapor-size-space-400)',
-    condition: { kind: 'default' },
+    value: 'var(--vapor-size-space-400)',
+    rawValue: '$space-400',
+    selectorContext: 'base',
     ...overrides,
 });
 
-describe('buildClassName', () => {
-    it('default: _<short>-<value>', () => {
-        expect(buildClassName(t({}))).toBe('_p-400');
+describe('buildClassName — readable (dev)', () => {
+    it('shape: vapor_<propSlug>_<valueSlug>_<tail>', () => {
+        expect(buildClassName(t())).toMatch(/^vapor_padding_space-400_[0-9a-zA-Z_]+$/);
     });
-    it('default: bg primary', () => {
-        expect(
-            buildClassName(
-                t({ property: 'backgroundColor', propertyShort: 'bg', valueShort: 'primary' }),
-            ),
-        ).toBe('_bg-primary');
+
+    it('same tuple → same class', () => {
+        expect(buildClassName(t())).toBe(buildClassName(t()));
     });
-    it('named BP: _sm-<short>-<value>', () => {
-        expect(
-            buildClassName(t({ valueShort: '100', condition: { kind: 'named-bp', name: 'sm' } })),
-        ).toBe('_sm-p-100');
-    });
-    it('pseudo: strip leading underscore', () => {
-        expect(
-            buildClassName(
-                t({
-                    property: 'backgroundColor',
-                    propertyShort: 'bg',
-                    valueShort: 'primary-hover',
-                    condition: { kind: 'pseudo', name: '_hover' },
-                }),
-            ),
-        ).toBe('_hover-bg-primary-hover');
-    });
-    it('raw media: _mq<hash6>-<short>-<value>', () => {
+
+    it('token-shaped rawValue strips leading $', () => {
         const cls = buildClassName(
             t({
-                valueShort: '400',
-                condition: { kind: 'raw-media', query: '(min-width: 2560px)', hash: 'abcdef12' },
+                property: 'background-color',
+                value: 'var(--vapor-color-foreground-primary)',
+                rawValue: '$fg-primary',
             }),
         );
-        expect(cls).toBe('_mqabcdef-p-400');
+        expect(cls).toMatch(/^vapor_background-color_fg-primary_[0-9a-zA-Z_]+$/);
+    });
+
+    it('distinct selectorContext → distinct tail', () => {
+        const def = buildClassName(t());
+        const hover = buildClassName(t({ selectorContext: ':hover' }));
+        expect(def).not.toBe(hover);
+    });
+
+    it('distinct cssValue → distinct tail', () => {
+        const a = buildClassName(t({ value: 'var(--a)' }));
+        const b = buildClassName(t({ value: 'var(--b)' }));
+        expect(a).not.toBe(b);
+    });
+
+    it('slug escapes special chars (# → x, . → d, etc.)', () => {
+        const cls = buildClassName(t({ property: 'color', value: '#ff0000', rawValue: '#ff0000' }));
+        expect(cls).toMatch(/^vapor_color_xff0000_[0-9a-zA-Z_]+$/);
     });
 });
 
-describe('buildClassName (hashed)', () => {
-    it('produces _<8-char base36 slug>', () => {
-        const cls = buildClassName(t({}), 'hashed');
-        expect(cls).toMatch(/^_[0-9a-z]{8}$/);
+describe('buildClassName — hashed (prod)', () => {
+    it('shape: _<propHash><valueHash> (base62)', () => {
+        expect(buildClassName(t(), 'hashed')).toMatch(/^_[0-9a-zA-Z_]+$/);
     });
-    it('stable: same tuple → same class', () => {
-        const a = buildClassName(t({}), 'hashed');
-        const b = buildClassName(t({}), 'hashed');
-        expect(a).toBe(b);
+
+    it('same tuple → same class', () => {
+        expect(buildClassName(t(), 'hashed')).toBe(buildClassName(t(), 'hashed'));
     });
-    it('distinct condition → distinct class', () => {
-        const def = buildClassName(t({}), 'hashed');
-        const sm = buildClassName(t({ condition: { kind: 'named-bp', name: 'sm' } }), 'hashed');
-        const hover = buildClassName(
-            t({ condition: { kind: 'pseudo', name: '_hover' } }),
-            'hashed',
-        );
-        expect(new Set([def, sm, hover]).size).toBe(3);
-    });
-    it('distinct cssValue → distinct class', () => {
-        const a = buildClassName(t({ cssValue: 'var(--a)' }), 'hashed');
-        const b = buildClassName(t({ cssValue: 'var(--b)' }), 'hashed');
-        expect(a).not.toBe(b);
-    });
+
     it('distinct property → distinct class', () => {
         const a = buildClassName(t({ property: 'padding' }), 'hashed');
         const b = buildClassName(t({ property: 'margin' }), 'hashed');
         expect(a).not.toBe(b);
+    });
+
+    it('distinct selectorContext → distinct class', () => {
+        const def = buildClassName(t(), 'hashed');
+        const hover = buildClassName(t({ selectorContext: ':hover' }), 'hashed');
+        const media = buildClassName(
+            t({ selectorContext: '@media(min-width:768px)' }),
+            'hashed',
+        );
+        expect(new Set([def, hover, media]).size).toBe(3);
+    });
+
+    it('distinct cssValue → distinct class', () => {
+        const a = buildClassName(t({ value: 'var(--a)' }), 'hashed');
+        const b = buildClassName(t({ value: 'var(--b)' }), 'hashed');
+        expect(a).not.toBe(b);
+    });
+});
+
+describe('generateArbitraryValueSelector', () => {
+    it('deterministic', () => {
+        expect(generateArbitraryValueSelector('foo')).toBe(generateArbitraryValueSelector('foo'));
+    });
+    it('base62 output only', () => {
+        expect(generateArbitraryValueSelector('padding|base')).toMatch(/^[0-9a-zA-Z_]+$/);
+    });
+    it('atStart=true escapes leading digit', () => {
+        for (let i = 0; i < 200; i++) {
+            const s = `input-${i}`;
+            const bare = generateArbitraryValueSelector(s);
+            if (/^[0-9]/.test(bare)) {
+                expect(generateArbitraryValueSelector(s, true)).toMatch(/^_/);
+                return;
+            }
+        }
     });
 });
