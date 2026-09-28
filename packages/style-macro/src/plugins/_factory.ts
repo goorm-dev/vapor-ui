@@ -4,7 +4,7 @@ import { createUnplugin } from 'unplugin';
 import { formatBuildError } from '~/compilers/code-frame';
 import { transform } from '~/compilers/transform';
 import { type ColorSchemeScriptOpts, buildColorSchemeScript } from '~/helpers/fouc-script';
-import { emitLayerOrderCss, resolveOptions } from '~/plugins/_options';
+import { resolveOptions } from '~/plugins/_options';
 
 interface FileRecord {
     css: string;
@@ -23,11 +23,6 @@ const records = new Map<string, FileRecord>();
 
 export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
     const opts = resolveOptions(rawOpts ?? {});
-    const layerOrderCss = emitLayerOrderCss(opts.layerOrder);
-    const layerOrderHash = hashContent(layerOrderCss);
-    records.set(layerOrderHash, { css: layerOrderCss, classes: [] });
-
-    let injectedViaHtml = false;
 
     return {
         name: 'vapor-style-macro',
@@ -35,18 +30,12 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
 
         vite: {
             transformIndexHtml(html) {
-                injectedViaHtml = true;
-                const layerTag = `<style>@layer ${opts.layerOrder.join(', ')};</style>`;
-
-                const scriptTag = opts.injectColorScheme
-                    ? `<script>${buildColorSchemeScript(opts.injectColorScheme)}</script>`
-                    : '';
-
-                const injection = scriptTag + layerTag;
+                if (!opts.injectColorScheme) return html;
+                const scriptTag = `<script>${buildColorSchemeScript(opts.injectColorScheme)}</script>`;
                 if (/(<head[^>]*>)/i.test(html)) {
-                    return html.replace(/(<head[^>]*>)/i, `$1${injection}`);
+                    return html.replace(/(<head[^>]*>)/i, `$1${scriptTag}`);
                 }
-                return `${injection}${html}`;
+                return `${scriptTag}${html}`;
             },
         },
 
@@ -102,14 +91,6 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
 
             const prependLines: string[] = [];
 
-            // Non-Vite adapters (webpack/turbopack) have no HTML injection
-            // hook. Piggyback on every file that imports the Provider so
-            // the layer-order declaration lands in the bundled CSS.
-            // Content-hashed virtual module → bundler dedupes across chunks.
-            if (result.hasProviderImport && !injectedViaHtml) {
-                prependLines.push(`import "${PUBLIC_PREFIX}${layerOrderHash}${VIRTUAL_SUFFIX}";`);
-            }
-
             if (result.css) {
                 const hash = hashContent(result.css);
                 records.set(hash, { css: result.css, classes: result.classes });
@@ -133,6 +114,5 @@ export interface VaporPluginOptions {
     themeStylesImport?: string | false;
     include?: (id: string) => boolean;
     hash?: boolean;
-    layerOrder?: string[];
     injectColorScheme?: boolean | ColorSchemeScriptOpts;
 }

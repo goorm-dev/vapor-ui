@@ -35,9 +35,7 @@ function detectTurbopack(): boolean {
  *     // next.config.ts
  *     import { vaporNextPlugin } from '@vapor-ui/style-macro/next';
  *
- *     const withVapor = vaporNextPlugin({
- *         layerOrder: ['vapor-theme', 'vapor-reset', 'vapor-components', 'vapor-utilities'],
- *     });
+ *     const withVapor = vaporNextPlugin();
  *
  *     const nextConfig: NextConfig = { ... };
  *     export default withVapor(nextConfig);
@@ -70,7 +68,6 @@ export function vaporNextPlugin(
             const rawLoaderOptions: Record<string, unknown> = {
                 hash: unpluginOpts.hash,
                 themeStylesImport: unpluginOpts.themeStylesImport,
-                layerOrder: unpluginOpts.layerOrder,
             };
 
             const loaderOptions = Object.fromEntries(

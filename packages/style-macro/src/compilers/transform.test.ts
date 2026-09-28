@@ -143,20 +143,3 @@ describe('transform — dynamic slots', () => {
     });
 });
 
-describe('transform — provider detection', () => {
-    it('sets hasProviderImport when ThemeProvider is imported from @vapor-ui/core', () => {
-        const source = [
-            `import { ThemeProvider } from '@vapor-ui/core';`,
-            `import { css } from '@vapor-ui/style-macro';`,
-            `const cls = css({ padding: '$space-100' });`,
-        ].join('\n');
-        const out = transform({ source, filename: '/M.tsx' });
-        expect(out.hasProviderImport).toBe(true);
-    });
-
-    it('does not set hasProviderImport when only css() is used', () => {
-        const source = src(`const cls = css({ padding: '$space-100' });`);
-        const out = transform({ source, filename: '/N.tsx' });
-        expect(out.hasProviderImport).toBe(false);
-    });
-});

@@ -2,7 +2,7 @@ import { formatBuildError } from '~/compilers/code-frame';
 import { transform } from '~/compilers/transform';
 
 import type { VaporPluginOptions } from './_factory';
-import { emitLayerOrderCss, resolveOptions } from './_options';
+import { resolveOptions } from './_options';
 
 export interface TurbopackLoaderContext {
     resourcePath: string;
@@ -43,10 +43,6 @@ export default async function vaporStyleTurbopackLoader(
     }
 
     const prepended: string[] = [];
-
-    if (result.hasProviderImport) {
-        prepended.push(dataCssImport(emitLayerOrderCss(opts.layerOrder)));
-    }
 
     if (result.css) {
         if (opts.themeStylesImport) {

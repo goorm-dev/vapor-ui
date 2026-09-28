@@ -159,78 +159,26 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
     });
 });
 
-describe('unplugin — layer order (plugin option)', () => {
-    it('prepends a layer-order CSS import into files that import the Provider', () => {
-        const hooks = getHooks({
-            layerOrder: ['vapor-theme', 'vapor-reset', 'vapor-components'],
-        });
-        const ctx = makeCtx();
-        const src = [
-            `import { ThemeProvider } from '@vapor-ui/core';`,
-            `import { css } from '@vapor-ui/style-macro';`,
-            `const cls = css({ padding: '$space-400' });`,
-            `export function App() {`,
-            `  return <ThemeProvider>x</ThemeProvider>;`,
-            `}`,
-        ].join('\n');
-        const out = callHook(hooks.transform, ctx, src, '/src/D.tsx');
-        expect(out).not.toBeNull();
-        const cssImports = out.code.match(/import "~vapor-style\/[a-f0-9]+\.css";?/g) ?? [];
-        // one for layer-order CSS, one for the emitted styles CSS
-        expect(cssImports.length).toBe(2);
-
-        // The layer-order virtual id should resolve to the exact `@layer …;`
-        // declaration built from the plugin option (in order).
-        const layerImports = cssImports.filter((s: string) => {
-            const m = s.match(/(~vapor-style\/[a-f0-9]+\.css)/);
-            if (!m) return false;
-            const css = callHook(hooks.load, ctx, m[1]);
-            return (
-                typeof css === 'string' &&
-                css.trim() === '@layer vapor-theme, vapor-reset, vapor-components;'
-            );
-        });
-        expect(layerImports.length).toBe(1);
-    });
-
-    it('does not prepend layer CSS into files that only use css() (no Provider import)', () => {
-        const hooks = getHooks();
-        const ctx = makeCtx();
-        const src = [
-            `import { css } from '@vapor-ui/style-macro';`,
-            `const cls = css({ padding: '$space-400' });`,
-        ].join('\n');
-        const out = callHook(hooks.transform, ctx, src, '/src/plain.tsx');
-        const cssImports = out.code.match(/import "~vapor-style\/[a-f0-9]+\.css";?/g) ?? [];
-        // only the css() CSS — no layer-order import
-        expect(cssImports.length).toBe(1);
-    });
-});
-
-describe('unplugin — vite.transformIndexHtml (FOUC guard + layer order)', () => {
+describe('unplugin — vite.transformIndexHtml (FOUC guard)', () => {
     function getVite(opts: VaporPluginOptions = {}): AnyProp {
         const hooks = getHooks(opts);
         // vite adapter object exposes vite-specific hooks under `.vite`.
         return hooks.vite;
     }
 
-    it('injects only <style> layer-order tag when injectColorScheme is not set', () => {
-        const vite = getVite();
+    it('returns html unchanged when injectColorScheme is disabled', () => {
+        const vite = getVite({ injectColorScheme: false });
         const html = '<!doctype html><html><head></head><body></body></html>';
         const out = vite.transformIndexHtml.call(makeCtx(), html);
-        expect(out).toContain('<style>@layer ');
-        expect(out).not.toContain('<script>');
+        expect(out).toBe(html);
     });
 
-    it('injects both <script> FOUC guard and <style> layer-order when injectColorScheme=true', () => {
+    it('injects <script> FOUC guard when injectColorScheme=true', () => {
         const vite = getVite({ injectColorScheme: true });
         const html = '<!doctype html><html><head></head><body></body></html>';
         const out = vite.transformIndexHtml.call(makeCtx(), html);
         expect(out).toContain('<script>');
         expect(out).toContain('data-vapor-theme');
-        expect(out).toContain('<style>@layer ');
-        // <script> must sit BEFORE <style> so attribute is pinned before layer parsing.
-        expect(out.indexOf('<script>')).toBeLessThan(out.indexOf('<style>'));
     });
 
     it('honors custom ColorScheme opts', () => {

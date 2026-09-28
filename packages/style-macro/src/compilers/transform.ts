@@ -17,7 +17,6 @@ export interface TransformResult {
     code: string;
     css: string | null;
     classes: string[];
-    hasProviderImport: boolean;
     errors: BuildError[];
 }
 
@@ -37,8 +36,6 @@ export function transform(opts: TransformOpts): TransformResult {
 
 const IMPORT_SOURCE = '@vapor-ui/style-macro';
 const IMPORT_NAME = 'css';
-const PROVIDER_SOURCES = new Set(['@vapor-ui/core', '@vapor-ui/core/theme-provider']);
-const PROVIDER_NAME = 'ThemeProvider';
 
 interface CallRecord {
     node: AnyProp;
@@ -55,7 +52,6 @@ class Transformer {
     readonly #callSites: CallRecord[] = [];
 
     #bindingName: string | null = null;
-    #hasProviderImport = false;
     #ms: MagicString | null = null;
     #needResolveToken = false;
     #needMergeStyle = false;
@@ -82,7 +78,6 @@ class Transformer {
                 code: source,
                 css: null,
                 classes: [],
-                hasProviderImport: this.#hasProviderImport,
                 errors: this.#errors,
             };
         }
@@ -152,7 +147,6 @@ class Transformer {
                 code: source,
                 css: null,
                 classes: [],
-                hasProviderImport: this.#hasProviderImport,
                 errors: this.#errors,
             };
         }
@@ -166,16 +160,13 @@ class Transformer {
             code: this.#ms!.toString(),
             css: this.#allRules.length ? emitted.cssText : null,
             classes: [...this.#classes],
-            hasProviderImport: this.#hasProviderImport,
             errors: [],
         };
     }
 
     #shouldSkip(): boolean {
         const { source } = this.opts;
-        const hasMacro = source.includes(IMPORT_NAME);
-        const hasProvider = source.includes(PROVIDER_NAME);
-        return !hasMacro && !hasProvider;
+        return !source.includes(IMPORT_NAME);
     }
 
     #scanImports(program: AnyProp): void {
@@ -187,17 +178,12 @@ class Transformer {
 
     #scanImportDeclaration(stmt: AnyProp): void {
         const src: string = stmt.source.value;
-        const matchesMacro = src === IMPORT_SOURCE;
-        const matchesProvider = PROVIDER_SOURCES.has(src);
-        if (!matchesMacro && !matchesProvider) return;
+        if (src !== IMPORT_SOURCE) return;
 
         for (const spec of stmt.specifiers) {
             if (spec.type !== 'ImportSpecifier' || spec.imported?.type !== 'Identifier') continue;
-            if (matchesMacro && spec.imported.name === IMPORT_NAME) {
+            if (spec.imported.name === IMPORT_NAME) {
                 this.#bindingName = spec.local.name;
-            }
-            if (matchesProvider && spec.imported.name === PROVIDER_NAME) {
-                this.#hasProviderImport = true;
             }
         }
     }
@@ -300,5 +286,5 @@ function jsSingleQuoted(value: string): string {
 }
 
 function emptyResult(source: string): TransformResult {
-    return { code: source, css: null, classes: [], hasProviderImport: false, errors: [] };
+    return { code: source, css: null, classes: [], errors: [] };
 }

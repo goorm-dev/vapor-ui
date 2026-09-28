@@ -76,28 +76,6 @@ describe('turbopack', () => {
         expect(cssIdx).toBeGreaterThan(themeIdx);
     });
 
-    it('emits a separate layer-order data-URI import (from plugin option) when the file imports the Provider', async () => {
-        const ctx = mkCtx('/src/E.tsx', {
-            layerOrder: ['vapor-theme', 'vapor-reset'],
-        });
-        const src = [
-            `import { ThemeProvider } from '@vapor-ui/core';`,
-            `import { css } from '@vapor-ui/style-macro';`,
-            `const cls = css({ padding: '$space-400' });`,
-            `export function App() {`,
-            `  return <ThemeProvider>x</ThemeProvider>;`,
-            `}`,
-        ].join('\n');
-        const out = await run(ctx, src);
-        const matches = Array.from(out.matchAll(DATA_CSS_IMPORT_RE));
-        expect(matches.length).toBe(2);
-        const payloads = matches.map((m) => decodeURIComponent((m as RegExpMatchArray)[1]!));
-        const layerCss = payloads.find((c) => /^@layer [^{]+;\s*$/.test(c));
-        expect(layerCss).toBeTruthy();
-        expect(layerCss).toContain('vapor-theme');
-        expect(layerCss).toContain('vapor-reset');
-    });
-
     it('throws when the transform reports a build error', async () => {
         const ctx = mkCtx('/src/err.tsx');
         const src = [
