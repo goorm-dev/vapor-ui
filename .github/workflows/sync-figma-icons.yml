@@ -36,6 +36,7 @@ jobs:
             has_changes: ${{ steps.pr.outputs.has_changes }}
             pr_number: ${{ steps.pr.outputs.number }}
             changed_icons: ${{ steps.changed.outputs.icons }}
+            sha: ${{ steps.pr.outputs.sha }}
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
@@ -109,6 +110,8 @@ jobs:
 
                   Co-Authored-By: GitHub Action <action@github.com>"
                   git push --force -u origin "$BRANCH_NAME"
+                  # The parity job renders this exact commit, not whatever the branch holds later.
+                  echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
                   # Reuse the open PR if there is one; only its body needs refreshing
                   EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
@@ -144,6 +147,7 @@ jobs:
         with:
             pr-number: ${{ needs.sync-figma-icons.outputs.pr_number }}
             changed-icons: ${{ needs.sync-figma-icons.outputs.changed_icons }}
+            ref: ${{ needs.sync-figma-icons.outputs.sha }}
 
     notify:
         name: Notify Slack
