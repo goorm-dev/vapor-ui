@@ -21,6 +21,10 @@ on:
                 description: 'Comma-separated icons to draw on the report even when they pass.'
                 type: string
                 required: false
+            ref:
+                description: 'Commit to render. Empty means the triggering ref.'
+                type: string
+                required: false
     pull_request:
         paths:
             - packages/icons/src/**
@@ -52,6 +56,10 @@ jobs:
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
+              # A called workflow checks out its caller's ref — main for the weekly sync, which
+              # would render the old icons against the new Figma PNGs. The sync passes its commit.
+              with:
+                  ref: ${{ inputs.ref }}
 
             - name: Install
               uses: ./.github/composite/install
