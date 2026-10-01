@@ -1,6 +1,6 @@
 {
     "name": "vapor-figma",
     "description": "Compose Figma designs from the Vapor core library (Vapor Design System) while keeping every instance linked to its main component",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "author": { "name": "Vapor Team", "email": "vapor.ui@goorm.io" }
 }
