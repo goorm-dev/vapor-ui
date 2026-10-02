@@ -27,7 +27,7 @@
         "prettier": "^3.9.6"
     },
     "devDependencies": {
-        "@figma/rest-api-spec": "^0.42.0",
+        "@figma/rest-api-spec": "^0.43.0",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/lodash-es": "^4.17.12",
@@ -37,7 +37,7 @@
         "@types/react-dom": "catalog:",
         "eslint": "catalog:",
         "pixelmatch": "^7.2.0",
-        "playwright": "^1.62.1",
+        "playwright": "^1.63.0",
         "pngjs": "^7.0.0",
         "react": "catalog:",
         "react-dom": "catalog:",
