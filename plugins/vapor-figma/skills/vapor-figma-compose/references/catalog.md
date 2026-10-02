@@ -1,0 +1,42 @@
+# Core 컴포넌트 카탈로그
+
+Vapor core 라이브러리(`Vapor Design System`) 🟢 Stable 컴포넌트 색인이다. 원본 파일 `oxXA7DN1My1R4UFVmrm8Ep`의 컴포넌트 페이지를 2026-10-01에 검토했다. 각 컴포넌트의 구조·버그·Guidelines는 오른쪽 파일에 있다.
+
+| 컴포넌트         | 대표 컴포넌트      | key                                        | 용도                                                                                                                           | 파일                                                    |
+| ---------------- | ------------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------- |
+| Avatar           | 💙Avatar           | `8c582403a072e2229c07a5312c57d13a99f9166f` | 사용자가 설정한 프로필 이미지 또는 텍스트를 UI에 나타낸다.                                                                     | [avatar.md](components/avatar.md)                       |
+| Badge            | 💙Badge            | `df27a582d93b371e74ab1d7a89b9c8140ed58e45` | 이미지·콘텐츠 등의 상태 또는 분류를 시각적으로 표시한다.                                                                       | [badge.md](components/badge.md)                         |
+| Breadcrumb       | 💙Breadcrumb       | `20a26ce1f4194806ddfe9ac722905a0865811bf9` | 현재 페이지의 경로 탐색과 이동 링크로 쓴다.                                                                                    | [breadcrumb.md](components/breadcrumb.md)               |
+| Button           | 💙Button           | `a0f09d9423ea8755dc676de31815001872e69c5a` | 사용자가 행동을 실행할 수 있도록 돕는다.                                                                                       | [button.md](components/button.md)                       |
+| Callout          | 💙Callout          | `52743fcc6e6e192592878e3ac8614b3283553766` | 사용자 액션에 대한 피드백이나 서비스 메시지를 제공한다.                                                                        | [callout.md](components/callout.md)                     |
+| Card             | 💙Card             | `78e6c7c76ec04503d5b9c9b416e257587ba04103` | 이미지·텍스트·일부 기능 버튼을 담는 컨테이너로 콘텐츠를 제공한다.                                                              | [card.md](components/card.md)                           |
+| Checkbox         | 💙Checkbox         | `7bbbc1ccd74df4f19c84c2142fdeb0e47fe8be9d` | 여러 항목 중 복수 선택을 가능하게 하는 입력 컴포넌트다.                                                                        | [checkbox.md](components/checkbox.md)                   |
+| Dialog           | 💙Dialog           | `8d3b8f457fd498e1789857600411cabf64c905a1` | 현재 페이지 위에 오버레이로 띄워 사용자가 주요 작업에 집중하게 한다.                                                           | [dialog.md](components/dialog.md)                       |
+| Field            | 💙Field            | `5df009b6efdda299cd4909d6a7c3c0abd6fae1e1` | 폼 요소에 라벨, help text, 유효성 검사 메시지를 붙인다.                                                                        | [field.md](components/field.md)                         |
+| FloatingBar      | FloatingBar.Popup  | `9ee156dfa4da480b1691f8e7158d7e900861a561` | 화면 위에 떠서 현재 맥락의 액션·설정·정보를 모아 보여주는 컨텍스트 툴바다.                                                     | [floating-bar.md](components/floating-bar.md)           |
+| IconButton       | 💙IconButton       | `0ae436f8c145b2b091994a0cf250edea8a63a01c` | 텍스트 없이 아이콘만으로 특정 작업이나 기능을 실행하는 버튼이다.                                                               | [icon-button.md](components/icon-button.md)             |
+| InputGroup       | 💙InputGroup       | `e30f2d2b6eeb6de6dead47a9b18280cfc660e3e9` | 입력 필드에 글자 수 같은 보조 요소를 함께 배치해 입력을 돕는다. TextInput 또는 Textarea와 결합해 쓴다.                         | [input-group.md](components/input-group.md)             |
+| Menu             | 💙Menu             | `0f27fad4b9a88deb3a203bed776c8fcd0dbe1e55` | 트리거를 누르면 열려서, 여러 액션 중 하나를 골라 실행하게 하는 목록이다.                                                       | [menu.md](components/menu.md)                           |
+| MultiSelect      | 💙MultiSelect      | `298e34d17af8e5483aa128f2a100636edb1f9d96` | 여러 항목을 고를 수 있는 드롭다운 입력이다.                                                                                    | [multi-select.md](components/multi-select.md)           |
+| NavigationMenu   | 💙NavigationMenu   | `ac6e74f3b6267495b8837ccc796bac4c27c1e7da` | 여러 콘텐츠 섹션 사이를 오가게 하는 내비게이션이다. 누르면 페이지가 이동한다.                                                  | [navigation-menu.md](components/navigation-menu.md)     |
+| Pagination       | 💙Pagination       | `67b043bee93e00bdf099dc796207a3737ab33f8b` | 여러 페이지로 나뉜 콘텐츠에서 원하는 페이지로 이동하게 하는 내비게이션이다.                                                    | [pagination.md](components/pagination.md)               |
+| Popover          | 💙Popover          | `6b9d3ec103313d506a68456678c717281b79b5a0` | 트리거를 클릭·호버하면 뜨는 작은 오버레이다. 추가 정보·옵션·도구를 준다. 모달보다 덜 방해하고 툴팁보다 인터랙션을 더 허용한다. | [popover.md](components/popover.md)                     |
+| Radio            | 💙RadioGroup       | `954b9c15efbd2714202862c4a41e59b37d91fb48` | 여러 옵션 중 하나만 선택하게 한다. RadioCard는 카드 형태 선택지, RadioGroup은 그룹 라벨과 옵션 묶음이다.                       | [radio.md](components/radio.md)                         |
+| SegmentedControl | 💙SegmentedControl | `845449aff5854ea62d5a51a1af512d23023e3aa0` | 버튼 토글 형태로, 상호 배타적인 2개 이상 옵션 중 하나를 선택하게 한다.                                                         | [segmented-control.md](components/segmented-control.md) |
+| Select           | 💙Select           | `f587c9265287983a195f5884ea8ca2cb5ea87215` | 정해진 항목 중 하나를 고르게 하는 드롭다운 입력이다.                                                                           | [select.md](components/select.md)                       |
+| Sheet            | 💙Sheet            | `e4f46127fbab1019657383a4fe8b8d5310155acd` | 현재 페이지 가장자리에서 오버레이로 열어 사용자가 주요 작업에 집중하게 한다.                                                   | [sheet.md](components/sheet.md)                         |
+| Spinner          | 💙Spinner          | `7fdcb2ba08b5bce349bdefdda2ea99bd3256be21` | 콘텐츠나 데이터를 불러오는 동안 처리 중임을 알린다.                                                                            | [spinner.md](components/spinner.md)                     |
+| Switch           | 💙Switch           | `000bdceb1e4302cd136c0aa34c5d423d53309564` | 이진 상태(on/off)를 전환하는 토글 방식 입력 요소다.                                                                            | [switch.md](components/switch.md)                       |
+| Table            | 💙Table            | `28678707bad2c0e093f3073e423f28397cc6a713` | 구조화된 데이터를 행(Row)과 열(Column)로 나눠 보여준다.                                                                        | [table.md](components/table.md)                         |
+| Tabs             | 💙Tabs             | `ed108ce61888e1d3756fd94656731c203ed932cd` | 같은 맥락 안에서 여러 콘텐츠 섹션을 전환하게 한다.                                                                             | [tabs.md](components/tabs.md)                           |
+| TextInput        | 💙TextInput        | `c2997cf93bb259beb7d9de15a290f453cec4e4f0` | 한 줄의 짧은 텍스트를 입력받는 필드다.                                                                                         | [text-input.md](components/text-input.md)               |
+| Textarea         | 💙Textarea         | `8317f1f40d31ca4976c83389f7ffe5fa0f937eb4` | 사용자가 여러 줄의 텍스트를 입력하는 컴포넌트다.                                                                               | [textarea.md](components/textarea.md)                   |
+| Toast            | 💙Toast.Add        | `f1f8c6a8200ccff583495a0db690b7d3e575793f` | 사용자 동작의 결과나 상태 변화를 흐름을 방해하지 않고 잠깐 알리는 임시 알림이다.                                               | [toast.md](components/toast.md)                         |
+| Toggle           | 💙Toggle           | `715b8a0043169e6aa20c4ec37589ec524cd3766d` | 항목을 선택하거나 해제한다. ToggleGroup은 Toggle 여러 개를 묶어 다중·단일 선택을 제공한다.                                     | [toggle.md](components/toggle.md)                       |
+| Toolbar          | 💙Toolbar          | `606819a01906b1220faac47caea42a9e960b1daf` | 버튼·토글·인풋 같은 개별 컨트롤 여러 개를 한 그룹으로 묶어 제공한다.                                                           | [toolbar.md](components/toolbar.md)                     |
+| Tooltip          | 💙Tooltip          | `eb84b7288746454956af16e158e37bfa7a056c62` | 호버(또는 클릭) 시 상황에 맞는 도움말·정보를 보여준다.                                                                         | [tooltip.md](components/tooltip.md)                     |
+
+## 범위 밖
+
+- Composites 라이브러리, Alpha·Archive·Deprecated 페이지의 컴포넌트는 다루지 않는다.
+- 위 표에 없는 컴포넌트가 필요하면 core 조합으로 대체안을 제안하고 보고한다.
