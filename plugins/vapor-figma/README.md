@@ -11,19 +11,11 @@ Claude Code에서 Vapor core 라이브러리(Figma 팀 라이브러리 `Vapor De
 ## 설치
 
 ```bash
-# main 브랜치
 /plugin marketplace add goorm-dev/vapor-ui
 /plugin install vapor-figma@vapor-ui
 ```
 
-머지 전 브랜치에서 설치하려면 마켓플레이스를 브랜치로 추가합니다.
-
-```bash
-/plugin marketplace add goorm-dev/vapor-ui#feature/vapor-321
-/plugin install vapor-figma@vapor-ui
-```
-
-브랜치에 새 커밋이 올라오면 `/plugin marketplace update vapor-ui`로 받습니다.
+새 버전은 `/plugin marketplace update vapor-ui`로 받습니다.
 
 ## 사용
 
