@@ -84,14 +84,7 @@ const config: StorybookConfig = {
             },
 
             plugins: [
-                vaporVitePlugin({
-                    layerOrder: [
-                        'vapor-theme',
-                        'vapor-reset',
-                        'vapor-utilities',
-                        'vapor-components',
-                    ],
-                }),
+                vaporVitePlugin(),
                 coreDistCssPassthrough,
                 vanillaExtractPlugin({
                     identifiers: ({ hash, filePath, debugId }) => {
