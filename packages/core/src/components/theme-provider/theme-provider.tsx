@@ -86,18 +86,6 @@ interface UseThemeProps {
     mounted?: boolean;
 }
 
-/**
- * Vapor's built-in cascade layer names. Exported so consumers can reference
- * them when configuring the style-macro plugin's `layerOrder` option in
- * `vite.config`/`next.config` without hardcoding string literals.
- */
-const LAYER_NAMES = {
-    theme: 'vapor-theme',
-    reset: 'vapor-reset',
-    components: 'vapor-components',
-    utilities: 'vapor-utilities',
-} as const;
-
 interface ThemeProviderProps extends ThemeConfig {
     children: React.ReactNode;
 }
@@ -330,6 +318,6 @@ const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) 
 };
 
 /* -----------------------------------------------------------------------------------------------*/
-export { ThemeProvider, ThemeScope, useTheme, LAYER_NAMES };
+export { ThemeProvider, ThemeScope, useTheme };
 export type { ThemeConfig, UseThemeProps, ThemeProviderProps, ThemeScopeProps };
 export type UseThemeReturn = UseThemeProps;
