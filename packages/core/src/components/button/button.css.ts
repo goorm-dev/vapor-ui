@@ -147,10 +147,13 @@ export const root = componentRecipe({
                 backgroundColor: vars.color.background['canvas-base'],
                 color: variables.outlineForeground,
             },
-            ghost: {
-                backgroundColor: 'transparent',
-                color: variables.ghostForeground,
-            },
+            ghost: [
+                interaction({ scale: 'light' }),
+                {
+                    backgroundColor: 'transparent',
+                    color: variables.ghostForeground,
+                },
+            ],
         },
     },
 });
