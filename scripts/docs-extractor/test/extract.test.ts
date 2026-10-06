@@ -41,7 +41,8 @@ function createFixture(files: Record<string, string>): string {
 }
 
 function run(root: string, options: Partial<ExtractOptions> = {}) {
-    return extract({ inputPath: root, tsconfigPath: path.join(root, 'tsconfig.json'), ...options });
+    return extract({ inputPath: root, tsconfigPath: path.join(root, 'tsconfig.json'), ...options })
+        .docs;
 }
 
 /** Extracts a fixture expected to hold exactly one component and returns its doc. */
@@ -831,5 +832,32 @@ describe('경고', () => {
         run(createFixture({ 'badge.tsx': BADGE_SOURCE }), { reporter });
 
         expect(reporter.warnings).toEqual([]);
+    });
+});
+
+describe('파싱 실패', () => {
+    it('읽을 수 없는 파일은 failures로 돌려주고 나머지는 계속 추출한다', () => {
+        const reporter = createRecordingReporter();
+        const root = createFixture({ 'badge.tsx': BADGE_SOURCE });
+        fs.symlinkSync(path.join(root, 'missing.tsx'), path.join(root, 'broken.tsx'));
+
+        const result = extract({
+            inputPath: root,
+            tsconfigPath: path.join(root, 'tsconfig.json'),
+            reporter,
+        });
+
+        expect(result.failures).toEqual(['broken']);
+        expect(result.docs.map((doc) => doc.name)).toEqual(['BadgeRoot']);
+        expect(reporter.warnings).toHaveLength(1);
+        expect(reporter.warnings[0]).toMatch(/^Failed to extract props for broken: /);
+    });
+
+    it('모두 읽히면 failures는 비어 있다', () => {
+        const root = createFixture({ 'badge.tsx': BADGE_SOURCE });
+
+        const result = extract({ inputPath: root, tsconfigPath: path.join(root, 'tsconfig.json') });
+
+        expect(result.failures).toEqual([]);
     });
 });

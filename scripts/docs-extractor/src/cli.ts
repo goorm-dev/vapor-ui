@@ -49,15 +49,23 @@ function runCli(): void {
     const { input, tsconfig, out, component, verbose } = cli.flags;
     const reporter = createConsoleReporter(verbose);
 
-    const docs = extract({
+    const { docs, failures } = extract({
         inputPath: path.resolve(input),
         tsconfigPath: path.resolve(tsconfig),
         component,
         reporter,
     });
 
-    // Only a full run knows which files are stale.
-    const { written, removed } = writeDocs(out, docs, { removeStale: !component });
+    // Only a full, clean run knows which files are stale: a component that failed
+    // to parse would look stale and lose its committed JSON.
+    const removeStale = !component && failures.length === 0;
+    if (!component && failures.length > 0) {
+        reporter.warn(
+            `Kept stale files because ${failures.length} files or components failed to parse.`,
+        );
+    }
+
+    const { written, removed } = writeDocs(out, docs, { removeStale });
     if (removed.length > 0) reporter.info(`Removed ${removed.length} stale files.`);
 
     try {

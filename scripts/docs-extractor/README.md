@@ -72,7 +72,7 @@ The output file path and the fields listed here form the contract with these con
 ### Output files
 
 - One JSON file per component in `--out`, named after the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
-- A full run deletes JSON files in `--out` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing.
+- A full run deletes JSON files in `--out` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
 - The CLI formats the written files with Prettier.
 
 ### Fields
@@ -166,14 +166,14 @@ cli.ts ──► extract() ──► read/     source → ParsedComponent[]   (t
    └─────► writeDocs()  ComponentDoc[] → <out>/*.json, then prettier
 ```
 
-| Module           | Interface                                                                     | Owns                                                                                         |
-| ---------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `src/extract.ts` | `extract({ inputPath, tsconfigPath, component?, reporter? }): ComponentDoc[]` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing |
-| `src/read/`      | `parseSourceFile()`, `scanComponentFiles()` (used by `extract()` only)        | Component detection, descriptions, default values, source classification, type printing      |
-| `src/policy.ts`  | `policy(components: ParsedComponent[]): ComponentDoc[]`                       | README "Props", "Types" and the field shape. No ts-morph, no filesystem                      |
-| `src/write.ts`   | `writeDocs(outputDir, docs, { removeStale })`, `formatWithPrettier()`         | File names, JSON bytes, stale-file removal                                                   |
-| `src/cli.ts`     | the `--input`/`--tsconfig`/`--out` command                                    | Flags, the console reporter, exit codes                                                      |
-| `src/model.ts`   | `ParsedComponent`, `ComponentDoc` and their prop types                        | The data passed between the modules above                                                    |
+| Module           | Interface                                                                         | Owns                                                                                         |
+| ---------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `src/extract.ts` | `extract({ inputPath, tsconfigPath, component?, reporter? }): { docs, failures }` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing |
+| `src/read/`      | `parseSourceFile()`, `scanComponentFiles()` (used by `extract()` only)            | Component detection, descriptions, default values, source classification, type printing      |
+| `src/policy.ts`  | `policy(components: ParsedComponent[]): ComponentDoc[]`                           | README "Props", "Types" and the field shape. No ts-morph, no filesystem                      |
+| `src/write.ts`   | `writeDocs(outputDir, docs, { removeStale })`, `formatWithPrettier()`             | File names, JSON bytes, stale-file removal                                                   |
+| `src/cli.ts`     | the `--input`/`--tsconfig`/`--out` command                                        | Flags, the console reporter, exit codes                                                      |
+| `src/model.ts`   | `ParsedComponent`, `ComponentDoc` and their prop types                            | The data passed between the modules above                                                    |
 
 Tests go through `extract()` (fixture sources on disk), `policy()` (plain data) and `writeDocs()` (a temp directory), not through module internals.
 

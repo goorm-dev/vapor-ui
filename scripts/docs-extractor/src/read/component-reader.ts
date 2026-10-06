@@ -157,13 +157,15 @@ function extractParsedComponent(
     };
 }
 
+/** `failures` names the namespaces that threw while being read; they are not in `components`. */
 export function parseSourceFile(
     sourceFile: SourceFile,
     reporter: Reporter = silentReporter,
-): ParsedComponent[] {
+): { components: ParsedComponent[]; failures: string[] } {
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
     const namespaces = getExportedNamespaces(sourceFile);
     const parsedComponents: ParsedComponent[] = [];
+    const failures: string[] = [];
 
     reporter.debug(`Found ${namespaces.length} namespaces in ${sourceFile.getFilePath()}`);
 
@@ -176,8 +178,9 @@ export function parseSourceFile(
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             reporter.warn(`Failed to extract props for ${namespace.getName()}: ${message}`);
+            failures.push(namespace.getName());
         }
     }
 
-    return parsedComponents;
+    return { components: parsedComponents, failures };
 }

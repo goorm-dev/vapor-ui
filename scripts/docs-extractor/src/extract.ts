@@ -17,6 +17,12 @@ export interface ExtractOptions {
     reporter?: Reporter;
 }
 
+export interface ExtractResult {
+    docs: ComponentDoc[];
+    /** Files or namespaces that failed to parse. They are missing from `docs`. */
+    failures: string[];
+}
+
 function findMissingDocs(docs: ComponentDoc[]): string[] {
     return docs.flatMap((doc) => [
         ...(doc.description ? [] : [doc.name]),
@@ -29,24 +35,29 @@ function findMissingDocs(docs: ComponentDoc[]): string[] {
  * README "Extraction Policy" specifies. Writes nothing.
  *
  * Throws ExtractorError when `inputPath` or `component` doesn't exist. A file
- * that fails to parse is skipped with a warning, and so is a namespace inside it.
+ * that fails to parse is skipped with a warning and listed in `failures`, and so
+ * is a namespace inside it.
  */
-export function extract(options: ExtractOptions): ComponentDoc[] {
+export function extract(options: ExtractOptions): ExtractResult {
     const { reporter = silentReporter } = options;
     const files = scanComponentFiles(options.inputPath, options.component);
     const project = new Project({ tsConfigFilePath: options.tsconfigPath });
 
     reporter.info('Parsing components...');
 
+    const failures: string[] = [];
     const parsed = files.flatMap((filePath) => {
         const fileName = path.basename(filePath, '.tsx');
 
         try {
             reporter.info(`Processing ${fileName}`);
-            return parseSourceFile(project.addSourceFileAtPath(filePath), reporter);
+            const result = parseSourceFile(project.addSourceFileAtPath(filePath), reporter);
+            failures.push(...result.failures);
+            return result.components;
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             reporter.warn(`Failed to extract props for ${fileName}: ${message}`);
+            failures.push(fileName);
             return [];
         }
     });
@@ -61,5 +72,5 @@ export function extract(options: ExtractOptions): ComponentDoc[] {
 
     reporter.info(`Done! Extracted ${docs.length} components.`);
 
-    return docs;
+    return { docs, failures };
 }
