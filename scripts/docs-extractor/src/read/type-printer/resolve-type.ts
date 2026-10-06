@@ -1,3 +1,4 @@
+import { anonymousObjectResolver } from '#read/type-printer/anonymous-object';
 import { baseUiResolver } from '#read/type-printer/base-ui-type';
 import { functionTypeResolver } from '#read/type-printer/function-type';
 import { primitiveResolver } from '#read/type-printer/primitive';
@@ -23,6 +24,7 @@ const RESOLVERS: Resolver[] = [
     functionTypeResolver,
     unionWithFunctionResolver,
     baseUiResolver,
+    anonymousObjectResolver,
 ];
 
 export function resolveType(type: Type, options: PrintOptions = {}): string {

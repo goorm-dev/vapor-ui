@@ -734,6 +734,31 @@ describe('타입 출력', () => {
         });
     });
 
+    it('이름 없는 객체 안의 리터럴 union도 값으로 펼친다', () => {
+        const doc = extractOne({
+            'positioner.tsx': `
+                type Side = 'top' | 'bottom';
+                type Padding = number | { top?: number };
+
+                export namespace Positioner {
+                    export type Props = {
+                        sideOffset?: (data: {
+                            side: Side;
+                            anchor: { width: number; side?: Side };
+                            padding: Padding;
+                        }) => number;
+                        empty?: (data: {}) => void;
+                    };
+                }
+            `,
+        });
+
+        expect(propOf(doc, 'sideOffset')?.detailedType).toBe(
+            '((data: { side: "top" | "bottom"; anchor: { width: number; side?: "top" | "bottom"; }; padding: Padding; }) => number) | undefined',
+        );
+        expect(propOf(doc, 'empty')?.detailedType).toBe('((data: {}) => void) | undefined');
+    });
+
     it('리터럴이 아닌 멤버가 있는 이름 붙은 union은 이름으로 쓴다', () => {
         const doc = extractOne({
             'popup.tsx': `
@@ -1012,12 +1037,12 @@ describe('타입 출력', () => {
         });
     });
 
-    it('Base UI가 매개변수 자리에 바로 쓴 객체 타입은 경고 없이 구조로 출력한다', () => {
+    it('Base UI가 매개변수·속성 자리에 바로 쓴 객체 타입은 경고 없이 구조로 출력한다', () => {
         const reporter = createRecordingReporter();
         const root = createFixture({
             'node_modules/@base-ui/react/positioner.d.ts': `
                 export interface PositionerProps {
-                    sideOffset?: (data: { side: string }) => number;
+                    sideOffset?: (data: { side: string; anchor: { width: number } }) => number;
                 }
             `,
             'positioner.tsx': `
@@ -1032,7 +1057,7 @@ describe('타입 출력', () => {
         const [doc] = run(root, { reporter });
 
         expect(propOf(doc, 'sideOffset')?.detailedType).toBe(
-            '((data: { side: string; }) => number) | undefined',
+            '((data: { side: string; anchor: { width: number; }; }) => number) | undefined',
         );
         expect(reporter.warnings).not.toContainEqual(
             expect.stringContaining('No public vapor-ui name for a Base UI type'),

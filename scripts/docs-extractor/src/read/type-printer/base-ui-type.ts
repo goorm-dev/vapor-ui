@@ -37,16 +37,17 @@ function resolveByIdentity(type: Type, ctx: ResolverContext): string | null {
  * Only types a component documents by name are worth a warning: Base UI's anonymous
  * event details and per-part `State`s. Shared helpers like `BaseUIEvent` or `HTMLProps`
  * have no vapor-ui alias by design and print under their own name. An object Base UI
- * writes straight into a parameter (`sideOffset={(data: { side; … }) => …}`) has no name
- * in Base UI either, so there is nothing to re-export.
+ * writes straight into a parameter or a property (`(data: { anchor: { width } }) => …`)
+ * has no name in Base UI either, so there is nothing to re-export.
  */
 function shouldHaveVaporName(type: Type): boolean {
     const symbol = type.getAliasSymbol() ?? type.getSymbol();
     const name = symbol?.getName();
     if (name === '__type') {
-        return !symbol!
-            .getDeclarations()
-            .every((decl) => Node.isParameterDeclaration(decl.getParent()));
+        return !symbol!.getDeclarations().every((decl) => {
+            const parent = decl.getParent();
+            return Node.isParameterDeclaration(parent) || Node.isPropertySignature(parent);
+        });
     }
     return !!name?.endsWith('State');
 }

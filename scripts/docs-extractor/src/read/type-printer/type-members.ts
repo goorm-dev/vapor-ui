@@ -38,9 +38,17 @@ function writtenUnionMembers(type: Type): Type[] {
     );
 }
 
-/** Every value is spelled out: `"sm" | "md"`, `1 | 2`, `boolean | "auto"`. */
-function isLiteralUnion(type: Type): boolean {
-    return type.getUnionTypes().every((member) => member.isLiteral() || member.isBooleanLiteral());
+/** Every value is spelled out: `"sm" | "md"`, `1 | 2`, `boolean | "auto"`, `"on" | undefined`. */
+export function isLiteralUnion(type: Type): boolean {
+    return type
+        .getUnionTypes()
+        .every(
+            (member) =>
+                member.isLiteral() ||
+                member.isBooleanLiteral() ||
+                member.isUndefined() ||
+                member.isNull(),
+        );
 }
 
 function kindOf(type: Type): ParsedTypeMember['kind'] {

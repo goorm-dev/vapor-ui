@@ -1,9 +1,9 @@
-import type { PrintOptions } from '#read/type-printer/shared';
-import { resolveTypeMembers } from '#read/type-printer/type-members';
+import { type PrintOptions, TYPE_FORMAT_FLAGS } from '#read/type-printer/shared';
+import { isLiteralUnion, resolveTypeMembers } from '#read/type-printer/type-members';
 import { joinTypeMembers } from '#type-text';
 import type { Node, Type } from 'ts-morph';
 
-function isObjectLike(type: Type): boolean {
+export function isObjectLike(type: Type): boolean {
     return (
         !type.isUnion() &&
         (type.isObject() || type.isIntersection()) &&
@@ -11,18 +11,30 @@ function isObjectLike(type: Type): boolean {
     );
 }
 
-function printObject(type: Type, location: Node, options: PrintOptions): string {
-    const lines = type.getProperties().map((property) => {
+/** `name?: T;` per property. Optional properties leave out `| undefined`. */
+export function printProperties(type: Type, location: Node, options: PrintOptions): string[] {
+    return type.getProperties().map((property) => {
         const declaration = property.getDeclarations()[0] ?? location;
         const optional = property.isOptional();
-        const members = resolveTypeMembers(property.getTypeAtLocation(declaration), {
+        const type = property.getTypeAtLocation(declaration);
+
+        // A named union of other types (`padding: Padding`) reads by its name, as it does
+        // inside a larger union; splitting it here would spell out what the name hides.
+        if (type.isUnion() && type.getAliasSymbol() && !isLiteralUnion(type)) {
+            return `${property.getName()}${optional ? '?' : ''}: ${type.getText(declaration, TYPE_FORMAT_FLAGS)};`;
+        }
+
+        const members = resolveTypeMembers(type, {
             ...options,
             contextNode: declaration,
         }).filter((member) => !optional || member.kind !== 'undefined');
 
-        return `  ${property.getName()}${optional ? '?' : ''}: ${joinTypeMembers(members)};`;
+        return `${property.getName()}${optional ? '?' : ''}: ${joinTypeMembers(members)};`;
     });
+}
 
+function printObject(type: Type, location: Node, options: PrintOptions): string {
+    const lines = printProperties(type, location, options).map((line) => `  ${line}`);
     return `{\n${lines.join('\n')}\n}`;
 }
 
