@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { type SourceFile, SyntaxKind } from 'ts-morph';
+import { type SourceFile, SyntaxKind, type VariableDeclaration } from 'ts-morph';
 
 type DefaultValues = Record<string, string>;
 
@@ -33,16 +33,12 @@ function findNamespaceImportName(sourceFile: SourceFile, modulePath: string): st
 }
 
 function extractDestructuringDefaults(
-    sourceFile: SourceFile,
-    componentName: string,
+    componentImplementation: VariableDeclaration,
     declaredPropNames?: Set<string>,
 ): DefaultValues {
     const result: DefaultValues = {};
 
-    const componentVar = sourceFile.getVariableDeclaration(componentName);
-    if (!componentVar) return result;
-
-    const initializer = componentVar.getInitializer();
+    const initializer = componentImplementation.getInitializer();
     if (!initializer) return result;
 
     initializer.forEachDescendant((node) => {
@@ -93,14 +89,10 @@ function findCssImports(sourceFile: SourceFile): CssImport[] {
 }
 
 function findRecipeUsageInComponent(
-    sourceFile: SourceFile,
-    componentName: string,
+    componentImplementation: VariableDeclaration,
     styleName: string,
 ): string | null {
-    const componentVar = sourceFile.getVariableDeclaration(componentName);
-    if (!componentVar) return null;
-
-    const initializer = componentVar.getInitializer();
+    const initializer = componentImplementation.getInitializer();
     if (!initializer) return null;
 
     let foundRecipe: string | null = null;
@@ -157,13 +149,15 @@ function parseRecipeDefaultVariants(
     return result;
 }
 
-export function getDefaultValuesForNamespace(
+export function getDefaultValuesForComponent(
     sourceFile: SourceFile,
-    namespaceName: string,
+    componentImplementation: VariableDeclaration | undefined,
     declaredPropNames?: Set<string>,
 ): DefaultValues {
+    if (!componentImplementation) return {};
+
     const result: DefaultValues = {
-        ...extractDestructuringDefaults(sourceFile, namespaceName, declaredPropNames),
+        ...extractDestructuringDefaults(componentImplementation, declaredPropNames),
     };
 
     const cssImports = findCssImports(sourceFile);
@@ -171,7 +165,7 @@ export function getDefaultValuesForNamespace(
         const styleName = findNamespaceImportName(sourceFile, cssImport.modulePath);
         if (!styleName) continue;
 
-        const recipeName = findRecipeUsageInComponent(sourceFile, namespaceName, styleName);
+        const recipeName = findRecipeUsageInComponent(componentImplementation, styleName);
         if (!recipeName) continue;
 
         const cssFile = sourceFile.getProject().getSourceFile(cssImport.resolvedPath);
