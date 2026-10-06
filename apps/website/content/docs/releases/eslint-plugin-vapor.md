@@ -5,6 +5,12 @@ description: 'eslint-plugin-vapor 패키지의 릴리즈 노트입니다.'
 
 # eslint-plugin-vapor
 
+## 1.1.1
+
+### Typography
+
+- fix the code font family name to `"Fira Code"` and apply it to the `code1` / `code2` typography styles ([#748](https://github.com/goorm-dev/vapor-ui/pull/748)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
 ## 1.1.0
 
 ### Rules
