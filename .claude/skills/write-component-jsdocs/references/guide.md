@@ -309,7 +309,7 @@ onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 
 **5. Never document default values**
 
-Don't write the `@default` tag and don't write `Default:` inline. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag; it reads `defaultValue` from the component function's destructuring defaults via the AST, so a default written in JSDoc is rendered twice in the docs table. Existing `@default` tags in the codebase stay as they are — just don't add new ones.
+Don't write the `@default` tag and don't write `Default:` inline. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag; it reads `defaultValue` from code — the component function's destructuring defaults, then the `defaultVariants` of the recipe the component calls — so a default written in JSDoc is rendered twice in the docs table (see the README's "Default values"). Existing `@default` tags in the codebase stay as they are — just don't add new ones.
 
 ```tsx
 // ❌ default duplicated in the docs table
@@ -320,6 +320,7 @@ Don't write the `@default` tag and don't write `Default:` inline. The extractor 
 disabled?: boolean;
 
 // ✅ extractor picks the default up from `disabled = false` in the component
+//    (a variant's default comes from the recipe's `defaultVariants` the same way)
 /**
  * Disables the button, blocking all interactions.
  */
