@@ -9,9 +9,4 @@ export default defineConfig({
     filterHtml: true,
     filterSprinkles: true,
     includeHtml: ['className', 'style'],
-    components: {
-        'button/button.tsx': {
-            include: ['nativeButton'],
-        },
-    },
 });

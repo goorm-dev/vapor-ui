@@ -8,7 +8,6 @@ import { ModuleKind, ModuleResolutionKind, Project, ScriptTarget } from 'ts-morp
 
 import { filterParsedComponents } from '#domain/filter';
 import { componentsToJson } from '#domain/serialize';
-import type { FilterConfig } from '#domain/stage-config';
 import { parsedComponentsToModels } from '#domain/transform';
 import { parseSourceFile } from '#infrastructure/ts-morph/component-reader';
 
@@ -111,25 +110,5 @@ describe('parseSourceFile → transform pipeline', () => {
         expect(stateProp?.type).toEqual(['BaseCollapsible.Root.State']);
         expect(onOpenChangeProp?.type[0]).toContain('Collapsible.Root.ChangeEventDetails');
         expect(dataTestIdProp).toBeUndefined();
-    });
-
-    it('respects include option for html-like props', () => {
-        const root = createFixtureRoot();
-        const { componentFile } = writeFixtureFiles(root);
-        const project = createProject();
-        const sourceFile = project.addSourceFileAtPath(componentFile);
-
-        const parsed = parseSourceFile(sourceFile);
-        const filterConfig: FilterConfig = {
-            filterExternal: false,
-            filterHtml: false,
-            filterSprinkles: false,
-            include: ['data-testid'],
-        };
-        const filtered = filterParsedComponents(parsed, filterConfig);
-        const props = componentsToJson(parsedComponentsToModels(filtered));
-        const jsonProps = props[0].props;
-
-        expect(jsonProps.some((prop) => prop.name === 'data-testid')).toBe(true);
     });
 });

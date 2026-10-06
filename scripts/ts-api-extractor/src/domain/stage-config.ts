@@ -15,5 +15,4 @@ export interface FilterConfig {
     filterHtml: boolean;
     filterSprinkles: boolean;
     includeHtml?: string[];
-    include?: string[];
 }

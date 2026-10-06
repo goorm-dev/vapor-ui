@@ -1,7 +1,6 @@
 import path from 'node:path';
 import { Project } from 'ts-morph';
 
-import { resolveComponentInclude } from '#domain/config/resolve';
 import { filterParsedComponents } from '#domain/filter';
 import type { ExtractInput, ExtractOutput } from '#domain/output';
 import { formatFileName, jsonOutputFormat } from '#domain/output-format';
@@ -36,7 +35,6 @@ export function extract(input: ExtractInput): ExtractOutput {
                 filterHtml: config.filterHtml,
                 filterSprinkles: config.filterSprinkles,
                 includeHtml: config.includeHtml,
-                include: resolveComponentInclude(filePath, config.components),
             };
 
             const parsedComponents = parseSourceFile(sourceFile, parseConfig);

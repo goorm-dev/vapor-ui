@@ -7,7 +7,7 @@
  */
 import { extract } from '#app/extract';
 import { defaultExtractorConfig } from '#domain/config/defaults';
-import type { ComponentExtractConfig, ExtractorConfig } from '#domain/config/schema';
+import type { ExtractorConfig } from '#domain/config/schema';
 import type { Reporter } from '#domain/reporter';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -56,13 +56,12 @@ function createFixture(): Fixture {
     return { root, componentFile, outputDir: path.join(root, 'out') };
 }
 
-function createConfig(fixture: Fixture, components: Record<string, ComponentExtractConfig> = {}) {
+function createConfig(fixture: Fixture) {
     return {
         ...defaultExtractorConfig,
         inputPath: fixture.root,
         tsconfig: path.join(fixture.root, 'tsconfig.json'),
         outputDir: fixture.outputDir,
-        components,
     } satisfies ExtractorConfig;
 }
 
@@ -170,16 +169,6 @@ export const SheetRoot = (props: SheetRoot.Props) => props;
             config: { ...createConfig(fixture), filterHtml: false },
         });
         expect(kept.props[0].props.map((prop) => prop.name)).toContain('aria-label');
-    });
-
-    it('components.include로 필터를 개별 해제할 수 있다', () => {
-        const result = extract({
-            tsconfigPath: path.join(fixture.root, 'tsconfig.json'),
-            targetFiles: [fixture.componentFile],
-            config: createConfig(fixture, { 'badge.tsx': { include: ['aria-label'] } }),
-        });
-
-        expect(result.props[0].props.map((prop) => prop.name)).toContain('aria-label');
     });
 
     it('읽을 수 없는 파일은 경고만 남기고 나머지를 계속 처리한다', () => {
