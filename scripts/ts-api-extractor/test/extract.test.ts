@@ -196,6 +196,29 @@ export const SheetRoot = (props: SheetRoot.Props) => props;
         expect(kept.props[0].props.map((prop) => prop.name)).toContain('aria-label');
     });
 
+    it('JSDoc이 없는 컴포넌트와 prop을 경고 하나로 모아 알린다', () => {
+        const chipFile = path.join(fixture.root, 'chip.tsx');
+        fs.writeFileSync(
+            chipFile,
+            `
+export namespace Chip {
+    export type Props = {
+        /** 칩 라벨 */
+        label: string;
+        size?: 'sm' | 'md';
+    };
+}
+
+export const Chip = (props: Chip.Props) => props;
+`,
+        );
+        const reporter = createRecordingReporter();
+
+        runExtract(fixture, { targetFiles: [chipFile], reporter });
+
+        expect(reporter.warnings).toEqual(['Missing JSDoc on 2 items:\n  - Chip\n  - Chip.size']);
+    });
+
     it('읽을 수 없는 파일은 경고만 남기고 나머지를 계속 처리한다', () => {
         const reporter = createRecordingReporter();
 

@@ -2,7 +2,7 @@ import path from 'node:path';
 import { Project } from 'ts-morph';
 
 import { filterParsedComponents } from '#domain/filter';
-import type { ExtractInput, ExtractOutput } from '#domain/output';
+import type { ExtractInput, ExtractOutput, PropsInfoJson } from '#domain/output';
 import { formatFileName, jsonOutputFormat } from '#domain/output-format';
 import { silentReporter } from '#domain/reporter';
 import { componentsToJson } from '#domain/serialize';
@@ -10,6 +10,15 @@ import type { FilterConfig, ParseConfig } from '#domain/stage-config';
 import { parsedComponentsToModels } from '#domain/transform';
 import { removeStaleFiles, writeFiles } from '#infrastructure/fs/file-writer';
 import { parseSourceFile } from '#infrastructure/ts-morph/component-reader';
+
+function findMissingDocs(components: PropsInfoJson[]): string[] {
+    return components.flatMap((component) => [
+        ...(component.description ? [] : [component.name]),
+        ...component.props
+            .filter((prop) => !prop.description)
+            .map((prop) => `${component.name}.${prop.name}`),
+    ]);
+}
 
 export function extract(input: ExtractInput): ExtractOutput {
     const { config, reporter = silentReporter, format = jsonOutputFormat } = input;
@@ -48,6 +57,12 @@ export function extract(input: ExtractInput): ExtractOutput {
 
     const models = parsedComponentsToModels(parsed);
     const props = componentsToJson(models);
+
+    const missingDocs = findMissingDocs(props);
+    if (missingDocs.length > 0) {
+        const list = missingDocs.map((name) => `  - ${name}`).join('\n');
+        reporter.warn(`Missing JSDoc on ${missingDocs.length} items:\n${list}`);
+    }
 
     reporter.info(`Done! Extracted ${props.length} components.`);
 
