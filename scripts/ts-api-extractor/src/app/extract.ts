@@ -1,6 +1,3 @@
-import path from 'node:path';
-import { Project } from 'ts-morph';
-
 import { filterParsedComponents } from '#domain/filter';
 import type { ExtractInput, ExtractOutput, PropsInfoJson } from '#domain/output';
 import { formatFileName, jsonOutputFormat } from '#domain/output-format';
@@ -10,6 +7,8 @@ import type { FilterConfig, ParseConfig } from '#domain/stage-config';
 import { parsedComponentsToModels } from '#domain/transform';
 import { removeStaleFiles, writeFiles } from '#infrastructure/fs/file-writer';
 import { parseSourceFile } from '#infrastructure/ts-morph/component-reader';
+import path from 'node:path';
+import { Project } from 'ts-morph';
 
 function findMissingDocs(components: PropsInfoJson[]): string[] {
     return components.flatMap((component) => [
@@ -20,9 +19,17 @@ function findMissingDocs(components: PropsInfoJson[]): string[] {
     ]);
 }
 
+/** The prop policy from README "Props". Fixed in code so every run documents the same way. */
+const FILTER_CONFIG: FilterConfig = {
+    filterExternal: true,
+    filterHtml: true,
+    filterSprinkles: true,
+    includeHtml: ['className', 'style'],
+};
+
 export function extract(input: ExtractInput): ExtractOutput {
-    const { config, reporter = silentReporter, format = jsonOutputFormat } = input;
-    const outputDir = path.resolve(process.cwd(), config.outputDir);
+    const { reporter = silentReporter, format = jsonOutputFormat } = input;
+    const outputDir = path.resolve(input.outputDir);
     const project = new Project({ tsConfigFilePath: input.tsconfigPath });
 
     reporter.info('Parsing components...');
@@ -39,15 +46,8 @@ export function extract(input: ExtractInput): ExtractOutput {
         try {
             reporter.info(`Processing ${componentName}`);
             const parseConfig: ParseConfig = { reporter };
-            const filterConfig: FilterConfig = {
-                filterExternal: config.filterExternal,
-                filterHtml: config.filterHtml,
-                filterSprinkles: config.filterSprinkles,
-                includeHtml: config.includeHtml,
-            };
-
             const parsedComponents = parseSourceFile(sourceFile, parseConfig);
-            return filterParsedComponents(parsedComponents, filterConfig);
+            return filterParsedComponents(parsedComponents, FILTER_CONFIG);
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             reporter.warn(`Failed to extract props for ${componentName}: ${message}`);

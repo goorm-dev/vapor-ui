@@ -1,49 +1,51 @@
-import meow from 'meow';
-
 import { extract } from '#app/extract';
-import { resolveOptions } from '#cli/options';
 import { createConsoleReporter } from '#cli/reporter';
 import { ExtractorError } from '#domain/errors';
+import { resolveTargetFiles } from '#infrastructure/fs/component-scanner';
 import { formatWithPrettier } from '#infrastructure/fs/file-writer';
+import meow from 'meow';
+import path from 'node:path';
 
 async function runCli(): Promise<void> {
     const cli = meow(
         `
   Usage
-    $ ts-api-extractor
+    $ ts-api-extractor --input <dir> --tsconfig <file> --out <dir>
 
   Options
-    --component, -n   Component name to process (default: all components)
-    --config          Config file path
+    --input           Directory to scan for component .tsx files
+    --tsconfig        tsconfig.json used to resolve types
+    --out             Directory the JSON files are written to
+    --component, -n   Extract only this component file (default: all)
+    --verbose         Print debug output
 
-  Examples
-    $ ts-api-extractor
-    $ ts-api-extractor --component Tabs
-    $ ts-api-extractor --config ./docs-extractor.config.mjs
+  Paths are resolved against the current working directory.
+
+  Example
+    $ ts-api-extractor --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --out ./public/components/generated
 `,
         {
             importMeta: import.meta,
             flags: {
+                input: { type: 'string', isRequired: true },
+                tsconfig: { type: 'string', isRequired: true },
+                out: { type: 'string', isRequired: true },
                 component: { type: 'string', shortFlag: 'n' },
-                config: { type: 'string' },
+                verbose: { type: 'boolean', default: false },
             },
         },
     );
 
-    const resolved = await resolveOptions({
-        component: cli.flags.component,
-        configPath: cli.flags.config,
-    });
-
-    const reporter = createConsoleReporter(resolved.config.verbose);
+    const { input, tsconfig, out, component, verbose } = cli.flags;
+    const reporter = createConsoleReporter(verbose);
 
     const { writtenFiles } = extract({
-        tsconfigPath: resolved.tsconfigPath,
-        targetFiles: resolved.targetFiles,
-        config: resolved.config,
+        tsconfigPath: path.resolve(tsconfig),
+        targetFiles: await resolveTargetFiles(path.resolve(input), component),
+        outputDir: path.resolve(out),
         reporter,
         // Only a full run knows which files are stale.
-        removeStale: !cli.flags.component,
+        removeStale: !component,
     });
 
     // Formatting is a CLI convenience, not part of extraction: it shells out to

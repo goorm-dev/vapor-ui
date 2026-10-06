@@ -4,9 +4,6 @@
     "private": true,
     "description": "TypeScript AST-based API extractor for documentation generation",
     "type": "module",
-    "exports": {
-        ".": "./src/index.ts"
-    },
     "imports": {
         "#*": "./src/*.ts"
     },

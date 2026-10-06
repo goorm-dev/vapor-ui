@@ -2,12 +2,10 @@
  * extract() assembly tests
  *
  * The unit tests cover each stage in isolation; this covers the wiring between
- * them — tsconfig setup, config -> FilterConfig mapping, output file naming,
+ * them — tsconfig setup, the fixed prop filter, output file naming,
  * bytes actually landing on disk, and recovery when one file fails.
  */
 import { extract } from '#app/extract';
-import { defaultExtractorConfig } from '#domain/config/defaults';
-import type { ExtractorConfig } from '#domain/config/schema';
 import type { Reporter } from '#domain/reporter';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -56,15 +54,6 @@ function createFixture(): Fixture {
     return { root, componentFile, outputDir: path.join(root, 'out') };
 }
 
-function createConfig(fixture: Fixture) {
-    return {
-        ...defaultExtractorConfig,
-        inputPath: fixture.root,
-        tsconfig: path.join(fixture.root, 'tsconfig.json'),
-        outputDir: fixture.outputDir,
-    } satisfies ExtractorConfig;
-}
-
 function createRecordingReporter(): Reporter & { warnings: string[] } {
     const warnings: string[] = [];
 
@@ -82,7 +71,7 @@ function runExtract(fixture: Fixture, options: Partial<Parameters<typeof extract
     return extract({
         tsconfigPath: path.join(fixture.root, 'tsconfig.json'),
         targetFiles: [fixture.componentFile],
-        config: createConfig(fixture),
+        outputDir: fixture.outputDir,
         ...options,
     });
 }
@@ -184,16 +173,10 @@ export const SheetRoot = (props: SheetRoot.Props) => props;
         ]);
     });
 
-    it('filterHtml 설정이 필터 단계까지 전달된다', () => {
+    it('data-·aria- prop은 출력에서 뺀다', () => {
         const names = runExtract(fixture).props[0].props.map((prop) => prop.name);
-        expect(names).not.toContain('aria-label');
 
-        const kept = extract({
-            tsconfigPath: path.join(fixture.root, 'tsconfig.json'),
-            targetFiles: [fixture.componentFile],
-            config: { ...createConfig(fixture), filterHtml: false },
-        });
-        expect(kept.props[0].props.map((prop) => prop.name)).toContain('aria-label');
+        expect(names).not.toContain('aria-label');
     });
 
     it('JSDoc이 없는 컴포넌트와 prop을 경고 하나로 모아 알린다', () => {

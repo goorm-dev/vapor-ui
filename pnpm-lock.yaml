@@ -368,9 +368,6 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.5(@types/react@19.2.18)
-      '@vapor-ui/ts-api-extractor':
-        specifier: workspace:*
-        version: link:../../scripts/ts-api-extractor
       eslint:
         specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)

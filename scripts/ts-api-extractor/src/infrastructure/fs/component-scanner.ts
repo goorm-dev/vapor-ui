@@ -1,16 +1,9 @@
+import { ExtractorError } from '#domain/errors';
 import { glob } from 'glob';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type { ExtractorConfig } from '#domain/config/schema';
-import { ExtractorError } from '#domain/errors';
-
-const DEFAULT_EXCLUDES = ['.stories.tsx', '.css.ts', '.test.tsx'];
-
-export interface ScannerOptions {
-    exclude?: string[];
-    skipDefaultExcludes?: boolean;
-}
+const EXCLUDED_SUFFIXES = ['.stories.tsx', '.test.tsx'];
 
 export function normalizeComponentName(name: string): string {
     return name.toLowerCase().replace(/-/g, '');
@@ -27,45 +20,29 @@ export function findFileByComponentName(files: string[], componentName: string):
     );
 }
 
-export async function findComponentFiles(
-    inputPath: string,
-    options?: ScannerOptions,
-): Promise<string[]> {
+export async function findComponentFiles(inputPath: string): Promise<string[]> {
     // glob resolves directories concurrently, so its order varies between runs.
     // File order decides the order TypeScript instantiates types, which decides how
     // it prints the members of shared literal unions — so an unsorted list makes the
     // extracted JSON differ run to run. Sort to keep extraction reproducible.
     const files = (await glob('**/*.tsx', { cwd: inputPath, absolute: true })).sort();
 
-    const defaultPatterns = options?.skipDefaultExcludes ? [] : DEFAULT_EXCLUDES;
-    const customPatterns = options?.exclude ?? [];
-    const excludePatterns = [...defaultPatterns, ...customPatterns];
-
-    if (excludePatterns.length === 0) {
-        return files;
-    }
-
-    return files.filter((file) => !excludePatterns.some((pattern) => file.endsWith(pattern)));
+    return files.filter((file) => !EXCLUDED_SUFFIXES.some((suffix) => file.endsWith(suffix)));
 }
 
 /**
- * Turn a config (plus an optional --component filter) into the list of files to
- * parse. Owns every filesystem touch the CLI would otherwise have to do itself.
+ * Turn the input directory (plus an optional --component filter) into the list
+ * of files to parse. Owns every filesystem touch the CLI would otherwise do.
  */
 export async function resolveTargetFiles(
-    config: ExtractorConfig,
+    inputPath: string,
     componentName?: string,
 ): Promise<string[]> {
-    const absolutePath = path.resolve(process.cwd(), config.inputPath);
-
-    if (!fs.existsSync(absolutePath)) {
-        throw new ExtractorError(`Path does not exist: ${absolutePath}`);
+    if (!fs.existsSync(inputPath)) {
+        throw new ExtractorError(`Path does not exist: ${inputPath}`);
     }
 
-    const files = await findComponentFiles(absolutePath, {
-        exclude: config.exclude,
-        skipDefaultExcludes: !config.excludeDefaults,
-    });
+    const files = await findComponentFiles(inputPath);
 
     if (files.length === 0) {
         throw new ExtractorError('No .tsx files found in the specified path');

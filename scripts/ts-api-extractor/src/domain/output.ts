@@ -1,4 +1,3 @@
-import type { ExtractorConfig } from '#domain/config/schema';
 import type { ComponentModel, ParsedComponent } from '#domain/model';
 import type { OutputFormat } from '#domain/output-format';
 import type { Reporter } from '#domain/reporter';
@@ -28,7 +27,7 @@ export interface PropsInfoJson {
 export interface ExtractInput {
     tsconfigPath: string;
     targetFiles: string[];
-    config: ExtractorConfig;
+    outputDir: string;
     /** Defaults to a silent reporter, so library use produces no output. */
     reporter?: Reporter;
     /** Defaults to JSON. */

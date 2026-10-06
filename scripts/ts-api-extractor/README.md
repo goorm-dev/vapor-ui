@@ -20,16 +20,15 @@ This package automatically generates JSON documentation for `packages/core` comp
 Run from the monorepo root:
 
 ```bash
-# Run extraction from website (uses apps/website/docs-extractor.config.mjs)
+# Extract every component into apps/website/public/components/generated
 pnpm --filter website extract
 
 # Extract a specific component only
 pnpm --filter website extract --component Button
 ```
 
-There is no build step. The CLI runs straight from TypeScript source through `tsx`,
-and the package exports `./src/index.ts` so a config file can import `defineConfig`
-the same way. Only `pnpm install` is required.
+There is no build step. The CLI runs straight from TypeScript source through `tsx`.
+Only `pnpm install` is required.
 
 Run package tests:
 
@@ -41,54 +40,15 @@ pnpm --filter @vapor-ui/ts-api-extractor test:run
 
 ## CLI Reference
 
-| Option        | Short | Description                            |
-| ------------- | ----- | -------------------------------------- |
-| `--component` | `-n`  | Extract a specific component file only |
-| `--config`    | -     | Specify a config file path             |
+| Option        | Short | Required | Description                                  |
+| ------------- | ----- | -------- | -------------------------------------------- |
+| `--input`     | -     | yes      | Directory to scan for component `.tsx` files |
+| `--tsconfig`  | -     | yes      | `tsconfig.json` used to resolve types        |
+| `--out`       | -     | yes      | Directory the JSON files are written to      |
+| `--component` | `-n`  | no       | Extract only this component file             |
+| `--verbose`   | -     | no       | Print debug output                           |
 
-`verbose` is a config-file option, not a CLI flag.
-
-## Configuration
-
-### Config File Names
-
-The CLI searches for these filenames (in order):
-
-- `docs-extractor.config.mjs`
-- `docs-extractor.config.js`
-- `docs-extractor.config.cjs`
-- `docs-extractor.config.ts`
-
-> Note: The package directory was renamed to `ts-api-extractor`, but config filenames remain `docs-extractor.config.*` for backward compatibility.
-
-### Config Priority
-
-1. CLI flags (highest)
-2. File specified via `--config`
-3. Default config file in current working directory
-4. `src/domain/config/defaults.ts` (behavioral defaults only)
-
-`inputPath`, `tsconfig` and `outputDir` have **no defaults** — they depend on where
-the tool is invoked from, so a config file is required and extraction fails fast
-if any of the three is missing.
-
-### Config Schema
-
-```ts
-import { defineConfig } from '@vapor-ui/ts-api-extractor';
-
-export default defineConfig({
-    inputPath: '../../packages/core',
-    tsconfig: '../../packages/core/tsconfig.json',
-    exclude: [],
-    excludeDefaults: true,
-    outputDir: './public/components/generated',
-    filterExternal: true,
-    filterHtml: true,
-    filterSprinkles: true,
-    includeHtml: ['className'],
-});
-```
+Paths are resolved against the current working directory. There is no config file: the extraction policy below is fixed in code.
 
 ## Extraction Policy
 
@@ -106,14 +66,14 @@ The output file path and the fields listed here form the contract with these con
 
 ### Components
 
-- Scanned files: every `.tsx` file under `inputPath`, except `*.stories.tsx` and `*.test.tsx`.
+- Scanned files: every `.tsx` file under `--input`, except `*.stories.tsx` and `*.test.tsx`.
 - A component is an exported `namespace` that contains an exported `Props`, declared with either `type` or `interface`.
 - Each namespace is one component. A compound component produces one entry per part (`AvatarRoot`, `AvatarImage`, …).
 
 ### Output files
 
-- One JSON file per component in `outputDir`, named after the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
-- A full run deletes JSON files in `outputDir` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing.
+- One JSON file per component in `--out`, named after the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
+- A full run deletes JSON files in `--out` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing.
 - The CLI formats the written files with Prettier.
 
 ### Fields
@@ -201,15 +161,14 @@ Not extracted:
 
 ## Extraction Pipeline
 
-1. Parse CLI flags (`--component`, `--config`)
-2. Load and merge config (behavioral defaults + file config), failing if a path field is missing
-3. Scan target component files
-4. Initialize a ts-morph project from the configured `tsconfig`
-5. Parse exported namespaces and `Props` declarations (`interface` or `type`)
-6. Resolve types, extract defaults, and filter props
-7. Transform parsed props into sorted component models
-8. Serialize models to JSON files
-9. The CLI formats the written files with Prettier
+1. Parse CLI flags (`--input`, `--tsconfig`, `--out`, `--component`, `--verbose`)
+2. Scan target component files
+3. Initialize a ts-morph project from `--tsconfig`
+4. Parse exported namespaces and `Props` declarations (`interface` or `type`)
+5. Resolve types, extract defaults, and filter props
+6. Transform parsed props into sorted component models
+7. Serialize models to JSON files
+8. The CLI formats the written files with Prettier
 
 ## Architecture
 
@@ -219,7 +178,6 @@ Three layers. The folder a file lives in tells you which one it belongs to.
 src/
 ├── cli/                     # presentation — flags, exit codes, the only console.*
 │   ├── index.ts             #   meow entrypoint
-│   ├── options.ts           #   flags -> extract() inputs (no filesystem work)
 │   └── reporter.ts          #   the single Reporter implementation that prints
 │
 ├── domain/                  # business — no ts-morph, no node:*, no console
@@ -234,7 +192,6 @@ src/
 │   ├── serialize.ts         #   model -> json
 │   ├── clean-type.ts        #   type-string normalization
 │   ├── file-name.ts         #   kebab-case
-│   ├── config/              #   schema, validation, merge, defaults, defineConfig
 │   └── rules/               #   categorize, sort, normalize
 │
 ├── infrastructure/          # everything that touches the outside world
@@ -243,13 +200,11 @@ src/
 │   │   ├── default-values.ts     #   destructuring + recipe defaults
 │   │   ├── source-classifier.ts  #   where a symbol was declared
 │   │   └── type-printer/         #   the Resolver chain + base-ui mapper
-│   ├── fs/
-│   │   ├── component-scanner.ts  #   glob + target file resolution
-│   │   └── file-writer.ts        #   write bytes, run prettier (invoked by cli)
-│   └── config/loader.ts          #   find and import the config file
+│   └── fs/
+│       ├── component-scanner.ts  #   glob + target file resolution
+│       └── file-writer.ts        #   write bytes, remove stale files, run prettier
 │
-├── app/extract.ts           # wiring only — no rules, no IO of its own
-└── index.ts                 # public API (exported as source, no dist)
+└── app/extract.ts           # wiring only — no rules, no IO of its own
 ```
 
 Layer boundaries are enforced by ESLint (`eslint.config.mjs`): `domain/**` may not
@@ -268,13 +223,11 @@ import from `cli/` or `app/`.
 
 ### `Path does not exist`
 
-- Verify `inputPath` is correct relative to current working directory
-- Check for typos in `--config` path
+- Verify `--input` is correct relative to the current working directory
 
 ### `No .tsx files found`
 
-- Review `exclude` and `excludeDefaults` settings
-- Confirm target files have `.tsx` extension
+- Confirm target files have the `.tsx` extension
 
 ### `Component '<name>' not found`
 
@@ -289,7 +242,6 @@ import from `cli/` or `app/`.
 - Additional output formats: implement `OutputFormat` in `domain/output-format.ts`
   and pass it to `extract({ format })`
 - External plugin injection for Resolver/Filter/Defaults
-- Multi-config/profile support in CLI
 
 ## License
 
