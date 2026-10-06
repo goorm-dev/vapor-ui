@@ -34,7 +34,7 @@
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
-        "@types/node": "^20.19.43",
+        "@types/node": "^24.13.3",
         "@vitest/coverage-v8": "catalog:",
         "eslint": "catalog:",
         "tsup": "^8.5.1",
@@ -44,8 +44,5 @@
     },
     "peerDependencies": {
         "typescript": ">=5.9.3"
-    },
-    "engines": {
-        "node": ">=20.20.2"
     }
 }
