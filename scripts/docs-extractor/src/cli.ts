@@ -9,7 +9,7 @@ import path from 'node:path';
 function createConsoleReporter(verbose: boolean): Reporter {
     return {
         info: (message) => console.error(message),
-        warn: (message) => console.warn(`[ts-api-extractor] ${message}`),
+        warn: (message) => console.warn(`[docs-extractor] ${message}`),
         debug: (message) => {
             if (verbose) console.error(`[verbose] ${message}`);
         },
@@ -20,7 +20,7 @@ function runCli(): void {
     const cli = meow(
         `
   Usage
-    $ ts-api-extractor --input <dir> --tsconfig <file> --out <dir>
+    $ docs-extractor --input <dir> --tsconfig <file> --out <dir>
 
   Options
     --input           Directory to scan for component .tsx files
@@ -32,7 +32,7 @@ function runCli(): void {
   Paths are resolved against the current working directory.
 
   Example
-    $ ts-api-extractor --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --out ./public/components/generated
+    $ docs-extractor --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --out ./public/components/generated
 `,
         {
             importMeta: import.meta,

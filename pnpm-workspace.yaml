@@ -1,7 +1,7 @@
 packages:
     - apps/*
     - packages/*
-    - scripts/ts-api-extractor
+    - scripts/docs-extractor
     - scripts/sync-figma
 
 # Unified React 19 for entire monorepo

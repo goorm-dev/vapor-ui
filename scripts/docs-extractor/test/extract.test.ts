@@ -27,7 +27,7 @@ const roots: string[] = [];
 
 /** Writes `files` (relative path → content) next to a tsconfig.json and returns the root. */
 function createFixture(files: Record<string, string>): string {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ts-api-extractor-extract-'));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'docs-extractor-extract-'));
     roots.push(root);
 
     fs.writeFileSync(path.join(root, 'tsconfig.json'), TSCONFIG);

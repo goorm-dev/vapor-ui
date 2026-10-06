@@ -934,6 +934,40 @@ importers:
 
   packages/typescript-config: {}
 
+  scripts/docs-extractor:
+    dependencies:
+      glob:
+        specifier: ^10.5.0
+        version: 10.5.0
+      meow:
+        specifier: ^14.1.0
+        version: 14.1.0
+      ts-morph:
+        specifier: ^22.0.0
+        version: 22.0.0
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@types/node':
+        specifier: ^20.19.43
+        version: 20.19.43
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 3.2.7(@vitest/browser@3.2.7)(vitest@3.2.7)
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)
+      tsx:
+        specifier: ^4.23.13
+        version: 4.23.13
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 3.2.7(@types/debug@4.1.12)(@types/node@20.19.43)(@vitest/browser@3.2.7)(happy-dom@20.11.2)(jiti@2.7.0)(jsdom@29.0.2(@noble/hashes@1.8.0))(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.13)(yaml@2.9.0)
+
   scripts/sync-figma:
     dependencies:
       '@svgr/core':
@@ -979,40 +1013,6 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
-
-  scripts/ts-api-extractor:
-    dependencies:
-      glob:
-        specifier: ^10.5.0
-        version: 10.5.0
-      meow:
-        specifier: ^14.1.0
-        version: 14.1.0
-      ts-morph:
-        specifier: ^22.0.0
-        version: 22.0.0
-    devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@types/node':
-        specifier: ^20.19.43
-        version: 20.19.43
-      '@vitest/coverage-v8':
-        specifier: 'catalog:'
-        version: 3.2.7(@vitest/browser@3.2.7)(vitest@3.2.7)
-      eslint:
-        specifier: 'catalog:'
-        version: 9.39.5(jiti@2.7.0)
-      tsx:
-        specifier: ^4.23.13
-        version: 4.23.13
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-      vitest:
-        specifier: 'catalog:'
-        version: 3.2.7(@types/debug@4.1.12)(@types/node@20.19.43)(@vitest/browser@3.2.7)(happy-dom@20.11.2)(jiti@2.7.0)(jsdom@29.0.2(@noble/hashes@1.8.0))(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.13)(yaml@2.9.0)
 
 packages:
 

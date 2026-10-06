@@ -309,7 +309,7 @@ onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 
 **5. Never document default values**
 
-Don't write the `@default` tag and don't write `Default:` inline. The extractor (`scripts/ts-api-extractor`) does not parse the `@default` tag; it reads `defaultValue` from the component function's destructuring defaults via the AST, so a default written in JSDoc is rendered twice in the docs table. Existing `@default` tags in the codebase stay as they are — just don't add new ones.
+Don't write the `@default` tag and don't write `Default:` inline. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag; it reads `defaultValue` from the component function's destructuring defaults via the AST, so a default written in JSDoc is rendered twice in the docs table. Existing `@default` tags in the codebase stay as they are — just don't add new ones.
 
 ```tsx
 // ❌ default duplicated in the docs table

@@ -1,4 +1,4 @@
-# @vapor-ui/ts-api-extractor
+# @vapor-ui/docs-extractor
 
 > **Internal Package** - This is a private package (`private: true`) for internal use only. Not published to npm.
 
@@ -10,7 +10,7 @@ This package automatically generates JSON documentation for `packages/core` comp
 
 **Key characteristics:**
 
-- Location: `scripts/ts-api-extractor`
+- Location: `scripts/docs-extractor`
 - Modules: `extract()` (read + policy) behind a thin CLI that writes the files
 - Primary usage: `pnpm --filter website extract`
 
@@ -32,9 +32,9 @@ Only `pnpm install` is required.
 Run package tests:
 
 ```bash
-pnpm --filter @vapor-ui/ts-api-extractor typecheck
-pnpm --filter @vapor-ui/ts-api-extractor lint
-pnpm --filter @vapor-ui/ts-api-extractor test:run
+pnpm docs-extractor typecheck
+pnpm docs-extractor lint
+pnpm docs-extractor test
 ```
 
 ## CLI Reference

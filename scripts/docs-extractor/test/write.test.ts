@@ -19,7 +19,7 @@ const AVATAR_ROOT: ComponentDoc = {
 let outputDir: string;
 
 beforeEach(() => {
-    outputDir = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'ts-api-extractor-write-')), 'out');
+    outputDir = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'docs-extractor-write-')), 'out');
 });
 
 afterEach(() => {
