@@ -86,6 +86,7 @@ The output file path and the fields listed here form the contract with these con
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
             "description": "Size of the avatar. Controls the width, height, and border radius.",
             "defaultValue": "md"
@@ -99,7 +100,8 @@ The output file path and the fields listed here form the contract with these con
 | `name`                 | Namespace name                                                    |
 | `description`          | See [Descriptions](#descriptions). Omitted when there is none     |
 | `props[].name`         | Property name                                                     |
-| `props[].type`         | See [Types](#types)                                               |
+| `props[].type`         | Summary type, one member per element. See [Types](#types)         |
+| `props[].detailedType` | Full type on one line. See [Types](#types)                        |
 | `props[].required`     | `true` when the property is not optional                          |
 | `props[].description`  | See [Descriptions](#descriptions). Omitted when there is none     |
 | `props[].defaultValue` | See [Default values](#default-values). Omitted when there is none |
@@ -137,10 +139,17 @@ Props are sorted by group, then by name within a group. A prop joins the first g
 
 ### Types
 
-- The printed type drops `undefined`, empty and duplicate union members.
-- A union made only of string literals is printed without quotes: `"sm" | "md"` → `sm | md`.
-- When every union member is a simple token (a literal, a number or a single identifier), `type` holds one member per element: `["sm", "md", "lg"]`. Otherwise `type` holds the whole printed type as its only element: `["string | ((state: Badge.State) => (string | undefined))"]`.
-- Base UI types are printed with their public vapor-ui names, `React.Ref<X>` as `Ref<X>`, and `import("…").` prefixes are removed (`src/read/type-printer/`).
+A prop type is split into the top-level union members TypeScript prints (`src/read/type-printer/type-members.ts`). Both fields are built from those members.
+
+| Field          | `className?: string \| ((state: Badge.State) => string)`    |
+| -------------- | ----------------------------------------------------------- |
+| `type`         | `["string", "function"]`                                    |
+| `detailedType` | `"string \| ((state: Badge.State) => string) \| undefined"` |
+
+- `type` leaves out `undefined`, prints a function member as `function`, and prints a string literal without quotes: `"sm"` → `sm`.
+- `detailedType` keeps every member, `undefined` included, with quotes and parentheses as TypeScript writes them.
+- Members are not split further: `boolean` stays `boolean`, and `ReactNode` and `React.Ref<X>` are not expanded. Members that print the same are listed once. `null` and `undefined` come last.
+- Base UI types are printed with their public vapor-ui names. `ReactElement<X, …>` is printed as `ReactElement<X>`, or `ReactElement` when `X` is `unknown`.
 
 ### Default values
 
