@@ -1,6 +1,5 @@
 import { baseUiResolver } from '#read/type-printer/base-ui-type';
 import { functionTypeResolver } from '#read/type-printer/function-type';
-import { importedTypeResolver } from '#read/type-printer/imported-type';
 import { primitiveResolver } from '#read/type-printer/primitive';
 import { reactAliasResolver } from '#read/type-printer/react-alias';
 import { reactElementResolver } from '#read/type-printer/react-element';
@@ -10,8 +9,6 @@ import {
     type Resolver,
     type ResolverContext,
     TYPE_FORMAT_FLAGS,
-    simplifyForwardRefType,
-    simplifyReactElementGeneric,
 } from '#read/type-printer/shared';
 import { unionWithFunctionResolver } from '#read/type-printer/union';
 import type { Reporter } from '#reporter';
@@ -29,7 +26,6 @@ const RESOLVERS: Resolver[] = [
     functionTypeResolver,
     unionWithFunctionResolver,
     baseUiResolver,
-    importedTypeResolver,
 ];
 
 export function resolveType(
@@ -51,5 +47,5 @@ export function resolveType(
     }
 
     reporter?.debug(`resolveType: "${rawText}" -> fallback`);
-    return simplifyReactElementGeneric(simplifyForwardRefType(rawText));
+    return rawText;
 }

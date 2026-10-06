@@ -53,27 +53,3 @@ export const PRESERVED_REACT_ALIASES = new Set([
     'ReactChild',
     'ReactFragment',
 ]);
-
-export function extractPropsName(typeText: string): string | null {
-    const match = typeText.match(/["']([^"']+)["']\)\.(\w+)\.Props/);
-    if (match) {
-        return `${match[2]}.Props`;
-    }
-
-    return null;
-}
-
-export function simplifyNodeModulesImports(typeText: string): string {
-    return typeText.replace(/import\(["'].*?["']\)\./g, '');
-}
-
-export function simplifyReactElementGeneric(typeText: string): string {
-    return typeText.replace(/,\s*string \| React\.JSXElementConstructor<any>>/g, '>');
-}
-
-export function simplifyForwardRefType(typeText: string): string {
-    return typeText.replace(
-        /React\.ForwardRefExoticComponent<Omit<([^,]+\.Props), "ref"> & React\.RefAttributes<[^>]+>>/g,
-        '$1',
-    );
-}
