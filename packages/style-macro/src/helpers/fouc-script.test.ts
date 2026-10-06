@@ -11,7 +11,7 @@ describe('buildColorSchemeScript', () => {
 
     it('uses default keys when no opts', () => {
         const s = buildColorSchemeScript();
-        expect(s).toContain('"vapor-theme"');
+        expect(s).toContain('"vapor-ui-theme"');
         expect(s).toContain('"data-vapor-theme"');
         expect(s).toContain('"system"');
     });

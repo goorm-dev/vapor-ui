@@ -1,4 +1,5 @@
 import { formatBuildError } from '~/compilers/code-frame';
+import { insertAfterDirectives } from '~/compilers/directives';
 import { transform } from '~/compilers/transform';
 
 import type { VaporPluginOptions } from './_factory';
@@ -53,5 +54,5 @@ export default async function vaporStyleTurbopackLoader(
 
     if (prepended.length === 0) return result.code;
 
-    return `${prepended.join('\n')}\n${result.code}`;
+    return insertAfterDirectives(result.code, prepended);
 }

@@ -4,6 +4,7 @@ import { parseSync } from 'oxc-parser';
 import type { ClassNameMode } from '~/models/class-name';
 import type { AnyProp, BuildError, IRRule } from '~/models/types';
 
+import { directivePrologueEnd } from './directives';
 import { emitCss } from './emit-css';
 import { type DynamicCallSite, type InjectContext, injectJsxStyleForCall } from './jsx-inject';
 import { walk } from './oxc-walk';
@@ -244,7 +245,9 @@ class Transformer {
         if (specifiers.length === 0) return;
 
         const inject = `import { ${specifiers.join(', ')} } from '${RUNTIME_IMPORT_SOURCE}';\n`;
-        this.#ms!.appendLeft(0, inject);
+        const insertPos = directivePrologueEnd(this.opts.source);
+
+        this.#ms!.appendLeft(insertPos, inject);
     }
 }
 

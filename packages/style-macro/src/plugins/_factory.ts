@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { createUnplugin } from 'unplugin';
 
 import { formatBuildError } from '~/compilers/code-frame';
+import { insertAfterDirectives } from '~/compilers/directives';
 import { transform } from '~/compilers/transform';
 import { type ColorSchemeScriptOpts, buildColorSchemeScript } from '~/helpers/fouc-script';
 import { resolveOptions } from '~/plugins/_options';
@@ -103,7 +104,7 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
             if (!prependLines.length) return null;
 
             return {
-                code: prependLines.join('\n') + '\n' + result.code,
+                code: insertAfterDirectives(result.code, prependLines),
                 map: null,
             };
         },

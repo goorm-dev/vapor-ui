@@ -109,6 +109,27 @@ describe('transform — dynamic slots', () => {
         expect(out.code).toContain('_resolveToken(');
     });
 
+    it('preserves `use client` directive when auto-injecting runtime import', () => {
+        const source = [
+            `'use client';`,
+            ``,
+            `import { useState } from 'react';`,
+            `import { css } from '@vapor-ui/style-macro';`,
+            ``,
+            `function Comp({ color }) {`,
+            `  const [, setX] = useState(0);`,
+            `  return <div className={css({ color })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/UC.tsx' });
+        expect(out.errors).toEqual([]);
+        // directive 가 반드시 첫 statement 로 유지되어야 함 (Next SWC 요구).
+        expect(out.code.startsWith(`'use client';`)).toBe(true);
+        // runtime import 가 directive 뒤에 삽입됐는지 확인.
+        const firstLines = out.code.split('\n').slice(0, 4).join('\n');
+        expect(firstLines).toContain('_resolveToken');
+    });
+
     it('auto-imports _resolveToken from the dedicated runtime subpath', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
