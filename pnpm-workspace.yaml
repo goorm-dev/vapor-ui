@@ -2,15 +2,23 @@ packages:
     - apps/*
     - packages/*
     - scripts/docs-extractor
-    - scripts/sync-figma
+    - scripts/icon-extractor
+
+engineStrict: true
+
+allowBuilds:
+    '@parcel/watcher': true
+    esbuild: true
+    sharp: true
+    unrs-resolver: true
 
 # Unified React 19 for entire monorepo
 # Libraries (packages/*) maintain peerDependencies for React 17/18/19 compatibility
 catalog:
-    react: ^19.2.8
-    react-dom: ^19.2.8
-    '@types/react': ^19.2.18
-    '@types/react-dom': ^19.2.5
+    react: ^19.3.0
+    react-dom: ^19.3.0
+    '@types/react': ^19.3.0
+    '@types/react-dom': ^19.3.0
     typescript: ^5.9.3
     eslint: ^9.39.5
     rolldown: 1.2.6
