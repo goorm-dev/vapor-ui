@@ -87,73 +87,117 @@ export default defineConfig({
     filterHtml: true,
     filterSprinkles: true,
     includeHtml: ['className'],
-    components: {
-        'button/button.tsx': {
-            include: ['data-testid'],
-        },
-    },
 });
 ```
 
-## Output Schema
+## Extraction Policy
 
-Each component generates a JSON file (`<kebab-case>.json`):
+This section is the specification of the generated JSON. The extractor implements exactly these rules.
+
+### Consumers
+
+| Consumer                                                          | Reads                                                                     |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`)    | file name, `description`, `props[]`                                       |
+| `apps/website` LLM text (`src/utils/get-component-doc.ts`)        | `props[]`                                                                 |
+| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL) | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
+
+The output file path and the fields listed here form the contract with these consumers. The generated files are committed; extraction is run by hand, not in CI or the build.
+
+### Components
+
+- Scanned files: every `.tsx` file under `inputPath`, except `*.stories.tsx` and `*.test.tsx`.
+- A component is an exported `namespace` that contains an exported `Props`, declared with either `type` or `interface`.
+- Each namespace is one component. A compound component produces one entry per part (`AvatarRoot`, `AvatarImage`, …).
+
+### Output files
+
+- One JSON file per component in `outputDir`, named after the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
+- A full run deletes JSON files in `outputDir` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing.
+- The CLI formats the written files with Prettier.
+
+### Fields
 
 ```json
 {
-    "name": "Button",
-    "displayName": "Button",
-    "description": "...",
+    "name": "AvatarRoot",
+    "description": "Avatar component for displaying a user's profile image with an automatic initial-based fallback. Renders a `<span>` element.",
     "props": [
         {
             "name": "size",
-            "type": ["sm", "md", "lg"],
+            "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "description": "...",
+            "description": "Size of the avatar. Controls the width, height, and border radius.",
             "defaultValue": "md"
         }
     ]
 }
 ```
 
-## Component Recognition
+| Field                  | Value                                                             |
+| ---------------------- | ----------------------------------------------------------------- |
+| `name`                 | Namespace name                                                    |
+| `description`          | See [Descriptions](#descriptions). Omitted when there is none     |
+| `props[].name`         | Property name                                                     |
+| `props[].type`         | See [Types](#types)                                               |
+| `props[].required`     | `true` when the property is not optional                          |
+| `props[].description`  | See [Descriptions](#descriptions). Omitted when there is none     |
+| `props[].defaultValue` | See [Default values](#default-values). Omitted when there is none |
 
-Components are recognized based on this pattern:
+`displayName` and `defaultElement` are not produced.
 
-- File contains `export namespace <ComponentName>`
-- Namespace contains `export type Props = ...` (an exported type alias named `Props`;
-  an `interface Props` is not picked up)
+### Descriptions
 
-Files not matching this pattern are excluded from extraction.
+- JSDoc is the only source. Hand edits to the generated JSON are overwritten by the next run.
+- Text is copied as written in the source (English). Translation is not part of extraction.
+- Component description: the description text of the last JSDoc block on `export const <NamespaceName>`.
+- Prop description: the description text of the property's JSDoc. When the property is declared in several places (e.g. vapor-ui re-declares a Base UI prop), the vapor-ui declaration wins; otherwise the first declaration that has a JSDoc.
+- JSDoc tags (`@default`, `@deprecated`, `@example`, …) are dropped.
 
-## Prop Processing
+### Props
 
-### Type Resolution
+Every property of `Props`, including inherited ones, is checked against these rules in order. The first matching rule decides.
 
-- Parses ts-morph types to strings
-- A chain of `Resolver` objects handles React/Base UI/function/union types; the
-  first one to return a non-null string wins (`type-printer/resolve-type.ts`)
-- Cleaner stage normalizes unions and abbreviates render callbacks
+1. `className` and `style`: kept.
+2. Declared in React types, DOM lib types, or a `node_modules` package other than Base UI: dropped.
+3. Name starts with `data-` or `aria-`: dropped.
+4. Declared in the sprinkles module, or named like a deprecated CSS shorthand (`$css`, `width`, `color`, …; full list in `src/domain/filter.ts`): dropped.
+5. Anything else (own props, recipe variant props, Base UI props): kept.
 
-### Default Value Extraction
+Props are sorted by group, then by name within a group. A prop joins the first group whose rule matches, checked in this sequence: required, composition, variants, state, base-ui, custom.
 
-Default values are merged from multiple sources:
+| Order | Group       | Rule                                                                                            |
+| ----- | ----------- | ----------------------------------------------------------------------------------------------- |
+| 1     | required    | Not optional                                                                                    |
+| 2     | variants    | Declared in a `.css.ts` file                                                                    |
+| 3     | state       | `value`, `defaultValue`, `onChange`, `on*Change`, `open`/`checked`/… and their `default*` forms |
+| 4     | custom      | Everything else                                                                                 |
+| 5     | base-ui     | Declared in Base UI                                                                             |
+| 6     | composition | `asChild`, `render`                                                                             |
 
-- Component parameter destructuring defaults
-- `recipe(...).defaultVariants` in `.css.ts` files
-- Recipe back-tracking via `RecipeVariants` type imports
+### Types
 
-### Prop Filtering
+- The printed type drops `undefined`, empty and duplicate union members.
+- A union made only of string literals is printed without quotes: `"sm" | "md"` → `sm | md`.
+- When every union member is a simple token (a literal, a number or a single identifier), `type` holds one member per element: `["sm", "md", "lg"]`. Otherwise `type` holds the whole printed type as its only element: `["string | ((state: Badge.State) => (string | undefined))"]`.
+- Base UI types are printed with their public vapor-ui names, `React.Ref<X>` as `Ref<X>`, and `import("…").` prefixes are removed (`src/infrastructure/ts-morph/type-printer/`).
 
-Props are filtered based on configuration:
+### Default values
 
-| Filter            | Description                                      |
-| ----------------- | ------------------------------------------------ |
-| `filterExternal`  | Excludes external types (React/DOM/node_modules) |
-| `filterHtml`      | Excludes HTML attributes (`data-*`, `aria-*`)    |
-| `filterSprinkles` | Excludes sprinkles/deprecated CSS props          |
-| `include`         | Overrides filters for specific props             |
-| `includeHtml`     | Overrides HTML filter for specific attributes    |
+Code is the only source. The first source that has a value for a prop wins:
+
+1. A destructuring default for the prop in `export const <NamespaceName>`.
+2. `defaultVariants` of the recipe the component calls as `<styles>.<recipe>(…)`, where `<styles>` is a namespace import of a `.css` file and the recipe is created with `recipe()` or `componentRecipe()`.
+
+Not extracted:
+
+- `@default` tags and `Default:` text in JSDoc. `Default:` text stays in the description as written.
+- Defaults that a root part passes to other parts through context (e.g. `TabsRoot` `size`): the root has no default of its own, and the part recipe's `defaultVariants` is not traced back to the root.
+
+### Warnings
+
+- At the end of a run, one warning lists every component and prop without a description, as `Component` and `Component.prop`.
+- Missing JSDoc does not fail the run; the exit code stays 0.
 
 ## Extraction Pipeline
 
