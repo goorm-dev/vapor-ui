@@ -1,12 +1,6 @@
-import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-    resolve: {
-        alias: {
-            '~': path.resolve(__dirname, './src'),
-        },
-    },
     test: {
         globals: true,
         environment: 'node',
@@ -16,14 +10,7 @@ export default defineConfig({
             reporter: ['text', 'json', 'html', 'lcov'],
             include: ['src/**/*.ts'],
 
-            exclude: [
-                'src/index.ts',
-                'src/bin/**',
-                'src/cli/**',
-                'src/output/writer.ts',
-                'src/types/**',
-                'src/**/types.ts',
-            ],
+            exclude: ['src/cli.ts'],
 
             thresholds: {
                 lines: 70,

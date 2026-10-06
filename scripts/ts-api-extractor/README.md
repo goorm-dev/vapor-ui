@@ -11,8 +11,7 @@ This package automatically generates JSON documentation for `packages/core` comp
 **Key characteristics:**
 
 - Location: `scripts/ts-api-extractor`
-- Architecture: three layers (`cli` / `domain` / `infrastructure`) wired together by `app/extract.ts`
-- Pipeline: `scan -> parse -> resolve -> defaults -> filter -> transform -> write`
+- Modules: `extract()` (read + policy) behind a thin CLI that writes the files
 - Primary usage: `pnpm --filter website extract`
 
 ## Quick Start
@@ -121,7 +120,7 @@ Every property of `Props`, including inherited ones, is checked against these ru
 1. `className` and `style`: kept.
 2. Declared in React types, DOM lib types, or a `node_modules` package other than Base UI: dropped.
 3. Name starts with `data-` or `aria-`: dropped.
-4. Declared in the sprinkles module, or named like a deprecated CSS shorthand (`$css`, `width`, `color`, …; full list in `src/domain/filter.ts`): dropped.
+4. Declared in the sprinkles module, or named like a deprecated CSS shorthand (`$css`, `width`, `color`, …; full list in `src/policy.ts`): dropped.
 5. Anything else (own props, recipe variant props, Base UI props): kept.
 
 Props are sorted by group, then by name within a group. A prop joins the first group whose rule matches, checked in this sequence: required, composition, variants, state, base-ui, custom.
@@ -140,7 +139,7 @@ Props are sorted by group, then by name within a group. A prop joins the first g
 - The printed type drops `undefined`, empty and duplicate union members.
 - A union made only of string literals is printed without quotes: `"sm" | "md"` → `sm | md`.
 - When every union member is a simple token (a literal, a number or a single identifier), `type` holds one member per element: `["sm", "md", "lg"]`. Otherwise `type` holds the whole printed type as its only element: `["string | ((state: Badge.State) => (string | undefined))"]`.
-- Base UI types are printed with their public vapor-ui names, `React.Ref<X>` as `Ref<X>`, and `import("…").` prefixes are removed (`src/infrastructure/ts-morph/type-printer/`).
+- Base UI types are printed with their public vapor-ui names, `React.Ref<X>` as `Ref<X>`, and `import("…").` prefixes are removed (`src/read/type-printer/`).
 
 ### Default values
 
@@ -159,57 +158,26 @@ Not extracted:
 - At the end of a run, one warning lists every component and prop without a description, as `Component` and `Component.prop`.
 - Missing JSDoc does not fail the run; the exit code stays 0.
 
-## Extraction Pipeline
-
-1. Parse CLI flags (`--input`, `--tsconfig`, `--out`, `--component`, `--verbose`)
-2. Scan target component files
-3. Initialize a ts-morph project from `--tsconfig`
-4. Parse exported namespaces and `Props` declarations (`interface` or `type`)
-5. Resolve types, extract defaults, and filter props
-6. Transform parsed props into sorted component models
-7. Serialize models to JSON files
-8. The CLI formats the written files with Prettier
-
 ## Architecture
 
-Three layers. The folder a file lives in tells you which one it belongs to.
-
 ```text
-src/
-├── cli/                     # presentation — flags, exit codes, the only console.*
-│   ├── index.ts             #   meow entrypoint
-│   └── reporter.ts          #   the single Reporter implementation that prints
-│
-├── domain/                  # business — no ts-morph, no node:*, no console
-│   ├── model.ts             #   ParsedProp / PropModel / ComponentModel
-│   ├── output.ts            #   JSON shape + extract() input/output types
-│   ├── output-format.ts     #   how a component becomes a file (name + bytes)
-│   ├── stage-config.ts      #   per-stage config (ParseConfig, FilterConfig)
-│   ├── reporter.ts          #   output port implemented by cli/reporter.ts
-│   ├── errors.ts            #   ExtractorError (bad request, not a crash)
-│   ├── filter.ts            #   prop inclusion rules
-│   ├── transform.ts         #   parsed -> model
-│   ├── serialize.ts         #   model -> json
-│   ├── clean-type.ts        #   type-string normalization
-│   ├── file-name.ts         #   kebab-case
-│   └── rules/               #   categorize, sort, normalize
-│
-├── infrastructure/          # everything that touches the outside world
-│   ├── ts-morph/
-│   │   ├── component-reader.ts   #   namespace/Props -> ParsedComponent
-│   │   ├── default-values.ts     #   destructuring + recipe defaults
-│   │   ├── source-classifier.ts  #   where a symbol was declared
-│   │   └── type-printer/         #   the Resolver chain + base-ui mapper
-│   └── fs/
-│       ├── component-scanner.ts  #   glob + target file resolution
-│       └── file-writer.ts        #   write bytes, remove stale files, run prettier
-│
-└── app/extract.ts           # wiring only — no rules, no IO of its own
+cli.ts ──► extract() ──► read/     source → ParsedComponent[]   (ts-morph, filesystem)
+   │                └──► policy()  ParsedComponent[] → ComponentDoc[]   (pure)
+   └─────► writeDocs()  ComponentDoc[] → <out>/*.json, then prettier
 ```
 
-Layer boundaries are enforced by ESLint (`eslint.config.mjs`): `domain/**` may not
-import `ts-morph`, `node:*`, `glob` or `meow`, and `infrastructure/**` may not
-import from `cli/` or `app/`.
+| Module           | Interface                                                                     | Owns                                                                                         |
+| ---------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `src/extract.ts` | `extract({ inputPath, tsconfigPath, component?, reporter? }): ComponentDoc[]` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing |
+| `src/read/`      | `parseSourceFile()`, `scanComponentFiles()` (used by `extract()` only)        | Component detection, descriptions, default values, source classification, type printing      |
+| `src/policy.ts`  | `policy(components: ParsedComponent[]): ComponentDoc[]`                       | README "Props", "Types" and the field shape. No ts-morph, no filesystem                      |
+| `src/write.ts`   | `writeDocs(outputDir, docs, { removeStale })`, `formatWithPrettier()`         | File names, JSON bytes, stale-file removal                                                   |
+| `src/cli.ts`     | the `--input`/`--tsconfig`/`--out` command                                    | Flags, the console reporter, exit codes                                                      |
+| `src/model.ts`   | `ParsedComponent`, `ComponentDoc` and their prop types                        | The data passed between the modules above                                                    |
+
+Tests go through `extract()` (fixture sources on disk), `policy()` (plain data) and `writeDocs()` (a temp directory), not through module internals.
+
+ESLint (`eslint.config.mjs`) keeps `policy.ts` and `model.ts` free of `ts-morph`, `node:*`, `glob` and `meow`, and keeps `read/` from importing the policy, the writer or the CLI.
 
 ## Quality Standards
 
@@ -236,12 +204,6 @@ import from `cli/` or `app/`.
 ### `module not found` when running from website
 
 - Run `pnpm install` — `tsx` and the workspace link are set up by install, not by a build
-
-## Future Extensions
-
-- Additional output formats: implement `OutputFormat` in `domain/output-format.ts`
-  and pass it to `extract({ format })`
-- External plugin injection for Resolver/Filter/Defaults
 
 ## License
 

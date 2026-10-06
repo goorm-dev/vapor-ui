@@ -7,7 +7,7 @@
         "build": "next build",
         "clean": "rm -rf node_modules .next .turbo .source",
         "dev": "next dev --turbo",
-        "extract": "tsx --tsconfig ../../scripts/ts-api-extractor/tsconfig.json ../../scripts/ts-api-extractor/src/cli/index.ts --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --out ./public/components/generated",
+        "extract": "tsx --tsconfig ../../scripts/ts-api-extractor/tsconfig.json ../../scripts/ts-api-extractor/src/cli.ts --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --out ./public/components/generated",
         "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src",
         "start": "next start",

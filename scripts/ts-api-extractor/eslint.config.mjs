@@ -1,15 +1,18 @@
 import { configs } from '@repo/eslint-config/base';
 
 /**
- * Layer boundaries.
+ * Module boundaries.
  *
- * domain/ holds the rules that define what a documented component is. It must
- * stay free of ts-morph, the filesystem and the console so the rules can be read
- * and tested without a TypeScript program. infrastructure/ may use anything, but
- * must not reach up into cli/ or app/.
+ * policy.ts holds the rules that decide what a documented component looks like.
+ * It stays free of ts-morph, the filesystem and the console so every rule can be
+ * read and tested with plain data. read/ turns source into ParsedComponent and
+ * must not reach up into the policy, the writer or the CLI.
+ *
+ * These patterns use gitignore syntax, where a leading `#` starts a comment,
+ * so the subpath imports are written with an escaped `\#`.
  */
-const layerBoundaries = {
-    files: ['src/domain/**/*.ts'],
+const policyBoundaries = {
+    files: ['src/policy.ts', 'src/model.ts'],
     rules: {
         'no-restricted-imports': [
             'error',
@@ -18,11 +21,11 @@ const layerBoundaries = {
                     {
                         group: ['ts-morph', 'node:*', 'glob', 'meow'],
                         message:
-                            'domain/ must stay dependency-free. Put anything touching ts-morph, the filesystem or the CLI in infrastructure/.',
+                            'The policy must stay dependency-free. Put anything touching ts-morph or the filesystem in read/.',
                     },
                     {
-                        group: ['~/infrastructure/*', '~/cli/*', '~/app/*'],
-                        message: 'domain/ must not depend on outer layers.',
+                        group: ['\\#read/*', '\\#extract', '\\#write', '\\#cli'],
+                        message: 'The policy must not depend on reading, writing or the CLI.',
                     },
                 ],
             },
@@ -30,16 +33,17 @@ const layerBoundaries = {
     },
 };
 
-const infrastructureBoundaries = {
-    files: ['src/infrastructure/**/*.ts'],
+const readBoundaries = {
+    files: ['src/read/**/*.ts'],
     rules: {
         'no-restricted-imports': [
             'error',
             {
                 patterns: [
                     {
-                        group: ['~/cli/*', '~/app/*'],
-                        message: 'infrastructure/ must not depend on the CLI or the app layer.',
+                        group: ['\\#policy', '\\#extract', '\\#write', '\\#cli'],
+                        message:
+                            'read/ only turns source into ParsedComponent; the policy, writing and the CLI sit on top of it.',
                     },
                 ],
             },
@@ -47,4 +51,4 @@ const infrastructureBoundaries = {
     },
 };
 
-export default [...configs, layerBoundaries, infrastructureBoundaries];
+export default [...configs, policyBoundaries, readBoundaries];
