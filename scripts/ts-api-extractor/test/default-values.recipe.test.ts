@@ -1,64 +1,11 @@
 /**
  * Variant parser unit tests
  */
-import { Project } from 'ts-morph';
-
 import {
     findRecipeUsageInComponent,
-    getRecipeNameFromVariantsType,
     parseRecipeDefaultVariants,
 } from '#infrastructure/ts-morph/default-values';
-
-describe('getRecipeNameFromVariantsType', () => {
-    let project: Project;
-
-    beforeEach(() => {
-        project = new Project({
-            useInMemoryFileSystem: true,
-            compilerOptions: { strict: true },
-        });
-    });
-
-    it('Variants type에서 recipe 변수명 추출', () => {
-        const cssFile = project.createSourceFile(
-            'button.css.ts',
-            `
-            const buttonRecipe = recipe({});
-            export type ButtonVariants = typeof buttonRecipe;
-            `,
-        );
-
-        const result = getRecipeNameFromVariantsType(cssFile, 'ButtonVariants');
-
-        expect(result).toBe('buttonRecipe');
-    });
-
-    it('type alias 없으면 null', () => {
-        const cssFile = project.createSourceFile(
-            'button.css.ts',
-            `
-            const buttonRecipe = recipe({});
-            `,
-        );
-
-        const result = getRecipeNameFromVariantsType(cssFile, 'NonExistentType');
-
-        expect(result).toBeNull();
-    });
-
-    it('TypeQuery 없으면 null', () => {
-        const cssFile = project.createSourceFile(
-            'button.css.ts',
-            `
-            export type ButtonVariants = { size: 'sm' | 'md' };
-            `,
-        );
-
-        const result = getRecipeNameFromVariantsType(cssFile, 'ButtonVariants');
-
-        expect(result).toBeNull();
-    });
-});
+import { Project } from 'ts-morph';
 
 describe('findRecipeUsageInComponent', () => {
     let project: Project;

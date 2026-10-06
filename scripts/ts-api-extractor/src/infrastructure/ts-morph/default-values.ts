@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { type ImportSpecifier, type SourceFile, SyntaxKind } from 'ts-morph';
+import { type SourceFile, SyntaxKind } from 'ts-morph';
 
 export type DefaultValues = Record<string, string>;
 
@@ -83,11 +83,6 @@ interface CssImport {
     resolvedPath: string;
 }
 
-interface VariantsTypeImport {
-    typeName: string;
-    resolvedPath: string;
-}
-
 export function findCssImports(sourceFile: SourceFile): CssImport[] {
     const fileDir = path.dirname(sourceFile.getFilePath());
 
@@ -95,71 +90,6 @@ export function findCssImports(sourceFile: SourceFile): CssImport[] {
         modulePath,
         resolvedPath: path.resolve(fileDir, `${modulePath}.ts`),
     }));
-}
-
-function isRecipeVariantsType(namedImport: ImportSpecifier): boolean {
-    const symbol = namedImport.getSymbol();
-    if (!symbol) return false;
-
-    const typeAlias = symbol
-        .getDeclarations()
-        .find((declaration) => declaration.isKind(SyntaxKind.TypeAliasDeclaration));
-    if (!typeAlias) return false;
-
-    const typeNode = typeAlias.asKind(SyntaxKind.TypeAliasDeclaration)?.getTypeNode();
-    if (!typeNode?.isKind(SyntaxKind.TypeReference)) return false;
-
-    const typeRef = typeNode.asKind(SyntaxKind.TypeReference);
-    const typeName = typeRef?.getTypeName();
-    if (!typeName) return false;
-
-    const typeSymbol = typeName.getSymbol();
-    if (!typeSymbol || typeSymbol.getName() !== 'RecipeVariants') {
-        return false;
-    }
-
-    const typeDecl = typeSymbol.getDeclarations()[0];
-    return typeDecl?.getSourceFile().getFilePath().includes('@vanilla-extract/recipes') ?? false;
-}
-
-export function findVariantsTypeImports(sourceFile: SourceFile): VariantsTypeImport[] {
-    const imports: VariantsTypeImport[] = [];
-    const fileDir = path.dirname(sourceFile.getFilePath());
-
-    for (const importDecl of sourceFile.getImportDeclarations()) {
-        const modulePath = importDecl.getModuleSpecifierValue();
-        if (!modulePath.endsWith('.css')) continue;
-
-        for (const namedImport of importDecl.getNamedImports()) {
-            if (isRecipeVariantsType(namedImport)) {
-                imports.push({
-                    typeName: namedImport.getName(),
-                    resolvedPath: path.resolve(fileDir, `${modulePath}.ts`),
-                });
-            }
-        }
-    }
-
-    return imports;
-}
-
-export function getRecipeNameFromVariantsType(
-    cssFile: SourceFile,
-    variantsTypeName: string,
-): string | null {
-    const typeAlias = cssFile.getTypeAlias(variantsTypeName);
-    if (!typeAlias) return null;
-
-    let recipeName: string | null = null;
-
-    typeAlias.forEachDescendant((node) => {
-        if (recipeName || !node.isKind(SyntaxKind.TypeQuery)) return;
-
-        const expressionName = node.getExprName();
-        recipeName = expressionName.getText();
-    });
-
-    return recipeName;
 }
 
 export function findRecipeUsageInComponent(
@@ -246,24 +176,6 @@ export function getDefaultValuesForNamespace(
 
         const cssFile = sourceFile.getProject().getSourceFile(cssImport.resolvedPath);
         if (!cssFile) continue;
-
-        const defaults = parseRecipeDefaultVariants(cssFile, recipeName);
-        if (!defaults) continue;
-
-        for (const [key, value] of Object.entries(defaults)) {
-            if (!(key in result)) {
-                result[key] = value;
-            }
-        }
-    }
-
-    const variantsImports = findVariantsTypeImports(sourceFile);
-    for (const variantsImport of variantsImports) {
-        const cssFile = sourceFile.getProject().getSourceFile(variantsImport.resolvedPath);
-        if (!cssFile) continue;
-
-        const recipeName = getRecipeNameFromVariantsType(cssFile, variantsImport.typeName);
-        if (!recipeName) continue;
 
         const defaults = parseRecipeDefaultVariants(cssFile, recipeName);
         if (!defaults) continue;
