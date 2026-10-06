@@ -39,7 +39,7 @@ export interface Resolver {
 }
 
 export interface ResolverContext {
-    /** Pre-computed `type.getText(...)`, used by the text-matching resolvers. */
+    /** Pre-computed `type.getText(...)`, printed as is when a resolver keeps the type whole. */
     rawText: string;
     baseUiMap?: BaseUiTypeMap;
     contextNode?: Node;
@@ -52,4 +52,5 @@ export const PRESERVED_REACT_ALIASES = new Set([
     'ReactElement',
     'ReactChild',
     'ReactFragment',
+    'Ref',
 ]);

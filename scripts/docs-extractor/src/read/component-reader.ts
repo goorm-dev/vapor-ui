@@ -2,8 +2,8 @@ import type { ParsedComponent, ParsedProp } from '#model';
 import { getDefaultValuesForComponent } from '#read/default-values';
 import { classifyPropSource, isProjectOwned } from '#read/source-classifier';
 import { buildBaseUiTypeMap } from '#read/type-printer/base-ui-mapper';
-import { resolveType } from '#read/type-printer/resolve-type';
 import type { BaseUiTypeMap } from '#read/type-printer/shared';
+import { resolveTypeMembers } from '#read/type-printer/type-members';
 import { type Reporter, silentReporter } from '#reporter';
 import type {
     InterfaceDeclaration,
@@ -81,7 +81,7 @@ function extractParsedProp(
     reporter?: Reporter,
 ): ParsedProp {
     const name = symbol.getName();
-    const typeString = resolveType(
+    const typeMembers = resolveTypeMembers(
         symbol.getTypeAtLocation(declNode),
         baseUiMap,
         declNode,
@@ -90,7 +90,7 @@ function extractParsedProp(
 
     return {
         name,
-        typeString,
+        typeMembers,
         isOptional: symbol.isOptional(),
         source: classifyPropSource(symbol),
         description: getPropDescription(symbol),

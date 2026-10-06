@@ -4,11 +4,26 @@
  * Covers README "Extraction Policy" → Props, Types and Fields through the one
  * public function, with plain ParsedComponent data in and ComponentDoc out.
  */
-import type { ParsedComponent, ParsedProp } from '#model';
+import type { ParsedComponent, ParsedProp, ParsedTypeMember } from '#model';
 import { policy } from '#policy';
 
+const STRING: ParsedTypeMember = { text: 'string', kind: 'other' };
+const UNDEFINED: ParsedTypeMember = { text: 'undefined', kind: 'undefined' };
+
 function prop(name: string, overrides: Partial<ParsedProp> = {}): ParsedProp {
-    return { name, typeString: 'string', isOptional: true, source: 'project', ...overrides };
+    return { name, typeMembers: [STRING], isOptional: true, source: 'project', ...overrides };
+}
+
+function other(text: string): ParsedTypeMember {
+    return { text, kind: 'other' };
+}
+
+function literal(value: string): ParsedTypeMember {
+    return { text: `"${value}"`, kind: 'string-literal' };
+}
+
+function fn(text: string): ParsedTypeMember {
+    return { text, kind: 'function' };
 }
 
 function component(props: ParsedProp[], overrides: Partial<ParsedComponent> = {}): ParsedComponent {
@@ -23,8 +38,9 @@ function namesOf(...props: ParsedProp[]): string[] {
     return propsOf(...props).map((doc) => doc.name);
 }
 
-function typeOf(typeString: string): string[] {
-    return propsOf(prop('x', { typeString }))[0].type;
+function typesOf(...typeMembers: ParsedTypeMember[]) {
+    const [{ type, detailedType }] = propsOf(prop('x', { typeMembers }));
+    return { type, detailedType };
 }
 
 describe('policy', () => {
@@ -143,73 +159,50 @@ describe('policy', () => {
     });
 
     describe('타입 (README Types)', () => {
-        it('union에서 undefined를 뺀다', () => {
-            expect(typeOf('string | undefined')).toEqual(['string']);
+        it('요약 type은 멤버마다 원소 하나로 쓰고 undefined는 뺀다', () => {
+            expect(typesOf(other('boolean'), UNDEFINED).type).toEqual(['boolean']);
         });
 
-        it('중복된 union 멤버를 뺀다', () => {
-            expect(typeOf('string | string | number')).toEqual(['string', 'number']);
+        it('detailedType은 undefined까지 모든 멤버를 | 로 잇는다', () => {
+            expect(typesOf(other('boolean'), UNDEFINED).detailedType).toBe('boolean | undefined');
         });
 
-        it('빈 union 멤버를 뺀다', () => {
-            expect(typeOf('a |  | b')).toEqual(['a', 'b']);
+        it('string literal은 요약에서 따옴표를 떼고 detailedType에서는 유지한다', () => {
+            expect(typesOf(literal('sm'), literal('md'), UNDEFINED)).toEqual({
+                type: ['sm', 'md'],
+                detailedType: '"sm" | "md" | undefined',
+            });
         });
 
-        it('string literal로만 된 union은 따옴표 없이 멤버별로 나눈다', () => {
-            expect(typeOf('"sm" | "md" | "lg"')).toEqual(['sm', 'md', 'lg']);
+        it('요약에서 함수 멤버는 function으로 줄인다', () => {
+            expect(typesOf(STRING, fn('(state: Button.State) => string'), UNDEFINED)).toEqual({
+                type: ['string', 'function'],
+                detailedType: 'string | ((state: Button.State) => string) | undefined',
+            });
         });
 
-        it('따옴표를 벗기기 전에 undefined부터 뺀다', () => {
-            expect(typeOf('"sm" | "md" | undefined')).toEqual(['sm', 'md']);
+        it('함수 하나뿐인 타입은 detailedType에서 괄호로 감싸지 않는다', () => {
+            expect(typesOf(fn('(value: string) => void'))).toEqual({
+                type: ['function'],
+                detailedType: '(value: string) => void',
+            });
         });
 
-        it('리터럴이 아닌 멤버가 섞이면 따옴표를 유지한다', () => {
-            expect(typeOf('"sm" | number')).toEqual(['"sm"', 'number']);
-        });
-
-        it('숫자 union은 멤버별로 나눈다', () => {
-            expect(typeOf('1 | 2 | 3 | 4')).toEqual(['1', '2', '3', '4']);
-        });
-
-        it('식별자 union은 멤버별로 나눈다', () => {
-            expect(typeOf('string | number')).toEqual(['string', 'number']);
-        });
-
-        it('union이 아닌 타입은 원소 하나로 둔다', () => {
-            expect(typeOf('boolean')).toEqual(['boolean']);
-        });
-
-        it('함수 멤버가 있는 union은 통째로 원소 하나로 둔다', () => {
+        it('그 밖의 멤버는 출력된 텍스트 그대로 쓴다', () => {
             expect(
-                typeOf(
-                    'undefined | ReactElement | ((props: HTMLProps, state: Button.State) => ReactElement)',
-                ),
-            ).toEqual(['ReactElement | ((props: HTMLProps, state: Button.State) => ReactElement)']);
-        });
-
-        it('매개변수에 union이 있는 함수 타입은 나누지 않는다', () => {
-            expect(typeOf('(value: string | number) => void')).toEqual([
-                '(value: string | number) => void',
-            ]);
-        });
-
-        it.each(['(a | b) | c', 'Array<a | b> | c', '{ a: x | y } | z', '[a | b] | c'])(
-            '괄호·제네릭·객체·튜플 안의 |는 나누지 않는다: %s',
-            (typeString) => {
-                expect(typeOf(typeString)).toEqual([typeString]);
-            },
-        );
-
-        it('괄호로 묶인 멤버도 중복이면 뺀다', () => {
-            expect(typeOf('(a | b) | (a | b) | c')).toEqual(['(a | b) | c']);
+                typesOf(other('ReactNode'), other('React.RefObject<HTMLElement | null>')),
+            ).toEqual({
+                type: ['ReactNode', 'React.RefObject<HTMLElement | null>'],
+                detailedType: 'ReactNode | React.RefObject<HTMLElement | null>',
+            });
         });
     });
 
     describe('필드 (README Fields)', () => {
-        it('prop 필드를 name, type, required, description, defaultValue 순으로 쓴다', () => {
+        it('prop 필드를 name, type, detailedType, required, description, defaultValue 순으로 쓴다', () => {
             const [doc] = propsOf(
                 prop('size', {
-                    typeString: '"sm" | "md"',
+                    typeMembers: [literal('sm'), literal('md'), UNDEFINED],
                     source: 'variants',
                     description: '버튼 크기',
                     defaultValue: 'md',
@@ -219,6 +212,7 @@ describe('policy', () => {
             expect(doc).toEqual({
                 name: 'size',
                 type: ['sm', 'md'],
+                detailedType: '"sm" | "md" | undefined',
                 required: false,
                 description: '버튼 크기',
                 defaultValue: 'md',
@@ -226,6 +220,7 @@ describe('policy', () => {
             expect(Object.keys(doc)).toEqual([
                 'name',
                 'type',
+                'detailedType',
                 'required',
                 'description',
                 'defaultValue',
@@ -237,9 +232,10 @@ describe('policy', () => {
         });
 
         it('설명·기본값이 없으면 필드를 생략한다', () => {
-            expect(propsOf(prop('disabled', { typeString: 'boolean' }))[0]).toEqual({
+            expect(propsOf(prop('disabled', { typeMembers: [other('boolean')] }))[0]).toEqual({
                 name: 'disabled',
                 type: ['boolean'],
+                detailedType: 'boolean',
                 required: false,
             });
         });

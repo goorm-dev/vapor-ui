@@ -3,7 +3,6 @@ import { functionTypeResolver } from '#read/type-printer/function-type';
 import { primitiveResolver } from '#read/type-printer/primitive';
 import { reactAliasResolver } from '#read/type-printer/react-alias';
 import { reactElementResolver } from '#read/type-printer/react-element';
-import { refTypeResolver } from '#read/type-printer/ref-type';
 import {
     type BaseUiTypeMap,
     type Resolver,
@@ -19,7 +18,6 @@ import { type Node, type Type } from 'ts-morph';
  * checks come before the ones that walk the type graph.
  */
 const RESOLVERS: Resolver[] = [
-    refTypeResolver,
     reactAliasResolver,
     primitiveResolver,
     reactElementResolver,

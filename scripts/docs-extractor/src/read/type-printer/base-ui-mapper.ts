@@ -11,7 +11,7 @@
 import { isBaseUiPath } from '#read/source-classifier';
 import type { BaseUiTypeMap } from '#read/type-printer/shared';
 import path from 'node:path';
-import { type SourceFile, SyntaxKind, type Type, type TypeAliasDeclaration } from 'ts-morph';
+import { type SourceFile, SyntaxKind, type Type, type TypeAliasDeclaration, ts } from 'ts-morph';
 
 /**
  * Extract base-ui qualified path from Type object using AST.
@@ -163,10 +163,16 @@ function collectNamespaceTypeAliases(
                 // Fallback key: namespace.alias format
                 map[`${nsName}.${aliasName}`] = { type: aliasType, vaporPath };
 
-                // Flat base-ui symbol name (e.g. CollapsibleRootChangeEventDetails)
+                // Flat base-ui symbol name (e.g. CollapsibleRootChangeEventDetails).
+                // Anonymous types share TypeScript's internal name `__type`, so they get no key.
                 const flatName =
                     aliasType.getSymbol()?.getName() ?? aliasType.getAliasSymbol()?.getName();
-                if (flatName && flatName !== aliasName && !map[flatName]) {
+                if (
+                    flatName &&
+                    flatName !== aliasName &&
+                    flatName !== ts.InternalSymbolName.Type &&
+                    !map[flatName]
+                ) {
                     map[flatName] = { type: aliasType, vaporPath };
                 }
             }

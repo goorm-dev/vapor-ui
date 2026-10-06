@@ -96,10 +96,17 @@ describe('extract', () => {
                 name: 'BadgeRoot',
                 description: '상태를 표시하는 뱃지.',
                 props: [
-                    { name: 'label', type: ['string'], required: true, description: '뱃지 라벨' },
+                    {
+                        name: 'label',
+                        type: ['string'],
+                        detailedType: 'string',
+                        required: true,
+                        description: '뱃지 라벨',
+                    },
                     {
                         name: 'size',
                         type: ['sm', 'md', 'lg'],
+                        detailedType: '"sm" | "md" | "lg" | undefined',
                         required: false,
                         description: '뱃지 크기',
                         defaultValue: 'md',
@@ -164,7 +171,15 @@ describe('컴포넌트 인식', () => {
         expect(doc).toEqual({
             name: 'SheetRoot',
             description: '화면 가장자리에서 열리는 패널.',
-            props: [{ name: 'open', type: ['boolean'], required: false, description: '열림 여부' }],
+            props: [
+                {
+                    name: 'open',
+                    type: ['boolean'],
+                    detailedType: 'boolean | undefined',
+                    required: false,
+                    description: '열림 여부',
+                },
+            ],
         });
     });
 
@@ -340,6 +355,7 @@ describe('설명', () => {
         expect(propOf(doc, 'size')).toEqual({
             name: 'size',
             type: ['sm', 'lg'],
+            detailedType: '"sm" | "lg" | undefined',
             required: false,
             description: '버튼 크기',
         });
@@ -364,8 +380,18 @@ describe('설명', () => {
         expect(doc).toEqual({
             name: 'Empty',
             props: [
-                { name: 'value', type: ['string'], required: false },
-                { name: 'other', type: ['string'], required: false },
+                {
+                    name: 'value',
+                    type: ['string'],
+                    detailedType: 'string | undefined',
+                    required: false,
+                },
+                {
+                    name: 'other',
+                    type: ['string'],
+                    detailedType: 'string | undefined',
+                    required: false,
+                },
             ],
         });
     });
@@ -564,8 +590,8 @@ describe('기본값', () => {
         );
 
         expect(docs.map((doc) => propOf(doc, 'size'))).toEqual([
-            { name: 'size', type: ['string'], required: false },
-            { name: 'size', type: ['string'], required: false },
+            { name: 'size', type: ['string'], detailedType: 'string | undefined', required: false },
+            { name: 'size', type: ['string'], detailedType: 'string | undefined', required: false },
         ]);
     });
 
@@ -598,6 +624,7 @@ describe('기본값', () => {
         expect(propOf(docs[0], 'size')).toEqual({
             name: 'size',
             type: ['sm', 'md'],
+            detailedType: '"sm" | "md" | undefined',
             required: false,
         });
     });
@@ -621,7 +648,28 @@ describe('기본값', () => {
     });
 });
 
+const REACT_TYPES = `
+    declare namespace React {
+        interface ReactElement {
+            type: unknown;
+        }
+        interface RefObject<T> {
+            current: T;
+        }
+        type ReactNode = ReactElement | string | number | boolean | null | undefined;
+        type RefCallback<T> = (instance: T | null) => void;
+        type Ref<T> = RefCallback<T> | RefObject<T | null> | null;
+    }
+    export = React;
+`;
+
 describe('타입 출력', () => {
+    function typesOf(doc: ReturnType<typeof extractOne>) {
+        return Object.fromEntries(
+            doc.props.map((prop) => [prop.name, [prop.type, prop.detailedType]]),
+        );
+    }
+
     it('prop 타입을 TypeScript 표기대로 출력한다', () => {
         const doc = extractOne({
             'field.tsx': `
@@ -632,21 +680,61 @@ describe('타입 출력', () => {
                         c?: 42;
                         d?: 'primary' | 'secondary';
                         e?: (value: string) => void;
-                        f?: (a: string, b: number) => boolean;
+                        f: (a: string, b: number) => boolean;
                         g?: null;
+                        h: string | ((state: { open: boolean }) => string);
                     };
                 }
             `,
         });
 
-        expect(Object.fromEntries(doc.props.map((prop) => [prop.name, prop.type]))).toEqual({
-            a: ['boolean'],
-            b: ['number'],
-            c: ['42'],
-            d: ['primary', 'secondary'],
-            e: ['(value: string) => void'],
-            f: ['(a: string, b: number) => boolean'],
-            g: ['null'],
+        expect(typesOf(doc)).toEqual({
+            a: [['boolean'], 'boolean | undefined'],
+            b: [['number'], 'number | undefined'],
+            c: [['42'], '42 | undefined'],
+            d: [['primary', 'secondary'], '"primary" | "secondary" | undefined'],
+            e: [['function'], '((value: string) => void) | undefined'],
+            f: [['function'], '(a: string, b: number) => boolean'],
+            g: [['null'], 'null | undefined'],
+            h: [['string', 'function'], 'string | ((state: { open: boolean; }) => string)'],
+        });
+    });
+
+    it('boolean은 union 안에서도 true·false로 나누지 않는다', () => {
+        const doc = extractOne({
+            'popup.tsx': `
+                export namespace Popup {
+                    export type Props = { focus?: boolean | HTMLElement | (() => boolean) };
+                }
+            `,
+        });
+
+        expect(typesOf(doc)).toEqual({
+            focus: [
+                ['boolean', 'HTMLElement', 'function'],
+                'boolean | HTMLElement | (() => boolean) | undefined',
+            ],
+        });
+    });
+
+    it('ReactNode·Ref 같은 React alias는 풀지 않는다', () => {
+        const doc = extractOne({
+            'node_modules/@types/react/index.d.ts': REACT_TYPES,
+            'box.tsx': `
+                import type * as React from 'react';
+
+                export namespace Box {
+                    export type Props = {
+                        children?: React.ReactNode | ((open: boolean) => React.ReactNode);
+                        innerRef?: React.Ref<HTMLDivElement>;
+                    };
+                }
+            `,
+        });
+
+        expect(typesOf(doc)).toEqual({
+            children: [['ReactNode', 'function'], 'ReactNode | ((open: boolean) => ReactNode)'],
+            innerRef: [['React.Ref<HTMLDivElement>'], 'React.Ref<HTMLDivElement> | undefined'],
         });
     });
 
@@ -680,37 +768,40 @@ describe('타입 출력', () => {
             }),
         );
 
-        expect(Object.fromEntries(docs[0].props.map((prop) => [prop.name, prop.type]))).toEqual({
-            state: ['Collapsible.Root.State'],
-            onOpenChange: ['(details: Collapsible.Root.ChangeEventDetails) => void'],
+        expect(typesOf(docs[0])).toEqual({
+            state: [['Collapsible.Root.State'], 'Collapsible.Root.State'],
+            onOpenChange: [
+                ['function'],
+                '((details: Collapsible.Root.ChangeEventDetails) => void) | undefined',
+            ],
         });
     });
 
-    it('React.Ref<X>를 Ref<X>로 출력한다', () => {
-        const doc = extractOne({
-            'node_modules/@types/react/index.d.ts': `
-                declare namespace React {
-                    interface RefObject<T> {
-                        current: T | null;
+    it('익명 타입은 다른 익명 Base UI 타입의 이름으로 출력하지 않는다', () => {
+        const docs = run(
+            createFixture({
+                'form/@base-ui/FormRoot.d.ts': `
+                    export namespace Root {
+                        export type SubmitEventDetails = { reason: string };
                     }
-                    type RefCallback<T> = (instance: T | null) => void;
-                    type Ref<T> = RefCallback<T> | RefObject<T> | null;
-                }
-                export = React;
-            `,
-            'box.tsx': `
-                import type * as React from 'react';
+                `,
+                'form/index.ts': `export * as Form from './index.parts';`,
+                'form/index.parts.ts': `export { FormRoot as Root } from './form';`,
+                'form/form.tsx': `
+                    import type * as BaseForm from './@base-ui/FormRoot';
 
-                export namespace Box {
-                    export type Props = { innerRef?: React.Ref<HTMLDivElement> };
-                }
-            `,
-        });
+                    export namespace FormRoot {
+                        export type Props = { errors?: { field: string } };
+                        export type SubmitEventDetails = BaseForm.Root.SubmitEventDetails;
+                    }
+                `,
+            }),
+        );
 
-        expect(propOf(doc, 'innerRef')?.type).toEqual(['Ref<HTMLDivElement>']);
+        expect(propOf(docs[0], 'errors')?.type).toEqual(['{ field: string; }']);
     });
 
-    it('import("…") 경로를 지운다', () => {
+    it('import("…") 경로 없이 타입 이름만 쓴다', () => {
         const doc = extractOne({
             'types.ts': `export interface Value { id: string }`,
             'picker.tsx': `

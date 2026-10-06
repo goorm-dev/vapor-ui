@@ -13,7 +13,15 @@ import path from 'node:path';
 const AVATAR_ROOT: ComponentDoc = {
     name: 'AvatarRoot',
     description: 'Avatar component.',
-    props: [{ name: 'size', type: ['sm', 'md'], required: false, defaultValue: 'md' }],
+    props: [
+        {
+            name: 'size',
+            type: ['sm', 'md'],
+            detailedType: '"sm" | "md" | undefined',
+            required: false,
+            defaultValue: 'md',
+        },
+    ],
 };
 
 let outputDir: string;

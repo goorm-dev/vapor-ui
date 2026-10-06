@@ -12,10 +12,19 @@ export type PropSource =
     | 'dom' // TypeScript's DOM lib
     | 'external'; // any other node_modules package
 
+/**
+ * One top-level member of a prop's type, as TypeScript splits it: `boolean` stays
+ * one member and aliases such as `ReactNode` are not expanded.
+ */
+export interface ParsedTypeMember {
+    /** The member as the type printer wrote it. */
+    text: string;
+    kind: 'function' | 'string-literal' | 'undefined' | 'other';
+}
+
 export interface ParsedProp {
     name: string;
-    /** The type as the type printer wrote it, before the policy cleans it. */
-    typeString: string;
+    typeMembers: ParsedTypeMember[];
     isOptional: boolean;
     source: PropSource;
     description?: string;
@@ -34,7 +43,10 @@ export interface ParsedComponent {
 
 export interface PropDoc {
     name: string;
+    /** Summary for scanning: no `undefined`, function members read `function`. */
     type: string[];
+    /** The full type on one line, `undefined` included. */
+    detailedType: string;
     required: boolean;
     description?: string;
     defaultValue?: string;
