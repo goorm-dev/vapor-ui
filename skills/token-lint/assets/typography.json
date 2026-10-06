@@ -4,7 +4,7 @@
         "fontFamily": {
             "$type": "fontFamily",
             "sans": { "$value": ["Pretendard", "sans-serif"] },
-            "code": { "$value": ["FiraCode", "monospace"] }
+            "code": { "$value": ["Fira Code", "monospace"] }
         },
         "fontWeight": {
             "$type": "fontWeight",
