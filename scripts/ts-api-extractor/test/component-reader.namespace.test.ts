@@ -4,7 +4,7 @@
 import { Project } from 'ts-morph';
 
 import {
-    findExportedInterfaceProps,
+    findExportedProps,
     getExportedNamespaces,
 } from '#infrastructure/ts-morph/component-reader';
 
@@ -121,7 +121,7 @@ describe('getExportedNamespaces', () => {
     });
 });
 
-describe('findExportedInterfaceProps', () => {
+describe('findExportedProps', () => {
     let project: Project;
 
     beforeEach(() => {
@@ -144,7 +144,7 @@ describe('findExportedInterfaceProps', () => {
         );
 
         const namespace = source.getModuleOrThrow('Button');
-        const result = findExportedInterfaceProps(namespace);
+        const result = findExportedProps(namespace);
 
         expect(result).toBeDefined();
         expect(result?.getName()).toBe('Props');
@@ -161,7 +161,7 @@ describe('findExportedInterfaceProps', () => {
         );
 
         const namespace = source.getModuleOrThrow('Button');
-        const result = findExportedInterfaceProps(namespace);
+        const result = findExportedProps(namespace);
 
         expect(result).toBeUndefined();
     });
@@ -177,7 +177,7 @@ describe('findExportedInterfaceProps', () => {
         );
 
         const namespace = source.getModuleOrThrow('Button');
-        const result = findExportedInterfaceProps(namespace);
+        const result = findExportedProps(namespace);
 
         expect(result).toBeUndefined();
     });
@@ -191,7 +191,7 @@ describe('findExportedInterfaceProps', () => {
         );
 
         const namespace = source.getModuleOrThrow('Empty');
-        const result = findExportedInterfaceProps(namespace);
+        const result = findExportedProps(namespace);
 
         expect(result).toBeUndefined();
     });

@@ -5,14 +5,13 @@
  * them — tsconfig setup, config -> FilterConfig mapping, output file naming,
  * bytes actually landing on disk, and recovery when one file fails.
  */
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-
 import { extract } from '#app/extract';
 import { defaultExtractorConfig } from '#domain/config/defaults';
 import type { ComponentExtractConfig, ExtractorConfig } from '#domain/config/schema';
 import type { Reporter } from '#domain/reporter';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 const TSCONFIG = JSON.stringify({
     compilerOptions: {
@@ -127,6 +126,36 @@ describe('extract', () => {
                 required: false,
                 description: '뱃지 크기',
                 defaultValue: 'md',
+            },
+        ]);
+    });
+
+    it('Props를 interface로 선언한 컴포넌트도 추출한다', () => {
+        const sheetFile = path.join(fixture.root, 'sheet.tsx');
+        fs.writeFileSync(
+            sheetFile,
+            `
+export namespace SheetRoot {
+    export interface Props {
+        /** 열림 여부 */
+        open?: boolean;
+    }
+}
+
+/** 화면 가장자리에서 열리는 패널. */
+export const SheetRoot = (props: SheetRoot.Props) => props;
+`,
+        );
+
+        const { props } = runExtract(fixture, { targetFiles: [sheetFile] });
+
+        expect(props).toEqual([
+            {
+                name: 'SheetRoot',
+                description: '화면 가장자리에서 열리는 패널.',
+                props: [
+                    { name: 'open', type: ['boolean'], required: false, description: '열림 여부' },
+                ],
             },
         ]);
     });

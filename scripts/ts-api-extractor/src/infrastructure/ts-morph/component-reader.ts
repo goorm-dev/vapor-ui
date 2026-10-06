@@ -8,6 +8,7 @@ import { buildBaseUiTypeMap } from '#infrastructure/ts-morph/type-printer/base-u
 import { resolveType } from '#infrastructure/ts-morph/type-printer/resolve-type';
 import type { BaseUiTypeMap } from '#infrastructure/ts-morph/type-printer/shared';
 import type {
+    InterfaceDeclaration,
     ModuleDeclaration,
     Node,
     SourceFile,
@@ -49,12 +50,17 @@ export function getExportedNamespaces(sourceFile: SourceFile): ModuleDeclaration
         );
 }
 
-export function findExportedInterfaceProps(
+function isExportedProps(declaration: TypeAliasDeclaration | InterfaceDeclaration): boolean {
+    return declaration.getName() === 'Props' && declaration.isExported();
+}
+
+export function findExportedProps(
     namespace: ModuleDeclaration,
-): TypeAliasDeclaration | undefined {
-    return namespace
-        .getTypeAliases()
-        .find((typeAlias) => typeAlias.getName() === 'Props' && typeAlias.isExported());
+): TypeAliasDeclaration | InterfaceDeclaration | undefined {
+    return (
+        namespace.getTypeAliases().find(isExportedProps) ??
+        namespace.getInterfaces().find(isExportedProps)
+    );
 }
 
 function readDoc(symbol: TsSymbol): string {
@@ -125,7 +131,7 @@ function extractParsedComponent(
     options: ParseConfig,
 ): ParsedComponent | null {
     const namespaceName = namespace.getName();
-    const exportedProps = findExportedInterfaceProps(namespace);
+    const exportedProps = findExportedProps(namespace);
     if (!exportedProps) return null;
 
     const allSymbols = exportedProps.getType().getProperties();
