@@ -808,6 +808,72 @@ describe('타입 출력', () => {
         });
     });
 
+    describe('여러 namespace가 같은 Base UI 타입을 가리킬 때', () => {
+        const BASE_COLLAPSIBLE = `
+            export namespace Root {
+                export interface State {
+                    open: boolean;
+                }
+            }
+            export namespace Trigger {
+                export interface State {
+                    open: boolean;
+                }
+            }
+        `;
+
+        it('prop이 속한 namespace의 이름으로 출력한다', () => {
+            const docs = run(
+                createFixture({
+                    'collapsible/@base-ui/Collapsible.d.ts': BASE_COLLAPSIBLE,
+                    'collapsible/index.ts': `export * as Collapsible from './index.parts';`,
+                    'collapsible/index.parts.ts': `export { CollapsibleRoot as Root, CollapsibleTrigger as Trigger } from './collapsible';`,
+                    'collapsible/collapsible.tsx': `
+                        import type * as BaseCollapsible from './@base-ui/Collapsible';
+
+                        export namespace CollapsibleRoot {
+                            export type State = BaseCollapsible.Root.State;
+                            export type Props = { state: State };
+                        }
+
+                        export namespace CollapsibleTrigger {
+                            export type State = BaseCollapsible.Root.State;
+                            export type Props = { state: State };
+                        }
+                    `,
+                }),
+            );
+
+            expect(docs.map((doc) => [doc.name, propOf(doc, 'state')?.detailedType])).toEqual([
+                ['CollapsibleRoot', 'Collapsible.Root.State'],
+                ['CollapsibleTrigger', 'Collapsible.Trigger.State'],
+            ]);
+        });
+
+        it('공개 이름이 없는 Base UI 타입은 경고한다', () => {
+            const reporter = createRecordingReporter();
+            const root = createFixture({
+                'collapsible/@base-ui/Collapsible.d.ts': BASE_COLLAPSIBLE,
+                'collapsible/index.ts': `export * as Collapsible from './index.parts';`,
+                'collapsible/index.parts.ts': `export { CollapsibleTrigger as Trigger } from './collapsible';`,
+                'collapsible/collapsible.tsx': `
+                    import type * as BaseCollapsible from './@base-ui/Collapsible';
+
+                    export namespace CollapsibleTrigger {
+                        export type State = BaseCollapsible.Root.State;
+                        export type Props = { state: BaseCollapsible.Trigger.State };
+                    }
+                `,
+            });
+
+            run(root, { reporter });
+
+            expect(reporter.warnings).toContainEqual(
+                expect.stringContaining('No public vapor-ui name for a Base UI type'),
+            );
+        });
+    });
+
     describe('조건부 타입으로 이름을 잃은 Base UI 타입', () => {
         // Base UI writes event details as `R extends string ? Detail<R> & {} : never`.
         // TypeScript evaluates it into an anonymous object, so the name is gone from the type.
