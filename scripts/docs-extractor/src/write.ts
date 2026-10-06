@@ -11,6 +11,13 @@ function toKebabCase(str: string): string {
         .toLowerCase();
 }
 
+/**
+ * Hand-written JSON that lives next to the generated files and is never removed
+ * as stale. `toast-object.json` documents the ToastOptions object used with
+ * `useToastManager` (toast.mdx), which has no component namespace to extract from.
+ */
+const HAND_WRITTEN_FILES = new Set(['toast-object.json']);
+
 function isExtractorOutput(filePath: string): boolean {
     try {
         const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -30,7 +37,7 @@ function removeStaleFiles(dir: string, keep: string[]): string[] {
     const keepSet = new Set(keep);
     const stale = fs
         .readdirSync(dir)
-        .filter((name) => name.endsWith('.json'))
+        .filter((name) => name.endsWith('.json') && !HAND_WRITTEN_FILES.has(name))
         .map((name) => path.resolve(dir, name))
         .filter((filePath) => !keepSet.has(filePath) && isExtractorOutput(filePath));
 

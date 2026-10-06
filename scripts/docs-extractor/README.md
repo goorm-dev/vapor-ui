@@ -73,6 +73,7 @@ The output file path and the fields listed here form the contract with these con
 
 - One JSON file per component in `--out`, named after the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
 - A full run deletes JSON files in `--out` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
+- `toast-object.json` in `--out` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
 - The CLI formats the written files with Prettier.
 
 ### Fields

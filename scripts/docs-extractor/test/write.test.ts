@@ -68,6 +68,15 @@ describe('writeDocs', () => {
         ]);
     });
 
+    it('removeStale이어도 손으로 쓴 toast-object.json은 남긴다', () => {
+        const handWritten = writeJson('toast-object.json', { name: 'ToastObject', props: [] });
+
+        const { removed } = writeDocs(outputDir, [AVATAR_ROOT], { removeStale: true });
+
+        expect(removed).toEqual([]);
+        expect(fs.existsSync(handWritten)).toBe(true);
+    });
+
     it('removeStale이 없으면 기존 파일을 지우지 않는다', () => {
         const stale = writeJson('removed-part.json', { name: 'RemovedPart', props: [] });
 
