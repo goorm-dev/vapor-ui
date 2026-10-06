@@ -67,10 +67,17 @@ Use when a component part has no variants — a single fixed className is genera
 import { componentStyle } from '~/styles/mixins/layer-style.css';
 
 export const title = componentStyle({
-    fontSize: vars.typography.fontSize['200'],
-    fontWeight: vars.typography.fontWeight['700'],
+    paddingInline: vars.size.space['150'],
     color: vars.color.foreground.normal[200],
 });
+```
+
+`componentStyle` also accepts an array — pass mixin classNames alongside the style rule to compose them:
+
+```ts
+import { typography } from '~/styles/mixins/typography.css';
+
+export const title = componentStyle([typography({ style: 'subtitle1' }), { gridColumn: '1' }]);
 ```
 
 ### `interaction()` mixin — interactive states
@@ -84,6 +91,47 @@ base: [
     interaction(), // hover · active · focus-visible
     { display: 'inline-flex', ... },
 ]
+```
+
+### `typography()` mixin — text styles
+
+Never set `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing` by hand, and never spread `typographyVariants`. Call the `typography()` recipe with one of the named styles (`display1`–`display4`, `heading1`–`heading6`, `subtitle1`–`subtitle2`, `body1`–`body4`, `code1`–`code2`) so every component picks the same four tokens together.
+
+```ts
+import { typography } from '~/styles/mixins/typography.css';
+
+// ✅ static part
+export const label = componentStyle([typography({ style: 'subtitle1' }), { gridColumn: '1' }]);
+
+// ✅ inside a recipe — base or a variant value
+export const button = componentRecipe({
+    base: [typography({ style: 'subtitle1' }), { display: 'inline-flex' }],
+    variants: {
+        size: {
+            sm: [typography({ style: 'subtitle2' }), { height: vars.size.space['300'] }],
+            md: [typography({ style: 'subtitle1' }), { height: vars.size.space['400'] }],
+        },
+    },
+});
+```
+
+```ts
+// ❌ raw typography tokens — drifts from the scale
+export const label = componentStyle({
+    fontSize: vars.typography.fontSize['075'],
+    fontWeight: vars.typography.fontWeight[500],
+});
+
+// ❌ spreading the variant map — it exists to feed `variants`, not to style with
+export const label = componentStyle({ ...typographyVariants.subtitle1 });
+```
+
+`typographyVariants` is the raw style map that backs the recipe. Its only job is to be handed to a `variants` group so a component can expose a `typography` prop (see `Text`, `Field`):
+
+```ts
+export const root = componentRecipe({
+    variants: { typography: typographyVariants },
+});
 ```
 
 ## Passing Variants to `recipe` — Two Patterns

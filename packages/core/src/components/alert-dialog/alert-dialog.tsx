@@ -199,6 +199,30 @@ export const AlertDialogDescription = forwardRef<
 AlertDialogDescription.displayName = 'AlertDialog.Description';
 
 /* -------------------------------------------------------------------------------------------------
+ * AlertDialog.Header
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Top section of the dialog, typically containing the title and description. Renders a `<div>` element.
+ */
+export const AlertDialogHeader = forwardRef<HTMLDivElement, AlertDialogHeader.Props>(
+    (props, ref) => {
+        const { render, className, ...componentProps } = resolveStyles(props);
+
+        return useRenderElement({
+            ref,
+            render,
+            defaultTagName: 'div',
+            props: {
+                className: cn(styles.header, className),
+                ...componentProps,
+            },
+        });
+    },
+);
+AlertDialogHeader.displayName = 'AlertDialog.Header';
+
+/* -------------------------------------------------------------------------------------------------
  * AlertDialog.Body
  * -----------------------------------------------------------------------------------------------*/
 
@@ -305,6 +329,11 @@ export namespace AlertDialogTitle {
 export namespace AlertDialogDescription {
     export type State = BaseAlertDialog.Description.State;
     export type Props = VaporUIComponentProps<typeof BaseAlertDialog.Description, State>;
+}
+
+export namespace AlertDialogHeader {
+    export type State = {};
+    export type Props = VaporUIComponentProps<'div', State>;
 }
 
 export namespace AlertDialogBody {
