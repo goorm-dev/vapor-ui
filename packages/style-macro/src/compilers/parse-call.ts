@@ -249,21 +249,46 @@ function tokenErrorMessage(code: TokenErrorCode, cssProperty: string, tokenName:
     const token = `$${tokenName}`;
 
     if (code === 'unknown-token') {
-        return `Unknown token "${token}" for property "${cssProperty}".`;
+        return [
+            '',
+            '알 수 없는 토큰입니다.',
+            `  - 속성: ${cssProperty}`,
+            `  - 토큰: ${token}`,
+            `  - 원인: "${cssProperty}" axis 에 "${tokenName}" 토큰이 정의되어 있지 않음.`,
+            '',
+        ].join('\n');
     }
 
     if (code === 'scope-mismatch') {
-        return `Token "${token}" exists but is not valid for property "${cssProperty}".`;
+        return [
+            '',
+            '토큰 scope 가 property 와 일치하지 않습니다.',
+            `  - 속성: ${cssProperty}`,
+            `  - 토큰: ${token}`,
+            `  - 원인: "${token}" 는 다른 axis 소속이라 "${cssProperty}" 에 사용할 수 없음.`,
+            '',
+        ].join('\n');
     }
 
-    return `Property "${cssProperty}" has no token scope defined.`;
+    // 'unknown-property' — shorthand 혹은 토큰 미지원 property
+    return [
+        '',
+        '토큰을 지원하지 않는 property 입니다.',
+        `  - 속성: ${cssProperty}`,
+        `  - 토큰: ${token}`,
+        `  - 원인: "${cssProperty}" 는 token scope 가 정의되어 있지 않음 (shorthand 등).`,
+        '  - 해결: 전용 sub-property 로 분리 (예: backgroundColor, borderColor, outlineColor).',
+        '',
+    ].join('\n');
 }
+
+const HAS_TOKEN_RE = /\$[a-zA-Z0-9_-]+/;
 
 /**
  * 정적 값 → rule 변환.
- * - `$...` 토큰 → `resolveToken` 거쳐 CSS var
+ * - standalone `$token` → `resolveToken` 거쳐 CSS var
+ * - embedded `$token` (값 일부에 섞여 있음) → **reject** (전용 sub-property 로 분리 요구)
  * - 그 외 → `normalizeValue` 통과
- * shorthand property 는 자식 property 로 확장.
  */
 function pushToken(
     cssProperty: string,
@@ -274,7 +299,7 @@ function pushToken(
 ) {
     const jsProperty = kebabToCamel(cssProperty);
 
-    if (typeof rawValue === 'string' && rawValue.startsWith('$')) {
+    if (typeof rawValue === 'string' && HAS_TOKEN_RE.test(rawValue)) {
         const tokenName = rawValue.slice(1);
         const res = resolveToken(jsProperty, tokenName);
 
@@ -290,6 +315,15 @@ function pushToken(
         emitStatic(cssProperty, res.cssVar, rawValue, selectorContext, ctx);
         return;
     }
+
+    // if (typeof rawValue === 'string' && HAS_TOKEN_RE.test(rawValue)) {
+    //     ctx.errors.push({
+    //         code: 'invalid-input-shape',
+    //         message: tokenErrorMessage(cssProperty, rawValue),
+    //         loc,
+    //     });
+    //     return;
+    // }
 
     // 비토큰 raw 값 그대로 통과.
     const normalized = normalizeValue({ property: jsProperty, rawValue });

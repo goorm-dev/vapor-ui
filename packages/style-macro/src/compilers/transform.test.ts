@@ -237,3 +237,47 @@ describe('transform — ternary (entry-level)', () => {
     });
 });
 
+describe('transform — embedded $token reject', () => {
+    it('rejects `$token` embedded at end of shorthand value', () => {
+        const source = src(`const cls = css({ border: '1px solid $basic-black' });`);
+        const out = transform({ source, filename: '/EM1.tsx' });
+        expect(out.errors.length).toBe(1);
+        expect(out.errors[0].code).toBe('invalid-input-shape');
+        expect(out.errors[0].message).toContain('standalone');
+        expect(out.errors[0].message).toContain('감지 토큰');
+    });
+
+    it('rejects `$token` embedded at start of shorthand value', () => {
+        const source = src(`const cls = css({ background: '$basic-black 1px solid' });`);
+        const out = transform({ source, filename: '/EM2.tsx' });
+        expect(out.errors.length).toBe(1);
+        expect(out.errors[0].code).toBe('invalid-input-shape');
+    });
+
+    it('rejects multiple embedded tokens in one value', () => {
+        const source = src(`const cls = css({ padding: '$space-100 $space-200' });`);
+        const out = transform({ source, filename: '/EM3.tsx' });
+        expect(out.errors.length).toBe(1);
+        expect(out.errors[0].code).toBe('invalid-input-shape');
+    });
+
+    it('allows raw non-token shorthand (no `$` in value)', () => {
+        const source = src(`const cls = css({ border: '1px solid black' });`);
+        const out = transform({ source, filename: '/EM4.tsx' });
+        expect(out.errors).toEqual([]);
+    });
+
+    it('allows standalone `$token` (axis-strict path still runs)', () => {
+        const source = src(`const cls = css({ color: '$fg-primary' });`);
+        const out = transform({ source, filename: '/EM5.tsx' });
+        expect(out.errors).toEqual([]);
+    });
+
+    it('standalone `$999` preserves existing unknown-token behavior', () => {
+        const source = src(`const cls = css({ padding: '$999' });`);
+        const out = transform({ source, filename: '/EM6.tsx' });
+        expect(out.errors.length).toBeGreaterThan(0);
+        // invalid-input-shape 아니라 unknown-token (axis-strict path).
+        expect(out.errors[0].code).not.toBe('invalid-input-shape');
+    });
+});
