@@ -5,7 +5,7 @@ import { type Node, type Type, TypeFormatFlags } from 'ts-morph';
  * Maps a base-ui type (by qualified path or symbol name) to the public vapor-ui
  * path that documentation should display. Built per source file by base-ui-mapper.
  */
-export interface BaseUiTypeEntry {
+interface BaseUiTypeEntry {
     type: Type;
     vaporPath: string;
 }
@@ -19,7 +19,7 @@ export const TYPE_FORMAT_FLAGS =
     TypeFormatFlags.NoTruncation |
     TypeFormatFlags.WriteTypeArgumentsOfSignature;
 
-export type ResolveTypeFn = (
+type ResolveTypeFn = (
     type: Type,
     baseUiMap?: BaseUiTypeMap,
     contextNode?: Node,

@@ -1,13 +1,13 @@
 import path from 'node:path';
 import { type SourceFile, SyntaxKind } from 'ts-morph';
 
-export type DefaultValues = Record<string, string>;
+type DefaultValues = Record<string, string>;
 
 // ──────────────────────────────────────────────────────────────
 // Import analysis utilities
 // ──────────────────────────────────────────────────────────────
 
-export function findImportPaths(sourceFile: SourceFile, extension: string): string[] {
+function findImportPaths(sourceFile: SourceFile, extension: string): string[] {
     const seen = new Set<string>();
 
     for (const importDecl of sourceFile.getImportDeclarations()) {
@@ -21,7 +21,7 @@ export function findImportPaths(sourceFile: SourceFile, extension: string): stri
     return [...seen];
 }
 
-export function findNamespaceImportName(sourceFile: SourceFile, modulePath: string): string | null {
+function findNamespaceImportName(sourceFile: SourceFile, modulePath: string): string | null {
     for (const importDecl of sourceFile.getImportDeclarations()) {
         if (importDecl.getModuleSpecifierValue() !== modulePath) continue;
 
@@ -32,7 +32,7 @@ export function findNamespaceImportName(sourceFile: SourceFile, modulePath: stri
     return null;
 }
 
-export function extractDestructuringDefaults(
+function extractDestructuringDefaults(
     sourceFile: SourceFile,
     componentName: string,
     declaredPropNames?: Set<string>,
@@ -83,7 +83,7 @@ interface CssImport {
     resolvedPath: string;
 }
 
-export function findCssImports(sourceFile: SourceFile): CssImport[] {
+function findCssImports(sourceFile: SourceFile): CssImport[] {
     const fileDir = path.dirname(sourceFile.getFilePath());
 
     return findImportPaths(sourceFile, '.css').map((modulePath) => ({
@@ -92,7 +92,7 @@ export function findCssImports(sourceFile: SourceFile): CssImport[] {
     }));
 }
 
-export function findRecipeUsageInComponent(
+function findRecipeUsageInComponent(
     sourceFile: SourceFile,
     componentName: string,
     styleName: string,
@@ -120,7 +120,7 @@ export function findRecipeUsageInComponent(
     return foundRecipe;
 }
 
-export function parseRecipeDefaultVariants(
+function parseRecipeDefaultVariants(
     cssFile: SourceFile,
     variableName: string,
 ): DefaultValues | null {

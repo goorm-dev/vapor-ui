@@ -32,7 +32,7 @@ function normalizeFilePath(filePath: string): string {
  * with no source file (a built-in type, a ts-morph synthetic node) should not
  * propagate an error to callers.
  */
-export function classifyPath(filePath: string | undefined): PropSource {
+function classifyPath(filePath: string | undefined): PropSource {
     if (!filePath) return 'project';
 
     const normalized = normalizeFilePath(filePath);
@@ -51,6 +51,10 @@ export function classifyPath(filePath: string | undefined): PropSource {
  * Whether the declaration is vapor-ui's own. Used to prefer vapor-ui's JSDoc
  * over base-ui's for a prop that is declared in both.
  */
+export function isBaseUiPath(filePath: string): boolean {
+    return classifyPath(filePath) === 'base-ui';
+}
+
 export function isProjectOwned(filePath: string | undefined): boolean {
     return PROJECT_OWNED_SOURCES.has(classifyPath(filePath));
 }

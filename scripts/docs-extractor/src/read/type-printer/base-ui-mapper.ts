@@ -8,6 +8,7 @@
  * we scan vapor-ui's own namespace type aliases instead, which explicitly re-declare
  * base-ui types (e.g. `type State = BaseCollapsible.Root.State`).
  */
+import { isBaseUiPath } from '#read/source-classifier';
 import type { BaseUiTypeMap } from '#read/type-printer/shared';
 import path from 'node:path';
 import { type SourceFile, SyntaxKind, type Type, type TypeAliasDeclaration } from 'ts-morph';
@@ -21,7 +22,7 @@ function getBaseUiQualifiedPath(type: Type): string | null {
 
         const hasBaseUiDeclaration = symbol
             .getDeclarations()
-            .some((decl) => decl.getSourceFile().getFilePath().includes('@base-ui'));
+            .some((decl) => isBaseUiPath(decl.getSourceFile().getFilePath()));
         if (!hasBaseUiDeclaration) continue;
 
         const fqn = symbol.getFullyQualifiedName();
@@ -44,7 +45,7 @@ function isDeclaredInBaseUi(type: Type): boolean {
     const symbol = type.getSymbol() ?? type.getAliasSymbol();
     if (symbol) {
         for (const decl of symbol.getDeclarations()) {
-            if (decl.getSourceFile().getFilePath().includes('@base-ui')) {
+            if (isBaseUiPath(decl.getSourceFile().getFilePath())) {
                 return true;
             }
         }

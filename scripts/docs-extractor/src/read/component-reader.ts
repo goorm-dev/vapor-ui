@@ -25,7 +25,7 @@ function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: s
         );
 }
 
-export function getComponentDescription(
+function getComponentDescription(
     sourceFile: SourceFile,
     namespaceName: string,
 ): string | undefined {
@@ -38,7 +38,7 @@ export function getComponentDescription(
     return jsDocs.at(-1)?.getDescription().trim() || undefined;
 }
 
-export function getExportedNamespaces(sourceFile: SourceFile): ModuleDeclaration[] {
+function getExportedNamespaces(sourceFile: SourceFile): ModuleDeclaration[] {
     return sourceFile
         .getModules()
         .filter(
@@ -52,7 +52,7 @@ function isExportedProps(declaration: TypeAliasDeclaration | InterfaceDeclaratio
     return declaration.getName() === 'Props' && declaration.isExported();
 }
 
-export function findExportedProps(
+function findExportedProps(
     namespace: ModuleDeclaration,
 ): TypeAliasDeclaration | InterfaceDeclaration | undefined {
     return (
@@ -79,7 +79,7 @@ function isProjectDeclaration(declaration: Node): boolean {
  * So pick one declaration rather than merging: vapor-ui's own wording wins,
  * otherwise the first declaration that documents the prop at all.
  */
-export function getPropDescription(symbol: TsSymbol): string | undefined {
+function getPropDescription(symbol: TsSymbol): string | undefined {
     const declarations = symbol.getDeclarations();
 
     if (declarations.length <= 1) {
