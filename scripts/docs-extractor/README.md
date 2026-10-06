@@ -167,7 +167,7 @@ A prop type is split into the top-level union members TypeScript prints (`src/re
 `typeRefs` maps each public vapor-ui type name that a documented prop's `detailedType` prints (`Collapsible.Root.State`, `Collapsible.Root.ChangeEventDetails`) to its definition, so a reader can see the fields behind the name.
 
 - Keys are the names exactly as `detailedType` prints them, matched as whole names. Only names a component namespace re-exports from Base UI are listed; React and DOM types are not.
-- A value is the definition written out with one property per line: `{\n  open: boolean;\n}`. An optional property reads `name?: T` without `| undefined`. A union of objects, such as event details with one object per `reason`, reads as those objects joined by `|`.
+- A value is the definition written out with one property per line: `{\n  open: boolean;\n}`. An optional property reads `name?: T` without `| undefined`. A union of objects, such as event details with one object per `reason`, reads as `(\n  | { reason: "a"; event: MouseEvent; }\n  | …\n) & {\n  cancel: () => void;\n}`: property lines every member prints the same are written once inside `& { … }`, and each member keeps its other properties on its own line, in the checker's order. When no line is shared, the objects are joined by `|` in full.
 - Property types follow [Types](#types): a named union of values is expanded, other names inside are kept as names and not listed in `typeRefs`.
 
 ### Default values

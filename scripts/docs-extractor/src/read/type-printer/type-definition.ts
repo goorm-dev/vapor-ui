@@ -33,15 +33,39 @@ export function printProperties(type: Type, location: Node, options: PrintOption
     });
 }
 
+function formatObject(lines: string[]): string {
+    return `{\n${lines.map((line) => `  ${line}`).join('\n')}\n}`;
+}
+
 function printObject(type: Type, location: Node, options: PrintOptions): string {
-    const lines = printProperties(type, location, options).map((line) => `  ${line}`);
-    return `{\n${lines.join('\n')}\n}`;
+    return formatObject(printProperties(type, location, options));
+}
+
+/**
+ * The checker hands `(A | B) & Common` back distributed, so every member repeats the
+ * shared properties. Lines every member prints the same go back into one `& { … }`;
+ * the rest stay on each member's line. With nothing shared, each member reads in full.
+ */
+function printObjectUnion(members: Type[], location: Node, options: PrintOptions): string {
+    const memberLines = members.map((member) => printProperties(member, location, options));
+    const common = memberLines[0].filter((line) =>
+        memberLines.every((ownLines) => ownLines.includes(line)),
+    );
+
+    if (common.length === 0) return memberLines.map(formatObject).join(' | ');
+
+    const variants = memberLines.map((ownLines) => {
+        const rest = ownLines.filter((line) => !common.includes(line));
+        return `  | ${rest.length > 0 ? `{ ${rest.join(' ')} }` : '{}'}`;
+    });
+    const shared = common.map((line) => `  ${line}`);
+    return `(\n${variants.join('\n')}\n) & {\n${shared.join('\n')}\n}`;
 }
 
 /**
  * The body behind a type name, as a reader would write it: an object type reads one
  * property per line, a union of objects (Base UI event details, one per `reason`) reads
- * as those objects joined by `|`, anything else reads as its members on one line.
+ * as `(…members) & { …shared }`, anything else reads as its members on one line.
  * Property types go through the prop type printer, so names inside stay names one
  * level down and named unions of values are spelled out as in `detailedType`.
  */
@@ -50,7 +74,7 @@ export function printTypeDefinition(type: Type, location: Node, options: PrintOp
 
     const members = type.isUnion() ? type.getUnionTypes() : [];
     if (members.length > 0 && members.every(isObjectLike)) {
-        return members.map((member) => printObject(member, location, options)).join(' | ');
+        return printObjectUnion(members, location, options);
     }
 
     return joinTypeMembers(resolveTypeMembers(type, options));

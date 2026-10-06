@@ -838,14 +838,17 @@ describe('타입 출력', () => {
             createFixture({
                 'collapsible/@base-ui/CollapsibleRoot.d.ts': `
                     type Status = 'starting' | 'ending' | undefined;
-                    type Detail<R extends string> = { reason: R; cancel: () => void };
+                    type Detail<R extends string, E> = { reason: R; event: E } & { cancel: () => void };
                     export namespace Root {
                         export interface State {
                             open: boolean;
                             status: Status;
                             label?: string;
                         }
-                        export type ChangeEventDetails = Detail<'trigger-press'> | Detail<'none'>;
+                        export type ChangeEventDetails =
+                            | Detail<'trigger-press', MouseEvent>
+                            | Detail<'trigger-hover', MouseEvent>
+                            | Detail<'none', Event>;
                     }
                 `,
                 'collapsible/index.ts': `export * as Collapsible from './index.parts';`,
@@ -874,15 +877,39 @@ describe('타입 출력', () => {
                 '}',
             ].join('\n'),
             'Collapsible.Root.ChangeEventDetails': [
-                '{',
-                '  reason: "trigger-press";',
-                '  cancel: () => void;',
-                '} | {',
-                '  reason: "none";',
+                '(',
+                '  | { reason: "trigger-press"; event: MouseEvent; }',
+                '  | { reason: "trigger-hover"; event: MouseEvent; }',
+                '  | { reason: "none"; event: Event; }',
+                ') & {',
                 '  cancel: () => void;',
                 '}',
             ].join('\n'),
         });
+    });
+
+    it('공통 필드가 없는 객체 union은 멤버마다 객체 전체를 적는다', () => {
+        const doc = extractOne({
+            'select/@base-ui/SelectRoot.d.ts': `
+                export namespace Root {
+                    export type ChangeEventDetails = { reason: 'a' } | { index: number };
+                }
+            `,
+            'select/index.ts': `export * as Select from './index.parts';`,
+            'select/index.parts.ts': `export { SelectRoot as Root } from './select';`,
+            'select/select.tsx': `
+                import type * as BaseSelect from './@base-ui/SelectRoot';
+
+                export namespace SelectRoot {
+                    export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
+                    export type Props = { onChange?: (details: ChangeEventDetails) => void };
+                }
+            `,
+        });
+
+        expect(doc.typeRefs?.['Select.Root.ChangeEventDetails']).toBe(
+            ['{', '  reason: "a";', '} | {', '  index: number;', '}'].join('\n'),
+        );
     });
 
     it('Base UI 타입 이름을 쓰지 않는 컴포넌트는 typeRefs가 없다', () => {
