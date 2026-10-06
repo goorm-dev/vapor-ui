@@ -270,7 +270,6 @@ function tokenErrorMessage(code: TokenErrorCode, cssProperty: string, tokenName:
         ].join('\n');
     }
 
-    // 'unknown-property' — shorthand 혹은 토큰 미지원 property
     return [
         '',
         '토큰을 지원하지 않는 property 입니다.',
@@ -315,15 +314,6 @@ function pushToken(
         emitStatic(cssProperty, res.cssVar, rawValue, selectorContext, ctx);
         return;
     }
-
-    // if (typeof rawValue === 'string' && HAS_TOKEN_RE.test(rawValue)) {
-    //     ctx.errors.push({
-    //         code: 'invalid-input-shape',
-    //         message: tokenErrorMessage(cssProperty, rawValue),
-    //         loc,
-    //     });
-    //     return;
-    // }
 
     // 비토큰 raw 값 그대로 통과.
     const normalized = normalizeValue({ property: jsProperty, rawValue });
