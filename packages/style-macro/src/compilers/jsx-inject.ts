@@ -22,7 +22,6 @@ export interface InjectContext {
 export interface InjectOutcome {
     success: boolean;
     error?: BuildError;
-    usedMergeStyle?: boolean;
 }
 
 const WRAPPER_TYPES = new Set([
@@ -43,7 +42,7 @@ const WRAPPER_TYPES = new Set([
 /**
  * call 의 조상 체인을 훑어 `<Foo className={...}>` 위치를 찾고
  * `style={{ '--slot': _resolveToken(prop, expr), ... }}` 를 삽입한다.
- * 이미 style prop 있으면 `_mergeStyle(existing, {...})` 로 감싼다.
+ * 이미 style prop 있으면 spread syntax로 병합: `{...(existing), ...{slot}}`.
  */
 export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext): InjectOutcome {
     const found = findJsxAttribute(site.call, site.parents);
@@ -77,29 +76,25 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
         return { success: true };
     }
 
-    // 기존 style attribute — `_mergeStyle` 로 wrap.
+    // 기존 style attribute — spread syntax로 병합.
     const attrValue = attribute.value;
     if (!attrValue) {
         // `style` 만 있고 value 없음 → 새로 대체.
         ctx.ms.overwrite(attribute.start, attribute.end, `style={${slotObj}}`);
         return { success: true };
     }
-    // JSXExpressionContainer 안 표현식 감쌈.
-    if (attrValue.type === 'JSXExpressionContainer') {
+
+    // JSXExpressionContainer 안 표현식 → spread 로 병합.
+    // React style prop 은 object/undefined 만 받으므로 `...(existing)` 안전.
+    if (attrValue.type === 'JSXExpressionContainer' && attrValue.expression) {
         const inner = attrValue.expression;
-        if (inner) {
-            const innerSrc = `_mergeStyle(${ctx.ms.original.slice(inner.start, inner.end)}, ${slotObj})`;
-            ctx.ms.overwrite(inner.start, inner.end, innerSrc);
-            return { success: true, usedMergeStyle: true };
-        }
+        const existing = ctx.ms.original.slice(inner.start, inner.end);
+        const merged = `{ ...(${existing}), ...${slotObj} }`;
+        ctx.ms.overwrite(inner.start, inner.end, merged);
+
+        return { success: true };
     }
-    // string literal → 그대로 두고 {} 으로 감싸 병합.
-    if (attrValue.type === 'Literal' && typeof attrValue.value === 'string') {
-        const wrapped = `{_mergeStyle(${JSON.stringify(attrValue.value)}, ${slotObj})}`;
-        ctx.ms.overwrite(attrValue.start, attrValue.end, wrapped);
-        return { success: true, usedMergeStyle: true };
-    }
-    // 알 수 없는 shape → error.
+
     return {
         success: false,
         error: {

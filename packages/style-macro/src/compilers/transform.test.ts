@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { transform } from './transform';
 
-const src = (body: string) =>
-    [`import { css } from '@vapor-ui/style-macro';`, body].join('\n');
+const src = (body: string) => [`import { css } from '@vapor-ui/style-macro';`, body].join('\n');
 
 describe('transform — static syntax', () => {
     it('rewrites css({ prop: literal }) to string literal', () => {
@@ -40,9 +39,7 @@ describe('transform — static syntax', () => {
 
     it('supports pseudo-element ::before', () => {
         const out = transform({
-            source: src(
-                `const cls = css({ '::before': { content: '""', display: 'block' } });`,
-            ),
+            source: src(`const cls = css({ '::before': { content: '""', display: 'block' } });`),
             filename: '/D.tsx',
         });
         expect(out.errors).toEqual([]);
@@ -51,9 +48,7 @@ describe('transform — static syntax', () => {
 
     it('supports attribute selector', () => {
         const out = transform({
-            source: src(
-                `const cls = css({ '[data-active="true"]': { color: '$fg-primary' } });`,
-            ),
+            source: src(`const cls = css({ '[data-active="true"]': { color: '$fg-primary' } });`),
             filename: '/E.tsx',
         });
         expect(out.errors).toEqual([]);
@@ -62,9 +57,7 @@ describe('transform — static syntax', () => {
 
     it('supports self-ref &.class selector', () => {
         const out = transform({
-            source: src(
-                `const cls = css({ '&.selected': { fontWeight: 700 } });`,
-            ),
+            source: src(`const cls = css({ '&.selected': { fontWeight: 700 } });`),
             filename: '/F.tsx',
         });
         expect(out.errors).toEqual([]);
@@ -116,7 +109,7 @@ describe('transform — dynamic slots', () => {
         expect(out.code).toContain('_resolveToken(');
     });
 
-    it('auto-imports _resolveToken from @vapor-ui/style-macro', () => {
+    it('auto-imports _resolveToken from the dedicated runtime subpath', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `function Comp({ color }) {`,
@@ -126,11 +119,15 @@ describe('transform — dynamic slots', () => {
         const out = transform({ source, filename: '/K.tsx' });
         expect(out.errors).toEqual([]);
         expect(out.code).toContain('_resolveToken');
-        // 기존 css import 라인에 specifier 추가.
-        expect(out.code).toMatch(/import\s*\{[^}]*_resolveToken[^}]*\}\s*from\s*'@vapor-ui\/style-macro'/);
+        // 소비자 코드에 subpath import 라인 추가 (bundler-neutral).
+        expect(out.code).toMatch(
+            /import\s*\{\s*_resolveToken\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
+        );
+        // 사용자의 `css` import 는 보존되고 helper specifier 가 섞여 들어가지 않음.
+        expect(out.code).toMatch(/import\s*\{\s*css\s*\}\s*from\s*'@vapor-ui\/style-macro'/);
     });
 
-    it('wraps existing style prop with _mergeStyle', () => {
+    it('merges an existing style prop by spreading', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `function Comp({ color, myStyle }) {`,
@@ -139,7 +136,9 @@ describe('transform — dynamic slots', () => {
         ].join('\n');
         const out = transform({ source, filename: '/L.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.code).toContain('_mergeStyle(');
+        // 원본 식(`myStyle`) 과 slot object 를 spread 로 결합.
+        expect(out.code).toMatch(/\{\s*\.\.\.\(myStyle\)\s*,\s*\.\.\.\{/);
+        // helper import 는 `_resolveToken` 만 — `_mergeStyle` 은 inline spread 로 처리.
+        expect(out.code).not.toContain('_mergeStyle');
     });
 });
-

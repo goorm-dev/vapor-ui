@@ -36,6 +36,7 @@ export function transform(opts: TransformOpts): TransformResult {
 
 const IMPORT_SOURCE = '@vapor-ui/style-macro';
 const IMPORT_NAME = 'css';
+const RUNTIME_IMPORT_SOURCE = '@vapor-ui/style-macro/__runtime__';
 
 interface CallRecord {
     node: AnyProp;
@@ -54,7 +55,6 @@ class Transformer {
     #bindingName: string | null = null;
     #ms: MagicString | null = null;
     #needResolveToken = false;
-    #needMergeStyle = false;
 
     constructor(private readonly opts: TransformOpts) {
         this.#mode = opts.hash ? 'hashed' : 'readable';
@@ -126,7 +126,6 @@ class Transformer {
                     continue;
                 }
                 this.#needResolveToken = true;
-                if (outcome.usedMergeStyle) this.#needMergeStyle = true;
 
                 // call site 자체는 정적 부분 + dynamic 부분 통합 className string 으로 대체.
                 const uniq = Array.from(new Set(classNames)).sort().join(' ');
@@ -152,8 +151,8 @@ class Transformer {
         }
 
         // runtime helper import 자동 삽입 (필요 시).
-        if (this.#needResolveToken || this.#needMergeStyle) {
-            this.#ensureRuntimeImport(program);
+        if (this.#needResolveToken) {
+            this.#ensureRuntimeImport();
         }
 
         return {
@@ -169,14 +168,14 @@ class Transformer {
         return !source.includes(IMPORT_NAME);
     }
 
-    #scanImports(program: AnyProp): void {
+    #scanImports(program: AnyProp) {
         for (const stmt of program.body) {
             if (stmt.type !== 'ImportDeclaration') continue;
             this.#scanImportDeclaration(stmt);
         }
     }
 
-    #scanImportDeclaration(stmt: AnyProp): void {
+    #scanImportDeclaration(stmt: AnyProp) {
         const src: string = stmt.source.value;
         if (src !== IMPORT_SOURCE) return;
 
@@ -188,7 +187,7 @@ class Transformer {
         }
     }
 
-    #onCallExpression = (node: AnyProp, parents: AnyProp[]): void => {
+    #onCallExpression = (node: AnyProp, parents: AnyProp[]) => {
         if (!this.#bindingName) return;
         if (node.callee?.type !== 'Identifier' || node.callee.name !== this.#bindingName) return;
 
@@ -212,7 +211,7 @@ class Transformer {
         rules: IRRule[],
         classNames: string[],
         ternaries: ReturnType<typeof parseCallArg>['ternaries'],
-    ): void {
+    ) {
         const tern = ternaries[0];
         const idxs: number[] = [];
         for (let i = 0; i < rules.length && idxs.length < 2; i++) {
@@ -239,41 +238,17 @@ class Transformer {
         this.#ms!.overwrite(node.start, node.end, expr);
     }
 
-    #ensureRuntimeImport(program: AnyProp): void {
-        // 이미 있는 `@vapor-ui/style-macro` import 를 재사용하거나 새로 삽입.
+    #ensureRuntimeImport() {
         const specifiers: string[] = [];
         if (this.#needResolveToken) specifiers.push('_resolveToken');
-        if (this.#needMergeStyle) specifiers.push('_mergeStyle');
+        if (specifiers.length === 0) return;
 
-        // 기존 declaration 찾아 없는 specifier 만 추가.
-        for (const stmt of program.body) {
-            if (stmt.type !== 'ImportDeclaration') continue;
-            if (stmt.source.value !== IMPORT_SOURCE) continue;
-
-            const existing = new Set<string>();
-            for (const spec of stmt.specifiers) {
-                if (spec.type === 'ImportSpecifier' && spec.imported?.type === 'Identifier') {
-                    existing.add(spec.imported.name);
-                }
-            }
-            const toAdd = specifiers.filter((n) => !existing.has(n));
-            if (toAdd.length === 0) return;
-
-            // 마지막 specifier 뒤에 삽입.
-            const last = stmt.specifiers[stmt.specifiers.length - 1];
-            const insertPos = last.end;
-            const inject = `, ${toAdd.map((n) => `${n}`).join(', ')}`;
-            this.#ms!.appendLeft(insertPos, inject);
-            return;
-        }
-
-        // 새 import 문 삽입.
-        const inject = `import { ${specifiers.join(', ')} } from '${IMPORT_SOURCE}';\n`;
+        const inject = `import { ${specifiers.join(', ')} } from '${RUNTIME_IMPORT_SOURCE}';\n`;
         this.#ms!.appendLeft(0, inject);
     }
 }
 
-function jsSingleQuoted(value: string): string {
+function jsSingleQuoted(value: string) {
     return (
         "'" +
         value
