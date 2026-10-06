@@ -1,8 +1,7 @@
 import { propertyToTokenAxis, tokens } from '~/tokens';
 
 export type ResolveResult =
-    | { cssVar: string }
-    | { error: 'unknown-token' | 'scope-mismatch' | 'unknown-property' };
+    { cssVar: string } | { error: 'unknown-token' | 'scope-mismatch' | 'unknown-property' };
 
 /**
  * `$token` 참조를 CSS var 표현으로 해석. 소스는 `~/tokens` 하드코딩 맵.

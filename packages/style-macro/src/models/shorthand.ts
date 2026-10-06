@@ -51,10 +51,7 @@ const TABLE: Record<string, Expansion> = {
     ],
 };
 
-export function expandShorthand(
-    property: string,
-    value: string,
-): Array<{ property: string; value: string }> {
+export function expandShorthand(property: string, value: string) {
     const fn = TABLE[property];
     if (fn) return fn(value);
     return [{ property, value }];

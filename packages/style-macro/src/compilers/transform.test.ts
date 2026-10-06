@@ -236,3 +236,4 @@ describe('transform — ternary (entry-level)', () => {
         expect(out.code).toMatch(/\+\s*' '\s*\+/);
     });
 });
+

@@ -5,55 +5,21 @@ import { resolveToken } from '~/models/tokens';
 import type { AnyProp, BuildError, IRRule } from '~/models/types';
 import { normalizeValue } from '~/models/value';
 
-const IDENTIFIER_PROPS = new Set([
-    'animation-name',
-    'will-change',
-    'counter-reset',
-    'counter-increment',
-    'content',
-    'grid-template-areas',
-]);
-
 export interface TernarySite {
     consequentRuleIndexes: number[];
     alternateRuleIndexes: number[];
-    /** 소스 문자열 안 test expression 범위. transform 이 원본 식 그대로 slice. */
     testStart: number;
     testEnd: number;
 }
 
-export interface ParseCallResult {
-    /** 방출된 IR 목록. 동일 selectorContext + property + value 는 중복 허용 (emit 이 dedupe). */
-    rules: IRRule[];
-    /** entry-level ternary 위치. transform.ts 가 코드 재작성 때 소비. */
-    ternaries: TernarySite[];
-    /** call site 전용 build errors. */
-    errors: BuildError[];
-}
-
-function toKebab(prop: string): string {
-    if (prop.startsWith('--')) return prop;
-    return prop
-        .replace(/([A-Z])/g, '-$1')
-        .toLowerCase()
-        .replace(/^-/, '');
-}
-
 function locOf(node: AnyProp): { line: number; column: number } {
-    const start = node.loc?.start;
+    const start = node?.loc?.start;
     return { line: start?.line ?? 1, column: start?.column ?? 0 };
 }
 
-function keyName(prop: AnyProp): string | null {
-    if (prop.computed) return null;
-    if (prop.key?.type === 'Identifier') return prop.key.name;
-    if (prop.key?.type === 'Literal' && typeof prop.key.value === 'string') return prop.key.value;
-    return null;
-}
-
-function extractStaticValue(node: AnyProp): string | number | null {
+/** 리터럴 / 음수 리터럴 / 보간 없는 템플릿 → 값 반환. 아니면 null (dynamic). */
+function extractStaticValue(node: AnyProp) {
     if (!node) return null;
-    // oxc: string/number/boolean/null 은 Literal
     if (node.type === 'Literal') {
         if (typeof node.value === 'string' || typeof node.value === 'number') return node.value;
         return null;
@@ -71,220 +37,313 @@ function extractStaticValue(node: AnyProp): string | number | null {
     return null;
 }
 
+interface ParseCtx {
+    readonly rules: IRRule[];
+    readonly errors: BuildError[];
+    readonly ternaries: TernarySite[];
+    readonly source: string;
+}
+
+function errorAt(node: AnyProp, code: BuildError['code'], message: string, ctx: ParseCtx) {
+    ctx.errors.push({ code, message, loc: locOf(node) });
+}
+
+function walkObject(obj: AnyProp, selectorContext: string, isTop: boolean, ctx: ParseCtx) {
+    if (!obj?.properties) return;
+
+    for (const prop of obj.properties) {
+        if (prop.type === 'SpreadElement') {
+            errorAt(prop, 'spread', 'Spread elements are not supported in css().', ctx);
+            continue;
+        }
+        if (prop.type !== 'Property') {
+            errorAt(prop, 'invalid-input-shape', 'Unsupported property node.', ctx);
+            continue;
+        }
+        handleProperty(prop, selectorContext, isTop, ctx);
+    }
+}
+
+function toKebab(prop: string) {
+    if (prop.startsWith('--')) return prop;
+    return prop
+        .replace(/([A-Z])/g, '-$1')
+        .toLowerCase()
+        .replace(/^-/, '');
+}
+
+function keyName(prop: AnyProp) {
+    if (prop.computed) return null;
+    if (prop.key?.type === 'Identifier') return prop.key.name;
+    if (prop.key?.type === 'Literal' && typeof prop.key.value === 'string') return prop.key.value;
+    return null;
+}
+
+function handleProperty(prop: AnyProp, selectorContext: string, isTop: boolean, ctx: ParseCtx) {
+    if (prop.computed) {
+        errorAt(prop.key ?? prop, 'computed-key', 'Computed keys are not supported in css().', ctx);
+        return;
+    }
+
+    const name = keyName(prop);
+    if (name === null) {
+        errorAt(prop.key ?? prop, 'computed-key', 'Computed keys are not supported in css().', ctx);
+        return;
+    }
+
+    const value = prop.value;
+
+    // 중첩 객체 → selector 확장.
+    if (value?.type === 'ObjectExpression') {
+        handleNestedObject(name, value, selectorContext, prop, ctx);
+        return;
+    }
+
+    const cssProperty = toKebab(name);
+
+    // 최상위 삼항은 build-time 2-way 로 전개.
+    if (isTop && value?.type === 'ConditionalExpression') {
+        handleTernary(cssProperty, value, selectorContext, ctx);
+        return;
+    }
+
+    // 리터럴/토큰이면 static, 아니면 dynamic slot.
+    const staticVal = extractStaticValue(value);
+    if (staticVal === null) {
+        handleDynamic(cssProperty, value, selectorContext, ctx);
+        return;
+    }
+
+    pushToken(cssProperty, staticVal, selectorContext, locOf(value), ctx);
+}
+
+function handleNestedObject(
+    name: string,
+    value: AnyProp,
+    selectorContext: string,
+    prop: AnyProp,
+    ctx: ParseCtx,
+) {
+    try {
+        parseSelector(name);
+    } catch {
+        errorAt(
+            prop.key ?? prop,
+            'invalid-selector',
+            `Invalid nested selector "${name}". Must start with ':', '::', '@', '[', or '&'.`,
+            ctx,
+        );
+        return;
+    }
+    const nextContext = composeContext(selectorContext, name);
+    walkObject(value, nextContext, false, ctx);
+}
+
+function rangeIndexes(start: number, end: number): number[] {
+    const out: number[] = [];
+    for (let i = start; i < end; i++) out.push(i);
+    return out;
+}
+
+/**
+ * `color: cond ? '$a' : '$b'` → 양 분기 rule 모두 emit + index 범위 기록.
+ * transform.ts 가 이 범위로 삼항식 재작성.
+ */
+function handleTernary(
+    cssProperty: string,
+    value: AnyProp,
+    selectorContext: string,
+    ctx: ParseCtx,
+) {
+    const conseqLit = extractStaticValue(value.consequent);
+    const altLit = extractStaticValue(value.alternate);
+
+    if (conseqLit === null || altLit === null) {
+        errorAt(
+            value,
+            'dynamic-value',
+            'Ternary branches must be literals or tokens at the entry-level ternary.',
+            ctx,
+        );
+        return;
+    }
+
+    const conseqStart = ctx.rules.length;
+    pushToken(cssProperty, conseqLit, selectorContext, locOf(value), ctx);
+    const conseqEnd = ctx.rules.length;
+
+    const altStart = ctx.rules.length;
+    pushToken(cssProperty, altLit, selectorContext, locOf(value), ctx);
+    const altEnd = ctx.rules.length;
+
+    ctx.ternaries.push({
+        consequentRuleIndexes: rangeIndexes(conseqStart, conseqEnd),
+        alternateRuleIndexes: rangeIndexes(altStart, altEnd),
+        testStart: value.test.start,
+        testEnd: value.test.end,
+    });
+}
+
+/** dynamic value 금지 property (값이 식별자여야 함). */
+const IDENTIFIER_PROPS = new Set([
+    'animation-name',
+    'will-change',
+    'counter-reset',
+    'counter-increment',
+    'content',
+    'grid-template-areas',
+]);
+
+/**
+ * 동적 값 → slotId 발급 + DynamicRule emit.
+ * transform.ts 가 JSX className 근처에 `style={{...slot: _resolveToken(prop, expr)}}` 주입.
+ */
+function handleDynamic(
+    cssProperty: string,
+    value: AnyProp,
+    selectorContext: string,
+    ctx: ParseCtx,
+) {
+    if (IDENTIFIER_PROPS.has(cssProperty)) {
+        errorAt(
+            value,
+            'dynamic-value',
+            `Dynamic value is not allowed for property "${cssProperty}".`,
+            ctx,
+        );
+        return;
+    }
+
+    if (!value || typeof value.start !== 'number' || typeof value.end !== 'number') {
+        errorAt(value, 'dynamic-value', `Cannot capture dynamic value for "${cssProperty}".`, ctx);
+        return;
+    }
+
+    const sourceExpr = ctx.source.slice(value.start, value.end);
+    const slotId = generateArbitraryValueSelector(
+        `${cssProperty}|${selectorContext}|${sourceExpr}`,
+    );
+
+    // shorthand 는 자식 property 전부 동일 slotId 공유.
+    for (const e of expandShorthand(cssProperty, `var(--slot-${slotId})`)) {
+        ctx.rules.push({
+            kind: 'dynamic',
+            property: e.property,
+            slotId,
+            selectorContext,
+            sourceExpr,
+        });
+    }
+}
+
+function kebabToCamel(prop: string) {
+    return prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+}
+
+type TokenErrorCode = Extract<
+    BuildError['code'],
+    'unknown-token' | 'scope-mismatch' | 'unknown-property'
+>;
+
+function tokenErrorMessage(code: TokenErrorCode, cssProperty: string, tokenName: string) {
+    const token = `$${tokenName}`;
+
+    if (code === 'unknown-token') {
+        return `Unknown token "${token}" for property "${cssProperty}".`;
+    }
+
+    if (code === 'scope-mismatch') {
+        return `Token "${token}" exists but is not valid for property "${cssProperty}".`;
+    }
+
+    return `Property "${cssProperty}" has no token scope defined.`;
+}
+
+/**
+ * 정적 값 → rule 변환.
+ * - `$...` 토큰 → `resolveToken` 거쳐 CSS var
+ * - 그 외 → `normalizeValue` 통과
+ * shorthand property 는 자식 property 로 확장.
+ */
 function pushToken(
-    rules: IRRule[],
-    errors: BuildError[],
-    property: string,
+    cssProperty: string,
     rawValue: string | number,
     selectorContext: string,
     loc: { line: number; column: number },
+    ctx: ParseCtx,
 ) {
-    // camelCase axis lookup 을 위해 property 를 camelCase 로 정규화 하는 쪽이 편함.
-    // parse 시점은 kebab-case 로 통일. axis 는 camelCase key. 두 형태를 다 시도.
-    const camel = property.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+    const jsProperty = kebabToCamel(cssProperty);
 
     if (typeof rawValue === 'string' && rawValue.startsWith('$')) {
         const tokenName = rawValue.slice(1);
-        const res = resolveToken(camel, tokenName);
+        const res = resolveToken(jsProperty, tokenName);
+
         if ('error' in res) {
-            errors.push({
+            ctx.errors.push({
                 code: res.error,
-                message:
-                    res.error === 'unknown-token'
-                        ? `Unknown token "$${tokenName}" for property "${property}".`
-                        : res.error === 'scope-mismatch'
-                          ? `Token "$${tokenName}" exists but is not valid for property "${property}".`
-                          : `Property "${property}" has no token scope defined.`,
+                message: tokenErrorMessage(res.error, cssProperty, tokenName),
                 loc,
             });
             return;
         }
-        const rawStr = rawValue;
-        const expanded = expandShorthand(property, res.cssVar);
-        for (const e of expanded) {
-            rules.push({
-                kind: 'static',
-                property: e.property,
-                value: e.value,
-                rawValue: rawStr,
-                selectorContext,
-            });
-        }
+
+        emitStatic(cssProperty, res.cssVar, rawValue, selectorContext, ctx);
         return;
     }
 
-    const normalized = normalizeValue({ property: camel, rawValue });
-    const expanded = expandShorthand(property, normalized.css);
-    const rawStr = String(rawValue);
-    for (const e of expanded) {
-        rules.push({
+    // 비토큰 raw 값 그대로 통과.
+    const normalized = normalizeValue({ property: jsProperty, rawValue });
+    emitStatic(cssProperty, normalized.css, String(rawValue), selectorContext, ctx);
+}
+
+function emitStatic(
+    cssProperty: string,
+    value: string,
+    rawValue: string,
+    selectorContext: string,
+    ctx: ParseCtx,
+) {
+    for (const e of expandShorthand(cssProperty, value)) {
+        ctx.rules.push({
             kind: 'static',
             property: e.property,
             value: e.value,
-            rawValue: rawStr,
+            rawValue,
             selectorContext,
         });
     }
 }
 
-function walkObject(
-    obj: AnyProp,
-    selectorContext: string,
-    rules: IRRule[],
-    errors: BuildError[],
-    ternaries: TernarySite[],
-    source: string,
-    isTop: boolean,
-) {
-    if (!obj?.properties) return;
+function createCtx(source: string): ParseCtx {
+    return { rules: [], errors: [], ternaries: [], source };
+}
 
-    for (const prop of obj.properties) {
-        if (prop.type === 'SpreadElement') {
-            errors.push({
-                code: 'spread',
-                message: 'Spread elements are not supported in css().',
-                loc: locOf(prop),
-            });
-            continue;
-        }
-        if (prop.type !== 'Property') {
-            errors.push({
-                code: 'invalid-input-shape',
-                message: 'Unsupported property node.',
-                loc: locOf(prop),
-            });
-            continue;
-        }
-        if (prop.computed) {
-            errors.push({
-                code: 'computed-key',
-                message: 'Computed keys are not supported in css().',
-                loc: locOf(prop.key ?? prop),
-            });
-            continue;
-        }
-        const name = keyName(prop);
-        if (name === null) {
-            errors.push({
-                code: 'computed-key',
-                message: 'Computed keys are not supported in css().',
-                loc: locOf(prop.key ?? prop),
-            });
-            continue;
-        }
-
-        const value = prop.value;
-
-        // Nested object → selector 확장.
-        if (value?.type === 'ObjectExpression') {
-            try {
-                parseSelector(name);
-            } catch {
-                errors.push({
-                    code: 'invalid-selector',
-                    message: `Invalid nested selector "${name}". Must start with ':', '::', '@', '[', or '&'.`,
-                    loc: locOf(prop.key ?? prop),
-                });
-                continue;
-            }
-            const nextContext = composeContext(selectorContext, name);
-            walkObject(value, nextContext, rules, errors, ternaries, source, false);
-            continue;
-        }
-
-        const kebab = toKebab(name);
-
-        // entry-level ternary → 2-way build-time expansion.
-        if (isTop && value?.type === 'ConditionalExpression') {
-            const conseqLit = extractStaticValue(value.consequent);
-            const altLit = extractStaticValue(value.alternate);
-
-            if (conseqLit === null || altLit === null) {
-                errors.push({
-                    code: 'dynamic-value',
-                    message:
-                        'Ternary branches must be literals or tokens at the entry-level ternary.',
-                    loc: locOf(value),
-                });
-                continue;
-            }
-
-            const conseqRules: IRRule[] = [];
-            const altRules: IRRule[] = [];
-
-            pushToken(conseqRules, errors, kebab, conseqLit, selectorContext, locOf(value));
-            pushToken(altRules, errors, kebab, altLit, selectorContext, locOf(value));
-
-            const conseqStart = rules.length;
-            rules.push(...conseqRules);
-
-            const altStart = rules.length;
-            rules.push(...altRules);
-
-            ternaries.push({
-                consequentRuleIndexes: conseqRules.map((_, i) => conseqStart + i),
-                alternateRuleIndexes: altRules.map((_, i) => altStart + i),
-                testStart: value.test.start,
-                testEnd: value.test.end,
-            });
-            continue;
-        }
-
-        const staticVal = extractStaticValue(value);
-        if (staticVal === null) {
-            // 동적 값 → slotId 생성 + DynamicRule 방출. transform.ts 가 후속으로 JSX
-            // className 자리 근처에 `style={{...slot: _resolveToken(prop, expr)}}` 주입.
-            if (IDENTIFIER_PROPS.has(kebab)) {
-                errors.push({
-                    code: 'dynamic-value',
-                    message: `Dynamic value is not allowed for property "${kebab}".`,
-                    loc: locOf(value),
-                });
-                continue;
-            }
-            if (!value || typeof value.start !== 'number' || typeof value.end !== 'number') {
-                errors.push({
-                    code: 'dynamic-value',
-                    message: `Cannot capture dynamic value for "${kebab}".`,
-                    loc: locOf(value),
-                });
-                continue;
-            }
-            const sourceExpr = source.slice(value.start, value.end);
-            const slotId = generateArbitraryValueSelector(
-                `${kebab}|${selectorContext}|${sourceExpr}`,
-            );
-            // shorthand 확장 시 자식 property 각각을 동일 slotId 로 매핑.
-            // 자식 property 이 하나뿐인 (non-shorthand) 케이스는 그대로 반영.
-            const expanded = expandShorthand(kebab, `var(--slot-${slotId})`);
-            for (const e of expanded) {
-                rules.push({
-                    kind: 'dynamic',
-                    property: e.property,
-                    slotId,
-                    selectorContext,
-                    sourceExpr,
-                });
-            }
-            continue;
-        }
-
-        pushToken(rules, errors, kebab, staticVal, selectorContext, locOf(value));
-    }
+export interface ParseCallResult {
+    /** IR 목록. 중복 허용 (emit 단계에서 dedupe). */
+    rules: IRRule[];
+    /** 최상위 삼항 위치. */
+    ternaries: TernarySite[];
+    /** 이 call 의 build error. */
+    errors: BuildError[];
 }
 
 export function parseCallArg(arg: AnyProp, source: string): ParseCallResult {
-    const rules: IRRule[] = [];
-    const errors: BuildError[] = [];
-    const ternaries: TernarySite[] = [];
+    const ctx = createCtx(source);
+
     if (!arg || arg.type !== 'ObjectExpression') {
-        errors.push({
-            code: 'invalid-input-shape',
-            message: 'css() requires an object literal argument.',
-            loc: locOf(arg ?? { loc: undefined }),
-        });
-        return { rules, errors, ternaries };
+        errorAt(
+            arg ?? { loc: undefined },
+            'invalid-input-shape',
+            'css() requires an object literal argument.',
+            ctx,
+        );
+    } else {
+        walkObject(arg, 'base', true, ctx);
     }
-    walkObject(arg, 'base', rules, errors, ternaries, source, true);
-    return { rules, errors, ternaries };
+
+    return {
+        rules: ctx.rules,
+        errors: ctx.errors,
+        ternaries: ctx.ternaries,
+    };
 }
