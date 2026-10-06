@@ -3,8 +3,10 @@ import { getDefaultValuesForComponent } from '#read/default-values';
 import { classifyPropSource, isProjectOwned } from '#read/source-classifier';
 import { buildBaseUiTypeMap } from '#read/type-printer/base-ui-mapper';
 import type { BaseUiTypeMap, PrintOptions } from '#read/type-printer/shared';
+import { printTypeDefinition } from '#read/type-printer/type-definition';
 import { resolveTypeMembers } from '#read/type-printer/type-members';
 import { type Reporter, silentReporter } from '#reporter';
+import { mentionsTypeName } from '#type-text';
 import type {
     InterfaceDeclaration,
     ModuleDeclaration,
@@ -95,6 +97,24 @@ function extractParsedProp(
     };
 }
 
+/** Bodies of the public vapor-ui type names the props print. A name is printed once per component. */
+function getTypeDefinitions(
+    props: ParsedProp[],
+    location: Node,
+    options: PrintOptions,
+): Record<string, string> {
+    const texts = props.flatMap((prop) => prop.typeMembers.map((member) => member.text));
+    const entries = new Map(
+        Object.values(options.baseUiMap ?? {}).map((entry) => [entry.vaporPath, entry.type]),
+    );
+
+    return Object.fromEntries(
+        [...entries]
+            .filter(([name]) => texts.some((text) => mentionsTypeName(text, name)))
+            .map(([name, type]) => [name, printTypeDefinition(type, location, options)]),
+    );
+}
+
 function extractParsedComponent(
     sourceFile: SourceFile,
     namespace: ModuleDeclaration,
@@ -116,20 +136,17 @@ function extractParsedComponent(
 
     reporter.debug(`${namespaceName}: ${allSymbols.length} symbols`);
 
+    const options: PrintOptions = { baseUiMap, reporter, namespace: namespaceName };
     const props = allSymbols.map((symbol) => {
         const declNode = symbol.getDeclarations()[0] ?? exportedProps;
-        return extractParsedProp(
-            symbol,
-            declNode,
-            { baseUiMap, reporter, namespace: namespaceName },
-            defaultValues,
-        );
+        return extractParsedProp(symbol, declNode, options, defaultValues);
     });
 
     return {
         name: namespaceName,
         description: getComponentDescription(componentImplementation),
         props,
+        typeDefinitions: getTypeDefinitions(props, exportedProps, options),
     };
 }
 

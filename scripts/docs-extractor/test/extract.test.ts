@@ -808,6 +808,64 @@ describe('타입 출력', () => {
         });
     });
 
+    it('prop이 이름으로 쓰는 Base UI 타입의 정의를 typeRefs에 담는다', () => {
+        const docs = run(
+            createFixture({
+                'collapsible/@base-ui/CollapsibleRoot.d.ts': `
+                    type Status = 'starting' | 'ending' | undefined;
+                    type Detail<R extends string> = { reason: R; cancel: () => void };
+                    export namespace Root {
+                        export interface State {
+                            open: boolean;
+                            status: Status;
+                            label?: string;
+                        }
+                        export type ChangeEventDetails = Detail<'trigger-press'> | Detail<'none'>;
+                    }
+                `,
+                'collapsible/index.ts': `export * as Collapsible from './index.parts';`,
+                'collapsible/index.parts.ts': `export { CollapsibleRoot as Root } from './collapsible';`,
+                'collapsible/collapsible.tsx': `
+                    import type * as BaseCollapsible from './@base-ui/CollapsibleRoot';
+
+                    export namespace CollapsibleRoot {
+                        export type State = BaseCollapsible.Root.State;
+                        export type ChangeEventDetails = BaseCollapsible.Root.ChangeEventDetails;
+                        export type Props = {
+                            className?: (state: State) => string;
+                            onOpenChange?: (details: ChangeEventDetails) => void;
+                        };
+                    }
+                `,
+            }),
+        );
+
+        expect(docs[0].typeRefs).toEqual({
+            'Collapsible.Root.State': [
+                '{',
+                '  open: boolean;',
+                '  status: "starting" | "ending" | undefined;',
+                '  label?: string;',
+                '}',
+            ].join('\n'),
+            'Collapsible.Root.ChangeEventDetails': [
+                '{',
+                '  reason: "trigger-press";',
+                '  cancel: () => void;',
+                '} | {',
+                '  reason: "none";',
+                '  cancel: () => void;',
+                '}',
+            ].join('\n'),
+        });
+    });
+
+    it('Base UI 타입 이름을 쓰지 않는 컴포넌트는 typeRefs가 없다', () => {
+        const doc = extractOne({ 'badge.tsx': BADGE_SOURCE });
+
+        expect(doc).not.toHaveProperty('typeRefs');
+    });
+
     describe('여러 namespace가 같은 Base UI 타입을 가리킬 때', () => {
         const BASE_COLLAPSIBLE = `
             export namespace Root {

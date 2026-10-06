@@ -90,21 +90,31 @@ The output file path and the fields listed here form the contract with these con
             "required": false,
             "description": "Size of the avatar. Controls the width, height, and border radius.",
             "defaultValue": "md"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Avatar.Root.State) => (string | undefined)) | undefined",
+            "required": false
         }
-    ]
+    ],
+    "typeRefs": {
+        "Avatar.Root.State": "{\n  imageLoadingStatus: \"idle\" | \"error\" | \"loading\" | \"loaded\";\n}"
+    }
 }
 ```
 
-| Field                  | Value                                                             |
-| ---------------------- | ----------------------------------------------------------------- |
-| `name`                 | Namespace name                                                    |
-| `description`          | See [Descriptions](#descriptions). Omitted when there is none     |
-| `props[].name`         | Property name                                                     |
-| `props[].type`         | Summary type, one member per element. See [Types](#types)         |
-| `props[].detailedType` | Full type on one line. See [Types](#types)                        |
-| `props[].required`     | `true` when the property is not optional                          |
-| `props[].description`  | See [Descriptions](#descriptions). Omitted when there is none     |
-| `props[].defaultValue` | See [Default values](#default-values). Omitted when there is none |
+| Field                  | Value                                                               |
+| ---------------------- | ------------------------------------------------------------------- |
+| `name`                 | Namespace name                                                      |
+| `description`          | See [Descriptions](#descriptions). Omitted when there is none       |
+| `props[].name`         | Property name                                                       |
+| `props[].type`         | Summary type, one member per element. See [Types](#types)           |
+| `props[].detailedType` | Full type on one line. See [Types](#types)                          |
+| `props[].required`     | `true` when the property is not optional                            |
+| `props[].description`  | See [Descriptions](#descriptions). Omitted when there is none       |
+| `props[].defaultValue` | See [Default values](#default-values). Omitted when there is none   |
+| `typeRefs`             | See [Type references](#type-references). Omitted when there is none |
 
 `displayName` and `defaultElement` are not produced.
 
@@ -151,6 +161,14 @@ A prop type is split into the top-level union members TypeScript prints (`src/re
 - `boolean`, `ReactNode` and `React.Ref<X>` are not expanded. A named union of values only (`type Side = "top" | "bottom"`) is expanded into its values, any other named union (`type Padding = number | {…}`) is kept by name. Members that print the same are listed once. `null` and `undefined` come last.
 - Base UI types are printed with their public vapor-ui names, including types TypeScript turns into an anonymous object (Base UI's `ChangeEventDetails`). When several names fit, the one declared in the component's own namespace wins. An anonymous Base UI type with no public name is printed as its structure, with a warning to re-export it from the component namespace. `ReactElement<X, …>` is printed as `ReactElement<X>`, or `ReactElement` when `X` is `unknown`.
 
+### Type references
+
+`typeRefs` maps each public vapor-ui type name that a documented prop's `detailedType` prints (`Collapsible.Root.State`, `Collapsible.Root.ChangeEventDetails`) to its definition, so a reader can see the fields behind the name.
+
+- Keys are the names exactly as `detailedType` prints them, matched as whole names. Only names a component namespace re-exports from Base UI are listed; React and DOM types are not.
+- A value is the definition written out with one property per line: `{\n  open: boolean;\n}`. An optional property reads `name?: T` without `| undefined`. A union of objects, such as event details with one object per `reason`, reads as those objects joined by `|`.
+- Property types follow [Types](#types): a named union of values is expanded, other names inside are kept as names and not listed in `typeRefs`.
+
 ### Default values
 
 Code is the only source. The first source that has a value for a prop wins:
@@ -176,16 +194,17 @@ cli.ts ──► extract() ──► read/     source → ParsedComponent[]   (t
    └─────► writeDocs()  ComponentDoc[] → <out>/*.json, then prettier
 ```
 
-| Module            | Interface                                                                         | Owns                                                                                         |
-| ----------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `src/extract.ts`  | `extract({ inputPath, tsconfigPath, component?, reporter? }): { docs, failures }` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing |
-| `src/read/`       | `parseSourceFile()`, `scanComponentFiles()`; only `extract()` imports them        | Component detection, descriptions, default values, source classification, type printing      |
-| `src/policy.ts`   | `policy(components: ParsedComponent[]): ComponentDoc[]`                           | README "Props", "Types" and the field shape. No ts-morph, no filesystem                      |
-| `src/write.ts`    | `writeDocs(outputDir, docs, { removeStale })`, `formatWithPrettier()`             | File names, JSON bytes, stale-file removal                                                   |
-| `src/cli.ts`      | the `--input`/`--tsconfig`/`--out` command                                        | Flags, the console reporter, exit codes                                                      |
-| `src/model.ts`    | `ParsedComponent`, `ComponentDoc` and their prop types                            | The data passed between the modules above                                                    |
-| `src/reporter.ts` | `Reporter`, `silentReporter`                                                      | Where progress and warnings go; the CLI supplies the console one                             |
-| `src/errors.ts`   | `ExtractorError`                                                                  | Bad input (missing path, unknown component), printed by the CLI without a stack              |
+| Module             | Interface                                                                         | Owns                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `src/extract.ts`   | `extract({ inputPath, tsconfigPath, component?, reporter? }): { docs, failures }` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing |
+| `src/read/`        | `parseSourceFile()`, `scanComponentFiles()`; only `extract()` imports them        | Component detection, descriptions, default values, source classification, type printing      |
+| `src/policy.ts`    | `policy(components: ParsedComponent[]): ComponentDoc[]`                           | README "Props", "Types" and the field shape. No ts-morph, no filesystem                      |
+| `src/write.ts`     | `writeDocs(outputDir, docs, { removeStale })`, `formatWithPrettier()`             | File names, JSON bytes, stale-file removal                                                   |
+| `src/cli.ts`       | the `--input`/`--tsconfig`/`--out` command                                        | Flags, the console reporter, exit codes                                                      |
+| `src/model.ts`     | `ParsedComponent`, `ComponentDoc` and their prop types                            | The data passed between the modules above                                                    |
+| `src/type-text.ts` | `joinTypeMembers()`, `mentionsTypeName()`                                         | How printed type text is joined and searched, shared by `read/` and the policy               |
+| `src/reporter.ts`  | `Reporter`, `silentReporter`                                                      | Where progress and warnings go; the CLI supplies the console one                             |
+| `src/errors.ts`    | `ExtractorError`                                                                  | Bad input (missing path, unknown component), printed by the CLI without a stack              |
 
 Tests go through `extract()` (fixture sources on disk), `policy()` (plain data) and `writeDocs()` (a temp directory), not through module internals.
 

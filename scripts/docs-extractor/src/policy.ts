@@ -13,6 +13,7 @@ import type {
     PropDoc,
     PropSource,
 } from '#model';
+import { joinTypeMembers, mentionsTypeName } from '#type-text';
 
 // ──────────────────────────────────────────────────────────────
 // Props: which ones are documented
@@ -93,14 +94,6 @@ function summarizeType(members: ParsedTypeMember[]): string[] {
     return [...new Set(summary)];
 }
 
-function detailType(members: ParsedTypeMember[]): string {
-    if (members.length === 1) return members[0].text;
-
-    return members
-        .map((member) => (member.kind === 'function' ? `(${member.text})` : member.text))
-        .join(' | ');
-}
-
 // ──────────────────────────────────────────────────────────────
 // Order: which props come first
 // ──────────────────────────────────────────────────────────────
@@ -152,7 +145,7 @@ function toPropDoc(prop: ParsedProp): PropDoc {
     return {
         name: prop.name,
         type: summarizeType(prop.typeMembers),
-        detailedType: detailType(prop.typeMembers),
+        detailedType: joinTypeMembers(prop.typeMembers),
         required: !prop.isOptional,
         ...(prop.description !== undefined && { description: prop.description }),
         ...(prop.defaultValue !== undefined && { defaultValue: prop.defaultValue }),
@@ -163,13 +156,31 @@ function categoryOrder(prop: ParsedProp): number {
     return CATEGORY_ORDER[categorizeProp(prop.name, !prop.isOptional, prop.source)];
 }
 
+/** Only the definitions a documented prop names: a dropped prop's types are not on the page. */
+function pickTypeRefs(
+    definitions: Record<string, string>,
+    props: PropDoc[],
+): Record<string, string> | undefined {
+    const refs = Object.entries(definitions).filter(([name]) =>
+        props.some((prop) => mentionsTypeName(prop.detailedType, name)),
+    );
+
+    return refs.length > 0 ? Object.fromEntries(refs) : undefined;
+}
+
 export function policy(components: ParsedComponent[]): ComponentDoc[] {
-    return components.map((component) => ({
-        name: component.name,
-        ...(component.description !== undefined && { description: component.description }),
-        props: component.props
+    return components.map((component) => {
+        const props = component.props
             .filter(isDocumented)
             .sort((a, b) => categoryOrder(a) - categoryOrder(b) || a.name.localeCompare(b.name))
-            .map(toPropDoc),
-    }));
+            .map(toPropDoc);
+        const typeRefs = pickTypeRefs(component.typeDefinitions ?? {}, props);
+
+        return {
+            name: component.name,
+            ...(component.description !== undefined && { description: component.description }),
+            props,
+            ...(typeRefs && { typeRefs }),
+        };
+    });
 }

@@ -35,6 +35,8 @@ export interface ParsedComponent {
     name: string;
     description?: string;
     props: ParsedProp[];
+    /** Bodies of the public vapor-ui type names the props print, keyed by that name. */
+    typeDefinitions?: Record<string, string>;
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -56,4 +58,6 @@ export interface ComponentDoc {
     name: string;
     description?: string;
     props: PropDoc[];
+    /** Definitions of the vapor-ui type names in `props[].detailedType`, keyed by that name. */
+    typeRefs?: Record<string, string>;
 }

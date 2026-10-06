@@ -261,6 +261,35 @@ describe('policy', () => {
             expect(policy([component([], { name: 'Box' })])).toEqual([{ name: 'Box', props: [] }]);
         });
 
+        it('문서화된 prop이 이름으로 쓰는 타입 정의만 typeRefs에 남긴다', () => {
+            const [doc] = policy([
+                component(
+                    [
+                        prop('className', { typeMembers: [fn('(state: A.State) => string')] }),
+                        prop('onClick', { source: 'react', typeMembers: [other('A.Event')] }),
+                    ],
+                    {
+                        typeDefinitions: {
+                            'A.State': '{ open: boolean; }',
+                            'A.Event': '{ x: number; }',
+                            'A.St': '{}',
+                        },
+                    },
+                ),
+            ]);
+
+            expect(doc.typeRefs).toEqual({ 'A.State': '{ open: boolean; }' });
+            expect(Object.keys(doc)).toEqual(['name', 'props', 'typeRefs']);
+        });
+
+        it('남길 타입 정의가 없으면 typeRefs를 생략한다', () => {
+            const [doc] = policy([
+                component([prop('x')], { typeDefinitions: { 'A.State': '{}' } }),
+            ]);
+
+            expect(doc).not.toHaveProperty('typeRefs');
+        });
+
         it('컴포넌트를 입력 순서대로 하나씩 돌려준다', () => {
             expect(
                 policy([component([], { name: 'Button' }), component([], { name: 'Input' })]).map(
