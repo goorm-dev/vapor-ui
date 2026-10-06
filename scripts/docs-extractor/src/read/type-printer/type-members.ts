@@ -10,9 +10,10 @@ import type { Node, Type, ts } from 'ts-morph';
  *
  * `getUnionTypes()` returns the flattened union, which expands `ReactNode` and
  * `Ref<T>` into their members. TypeScript keeps the written members on the
- * union's `origin`, which is what `type.getText()` prints from. `origin` also
- * records unnamed shapes such as `(A | B) & (A | B)`, so only a named member is
- * kept whole; an unnamed union is opened again.
+ * union's `origin`, which is what `type.getText()` prints from. A member that is
+ * itself a union is opened again when it has no name, such as `(A | B) & (A | B)`,
+ * or when it only lists values, such as `type Side = 'top' | 'bottom'`. A named
+ * union of other types (`type Padding = number | {…}`) reads better by its name.
  *
  * ponytail: `origin` and ts-morph's `compilerFactory` are both internal. If either
  * moves in an upgrade, this falls back to the flattened union and aliases expand
@@ -30,10 +31,17 @@ function writtenUnionMembers(type: Type): Type[] {
             : type.getUnionTypes();
 
     return members.flatMap((member) =>
-        member.isUnion() && !member.isBoolean() && !member.getAliasSymbol()
+        member.isUnion() &&
+        !member.isBoolean() &&
+        (!member.getAliasSymbol() || isLiteralUnion(member))
             ? writtenUnionMembers(member)
             : [member],
     );
+}
+
+/** Every value is spelled out: `"sm" | "md"`, `1 | 2`, `boolean | "auto"`. */
+function isLiteralUnion(type: Type): boolean {
+    return type.getUnionTypes().every((member) => member.isLiteral() || member.isBooleanLiteral());
 }
 
 function kindOf(type: Type): ParsedTypeMember['kind'] {

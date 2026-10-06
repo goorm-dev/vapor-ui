@@ -148,7 +148,7 @@ A prop type is split into the top-level union members TypeScript prints (`src/re
 
 - `type` leaves out `undefined`, prints a function member as `function`, and prints a string literal without quotes: `"sm"` → `sm`.
 - `detailedType` keeps every member, `undefined` included, with quotes and parentheses as TypeScript writes them.
-- Members are not split further: `boolean` stays `boolean`, and `ReactNode` and `React.Ref<X>` are not expanded. Members that print the same are listed once. `null` and `undefined` come last.
+- `boolean`, `ReactNode` and `React.Ref<X>` are not expanded. A named union of values only (`type Side = "top" | "bottom"`) is expanded into its values, any other named union (`type Padding = number | {…}`) is kept by name. Members that print the same are listed once. `null` and `undefined` come last.
 - Base UI types are printed with their public vapor-ui names. `ReactElement<X, …>` is printed as `ReactElement<X>`, or `ReactElement` when `X` is `unknown`.
 
 ### Default values

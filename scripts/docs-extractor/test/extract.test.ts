@@ -717,6 +717,37 @@ describe('타입 출력', () => {
         });
     });
 
+    it('리터럴로만 된 이름 붙은 union은 필수·선택 prop 모두 값으로 펼친다', () => {
+        const doc = extractOne({
+            'button.tsx': `
+                type Size = 'sm' | 'md';
+
+                export namespace Button {
+                    export type Props = { required: Size; optional?: Size };
+                }
+            `,
+        });
+
+        expect(typesOf(doc)).toEqual({
+            required: [['sm', 'md'], '"sm" | "md"'],
+            optional: [['sm', 'md'], '"sm" | "md" | undefined'],
+        });
+    });
+
+    it('리터럴이 아닌 멤버가 있는 이름 붙은 union은 이름으로 쓴다', () => {
+        const doc = extractOne({
+            'popup.tsx': `
+                type Padding = number | { top?: number };
+
+                export namespace Popup {
+                    export type Props = { collisionPadding?: Padding };
+                }
+            `,
+        });
+
+        expect(typesOf(doc)).toEqual({ collisionPadding: [['Padding'], 'Padding | undefined'] });
+    });
+
     it('ReactNode·Ref 같은 React alias는 풀지 않는다', () => {
         const doc = extractOne({
             'node_modules/@types/react/index.d.ts': REACT_TYPES,
