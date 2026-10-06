@@ -8,6 +8,8 @@ import { type Node, type Type, TypeFormatFlags } from 'ts-morph';
 interface BaseUiTypeEntry {
     type: Type;
     vaporPath: string;
+    /** The vapor-ui namespace that declares the alias, e.g. `CollapsibleRoot`. */
+    namespace: string;
 }
 
 export interface BaseUiTypeMap {
@@ -19,12 +21,13 @@ export const TYPE_FORMAT_FLAGS =
     TypeFormatFlags.NoTruncation |
     TypeFormatFlags.WriteTypeArgumentsOfSignature;
 
-type ResolveTypeFn = (
-    type: Type,
-    baseUiMap?: BaseUiTypeMap,
-    contextNode?: Node,
-    reporter?: Reporter,
-) => string;
+export interface PrintOptions {
+    baseUiMap?: BaseUiTypeMap;
+    contextNode?: Node;
+    reporter?: Reporter;
+    /** The component namespace being documented. Its alias names win when several fit. */
+    namespace?: string;
+}
 
 /**
  * One branch of the type-printing chain.
@@ -38,13 +41,10 @@ export interface Resolver {
     resolve(type: Type, ctx: ResolverContext): string | null;
 }
 
-export interface ResolverContext {
+export interface ResolverContext extends PrintOptions {
     /** Pre-computed `type.getText(...)`, printed as is when a resolver keeps the type whole. */
     rawText: string;
-    baseUiMap?: BaseUiTypeMap;
-    contextNode?: Node;
-    reporter?: Reporter;
-    resolveType: ResolveTypeFn;
+    resolveType: (type: Type, options: PrintOptions) => string;
 }
 
 export const PRESERVED_REACT_ALIASES = new Set([

@@ -41,7 +41,7 @@ function getBaseUiQualifiedPath(type: Type): string | null {
     return null;
 }
 
-function isDeclaredInBaseUi(type: Type): boolean {
+export function isDeclaredInBaseUi(type: Type): boolean {
     const symbol = type.getSymbol() ?? type.getAliasSymbol();
     if (symbol) {
         for (const decl of symbol.getDeclarations()) {
@@ -157,11 +157,11 @@ function collectNamespaceTypeAliases(
                 const vaporPath = `${publicNsPath}.${aliasName}`;
 
                 if (normalizedPath) {
-                    map[normalizedPath] = { type: aliasType, vaporPath };
+                    map[normalizedPath] = { type: aliasType, vaporPath, namespace: nsName };
                 }
 
                 // Fallback key: namespace.alias format
-                map[`${nsName}.${aliasName}`] = { type: aliasType, vaporPath };
+                map[`${nsName}.${aliasName}`] = { type: aliasType, vaporPath, namespace: nsName };
 
                 // Flat base-ui symbol name (e.g. CollapsibleRootChangeEventDetails).
                 // Anonymous types share TypeScript's internal name `__type`, so they get no key.
@@ -173,7 +173,7 @@ function collectNamespaceTypeAliases(
                     flatName !== ts.InternalSymbolName.Type &&
                     !map[flatName]
                 ) {
-                    map[flatName] = { type: aliasType, vaporPath };
+                    map[flatName] = { type: aliasType, vaporPath, namespace: nsName };
                 }
             }
         }

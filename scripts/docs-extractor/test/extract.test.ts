@@ -808,6 +808,86 @@ describe('타입 출력', () => {
         });
     });
 
+    describe('조건부 타입으로 이름을 잃은 Base UI 타입', () => {
+        // Base UI writes event details as `R extends string ? Detail<R> & {} : never`.
+        // TypeScript evaluates it into an anonymous object, so the name is gone from the type.
+        const BASE_RADIO_GROUP = `
+            type Detail<R extends string, C extends object> = { reason: R; cancel: () => void } & C;
+            type EventDetails<R extends string, C extends object = {}> = R extends string
+                ? Detail<R, C> & {}
+                : never;
+
+            export namespace RadioGroup {
+                export type ChangeEventDetails = EventDetails<'none'>;
+                export type Props = {
+                    onValueChange?: (value: string, eventDetails: ChangeEventDetails) => void;
+                };
+            }
+        `;
+
+        it('공개 vapor-ui 이름으로 출력하고, prop이 속한 namespace의 이름을 먼저 쓴다', () => {
+            const docs = run(
+                createFixture({
+                    'segmented/@base-ui/RadioGroup.d.ts': BASE_RADIO_GROUP,
+                    'segmented/index.ts': `export * as Segmented from './index.parts';`,
+                    'segmented/index.parts.ts': `export { SegmentedRootPrimitive as RootPrimitive, SegmentedRoot as Root } from './segmented';`,
+                    'segmented/segmented.tsx': `
+                        import type { RadioGroup } from './@base-ui/RadioGroup';
+
+                        export namespace SegmentedRootPrimitive {
+                            export type Props = RadioGroup.Props;
+                            export type ChangeEventDetails = RadioGroup.ChangeEventDetails;
+                        }
+
+                        export namespace SegmentedRoot {
+                            export type Props = {
+                                onValueChange?: (value: string, eventDetails: SegmentedRoot.ChangeEventDetails) => void;
+                            };
+                            export type ChangeEventDetails = SegmentedRootPrimitive.ChangeEventDetails;
+                        }
+                    `,
+                }),
+            );
+
+            expect(
+                docs.map((doc) => [doc.name, propOf(doc, 'onValueChange')?.detailedType]),
+            ).toEqual([
+                [
+                    'SegmentedRootPrimitive',
+                    '((value: string, eventDetails: Segmented.RootPrimitive.ChangeEventDetails) => void) | undefined',
+                ],
+                [
+                    'SegmentedRoot',
+                    '((value: string, eventDetails: Segmented.Root.ChangeEventDetails) => void) | undefined',
+                ],
+            ]);
+        });
+
+        it('공개 이름이 없으면 구조를 펼쳐 출력하고 경고한다', () => {
+            const reporter = createRecordingReporter();
+            const root = createFixture({
+                'radio/@base-ui/RadioGroup.d.ts': BASE_RADIO_GROUP,
+                'radio/radio.tsx': `
+                    import type { RadioGroup } from './@base-ui/RadioGroup';
+
+                    export namespace Radio {
+                        /** 라디오 그룹 */
+                        export type Props = RadioGroup.Props;
+                    }
+                `,
+            });
+
+            const [doc] = run(root, { reporter });
+
+            expect(propOf(doc, 'onValueChange')?.detailedType).toBe(
+                '((value: string, eventDetails: { reason: "none"; cancel: () => void; }) => void) | undefined',
+            );
+            expect(reporter.warnings).toContainEqual(
+                expect.stringContaining('No public vapor-ui name for a Base UI type'),
+            );
+        });
+    });
+
     it('익명 타입은 다른 익명 Base UI 타입의 이름으로 출력하지 않는다', () => {
         const docs = run(
             createFixture({

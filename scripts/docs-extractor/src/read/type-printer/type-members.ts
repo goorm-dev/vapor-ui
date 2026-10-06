@@ -1,9 +1,8 @@
 import type { ParsedTypeMember } from '#model';
 import { isPreservedReactAlias } from '#read/type-printer/react-alias';
 import { resolveType } from '#read/type-printer/resolve-type';
-import type { BaseUiTypeMap } from '#read/type-printer/shared';
-import type { Reporter } from '#reporter';
-import type { Node, Type, ts } from 'ts-morph';
+import type { PrintOptions } from '#read/type-printer/shared';
+import type { Type, ts } from 'ts-morph';
 
 /**
  * The union as it was written, e.g. `ReactNode | Ref<T> | undefined`.
@@ -63,14 +62,9 @@ function nullishRank(member: ParsedTypeMember): number {
  * (`ReactNode`, `Ref<T>`) are not opened, members that print the same are
  * listed once, and `null | undefined` come last.
  */
-export function resolveTypeMembers(
-    type: Type,
-    baseUiMap: BaseUiTypeMap,
-    contextNode: Node,
-    reporter?: Reporter,
-): ParsedTypeMember[] {
+export function resolveTypeMembers(type: Type, options: PrintOptions): ParsedTypeMember[] {
     const toMember = (member: Type): ParsedTypeMember => ({
-        text: resolveType(member, baseUiMap, contextNode, reporter),
+        text: resolveType(member, options),
         kind: kindOf(member),
     });
 

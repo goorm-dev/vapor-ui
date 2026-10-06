@@ -15,7 +15,7 @@ function resolveReactElement(type: Type, ctx: ResolverContext): string {
     const [props] = type.getTypeArguments();
     if (!props || props.isUnknown() || props.isAny()) return 'ReactElement';
 
-    const propsText = ctx.resolveType(props, ctx.baseUiMap, ctx.contextNode, ctx.reporter);
+    const propsText = ctx.resolveType(props, ctx);
     return `ReactElement<${propsText}>`;
 }
 

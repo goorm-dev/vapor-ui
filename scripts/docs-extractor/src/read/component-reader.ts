@@ -2,7 +2,7 @@ import type { ParsedComponent, ParsedProp } from '#model';
 import { getDefaultValuesForComponent } from '#read/default-values';
 import { classifyPropSource, isProjectOwned } from '#read/source-classifier';
 import { buildBaseUiTypeMap } from '#read/type-printer/base-ui-mapper';
-import type { BaseUiTypeMap } from '#read/type-printer/shared';
+import type { BaseUiTypeMap, PrintOptions } from '#read/type-printer/shared';
 import { resolveTypeMembers } from '#read/type-printer/type-members';
 import { type Reporter, silentReporter } from '#reporter';
 import type {
@@ -76,17 +76,14 @@ function getPropDescription(symbol: TsSymbol): string | undefined {
 function extractParsedProp(
     symbol: TsSymbol,
     declNode: Node,
-    baseUiMap: BaseUiTypeMap,
+    options: PrintOptions,
     defaultValues: Record<string, string>,
-    reporter?: Reporter,
 ): ParsedProp {
     const name = symbol.getName();
-    const typeMembers = resolveTypeMembers(
-        symbol.getTypeAtLocation(declNode),
-        baseUiMap,
-        declNode,
-        reporter,
-    );
+    const typeMembers = resolveTypeMembers(symbol.getTypeAtLocation(declNode), {
+        ...options,
+        contextNode: declNode,
+    });
 
     return {
         name,
@@ -121,7 +118,12 @@ function extractParsedComponent(
 
     const props = allSymbols.map((symbol) => {
         const declNode = symbol.getDeclarations()[0] ?? exportedProps;
-        return extractParsedProp(symbol, declNode, baseUiMap, defaultValues, reporter);
+        return extractParsedProp(
+            symbol,
+            declNode,
+            { baseUiMap, reporter, namespace: namespaceName },
+            defaultValues,
+        );
     });
 
     return {

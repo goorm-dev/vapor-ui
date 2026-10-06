@@ -4,14 +4,13 @@ import { primitiveResolver } from '#read/type-printer/primitive';
 import { reactAliasResolver } from '#read/type-printer/react-alias';
 import { reactElementResolver } from '#read/type-printer/react-element';
 import {
-    type BaseUiTypeMap,
+    type PrintOptions,
     type Resolver,
     type ResolverContext,
     TYPE_FORMAT_FLAGS,
 } from '#read/type-printer/shared';
 import { unionWithFunctionResolver } from '#read/type-printer/union';
-import type { Reporter } from '#reporter';
-import { type Node, type Type } from 'ts-morph';
+import type { Type } from 'ts-morph';
 
 /**
  * Order matters: the first resolver that claims the type wins. Narrow, cheap
@@ -26,14 +25,17 @@ const RESOLVERS: Resolver[] = [
     baseUiResolver,
 ];
 
-export function resolveType(
-    type: Type,
-    baseUiMap?: BaseUiTypeMap,
-    contextNode?: Node,
-    reporter?: Reporter,
-): string {
+export function resolveType(type: Type, options: PrintOptions = {}): string {
+    const { baseUiMap, contextNode, reporter, namespace } = options;
     const rawText = contextNode ? type.getText(contextNode, TYPE_FORMAT_FLAGS) : type.getText();
-    const ctx: ResolverContext = { rawText, baseUiMap, contextNode, reporter, resolveType };
+    const ctx: ResolverContext = {
+        rawText,
+        baseUiMap,
+        contextNode,
+        reporter,
+        namespace,
+        resolveType,
+    };
 
     for (const resolver of RESOLVERS) {
         const resolved = resolver.resolve(type, ctx);
