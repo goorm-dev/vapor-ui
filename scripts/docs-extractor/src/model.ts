@@ -26,6 +26,8 @@ export interface ParsedProp {
     name: string;
     typeMembers: ParsedTypeMember[];
     isOptional: boolean;
+    /** Tagged `@ignore` upstream and not re-declared by vapor-ui. */
+    isIgnored?: boolean;
     source: PropSource;
     description?: string;
     defaultValue?: string;

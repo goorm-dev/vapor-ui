@@ -1128,6 +1128,38 @@ describe('prop 출처', () => {
             'focusableWhenDisabled',
         ]);
     });
+
+    it('@ignore가 붙은 Base UI prop은 빼고, vapor-ui가 다시 선언하면 남긴다', () => {
+        const docs = run(
+            createFixture({
+                'node_modules/@base-ui/react/item.d.ts': `
+                    export interface BaseItemProps {
+                        /** @ignore */
+                        id?: string;
+                        label?: string;
+                    }
+                `,
+                'item.tsx': `
+                    import type { BaseItemProps } from '@base-ui/react/item';
+
+                    export namespace Item {
+                        export type Props = BaseItemProps;
+                    }
+                    export namespace OwnItem {
+                        export type Props = BaseItemProps & {
+                            /** The id of the item. */
+                            id?: string;
+                        };
+                    }
+                `,
+            }),
+        );
+
+        expect(docs.map((doc) => doc.props.map((prop) => prop.name))).toEqual([
+            ['label'],
+            ['id', 'label'],
+        ]);
+    });
 });
 
 describe('경고', () => {

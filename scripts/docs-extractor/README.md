@@ -131,10 +131,11 @@ The output file path and the fields listed here form the contract with these con
 Every property of `Props`, including inherited ones, is checked against these rules in order. The first matching rule decides.
 
 1. `className` and `style`: kept.
-2. Declared in React types, DOM lib types, or a `node_modules` package other than Base UI: dropped.
-3. Name starts with `data-` or `aria-`: dropped.
-4. Declared in the sprinkles module, or named like a deprecated CSS shorthand (`$css`, `width`, `color`, …; full list in `src/policy.ts`): dropped.
-5. Anything else (own props, recipe variant props, Base UI props): kept.
+2. Tagged `@ignore` in its Base UI JSDoc (Base UI's internal `id`) and not re-declared by vapor-ui: dropped.
+3. Declared in React types, DOM lib types, or a `node_modules` package other than Base UI: dropped.
+4. Name starts with `data-` or `aria-`: dropped.
+5. Declared in the sprinkles module, or named like a deprecated CSS shorthand (`$css`, `width`, `color`, …; full list in `src/policy.ts`): dropped.
+6. Anything else (own props, recipe variant props, Base UI props): kept.
 
 Props are sorted by group, then by name within a group. A prop joins the first group whose rule matches, checked in this sequence: required, composition, variants, state, base-ui, custom.
 

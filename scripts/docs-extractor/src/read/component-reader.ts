@@ -59,9 +59,19 @@ function findExportedProps(
     );
 }
 
-function getPropDescription(symbol: TsSymbol): string | undefined {
-    const isOwn = (declaration: Node) => isProjectOwned(declaration.getSourceFile().getFilePath());
+const isOwn = (declaration: Node) => isProjectOwned(declaration.getSourceFile().getFilePath());
 
+/** Base UI tags props it keeps out of its own docs (the internal `id`) with `@ignore`. A vapor-ui re-declaration brings the prop back. */
+function isIgnored(symbol: TsSymbol): boolean {
+    const declarations = symbol.getDeclarations();
+    if (declarations.some(isOwn)) return false;
+
+    return declarations.some((declaration) =>
+        ts.getJSDocTags(declaration.compilerNode).some((tag) => tag.tagName.text === 'ignore'),
+    );
+}
+
+function getPropDescription(symbol: TsSymbol): string | undefined {
     return symbol
         .getDeclarations()
         .sort((a, b) => Number(isOwn(b)) - Number(isOwn(a)))
@@ -91,6 +101,7 @@ function extractParsedProp(
         name,
         typeMembers,
         isOptional: symbol.isOptional(),
+        isIgnored: isIgnored(symbol),
         source: classifyPropSource(symbol),
         description: getPropDescription(symbol),
         defaultValue: defaultValues[name],

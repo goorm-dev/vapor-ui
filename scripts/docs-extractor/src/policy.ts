@@ -66,6 +66,7 @@ function isDocumented(prop: ParsedProp): boolean {
     const { name, source } = prop;
 
     if (DOCUMENTED_HTML_PROPS.has(name)) return true;
+    if (prop.isIgnored) return false;
     if (source === 'react' || source === 'dom' || source === 'external') return false;
     if (name.startsWith('data-') || name.startsWith('aria-')) return false;
     if (source === 'sprinkles' || DEPRECATED_CSS_PROPS.has(name)) return false;
