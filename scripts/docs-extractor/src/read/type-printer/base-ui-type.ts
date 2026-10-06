@@ -1,6 +1,6 @@
 import { isDeclaredInBaseUi, resolveBaseUiType } from '#read/type-printer/base-ui-mapper';
 import type { BaseUiTypeMap, Resolver, ResolverContext } from '#read/type-printer/shared';
-import type { Type } from 'ts-morph';
+import { Node, type Type } from 'ts-morph';
 
 function resolveMappedBaseUiType(type: Type, baseUiMap: BaseUiTypeMap): string | null {
     const directPath = resolveBaseUiType(type, baseUiMap);
@@ -36,11 +36,19 @@ function resolveByIdentity(type: Type, ctx: ResolverContext): string | null {
 /**
  * Only types a component documents by name are worth a warning: Base UI's anonymous
  * event details and per-part `State`s. Shared helpers like `BaseUIEvent` or `HTMLProps`
- * have no vapor-ui alias by design and print under their own name.
+ * have no vapor-ui alias by design and print under their own name. An object Base UI
+ * writes straight into a parameter (`sideOffset={(data: { side; … }) => …}`) has no name
+ * in Base UI either, so there is nothing to re-export.
  */
 function shouldHaveVaporName(type: Type): boolean {
-    const name = (type.getAliasSymbol() ?? type.getSymbol())?.getName();
-    return name === '__type' || !!name?.endsWith('State');
+    const symbol = type.getAliasSymbol() ?? type.getSymbol();
+    const name = symbol?.getName();
+    if (name === '__type') {
+        return !symbol!
+            .getDeclarations()
+            .every((decl) => Node.isParameterDeclaration(decl.getParent()));
+    }
+    return !!name?.endsWith('State');
 }
 
 export const baseUiResolver: Resolver = {

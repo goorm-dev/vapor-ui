@@ -1012,6 +1012,33 @@ describe('타입 출력', () => {
         });
     });
 
+    it('Base UI가 매개변수 자리에 바로 쓴 객체 타입은 경고 없이 구조로 출력한다', () => {
+        const reporter = createRecordingReporter();
+        const root = createFixture({
+            'node_modules/@base-ui/react/positioner.d.ts': `
+                export interface PositionerProps {
+                    sideOffset?: (data: { side: string }) => number;
+                }
+            `,
+            'positioner.tsx': `
+                import type { PositionerProps } from '@base-ui/react/positioner';
+
+                export namespace Positioner {
+                    export type Props = PositionerProps;
+                }
+            `,
+        });
+
+        const [doc] = run(root, { reporter });
+
+        expect(propOf(doc, 'sideOffset')?.detailedType).toBe(
+            '((data: { side: string; }) => number) | undefined',
+        );
+        expect(reporter.warnings).not.toContainEqual(
+            expect.stringContaining('No public vapor-ui name for a Base UI type'),
+        );
+    });
+
     it('익명 타입은 다른 익명 Base UI 타입의 이름으로 출력하지 않는다', () => {
         const docs = run(
             createFixture({

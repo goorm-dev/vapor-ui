@@ -160,7 +160,7 @@ A prop type is split into the top-level union members TypeScript prints (`src/re
 - `type` leaves out `undefined`, prints a function member as `function`, and prints a string literal without quotes: `"sm"` → `sm`.
 - `detailedType` keeps every member, `undefined` included, with quotes and parentheses as TypeScript writes them.
 - `boolean`, `ReactNode` and `React.Ref<X>` are not expanded. A named union of values only (`type Side = "top" | "bottom"`) is expanded into its values, any other named union (`type Padding = number | {…}`) is kept by name. Members that print the same are listed once. `null` and `undefined` come last.
-- Base UI types are printed with their public vapor-ui names, including types TypeScript turns into an anonymous object (Base UI's `ChangeEventDetails`). When several names fit, the one declared in the component's own namespace wins. An anonymous Base UI type with no public name is printed as its structure, with a warning to re-export it from the component namespace. `ReactElement<X, …>` is printed as `ReactElement<X>`, or `ReactElement` when `X` is `unknown`.
+- Base UI types are printed with their public vapor-ui names, including types TypeScript turns into an anonymous object (Base UI's `ChangeEventDetails`). When several names fit, the one declared in the component's own namespace wins. An anonymous Base UI type with no public name is printed as its structure, with a warning to re-export it from the component namespace. An object Base UI writes inline as a parameter type (`sideOffset`'s `data`) has no name to re-export, so it is printed as its structure without a warning. `ReactElement<X, …>` is printed as `ReactElement<X>`, or `ReactElement` when `X` is `unknown`.
 
 ### Type references
 
