@@ -75,9 +75,9 @@ function isDocumented(prop: ParsedProp): boolean {
 // Types: how a type reads
 // ──────────────────────────────────────────────────────────────
 
-/** `"sm"` reads `sm`, a function reads `function`, `undefined` is left out. */
+/** `"sm"` reads `sm`, functions read one `function`, `undefined` is left out. */
 function summarizeType(members: ParsedTypeMember[]): string[] {
-    return members.flatMap((member) => {
+    const summary = members.flatMap((member) => {
         switch (member.kind) {
             case 'undefined':
                 return [];
@@ -89,6 +89,8 @@ function summarizeType(members: ParsedTypeMember[]): string[] {
                 return [member.text];
         }
     });
+
+    return [...new Set(summary)];
 }
 
 function detailType(members: ParsedTypeMember[]): string {

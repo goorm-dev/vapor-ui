@@ -181,6 +181,16 @@ describe('policy', () => {
             });
         });
 
+        it('요약에서 function은 한 번만 쓴다', () => {
+            expect(
+                typesOf(
+                    other('ReactElement'),
+                    fn('() => ReactElement'),
+                    fn('(a: A) => ReactElement'),
+                ).type,
+            ).toEqual(['ReactElement', 'function']);
+        });
+
         it('함수 하나뿐인 타입은 detailedType에서 괄호로 감싸지 않는다', () => {
             expect(typesOf(fn('(value: string) => void'))).toEqual({
                 type: ['function'],
