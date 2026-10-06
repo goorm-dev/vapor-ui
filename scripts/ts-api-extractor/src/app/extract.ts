@@ -8,7 +8,7 @@ import { silentReporter } from '#domain/reporter';
 import { componentsToJson } from '#domain/serialize';
 import type { FilterConfig, ParseConfig } from '#domain/stage-config';
 import { parsedComponentsToModels } from '#domain/transform';
-import { writeFiles } from '#infrastructure/fs/file-writer';
+import { removeStaleFiles, writeFiles } from '#infrastructure/fs/file-writer';
 import { parseSourceFile } from '#infrastructure/ts-morph/component-reader';
 
 export function extract(input: ExtractInput): ExtractOutput {
@@ -57,6 +57,11 @@ export function extract(input: ExtractInput): ExtractOutput {
             content: format.serialize(prop),
         })),
     );
+
+    if (input.removeStale) {
+        const removed = removeStaleFiles(outputDir, writtenFiles);
+        if (removed.length > 0) reporter.info(`Removed ${removed.length} stale files.`);
+    }
 
     return {
         parsed,

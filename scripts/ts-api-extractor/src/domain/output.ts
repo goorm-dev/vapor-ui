@@ -33,6 +33,11 @@ export interface ExtractInput {
     reporter?: Reporter;
     /** Defaults to JSON. */
     format?: OutputFormat;
+    /**
+     * Delete extractor JSON in outputDir that this run didn't write. Only set it
+     * when targetFiles covers every component, or the rest get deleted too.
+     */
+    removeStale?: boolean;
 }
 
 export interface ExtractOutput {

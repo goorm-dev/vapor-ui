@@ -105,6 +105,31 @@ describe('extract', () => {
         expect(fs.existsSync(result.writtenFiles[0])).toBe(true);
     });
 
+    it('removeStale이면 이번에 쓰지 않은 추출 JSON을 지우고 다른 JSON은 남긴다', () => {
+        const stale = path.join(fixture.outputDir, 'removed-part.json');
+        const unrelated = path.join(fixture.outputDir, 'package.json');
+        fs.mkdirSync(fixture.outputDir, { recursive: true });
+        fs.writeFileSync(stale, JSON.stringify({ name: 'RemovedPart', props: [] }));
+        fs.writeFileSync(unrelated, JSON.stringify({ name: 'not-extractor-output' }));
+
+        runExtract(fixture, { removeStale: true });
+
+        expect(fs.readdirSync(fixture.outputDir).sort()).toEqual([
+            'badge-root.json',
+            'package.json',
+        ]);
+    });
+
+    it('removeStale이 없으면 기존 파일을 지우지 않는다', () => {
+        const stale = path.join(fixture.outputDir, 'removed-part.json');
+        fs.mkdirSync(fixture.outputDir, { recursive: true });
+        fs.writeFileSync(stale, JSON.stringify({ name: 'RemovedPart', props: [] }));
+
+        runExtract(fixture);
+
+        expect(fs.existsSync(stale)).toBe(true);
+    });
+
     it('디스크에 쓰인 바이트가 반환된 props와 일치한다', () => {
         const result = runExtract(fixture);
         const written = JSON.parse(fs.readFileSync(result.writtenFiles[0], 'utf8'));

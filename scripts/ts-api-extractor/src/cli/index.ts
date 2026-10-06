@@ -42,6 +42,8 @@ async function runCli(): Promise<void> {
         targetFiles: resolved.targetFiles,
         config: resolved.config,
         reporter,
+        // Only a full run knows which files are stale.
+        removeStale: !cli.flags.component,
     });
 
     // Formatting is a CLI convenience, not part of extraction: it shells out to
