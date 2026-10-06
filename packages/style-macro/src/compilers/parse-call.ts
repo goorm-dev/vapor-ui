@@ -15,10 +15,9 @@ const IDENTIFIER_PROPS = new Set([
 ]);
 
 export interface TernarySite {
-    /** 대체될 CallExpression 노드 안 property 슬롯 위치 정보 */
-    property: string;
-    consequentClasses: string[];
-    alternateClasses: string[];
+    consequentRuleIndexes: number[];
+    alternateRuleIndexes: number[];
+    /** 소스 문자열 안 test expression 범위. transform 이 원본 식 그대로 slice. */
     testStart: number;
     testEnd: number;
 }
@@ -199,6 +198,7 @@ function walkObject(
         if (isTop && value?.type === 'ConditionalExpression') {
             const conseqLit = extractStaticValue(value.consequent);
             const altLit = extractStaticValue(value.alternate);
+
             if (conseqLit === null || altLit === null) {
                 errors.push({
                     code: 'dynamic-value',
@@ -208,15 +208,22 @@ function walkObject(
                 });
                 continue;
             }
+
             const conseqRules: IRRule[] = [];
             const altRules: IRRule[] = [];
+
             pushToken(conseqRules, errors, kebab, conseqLit, selectorContext, locOf(value));
             pushToken(altRules, errors, kebab, altLit, selectorContext, locOf(value));
-            rules.push(...conseqRules, ...altRules);
+
+            const conseqStart = rules.length;
+            rules.push(...conseqRules);
+
+            const altStart = rules.length;
+            rules.push(...altRules);
+
             ternaries.push({
-                property: kebab,
-                consequentClasses: [], // transform.ts fills after buildClassName
-                alternateClasses: [],
+                consequentRuleIndexes: conseqRules.map((_, i) => conseqStart + i),
+                alternateRuleIndexes: altRules.map((_, i) => altStart + i),
                 testStart: value.test.start,
                 testEnd: value.test.end,
             });

@@ -163,3 +163,76 @@ describe('transform — dynamic slots', () => {
         expect(out.code).not.toContain('_mergeStyle');
     });
 });
+
+describe('transform — ternary (entry-level)', () => {
+    it('rewrites single ternary on non-shorthand property', () => {
+        const source = src(`const cls = css({ color: cond ? '$fg-primary' : '$fg-secondary' });`);
+        const out = transform({ source, filename: '/T1.tsx' });
+        expect(out.errors).toEqual([]);
+        // 삼항 식이 생성 코드 안에 유지.
+        expect(out.code).toMatch(/cond\s*\?/);
+        // conseq / alt 양쪽 class 가 CSS 에 모두 emit.
+        expect(out.css).toContain('--vapor-color-foreground-primary');
+        expect(out.css).toContain('--vapor-color-foreground-secondary');
+    });
+
+    it('(#2) handles ternary on shorthand property (padding)', () => {
+        // padding → padding-top/right/bottom/left 4개로 확장. 분기당 4개 rule.
+        const source = src(`const cls = css({ padding: compact ? '$space-100' : '$space-400' });`);
+        const out = transform({ source, filename: '/T2.tsx' });
+        expect(out.errors).toEqual([]);
+        // 삼항식 유지되어야 함 — 양 분기 join 으로 떨어지면 버그.
+        expect(out.code).toMatch(/compact\s*\?/);
+        // 삼항식 branch 안에 공백으로 join 된 4개 class 가 있어야 함.
+        const ternMatch = out.code.match(/compact\s*\?\s*'([^']+)'\s*:\s*'([^']+)'/);
+        expect(ternMatch).not.toBeNull();
+        expect(ternMatch![1].split(' ').length).toBe(4);
+        expect(ternMatch![2].split(' ').length).toBe(4);
+    });
+
+    it('(#3) handles dynamic value + ternary in same call', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `function C({ color, active }) {`,
+            `  return <div className={css({`,
+            `    color,`,
+            `    backgroundColor: active ? '$bg-primary' : '$bg-secondary',`,
+            `  })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/T3.tsx' });
+        expect(out.errors).toEqual([]);
+        // dynamic 처리 통과: _resolveToken + style attr.
+        expect(out.code).toContain('_resolveToken');
+        // 삼항식 유지되어야 함 — dynamic path 때문에 skip 되면 버그.
+        expect(out.code).toMatch(/active\s*\?/);
+    });
+
+    it('(#4) handles multiple entry-level ternaries', () => {
+        const source = src(
+            `const cls = css({` +
+                `color: a ? '$fg-primary' : '$fg-secondary',` +
+                `backgroundColor: b ? '$bg-primary' : '$bg-secondary'` +
+                `});`,
+        );
+        const out = transform({ source, filename: '/T4.tsx' });
+        expect(out.errors).toEqual([]);
+        // 두 삼항 모두 유지.
+        const aCount = (out.code.match(/\ba\s*\?/g) || []).length;
+        const bCount = (out.code.match(/\bb\s*\?/g) || []).length;
+        expect(aCount).toBe(1);
+        expect(bCount).toBe(1);
+    });
+
+    it('mixes static props with ternary', () => {
+        const source = src(
+            `const cls = css({ display: 'flex', color: cond ? '$fg-primary' : '$fg-secondary' });`,
+        );
+        const out = transform({ source, filename: '/T5.tsx' });
+        expect(out.errors).toEqual([]);
+        // 삼항 식 유지 + static class (display) 는 rest 에 join.
+        expect(out.code).toMatch(/cond\s*\?/);
+        // 전체 replacement 안에 ' + ' 공백 결합 흔적.
+        expect(out.code).toMatch(/\+\s*' '\s*\+/);
+    });
+});

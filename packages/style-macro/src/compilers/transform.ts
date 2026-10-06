@@ -127,19 +127,10 @@ class Transformer {
                     continue;
                 }
                 this.#needResolveToken = true;
-
-                // call site 자체는 정적 부분 + dynamic 부분 통합 className string 으로 대체.
-                const uniq = Array.from(new Set(classNames)).sort().join(' ');
-                this.#ms!.overwrite(call.node.start, call.node.end, jsSingleQuoted(uniq));
-                continue;
             }
 
-            if (call.ternaries.length > 0) {
-                this.#rewriteCallWithTernaries(call.node, call.rules, classNames, call.ternaries);
-            } else {
-                const uniq = Array.from(new Set(classNames)).sort().join(' ');
-                this.#ms!.overwrite(call.node.start, call.node.end, jsSingleQuoted(uniq));
-            }
+            const replacement = this.#buildCallReplacement(classNames, call.ternaries);
+            this.#ms!.overwrite(call.node.start, call.node.end, replacement);
         }
 
         if (this.#errors.length) {
@@ -207,36 +198,50 @@ class Transformer {
         this.#allRules.push(...parsed.rules);
     };
 
-    #rewriteCallWithTernaries(
-        node: AnyProp,
-        rules: IRRule[],
+    /**
+     * `css({...})` 호출을 className 문자열식으로 교체.
+     */
+    #buildCallReplacement(
         classNames: string[],
         ternaries: ReturnType<typeof parseCallArg>['ternaries'],
-    ) {
-        const tern = ternaries[0];
-        const idxs: number[] = [];
-        for (let i = 0; i < rules.length && idxs.length < 2; i++) {
-            if (rules[i].kind === 'static' && rules[i].property === tern.property) idxs.push(i);
-        }
-        if (idxs.length !== 2) {
+    ): string {
+        if (ternaries.length === 0) {
             const uniq = Array.from(new Set(classNames)).sort().join(' ');
-            this.#ms!.overwrite(node.start, node.end, jsSingleQuoted(uniq));
-            return;
+            return jsSingleQuoted(uniq);
         }
-        const [i1, i2] = idxs;
-        const conseqCls = classNames[i1];
-        const altCls = classNames[i2];
-        const testSrc = this.opts.source.slice(tern.testStart, tern.testEnd);
 
-        const rest = classNames.filter((_, i) => i !== i1 && i !== i2);
-        const restLit = jsSingleQuoted(rest.sort().join(' '));
+        // 모든 ternary 분기가 점유한 rule index 집합.
+        const ternaryIdx = new Set<number>();
+        for (const t of ternaries) {
+            for (const i of t.consequentRuleIndexes) ternaryIdx.add(i);
+            for (const i of t.alternateRuleIndexes) ternaryIdx.add(i);
+        }
 
-        const expr =
-            rest.length > 0
-                ? `(${restLit} + ' ' + (${testSrc} ? ${jsSingleQuoted(conseqCls)} : ${jsSingleQuoted(altCls)}))`
-                : `(${testSrc} ? ${jsSingleQuoted(conseqCls)} : ${jsSingleQuoted(altCls)})`;
+        // rest = ternary 와 무관한 모든 rule 의 class (dedupe + sort).
+        const restClasses = classNames.filter((_, i) => !ternaryIdx.has(i));
+        const restUniq = Array.from(new Set(restClasses)).sort();
+        const restLit = jsSingleQuoted(restUniq.join(' '));
 
-        this.#ms!.overwrite(node.start, node.end, expr);
+        const parts: string[] = [];
+        if (restUniq.length > 0) parts.push(restLit);
+
+        for (const t of ternaries) {
+            const conseqUniq = Array.from(
+                new Set(t.consequentRuleIndexes.map((i) => classNames[i])),
+            ).sort();
+            const altUniq = Array.from(
+                new Set(t.alternateRuleIndexes.map((i) => classNames[i])),
+            ).sort();
+
+            const conseqLit = jsSingleQuoted(conseqUniq.join(' '));
+            const altLit = jsSingleQuoted(altUniq.join(' '));
+            const testSrc = this.opts.source.slice(t.testStart, t.testEnd);
+
+            parts.push(`(${testSrc} ? ${conseqLit} : ${altLit})`);
+        }
+
+        if (parts.length === 1) return parts[0];
+        return `(${parts.join(" + ' ' + ")})`;
     }
 
     #ensureRuntimeImport() {
