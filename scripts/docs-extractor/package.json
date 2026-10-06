@@ -28,9 +28,6 @@
         "typescript": "catalog:",
         "vitest": "catalog:"
     },
-    "peerDependencies": {
-        "typescript": ">=5.9.3"
-    },
     "engines": {
         "node": ">=20.20.2"
     }
