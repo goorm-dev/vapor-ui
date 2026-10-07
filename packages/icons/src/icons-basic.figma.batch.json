@@ -1,0 +1,2785 @@
+{
+    "templateFile": "./icon.figma.batch.ts",
+    "components": [
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7429-373",
+            "component": "AccessibilityOutlineIcon",
+            "source": "src/components/basic-icons/AccessibilityOutlineIcon/AccessibilityOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1561-979",
+            "component": "AchievementIcon",
+            "source": "src/components/basic-icons/AchievementIcon/AchievementIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2784",
+            "component": "AchievementOutlineIcon",
+            "source": "src/components/basic-icons/AchievementOutlineIcon/AchievementOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-1321",
+            "component": "AddCartOutlineIcon",
+            "source": "src/components/basic-icons/AddCartOutlineIcon/AddCartOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1512",
+            "component": "AddUserIcon",
+            "source": "src/components/basic-icons/AddUserIcon/AddUserIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1470",
+            "component": "AddUserOutlineIcon",
+            "source": "src/components/basic-icons/AddUserOutlineIcon/AddUserOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7780-466",
+            "component": "AichatOutlineIcon",
+            "source": "src/components/basic-icons/AichatOutlineIcon/AichatOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3165-124",
+            "component": "AiGoormeeIcon",
+            "source": "src/components/basic-icons/AiGoormeeIcon/AiGoormeeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2698",
+            "component": "AiGoormeeOutlineIcon",
+            "source": "src/components/basic-icons/AiGoormeeOutlineIcon/AiGoormeeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9271",
+            "component": "AirplayIcon",
+            "source": "src/components/basic-icons/AirplayIcon/AirplayIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9268",
+            "component": "AirplayOutlineIcon",
+            "source": "src/components/basic-icons/AirplayOutlineIcon/AirplayOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7102-2103",
+            "component": "AiSmartieIcon",
+            "source": "src/components/basic-icons/AiSmartieIcon/AiSmartieIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7391-383",
+            "component": "AiSmartieOutlineIcon",
+            "source": "src/components/basic-icons/AiSmartieOutlineIcon/AiSmartieOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4489-1655",
+            "component": "AlgorithmIcon",
+            "source": "src/components/basic-icons/AlgorithmIcon/AlgorithmIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6634-1680",
+            "component": "AlgorithmOutlineIcon",
+            "source": "src/components/basic-icons/AlgorithmOutlineIcon/AlgorithmOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1882",
+            "component": "AlignCenterOutlineIcon",
+            "source": "src/components/basic-icons/AlignCenterOutlineIcon/AlignCenterOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8365-380",
+            "component": "AlignJustifyOutlineIcon",
+            "source": "src/components/basic-icons/AlignJustifyOutlineIcon/AlignJustifyOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4240",
+            "component": "AlignLeftOutlineIcon",
+            "source": "src/components/basic-icons/AlignLeftOutlineIcon/AlignLeftOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2136",
+            "component": "AlignRightOutlineIcon",
+            "source": "src/components/basic-icons/AlignRightOutlineIcon/AlignRightOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=502-502",
+            "component": "AnalysisOutlineIcon",
+            "source": "src/components/basic-icons/AnalysisOutlineIcon/AnalysisOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8007-383",
+            "component": "ArrowDownCircleIcon",
+            "source": "src/components/basic-icons/ArrowDownCircleIcon/ArrowDownCircleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1999",
+            "component": "ArrowDownOutlineIcon",
+            "source": "src/components/basic-icons/ArrowDownOutlineIcon/ArrowDownOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3015-83",
+            "component": "ArrowUpOutlineIcon",
+            "source": "src/components/basic-icons/ArrowUpOutlineIcon/ArrowUpOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2352-151",
+            "component": "AssignmentIcon",
+            "source": "src/components/basic-icons/AssignmentIcon/AssignmentIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-2989",
+            "component": "AssignmentOutlineIcon",
+            "source": "src/components/basic-icons/AssignmentOutlineIcon/AssignmentOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7286-725",
+            "component": "AttachFileOutlineIcon",
+            "source": "src/components/basic-icons/AttachFileOutlineIcon/AttachFileOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4517-7",
+            "component": "AttemptOutlineIcon",
+            "source": "src/components/basic-icons/AttemptOutlineIcon/AttemptOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2308",
+            "component": "AutoCodeOutlineIcon",
+            "source": "src/components/basic-icons/AutoCodeOutlineIcon/AutoCodeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1411",
+            "component": "BackPageOutlineIcon",
+            "source": "src/components/basic-icons/BackPageOutlineIcon/BackPageOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2724",
+            "component": "BackUpOutlineIcon",
+            "source": "src/components/basic-icons/BackUpOutlineIcon/BackUpOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1824-1010",
+            "component": "BedIcon",
+            "source": "src/components/basic-icons/BedIcon/BedIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-2288",
+            "component": "BedOutlineIcon",
+            "source": "src/components/basic-icons/BedOutlineIcon/BedOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1365",
+            "component": "BellOffIcon",
+            "source": "src/components/basic-icons/BellOffIcon/BellOffIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1394",
+            "component": "BellOffOutlineIcon",
+            "source": "src/components/basic-icons/BellOffOutlineIcon/BellOffOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6681-1338",
+            "component": "BellOnIcon",
+            "source": "src/components/basic-icons/BellOnIcon/BellOnIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1354",
+            "component": "BellOnOutlineIcon",
+            "source": "src/components/basic-icons/BellOnOutlineIcon/BellOnOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4997-11",
+            "component": "BlankOutlineIcon",
+            "source": "src/components/basic-icons/BlankOutlineIcon/BlankOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=713-458",
+            "component": "BlockOutlineIcon",
+            "source": "src/components/basic-icons/BlockOutlineIcon/BlockOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2146",
+            "component": "BoldOutlineIcon",
+            "source": "src/components/basic-icons/BoldOutlineIcon/BoldOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=106-11",
+            "component": "BookIcon",
+            "source": "src/components/basic-icons/BookIcon/BookIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6681-1320",
+            "component": "BookmarkIcon",
+            "source": "src/components/basic-icons/BookmarkIcon/BookmarkIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6681-1327",
+            "component": "BookmarkOutlineIcon",
+            "source": "src/components/basic-icons/BookmarkOutlineIcon/BookmarkOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2889",
+            "component": "BookOutlineIcon",
+            "source": "src/components/basic-icons/BookOutlineIcon/BookOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4253",
+            "component": "BottomPlayerIcon",
+            "source": "src/components/basic-icons/BottomPlayerIcon/BottomPlayerIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1303",
+            "component": "BottomPlayerOutlineIcon",
+            "source": "src/components/basic-icons/BottomPlayerOutlineIcon/BottomPlayerOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4182",
+            "component": "BranchIcon",
+            "source": "src/components/basic-icons/BranchIcon/BranchIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1315",
+            "component": "BranchOutlineIcon",
+            "source": "src/components/basic-icons/BranchOutlineIcon/BranchOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2399",
+            "component": "BreakpointIcon",
+            "source": "src/components/basic-icons/BreakpointIcon/BreakpointIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4193",
+            "component": "BuildIcon",
+            "source": "src/components/basic-icons/BuildIcon/BuildIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1301",
+            "component": "BuildOutlineIcon",
+            "source": "src/components/basic-icons/BuildOutlineIcon/BuildOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7378-725",
+            "component": "BulletlistOutlineIcon",
+            "source": "src/components/basic-icons/BulletlistOutlineIcon/BulletlistOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1824-1008",
+            "component": "CafeIcon",
+            "source": "src/components/basic-icons/CafeIcon/CafeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-2285",
+            "component": "CafeOutlineIcon",
+            "source": "src/components/basic-icons/CafeOutlineIcon/CafeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1824-977",
+            "component": "CakeIcon",
+            "source": "src/components/basic-icons/CakeIcon/CakeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-2289",
+            "component": "CakeOutlineIcon",
+            "source": "src/components/basic-icons/CakeOutlineIcon/CakeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3930-76",
+            "component": "CalculatorIcon",
+            "source": "src/components/basic-icons/CalculatorIcon/CalculatorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1316",
+            "component": "CalculatorOutlineIcon",
+            "source": "src/components/basic-icons/CalculatorOutlineIcon/CalculatorOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4241",
+            "component": "CalendarIcon",
+            "source": "src/components/basic-icons/CalendarIcon/CalendarIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1434",
+            "component": "CalendarOutlineIcon",
+            "source": "src/components/basic-icons/CalendarOutlineIcon/CalendarOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7014-2264",
+            "component": "CallIcon",
+            "source": "src/components/basic-icons/CallIcon/CallIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7014-2263",
+            "component": "CallOutlineIcon",
+            "source": "src/components/basic-icons/CallOutlineIcon/CallOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6638-391",
+            "component": "CameraIcon",
+            "source": "src/components/basic-icons/CameraIcon/CameraIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6638-390",
+            "component": "CameraOutlineIcon",
+            "source": "src/components/basic-icons/CameraOutlineIcon/CameraOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9336",
+            "component": "CampIcon",
+            "source": "src/components/basic-icons/CampIcon/CampIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9330",
+            "component": "CampOutlineIcon",
+            "source": "src/components/basic-icons/CampOutlineIcon/CampOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4273",
+            "component": "CaptionIcon",
+            "source": "src/components/basic-icons/CaptionIcon/CaptionIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6634-2132",
+            "component": "CaptionOutlineIcon",
+            "source": "src/components/basic-icons/CaptionOutlineIcon/CaptionOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4275",
+            "component": "CardsIcon",
+            "source": "src/components/basic-icons/CardsIcon/CardsIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=60-60",
+            "component": "CardsOutlineIcon",
+            "source": "src/components/basic-icons/CardsOutlineIcon/CardsOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1525",
+            "component": "CaretDownIcon",
+            "source": "src/components/basic-icons/CaretDownIcon/CaretDownIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1527",
+            "component": "CaretLeftIcon",
+            "source": "src/components/basic-icons/CaretLeftIcon/CaretLeftIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1528",
+            "component": "CaretRightIcon",
+            "source": "src/components/basic-icons/CaretRightIcon/CaretRightIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1526",
+            "component": "CaretUpIcon",
+            "source": "src/components/basic-icons/CaretUpIcon/CaretUpIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1824-986",
+            "component": "CarIcon",
+            "source": "src/components/basic-icons/CarIcon/CarIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-2286",
+            "component": "CarOutlineIcon",
+            "source": "src/components/basic-icons/CarOutlineIcon/CarOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-1303",
+            "component": "CertificateIcon",
+            "source": "src/components/basic-icons/CertificateIcon/CertificateIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-1306",
+            "component": "CertificateOutlineIcon",
+            "source": "src/components/basic-icons/CertificateOutlineIcon/CertificateOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-1312",
+            "component": "ChapterIcon",
+            "source": "src/components/basic-icons/ChapterIcon/ChapterIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-1309",
+            "component": "ChapterOutlineIcon",
+            "source": "src/components/basic-icons/ChapterOutlineIcon/ChapterOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=502-504",
+            "component": "ChartOutlineIcon",
+            "source": "src/components/basic-icons/ChartOutlineIcon/ChartOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1902",
+            "component": "ChartPieIcon",
+            "source": "src/components/basic-icons/ChartPieIcon/ChartPieIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1430",
+            "component": "ChartPieOutlineIcon",
+            "source": "src/components/basic-icons/ChartPieOutlineIcon/ChartPieOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8007-386",
+            "component": "CheckboxIcon",
+            "source": "src/components/basic-icons/CheckboxIcon/CheckboxIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9223",
+            "component": "CheckCartOutlineIcon",
+            "source": "src/components/basic-icons/CheckCartOutlineIcon/CheckCartOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1349",
+            "component": "CheckCircleIcon",
+            "source": "src/components/basic-icons/CheckCircleIcon/CheckCircleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1392",
+            "component": "CheckCircleOutlineIcon",
+            "source": "src/components/basic-icons/CheckCircleOutlineIcon/CheckCircleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9120-376",
+            "component": "ChecklistOutlineIcon",
+            "source": "src/components/basic-icons/ChecklistOutlineIcon/ChecklistOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1570",
+            "component": "ChevronDoubleLeftOutlineIcon",
+            "source": "src/components/basic-icons/ChevronDoubleLeftOutlineIcon/ChevronDoubleLeftOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1578",
+            "component": "ChevronDoubleRightOutlineIcon",
+            "source": "src/components/basic-icons/ChevronDoubleRightOutlineIcon/ChevronDoubleRightOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1305",
+            "component": "ChevronDownOutlineIcon",
+            "source": "src/components/basic-icons/ChevronDownOutlineIcon/ChevronDownOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1319",
+            "component": "ChevronLeftOutlineIcon",
+            "source": "src/components/basic-icons/ChevronLeftOutlineIcon/ChevronLeftOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1325",
+            "component": "ChevronRightOutlineIcon",
+            "source": "src/components/basic-icons/ChevronRightOutlineIcon/ChevronRightOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1314",
+            "component": "ChevronUpOutlineIcon",
+            "source": "src/components/basic-icons/ChevronUpOutlineIcon/ChevronUpOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2203",
+            "component": "ClassIcon",
+            "source": "src/components/basic-icons/ClassIcon/ClassIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1424",
+            "component": "CloseOutlineIcon",
+            "source": "src/components/basic-icons/CloseOutlineIcon/CloseOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-3532",
+            "component": "CodeBlockIcon",
+            "source": "src/components/basic-icons/CodeBlockIcon/CodeBlockIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=5197-554",
+            "component": "CodeBlockOutlineIcon",
+            "source": "src/components/basic-icons/CodeBlockOutlineIcon/CodeBlockOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=830-453",
+            "component": "CodevisorIcon",
+            "source": "src/components/basic-icons/CodevisorIcon/CodevisorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4207",
+            "component": "CollaborationIcon",
+            "source": "src/components/basic-icons/CollaborationIcon/CollaborationIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2591",
+            "component": "CollaborationOutlineIcon",
+            "source": "src/components/basic-icons/CollaborationOutlineIcon/CollaborationOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4716-6",
+            "component": "CollapseOutlineIcon",
+            "source": "src/components/basic-icons/CollapseOutlineIcon/CollapseOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1646",
+            "component": "CommitOutlineIcon",
+            "source": "src/components/basic-icons/CommitOutlineIcon/CommitOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8148-384",
+            "component": "ComponentIcon",
+            "source": "src/components/basic-icons/ComponentIcon/ComponentIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1421",
+            "component": "ConfirmOutlineIcon",
+            "source": "src/components/basic-icons/ConfirmOutlineIcon/ConfirmOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4211",
+            "component": "ContainerIcon",
+            "source": "src/components/basic-icons/ContainerIcon/ContainerIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1290",
+            "component": "ContainerOutlineIcon",
+            "source": "src/components/basic-icons/ContainerOutlineIcon/ContainerOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3368-89",
+            "component": "ContainerRunIcon",
+            "source": "src/components/basic-icons/ContainerRunIcon/ContainerRunIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1288",
+            "component": "ContainerRunOutlineIcon",
+            "source": "src/components/basic-icons/ContainerRunOutlineIcon/ContainerRunOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2347",
+            "component": "ContainerShareIcon",
+            "source": "src/components/basic-icons/ContainerShareIcon/ContainerShareIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1291",
+            "component": "ContainerShareOutlineIcon",
+            "source": "src/components/basic-icons/ContainerShareOutlineIcon/ContainerShareOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7718-394",
+            "component": "ContainerStopIcon",
+            "source": "src/components/basic-icons/ContainerStopIcon/ContainerStopIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7718-409",
+            "component": "ContainerStopOutlineIcon",
+            "source": "src/components/basic-icons/ContainerStopOutlineIcon/ContainerStopOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4210",
+            "component": "ContainerToImageIcon",
+            "source": "src/components/basic-icons/ContainerToImageIcon/ContainerToImageIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4-558",
+            "component": "ControlCommonIcon",
+            "source": "src/components/basic-icons/ControlCommonIcon/ControlCommonIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1400",
+            "component": "ControlCommonOutlineIcon",
+            "source": "src/components/basic-icons/ControlCommonOutlineIcon/ControlCommonOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8469-375",
+            "component": "CopyAsMarkdownOutlineIcon",
+            "source": "src/components/basic-icons/CopyAsMarkdownOutlineIcon/CopyAsMarkdownOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4154",
+            "component": "CopyIcon",
+            "source": "src/components/basic-icons/CopyIcon/CopyIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1443",
+            "component": "CopyOutlineIcon",
+            "source": "src/components/basic-icons/CopyOutlineIcon/CopyOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2124",
+            "component": "CorrectOutlineIcon",
+            "source": "src/components/basic-icons/CorrectOutlineIcon/CorrectOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4256",
+            "component": "CouponIcon",
+            "source": "src/components/basic-icons/CouponIcon/CouponIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1403",
+            "component": "CouponOutlineIcon",
+            "source": "src/components/basic-icons/CouponOutlineIcon/CouponOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4243",
+            "component": "CourseHistoryIcon",
+            "source": "src/components/basic-icons/CourseHistoryIcon/CourseHistoryIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9262",
+            "component": "CourseIcon",
+            "source": "src/components/basic-icons/CourseIcon/CourseIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9265",
+            "component": "CourseOutlineIcon",
+            "source": "src/components/basic-icons/CourseOutlineIcon/CourseOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4180",
+            "component": "CpuIcon",
+            "source": "src/components/basic-icons/CpuIcon/CpuIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1292",
+            "component": "CpuOutlineIcon",
+            "source": "src/components/basic-icons/CpuOutlineIcon/CpuOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2401",
+            "component": "CreateBranchOutlineIcon",
+            "source": "src/components/basic-icons/CreateBranchOutlineIcon/CreateBranchOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4209",
+            "component": "CreditCardIcon",
+            "source": "src/components/basic-icons/CreditCardIcon/CreditCardIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1627",
+            "component": "CreditCardOutlineIcon",
+            "source": "src/components/basic-icons/CreditCardOutlineIcon/CreditCardOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1060-1260",
+            "component": "CursorshareoffIcon",
+            "source": "src/components/basic-icons/CursorshareoffIcon/CursorshareoffIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1060-1261",
+            "component": "CursorshareonIcon",
+            "source": "src/components/basic-icons/CursorshareonIcon/CursorshareonIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2036-983",
+            "component": "DarkIcon",
+            "source": "src/components/basic-icons/DarkIcon/DarkIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1597",
+            "component": "DarkOutlineIcon",
+            "source": "src/components/basic-icons/DarkOutlineIcon/DarkOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7102-2121",
+            "component": "DashboardIcon",
+            "source": "src/components/basic-icons/DashboardIcon/DashboardIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7391-384",
+            "component": "DashboardOutlineIcon",
+            "source": "src/components/basic-icons/DashboardOutlineIcon/DashboardOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4489-1656",
+            "component": "DatabaseIcon",
+            "source": "src/components/basic-icons/DatabaseIcon/DatabaseIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6634-1675",
+            "component": "DatabaseOutlineIcon",
+            "source": "src/components/basic-icons/DatabaseOutlineIcon/DatabaseOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2418",
+            "component": "DebugContinueIcon",
+            "source": "src/components/basic-icons/DebugContinueIcon/DebugContinueIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2288",
+            "component": "DebugIcon",
+            "source": "src/components/basic-icons/DebugIcon/DebugIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1293",
+            "component": "DebugOutlineIcon",
+            "source": "src/components/basic-icons/DebugOutlineIcon/DebugOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1060-1269",
+            "component": "DeployOutlineIcon",
+            "source": "src/components/basic-icons/DeployOutlineIcon/DeployOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3375-79",
+            "component": "DeployPushIcon",
+            "source": "src/components/basic-icons/DeployPushIcon/DeployPushIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1297",
+            "component": "DeployPushOutlineIcon",
+            "source": "src/components/basic-icons/DeployPushOutlineIcon/DeployPushOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4202",
+            "component": "DetailViewIcon",
+            "source": "src/components/basic-icons/DetailViewIcon/DetailViewIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1472",
+            "component": "DetailViewOutlineIcon",
+            "source": "src/components/basic-icons/DetailViewOutlineIcon/DetailViewOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=10057-460",
+            "component": "DevicesIcon",
+            "source": "src/components/basic-icons/DevicesIcon/DevicesIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=765-431",
+            "component": "DiscardOutlineIcon",
+            "source": "src/components/basic-icons/DiscardOutlineIcon/DiscardOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2519",
+            "component": "DiscIcon",
+            "source": "src/components/basic-icons/DiscIcon/DiscIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-2981",
+            "component": "DiscOutlineIcon",
+            "source": "src/components/basic-icons/DiscOutlineIcon/DiscOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4489-1636",
+            "component": "DiscussionIcon",
+            "source": "src/components/basic-icons/DiscussionIcon/DiscussionIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1445",
+            "component": "DiscussionOutlineIcon",
+            "source": "src/components/basic-icons/DiscussionOutlineIcon/DiscussionOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2390",
+            "component": "DiskIcon",
+            "source": "src/components/basic-icons/DiskIcon/DiskIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4233",
+            "component": "DislikeIcon",
+            "source": "src/components/basic-icons/DislikeIcon/DislikeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1654",
+            "component": "DislikeOutlineIcon",
+            "source": "src/components/basic-icons/DislikeOutlineIcon/DislikeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1346",
+            "component": "DislikeThumbIcon",
+            "source": "src/components/basic-icons/DislikeThumbIcon/DislikeThumbIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1389",
+            "component": "DislikeThumbOutlineIcon",
+            "source": "src/components/basic-icons/DislikeThumbOutlineIcon/DislikeThumbOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4668-4",
+            "component": "DividerIcon",
+            "source": "src/components/basic-icons/DividerIcon/DividerIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1307",
+            "component": "DividerOutlineIcon",
+            "source": "src/components/basic-icons/DividerOutlineIcon/DividerOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8769-407",
+            "component": "DocktoBottomIcon",
+            "source": "src/components/basic-icons/DocktoBottomIcon/DocktoBottomIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8769-406",
+            "component": "DocktoBottomOutlineIcon",
+            "source": "src/components/basic-icons/DocktoBottomOutlineIcon/DocktoBottomOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7057-2264",
+            "component": "DocumentViewerIcon",
+            "source": "src/components/basic-icons/DocumentViewerIcon/DocumentViewerIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7057-2295",
+            "component": "DocumentViewerOutlineIcon",
+            "source": "src/components/basic-icons/DocumentViewerOutlineIcon/DocumentViewerOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2108-1101",
+            "component": "DollarOutlineIcon",
+            "source": "src/components/basic-icons/DollarOutlineIcon/DollarOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4229-96",
+            "component": "DotIcon",
+            "source": "src/components/basic-icons/DotIcon/DotIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1340",
+            "component": "DownloadIcon",
+            "source": "src/components/basic-icons/DownloadIcon/DownloadIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1381",
+            "component": "DownloadOutlineIcon",
+            "source": "src/components/basic-icons/DownloadOutlineIcon/DownloadOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2530",
+            "component": "DragIndicatorIcon",
+            "source": "src/components/basic-icons/DragIndicatorIcon/DragIndicatorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4224",
+            "component": "EditIcon",
+            "source": "src/components/basic-icons/EditIcon/EditIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1492",
+            "component": "EditOutlineIcon",
+            "source": "src/components/basic-icons/EditOutlineIcon/EditOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4997-12",
+            "component": "EnterOutlineIcon",
+            "source": "src/components/basic-icons/EnterOutlineIcon/EnterOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4242",
+            "component": "EqualOutlineIcon",
+            "source": "src/components/basic-icons/EqualOutlineIcon/EqualOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-1847",
+            "component": "EraserIcon",
+            "source": "src/components/basic-icons/EraserIcon/EraserIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1914",
+            "component": "EraserOutlineIcon",
+            "source": "src/components/basic-icons/EraserOutlineIcon/EraserOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1352",
+            "component": "ErrorCircleIcon",
+            "source": "src/components/basic-icons/ErrorCircleIcon/ErrorCircleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1395",
+            "component": "ErrorCircleOutlineIcon",
+            "source": "src/components/basic-icons/ErrorCircleOutlineIcon/ErrorCircleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4246",
+            "component": "ExamIcon",
+            "source": "src/components/basic-icons/ExamIcon/ExamIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1922",
+            "component": "ExamListIcon",
+            "source": "src/components/basic-icons/ExamListIcon/ExamListIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2796",
+            "component": "ExamListOutlineIcon",
+            "source": "src/components/basic-icons/ExamListOutlineIcon/ExamListOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2561",
+            "component": "ExamOutlineIcon",
+            "source": "src/components/basic-icons/ExamOutlineIcon/ExamOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1935",
+            "component": "ExamReportIcon",
+            "source": "src/components/basic-icons/ExamReportIcon/ExamReportIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2663",
+            "component": "ExamReportOutlineIcon",
+            "source": "src/components/basic-icons/ExamReportOutlineIcon/ExamReportOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4717-40",
+            "component": "ExpandOutlineIcon",
+            "source": "src/components/basic-icons/ExpandOutlineIcon/ExpandOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-2229",
+            "component": "ExploreIcon",
+            "source": "src/components/basic-icons/ExploreIcon/ExploreIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-2284",
+            "component": "ExploreOutlineIcon",
+            "source": "src/components/basic-icons/ExploreOutlineIcon/ExploreOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1624",
+            "component": "ExportIcon",
+            "source": "src/components/basic-icons/ExportIcon/ExportIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4-566",
+            "component": "ExportImageIcon",
+            "source": "src/components/basic-icons/ExportImageIcon/ExportImageIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1628",
+            "component": "ExportOutlineIcon",
+            "source": "src/components/basic-icons/ExportOutlineIcon/ExportOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=837-434",
+            "component": "FileAddIcon",
+            "source": "src/components/basic-icons/FileAddIcon/FileAddIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6634-2147",
+            "component": "FileAddOutlineIcon",
+            "source": "src/components/basic-icons/FileAddOutlineIcon/FileAddOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=837-436",
+            "component": "FileDeleteIcon",
+            "source": "src/components/basic-icons/FileDeleteIcon/FileDeleteIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6634-2154",
+            "component": "FileDeleteOutlineIcon",
+            "source": "src/components/basic-icons/FileDeleteOutlineIcon/FileDeleteOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4221",
+            "component": "FileEditOutlineIcon",
+            "source": "src/components/basic-icons/FileEditOutlineIcon/FileEditOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4218",
+            "component": "FileIcon",
+            "source": "src/components/basic-icons/FileIcon/FileIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1084-560",
+            "component": "FilenewIcon",
+            "source": "src/components/basic-icons/FilenewIcon/FilenewIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1469",
+            "component": "FileNewOutlineIcon",
+            "source": "src/components/basic-icons/FileNewOutlineIcon/FileNewOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1626",
+            "component": "FileOutlineIcon",
+            "source": "src/components/basic-icons/FileOutlineIcon/FileOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1449",
+            "component": "FilterIcon",
+            "source": "src/components/basic-icons/FilterIcon/FilterIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1438",
+            "component": "FilterOutlineIcon",
+            "source": "src/components/basic-icons/FilterOutlineIcon/FilterOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2104",
+            "component": "FlagIcon",
+            "source": "src/components/basic-icons/FlagIcon/FlagIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-3012",
+            "component": "FlagOutlineIcon",
+            "source": "src/components/basic-icons/FlagOutlineIcon/FlagOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4181",
+            "component": "FlaskIcon",
+            "source": "src/components/basic-icons/FlaskIcon/FlaskIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1305",
+            "component": "FlaskIIconcon",
+            "source": "src/components/basic-icons/FlaskIIconcon/FlaskIIconcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9247",
+            "component": "FlightIcon",
+            "source": "src/components/basic-icons/FlightIcon/FlightIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2436",
+            "component": "FolderIcon",
+            "source": "src/components/basic-icons/FolderIcon/FolderIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1084-563",
+            "component": "FolderNewIcon",
+            "source": "src/components/basic-icons/FolderNewIcon/FolderNewIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1309",
+            "component": "FolderNewOutlineIcon",
+            "source": "src/components/basic-icons/FolderNewOutlineIcon/FolderNewOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1299",
+            "component": "FolderOutlineIcon",
+            "source": "src/components/basic-icons/FolderOutlineIcon/FolderOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2172",
+            "component": "FolderSearchIcon",
+            "source": "src/components/basic-icons/FolderSearchIcon/FolderSearchIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1312",
+            "component": "FolderSearchOutlineIcon",
+            "source": "src/components/basic-icons/FolderSearchOutlineIcon/FolderSearchOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4753-4",
+            "component": "FoldIcon",
+            "source": "src/components/basic-icons/FoldIcon/FoldIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1295",
+            "component": "FoldOutlineIcon",
+            "source": "src/components/basic-icons/FoldOutlineIcon/FoldOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1803-976",
+            "component": "ForkIcon",
+            "source": "src/components/basic-icons/ForkIcon/ForkIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1313",
+            "component": "ForkOutlineIcon",
+            "source": "src/components/basic-icons/ForkOutlineIcon/ForkOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4791-10",
+            "component": "FormatColorTextOutlineIcon",
+            "source": "src/components/basic-icons/FormatColorTextOutlineIcon/FormatColorTextOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1417",
+            "component": "ForwardPageOutlineIcon",
+            "source": "src/components/basic-icons/ForwardPageOutlineIcon/ForwardPageOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4194",
+            "component": "FunctionIcon",
+            "source": "src/components/basic-icons/FunctionIcon/FunctionIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1310",
+            "component": "FunctionOutlineIcon",
+            "source": "src/components/basic-icons/FunctionOutlineIcon/FunctionOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4248",
+            "component": "FunctionsOutlineIcon",
+            "source": "src/components/basic-icons/FunctionsOutlineIcon/FunctionsOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1824-1009",
+            "component": "GameIcon",
+            "source": "src/components/basic-icons/GameIcon/GameIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-2994",
+            "component": "GameOutlineIcon",
+            "source": "src/components/basic-icons/GameOutlineIcon/GameOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2692-88",
+            "component": "GiftOutlineIcon",
+            "source": "src/components/basic-icons/GiftOutlineIcon/GiftOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4-570",
+            "component": "GitIcon",
+            "source": "src/components/basic-icons/GitIcon/GitIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2422",
+            "component": "GitMergeOutlineIcon",
+            "source": "src/components/basic-icons/GitMergeOutlineIcon/GitMergeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4255",
+            "component": "GlobalOutlineIcon",
+            "source": "src/components/basic-icons/GlobalOutlineIcon/GlobalOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1983",
+            "component": "GoogleDrawingIcon",
+            "source": "src/components/basic-icons/GoogleDrawingIcon/GoogleDrawingIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1470",
+            "component": "GoogleDrawingOutlineIcon",
+            "source": "src/components/basic-icons/GoogleDrawingOutlineIcon/GoogleDrawingOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2006",
+            "component": "GooglePresentationIcon",
+            "source": "src/components/basic-icons/GooglePresentationIcon/GooglePresentationIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1467",
+            "component": "GooglePresentationOutlineIcon",
+            "source": "src/components/basic-icons/GooglePresentationOutlineIcon/GooglePresentationOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4266",
+            "component": "GoogleSpreadsheetIcon",
+            "source": "src/components/basic-icons/GoogleSpreadsheetIcon/GoogleSpreadsheetIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1468",
+            "component": "GoogleSpreadsheetOutlineIcon",
+            "source": "src/components/basic-icons/GoogleSpreadsheetOutlineIcon/GoogleSpreadsheetOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1908",
+            "component": "GoormduinoIcon",
+            "source": "src/components/basic-icons/GoormduinoIcon/GoormduinoIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4548-8",
+            "component": "GpuIcon",
+            "source": "src/components/basic-icons/GpuIcon/GpuIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1518",
+            "component": "GroupIcon",
+            "source": "src/components/basic-icons/GroupIcon/GroupIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1478",
+            "component": "GroupOutlineIcon",
+            "source": "src/components/basic-icons/GroupOutlineIcon/GroupOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4212",
+            "component": "GuestIcon",
+            "source": "src/components/basic-icons/GuestIcon/GuestIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7251-765",
+            "component": "HardBreakOutlineIcon",
+            "source": "src/components/basic-icons/HardBreakOutlineIcon/HardBreakOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9120-382",
+            "component": "Heading1OutlineIcon",
+            "source": "src/components/basic-icons/Heading1OutlineIcon/Heading1OutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9120-380",
+            "component": "Heading2OutlineIcon",
+            "source": "src/components/basic-icons/Heading2OutlineIcon/Heading2OutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9120-378",
+            "component": "Heading3OutlineIcon",
+            "source": "src/components/basic-icons/Heading3OutlineIcon/Heading3OutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9124-391",
+            "component": "Heading4OutlineIcon",
+            "source": "src/components/basic-icons/Heading4OutlineIcon/Heading4OutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6675-1301",
+            "component": "HeartIcon",
+            "source": "src/components/basic-icons/HeartIcon/HeartIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1395",
+            "component": "HeartOutlineIcon",
+            "source": "src/components/basic-icons/HeartOutlineIcon/HeartOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1355",
+            "component": "HelpCircleIcon",
+            "source": "src/components/basic-icons/HelpCircleIcon/HelpCircleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1398",
+            "component": "HelpCircleOutlineIcon",
+            "source": "src/components/basic-icons/HelpCircleOutlineIcon/HelpCircleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2131",
+            "component": "HelpIcon",
+            "source": "src/components/basic-icons/HelpIcon/HelpIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9235",
+            "component": "HighlightViewIcon",
+            "source": "src/components/basic-icons/HighlightViewIcon/HighlightViewIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9232",
+            "component": "HighlightViewOutlineIcon",
+            "source": "src/components/basic-icons/HighlightViewOutlineIcon/HighlightViewOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2165",
+            "component": "HistoryOutlineIcon",
+            "source": "src/components/basic-icons/HistoryOutlineIcon/HistoryOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1503",
+            "component": "HomeIcon",
+            "source": "src/components/basic-icons/HomeIcon/HomeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1461",
+            "component": "HomeOutlineIcon",
+            "source": "src/components/basic-icons/HomeOutlineIcon/HomeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=538-488",
+            "component": "HourglassIcon",
+            "source": "src/components/basic-icons/HourglassIcon/HourglassIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4-585",
+            "component": "IdCardIcon",
+            "source": "src/components/basic-icons/IdCardIcon/IdCardIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2583",
+            "component": "IdCardOutlineIcon",
+            "source": "src/components/basic-icons/IdCardOutlineIcon/IdCardOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2019",
+            "component": "IdeShareIcon",
+            "source": "src/components/basic-icons/IdeShareIcon/IdeShareIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=10057-447",
+            "component": "IdIcon",
+            "source": "src/components/basic-icons/IdIcon/IdIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1990",
+            "component": "ImageIcon",
+            "source": "src/components/basic-icons/ImageIcon/ImageIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1564",
+            "component": "ImageOutlineIcon",
+            "source": "src/components/basic-icons/ImageOutlineIcon/ImageOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1798-991",
+            "component": "ImagePackIcon",
+            "source": "src/components/basic-icons/ImagePackIcon/ImagePackIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2860",
+            "component": "ImagePackOutlineIcon",
+            "source": "src/components/basic-icons/ImagePackOutlineIcon/ImagePackOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2523",
+            "component": "ImageToContainerIcon",
+            "source": "src/components/basic-icons/ImageToContainerIcon/ImageToContainerIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1289",
+            "component": "ImageToContainerOutlineIcon",
+            "source": "src/components/basic-icons/ImageToContainerOutlineIcon/ImageToContainerOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1631",
+            "component": "ImportIcon",
+            "source": "src/components/basic-icons/ImportIcon/ImportIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1638",
+            "component": "ImportOutlineIcon",
+            "source": "src/components/basic-icons/ImportOutlineIcon/ImportOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8365-381",
+            "component": "IndentDecreaseOutlineIcon",
+            "source": "src/components/basic-icons/IndentDecreaseOutlineIcon/IndentDecreaseOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2360",
+            "component": "IndentIncreaseOutlineIcon",
+            "source": "src/components/basic-icons/IndentIncreaseOutlineIcon/IndentIncreaseOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4-601",
+            "component": "InfiniteOutlineIcon",
+            "source": "src/components/basic-icons/InfiniteOutlineIcon/InfiniteOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1361",
+            "component": "InfoCircleIcon",
+            "source": "src/components/basic-icons/InfoCircleIcon/InfoCircleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1406",
+            "component": "InfoCircleOutlineIcon",
+            "source": "src/components/basic-icons/InfoCircleOutlineIcon/InfoCircleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1455",
+            "component": "InOutlineIcon",
+            "source": "src/components/basic-icons/InOutlineIcon/InOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4183",
+            "component": "InputSettingOutlineIcon",
+            "source": "src/components/basic-icons/InputSettingOutlineIcon/InputSettingOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4198",
+            "component": "IntelliSenseClassIcon",
+            "source": "src/components/basic-icons/IntelliSenseClassIcon/IntelliSenseClassIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2492",
+            "component": "IntelliSenseColorIcon",
+            "source": "src/components/basic-icons/IntelliSenseColorIcon/IntelliSenseColorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4158",
+            "component": "IntelliSenseConstantIcon",
+            "source": "src/components/basic-icons/IntelliSenseConstantIcon/IntelliSenseConstantIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2483",
+            "component": "IntelliSenseEnumIcon",
+            "source": "src/components/basic-icons/IntelliSenseEnumIcon/IntelliSenseEnumIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1311",
+            "component": "IntelliSenseEnumOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSenseEnumOutlineIcon/IntelliSenseEnumOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4157",
+            "component": "IntelliSenseEventIcon",
+            "source": "src/components/basic-icons/IntelliSenseEventIcon/IntelliSenseEventIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2632",
+            "component": "IntelliSenseEventOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSenseEventOutlineIcon/IntelliSenseEventOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4200",
+            "component": "IntelliSenseFieldOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSenseFieldOutlineIcon/IntelliSenseFieldOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4201",
+            "component": "IntelliSenseFunctionIcon",
+            "source": "src/components/basic-icons/IntelliSenseFunctionIcon/IntelliSenseFunctionIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4161",
+            "component": "IntelliSenseInterfaceIcon",
+            "source": "src/components/basic-icons/IntelliSenseInterfaceIcon/IntelliSenseInterfaceIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4165",
+            "component": "IntelliSenseModuleIcon",
+            "source": "src/components/basic-icons/IntelliSenseModuleIcon/IntelliSenseModuleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1306",
+            "component": "IntelliSenseModuleOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSenseModuleOutlineIcon/IntelliSenseModuleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4163",
+            "component": "IntelliSenseNullIcon",
+            "source": "src/components/basic-icons/IntelliSenseNullIcon/IntelliSenseNullIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2506",
+            "component": "IntelliSenseOperatorIcon",
+            "source": "src/components/basic-icons/IntelliSenseOperatorIcon/IntelliSenseOperatorIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2855",
+            "component": "IntelliSensePropertyIcon",
+            "source": "src/components/basic-icons/IntelliSensePropertyIcon/IntelliSensePropertyIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2466",
+            "component": "IntelliSensePropertyOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSensePropertyOutlineIcon/IntelliSensePropertyOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4159",
+            "component": "IntelliSenseReferenceOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSenseReferenceOutlineIcon/IntelliSenseReferenceOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4160",
+            "component": "IntelliSenseSnippetIcon",
+            "source": "src/components/basic-icons/IntelliSenseSnippetIcon/IntelliSenseSnippetIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2556",
+            "component": "IntelliSenseSnippetOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSenseSnippetOutlineIcon/IntelliSenseSnippetOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4162",
+            "component": "IntelliSenseStructureIcon",
+            "source": "src/components/basic-icons/IntelliSenseStructureIcon/IntelliSenseStructureIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4164",
+            "component": "IntelliSenseTextIcon",
+            "source": "src/components/basic-icons/IntelliSenseTextIcon/IntelliSenseTextIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2514",
+            "component": "IntelliSenseTypeParameterOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSenseTypeParameterOutlineIcon/IntelliSenseTypeParameterOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2498",
+            "component": "IntelliSenseUnitIcon",
+            "source": "src/components/basic-icons/IntelliSenseUnitIcon/IntelliSenseUnitIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1317",
+            "component": "IntelliSenseUnitOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSenseUnitOutlineIcon/IntelliSenseUnitOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2474",
+            "component": "IntelliSenseValueIcon",
+            "source": "src/components/basic-icons/IntelliSenseValueIcon/IntelliSenseValueIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4199",
+            "component": "IntelliSenseVariableOutlineIcon",
+            "source": "src/components/basic-icons/IntelliSenseVariableOutlineIcon/IntelliSenseVariableOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4268",
+            "component": "ItalicIcon",
+            "source": "src/components/basic-icons/ItalicIcon/ItalicIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7156-695",
+            "component": "KeyboardIcon",
+            "source": "src/components/basic-icons/KeyboardIcon/KeyboardIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7156-703",
+            "component": "KeyboardOutlineIcon",
+            "source": "src/components/basic-icons/KeyboardOutlineIcon/KeyboardOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4997-13",
+            "component": "KeyboardTabIcon",
+            "source": "src/components/basic-icons/KeyboardTabIcon/KeyboardTabIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6905-749",
+            "component": "KidIcon",
+            "source": "src/components/basic-icons/KidIcon/KidIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6905-759",
+            "component": "KidOutlineIcon",
+            "source": "src/components/basic-icons/KidOutlineIcon/KidOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9626-458",
+            "component": "LicenseIcon",
+            "source": "src/components/basic-icons/LicenseIcon/LicenseIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9301",
+            "component": "LightbulbIcon",
+            "source": "src/components/basic-icons/LightbulbIcon/LightbulbIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9298",
+            "component": "LightbulbOutlineIcon",
+            "source": "src/components/basic-icons/LightbulbOutlineIcon/LightbulbOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2036-984",
+            "component": "LightIcon",
+            "source": "src/components/basic-icons/LightIcon/LightIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4170",
+            "component": "LightningIcon",
+            "source": "src/components/basic-icons/LightningIcon/LightningIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1668",
+            "component": "LightningOutlineIcon",
+            "source": "src/components/basic-icons/LightningOutlineIcon/LightningOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1598",
+            "component": "LightOutlineIcon",
+            "source": "src/components/basic-icons/LightOutlineIcon/LightOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4230",
+            "component": "LikeIcon",
+            "source": "src/components/basic-icons/LikeIcon/LikeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1656",
+            "component": "LikeOutlineIcon",
+            "source": "src/components/basic-icons/LikeOutlineIcon/LikeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1343",
+            "component": "LikeThumbIcon",
+            "source": "src/components/basic-icons/LikeThumbIcon/LikeThumbIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1384",
+            "component": "LikeThumbOutlineIcon",
+            "source": "src/components/basic-icons/LikeThumbOutlineIcon/LikeThumbOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8515-443",
+            "component": "LinearScaleOutlineIcon",
+            "source": "src/components/basic-icons/LinearScaleOutlineIcon/LinearScaleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4790-4",
+            "component": "LineSpacingOutlineIcon",
+            "source": "src/components/basic-icons/LineSpacingOutlineIcon/LineSpacingOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4274",
+            "component": "LineStyleOutlineIcon",
+            "source": "src/components/basic-icons/LineStyleOutlineIcon/LineStyleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7974-5822",
+            "component": "LinkOffOutlineIcon",
+            "source": "src/components/basic-icons/LinkOffOutlineIcon/LinkOffOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4232",
+            "component": "LinkOutlineIcon",
+            "source": "src/components/basic-icons/LinkOutlineIcon/LinkOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4261",
+            "component": "ListIcon",
+            "source": "src/components/basic-icons/ListIcon/ListIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4245",
+            "component": "ListNumberedIcon",
+            "source": "src/components/basic-icons/ListNumberedIcon/ListNumberedIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9289",
+            "component": "LiveLessonIcon",
+            "source": "src/components/basic-icons/LiveLessonIcon/LiveLessonIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9286",
+            "component": "LiveLessonOutlineIcon",
+            "source": "src/components/basic-icons/LiveLessonOutlineIcon/LiveLessonOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9241",
+            "component": "LocationIcon",
+            "source": "src/components/basic-icons/LocationIcon/LocationIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9238",
+            "component": "LocationOutlineIcon",
+            "source": "src/components/basic-icons/LocationOutlineIcon/LocationOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1367",
+            "component": "LockIcon",
+            "source": "src/components/basic-icons/LockIcon/LockIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1412",
+            "component": "LockOutlineIcon",
+            "source": "src/components/basic-icons/LockOutlineIcon/LockOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8007-392",
+            "component": "LongTextOutlineIcon",
+            "source": "src/components/basic-icons/LongTextOutlineIcon/LongTextOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2032",
+            "component": "MagicWandIcon",
+            "source": "src/components/basic-icons/MagicWandIcon/MagicWandIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-2044",
+            "component": "MagicWandOutlineIcon",
+            "source": "src/components/basic-icons/MagicWandOutlineIcon/MagicWandOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2025",
+            "component": "MailIcon",
+            "source": "src/components/basic-icons/MailIcon/MailIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1868-1000",
+            "component": "MailOutlineIcon",
+            "source": "src/components/basic-icons/MailOutlineIcon/MailOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=502-509",
+            "component": "ManagementOutlineIcon",
+            "source": "src/components/basic-icons/ManagementOutlineIcon/ManagementOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2001",
+            "component": "MarkdownIcon",
+            "source": "src/components/basic-icons/MarkdownIcon/MarkdownIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-1953",
+            "component": "MarkdownOutlineIcon",
+            "source": "src/components/basic-icons/MarkdownOutlineIcon/MarkdownOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-2897",
+            "component": "MarkModeIcon",
+            "source": "src/components/basic-icons/MarkModeIcon/MarkModeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4247",
+            "component": "MarkModeOutlineIcon",
+            "source": "src/components/basic-icons/MarkModeOutlineIcon/MarkModeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-2999",
+            "component": "MemoIcon",
+            "source": "src/components/basic-icons/MemoIcon/MemoIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3847-4",
+            "component": "MemoOutlineIcon",
+            "source": "src/components/basic-icons/MemoOutlineIcon/MemoOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2367",
+            "component": "MemoryIcon",
+            "source": "src/components/basic-icons/MemoryIcon/MemoryIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4151",
+            "component": "MenuOutlineIcon",
+            "source": "src/components/basic-icons/MenuOutlineIcon/MenuOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4250",
+            "component": "MergeUpOutlineIcon",
+            "source": "src/components/basic-icons/MergeUpOutlineIcon/MergeUpOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4166",
+            "component": "MessageIcon",
+            "source": "src/components/basic-icons/MessageIcon/MessageIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1444",
+            "component": "MessageOutlineIcon",
+            "source": "src/components/basic-icons/MessageOutlineIcon/MessageOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4196",
+            "component": "MethodIcon",
+            "source": "src/components/basic-icons/MethodIcon/MethodIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1314",
+            "component": "MethodOutlineIcon",
+            "source": "src/components/basic-icons/MethodOutlineIcon/MethodOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=684-493",
+            "component": "MicOffIcon",
+            "source": "src/components/basic-icons/MicOffIcon/MicOffIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1657",
+            "component": "MicOffOutlineIcon",
+            "source": "src/components/basic-icons/MicOffOutlineIcon/MicOffOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=684-490",
+            "component": "MicOnIcon",
+            "source": "src/components/basic-icons/MicOnIcon/MicOnIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1655",
+            "component": "MicOnOutlineIcon",
+            "source": "src/components/basic-icons/MicOnOutlineIcon/MicOnOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2091",
+            "component": "MinusBoxIcon",
+            "source": "src/components/basic-icons/MinusBoxIcon/MinusBoxIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1418",
+            "component": "MinusBoxOutlineIcon",
+            "source": "src/components/basic-icons/MinusBoxOutlineIcon/MinusBoxOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2336",
+            "component": "MinusOutlineIcon",
+            "source": "src/components/basic-icons/MinusOutlineIcon/MinusOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4172",
+            "component": "MoreCommonOutlineIcon",
+            "source": "src/components/basic-icons/MoreCommonOutlineIcon/MoreCommonOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-1315",
+            "component": "MovieIcon",
+            "source": "src/components/basic-icons/MovieIcon/MovieIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-1318",
+            "component": "MovieOutlineIcon",
+            "source": "src/components/basic-icons/MovieOutlineIcon/MovieOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1945",
+            "component": "NetfficeOutlineIcon",
+            "source": "src/components/basic-icons/NetfficeOutlineIcon/NetfficeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4174",
+            "component": "NetworkIcon",
+            "source": "src/components/basic-icons/NetworkIcon/NetworkIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1302",
+            "component": "NetworkOutlineIcon",
+            "source": "src/components/basic-icons/NetworkOutlineIcon/NetworkOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2275",
+            "component": "NextIcon",
+            "source": "src/components/basic-icons/NextIcon/NextIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1402",
+            "component": "NextOutlineIcon",
+            "source": "src/components/basic-icons/NextOutlineIcon/NextOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4-626",
+            "component": "NoImageIcon",
+            "source": "src/components/basic-icons/NoImageIcon/NoImageIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1565",
+            "component": "NoImageOutlineIcon",
+            "source": "src/components/basic-icons/NoImageOutlineIcon/NoImageOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1671",
+            "component": "NoticeBoardIcon",
+            "source": "src/components/basic-icons/NoticeBoardIcon/NoticeBoardIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1668",
+            "component": "NoticeBoardOutlineIcon",
+            "source": "src/components/basic-icons/NoticeBoardOutlineIcon/NoticeBoardOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1358",
+            "component": "NoticeCircleIcon",
+            "source": "src/components/basic-icons/NoticeCircleIcon/NoticeCircleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1403",
+            "component": "NoticeCircleOutlineIcon",
+            "source": "src/components/basic-icons/NoticeCircleOutlineIcon/NoticeCircleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1509",
+            "component": "NoUserIcon",
+            "source": "src/components/basic-icons/NoUserIcon/NoUserIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1467",
+            "component": "NoUserOutlineIcon",
+            "source": "src/components/basic-icons/NoUserOutlineIcon/NoUserOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7378-726",
+            "component": "NumberlistOutlineIcon",
+            "source": "src/components/basic-icons/NumberlistOutlineIcon/NumberlistOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4214",
+            "component": "ObjectIcon",
+            "source": "src/components/basic-icons/ObjectIcon/ObjectIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1061-1267",
+            "component": "OpenFileIcon",
+            "source": "src/components/basic-icons/OpenFileIcon/OpenFileIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1471",
+            "component": "OpenFileOutlineIcon",
+            "source": "src/components/basic-icons/OpenFileOutlineIcon/OpenFileOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2452",
+            "component": "OpenFolderIcon",
+            "source": "src/components/basic-icons/OpenFolderIcon/OpenFolderIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1298",
+            "component": "OpenFolderOutlineIcon",
+            "source": "src/components/basic-icons/OpenFolderOutlineIcon/OpenFolderOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1686",
+            "component": "OpenInNewOutlineIcon",
+            "source": "src/components/basic-icons/OpenInNewOutlineIcon/OpenInNewOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4206",
+            "component": "OrganizationIcon",
+            "source": "src/components/basic-icons/OrganizationIcon/OrganizationIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1452",
+            "component": "OutOutlineIcon",
+            "source": "src/components/basic-icons/OutOutlineIcon/OutOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4489-1657",
+            "component": "PandasOutlineIcon",
+            "source": "src/components/basic-icons/PandasOutlineIcon/PandasOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4029-20",
+            "component": "PanelOpenIcon",
+            "source": "src/components/basic-icons/PanelOpenIcon/PanelOpenIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2801",
+            "component": "PanelOpenOutlineIcon",
+            "source": "src/components/basic-icons/PanelOpenOutlineIcon/PanelOpenOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9346",
+            "component": "ParentsIcon",
+            "source": "src/components/basic-icons/ParentsIcon/ParentsIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2260",
+            "component": "PauseIcon",
+            "source": "src/components/basic-icons/PauseIcon/PauseIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1401",
+            "component": "PauseOutlineIcon",
+            "source": "src/components/basic-icons/PauseOutlineIcon/PauseOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-2944",
+            "component": "PcIcon",
+            "source": "src/components/basic-icons/PcIcon/PcIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4260",
+            "component": "PcOutlineIcon",
+            "source": "src/components/basic-icons/PcOutlineIcon/PcOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4234",
+            "component": "PdfIcon",
+            "source": "src/components/basic-icons/PdfIcon/PdfIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1466",
+            "component": "PdfOutlineIcon",
+            "source": "src/components/basic-icons/PdfOutlineIcon/PdfOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2085",
+            "component": "PhoneIcon",
+            "source": "src/components/basic-icons/PhoneIcon/PhoneIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6634-1701",
+            "component": "PhoneOutlineIcon",
+            "source": "src/components/basic-icons/PhoneOutlineIcon/PhoneOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1683",
+            "component": "PinSetIcon",
+            "source": "src/components/basic-icons/PinSetIcon/PinSetIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1680",
+            "component": "PinSetOutlineIcon",
+            "source": "src/components/basic-icons/PinSetOutlineIcon/PinSetOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4550-14",
+            "component": "PipetteIcon",
+            "source": "src/components/basic-icons/PipetteIcon/PipetteIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2237",
+            "component": "PlansIcon",
+            "source": "src/components/basic-icons/PlansIcon/PlansIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1304",
+            "component": "PlansOutlineIcon",
+            "source": "src/components/basic-icons/PlansOutlineIcon/PlansOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4216",
+            "component": "PlayIcon",
+            "source": "src/components/basic-icons/PlayIcon/PlayIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4236",
+            "component": "PlaylistOutlineIcon",
+            "source": "src/components/basic-icons/PlaylistOutlineIcon/PlaylistOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1399",
+            "component": "PlayOutlineIcon",
+            "source": "src/components/basic-icons/PlayOutlineIcon/PlayOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4177",
+            "component": "PlugInIcon",
+            "source": "src/components/basic-icons/PlugInIcon/PlugInIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2382",
+            "component": "PlugOutIcon",
+            "source": "src/components/basic-icons/PlugOutIcon/PlugOutIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4249",
+            "component": "PlusBoxIcon",
+            "source": "src/components/basic-icons/PlusBoxIcon/PlusBoxIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1417",
+            "component": "PlusBoxOutlineIcon",
+            "source": "src/components/basic-icons/PlusBoxOutlineIcon/PlusBoxOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2358",
+            "component": "PlusOutlineIcon",
+            "source": "src/components/basic-icons/PlusOutlineIcon/PlusOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1061-1274",
+            "component": "PortforwardingIcon",
+            "source": "src/components/basic-icons/PortforwardingIcon/PortforwardingIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1294",
+            "component": "PortforwardingOutlineIcon",
+            "source": "src/components/basic-icons/PortforwardingOutlineIcon/PortforwardingOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4778-18",
+            "component": "PowerIcon",
+            "source": "src/components/basic-icons/PowerIcon/PowerIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4190",
+            "component": "PreIcon",
+            "source": "src/components/basic-icons/PreIcon/PreIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1398",
+            "component": "PreOutlineIcon",
+            "source": "src/components/basic-icons/PreOutlineIcon/PreOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7081-2303",
+            "component": "PresentScreenIcon",
+            "source": "src/components/basic-icons/PresentScreenIcon/PresentScreenIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7081-2328",
+            "component": "PresentScreenOutlineIcon",
+            "source": "src/components/basic-icons/PresentScreenOutlineIcon/PresentScreenOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=787-436",
+            "component": "PresetOutlineIcon",
+            "source": "src/components/basic-icons/PresetOutlineIcon/PresetOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=68-1",
+            "component": "PreviewIcon",
+            "source": "src/components/basic-icons/PreviewIcon/PreviewIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1491",
+            "component": "PreviewOutlineIcon",
+            "source": "src/components/basic-icons/PreviewOutlineIcon/PreviewOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1893",
+            "component": "PriceOutlineIcon",
+            "source": "src/components/basic-icons/PriceOutlineIcon/PriceOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2051",
+            "component": "PrintIcon",
+            "source": "src/components/basic-icons/PrintIcon/PrintIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1493",
+            "component": "PrintOutlineIcon",
+            "source": "src/components/basic-icons/PrintOutlineIcon/PrintOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4175",
+            "component": "ProjectIcon",
+            "source": "src/components/basic-icons/ProjectIcon/ProjectIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4173",
+            "component": "ProjectOpenIcon",
+            "source": "src/components/basic-icons/ProjectOpenIcon/ProjectOpenIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-2935",
+            "component": "ProjectOutlineIcon",
+            "source": "src/components/basic-icons/ProjectOutlineIcon/ProjectOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2154",
+            "component": "ProjectSettingIcon",
+            "source": "src/components/basic-icons/ProjectSettingIcon/ProjectSettingIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1300",
+            "component": "ProjectSettingOutlineIcon",
+            "source": "src/components/basic-icons/ProjectSettingOutlineIcon/ProjectSettingOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2218",
+            "component": "PropertyIcon",
+            "source": "src/components/basic-icons/PropertyIcon/PropertyIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9292",
+            "component": "PsychologyIcon",
+            "source": "src/components/basic-icons/PsychologyIcon/PsychologyIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9295",
+            "component": "PsychologyOutlineIcon",
+            "source": "src/components/basic-icons/PsychologyOutlineIcon/PsychologyOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2443",
+            "component": "PublishIcon",
+            "source": "src/components/basic-icons/PublishIcon/PublishIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7724-384",
+            "component": "PublishOutlineIcon",
+            "source": "src/components/basic-icons/PublishOutlineIcon/PublishOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1643",
+            "component": "PullOutlineIcon",
+            "source": "src/components/basic-icons/PullOutlineIcon/PullOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2112",
+            "component": "QnAIcon",
+            "source": "src/components/basic-icons/QnAIcon/QnAIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6639-1404",
+            "component": "QnAOutlineIcon",
+            "source": "src/components/basic-icons/QnAOutlineIcon/QnAOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4264",
+            "component": "QrcodeOutlineIcon",
+            "source": "src/components/basic-icons/QrcodeOutlineIcon/QrcodeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2106",
+            "component": "QuoteIcon",
+            "source": "src/components/basic-icons/QuoteIcon/QuoteIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-2194",
+            "component": "QuoteOutlineIcon",
+            "source": "src/components/basic-icons/QuoteOutlineIcon/QuoteOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=3878-7",
+            "component": "ReferenceIcon",
+            "source": "src/components/basic-icons/ReferenceIcon/ReferenceIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6634-2114",
+            "component": "ReferenceOutlineIcon",
+            "source": "src/components/basic-icons/ReferenceOutlineIcon/ReferenceOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1674",
+            "component": "RefreshOutlineIcon",
+            "source": "src/components/basic-icons/RefreshOutlineIcon/RefreshOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4213",
+            "component": "RegexOutlineIcon",
+            "source": "src/components/basic-icons/RegexOutlineIcon/RegexOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1677",
+            "component": "ReloadOutlineIcon",
+            "source": "src/components/basic-icons/ReloadOutlineIcon/ReloadOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2461",
+            "component": "RemoteIcon",
+            "source": "src/components/basic-icons/RemoteIcon/RemoteIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=406-504",
+            "component": "RemoteOffIcon",
+            "source": "src/components/basic-icons/RemoteOffIcon/RemoteOffIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2729",
+            "component": "RemoteOffOutlineIcon",
+            "source": "src/components/basic-icons/RemoteOffOutlineIcon/RemoteOffOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2717",
+            "component": "RemoteOutlineIcon",
+            "source": "src/components/basic-icons/RemoteOutlineIcon/RemoteOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2428",
+            "component": "ReplaceIcon",
+            "source": "src/components/basic-icons/ReplaceIcon/ReplaceIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4244",
+            "component": "ReplyOutlineIcon",
+            "source": "src/components/basic-icons/ReplyOutlineIcon/ReplyOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1824-1007",
+            "component": "RestaurantOutlineIcon",
+            "source": "src/components/basic-icons/RestaurantOutlineIcon/RestaurantOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4267",
+            "component": "ResultManagementIcon",
+            "source": "src/components/basic-icons/ResultManagementIcon/ResultManagementIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2884",
+            "component": "ResultManagementOutlineIcon",
+            "source": "src/components/basic-icons/ResultManagementOutlineIcon/ResultManagementOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9626-457",
+            "component": "RewardedAdsIcon",
+            "source": "src/components/basic-icons/RewardedAdsIcon/RewardedAdsIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9250",
+            "component": "RouteIcon",
+            "source": "src/components/basic-icons/RouteIcon/RouteIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9253",
+            "component": "RouteOutlineIcon",
+            "source": "src/components/basic-icons/RouteOutlineIcon/RouteOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4195",
+            "component": "RunIcon",
+            "source": "src/components/basic-icons/RunIcon/RunIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2875",
+            "component": "RunOutlineIcon",
+            "source": "src/components/basic-icons/RunOutlineIcon/RunOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4188",
+            "component": "SaveAsIcon",
+            "source": "src/components/basic-icons/SaveAsIcon/SaveAsIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1296",
+            "component": "SaveAsOutlineIcon",
+            "source": "src/components/basic-icons/SaveAsOutlineIcon/SaveAsOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4192",
+            "component": "SaveIcon",
+            "source": "src/components/basic-icons/SaveIcon/SaveIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2868",
+            "component": "SaveOutlineIcon",
+            "source": "src/components/basic-icons/SaveOutlineIcon/SaveOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1824-982",
+            "component": "SavingIcon",
+            "source": "src/components/basic-icons/SavingIcon/SavingIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6629-2287",
+            "component": "SavingOutlineIcon",
+            "source": "src/components/basic-icons/SavingOutlineIcon/SavingOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4836-539",
+            "component": "SbomIcon",
+            "source": "src/components/basic-icons/SbomIcon/SbomIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9343",
+            "component": "SchoolIcon",
+            "source": "src/components/basic-icons/SchoolIcon/SchoolIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9333",
+            "component": "SchoolOutlineIcon",
+            "source": "src/components/basic-icons/SchoolOutlineIcon/SchoolOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1458",
+            "component": "SearchOutlineIcon",
+            "source": "src/components/basic-icons/SearchOutlineIcon/SearchOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1524",
+            "component": "SendIcon",
+            "source": "src/components/basic-icons/SendIcon/SendIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1497",
+            "component": "SendOutlineIcon",
+            "source": "src/components/basic-icons/SendOutlineIcon/SendOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1692",
+            "component": "SettingIcon",
+            "source": "src/components/basic-icons/SettingIcon/SettingIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1689",
+            "component": "SettingOutlineIcon",
+            "source": "src/components/basic-icons/SettingOutlineIcon/SettingOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1527",
+            "component": "ShareIcon",
+            "source": "src/components/basic-icons/ShareIcon/ShareIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1496",
+            "component": "ShareOutlineIcon",
+            "source": "src/components/basic-icons/ShareOutlineIcon/ShareOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4239",
+            "component": "ShoppingCartIcon",
+            "source": "src/components/basic-icons/ShoppingCartIcon/ShoppingCartIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-3007",
+            "component": "ShoppingCartOutlineIcon",
+            "source": "src/components/basic-icons/ShoppingCartOutlineIcon/ShoppingCartOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=741-432",
+            "component": "ShortcutOutlineIcon",
+            "source": "src/components/basic-icons/ShortcutOutlineIcon/ShortcutOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8007-389",
+            "component": "ShortTextOutlineIcon",
+            "source": "src/components/basic-icons/ShortTextOutlineIcon/ShortTextOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8587-790",
+            "component": "SideNavIcon",
+            "source": "src/components/basic-icons/SideNavIcon/SideNavIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8769-405",
+            "component": "SideNavOutlineIcon",
+            "source": "src/components/basic-icons/SideNavOutlineIcon/SideNavOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=710-441",
+            "component": "SignalPowerOutlineIcon",
+            "source": "src/components/basic-icons/SignalPowerOutlineIcon/SignalPowerOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4225",
+            "component": "SlashOutlineIcon",
+            "source": "src/components/basic-icons/SlashOutlineIcon/SlashOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8444-394",
+            "component": "SlotIcon",
+            "source": "src/components/basic-icons/SlotIcon/SlotIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=777-450",
+            "component": "SoundOffIcon",
+            "source": "src/components/basic-icons/SoundOffIcon/SoundOffIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1576",
+            "component": "SoundOffOutlineIcon",
+            "source": "src/components/basic-icons/SoundOffOutlineIcon/SoundOffOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=777-449",
+            "component": "SoundOnIcon",
+            "source": "src/components/basic-icons/SoundOnIcon/SoundOnIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1575",
+            "component": "SoundOnOutlineIcon",
+            "source": "src/components/basic-icons/SoundOnOutlineIcon/SoundOnOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4156",
+            "component": "SourcecodeIcon",
+            "source": "src/components/basic-icons/SourcecodeIcon/SourcecodeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1062-1261",
+            "component": "SpinnerOutlineIcon",
+            "source": "src/components/basic-icons/SpinnerOutlineIcon/SpinnerOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2317",
+            "component": "SplitHorizontalOutlineIcon",
+            "source": "src/components/basic-icons/SplitHorizontalOutlineIcon/SplitHorizontalOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4262",
+            "component": "SplitIcon",
+            "source": "src/components/basic-icons/SplitIcon/SplitIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2294",
+            "component": "SplitVerticalOutlineIcon",
+            "source": "src/components/basic-icons/SplitVerticalOutlineIcon/SplitVerticalOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=451-494",
+            "component": "SshIcon",
+            "source": "src/components/basic-icons/SshIcon/SshIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1887",
+            "component": "StarIcon",
+            "source": "src/components/basic-icons/StarIcon/StarIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1918",
+            "component": "StarOutlineIcon",
+            "source": "src/components/basic-icons/StarOutlineIcon/StarOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4167",
+            "component": "StepInOutlineIcon",
+            "source": "src/components/basic-icons/StepInOutlineIcon/StepInOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2457",
+            "component": "StepOutOutlineIcon",
+            "source": "src/components/basic-icons/StepOutOutlineIcon/StepOutOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4171",
+            "component": "StepOverOutlineIcon",
+            "source": "src/components/basic-icons/StepOverOutlineIcon/StepOverOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2216",
+            "component": "StopIcon",
+            "source": "src/components/basic-icons/StopIcon/StopIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1318",
+            "component": "StopOutlineIcon",
+            "source": "src/components/basic-icons/StopOutlineIcon/StopOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2538",
+            "component": "StorageIcon",
+            "source": "src/components/basic-icons/StorageIcon/StorageIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9120-374",
+            "component": "StrikeOutlineIcon",
+            "source": "src/components/basic-icons/StrikeOutlineIcon/StrikeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4220",
+            "component": "StruckIcon",
+            "source": "src/components/basic-icons/StruckIcon/StruckIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7080-1308",
+            "component": "StruckOutlineIcon",
+            "source": "src/components/basic-icons/StruckOutlineIcon/StruckOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9259",
+            "component": "StudentManagementIcon",
+            "source": "src/components/basic-icons/StudentManagementIcon/StudentManagementIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9256",
+            "component": "StudentManagementOutlineIcon",
+            "source": "src/components/basic-icons/StudentManagementOutlineIcon/StudentManagementOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4237",
+            "component": "SyllabusIcon",
+            "source": "src/components/basic-icons/SyllabusIcon/SyllabusIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6665-2928",
+            "component": "SyllabusOutlineIcon",
+            "source": "src/components/basic-icons/SyllabusOutlineIcon/SyllabusOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1435",
+            "component": "TableFilterOutlineIcon",
+            "source": "src/components/basic-icons/TableFilterOutlineIcon/TableFilterOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4271",
+            "component": "TableOutlineIcon",
+            "source": "src/components/basic-icons/TableOutlineIcon/TableOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2060",
+            "component": "TabletIcon",
+            "source": "src/components/basic-icons/TabletIcon/TabletIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6634-1718",
+            "component": "TabletOutlineIcon",
+            "source": "src/components/basic-icons/TabletOutlineIcon/TabletOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6785-9244",
+            "component": "TakeoffIcon",
+            "source": "src/components/basic-icons/TakeoffIcon/TakeoffIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=531-525",
+            "component": "TerminalConnectOutlineIcon",
+            "source": "src/components/basic-icons/TerminalConnectOutlineIcon/TerminalConnectOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-1889",
+            "component": "TerminalOutlineIcon",
+            "source": "src/components/basic-icons/TerminalOutlineIcon/TerminalOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4227",
+            "component": "TerminalWindowOutlineIcon",
+            "source": "src/components/basic-icons/TerminalWindowOutlineIcon/TerminalWindowOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2351-145",
+            "component": "TestIcon",
+            "source": "src/components/basic-icons/TestIcon/TestIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6661-2644",
+            "component": "TestOutlineIcon",
+            "source": "src/components/basic-icons/TestOutlineIcon/TestOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4272",
+            "component": "TextColorOutlineIcon",
+            "source": "src/components/basic-icons/TextColorOutlineIcon/TextColorOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4231",
+            "component": "TextOutlineIcon",
+            "source": "src/components/basic-icons/TextOutlineIcon/TextOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=8402-6388",
+            "component": "TextScanOutlineIcon",
+            "source": "src/components/basic-icons/TextScanOutlineIcon/TextScanOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1530",
+            "component": "TimeIcon",
+            "source": "src/components/basic-icons/TimeIcon/TimeIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1500",
+            "component": "TimeOutlineIcon",
+            "source": "src/components/basic-icons/TimeOutlineIcon/TimeOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4203",
+            "component": "TransferOutlineIcon",
+            "source": "src/components/basic-icons/TransferOutlineIcon/TransferOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4719-19",
+            "component": "TranslateOutlineIcon",
+            "source": "src/components/basic-icons/TranslateOutlineIcon/TranslateOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1373",
+            "component": "TrashIcon",
+            "source": "src/components/basic-icons/TrashIcon/TrashIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1418",
+            "component": "TrashOutlineIcon",
+            "source": "src/components/basic-icons/TrashOutlineIcon/TrashOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=1556-977",
+            "component": "TreeCollapseIcon",
+            "source": "src/components/basic-icons/TreeCollapseIcon/TreeCollapseIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=9496-371",
+            "component": "TriangleOutlineIcon",
+            "source": "src/components/basic-icons/TriangleOutlineIcon/TriangleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7610-384",
+            "component": "TwoFileIcon",
+            "source": "src/components/basic-icons/TwoFileIcon/TwoFileIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4258",
+            "component": "UnderlineOutlineIcon",
+            "source": "src/components/basic-icons/UnderlineOutlineIcon/UnderlineOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6712-1430",
+            "component": "UndoOutlineIcon",
+            "source": "src/components/basic-icons/UndoOutlineIcon/UndoOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1370",
+            "component": "UnlockIcon",
+            "source": "src/components/basic-icons/UnlockIcon/UnlockIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1415",
+            "component": "UnlockOutlineIcon",
+            "source": "src/components/basic-icons/UnlockOutlineIcon/UnlockOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1332",
+            "component": "UploadIcon",
+            "source": "src/components/basic-icons/UploadIcon/UploadIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1376",
+            "component": "UploadOutlineIcon",
+            "source": "src/components/basic-icons/UploadOutlineIcon/UploadOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4222",
+            "component": "UppercaseIcon",
+            "source": "src/components/basic-icons/UppercaseIcon/UppercaseIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1515",
+            "component": "UserCheckIcon",
+            "source": "src/components/basic-icons/UserCheckIcon/UserCheckIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1473",
+            "component": "UserCheckOutlineIcon",
+            "source": "src/components/basic-icons/UserCheckOutlineIcon/UserCheckOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1506",
+            "component": "UserIcon",
+            "source": "src/components/basic-icons/UserIcon/UserIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1521",
+            "component": "UserMoveIcon",
+            "source": "src/components/basic-icons/UserMoveIcon/UserMoveIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1481",
+            "component": "UserMoveOutlineIcon",
+            "source": "src/components/basic-icons/UserMoveOutlineIcon/UserMoveOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1464",
+            "component": "UserOutlineIcon",
+            "source": "src/components/basic-icons/UserOutlineIcon/UserOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7359-734",
+            "component": "UserSearchIcon",
+            "source": "src/components/basic-icons/UserSearchIcon/UserSearchIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=7359-733",
+            "component": "UserSearchOutlineIcon",
+            "source": "src/components/basic-icons/UserSearchOutlineIcon/UserSearchOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4189",
+            "component": "VariableIcon",
+            "source": "src/components/basic-icons/VariableIcon/VariableIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=684-497",
+            "component": "VideocamOffIcon",
+            "source": "src/components/basic-icons/VideocamOffIcon/VideocamOffIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1643",
+            "component": "VideocamOffOutlineIcon",
+            "source": "src/components/basic-icons/VideocamOffOutlineIcon/VideocamOffOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=684-488",
+            "component": "VideocamOnIcon",
+            "source": "src/components/basic-icons/VideocamOnIcon/VideocamOnIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1642",
+            "component": "VideocamOnOutlineIcon",
+            "source": "src/components/basic-icons/VideocamOnOutlineIcon/VideocamOnOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4185",
+            "component": "ViewExpandOutlineIcon",
+            "source": "src/components/basic-icons/ViewExpandOutlineIcon/ViewExpandOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=4-631",
+            "component": "ViewModuleIcon",
+            "source": "src/components/basic-icons/ViewModuleIcon/ViewModuleIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6624-1667",
+            "component": "ViewModuleOutlineIcon",
+            "source": "src/components/basic-icons/ViewModuleOutlineIcon/ViewModuleOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1446",
+            "component": "ViewOffIcon",
+            "source": "src/components/basic-icons/ViewOffIcon/ViewOffIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1430",
+            "component": "ViewOffOutlineIcon",
+            "source": "src/components/basic-icons/ViewOffOutlineIcon/ViewOffOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1443",
+            "component": "ViewOnIcon",
+            "source": "src/components/basic-icons/ViewOnIcon/ViewOnIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1427",
+            "component": "ViewOnOutlineIcon",
+            "source": "src/components/basic-icons/ViewOnOutlineIcon/ViewOnOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2338",
+            "component": "ViewShrinkOutlineIcon",
+            "source": "src/components/basic-icons/ViewShrinkOutlineIcon/ViewShrinkOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1364",
+            "component": "WarningIcon",
+            "source": "src/components/basic-icons/WarningIcon/WarningIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=6713-1409",
+            "component": "WarningOutlineIcon",
+            "source": "src/components/basic-icons/WarningOutlineIcon/WarningOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2299",
+            "component": "WordMatchIcon",
+            "source": "src/components/basic-icons/WordMatchIcon/WordMatchIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4169",
+            "component": "WordSearchOutlineIcon",
+            "source": "src/components/basic-icons/WordSearchOutlineIcon/WordSearchOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-4155",
+            "component": "ZoomInOutlineIcon",
+            "source": "src/components/basic-icons/ZoomInOutlineIcon/ZoomInOutlineIcon.tsx"
+        },
+        {
+            "url": "https://www.figma.com/design/DVgbt41m23pnHjAL8ZYsD3?node-id=2-2447",
+            "component": "ZoomOutOutlineIcon",
+            "source": "src/components/basic-icons/ZoomOutOutlineIcon/ZoomOutOutlineIcon.tsx"
+        }
+    ]
+}

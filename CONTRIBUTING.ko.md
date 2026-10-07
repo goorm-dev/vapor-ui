@@ -40,11 +40,13 @@ cd vapor-ui
 git remote add upstream https://github.com/goorm-dev/vapor-ui.git
 ```
 
-2. Node 버전이 [.nvmrc](../.nvmrc)와 일치하는지 확인하세요:
+2. [.nvmrc](./.nvmrc)에 적힌 Node 버전으로 전환하세요 (`pnpm install`은 Node.js 24 이상이 필요합니다):
 
 ```bash
-node -v
+nvm use   # 또는: fnm use
 ```
+
+pnpm 버전은 `package.json`의 `packageManager` 필드로 고정되어 있어 자동으로 전환됩니다.
 
 3. 의존성을 설치하세요:
 

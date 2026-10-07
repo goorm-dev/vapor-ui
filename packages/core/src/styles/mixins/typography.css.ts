@@ -102,12 +102,14 @@ export const typographyVariants = {
         fontWeight: vars.typography.fontWeight[400],
     },
     code1: {
+        fontFamily: vars.typography.fontFamily.code,
         lineHeight: vars.typography.lineHeight['075'],
         letterSpacing: vars.typography.letterSpacing['000'],
         fontSize: vars.typography.fontSize['075'],
         fontWeight: vars.typography.fontWeight[400],
     },
     code2: {
+        fontFamily: vars.typography.fontFamily.code,
         lineHeight: vars.typography.lineHeight['050'],
         letterSpacing: vars.typography.letterSpacing['000'],
         fontSize: vars.typography.fontSize['050'],
