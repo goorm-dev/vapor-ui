@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "description": "Build-time atomic CSS-in-JS macro.",
     "license": "MIT",
-    "type": "module",
     "sideEffects": false,
+    "type": "module",
     "exports": {
         ".": {
             "import": {

@@ -67,10 +67,7 @@ describe('buildClassName — hashed (prod)', () => {
     it('distinct selectorContext → distinct class', () => {
         const def = buildClassName(t(), 'hashed');
         const hover = buildClassName(t({ selectorContext: ':hover' }), 'hashed');
-        const media = buildClassName(
-            t({ selectorContext: '@media(min-width:768px)' }),
-            'hashed',
-        );
+        const media = buildClassName(t({ selectorContext: '@media(min-width:768px)' }), 'hashed');
         expect(new Set([def, hover, media]).size).toBe(3);
     });
 
