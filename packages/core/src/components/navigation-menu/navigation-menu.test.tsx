@@ -290,6 +290,24 @@ describe('<NavigationMenu.Link />', () => {
         expect(link).not.toHaveAttribute('data-current');
     });
 
+    it('should pass NavigationMenu.Link state to style and render callbacks', () => {
+        const rendered = render(
+            <NavItemTest
+                current
+                style={(state) => ({ opacity: state.current ? 0.5 : 1 })}
+                render={(props, state) => (
+                    <a {...props} data-state-current={state.current}>
+                        Home
+                    </a>
+                )}
+            />,
+        );
+        const link = rendered.getByTestId(NAV_LINK);
+
+        expect(link).toHaveStyle({ opacity: '0.5' });
+        expect(link).toHaveAttribute('data-state-current', 'true');
+    });
+
     it('should render with aria-current="page" when clicked', async () => {
         let link;
 
