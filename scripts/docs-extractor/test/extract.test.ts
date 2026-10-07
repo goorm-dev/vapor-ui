@@ -888,6 +888,32 @@ describe('타입 출력', () => {
         });
     });
 
+    it('정의 안에 나오는 다른 공개 이름은 typeRefs에 따로 올리지 않는다', () => {
+        const doc = extractOne({
+            'popover/@base-ui/PopoverRoot.d.ts': `
+                export namespace Root {
+                    export interface Anchor { width: number }
+                    export interface State { anchor: Anchor }
+                }
+            `,
+            'popover/index.ts': `export * as Popover from './index.parts';`,
+            'popover/index.parts.ts': `export { PopoverRoot as Root } from './popover';`,
+            'popover/popover.tsx': `
+                import type * as BasePopover from './@base-ui/PopoverRoot';
+
+                export namespace PopoverRoot {
+                    export type Anchor = BasePopover.Root.Anchor;
+                    export type State = BasePopover.Root.State;
+                    export type Props = { className?: (state: State) => string };
+                }
+            `,
+        });
+
+        expect(doc.typeRefs).toEqual({
+            'Popover.Root.State': '{\n  anchor: Popover.Root.Anchor;\n}',
+        });
+    });
+
     it('공통 필드가 없는 객체 union은 멤버마다 객체 전체를 적는다', () => {
         const doc = extractOne({
             'select/@base-ui/SelectRoot.d.ts': `

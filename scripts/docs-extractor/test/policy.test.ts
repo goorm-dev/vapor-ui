@@ -11,7 +11,14 @@ const STRING: ParsedTypeMember = { text: 'string', kind: 'other' };
 const UNDEFINED: ParsedTypeMember = { text: 'undefined', kind: 'undefined' };
 
 function prop(name: string, overrides: Partial<ParsedProp> = {}): ParsedProp {
-    return { name, typeMembers: [STRING], isOptional: true, source: 'project', ...overrides };
+    return {
+        name,
+        typeMembers: [STRING],
+        typeRefs: [],
+        isOptional: true,
+        source: 'project',
+        ...overrides,
+    };
 }
 
 function other(text: string): ParsedTypeMember {
@@ -261,18 +268,17 @@ describe('policy', () => {
             expect(policy([component([], { name: 'Box' })])).toEqual([{ name: 'Box', props: [] }]);
         });
 
-        it('문서화된 prop이 이름으로 쓰는 타입 정의만 typeRefs에 남긴다', () => {
+        it('문서화된 prop이 쓰는 공개 이름의 정의만 typeRefs에 남긴다', () => {
             const [doc] = policy([
                 component(
                     [
-                        prop('className', { typeMembers: [fn('(state: A.State) => string')] }),
-                        prop('onClick', { source: 'react', typeMembers: [other('A.Event')] }),
+                        prop('className', { typeRefs: ['A.State'] }),
+                        prop('onClick', { source: 'react', typeRefs: ['A.Event'] }),
                     ],
                     {
-                        typeDefinitions: {
+                        typeRefs: {
                             'A.State': '{ open: boolean; }',
                             'A.Event': '{ x: number; }',
-                            'A.St': '{}',
                         },
                     },
                 ),
@@ -282,9 +288,11 @@ describe('policy', () => {
             expect(Object.keys(doc)).toEqual(['name', 'props', 'typeRefs']);
         });
 
-        it('남길 타입 정의가 없으면 typeRefs를 생략한다', () => {
+        it('남길 type ref가 없으면 typeRefs를 생략한다', () => {
             const [doc] = policy([
-                component([prop('x')], { typeDefinitions: { 'A.State': '{}' } }),
+                component([prop('onClick', { source: 'react', typeRefs: ['A.State'] })], {
+                    typeRefs: { 'A.State': '{}' },
+                }),
             ]);
 
             expect(doc).not.toHaveProperty('typeRefs');

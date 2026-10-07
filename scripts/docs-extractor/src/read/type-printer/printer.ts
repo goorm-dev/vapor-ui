@@ -2,7 +2,7 @@
  * Prints prop types for the docs. One printer per component namespace; callers ask it
  * only two things: the members of a prop's type, and the body behind a type name.
  */
-import type { ParsedTypeMember } from '#model';
+import { type ParsedProp, type ParsedTypeMember, joinTypeMembers } from '#model';
 import {
     isAnonymousObject,
     isPreservedReactAlias,
@@ -19,16 +19,16 @@ import {
     writtenUnionMembers,
 } from '#read/type-printer/members';
 import { TYPE_FORMAT_FLAGS, type TypePrinterOptions } from '#read/type-printer/shared';
-import { joinTypeMembers } from '#type-text';
 import type { Node, Type } from 'ts-morph';
 
 export interface TypePrinter {
     /**
      * Splits a prop type into the members TypeScript prints at the top level. Aliases
      * the docs keep (`ReactNode`, `Ref<T>`) are not opened. `location` is where the
-     * type is read, usually the prop's declaration.
+     * type is read, usually the prop's declaration. `typeRefs` lists the public vapor-ui
+     * names the printer chose anywhere in the prop's type, once each, in print order.
      */
-    members(type: Type, location: Node): ParsedTypeMember[];
+    members(type: Type, location: Node): Pick<ParsedProp, 'typeMembers' | 'typeRefs'>;
     /**
      * The body behind a type name, as a reader would write it: an object type reads one
      * property per line, a union of objects (Base UI event details, one per `reason`)
@@ -38,6 +38,13 @@ export interface TypePrinter {
 }
 
 export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions): TypePrinter {
+    /**
+     * The public names chosen while printing a prop; unset while printing a definition, whose names are not followed.
+     * ponytail: only the `nameOf` branch records. A public name inside TypeScript's own text (the `rawText`
+     * fallbacks) would print without a type ref; none of the generated files has one. Pick it here if one appears.
+     */
+    let chosenNames: Set<string> | undefined;
+
     /**
      * One type as text. Order matters: the first branch that claims the type wins.
      * Narrow, cheap checks come before the ones that walk the type graph.
@@ -72,7 +79,10 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
         }
 
         const publicName = publicNames.nameOf(type, namespace);
-        if (publicName) return publicName;
+        if (publicName) {
+            chosenNames?.add(publicName);
+            return publicName;
+        }
 
         // Inside a parameter or a return type, a union splits as it does at the top level.
         // A named union of other types (`padding: Padding`) reads by its name.
@@ -147,5 +157,15 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
         return joinTypeMembers(members(type, undefined));
     }
 
-    return { members, definition };
+    function propMembers(type: Type, location: Node): ReturnType<TypePrinter['members']> {
+        chosenNames = new Set();
+        try {
+            const typeMembers = members(type, location);
+            return { typeMembers, typeRefs: [...chosenNames] };
+        } finally {
+            chosenNames = undefined;
+        }
+    }
+
+    return { members: propMembers, definition };
 }

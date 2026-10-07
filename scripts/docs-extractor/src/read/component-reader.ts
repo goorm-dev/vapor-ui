@@ -89,11 +89,10 @@ function extractParsedProp(
     defaultValues: Record<string, string>,
 ): ParsedProp {
     const name = symbol.getName();
-    const typeMembers = printer.members(symbol.getTypeAtLocation(declNode), declNode);
 
     return {
         name,
-        typeMembers,
+        ...printer.members(symbol.getTypeAtLocation(declNode), declNode),
         isOptional: symbol.isOptional(),
         isIgnored: isIgnored(symbol),
         source: classifyPropSource(symbol),
@@ -103,21 +102,19 @@ function extractParsedProp(
 }
 
 /**
- * Bodies of the public vapor-ui type names the props print. A name is printed once per component.
- * ponytail: names are found by scanning printed text for dotted words; KAN-47 passes them as data.
+ * Bodies of the public vapor-ui type names the props print. A name is printed once per
+ * component; names inside a body are not followed.
  */
-function getTypeDefinitions(
+function getTypeRefs(
     props: ParsedProp[],
     location: Node,
     publicNames: PublicNames,
     printer: TypePrinter,
 ): Record<string, string> {
-    const words = props.flatMap((prop) =>
-        prop.typeMembers.flatMap((member) => member.text.match(/[\w.]+/g) ?? []),
-    );
+    const names = new Set(props.flatMap((prop) => prop.typeRefs));
 
     return Object.fromEntries(
-        [...new Set(words)].flatMap((name) => {
+        [...names].flatMap((name) => {
             const type = publicNames.typeOf(name);
             return type ? [[name, printer.definition(type, location)]] : [];
         }),
@@ -155,7 +152,7 @@ function extractParsedComponent(
         name: namespaceName,
         description: getComponentDescription(componentImplementation),
         props,
-        typeDefinitions: getTypeDefinitions(props, exportedProps, publicNames, printer),
+        typeRefs: getTypeRefs(props, exportedProps, publicNames, printer),
     };
 }
 

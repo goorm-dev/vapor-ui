@@ -166,7 +166,7 @@ A prop type is split into the top-level union members TypeScript prints (`src/re
 
 `typeRefs` maps each public vapor-ui type name that a documented prop's `detailedType` prints (`Collapsible.Root.State`, `Collapsible.Root.ChangeEventDetails`) to its definition, so a reader can see the fields behind the name.
 
-- Keys are the names exactly as `detailedType` prints them, matched as whole names. Only names a component namespace re-exports from Base UI are listed; React and DOM types are not.
+- Keys are the names exactly as `detailedType` prints them. A name that appears only inside another definition is not a key. Only names a component namespace re-exports from Base UI are listed; React and DOM types are not.
 - A value is the definition written out with one property per line: `{\n  open: boolean;\n}`. An optional property reads `name?: T` without `| undefined`. A union of objects, such as event details with one object per `reason`, reads as `(\n  | { reason: "a"; event: MouseEvent; }\n  | …\n) & {\n  cancel: () => void;\n}`: property lines every member prints the same are written once inside `& { … }`, and each member keeps its other properties on its own line, in the checker's order. When no line is shared, the objects are joined by `|` in full.
 - Property types follow [Types](#types): a named union of values is expanded, other names inside are kept as names and not listed in `typeRefs`.
 
@@ -195,17 +195,16 @@ cli.ts ──► extract() ──► read/     source → ParsedComponent[]   (t
    └─────► writeDocs()  ComponentDoc[] → <out>/*.json, then prettier
 ```
 
-| Module             | Interface                                                                         | Owns                                                                                                  |
-| ------------------ | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `src/extract.ts`   | `extract({ inputPath, tsconfigPath, component?, reporter? }): { docs, failures }` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing          |
-| `src/read/`        | `parseSourceFile()`, `scanComponentFiles()`; only `extract()` imports them        | Component detection, descriptions, default values, source classification, public names, type printing |
-| `src/policy.ts`    | `policy(components: ParsedComponent[]): ComponentDoc[]`                           | README "Props", "Types" and the field shape. No ts-morph, no filesystem                               |
-| `src/write.ts`     | `writeDocs(outputDir, docs, { removeStale })`, `formatWithPrettier()`             | File names, JSON bytes, stale-file removal                                                            |
-| `src/cli.ts`       | the `--input`/`--tsconfig`/`--out` command                                        | Flags, the console reporter, exit codes                                                               |
-| `src/model.ts`     | `ParsedComponent`, `ComponentDoc` and their prop types                            | The data passed between the modules above                                                             |
-| `src/type-text.ts` | `joinTypeMembers()`, `mentionsTypeName()`                                         | How printed type text is joined and searched, shared by `read/` and the policy                        |
-| `src/reporter.ts`  | `Reporter`, `silentReporter`                                                      | Where progress and warnings go; the CLI supplies the console one                                      |
-| `src/errors.ts`    | `ExtractorError`                                                                  | Bad input (missing path, unknown component), printed by the CLI without a stack                       |
+| Module            | Interface                                                                         | Owns                                                                                                  |
+| ----------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `src/extract.ts`  | `extract({ inputPath, tsconfigPath, component?, reporter? }): { docs, failures }` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing          |
+| `src/read/`       | `parseSourceFile()`, `scanComponentFiles()`; only `extract()` imports them        | Component detection, descriptions, default values, source classification, public names, type printing |
+| `src/policy.ts`   | `policy(components: ParsedComponent[]): ComponentDoc[]`                           | README "Props", "Types" and the field shape. No ts-morph, no filesystem                               |
+| `src/write.ts`    | `writeDocs(outputDir, docs, { removeStale })`, `formatWithPrettier()`             | File names, JSON bytes, stale-file removal                                                            |
+| `src/cli.ts`      | the `--input`/`--tsconfig`/`--out` command                                        | Flags, the console reporter, exit codes                                                               |
+| `src/model.ts`    | `ParsedComponent`, `ComponentDoc` and their prop types, `joinTypeMembers()`       | The data passed between the modules above, and how type members are joined on one line                |
+| `src/reporter.ts` | `Reporter`, `silentReporter`                                                      | Where progress and warnings go; the CLI supplies the console one                                      |
+| `src/errors.ts`   | `ExtractorError`                                                                  | Bad input (missing path, unknown component), printed by the CLI without a stack                       |
 
 Tests go through `extract()` (fixture sources on disk), `policy()` (plain data), `writeDocs()` (a temp directory) and two `read/` seams, the type printer's `createTypePrinter()` and the public names' `createPublicNames()` (source strings in an in-memory project), not through module internals.
 

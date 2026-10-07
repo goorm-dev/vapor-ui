@@ -25,6 +25,8 @@ export interface ParsedTypeMember {
 export interface ParsedProp {
     name: string;
     typeMembers: ParsedTypeMember[];
+    /** The public vapor-ui type names the printer chose for this prop's type, in print order. */
+    typeRefs: string[];
     isOptional: boolean;
     /** Tagged `@ignore` upstream and not re-declared by vapor-ui. */
     isIgnored?: boolean;
@@ -38,7 +40,16 @@ export interface ParsedComponent {
     description?: string;
     props: ParsedProp[];
     /** Bodies of the public vapor-ui type names the props print, keyed by that name. */
-    typeDefinitions?: Record<string, string>;
+    typeRefs?: Record<string, string>;
+}
+
+/** The members on one line, function members wrapped so `| undefined` doesn't read as their return type. */
+export function joinTypeMembers(members: ParsedTypeMember[]): string {
+    if (members.length === 1) return members[0].text;
+
+    return members
+        .map((member) => (member.kind === 'function' ? `(${member.text})` : member.text))
+        .join(' | ');
 }
 
 // ──────────────────────────────────────────────────────────────

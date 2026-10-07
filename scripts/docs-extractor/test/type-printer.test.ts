@@ -1,16 +1,30 @@
 /**
  * Type printer tests
  *
- * The printer is asked two things: `members(type, location)` and
- * `definition(type, location)`. Each test puts a source string in an in-memory
- * project and asks about one declared type.
+ * The printer is asked two things: `members(type, location)` (the prop's members
+ * and the public names it chose) and `definition(type, location)`. Each test puts a
+ * source string in an in-memory project and asks about one declared type.
  */
+import { joinTypeMembers } from '#model';
+import type { PublicNames } from '#read/public-names';
 import { createTypePrinter } from '#read/type-printer/printer';
-import { joinTypeMembers } from '#type-text';
-import { Project } from 'ts-morph';
+import { Project, type SourceFile } from 'ts-morph';
 
 /** `type ReactNode` stands in for React's: the printer keeps it by its alias name. */
 const PRELUDE = 'type ReactNode = string | number | boolean | null | undefined;\n';
+
+/** Every type alias in the fixture whose name starts with `Public` is public under `X.<name>`. */
+function fixturePublicNames(file: SourceFile): PublicNames {
+    const entries = file
+        .getTypeAliases()
+        .filter((alias) => alias.getName().startsWith('Public'))
+        .map((alias) => ({ name: `X.${alias.getName()}`, type: alias.getType() }));
+
+    return {
+        nameOf: (type) => entries.find((entry) => entry.type === type)?.name,
+        typeOf: (name) => entries.find((entry) => entry.name === name)?.type,
+    };
+}
 
 function setup(source: string) {
     const project = new Project({
@@ -19,17 +33,21 @@ function setup(source: string) {
     });
     const file = project.createSourceFile('fixture.ts', PRELUDE + source);
     const printer = createTypePrinter({
-        publicNames: { nameOf: () => undefined, typeOf: () => undefined },
+        publicNames: fixturePublicNames(file),
         namespace: 'Fixture',
     });
     return { file, printer };
 }
 
-/** The prop's type on one line, as `detailedType` reads it. */
-function printProp(source: string, prop: string): string {
+function readProp(source: string, prop: string) {
     const { file, printer } = setup(source);
     const declaration = file.getInterfaceOrThrow('Props').getPropertyOrThrow(prop);
-    return joinTypeMembers(printer.members(declaration.getType(), declaration));
+    return printer.members(declaration.getType(), declaration);
+}
+
+/** The prop's type on one line, as `detailedType` reads it. */
+function printProp(source: string, prop: string): string {
+    return joinTypeMembers(readProp(source, prop).typeMembers);
 }
 
 function printDefinition(source: string, name: string): string {
@@ -47,6 +65,42 @@ describe('members', () => {
         expect(printProp('interface Props { a: boolean | (() => void) }', 'a')).toBe(
             'boolean | (() => void)',
         );
+    });
+});
+
+describe('type refs', () => {
+    const source = `
+type PublicInner = { a: string };
+type PublicState = { inner: PublicInner };
+interface Props { a?: PublicState | ((state: PublicState, x: PublicInner) => string) }`;
+
+    it('lists each public name the prop prints once, in print order', () => {
+        const { typeMembers, typeRefs } = readProp(source, 'a');
+
+        expect(joinTypeMembers(typeMembers)).toBe(
+            'X.PublicState | ((state: X.PublicState, x: X.PublicInner) => string) | undefined',
+        );
+        expect(typeRefs).toEqual(['X.PublicState', 'X.PublicInner']);
+    });
+
+    it('lists none for a prop that prints no public name', () => {
+        expect(readProp('interface Props { a: string }', 'a').typeRefs).toEqual([]);
+    });
+
+    it('does not count names printed inside a definition', () => {
+        const { file, printer } = setup(`
+type PublicInner = { a: string };
+type PublicState = { inner: PublicInner };
+interface Props { a: PublicState }`);
+        const declaration = file.getInterfaceOrThrow('Props').getPropertyOrThrow('a');
+        const state = file.getTypeAliasOrThrow('PublicState');
+
+        expect(printer.definition(state.getType(), state)).toBe(`{
+  inner: X.PublicInner;
+}`);
+        expect(printer.members(declaration.getType(), declaration).typeRefs).toEqual([
+            'X.PublicState',
+        ]);
     });
 });
 

@@ -5,15 +5,15 @@
  * Pure: it takes what read/ found in the source and returns the JSON shape, so
  * every rule can be tested with plain data.
  */
-import type {
-    ComponentDoc,
-    ParsedComponent,
-    ParsedProp,
-    ParsedTypeMember,
-    PropDoc,
-    PropSource,
+import {
+    type ComponentDoc,
+    type ParsedComponent,
+    type ParsedProp,
+    type ParsedTypeMember,
+    type PropDoc,
+    type PropSource,
+    joinTypeMembers,
 } from '#model';
-import { joinTypeMembers, mentionsTypeName } from '#type-text';
 
 // ──────────────────────────────────────────────────────────────
 // Props: which ones are documented
@@ -157,30 +157,28 @@ function categoryOrder(prop: ParsedProp): number {
     return CATEGORY_ORDER[categorizeProp(prop.name, !prop.isOptional, prop.source)];
 }
 
-/** Only the definitions a documented prop names: a dropped prop's types are not on the page. */
+/** Only the type refs a documented prop uses: a dropped prop's types are not on the page. */
 function pickTypeRefs(
     definitions: Record<string, string>,
-    props: PropDoc[],
+    props: ParsedProp[],
 ): Record<string, string> | undefined {
-    const refs = Object.entries(definitions).filter(([name]) =>
-        props.some((prop) => mentionsTypeName(prop.detailedType, name)),
-    );
+    const used = new Set(props.flatMap((prop) => prop.typeRefs));
+    const refs = Object.entries(definitions).filter(([name]) => used.has(name));
 
     return refs.length > 0 ? Object.fromEntries(refs) : undefined;
 }
 
 export function policy(components: ParsedComponent[]): ComponentDoc[] {
     return components.map((component) => {
-        const props = component.props
+        const documented = component.props
             .filter(isDocumented)
-            .sort((a, b) => categoryOrder(a) - categoryOrder(b) || a.name.localeCompare(b.name))
-            .map(toPropDoc);
-        const typeRefs = pickTypeRefs(component.typeDefinitions ?? {}, props);
+            .sort((a, b) => categoryOrder(a) - categoryOrder(b) || a.name.localeCompare(b.name));
+        const typeRefs = pickTypeRefs(component.typeRefs ?? {}, documented);
 
         return {
             name: component.name,
             ...(component.description !== undefined && { description: component.description }),
-            props,
+            props: documented.map(toPropDoc),
             ...(typeRefs && { typeRefs }),
         };
     });
