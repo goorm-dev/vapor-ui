@@ -32,8 +32,8 @@ Turborepo manages build dependency order automatically — `pnpm dev` builds ups
 
 ## Development Environment
 
-- **Node.js**: 20.20.2+ (see `.nvmrc`)
-- **Package Manager**: pnpm 10.33.4 (`corepack enable` or install via npm)
+- **Node.js**: 24+ (see `.nvmrc`)
+- **Package Manager**: pnpm 11.21.0 (`corepack enable` or install via npm)
 - **IDE**: ESLint v9+ and Prettier v3+ integration recommended
 
 ## Commands

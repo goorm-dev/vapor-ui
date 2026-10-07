@@ -26,6 +26,7 @@
         "format:check": "pnpm format:package -c && prettier --check .",
         "format:package": "npx sort-package-json \"**/package.json\" --ignore \"**/node_modules\" \"dist\"",
         "hooks": "pnpm --filter @vapor-ui/hooks",
+        "icon-extractor": "pnpm --filter @repo/icon-extractor",
         "icons": "pnpm --filter @vapor-ui/icons",
         "lint": "turbo run lint",
         "prepare": "husky",
@@ -33,9 +34,8 @@
         "release:slack": "node scripts/changelog/slack.js",
         "start": "turbo run start",
         "storybook": "pnpm --filter storybook",
-        "sync-figma": "pnpm --filter @repo/sync-figma",
-        "sync-icons:basic": "pnpm --filter @repo/sync-figma sync-icons:basic",
-        "sync-icons:symbol": "pnpm --filter @repo/sync-figma sync-icons:symbol",
+        "sync-icons:basic": "pnpm --filter @repo/icon-extractor sync-icons:basic",
+        "sync-icons:symbol": "pnpm --filter @repo/icon-extractor sync-icons:symbol",
         "test": "turbo run test",
         "test:regressions": "turbo run test:regressions",
         "test:update-snapshots": "turbo run test:regressions -- --update-snapshots",
@@ -51,7 +51,7 @@
         "@changesets/cli": "^2.31.1",
         "@changesets/get-github-info": "^0.8.0",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@types/node": "^22.20.1",
+        "@types/node": "^24.13.3",
         "dotenv": "^17.4.2",
         "husky": "^9.1.7",
         "lodash-es": "^4.18.1",
@@ -62,8 +62,8 @@
         "turbo": "^2.10.12",
         "typescript": "catalog:"
     },
-    "packageManager": "pnpm@10.34.5",
+    "packageManager": "pnpm@11.21.0",
     "engines": {
-        "node": ">=20.20.2"
+        "node": ">=24"
     }
 }
