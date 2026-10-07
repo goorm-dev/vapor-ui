@@ -449,13 +449,13 @@ importers:
         version: 9.39.5(jiti@2.7.0)(supports-color@8.1.1)
       jest:
         specifier: ^30.4.2
-        version: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1)
+        version: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1)
       rimraf:
         specifier: ^6.1.3
         version: 6.1.3
       ts-jest:
         specifier: ^29.4.12
-        version: 29.4.14(@babel/core@7.29.7(supports-color@8.1.1))(@jest/transform@30.5.2(supports-color@8.1.1))(@jest/types@30.5.1)(babel-jest@30.5.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(esbuild@0.27.7)(jest-util@30.5.1)(jest@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1))(typescript@5.9.3)
+        version: 29.4.14(@babel/core@7.29.7(supports-color@8.1.1))(@jest/transform@30.5.2(supports-color@8.1.1))(@jest/types@30.5.1)(babel-jest@30.5.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(esbuild@0.27.7)(jest-util@30.5.1)(jest@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1))(typescript@5.9.3)
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.29)(supports-color@8.1.1)(tsx@4.23.15)(typescript@5.9.3)(yaml@2.9.1)
@@ -573,8 +573,8 @@ importers:
         specifier: ^6.1.3
         version: 6.1.3
       rolldown:
-        specifier: ^1.1.4
-        version: 1.2.12
+        specifier: 'catalog:'
+        version: 1.2.6
       tinyglobby:
         specifier: ^0.2.17
         version: 0.2.17
@@ -11472,7 +11472,7 @@ snapshots:
       jest-util: 30.5.1
       slash: 3.0.0
 
-  '@jest/core@30.5.2(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1)':
+  '@jest/core@30.5.2(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1)':
     dependencies:
       '@jest/console': 30.5.2
       '@jest/pattern': 30.5.0
@@ -11488,7 +11488,7 @@ snapshots:
       fast-json-stable-stringify: 2.1.0
       graceful-fs: 4.2.11
       jest-changed-files: 30.5.1
-      jest-config: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1)
+      jest-config: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1)
       jest-haste-map: 30.5.1
       jest-message-util: 30.5.1
       jest-regex-util: 30.5.0
@@ -13495,9 +13495,9 @@ snapshots:
       std-env: 3.10.0
       test-exclude: 7.0.2
       tinyrainbow: 2.0.0
-      vitest: 3.2.7(@types/debug@4.1.13)(@types/node@24.19.1)(@vitest/browser@3.2.7)(happy-dom@20.14.5)(jiti@2.7.0)(jsdom@24.1.3(supports-color@8.1.1))(lightningcss@1.33.0)(sass@1.105.1)(supports-color@8.1.1)(tsx@4.23.15)(yaml@2.9.1)
+      vitest: 3.2.7(@types/debug@4.1.13)(@types/node@22.20.5)(@vitest/browser@3.2.7)(happy-dom@20.14.5)(jiti@2.7.0)(jsdom@24.1.3(supports-color@8.1.1))(lightningcss@1.33.0)(sass@1.105.1)(supports-color@8.1.1)(tsx@4.23.15)(yaml@2.9.1)
     optionalDependencies:
-      '@vitest/browser': 3.2.7(playwright@1.63.0)(vite@7.3.6(@types/node@24.19.1)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))(vitest@3.2.7)
+      '@vitest/browser': 3.2.7(playwright@1.63.0)(vite@7.3.6(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))(vitest@3.2.7)
     transitivePeerDependencies:
       - supports-color
 
@@ -14581,10 +14581,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1):
+  esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1):
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
-      esbuild: 0.28.2
+      esbuild: 0.27.7
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -15927,15 +15927,15 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1):
+  jest-cli@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1):
     dependencies:
-      '@jest/core': 30.5.2(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1)
+      '@jest/core': 30.5.2(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1)
       '@jest/test-result': 30.5.2
       '@jest/types': 30.5.1
       chalk: 4.1.2
       exit-x: 0.2.2
       import-local: 3.2.0
-      jest-config: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1)
+      jest-config: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1)
       jest-util: 30.5.1
       jest-validate: 30.5.1
       yargs: 17.7.3
@@ -15946,7 +15946,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1):
+  jest-config@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1):
     dependencies:
       '@babel/core': 7.29.7(supports-color@8.1.1)
       '@jest/get-type': 30.5.0
@@ -15973,7 +15973,7 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 24.19.1
-      esbuild-register: 3.6.0(esbuild@0.28.2)(supports-color@8.1.1)
+      esbuild-register: 3.6.0(esbuild@0.27.7)(supports-color@8.1.1)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -16228,12 +16228,12 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1):
+  jest@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1):
     dependencies:
-      '@jest/core': 30.5.2(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1)
+      '@jest/core': 30.5.2(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1)
       '@jest/types': 30.5.1
       import-local: 3.2.0
-      jest-cli: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1)
+      jest-cli: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -18514,12 +18514,12 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-jest@29.4.14(@babel/core@7.29.7(supports-color@8.1.1))(@jest/transform@30.5.2(supports-color@8.1.1))(@jest/types@30.5.1)(babel-jest@30.5.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(esbuild@0.27.7)(jest-util@30.5.1)(jest@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1))(typescript@5.9.3):
+  ts-jest@29.4.14(@babel/core@7.29.7(supports-color@8.1.1))(@jest/transform@30.5.2(supports-color@8.1.1))(@jest/types@30.5.1)(babel-jest@30.5.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(esbuild@0.27.7)(jest-util@30.5.1)(jest@30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1))(typescript@5.9.3):
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
       handlebars: 4.7.10
-      jest: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@8.1.1))(supports-color@8.1.1)
+      jest: 30.5.2(@types/node@24.19.1)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@8.1.1))(supports-color@8.1.1)
       json5: 2.2.3
       lodash.memoize: 4.1.2
       make-error: 1.3.6
