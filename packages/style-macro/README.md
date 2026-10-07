@@ -149,7 +149,18 @@ css({ borderWidth: '1px', borderStyle: 'solid', borderColor: '$basic-black' });
 
 ## FOUC guard
 
-Next.js (SSR) 에서 pre-hydration 테마 세팅:
+pre-hydration 시점에 `<html>` 에 theme attribute 를 세팅해 light↔dark flash 를 차단.
+
+### 자동 주입 (Vite / Webpack)
+
+`injectColorScheme` 옵션 (default `true`) 으로 번들러가 `<head>` 에 inline `<script>` 자동 삽입.
+
+- Vite — `transformIndexHtml` hook
+- Webpack — `html-webpack-plugin` 의 `beforeEmit` hook (미설치 시 no-op)
+
+### 수동 주입 (Next.js / 프레임워크 기본 HTML 사용 불가 환경)
+
+Next.js App Router 는 `<html>` 를 번들러가 아닌 React 가 렌더링하기 때문에 자동 주입이 불가능. layout 에서 직접 삽입.
 
 ```tsx
 // app/layout.tsx
@@ -159,7 +170,7 @@ const SCRIPT = buildColorSchemeScript({ defaultTheme: 'system' });
 
 export default function Root({ children }) {
     return (
-        <html>
+        <html suppressHydrationWarning>
             <head>
                 <script dangerouslySetInnerHTML={{ __html: SCRIPT }} />
             </head>
@@ -169,15 +180,15 @@ export default function Root({ children }) {
 }
 ```
 
-`buildColorSchemeScript` option:
+`suppressHydrationWarning` 는 반드시 `<html>` 에만 지정. inline script 가 `<html>` 에 `data-vapor-theme` attribute 를 추가하면 server markup (attribute 없음) 과 client DOM (attribute 있음) 이 달라져 React 가 hydration warning 을 띄움. 이 flag 는 해당 element **한 depth** 의 attribute mismatch 만 억제하고 children 에는 전파하지 않아 안전.
+
+### `buildColorSchemeScript` option
 
 | 옵션           | 기본값               | 설명                              |
 | -------------- | -------------------- | --------------------------------- |
 | `storageKey`   | `'vapor-ui-theme'`   | localStorage key                  |
 | `attribute`    | `'data-vapor-theme'` | `<html>` attribute 이름           |
 | `defaultTheme` | `'system'`           | `'light'` / `'dark'` / `'system'` |
-
-Vite 는 `injectColorScheme` 옵션으로 자동 주입 (별도 설정 불필요).
 
 ## Error 코드
 

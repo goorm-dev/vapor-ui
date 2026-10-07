@@ -2,8 +2,8 @@ import { createRequire } from 'node:module';
 
 import type { AnyProp } from '~/models/types';
 
-import unplugin from './_factory';
 import type { VaporPluginOptions } from './_factory';
+import { vaporWebpackPlugin } from './webpack';
 
 export type NextMode = 'auto' | 'webpack' | 'turbopack';
 
@@ -55,7 +55,7 @@ export function vaporNextPlugin(
             const originalWebpack = (nextConfig as NextConfigMutable).webpack;
             merged.webpack = (config: AnyProp, ctx: AnyProp) => {
                 config.plugins ??= [];
-                config.plugins.push(unplugin.webpack(unpluginOpts));
+                config.plugins.push(vaporWebpackPlugin(unpluginOpts));
                 return originalWebpack ? originalWebpack(config, ctx) : config;
             };
         }

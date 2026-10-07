@@ -144,47 +144,7 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
     });
 });
 
-describe('unplugin — vite.transformIndexHtml (FOUC guard)', () => {
-    function getVite(opts: VaporPluginOptions = {}): AnyProp {
-        const hooks = getHooks(opts);
-        // vite adapter object exposes vite-specific hooks under `.vite`.
-        return hooks.vite;
-    }
-
-    it('returns html unchanged when injectColorScheme is disabled', () => {
-        const vite = getVite({ injectColorScheme: false });
-        const html = '<!doctype html><html><head></head><body></body></html>';
-        const out = vite.transformIndexHtml.call(makeCtx(), html);
-        expect(out).toBe(html);
-    });
-
-    it('injects <script> FOUC guard when injectColorScheme=true', () => {
-        const vite = getVite({ injectColorScheme: true });
-        const html = '<!doctype html><html><head></head><body></body></html>';
-        const out = vite.transformIndexHtml.call(makeCtx(), html);
-        expect(out).toContain('<script>');
-        expect(out).toContain('data-vapor-theme');
-    });
-
-    it('honors custom ColorScheme opts', () => {
-        const vite = getVite({
-            injectColorScheme: {
-                storageKey: 'my-key',
-                attribute: 'data-my-theme',
-                defaultTheme: 'dark',
-            },
-        });
-        const html = '<!doctype html><html><head></head><body></body></html>';
-        const out = vite.transformIndexHtml.call(makeCtx(), html);
-        expect(out).toContain('"my-key"');
-        expect(out).toContain('"data-my-theme"');
-        expect(out).toContain('"dark"');
-    });
-
-    it('placement: injects directly after opening <head>', () => {
-        const vite = getVite({ injectColorScheme: true });
-        const html = '<!doctype html><html><head><title>t</title></head><body></body></html>';
-        const out = vite.transformIndexHtml.call(makeCtx(), html);
-        expect(out).toMatch(/<head>\s*<script>/);
-    });
-});
+// The FOUC guard moved from the factory (`vite.transformIndexHtml`) into
+// the vite adapter file (`src/plugins/vite.ts`). FOUC-specific tests now
+// live in `plugins.test.ts` under the `vite adapter — FOUC plugin
+// composition` describe block.

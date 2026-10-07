@@ -5,6 +5,63 @@ import { vaporRolldownPlugin } from './rolldown';
 import { vaporVitePlugin } from './vite';
 import { vaporWebpackPlugin } from './webpack';
 
+describe('vite adapter — FOUC plugin composition', () => {
+    function foucOf(plugins: Array<{ name: string; transformIndexHtml?: unknown }>) {
+        return plugins.find((p) => p.name === 'vapor-style-macro:fouc') as
+            { name: string; transformIndexHtml: (html: string) => string } | undefined;
+    }
+
+    it('returns an array containing both the base plugin and the FOUC plugin by default', () => {
+        const plugins = vaporVitePlugin();
+        expect(Array.isArray(plugins)).toBe(true);
+        const names = plugins.map((p) => p.name);
+        expect(names).toContain('vapor-style-macro');
+        expect(names).toContain('vapor-style-macro:fouc');
+    });
+
+    it('omits the FOUC plugin when injectColorScheme is false', () => {
+        const plugins = vaporVitePlugin({ injectColorScheme: false });
+        const names = plugins.map((p) => p.name);
+        expect(names).toContain('vapor-style-macro');
+        expect(names).not.toContain('vapor-style-macro:fouc');
+    });
+
+    it('FOUC plugin injects <script> guard right after <head>', () => {
+        const fouc = foucOf(vaporVitePlugin({ injectColorScheme: true }));
+        expect(fouc).toBeDefined();
+        const html = '<!doctype html><html><head><title>t</title></head><body></body></html>';
+        const out = fouc!.transformIndexHtml(html);
+        expect(out).toContain('<script>');
+        expect(out).toContain('data-vapor-theme');
+        expect(out).toMatch(/<head>\s*<script>/);
+    });
+
+    it('FOUC plugin honors custom ColorScheme opts', () => {
+        const fouc = foucOf(
+            vaporVitePlugin({
+                injectColorScheme: {
+                    storageKey: 'my-key',
+                    attribute: 'data-my-theme',
+                    defaultTheme: 'dark',
+                },
+            }),
+        );
+        const html = '<!doctype html><html><head></head><body></body></html>';
+        const out = fouc!.transformIndexHtml(html);
+        expect(out).toContain('"my-key"');
+        expect(out).toContain('"data-my-theme"');
+        expect(out).toContain('"dark"');
+    });
+});
+
+// The webpack adapter composes `unplugin.webpack(opts).apply` with
+// `tapVirtualModulesPlugin` and `tapHtmlFouc`. `base.apply(compiler)`
+// touches real webpack internals (plugin registration via Compiler
+// hooks like `thisCompilation`), which this test environment doesn't
+// mock. Behavioral coverage for the FOUC pipeline (buildColorSchemeScript
+// output, <head> regex replace) lives in `fouc-script.test.ts` and the
+// vite adapter block above — same script string, same regex.
+
 describe('adapter subpath default exports', () => {
     it.each([
         ['vite', vaporVitePlugin],
@@ -17,29 +74,18 @@ describe('adapter subpath default exports', () => {
 });
 
 describe('unplugin-backed adapters return a plugin object', () => {
-    // Adapters that return an inspectable plugin descriptor with a `name`
-    // field (`{ name, ...hooks }` shape).
-    it.each([
-        ['vite', vaporVitePlugin],
-        ['rolldown', vaporRolldownPlugin],
-    ])('%s() returns a descriptor with `name`', (_name, adapter) => {
-        const plugin = adapter();
+    it('rolldown() returns a descriptor with `name`', () => {
+        const plugin = vaporRolldownPlugin();
         expect(plugin).toBeTypeOf('object');
         expect(plugin).not.toBeNull();
         expect((plugin as { name?: string }).name).toBe('vapor-style-macro');
     });
 
-    // webpack/rspack unplugin adapters return a plugin CLASS INSTANCE — the
-    // `name` lives on the constructor or is set once `apply(compiler)` runs.
-    // Assert instead on the `apply` hook every webpack-family plugin exposes.
-    it.each([['webpack', vaporWebpackPlugin]])(
-        '%s() returns an instance with apply()',
-        (_name, adapter) => {
-            const plugin = adapter() as { apply?: unknown };
-            expect(plugin).toBeTypeOf('object');
-            expect(typeof plugin.apply).toBe('function');
-        },
-    );
+    it('webpack() returns an instance with apply()', () => {
+        const plugin = vaporWebpackPlugin() as { apply?: unknown };
+        expect(plugin).toBeTypeOf('object');
+        expect(typeof plugin.apply).toBe('function');
+    });
 });
 
 // Local structural view of NextConfig used to type-check assertions on the

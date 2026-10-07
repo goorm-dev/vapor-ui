@@ -4,7 +4,7 @@ import { createUnplugin } from 'unplugin';
 import { formatBuildError } from '~/compilers/code-frame';
 import { insertAfterDirectives } from '~/compilers/directives';
 import { transform } from '~/compilers/transform';
-import { type ColorSchemeScriptOpts, buildColorSchemeScript } from '~/helpers/fouc-script';
+import type { ColorSchemeScriptOpts } from '~/helpers/fouc-script';
 import { resolveOptions } from '~/plugins/_options';
 
 interface FileRecord {
@@ -28,28 +28,6 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
     return {
         name: 'vapor-style-macro',
         enforce: 'pre',
-
-        vite: {
-            transformIndexHtml(html) {
-                if (!opts.injectColorScheme) return html;
-                const scriptTag = `<script>${buildColorSchemeScript(opts.injectColorScheme)}</script>`;
-                if (/(<head[^>]*>)/i.test(html)) {
-                    return html.replace(/(<head[^>]*>)/i, `$1${scriptTag}`);
-                }
-                return `${scriptTag}${html}`;
-            },
-        },
-
-        webpack(compiler) {
-            const plugins = compiler.options.plugins as
-                | Array<{ apply?: (c: unknown) => void; constructor?: { name?: string } } | null>
-                | undefined;
-            const vfs = plugins?.find((p) => p?.constructor?.name === 'VirtualModulesPlugin');
-
-            if (vfs && typeof vfs.apply === 'function') {
-                vfs.apply(compiler);
-            }
-        },
 
         resolveId(id) {
             if (id.startsWith(PUBLIC_PREFIX)) return id;
