@@ -1,0 +1,180 @@
+/**
+ * Prints prop types for the docs. One printer per component namespace; callers ask it
+ * only two things: the members of a prop's type, and the body behind a type name.
+ */
+import { type ParsedProp, type ParsedTypeMember, joinTypeMembers } from '#model';
+import {
+    isAnonymousObject,
+    isPreservedReactAlias,
+    isReactElement,
+    primitiveText,
+    reactElementProps,
+} from '#read/type-printer/branches';
+import { formatObject, formatObjectUnion, isObjectLike } from '#read/type-printer/definition';
+import { formatFunction, parametersOf } from '#read/type-printer/function';
+import {
+    keepsUnionName,
+    kindOf,
+    tidyMembers,
+    writtenUnionMembers,
+} from '#read/type-printer/members';
+import { TYPE_FORMAT_FLAGS, type TypePrinterOptions } from '#read/type-printer/shared';
+import type { Node, Type } from 'ts-morph';
+
+export interface TypePrinter {
+    /**
+     * Splits a prop type into the members TypeScript prints at the top level. Aliases
+     * the docs keep (`ReactNode`, `Ref<T>`) are not opened. `location` is where the
+     * type is read, usually the prop's declaration. `typeRefs` lists the public vapor-ui
+     * names the printer chose anywhere in the prop's type, once each, in print order.
+     */
+    members(type: Type, location: Node): Pick<ParsedProp, 'typeMembers' | 'typeRefs'>;
+    /**
+     * The body behind a type name, as a reader would write it: an object type reads one
+     * property per line, a union of objects (Base UI event details, one per `reason`)
+     * reads as `(…members) & { …shared }`, anything else reads as its members on one line.
+     */
+    definition(type: Type, location: Node): string;
+}
+
+export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions): TypePrinter {
+    /**
+     * The public names chosen while printing a prop; unset while printing a definition, whose names are not followed.
+     * ponytail: only the `nameOf` branch records. A public name inside TypeScript's own text (the `rawText`
+     * fallbacks) would print without a type ref. Type arguments are printed again for that reason; an array
+     * (`State[]`) or a tuple is not, and none of the generated files has one. Pick it here if one appears.
+     */
+    let chosenNames: Set<string> | undefined;
+
+    /**
+     * One type as text. Order matters: the first branch that claims the type wins.
+     * Narrow, cheap checks come before the ones that walk the type graph.
+     */
+    function print(type: Type, location: Node | undefined): string {
+        const rawText = location ? type.getText(location, TYPE_FORMAT_FLAGS) : type.getText();
+
+        // `ReactNode` prints by name; a generic alias keeps its arguments, e.g. `React.Ref<HTMLDivElement>`.
+        if (isPreservedReactAlias(type)) {
+            const args = type.getAliasTypeArguments();
+            if (args.length > 0) return withPrintedArguments(rawText, args, location);
+            return type.getAliasSymbol()?.getName() ?? rawText;
+        }
+
+        const primitive = primitiveText(type);
+        if (primitive !== null) return primitive;
+
+        if (isReactElement(type)) {
+            const props = reactElementProps(type);
+            return props ? `ReactElement<${print(props, location)}>` : 'ReactElement';
+        }
+
+        const [signature] = type.getCallSignatures();
+        if (signature) {
+            const params = parametersOf(signature).map(({ name, optional, type: paramType }) => {
+                if (!paramType) return `${name}: unknown`;
+                const paramMembers = members(paramType, location).filter(
+                    (member) => !optional || member.kind !== 'undefined',
+                );
+                return `${name}${optional ? '?' : ''}: ${joinTypeMembers(paramMembers)}`;
+            });
+            return formatFunction(params, print(signature.getReturnType(), location));
+        }
+
+        const publicName = publicNames.nameOf(type, namespace);
+        if (publicName) {
+            chosenNames?.add(publicName);
+            return publicName;
+        }
+
+        // Inside a parameter or a return type, a union splits as it does at the top level.
+        // A union kept by name returns here: `members()` hands it straight back to `print()`.
+        if (type.isUnion()) {
+            if (keepsUnionName(type)) return rawText;
+            return joinTypeMembers(members(type, location));
+        }
+
+        const objectLocation = location ?? type.getSymbol()?.getDeclarations()[0];
+        if (objectLocation && isAnonymousObject(type)) {
+            const lines = properties(type, objectLocation);
+            return lines.length > 0 ? `{ ${lines.join(' ')} }` : '{}';
+        }
+
+        const args = type.getAliasSymbol() ? type.getAliasTypeArguments() : type.getTypeArguments();
+        return withPrintedArguments(rawText, args, location);
+    }
+
+    /**
+     * `React.RefObject<MenuRootActions | null>` reads `React.RefObject<Menu.Root.Actions | null>`:
+     * the name stays as TypeScript writes it, each argument is printed again so a public name
+     * inside is picked like anywhere else.
+     */
+    function withPrintedArguments(
+        rawText: string,
+        args: Type[],
+        location: Node | undefined,
+    ): string {
+        const name = /^[\w.]+(?=<)/.exec(rawText)?.[0];
+        if (!name || args.length === 0 || !rawText.endsWith('>')) return rawText;
+        return `${name}<${args.map((arg) => print(arg, location)).join(', ')}>`;
+    }
+
+    function members(type: Type, location: Node | undefined): ParsedTypeMember[] {
+        const toMember = (member: Type): ParsedTypeMember => ({
+            text: print(member, location),
+            kind: kindOf(member),
+        });
+
+        // Not split: a union kept by its own name (`Padding`, `ReactNode`) or by a vapor-ui
+        // name (Base UI event details).
+        if (
+            !type.isUnion() ||
+            type.isBoolean() ||
+            keepsUnionName(type) ||
+            isPreservedReactAlias(type) ||
+            publicNames.nameOf(type, namespace)
+        ) {
+            return [toMember(type)];
+        }
+
+        return tidyMembers(writtenUnionMembers(type).map(toMember));
+    }
+
+    /** `name?: T;` per property, each read at its own declaration. Optional properties leave out `| undefined`. */
+    function properties(type: Type, location: Node): string[] {
+        return type.getProperties().map((property) => {
+            const declaration = property.getDeclarations()[0] ?? location;
+            const optional = property.isOptional();
+            const propertyType = property.getTypeAtLocation(declaration);
+            const head = `${property.getName()}${optional ? '?' : ''}`;
+            const propertyMembers = members(propertyType, declaration).filter(
+                (member) => !optional || member.kind !== 'undefined',
+            );
+            return `${head}: ${joinTypeMembers(propertyMembers)};`;
+        });
+    }
+
+    function definition(type: Type, location: Node): string {
+        if (isObjectLike(type)) return formatObject(properties(type, location));
+
+        const unionMembers = type.isUnion() ? type.getUnionTypes() : [];
+        if (unionMembers.length > 0 && unionMembers.every(isObjectLike)) {
+            return formatObjectUnion(unionMembers.map((member) => properties(member, location)));
+        }
+
+        // ponytail: read without a location, as before the printer existed; passing
+        // `location` here would change how TypeScript abbreviates the remaining text.
+        return joinTypeMembers(members(type, undefined));
+    }
+
+    function propMembers(type: Type, location: Node): ReturnType<TypePrinter['members']> {
+        chosenNames = new Set();
+        try {
+            const typeMembers = members(type, location);
+            return { typeMembers, typeRefs: [...chosenNames] };
+        } finally {
+            chosenNames = undefined;
+        }
+    }
+
+    return { members: propMembers, definition };
+}

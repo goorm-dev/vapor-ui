@@ -37,7 +37,7 @@ export const root = componentRecipe({
     defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill' },
     variants: {
         /**
-         * Size of the button, controlling height, padding, and typography. Default: `'md'`
+         * Size of the button, controlling height, padding, and typography.
          */
         size: {
             sm: [
@@ -75,7 +75,7 @@ export const root = componentRecipe({
         },
 
         /**
-         * Color palette applied to the button. Controls the background, text, and border colors for all visual variants. Default: `'primary'`
+         * Color palette applied to the button. Controls the background, text, and border colors for all visual variants.
          */
         colorPalette: {
             primary: {
@@ -135,7 +135,7 @@ export const root = componentRecipe({
         },
 
         /**
-         * Visual style of the button. Default: `'fill'`
+         * Visual style of the button.
          */
         variant: {
             fill: {

@@ -278,7 +278,7 @@ DialogFooter.displayName = 'Dialog.Footer';
 export interface DialogRootProps
     extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
-     * When `true`, clicking the overlay closes the dialog. Default: `true`
+     * When `true`, clicking the overlay closes the dialog.
      */
     closeOnClickOverlay?: boolean;
 }
