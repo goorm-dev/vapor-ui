@@ -52,6 +52,32 @@ describe('members', () => {
     });
 });
 
+describe('members inside a callback follow the top-level rules', () => {
+    it('keeps ReactNode by name in a parameter', () => {
+        expect(
+            printProp('interface Props { a: (node: ReactNode | (() => void)) => void }', 'a'),
+        ).toBe('(node: ReactNode | (() => void)) => void');
+    });
+
+    it('reads boolean | fn in a parameter as boolean, not false | true', () => {
+        expect(
+            printProp('interface Props { a: (open: boolean | (() => void)) => void }', 'a'),
+        ).toBe('(open: boolean | (() => void)) => void');
+    });
+
+    it('keeps | undefined on a required parameter', () => {
+        expect(
+            printProp('interface Props { a: (cb: (() => void) | undefined) => void }', 'a'),
+        ).toBe('(cb: (() => void) | undefined) => void');
+    });
+
+    it('prints an optional parameter as cb?: without | undefined', () => {
+        expect(printProp('interface Props { a: (cb?: () => void) => void }', 'a')).toBe(
+            '(cb?: () => void) => void',
+        );
+    });
+});
+
 describe('definition', () => {
     it('prints an object one property per line, optional ones without undefined', () => {
         expect(printDefinition('type Details = { reason: "a" | "b"; event?: Event };', 'Details'))

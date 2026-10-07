@@ -55,14 +55,18 @@ function shouldHaveVaporName(type: Type): boolean {
     return !!name?.endsWith('State');
 }
 
-/** The public vapor-ui name of a Base UI type, or null. `rawText` is what prints instead. */
+/** The public vapor-ui name of a Base UI type, or null. */
+export function findVaporName(type: Type, options: TypePrinterOptions): string | null {
+    return resolveByIdentity(type, options) ?? resolveMappedBaseUiType(type, options.baseUiMap);
+}
+
+/** `findVaporName`, warning when a type the docs name has none. `rawText` is what prints instead. */
 export function baseUiName(
     type: Type,
     options: TypePrinterOptions,
     rawText: string,
 ): string | null {
-    const resolved =
-        resolveByIdentity(type, options) ?? resolveMappedBaseUiType(type, options.baseUiMap);
+    const resolved = findVaporName(type, options);
     if (!resolved && isDeclaredInBaseUi(type) && shouldHaveVaporName(type)) {
         options.reporter.warn(
             `No public vapor-ui name for a Base UI type in ${options.namespace}; printing ${rawText}. Re-export it from the component namespace to print it by name.`,

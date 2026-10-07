@@ -1,18 +1,9 @@
-import type { Node, Signature, Type } from 'ts-morph';
-
-/** The call signature of a function type, also when it is written `fn | undefined`. */
-export function functionSignature(type: Type): Signature | undefined {
-    const [signature] = type.getCallSignatures();
-    if (signature || !type.isUnion()) return signature;
-
-    const nonNullish = type
-        .getUnionTypes()
-        .filter((member) => !member.isUndefined() && !member.isNull());
-    return nonNullish.length === 1 ? nonNullish[0].getCallSignatures()[0] : undefined;
-}
+import { Node, type Signature, type Type } from 'ts-morph';
 
 export interface Parameter {
     name: string;
+    /** Written `name?:` or with a default, so `| undefined` goes unsaid. */
+    optional: boolean;
     /** Undefined when TypeScript has nowhere to read the type from; it prints `unknown`. */
     type?: Type;
 }
@@ -21,7 +12,9 @@ export function parametersOf(signature: Signature): Parameter[] {
     return signature.getParameters().map((param) => {
         const node: Node | undefined =
             param.getDeclarations()[0] ?? param.getValueDeclaration() ?? signature.getDeclaration();
-        return { name: param.getName(), type: node && param.getTypeAtLocation(node) };
+        const optional =
+            Node.isParameterDeclaration(node) && (node.hasQuestionToken() || node.hasInitializer());
+        return { name: param.getName(), optional, type: node && param.getTypeAtLocation(node) };
     });
 }
 

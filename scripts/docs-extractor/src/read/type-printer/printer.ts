@@ -3,17 +3,16 @@
  * only two things: the members of a prop's type, and the body behind a type name.
  */
 import type { ParsedTypeMember } from '#model';
-import { baseUiName } from '#read/type-printer/base-ui-type';
+import { baseUiName, findVaporName } from '#read/type-printer/base-ui-type';
 import {
     isAnonymousObject,
     isPreservedReactAlias,
     isReactElement,
-    isUnionWithFunction,
     primitiveText,
     reactElementProps,
 } from '#read/type-printer/branches';
 import { formatObject, formatObjectUnion, isObjectLike } from '#read/type-printer/definition';
-import { formatFunction, functionSignature, parametersOf } from '#read/type-printer/function';
+import { formatFunction, parametersOf } from '#read/type-printer/function';
 import {
     isLiteralUnion,
     kindOf,
@@ -61,26 +60,27 @@ export function createTypePrinter(options: TypePrinterOptions): TypePrinter {
             return props ? `ReactElement<${print(props, location)}>` : 'ReactElement';
         }
 
-        const signature = functionSignature(type);
+        const [signature] = type.getCallSignatures();
         if (signature) {
-            const params = parametersOf(signature).map(({ name, type: paramType }) =>
-                paramType ? `${name}: ${print(paramType, location)}` : `${name}: unknown`,
-            );
+            const params = parametersOf(signature).map(({ name, optional, type: paramType }) => {
+                if (!paramType) return `${name}: unknown`;
+                const paramMembers = members(paramType, location).filter(
+                    (member) => !optional || member.kind !== 'undefined',
+                );
+                return `${name}${optional ? '?' : ''}: ${joinTypeMembers(paramMembers)}`;
+            });
             return formatFunction(params, print(signature.getReturnType(), location));
-        }
-
-        if (isUnionWithFunction(type)) {
-            return type
-                .getUnionTypes()
-                .map((member) => {
-                    const text = print(member, location);
-                    return member.getCallSignatures().length > 0 ? `(${text})` : text;
-                })
-                .join(' | ');
         }
 
         const vaporName = baseUiName(type, options, rawText);
         if (vaporName) return vaporName;
+
+        // Inside a parameter or a return type, a union splits as it does at the top level.
+        // A named union of other types (`padding: Padding`) reads by its name.
+        if (type.isUnion()) {
+            if (type.getAliasSymbol() && !isLiteralUnion(type)) return rawText;
+            return joinTypeMembers(members(type, location));
+        }
 
         const objectLocation = location ?? type.getSymbol()?.getDeclarations()[0];
         if (objectLocation && isAnonymousObject(type)) {
@@ -97,7 +97,13 @@ export function createTypePrinter(options: TypePrinterOptions): TypePrinter {
             kind: kindOf(member),
         });
 
-        if (!type.isUnion() || type.isBoolean() || isPreservedReactAlias(type)) {
+        // A union with a vapor-ui name (Base UI event details) reads by that name, unsplit.
+        if (
+            !type.isUnion() ||
+            type.isBoolean() ||
+            isPreservedReactAlias(type) ||
+            findVaporName(type, options)
+        ) {
             return [toMember(type)];
         }
 

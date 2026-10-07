@@ -47,13 +47,6 @@ export function reactElementProps(type: Type): Type | undefined {
     return !props || props.isUnknown() || props.isAny() ? undefined : props;
 }
 
-export function isUnionWithFunction(type: Type): boolean {
-    return (
-        type.isUnion() &&
-        type.getUnionTypes().some((member) => member.getCallSignatures().length > 0)
-    );
-}
-
 /**
  * An object with no name, such as the `data` Base UI writes into `sideOffset`, is
  * printed property by property on one line, so named unions of values inside are
