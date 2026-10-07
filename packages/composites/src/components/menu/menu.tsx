@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { Box, Menu as MenuPrimitives } from '@vapor-ui/core';
+import { Box, Menu as MenuPrimitives, Text, VStack } from '@vapor-ui/core';
 import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import type { SlotProps } from '~/utils/create-slots';
@@ -246,9 +246,17 @@ const itemSlots = createSlots({
     leading: Box,
     trailing: Box,
     label: Box,
+    description: Text,
 });
 
-export const MenuItem = ({ variant, label, leading, trailing, onClick }: MenuItem.Props) => {
+export const MenuItem = ({
+    variant,
+    label,
+    description,
+    leading,
+    trailing,
+    onClick,
+}: MenuItem.Props) => {
     const gridTemplateAreas = `"${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
     const gridTemplateColumns = `${leading ? '1rem' : ''} 1fr ${trailing ? 'auto' : ''}`;
 
@@ -263,7 +271,10 @@ export const MenuItem = ({ variant, label, leading, trailing, onClick }: MenuIte
             }}
         >
             <itemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
-            <itemSlots.label render={label} $css={{ flex: 1, gridArea: 'label' }} />
+            <VStack $css={{ flex: 1, gridArea: 'label' }}>
+                <itemSlots.label render={label} />
+                <itemSlots.description render={description} foreground="hint" typography="body3" />
+            </VStack>
             <itemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
         </MenuPrimitives.Item>
     );
@@ -300,6 +311,11 @@ export interface MenuItemProps {
      * 항목의 텍스트 라벨.
      */
     label: ItemSlots['label'];
+
+    /**
+     * 항목의 동작을 설명하는 텍스트.
+     */
+    description?: ItemSlots['description'];
 }
 
 export namespace MenuItem {
@@ -509,6 +525,7 @@ export namespace MenuCheckGroup {
 
 const checkItemSlots = createSlots({
     leading: Box,
+    description: Text,
     label: Box,
     trailing: Box,
 });
@@ -518,6 +535,7 @@ export const MenuCheckItem = ({
     onClick,
     leading,
     label,
+    description,
     trailing,
 }: MenuCheckItem.Props) => {
     const context = useMenuCheckGroupContext();
@@ -538,7 +556,14 @@ export const MenuCheckItem = ({
                 </MenuPrimitives.RadioItemIndicatorPrimitive>
 
                 <checkItemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
-                <checkItemSlots.label render={label} $css={{ gridArea: 'label' }} />
+                <VStack $css={{ gridArea: 'label' }}>
+                    <checkItemSlots.label render={label} />
+                    <checkItemSlots.description
+                        render={description}
+                        foreground="hint"
+                        typography="body3"
+                    />
+                </VStack>
                 <checkItemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
             </MenuPrimitives.RadioItemPrimitive>
         );
@@ -559,7 +584,14 @@ export const MenuCheckItem = ({
             </MenuPrimitives.CheckboxItemIndicatorPrimitive>
 
             <checkItemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
-            <checkItemSlots.label render={label} $css={{ gridArea: 'label' }} />
+            <VStack $css={{ gridArea: 'label' }}>
+                <checkItemSlots.label render={label} />
+                <checkItemSlots.description
+                    render={description}
+                    foreground="hint"
+                    typography="body3"
+                />
+            </VStack>
             <checkItemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
         </MenuPrimitives.CheckboxItemPrimitive>
     );
@@ -591,6 +623,11 @@ export interface MenuCheckItemProps {
      * 항목의 텍스트 라벨.
      */
     label: CheckItemSlots['label'];
+
+    /**
+     * 항목의 동작을 설명하는 텍스트.
+     */
+    description?: CheckItemSlots['description'];
 
     /**
      * 항목 우측에 표시되는 요소. 단축키·보조 아이콘 등을 배치한다.
