@@ -140,3 +140,22 @@ export namespace CollapsibleTrigger {
     // Only `State` is taken from vapor-ui's own aliases: a prop typed `'sm' | 'md'` keeps its values.
     expect(names.typeOf('Collapsible.Root.Size')).toBeUndefined();
 });
+
+it('names a ChangeEventDetails vapor-ui declares itself, but not the reason union it is built from', () => {
+    const { names } = setup(
+        COMPOUND_BARREL,
+        `
+type MakeChangeEventDetails<Reason extends string> = { reason: Reason; cancel: () => void };
+
+export namespace CollapsibleRoot {
+    export type ChangeEventReason = 'item-press';
+    export type ChangeEventDetails = MakeChangeEventDetails<CollapsibleRoot.ChangeEventReason>;
+}
+`,
+    );
+    const details = names.typeOf('Collapsible.Root.ChangeEventDetails');
+
+    expect(details).toBeDefined();
+    expect(names.nameOf(details!, 'CollapsibleRoot')).toBe('Collapsible.Root.ChangeEventDetails');
+    expect(names.typeOf('Collapsible.Root.ChangeEventReason')).toBeUndefined();
+});

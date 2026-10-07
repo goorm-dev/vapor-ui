@@ -108,13 +108,16 @@ function readBarrel(sourceFile: SourceFile): Map<string, string> {
 }
 
 /**
- * A namespace alias the docs print by name: any Base UI type, or a `State` vapor-ui
- * declares itself (`interface CheckboxRootState extends BaseCheckbox.Root.State`).
- * vapor-ui's other aliases (`Props`, a `Size` union) stay out: matching by type identity
- * would print a prop typed `'sm' | 'md'` as the alias name.
+ * A namespace alias the docs print by name: any Base UI type, or a `State` or
+ * `ChangeEventDetails` vapor-ui declares itself (`interface CheckboxRootState extends
+ * BaseCheckbox.Root.State`, Pagination's `MakeChangeEventDetails<'item-press'>`).
+ * vapor-ui's other aliases (`Props`, a `Size` union, a `ChangeEventReason`) stay out:
+ * matching by type identity would print a prop typed `'sm' | 'md'` as the alias name.
  */
+const OWN_PUBLIC_ALIASES = new Set(['State', 'ChangeEventDetails']);
+
 function isPublicAlias(alias: TypeAliasDeclaration): boolean {
-    return alias.getName() === 'State' || isDeclaredInBaseUi(alias.getType());
+    return OWN_PUBLIC_ALIASES.has(alias.getName()) || isDeclaredInBaseUi(alias.getType());
 }
 
 /** Every exported public alias in an exported namespace the barrel names. */
