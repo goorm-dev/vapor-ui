@@ -41,7 +41,8 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
     /**
      * The public names chosen while printing a prop; unset while printing a definition, whose names are not followed.
      * ponytail: only the `nameOf` branch records. A public name inside TypeScript's own text (the `rawText`
-     * fallbacks) would print without a type ref; none of the generated files has one. Pick it here if one appears.
+     * fallbacks) would print without a type ref. Type arguments are printed again for that reason; an array
+     * (`State[]`) or a tuple is not, and none of the generated files has one. Pick it here if one appears.
      */
     let chosenNames: Set<string> | undefined;
 
@@ -54,7 +55,8 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
 
         // `ReactNode` prints by name; a generic alias keeps its arguments, e.g. `React.Ref<HTMLDivElement>`.
         if (isPreservedReactAlias(type)) {
-            if (type.getAliasTypeArguments().length > 0) return rawText;
+            const args = type.getAliasTypeArguments();
+            if (args.length > 0) return withPrintedArguments(rawText, args, location);
             return type.getAliasSymbol()?.getName() ?? rawText;
         }
 
@@ -97,7 +99,23 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
             return lines.length > 0 ? `{ ${lines.join(' ')} }` : '{}';
         }
 
-        return rawText;
+        const args = type.getAliasSymbol() ? type.getAliasTypeArguments() : type.getTypeArguments();
+        return withPrintedArguments(rawText, args, location);
+    }
+
+    /**
+     * `React.RefObject<MenuRootActions | null>` reads `React.RefObject<Menu.Root.Actions | null>`:
+     * the name stays as TypeScript writes it, each argument is printed again so a public name
+     * inside is picked like anywhere else.
+     */
+    function withPrintedArguments(
+        rawText: string,
+        args: Type[],
+        location: Node | undefined,
+    ): string {
+        const name = /^[\w.]+(?=<)/.exec(rawText)?.[0];
+        if (!name || args.length === 0 || !rawText.endsWith('>')) return rawText;
+        return `${name}<${args.map((arg) => print(arg, location)).join(', ')}>`;
     }
 
     function members(type: Type, location: Node | undefined): ParsedTypeMember[] {

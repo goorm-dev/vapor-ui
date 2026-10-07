@@ -83,6 +83,19 @@ interface Props { a?: PublicState | ((state: PublicState, x: PublicInner) => str
         expect(typeRefs).toEqual(['X.PublicState', 'X.PublicInner']);
     });
 
+    it('names a public type passed as a type argument, such as actionsRef', () => {
+        const { typeMembers, typeRefs } = readProp(
+            `
+interface RefObject<T> { current: T }
+type PublicActions = { close: () => void };
+interface Props { a?: RefObject<PublicActions | null> }`,
+            'a',
+        );
+
+        expect(joinTypeMembers(typeMembers)).toBe('RefObject<X.PublicActions | null> | undefined');
+        expect(typeRefs).toEqual(['X.PublicActions']);
+    });
+
     it('lists none for a prop that prints no public name', () => {
         expect(readProp('interface Props { a: string }', 'a').typeRefs).toEqual([]);
     });
