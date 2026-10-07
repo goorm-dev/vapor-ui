@@ -64,7 +64,7 @@ describe('transform — static syntax', () => {
         expect(out.css).toMatch(/\.[^ ]+\.selected/);
     });
 
-    it('reports unknown token', () => {
+    it('reports unknown token as build error', () => {
         const out = transform({
             source: src(`const cls = css({ padding: '$doesNotExist' });`),
             filename: '/G.tsx',
@@ -237,47 +237,62 @@ describe('transform — ternary (entry-level)', () => {
     });
 });
 
-describe('transform — embedded $token reject', () => {
-    it('rejects `$token` embedded at end of shorthand value', () => {
-        const source = src(`const cls = css({ border: '1px solid $basic-black' });`);
-        const out = transform({ source, filename: '/EM1.tsx' });
-        expect(out.errors.length).toBe(1);
-        expect(out.errors[0].code).toBe('invalid-input-shape');
-        expect(out.errors[0].message).toContain('standalone');
-        expect(out.errors[0].message).toContain('감지');
-    });
+describe('transform — token resolve (build error)', () => {
+    // 성공한 fragment 는 치환, 실패 fragment 는 build error 로 ctx.errors push.
 
-    it('rejects `$token` embedded at start of shorthand value', () => {
-        const source = src(`const cls = css({ background: '$basic-black 1px solid' });`);
-        const out = transform({ source, filename: '/EM2.tsx' });
-        expect(out.errors.length).toBe(1);
-        expect(out.errors[0].code).toBe('invalid-input-shape');
-    });
-
-    it('rejects multiple embedded tokens in one value', () => {
-        const source = src(`const cls = css({ padding: '$space-100 $space-200' });`);
-        const out = transform({ source, filename: '/EM3.tsx' });
-        expect(out.errors.length).toBe(1);
-        expect(out.errors[0].code).toBe('invalid-input-shape');
-    });
-
-    it('allows raw non-token shorthand (no `$` in value)', () => {
-        const source = src(`const cls = css({ border: '1px solid black' });`);
-        const out = transform({ source, filename: '/EM4.tsx' });
-        expect(out.errors).toEqual([]);
-    });
-
-    it('allows standalone `$token` (axis-strict path still runs)', () => {
+    it('resolves standalone `$token` on axis-매치 property', () => {
         const source = src(`const cls = css({ color: '$fg-primary' });`);
-        const out = transform({ source, filename: '/EM5.tsx' });
+        const out = transform({ source, filename: '/EM1.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.css).toContain('var(--vapor-color-foreground-primary)');
+    });
+
+    it('resolves multiple embedded tokens on axis-매치 property (padding)', () => {
+        const source = src(`const cls = css({ padding: '$space-100 $space-200' });`);
+        const out = transform({ source, filename: '/EM2.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.css).toContain('var(--vapor-size-space-100)');
+        expect(out.css).toContain('var(--vapor-size-space-200)');
+    });
+
+    it('passes raw non-token value through', () => {
+        const source = src(`const cls = css({ border: '1px solid black' });`);
+        const out = transform({ source, filename: '/EM3.tsx' });
         expect(out.errors).toEqual([]);
     });
 
-    it('standalone `$999` preserves existing unknown-token behavior', () => {
+    it('errors on shorthand property with embedded token (border)', () => {
+        const source = src(`const cls = css({ border: '1px solid $basic-black' });`);
+        const out = transform({ source, filename: '/EM4.tsx' });
+        expect(out.errors.length).toBeGreaterThan(0);
+        expect(out.errors[0].code).toBe('unknown-property');
+    });
+
+    it('errors on standalone token on shorthand (background)', () => {
+        const source = src(`const cls = css({ background: '$bg-primary' });`);
+        const out = transform({ source, filename: '/EM5.tsx' });
+        expect(out.errors.length).toBeGreaterThan(0);
+        expect(out.errors[0].code).toBe('unknown-property');
+    });
+
+    it('errors on unknown token', () => {
         const source = src(`const cls = css({ padding: '$999' });`);
         const out = transform({ source, filename: '/EM6.tsx' });
         expect(out.errors.length).toBeGreaterThan(0);
-        // invalid-input-shape 아니라 unknown-token (axis-strict path).
-        expect(out.errors[0].code).not.toBe('invalid-input-shape');
+        expect(out.errors[0].code).toBe('unknown-token');
+    });
+
+    it('errors on scope-mismatch token', () => {
+        const source = src(`const cls = css({ color: '$bg-primary' });`);
+        const out = transform({ source, filename: '/EM7.tsx' });
+        expect(out.errors.length).toBeGreaterThan(0);
+        expect(out.errors[0].code).toBe('scope-mismatch');
+    });
+
+    it('mixed resolved + unresolved → errors on unresolved fragment', () => {
+        const source = src(`const cls = css({ padding: '$space-100 $nope-xyz' });`);
+        const out = transform({ source, filename: '/EM8.tsx' });
+        expect(out.errors.length).toBeGreaterThan(0);
+        expect(out.errors[0].code).toBe('unknown-token');
     });
 });
