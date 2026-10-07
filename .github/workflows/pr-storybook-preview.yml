@@ -44,6 +44,20 @@ jobs:
                   STORYBOOK_BASE_PATH: /${{ env.PREVIEW_PATH }}/
               run: pnpm build:storybook
 
+            - name: Rewrite asset paths for subpath hosting
+              run: |
+                  cd apps/storybook/storybook-static
+                  PREFIX="/${{ env.PREVIEW_PATH }}"
+                  find . -type f \( -name '*.html' -o -name '*.js' -o -name '*.css' -o -name '*.json' \) \
+                    -exec sed -i \
+                      -e "s|=\"/assets/|=\"${PREFIX}/assets/|g" \
+                      -e "s|=\"/sb-|=\"${PREFIX}/sb-|g" \
+                      -e "s|'/assets/|'${PREFIX}/assets/|g" \
+                      -e "s|'/sb-|'${PREFIX}/sb-|g" \
+                      -e "s|\"/assets/|\"${PREFIX}/assets/|g" \
+                      -e "s|\"/sb-|\"${PREFIX}/sb-|g" \
+                      {} +
+
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v4
               with:
@@ -69,7 +83,7 @@ jobs:
                   header: storybook-preview
                   GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
                   message: |
-                      ### 📚 Storybook Preview
+                      📚 **Storybook Preview**
 
                       | Commit | Preview |
                       | :----- | :------ |
