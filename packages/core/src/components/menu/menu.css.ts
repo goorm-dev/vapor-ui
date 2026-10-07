@@ -84,8 +84,8 @@ export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
     foregrounds({ color: 'secondary' }),
     {
-        paddingTop: vars.size.space['075'],
-        paddingRight: vars.size.space['100'],
+        paddingTop: vars.size.space['100'],
+        paddingRight: vars.size.space['150'],
         paddingBottom: vars.size.space['050'],
         paddingLeft: vars.size.space['150'],
     },
