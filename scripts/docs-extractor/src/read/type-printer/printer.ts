@@ -13,7 +13,7 @@ import {
 import { formatObject, formatObjectUnion, isObjectLike } from '#read/type-printer/definition';
 import { formatFunction, parametersOf } from '#read/type-printer/function';
 import {
-    isLiteralUnion,
+    keepsUnionName,
     kindOf,
     tidyMembers,
     writtenUnionMembers,
@@ -85,9 +85,9 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
         }
 
         // Inside a parameter or a return type, a union splits as it does at the top level.
-        // A named union of other types (`padding: Padding`) reads by its name.
+        // A union kept by name returns here: `members()` hands it straight back to `print()`.
         if (type.isUnion()) {
-            if (type.getAliasSymbol() && !isLiteralUnion(type)) return rawText;
+            if (keepsUnionName(type)) return rawText;
             return joinTypeMembers(members(type, location));
         }
 
@@ -106,10 +106,12 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
             kind: kindOf(member),
         });
 
-        // A union with a vapor-ui name (Base UI event details) reads by that name, unsplit.
+        // Not split: a union kept by its own name (`Padding`, `ReactNode`) or by a vapor-ui
+        // name (Base UI event details).
         if (
             !type.isUnion() ||
             type.isBoolean() ||
+            keepsUnionName(type) ||
             isPreservedReactAlias(type) ||
             publicNames.nameOf(type, namespace)
         ) {
@@ -126,17 +128,6 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
             const optional = property.isOptional();
             const propertyType = property.getTypeAtLocation(declaration);
             const head = `${property.getName()}${optional ? '?' : ''}`;
-
-            // A named union of other types (`padding: Padding`) reads by its name, as it does
-            // inside a larger union; splitting it here would spell out what the name hides.
-            if (
-                propertyType.isUnion() &&
-                propertyType.getAliasSymbol() &&
-                !isLiteralUnion(propertyType)
-            ) {
-                return `${head}: ${propertyType.getText(declaration, TYPE_FORMAT_FLAGS)};`;
-            }
-
             const propertyMembers = members(propertyType, declaration).filter(
                 (member) => !optional || member.kind !== 'undefined',
             );

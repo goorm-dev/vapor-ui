@@ -1,4 +1,5 @@
 import type { ParsedTypeMember } from '#model';
+import { isPreservedReactAlias } from '#read/type-printer/branches';
 import type { Type, ts } from 'ts-morph';
 
 /**
@@ -7,9 +8,7 @@ import type { Type, ts } from 'ts-morph';
  * `getUnionTypes()` returns the flattened union, which expands `ReactNode` and
  * `Ref<T>` into their members. TypeScript keeps the written members on the
  * union's `origin`, which is what `type.getText()` prints from. A member that is
- * itself a union is opened again when it has no name, such as `(A | B) & (A | B)`,
- * or when it only lists values, such as `type Side = 'top' | 'bottom'`. A named
- * union of other types (`type Padding = number | {…}`) reads better by its name.
+ * itself a union is opened again unless {@link keepsUnionName} keeps it by name.
  *
  * ponytail: `origin` and ts-morph's `compilerFactory` are both internal. If either
  * moves in an upgrade, this falls back to the flattened union and aliases expand
@@ -29,14 +28,31 @@ export function writtenUnionMembers(type: Type): Type[] {
     return members.flatMap((member) =>
         member.isUnion() &&
         !member.isBoolean() &&
-        (!member.getAliasSymbol() || isLiteralUnion(member))
+        !keepsUnionName(member) &&
+        !isPreservedReactAlias(member)
             ? writtenUnionMembers(member)
             : [member],
     );
 }
 
+/**
+ * A named union of other types, `type Padding = number | {…}`, reads by its name
+ * wherever it appears. Everything else is opened: a union with no name, one that
+ * only lists values (`type Side = 'top' | 'bottom'`), and a generic one such as
+ * Base UI's `ClassNameParams<State>`, whose name hides what it takes.
+ */
+export function keepsUnionName(type: Type): boolean {
+    return (
+        type.isUnion() &&
+        !type.isBoolean() &&
+        Boolean(type.getAliasSymbol()) &&
+        type.getAliasTypeArguments().length === 0 &&
+        !isLiteralUnion(type)
+    );
+}
+
 /** Every value is spelled out: `"sm" | "md"`, `1 | 2`, `boolean | "auto"`, `"on" | undefined`. */
-export function isLiteralUnion(type: Type): boolean {
+function isLiteralUnion(type: Type): boolean {
     return type
         .getUnionTypes()
         .every(

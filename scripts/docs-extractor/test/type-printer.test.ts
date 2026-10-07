@@ -130,6 +130,46 @@ describe('members inside a callback follow the top-level rules', () => {
     });
 });
 
+describe('a named union of other types reads the same wherever it appears', () => {
+    const source = `
+type Padding = number | { x: number };
+type ClassName<S> = string | ((state: S) => string);
+interface Props {
+    a: Padding;
+    b: (p: Padding) => void;
+    c?: Padding;
+    d: (p?: Padding) => void;
+    e: () => Padding;
+    f: { q: Padding };
+    g: ClassName<{ open: boolean }>;
+    h: (c: ClassName<number>) => void;
+    i: () => ClassName<number>;
+    j: { q: ClassName<number> };
+    k?: ClassName<number>;
+}`;
+
+    it.each([
+        ['a', 'Padding'],
+        ['b', '(p: Padding) => void'],
+        ['c', 'Padding | undefined'],
+        ['d', '(p?: Padding) => void'],
+        ['e', '() => Padding'],
+        ['f', '{ q: Padding; }'],
+    ])('keeps a union alias without type arguments by name (%s)', (prop, expected) => {
+        expect(printProp(source, prop)).toBe(expected);
+    });
+
+    it.each([
+        ['g', 'string | ((state: { open: boolean; }) => string)'],
+        ['h', '(c: string | ((state: number) => string)) => void'],
+        ['i', '() => (string | ((state: number) => string))'],
+        ['j', '{ q: string | ((state: number) => string); }'],
+        ['k', 'string | ((state: number) => string) | undefined'],
+    ])('opens a generic union alias (%s)', (prop, expected) => {
+        expect(printProp(source, prop)).toBe(expected);
+    });
+});
+
 describe('definition', () => {
     it('prints an object one property per line, optional ones without undefined', () => {
         expect(printDefinition('type Details = { reason: "a" | "b"; event?: Event };', 'Details'))
