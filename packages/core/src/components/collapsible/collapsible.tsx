@@ -69,9 +69,7 @@ export namespace CollapsibleRoot {
 }
 
 export namespace CollapsibleTrigger {
-    // FIXME: BaseCollapsible.Trigger.State appears to be missing.
-    // Substituting with Root.State as they are functionally identical.
-    export type State = BaseCollapsible.Root.State;
+    export type State = BaseCollapsible.Trigger.State;
     export type Props = VaporUIComponentProps<typeof BaseCollapsible.Trigger, State>;
 }
 
