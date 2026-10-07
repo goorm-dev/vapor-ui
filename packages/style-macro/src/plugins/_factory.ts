@@ -95,9 +95,6 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
             if (result.css) {
                 const hash = hashContent(result.css);
                 records.set(hash, { css: result.css, classes: result.classes });
-                if (opts.themeStylesImport) {
-                    prependLines.push(`import "${opts.themeStylesImport}";`);
-                }
                 prependLines.push(`import "${PUBLIC_PREFIX}${hash}${VIRTUAL_SUFFIX}";`);
             }
 
@@ -112,7 +109,6 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
 });
 
 export interface VaporPluginOptions {
-    themeStylesImport?: string | false;
     include?: (id: string) => boolean;
     hash?: boolean;
     injectColorScheme?: boolean | ColorSchemeScriptOpts;

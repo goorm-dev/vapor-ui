@@ -63,19 +63,6 @@ describe('turbopack', () => {
         expect(raw).not.toContain('\n');
     });
 
-    it('emits themeStylesImport BEFORE the data:text/css import when option is set', async () => {
-        const ctx = mkCtx('/src/D.tsx', { themeStylesImport: '@vapor-ui/core/styles.css' });
-        const src = [
-            `import { css } from '@vapor-ui/style-macro';`,
-            `const cls = css({ padding: '$space-200' });`,
-        ].join('\n');
-        const out = await run(ctx, src);
-        const themeIdx = out.indexOf(`import "@vapor-ui/core/styles.css";`);
-        const cssIdx = out.search(/import "data:text\/css,/);
-        expect(themeIdx).toBeGreaterThanOrEqual(0);
-        expect(cssIdx).toBeGreaterThan(themeIdx);
-    });
-
     it('throws when the transform reports a build error', async () => {
         const ctx = mkCtx('/src/err.tsx');
         const src = [

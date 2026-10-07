@@ -68,7 +68,6 @@ export default withVapor(nextConfig);
 interface VaporPluginOptions {
     include?: (id: string) => boolean;
     hash?: boolean;
-    themeStylesImport?: string | false;
     injectColorScheme?: boolean | ColorSchemeScriptOpts;
 }
 ```
@@ -77,7 +76,6 @@ interface VaporPluginOptions {
 | ------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
 | `include`           | `*.{ts,tsx,js,jsx,mts,mjs,cts,cjs}` − `node_modules` | 변환 대상 파일 필터                                                             |
 | `hash`              | `process.env.NODE_ENV === 'production'`              | class name hash 모드 (readable vs hashed)                                       |
-| `themeStylesImport` | `null`                                               | 각 파일에 side-effect CSS import 삽입 (예: `'@vapor-ui/core/styles.css'`)       |
 | `injectColorScheme` | `true`                                               | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능 |
 
 ## 지원하는 값

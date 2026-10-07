@@ -100,21 +100,6 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
             expect(out.code).toContain(`import { css } from '@vapor-ui/style-macro';`);
         });
 
-        it('emits a themeStylesImport before the virtual CSS import when option set', () => {
-            const hooks = getHooks({ themeStylesImport: '@vapor-ui/core/styles.css' });
-            const ctx = makeCtx();
-            const src = [
-                `import { css } from '@vapor-ui/style-macro';`,
-                `const cls = css({ padding: '$space-200' });`,
-            ].join('\n');
-            const out = callHook(hooks.transform, ctx, src, '/src/B.tsx');
-            expect(out.code).toContain(`import "@vapor-ui/core/styles.css";`);
-            const themeIdx = out.code.indexOf(`import "@vapor-ui/core/styles.css";`);
-            const virtualIdx = out.code.search(/import "~vapor-style\/[a-f0-9]+\.css";?/);
-            expect(themeIdx).toBeGreaterThanOrEqual(0);
-            expect(virtualIdx).toBeGreaterThan(themeIdx);
-        });
-
         it('calls this.error and never returns when transform reports build errors', () => {
             const hooks = getHooks();
             const ctx = makeCtx();

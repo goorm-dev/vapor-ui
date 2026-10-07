@@ -46,9 +46,6 @@ export default async function vaporStyleTurbopackLoader(
     const prepended: string[] = [];
 
     if (result.css) {
-        if (opts.themeStylesImport) {
-            prepended.push(`import "${opts.themeStylesImport}";`);
-        }
         prepended.push(dataCssImport(result.css));
     }
 

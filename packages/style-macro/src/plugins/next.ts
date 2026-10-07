@@ -67,7 +67,6 @@ export function vaporNextPlugin(
 
             const rawLoaderOptions: Record<string, unknown> = {
                 hash: unpluginOpts.hash,
-                themeStylesImport: unpluginOpts.themeStylesImport,
             };
 
             const loaderOptions = Object.fromEntries(
