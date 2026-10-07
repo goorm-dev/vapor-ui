@@ -19,10 +19,10 @@ type CssProps = Sprinkles;
 export type Styles = {
     /**
      * @deprecated
-     * @vapor-ui/css-utils를 사용해주세요.
+     * @vapor-ui/style-macro를 사용해주세요.
      *
      * @example
-     * import { css } from '@vapor-ui/css-utils';
+     * import { css } from '@vapor-ui/style-macro';
      * <Button className={css({ backgroundColor: '$bg-primary', gap: '$space-100'  })} />
      */
     $css?: CssProps;

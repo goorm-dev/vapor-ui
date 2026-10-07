@@ -1,7 +1,6 @@
 // Hash algorithm ported from adobe/react-spectrum s2 style-macro (Apache-2.0):
 // https://github.com/adobe/react-spectrum/blob/main/packages/%40react-spectrum/s2/style/style-macro.ts
-// css-utils 방식 djb2 + base62 조합. SHA1/base36 방식보다 짧고 URL-safe.
-
+// style-macro 방식 djb2 + base62 조합. SHA1/base36 방식보다 짧고 URL-safe.
 import type { Tuple } from './types';
 
 export type ClassNameMode = 'readable' | 'hashed';
@@ -72,9 +71,7 @@ export function buildClassName(t: Tuple, mode: ClassNameMode = 'readable'): stri
 
     const propSlug = slug(t.property);
     const valueSlug = slug(stripTokenPrefix(t.rawValue ?? t.value));
-    const tail = generateArbitraryValueSelector(
-        `${t.property}|${t.selectorContext}|${t.value}`,
-    );
+    const tail = generateArbitraryValueSelector(`${t.property}|${t.selectorContext}|${t.value}`);
     return `vapor_${propSlug}_${valueSlug}_${tail}`;
 }
 

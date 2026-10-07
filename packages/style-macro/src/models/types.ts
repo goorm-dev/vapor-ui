@@ -19,7 +19,7 @@ export interface BuildError {
 
 /**
  * IR — parse-call 이 방출, emit-css 가 소비.
- * selectorContext 는 css-utils 방식 canonical 문자열:
+ * selectorContext 는 style-macro 방식 canonical 문자열:
  *   'base' | ':hover' | '::before' | '@media(min-width:768px):hover' | ...
  */
 export interface StaticRule {
