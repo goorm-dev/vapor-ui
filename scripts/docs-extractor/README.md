@@ -207,7 +207,7 @@ cli.ts ──► extract() ──► read/     source → ParsedComponent[]   (t
 | `src/reporter.ts`  | `Reporter`, `silentReporter`                                                      | Where progress and warnings go; the CLI supplies the console one                             |
 | `src/errors.ts`    | `ExtractorError`                                                                  | Bad input (missing path, unknown component), printed by the CLI without a stack              |
 
-Tests go through `extract()` (fixture sources on disk), `policy()` (plain data) and `writeDocs()` (a temp directory), not through module internals.
+Tests go through `extract()` (fixture sources on disk), `policy()` (plain data), `writeDocs()` (a temp directory) and the type printer's `createTypePrinter()` interface (source strings in an in-memory project), not through module internals.
 
 ESLint (`eslint.config.mjs`) keeps `policy.ts` and `model.ts` free of `ts-morph`, `node:*`, `glob` and `meow`, and keeps `read/` from importing the policy, the writer or the CLI.
 
