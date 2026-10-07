@@ -47,14 +47,15 @@ function classifyPath(filePath: string | undefined): PropSource {
     return 'project';
 }
 
-/**
- * Whether the declaration is vapor-ui's own. Used to prefer vapor-ui's JSDoc
- * over base-ui's for a prop that is declared in both.
- */
+/** Whether the file is one of Base UI's declarations, judged by `@base-ui` in its path. */
 export function isBaseUiPath(filePath: string): boolean {
     return classifyPath(filePath) === 'base-ui';
 }
 
+/**
+ * Whether the declaration is vapor-ui's own. Used to prefer vapor-ui's JSDoc
+ * over base-ui's for a prop that is declared in both.
+ */
 export function isProjectOwned(filePath: string | undefined): boolean {
     return PROJECT_OWNED_SOURCES.has(classifyPath(filePath));
 }

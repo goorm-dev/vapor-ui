@@ -3,7 +3,6 @@
  * only two things: the members of a prop's type, and the body behind a type name.
  */
 import type { ParsedTypeMember } from '#model';
-import { baseUiName, findVaporName } from '#read/type-printer/base-ui-type';
 import {
     isAnonymousObject,
     isPreservedReactAlias,
@@ -38,7 +37,7 @@ export interface TypePrinter {
     definition(type: Type, location: Node): string;
 }
 
-export function createTypePrinter(options: TypePrinterOptions): TypePrinter {
+export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions): TypePrinter {
     /**
      * One type as text. Order matters: the first branch that claims the type wins.
      * Narrow, cheap checks come before the ones that walk the type graph.
@@ -72,8 +71,8 @@ export function createTypePrinter(options: TypePrinterOptions): TypePrinter {
             return formatFunction(params, print(signature.getReturnType(), location));
         }
 
-        const vaporName = baseUiName(type, options, rawText);
-        if (vaporName) return vaporName;
+        const publicName = publicNames.nameOf(type, namespace);
+        if (publicName) return publicName;
 
         // Inside a parameter or a return type, a union splits as it does at the top level.
         // A named union of other types (`padding: Padding`) reads by its name.
@@ -102,7 +101,7 @@ export function createTypePrinter(options: TypePrinterOptions): TypePrinter {
             !type.isUnion() ||
             type.isBoolean() ||
             isPreservedReactAlias(type) ||
-            findVaporName(type, options)
+            publicNames.nameOf(type, namespace)
         ) {
             return [toMember(type)];
         }

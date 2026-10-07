@@ -1,11 +1,9 @@
 import type { ParsedComponent, ParsedProp } from '#model';
 import { getDefaultValuesForComponent } from '#read/default-values';
+import { type PublicNames, createPublicNames } from '#read/public-names';
 import { classifyPropSource, isProjectOwned } from '#read/source-classifier';
-import { buildBaseUiTypeMap } from '#read/type-printer/base-ui-mapper';
 import { type TypePrinter, createTypePrinter } from '#read/type-printer/printer';
-import type { BaseUiTypeMap } from '#read/type-printer/shared';
 import { type Reporter, silentReporter } from '#reporter';
-import { mentionsTypeName } from '#type-text';
 import type {
     InterfaceDeclaration,
     ModuleDeclaration,
@@ -104,27 +102,32 @@ function extractParsedProp(
     };
 }
 
-/** Bodies of the public vapor-ui type names the props print. A name is printed once per component. */
+/**
+ * Bodies of the public vapor-ui type names the props print. A name is printed once per component.
+ * ponytail: names are found by scanning printed text for dotted words; KAN-47 passes them as data.
+ */
 function getTypeDefinitions(
     props: ParsedProp[],
     location: Node,
-    baseUiMap: BaseUiTypeMap,
+    publicNames: PublicNames,
     printer: TypePrinter,
 ): Record<string, string> {
-    const texts = props.flatMap((prop) => prop.typeMembers.map((member) => member.text));
-    const entries = new Map(Object.values(baseUiMap).map((entry) => [entry.vaporPath, entry.type]));
+    const words = props.flatMap((prop) =>
+        prop.typeMembers.flatMap((member) => member.text.match(/[\w.]+/g) ?? []),
+    );
 
     return Object.fromEntries(
-        [...entries]
-            .filter(([name]) => texts.some((text) => mentionsTypeName(text, name)))
-            .map(([name, type]) => [name, printer.definition(type, location)]),
+        [...new Set(words)].flatMap((name) => {
+            const type = publicNames.typeOf(name);
+            return type ? [[name, printer.definition(type, location)]] : [];
+        }),
     );
 }
 
 function extractParsedComponent(
     sourceFile: SourceFile,
     namespace: ModuleDeclaration,
-    baseUiMap: BaseUiTypeMap,
+    publicNames: PublicNames,
     reporter: Reporter,
 ): ParsedComponent | null {
     const namespaceName = namespace.getName();
@@ -142,7 +145,7 @@ function extractParsedComponent(
 
     reporter.debug(`${namespaceName}: ${allSymbols.length} symbols`);
 
-    const printer = createTypePrinter({ baseUiMap, reporter, namespace: namespaceName });
+    const printer = createTypePrinter({ publicNames, namespace: namespaceName });
     const props = allSymbols.map((symbol) => {
         const declNode = symbol.getDeclarations()[0] ?? exportedProps;
         return extractParsedProp(symbol, declNode, printer, defaultValues);
@@ -152,7 +155,7 @@ function extractParsedComponent(
         name: namespaceName,
         description: getComponentDescription(componentImplementation),
         props,
-        typeDefinitions: getTypeDefinitions(props, exportedProps, baseUiMap, printer),
+        typeDefinitions: getTypeDefinitions(props, exportedProps, publicNames, printer),
     };
 }
 
@@ -161,7 +164,7 @@ export function parseSourceFile(
     sourceFile: SourceFile,
     reporter: Reporter = silentReporter,
 ): { components: ParsedComponent[]; failures: string[] } {
-    const baseUiMap = buildBaseUiTypeMap(sourceFile);
+    const publicNames = createPublicNames(sourceFile, reporter);
     const namespaces = getExportedNamespaces(sourceFile);
     const parsedComponents: ParsedComponent[] = [];
     const failures: string[] = [];
@@ -170,7 +173,7 @@ export function parseSourceFile(
 
     for (const namespace of namespaces) {
         try {
-            const parsed = extractParsedComponent(sourceFile, namespace, baseUiMap, reporter);
+            const parsed = extractParsedComponent(sourceFile, namespace, publicNames, reporter);
             if (parsed) {
                 parsedComponents.push(parsed);
             }

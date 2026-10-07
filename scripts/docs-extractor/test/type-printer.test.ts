@@ -6,7 +6,6 @@
  * project and asks about one declared type.
  */
 import { createTypePrinter } from '#read/type-printer/printer';
-import { silentReporter } from '#reporter';
 import { joinTypeMembers } from '#type-text';
 import { Project } from 'ts-morph';
 
@@ -20,9 +19,8 @@ function setup(source: string) {
     });
     const file = project.createSourceFile('fixture.ts', PRELUDE + source);
     const printer = createTypePrinter({
-        baseUiMap: {},
+        publicNames: { nameOf: () => undefined, typeOf: () => undefined },
         namespace: 'Fixture',
-        reporter: silentReporter,
     });
     return { file, printer };
 }
