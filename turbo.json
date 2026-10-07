@@ -32,7 +32,7 @@
         "lint": { "dependsOn": ["^lint"] },
         "clean": { "cache": false },
         "build:storybook": {
-            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
+            "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$"],
             "outputs": ["storybook-static/**"]
         }
