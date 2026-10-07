@@ -27,8 +27,8 @@ export default async function vaporStyleTurbopackLoader(
     const rawOpts = this.getOptions ? this.getOptions() : ({} as VaporPluginOptions);
     const opts = resolveOptions(rawOpts);
 
-    // Fast-path: no `css` in source → nothing to do.
-    if (!source.includes('css')) return source;
+    // Fast-path: no `@vapor-ui/style-macro` import in source → nothing to do.
+    if (!source.includes('@vapor-ui/style-macro')) return source;
 
     const result = transform({
         source,

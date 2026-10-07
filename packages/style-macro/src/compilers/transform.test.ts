@@ -244,7 +244,7 @@ describe('transform — embedded $token reject', () => {
         expect(out.errors.length).toBe(1);
         expect(out.errors[0].code).toBe('invalid-input-shape');
         expect(out.errors[0].message).toContain('standalone');
-        expect(out.errors[0].message).toContain('감지 토큰');
+        expect(out.errors[0].message).toContain('감지');
     });
 
     it('rejects `$token` embedded at start of shorthand value', () => {

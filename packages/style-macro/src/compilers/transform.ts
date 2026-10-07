@@ -156,8 +156,8 @@ class Transformer {
     }
 
     #shouldSkip(): boolean {
-        const { source } = this.opts;
-        return !source.includes(IMPORT_NAME);
+        // package specifier가 소스에 없으면 import 자체가 없는 셈 → oxc parsing skip.
+        return !this.opts.source.includes(IMPORT_SOURCE);
     }
 
     #scanImports(program: AnyProp) {

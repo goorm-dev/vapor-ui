@@ -281,12 +281,11 @@ function tokenErrorMessage(code: TokenErrorCode, cssProperty: string, tokenName:
     ].join('\n');
 }
 
-const HAS_TOKEN_RE = /\$[a-zA-Z0-9_-]+/;
+const HAS_TOKEN_REGEX = /\$[a-zA-Z0-9_-]+/;
 
 /**
  * 정적 값 → rule 변환.
  * - standalone `$token` → `resolveToken` 거쳐 CSS var
- * - embedded `$token` (값 일부에 섞여 있음) → **reject** (전용 sub-property 로 분리 요구)
  * - 그 외 → `normalizeValue` 통과
  */
 function pushToken(
@@ -298,7 +297,7 @@ function pushToken(
 ) {
     const jsProperty = kebabToCamel(cssProperty);
 
-    if (typeof rawValue === 'string' && HAS_TOKEN_RE.test(rawValue)) {
+    if (typeof rawValue === 'string' && HAS_TOKEN_REGEX.test(rawValue)) {
         const tokenName = rawValue.slice(1);
         const res = resolveToken(jsProperty, tokenName);
 
