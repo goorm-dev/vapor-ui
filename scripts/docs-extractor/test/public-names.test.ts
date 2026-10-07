@@ -112,3 +112,31 @@ it('does not warn about an object Base UI writes straight into a parameter or a 
     ).toBeUndefined();
     expect(warnings).toEqual([]);
 });
+
+it('names a State vapor-ui declares itself, extending Base UI or not', () => {
+    const { names } = setup(
+        COMPOUND_BARREL,
+        `
+import type { BaseCollapsibleRoot } from '../../node_modules/@base-ui/react/collapsible';
+
+export interface CollapsibleRootState extends BaseCollapsibleRoot.State { invalid?: boolean }
+export interface CollapsibleTriggerState { pressed: boolean }
+
+export namespace CollapsibleRoot {
+    export type State = CollapsibleRootState;
+    export type Size = 'sm' | 'md';
+}
+export namespace CollapsibleTrigger {
+    export type State = CollapsibleTriggerState;
+}
+`,
+    );
+    const rootState = names.typeOf('Collapsible.Root.State');
+    const triggerState = names.typeOf('Collapsible.Trigger.State');
+
+    expect(rootState?.getText()).toMatch(/CollapsibleRootState$/);
+    expect(names.nameOf(rootState!, 'CollapsibleRoot')).toBe('Collapsible.Root.State');
+    expect(names.nameOf(triggerState!, 'CollapsibleTrigger')).toBe('Collapsible.Trigger.State');
+    // Only `State` is taken from vapor-ui's own aliases: a prop typed `'sm' | 'md'` keeps its values.
+    expect(names.typeOf('Collapsible.Root.Size')).toBeUndefined();
+});

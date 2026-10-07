@@ -11,7 +11,14 @@
 import { isBaseUiPath } from '#read/source-classifier';
 import type { Reporter } from '#reporter';
 import path from 'node:path';
-import { Node, type SourceFile, SyntaxKind, type Type, TypeFormatFlags } from 'ts-morph';
+import {
+    Node,
+    type SourceFile,
+    SyntaxKind,
+    type Type,
+    type TypeAliasDeclaration,
+    TypeFormatFlags,
+} from 'ts-morph';
 
 export interface PublicNames {
     /**
@@ -100,7 +107,17 @@ function readBarrel(sourceFile: SourceFile): Map<string, string> {
     return names;
 }
 
-/** Every exported alias of a Base UI type in an exported namespace the barrel names. */
+/**
+ * A namespace alias the docs print by name: any Base UI type, or a `State` vapor-ui
+ * declares itself (`interface CheckboxRootState extends BaseCheckbox.Root.State`).
+ * vapor-ui's other aliases (`Props`, a `Size` union) stay out: matching by type identity
+ * would print a prop typed `'sm' | 'md'` as the alias name.
+ */
+function isPublicAlias(alias: TypeAliasDeclaration): boolean {
+    return alias.getName() === 'State' || isDeclaredInBaseUi(alias.getType());
+}
+
+/** Every exported public alias in an exported namespace the barrel names. */
 function collectPublicNames(sourceFile: SourceFile): PublicNameEntry[] {
     const barrel = readBarrel(sourceFile);
 
@@ -110,7 +127,7 @@ function collectPublicNames(sourceFile: SourceFile): PublicNameEntry[] {
         .flatMap((ns) =>
             ns
                 .getTypeAliases()
-                .filter((alias) => alias.isExported() && isDeclaredInBaseUi(alias.getType()))
+                .filter((alias) => alias.isExported() && isPublicAlias(alias))
                 .map((alias) => ({
                     name: `${barrel.get(ns.getName())}.${alias.getName()}`,
                     type: alias.getType(),
