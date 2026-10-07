@@ -1,5 +1,5 @@
 import { isDeclaredInBaseUi, resolveBaseUiType } from '#read/type-printer/base-ui-mapper';
-import type { BaseUiTypeMap, Resolver, ResolverContext } from '#read/type-printer/shared';
+import type { BaseUiTypeMap, TypePrinterOptions } from '#read/type-printer/shared';
 import { Node, type Type } from 'ts-morph';
 
 function resolveMappedBaseUiType(type: Type, baseUiMap: BaseUiTypeMap): string | null {
@@ -24,13 +24,16 @@ function resolveMappedBaseUiType(type: Type, baseUiMap: BaseUiTypeMap): string |
  * type object itself lets the prop's own namespace win. It also covers Base UI event
  * details, which TypeScript evaluates into anonymous objects with no name to look up.
  */
-function resolveByIdentity(type: Type, ctx: ResolverContext): string | null {
-    const matches = Object.values(ctx.baseUiMap ?? {}).filter(
+function resolveByIdentity(
+    type: Type,
+    { baseUiMap, namespace }: TypePrinterOptions,
+): string | null {
+    const matches = Object.values(baseUiMap).filter(
         (entry) => entry.type.compilerType === type.compilerType,
     );
     if (matches.length === 0) return null;
 
-    return (matches.find((entry) => entry.namespace === ctx.namespace) ?? matches[0]).vaporPath;
+    return (matches.find((entry) => entry.namespace === namespace) ?? matches[0]).vaporPath;
 }
 
 /**
@@ -52,19 +55,19 @@ function shouldHaveVaporName(type: Type): boolean {
     return !!name?.endsWith('State');
 }
 
-export const baseUiResolver: Resolver = {
-    name: 'base-ui-type',
-    resolve: (type, ctx) => {
-        if (!ctx.baseUiMap) return null;
+/** The public vapor-ui name of a Base UI type, or null. `rawText` is what prints instead. */
+export function baseUiName(
+    type: Type,
+    options: TypePrinterOptions,
+    rawText: string,
+): string | null {
+    const resolved =
+        resolveByIdentity(type, options) ?? resolveMappedBaseUiType(type, options.baseUiMap);
+    if (!resolved && isDeclaredInBaseUi(type) && shouldHaveVaporName(type)) {
+        options.reporter.warn(
+            `No public vapor-ui name for a Base UI type in ${options.namespace}; printing ${rawText}. Re-export it from the component namespace to print it by name.`,
+        );
+    }
 
-        const resolved =
-            resolveByIdentity(type, ctx) ?? resolveMappedBaseUiType(type, ctx.baseUiMap);
-        if (!resolved && isDeclaredInBaseUi(type) && shouldHaveVaporName(type)) {
-            ctx.reporter?.warn(
-                `No public vapor-ui name for a Base UI type in ${ctx.namespace ?? 'unknown namespace'}; printing ${ctx.rawText}. Re-export it from the component namespace to print it by name.`,
-            );
-        }
-
-        return resolved;
-    },
-};
+    return resolved;
+}

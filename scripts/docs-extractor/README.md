@@ -150,7 +150,7 @@ Props are sorted by group, then by name within a group. A prop joins the first g
 
 ### Types
 
-A prop type is split into the top-level union members TypeScript prints (`src/read/type-printer/type-members.ts`). Both fields are built from those members.
+A prop type is split into the top-level union members TypeScript prints (`src/read/type-printer/printer.ts`). Both fields are built from those members.
 
 | Field          | `className?: string \| ((state: Badge.State) => string)`    |
 | -------------- | ----------------------------------------------------------- |

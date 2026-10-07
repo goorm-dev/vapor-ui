@@ -1,7 +1,4 @@
 import type { ParsedTypeMember } from '#model';
-import { isPreservedReactAlias } from '#read/type-printer/react-alias';
-import { resolveType } from '#read/type-printer/resolve-type';
-import type { PrintOptions } from '#read/type-printer/shared';
 import type { Type, ts } from 'ts-morph';
 
 /**
@@ -18,7 +15,7 @@ import type { Type, ts } from 'ts-morph';
  * moves in an upgrade, this falls back to the flattened union and aliases expand
  * again; the extract tests for ReactNode and Ref catch that.
  */
-function writtenUnionMembers(type: Type): Type[] {
+export function writtenUnionMembers(type: Type): Type[] {
     const origin = (type.compilerType as { origin?: ts.Type }).origin;
     const factory = (
         type as unknown as { _context?: { compilerFactory?: { getType(t: ts.Type): Type } } }
@@ -51,7 +48,7 @@ export function isLiteralUnion(type: Type): boolean {
         );
 }
 
-function kindOf(type: Type): ParsedTypeMember['kind'] {
+export function kindOf(type: Type): ParsedTypeMember['kind'] {
     if (type.isUndefined()) return 'undefined';
     if (type.isStringLiteral()) return 'string-literal';
     if (type.getCallSignatures().length > 0) return 'function';
@@ -65,23 +62,10 @@ function nullishRank(member: ParsedTypeMember): number {
 }
 
 /**
- * Splits a prop type into the members TypeScript prints at the top level:
- * `true | false` reads as one `boolean`, aliases kept by the type printer
- * (`ReactNode`, `Ref<T>`) are not opened, members that print the same are
- * listed once, and `null | undefined` come last.
+ * Printed members as TypeScript lists them at the top level: `true | false` reads as
+ * one `boolean`, members that print the same are listed once, `null | undefined` last.
  */
-export function resolveTypeMembers(type: Type, options: PrintOptions): ParsedTypeMember[] {
-    const toMember = (member: Type): ParsedTypeMember => ({
-        text: resolveType(member, options),
-        kind: kindOf(member),
-    });
-
-    if (!type.isUnion() || type.isBoolean() || isPreservedReactAlias(type)) {
-        return [toMember(type)];
-    }
-
-    let members = writtenUnionMembers(type).map(toMember);
-
+export function tidyMembers(members: ParsedTypeMember[]): ParsedTypeMember[] {
     const texts = new Set(members.map((member) => member.text));
     if (texts.has('true') && texts.has('false')) {
         members = members
