@@ -24,6 +24,12 @@ export const root = componentRecipe({
 export const label = componentStyle([
     foregrounds({ color: 'secondary' }),
     typography({ style: 'subtitle2' }),
+    { display: 'inline-flex', gap: vars.size.space['050'] },
+]);
+
+export const requiredSymbol = componentStyle([
+    foregrounds({ color: 'danger' }),
+    typography({ style: 'subtitle2' }),
 ]);
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

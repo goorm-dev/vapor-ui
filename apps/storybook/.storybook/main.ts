@@ -53,7 +53,11 @@ const coreDistCssPassthrough = {
 };
 
 const config: StorybookConfig = {
-    stories: ['../../../packages/**!(node_modules|dist)/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    // stories: ['../../../packages/**!(node_modules|dist)/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    stories: [
+        '../../../packages/core/src/**/*.stories.tsx',
+        '../../../packages/composites/src/**/*.stories.tsx',
+    ],
     addons: [getAbsolutePath('@storybook/addon-docs')],
 
     core: {
