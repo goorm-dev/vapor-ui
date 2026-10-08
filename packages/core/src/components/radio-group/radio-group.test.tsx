@@ -13,6 +13,11 @@ const OPTION_2 = 'Option 2';
 const RadioGroupTest = (props: RadioGroup.Root.Props) => {
     return (
         <RadioGroup.Root {...props}>
+            <RadioGroup.Label>
+                레이블
+                <RadioGroup.RequiredSymbol />
+            </RadioGroup.Label>
+
             <Radio.Root id="option1" value="option1" aria-label={OPTION_1} />
             <label htmlFor="option1">{OPTION_1}</label>
 
@@ -276,6 +281,105 @@ describe('RadioGroup', () => {
 
         expect(radioA).toHaveAttribute('tabindex', '-1');
         expect(radioB).toHaveAttribute('tabindex', '0');
+    });
+
+    describe('RequiredSymbol', () => {
+        const LABEL_TEXT = 'Favorite option';
+
+        const RequiredSymbolTest = (props: RadioGroup.Root.Props) => (
+            <RadioGroup.Root {...props}>
+                <RadioGroup.Label>
+                    {LABEL_TEXT}
+                    <RadioGroup.RequiredSymbol />
+                </RadioGroup.Label>
+                <Radio.Root id="option1" value="option1" aria-label={OPTION_1} />
+                <label htmlFor="option1">{OPTION_1}</label>
+            </RadioGroup.Root>
+        );
+
+        it('should not render when `required` is not set on the Root', () => {
+            const rendered = render(<RequiredSymbolTest />);
+            const label = rendered.getByText(LABEL_TEXT);
+
+            expect(label.textContent).toBe(LABEL_TEXT);
+            expect(rendered.queryByText('*')).not.toBeInTheDocument();
+        });
+
+        it('should not render when `required={false}` on the Root', () => {
+            const rendered = render(<RequiredSymbolTest required={false} />);
+
+            expect(rendered.queryByText('*')).not.toBeInTheDocument();
+        });
+
+        it('should render with `*` as default content when `required` on the Root', () => {
+            const rendered = render(<RequiredSymbolTest required />);
+            const symbol = rendered.getByText('*');
+
+            expect(symbol).toBeInTheDocument();
+            expect(symbol.tagName).toBe('SPAN');
+        });
+
+        it('should render custom children instead of the default `*`', () => {
+            const CUSTOM_SYMBOL = '(required)';
+            const rendered = render(
+                <RadioGroup.Root required>
+                    <RadioGroup.Label>
+                        {LABEL_TEXT}
+                        <RadioGroup.RequiredSymbol>{CUSTOM_SYMBOL}</RadioGroup.RequiredSymbol>
+                    </RadioGroup.Label>
+                </RadioGroup.Root>,
+            );
+            const symbol = rendered.getByText(CUSTOM_SYMBOL);
+
+            expect(symbol).toBeInTheDocument();
+            expect(rendered.queryByText('*')).not.toBeInTheDocument();
+        });
+
+        it('should merge user-supplied `className` with the component class', () => {
+            const CUSTOM_CLASS = 'custom-required-symbol';
+            const rendered = render(
+                <RadioGroup.Root required>
+                    <RadioGroup.Label>
+                        {LABEL_TEXT}
+                        <RadioGroup.RequiredSymbol className={CUSTOM_CLASS} />
+                    </RadioGroup.Label>
+                </RadioGroup.Root>,
+            );
+            const symbol = rendered.getByText('*');
+
+            expect(symbol).toHaveClass(CUSTOM_CLASS);
+            expect(symbol.className).not.toBe(CUSTOM_CLASS);
+        });
+
+        it('should forward the ref to the rendered element', () => {
+            const ref = createRef<HTMLSpanElement>();
+            render(
+                <RadioGroup.Root required>
+                    <RadioGroup.Label>
+                        {LABEL_TEXT}
+                        <RadioGroup.RequiredSymbol ref={ref} />
+                    </RadioGroup.Label>
+                </RadioGroup.Root>,
+            );
+
+            expect(ref.current).toBeInstanceOf(HTMLSpanElement);
+            expect(ref.current?.textContent).toBe('*');
+        });
+
+        it('should render with a custom element via the `render` prop', () => {
+            const rendered = render(
+                <RadioGroup.Root required>
+                    <RadioGroup.Label>
+                        {LABEL_TEXT}
+                        <RadioGroup.RequiredSymbol render={<em data-testid="required" />} />
+                    </RadioGroup.Label>
+                </RadioGroup.Root>,
+            );
+            const symbol = rendered.getByTestId('required');
+
+            expect(symbol.tagName).toBe('EM');
+            expect(symbol.textContent).toBe('*');
+        });
     });
 });
 

@@ -27,7 +27,10 @@ type Story = StoryObj<typeof RadioGroup>;
 export const Default: Story = {
     render: (args) => (
         <RadioGroup.Root {...args} name="radio-group" defaultValue="3">
-            <RadioGroup.Label id="radio-group-label">Options</RadioGroup.Label>
+            <RadioGroup.Label id="radio-group-label">
+                Options
+                <RadioGroup.RequiredSymbol />
+            </RadioGroup.Label>
 
             <label
                 style={{
@@ -91,73 +94,87 @@ export const TestBed: Story = {
         <VStack $css={{ gap: '$400' }}>
             <HStack $css={{ gap: '$200', alignItems: 'center' }}>
                 <RadioGroup.Root {...args} defaultValue="radio-1">
-                    <RadioGroup.Label>Default</RadioGroup.Label>
+                    <RadioGroup.Label>
+                        Default
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
                     <Radio.Root value="radio-1" size="md" />
                     <Radio.Root value="radio-2" size="md" />
                 </RadioGroup.Root>
-                <RadioGroup.Root {...args} defaultValue="radio-4">
-                    <RadioGroup.Label>Disabled</RadioGroup.Label>
-                    <Radio.Root value="radio-4" size="md" disabled />
-                    <Radio.Root value="radio-5" size="md" disabled />
+                <RadioGroup.Root {...args} defaultValue="radio-4" disabled>
+                    <RadioGroup.Label>
+                        Disabled
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
+                    <Radio.Root value="radio-4" size="md" />
+                    <Radio.Root value="radio-5" size="md" />
                 </RadioGroup.Root>
-                <RadioGroup.Root {...args} defaultValue="radio-7">
-                    <RadioGroup.Label>Invalid</RadioGroup.Label>
-                    <Radio.Root value="radio-7" size="md" invalid />
-                    <Radio.Root value="radio-8" size="md" invalid />
+                <RadioGroup.Root {...args} defaultValue="radio-7" invalid>
+                    <RadioGroup.Label>
+                        Invalid
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
+                    <Radio.Root value="radio-7" size="md" />
+                    <Radio.Root value="radio-8" size="md" />
                 </RadioGroup.Root>
-                <RadioGroup.Root {...args} defaultValue="radio-10">
-                    <RadioGroup.Label>Required</RadioGroup.Label>
-                    <Radio.Root value="radio-10" size="md" required />
-                    <Radio.Root value="radio-11" size="md" required />
+                <RadioGroup.Root {...args} defaultValue="radio-10" required>
+                    <RadioGroup.Label>
+                        Required
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
+                    <Radio.Root value="radio-10" size="md" />
+                    <Radio.Root value="radio-11" size="md" />
                 </RadioGroup.Root>
-                <RadioGroup.Root {...args} defaultValue="radio-13">
-                    <RadioGroup.Label>ReadOnly</RadioGroup.Label>
-                    <Radio.Root value="radio-13" size="md" readOnly />
-                    <Radio.Root value="radio-14" size="md" readOnly />
+                <RadioGroup.Root {...args} defaultValue="radio-13" readOnly>
+                    <RadioGroup.Label>
+                        ReadOnly
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
+                    <Radio.Root value="radio-13" size="md" />
+                    <Radio.Root value="radio-14" size="md" />
                 </RadioGroup.Root>
             </HStack>
 
             <HStack $css={{ gap: '$200', alignItems: 'center' }}>
                 <RadioGroup.Root {...args} defaultValue="radio-1">
-                    <RadioGroup.Label>Default</RadioGroup.Label>
+                    <RadioGroup.Label>
+                        Default
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
                     <RadioCard value="radio-1">radio-1</RadioCard>
                     <RadioCard value="radio-2">radio-2</RadioCard>
                 </RadioGroup.Root>
-                <RadioGroup.Root {...args} defaultValue="radio-4">
-                    <RadioGroup.Label>Disabled</RadioGroup.Label>
-                    <RadioCard value="radio-4" disabled>
-                        radio-4
-                    </RadioCard>
-                    <RadioCard value="radio-5" disabled>
-                        radio-5
-                    </RadioCard>
+                <RadioGroup.Root {...args} defaultValue="radio-4" disabled>
+                    <RadioGroup.Label>
+                        Disabled
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
+                    <RadioCard value="radio-4">radio-4</RadioCard>
+                    <RadioCard value="radio-5">radio-5</RadioCard>
                 </RadioGroup.Root>
-                <RadioGroup.Root {...args} defaultValue="radio-7">
-                    <RadioGroup.Label>Invalid</RadioGroup.Label>
-                    <RadioCard value="radio-7" invalid>
-                        radio-7
-                    </RadioCard>
-                    <RadioCard value="radio-8" invalid>
-                        radio-8
-                    </RadioCard>
+                <RadioGroup.Root {...args} defaultValue="radio-7" invalid>
+                    <RadioGroup.Label>
+                        Invalid
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
+                    <RadioCard value="radio-7">radio-7</RadioCard>
+                    <RadioCard value="radio-8">radio-8</RadioCard>
                 </RadioGroup.Root>
-                <RadioGroup.Root {...args} defaultValue="radio-10">
-                    <RadioGroup.Label>Required</RadioGroup.Label>
-                    <RadioCard value="radio-10" required>
-                        radio-10
-                    </RadioCard>
-                    <RadioCard value="radio-11" required>
-                        radio-11
-                    </RadioCard>
+                <RadioGroup.Root {...args} defaultValue="radio-10" required>
+                    <RadioGroup.Label>
+                        Required
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
+                    <RadioCard value="radio-10">radio-10</RadioCard>
+                    <RadioCard value="radio-11">radio-11</RadioCard>
                 </RadioGroup.Root>
-                <RadioGroup.Root {...args} defaultValue="radio-13">
-                    <RadioGroup.Label>ReadOnly</RadioGroup.Label>
-                    <RadioCard value="radio-13" readOnly>
-                        radio-13
-                    </RadioCard>
-                    <RadioCard value="radio-14" readOnly>
-                        radio-14
-                    </RadioCard>
+                <RadioGroup.Root {...args} defaultValue="radio-13" readOnly>
+                    <RadioGroup.Label>
+                        ReadOnly
+                        <RadioGroup.RequiredSymbol />
+                    </RadioGroup.Label>
+                    <RadioCard value="radio-13">radio-13</RadioCard>
+                    <RadioCard value="radio-14">radio-14</RadioCard>
                 </RadioGroup.Root>
             </HStack>
         </VStack>
