@@ -4,6 +4,7 @@ import type { ComponentProps } from 'react';
 import { forwardRef } from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
@@ -14,6 +15,7 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+import { useFieldContext } from '../field';
 import type { RootVariants } from './checkbox.css';
 import * as styles from './checkbox.css';
 
@@ -39,6 +41,15 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
     ]);
 
     const { size, invalid, indeterminate } = variantProps;
+    const { required } = otherProps;
+
+    const { setRequired } = useFieldContext();
+
+    useIsoLayoutEffect(() => {
+        setRequired(!!required);
+
+        return () => setRequired(false);
+    }, [required, setRequired]);
 
     const childrenRender = createRender(childrenProp, <CheckboxIndicatorPrimitive />);
     const children = useRenderElement({
