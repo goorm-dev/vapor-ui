@@ -110,6 +110,19 @@ export namespace DialogRoot {
 
 Prop type naming follows the local module pattern — preserve `Button.Props`, `DialogRoot.Props`, or direct names like `PaginationRootProps` as they already exist. Do not force a single convention.
 
+When a prop is combined with an internal value (context, state) before being passed down, rename it with a `Prop` suffix on destructure and compute the result in a named variable above the JSX. Keep the JSX attribute a plain reference:
+
+```tsx
+const { disabled: disabledProp, ...componentProps } = resolveStyles(props);
+const { disabled: contextDisabled } = useMenuContext();
+
+const disabled = disabledProp || contextDisabled;
+
+return <BaseMenu.Trigger ref={ref} disabled={disabled} {...componentProps} />;
+```
+
+Do not inline the merge expression in the JSX attribute (`disabled={disabledProp || contextDisabled}`).
+
 - Avoid `React.FC`.
 - Do not use `defaultProps` on function components — use parameter defaults instead.
 - When a function has 3+ parameters, prefer an object parameter.
