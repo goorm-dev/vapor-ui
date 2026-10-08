@@ -117,6 +117,7 @@ export const RadioGroupRequiredSymbol = forwardRef<HTMLSpanElement, RadioGroupRe
             enabled: !!required,
             defaultTagName: 'span',
             props: {
+                'aria-hidden': true,
                 className: cn(styles.requiredSymbol, className),
                 children,
                 ...componentProps,
