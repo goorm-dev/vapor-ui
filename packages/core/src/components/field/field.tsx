@@ -1,9 +1,11 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useCallback, useMemo, useState } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
 
+import { useRenderElement } from '~/hooks/use-render-element';
+import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -11,14 +13,46 @@ import type { VaporUIComponentProps } from '~/utils/types';
 import type { LabelVariants } from './field.css';
 import * as styles from './field.css';
 
+type FieldContext = {
+    required: boolean;
+    setRequired: (required: boolean) => void;
+};
+
+const defaultContext: FieldContext = {
+    required: false,
+    setRequired: () => {},
+};
+
+export const [FieldProvider, useFieldContext] = createContext<FieldContext>({
+    name: 'Field',
+    hookName: 'useFieldContext',
+    providerName: 'FieldProvider',
+    defaultValue: defaultContext,
+});
+
 /* -------------------------------------------------------------------------------------------------
- * Field
+ * Field.Root
  * -----------------------------------------------------------------------------------------------*/
 
 export const FieldRoot = forwardRef<HTMLDivElement, FieldRoot.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { className, ...otherProps } = resolveStyles(props);
 
-    return <BaseField.Root ref={ref} className={cn(styles.root, className)} {...componentProps} />;
+    const [required, setRequiredState] = useState(false);
+
+    const setRequired = useCallback((next: boolean) => {
+        setRequiredState(next);
+    }, []);
+
+    const contextValue = useMemo<FieldContext>(
+        () => ({ required, setRequired }),
+        [required, setRequired],
+    );
+
+    return (
+        <FieldProvider value={contextValue}>
+            <BaseField.Root ref={ref} className={cn(styles.root, className)} {...otherProps} />
+        </FieldProvider>
+    );
 });
 
 FieldRoot.displayName = 'Field.Root';
@@ -39,6 +73,38 @@ export const FieldLabel = forwardRef<HTMLElement, FieldLabel.Props>((props, ref)
     );
 });
 FieldLabel.displayName = 'Field.Label';
+
+/* -------------------------------------------------------------------------------------------------
+ * Field.RequiredSymbol
+ * -----------------------------------------------------------------------------------------------*/
+
+export const FieldRequiredSymbol = forwardRef<HTMLSpanElement, FieldRequiredSymbol.Props>(
+    (props, ref) => {
+        const {
+            render,
+            className,
+            children: childrenProp,
+            ...componentProps
+        } = resolveStyles(props);
+
+        const { required } = useFieldContext();
+        const children = childrenProp || '*';
+
+        return useRenderElement({
+            ref,
+            render,
+            enabled: required,
+            defaultTagName: 'span',
+            props: {
+                'aria-hidden': true,
+                className: cn(styles.requiredSymbol, className),
+                children,
+                ...componentProps,
+            },
+        });
+    },
+);
+FieldRequiredSymbol.displayName = 'Field.RequiredSymbol';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Description
@@ -117,6 +183,11 @@ export namespace FieldRoot {
 export namespace FieldLabel {
     export type State = BaseField.Label.State;
     export type Props = VaporUIComponentProps<typeof BaseField.Label, State> & LabelVariants;
+}
+
+export namespace FieldRequiredSymbol {
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }
 
 export namespace FieldDescription {

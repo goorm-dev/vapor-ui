@@ -39,6 +39,24 @@ const meta: Meta<FieldStoryArgs> = {
 };
 
 export default meta;
+
+export const Default: Story = {
+    render: (args) => {
+        return (
+            <>
+                <Field.Root validationMode="onChange">
+                    <Field.Label>
+                        Label <Field.RequiredSymbol />
+                    </Field.Label>
+                    <TextInput required={args.required} />
+                    <Field.Error match="valueMissing">이 필드는 필수입니다.</Field.Error>
+                    <Field.Success>✓ 올바른 이름 형식입니다</Field.Success>
+                </Field.Root>
+            </>
+        );
+    },
+};
+
 type Story = StoryObj<FieldStoryArgs>;
 
 const submitForm = async (event: SubmitEvent<HTMLFormElement>) => {
@@ -86,6 +104,7 @@ export const TestBed: Story = {
                         <Field.Label $css={{ alignItems: 'center' }}>
                             <Checkbox.Root />
                             멘토님 강연 능력
+                            <Field.RequiredSymbol />
                         </Field.Label>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
                         <Field.Success
@@ -107,6 +126,7 @@ export const TestBed: Story = {
                         <Field.Label $css={{ alignItems: 'center' }}>
                             <Checkbox.Root required />
                             멘토님 강연 능력
+                            <Field.RequiredSymbol />
                         </Field.Label>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
                         <Field.Success match>✓ 강의 평가가 완료되었습니다</Field.Success>
@@ -117,6 +137,7 @@ export const TestBed: Story = {
                         <Field.Label $css={{ alignItems: 'center' }}>
                             서비스 메일 수신 동의 - required
                             <Switch.Root required />
+                            <Field.RequiredSymbol />
                         </Field.Label>
                         <Field.Description>
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
@@ -129,6 +150,7 @@ export const TestBed: Story = {
                         <Field.Label $css={{ alignItems: 'center' }}>
                             이벤트성 광고 수신 동의 - non required
                             <Switch.Root />
+                            <Field.RequiredSymbol />
                         </Field.Label>
                         <Field.Description>
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
@@ -142,7 +164,10 @@ export const TestBed: Story = {
                         render={<RadioGroup.Root required />}
                         {...fieldArgs}
                     >
-                        <Field.Label>성별 선택</Field.Label>
+                        <RadioGroup.Label>
+                            성별 선택
+                            <Field.RequiredSymbol />
+                        </RadioGroup.Label>
                         <Flex $css={{ flexDirection: 'column', gap: '$100' }}>
                             <Field.Item>
                                 <Radio.Root value="male" />
@@ -166,10 +191,12 @@ export const TestBed: Story = {
                     <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
                         <Field.Label nativeLabel={false} render={<Text typography="subtitle2" />}>
                             이름
+                            <Field.RequiredSymbol />
                         </Field.Label>
                         <TextInput required />
                         <Field.Description>
                             계정 생성을 위해 유효한 이름을 입력해주세요
+                            <Field.RequiredSymbol />
                         </Field.Description>
                         <Field.Error match="valueMissing">이 필드는 필수입니다.</Field.Error>
                         <Field.Success match>✓ 올바른 이름 형식입니다</Field.Success>
