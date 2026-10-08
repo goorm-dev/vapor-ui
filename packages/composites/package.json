@@ -61,7 +61,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@base-ui/utils": "^0.3.2",
+        "@base-ui/utils": "^0.4.0",
         "@vapor-ui/icons": "workspace:^",
         "clsx": "^2.1.1"
     },
