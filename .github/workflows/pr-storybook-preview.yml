@@ -68,7 +68,17 @@ jobs:
             - name: Upload Storybook to S3
               run: |
                   aws s3 rm s3://${{ env.BUCKET_NAME }}/${{ env.PREVIEW_PATH }} --recursive
-                  aws s3 cp './apps/storybook/storybook-static/' s3://${{ env.BUCKET_NAME }}/${{ env.PREVIEW_PATH }} --recursive
+                  aws s3 cp './apps/storybook/storybook-static/' s3://${{ env.BUCKET_NAME }}/${{ env.PREVIEW_PATH }} \
+                    --recursive \
+                    --cache-control "public, max-age=31536000, immutable" \
+                    --exclude "*.html" \
+                    --exclude "*.json"
+                  aws s3 cp './apps/storybook/storybook-static/' s3://${{ env.BUCKET_NAME }}/${{ env.PREVIEW_PATH }} \
+                    --recursive \
+                    --cache-control "no-cache, must-revalidate" \
+                    --exclude "*" \
+                    --include "*.html" \
+                    --include "*.json"
 
             - name: Resolve commit SHA
               id: sha
