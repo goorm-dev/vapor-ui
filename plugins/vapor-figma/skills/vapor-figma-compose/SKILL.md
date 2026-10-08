@@ -25,16 +25,11 @@ description: Vapor core 라이브러리(Figma 팀 라이브러리 "Vapor Design 
 | [V2.0] [Goorm theme] Foundation | 색·간격 변수, Text Style                                       | `lk-7886ae01051a0e537a8f7f12d057999c77db2a7d267f3a7d323c5dbac9ae8b58ebcbd7a976b384e4c819a61d82abee32c4a00057c97aac10aea9d6f209451791` |
 | Icon [goorm]                    | 아이콘 (Community 라이브러리의 같은 이름 아이콘은 쓰지 않는다) | `lk-929890530de6c44edcef6f532f68a16cff0c3147d3f42b54f38e55bc925a5b270f096eb2f7b9284b7e10e9f80bf4819bd9aa6f03c5bf496c8473dbb083175d47` |
 
-## 맥락은 네 곳에서 온다
+## references는 지도다
 
-| 출처                          | 무엇을 얻나                                                                                          | 언제                                                                                       |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| **A. 이 스킬의 references**   | key, 구조 경로(라벨이 어느 레이어에 있나), swap 대상, 알려진 버그와 우회법, Guidelines·do/don't 요약 | 쓸 컴포넌트마다 `references/components/<name>.md`를 읽는다                                 |
-| **B. 라이브러리 실시간 읽기** | variant 값, 속성 이름의 `#…` ID 접미사, 컴포넌트 `description`                                       | 조립 직전, `use_figma`로 읽는다 (아래 코드)                                                |
-| **C. 토큰**                   | 색 변수, Text Style                                                                                  | `search_design_system`. **반드시 `[V2.0] [Goorm theme] Foundation` 라이브러리로 한정**한다 |
-| **D. 대상 파일**              | 기존 화면, 레이아웃, 이미 쓰인 컴포넌트                                                              | `get_metadata` · `get_screenshot`                                                          |
+`references/components/<name>.md`에는 key, 구조 경로(라벨이 어느 레이어에 있나), swap 대상, 알려진 버그와 우회법, Guidelines·do/don't 요약이 있다. 쓸 컴포넌트마다 읽는다.
 
-속성 이름과 값은 references에 적힌 것을 믿지 말고 **B로 실시간으로 읽는다.** 라이브러리는 계속 바뀐다. references는 "어디를 봐야 하는지"를 알려주는 지도다.
+속성 이름과 값은 references에 적힌 것을 믿지 말고 조립 직전 라이브러리에서 실시간으로 읽는다(워크플로우 4). 라이브러리는 계속 바뀐다.
 
 ## 워크플로우
 
@@ -42,8 +37,10 @@ description: Vapor core 라이브러리(Figma 팀 라이브러리 "Vapor Design 
 2. **Guidelines·Usecase를 대조한다.** 각 컴포넌트 파일의 `## Guidelines`와 `## Usecase`를 요청과 대조한다.
     - 요청이 **정하지 않은 부분**은 가이드를 따른다(예: 취소 버튼이 있으면 Header close 아이콘을 끈다, 위험한 확인 버튼은 danger).
     - 요청이 **명시한 것**(컴포넌트 종류, 문구, 개수)이 가이드와 충돌하면 요청대로 만들고, 보고의 "가이드 대조"에 충돌과 대안을 적는다. 디자이너가 쓴 문구를 임의로 고치지 않는다.
-3. **어긋남을 점검한다.** 쓸 컴포넌트를 `search_design_system`(core 라이브러리 키로 한정)으로 조회해 `updatedAt`을 본다. 컴포넌트 파일의 `reviewedAt`보다 새로우면 "references가 오래됐을 수 있음"을 보고에 적고, B로 읽은 실제 구조를 우선한다.
-4. **실시간으로 읽는다** (B). 쓸 컴포넌트의 속성 정의를 한 번의 `use_figma`로 읽는다. 중첩 구조(어느 레이어에 무엇이 있나)는 import한 component에서는 비어 보일 수 있다 — **임시 instance를 만들어 읽고 지운다.**
+3. **어긋남을 점검한다.** 쓸 컴포넌트를 `search_design_system`(core 라이브러리 키로 한정)으로 조회해 `updatedAt`을 본다. 컴포넌트 파일의 `reviewedAt`보다 새로우면 "references가 오래됐을 수 있음"을 보고에 적고, 실시간으로 읽은 실제 구조를 우선한다.
+4. **실시간으로 읽는다.** 쓸 컴포넌트마다 두 가지를 읽는다. references와 다르면 여기서 읽은 것을 따른다.
+    - **속성 정의** — 컴포넌트가 밖으로 노출한 variant·boolean·text·swap 속성의 이름과 값. import한 component(set)의 `componentPropertyDefinitions`로 읽는다(아래 코드). 모든 컴포넌트를 `use_figma` 한 번에 읽는다.
+    - **내부 레이어 트리** — 컴포넌트 안에 어떤 레이어·중첩 instance가 어떤 순서로 있고, 라벨 텍스트와 속성이 어느 레이어에 연결되는지(예: Dialog Header가 `close=true`면 제목은 바깥 속성이 아니라 안쪽 중첩 🟨Dialog.Header instance의 `Text#…`에 연결된다). 속성 정의만으로는 알 수 없다. import한 component의 `children`은 비어 있거나 덜 보일 수 있으니, **임시 instance를 만들어 `findAll`과 중첩 instance의 `componentProperties`로 읽은 뒤 `remove()`한다.** 디자이너 파일에 프로브용 instance를 남기지 않는다.
 5. **조립한다.** 아래 "보존 사다리" 순서로만 편집한다.
 6. **검수한다.** 아래 검수 코드를 돌리고, 스크린샷을 1회 찍어 눈으로 확인한다. raw 색이 의심되면 `token-usage-review` 스킬로 넘긴다.
 7. **보고한다.** 아래 보고 형식대로.
@@ -99,7 +96,7 @@ for (const [name, [kind, key]] of Object.entries(KEYS)) {
     const owner = node.type === 'COMPONENT' && node.parent?.type === 'COMPONENT_SET' ? node.parent : node;
     const props = {};
     for (const [p, d] of Object.entries(owner.componentPropertyDefinitions)) {
-        props[JSON.stringify(p)] = { type: d.type, default: d.defaultValue, values: d.variantOptions?.map((v) => JSON.stringify(v)) };
+        props[JSON.stringify(p)] = { type: d.type, default: d.defaultValue, values: d.variantOptions?.map((v) => JSON.stringify(v)), preferred: d.preferredValues };
     }
     out[name] = { name: owner.name, description: owner.description, props };
 }
