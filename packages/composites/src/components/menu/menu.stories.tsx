@@ -54,6 +54,12 @@ export const Default: Story = {
                         trailing={<Kbd>⌥ ⌘ K</Kbd>}
                         onClick={() => alert('clicked item 2')}
                     />
+                    <Menu.Item
+                        label="item 3"
+                        description="item 3을 실행합니다."
+                        trailing={<Kbd>⌘ K</Kbd>}
+                        onClick={() => alert('clicked item 3')}
+                    />
 
                     <Menu.Root trigger={<Menu.SubmenuItem label="Submenu Item" />}>
                         <Menu.CheckGroup
@@ -73,16 +79,19 @@ export const Default: Story = {
                         <Menu.Item
                             leading={<HeartIcon />}
                             label="item 1"
+                            description="item 1을 실행합니다."
                             onClick={() => alert('clicked item 1')}
                         />
                         <Menu.Item
                             leading={<HeartIcon />}
                             label="item 2"
+                            description="item 2을 실행합니다."
                             onClick={() => alert('clicked item 2')}
                         />
                         <Menu.Item
                             leading={<HeartIcon />}
                             label="item 3"
+                            description="item 3을 실행합니다."
                             trailing={<ChevronDoubleRightOutlineIcon />}
                             variant="critical"
                             onClick={() => alert('clicked item 3')}
