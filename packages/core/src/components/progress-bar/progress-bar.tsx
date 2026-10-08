@@ -99,6 +99,9 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
         }
     }, [min, max, ariaLabel, ariaLabelledBy]);
 
+    // Appended, never replaced: a description the consumer wired up and ours both apply.
+    const describedBy = [ariaDescribedBy, ...descriptionIds].filter(Boolean).join(' ') || undefined;
+
     return (
         <ProgressBarProvider value={contextValue}>
             <BaseProgress.Root
@@ -107,10 +110,7 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
                 min={min}
                 max={max}
                 getAriaValueText={getAriaValueText ?? OMIT_ARIA_VALUE_TEXT}
-                // Appended, never replaced: a description the consumer wired up and ours both apply.
-                aria-describedby={
-                    [ariaDescribedBy, ...descriptionIds].filter(Boolean).join(' ') || undefined
-                }
+                aria-describedby={describedBy}
                 className={cn(styles.root, className)}
                 {...componentProps}
             >
