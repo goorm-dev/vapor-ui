@@ -45,6 +45,144 @@ describe('Field', () => {
         });
     });
 
+    describe('Field.RequiredSymbol', () => {
+        it('should not render when no required form control exists', () => {
+            const rendered = render(
+                <Field.Root name="test-field">
+                    <Field.Label htmlFor="input">
+                        Name <Field.RequiredSymbol data-testid="symbol" />
+                    </Field.Label>
+                    <TextInput id="input" />
+                </Field.Root>,
+            );
+
+            expect(rendered.queryByTestId('symbol')).not.toBeInTheDocument();
+        });
+
+        it('should render when a required TextInput is mounted', () => {
+            const rendered = render(
+                <Field.Root name="test-field">
+                    <Field.Label htmlFor="input">
+                        Name <Field.RequiredSymbol data-testid="symbol" />
+                    </Field.Label>
+                    <TextInput id="input" required />
+                </Field.Root>,
+            );
+
+            const symbol = rendered.getByTestId('symbol');
+            expect(symbol).toBeInTheDocument();
+            expect(symbol).toHaveTextContent('*');
+            expect(symbol).toHaveAttribute('aria-hidden', 'true');
+        });
+
+        it('should hide symbol when required prop toggles to false', () => {
+            const { rerender, queryByTestId } = render(
+                <Field.Root name="test-field">
+                    <Field.Label htmlFor="input">
+                        Name <Field.RequiredSymbol data-testid="symbol" />
+                    </Field.Label>
+                    <TextInput id="input" required />
+                </Field.Root>,
+            );
+            expect(queryByTestId('symbol')).toBeInTheDocument();
+
+            rerender(
+                <Field.Root name="test-field">
+                    <Field.Label htmlFor="input">
+                        Name <Field.RequiredSymbol data-testid="symbol" />
+                    </Field.Label>
+                    <TextInput id="input" />
+                </Field.Root>,
+            );
+            expect(queryByTestId('symbol')).not.toBeInTheDocument();
+        });
+
+        it('should render when a required Checkbox is mounted', () => {
+            const rendered = render(
+                <Field.Root name="agreement">
+                    <Field.Label>
+                        Terms <Field.RequiredSymbol data-testid="symbol" />
+                    </Field.Label>
+                    <Checkbox.Root required />
+                </Field.Root>,
+            );
+            expect(rendered.getByTestId('symbol')).toBeInTheDocument();
+        });
+
+        it('should render when a required Switch is mounted', () => {
+            const rendered = render(
+                <Field.Root name="notifications">
+                    <Field.Label>
+                        Notifications <Field.RequiredSymbol data-testid="symbol" />
+                    </Field.Label>
+                    <Switch.Root required />
+                </Field.Root>,
+            );
+            expect(rendered.getByTestId('symbol')).toBeInTheDocument();
+        });
+
+        it('should render when a required RadioGroup is mounted', () => {
+            const rendered = render(
+                <Field.Root name="gender">
+                    <Field.Label>
+                        Gender <Field.RequiredSymbol data-testid="symbol" />
+                    </Field.Label>
+                    <RadioGroup.Root required name="gender">
+                        <Field.Item>
+                            <Radio.Root value="a" />
+                            <Field.Label>A</Field.Label>
+                        </Field.Item>
+                    </RadioGroup.Root>
+                </Field.Root>,
+            );
+            expect(rendered.getByTestId('symbol')).toBeInTheDocument();
+        });
+
+        it('should keep multiple RequiredSymbol instances in sync', () => {
+            const rendered = render(
+                <Field.Root name="test-field">
+                    <Field.Label>
+                        Name <Field.RequiredSymbol data-testid="symbol-a" />
+                    </Field.Label>
+                    <TextInput required />
+                    <Field.Description>
+                        <Field.RequiredSymbol data-testid="symbol-b" /> 필수 입력
+                    </Field.Description>
+                </Field.Root>,
+            );
+
+            expect(rendered.getByTestId('symbol-a')).toBeInTheDocument();
+            expect(rendered.getByTestId('symbol-b')).toBeInTheDocument();
+        });
+
+        it('should render custom children instead of default "*"', () => {
+            const rendered = render(
+                <Field.Root name="test-field">
+                    <Field.Label>
+                        Name{' '}
+                        <Field.RequiredSymbol data-testid="symbol">(required)</Field.RequiredSymbol>
+                    </Field.Label>
+                    <TextInput required />
+                </Field.Root>,
+            );
+
+            expect(rendered.getByTestId('symbol')).toHaveTextContent('(required)');
+        });
+
+        it('should have no a11y violations when symbol is rendered', async () => {
+            const rendered = render(
+                <Field.Root name="test-field">
+                    <Field.Label htmlFor="input">
+                        Email <Field.RequiredSymbol />
+                    </Field.Label>
+                    <TextInput id="input" required />
+                </Field.Root>,
+            );
+            const result = await axe(rendered.container);
+            expect(result).toHaveNoViolations();
+        });
+    });
+
     describe('Field with Checkbox integration', () => {
         it('should have no a11y violations', async () => {
             const rendered = render(<FieldWithCheckboxTest />);
