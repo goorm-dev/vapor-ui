@@ -24,20 +24,15 @@ const RegressionRoot = ({ children }: { children: ReactNode }) => {
 
 const portalResetStyles = `
 .regression-cell [data-slots$=".Portal"] {
-    position: static !important;
     display: contents !important;
 }
 .regression-cell [data-slots$=".Positioner"] {
-    position: static !important;
-    inset: auto !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: none !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    box-sizing: border-box !important;
+    opacity: 100% !important;
+}
+.regression-cell [data-slots$=".Positioner"]:has(> [data-slots$=".Popup"]) {
+    position: unset !important;
+    inset: unset !important;
+    transform: unset !important;
 }
 `;
 
@@ -161,13 +156,13 @@ const RegressionRender = ({
                     position: 'relative',
                     display: 'flex',
                     justifyContent: 'flex-start',
-                    width: '100%',
-                    minWidth: 0,
+                    alignItems: 'flex-start',
+                    width: 'max-content',
+                    minWidth: '100%',
                     minHeight: '320px',
                     padding: '16px',
                     boxSizing: 'border-box',
                     transform: 'translateZ(0)',
-                    overflow: 'hidden',
                 }}
             >
                 {children}
