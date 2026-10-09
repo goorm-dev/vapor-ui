@@ -59,7 +59,7 @@ export const TooltipPositionerPrimitive = forwardRef<
     const {
         side = 'top',
         align = 'center',
-        sideOffset = 8,
+        sideOffset = 10,
         collisionAvoidance,
         ...componentProps
     } = resolveStyles(props);
