@@ -1,12 +1,12 @@
 'use client';
 
-import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement } from 'react';
+import { forwardRef } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
-import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
+import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
@@ -279,46 +279,13 @@ NavigationMenuPositionerPrimitive.displayName = 'NavigationMenu.PositionerPrimit
  * NavigationMenu.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-const DATA_SIDE = 'data-side';
-const DATA_ALIGN = 'data-align';
-
 export const NavigationMenuPopupPrimitive = forwardRef<
     HTMLElement,
     NavigationMenuPopupPrimitive.Props
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
-    const [side, setSide] = useState<NavigationMenuPositionerPrimitive.Props['side']>();
-    const [align, setAlign] = useState<NavigationMenuPositionerPrimitive.Props['align']>();
-
-    const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
-
-    const popupRef = useRef<HTMLDivElement>(null);
+    const { popupRef, arrowRef, position } = useArrowPosition();
     const composedRef = composeRefs(popupRef, ref);
-
-    useEffect(() => {
-        if (!popupRef.current) return;
-
-        const dataset = popupRef.current.dataset;
-        const { side: initialSide, align: initialAlign } = extractPositions(dataset);
-
-        if (initialSide) setSide(initialSide);
-        if (initialAlign) setAlign(initialAlign);
-    }, []);
-
-    const arrowRef = useMutationObserverRef<HTMLDivElement>({
-        callback: (mutations) => {
-            mutations.forEach((mutation) => {
-                const { attributeName, target: mutationTarget } = mutation;
-
-                const dataset = (mutationTarget as HTMLElement).dataset;
-                const { side: nextSide, align: nextAlign } = extractPositions(dataset);
-
-                if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
-                if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
-            });
-        },
-        options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
-    });
 
     return (
         <BaseNavigationMenu.Popup
@@ -335,38 +302,6 @@ export const NavigationMenuPopupPrimitive = forwardRef<
     );
 });
 NavigationMenuPopupPrimitive.displayName = 'NavigationMenu.PopupPrimitive';
-
-const extractPositions = (dataset: DOMStringMap) => {
-    const currentSide = dataset.side as NavigationMenuPositionerPrimitive.Props['side'];
-    const currentAlign = dataset.align as NavigationMenuPositionerPrimitive.Props['align'];
-    return { side: currentSide, align: currentAlign };
-};
-
-/* -----------------------------------------------------------------------------------------------*/
-
-type ArrowPositionProps = Pick<NavigationMenuPositionerPrimitive.Props, 'side' | 'align'> & {
-    offset?: number;
-};
-
-const getArrowPosition = ({
-    side = 'top',
-    align = 'center',
-    offset = 12,
-}: ArrowPositionProps): CSSProperties => {
-    const positionMap = {
-        'top-start': { left: offset, right: 'unset' },
-        'top-end': { left: 'unset', right: offset },
-        'bottom-start': { left: offset, right: 'unset' },
-        'bottom-end': { left: 'unset', right: offset },
-        'left-start': { top: offset, bottom: 'unset' },
-        'left-end': { top: 'unset', bottom: offset },
-        'right-start': { top: offset, bottom: 'unset' },
-        'right-end': { top: 'unset', bottom: offset },
-    };
-
-    const key = `${side}-${align}` as keyof typeof positionMap;
-    return positionMap[key] || {};
-};
 
 /* -----------------------------------------------------------------------------------------------*/
 

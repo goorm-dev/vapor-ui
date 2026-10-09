@@ -1,11 +1,11 @@
 'use client';
 
-import type { CSSProperties, ComponentProps, ReactElement } from 'react';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import type { ComponentProps, ReactElement } from 'react';
+import { forwardRef } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
-import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
+import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
@@ -81,53 +81,13 @@ TooltipPositionerPrimitive.displayName = 'Tooltip.PositionerPrimitive';
  * Tooltip.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-const DATA_SIDE = 'data-side';
-const DATA_ALIGN = 'data-align';
-
 export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrimitive.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
-
-        const [side, setSide] = useState<TooltipPositionerPrimitive.Props['side']>('bottom');
-        const [align, setAlign] = useState<TooltipPositionerPrimitive.Props['align']>('center');
-
-        const position = useMemo(
-            () =>
-                getArrowPosition({
-                    side,
-                    align,
-                    offset: side === 'top' || side === 'bottom' ? 12 : 6,
-                }),
-            [side, align],
-        );
-
-        const popupRef = useRef<HTMLDivElement>(null);
-        const composedRef = composeRefs(popupRef, ref);
-
-        useEffect(() => {
-            if (!popupRef.current) return;
-
-            const dataset = popupRef.current.dataset;
-            const { side: initialSide, align: initialAlign } = extractPositions(dataset);
-
-            if (initialSide) setSide(initialSide);
-            if (initialAlign) setAlign(initialAlign);
-        }, []);
-
-        const arrowRef = useMutationObserverRef<HTMLDivElement>({
-            callback: (mutations) => {
-                mutations.forEach((mutation) => {
-                    const { attributeName, target: mutationTarget } = mutation;
-
-                    const dataset = (mutationTarget as HTMLElement).dataset;
-                    const { side: nextSide, align: nextAlign } = extractPositions(dataset);
-
-                    if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
-                    if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
-                });
-            },
-            options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
+        const { popupRef, arrowRef, position } = useArrowPosition({
+            offset: (side) => (side === 'top' || side === 'bottom' ? 12 : 6),
         });
+        const composedRef = composeRefs(popupRef, ref);
 
         return (
             <BaseTooltip.Popup
@@ -145,20 +105,6 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
     },
 );
 TooltipPopupPrimitive.displayName = 'Tooltip.PopupPrimitive';
-
-const extractPositions = (dataset: DOMStringMap) => {
-    const currentSide = dataset.side as VaporUIComponentProps<
-        typeof BaseTooltip.Positioner,
-        BaseTooltip.Positioner.State
-    >['side'];
-
-    const currentAlign = dataset.align as VaporUIComponentProps<
-        typeof BaseTooltip.Positioner,
-        BaseTooltip.Positioner.State
-    >['align'];
-
-    return { side: currentSide, align: currentAlign };
-};
 
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Popup
@@ -184,35 +130,6 @@ export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     },
 );
 TooltipPopup.displayName = 'Tooltip.Popup';
-
-/* -----------------------------------------------------------------------------------------------*/
-
-type ArrowPositionProps = Pick<
-    VaporUIComponentProps<typeof BaseTooltip.Positioner, BaseTooltip.Positioner.State>,
-    'side' | 'align'
-> & {
-    offset?: number;
-};
-
-const getArrowPosition = ({
-    side = 'top',
-    align = 'center',
-    offset = 12,
-}: ArrowPositionProps): CSSProperties => {
-    const positionMap = {
-        'top-start': { left: offset, right: 'unset' },
-        'top-end': { left: 'unset', right: offset },
-        'bottom-start': { left: offset, right: 'unset' },
-        'bottom-end': { left: 'unset', right: offset },
-        'left-start': { top: offset, bottom: 'unset' },
-        'left-end': { top: 'unset', bottom: offset },
-        'right-start': { top: offset, bottom: 'unset' },
-        'right-end': { top: 'unset', bottom: offset },
-    };
-
-    const key = `${side}-${align}` as keyof typeof positionMap;
-    return positionMap[key] || {};
-};
 
 /* -----------------------------------------------------------------------------------------------*/
 
