@@ -255,7 +255,7 @@ export const NavigationMenuPositionerPrimitive = forwardRef<
     const {
         side = 'bottom',
         align = 'center',
-        sideOffset = 8,
+        sideOffset = 10,
         collisionAvoidance,
         className,
         ...componentProps
