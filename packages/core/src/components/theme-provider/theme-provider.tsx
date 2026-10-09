@@ -1,5 +1,8 @@
 'use client';
 
+import '~/styles/variables.css';
+import '~/styles/themes.css';
+
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 /* -------------------------------------------------------------------------------------------------

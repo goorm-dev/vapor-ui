@@ -35,7 +35,7 @@ export default function Sort() {
                     const status = getValue<string>();
 
                     return (
-                        <Badge color={activeness[status]} shape="pill">
+                        <Badge colorPalette={activeness[status]} shape="pill">
                             {status.toUpperCase()}
                         </Badge>
                     );
@@ -99,7 +99,7 @@ export default function Sort() {
                                                 variant="ghost"
                                                 size="sm"
                                                 onClick={header.column.getToggleSortingHandler()}
-                                                color="secondary"
+                                                colorPalette="secondary"
                                             >
                                                 <ControlCommonIcon />
                                             </IconButton>
@@ -154,7 +154,7 @@ const datas: Data[] = [
     { name: 'Lucas Park', status: 'active', role: 'developer', 'last-active': '1 hour ago' },
 ];
 
-const activeness: Record<string, Badge.Props['color']> = {
+const activeness: Record<string, Badge.Props['colorPalette']> = {
     active: 'success',
     inactive: 'hint',
 };

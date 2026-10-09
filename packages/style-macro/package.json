@@ -1,0 +1,82 @@
+{
+    "name": "@vapor-ui/style-macro",
+    "version": "0.1.0",
+    "description": "Build-time atomic CSS-in-JS macro.",
+    "license": "MIT",
+    "sideEffects": false,
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            },
+            "require": {
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
+        },
+        "./*": {
+            "import": {
+                "types": "./dist/plugins/*.d.mts",
+                "default": "./dist/plugins/*.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/*.d.cts",
+                "default": "./dist/plugins/*.cjs"
+            }
+        },
+        "./__runtime__": {
+            "import": {
+                "types": "./dist/runtime.d.mts",
+                "default": "./dist/runtime.mjs"
+            },
+            "require": {
+                "types": "./dist/runtime.d.cts",
+                "default": "./dist/runtime.cjs"
+            }
+        },
+        "./package.json": "./package.json"
+    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "bench": "vitest bench --run",
+        "build": "tsdown",
+        "clean": "rimraf dist node_modules .turbo",
+        "lint": "eslint ./src",
+        "test": "vitest --run",
+        "test:watch": "vitest",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@babel/code-frame": "^7.29.7",
+        "csstype": "^3.2.3",
+        "magic-string": "^0.30.21",
+        "oxc-parser": "^0.138.0",
+        "unplugin": "^3.3.0"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@rollup/plugin-node-resolve": "^16.0.3",
+        "@rollup/plugin-typescript": "^11.1.6",
+        "@types/babel__code-frame": "^7.27.0",
+        "@types/node": "^20.19.43",
+        "eslint": "catalog:",
+        "rimraf": "^6.1.3",
+        "rollup": "^4.62.2",
+        "tsdown": "^0.22.8",
+        "tsup": "^8.5.1",
+        "typescript": "catalog:",
+        "vite": "^7.3.6",
+        "vitest": "^3.2.6"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
