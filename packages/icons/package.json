@@ -52,7 +52,7 @@
         "clsx": "^2.1.1"
     },
     "devDependencies": {
-        "@figma/code-connect": "^2.0.0",
+        "@figma/code-connect": "^2.0.1",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/react": "catalog:",
