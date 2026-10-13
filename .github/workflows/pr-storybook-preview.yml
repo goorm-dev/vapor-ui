@@ -1,4 +1,4 @@
-name: "Storybook Preview"
+name: 'Storybook Preview'
 
 on:
     pull_request:
@@ -44,8 +44,7 @@ jobs:
               with:
                   apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-                  workingDirectory: "apps/storybook"
-                  command: pages deploy storybook-static --project-name=${{ env.CF_PAGES_PROJECT_NAME }} --branch=pr-${{ github.event.pull_request.number }}
+                  command: pages deploy apps/storybook/storybook-static --project-name=${{ env.CF_PAGES_PROJECT_NAME }} --branch=pr-${{ github.event.pull_request.number }}
 
             - name: Resolve commit SHA
               id: sha

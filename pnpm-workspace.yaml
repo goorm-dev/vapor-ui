@@ -11,6 +11,7 @@ allowBuilds:
     esbuild: true
     sharp: true
     unrs-resolver: true
+    workerd: true
 
 # Unified React 19 for entire monorepo
 # Libraries (packages/*) maintain peerDependencies for React 17/18/19 compatibility
