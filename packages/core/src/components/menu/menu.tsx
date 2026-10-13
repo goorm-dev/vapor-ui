@@ -283,7 +283,7 @@ export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Prop
 
         const positionerRender = createRender(
             positionerElement,
-            <MenuPositionerPrimitive side="right" sideOffset={0} />,
+            <MenuPositionerPrimitive side="right" sideOffset={12} />,
         );
         const positioner = useRenderElement({
             render: positionerRender,
