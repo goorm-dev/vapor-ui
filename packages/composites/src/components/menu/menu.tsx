@@ -107,7 +107,7 @@ const Submenu = ({
             <submenuSlots.trigger render={trigger} />
 
             <MenuPrimitives.PortalPrimitive container={container}>
-                <MenuPrimitives.PositionerPrimitive side={side} sideOffset={0} align={align}>
+                <MenuPrimitives.PositionerPrimitive side={side} sideOffset={12} align={align}>
                     <MenuPrimitives.SubmenuPopupPrimitive $css={{ transition: 'none' }}>
                         {children}
                     </MenuPrimitives.SubmenuPopupPrimitive>
@@ -275,7 +275,10 @@ export const MenuItem = ({
                 <itemSlots.label render={label} />
                 <itemSlots.description render={description} foreground="hint" typography="body3" />
             </VStack>
-            <itemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
+            <itemSlots.trailing
+                render={trailing}
+                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
+            />
         </MenuPrimitives.Item>
     );
 };
@@ -303,7 +306,7 @@ export interface MenuItemProps {
     leading?: ItemSlots['leading'];
 
     /**
-     * 항목 우측에 표시되는 요소. 단축키·보조 아이콘 등을 배치한다.
+     * 항목 우측에 표시되는 요소. 단축키나 보조 아이콘 등을 배치한다.
      */
     trailing?: ItemSlots['trailing'];
 
@@ -564,7 +567,10 @@ export const MenuCheckItem = ({
                         typography="body3"
                     />
                 </VStack>
-                <checkItemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
+                <checkItemSlots.trailing
+                    render={trailing}
+                    $css={{ gridArea: 'trailing', marginLeft: '$150' }}
+                />
             </MenuPrimitives.RadioItemPrimitive>
         );
     }
@@ -592,7 +598,10 @@ export const MenuCheckItem = ({
                     typography="body3"
                 />
             </VStack>
-            <checkItemSlots.trailing render={trailing} $css={{ gridArea: 'trailing' }} />
+            <checkItemSlots.trailing
+                render={trailing}
+                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
+            />
         </MenuPrimitives.CheckboxItemPrimitive>
     );
 };
@@ -630,7 +639,7 @@ export interface MenuCheckItemProps {
     description?: CheckItemSlots['description'];
 
     /**
-     * 항목 우측에 표시되는 요소. 단축키·보조 아이콘 등을 배치한다.
+     * 항목 우측에 표시되는 요소. 단축키나 보조 아이콘 등을 배치한다.
      */
     trailing?: CheckItemSlots['trailing'];
 }
@@ -644,11 +653,12 @@ export namespace MenuCheckItem {
 const submenuItemSlots = createSlots({
     leading: Box,
     label: Box,
+    trailing: Box,
 });
 
-export const MenuSubmenuItem = ({ leading, label }: MenuSubmenuItem.Props) => {
-    const gridTemplateAreas = `"${leading ? 'leading' : ''} label trailing"`;
-    const gridTemplateColumns = `${leading ? 'auto' : ''} 1fr auto`;
+export const MenuSubmenuItem = ({ leading, label, trailing }: MenuSubmenuItem.Props) => {
+    const gridTemplateAreas = `"${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
+    const gridTemplateColumns = `${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''} auto`;
 
     return (
         <MenuPrimitives.SubmenuTriggerItem
@@ -656,6 +666,10 @@ export const MenuSubmenuItem = ({ leading, label }: MenuSubmenuItem.Props) => {
         >
             <submenuItemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
             <submenuItemSlots.label render={label} $css={{ gridArea: 'label' }} />
+            <submenuItemSlots.trailing
+                render={trailing}
+                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
+            />
         </MenuPrimitives.SubmenuTriggerItem>
     );
 };
@@ -672,6 +686,11 @@ export interface MenuSubmenuItemProps {
      * 항목의 텍스트 라벨.
      */
     label: SubmenuItemSlots['label'];
+
+    /**
+     * 항목 우측에 표시되는 요소. 단축키나 보조 아이콘 등을 배치한다.
+     */
+    trailing?: SubmenuItemSlots['trailing'];
 }
 
 export namespace MenuSubmenuItem {
