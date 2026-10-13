@@ -69,16 +69,18 @@ export const item = componentStyle([
 
 export const separator = componentStyle({
     flexShrink: 0,
-    marginBlock: vars.size.space['050'],
+    marginBlock: vars.size.space['075'],
+    marginInline: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
     height: '0.0625rem',
 });
 
 export const subTrigger = componentStyle([item, { paddingRight: vars.size.space['075'] }]);
 
-export const subTriggerIcon = componentStyle({
-    marginLeft: 'auto',
-});
+export const subTriggerIcon = componentStyle([
+    foregrounds({ color: 'secondary' }),
+    { marginLeft: 'auto' },
+]);
 
 export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
