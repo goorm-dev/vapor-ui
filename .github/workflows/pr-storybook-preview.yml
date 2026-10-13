@@ -9,7 +9,6 @@ on:
             - packages/core/src/**
             - packages/composites/src/**
             - apps/storybook/**
-            - .github/workflows/*.yml
 
 permissions:
     contents: read
