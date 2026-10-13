@@ -261,6 +261,10 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
     const $css = {
         maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
+        // Keep the Header gap as margin (outside the scroll area) instead of core's paddingTop,
+        // so it stays visible when the body scrolls.
+        marginTop: '$200',
+        paddingTop: '$000',
         paddingBottom: overflowed ? '$250' : '$000',
         ...$cssProp,
     } satisfies typeof $cssProp;

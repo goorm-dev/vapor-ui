@@ -2,4 +2,4 @@
 '@vapor-ui/composites': patch
 ---
 
-remove `Dialog` body `marginTop` now that `@vapor-ui/core` `Dialog.Body` provides the 16px top padding — keeps the Header→Body gap at 16px instead of doubling to 32px
+reset `@vapor-ui/core` `Dialog.Body` top padding in `Dialog` so the Header→Body gap stays 16px (kept as margin outside the scroll area) instead of doubling to 32px
