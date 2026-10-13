@@ -124,10 +124,10 @@ describe('Field', () => {
         it('should render when a required RadioGroup is mounted', () => {
             const rendered = render(
                 <Field.Root name="gender">
-                    <Field.Label>
-                        Gender <Field.RequiredSymbol data-testid="symbol" />
-                    </Field.Label>
                     <RadioGroup.Root required name="gender">
+                        <RadioGroup.Label>
+                            Gender <RadioGroup.RequiredSymbol data-testid="symbol" />
+                        </RadioGroup.Label>
                         <Field.Item>
                             <Radio.Root value="a" />
                             <Field.Label>A</Field.Label>
