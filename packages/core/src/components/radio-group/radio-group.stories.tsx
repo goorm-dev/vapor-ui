@@ -36,7 +36,7 @@ export const Default: Story = {
                 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 'var(--vapor-size-space-050)',
+                    gap: 'var(--vapor-size-space-100)',
                 }}
             >
                 <Radio.Root value="1" />
@@ -46,7 +46,7 @@ export const Default: Story = {
                 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 'var(--vapor-size-space-050)',
+                    gap: 'var(--vapor-size-space-100)',
                 }}
             >
                 <Radio.Root value="2" />
@@ -56,7 +56,7 @@ export const Default: Story = {
                 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 'var(--vapor-size-space-050)',
+                    gap: 'var(--vapor-size-space-100)',
                 }}
             >
                 <Radio.Root value="3" />
@@ -66,7 +66,7 @@ export const Default: Story = {
                 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 'var(--vapor-size-space-050)',
+                    gap: 'var(--vapor-size-space-100)',
                 }}
             >
                 <Radio.Root value="4" />
