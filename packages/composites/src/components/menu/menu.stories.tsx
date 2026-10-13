@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Box, Button, Text, VStack } from '@vapor-ui/core';
+import { Badge, Box, Button, Text, VStack } from '@vapor-ui/core';
 import {
     ChevronDoubleRightOutlineIcon,
     HeartIcon,
@@ -25,9 +25,9 @@ export default {
     },
 } satisfies Meta<typeof Menu.Root>;
 
-const Kbd = ({ children }: Box.Props) => {
+const Kbd = ({ children, ...props }: Box.Props) => {
     return (
-        <Box $css={{ fontFamily: 'monospace', fontSize: '12px', color: '$fg-hint' }}>
+        <Box $css={{ fontFamily: 'monospace', fontSize: '12px', color: '$fg-hint' }} {...props}>
             {children}
         </Box>
     );
@@ -75,6 +75,22 @@ export const Default: Story = {
                         </Menu.CheckGroup>
                     </Menu.Root>
 
+                    <Menu.Group label="submenu test">
+                        <Menu.Root
+                            trigger={
+                                <Menu.SubmenuItem
+                                    label="without trailing"
+                                    trailing={<Badge size="sm">선택</Badge>}
+                                />
+                            }
+                        >
+                            <></>
+                        </Menu.Root>
+                        <Menu.Root trigger={<Menu.SubmenuItem label="with trailing" />}>
+                            <></>
+                        </Menu.Root>
+                    </Menu.Group>
+
                     <Menu.Group label="label">
                         <Menu.Item
                             leading={<HeartIcon />}
@@ -106,9 +122,7 @@ export const Default: Story = {
                     >
                         <Menu.CheckItem label="single 1" value="single 1" />
                         <Menu.CheckItem label="single 2" value="single 2" />
-                        <Menu.CheckItem label="single 3" value="single 3" />
-                        <Menu.CheckItem label="single 4" value="single 4" />
-                        <Menu.CheckItem label="single 5" value="single 5" leading={<HeartIcon />} />
+                        <Menu.CheckItem label="single 3" value="single 3" leading={<HeartIcon />} />
                     </Menu.CheckGroup>
 
                     <Menu.CheckGroup
@@ -120,7 +134,6 @@ export const Default: Story = {
                         <Menu.CheckItem label="multiple 1" value="multiple 1" />
                         <Menu.CheckItem label="multiple 2" value="multiple 2" />
                         <Menu.CheckItem label="multiple 3" value="multiple 3" />
-                        <Menu.CheckItem label="multiple 4" value="multiple 4" />
                     </Menu.CheckGroup>
                 </Menu.Root>
             </div>
