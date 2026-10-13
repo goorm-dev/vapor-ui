@@ -277,7 +277,7 @@ export const MenuItem = ({
             </VStack>
             <itemSlots.trailing
                 render={trailing}
-                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
+                $css={{ gridArea: 'trailing', marginLeft: '$075' }}
             />
         </MenuPrimitives.Item>
     );
@@ -569,7 +569,7 @@ export const MenuCheckItem = ({
                 </VStack>
                 <checkItemSlots.trailing
                     render={trailing}
-                    $css={{ gridArea: 'trailing', marginLeft: '$150' }}
+                    $css={{ gridArea: 'trailing', marginLeft: '$075' }}
                 />
             </MenuPrimitives.RadioItemPrimitive>
         );
@@ -600,7 +600,7 @@ export const MenuCheckItem = ({
             </VStack>
             <checkItemSlots.trailing
                 render={trailing}
-                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
+                $css={{ gridArea: 'trailing', marginLeft: '$075' }}
             />
         </MenuPrimitives.CheckboxItemPrimitive>
     );
@@ -668,7 +668,7 @@ export const MenuSubmenuItem = ({ leading, label, trailing }: MenuSubmenuItem.Pr
             <submenuItemSlots.label render={label} $css={{ gridArea: 'label' }} />
             <submenuItemSlots.trailing
                 render={trailing}
-                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
+                $css={{ gridArea: 'trailing', marginLeft: '$075' }}
             />
         </MenuPrimitives.SubmenuTriggerItem>
     );
