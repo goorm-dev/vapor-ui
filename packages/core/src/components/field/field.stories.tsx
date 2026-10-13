@@ -41,14 +41,14 @@ const meta: Meta<FieldStoryArgs> = {
 export default meta;
 
 export const Default: Story = {
-    render: (args) => {
+    render: ({ required, ...args }) => {
         return (
             <>
-                <Field.Root validationMode="onChange">
+                <Field.Root validationMode="onChange" {...args}>
                     <Field.Label>
                         Label <Field.RequiredSymbol />
                     </Field.Label>
-                    <TextInput required={args.required} />
+                    <TextInput required={required} />
                     <Field.Error match="valueMissing">이 필드는 필수입니다.</Field.Error>
                     <Field.Success>✓ 올바른 이름 형식입니다</Field.Success>
                 </Field.Root>
