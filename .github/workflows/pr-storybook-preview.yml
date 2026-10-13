@@ -1,4 +1,4 @@
-name: 'Storybook Preview'
+name: "Storybook Preview"
 
 on:
     pull_request:
@@ -9,6 +9,7 @@ on:
             - packages/core/src/**
             - packages/composites/src/**
             - apps/storybook/**
+            - .github/workflows/*.yml
 
 permissions:
     contents: read
@@ -43,6 +44,7 @@ jobs:
               with:
                   apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                  packageManager: pnpm
                   command: pages deploy apps/storybook/storybook-static --project-name=${{ env.CF_PAGES_PROJECT_NAME }} --branch=pr-${{ github.event.pull_request.number }}
 
             - name: Resolve commit SHA
