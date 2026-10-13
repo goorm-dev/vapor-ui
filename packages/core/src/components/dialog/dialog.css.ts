@@ -92,14 +92,15 @@ export const header = componentStyle({
     flexShrink: 0,
     alignItems: 'center',
     gap: vars.size.space['150'],
-    paddingBlock: 0,
+    paddingTop: vars.size.space['300'],
+    paddingBottom: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
-    height: vars.size.dimension['700'],
 });
 
 export const body = componentStyle({
-    paddingBlock: 0,
+    paddingTop: vars.size.space['200'],
+    paddingBottom: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
     overflowY: 'auto',
@@ -108,7 +109,8 @@ export const body = componentStyle({
 export const footer = componentStyle({
     display: 'flex',
     alignItems: 'center',
-    paddingBlock: vars.size.space['200'],
+    paddingTop: vars.size.space['200'],
+    paddingBottom: vars.size.space['300'],
     paddingInline: vars.size.space['300'],
     width: '100%',
 });
