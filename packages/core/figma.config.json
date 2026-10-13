@@ -1,0 +1,7 @@
+{
+    "codeConnect": {
+        "language": "typescript",
+        "include": ["src/**/*.figma.ts", "src/**/*.figma.batch.json"],
+        "label": "React"
+    }
+}
