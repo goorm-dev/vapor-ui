@@ -78,7 +78,6 @@ const config: StorybookConfig = {
     viteFinal: async (config) => {
         const mergedConfig = mergeConfig(config, {
             ...config,
-            base: process.env.STORYBOOK_BASE_PATH ?? '/',
             resolve: {
                 ...config.resolve,
                 alias: [tildeAlias],
