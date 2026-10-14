@@ -219,9 +219,16 @@ const Header = ({ title, description }: HeaderProps) => {
                 gap: '$200',
             }}
         >
-            <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
+            <VStack $css={{ alignItems: 'flex-start', gap: '$050', flex: 1 }}>
                 <slots.title render={title} />
-                <slots.description render={description} $css={{ color: '$fg-hint' }} />
+                <slots.description
+                    render={description}
+                    // $css has no fontWeight token scale, so reference the token variable directly.
+                    $css={{
+                        color: '$fg-hint',
+                        fontWeight: 'var(--vapor-typography-fontWeight-500)',
+                    }}
+                />
             </VStack>
 
             <CloseButton />
