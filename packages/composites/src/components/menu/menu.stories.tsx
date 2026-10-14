@@ -79,6 +79,7 @@ export const Default: Story = {
                         <Menu.Root
                             trigger={
                                 <Menu.SubmenuItem
+                                    leading={<HeartIcon />}
                                     label="without trailing"
                                     trailing={<Badge size="sm">선택</Badge>}
                                 />

@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { Box, Menu as MenuPrimitives, Text, VStack } from '@vapor-ui/core';
-import { ConfirmOutlineIcon } from '@vapor-ui/icons';
+import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -24,7 +24,7 @@ const rootSlots = createSlots({
 });
 
 const submenuSlots = createSlots({
-    trigger: MenuPrimitives.SubmenuTriggerItem,
+    trigger: MenuPrimitives.SubmenuTrigger,
 });
 
 export const MenuRoot = (props: MenuRoot.Props) => {
@@ -258,7 +258,7 @@ export const MenuItem = ({
     onClick,
 }: MenuItem.Props) => {
     const gridTemplateAreas = `"${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
-    const gridTemplateColumns = `${leading ? '1rem' : ''} 1fr ${trailing ? 'auto' : ''}`;
+    const gridTemplateColumns = `${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
 
     return (
         <MenuPrimitives.Item
@@ -268,16 +268,20 @@ export const MenuItem = ({
                 display: 'grid',
                 gridTemplateAreas,
                 gridTemplateColumns,
+                gap: '$000',
             }}
         >
-            <itemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
+            <itemSlots.leading
+                render={leading}
+                $css={{ gridArea: 'leading', marginRight: '$075' }}
+            />
             <VStack $css={{ flex: 1, gridArea: 'label' }}>
                 <itemSlots.label render={label} />
                 <itemSlots.description render={description} foreground="hint" typography="body3" />
             </VStack>
             <itemSlots.trailing
                 render={trailing}
-                $css={{ gridArea: 'trailing', marginLeft: '$075' }}
+                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
             />
         </MenuPrimitives.Item>
     );
@@ -544,7 +548,7 @@ export const MenuCheckItem = ({
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
     const gridTemplateAreas = `"${hasSelection ? 'marker' : ''} ${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
-    const gridTemplateColumns = `${hasSelection ? '1rem' : ''} ${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
+    const gridTemplateColumns = `${hasSelection ? 'auto' : ''} ${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
 
     if (mode === 'single') {
         return (
@@ -552,13 +556,18 @@ export const MenuCheckItem = ({
                 closeOnClick
                 value={valueProp}
                 onClick={onClick}
-                $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns }}
+                $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns, gap: '$000' }}
             >
-                <MenuPrimitives.RadioItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
+                <MenuPrimitives.RadioItemIndicatorPrimitive
+                    $css={{ gridArea: 'marker', marginRight: '$075' }}
+                >
                     <ConfirmOutlineIcon />
                 </MenuPrimitives.RadioItemIndicatorPrimitive>
 
-                <checkItemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
+                <checkItemSlots.leading
+                    render={leading}
+                    $css={{ gridArea: 'leading', marginRight: '$075' }}
+                />
                 <VStack $css={{ gridArea: 'label' }}>
                     <checkItemSlots.label render={label} />
                     <checkItemSlots.description
@@ -569,7 +578,7 @@ export const MenuCheckItem = ({
                 </VStack>
                 <checkItemSlots.trailing
                     render={trailing}
-                    $css={{ gridArea: 'trailing', marginLeft: '$075' }}
+                    $css={{ gridArea: 'trailing', marginLeft: '$150' }}
                 />
             </MenuPrimitives.RadioItemPrimitive>
         );
@@ -583,13 +592,18 @@ export const MenuCheckItem = ({
             checked={value.includes(valueProp)}
             onCheckedChange={() => handleValueChange(valueProp)}
             onClick={onClick}
-            $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns }}
+            $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns, gap: '$000' }}
         >
-            <MenuPrimitives.CheckboxItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
+            <MenuPrimitives.CheckboxItemIndicatorPrimitive
+                $css={{ gridArea: 'marker', marginRight: '$075' }}
+            >
                 <ConfirmOutlineIcon />
             </MenuPrimitives.CheckboxItemIndicatorPrimitive>
 
-            <checkItemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
+            <checkItemSlots.leading
+                render={leading}
+                $css={{ gridArea: 'leading', marginRight: '$075' }}
+            />
             <VStack $css={{ gridArea: 'label' }}>
                 <checkItemSlots.label render={label} />
                 <checkItemSlots.description
@@ -600,7 +614,7 @@ export const MenuCheckItem = ({
             </VStack>
             <checkItemSlots.trailing
                 render={trailing}
-                $css={{ gridArea: 'trailing', marginLeft: '$075' }}
+                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
             />
         </MenuPrimitives.CheckboxItemPrimitive>
     );
@@ -661,16 +675,24 @@ export const MenuSubmenuItem = ({ leading, label, trailing }: MenuSubmenuItem.Pr
     const gridTemplateColumns = `${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''} auto`;
 
     return (
-        <MenuPrimitives.SubmenuTriggerItem
-            $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns }}
+        <MenuPrimitives.SubmenuTrigger
+            $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns, gap: '$000' }}
         >
-            <submenuItemSlots.leading render={leading} $css={{ gridArea: 'leading' }} />
+            <submenuItemSlots.leading
+                render={leading}
+                $css={{ gridArea: 'leading', marginRight: '$075' }}
+            />
             <submenuItemSlots.label render={label} $css={{ gridArea: 'label' }} />
             <submenuItemSlots.trailing
                 render={trailing}
-                $css={{ gridArea: 'trailing', marginLeft: '$075' }}
+                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
             />
-        </MenuPrimitives.SubmenuTriggerItem>
+
+            <Box
+                render={<ChevronRightOutlineIcon />}
+                $css={{ color: '$fg-secondary', marginLeft: '$050' }}
+            />
+        </MenuPrimitives.SubmenuTrigger>
     );
 };
 
