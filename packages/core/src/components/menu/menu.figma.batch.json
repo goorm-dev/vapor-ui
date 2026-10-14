@@ -1,0 +1,65 @@
+{
+    "templateFile": "./menu.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81346",
+            "component": "Menu.Root",
+            "source": "src/components/menu/menu.tsx"
+        },
+        {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81279",
+            "component": "Menu.Popup",
+            "source": "src/components/menu/menu.tsx"
+        },
+        {
+            "part": "submenuPopup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81281",
+            "component": "Menu.SubmenuPopup",
+            "source": "src/components/menu/menu.tsx"
+        },
+        {
+            "part": "group",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81339",
+            "component": "Menu.Group",
+            "source": "src/components/menu/menu.tsx"
+        },
+        {
+            "part": "groupLabel",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81285",
+            "component": "Menu.GroupLabel",
+            "source": "src/components/menu/menu.tsx"
+        },
+        {
+            "part": "separator",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81283",
+            "component": "Menu.Separator",
+            "source": "src/components/menu/menu.tsx"
+        },
+        {
+            "part": "item",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81416",
+            "component": "Menu.Item",
+            "source": "src/components/menu/menu.tsx"
+        },
+        {
+            "part": "submenuTriggerItem",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81407",
+            "component": "Menu.SubmenuTriggerItem",
+            "source": "src/components/menu/menu.tsx"
+        },
+        {
+            "part": "checkboxItem",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81422",
+            "component": "Menu.CheckboxItem",
+            "source": "src/components/menu/menu.tsx"
+        },
+        {
+            "part": "radioItem",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=39620-81428",
+            "component": "Menu.RadioItem",
+            "source": "src/components/menu/menu.tsx"
+        }
+    ]
+}

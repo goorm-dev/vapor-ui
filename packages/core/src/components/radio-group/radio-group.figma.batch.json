@@ -1,0 +1,17 @@
+{
+    "templateFile": "./radio-group.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34525-16366",
+            "component": "RadioGroup.Root",
+            "source": "src/components/radio-group/radio-group.tsx"
+        },
+        {
+            "part": "label",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34520-3844",
+            "component": "RadioGroup.Label",
+            "source": "src/components/radio-group/radio-group.tsx"
+        }
+    ]
+}
