@@ -210,25 +210,11 @@ interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
 const Header = ({ title, description }: HeaderProps) => {
     return (
         <DialogPrimitives.Header
-            $css={{
-                position: 'relative',
-                display: 'grid',
-                gridTemplateColumns: '1fr 28px',
-                height: 'unset',
-                paddingTop: '$300',
-                gap: '$200',
-            }}
+            $css={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 28px' }}
         >
             <VStack $css={{ alignItems: 'flex-start', gap: '$050', flex: 1 }}>
                 <slots.title render={title} />
-                <slots.description
-                    render={description}
-                    // $css has no fontWeight token scale, so reference the token variable directly.
-                    $css={{
-                        color: '$fg-hint',
-                        fontWeight: 'var(--vapor-typography-fontWeight-500)',
-                    }}
-                />
+                <slots.description render={description} />
             </VStack>
 
             <CloseButton />
@@ -268,8 +254,6 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
     const $css = {
         maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
-        marginTop: '$250',
-        paddingTop: '$000',
         paddingBottom: overflowed ? '$250' : '$000',
         ...$cssProp,
     } satisfies typeof $cssProp;
@@ -296,7 +280,6 @@ const Footer = ({ action, assistive }: FooterProps) => {
                 display: 'grid',
                 gridTemplateAreas: '"assistive action"',
                 paddingTop: renderFooter ? '$250' : '$000',
-                paddingBottom: '$300',
             }}
         >
             <slots.assistive
