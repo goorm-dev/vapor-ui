@@ -111,7 +111,10 @@ const attr = slot.getEnum('value', { true: 'defaultValue', false: 'placeholder' 
 ```bash
 pnpm --filter @vapor-ui/core exec figma connect parse   # offline: templates bundle and parse
 pnpm core figma:check                                    # dry-run publish, needs FIGMA_ACCESS_TOKEN
+pnpm core figma:preview -f <file> --unique               # render snippets for every variant, needs FIGMA_ACCESS_TOKEN
 pnpm core figma:publish                                  # publish to Figma, needs FIGMA_ACCESS_TOKEN
 ```
 
-The token needs the **Code Connect: Write** and **File content: Read** scopes.
+`figma:check` validates without rendering; use `figma:preview` to see snippets. Pass `-f <file>` (paths relative to `packages/core`; a `.figma.batch.json` covers all its parts) to target one component. Publish leaf components (Button, Badge, Toggle) before parents that embed them.
+
+The token needs the **Code Connect: Write** and **File content: Read** scopes. The CLI reads `FIGMA_ACCESS_TOKEN` only, from the environment or `packages/core/.env`.

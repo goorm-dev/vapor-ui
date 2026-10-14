@@ -59,6 +59,7 @@
         "build": "rimraf dist && rolldown -c rolldown.config.ts",
         "clean": "rimraf dist node_modules .turbo",
         "figma:check": "figma connect publish --dry-run",
+        "figma:preview": "figma connect preview",
         "figma:publish": "figma connect publish",
         "lint": "eslint ./src",
         "test": "vitest --run",
