@@ -558,9 +558,7 @@ export const MenuCheckItem = ({
                 onClick={onClick}
                 $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns, gap: '$000' }}
             >
-                <MenuPrimitives.RadioItemIndicatorPrimitive
-                    $css={{ gridArea: 'marker', marginRight: '$050' }}
-                >
+                <MenuPrimitives.RadioItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
                     <ConfirmOutlineIcon />
                 </MenuPrimitives.RadioItemIndicatorPrimitive>
 
@@ -594,9 +592,7 @@ export const MenuCheckItem = ({
             onClick={onClick}
             $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns, gap: '$000' }}
         >
-            <MenuPrimitives.CheckboxItemIndicatorPrimitive
-                $css={{ gridArea: 'marker', marginRight: '$050' }}
-            >
+            <MenuPrimitives.CheckboxItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
                 <ConfirmOutlineIcon />
             </MenuPrimitives.CheckboxItemIndicatorPrimitive>
 
