@@ -6,8 +6,6 @@
 
 - regenerate icon components with the SVGR + svgo pipeline ([#722](https://github.com/goorm-dev/vapor-ui/pull/722)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Etc.
-
 - Update icons from Figma ([#706](https://github.com/goorm-dev/vapor-ui/pull/706)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
     **Updated Basic Icons:** `TriangleOutlineIcon`
