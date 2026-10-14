@@ -107,7 +107,7 @@ const Submenu = ({
             <submenuSlots.trigger render={trigger} />
 
             <MenuPrimitives.PortalPrimitive container={container}>
-                <MenuPrimitives.PositionerPrimitive side={side} sideOffset={12} align={align}>
+                <MenuPrimitives.PositionerPrimitive side={side} sideOffset={8} align={align}>
                     <MenuPrimitives.SubmenuPopupPrimitive $css={{ transition: 'none' }}>
                         {children}
                     </MenuPrimitives.SubmenuPopupPrimitive>
