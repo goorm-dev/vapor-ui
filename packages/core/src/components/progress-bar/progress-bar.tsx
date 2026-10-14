@@ -58,7 +58,7 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
         value,
         min = 0,
         max = 100,
-        getAriaValueText,
+        getAriaValueText: getAriaValueTextProp,
         'aria-describedby': ariaDescribedBy,
         ...componentProps
     } = resolveStyles(props);
@@ -101,6 +101,7 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
 
     // Appended, never replaced: a description the consumer wired up and ours both apply.
     const describedBy = [ariaDescribedBy, ...descriptionIds].filter(Boolean).join(' ') || undefined;
+    const getAriaValueText = getAriaValueTextProp ?? OMIT_ARIA_VALUE_TEXT;
 
     return (
         <ProgressBarProvider value={contextValue}>
@@ -109,7 +110,7 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
                 value={clampedValue}
                 min={min}
                 max={max}
-                getAriaValueText={getAriaValueText ?? OMIT_ARIA_VALUE_TEXT}
+                getAriaValueText={getAriaValueText}
                 aria-describedby={describedBy}
                 className={cn(styles.root, className)}
                 {...componentProps}
