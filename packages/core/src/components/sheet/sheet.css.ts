@@ -1,6 +1,7 @@
 import type { CSSProperties } from '@vanilla-extract/css';
 import { createGlobalVar } from '@vanilla-extract/css';
 
+import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
@@ -186,6 +187,7 @@ export const header = componentStyle({
 
 export const body = componentStyle({
     flex: 1,
+    marginTop: 'unset',
     paddingBlock: vars.size.space[100],
     paddingInline: vars.size.space[150],
     height: '100%',
@@ -196,3 +198,5 @@ export const footer = componentStyle({
     paddingBlock: vars.size.space[100],
     paddingInline: vars.size.space[150],
 });
+
+export const description = componentStyle([foregrounds({ color: 'normal' })]);
