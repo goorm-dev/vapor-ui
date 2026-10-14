@@ -558,7 +558,9 @@ export const MenuCheckItem = ({
                 onClick={onClick}
                 $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns, gap: '$000' }}
             >
-                <MenuPrimitives.RadioItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
+                <MenuPrimitives.RadioItemIndicatorPrimitive
+                    $css={{ gridArea: 'marker', marginRight: '$050' }}
+                >
                     <ConfirmOutlineIcon />
                 </MenuPrimitives.RadioItemIndicatorPrimitive>
 
