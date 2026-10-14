@@ -174,7 +174,7 @@ PopoverDescription.displayName = 'Popover.Description';
 
 const ArrowIcon = (props: ComponentProps<'svg'>) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 16" fill="none" {...props}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7 16" fill="none" {...props}>
             <path
                 d="M1.17969 8.93457C0.620294 8.43733 0.620294 7.56267 1.17969 7.06543L7.25 1.66992L7.25 14.3301L1.17969 8.93457Z"
                 stroke={vars.color.border.normal}

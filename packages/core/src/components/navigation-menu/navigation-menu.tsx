@@ -309,8 +309,8 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
     return (
         <svg
             width="16"
-            height="8"
-            viewBox="0 0 16 8"
+            height="7"
+            viewBox="0 0 16 7"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             {...props}
@@ -325,6 +325,18 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
                 fill="currentColor"
             />
         </svg>
+
+        //         <svg xmlns="http://www.w3.org/2000/svg" width="7" height="16" viewBox="0 0 7 16" fill="none">
+        // <g clip-path="url(#clip0_33569_6404)">
+        // <path d="M5.82031 8.93457C6.37971 8.43733 6.37971 7.56267 5.82031 7.06543L-0.249999 1.66992L-0.25 14.3301L5.82031 8.93457Z" stroke="#E1E1E1" stroke-width="1.5"/>
+        // <path d="M5.62805 7.24431C6.08814 7.64306 6.08814 8.35694 5.62805 8.75569L-1 14.5L-0.999999 1.5L5.62805 7.24431Z" fill="white"/>
+        // </g>
+        // <defs>
+        // <clipPath id="clip0_33569_6404">
+        // <rect width="16" height="7" fill="white" transform="matrix(4.37114e-08 -1 -1 -4.37114e-08 7 16)"/>
+        // </clipPath>
+        // </defs>
+        // </svg>
     );
 };
 
