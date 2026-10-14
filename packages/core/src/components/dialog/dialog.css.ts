@@ -99,7 +99,7 @@ export const header = componentStyle({
 });
 
 export const body = componentStyle({
-    paddingTop: vars.size.space['200'],
+    paddingTop: vars.size.space['250'],
     paddingBottom: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
@@ -109,7 +109,7 @@ export const body = componentStyle({
 export const footer = componentStyle({
     display: 'flex',
     alignItems: 'center',
-    paddingTop: vars.size.space['200'],
+    paddingTop: vars.size.space['250'],
     paddingBottom: vars.size.space['300'],
     paddingInline: vars.size.space['300'],
     width: '100%',
