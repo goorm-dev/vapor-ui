@@ -548,7 +548,7 @@ export const MenuCheckItem = ({
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
     const gridTemplateAreas = `"${hasSelection ? 'marker' : ''} ${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
-    const gridTemplateColumns = `${hasSelection ? '1.25rem' : ''} ${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
+    const gridTemplateColumns = `${hasSelection ? '1.375rem' : ''} ${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
 
     if (mode === 'single') {
         return (
