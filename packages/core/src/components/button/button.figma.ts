@@ -15,12 +15,7 @@ const colorPalette = instance.getEnum('colorPalette', {
     danger: 'danger',
     contrast: 'contrast',
 });
-// The Figma value name carries a leading backspace (U+0008); keep the key byte-exact.
-const variant = instance.getEnum('variant', {
-    fill: 'fill',
-    outline: 'outline',
-    '\bghost': 'ghost',
-});
+const variant = instance.getEnum('variant', { fill: 'fill', outline: 'outline', ghost: 'ghost' });
 
 const disabled = instance.getEnum('disabled', { true: true, false: false });
 
@@ -32,10 +27,9 @@ function icon(layer: InstanceHandle, visible: string, swap: string) {
     return handle?.type === 'INSTANCE' ? handle.executeTemplate().example : '';
 }
 
-// `taxt` is the property name as spelled in Figma.
 const children =
     slot.type === 'INSTANCE'
-        ? figma.code`${icon(slot, 'hasLeadingIcon', 'LeadingIcon')}${slot.getString('taxt')}${icon(slot, 'hasTrailingIcon', 'TrailingIcon')}`
+        ? figma.code`${icon(slot, 'hasLeadingIcon', 'LeadingIcon')}${slot.getString('text')}${icon(slot, 'hasTrailingIcon', 'TrailingIcon')}`
         : '';
 
 export default {

@@ -3,13 +3,13 @@
     "components": [
         {
             "part": "root",
-            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38114-3351",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-3385",
             "component": "Dialog.Root",
             "source": "src/components/dialog/dialog.tsx"
         },
         {
             "part": "popup",
-            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=32449-9767",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-3400",
             "component": "Dialog.Popup",
             "source": "src/components/dialog/dialog.tsx"
         },
