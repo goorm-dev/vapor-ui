@@ -1,0 +1,17 @@
+{
+    "name": "vapor-ui",
+    "owner": {
+        "name": "Vapor Team",
+        "email": "vapor.ui@goorm.io"
+    },
+    "metadata": {
+        "description": "Claude Code plugins for working with the Vapor UI design system"
+    },
+    "plugins": [
+        {
+            "name": "vapor-figma",
+            "source": "./plugins/vapor-figma",
+            "description": "Compose Figma designs from the Vapor core library without detaching instances"
+        }
+    ]
+}
