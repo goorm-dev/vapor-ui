@@ -3,6 +3,8 @@
 // component=IconButton
 import figma from 'figma';
 
+import { bool, example, flags } from '../../utils/figma';
+
 const instance = figma.selectedInstance;
 
 const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
@@ -16,14 +18,13 @@ const colorPalette = instance.getEnum('colorPalette', {
 });
 const variant = instance.getEnum('variant', { fill: 'fill', outline: 'outline', ghost: 'ghost' });
 const shape = instance.getEnum('shape', { square: 'square', circle: 'circle' });
-const disabled = instance.getEnum('disabled', { true: true, false: false });
+const disabled = bool(instance, 'disabled');
 
 const slot = instance.findInstance('🟨IconButton/SlotLayer');
-const iconHandle = slot.type === 'INSTANCE' ? slot.getInstanceSwap('Icon') : undefined;
-const icon = iconHandle?.type === 'INSTANCE' ? iconHandle.executeTemplate().example : '';
+const icon = slot.type === 'INSTANCE' ? example(slot.getInstanceSwap('Icon')) : '';
 
 export default {
-    example: figma.code`<IconButton size="${size}" colorPalette="${colorPalette}" variant="${variant}" shape="${shape}" aria-label="..."${disabled ? ' disabled' : ''}>${icon}</IconButton>`,
+    example: figma.code`<IconButton size="${size}" colorPalette="${colorPalette}" variant="${variant}" shape="${shape}" aria-label="..."${flags({ disabled })}>${icon}</IconButton>`,
     imports: ['import { IconButton } from "@vapor-ui/core"'],
     id: 'icon-button',
     metadata: { nestable: true },

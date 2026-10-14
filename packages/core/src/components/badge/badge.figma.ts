@@ -2,7 +2,8 @@
 // source=src/components/badge/badge.tsx
 // component=Badge
 import figma from 'figma';
-import type { InstanceHandle } from 'figma';
+
+import { icon } from '../../utils/figma';
 
 const instance = figma.selectedInstance;
 
@@ -18,12 +19,6 @@ const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg' });
 const shape = instance.getEnum('shape', { pill: 'pill', square: 'square' });
 
 const slot = instance.findInstance('🟨Badge/SlotLayer');
-
-function icon(layer: InstanceHandle, visible: string, swap: string) {
-    if (!layer.getBoolean(visible)) return '';
-    const handle = layer.getInstanceSwap(swap);
-    return handle?.type === 'INSTANCE' ? handle.executeTemplate().example : '';
-}
 
 const children =
     slot.type === 'INSTANCE'

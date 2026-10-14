@@ -3,25 +3,21 @@
 // component=Checkbox.Root
 import figma from 'figma';
 
+import { bool, flags } from '../../utils/figma';
+
 const instance = figma.selectedInstance;
 
 const size = instance.getEnum('size', { md: 'md', lg: 'lg' });
-const disabled = instance.getEnum('disabled', { true: true, false: false });
-const indeterminate = instance.getEnum('indeterminate', { true: true, false: false });
-const invalid = instance.getEnum('invalid', { true: true, false: false });
-const readOnly = instance.getEnum('readOnly', { true: true, false: false, Default: false });
-
-const flags = [
-    disabled && ' disabled',
-    indeterminate && ' indeterminate',
-    invalid && ' invalid',
-    readOnly && ' readOnly',
-]
-    .filter(Boolean)
-    .join('');
+// `readOnly` also has a `Default` option in Figma; anything but `true` reads as false.
+const props = flags({
+    disabled: bool(instance, 'disabled'),
+    indeterminate: bool(instance, 'indeterminate'),
+    invalid: bool(instance, 'invalid'),
+    readOnly: bool(instance, 'readOnly'),
+});
 
 export default {
-    example: figma.code`<Checkbox.Root size="${size}"${flags} />`,
+    example: figma.code`<Checkbox.Root size="${size}"${props} />`,
     imports: ['import { Checkbox } from "@vapor-ui/core"'],
     id: 'checkbox',
     metadata: { nestable: true },

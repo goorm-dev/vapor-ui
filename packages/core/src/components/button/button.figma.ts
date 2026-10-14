@@ -2,7 +2,8 @@
 // source=src/components/button/button.tsx
 // component=Button
 import figma from 'figma';
-import type { InstanceHandle } from 'figma';
+
+import { bool, flags, icon } from '../../utils/figma';
 
 const instance = figma.selectedInstance;
 
@@ -17,15 +18,9 @@ const colorPalette = instance.getEnum('colorPalette', {
 });
 const variant = instance.getEnum('variant', { fill: 'fill', outline: 'outline', ghost: 'ghost' });
 
-const disabled = instance.getEnum('disabled', { true: true, false: false });
+const disabled = bool(instance, 'disabled');
 
 const slot = instance.findInstance('🟨Button/SlotLayer');
-
-function icon(layer: InstanceHandle, visible: string, swap: string) {
-    if (!layer.getBoolean(visible)) return '';
-    const handle = layer.getInstanceSwap(swap);
-    return handle?.type === 'INSTANCE' ? handle.executeTemplate().example : '';
-}
 
 const children =
     slot.type === 'INSTANCE'
@@ -33,7 +28,7 @@ const children =
         : '';
 
 export default {
-    example: figma.code`<Button size="${size}" colorPalette="${colorPalette}" variant="${variant}"${disabled ? ' disabled' : ''}>${children}</Button>`,
+    example: figma.code`<Button size="${size}" colorPalette="${colorPalette}" variant="${variant}"${flags({ disabled })}>${children}</Button>`,
     imports: ['import { Button } from "@vapor-ui/core"'],
     id: 'button',
     metadata: { nestable: true },

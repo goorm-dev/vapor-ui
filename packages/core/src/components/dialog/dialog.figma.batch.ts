@@ -1,5 +1,7 @@
 import figma from 'figma';
 
+import { example } from '../../utils/figma';
+
 const DIALOG_PART_ID = {
     root: 'dialog-root',
     popup: 'dialog-popup',
@@ -15,8 +17,7 @@ const part: DialogPart = figma.batch.part;
 const { component } = figma.batch;
 
 function child(name: DialogPart) {
-    const handle = instance.findConnectedInstance(DIALOG_PART_ID[name]);
-    return handle?.type === 'INSTANCE' ? handle.executeTemplate().example : '';
+    return example(instance.findConnectedInstance(DIALOG_PART_ID[name]));
 }
 
 function render() {
