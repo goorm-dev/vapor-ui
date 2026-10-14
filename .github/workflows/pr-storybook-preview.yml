@@ -1,4 +1,4 @@
-name: "Storybook Preview"
+name: 'Storybook Preview'
 
 on:
     pull_request:

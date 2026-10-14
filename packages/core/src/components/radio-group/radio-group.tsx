@@ -47,7 +47,7 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((
         'required',
     ]);
 
-    const { invalid } = variantProps;
+    const { invalid, required } = variantProps;
     const dataAttrs = createDataAttributes({ invalid });
 
     return (
@@ -56,6 +56,7 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((
                 ref={ref}
                 aria-labelledby={labelElementId}
                 aria-invalid={invalid}
+                required={required}
                 className={cn(styles.root(), className)}
                 {...dataAttrs}
                 {...otherProps}
@@ -116,6 +117,7 @@ export const RadioGroupRequiredSymbol = forwardRef<HTMLSpanElement, RadioGroupRe
             enabled: !!required,
             defaultTagName: 'span',
             props: {
+                'aria-hidden': true,
                 className: cn(styles.requiredSymbol, className),
                 children,
                 ...componentProps,

@@ -13,6 +13,11 @@ const OPTION_2 = 'Option 2';
 const RadioGroupTest = (props: RadioGroup.Root.Props) => {
     return (
         <RadioGroup.Root {...props}>
+            <RadioGroup.Label>
+                레이블
+                <RadioGroup.RequiredSymbol />
+            </RadioGroup.Label>
+
             <Radio.Root id="option1" value="option1" aria-label={OPTION_1} />
             <label htmlFor="option1">{OPTION_1}</label>
 
