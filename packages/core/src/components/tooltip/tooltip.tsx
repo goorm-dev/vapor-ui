@@ -86,6 +86,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
         const { popupRef, arrowRef, position } = useArrowPosition({
             offset: (side) => (side === 'top' || side === 'bottom' ? 12 : 6),
         });
+
         const composedRef = composeRefs(popupRef, ref);
 
         return (

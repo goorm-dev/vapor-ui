@@ -1,7 +1,5 @@
-'use client';
-
 import type { CSSProperties } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useMutationObserverRef } from './use-mutation-observer-ref';
 
@@ -33,16 +31,13 @@ interface UseArrowPositionOptions {
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-export function useArrowPosition<
-    Popup extends HTMLElement = HTMLElement,
-    Arrow extends HTMLElement = Popup,
->(options: UseArrowPositionOptions = {}) {
-    const { offset = 12, initialSide, initialAlign } = options;
+export function useArrowPosition(options: UseArrowPositionOptions = {}) {
+    const { offset = 12, initialSide = 'bottom', initialAlign = 'center' } = options;
 
     const [side, setSide] = useState<ArrowPositionSide | undefined>(initialSide);
     const [align, setAlign] = useState<ArrowPositionAlign | undefined>(initialAlign);
 
-    const popupRef = useRef<Popup | null>(null);
+    const popupRef = useRef<HTMLElement | null>(null);
 
     useEffect(() => {
         const node = popupRef.current;
@@ -54,7 +49,7 @@ export function useArrowPosition<
         if (nextAlign) setAlign(nextAlign);
     }, []);
 
-    const arrowRef = useMutationObserverRef<Arrow>({
+    const arrowRef = useMutationObserverRef<HTMLElement>({
         callback: (mutations) => {
             mutations.forEach((mutation) => {
                 const { attributeName, target } = mutation;
@@ -68,11 +63,8 @@ export function useArrowPosition<
         options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
     });
 
-    const position = useMemo(() => {
-        const resolvedOffset = typeof offset === 'function' ? offset(side) : offset;
-
-        return getArrowPosition({ side, align, offset: resolvedOffset });
-    }, [side, align, offset]);
+    const resolvedOffset = typeof offset === 'function' ? offset(side) : offset;
+    const position = getArrowPosition({ side, align, offset: resolvedOffset });
 
     return { popupRef, arrowRef, position };
 }
@@ -88,11 +80,7 @@ interface GetArrowPositionArgs {
     offset?: number;
 }
 
-const getArrowPosition = ({
-    side = 'bottom',
-    align = 'center',
-    offset = 12,
-}: GetArrowPositionArgs): CSSProperties => {
+const getArrowPosition = ({ side, align, offset }: GetArrowPositionArgs): CSSProperties => {
     const positionMap = {
         'top-start': { left: offset, right: 'unset' },
         'top-end': { left: 'unset', right: offset },
