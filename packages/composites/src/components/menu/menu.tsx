@@ -548,7 +548,7 @@ export const MenuCheckItem = ({
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
     const gridTemplateAreas = `"${hasSelection ? 'marker' : ''} ${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
-    const gridTemplateColumns = `${hasSelection ? '1.375rem' : ''} ${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
+    const gridTemplateColumns = `${hasSelection ? '1.25rem' : ''} ${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
 
     if (mode === 'single') {
         return (
@@ -559,7 +559,7 @@ export const MenuCheckItem = ({
                 $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns, gap: '$000' }}
             >
                 <MenuPrimitives.RadioItemIndicatorPrimitive
-                    $css={{ gridArea: 'marker', marginRight: '$075' }}
+                    $css={{ gridArea: 'marker', marginRight: '$050' }}
                 >
                     <ConfirmOutlineIcon />
                 </MenuPrimitives.RadioItemIndicatorPrimitive>
@@ -595,7 +595,7 @@ export const MenuCheckItem = ({
             $css={{ display: 'grid', gridTemplateAreas, gridTemplateColumns, gap: '$000' }}
         >
             <MenuPrimitives.CheckboxItemIndicatorPrimitive
-                $css={{ gridArea: 'marker', marginRight: '$075' }}
+                $css={{ gridArea: 'marker', marginRight: '$050' }}
             >
                 <ConfirmOutlineIcon />
             </MenuPrimitives.CheckboxItemIndicatorPrimitive>

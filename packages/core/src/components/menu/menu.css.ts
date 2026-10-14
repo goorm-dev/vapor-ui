@@ -1,3 +1,5 @@
+import { calc } from '@vanilla-extract/css-utils';
+
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
@@ -99,7 +101,8 @@ export const indicator = componentStyle([
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: vars.size.dimension['200'],
-        height: vars.size.dimension['200'],
+        marginLeft: calc.multiply(vars.size.space['025'], -1),
+        width: vars.size.dimension['250'],
+        height: vars.size.dimension['250'],
     },
 ]);
