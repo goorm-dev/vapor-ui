@@ -107,7 +107,7 @@ const Submenu = ({
             <submenuSlots.trigger render={trigger} />
 
             <MenuPrimitives.PortalPrimitive container={container}>
-                <MenuPrimitives.PositionerPrimitive side={side} sideOffset={8} align={align}>
+                <MenuPrimitives.PositionerPrimitive side={side} sideOffset={4} align={align}>
                     <MenuPrimitives.SubmenuPopupPrimitive $css={{ transition: 'none' }}>
                         {children}
                     </MenuPrimitives.SubmenuPopupPrimitive>
@@ -238,95 +238,6 @@ export interface MenuGroupProps {
 
 export namespace MenuGroup {
     export type Props = MenuGroupProps;
-}
-
-/* -----------------------------------------------------------------------------------------------*/
-
-const itemSlots = createSlots({
-    leading: Box,
-    trailing: Box,
-    label: Box,
-    description: Text,
-});
-
-export const MenuItem = ({
-    variant,
-    label,
-    description,
-    leading,
-    trailing,
-    onClick,
-}: MenuItem.Props) => {
-    const gridTemplateAreas = `"${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
-    const gridTemplateColumns = `${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
-
-    return (
-        <MenuPrimitives.Item
-            onClick={onClick}
-            $css={{
-                color: variant === 'critical' ? '$fg-danger' : '$fg-normal',
-                display: 'grid',
-                gridTemplateAreas,
-                gridTemplateColumns,
-                gap: '$000',
-            }}
-        >
-            <itemSlots.leading
-                render={leading}
-                $css={{ gridArea: 'leading', marginRight: '$075' }}
-            />
-            <VStack $css={{ flex: 1, gridArea: 'label' }}>
-                <itemSlots.label render={label} />
-                <itemSlots.description render={description} foreground="hint" typography="body3" />
-            </VStack>
-            <itemSlots.trailing
-                render={trailing}
-                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
-            />
-        </MenuPrimitives.Item>
-    );
-};
-
-type ItemSlots = SlotProps<typeof itemSlots, 'label'>;
-type ItemProps = MenuPrimitives.Item.Props;
-
-export interface MenuItemProps {
-    /**
-     * 항목 클릭 시 호출되는 이벤트 핸들러.
-     * @example
-     * <Menu.Item onClick={handleSelect} label="Copy" />
-     */
-    onClick: ItemProps['onClick'];
-
-    /**
-     * 메뉴 아이템의 시각적 위계를 결정한다.
-     * @default "default"
-     */
-    variant?: 'default' | 'critical';
-
-    /**
-     * 항목 좌측에 표시되는 요소. 주로 아이콘을 배치한다.
-     */
-    leading?: ItemSlots['leading'];
-
-    /**
-     * 항목 우측에 표시되는 요소. 단축키나 보조 아이콘 등을 배치한다.
-     */
-    trailing?: ItemSlots['trailing'];
-
-    /**
-     * 항목의 텍스트 라벨.
-     */
-    label: ItemSlots['label'];
-
-    /**
-     * 항목의 동작을 설명하는 텍스트.
-     */
-    description?: ItemSlots['description'];
-}
-
-export namespace MenuItem {
-    export type Props = MenuItemProps;
 }
 
 /* -----------------------------------------------------------------------------------------------*/
@@ -530,6 +441,95 @@ export namespace MenuCheckGroup {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+const itemSlots = createSlots({
+    leading: Box,
+    trailing: Box,
+    label: Box,
+    description: Text,
+});
+
+export const MenuItem = ({
+    variant,
+    label,
+    description,
+    leading,
+    trailing,
+    onClick,
+}: MenuItem.Props) => {
+    const gridTemplateAreas = `"${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
+    const gridTemplateColumns = `${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
+
+    return (
+        <MenuPrimitives.Item
+            onClick={onClick}
+            $css={{
+                color: variant === 'critical' ? '$fg-danger' : '$fg-normal',
+                display: 'grid',
+                gridTemplateAreas,
+                gridTemplateColumns,
+                gap: '$000',
+            }}
+        >
+            <itemSlots.leading
+                render={leading}
+                $css={{ gridArea: 'leading', marginRight: '$075' }}
+            />
+            <VStack $css={{ flex: 1, gridArea: 'label' }}>
+                <itemSlots.label render={label} />
+                <itemSlots.description render={description} foreground="hint" typography="body3" />
+            </VStack>
+            <itemSlots.trailing
+                render={trailing}
+                $css={{ gridArea: 'trailing', marginLeft: '$150' }}
+            />
+        </MenuPrimitives.Item>
+    );
+};
+
+type ItemSlots = SlotProps<typeof itemSlots, 'label'>;
+type ItemProps = MenuPrimitives.Item.Props;
+
+export interface MenuItemProps {
+    /**
+     * 항목 클릭 시 호출되는 이벤트 핸들러.
+     * @example
+     * <Menu.Item onClick={handleSelect} label="Copy" />
+     */
+    onClick: ItemProps['onClick'];
+
+    /**
+     * 메뉴 아이템의 시각적 위계를 결정한다.
+     * @default "default"
+     */
+    variant?: 'default' | 'critical';
+
+    /**
+     * 항목 좌측에 표시되는 요소. 주로 아이콘을 배치한다.
+     */
+    leading?: ItemSlots['leading'];
+
+    /**
+     * 항목 우측에 표시되는 요소. 단축키나 보조 아이콘 등을 배치한다.
+     */
+    trailing?: ItemSlots['trailing'];
+
+    /**
+     * 항목의 텍스트 라벨.
+     */
+    label: ItemSlots['label'];
+
+    /**
+     * 항목의 동작을 설명하는 텍스트.
+     */
+    description?: ItemSlots['description'];
+}
+
+export namespace MenuItem {
+    export type Props = MenuItemProps;
+}
+
+/* -----------------------------------------------------------------------------------------------*/
+
 const checkItemSlots = createSlots({
     leading: Box,
     description: Text,
@@ -548,7 +548,7 @@ export const MenuCheckItem = ({
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
     const gridTemplateAreas = `"${hasSelection ? 'marker' : ''} ${leading ? 'leading' : ''} label ${trailing ? 'trailing' : ''}"`;
-    const gridTemplateColumns = `${hasSelection ? 'auto' : ''} ${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
+    const gridTemplateColumns = `${hasSelection ? '1.375rem' : ''} ${leading ? 'auto' : ''} 1fr ${trailing ? 'auto' : ''}`;
 
     if (mode === 'single') {
         return (
