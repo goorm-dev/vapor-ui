@@ -28,7 +28,7 @@ export const arrow = componentStyle({
 
     selectors: {
         '&[data-side="top"]': {
-            bottom: '-11px',
+            bottom: '-10px',
             transform: 'rotate(-90deg)',
         },
         '&[data-side="right"]': {
@@ -36,7 +36,7 @@ export const arrow = componentStyle({
             transform: 'rotate(0deg)',
         },
         '&[data-side="bottom"]': {
-            top: '-11px',
+            top: '-10px',
             transform: 'rotate(90deg)',
         },
         '&[data-side="left"]': {
