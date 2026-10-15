@@ -59,6 +59,6 @@ jobs:
                   message: |
                       📚 **Storybook Preview**
 
-                      | Commit | Latest (branch alias) | This build (immutable) |
-                      | :----- | :-------------------- | :--------------------- |
-                      | [`${{ steps.sha.outputs.short }}`](https://github.com/${{ github.repository }}/commit/${{ steps.sha.outputs.full }}) | ${{ steps.deploy.outputs.deployment-alias-url }} | ${{ steps.deploy.outputs.deployment-url }} |
+                      | Commit | Preview |
+                      | :----- | :------ |
+                      | [`${{ steps.sha.outputs.short }}`](https://github.com/${{ github.repository }}/commit/${{ steps.sha.outputs.full }}) | ${{ steps.deploy.outputs.pages-deployment-alias-url }} |
