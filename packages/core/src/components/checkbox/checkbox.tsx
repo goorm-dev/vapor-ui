@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 
-import { useFieldRequired } from '~/components/field';
+import { useFieldRequired } from '~/components/field/field';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';

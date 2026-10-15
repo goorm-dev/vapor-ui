@@ -4,7 +4,7 @@ import { forwardRef, useState } from 'react';
 
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
 
-import { useFieldRequired } from '~/components/field';
+import { useFieldRequired } from '~/components/field/field';
 import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { useVaporId } from '~/hooks/use-vapor-id';

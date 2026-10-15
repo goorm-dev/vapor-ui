@@ -3,6 +3,7 @@
 import { forwardRef, useCallback, useMemo, useState } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
@@ -171,6 +172,18 @@ export const FieldItem = forwardRef<HTMLDivElement, FieldItem.Props>((props, ref
     return <BaseField.Item ref={ref} className={cn(styles.item, className)} {...componentProps} />;
 });
 FieldItem.displayName = 'Field.Item';
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export const useFieldRequired = (required: boolean | undefined) => {
+    const { setRequired } = useFieldContext();
+
+    useIsoLayoutEffect(() => {
+        setRequired(!!required);
+
+        return () => setRequired(false);
+    }, [required, setRequired]);
+};
 
 /* -----------------------------------------------------------------------------------------------*/
 

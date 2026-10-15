@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
 
-import { useFieldRequired } from '~/components/field';
+import { useFieldRequired } from '~/components/field/field';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
