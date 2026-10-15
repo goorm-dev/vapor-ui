@@ -9,7 +9,7 @@
         "dev": "next dev --turbo",
         "extract": "tsx --tsconfig ../../scripts/docs-extractor/tsconfig.json ../../scripts/docs-extractor/src/cli.ts --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --out ./public/components/generated",
         "postinstall": "fumadocs-mdx",
-        "lint": "eslint ./src",
+        "lint": "eslint ./src ./content",
         "start": "next start",
         "typecheck": "tsc --noEmit"
     },

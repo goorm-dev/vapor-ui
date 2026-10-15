@@ -5,6 +5,25 @@ import { docs, theme } from 'fumadocs-mdx/collections/server';
 export const source = loader({
     baseUrl: '/docs',
     source: docs.toFumadocsSource(),
+    pageTree: {
+        transformers: [
+            {
+                /**
+                 * A page lives in its own folder (`button/index.mdx` next to `demos/` and
+                 * `api/`), which Fumadocs would draw as a folder. Show a folder holding only
+                 * its index page as that page, the way a plain `button.mdx` is shown.
+                 */
+                folder(node) {
+                    node.children = node.children.map((child) =>
+                        child.type === 'folder' && child.index && child.children.length === 0
+                            ? child.index
+                            : child,
+                    );
+                    return node;
+                },
+            },
+        ],
+    },
 });
 
 export const themeSource = loader({
