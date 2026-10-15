@@ -65,7 +65,7 @@ export const label = componentRecipe({
 
 export const requiredSymbol = componentStyle([
     foregrounds({ color: 'danger' }),
-    typography({ style: 'subtitle1' }),
+    typography({ style: 'subtitle2' }),
 ]);
 
 export const item = componentStyle({
