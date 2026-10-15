@@ -576,7 +576,6 @@ export const MenuCheckItem = ({
     );
 };
 
-type CheckItemSlots = ItemSlots;
 type RadioItemProps = MenuPrimitives.RadioItemPrimitive.Props;
 type CheckboxItemProps = MenuPrimitives.CheckboxItemPrimitive.Props;
 
@@ -596,22 +595,22 @@ export interface MenuCheckItemProps {
     /**
      * 항목 좌측에 표시되는 요소. 레이블을 보충 설명하기 위한 요소를 배치한다.
      */
-    leading?: CheckItemSlots['leading'];
+    leading?: ItemSlots['leading'];
 
     /**
      * 항목의 텍스트 라벨.
      */
-    label: CheckItemSlots['label'];
+    label: ItemSlots['label'];
 
     /**
      * 항목의 동작을 설명하는 텍스트.
      */
-    description?: CheckItemSlots['description'];
+    description?: ItemSlots['description'];
 
     /**
      * 항목 우측에 표시되는 요소. 단축키나 보조 아이콘 등을 배치한다.
      */
-    trailing?: CheckItemSlots['trailing'];
+    trailing?: ItemSlots['trailing'];
 }
 
 export namespace MenuCheckItem {
@@ -649,28 +648,26 @@ export const MenuSubmenuItem = ({
     );
 };
 
-type SubmenuItemSlots = ItemSlots;
-
 export interface MenuSubmenuItemProps {
     /**
      * 항목 좌측에 표시되는 요소. 레이블을 보충 설명하기 위한 요소를 배치한다.
      */
-    leading?: SubmenuItemSlots['leading'];
+    leading?: ItemSlots['leading'];
 
     /**
      * 항목의 텍스트 라벨.
      */
-    label: SubmenuItemSlots['label'];
+    label: ItemSlots['label'];
 
     /**
      * 항목의 동작을 설명하는 텍스트.
      */
-    description?: CheckItemSlots['description'];
+    description?: ItemSlots['description'];
 
     /**
      * 항목 우측에 표시되는 요소. 단축키나 보조 아이콘 등을 배치한다.
      */
-    trailing?: SubmenuItemSlots['trailing'];
+    trailing?: ItemSlots['trailing'];
 }
 
 export namespace MenuSubmenuItem {
