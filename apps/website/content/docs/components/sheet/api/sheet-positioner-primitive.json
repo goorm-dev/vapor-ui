@@ -1,0 +1,36 @@
+{
+    "name": "SheetPositionerPrimitive",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Sheet.PositionerPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "side",
+            "type": ["bottom", "left", "right", "top"],
+            "detailedType": "\"bottom\" | \"left\" | \"right\" | \"top\" | undefined",
+            "required": false,
+            "defaultValue": "right"
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties", "function"],
+            "detailedType": "CSSProperties | ((state: Sheet.PositionerPrimitive.State) => (CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Sheet.PositionerPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Sheet.PositionerPrimitive.State": "{\n  side?: \"bottom\" | \"left\" | \"right\" | \"top\";\n  open: boolean;\n  closed: boolean;\n}"
+    }
+}

@@ -1,0 +1,88 @@
+{
+    "name": "MeterRoot",
+    "description": "Displays a measurement inside a known range, such as disk usage or a score. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "value",
+            "type": ["number"],
+            "detailedType": "number",
+            "required": true,
+            "description": "The current value."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
+            "required": false,
+            "description": "Size of the meter. Controls the height of the track."
+        },
+        {
+            "name": "type",
+            "type": ["default", "warning"],
+            "detailedType": "\"default\" | \"warning\" | undefined",
+            "required": false,
+            "description": "Color of the filled portion of the meter."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Meter.Root.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "format",
+            "type": ["Intl.NumberFormatOptions"],
+            "detailedType": "Intl.NumberFormatOptions | undefined",
+            "required": false,
+            "description": "Options to format the value."
+        },
+        {
+            "name": "getAriaValueText",
+            "type": ["function"],
+            "detailedType": "((formattedValue: string, value: number) => string) | undefined",
+            "required": false,
+            "description": "A function that returns a string value that provides a human-readable text alternative for `aria-valuenow`, the current value of the meter."
+        },
+        {
+            "name": "locale",
+            "type": ["Intl.LocalesArgument"],
+            "detailedType": "Intl.LocalesArgument",
+            "required": false,
+            "description": "The locale used by `Intl.NumberFormat` when formatting the value.\nDefaults to the user's runtime locale."
+        },
+        {
+            "name": "max",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "The maximum value",
+            "defaultValue": "100"
+        },
+        {
+            "name": "min",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "The minimum value",
+            "defaultValue": "0"
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Meter.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Meter.Root.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Meter.Root.State": "{\n\n}"
+    }
+}

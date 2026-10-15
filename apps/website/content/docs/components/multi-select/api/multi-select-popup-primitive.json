@@ -1,0 +1,42 @@
+{
+    "name": "MultiSelectPopupPrimitive",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: MultiSelect.PopupPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false
+        },
+        {
+            "name": "finalFocus",
+            "type": ["boolean", "React.RefObject<HTMLElement | null>", "function"],
+            "detailedType": "boolean | React.RefObject<HTMLElement | null> | ((closeType: \"\" | \"mouse\" | \"touch\" | \"pen\" | \"keyboard\") => (boolean | void | HTMLElement | null)) | undefined",
+            "required": false,
+            "description": "Determines the element to focus when the select popup is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: MultiSelect.PopupPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: MultiSelect.PopupPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "MultiSelect.PopupPrimitive.State": "{\n  side: \"none\" | \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\";\n  align: \"center\" | \"end\" | \"start\";\n  open: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n}"
+    }
+}

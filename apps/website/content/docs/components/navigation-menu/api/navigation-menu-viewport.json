@@ -1,0 +1,50 @@
+{
+    "name": "NavigationMenuViewport",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: NavigationMenu.Viewport.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "popupElement",
+            "type": ["ReactElement<NavigationMenuPopupPrimitive.Props>"],
+            "detailedType": "ReactElement<NavigationMenuPopupPrimitive.Props> | undefined",
+            "required": false,
+            "description": "A Custom element for NavigationMenu.PopupPrimitive. If not provided, the default NavigationMenu.PopupPrimitive will be rendered."
+        },
+        {
+            "name": "portalElement",
+            "type": ["ReactElement<NavigationMenuPortalPrimitive.Props>"],
+            "detailedType": "ReactElement<NavigationMenuPortalPrimitive.Props> | undefined",
+            "required": false,
+            "description": "A Custom element for NavigationMenu.PortalPrimitive. If not provided, the default NavigationMenu.PortalPrimitive will be rendered."
+        },
+        {
+            "name": "positionerElement",
+            "type": ["ReactElement<NavigationMenuPositionerPrimitive.Props>"],
+            "detailedType": "ReactElement<NavigationMenuPositionerPrimitive.Props> | undefined",
+            "required": false,
+            "description": "A Custom element for NavigationMenu.PositionerPrimitive. If not provided, the default NavigationMenu.PositionerPrimitive will be rendered."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: NavigationMenu.Viewport.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Viewport.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "NavigationMenu.Viewport.State": "{\n\n}"
+    }
+}

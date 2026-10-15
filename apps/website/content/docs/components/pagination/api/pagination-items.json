@@ -1,0 +1,11 @@
+{
+    "name": "PaginationItems",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode", "function"],
+            "detailedType": "ReactNode | ((pages: PageType[]) => ReactNode)",
+            "required": false
+        }
+    ]
+}

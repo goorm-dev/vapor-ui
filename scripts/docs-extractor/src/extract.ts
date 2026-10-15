@@ -19,6 +19,8 @@ export interface ExtractOptions {
 
 export interface ExtractResult {
     docs: ComponentDoc[];
+    /** The `.tsx` file each doc in `docs` was extracted from. */
+    sourceFiles: Map<ComponentDoc, string>;
     /** Files or namespaces that failed to parse. They are missing from `docs`. */
     failures: string[];
 }
@@ -46,6 +48,7 @@ export function extract(options: ExtractOptions): ExtractResult {
     reporter.info('Parsing components...');
 
     const failures: string[] = [];
+    const parsedFrom: string[] = [];
     const parsed = files.flatMap((filePath) => {
         const fileName = path.basename(filePath, '.tsx');
 
@@ -53,6 +56,7 @@ export function extract(options: ExtractOptions): ExtractResult {
             reporter.info(`Processing ${fileName}`);
             const result = parseSourceFile(project.addSourceFileAtPath(filePath), reporter);
             failures.push(...result.failures);
+            parsedFrom.push(...result.components.map(() => filePath));
             return result.components;
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
@@ -62,7 +66,9 @@ export function extract(options: ExtractOptions): ExtractResult {
         }
     });
 
+    // policy() maps one component to one doc, in order.
     const docs = policy(parsed);
+    const sourceFiles = new Map(docs.map((doc, i) => [doc, parsedFrom[i]]));
 
     const missingDocs = findMissingDocs(docs);
     if (missingDocs.length > 0) {
@@ -72,5 +78,5 @@ export function extract(options: ExtractOptions): ExtractResult {
 
     reporter.info(`Done! Extracted ${docs.length} components.`);
 
-    return { docs, failures };
+    return { docs, sourceFiles, failures };
 }
