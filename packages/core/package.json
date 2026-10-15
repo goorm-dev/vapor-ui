@@ -58,9 +58,9 @@
     ],
     "scripts": {
         "build": "rimraf dist && rolldown -c rolldown.config.ts",
-        "prepack": "pnpm --filter website docs:llms ../../packages/core/docs",
         "clean": "rimraf dist node_modules .turbo",
         "lint": "eslint ./src",
+        "prepack": "pnpm --filter website docs:llms ../../packages/core/docs",
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",
         "test:watch": "vitest",
