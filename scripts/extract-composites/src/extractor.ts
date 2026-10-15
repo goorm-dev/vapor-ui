@@ -37,9 +37,7 @@ export async function extract(opts: ExtractOptions): Promise<{
 
     const canvas = await client.getNode(opts.fileKey, opts.nodeId);
     const cover = findCoverFrame(canvas);
-    const componentMeta = cover
-        ? readComponentMeta(cover)
-        : { name: canvas.name };
+    const componentMeta = cover ? readComponentMeta(cover) : { name: canvas.name };
     const slug = opts.slugOverride ?? kebabCase(componentMeta.name);
     const outputDir = `${opts.outputRoot}/${slug}`;
 

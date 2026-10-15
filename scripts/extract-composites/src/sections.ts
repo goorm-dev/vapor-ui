@@ -69,7 +69,5 @@ export function toSectionKey(rawName: string): string {
 }
 
 export function findCoverFrame(canvas: FigmaNode): FigmaNode | undefined {
-    return (canvas.children ?? []).find(
-        (c) => c.type === 'FRAME' && c.name === COVER_FRAME_NAME,
-    );
+    return (canvas.children ?? []).find((c) => c.type === 'FRAME' && c.name === COVER_FRAME_NAME);
 }

@@ -6,20 +6,12 @@ const CONTENT_BLOCK_NAME = 'Component guide/Content block';
 const HEADER_INSTANCE_NAME = 'Component guide/Header';
 
 /** Placeholder content that designers leave untouched in Figma. Treat as empty. */
-const PLACEHOLDER_VALUES = new Set([
-    'body',
-    'section title',
-    'section subtitle',
-    '작성예정',
-]);
+const PLACEHOLDER_VALUES = new Set(['body', 'section title', 'section subtitle', '작성예정']);
 
 /** Collect all Component guide/Text instances inside subtree (including nested ones).
  *  Each instance has its own variant and direct TEXT child, so nesting is semantic. */
 export function collectAllTextInstances(subtree: FigmaNode): FigmaNode[] {
-    return findDescendants(
-        subtree,
-        (n) => n.type === 'INSTANCE' && n.name === TEXT_INSTANCE_NAME,
-    );
+    return findDescendants(subtree, (n) => n.type === 'INSTANCE' && n.name === TEXT_INSTANCE_NAME);
 }
 
 /** Extract text content from first direct TEXT child; skip nested Component guide/Text. */
