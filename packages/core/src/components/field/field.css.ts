@@ -44,7 +44,7 @@ export const success = componentStyle([
 
 export const label = componentRecipe({
     base: {
-        display: 'flex',
+        display: 'inline-flex',
         gap: vars.size.space['050'],
 
         selectors: {
