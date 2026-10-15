@@ -21,7 +21,6 @@ function child(name: AlertDialogPart) {
 }
 
 function render() {
-    // Figma `size` has only `md` and AlertDialog.Root has no `size` prop, so it is dropped.
     if (part === 'root') {
         return figma.code`<AlertDialog.Root>
     ${child('popup')}

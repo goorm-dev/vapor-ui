@@ -8,6 +8,8 @@ import { bool, flags } from '../../utils/figma';
 const instance = figma.selectedInstance;
 
 // `invaild` is misspelled that way in Figma; it maps to the `invalid` prop.
+// Code has no `size` prop yet; Figma's single `md` option is kept in the snippet as decided (VAPOR-245).
+const size = instance.getEnum('size', { md: 'md' });
 const props = flags({
     disabled: bool(instance, 'disabled'),
     invalid: bool(instance, 'invaild'),
@@ -15,7 +17,7 @@ const props = flags({
 });
 
 export default {
-    example: figma.code`<RadioCard value="..."${props}>{/* contents */}</RadioCard>`,
+    example: figma.code`<RadioCard value="..." size="${size}"${props}>{/* contents */}</RadioCard>`,
     imports: ['import { RadioCard } from "@vapor-ui/core"'],
     id: 'radio-card',
     metadata: { nestable: true },

@@ -5,6 +5,7 @@ import { bool, example, flags } from '../../utils/figma';
 const RADIO_GROUP_PART_ID = {
     root: 'radio-group-root',
     label: 'radio-group-label',
+    requiredSymbol: 'radio-group-required-symbol',
 } as const;
 
 type RadioGroupPart = keyof typeof RADIO_GROUP_PART_ID;
@@ -23,17 +24,29 @@ function render() {
             required: bool(instance, 'required'),
         });
         const label = example(instance.findConnectedInstance(RADIO_GROUP_PART_ID.label));
-        // The radios live in the slot layer's `Slot`; its `orientation`/`type` have no code prop.
+        // The radios live in the slot layer's `Slot`; its `type` has no code prop.
         const slotLayer = instance.findInstance('🟨RadioGroup/SlotLayer');
         const items = slotLayer.type === 'INSTANCE' ? (slotLayer.getSlot('Slot') ?? '') : '';
+        // RadioGroup.Root has no orientation prop yet (column only), so Figma's horizontal maps to a `$css` override.
+        const horizontal =
+            slotLayer.type === 'INSTANCE' &&
+            slotLayer.getEnum('orientation', { horizontal: true, vertical: false });
+        const css = horizontal ? ` $css={{ flexDirection: 'row' }}` : '';
 
-        return figma.code`<RadioGroup.Root size="${size}"${props}>
+        return figma.code`<RadioGroup.Root size="${size}"${props}${css}>
     ${label}
     ${items}
 </RadioGroup.Root>`;
     }
 
-    return figma.code`<${component}>{/* contents */}</${component}>`;
+    if (part === 'label') {
+        const requiredSymbol = example(
+            instance.findConnectedInstance(RADIO_GROUP_PART_ID.requiredSymbol),
+        );
+        return figma.code`<${component}>{/* contents */}${requiredSymbol}</${component}>`;
+    }
+
+    return figma.code`<${component} />`;
 }
 
 export default {

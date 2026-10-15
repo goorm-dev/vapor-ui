@@ -1,6 +1,6 @@
 import figma from 'figma';
 
-import { example } from '../../utils/figma';
+import { bool, example } from '../../utils/figma';
 
 const CARD_PART_ID = {
     root: 'card-root',
@@ -28,7 +28,11 @@ function render() {
 </Card.Root>`;
     }
 
-    return figma.code`<${component}>{/* contents */}</${component}>`;
+    // Card.Body has no padding prop yet, so Figma's `hasPadding=false` maps to a `$css` override.
+    const noPadding = part === 'body' && !bool(instance, 'hasPadding');
+    const css = noPadding ? ` $css={{ padding: '000' }}` : '';
+
+    return figma.code`<${component}${css}>{/* contents */}</${component}>`;
 }
 
 export default {

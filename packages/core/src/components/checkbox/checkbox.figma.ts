@@ -10,6 +10,7 @@ const instance = figma.selectedInstance;
 const size = instance.getEnum('size', { md: 'md', lg: 'lg' });
 // `readOnly` also has a `Default` option in Figma; anything but `true` reads as false.
 const props = flags({
+    defaultChecked: bool(instance, 'checked'),
     disabled: bool(instance, 'disabled'),
     indeterminate: bool(instance, 'indeterminate'),
     invalid: bool(instance, 'invalid'),

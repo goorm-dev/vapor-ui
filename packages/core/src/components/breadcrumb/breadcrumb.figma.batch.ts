@@ -23,8 +23,7 @@ const CHILD_IDS: string[] = [
 
 function render() {
     if (part === 'root') {
-        // `sm` is spelled `\bsm` (leading U+0008) in Figma.
-        const size = instance.getEnum('size', { '\bsm': 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+        const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
         const children = lines(
             instance
                 .findConnectedInstances((node) => CHILD_IDS.includes(node.codeConnectId() ?? ''))
