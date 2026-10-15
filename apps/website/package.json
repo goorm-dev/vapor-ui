@@ -8,6 +8,7 @@
         "clean": "rm -rf node_modules .next .turbo .source",
         "dev": "next dev --turbo",
         "docs:api": "tsx --tsconfig ../../scripts/docs-extractor/tsconfig.json ../../scripts/docs-extractor/src/cli.ts --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --pages ./content/docs/components",
+        "docs:llms": "tsx scripts/build-llm-docs.ts",
         "docs:api:watch": "tsx watch --clear-screen=false --include '../../packages/core/src/**' --tsconfig ../../scripts/docs-extractor/tsconfig.json ../../scripts/docs-extractor/src/cli.ts --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --pages ./content/docs/components",
         "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src ./content",

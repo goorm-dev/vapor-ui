@@ -53,10 +53,12 @@
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.cts",
     "files": [
-        "dist"
+        "dist",
+        "docs"
     ],
     "scripts": {
         "build": "rimraf dist && rolldown -c rolldown.config.ts",
+        "prepack": "pnpm --filter website docs:llms ../../packages/core/docs",
         "clean": "rimraf dist node_modules .turbo",
         "lint": "eslint ./src",
         "test": "vitest --run",
