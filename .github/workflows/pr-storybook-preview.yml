@@ -1,0 +1,64 @@
+name: 'Storybook Preview'
+
+on:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+        paths:
+            - packages/core/src/**
+            - packages/composites/src/**
+            - apps/storybook/**
+
+permissions:
+    contents: read
+
+env:
+    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    CF_PAGES_PROJECT_NAME: vapor-ui-storybook
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    deploy-preview:
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        runs-on: ubuntu-latest
+        steps:
+            - name: Git clone the repository
+              uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              uses: ./.github/composite/install
+
+            - name: Build Storybook
+              run: pnpm build:storybook
+
+            - name: Deploy to Cloudflare Pages
+              id: deploy
+              uses: cloudflare/wrangler-action@v4
+              with:
+                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                  command: pages deploy apps/storybook/storybook-static --project-name=${{ env.CF_PAGES_PROJECT_NAME }} --branch=pr-${{ github.event.pull_request.number }}
+
+            - name: Resolve commit SHA
+              id: sha
+              run: |
+                  SHA_FULL="${{ github.event.pull_request.head.sha }}"
+                  echo "full=$SHA_FULL" >> $GITHUB_OUTPUT
+                  echo "short=${SHA_FULL:0:7}" >> $GITHUB_OUTPUT
+
+            - name: Post preview comment
+              uses: marocchino/sticky-pull-request-comment@v2
+              with:
+                  header: storybook-preview
+                  GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
+                  message: |
+                      📚 **Storybook Preview**
+
+                      | Commit | Preview |
+                      | :----- | :------ |
+                      | [`${{ steps.sha.outputs.short }}`](https://github.com/${{ github.repository }}/commit/${{ steps.sha.outputs.full }}) | ${{ steps.deploy.outputs.pages-deployment-alias-url }} |
