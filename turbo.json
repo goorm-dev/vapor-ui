@@ -10,7 +10,8 @@
                 "@vapor-ui/core#build",
                 "@vapor-ui/icons#build",
                 "@vapor-ui/css-generator#build",
-                "@vapor-ui/color-generator#build"
+                "@vapor-ui/color-generator#build",
+                "website#docs:api"
             ],
             "outputs": ["dist/**"]
         },
@@ -18,19 +19,42 @@
             "dependsOn": ["website#build"],
             "outputs": [".next/**", "!.next/cache/**"]
         },
+        "website#build": {
+            "dependsOn": ["^build", "website#docs:api"],
+            "inputs": ["$TURBO_DEFAULT$", ".env*"],
+            "outputs": [".next/**", "!.next/cache/**"]
+        },
+        "website#docs:api": {
+            "inputs": [
+                "$TURBO_ROOT$/packages/core/src/**",
+                "$TURBO_ROOT$/packages/core/tsconfig.json",
+                "$TURBO_ROOT$/scripts/docs-extractor/src/**",
+                "content/docs/components/*/index.mdx"
+            ],
+            "outputs": ["content/docs/components/*/api/*.json"]
+        },
         "build": {
             "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
             "outputs": [".next/**", "!.next/cache/**", "dist/**"]
         },
-        "typecheck": { "dependsOn": ["^build"] },
-        "test": { "outputs": [], "dependsOn": ["^build"] },
+        "typecheck": {
+            "dependsOn": ["^build"]
+        },
+        "test": {
+            "outputs": [],
+            "dependsOn": ["^build"]
+        },
         "test:regressions": {
             "dependsOn": ["storybook#build:storybook"],
             "cache": false
         },
-        "lint": { "dependsOn": ["^lint"] },
-        "clean": { "cache": false },
+        "lint": {
+            "dependsOn": ["^lint"]
+        },
+        "clean": {
+            "cache": false
+        },
         "build:storybook": {
             "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
             "inputs": ["$TURBO_DEFAULT$"],
