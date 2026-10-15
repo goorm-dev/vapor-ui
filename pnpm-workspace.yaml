@@ -3,6 +3,7 @@ packages:
     - packages/*
     - scripts/ts-api-extractor
     - scripts/icon-extractor
+    - scripts/extract-composites
 
 engineStrict: true
 
