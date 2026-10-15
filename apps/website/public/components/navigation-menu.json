@@ -57,7 +57,7 @@
         {
             "prop": "size",
             "type": ["sm", "md", "lg", "xl"],
-            "default": "md",
+            "default": "sm",
             "description": "Nav.Link의 높이·타이포그래피 크기 등을 제어합니다."
         },
         {

@@ -284,10 +284,10 @@ describe('<ProgressBar />', () => {
     });
 
     describe('size', () => {
-        it('should default to md', () => {
+        it('should default to sm', () => {
             const { container } = render(<ProgressBarTest value={42} />);
 
-            expect(getTrack(container)!.className).toMatch(/size_md/);
+            expect(getTrack(container)!.className).toMatch(/size_sm/);
         });
 
         it.each(['sm', 'md', 'lg'] as const)('should mark the track with size="%s"', (size) => {

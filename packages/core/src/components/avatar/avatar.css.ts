@@ -20,7 +20,7 @@ export const root = componentRecipe({
         verticalAlign: 'top',
     },
 
-    defaultVariants: { size: 'md', shape: 'square' },
+    defaultVariants: { size: 'md', shape: 'circle' },
     variants: {
         /**
          * Size of the avatar. Controls the width, height, and border radius. Default: `'md'`
@@ -48,7 +48,7 @@ export const root = componentRecipe({
             },
         },
         /**
-         * Shape of the avatar border radius. Default: `'square'`
+         * Shape of the avatar border radius. Default: `'circle'`
          */
         shape: {
             square: { borderRadius: radii },

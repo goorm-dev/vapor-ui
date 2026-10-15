@@ -21,7 +21,7 @@ export const track = componentRecipe({
         overflow: 'hidden',
     },
 
-    defaultVariants: { size: 'md' },
+    defaultVariants: { size: 'sm' },
     variants: {
         /**
          * Size of the meter. Controls the height of the track.
