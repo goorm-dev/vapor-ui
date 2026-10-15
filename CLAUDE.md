@@ -50,6 +50,8 @@ pnpm lint             # lint all packages
 pnpm typecheck        # typecheck all packages
 pnpm format           # format all files with Prettier
 pnpm format:check     # check formatting without writing
+pnpm docs:api         # regenerate the props JSON next to each docs page (also run by dev/build)
+pnpm docs:api:watch   # same, rerun on every packages/core change
 ```
 
 ### Package shortcuts
