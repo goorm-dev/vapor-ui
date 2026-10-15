@@ -44,7 +44,7 @@ export const success = componentStyle([
 
 export const label = componentRecipe({
     base: {
-        display: 'inline-flex',
+        display: 'flex',
         gap: vars.size.space['050'],
 
         selectors: {
@@ -65,7 +65,7 @@ export const label = componentRecipe({
 
 export const requiredSymbol = componentStyle([
     foregrounds({ color: 'danger' }),
-    typography({ style: 'subtitle2' }),
+    typography({ style: 'subtitle1' }),
 ]);
 
 export const item = componentStyle({

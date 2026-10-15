@@ -4,9 +4,8 @@ import { forwardRef, useRef } from 'react';
 
 import { Input as BaseInput } from '@base-ui/react/input';
 import { useControlled } from '@base-ui/utils/useControlled';
-import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 
-import { useFieldContext } from '~/components/field/field';
+import { useFieldRequired } from '~/components/field';
 import { useInputGroup } from '~/components/input-group';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -38,13 +37,7 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
     const { invalid, size } = variantProps;
     const { disabled, readOnly, maxLength, required } = otherProps;
 
-    const { setRequired } = useFieldContext();
-
-    useIsoLayoutEffect(() => {
-        setRequired(!!required);
-
-        return () => setRequired(false);
-    }, [required, setRequired]);
+    useFieldRequired(required);
 
     const handleChange = (value: string, event: TextInput.ChangeEventDetails) => {
         setValue(value);

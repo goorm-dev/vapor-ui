@@ -3,8 +3,8 @@
 import { forwardRef } from 'react';
 
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
-import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 
+import { useFieldRequired } from '~/components/field';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
@@ -14,7 +14,6 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
-import { useFieldContext } from '../field';
 import type { ControlVariants } from './switch.css';
 import * as styles from './switch.css';
 
@@ -42,13 +41,7 @@ export const SwitchRoot = forwardRef<HTMLElement, SwitchRoot.Props>((props, ref)
     const { required } = otherProps;
     const dataAttrs = createDataAttributes({ invalid });
 
-    const { setRequired } = useFieldContext();
-
-    useIsoLayoutEffect(() => {
-        setRequired(!!required);
-
-        return () => setRequired(false);
-    }, [required, setRequired]);
+    useFieldRequired(required);
 
     const childrenRender = createRender(childrenProp, <SwitchThumbPrimitive />);
     const children = useRenderElement({

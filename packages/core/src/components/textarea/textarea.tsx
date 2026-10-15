@@ -4,8 +4,8 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
 import { useControlled } from '@base-ui/utils/useControlled';
-import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 
+import { useFieldRequired } from '~/components/field';
 import { useInputGroup } from '~/components/input-group/input-group';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { cn } from '~/utils/cn';
@@ -14,7 +14,6 @@ import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
-import { useFieldContext } from '../field';
 import type { TextareaVariants } from './textarea.css';
 import * as styles from './textarea.css';
 
@@ -63,13 +62,7 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         setValue(newValue);
     };
 
-    const { setRequired } = useFieldContext();
-
-    useIsoLayoutEffect(() => {
-        setRequired(!!required);
-
-        return () => setRequired(false);
-    }, [required, setRequired]);
+    useFieldRequired(required);
 
     const state: Textarea.State = useMemo(
         () => ({ disabled, readOnly, required, invalid }),
