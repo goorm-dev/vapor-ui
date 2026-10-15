@@ -15,7 +15,7 @@ export const item = componentStyle({
 });
 
 export const link = componentRecipe({
-    defaultVariants: { size: 'md', current: false },
+    defaultVariants: { size: 'xl', current: false },
     variants: {
         size: {
             sm: typography({ style: 'body4' }),
@@ -58,7 +58,7 @@ export const icon = componentRecipe({
         color: vars.color.foreground['hint'],
     },
 
-    defaultVariants: { size: 'md' },
+    defaultVariants: { size: 'xl' },
     variants: {
         size: {
             sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },

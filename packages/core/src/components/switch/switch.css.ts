@@ -41,7 +41,7 @@ export const control = componentRecipe({
         },
     ],
 
-    defaultVariants: { size: 'md', invalid: false },
+    defaultVariants: { size: 'sm', invalid: false },
     variants: {
         invalid: { true: {}, false: {} },
         size: {
@@ -90,7 +90,7 @@ export const indicator = componentRecipe({
         },
     },
 
-    defaultVariants: { size: 'md' },
+    defaultVariants: { size: 'sm' },
     variants: {
         size: {
             sm: {

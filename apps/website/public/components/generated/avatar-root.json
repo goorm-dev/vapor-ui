@@ -27,7 +27,7 @@
             "type": ["circle", "square"],
             "required": false,
             "description": "아바타 모서리 형태",
-            "defaultValue": "square"
+            "defaultValue": "circle"
         },
         {
             "name": "src",

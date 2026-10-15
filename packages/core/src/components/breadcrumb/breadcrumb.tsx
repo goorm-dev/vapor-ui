@@ -266,7 +266,7 @@ export interface BreadcrumbLinkPrimitiveState {
 
 export namespace BreadcrumbLinkPrimitive {
     export type State = BreadcrumbLinkPrimitiveState;
-    export type Props = BreadcrumbVariants &
+    export type Props = Omit<BreadcrumbVariants, 'size'> &
         VaporUIComponentProps<'a', BreadcrumbLinkPrimitive.State>;
 }
 

@@ -112,7 +112,7 @@ export const track = componentRecipe({
         },
     },
 
-    defaultVariants: { size: 'md' },
+    defaultVariants: { size: 'sm' },
     variants: {
         /**
          * Size of the track. Controls its height.
