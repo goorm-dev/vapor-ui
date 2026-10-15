@@ -10,6 +10,7 @@ export {
     MenuItem as Item,
     MenuSeparator as Separator,
     MenuSubmenuRoot as SubmenuRoot,
+    MenuSubmenuTrigger as SubmenuTrigger,
     MenuSubmenuTriggerItem as SubmenuTriggerItem,
     MenuSubmenuPopupPrimitive as SubmenuPopupPrimitive,
     MenuSubmenuPopup as SubmenuPopup,

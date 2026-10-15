@@ -227,10 +227,10 @@ export const MenuSubmenuRoot = ({
 MenuSubmenuRoot.displayName = 'Menu.SubmenuRoot';
 
 /* -------------------------------------------------------------------------------------------------
- * Menu.SubmenuTriggerItem
+ * Menu.SubmenuTrigger
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTriggerItem.Props>(
+export const MenuSubmenuTrigger = forwardRef<HTMLElement, MenuSubmenuTrigger.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
         const { triggerRef } = useSubmenuContext();
@@ -243,9 +243,24 @@ export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTrigger
                 {...componentProps}
             >
                 {children}
-
-                <ChevronRightOutlineIcon />
             </BaseMenu.SubmenuTrigger>
+        );
+    },
+);
+MenuSubmenuTrigger.displayName = 'Menu.SubmenuTrigger';
+
+/* -------------------------------------------------------------------------------------------------
+ * Menu.SubmenuTriggerItem
+ * -----------------------------------------------------------------------------------------------*/
+
+export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTriggerItem.Props>(
+    ({ children, ...props }, ref) => {
+        return (
+            <MenuSubmenuTrigger ref={ref} {...props}>
+                {children}
+
+                <ChevronRightOutlineIcon className={styles.subTriggerIcon} />
+            </MenuSubmenuTrigger>
         );
     },
 );
@@ -283,7 +298,7 @@ export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Prop
 
         const positionerRender = createRender(
             positionerElement,
-            <MenuPositionerPrimitive side="right" sideOffset={0} />,
+            <MenuPositionerPrimitive side="right" sideOffset={8} />,
         );
         const positioner = useRenderElement({
             render: positionerRender,
@@ -368,9 +383,9 @@ export const MenuCheckboxItem = forwardRef<HTMLElement, MenuCheckboxItem.Props>(
 
     return (
         <MenuCheckboxItemPrimitive ref={ref} {...componentProps}>
-            {children}
-
             <MenuCheckboxItemIndicatorPrimitive />
+
+            {children}
         </MenuCheckboxItemPrimitive>
     );
 });
@@ -446,11 +461,9 @@ export const MenuRadioItem = forwardRef<HTMLElement, MenuRadioItem.Props>((props
 
     return (
         <MenuRadioItemPrimitive ref={ref} {...componentProps}>
-            {children}
+            <MenuRadioItemIndicatorPrimitive className={styles.indicator} />
 
-            <MenuRadioItemIndicatorPrimitive className={styles.indicator}>
-                <ConfirmOutlineIcon size="100%" />
-            </MenuRadioItemIndicatorPrimitive>
+            {children}
         </MenuRadioItemPrimitive>
     );
 });
@@ -530,9 +543,14 @@ export namespace MenuSubmenuRoot {
     export type OpenEventDetails = BaseMenu.SubmenuRoot.ChangeEventDetails;
 }
 
-export namespace MenuSubmenuTriggerItem {
+export namespace MenuSubmenuTrigger {
     export type State = BaseMenu.SubmenuTrigger.State;
     export type Props = VaporUIComponentProps<typeof BaseMenu.SubmenuTrigger, State>;
+}
+
+export namespace MenuSubmenuTriggerItem {
+    export type State = MenuSubmenuTrigger.State;
+    export type Props = VaporUIComponentProps<typeof MenuSubmenuTrigger, State>;
 }
 
 export namespace MenuSubmenuPopupPrimitive {

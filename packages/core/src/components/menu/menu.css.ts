@@ -1,3 +1,5 @@
+import { calc } from '@vanilla-extract/css-utils';
+
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
@@ -22,7 +24,7 @@ export const popup = componentStyle({
 
     backgroundColor: vars.color.background['canvas-overlay'],
     padding: vars.size.space['050'],
-    minWidth: 'max(var(--anchor-width), 12.5rem)',
+    minWidth: '12.5rem',
 
     overflowY: 'auto',
 
@@ -49,18 +51,14 @@ export const item = componentStyle([
         display: 'flex',
         alignItems: 'center',
         alignSelf: 'stretch',
-        justifyContent: 'space-between',
-        gap: vars.size.space['050'],
+        gap: vars.size.space['075'],
 
         border: 'none',
 
         borderRadius: vars.size.borderRadius['300'],
         cursor: 'pointer',
-        paddingRight: vars.size.space['150'],
-        paddingLeft: vars.size.space['250'],
-        paddingBlock: vars.size.space['050'],
-
-        height: vars.size.dimension['400'],
+        paddingBlock: vars.size.space['100'],
+        paddingInline: vars.size.space['150'],
 
         selectors: {
             [when.disabled()]: {
@@ -73,35 +71,38 @@ export const item = componentStyle([
 
 export const separator = componentStyle({
     flexShrink: 0,
-    marginBlock: vars.size.space['050'],
+    marginBlock: vars.size.space['075'],
+    marginInline: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
     height: '0.0625rem',
 });
 
-export const subTrigger = item;
+export const subTrigger = componentStyle([item, { paddingRight: vars.size.space['075'] }]);
+
+export const subTriggerIcon = componentStyle([
+    foregrounds({ color: 'secondary' }),
+    { marginLeft: 'auto' },
+]);
 
 export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
     foregrounds({ color: 'secondary' }),
     {
         paddingTop: vars.size.space['100'],
-        paddingRight: vars.size.space['050'],
+        paddingRight: vars.size.space['150'],
         paddingBottom: vars.size.space['050'],
-        paddingLeft: vars.size.space['250'],
+        paddingLeft: vars.size.space['150'],
     },
 ]);
 
 export const indicator = componentStyle([
     foregrounds({ color: 'normal' }),
     {
-        position: 'absolute',
-        top: '50%',
-        left: vars.size.space['050'],
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transform: 'translateY(-50%)',
-        width: vars.size.dimension['150'],
-        height: vars.size.dimension['150'],
+        marginLeft: calc.multiply(vars.size.space['025'], -1),
+        width: vars.size.dimension['250'],
+        height: vars.size.dimension['250'],
     },
 ]);
