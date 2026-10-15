@@ -1,0 +1,23 @@
+{
+    "templateFile": "./segmented-control.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=41595-76880",
+            "component": "SegmentedControl.Root",
+            "source": "src/components/segmented-control/segmented-control.tsx"
+        },
+        {
+            "part": "item",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=42080-1943",
+            "component": "SegmentedControl.Item",
+            "source": "src/components/segmented-control/segmented-control.tsx"
+        },
+        {
+            "part": "iconItem",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=42080-1944",
+            "component": "SegmentedControl.IconItem",
+            "source": "src/components/segmented-control/segmented-control.tsx"
+        }
+    ]
+}

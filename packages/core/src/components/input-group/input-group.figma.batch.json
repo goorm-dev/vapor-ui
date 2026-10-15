@@ -1,0 +1,17 @@
+{
+    "templateFile": "./input-group.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=47458-5217",
+            "component": "InputGroup.Root",
+            "source": "src/components/input-group/input-group.tsx"
+        },
+        {
+            "part": "counter",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=47458-5227",
+            "component": "InputGroup.Counter",
+            "source": "src/components/input-group/input-group.tsx"
+        }
+    ]
+}
