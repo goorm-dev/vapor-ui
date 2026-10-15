@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 1.7.0
+
+### Etc.
+
+- add RadioGroup.RequiredSymbol ([#754](https://github.com/goorm-dev/vapor-ui/pull/754)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
 ## 1.6.0
 
 ### General changes
