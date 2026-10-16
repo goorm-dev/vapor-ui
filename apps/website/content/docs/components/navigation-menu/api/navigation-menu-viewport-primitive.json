@@ -1,5 +1,6 @@
 {
     "name": "NavigationMenuViewportPrimitive",
+    "description": "Clipping area inside the panel that shows the content of the open item. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

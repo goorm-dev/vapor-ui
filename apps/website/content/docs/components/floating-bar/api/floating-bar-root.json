@@ -1,5 +1,6 @@
 {
     "name": "FloatingBarRoot",
+    "description": "Root of the FloatingBar compound component, a bar that floats at the bottom center of the viewport to show contextual actions. Manages the open state. Doesn't render its own HTML element.",
     "props": [
         {
             "name": "defaultOpen",
@@ -73,7 +74,7 @@
         }
     ],
     "typeRefs": {
-        "FloatingBar.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"close-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"trigger-focus\"; event: FocusEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  preventUnmountOnClose: () => void;\n}",
+        "FloatingBar.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"trigger-focus\"; event: FocusEvent; }\n  | { reason: \"trigger-press\"; event: MouseEvent | PointerEvent | TouchEvent | KeyboardEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | PointerEvent | TouchEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"close-press\"; event: MouseEvent | PointerEvent | KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  preventUnmountOnClose: () => void;\n}",
         "FloatingBar.Root.Actions": "{\n  unmount: () => void;\n  close: () => void;\n}"
     }
 }

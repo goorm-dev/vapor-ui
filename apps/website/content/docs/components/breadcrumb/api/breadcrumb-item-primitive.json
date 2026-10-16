@@ -1,5 +1,6 @@
 {
     "name": "BreadcrumbItemPrimitive",
+    "description": "List item that holds one entry of the breadcrumb trail, such as a link or an ellipsis. Renders an `<li>` element.",
     "props": [
         {
             "name": "className",

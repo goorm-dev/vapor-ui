@@ -1,11 +1,13 @@
 {
     "name": "BreadcrumbRootPrimitive",
+    "description": "Navigation landmark labeled \"Breadcrumb\" that holds the breadcrumb trail and shares its size with the links, separators, and ellipsis inside it. Renders a `<nav>` element.",
     "props": [
         {
             "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
-            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false
+            "type": ["md", "sm", "lg", "xl"],
+            "detailedType": "\"md\" | \"sm\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Size of the breadcrumb, controlling the typography of the links and the size of the separator and ellipsis icons."
         },
         {
             "name": "className",

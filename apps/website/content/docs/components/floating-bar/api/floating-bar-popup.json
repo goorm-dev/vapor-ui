@@ -1,5 +1,6 @@
 {
     "name": "FloatingBarPopup",
+    "description": "Combines `FloatingBar.PortalPrimitive`, `FloatingBar.PositionerPrimitive`, and `FloatingBar.PopupPrimitive` into a single part. Use `portalElement` to replace the portal. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -13,7 +14,7 @@
             "type": ["ReactElement<FloatingBarPortalPrimitive.Props>"],
             "detailedType": "ReactElement<FloatingBarPortalPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for FloatingBar.PortalPrimitive. If not provided, the default FloatingBar.PortalPrimitive will be rendered."
+            "description": "Replaces the default `FloatingBar.PortalPrimitive`. Use to change the portal container."
         },
         {
             "name": "finalFocus",

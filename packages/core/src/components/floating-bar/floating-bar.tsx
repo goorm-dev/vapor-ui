@@ -15,6 +15,9 @@ import * as styles from './floating-bar.css';
  * FloatingBar.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the FloatingBar compound component, a bar that floats at the bottom center of the viewport to show contextual actions. Manages the open state. Doesn't render its own HTML element.
+ */
 export const FloatingBarRoot = (props: FloatingBarRoot.Props) => {
     return <Popover.Root {...props} />;
 };
@@ -24,6 +27,9 @@ FloatingBarRoot.displayName = 'FloatingBar.Root';
  * FloatingBar.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that opens the floating bar when clicked. Renders a `<button>` element.
+ */
 export const FloatingBarTrigger = forwardRef<HTMLButtonElement, FloatingBarTrigger.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -37,6 +43,9 @@ FloatingBarTrigger.displayName = 'FloatingBar.Trigger';
  * FloatingBar.Close
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that closes the floating bar when clicked. Renders a `<button>` element.
+ */
 export const FloatingBarClose = forwardRef<HTMLButtonElement, FloatingBarClose.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -50,6 +59,9 @@ FloatingBarClose.displayName = 'FloatingBar.Close';
  * FloatingBar.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal container that renders the floating bar outside the normal DOM hierarchy. Renders a `<div>` element.
+ */
 export const FloatingBarPortalPrimitive = forwardRef<
     HTMLDivElement,
     FloatingBarPortalPrimitive.Props
@@ -69,6 +81,9 @@ FloatingBarPortalPrimitive.displayName = 'FloatingBar.PortalPrimitive';
  */
 const positions = { top: 'initial', opacity: 1, left: '50%', transform: 'translateX(-50%)' };
 
+/**
+ * Fixes the floating bar to the bottom center of the viewport, above the safe area. Renders a `<div>` element.
+ */
 export const FloatingBarPositionerPrimitive = forwardRef<
     HTMLDivElement,
     FloatingBarPositionerPrimitive.Props
@@ -91,6 +106,9 @@ FloatingBarPositionerPrimitive.displayName = 'FloatingBar.PositionerPrimitive';
  * FloatingBar.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The floating bar panel that holds the actions, sliding up from the bottom as it opens. Renders a `<div>` element.
+ */
 export const FloatingBarPopupPrimitive = forwardRef<
     HTMLDivElement,
     FloatingBarPopupPrimitive.Props
@@ -105,6 +123,9 @@ FloatingBarPopupPrimitive.displayName = 'FloatingBar.PopupPrimitive';
  * FloatingBar.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `FloatingBar.PortalPrimitive`, `FloatingBar.PositionerPrimitive`, and `FloatingBar.PopupPrimitive` into a single part. Use `portalElement` to replace the portal. Renders a `<div>` element.
+ */
 export const FloatingBarPopup = forwardRef<HTMLDivElement, FloatingBarPopup.Props>((props, ref) => {
     const { portalElement, ...componentProps } = props;
 
@@ -162,7 +183,7 @@ export namespace FloatingBarPopupPrimitive {
 
 export interface FloatingBarPopupProps extends FloatingBarPopupPrimitive.Props {
     /**
-     * A Custom element for FloatingBar.PortalPrimitive. If not provided, the default FloatingBar.PortalPrimitive will be rendered.
+     * Replaces the default `FloatingBar.PortalPrimitive`. Use to change the portal container.
      */
     portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
 }

@@ -1,5 +1,6 @@
 {
     "name": "FloatingBarPopupPrimitive",
+    "description": "The floating bar panel that holds the actions, sliding up from the bottom as it opens. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

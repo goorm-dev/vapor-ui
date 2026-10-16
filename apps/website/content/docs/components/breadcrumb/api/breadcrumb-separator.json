@@ -1,6 +1,14 @@
 {
     "name": "BreadcrumbSeparator",
+    "description": "Icon placed between breadcrumb items, a slash by default, hidden from assistive technologies. Renders an `<li>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Icon shown as the separator, such as a chevron icon. Replaces the default slash icon."
+        },
         {
             "name": "className",
             "type": ["string", "function"],

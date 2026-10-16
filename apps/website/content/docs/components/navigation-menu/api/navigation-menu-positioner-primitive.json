@@ -1,5 +1,6 @@
 {
     "name": "NavigationMenuPositionerPrimitive",
+    "description": "Positions the navigation menu panel against the open trigger and keeps it inside the viewport. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

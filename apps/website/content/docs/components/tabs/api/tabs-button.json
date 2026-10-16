@@ -1,5 +1,6 @@
 {
     "name": "TabsButton",
+    "description": "Button that activates the panel with the same `value` when clicked. Renders a `<button>` element.",
     "props": [
         {
             "name": "value",

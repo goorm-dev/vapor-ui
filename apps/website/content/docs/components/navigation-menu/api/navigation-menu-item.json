@@ -1,5 +1,6 @@
 {
     "name": "NavigationMenuItem",
+    "description": "Holds one navigation entry, either a link or a trigger with its content. Renders an `<li>` element.",
     "props": [
         {
             "name": "value",

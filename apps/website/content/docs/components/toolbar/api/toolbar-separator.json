@@ -1,5 +1,6 @@
 {
     "name": "ToolbarSeparator",
+    "description": "Vertical line that separates groups of toolbar items. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -11,7 +12,7 @@
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: SeparatorState) => (React.CSSProperties | undefined)) | ((state: Toolbar.Separator.State) => (React.CSSProperties | undefined)) | undefined",
+            "detailedType": "React.CSSProperties | ((state: Toolbar.Separator.State) => (React.CSSProperties | undefined)) | ((state: SeparatorState) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },

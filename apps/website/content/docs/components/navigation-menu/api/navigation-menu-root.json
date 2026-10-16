@@ -1,17 +1,20 @@
 {
     "name": "NavigationMenuRoot",
+    "description": "Root of the NavigationMenu compound component, a set of site navigation links where some items open a panel of further links. Shares `direction`, `size`, and `disabled` with the parts inside it. Renders a `<nav>` element, or a `<div>` element when nested.",
     "props": [
         {
             "name": "direction",
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
-            "required": false
+            "required": false,
+            "description": "Layout direction of the menu items, which also sets the arrow keys that move focus between them."
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false
+            "required": false,
+            "description": "Size of the links and triggers, controlling height, padding, and typography."
         },
         {
             "name": "defaultValue",
@@ -45,7 +48,8 @@
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
-            "required": false
+            "required": false,
+            "description": "Disables every link and trigger in the menu, blocking all interactions. A `disabled` set on a link or trigger takes precedence."
         },
         {
             "name": "actionsRef",
@@ -100,6 +104,6 @@
     "typeRefs": {
         "NavigationMenu.Root.State": "{\n  open: boolean;\n  nested: boolean;\n}",
         "NavigationMenu.Root.Actions": "{\n  unmount: () => void;\n}",
-        "NavigationMenu.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"link-press\"; event: MouseEvent | PointerEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
+        "NavigationMenu.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"link-press\"; event: MouseEvent | PointerEvent; }\n  | { reason: \"none\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
     }
 }
