@@ -1312,7 +1312,7 @@ describe('파싱 실패', () => {
 
         expect(result.failures).toEqual(['broken']);
         expect(result.docs.map((doc) => doc.name)).toEqual(['BadgeRoot']);
-        expect(result.sourceFiles.get(result.docs[0])).toBe(path.join(root, 'badge.tsx'));
+        expect(result.sourceFiles[0]).toBe(path.join(root, 'badge.tsx'));
         expect(reporter.warnings).toHaveLength(1);
         expect(reporter.warnings[0]).toMatch(/^Failed to extract props for broken: /);
     });

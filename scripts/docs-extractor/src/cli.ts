@@ -68,7 +68,7 @@ function runCli(): void {
 
     const { written, removed } = writeDocs(
         pages,
-        docs.map((doc) => ({ doc, sourceFile: sourceFiles.get(doc)! })),
+        docs.map((doc, i) => ({ doc, sourceFile: sourceFiles[i] })),
         { removeStale },
     );
     if (removed.length > 0) reporter.info(`Removed ${removed.length} stale files.`);
