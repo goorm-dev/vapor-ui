@@ -1,5 +1,6 @@
 {
     "name": "CollapsiblePanel",
+    "description": "Content of the collapsible, which expands and collapses with a height animation. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -38,6 +39,6 @@
         }
     ],
     "typeRefs": {
-        "Collapsible.Panel.State": "{\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n  disabled: boolean;\n  open: boolean;\n}"
+        "Collapsible.Panel.State": "{\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n  open: boolean;\n  disabled: boolean;\n}"
     }
 }

@@ -1,5 +1,6 @@
 {
     "name": "TableCell",
+    "description": "Data cell in a table row. Renders a `<td>` element.",
     "props": [
         {
             "name": "className",
