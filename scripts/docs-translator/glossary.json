@@ -1,0 +1,23 @@
+[
+    { "en": "element", "ko": "요소" },
+    { "en": "controlled", "ko": "제어" },
+    { "en": "uncontrolled", "ko": "비제어" },
+    { "en": "render", "ko": "렌더링" },
+    { "en": "trigger", "ko": "트리거" },
+    { "en": "popup", "ko": "팝업" },
+    { "en": "portal", "ko": "포털" },
+    { "en": "backdrop", "ko": "배경" },
+    { "en": "viewport", "ko": "뷰포트" },
+    { "en": "item", "ko": "항목" },
+    { "en": "panel", "ko": "패널" },
+    { "en": "part", "ko": "파트" },
+    { "en": "indicator", "ko": "인디케이터" },
+    { "en": "highlight", "ko": "강조" },
+    { "en": "label", "ko": "레이블" },
+    { "en": "assistive technolog", "ko": "보조기술" },
+    { "en": "event handler", "ko": "이벤트 핸들러" },
+    { "en": "callback", "ko": "콜백" },
+    { "en": "children", "ko": "자식" },
+    { "en": "state", "ko": "상태" },
+    { "en": "focus", "ko": "포커스" }
+]
