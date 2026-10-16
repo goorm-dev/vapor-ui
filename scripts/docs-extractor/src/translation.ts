@@ -61,3 +61,44 @@ export function mirrorDoc(
         })),
     };
 }
+
+/** One `glossary.json` entry: the Korean every translation must use for `en`. */
+export interface GlossaryTerm {
+    en: string;
+    ko: string;
+}
+
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** The glossary terms a source text uses: `en` matched case-insensitively at the start of a word. */
+export function applicableTerms(text: string, glossary: GlossaryTerm[]): GlossaryTerm[] {
+    return glossary.filter(({ en }) => new RegExp(`\\b${escapeRegExp(en)}`, 'i').test(text));
+}
+
+/** The lock entry a translation of `text` gets under the given guide version and glossary. */
+export function lockEntryFor(text: string, guide: number, glossary: GlossaryTerm[]): LockEntry {
+    const terms = applicableTerms(text, glossary).map(({ en, ko }) => [en, ko]);
+    return { source: hashText(text), guide, terms: hashText(JSON.stringify(terms)) };
+}
+
+/**
+ * The translation units of `doc` whose translation is missing: no lock entry, or
+ * one made from a different source text, guide version or glossary terms.
+ */
+export function missingUnits(
+    doc: ComponentDoc,
+    lock: Record<string, LockEntry> = {},
+    guide: number,
+    glossary: GlossaryTerm[],
+): TranslationUnit[] {
+    return translationUnits(doc).filter(({ key, text }) => {
+        const want = lockEntryFor(text, guide, glossary);
+        const have = lock[key];
+        return (
+            !have ||
+            have.source !== want.source ||
+            have.guide !== want.guide ||
+            have.terms !== want.terms
+        );
+    });
+}

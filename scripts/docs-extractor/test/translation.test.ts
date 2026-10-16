@@ -5,7 +5,15 @@
  * was made from the current source text, and otherwise puts the English in its place.
  */
 import type { ComponentDoc } from '#model';
-import { type LockEntry, hashText, mirrorDoc, translationUnits } from '#translation';
+import {
+    type LockEntry,
+    applicableTerms,
+    hashText,
+    lockEntryFor,
+    mirrorDoc,
+    missingUnits,
+    translationUnits,
+} from '#translation';
 
 const EN: ComponentDoc = {
     name: 'MeterRoot',
@@ -95,5 +103,55 @@ describe('mirrorDoc', () => {
 
     it('한국어 파일이 없으면 영어를 그대로 복사한다', () => {
         expect(mirrorDoc(EN, undefined, {})).toEqual(EN);
+    });
+});
+
+describe('applicableTerms', () => {
+    const glossary = [
+        { en: 'element', ko: '요소' },
+        { en: 'item', ko: '항목' },
+        { en: 'assistive technolog', ko: '보조기술' },
+    ];
+
+    it('대소문자를 무시하고 단어 경계에서 앞부분이 일치하는 용어를 고른다', () => {
+        expect(
+            applicableTerms('Renders an Element. Hidden from assistive technologies.', glossary),
+        ).toEqual([glossary[0], glossary[2]]);
+    });
+
+    it('단어 중간에서 일치하는 용어는 고르지 않는다', () => {
+        expect(applicableTerms('A lineitem and a subelement.', glossary)).toEqual([]);
+    });
+});
+
+describe('missingUnits', () => {
+    const glossary = [{ en: 'value', ko: '값' }];
+    const fresh = (text: string) => lockEntryFor(text, 1, glossary);
+    const lock = {
+        description: fresh('Displays a measurement.'),
+        'props.value': fresh('The current value.'),
+        'props.max': fresh('The maximum value.'),
+    };
+
+    it('원문·가이드 version·용어가 lock과 모두 같으면 누락이 없다', () => {
+        expect(missingUnits(EN, lock, 1, glossary)).toEqual([]);
+    });
+
+    it('lock에 없는 항목은 누락이다', () => {
+        expect(missingUnits(EN, { description: lock.description }, 1, glossary)).toEqual([
+            { key: 'props.value', text: 'The current value.' },
+            { key: 'props.max', text: 'The maximum value.' },
+        ]);
+    });
+
+    it('가이드 version이 다르면 전부 누락이다', () => {
+        expect(missingUnits(EN, lock, 2, glossary)).toHaveLength(3);
+    });
+
+    it('적용되는 용어의 번역이 바뀌면 그 용어가 들어간 항목만 누락이다', () => {
+        expect(missingUnits(EN, lock, 1, [{ en: 'value', ko: '밸류' }])).toEqual([
+            { key: 'props.value', text: 'The current value.' },
+            { key: 'props.max', text: 'The maximum value.' },
+        ]);
     });
 });

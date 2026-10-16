@@ -141,28 +141,48 @@ function readKoDoc(koPath: string): ComponentDoc | undefined {
     ) as ComponentDoc;
 }
 
+export interface ApiDirFile {
+    /** File name without `.json`, the lock key. */
+    name: string;
+    en: ComponentDoc;
+    /** The current `ko/` file, if there is one. */
+    ko: ComponentDoc | undefined;
+    koPath: string;
+}
+
 /**
- * Writes `<api>/ko/<file>` for every extractor-shaped `<api>/en/<file>`, hand-written
- * files included: the Korean text where the lock says it matches the current source
- * text, the English elsewhere (see mirrorDoc).
+ * Reads one page's `api/` folder: its lock, and every extractor-shaped `en/` file
+ * (hand-written ones included) with its `ko/` counterpart. Shared with the
+ * translate script so both read the folder by the same rules.
+ */
+export function readApiDir(apiDir: string): { lock: Lock; files: ApiDirFile[] } {
+    const files = globSync('en/*.json', { cwd: apiDir, absolute: true })
+        .sort()
+        .filter(isExtractorOutput)
+        .map((enPath) => {
+            const koPath = koPathFor(enPath);
+            return {
+                name: path.basename(enPath, '.json'),
+                en: JSON.parse(fs.readFileSync(enPath, 'utf8')) as ComponentDoc,
+                ko: readKoDoc(koPath),
+                koPath,
+            };
+        });
+    return { lock: readLock(apiDir), files };
+}
+
+/**
+ * Writes `<api>/ko/<file>` for every file readApiDir finds: the Korean text where
+ * the lock says it matches the current source text, the English elsewhere (see mirrorDoc).
  */
 function mirrorApiDir(apiDir: string): string[] {
-    const lock = readLock(apiDir);
+    const { lock, files } = readApiDir(apiDir);
 
-    return globSync('en/*.json', { cwd: apiDir, absolute: true })
-        .sort()
-        .flatMap((enPath) => {
-            if (!isExtractorOutput(enPath)) return [];
-            const en: ComponentDoc = JSON.parse(fs.readFileSync(enPath, 'utf8'));
-
-            const koPath = koPathFor(enPath);
-            const name = path.basename(enPath, '.json');
-            const ko = mirrorDoc(en, readKoDoc(koPath), lock[name]);
-
-            fs.mkdirSync(path.dirname(koPath), { recursive: true });
-            fs.writeFileSync(koPath, JSON.stringify(ko, null, 2));
-            return [koPath];
-        });
+    return files.map(({ name, en, ko, koPath }) => {
+        fs.mkdirSync(path.dirname(koPath), { recursive: true });
+        fs.writeFileSync(koPath, JSON.stringify(mirrorDoc(en, ko, lock[name]), null, 2));
+        return koPath;
+    });
 }
 
 export interface WriteResult {
