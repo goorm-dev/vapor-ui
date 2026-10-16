@@ -1,6 +1,6 @@
 ---
 name: write-component-jsdocs
-description: Guide for writing JSDoc comments on vapor-ui components and their props. Use when adding, reviewing, or fixing JSDoc on component tsx files or css.ts variant files. Covers where to place comments based on component pattern — standalone, compound root, compound sub-part — language and format rules, and a checklist for review. Triggers on requests like add jsdocs, write component docs, document props, jsdoc 작성, or when reviewing a component documentation completeness.
+description: Guide for writing JSDoc comments on vapor-ui components and their props. Use when adding, reviewing, or fixing JSDoc on component tsx files or css.ts variant files. Covers where to place comments based on component pattern — standalone, compound root, compound sub-part, primitive vs combined part — language and format rules, and a checklist for review. Triggers on requests like add jsdocs, write component docs, document props, jsdoc 작성, or when reviewing a component documentation completeness.
 argument-hint: ComponentName — the PascalCase component name to document (e.g. Button, Dialog, Avatar). Required. When provided, locate the component under packages/core/src/components/{kebab-case-name}/ and apply this guide to those files only.
 ---
 
@@ -11,8 +11,8 @@ JSDoc in vapor-ui is **user-facing UI**, not internal code comments. Write it fo
 ## Core rules
 
 - **Language**: English only. No Korean in JSDoc blocks.
-- **Format**: Always leave the first line of every `/** ... */` block empty.
-- **Placement**: Write the component summary above the component function. Write individual prop descriptions inside the Props interface/type, not on the component function.
+- **Format**: Put `/**` on its own line and start the text on the next line. Never write a one-line `/** ... */` block, and don't add an empty ` *` line before the text.
+- **Placement**: Write the component summary directly above the `export const X = forwardRef(...)` statement — the extractor reads the JSDoc on that statement. Write individual prop descriptions inside the Props interface/type, not on the component.
 
 ## Where to write
 
@@ -20,7 +20,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 
 | Target            | File                 | Location                                              |
 | ----------------- | -------------------- | ----------------------------------------------------- |
-| Component summary | `{component}.tsx`    | Above the component function                          |
+| Component summary | `{component}.tsx`    | Above `export const X = forwardRef(...)`              |
 | Individual props  | `{component}.tsx`    | Inside the `interface` or namespace `Props`           |
 | Variant groups    | `{component}.css.ts` | On each variant key object inside `componentRecipe()` |
 
@@ -42,6 +42,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 2. User perspective: what it is → when to use it
 3. No internal terms (`memoized`, `wrapper`, `token-based`, etc.)
 4. End with the rendered HTML element using backticks around the tag: "Renders a `<button>` element." or "Doesn't render its own HTML element.".
+5. **Primitive vs combined part** — a `XxxPrimitive` part describes the part itself. A part that assembles primitives (e.g. `Tooltip.Popup` over `PortalPrimitive`, `PositionerPrimitive`, `PopupPrimitive`) starts with "Combines `A`, `B`, and `C` into a single part.", then names the `xxxElement` props that replace each piece, then the rendered element. See [references/guide.md](references/guide.md#primitive-vs-combined-parts).
 
 ## Prop description rules
 
@@ -49,7 +50,9 @@ Placement depends on the component pattern. See [references/guide.md](references
 2. Describe side effects and interactions with other props
 3. For numeric props: include unit and valid range
 4. For event handlers: specify the exact trigger condition, not just "handler"
-5. Never document default values in JSDoc — neither the `@default` tag nor inline `Default:` text. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag at all; it reads `defaultValue` from code — the component function's destructuring defaults, then the `defaultVariants` of the recipe the component calls — so a default written in JSDoc shows up twice in the docs table (see the README's "Default values"). Existing `@default` tags stay as they are — just don't add new ones.
+5. Never document default values in JSDoc — neither the `@default` tag nor inline `Default:` text. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag at all; it reads `defaultValue` from code — the component function's destructuring defaults, then the `defaultVariants` of the recipe the component calls. Remove any `@default` tag you find.
+6. `children` — say what goes in the slot, with an example ("Content shown inside the badge, such as a label or count."). For a function child, describe its arguments. Never write just "Children of the component" or restate `ReactNode`.
+7. Repeated props (`size`, `invalid`, …) — start from the shared phrase in [references/guide.md](references/guide.md#shared-phrases) and add only what differs for that component.
 
 ## Review checklist
 
@@ -58,11 +61,14 @@ See the full checklist in [references/guide.md](references/guide.md#checklist).
 **Quick checklist:**
 
 - [ ] All JSDoc in English
-- [ ] First line of every block is empty
+- [ ] `/**` on its own line, text starts on the next line, no one-line `/** */` blocks
 - [ ] Summary is one line, complete sentence, HTML element in backticks (e.g. `` `<button>` ``)
+- [ ] Combined parts start with "Combines …" and name their `xxxElement` props
 - [ ] No prop name repetition in descriptions
+- [ ] `children` says what goes in the slot
 - [ ] Event handlers describe exact trigger condition
 - [ ] Numeric props include unit and range
+- [ ] Shared props (`size`, `invalid`, …) follow the shared phrases
 - [ ] No JSDoc on individual variant values (`sm`, `md`, `fill`, `primary`, etc.)
 - [ ] No JSDoc on `export type XxxVariants`
 - [ ] No default values in descriptions — neither `@default` tags nor inline `Default:` text
