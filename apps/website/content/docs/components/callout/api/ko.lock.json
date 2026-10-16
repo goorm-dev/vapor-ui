@@ -1,0 +1,51 @@
+{
+    "callout-icon": {
+        "description": {
+            "source": "67e27d4afe004c54",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "callout-root": {
+        "description": {
+            "source": "0a909bf135bb9287",
+            "guide": 2,
+            "terms": "c39d094f5d27eebe"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.colorPalette": {
+            "source": "6880e3cdef75d3a8",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

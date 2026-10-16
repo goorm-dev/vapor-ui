@@ -1,0 +1,46 @@
+{
+    "name": "BreadcrumbLinkPrimitive",
+    "description": "Breadcrumb 경로에 있는 페이지로 연결되는 링크. 사용자가 있는 페이지의 링크에는 `current`를 설정하세요. `<a>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "current",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "링크를 현재 페이지로 표시합니다. 활성 색상을 적용하고 `<a>` 요소에 `aria-current=\"page\"`와 `aria-disabled`를 설정합니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Breadcrumb의 크기. 링크의 타이포그래피와 구분자 및 생략 아이콘의 크기를 결정합니다.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Breadcrumb.LinkPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties", "function"],
+            "detailedType": "CSSProperties | ((state: Breadcrumb.LinkPrimitive.State) => (CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Breadcrumb.LinkPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Breadcrumb.LinkPrimitive.State": "{\n  current: boolean;\n}"
+    }
+}

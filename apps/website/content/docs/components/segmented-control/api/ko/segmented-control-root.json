@@ -1,0 +1,108 @@
+{
+    "name": "SegmentedControlRoot",
+    "description": "`SegmentedControl.RootPrimitive`와 `SegmentedControl.IndicatorPrimitive`를 하나의 파트로 합칩니다. 인디케이터를 대체하려면 `indicatorElement`를 사용하세요. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
+            "required": false,
+            "description": "세그먼트 컨트롤의 크기. 패딩과 세그먼트의 높이 및 패딩을 결정합니다."
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "비제어 세그먼트 컨트롤에서 처음 렌더링할 때 선택되는 세그먼트의 값. `SegmentedControl.Item`의 `value`와 일치해야 합니다. 설정하지 않았거나 일치하는 세그먼트가 없으면 활성화된 첫 번째 세그먼트가 선택됩니다."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: string, eventDetails: SegmentedControl.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "사용자가 클릭하거나 화살표 키로 다른 세그먼트를 선택할 때 호출됩니다. 새 값과 변경 이벤트 세부 정보를 받습니다."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "제어 세그먼트 컨트롤에서 선택된 세그먼트의 값. 사용자가 세그먼트를 선택할 때 값을 갱신하려면 `onValueChange`와 함께 사용하세요."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: SegmentedControl.Root.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "indicatorElement",
+            "type": ["ReactElement<SegmentedControlIndicatorPrimitive.Props>"],
+            "detailedType": "ReactElement<SegmentedControlIndicatorPrimitive.Props> | undefined",
+            "required": false,
+            "description": "기본 `SegmentedControl.IndicatorPrimitive`를 대체합니다. 슬라이딩 강조 표시의 모양을 바꿀 때 사용하세요."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+        },
+        {
+            "name": "form",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "라디오 input을 소유한 폼을 식별합니다.\n라디오 그룹이 폼 밖에 렌더링될 때 유용합니다."
+        },
+        {
+            "name": "inputRef",
+            "type": ["React.Ref<HTMLInputElement>"],
+            "detailedType": "React.Ref<HTMLInputElement> | undefined",
+            "required": false,
+            "description": "숨겨진 input 요소에 접근하는 ref."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "폼을 제출할 때 필드를 식별하는 이름."
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "사용자가 그룹에서 다른 라디오 버튼을 선택하지 못하게 할지 여부."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "폼을 제출하기 전에 사용자가 값을 반드시 선택해야 하는지 여부."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: SegmentedControl.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: SegmentedControl.Root.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "SegmentedControl.Root.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "SegmentedControl.Root.State": "{\n  readOnly: boolean;\n  required: boolean;\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
+    }
+}

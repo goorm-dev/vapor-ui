@@ -9,7 +9,7 @@ interface ComponentPropsTableProps {
 
 /** Reads the part's generated API JSON at build time and renders its props table. */
 export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps) => {
-    const componentData = readComponentApi(componentName);
+    const componentData = readComponentApi(componentName, 'ko');
 
     if (!componentData) {
         throw new Error(`No API JSON for "${componentName}". Run \`pnpm docs:api\`.`);

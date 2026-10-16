@@ -1,0 +1,205 @@
+{
+    "radio-group-label": {
+        "description": {
+            "source": "89495cc2fb82f4b5",
+            "guide": 2,
+            "terms": "3c759f63895822aa"
+        },
+        "props.children": {
+            "source": "5ddb345e453294b1",
+            "guide": 2,
+            "terms": "8518674c00398286"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "radio-group-root": {
+        "description": {
+            "source": "3215b72ccb5338ad",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.children": {
+            "source": "cae8c592069ba9ae",
+            "guide": 2,
+            "terms": "9d600eecf6a80945"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.defaultValue": {
+            "source": "e8e07ed19cba6230",
+            "guide": 2,
+            "terms": "7f5451ec1913b413"
+        },
+        "props.disabled": {
+            "source": "beac01633b0203fa",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.form": {
+            "source": "9cc3505443a22cd6",
+            "guide": 2,
+            "terms": "b01d06383280049d"
+        },
+        "props.inputRef": {
+            "source": "b91d4862ecafee47",
+            "guide": 2,
+            "terms": "a48bffc79c05ff98"
+        },
+        "props.invalid": {
+            "source": "4d32bdc80ae36c16",
+            "guide": 2,
+            "terms": "a48bffc79c05ff98"
+        },
+        "props.name": {
+            "source": "29e3e432eb818efb",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.onValueChange": {
+            "source": "8907199c44370820",
+            "guide": 2,
+            "terms": "d807d0b0e57e911d"
+        },
+        "props.readOnly": {
+            "source": "b9a22bb5b96d07e4",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.required": {
+            "source": "2e4c5447b214bba6",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.size": {
+            "source": "14178b67ab0a779e",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.value": {
+            "source": "38fc67d416719f6a",
+            "guide": 2,
+            "terms": "9f022edc67d0083b"
+        }
+    },
+    "radio-indicator-primitive": {
+        "description": {
+            "source": "6db85282edfc1c86",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.keepMounted": {
+            "source": "9813c7c799238882",
+            "guide": 2,
+            "terms": "a48bffc79c05ff98"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "radio-root": {
+        "description": {
+            "source": "916672a9376e4a0b",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.children": {
+            "source": "485d2081449be53d",
+            "guide": 2,
+            "terms": "8700bca9b02d4aa6"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.disabled": {
+            "source": "beac01633b0203fa",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.inputRef": {
+            "source": "b91d4862ecafee47",
+            "guide": 2,
+            "terms": "a48bffc79c05ff98"
+        },
+        "props.invalid": {
+            "source": "d50ecb5308f47b37",
+            "guide": 2,
+            "terms": "a48bffc79c05ff98"
+        },
+        "props.nativeButton": {
+            "source": "fd073644b0e7e06b",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.readOnly": {
+            "source": "bb141010488d62d1",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.required": {
+            "source": "2e4c5447b214bba6",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.size": {
+            "source": "056f809134563dc0",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.value": {
+            "source": "a19f9d88e90e8121",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    }
+}

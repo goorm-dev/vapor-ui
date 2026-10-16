@@ -1,0 +1,35 @@
+{
+    "name": "ToastProvider",
+    "description": "자식에게 Toast 상태를 제공하고, `useToastManager` 또는 `toastManager`로 추가한 각 Toast를 아이콘, 제목, 설명, 액션, 닫기 버튼과 함께 표시합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Toast를 표시할 수 있는 앱의 영역. 보통 앱 전체입니다."
+        },
+        {
+            "name": "toastManager",
+            "type": ["ToastManager"],
+            "detailedType": "ToastManager | undefined",
+            "required": false,
+            "description": "`createToastManager`로 만든 Toast 매니저. React 컴포넌트 밖에서 Toast를 추가할 때 사용합니다."
+        },
+        {
+            "name": "limit",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "한 번에 표시할 수 있는 Toast의 최대 개수. 제한을 넘으면 가장 오래된 Toast를 제거하지 않고 (`data-limited` 속성으로) `limited`로 표시하므로, 숨기거나 애니메이션으로 사라지게 할 수 있습니다."
+        },
+        {
+            "name": "timeout",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "Toast가 자동으로 닫히기까지의 기본 시간(ms). `0`이면 Toast가 자동으로 닫히지 않습니다.",
+            "defaultValue": "4000"
+        }
+    ]
+}

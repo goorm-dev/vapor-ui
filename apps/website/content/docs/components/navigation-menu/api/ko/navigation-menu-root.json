@@ -1,0 +1,109 @@
+{
+    "name": "NavigationMenuRoot",
+    "description": "일부 항목이 추가 링크 패널을 여는 사이트 탐색 링크 모음인 NavigationMenu 복합 컴포넌트의 루트. 내부 파트와 `direction`, `size`, `disabled`를 공유합니다. `<nav>` 요소로 렌더링되며, 중첩된 경우 `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "direction",
+            "type": ["horizontal", "vertical"],
+            "detailedType": "\"horizontal\" | \"vertical\" | undefined",
+            "required": false,
+            "description": "메뉴 항목의 레이아웃 방향. 항목 사이에서 포커스를 옮기는 화살표 키도 이 값으로 정해집니다."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "링크와 트리거의 크기. 높이, 패딩, 타이포그래피를 결정합니다."
+        },
+        {
+            "name": "defaultValue",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "처음에 선택되어 있을 항목의 비제어 값.\n\n제어 컴포넌트로 렌더링하려면 대신 `value` prop을 사용하세요."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: unknown, eventDetails: NavigationMenu.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "값이 바뀔 때 호출되는 콜백."
+        },
+        {
+            "name": "value",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "현재 열려 있어야 하는 탐색 메뉴 항목의 제어 값. null이나 undefined가 아니면 메뉴가 열리고, null이나 undefined이면 메뉴가 닫힙니다.\n\n비제어 컴포넌트로 렌더링하려면 대신 `defaultValue` prop을 사용하세요."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: NavigationMenu.Root.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "메뉴의 모든 링크와 트리거를 비활성화해 모든 상호작용을 막습니다. 링크나 트리거에 설정한 `disabled`가 우선합니다."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<NavigationMenu.Root.Actions | null>"],
+            "detailedType": "React.RefObject<NavigationMenu.Root.Actions | null> | undefined",
+            "required": false,
+            "description": "명령형 동작에 접근하는 ref."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "탐색 팝업을 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "탐색 팝업을 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["function"],
+            "detailedType": "((open: boolean) => void) | undefined",
+            "required": false,
+            "description": "탐색 메뉴가 닫힌 뒤 애니메이션이 모두 끝나면 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "detailedType": "\"horizontal\" | \"vertical\" | undefined",
+            "required": false,
+            "description": "탐색 메뉴의 방향."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: NavigationMenu.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Root.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "NavigationMenu.Root.State": "{\n  open: boolean;\n  nested: boolean;\n}",
+        "NavigationMenu.Root.Actions": "{\n  unmount: () => void;\n}",
+        "NavigationMenu.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"link-press\"; event: MouseEvent | PointerEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
+    }
+}

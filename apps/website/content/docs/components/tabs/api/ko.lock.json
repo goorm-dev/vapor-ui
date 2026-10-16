@@ -1,0 +1,214 @@
+{
+    "tabs-button": {
+        "description": {
+            "source": "4a444a8faf918d90",
+            "guide": 2,
+            "terms": "8737339371a9dd88"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.disabled": {
+            "source": "b8cf01fcd26fd9e8",
+            "guide": 2,
+            "terms": "b01d06383280049d"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.value": {
+            "source": "1612169b937f014d",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "tabs-indicator-primitive": {
+        "description": {
+            "source": "3e7529fdafd25390",
+            "guide": 2,
+            "terms": "c39d094f5d27eebe"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.renderBeforeHydration": {
+            "source": "ac1d52c78d1f113b",
+            "guide": 2,
+            "terms": "99b6bf111eae84fd"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "tabs-list-primitive": {
+        "description": {
+            "source": "8143f273c82a6c11",
+            "guide": 2,
+            "terms": "3f97d30ff500acb9"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "tabs-list": {
+        "description": {
+            "source": "eb7cec9011515346",
+            "guide": 2,
+            "terms": "f679222c3e4816ed"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.indicatorElement": {
+            "source": "effca31d999a4fb0",
+            "guide": 2,
+            "terms": "cd131a323ae96b63"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "tabs-panel": {
+        "description": {
+            "source": "39d8d13ae0ffdb2b",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.keepMounted": {
+            "source": "8c76c2478e3788df",
+            "guide": 2,
+            "terms": "5ea3ee1ea0908549"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.value": {
+            "source": "7d1cc9cfe5679e69",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "tabs-root": {
+        "description": {
+            "source": "4d88e1769720498a",
+            "guide": 2,
+            "terms": "d568a7668afaf5ae"
+        },
+        "props.activateOnFocus": {
+            "source": "651a2b702b4e780c",
+            "guide": 2,
+            "terms": "63afee4cf0610e2a"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.defaultValue": {
+            "source": "5280e7ce798ab706",
+            "guide": 2,
+            "terms": "3dc9ff164840b150"
+        },
+        "props.disabled": {
+            "source": "467803fcaedc6a5c",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.loopFocus": {
+            "source": "76db443ceb9fd4b3",
+            "guide": 2,
+            "terms": "9a94fba5c1cf20d5"
+        },
+        "props.onValueChange": {
+            "source": "f7f5ecb2329023e8",
+            "guide": 2,
+            "terms": "19e8a347ce16ee7a"
+        },
+        "props.orientation": {
+            "source": "b7a7e99c28531987",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.size": {
+            "source": "4f2d1a594484d456",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.value": {
+            "source": "1cae9a96df3ec579",
+            "guide": 2,
+            "terms": "3dc9ff164840b150"
+        },
+        "props.variant": {
+            "source": "f088193bb94b8496",
+            "guide": 2,
+            "terms": "6021f0f25c2a5a78"
+        }
+    }
+}

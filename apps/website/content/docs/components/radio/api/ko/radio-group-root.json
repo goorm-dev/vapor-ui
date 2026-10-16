@@ -1,0 +1,116 @@
+{
+    "name": "RadioGroupRoot",
+    "description": "라디오를 묶어 한 번에 하나만 선택할 수 있게 하는 RadioGroup 복합 컴포넌트의 루트. 내부 라디오와 `size`, `invalid`를 공유합니다. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["md", "lg"],
+            "detailedType": "\"md\" | \"lg\" | undefined",
+            "required": false,
+            "description": "그룹 안 라디오의 크기. 너비와 높이를 결정합니다. 자체 `size`를 지정한 `Radio.Root`는 그 값을 유지합니다.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "처음에 선택되어 있을 라디오 버튼의 비제어 값.\n\n제어 컴포넌트로 렌더링하려면 대신 `value` prop을 사용하세요."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: unknown, eventDetails: RadioGroup.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "값이 바뀔 때 호출되는 콜백."
+        },
+        {
+            "name": "value",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "현재 선택되어 있을 라디오 항목의 제어 값.\n\n비제어 컴포넌트로 렌더링하려면 대신 `defaultValue` prop을 사용하세요."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "그룹에 표시할 라디오. `Radio.Root` 또는 `RadioCard` 항목과 선택 사항인 `RadioGroup.Label`이 들어갑니다."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: RadioGroup.Root.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "라디오 그룹을 유효하지 않은 상태로 표시하고, 내부의 모든 라디오와 라디오 카드에 오류 스타일을 적용합니다. `<div>` 요소에 `aria-invalid`를 설정합니다."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+        },
+        {
+            "name": "form",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "라디오 input을 소유하는 폼을 식별합니다.\n라디오 그룹이 폼 바깥에 렌더링될 때 유용합니다."
+        },
+        {
+            "name": "inputRef",
+            "type": ["React.Ref<HTMLInputElement>"],
+            "detailedType": "React.Ref<HTMLInputElement> | undefined",
+            "required": false,
+            "description": "숨겨진 input 요소에 접근하는 ref."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "폼을 제출할 때 필드를 식별하는 이름."
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "사용자가 그룹에서 다른 라디오 버튼을 선택하지 못하게 할지 여부."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "폼을 제출하기 전에 사용자가 값을 반드시 선택해야 하는지 여부."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: RadioGroup.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: RadioGroup.Root.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "RadioGroup.Root.State": "{\n  readOnly: boolean;\n  required: boolean;\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}",
+        "RadioGroup.Root.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
+    }
+}

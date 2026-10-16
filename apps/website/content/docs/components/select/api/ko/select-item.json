@@ -1,0 +1,65 @@
+{
+    "name": "SelectItem",
+    "description": "`Select.ItemPrimitive`, `Select.ItemIndicatorPrimitive`를 하나의 파트로 합치며, 체크 표시는 레이블 뒤에 놓입니다. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "value",
+            "type": ["any"],
+            "detailedType": "any",
+            "required": false,
+            "description": "이 Select 항목을 식별하는 고유한 값."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "옵션의 레이블(예: 텍스트 또는 텍스트가 있는 아이콘). 체크 표시는 그 뒤에 추가됩니다."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Select.Item.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+        },
+        {
+            "name": "label",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "키보드 텍스트 탐색 중 항목과 일치하는지 확인할 때 사용할 텍스트 레이블을 지정합니다.\n\n제공하지 않으면 항목의 텍스트 콘텐츠가 기본값입니다."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Select.Item.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Select.Item.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Select.Item.State": "{\n  disabled: boolean;\n  selected: boolean;\n  highlighted: boolean;\n}"
+    }
+}

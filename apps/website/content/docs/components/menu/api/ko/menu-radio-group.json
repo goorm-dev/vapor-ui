@@ -1,0 +1,66 @@
+{
+    "name": "MenuRadioGroup",
+    "description": "라디오 항목을 묶어 한 번에 하나만 선택할 수 있게 합니다. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "defaultValue",
+            "type": ["any"],
+            "detailedType": "any",
+            "required": false,
+            "description": "처음에 선택되어 있어야 하는 라디오 항목의 비제어 값.\n\n제어 라디오 그룹을 렌더링하려면 대신 `value` prop을 사용하세요."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: any, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "선택된 값이 바뀔 때 호출되는 함수."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "detailedType": "any",
+            "required": false,
+            "description": "현재 선택되어 있어야 하는 라디오 항목의 제어 값.\n\n비제어 라디오 그룹을 렌더링하려면 대신 `defaultValue` prop을 사용하세요."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Menu.RadioGroup.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "컴포넌트의 콘텐츠."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Menu.RadioGroup.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Menu.RadioGroup.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Menu.RadioGroup.State": "{\n  disabled: boolean;\n}",
+        "Menu.RadioGroup.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"close-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"trigger-focus\"; event: FocusEvent; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"sibling-open\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  preventUnmountOnClose: () => void;\n}"
+    }
+}

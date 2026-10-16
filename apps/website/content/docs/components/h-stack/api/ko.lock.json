@@ -1,0 +1,34 @@
+{
+    "h-stack": {
+        "description": {
+            "source": "2b789f8030749f8c",
+            "guide": 2,
+            "terms": "1a6f83e43baea56f"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.inline": {
+            "source": "b45cf1333bcd090b",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.reverse": {
+            "source": "bc3cd3415e5f70e1",
+            "guide": 2,
+            "terms": "060540aeb57361be"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

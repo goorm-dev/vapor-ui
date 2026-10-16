@@ -1,0 +1,45 @@
+{
+    "name": "CheckboxIndicatorPrimitive",
+    "description": "체크박스가 체크되어 있는 동안 안에 표시되는 체크 표시. `indeterminate`가 설정되어 있으면 대시를 표시합니다. `<span>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "기본 체크 표시나 대시 대신 표시할 아이콘(예: 아이콘 컴포넌트). 요소의 `width`와 `height`는 `100%`로 지정됩니다. 단일 요소가 아니면 무시되고 기본 아이콘을 표시합니다."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Checkbox.IndicatorPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "keepMounted",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "체크박스가 체크되지 않았을 때도 요소를 DOM에 유지할지 여부.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Checkbox.IndicatorPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Checkbox.IndicatorPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Checkbox.IndicatorPrimitive.State": "{\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n  checked: boolean;\n  disabled: boolean;\n  readOnly: boolean;\n  required: boolean;\n  indeterminate: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
+    }
+}

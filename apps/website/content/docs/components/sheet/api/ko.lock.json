@@ -1,0 +1,440 @@
+{
+    "sheet-body": {
+        "description": {
+            "source": "e6b490571607dc5f",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-close": {
+        "description": {
+            "source": "186bed1157ca58ac",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-description": {
+        "description": {
+            "source": "8c60614f4f8e1e9c",
+            "guide": 2,
+            "terms": "12152fc354171c4e"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-footer": {
+        "description": {
+            "source": "f71136b1d09326af",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-header": {
+        "description": {
+            "source": "a62fcc10c88726e7",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-overlay-primitive": {
+        "description": {
+            "source": "d9588d9054b0a60d",
+            "guide": 2,
+            "terms": "03ae27799318fede"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.forceRender": {
+            "source": "f175c8f3fe86a0bd",
+            "guide": 2,
+            "terms": "ff687a1a632444ff"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-popup-primitive": {
+        "description": {
+            "source": "4c9757ad7dedec5c",
+            "guide": 2,
+            "terms": "39a404b395872cd5"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.finalFocus": {
+            "source": "875d4078c06bced4",
+            "guide": 2,
+            "terms": "c6db445e670d5a6a"
+        },
+        "props.initialFocus": {
+            "source": "ba340578092fecb9",
+            "guide": 2,
+            "terms": "c5576ed7609dcea6"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-popup": {
+        "description": {
+            "source": "35a66633a0230386",
+            "guide": 2,
+            "terms": "7142ce0e04a77d58"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.finalFocus": {
+            "source": "875d4078c06bced4",
+            "guide": 2,
+            "terms": "c6db445e670d5a6a"
+        },
+        "props.initialFocus": {
+            "source": "ba340578092fecb9",
+            "guide": 2,
+            "terms": "c5576ed7609dcea6"
+        },
+        "props.overlayElement": {
+            "source": "1b09cbaf99eee3f2",
+            "guide": 2,
+            "terms": "1699ce162ea58879"
+        },
+        "props.portalElement": {
+            "source": "e292957f599331c4",
+            "guide": 2,
+            "terms": "68ceb693abb725d9"
+        },
+        "props.positionerElement": {
+            "source": "dbe97e05ff0d915a",
+            "guide": 2,
+            "terms": "d60eb3f6efd521fa"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-portal-primitive": {
+        "description": {
+            "source": "c34be3fbc8f697a9",
+            "guide": 2,
+            "terms": "89e6722106556dd8"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.container": {
+            "source": "14dbbd8fcd1ffdc2",
+            "guide": 2,
+            "terms": "89e6722106556dd8"
+        },
+        "props.keepMounted": {
+            "source": "f1cabf3d00a37e20",
+            "guide": 2,
+            "terms": "d5f42ce2c1083b5f"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-positioner-primitive": {
+        "description": {
+            "source": "7b88a0847ba494d3",
+            "guide": 2,
+            "terms": "2a8a98cd65f33bcc"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.side": {
+            "source": "4ca96c146bf882cf",
+            "guide": 2,
+            "terms": "244f01a49500a56d"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-resize-handle": {
+        "description": {
+            "source": "9aa4f74c2db8f33c",
+            "guide": 2,
+            "terms": "bc35cf2d24e94102"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.disabled": {
+            "source": "0e927dccc1e5591f",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.step": {
+            "source": "d4f73992387fb66f",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-root": {
+        "description": {
+            "source": "98011678a0575a26",
+            "guide": 2,
+            "terms": "f5b3909ae1ba0180"
+        },
+        "props.actionsRef": {
+            "source": "e46b684fb74a891c",
+            "guide": 2,
+            "terms": "3dc9ff164840b150"
+        },
+        "props.children": {
+            "source": "360875b3b8fca1b9",
+            "guide": 2,
+            "terms": "880bb85721e505eb"
+        },
+        "props.closeOnClickOverlay": {
+            "source": "e19d3a7f67788130",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.defaultOpen": {
+            "source": "21db487f06c2e75f",
+            "guide": 2,
+            "terms": "61806d551a58f35c"
+        },
+        "props.defaultTriggerId": {
+            "source": "50a2fa613f34b56b",
+            "guide": 2,
+            "terms": "47f73f7a70aa11e1"
+        },
+        "props.handle": {
+            "source": "ae81effb0e7ebc61",
+            "guide": 2,
+            "terms": "c5797848e5fc3191"
+        },
+        "props.modal": {
+            "source": "80dc09a220e21813",
+            "guide": 2,
+            "terms": "6f111667ea3e4aeb"
+        },
+        "props.onOpenChange": {
+            "source": "ac9f65a08ad91e82",
+            "guide": 2,
+            "terms": "917b5199bf8a587f"
+        },
+        "props.onOpenChangeComplete": {
+            "source": "e8e36ddde8c0712e",
+            "guide": 2,
+            "terms": "917b5199bf8a587f"
+        },
+        "props.open": {
+            "source": "d219e7f5f3a376a6",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.triggerId": {
+            "source": "d05d8e680fdd959d",
+            "guide": 2,
+            "terms": "0c64f2534e9520cf"
+        }
+    },
+    "sheet-title": {
+        "description": {
+            "source": "0b545fd84226eab8",
+            "guide": 2,
+            "terms": "859742149d3ea99f"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "sheet-trigger": {
+        "description": {
+            "source": "caf67d5fb56cc7d8",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.handle": {
+            "source": "5640a7761b80ab92",
+            "guide": 2,
+            "terms": "47f73f7a70aa11e1"
+        },
+        "props.id": {
+            "source": "5c0dbe8a35fa85a8",
+            "guide": 2,
+            "terms": "689d5bd15c922d0b"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.payload": {
+            "source": "3e0c8bdda819e421",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

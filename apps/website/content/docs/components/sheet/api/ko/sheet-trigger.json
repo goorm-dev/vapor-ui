@@ -1,0 +1,58 @@
+{
+    "name": "SheetTrigger",
+    "description": "클릭하면 Sheet를 여는 버튼. `<button>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Sheet.Trigger.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "handle",
+            "type": ["DialogHandle<unknown>"],
+            "detailedType": "DialogHandle<unknown> | undefined",
+            "required": false,
+            "description": "트리거를 Dialog와(과) 연결하는 핸들.\nDialog.createHandle() 메서드로 만들 수 있습니다."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "트리거의 ID. 렌더링되는 요소에 전달될 뿐만 아니라, 제어 모드에서 DialogRoot의 `triggerId` prop으로 Dialog의 활성 트리거를 지정하는 데에도 쓰입니다."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요."
+        },
+        {
+            "name": "payload",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "Dialog가 열릴 때 전달할 페이로드."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Sheet.Trigger.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Sheet.Trigger.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Sheet.Trigger.State": "{\n  disabled: boolean;\n  open: boolean;\n}"
+    }
+}

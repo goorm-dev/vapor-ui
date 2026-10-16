@@ -1,0 +1,72 @@
+{
+    "name": "TooltipTrigger",
+    "description": "마우스를 올리거나 포커스하면 Tooltip을 여는 요소. `<button>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Tooltip.Trigger.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "Tooltip을 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
+        },
+        {
+            "name": "closeOnClick",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "이 트리거를 클릭하면 Tooltip을 닫을지 여부."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "마우스를 올렸을 때 Tooltip을 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "`true`이면 이 트리거와 상호작용해도 Tooltip이 열리지 않습니다.\n트리거 요소에 `disabled` 속성이 적용되지는 않습니다.\n트리거 요소 자체를 비활성화하려면 `render` prop으로 트리거 요소에 `disabled` prop을 전달하세요."
+        },
+        {
+            "name": "handle",
+            "type": ["TooltipHandle<unknown>"],
+            "detailedType": "TooltipHandle<unknown> | undefined",
+            "required": false,
+            "description": "트리거를 Tooltip과 연결하는 핸들."
+        },
+        {
+            "name": "payload",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "Tooltip이 열릴 때 Tooltip에 전달하는 페이로드."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Tooltip.Trigger.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Tooltip.Trigger.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Tooltip.Trigger.State": "{\n  open: boolean;\n}"
+    }
+}

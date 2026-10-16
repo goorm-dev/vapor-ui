@@ -1,0 +1,131 @@
+{
+    "name": "MultiSelectPositionerPrimitive",
+    "description": "팝업을 트리거 기준으로 배치하고 뷰포트 안에 유지합니다. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: MultiSelect.PositionerPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "align",
+            "type": ["center", "end", "start"],
+            "detailedType": "\"center\" | \"end\" | \"start\" | undefined",
+            "required": false,
+            "description": "지정한 방향을 기준으로 팝업을 정렬하는 방식.",
+            "defaultValue": "start"
+        },
+        {
+            "name": "alignItemWithTrigger",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "포지셔너가 트리거와 겹쳐서 선택된 항목의 텍스트가 트리거의 값 텍스트와 정렬되는지 여부. 마우스 입력에만 적용되며 공간이 충분하지 않으면 자동으로 비활성화됩니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "alignOffset",
+            "type": ["number", "function"],
+            "detailedType": "number | ((data: { side: \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\"; align: \"center\" | \"end\" | \"start\"; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number) | undefined",
+            "required": false,
+            "description": "정렬 축 방향의 추가 오프셋(픽셀). 앵커 요소와 포지셔너 요소의 크기, 방향, 정렬을 읽어 오프셋을 반환하는 함수도 받습니다.\n\n함수는 다음 속성을 가진 `data` 객체를 인수로 받습니다.\n- `data.anchor`: `width`와 `height` 속성을 가진 앵커 요소의 크기.\n- `data.positioner`: `width`와 `height` 속성을 가진 포지셔너 요소의 크기.\n- `data.side`: 포지셔너를 정렬하는 기준이 되는 앵커 요소의 방향.\n- `data.align`: 지정한 방향을 기준으로 포지셔너가 정렬되는 방식."
+        },
+        {
+            "name": "anchor",
+            "type": [
+                "Element",
+                "VirtualElement",
+                "React.RefObject<Element | null>",
+                "function",
+                "null"
+            ],
+            "detailedType": "Element | VirtualElement | React.RefObject<Element | null> | (() => (Element | VirtualElement | null)) | null | undefined",
+            "required": false,
+            "description": "팝업을 배치할 기준 요소. 기본값은 트리거입니다."
+        },
+        {
+            "name": "arrowPadding",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "화살표와 팝업 가장자리 사이에 유지할 최소 거리.\n\n화살표 요소가 팝업의 둥근 모서리 밖으로 튀어나오지 않게 할 때 사용하세요."
+        },
+        {
+            "name": "collisionAvoidance",
+            "type": ["CollisionAvoidance"],
+            "detailedType": "CollisionAvoidance | undefined",
+            "required": false,
+            "description": "팝업을 배치할 때 충돌을 처리하는 방식.\n\n`side`는 선호하는 배치 축(`top`/`bottom` 또는 `left`/`right`)의 넘침을 제어합니다.\n- `'flip'`: 요청한 방향에 들어맞으면 그대로 유지하고, 그렇지 않으면 반대 방향(`top`과 `bottom`, 또는 `left`와 `right`)을 시도합니다.\n- `'shift'`: 방향을 바꾸지 않습니다. 요청한 방향을 유지한 채 팝업이 계속 보이도록 클리핑 경계 안에서 팝업을 옮깁니다.\n- `'none'`: 방향 축의 넘침을 보정하지 않습니다.\n\n`align`은 정렬 축(`start`/`center`/`end`)의 넘침을 제어합니다.\n- `'flip'`: 방향은 유지하고, 요청한 정렬이 넘치면 `start`와 `end`를 서로 바꿉니다.\n- `'shift'`: 방향과 요청한 정렬을 유지한 채 팝업이 들어맞도록 정렬 축을 따라 조금 밉니다.\n- `'none'`: 정렬 축의 넘침을 보정하지 않습니다.\n\n`fallbackAxisSide`는 선호하는 축에 들어맞지 않을 때 수직 축에서의 대체 동작을 제어합니다.\n- `'start'`: 수직 축으로의 대체를 허용하고 논리적 시작 방향을 먼저 시도합니다(LTR에서는 `top`이 `bottom`보다, `left`가 `right`보다 먼저).\n- `'end'`: 수직 축으로의 대체를 허용하고 논리적 끝 방향을 먼저 시도합니다(LTR에서는 `bottom`이 `top`보다, `right`가 `left`보다 먼저).\n- `'none'`: 수직 축으로 대체하지 않습니다.\n\n`side`가 `'shift'`일 때 `align`을 명시적으로 설정하면 `'shift'` 또는 `'none'`만 지원합니다. `align`을 생략하면 기본값은 `'flip'`입니다."
+        },
+        {
+            "name": "collisionBoundary",
+            "type": ["Boundary"],
+            "detailedType": "Boundary | undefined",
+            "required": false,
+            "description": "팝업이 벗어나지 못하는 영역을 정하는 요소 또는 사각형."
+        },
+        {
+            "name": "collisionPadding",
+            "type": ["Padding"],
+            "detailedType": "Padding | undefined",
+            "required": false,
+            "description": "충돌 경계의 가장자리에서 유지할 추가 여백."
+        },
+        {
+            "name": "disableAnchorTracking",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "팝업이 기준 앵커의 레이아웃 이동을 따라가지 않게 할지 여부."
+        },
+        {
+            "name": "positionMethod",
+            "type": ["fixed", "absolute"],
+            "detailedType": "\"fixed\" | \"absolute\" | undefined",
+            "required": false,
+            "description": "사용할 CSS `position` 속성."
+        },
+        {
+            "name": "side",
+            "type": ["bottom", "left", "right", "top", "inline-end", "inline-start"],
+            "detailedType": "\"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\" | undefined",
+            "required": false,
+            "description": "팝업을 정렬할 앵커 요소의 방향. 충돌을 피하려고 자동으로 바뀔 수 있습니다.",
+            "defaultValue": "bottom"
+        },
+        {
+            "name": "sideOffset",
+            "type": ["number", "function"],
+            "detailedType": "number | ((data: { side: \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\"; align: \"center\" | \"end\" | \"start\"; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number) | undefined",
+            "required": false,
+            "description": "앵커와 팝업 사이의 거리(픽셀). 앵커 요소와 포지셔너 요소의 크기, 방향, 정렬을 읽어 거리를 반환하는 함수도 받습니다.\n\n함수는 다음 속성을 가진 `data` 객체를 인수로 받습니다.\n- `data.anchor`: `width`와 `height` 속성을 가진 앵커 요소의 크기.\n- `data.positioner`: `width`와 `height` 속성을 가진 포지셔너 요소의 크기.\n- `data.side`: 포지셔너를 정렬하는 기준이 되는 앵커 요소의 방향.\n- `data.align`: 지정한 방향을 기준으로 포지셔너가 정렬되는 방식.",
+            "defaultValue": "4"
+        },
+        {
+            "name": "sticky",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "앵커 요소가 스크롤되어 화면 밖으로 나간 뒤에도 팝업을 뷰포트 안에 유지할지 여부."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: MultiSelect.PositionerPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: MultiSelect.PositionerPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "MultiSelect.PositionerPrimitive.State": "{\n  open: boolean;\n  side: \"none\" | \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\";\n  align: \"center\" | \"end\" | \"start\";\n  anchorHidden: boolean;\n}"
+    }
+}

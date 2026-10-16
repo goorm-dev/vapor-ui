@@ -1,0 +1,196 @@
+{
+    "name": "MultiSelectRoot",
+    "description": "MultiSelect 복합 컴포넌트의 루트. 사용자가 팝업의 목록에서 여러 옵션을 고를 수 있습니다. 선택된 값과 열림 상태를 관리하며 `size`, `invalid`, `placeholder`를 파트에 전달합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "props": [
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "MultiSelect를 유효하지 않음으로 표시하고 오류 스타일을 적용합니다. 트리거 `<button>` 요소에 `aria-invalid`를 설정합니다."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "MultiSelect의 크기. 최소 높이, 패딩, 타이포그래피, 아이콘과 배지의 크기를 결정합니다."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Select 팝업이 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요."
+        },
+        {
+            "name": "defaultValue",
+            "type": ["Value[]", "null"],
+            "detailedType": "Value[] | null | undefined",
+            "required": false,
+            "description": "Select가 처음 렌더링될 때의 비제어 값.\n\n제어 컴포넌트로 렌더링하려면 대신 `value` prop을 사용하세요."
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["function"],
+            "detailedType": "((open: boolean, eventDetails: MultiSelect.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Select 팝업이 열리거나 닫힐 때 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: Value[], eventDetails: MultiSelect.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Select의 값이 바뀔 때 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Select 팝업이 현재 열려 있는지 여부."
+        },
+        {
+            "name": "value",
+            "type": ["Value[]", "null"],
+            "detailedType": "Value[] | null | undefined",
+            "required": false,
+            "description": "Select의 값. 제어 컴포넌트로 쓸 때 사용하세요."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "MultiSelect의 파트(예: `MultiSelect.Trigger`, `MultiSelect.Popup`)."
+        },
+        {
+            "name": "placeholder",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "값이 선택되지 않았을 때 트리거에 표시되는 텍스트. `MultiSelect.ValuePrimitive`의 `children`이나 `items`에서 값이 `null`인 항목의 레이블이 이보다 우선합니다."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<MultiSelect.Root.Actions | null>"],
+            "detailedType": "React.RefObject<MultiSelect.Root.Actions | null> | undefined",
+            "required": false,
+            "description": "명령형 동작에 대한 ref.\n- `unmount`: Select를 수동으로 언마운트합니다.\n외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요."
+        },
+        {
+            "name": "autoComplete",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "브라우저 자동 완성에 쓰이는 힌트."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+        },
+        {
+            "name": "form",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "숨겨진 input을 소유하는 폼을 식별합니다. Select를 폼 밖에서 렌더링할 때 유용합니다."
+        },
+        {
+            "name": "highlightItemOnHover",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "포인터를 항목 위로 옮기면 항목을 강조할지 여부. 이 prop을 비활성화하면 CSS `:hover`를 `:focus`(`data-highlighted`) 상태와 구분할 수 있습니다."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Select의 id."
+        },
+        {
+            "name": "inputRef",
+            "type": ["React.Ref<HTMLInputElement>"],
+            "detailedType": "React.Ref<HTMLInputElement> | undefined",
+            "required": false,
+            "description": "숨겨진 input 요소에 접근하는 ref."
+        },
+        {
+            "name": "isItemEqualToValue",
+            "type": ["function"],
+            "detailedType": "((itemValue: Value, value: Value) => boolean) | undefined",
+            "required": false,
+            "description": "선택 항목의 값이 현재 선택된 값과 일치하는지 판단하는 커스텀 비교 로직. 항목 값이 참조로 일치하지 않는 객체일 때 유용합니다. 기본값은 `Object.is` 비교입니다."
+        },
+        {
+            "name": "items",
+            "type": [
+                "Record<string, ReactNode>",
+                "readonly { label: React.ReactNode; value: any; }[]",
+                "readonly Group<any>[]"
+            ],
+            "detailedType": "Record<string, ReactNode> | readonly { label: React.ReactNode; value: any; }[] | readonly Group<any>[] | undefined",
+            "required": false,
+            "description": "Select 팝업에 렌더링되는 항목의 데이터 구조. 지정하면 `<Select.Value>`가 원시 값 대신 선택된 항목의 레이블을 렌더링합니다."
+        },
+        {
+            "name": "itemToStringLabel",
+            "type": ["function"],
+            "detailedType": "((itemValue: Value) => string) | undefined",
+            "required": false,
+            "description": "항목 값이 객체(`<Select.Item value={object}>`)일 때, 이 함수가 객체 값을 트리거에 표시할 문자열로 변환합니다. 객체의 형태가 `{ value, label }`이면 이 prop을 지정하지 않아도 레이블이 자동으로 사용됩니다."
+        },
+        {
+            "name": "itemToStringValue",
+            "type": ["function"],
+            "detailedType": "((itemValue: Value) => string) | undefined",
+            "required": false,
+            "description": "항목 값이 객체(`<Select.Item value={object}>`)일 때, 이 함수가 객체 값을 폼 제출에 쓸 문자열로 변환합니다. 객체의 형태가 `{ value, label }`이면 이 prop을 지정하지 않아도 값이 자동으로 사용됩니다."
+        },
+        {
+            "name": "modal",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Select가 열렸을 때 모달 상태가 되는지 여부.\n- `true`: 사용자 상호작용이 Select로 제한됩니다. 문서 페이지 스크롤이 잠기고 바깥 요소의 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 상호작용할 수 있습니다.\n\n터치 기기에서 `true` 모달은 바깥쪽 탭을 막지만, 팝업이 뷰포트 너비를 거의 가득 채우지 않으면 페이지를 스크롤할 수 있습니다. 이는 iOS 네이티브 동작과 같습니다."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "폼을 제출할 때 필드를 식별하는 이름."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["function"],
+            "detailedType": "((open: boolean) => void) | undefined",
+            "required": false,
+            "description": "Select 팝업이 열리거나 닫힌 뒤 애니메이션이 모두 끝나면 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "사용자가 Select 팝업에서 다른 옵션을 선택하지 못하게 할지 여부."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "폼을 제출하기 전에 사용자가 값을 반드시 선택해야 하는지 여부."
+        }
+    ],
+    "typeRefs": {
+        "MultiSelect.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"window-resize\"; event: UIEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "MultiSelect.Root.Actions": "{\n  unmount: () => void;\n}"
+    }
+}

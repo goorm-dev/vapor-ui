@@ -1,0 +1,59 @@
+{
+    "name": "GridRoot",
+    "description": "Grid 복합 컴포넌트의 루트. CSS grid로 자식을 행과 열에 배치하는 컨테이너입니다. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "flow",
+            "type": ["row", "column", "row-dense", "column-dense"],
+            "detailedType": "\"row\" | \"column\" | \"row-dense\" | \"column-dense\" | undefined",
+            "required": false,
+            "description": "명시적인 위치가 없는 항목을 배치하는 방향. `grid-auto-flow` 값으로 설정합니다. `-dense` 값은 앞쪽의 빈 칸을 뒤쪽 항목으로 채웁니다.",
+            "defaultValue": "row"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Grid.Root.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "inline",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컨테이너를 `grid` 대신 `inline-grid`로 표시해 주변 콘텐츠와 같은 줄에 놓습니다."
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties", "function"],
+            "detailedType": "CSSProperties | ((state: Box.State) => (CSSProperties | undefined)) | ((state: Grid.Root.State) => (CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "templateColumns",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "그리드의 열 트랙. `200px 1fr`이나 `repeat(3, 1fr)`처럼 `grid-template-columns` 값으로 설정합니다."
+        },
+        {
+            "name": "templateRows",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "그리드의 행 트랙. `auto 1fr`이나 `repeat(3, 1fr)`처럼 `grid-template-rows` 값으로 설정합니다."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Box.State) => ReactElement) | ((props: HTMLProps, state: Grid.Root.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Grid.Root.State": "{\n\n}"
+    }
+}
