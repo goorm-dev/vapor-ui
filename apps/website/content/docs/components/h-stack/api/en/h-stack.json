@@ -1,0 +1,44 @@
+{
+    "name": "HStack",
+    "description": "Flex container that arranges its children horizontally in a row. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: HStack.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "inline",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Displays the container as `inline-flex` instead of `flex`, so it sits inline with surrounding content."
+        },
+        {
+            "name": "reverse",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Reverses the order of the children, setting `flex-direction` to `row-reverse`."
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties", "function"],
+            "detailedType": "CSSProperties | ((state: Box.State) => (CSSProperties | undefined)) | ((state: Flex.State) => (CSSProperties | undefined)) | ((state: HStack.State) => (CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Flex.State) => ReactElement) | ((props: HTMLProps, state: Box.State) => ReactElement) | ((props: HTMLProps, state: HStack.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "HStack.State": "{\n\n}"
+    }
+}

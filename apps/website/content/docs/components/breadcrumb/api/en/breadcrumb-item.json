@@ -1,0 +1,44 @@
+{
+    "name": "BreadcrumbItem",
+    "description": "Combines `Breadcrumb.ItemPrimitive` and `Breadcrumb.LinkPrimitive` into a single part, one linked entry of the breadcrumb trail. Renders an `<a>` element inside an `<li>` element.",
+    "props": [
+        {
+            "name": "current",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Marks the link as the current page, applying the active color and setting `aria-current=\"page\"` and `aria-disabled` on the `<a>` element."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Size of the breadcrumb, controlling the typography of the links and the size of the separator and ellipsis icons."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Breadcrumb.Item.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties", "function"],
+            "detailedType": "CSSProperties | ((state: Breadcrumb.Item.State) => (CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Breadcrumb.Item.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Breadcrumb.Item.State": "{\n  current: boolean;\n}"
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "name": "FieldSuccess",
+    "description": "Success message shown when the field passes validation. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Field.Success.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "match",
+            "type": ["boolean", "valid"],
+            "detailedType": "boolean | \"valid\" | undefined",
+            "required": false,
+            "description": "Controls when the message is shown. With `'valid'`, it shows once the field passes validation. Set to `true` to always show it, letting an external library control its visibility.",
+            "defaultValue": "valid"
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Field.Success.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Field.Success.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Field.Success.State": "{\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
+    }
+}

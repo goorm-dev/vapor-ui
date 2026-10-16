@@ -1,0 +1,37 @@
+{
+    "name": "BreadcrumbEllipsis",
+    "description": "Combines `Breadcrumb.ItemPrimitive` and `Breadcrumb.EllipsisPrimitive` into a single part, an entry that stands in for collapsed items. Renders a `<span>` element inside an `<li>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Icon shown for the collapsed items. Replaces the default more icon."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Breadcrumb.Ellipsis.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties", "function"],
+            "detailedType": "CSSProperties | ((state: Breadcrumb.Ellipsis.State) => (CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Breadcrumb.Ellipsis.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Breadcrumb.Ellipsis.State": "{\n\n}"
+    }
+}

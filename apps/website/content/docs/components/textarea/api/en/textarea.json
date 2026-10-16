@@ -1,0 +1,77 @@
+{
+    "name": "Textarea",
+    "description": "Multi-line text field for longer input such as comments or descriptions. Set `autoResize` to grow its height with the content. Renders a `<textarea>` element.",
+    "props": [
+        {
+            "name": "autoResize",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Grows the textarea's height to fit its content as the user types, and turns off manual resizing.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Marks the textarea as invalid, applying error styles. Sets `aria-invalid` on the `<textarea>` element.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Size of the textarea, controlling padding and typography.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Initial text in the field. Use when uncontrolled.",
+            "defaultValue": ""
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: string, event: Textarea.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Called when the text changes as the user types, pastes, or deletes. Receives the new text and the change event details. Not called while `disabled` or `readOnly` is set."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Current text in the field. Use when controlled."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Textarea.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties", "function"],
+            "detailedType": "CSSProperties | ((state: Textarea.State) => (CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Textarea.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Textarea.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "Textarea.State": "{\n  disabled: boolean;\n  readOnly: boolean;\n  required: boolean;\n  invalid: boolean;\n}"
+    }
+}

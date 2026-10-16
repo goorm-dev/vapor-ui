@@ -1,0 +1,37 @@
+{
+    "name": "TabsList",
+    "description": "Combines `Tabs.ListPrimitive` and `Tabs.IndicatorPrimitive` into a single part, with the indicator after the tab buttons. Use `indicatorElement` to replace the indicator. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Tabs.List.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "indicatorElement",
+            "type": ["ReactElement<TabsIndicatorPrimitive.Props>"],
+            "detailedType": "ReactElement<TabsIndicatorPrimitive.Props> | undefined",
+            "required": false,
+            "description": "Replaces the default `Tabs.IndicatorPrimitive`. Use to change how the active tab is highlighted."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Tabs.List.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Tabs.List.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Tabs.List.State": "{\n  orientation: \"horizontal\" | \"vertical\";\n  tabActivationDirection: \"none\" | \"left\" | \"right\" | \"up\" | \"down\";\n}"
+    }
+}

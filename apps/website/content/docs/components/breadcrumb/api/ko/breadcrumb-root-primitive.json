@@ -1,0 +1,37 @@
+{
+    "name": "BreadcrumbRootPrimitive",
+    "description": "Navigation landmark labeled \"Breadcrumb\" that holds the breadcrumb trail and shares its size with the links, separators, and ellipsis inside it. Renders a `<nav>` element.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Size of the breadcrumb, controlling the typography of the links and the size of the separator and ellipsis icons."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Breadcrumb.RootPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties", "function"],
+            "detailedType": "CSSProperties | ((state: Breadcrumb.RootPrimitive.State) => (CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Breadcrumb.RootPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Breadcrumb.RootPrimitive.State": "{\n\n}"
+    }
+}

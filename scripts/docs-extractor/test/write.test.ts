@@ -6,6 +6,7 @@
  */
 import { ExtractorError } from '#errors';
 import type { ComponentDoc } from '#model';
+import { hashText } from '#translation';
 import { findApiDir, writeDocs } from '#write';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -79,6 +80,12 @@ describe('findApiDir', () => {
     });
 });
 
+function readJson(filePath: string): unknown {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+const apiPath = (page: string, ...rest: string[]) => path.join(pagesDir, page, 'api', ...rest);
+
 describe('writeDocs', () => {
     it.each([
         ['AvatarRoot', 'avatar-root.json'],
@@ -92,7 +99,10 @@ describe('writeDocs', () => {
             { doc: { name, props: [] }, sourceFile: source('avatar') },
         ]);
 
-        expect(written).toEqual([path.join(pagesDir, 'avatar', 'api', fileName)]);
+        expect(written).toEqual([
+            apiPath('avatar', 'en', fileName),
+            apiPath('avatar', 'ko', fileName),
+        ]);
     });
 
     it('페이지가 없다고 매핑된 문서는 쓰지 않는다', () => {
@@ -103,29 +113,91 @@ describe('writeDocs', () => {
         expect(written).toEqual([]);
     });
 
-    it('없는 api 폴더를 만들고 문서를 JSON으로 쓴다', () => {
-        const { written } = writeDocs(pagesDir, [AVATAR]);
+    it('없는 폴더를 만들고 원문을 en/에, lock이 없으면 같은 내용을 ko/에 쓴다', () => {
+        writeDocs(pagesDir, [AVATAR]);
 
-        expect(JSON.parse(fs.readFileSync(written[0], 'utf8'))).toEqual(AVATAR_ROOT);
+        expect(readJson(apiPath('avatar', 'en', 'avatar-root.json'))).toEqual(AVATAR_ROOT);
+        expect(readJson(apiPath('avatar', 'ko', 'avatar-root.json'))).toEqual(AVATAR_ROOT);
     });
 
-    it('removeStale이면 어느 페이지든 이번에 쓰지 않은 추출 JSON을 지우고 다른 JSON은 남긴다', () => {
-        const stale = writeJson('radio', 'removed-part.json', { name: 'RemovedPart', props: [] });
-        writeJson('avatar', 'package.json', { name: 'not-extractor-output' });
-        fs.writeFileSync(path.join(pagesDir, 'avatar', 'api', 'broken.json'), '{ not json');
+    it('ko.lock.json의 원문 해시가 맞는 번역은 유지한다', () => {
+        const ko = { ...AVATAR_ROOT, description: '아바타 컴포넌트.' };
+        writeJson('avatar', 'ko/avatar-root.json', ko);
+        writeJson('avatar', 'ko.lock.json', {
+            'avatar-root': {
+                description: { source: hashText('Avatar component.'), guide: 1, terms: '' },
+            },
+        });
+
+        writeDocs(pagesDir, [AVATAR]);
+
+        expect(readJson(apiPath('avatar', 'ko', 'avatar-root.json'))).toEqual(ko);
+    });
+
+    it('ko.lock.json이 JSON이 아니면 번역을 덮어쓰지 않고 에러를 낸다', () => {
+        fs.mkdirSync(apiPath('avatar'), { recursive: true });
+        fs.writeFileSync(apiPath('avatar', 'ko.lock.json'), '{ not json');
+
+        expect(() => writeDocs(pagesDir, [AVATAR])).toThrow(ExtractorError);
+    });
+
+    it('ko.lock.json이 객체가 아니면 에러를 낸다', () => {
+        writeJson('avatar', 'ko.lock.json', null);
+
+        expect(() => writeDocs(pagesDir, [AVATAR])).toThrow(ExtractorError);
+    });
+
+    it('기존 ko/ 파일이 JSON이 아니면 번역을 영어로 덮어쓰지 않고 에러를 낸다', () => {
+        fs.mkdirSync(apiPath('avatar', 'ko'), { recursive: true });
+        fs.writeFileSync(apiPath('avatar', 'ko', 'avatar-root.json'), '<<<<<<< HEAD');
+
+        expect(() => writeDocs(pagesDir, [AVATAR])).toThrow(ExtractorError);
+        expect(fs.readFileSync(apiPath('avatar', 'ko', 'avatar-root.json'), 'utf8')).toBe(
+            '<<<<<<< HEAD',
+        );
+    });
+
+    it('en/에 있는 손으로 쓴 파일도 ko/에 미러링한다', () => {
+        const handWritten = { name: 'ToastObject', props: [] };
+        writeJson('toast', 'en/toast-object.json', handWritten);
+
+        writeDocs(pagesDir, [{ doc: AVATAR_ROOT, sourceFile: source('toast') }]);
+
+        expect(readJson(apiPath('toast', 'ko', 'toast-object.json'))).toEqual(handWritten);
+    });
+
+    it('removeStale이면 이번에 쓰지 않은 추출 JSON을 en/·ko/에서 지우고 다른 JSON은 남긴다', () => {
+        const staleEn = writeJson('radio', 'en/removed-part.json', {
+            name: 'RemovedPart',
+            props: [],
+        });
+        const staleKo = writeJson('radio', 'ko/removed-part.json', {
+            name: 'RemovedPart',
+            props: [],
+        });
+        writeJson('avatar', 'en/package.json', { name: 'not-extractor-output' });
+        fs.writeFileSync(apiPath('avatar', 'en', 'broken.json'), '{ not json');
 
         const { removed } = writeDocs(pagesDir, [AVATAR], { removeStale: true });
 
-        expect(removed).toEqual([stale]);
-        expect(fs.readdirSync(path.join(pagesDir, 'avatar', 'api')).sort()).toEqual([
+        expect(removed.sort()).toEqual([staleEn, staleKo].sort());
+        expect(fs.readdirSync(apiPath('avatar', 'en')).sort()).toEqual([
             'avatar-root.json',
             'broken.json',
             'package.json',
         ]);
     });
 
+    it('removeStale이면 en/ 짝이 없는 ko/ 파일도 지운다', () => {
+        const orphan = writeJson('radio', 'ko/old-part.json', { name: 'OldPart', props: [] });
+
+        const { removed } = writeDocs(pagesDir, [AVATAR], { removeStale: true });
+
+        expect(removed).toEqual([orphan]);
+    });
+
     it('removeStale이어도 손으로 쓴 toast-object.json은 남긴다', () => {
-        const handWritten = writeJson('toast', 'toast-object.json', {
+        const handWritten = writeJson('toast', 'en/toast-object.json', {
             name: 'ToastObject',
             props: [],
         });
@@ -137,7 +209,10 @@ describe('writeDocs', () => {
     });
 
     it('removeStale이 없으면 기존 파일을 지우지 않는다', () => {
-        const stale = writeJson('radio', 'removed-part.json', { name: 'RemovedPart', props: [] });
+        const stale = writeJson('radio', 'en/removed-part.json', {
+            name: 'RemovedPart',
+            props: [],
+        });
 
         const { removed } = writeDocs(pagesDir, [AVATAR]);
 

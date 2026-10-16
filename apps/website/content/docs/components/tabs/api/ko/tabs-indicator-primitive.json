@@ -1,0 +1,37 @@
+{
+    "name": "TabsIndicatorPrimitive",
+    "description": "Highlight that moves to the active tab, a line on the border of the list or a filled background depending on `variant`. Renders a `<span>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Tabs.IndicatorPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "renderBeforeHydration",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether to render itself before React hydrates.\nThis minimizes the time that the indicator isn't visible after server-side rendering."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Tabs.IndicatorPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Tabs.IndicatorPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Tabs.IndicatorPrimitive.State": "{\n  activeTabPosition: TabsTabPosition | null;\n  activeTabSize: TabsTabSize | null;\n  orientation: \"horizontal\" | \"vertical\";\n  tabActivationDirection: \"none\" | \"left\" | \"right\" | \"up\" | \"down\";\n}"
+    }
+}
