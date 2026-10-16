@@ -1,34 +1,34 @@
 {
     "name": "ToastProviderPrimitive",
-    "description": "Provides toast state to its children without showing any toasts, so you can build your own toast list from the other primitives. Doesn't render its own HTML element.",
+    "description": "Toast를 표시하지 않고 자식에 Toast 상태를 제공하므로, 다른 프리미티브로 직접 Toast 목록을 만들 수 있습니다. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "Part of the app that can show toasts, typically the whole app."
+            "description": "Toast를 표시할 수 있는 앱의 일부. 보통 앱 전체입니다."
         },
         {
             "name": "toastManager",
             "type": ["ToastManager"],
             "detailedType": "ToastManager | undefined",
             "required": false,
-            "description": "Toast manager created with `createToastManager`, for adding toasts from outside React components."
+            "description": "`createToastManager`로 만든 Toast 매니저. React 컴포넌트 밖에서 Toast를 추가할 때 사용합니다."
         },
         {
             "name": "limit",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "The maximum number of toasts that can be displayed at once.\nWhen the limit is exceeded, the oldest toasts are marked as `limited` (via the `data-limited`\nattribute) rather than removed, so they can be hidden or animated out."
+            "description": "한 번에 표시할 수 있는 Toast의 최대 개수.\n제한을 넘으면 가장 오래된 Toast는 제거되지 않고 `limited`로 표시되므로(`data-limited` 속성), 숨기거나 애니메이션으로 사라지게 할 수 있습니다."
         },
         {
             "name": "timeout",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "The default amount of time (in ms) before a toast is auto dismissed.\nA value of `0` will prevent the toast from being dismissed automatically."
+            "description": "Toast가 자동으로 닫히기까지의 기본 시간(ms).\n`0`이면 Toast가 자동으로 닫히지 않습니다."
         }
     ]
 }

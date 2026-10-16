@@ -1,83 +1,83 @@
 {
     "name": "SheetRoot",
-    "description": "Root of the Sheet compound component, a panel that slides in from an edge of the viewport for supplementary content or tasks. Manages the open state. Doesn't render its own HTML element.",
+    "description": "Sheet 복합 컴포넌트의 루트. 뷰포트의 가장자리에서 밀려 들어와 보충 콘텐츠나 작업을 보여주는 패널입니다. 열림 상태를 관리합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "defaultOpen",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the dialog is initially open.\n\nTo render a controlled dialog, use the `open` prop instead."
+            "description": "Dialog가 처음에 열려 있는지 여부.\n\n제어 Dialog를 렌더링하려면 `open` prop을 대신 사용하세요."
         },
         {
             "name": "onOpenChange",
             "type": ["function"],
             "detailedType": "((open: boolean, eventDetails: Sheet.Root.ChangeEventDetails) => void) | undefined",
             "required": false,
-            "description": "Event handler called when the dialog is opened or closed."
+            "description": "Dialog가 열리거나 닫힐 때 호출되는 이벤트 핸들러."
         },
         {
             "name": "open",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the dialog is currently open."
+            "description": "Dialog가 현재 열려 있는지 여부."
         },
         {
             "name": "closeOnClickOverlay",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "When `true`, clicking the overlay closes the dialog."
+            "description": "`true`이면 오버레이를 클릭할 때 Dialog가 닫힙니다."
         },
         {
             "name": "actionsRef",
             "type": ["React.RefObject<Sheet.Root.Actions | null>"],
             "detailedType": "React.RefObject<Sheet.Root.Actions | null> | undefined",
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: Manually unmounts the dialog.\nCall this after any externally controlled closing animation finishes.\n- `close`: Closes the dialog imperatively when called."
+            "description": "명령형 액션에 대한 ref.\n- `unmount`: Dialog를 수동으로 언마운트합니다.\n외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 호출하면 Dialog를 명령형으로 닫습니다."
         },
         {
             "name": "children",
             "type": ["ReactNode", "function"],
             "detailedType": "ReactNode | ((arg: { payload: unknown; }) => ReactNode)",
             "required": false,
-            "description": "The content of the dialog.\nThis can be a regular React node or a render function that receives the `payload` of the active trigger."
+            "description": "Dialog의 콘텐츠.\n일반 React 노드이거나, 활성 트리거의 `payload`를 받는 렌더 함수일 수 있습니다."
         },
         {
             "name": "defaultTriggerId",
             "type": ["string", "null"],
             "detailedType": "string | null | undefined",
             "required": false,
-            "description": "ID of the trigger that the dialog is associated with.\nThis is useful in conjunction with the `defaultOpen` prop to create an initially open dialog."
+            "description": "Dialog와 연결된 트리거의 ID.\n`defaultOpen` prop과 함께 쓰면 처음부터 열려 있는 Dialog를 만들 때 유용합니다."
         },
         {
             "name": "handle",
             "type": ["DialogHandle<unknown>"],
             "detailedType": "DialogHandle<unknown> | undefined",
             "required": false,
-            "description": "A handle to associate the dialog with a trigger.\nIf specified, allows external triggers to control the dialog's open state.\nCan be created with the Dialog.createHandle() method."
+            "description": "Dialog를 트리거와 연결하는 핸들.\n지정하면 외부 트리거가 Dialog의 열림 상태를 제어할 수 있습니다.\nDialog.createHandle() 메서드로 만들 수 있습니다."
         },
         {
             "name": "modal",
             "type": ["boolean", "trap-focus"],
             "detailedType": "boolean | \"trap-focus\" | undefined",
             "required": false,
-            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.\n\nWhen `modal` is `true` or `'trap-focus'`, render `<Dialog.Close>` inside `<Dialog.Popup>` so\ntouch screen readers can escape the popup."
+            "description": "Dialog가 열릴 때 모달 상태가 되는지 결정합니다.\n- `true`: 사용자 상호작용이 Dialog로 한정됩니다. 포커스가 갇히고, 문서 페이지 스크롤이 잠기며, 바깥 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 상호작용할 수 있습니다.\n- `'trap-focus'`: 포커스는 Dialog 안에 갇히지만, 문서 페이지 스크롤은 잠기지 않고 바깥에 대한 포인터 상호작용도 계속 활성화됩니다.\n\n`modal`이 `true` 또는 `'trap-focus'`이면 터치 스크린 리더 사용자가 팝업을 벗어날 수 있도록\n`<Dialog.Close>`를 `<Dialog.Popup>` 안에 렌더링하세요."
         },
         {
             "name": "onOpenChangeComplete",
             "type": ["function"],
             "detailedType": "((open: boolean) => void) | undefined",
             "required": false,
-            "description": "Event handler called after any animations complete when the dialog is opened or closed."
+            "description": "Dialog가 열리거나 닫힌 뒤 모든 애니메이션이 끝났을 때 호출되는 이벤트 핸들러."
         },
         {
             "name": "triggerId",
             "type": ["string", "null"],
             "detailedType": "string | null | undefined",
             "required": false,
-            "description": "ID of the trigger that the dialog is associated with.\nThis is useful in conjunction with the `open` prop to create a controlled dialog.\nThere's no need to specify this prop when the dialog is uncontrolled (that is, when the `open` prop is not set)."
+            "description": "Dialog와 연결된 트리거의 ID.\n`open` prop과 함께 쓰면 제어 Dialog를 만들 때 유용합니다.\nDialog가 비제어일 때(즉 `open` prop을 설정하지 않았을 때)는 이 prop을 지정할 필요가 없습니다."
         }
     ],
     "typeRefs": {

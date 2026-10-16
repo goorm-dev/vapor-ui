@@ -1,27 +1,27 @@
 {
     "name": "CheckboxIndicatorPrimitive",
-    "description": "Check mark shown inside the checkbox while it is checked, or a dash while `indeterminate` is set. Renders a `<span>` element.",
+    "description": "Checkbox가 체크된 동안 안에 표시되는 체크 표시. `indeterminate`가 설정되면 대시를 표시합니다. `<span>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "Icon shown in place of the default check mark or dash, such as an icon component. The element receives a `width` and `height` of `100%`. Anything other than a single element is ignored and the default icon is shown."
+            "description": "기본 체크 표시나 대시 대신 표시할 아이콘(예: 아이콘 컴포넌트). 요소에 `width`와 `height`가 `100%`로 적용됩니다. 단일 요소가 아니면 무시되고 기본 아이콘이 표시됩니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Checkbox.IndicatorPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "keepMounted",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to keep the element in the DOM when the checkbox is not checked.",
+            "description": "Checkbox가 체크되지 않았을 때 요소를 DOM에 유지할지 여부.",
             "defaultValue": "true"
         },
         {
@@ -29,14 +29,14 @@
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Checkbox.IndicatorPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Checkbox.IndicatorPrimitive.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

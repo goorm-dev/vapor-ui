@@ -1,13 +1,13 @@
 {
     "name": "AvatarRoot",
-    "description": "Combines `Avatar.ImagePrimitive` and `Avatar.FallbackPrimitive` into a single part that shows a user's profile image, falling back to the first letter of `alt` when the image is missing or fails to load. Pass the primitives as `children`, or use `imageElement` or `fallbackElement`, to replace the image or fallback. Renders a `<span>` element.",
+    "description": "`Avatar.ImagePrimitive`와 `Avatar.FallbackPrimitive`를 하나의 파트로 합쳐 사용자의 프로필 이미지를 표시하고, 이미지가 없거나 불러오지 못하면 `alt`의 첫 글자를 대신 표시합니다. 프리미티브를 `children`으로 전달하거나 `imageElement` 또는 `fallbackElement`를 사용해 이미지나 폴백을 대체할 수 있습니다. `<span>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "shape",
             "type": ["circle", "square"],
             "detailedType": "\"circle\" | \"square\" | undefined",
             "required": false,
-            "description": "Corner style of the avatar.",
+            "description": "아바타의 모서리 스타일.",
             "defaultValue": "square"
         },
         {
@@ -15,7 +15,7 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the avatar, controlling width, height, corner radius, and the typography of the fallback.",
+            "description": "아바타의 크기. 너비, 높이, 모서리 반경, 폴백의 타이포그래피를 결정합니다.",
             "defaultValue": "md"
         },
         {
@@ -23,56 +23,56 @@
             "type": ["function"],
             "detailedType": "((status: \"idle\" | \"loading\" | \"loaded\" | \"error\") => void) | undefined",
             "required": false,
-            "description": "Callback fired when the loading status changes."
+            "description": "로딩 상태가 바뀔 때 호출되는 콜백."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Avatar.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "fallbackElement",
             "type": ["ReactElement<AvatarFallbackPrimitive.Props>"],
             "detailedType": "ReactElement<AvatarFallbackPrimitive.Props> | undefined",
             "required": false,
-            "description": "Replaces the default `Avatar.FallbackPrimitive`. Ignored when `children` are given."
+            "description": "기본 `Avatar.FallbackPrimitive`를 대체합니다. `children`이 주어지면 무시됩니다."
         },
         {
             "name": "imageElement",
             "type": ["ReactElement<AvatarImagePrimitive.Props>"],
             "detailedType": "ReactElement<AvatarImagePrimitive.Props> | undefined",
             "required": false,
-            "description": "Replaces the default `Avatar.ImagePrimitive`. Ignored when `children` are given."
+            "description": "기본 `Avatar.ImagePrimitive`를 대체합니다. `children`이 주어지면 무시됩니다."
         },
         {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before showing the fallback. Specified in milliseconds."
+            "description": "폴백을 표시하기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
         },
         {
             "name": "keepMounted",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the image element stays mounted and loads in place instead of being preloaded.\nSupports `loading=\"lazy\"` and optimized image components such as `next/image`."
+            "description": "이미지를 미리 불러오지 않고 이미지 요소를 마운트한 상태로 유지하며 그 자리에서 로드하는지 여부.\n`loading=\"lazy\"`와 `next/image` 같은 최적화된 이미지 컴포넌트를 지원합니다."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Avatar.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Avatar.Root.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

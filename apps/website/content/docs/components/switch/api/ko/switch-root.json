@@ -1,13 +1,13 @@
 {
     "name": "SwitchRoot",
-    "description": "Switch that turns a single setting on or off. Renders a `<span>` element and a hidden `<input>` beside it.",
+    "description": "단일 설정을 켜거나 끄는 Switch. `<span>` 요소와 그 옆의 숨겨진 `<input>`을 렌더링합니다.",
     "props": [
         {
             "name": "invalid",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Marks the switch as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element.",
+            "description": "Switch를 유효하지 않은 상태로 표시하고 오류 스타일을 적용합니다. `<span>` 요소에 `aria-invalid`를 설정합니다.",
             "defaultValue": "false"
         },
         {
@@ -15,7 +15,7 @@
             "type": ["sm", "md", "lg"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
             "required": false,
-            "description": "Size of the switch, controlling its width, height, and padding, and the size of its thumb.",
+            "description": "Switch의 크기. 너비, 높이, 패딩과 썸의 크기를 결정합니다.",
             "defaultValue": "md"
         },
         {
@@ -23,119 +23,119 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the switch is currently active.\n\nTo render an uncontrolled switch, use the `defaultChecked` prop instead."
+            "description": "Switch가 현재 켜져 있는지 여부.\n\n비제어 Switch를 렌더링하려면 `defaultChecked` prop을 대신 사용하세요."
         },
         {
             "name": "defaultChecked",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the switch is initially active.\n\nTo render a controlled switch, use the `checked` prop instead."
+            "description": "Switch가 처음에 켜져 있는지 여부.\n\n제어 Switch를 렌더링하려면 `checked` prop을 대신 사용하세요."
         },
         {
             "name": "onCheckedChange",
             "type": ["function"],
             "detailedType": "((checked: boolean, eventDetails: Switch.Root.ChangeEventDetails) => void) | undefined",
             "required": false,
-            "description": "Event handler called when the switch is activated or deactivated."
+            "description": "Switch를 켜거나 끌 때 호출되는 이벤트 핸들러."
         },
         {
             "name": "value",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "The value submitted with the form when the switch is on.\nBy default, switch submits the \"on\" value, matching native checkbox behavior."
+            "description": "Switch가 켜져 있을 때 폼과 함께 제출되는 값.\n기본적으로 Switch는 네이티브 체크박스의 동작과 같게 \"on\" 값을 제출합니다."
         },
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "Element shown inside the switch in place of the default `Switch.ThumbPrimitive`, such as a `Switch.ThumbPrimitive` with custom props. Anything other than a single element is ignored and the default thumb is shown."
+            "description": "기본 `Switch.ThumbPrimitive`를 대체해 Switch 안에 표시되는 요소. 예를 들어 커스텀 prop을 지정한 `Switch.ThumbPrimitive`를 쓸 수 있습니다. 단일 요소가 아니면 무시되고 기본 썸이 표시됩니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Switch.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
         },
         {
             "name": "form",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "Identifies the form that owns the hidden input.\nUseful when the switch is rendered outside the form."
+            "description": "숨겨진 input을 소유하는 폼을 식별합니다.\nSwitch를 폼 밖에서 렌더링할 때 유용합니다."
         },
         {
             "name": "id",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "The id of the hidden input element.\n\nWhen `nativeButton` is `true`, the id is applied to the root element."
+            "description": "숨겨진 input 요소의 id.\n\n`nativeButton`이 `true`이면 id는 루트 요소에 적용됩니다."
         },
         {
             "name": "inputRef",
             "type": ["React.Ref<HTMLInputElement>"],
             "detailedType": "React.Ref<HTMLInputElement> | undefined",
             "required": false,
-            "description": "A ref to access the hidden `<input>` element."
+            "description": "숨겨진 `<input>` 요소에 접근하기 위한 ref."
         },
         {
             "name": "name",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "Identifies the field when a form is submitted."
+            "description": "폼을 제출할 때 필드를 식별합니다."
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button."
+            "description": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
         },
         {
             "name": "readOnly",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user should be unable to activate or deactivate the switch."
+            "description": "사용자가 Switch를 켜거나 끌 수 없도록 할지 여부."
         },
         {
             "name": "required",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user must activate the switch before submitting a form."
+            "description": "폼을 제출하기 전에 사용자가 Switch를 켜야 하는지 여부."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Switch.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "uncheckedValue",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "The value submitted with the form when the switch is off.\nBy default, unchecked switches do not submit any value, matching native checkbox behavior."
+            "description": "Switch가 꺼져 있을 때 폼과 함께 제출되는 값.\n기본적으로 꺼진 Switch는 네이티브 체크박스의 동작과 같게 아무 값도 제출하지 않습니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Switch.Root.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

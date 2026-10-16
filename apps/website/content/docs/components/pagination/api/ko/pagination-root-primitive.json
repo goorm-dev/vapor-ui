@@ -1,34 +1,34 @@
 {
     "name": "PaginationRootPrimitive",
-    "description": "Navigation landmark labeled \"Pagination\" that manages the selected page and shares `size` and `disabled` with the parts inside it. Renders a `<nav>` element.",
+    "description": "\"Pagination\" 레이블이 붙은 내비게이션 랜드마크. 선택된 페이지를 관리하고 `size`와 `disabled`를 내부 파트와 공유합니다. `<nav>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "totalPages",
             "type": ["number"],
             "detailedType": "number",
             "required": true,
-            "description": "Total number of pages. `Pagination.Next` is disabled once this page is selected."
+            "description": "전체 페이지 수. 이 페이지가 선택되면 `Pagination.Next`가 비활성화됩니다."
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the pagination buttons and ellipsis, controlling width, height, and typography."
+            "description": "페이지네이션 버튼과 줄임표의 크기. 너비, 높이, 타이포그래피를 결정합니다."
         },
         {
             "name": "onPageChange",
             "type": ["function"],
             "detailedType": "((page: number, eventDetails: Pagination.RootPrimitive.ChangeEventDetails) => void) | undefined",
             "required": false,
-            "description": "Called when a page button, `Pagination.Previous`, or `Pagination.Next` is clicked, with the new page and the event details. Call `eventDetails.cancel()` to keep the current page."
+            "description": "페이지 버튼, `Pagination.Previous`, `Pagination.Next`를 클릭할 때 새 페이지와 이벤트 상세 정보와 함께 호출됩니다. 현재 페이지를 유지하려면 `eventDetails.cancel()`을 호출하세요."
         },
         {
             "name": "boundaryCount",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "Number of pages always shown at the start and the end of the range.",
+            "description": "범위의 처음과 끝에 항상 표시되는 페이지 수.",
             "defaultValue": "1"
         },
         {
@@ -36,14 +36,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Pagination.RootPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "defaultPage",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "Page selected on first render, counted from `1`. Use when the component is not controlled.",
+            "description": "첫 렌더링 시 선택되는 페이지로, `1`부터 셉니다. 비제어 컴포넌트로 쓸 때 사용하세요.",
             "defaultValue": "1"
         },
         {
@@ -51,7 +51,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Disables the pagination, blocking all interactions on its buttons.",
+            "description": "페이지네이션을 비활성화하여 버튼의 모든 상호작용을 막습니다.",
             "defaultValue": "false"
         },
         {
@@ -59,14 +59,14 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "Selected page, counted from `1`. Use when the component is controlled."
+            "description": "선택된 페이지로, `1`부터 셉니다. 제어 컴포넌트로 쓸 때 사용하세요."
         },
         {
             "name": "siblingCount",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "Number of pages shown on each side of the selected page before the rest collapse into an ellipsis.",
+            "description": "선택된 페이지 양쪽에 표시되는 페이지 수. 나머지는 줄임표로 접힙니다.",
             "defaultValue": "2"
         },
         {
@@ -74,14 +74,14 @@
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Pagination.RootPrimitive.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Pagination.RootPrimitive.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를\n다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

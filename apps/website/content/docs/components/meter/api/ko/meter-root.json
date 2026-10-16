@@ -1,62 +1,62 @@
 {
     "name": "MeterRoot",
-    "description": "Displays a measurement inside a known range, such as disk usage or a score. Renders a `<div>` element.",
+    "description": "디스크 사용량이나 점수처럼 정해진 범위 안의 측정값을 표시합니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "value",
             "type": ["number"],
             "detailedType": "number",
             "required": true,
-            "description": "The current value."
+            "description": "현재 값."
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
             "required": false,
-            "description": "Size of the meter, controlling the height of the track."
+            "description": "미터의 크기. 트랙의 높이를 결정합니다."
         },
         {
             "name": "type",
             "type": ["default", "warning"],
             "detailedType": "\"default\" | \"warning\" | undefined",
             "required": false,
-            "description": "Color of the filled portion of the meter."
+            "description": "미터에서 채워진 영역의 색상."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Meter.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용할 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "format",
             "type": ["Intl.NumberFormatOptions"],
             "detailedType": "Intl.NumberFormatOptions | undefined",
             "required": false,
-            "description": "Options to format the value."
+            "description": "값을 포맷하는 옵션."
         },
         {
             "name": "getAriaValueText",
             "type": ["function"],
             "detailedType": "((formattedValue: string, value: number) => string) | undefined",
             "required": false,
-            "description": "A function that returns a string value that provides a human-readable text alternative for `aria-valuenow`, the current value of the meter."
+            "description": "미터의 현재 값인 `aria-valuenow`를 사람이 읽을 수 있는 텍스트로 대체하는 문자열을 반환하는 함수."
         },
         {
             "name": "locale",
             "type": ["Intl.LocalesArgument"],
             "detailedType": "Intl.LocalesArgument",
             "required": false,
-            "description": "The locale used by `Intl.NumberFormat` when formatting the value.\nDefaults to the user's runtime locale."
+            "description": "값을 포맷할 때 `Intl.NumberFormat`이 사용하는 로케일.\n기본값은 사용자의 런타임 로케일입니다."
         },
         {
             "name": "max",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "The maximum value",
+            "description": "최댓값",
             "defaultValue": "100"
         },
         {
@@ -64,7 +64,7 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "The minimum value",
+            "description": "최솟값",
             "defaultValue": "0"
         },
         {
@@ -72,14 +72,14 @@
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Meter.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용할 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Meter.Root.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

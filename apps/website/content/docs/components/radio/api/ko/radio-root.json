@@ -1,20 +1,20 @@
 {
     "name": "RadioRoot",
-    "description": "Radio button for picking one option from a set. Use inside `RadioGroup.Root`. Renders a `<span>` element and a hidden `<input>` beside it.",
+    "description": "여러 선택지 중 하나를 고르는 라디오 버튼. `RadioGroup.Root` 안에서 사용하세요. `<span>` 요소와 그 옆의 숨겨진 `<input>`으로 렌더링됩니다.",
     "props": [
         {
             "name": "value",
             "type": ["unknown"],
             "detailedType": "unknown",
             "required": true,
-            "description": "The unique identifying value of the radio in a group."
+            "description": "그룹 안에서 라디오를 식별하는 고유한 값."
         },
         {
             "name": "invalid",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Marks the radio as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element. Inside an invalid `RadioGroup.Root`, the radio is always invalid.",
+            "description": "라디오를 유효하지 않음으로 표시하고 오류 스타일을 적용합니다. `<span>` 요소에 `aria-invalid`를 설정합니다. 유효하지 않은 `RadioGroup.Root` 안에서는 라디오가 항상 유효하지 않음으로 처리됩니다.",
             "defaultValue": "false"
         },
         {
@@ -22,7 +22,7 @@
             "type": ["md", "lg"],
             "detailedType": "\"md\" | \"lg\" | undefined",
             "required": false,
-            "description": "Size of the radio, controlling its width and height. Inside `RadioGroup.Root`, falls back to the group's `size` when not set.",
+            "description": "라디오의 크기. 너비와 높이를 결정합니다. `RadioGroup.Root` 안에서 지정하지 않으면 그룹의 `size`를 따릅니다.",
             "defaultValue": "md"
         },
         {
@@ -30,63 +30,63 @@
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "Element shown inside the radio in place of the default `Radio.IndicatorPrimitive`, such as a `Radio.IndicatorPrimitive` with custom props. Anything other than a single element is ignored and the default indicator is shown."
+            "description": "기본 `Radio.IndicatorPrimitive`를 대체해 라디오 안에 표시할 요소. 예를 들어 커스텀 prop을 지정한 `Radio.IndicatorPrimitive`가 있습니다. 단일 요소가 아닌 값은 무시되고 기본 인디케이터가 표시됩니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Radio.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용할 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
         },
         {
             "name": "inputRef",
             "type": ["React.Ref<HTMLInputElement>"],
             "detailedType": "React.Ref<HTMLInputElement> | undefined",
             "required": false,
-            "description": "A ref to access the hidden input element."
+            "description": "숨겨진 입력 요소에 접근하기 위한 ref."
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button."
+            "description": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
         },
         {
             "name": "readOnly",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user should be unable to select the radio button."
+            "description": "사용자가 라디오 버튼을 선택할 수 없게 할지 여부."
         },
         {
             "name": "required",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user must choose a value before submitting a form."
+            "description": "폼을 제출하기 전에 사용자가 값을 선택해야 하는지 여부."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Radio.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용할 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Radio.Root.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

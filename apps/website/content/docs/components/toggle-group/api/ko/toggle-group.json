@@ -1,13 +1,13 @@
 {
     "name": "ToggleGroup",
-    "description": "Groups `Toggle` buttons so they share a pressed state, letting one or, with `multiple`, several be pressed at a time. Renders a `<div>` element.",
+    "description": "`Toggle` 버튼을 그룹으로 묶어 눌림 상태를 공유합니다. 기본적으로 하나만 누를 수 있고, `multiple`을 사용하면 여러 개를 동시에 누를 수 있습니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the toggles in the group, controlling their height and width. A `Toggle` that sets its own `size` keeps it.",
+            "description": "그룹 내 토글의 크기. 토글의 높이와 너비를 결정합니다. 자체 `size`를 지정한 `Toggle`은 해당 값을 유지합니다.",
             "defaultValue": "md"
         },
         {
@@ -15,77 +15,77 @@
             "type": ["readonly string[]"],
             "detailedType": "readonly string[] | undefined",
             "required": false,
-            "description": "The pressed state of the toggle group represented by an array of\nthe values of all pressed toggle buttons.\nThis is the uncontrolled counterpart of `value`."
+            "description": "눌려 있는 모든 토글 버튼의 값을 배열로 나타낸 ToggleGroup의 눌림 상태.\n`value`의 비제어 방식입니다."
         },
         {
             "name": "onValueChange",
             "type": ["function"],
             "detailedType": "((groupValue: string[], eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element | undefined; }) => void) | undefined",
             "required": false,
-            "description": "Callback fired when the pressed states of the toggle group changes."
+            "description": "ToggleGroup의 눌림 상태가 바뀔 때 호출되는 콜백."
         },
         {
             "name": "value",
             "type": ["readonly string[]"],
             "detailedType": "readonly string[] | undefined",
             "required": false,
-            "description": "The pressed state of the toggle group represented by an array of\nthe values of all pressed toggle buttons.\nThis is the controlled counterpart of `defaultValue`."
+            "description": "눌려 있는 모든 토글 버튼의 값을 배열로 나타낸 ToggleGroup의 눌림 상태.\n`defaultValue`의 제어 방식입니다."
         },
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "Toggles shown in the group, such as `Toggle` buttons."
+            "description": "그룹에 표시할 토글. `Toggle` 버튼 등이 올 수 있습니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: ToggleGroup.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용할 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "orientation",
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
             "required": false,
-            "description": "Direction of keyboard navigation between the toggles: Left and Right arrow keys for `horizontal`, Up and Down arrow keys for `vertical`. Doesn't change the layout."
+            "description": "토글 간 키보드 탐색 방향. `horizontal`은 왼쪽·오른쪽 화살표 키, `vertical`은 위·아래 화살표 키를 사용합니다. 레이아웃은 바뀌지 않습니다."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the toggle group should ignore user interaction."
+            "description": "ToggleGroup이 사용자 상호작용을 무시할지 여부."
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys."
+            "description": "화살표 키를 사용하다 목록의 끝에 도달했을 때 키보드 포커스를 첫 번째 항목으로 되돌릴지 여부."
         },
         {
             "name": "multiple",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "When `false` only one item in the group can be pressed. If any item in\nthe group becomes pressed, the others will become unpressed.\nWhen `true` multiple items can be pressed."
+            "description": "`false`이면 그룹에서 항목 하나만 누를 수 있습니다. 그룹의 어떤 항목이 눌리면 나머지는 눌림이 해제됩니다.\n`true`이면 여러 항목을 누를 수 있습니다."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: ToggleGroup.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용할 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: ToggleGroup.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

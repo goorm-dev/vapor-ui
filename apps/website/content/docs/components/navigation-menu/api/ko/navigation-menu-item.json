@@ -1,34 +1,34 @@
 {
     "name": "NavigationMenuItem",
-    "description": "Holds one navigation entry, either a link or a trigger with its content. Renders an `<li>` element.",
+    "description": "링크 또는 콘텐츠가 있는 트리거 중 하나인 탐색 항목 하나를 담습니다. `<li>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "value",
             "type": ["any"],
             "detailedType": "any",
             "required": false,
-            "description": "A unique value that identifies this navigation menu item.\nIf no value is provided, a unique ID will be generated automatically.\nUse when controlling the navigation menu programmatically."
+            "description": "이 탐색 메뉴 항목을 식별하는 고유한 값.\n값을 지정하지 않으면 고유한 ID가 자동으로 생성됩니다.\n탐색 메뉴를 프로그래밍 방식으로 제어할 때 사용하세요."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: NavigationMenu.Item.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: NavigationMenu.Item.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Item.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

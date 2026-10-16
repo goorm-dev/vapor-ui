@@ -1,34 +1,34 @@
 {
     "name": "ToastRootPrimitive",
-    "description": "A single toast, colored by the `colorPalette` of its toast object. Renders a `<div>` element.",
+    "description": "Toast 하나. Toast 객체의 `colorPalette`에 따라 색이 정해집니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "toast",
             "type": ["ToastObjectType<any>"],
             "detailedType": "ToastObjectType<any>",
             "required": true,
-            "description": "Toast to show, usually one item of `useToastManager().toasts`. Its `colorPalette`, `icon`, `close`, and `actionProps` set the color, icon, close button, and action button of the toast."
+            "description": "표시할 Toast. 보통 `useToastManager().toasts`의 항목 하나입니다. 이 객체의 `colorPalette`, `icon`, `close`, `actionProps`가 Toast의 색, 아이콘, 닫기 버튼, 액션 버튼을 정합니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Toast.RootPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Toast.RootPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "swipeDirection",
             "type": ["left", "right", "up", "down", "(\"left\" | \"right\" | \"up\" | \"down\")[]"],
             "detailedType": "\"left\" | \"right\" | \"up\" | \"down\" | (\"left\" | \"right\" | \"up\" | \"down\")[] | undefined",
             "required": false,
-            "description": "Direction(s) in which the toast can be swiped to dismiss.",
+            "description": "스와이프해서 Toast를 닫을 수 있는 방향.",
             "defaultValue": "['up', 'right']"
         },
         {
@@ -36,7 +36,7 @@
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Toast.RootPrimitive.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

@@ -1,55 +1,55 @@
 {
     "name": "Form",
-    "description": "Form that collects its fields' values and shows their validation errors in one place. Use with `Field` parts to validate on submit, blur, or change. Renders a `<form>` element.",
+    "description": "필드의 값을 수집하고 검증 오류를 한곳에 표시하는 Form. `Field` 파트와 함께 사용하면 제출, 블러, 변경 시점에 검증할 수 있습니다. `<form>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Form.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "actionsRef",
             "type": ["React.RefObject<Form.Actions | null>"],
             "detailedType": "React.RefObject<Form.Actions | null> | undefined",
             "required": false,
-            "description": "A ref to imperative actions.\n- `validate`: Validates all fields when called. Optionally pass a field name to validate a single field."
+            "description": "명령형 액션에 대한 ref.\n- `validate`: 호출하면 모든 필드를 검증합니다. 필드 이름을 전달하면 해당 필드만 검증할 수 있습니다."
         },
         {
             "name": "errors",
             "type": ["Errors"],
             "detailedType": "Errors | undefined",
             "required": false,
-            "description": "Validation errors returned externally, typically after submission by a server or a form action.\nThis should be an object where keys correspond to the `name` attribute on `<Field.Root>`,\nand values correspond to error(s) related to that field."
+            "description": "서버나 폼 액션 등이 제출 후에 외부에서 반환한 검증 오류.\n키는 `<Field.Root>`의 `name` 속성에 대응하고,\n값은 해당 필드와 관련된 오류에 대응하는 객체여야 합니다."
         },
         {
             "name": "onFormSubmit",
             "type": ["function"],
             "detailedType": "((formValues: Record<string, any>, eventDetails: Form.SubmitEventDetails) => void) | undefined",
             "required": false,
-            "description": "Event handler called when the form is submitted.\n`preventDefault()` is called on the native submit event when used."
+            "description": "Form을 제출할 때 호출되는 이벤트 핸들러.\n사용하면 네이티브 submit 이벤트에서 `preventDefault()`가 호출됩니다."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Form.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "validationMode",
             "type": ["onBlur", "onChange", "onSubmit"],
             "detailedType": "\"onBlur\" | \"onChange\" | \"onSubmit\" | undefined",
             "required": false,
-            "description": "Determines when the form should be validated.\nThe `validationMode` prop on `<Field.Root>` takes precedence over this.\n\n- `onSubmit` (default): validates the field when the form is submitted, afterwards fields will re-validate on change.\n- `onBlur`: validates a field when it loses focus.\n- `onChange`: validates the field on every change to its value."
+            "description": "Form을 검증할 시점을 결정합니다.\n`<Field.Root>`의 `validationMode` prop이 이 값보다 우선합니다.\n\n- `onSubmit` (기본값): Form을 제출할 때 필드를 검증하며, 이후에는 값이 변경될 때 다시 검증합니다.\n- `onBlur`: 필드가 포커스를 잃을 때 검증합니다.\n- `onChange`: 필드의 값이 변경될 때마다 검증합니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Form.State) => ReactElement) | ((props: React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, state: Form.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

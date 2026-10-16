@@ -1,20 +1,20 @@
 {
     "name": "SheetResizeHandle",
-    "description": "Handle on the inner edge of the sheet that resizes it by dragging or with the arrow keys. Place it inside `Sheet.Popup`. Renders a `<div>` element.",
+    "description": "Sheet 안쪽 가장자리에 있는 핸들. 드래그하거나 화살표 키로 Sheet의 크기를 조절합니다. `Sheet.Popup` 안에 배치하세요. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Sheet.ResizeHandle.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Disables the handle, blocking drag and keyboard resizing.",
+            "description": "핸들을 비활성화하여 드래그와 키보드 크기 조절을 막습니다.",
             "defaultValue": "false"
         },
         {
@@ -22,7 +22,7 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "Distance the sheet resizes per arrow-key press, in pixels.",
+            "description": "화살표 키를 한 번 누를 때 Sheet의 크기가 변하는 거리(픽셀 단위).",
             "defaultValue": "RESIZE_STEP"
         },
         {
@@ -30,14 +30,14 @@
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Sheet.ResizeHandle.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Sheet.ResizeHandle.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

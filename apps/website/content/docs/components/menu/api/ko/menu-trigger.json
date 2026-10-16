@@ -1,83 +1,83 @@
 {
     "name": "MenuTrigger",
-    "description": "Button that opens the menu when clicked. Renders a `<button>` element.",
+    "description": "클릭하면 Menu를 여는 버튼. `<button>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "Content shown inside the trigger, such as a label or an icon."
+            "description": "트리거 안에 표시되는 콘텐츠. 레이블이나 아이콘 등."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Menu.Trigger.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용할 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "closeDelay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before closing the menu that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop."
+            "description": "호버로 열린 Menu를 닫기 전에 기다리는 시간.\n밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다."
         },
         {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before the menu may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop."
+            "description": "호버로 Menu를 열 수 있게 되기까지 기다리는 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
         },
         {
             "name": "handle",
             "type": ["MenuHandle<unknown>"],
             "detailedType": "MenuHandle<unknown> | undefined",
             "required": false,
-            "description": "A handle to associate the trigger with a menu."
+            "description": "트리거를 Menu와 연결하는 핸들."
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
+            "description": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요."
         },
         {
             "name": "openOnHover",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the menu should also open when the trigger is hovered."
+            "description": "트리거에 호버할 때도 Menu를 열지 여부."
         },
         {
             "name": "payload",
             "type": ["unknown"],
             "detailedType": "unknown",
             "required": false,
-            "description": "A payload to pass to the menu when it is opened."
+            "description": "Menu를 열 때 Menu에 전달할 페이로드."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Menu.Trigger.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용할 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Menu.Trigger.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

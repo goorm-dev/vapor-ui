@@ -1,0 +1,381 @@
+{
+    "dialog-body": {
+        "description": {
+            "source": "7aef4c2db26a5ee7",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-close": {
+        "description": {
+            "source": "98ca8a75719796a7",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-description": {
+        "description": {
+            "source": "a647b0a192b033bc",
+            "guide": 1,
+            "terms": "12152fc354171c4e"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-footer": {
+        "description": {
+            "source": "8e1505ab540d1ff4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-header": {
+        "description": {
+            "source": "4e332ee186cae3c8",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-overlay-primitive": {
+        "description": {
+            "source": "e7069b8092f3e6ed",
+            "guide": 1,
+            "terms": "03ae27799318fede"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.forceRender": {
+            "source": "f175c8f3fe86a0bd",
+            "guide": 1,
+            "terms": "ff687a1a632444ff"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-popup-primitive": {
+        "description": {
+            "source": "fbdf756ecc696e62",
+            "guide": 1,
+            "terms": "72c5cdcd9d38111a"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.finalFocus": {
+            "source": "875d4078c06bced4",
+            "guide": 1,
+            "terms": "c6db445e670d5a6a"
+        },
+        "props.initialFocus": {
+            "source": "ba340578092fecb9",
+            "guide": 1,
+            "terms": "c5576ed7609dcea6"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-popup": {
+        "description": {
+            "source": "8a426040dbf7e1ed",
+            "guide": 1,
+            "terms": "176ed3253d455d36"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.finalFocus": {
+            "source": "875d4078c06bced4",
+            "guide": 1,
+            "terms": "c6db445e670d5a6a"
+        },
+        "props.initialFocus": {
+            "source": "ba340578092fecb9",
+            "guide": 1,
+            "terms": "c5576ed7609dcea6"
+        },
+        "props.overlayElement": {
+            "source": "e0c6f1ee8950f2cd",
+            "guide": 1,
+            "terms": "1699ce162ea58879"
+        },
+        "props.portalElement": {
+            "source": "7cdfc37a405b9921",
+            "guide": 1,
+            "terms": "68ceb693abb725d9"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-portal-primitive": {
+        "description": {
+            "source": "c644b62db095b46a",
+            "guide": 1,
+            "terms": "89e6722106556dd8"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.container": {
+            "source": "14dbbd8fcd1ffdc2",
+            "guide": 1,
+            "terms": "89e6722106556dd8"
+        },
+        "props.keepMounted": {
+            "source": "f1cabf3d00a37e20",
+            "guide": 1,
+            "terms": "d5f42ce2c1083b5f"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-root": {
+        "description": {
+            "source": "4b8ca2213c58d146",
+            "guide": 1,
+            "terms": "6f111667ea3e4aeb"
+        },
+        "props.actionsRef": {
+            "source": "e46b684fb74a891c",
+            "guide": 1,
+            "terms": "3dc9ff164840b150"
+        },
+        "props.children": {
+            "source": "360875b3b8fca1b9",
+            "guide": 1,
+            "terms": "880bb85721e505eb"
+        },
+        "props.closeOnClickOverlay": {
+            "source": "e19d3a7f67788130",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.defaultOpen": {
+            "source": "21db487f06c2e75f",
+            "guide": 1,
+            "terms": "61806d551a58f35c"
+        },
+        "props.defaultTriggerId": {
+            "source": "50a2fa613f34b56b",
+            "guide": 1,
+            "terms": "47f73f7a70aa11e1"
+        },
+        "props.handle": {
+            "source": "ae81effb0e7ebc61",
+            "guide": 1,
+            "terms": "c5797848e5fc3191"
+        },
+        "props.modal": {
+            "source": "80dc09a220e21813",
+            "guide": 1,
+            "terms": "6f111667ea3e4aeb"
+        },
+        "props.onOpenChange": {
+            "source": "ac9f65a08ad91e82",
+            "guide": 1,
+            "terms": "917b5199bf8a587f"
+        },
+        "props.onOpenChangeComplete": {
+            "source": "e8e36ddde8c0712e",
+            "guide": 1,
+            "terms": "917b5199bf8a587f"
+        },
+        "props.open": {
+            "source": "d219e7f5f3a376a6",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.size": {
+            "source": "222c099e9e33a29e",
+            "guide": 1,
+            "terms": "b2607fc1dae382d6"
+        },
+        "props.triggerId": {
+            "source": "d05d8e680fdd959d",
+            "guide": 1,
+            "terms": "0c64f2534e9520cf"
+        }
+    },
+    "dialog-title": {
+        "description": {
+            "source": "0ad158b4af65232b",
+            "guide": 1,
+            "terms": "859742149d3ea99f"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "dialog-trigger": {
+        "description": {
+            "source": "bdf68404b371248e",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.handle": {
+            "source": "5640a7761b80ab92",
+            "guide": 1,
+            "terms": "47f73f7a70aa11e1"
+        },
+        "props.id": {
+            "source": "5c0dbe8a35fa85a8",
+            "guide": 1,
+            "terms": "689d5bd15c922d0b"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.payload": {
+            "source": "3e0c8bdda819e421",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

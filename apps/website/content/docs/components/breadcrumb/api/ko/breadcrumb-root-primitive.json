@@ -1,34 +1,34 @@
 {
     "name": "BreadcrumbRootPrimitive",
-    "description": "Navigation landmark labeled \"Breadcrumb\" that holds the breadcrumb trail and shares its size with the links, separators, and ellipsis inside it. Renders a `<nav>` element.",
+    "description": "\"Breadcrumb\" 레이블이 붙은 내비게이션 랜드마크. Breadcrumb 경로를 담고 그 안의 링크, 구분자, 생략 아이콘과 크기를 공유합니다. `<nav>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the breadcrumb, controlling the typography of the links and the size of the separator and ellipsis icons."
+            "description": "Breadcrumb의 크기. 링크의 타이포그래피와 구분자 및 생략 아이콘의 크기를 결정합니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Breadcrumb.RootPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Breadcrumb.RootPrimitive.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Breadcrumb.RootPrimitive.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

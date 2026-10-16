@@ -1,13 +1,13 @@
 {
     "name": "Textarea",
-    "description": "Multi-line text field for longer input such as comments or descriptions. Set `autoResize` to grow its height with the content. Renders a `<textarea>` element.",
+    "description": "댓글이나 설명처럼 긴 입력을 위한 여러 줄 텍스트 필드. `autoResize`를 설정하면 콘텐츠에 맞춰 높이가 늘어납니다. `<textarea>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "autoResize",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Grows the textarea's height to fit its content as the user types, and turns off manual resizing.",
+            "description": "사용자가 입력할 때 콘텐츠에 맞춰 textarea의 높이를 늘리고, 수동 크기 조절을 끕니다.",
             "defaultValue": "false"
         },
         {
@@ -15,7 +15,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Marks the textarea as invalid, applying error styles. Sets `aria-invalid` on the `<textarea>` element.",
+            "description": "textarea를 유효하지 않은 상태로 표시하고 오류 스타일을 적용합니다. `<textarea>` 요소에 `aria-invalid`를 설정합니다.",
             "defaultValue": "false"
         },
         {
@@ -23,7 +23,7 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the textarea, controlling padding and typography.",
+            "description": "textarea의 크기. 패딩과 타이포그래피를 결정합니다.",
             "defaultValue": "md"
         },
         {
@@ -31,7 +31,7 @@
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "Initial text in the field. Use when uncontrolled.",
+            "description": "필드의 초기 텍스트. 비제어 컴포넌트로 쓸 때 사용하세요.",
             "defaultValue": ""
         },
         {
@@ -39,35 +39,35 @@
             "type": ["function"],
             "detailedType": "((value: string, event: Textarea.ChangeEventDetails) => void) | undefined",
             "required": false,
-            "description": "Called when the text changes as the user types, pastes, or deletes. Receives the new text and the change event details. Not called while `disabled` or `readOnly` is set."
+            "description": "사용자가 입력하거나 붙여넣거나 삭제해 텍스트가 바뀔 때 호출됩니다. 새 텍스트와 변경 이벤트 정보를 받습니다. `disabled` 또는 `readOnly`가 설정되어 있으면 호출되지 않습니다."
         },
         {
             "name": "value",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "Current text in the field. Use when controlled."
+            "description": "필드의 현재 텍스트. 제어 컴포넌트로 쓸 때 사용하세요."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Textarea.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용할 CSS 클래스, 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Textarea.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용할 스타일, 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Textarea.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

@@ -1,0 +1,388 @@
+{
+    "pagination-button-primitive": {
+        "description": {
+            "source": "b1c1542637d29493",
+            "guide": 1,
+            "terms": "c39d094f5d27eebe"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.page": {
+            "source": "695d8f4e02db262f",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-button": {
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.page": {
+            "source": "695d8f4e02db262f",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-ellipsis-primitive": {
+        "description": {
+            "source": "94d2261bf2761c39",
+            "guide": 1,
+            "terms": "1912fd938105e849"
+        },
+        "props.children": {
+            "source": "c4d9668e5d73fc57",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-ellipsis": {
+        "props.children": {
+            "source": "c4d9668e5d73fc57",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-item-primitive": {
+        "description": {
+            "source": "f3a573609ac83e11",
+            "guide": 1,
+            "terms": "ac589eefba6c2c89"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-items": {
+        "description": {
+            "source": "52ca7c9c569c38a3",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.children": {
+            "source": "785b5897c66a6974",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "pagination-list-primitive": {
+        "description": {
+            "source": "ee9aa9b6aa4f3ab4",
+            "guide": 1,
+            "terms": "ac589eefba6c2c89"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-next-primitive": {
+        "description": {
+            "source": "e562dc2cc16b3baa",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.children": {
+            "source": "77efe01072472272",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-next": {
+        "description": {
+            "source": "c15cdabe5f459d76",
+            "guide": 1,
+            "terms": "97eec823f3089741"
+        },
+        "props.children": {
+            "source": "77efe01072472272",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-previous-primitive": {
+        "description": {
+            "source": "f89cf88bd922f195",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.children": {
+            "source": "2c2f658d4a72ee7e",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-previous": {
+        "description": {
+            "source": "2957b4ce24ac8a36",
+            "guide": 1,
+            "terms": "97eec823f3089741"
+        },
+        "props.children": {
+            "source": "2c2f658d4a72ee7e",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "pagination-root-primitive": {
+        "description": {
+            "source": "7b47702b54efd921",
+            "guide": 1,
+            "terms": "34fbda6a8b3cba86"
+        },
+        "props.boundaryCount": {
+            "source": "2bd13a7cc08c0023",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.defaultPage": {
+            "source": "22e569fb1915b014",
+            "guide": 1,
+            "terms": "61806d551a58f35c"
+        },
+        "props.disabled": {
+            "source": "aacc8ee431fdd7b6",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.onPageChange": {
+            "source": "6dffd4d17aecb133",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.page": {
+            "source": "8d203ae5d1a5d8cf",
+            "guide": 1,
+            "terms": "3dc9ff164840b150"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.siblingCount": {
+            "source": "db7025f8d831991a",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.size": {
+            "source": "f9d3ef89bb322a05",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.totalPages": {
+            "source": "8c6b19adf91a4c94",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "pagination-root": {
+        "description": {
+            "source": "fb57f2dc4a034071",
+            "guide": 1,
+            "terms": "1c6ab826fbc86afe"
+        },
+        "props.boundaryCount": {
+            "source": "2bd13a7cc08c0023",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.defaultPage": {
+            "source": "22e569fb1915b014",
+            "guide": 1,
+            "terms": "61806d551a58f35c"
+        },
+        "props.disabled": {
+            "source": "aacc8ee431fdd7b6",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.onPageChange": {
+            "source": "6dffd4d17aecb133",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.page": {
+            "source": "8d203ae5d1a5d8cf",
+            "guide": 1,
+            "terms": "3dc9ff164840b150"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.siblingCount": {
+            "source": "db7025f8d831991a",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.size": {
+            "source": "f9d3ef89bb322a05",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.totalPages": {
+            "source": "8c6b19adf91a4c94",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        }
+    }
+}

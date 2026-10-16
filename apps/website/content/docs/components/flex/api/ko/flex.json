@@ -1,34 +1,34 @@
 {
     "name": "Flex",
-    "description": "Container that lays out its children with flexbox. Use for one-dimensional layouts that need custom direction, alignment, or spacing. Renders a `<div>` element.",
+    "description": "자식을 flexbox로 배치하는 컨테이너. 방향, 정렬, 간격을 직접 지정해야 하는 1차원 레이아웃에 사용하세요. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Flex.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "inline",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Displays the container as `inline-flex` instead of `flex`, so it sits inline with surrounding content."
+            "description": "컨테이너를 `flex` 대신 `inline-flex`로 표시하여 주변 콘텐츠와 같은 줄에 배치합니다."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Box.State) => (CSSProperties | undefined)) | ((state: Flex.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Flex.State) => ReactElement) | ((props: HTMLProps, state: Box.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

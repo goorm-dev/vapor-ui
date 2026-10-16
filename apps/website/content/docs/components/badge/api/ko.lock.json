@@ -1,0 +1,39 @@
+{
+    "badge": {
+        "description": {
+            "source": "8ef923748110ef8c",
+            "guide": 1,
+            "terms": "3c759f63895822aa"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.colorPalette": {
+            "source": "d221898c261f74bb",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.shape": {
+            "source": "0d1300b8858067bb",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.size": {
+            "source": "1548b8df676e604f",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

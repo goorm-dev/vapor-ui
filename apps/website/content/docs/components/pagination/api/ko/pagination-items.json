@@ -1,13 +1,13 @@
 {
     "name": "PaginationItems",
-    "description": "Generates a page button for each visible page and an ellipsis for each skipped range, based on `totalPages`, `siblingCount`, and `boundaryCount` of the root. Place it between `Pagination.Previous` and `Pagination.Next`. Doesn't render its own HTML element.",
+    "description": "루트의 `totalPages`, `siblingCount`, `boundaryCount`를 기준으로 표시할 각 페이지의 페이지 버튼과 건너뛴 각 범위의 줄임표를 생성합니다. `Pagination.Previous`와 `Pagination.Next` 사이에 배치하세요. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "children",
             "type": ["ReactNode", "function"],
             "detailedType": "ReactNode | ((pages: PageType[]) => ReactNode)",
             "required": false,
-            "description": "Content shown in place of the generated page buttons. As a function, receives the pages to show, each with a `type` (`NUM` for a page, `BREAK` for an ellipsis) and a page number in `value`."
+            "description": "생성된 페이지 버튼 대신 표시되는 콘텐츠. 함수일 때는 표시할 페이지 목록을 받으며, 각 페이지에는 `type`(`NUM`은 페이지, `BREAK`는 줄임표)과 `value`의 페이지 번호가 있습니다."
         }
     ]
 }

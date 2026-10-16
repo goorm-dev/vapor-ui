@@ -1,0 +1,54 @@
+{
+    "textarea": {
+        "description": {
+            "source": "a269d3b080ca1337",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.autoResize": {
+            "source": "20b26ac779dd1d13",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.defaultValue": {
+            "source": "f5dcaff9bb14fe39",
+            "guide": 1,
+            "terms": "03bfa6482a3d94e7"
+        },
+        "props.invalid": {
+            "source": "c597b565e52f7129",
+            "guide": 1,
+            "terms": "a48bffc79c05ff98"
+        },
+        "props.onValueChange": {
+            "source": "c03f550f57b78fa3",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.size": {
+            "source": "17597f1b8ad66095",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.value": {
+            "source": "91d284bc7083e7cb",
+            "guide": 1,
+            "terms": "3dc9ff164840b150"
+        }
+    }
+}

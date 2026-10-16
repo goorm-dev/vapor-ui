@@ -1,27 +1,27 @@
 {
     "name": "PaginationItemPrimitive",
-    "description": "List item that holds one pagination control, such as a page button or an ellipsis. Renders an `<li>` element.",
+    "description": "페이지 버튼이나 줄임표처럼 페이지네이션 컨트롤 하나를 담는 목록 항목. `<li>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Pagination.ItemPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Pagination.ItemPrimitive.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Pagination.ItemPrimitive.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를\n다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

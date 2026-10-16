@@ -1,6 +1,6 @@
 {
     "name": "FieldLabel",
-    "description": "Label for the field's control, linked to it for assistive technologies. Renders a `<label>` element.",
+    "description": "필드 컨트롤의 레이블. 보조기술이 인식하도록 컨트롤과 연결됩니다. `<label>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "foreground",
@@ -40,7 +40,7 @@
             ],
             "detailedType": "\"hint\" | \"normal\" | \"white\" | \"primary-100\" | \"primary-200\" | \"primary\" | \"secondary-100\" | \"secondary-200\" | \"secondary\" | \"success-100\" | \"success-200\" | \"success\" | \"warning-100\" | \"warning-200\" | \"warning\" | \"danger-100\" | \"danger-200\" | \"danger\" | \"hint-100\" | \"hint-200\" | \"contrast-100\" | \"contrast-200\" | \"contrast\" | \"primary-strong\" | \"success-strong\" | \"warning-strong\" | \"danger-strong\" | \"normal-100\" | \"normal-200\" | \"inverse\" | \"staticWhite\" | \"staticBlack\" | undefined",
             "required": false,
-            "description": "Text color of the label.",
+            "description": "레이블의 텍스트 색상.",
             "defaultValue": "secondary"
         },
         {
@@ -67,7 +67,7 @@
             ],
             "detailedType": "\"body1\" | \"display1\" | \"display2\" | \"display3\" | \"display4\" | \"heading1\" | \"heading2\" | \"heading3\" | \"heading4\" | \"heading5\" | \"heading6\" | \"subtitle1\" | \"subtitle2\" | \"body2\" | \"body3\" | \"body4\" | \"code1\" | \"code2\" | undefined",
             "required": false,
-            "description": "Typography style of the label text.",
+            "description": "레이블 텍스트의 타이포그래피 스타일.",
             "defaultValue": "body2"
         },
         {
@@ -75,28 +75,28 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Field.Label.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용할 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "nativeLabel",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<label>` element when replacing it via the `render` prop.\nSet to `false` if the rendered element is not a label (for example, `<div>`).\n\nThis is useful to avoid inheriting label behaviors on `<button>` controls (such as `<Select.Trigger>` and `<Combobox.Trigger>`), including avoiding `:hover` on the button when hovering the label, and preventing clicks on the label from firing on the button."
+            "description": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<label>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 레이블이 아니면(예: `<div>`) `false`로 설정하세요.\n\n`<Select.Trigger>`, `<Combobox.Trigger>` 같은 `<button>` 컨트롤이 레이블의 동작을 물려받지 않게 할 때 유용합니다. 레이블에 마우스를 올려도 버튼에 `:hover`가 적용되지 않고, 레이블을 클릭해도 버튼 클릭이 발생하지 않습니다."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Field.Label.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용할 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Field.Label.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

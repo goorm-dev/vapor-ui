@@ -1,111 +1,111 @@
 {
     "name": "MenuRoot",
-    "description": "Root of the Menu compound component, a list of actions or options that opens from a trigger. Manages the open state and, when `disabled`, disables the trigger and every item. Doesn't render its own HTML element.",
+    "description": "Menu 복합 컴포넌트의 루트로, 트리거에서 열리는 동작 또는 옵션 목록입니다. 열림 상태를 관리하며, `disabled`일 때 트리거와 모든 항목을 비활성화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "defaultOpen",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the menu is initially open.\n\nTo render a controlled menu, use the `open` prop instead."
+            "description": "Menu가 처음에 열려 있는지 여부.\n\n제어 Menu를 렌더링하려면 `open` prop을 대신 사용하세요."
         },
         {
             "name": "onOpenChange",
             "type": ["function"],
             "detailedType": "((open: boolean, eventDetails: Menu.Root.ChangeEventDetails) => void) | undefined",
             "required": false,
-            "description": "Event handler called when the menu is opened or closed."
+            "description": "Menu를 열거나 닫을 때 호출되는 이벤트 핸들러."
         },
         {
             "name": "open",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the menu is currently open."
+            "description": "Menu가 현재 열려 있는지 여부."
         },
         {
             "name": "actionsRef",
             "type": ["React.RefObject<Menu.Root.Actions | null>"],
             "detailedType": "React.RefObject<Menu.Root.Actions | null> | undefined",
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: Manually unmounts the menu.\n  Call this after any externally controlled closing animation finishes.\n- `close`: When specified, the menu can be closed imperatively."
+            "description": "명령형 동작에 대한 ref.\n- `unmount`: Menu를 수동으로 언마운트합니다.\n  외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 지정하면 Menu를 명령형으로 닫을 수 있습니다."
         },
         {
             "name": "children",
             "type": ["ReactNode", "function"],
             "detailedType": "ReactNode | ((arg: { payload: unknown; }) => ReactNode)",
             "required": false,
-            "description": "The content of the menu.\nThis can be a regular React node or a render function that receives the `payload` of the active trigger."
+            "description": "Menu의 콘텐츠.\n일반 React 노드이거나 활성 트리거의 `payload`를 받는 렌더 함수일 수 있습니다."
         },
         {
             "name": "closeParentOnEsc",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "When in a submenu, determines whether pressing the Escape key\ncloses the entire menu, or only the current child menu."
+            "description": "하위 메뉴 안에 있을 때 Escape 키를 누르면 전체 Menu를 닫을지, 현재 하위 메뉴만 닫을지 결정합니다."
         },
         {
             "name": "defaultTriggerId",
             "type": ["string", "null"],
             "detailedType": "string | null | undefined",
             "required": false,
-            "description": "ID of the trigger that the menu is associated with.\nThis is useful in conjunction with the `defaultOpen` prop to create an initially open menu."
+            "description": "Menu와 연결된 트리거의 ID.\n`defaultOpen` prop과 함께 사용해 처음부터 열려 있는 Menu를 만들 때 유용합니다."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
         },
         {
             "name": "handle",
             "type": ["MenuHandle<unknown>"],
             "detailedType": "MenuHandle<unknown> | undefined",
             "required": false,
-            "description": "A handle to associate the menu with a trigger.\nIf specified, allows external triggers to control the menu's open state."
+            "description": "Menu를 트리거와 연결하는 핸들.\n지정하면 외부 트리거가 Menu의 열림 상태를 제어할 수 있습니다."
         },
         {
             "name": "highlightItemOnHover",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether moving the pointer over items should highlight them.\nDisabling this prop allows CSS `:hover` to be differentiated from the `:focus` (`data-highlighted`) state."
+            "description": "포인터를 항목 위로 옮길 때 항목을 강조할지 여부.\n이 prop을 비활성화하면 CSS `:hover`와 `:focus`(`data-highlighted`) 상태를 구분할 수 있습니다."
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys."
+            "description": "화살표 키를 사용할 때 목록 끝에 도달하면 키보드 포커스를 첫 항목으로 되돌릴지 여부."
         },
         {
             "name": "modal",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Determines if the menu enters a modal state when open.\n- `true`: user interaction is limited to the menu: document page scroll is locked and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n\nOn touch devices, a `true` modal blocks outside taps but leaves the page scrollable unless the popup spans nearly the full viewport width, matching native iOS behavior.\n\nNested menus ignore this prop, and menus opened by hover are never modal."
+            "description": "Menu가 열렸을 때 모달 상태로 들어가는지 결정합니다.\n- `true`: 사용자 상호작용이 Menu로 제한됩니다. 문서 페이지 스크롤이 잠기고 바깥 요소의 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 상호작용할 수 있습니다.\n\n터치 기기에서 `true`인 모달은 바깥 탭을 막지만, 팝업이 뷰포트 너비를 거의 가득 채우지 않는 한 페이지는 스크롤할 수 있습니다. 네이티브 iOS 동작과 같습니다.\n\n중첩된 Menu는 이 prop을 무시하며, 호버로 연 Menu는 모달이 되지 않습니다."
         },
         {
             "name": "onOpenChangeComplete",
             "type": ["function"],
             "detailedType": "((open: boolean) => void) | undefined",
             "required": false,
-            "description": "Event handler called after any animations complete when the menu is opened or closed."
+            "description": "Menu를 열거나 닫을 때 모든 애니메이션이 끝난 뒤 호출되는 이벤트 핸들러."
         },
         {
             "name": "orientation",
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
             "required": false,
-            "description": "The visual orientation of the menu.\nControls whether roving focus uses up/down or left/right arrow keys."
+            "description": "Menu의 시각적 방향.\n로빙 포커스에 위/아래 화살표 키를 쓸지, 왼쪽/오른쪽 화살표 키를 쓸지 제어합니다."
         },
         {
             "name": "triggerId",
             "type": ["string", "null"],
             "detailedType": "string | null | undefined",
             "required": false,
-            "description": "ID of the trigger that the menu is associated with.\nThis is useful in conjunction with the `open` prop to create a controlled menu.\nThere's no need to specify this prop when the menu is uncontrolled (that is, when the `open` prop is not set)."
+            "description": "Menu와 연결된 트리거의 ID.\n`open` prop과 함께 사용해 제어 Menu를 만들 때 유용합니다.\nMenu가 비제어일 때(즉 `open` prop을 설정하지 않았을 때)는 이 prop을 지정할 필요가 없습니다."
         }
     ],
     "typeRefs": {

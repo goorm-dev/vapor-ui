@@ -1,76 +1,76 @@
 {
     "name": "SegmentedControlIconItem",
-    "description": "Square segment of a segmented control that holds only an icon, with no label text. Renders a `<button>` element.",
+    "description": "레이블 텍스트 없이 아이콘만 담는 정사각형 세그먼트. `<button>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "value",
             "type": ["string"],
             "detailedType": "string",
             "required": true,
-            "description": "Value that identifies the segment when it is selected. Must be unique within the segmented control."
+            "description": "세그먼트가 선택되었을 때 이를 식별하는 값. SegmentedControl 안에서 고유해야 합니다."
         },
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "Content shown inside the segment, such as a label or an icon."
+            "description": "레이블이나 아이콘처럼 세그먼트 안에 표시되는 콘텐츠."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: SegmentedControl.IconItem.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
         },
         {
             "name": "inputRef",
             "type": ["React.Ref<HTMLInputElement>"],
             "detailedType": "React.Ref<HTMLInputElement> | undefined",
             "required": false,
-            "description": "A ref to access the hidden input element."
+            "description": "숨겨진 input 요소에 접근하기 위한 ref."
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button."
+            "description": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
         },
         {
             "name": "readOnly",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user should be unable to select the radio button."
+            "description": "사용자가 라디오 버튼을 선택하지 못하게 할지 여부."
         },
         {
             "name": "required",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user must choose a value before submitting a form."
+            "description": "폼을 제출하기 전에 사용자가 값을 반드시 선택해야 하는지 여부."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: SegmentedControl.IconItem.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: SegmentedControl.IconItem.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

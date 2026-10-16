@@ -1,0 +1,39 @@
+{
+    "skeleton": {
+        "description": {
+            "source": "7c8a482f7d5d48bc",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.animation": {
+            "source": "544e441f87cfb61e",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.shape": {
+            "source": "b8431306e973d55c",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.size": {
+            "source": "0a2af4bdd3cc2a4f",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

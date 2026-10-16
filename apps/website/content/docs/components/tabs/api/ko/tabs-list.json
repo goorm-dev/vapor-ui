@@ -1,34 +1,34 @@
 {
     "name": "TabsList",
-    "description": "Combines `Tabs.ListPrimitive` and `Tabs.IndicatorPrimitive` into a single part, with the indicator after the tab buttons. Use `indicatorElement` to replace the indicator. Renders a `<div>` element.",
+    "description": "`Tabs.ListPrimitive`와 `Tabs.IndicatorPrimitive`를 하나의 파트로 합치며, 인디케이터는 탭 버튼 뒤에 위치합니다. 인디케이터를 대체하려면 `indicatorElement`를 사용하세요. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Tabs.List.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "indicatorElement",
             "type": ["ReactElement<TabsIndicatorPrimitive.Props>"],
             "detailedType": "ReactElement<TabsIndicatorPrimitive.Props> | undefined",
             "required": false,
-            "description": "Replaces the default `Tabs.IndicatorPrimitive`. Use to change how the active tab is highlighted."
+            "description": "기본 `Tabs.IndicatorPrimitive`를 대체합니다. 활성 탭을 강조하는 방식을 바꿀 때 사용하세요."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Tabs.List.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Tabs.List.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

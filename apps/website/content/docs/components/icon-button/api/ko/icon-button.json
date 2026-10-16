@@ -1,20 +1,20 @@
 {
     "name": "IconButton",
-    "description": "Button that shows only an icon, for compact actions such as closing or editing. The icon is hidden from assistive technology, so give the button an `aria-label`. Renders a `<button>` element.",
+    "description": "닫기나 편집처럼 간결한 동작에 쓰는, 아이콘만 표시하는 버튼. 아이콘은 보조기술에서 숨겨지므로 버튼에 `aria-label`을 지정하세요. `<button>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "colorPalette",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "detailedType": "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
             "required": false,
-            "description": "Color palette of the button, applied to its background, text, and border according to `variant`."
+            "description": "버튼의 색상 팔레트. `variant`에 따라 배경, 텍스트, 테두리에 적용됩니다."
         },
         {
             "name": "shape",
             "type": ["circle", "square"],
             "detailedType": "\"circle\" | \"square\" | undefined",
             "required": false,
-            "description": "Corner style of the icon button.",
+            "description": "아이콘 버튼의 모서리 스타일.",
             "defaultValue": "square"
         },
         {
@@ -22,49 +22,49 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the button, controlling height, padding, and typography."
+            "description": "버튼의 크기. 높이, 패딩, 타이포그래피를 결정합니다."
         },
         {
             "name": "variant",
             "type": ["fill", "outline", "ghost"],
             "detailedType": "\"fill\" | \"outline\" | \"ghost\" | undefined",
             "required": false,
-            "description": "Visual style of the button."
+            "description": "버튼의 시각적 스타일."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: IconButton.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스, 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "focusableWhenDisabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the button should be focusable when disabled."
+            "description": "비활성화되었을 때 버튼이 포커스를 받을 수 있는지 여부."
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
+            "description": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: IconButton.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일, 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: IconButton.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

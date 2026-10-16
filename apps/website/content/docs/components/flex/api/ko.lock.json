@@ -1,0 +1,29 @@
+{
+    "flex": {
+        "description": {
+            "source": "ed40065a0fa040d0",
+            "guide": 1,
+            "terms": "1a6f83e43baea56f"
+        },
+        "props.className": {
+            "source": "a9c3e1445b7312eb",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        },
+        "props.inline": {
+            "source": "b45cf1333bcd090b",
+            "guide": 1,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 1,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b083218372e4d4ff",
+            "guide": 1,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

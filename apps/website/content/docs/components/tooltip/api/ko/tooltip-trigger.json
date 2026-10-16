@@ -1,69 +1,69 @@
 {
     "name": "TooltipTrigger",
-    "description": "Element that opens the tooltip when hovered or focused. Renders a `<button>` element.",
+    "description": "마우스를 올리거나 포커스하면 Tooltip을 여는 요소. `<button>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Tooltip.Trigger.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "closeDelay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before closing the tooltip. Specified in milliseconds."
+            "description": "Tooltip을 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
         },
         {
             "name": "closeOnClick",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the tooltip should close when this trigger is clicked."
+            "description": "이 트리거를 클릭할 때 Tooltip을 닫을지 여부."
         },
         {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before opening the tooltip on hover. Specified in milliseconds."
+            "description": "마우스를 올렸을 때 Tooltip을 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "If `true`, the tooltip will not open when interacting with this trigger.\nNote that this doesn't apply the `disabled` attribute to the trigger element.\nIf you want to disable the trigger element itself, you can pass the `disabled` prop to the trigger element via the `render` prop."
+            "description": "`true`이면 이 트리거와 상호작용해도 Tooltip이 열리지 않습니다.\n이 prop은 트리거 요소에 `disabled` 속성을 적용하지 않습니다.\n트리거 요소 자체를 비활성화하려면 `render` prop으로 트리거 요소에 `disabled` prop을 전달하세요."
         },
         {
             "name": "handle",
             "type": ["TooltipHandle<unknown>"],
             "detailedType": "TooltipHandle<unknown> | undefined",
             "required": false,
-            "description": "A handle to associate the trigger with a tooltip."
+            "description": "트리거를 Tooltip과 연결하는 핸들."
         },
         {
             "name": "payload",
             "type": ["unknown"],
             "detailedType": "unknown",
             "required": false,
-            "description": "A payload to pass to the tooltip when it is opened."
+            "description": "Tooltip이 열릴 때 Tooltip에 전달하는 페이로드."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Tooltip.Trigger.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Tooltip.Trigger.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

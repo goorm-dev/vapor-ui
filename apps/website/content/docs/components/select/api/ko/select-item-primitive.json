@@ -1,62 +1,62 @@
 {
     "name": "SelectItemPrimitive",
-    "description": "Option in the popup that the user can select. Renders a `<div>` element.",
+    "description": "팝업에서 사용자가 선택할 수 있는 옵션. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "value",
             "type": ["any"],
             "detailedType": "any",
             "required": false,
-            "description": "A unique value that identifies this select item."
+            "description": "이 Select 항목을 식별하는 고유한 값."
         },
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "Content shown inside the option, such as its label and `Select.ItemIndicatorPrimitive`."
+            "description": "옵션 안에 표시되는 콘텐츠. 레이블과 `Select.ItemIndicatorPrimitive` 등이 있습니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Select.ItemPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
         },
         {
             "name": "label",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "Specifies the text label to use when the item is matched during keyboard text navigation.\n\nDefaults to the item text content if not provided."
+            "description": "키보드 텍스트 탐색에서 항목을 찾을 때 사용할 텍스트 레이블을 지정합니다.\n\n지정하지 않으면 항목의 텍스트 콘텐츠를 기본값으로 사용합니다."
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button."
+            "description": "`render` prop으로 교체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링하는 요소가 네이티브 버튼이면 `true`로 설정하세요."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Select.ItemPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Select.ItemPrimitive.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

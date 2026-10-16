@@ -1,13 +1,13 @@
 {
     "name": "GridRoot",
-    "description": "Root of the Grid compound component, a container that lays out its children in rows and columns with CSS grid. Renders a `<div>` element.",
+    "description": "Grid 복합 컴포넌트의 루트. CSS grid로 자식을 행과 열에 배치하는 컨테이너입니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "flow",
             "type": ["row", "column", "row-dense", "column-dense"],
             "detailedType": "\"row\" | \"column\" | \"row-dense\" | \"column-dense\" | undefined",
             "required": false,
-            "description": "Direction in which items without an explicit position are placed, set as the `grid-auto-flow` value. The `-dense` values fill earlier gaps with later items.",
+            "description": "위치가 명시되지 않은 항목을 배치하는 방향. `grid-auto-flow` 값으로 지정합니다. `-dense` 값은 앞쪽의 빈 칸을 뒤쪽 항목으로 채웁니다.",
             "defaultValue": "row"
         },
         {
@@ -15,42 +15,42 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Grid.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용할 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "inline",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Displays the container as `inline-grid` instead of `grid`, so it sits inline with surrounding content."
+            "description": "컨테이너를 `grid` 대신 `inline-grid`로 표시하여 주변 콘텐츠와 같은 줄에 놓습니다."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Box.State) => (CSSProperties | undefined)) | ((state: Grid.Root.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용할 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "templateColumns",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "Column tracks of the grid, set as the `grid-template-columns` value, such as `200px 1fr` or `repeat(3, 1fr)`."
+            "description": "그리드의 열 트랙. `grid-template-columns` 값으로 지정하며, `200px 1fr`이나 `repeat(3, 1fr)` 같은 값을 쓸 수 있습니다."
         },
         {
             "name": "templateRows",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "Row tracks of the grid, set as the `grid-template-rows` value, such as `auto 1fr` or `repeat(3, 1fr)`."
+            "description": "그리드의 행 트랙. `grid-template-rows` 값으로 지정하며, `auto 1fr`이나 `repeat(3, 1fr)` 같은 값을 쓸 수 있습니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Box.State) => ReactElement) | ((props: HTMLProps, state: Grid.Root.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

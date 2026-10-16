@@ -1,6 +1,6 @@
 {
     "name": "Text",
-    "description": "Displays text in one of the design system's typography styles and foreground colors. Use the `render` prop to output a different element, such as a heading or paragraph. Renders a `<span>` element.",
+    "description": "디자인 시스템의 타이포그래피 스타일과 전경색으로 텍스트를 표시합니다. 제목이나 단락처럼 다른 요소로 출력하려면 `render` prop을 사용하세요. `<span>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "foreground",
@@ -40,7 +40,7 @@
             ],
             "detailedType": "\"hint\" | \"normal\" | \"white\" | \"primary-100\" | \"primary-200\" | \"primary\" | \"secondary-100\" | \"secondary-200\" | \"secondary\" | \"success-100\" | \"success-200\" | \"success\" | \"warning-100\" | \"warning-200\" | \"warning\" | \"danger-100\" | \"danger-200\" | \"danger\" | \"hint-100\" | \"hint-200\" | \"contrast-100\" | \"contrast-200\" | \"contrast\" | \"primary-strong\" | \"success-strong\" | \"warning-strong\" | \"danger-strong\" | \"normal-100\" | \"normal-200\" | \"inverse\" | \"staticWhite\" | \"staticBlack\" | undefined",
             "required": false,
-            "description": "Color of the text, chosen from the foreground color palette.",
+            "description": "전경색 팔레트에서 고른 텍스트의 색상.",
             "defaultValue": "normal"
         },
         {
@@ -67,7 +67,7 @@
             ],
             "detailedType": "\"body1\" | \"display1\" | \"display2\" | \"display3\" | \"display4\" | \"heading1\" | \"heading2\" | \"heading3\" | \"heading4\" | \"heading5\" | \"heading6\" | \"subtitle1\" | \"subtitle2\" | \"body2\" | \"body3\" | \"body4\" | \"code1\" | \"code2\" | undefined",
             "required": false,
-            "description": "Typography style of the text, setting font size, line height, font weight, and letter spacing.",
+            "description": "텍스트의 타이포그래피 스타일. 글꼴 크기, 줄 높이, 글꼴 두께, 자간을 설정합니다.",
             "defaultValue": "body1"
         },
         {
@@ -75,21 +75,21 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Text.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Text.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Text.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

@@ -1,20 +1,20 @@
 {
     "name": "ToolbarRoot",
-    "description": "Root of the Toolbar compound component, a horizontal row of buttons and inputs that users move between with the arrow keys. Shares `size` with the items inside it. Renders a `<div>` element.",
+    "description": "Toolbar 복합 컴포넌트의 루트. 버튼과 입력이 가로로 놓이며 방향키로 이동할 수 있습니다. 내부 항목과 `size`를 공유합니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the toolbar buttons and inputs, controlling height, padding, and typography."
+            "description": "툴바 버튼과 입력의 크기. 높이, 패딩, 타이포그래피를 결정합니다."
         },
         {
             "name": "variant",
             "type": ["outline", "ghost"],
             "detailedType": "\"outline\" | \"ghost\" | undefined",
             "required": false,
-            "description": "Visual style of the toolbar. `outline` adds a border and background, `ghost` leaves the toolbar transparent.",
+            "description": "툴바의 시각적 스타일. `outline`은 테두리와 배경을 추가하고, `ghost`는 툴바를 투명하게 둡니다.",
             "defaultValue": "outline"
         },
         {
@@ -22,35 +22,35 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Toolbar.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Disables every button and input in the toolbar, blocking all interactions."
+            "description": "툴바의 모든 버튼과 입력을 비활성화하고 모든 상호작용을 막습니다."
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "If `true`, using keyboard navigation will wrap focus to the other end of the toolbar once the end is reached."
+            "description": "`true`이면 키보드 탐색으로 툴바의 끝에 도달했을 때 포커스가 반대쪽 끝으로 이동합니다."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Toolbar.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Toolbar.Root.State) => ReactElement) | undefined",
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {
