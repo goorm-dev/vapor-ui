@@ -53,12 +53,14 @@
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.cts",
     "files": [
-        "dist"
+        "dist",
+        "docs"
     ],
     "scripts": {
         "build": "rimraf dist && rolldown -c rolldown.config.ts",
         "clean": "rimraf dist node_modules .turbo",
         "lint": "eslint ./src",
+        "prepack": "pnpm --filter website docs:llms ../../packages/core/docs",
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",
         "test:watch": "vitest",

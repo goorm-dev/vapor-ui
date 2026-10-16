@@ -20,36 +20,37 @@ function runCli(): void {
     const cli = meow(
         `
   Usage
-    $ docs-extractor --input <dir> --tsconfig <file> --out <dir>
+    $ docs-extractor --input <dir> --tsconfig <file> --pages <dir>
 
   Options
     --input           Directory to scan for component .tsx files
     --tsconfig        tsconfig.json used to resolve types
-    --out             Directory the JSON files are written to
+    --pages           Directory holding one folder per page (<page>/index.mdx).
+                      Each component's JSON is written to <page>/api/
     --component, -n   Extract only this component file (default: all)
     --verbose         Print debug output
 
   Paths are resolved against the current working directory.
 
   Example
-    $ docs-extractor --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --out ./public/components/generated
+    $ docs-extractor --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --pages ./content/docs/components
 `,
         {
             importMeta: import.meta,
             flags: {
                 input: { type: 'string', isRequired: true },
                 tsconfig: { type: 'string', isRequired: true },
-                out: { type: 'string', isRequired: true },
+                pages: { type: 'string', isRequired: true },
                 component: { type: 'string', shortFlag: 'n' },
                 verbose: { type: 'boolean', default: false },
             },
         },
     );
 
-    const { input, tsconfig, out, component, verbose } = cli.flags;
+    const { input, tsconfig, pages, component, verbose } = cli.flags;
     const reporter = createConsoleReporter(verbose);
 
-    const { docs, failures } = extract({
+    const { docs, sourceFiles, failures } = extract({
         inputPath: path.resolve(input),
         tsconfigPath: path.resolve(tsconfig),
         component,
@@ -65,7 +66,11 @@ function runCli(): void {
         );
     }
 
-    const { written, removed } = writeDocs(out, docs, { removeStale });
+    const { written, removed } = writeDocs(
+        pages,
+        docs.map((doc, i) => ({ doc, sourceFile: sourceFiles[i] })),
+        { removeStale },
+    );
     if (removed.length > 0) reporter.info(`Removed ${removed.length} stale files.`);
 
     try {

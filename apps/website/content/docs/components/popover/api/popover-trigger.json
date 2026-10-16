@@ -1,0 +1,71 @@
+{
+    "name": "PopoverTrigger",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Popover.Trigger.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "How long to wait before closing the popover that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "How long to wait before the popover may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop."
+        },
+        {
+            "name": "handle",
+            "type": ["PopoverHandle<unknown>"],
+            "detailedType": "PopoverHandle<unknown> | undefined",
+            "required": false,
+            "description": "A handle to associate the trigger with a popover."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
+        },
+        {
+            "name": "openOnHover",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the popover should also open when the trigger is hovered."
+        },
+        {
+            "name": "payload",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "A payload to pass to the popover when it is opened."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Popover.Trigger.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Popover.Trigger.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Popover.Trigger.State": "{\n  disabled: boolean;\n  open: boolean;\n}"
+    }
+}

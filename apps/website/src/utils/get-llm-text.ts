@@ -14,6 +14,20 @@ const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 
 type ContentType = 'docs' | 'theme';
 
+interface LLMTextInput {
+    /** The page file as written, frontmatter included. */
+    raw: string;
+    title: string;
+    description?: string;
+    /** Site URL path, e.g. `/docs/components/button`. */
+    url: string;
+    /** Path under `content/<contentType>/`, e.g. `components/button/index.mdx`. */
+    path: string;
+    /** Absolute file path, for resolving includes. */
+    fullPath: string;
+    contentType: ContentType;
+}
+
 function processContent(content: string, contentType: ContentType): string {
     const baseContent = replaceFoundationDoc(replaceIconDoc(content));
 
@@ -28,36 +42,41 @@ function getSourceUrl(contentType: ContentType, path: string): string {
     return `https://raw.githubusercontent.com/goorm-dev/vapor-ui/refs/heads/main/apps/website/content/${contentType}/${path}`;
 }
 
+const stripFrontmatter = (raw: string) => raw.replace(/^---\n[\s\S]*?\n---\n/, '');
+
+/**
+ * Renders one page as plain markdown for LLMs: prose, demo source code and props
+ * tables. Needs no Next.js or Fumadocs runtime, so the `.mdx` routes and the
+ * script that packs docs into `@vapor-ui/core` share it.
+ */
+export async function toLLMText(input: LLMTextInput): Promise<string> {
+    const { title, description, url, contentType } = input;
+    const sourceUrl = getSourceUrl(contentType, input.path);
+    const header = `# ${title}\nURL: ${url}\nSource: ${sourceUrl}\n\n${description ?? ''}\n\n`;
+
+    try {
+        const content = processContent(stripFrontmatter(input.raw), contentType);
+        const processed = await processor.process({ path: input.fullPath, value: content });
+
+        return header + processed.value;
+    } catch (error) {
+        console.error(`Error processing page ${url}:`, error);
+
+        return `${header}> ⚠️ Error processing content: ${(error as Error).message}`;
+    }
+}
+
 export async function getLLMText(
     page: InferPageType<typeof source>,
     contentType: ContentType = 'docs',
 ): Promise<string> {
-    try {
-        const rawContent = await page.data.getText('raw');
-        const content = processContent(rawContent, contentType);
-        const sourceUrl = getSourceUrl(contentType, page.path);
-        const processed = await processor.process({
-            path: page.data.info.fullPath,
-            value: content,
-        });
-
-        return `# ${page.data.title}
-URL: ${page.url}
-Source: ${sourceUrl}
-
-${page.data.description}
-
-${processed.value}`;
-    } catch (error) {
-        console.error(`Error processing page ${page.url}:`, error);
-        const sourceUrl = getSourceUrl(contentType, page.path);
-
-        return `# ${page.data.title}
-URL: ${page.url}
-Source: ${sourceUrl}
-
-${page.data.description}
-
-> ⚠️ Error processing content: ${(error as Error).message}`;
-    }
+    return toLLMText({
+        raw: await page.data.getText('raw'),
+        title: page.data.title ?? '',
+        description: page.data.description,
+        url: page.url,
+        path: page.path,
+        fullPath: page.data.info.fullPath,
+        contentType,
+    });
 }

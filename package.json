@@ -19,6 +19,8 @@
         "core": "pnpm --filter @vapor-ui/core",
         "css-generator": "pnpm --filter @vapor-ui/css-generator",
         "dev": "turbo dev",
+        "docs:api": "turbo run docs:api --filter=website",
+        "docs:api:watch": "pnpm --filter website docs:api:watch",
         "docs-extractor": "pnpm --filter @vapor-ui/docs-extractor",
         "figma-codegen-plugin": "pnpm --filter figma-codegen-plugin",
         "figma-plugin": "pnpm --filter figma-plugin",
