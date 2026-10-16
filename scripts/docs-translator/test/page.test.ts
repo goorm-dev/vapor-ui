@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { type Translate, translatePage } from '../src/page';
+import { type Translate, isUpToDate, planPage, translatePage } from '../src/page';
 
 const GLOSSARY = [{ en: 'value', ko: '값' }];
 const GUIDE = { version: 1 };
@@ -103,16 +103,6 @@ describe('translatePage', () => {
         expect(read('ko/meter-root.json').props[1].description).toBe('KO(The maximum.)');
     });
 
-    it('lock이 맞아도 ko/에 영어가 남아 있는 항목은 다시 번역한다', async () => {
-        await translatePage(apiDir, GUIDE, GLOSSARY, fakeTranslate().translate);
-        write('ko/meter-root.json', EN);
-        const { translate, calls } = fakeTranslate();
-
-        await translatePage(apiDir, GUIDE, GLOSSARY, translate);
-
-        expect(calls[0][0]).toHaveLength(3);
-    });
-
     it('en/에 없는 파일과 항목의 lock은 지운다', async () => {
         write('ko.lock.json', {
             'meter-root': { 'props.removed': lockEntryFor('x', 1, []) },
@@ -135,5 +125,46 @@ describe('translatePage', () => {
             /props\.value[\s\S]*props\.max/,
         );
         expect(fs.existsSync(path.join(apiDir, 'ko.lock.json'))).toBe(false);
+    });
+});
+
+describe('planPage', () => {
+    it('번역 후에는 최신 상태다', async () => {
+        await translatePage(apiDir, GUIDE, GLOSSARY, fakeTranslate().translate);
+
+        expect(isUpToDate(planPage(apiDir, GUIDE, GLOSSARY))).toBe(true);
+    });
+
+    it('lock 항목 순서만 달라도 최신 상태가 아니다', async () => {
+        await translatePage(apiDir, GUIDE, GLOSSARY, fakeTranslate().translate);
+        const lock = read('ko.lock.json');
+        write('ko.lock.json', {
+            'meter-root': Object.fromEntries(Object.entries(lock['meter-root']).reverse()),
+        });
+
+        expect(isUpToDate(planPage(apiDir, GUIDE, GLOSSARY))).toBe(false);
+    });
+
+    it('en/이 비면 lock만 남은 페이지도 최신 상태가 아니고, 번역하면 lock을 지운다', async () => {
+        await translatePage(apiDir, GUIDE, GLOSSARY, fakeTranslate().translate);
+        fs.rmSync(path.join(apiDir, 'en'), { recursive: true });
+
+        expect(isUpToDate(planPage(apiDir, GUIDE, GLOSSARY))).toBe(false);
+        await translatePage(apiDir, GUIDE, GLOSSARY, fakeTranslate().translate);
+        expect(fs.existsSync(path.join(apiDir, 'ko.lock.json'))).toBe(false);
+    });
+
+    it('원문이 바뀐 항목은 누락, en/에 없는 lock 항목은 고아로 낸다', async () => {
+        await translatePage(apiDir, GUIDE, GLOSSARY, fakeTranslate().translate);
+        write('en/meter-root.json', {
+            ...EN,
+            description: 'Shows a measurement.',
+            props: [EN.props[0]],
+        });
+
+        const { items, orphans } = planPage(apiDir, GUIDE, GLOSSARY);
+
+        expect(items.map(({ id }) => id)).toEqual(['meter-root#description']);
+        expect(orphans).toEqual(['meter-root#props.max']);
     });
 });

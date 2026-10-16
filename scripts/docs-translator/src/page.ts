@@ -9,7 +9,7 @@ import {
     missingUnits,
     translationUnits,
 } from '@vapor-ui/docs-extractor/translation';
-import { readApiDir } from '@vapor-ui/docs-extractor/write';
+import { type ApiDirFile, readApiDir } from '@vapor-ui/docs-extractor/write';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -32,10 +32,6 @@ function writeJson(filePath: string, data: unknown) {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
-/** The text of each unit in `doc`, keyed by unit key. */
-const textsOf = (doc: ComponentDoc | undefined) =>
-    new Map(doc ? translationUnits(doc).map(({ key, text }) => [key, text]) : []);
-
 /** `doc` with the text of each unit in `ko` (unit key → Korean) replaced. */
 function withTexts(doc: ComponentDoc, ko: Record<string, string>): ComponentDoc {
     return {
@@ -46,6 +42,64 @@ function withTexts(doc: ComponentDoc, ko: Record<string, string>): ComponentDoc 
             description: ko[`props.${prop.name}`] ?? prop.description,
         })),
     };
+}
+
+export interface PagePlan {
+    lock: Lock;
+    files: ApiDirFile[];
+    /** Every text whose translation is missing (see missingUnits). */
+    items: TranslationItem[];
+    /** Lock entries, as item ids, for files or units no longer in `en/`. */
+    orphans: string[];
+    /** The lock once every item is translated, rebuilt from `en/`. */
+    nextLock: Lock;
+}
+
+/**
+ * What one page's `api/` folder needs, without calling any AI. A page is up to
+ * date when isUpToDate(plan); translatePage carries the plan out.
+ */
+export function planPage(
+    apiDir: string,
+    guide: { version: number },
+    glossary: GlossaryTerm[],
+): PagePlan {
+    const { lock, files } = readApiDir(apiDir);
+
+    const items = files.flatMap(({ name, en }) =>
+        missingUnits(en, lock[name], guide.version, glossary).map(({ key, text }) => ({
+            id: `${name}#${key}`,
+            text,
+        })),
+    );
+
+    const nextLock: Lock = Object.fromEntries(
+        files.map(({ name, en }) => [
+            name,
+            Object.fromEntries(
+                translationUnits(en)
+                    .map(({ key, text }): [string, LockEntry] => [
+                        key,
+                        lockEntryFor(text, guide.version, glossary),
+                    ])
+                    // Code-point order, not localeCompare, so every machine writes the same lock.
+                    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
+            ),
+        ]),
+    );
+
+    const orphans = Object.entries(lock).flatMap(([name, entries]) =>
+        Object.keys(entries)
+            .filter((key) => !nextLock[name]?.[key])
+            .map((key) => `${name}#${key}`),
+    );
+
+    return { lock, files, items, orphans, nextLock };
+}
+
+/** No missing translations, and the lock is exactly what translatePage would write. */
+export function isUpToDate(plan: PagePlan): boolean {
+    return plan.items.length === 0 && JSON.stringify(plan.nextLock) === JSON.stringify(plan.lock);
 }
 
 /**
@@ -62,36 +116,12 @@ export async function translatePage(
     translate: Translate,
 ): Promise<{ written: string[]; translated: number }> {
     const lockPath = path.join(apiDir, 'ko.lock.json');
-    const { lock, files } = readApiDir(apiDir);
-
-    const items = files.flatMap(({ name, en, ko }) => {
-        const missing = new Set(
-            missingUnits(en, lock[name], guide.version, glossary).map(({ key }) => key),
-        );
-        // The lock can match while ko/ holds the English placeholder, e.g. after a
-        // ko/ file was deleted and docs:api rewrote it. Translate those too.
-        // ponytail: a translation identical to its source text is retranslated every run.
-        const koTexts = textsOf(ko);
-        return translationUnits(en)
-            .filter(({ key, text }) => missing.has(key) || (koTexts.get(key) ?? text) === text)
-            .map(({ key, text }) => ({ id: `${name}#${key}`, text }));
-    });
-
-    const nextLock: Lock = Object.fromEntries(
-        files.map(({ name, en }) => [
-            name,
-            Object.fromEntries(
-                translationUnits(en)
-                    .map(({ key, text }): [string, LockEntry] => [
-                        key,
-                        lockEntryFor(text, guide.version, glossary),
-                    ])
-                    // Code-point order, not localeCompare, so every machine writes the same lock.
-                    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
-            ),
-        ]),
-    );
-    if (items.length === 0 && JSON.stringify(nextLock) === JSON.stringify(lock)) {
+    const plan = planPage(apiDir, guide, glossary);
+    const { lock, files, items, nextLock } = plan;
+    if (isUpToDate(plan)) return { written: [], translated: 0 };
+    // A page whose en/ is gone keeps nothing to translate; drop its lock.
+    if (files.length === 0) {
+        fs.rmSync(lockPath);
         return { written: [], translated: 0 };
     }
 

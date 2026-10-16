@@ -1,16 +1,9 @@
-import type { GlossaryTerm } from '@vapor-ui/docs-extractor/translation';
-import { globSync } from 'glob';
 import meow from 'meow';
 import { execFileSync } from 'node:child_process';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { billingSource, createClaudeTranslator } from './claude';
-import { readGuide } from './guide';
+import { INPUT_FLAGS, loadInputs, pageName } from './inputs';
 import { translatePage } from './page';
-
-const here = path.dirname(fileURLToPath(import.meta.url));
 
 // ponytail: fixed pool of 4 pages at a time; raise it if rate limits allow.
 const CONCURRENCY = 4;
@@ -31,19 +24,12 @@ async function runCli(): Promise<number> {
 `,
         {
             importMeta: import.meta,
-            flags: {
-                pages: { type: 'string', isRequired: true },
-                guide: { type: 'string', default: path.join(here, '..', 'guide.md') },
-                glossary: { type: 'string', default: path.join(here, '..', 'glossary.json') },
-            },
+            flags: INPUT_FLAGS,
         },
     );
 
-    const guide = readGuide(cli.flags.guide);
-    const glossary: GlossaryTerm[] = JSON.parse(fs.readFileSync(cli.flags.glossary, 'utf8'));
-    const apiDirs = globSync('*/api', { cwd: path.resolve(cli.flags.pages), absolute: true })
-        .filter((dir) => fs.existsSync(path.join(dir, 'en')))
-        .sort();
+    const inputs = loadInputs(cli.flags);
+    const { guide, glossary, apiDirs } = inputs;
 
     console.error(
         `Model ${guide.model}, guide version ${guide.version}, ${glossary.length} glossary terms`,
@@ -60,7 +46,7 @@ async function runCli(): Promise<number> {
     const queue = [...apiDirs];
     const worker = async () => {
         for (let dir = queue.shift(); dir; dir = queue.shift()) {
-            const page = path.relative(path.resolve(cli.flags.pages), path.dirname(dir));
+            const page = pageName(inputs, dir);
             try {
                 const result = await translatePage(dir, guide, glossary, translate);
                 written.push(...result.written);
