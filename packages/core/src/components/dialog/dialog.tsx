@@ -29,7 +29,7 @@ const [DialogProvider, useDialogContext] = createContext<DialogContext>({
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Root of the Dialog compound component. Manages open state and provides size context to sub-parts. Doesn't render its own HTML element.
+ * Root of the Dialog compound component, a modal window that focuses the user on a task or a piece of information. Manages the open state and sets the popup size. Doesn't render its own HTML element.
  */
 export const DialogRoot = ({
     size,
@@ -112,7 +112,7 @@ DialogPopupPrimitive.displayName = 'Dialog.PopupPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Convenience wrapper that composes `Dialog.PortalPrimitive`, `Dialog.OverlayPrimitive`, and `Dialog.PopupPrimitive` into a single element. Use `portalElement` or `overlayElement` to replace individual parts. Renders a `<div>` element.
+ * Combines `Dialog.PortalPrimitive`, `Dialog.OverlayPrimitive`, and `Dialog.PopupPrimitive` into a single part. Use `portalElement` or `overlayElement` to replace the portal or overlay. Renders a `<div>` element.
  */
 export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>(
     ({ portalElement, overlayElement, ...props }, ref) => {
@@ -308,11 +308,11 @@ export namespace DialogPopupPrimitive {
 
 export interface DialogPopupProps extends DialogPopupPrimitive.Props {
     /**
-     * Replaces the default `Dialog.PortalPrimitive`. Use to customise portal container behavior.
+     * Replaces the default `Dialog.PortalPrimitive`. Use to change the portal container.
      */
     portalElement?: ReactElement<DialogPortalPrimitive.Props>;
     /**
-     * Replaces the default `Dialog.OverlayPrimitive`. Use to customise backdrop appearance or behavior.
+     * Replaces the default `Dialog.OverlayPrimitive`. Use to change the backdrop.
      */
     overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
 }

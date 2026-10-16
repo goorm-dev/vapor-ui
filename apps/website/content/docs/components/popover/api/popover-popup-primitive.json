@@ -1,5 +1,6 @@
 {
     "name": "PopoverPopupPrimitive",
+    "description": "The popover panel, with an arrow that points at the trigger. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

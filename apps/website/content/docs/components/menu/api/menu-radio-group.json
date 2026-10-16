@@ -1,5 +1,6 @@
 {
     "name": "MenuRadioGroup",
+    "description": "Groups radio items so that only one of them can be selected at a time. Renders a `<div>` element.",
     "props": [
         {
             "name": "defaultValue",

@@ -20,6 +20,9 @@ import * as styles from './tooltip.css';
  * Tooltip.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the Tooltip compound component, which shows a short label for an element on hover or focus. Manages the open state. Doesn't render its own HTML element.
+ */
 export const TooltipRoot = (props: TooltipRoot.Props) => {
     return <BaseTooltip.Root {...props} />;
 };
@@ -28,6 +31,9 @@ export const TooltipRoot = (props: TooltipRoot.Props) => {
  * Tooltip.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Element that opens the tooltip when hovered or focused. Renders a `<button>` element.
+ */
 export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -39,6 +45,9 @@ TooltipTrigger.displayName = 'Tooltip.Trigger';
  * Tooltip.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal container that renders the tooltip outside the normal DOM hierarchy. Renders a `<div>` element.
+ */
 export const TooltipPortalPrimitive = forwardRef<HTMLDivElement, TooltipPortalPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -52,6 +61,9 @@ TooltipPortalPrimitive.displayName = 'Tooltip.PortalPrimitive';
  * Tooltip.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Positions the tooltip popup against its trigger and keeps it inside the viewport. Renders a `<div>` element.
+ */
 export const TooltipPositionerPrimitive = forwardRef<
     HTMLDivElement,
     TooltipPositionerPrimitive.Props
@@ -84,6 +96,9 @@ TooltipPositionerPrimitive.displayName = 'Tooltip.PositionerPrimitive';
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
+/**
+ * The tooltip panel, with an arrow that points at the trigger. Renders a `<div>` element.
+ */
 export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrimitive.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
@@ -164,6 +179,9 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Tooltip.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Tooltip.PortalPrimitive`, `Tooltip.PositionerPrimitive`, and `Tooltip.PopupPrimitive` into a single part. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.
+ */
 export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <TooltipPopupPrimitive ref={ref} {...props} />;
@@ -271,11 +289,11 @@ export namespace TooltipPopupPrimitive {
 
 export interface TooltipPopupProps extends TooltipPopupPrimitive.Props {
     /**
-     * A custom element for Tooltip.PortalPrimitive. If not provided, the default Tooltip.PortalPrimitive will be rendered.
+     * Replaces the default `Tooltip.PortalPrimitive`. Use to change the portal container.
      */
     portalElement?: ReactElement<TooltipPortalPrimitive.Props>;
     /**
-     * A custom element for Tooltip.PositionerPrimitive. If not provided, the default Tooltip.PositionerPrimitive will be rendered.
+     * Replaces the default `Tooltip.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup.
      */
     positionerElement?: ReactElement<TooltipPositionerPrimitive.Props>;
 }

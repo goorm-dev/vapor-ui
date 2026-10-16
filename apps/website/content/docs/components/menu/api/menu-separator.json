@@ -1,5 +1,6 @@
 {
     "name": "MenuSeparator",
+    "description": "Line that visually separates groups of menu items. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

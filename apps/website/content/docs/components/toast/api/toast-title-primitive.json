@@ -1,5 +1,6 @@
 {
     "name": "ToastTitlePrimitive",
+    "description": "Heading that shows the `title` of the toast. Renders an `<h2>` element.",
     "props": [
         {
             "name": "className",

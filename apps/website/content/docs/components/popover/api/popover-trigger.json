@@ -1,5 +1,6 @@
 {
     "name": "PopoverTrigger",
+    "description": "Button that opens the popover when clicked. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

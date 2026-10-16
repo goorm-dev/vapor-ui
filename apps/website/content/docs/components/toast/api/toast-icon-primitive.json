@@ -1,5 +1,6 @@
 {
     "name": "ToastIconPrimitive",
+    "description": "Icon of the toast. Shows the `icon` of the toast object, or a default icon for the `success` and `danger` color palettes. Renders an `<svg>` element.",
     "props": [
         {
             "name": "className",

@@ -1,5 +1,6 @@
 {
     "name": "PopoverDescription",
+    "description": "Paragraph that provides supplementary text for the popover, linked to the popover panel for assistive technologies. Renders a `<p>` element.",
     "props": [
         {
             "name": "className",
