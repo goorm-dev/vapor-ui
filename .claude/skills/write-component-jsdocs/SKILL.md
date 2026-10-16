@@ -42,7 +42,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 2. User perspective: what it is → when to use it
 3. No internal terms (`memoized`, `wrapper`, `token-based`, etc.)
 4. End with the rendered HTML element using backticks around the tag: "Renders a `<button>` element." or "Doesn't render its own HTML element.".
-5. **Primitive vs combined part** — a `XxxPrimitive` part describes the part itself. A part that assembles primitives (e.g. `Tooltip.Popup` over `PortalPrimitive`, `PositionerPrimitive`, `PopupPrimitive`) starts with "Combines `A`, `B`, and `C` into a single part.", then names the `xxxElement` props that replace each piece, then the rendered element. See [references/guide.md](references/guide.md#primitive-vs-combined-parts).
+5. **Primitive vs combined part** — a `XxxPrimitive` part describes the part itself. A part that assembles primitives (e.g. `Tooltip.Popup` over `PortalPrimitive`, `PositionerPrimitive`, `PopupPrimitive`) starts with "Combines `A`, `B`, and `C` into a single part.", then names the `xxxElement` props that replace each piece (if it has any), then the rendered element. See [references/guide.md](references/guide.md#primitive-vs-combined-parts).
 
 ## Prop description rules
 
@@ -52,7 +52,8 @@ Placement depends on the component pattern. See [references/guide.md](references
 4. For event handlers: specify the exact trigger condition, not just "handler"
 5. Never document default values in JSDoc — neither the `@default` tag nor inline `Default:` text. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag at all; it reads `defaultValue` from code — the component function's destructuring defaults, then the `defaultVariants` of the recipe the component calls. Remove any `@default` tag you find.
 6. `children` — say what goes in the slot, with an example ("Content shown inside the badge, such as a label or count."). For a function child, describe its arguments. Never write just "Children of the component" or restate `ReactNode`.
-7. Repeated props (`size`, `invalid`, …) — start from the shared phrase in [references/guide.md](references/guide.md#shared-phrases) and add only what differs for that component.
+7. Inherited Base UI props with no description (e.g. `children`, `onClick`) — re-declare the prop in the part's Props `interface` with the Base UI type (`children?: BaseMenu.Trigger.Props['children']`) and write the JSDoc there. The extractor prefers vapor-ui's own declaration. Turn `export type Props = …` into `export interface Props extends … {}` when needed.
+8. Repeated props (`size`, `invalid`, `portalElement`, …) — start from the shared phrase in [references/guide.md](references/guide.md#shared-phrases) and add only what differs for that component.
 
 ## Review checklist
 

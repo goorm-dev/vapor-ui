@@ -245,7 +245,7 @@ Compound components often ship both a `XxxPrimitive` part and a part that assemb
 export const TooltipPositionerPrimitive = forwardRef(...);
 ```
 
-**Combined part** — start with "Combines …", list the primitives it assembles, name the `xxxElement` props that replace each piece, then the rendered element. Don't call it a "wrapper".
+**Combined part** — start with "Combines …", list the primitives it assembles, name the `xxxElement` props that replace each piece (if it has any), then the rendered element. Don't call it a "wrapper".
 
 ```tsx
 /**
@@ -382,18 +382,44 @@ children?: ReactNode;
 children?: ReactNode | ((value: string) => ReactNode);
 ```
 
+**7. Re-declare inherited props that have no description**
+
+Some Base UI parts declare a prop (often `children` or an event handler) without JSDoc. You can't edit Base UI, so re-declare the prop in the part's Props with the Base UI type and document it there — the extractor prefers vapor-ui's own declaration. Keep the type identical by indexing into the Base UI props.
+
+```tsx
+// before
+export namespace MenuTrigger {
+    export type State = BaseMenu.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Trigger, State>;
+}
+
+// after
+export namespace MenuTrigger {
+    export type State = BaseMenu.Trigger.State;
+    export interface Props extends VaporUIComponentProps<typeof BaseMenu.Trigger, State> {
+        /**
+         * Content shown inside the trigger, such as a label or an icon.
+         */
+        children?: BaseMenu.Trigger.Props['children'];
+    }
+}
+```
+
 ---
 
 ## Shared Phrases
 
 Props that repeat across components start from the same sentence so readers (and agents) see the same meaning everywhere. Replace `{part}` with the part's name in plain words ("button", "checkbox", "text input"), then append only what differs for that component.
 
-| Prop       | Phrase                                                             | Add when                                                             |
-| ---------- | ------------------------------------------------------------------ | -------------------------------------------------------------------- |
-| `size`     | `Size of the {part}, controlling height, padding, and typography.` | Drop the items the size doesn't change (e.g. an icon-only part)      |
-| `invalid`  | `Marks the {part} as invalid, applying error styles.`              | Append "Sets `aria-invalid` on the {element}." when the code sets it |
-| `disabled` | `Disables the {part}, blocking all interactions.`                  | Mention props that force it (e.g. `loading`)                         |
-| `children` | `Content shown inside the {part}, such as …`                       | Always give the example; see rule 6                                  |
+| Prop                | Phrase                                                                                                       | Add when                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| `size`              | `Size of the {part}, controlling height, padding, and typography.`                                           | Drop the items the size doesn't change (e.g. an icon-only part)                         |
+| `invalid`           | `Marks the {part} as invalid, applying error styles.`                                                        | Append "Sets `aria-invalid` on the {element}." when the code sets it                    |
+| `disabled`          | `Disables the {part}, blocking all interactions.`                                                            | Mention props that force it (e.g. `loading`)                                            |
+| `children`          | `Content shown inside the {part}, such as …`                                                                 | Always give the example; see rule 6                                                     |
+| `portalElement`     | ``Replaces the default `X.PortalPrimitive`. Use to change the portal container.``                            | —                                                                                       |
+| `overlayElement`    | ``Replaces the default `X.OverlayPrimitive`. Use to change the backdrop.``                                   | —                                                                                       |
+| `positionerElement` | ``Replaces the default `X.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup.`` | Say what the positioner controls for that part (e.g. Sheet: the side it slides in from) |
 
 ---
 
