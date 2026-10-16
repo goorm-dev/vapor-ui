@@ -39,6 +39,9 @@ export const root = componentRecipe({
     },
 
     variants: {
+        /**
+         * Marks the radio card as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element. Inside an invalid `RadioGroup.Root`, the card is always invalid.
+         */
         invalid: {
             true: {},
         },

@@ -14,6 +14,9 @@ export const root = componentRecipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Size of the radios in the group, controlling their width and height. A `Radio.Root` that sets its own `size` keeps it.
+         */
         size: {
             md: {},
             lg: {},

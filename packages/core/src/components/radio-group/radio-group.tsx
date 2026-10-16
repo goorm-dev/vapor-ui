@@ -18,7 +18,12 @@ import type { RootVariants } from './radio-group.css';
 import * as styles from './radio-group.css';
 
 type RadioGroupVariants = RootVariants;
-type RadioGroupSharedProps = RadioGroupVariants & { invalid?: boolean };
+type RadioGroupSharedProps = RadioGroupVariants & {
+    /**
+     * Marks the radio group as invalid, applying error styles to every radio and radio card inside it. Sets `aria-invalid` on the `<div>` element.
+     */
+    invalid?: boolean;
+};
 
 type RadioGroupContext = RadioGroupSharedProps & {
     setLabelElementId?: (id?: string) => void;
@@ -36,6 +41,9 @@ export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGro
  * RadioGroup.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the RadioGroup compound component, which groups radios so only one can be selected at a time. Shares `size` and `invalid` with the radios inside it. Renders a `<div>` element.
+ */
 export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -68,6 +76,9 @@ RadioGroupRoot.displayName = 'RadioGroup.Root';
  * RadioGroup.Label
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Visible label for the radio group, also used as the group's accessible name. Renders a `<span>` element.
+ */
 export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>((props, ref) => {
     const { render, id: idProp, className, ...componentProps } = resolveStyles(props);
     const { setLabelElementId, invalid } = useRadioGroupContext();
@@ -97,7 +108,13 @@ RadioGroupLabel.displayName = 'RadioGroup.Label';
 
 export namespace RadioGroupRoot {
     export type State = BaseRadioGroup.State;
-    export type Props = VaporUIComponentProps<typeof BaseRadioGroup, State> & RadioGroupSharedProps;
+    export interface Props
+        extends VaporUIComponentProps<typeof BaseRadioGroup, State>, RadioGroupSharedProps {
+        /**
+         * Radios shown in the group, such as `Radio.Root` or `RadioCard` items and an optional `RadioGroup.Label`.
+         */
+        children?: BaseRadioGroup.Props['children'];
+    }
     export type ChangeEventDetails = BaseRadioGroup.ChangeEventDetails;
 }
 
@@ -110,5 +127,10 @@ export interface RadioGroupLabelState {
 
 export namespace RadioGroupLabel {
     export type State = RadioGroupLabelState;
-    export type Props = VaporUIComponentProps<'span', State>;
+    export interface Props extends VaporUIComponentProps<'span', State> {
+        /**
+         * Text of the label, such as the question the radios answer.
+         */
+        children?: VaporUIComponentProps<'span', State>['children'];
+    }
 }

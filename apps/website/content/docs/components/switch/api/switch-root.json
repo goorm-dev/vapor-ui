@@ -1,11 +1,13 @@
 {
     "name": "SwitchRoot",
+    "description": "Switch that turns a single setting on or off. Renders a `<span>` element and a hidden `<input>` beside it.",
     "props": [
         {
             "name": "invalid",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
+            "description": "Marks the switch as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element.",
             "defaultValue": "false"
         },
         {
@@ -13,6 +15,7 @@
             "type": ["sm", "md", "lg"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
             "required": false,
+            "description": "Size of the switch, controlling its width, height, and padding, and the size of its thumb.",
             "defaultValue": "md"
         },
         {
@@ -42,6 +45,13 @@
             "detailedType": "string | undefined",
             "required": false,
             "description": "The value submitted with the form when the switch is on.\nBy default, switch submits the \"on\" value, matching native checkbox behavior."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Element shown inside the switch in place of the default `Switch.ThumbPrimitive`, such as a `Switch.ThumbPrimitive` with custom props. Anything other than a single element is ignored and the default thumb is shown."
         },
         {
             "name": "className",

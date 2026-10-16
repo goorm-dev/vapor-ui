@@ -1,5 +1,6 @@
 {
     "name": "RadioRoot",
+    "description": "Radio button for picking one option from a set. Use inside `RadioGroup.Root`. Renders a `<span>` element and a hidden `<input>` beside it.",
     "props": [
         {
             "name": "value",
@@ -13,6 +14,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
+            "description": "Marks the radio as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element. Inside an invalid `RadioGroup.Root`, the radio is always invalid.",
             "defaultValue": "false"
         },
         {
@@ -20,7 +22,15 @@
             "type": ["md", "lg"],
             "detailedType": "\"md\" | \"lg\" | undefined",
             "required": false,
+            "description": "Size of the radio, controlling its width and height. Inside `RadioGroup.Root`, falls back to the group's `size` when not set.",
             "defaultValue": "md"
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Element shown inside the radio in place of the default `Radio.IndicatorPrimitive`, such as a `Radio.IndicatorPrimitive` with custom props. Anything other than a single element is ignored and the default indicator is shown."
         },
         {
             "name": "className",

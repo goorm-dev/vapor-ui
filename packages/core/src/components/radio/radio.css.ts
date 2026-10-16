@@ -58,8 +58,14 @@ export const root = componentRecipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
+        /**
+         * Marks the radio as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element. Inside an invalid `RadioGroup.Root`, the radio is always invalid.
+         */
         invalid: { true: {}, false: {} },
 
+        /**
+         * Size of the radio, controlling its width and height. Inside `RadioGroup.Root`, falls back to the group's `size` when not set.
+         */
         size: {
             md: {
                 width: vars.size.dimension[200],
