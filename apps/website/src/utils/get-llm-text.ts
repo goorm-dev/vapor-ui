@@ -12,9 +12,9 @@ import { replaceIconDoc } from '~/utils/get-icon-doc';
 
 const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 
-export type ContentType = 'docs' | 'theme';
+type ContentType = 'docs' | 'theme';
 
-export interface LLMTextInput {
+interface LLMTextInput {
     /** The page file as written, frontmatter included. */
     raw: string;
     title: string;

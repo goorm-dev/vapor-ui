@@ -13,9 +13,9 @@ export const replaceComponentDoc = (text: string) => {
                     return `> ⚠️ Spec file not found: \`${componentName}.json\``;
                 }
 
-                const items = json.props || [];
+                const items = json.props;
 
-                if (!Array.isArray(items) || items.length === 0) {
+                if (items.length === 0) {
                     return `> ⚠️ Props not found in \`${componentName}.json\``;
                 }
 

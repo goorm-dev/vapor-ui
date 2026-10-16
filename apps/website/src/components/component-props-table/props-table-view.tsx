@@ -1,34 +1,32 @@
 'use client';
 
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { type Components } from 'react-markdown';
 
 import { Badge, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 
 import { InfoPopover } from '~/components/info';
 import type { ComponentApi } from '~/utils/component-api';
 
+const markdownComponents: Components = {
+    code: ({ children }) => (
+        <code className="px-1 py-0.5 rounded bg-v-gray-100 text-sm">{children}</code>
+    ),
+};
+
 interface PropsTableViewProps {
     componentData: ComponentApi;
 }
 
 export const PropsTableView = ({ componentData }: PropsTableViewProps) => {
-    if (!componentData || componentData.props.length === 0) {
+    if (componentData.props.length === 0) {
         return <p>No props available for this component.</p>;
     }
 
     return (
         <VStack className="w-full not-prose" $css={{ alignItems: 'flex-start', gap: '$200' }}>
             <Text typography="body1" foreground="normal-200">
-                <ReactMarkdown
-                    components={{
-                        code: ({ children }) => (
-                            <code className="px-1 py-0.5 rounded bg-v-gray-100 text-sm">
-                                {children}
-                            </code>
-                        ),
-                    }}
-                >
+                <ReactMarkdown components={markdownComponents}>
                     {componentData.description ?? ''}
                 </ReactMarkdown>
             </Text>
@@ -86,15 +84,7 @@ export const PropsTableView = ({ componentData }: PropsTableViewProps) => {
                                         </Text>
                                         {prop.description && (
                                             <InfoPopover>
-                                                <ReactMarkdown
-                                                    components={{
-                                                        code: ({ children }) => (
-                                                            <code className="px-1 py-0.5 rounded bg-v-gray-100 text-sm">
-                                                                {children}
-                                                            </code>
-                                                        ),
-                                                    }}
-                                                >
+                                                <ReactMarkdown components={markdownComponents}>
                                                     {prop.description}
                                                 </ReactMarkdown>
                                             </InfoPopover>
