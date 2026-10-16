@@ -81,7 +81,7 @@
         }
     ],
     "typeRefs": {
-        "Pagination.Root.ChangeEventDetails": "{\n  reason: \"item-press\";\n  event: MouseEvent | KeyboardEvent | PointerEvent;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: HTMLElement | undefined;\n}",
+        "Pagination.Root.ChangeEventDetails": "{\n  reason: \"item-press\";\n  event: KeyboardEvent | MouseEvent | PointerEvent;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: HTMLElement | undefined;\n}",
         "Pagination.Root.State": "{\n  disabled: boolean;\n}"
     }
 }

@@ -82,8 +82,8 @@
         },
         {
             "name": "positionMethod",
-            "type": ["absolute", "fixed"],
-            "detailedType": "\"absolute\" | \"fixed\" | undefined",
+            "type": ["fixed", "absolute"],
+            "detailedType": "\"fixed\" | \"absolute\" | undefined",
             "required": false,
             "description": "Determines which CSS `position` property to use."
         },

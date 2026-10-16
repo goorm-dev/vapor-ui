@@ -54,7 +54,7 @@
     ],
     "typeRefs": {
         "Form.State": "{\n\n}",
-        "Form.SubmitEventDetails": "{\n  reason: \"none\";\n  event: Event;\n}",
-        "Form.Actions": "{\n  validate: (fieldName?: string) => void;\n}"
+        "Form.Actions": "{\n  validate: (fieldName?: string) => void;\n}",
+        "Form.SubmitEventDetails": "{\n  reason: \"none\";\n  event: Event;\n}"
     }
 }

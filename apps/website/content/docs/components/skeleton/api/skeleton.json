@@ -12,8 +12,8 @@
         },
         {
             "name": "shape",
-            "type": ["rounded", "square"],
-            "detailedType": "\"rounded\" | \"square\" | undefined",
+            "type": ["square", "rounded"],
+            "detailedType": "\"square\" | \"rounded\" | undefined",
             "required": false,
             "description": "Corner style of the skeleton.",
             "defaultValue": "rounded"

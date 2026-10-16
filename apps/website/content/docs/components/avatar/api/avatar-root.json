@@ -21,7 +21,7 @@
         {
             "name": "onLoadingStatusChange",
             "type": ["function"],
-            "detailedType": "((status: \"loading\" | \"idle\" | \"loaded\" | \"error\") => void) | undefined",
+            "detailedType": "((status: \"idle\" | \"loading\" | \"loaded\" | \"error\") => void) | undefined",
             "required": false,
             "description": "Callback fired when the loading status changes."
         },
@@ -76,6 +76,6 @@
         }
     ],
     "typeRefs": {
-        "Avatar.Root.State": "{\n  imageLoadingStatus: \"loading\" | \"idle\" | \"loaded\" | \"error\";\n}"
+        "Avatar.Root.State": "{\n  imageLoadingStatus: \"idle\" | \"loading\" | \"loaded\" | \"error\";\n}"
     }
 }

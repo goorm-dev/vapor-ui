@@ -49,8 +49,8 @@
         },
         {
             "name": "type",
-            "type": ["search", "text", "email", "password", "url", "tel"],
-            "detailedType": "\"search\" | \"text\" | \"email\" | \"password\" | \"url\" | \"tel\" | undefined",
+            "type": ["search", "text", "tel", "url", "email", "password"],
+            "detailedType": "\"search\" | \"text\" | \"tel\" | \"url\" | \"email\" | \"password\" | undefined",
             "required": false,
             "description": "Kind of text the field accepts, such as an email address, password, or URL."
         },

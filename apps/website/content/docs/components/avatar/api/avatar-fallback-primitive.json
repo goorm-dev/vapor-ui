@@ -25,6 +25,6 @@
         }
     ],
     "typeRefs": {
-        "Avatar.FallbackPrimitive.State": "{\n  imageLoadingStatus: \"loading\" | \"idle\" | \"loaded\" | \"error\";\n}"
+        "Avatar.FallbackPrimitive.State": "{\n  imageLoadingStatus: \"idle\" | \"loading\" | \"loaded\" | \"error\";\n}"
     }
 }

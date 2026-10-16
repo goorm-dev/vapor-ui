@@ -190,7 +190,7 @@
         }
     ],
     "typeRefs": {
-        "MultiSelect.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: MouseEvent | PointerEvent | TouchEvent | KeyboardEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | PointerEvent | TouchEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"window-resize\"; event: UIEvent; }\n  | { reason: \"item-press\"; event: MouseEvent | PointerEvent | KeyboardEvent; }\n  | { reason: \"focus-out\"; event: KeyboardEvent | FocusEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"none\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "MultiSelect.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"window-resize\"; event: UIEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
         "MultiSelect.Root.Actions": "{\n  unmount: () => void;\n}"
     }
 }

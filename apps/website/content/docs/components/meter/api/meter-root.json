@@ -18,8 +18,8 @@
         },
         {
             "name": "type",
-            "type": ["warning", "default"],
-            "detailedType": "\"warning\" | \"default\" | undefined",
+            "type": ["default", "warning"],
+            "detailedType": "\"default\" | \"warning\" | undefined",
             "required": false,
             "description": "Color of the filled portion of the meter."
         },

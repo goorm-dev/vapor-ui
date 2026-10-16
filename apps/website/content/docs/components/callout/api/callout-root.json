@@ -4,8 +4,8 @@
     "props": [
         {
             "name": "colorPalette",
-            "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
-            "detailedType": "\"primary\" | \"success\" | \"warning\" | \"danger\" | \"hint\" | \"contrast\" | undefined",
+            "type": ["hint", "primary", "success", "warning", "danger", "contrast"],
+            "detailedType": "\"hint\" | \"primary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
             "required": false,
             "description": "Color palette of the callout, applied to its border, background, and text.",
             "defaultValue": "primary"

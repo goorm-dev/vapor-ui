@@ -53,7 +53,7 @@
         }
     ],
     "typeRefs": {
-        "Collapsible.Root.State": "{\n  open: boolean;\n  disabled: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n}",
+        "Collapsible.Root.State": "{\n  disabled: boolean;\n  open: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n}",
         "Collapsible.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"none\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
     }
 }

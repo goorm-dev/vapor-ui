@@ -5,6 +5,7 @@
         {
             "name": "foreground",
             "type": [
+                "hint",
                 "normal",
                 "white",
                 "primary-100",
@@ -24,7 +25,6 @@
                 "danger",
                 "hint-100",
                 "hint-200",
-                "hint",
                 "contrast-100",
                 "contrast-200",
                 "contrast",
@@ -38,7 +38,7 @@
                 "staticWhite",
                 "staticBlack"
             ],
-            "detailedType": "\"normal\" | \"white\" | \"primary-100\" | \"primary-200\" | \"primary\" | \"secondary-100\" | \"secondary-200\" | \"secondary\" | \"success-100\" | \"success-200\" | \"success\" | \"warning-100\" | \"warning-200\" | \"warning\" | \"danger-100\" | \"danger-200\" | \"danger\" | \"hint-100\" | \"hint-200\" | \"hint\" | \"contrast-100\" | \"contrast-200\" | \"contrast\" | \"primary-strong\" | \"success-strong\" | \"warning-strong\" | \"danger-strong\" | \"normal-100\" | \"normal-200\" | \"inverse\" | \"staticWhite\" | \"staticBlack\" | undefined",
+            "detailedType": "\"hint\" | \"normal\" | \"white\" | \"primary-100\" | \"primary-200\" | \"primary\" | \"secondary-100\" | \"secondary-200\" | \"secondary\" | \"success-100\" | \"success-200\" | \"success\" | \"warning-100\" | \"warning-200\" | \"warning\" | \"danger-100\" | \"danger-200\" | \"danger\" | \"hint-100\" | \"hint-200\" | \"contrast-100\" | \"contrast-200\" | \"contrast\" | \"primary-strong\" | \"success-strong\" | \"warning-strong\" | \"danger-strong\" | \"normal-100\" | \"normal-200\" | \"inverse\" | \"staticWhite\" | \"staticBlack\" | undefined",
             "required": false,
             "description": "Color of the text, chosen from the foreground color palette.",
             "defaultValue": "normal"

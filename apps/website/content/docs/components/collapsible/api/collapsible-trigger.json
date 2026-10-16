@@ -32,6 +32,6 @@
         }
     ],
     "typeRefs": {
-        "Collapsible.Trigger.State": "{\n  open: boolean;\n  disabled: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n}"
+        "Collapsible.Trigger.State": "{\n  disabled: boolean;\n  open: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n}"
     }
 }

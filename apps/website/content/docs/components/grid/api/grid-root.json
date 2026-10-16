@@ -4,8 +4,8 @@
     "props": [
         {
             "name": "flow",
-            "type": ["column", "row", "row-dense", "column-dense"],
-            "detailedType": "\"column\" | \"row\" | \"row-dense\" | \"column-dense\" | undefined",
+            "type": ["row", "column", "row-dense", "column-dense"],
+            "detailedType": "\"row\" | \"column\" | \"row-dense\" | \"column-dense\" | undefined",
             "required": false,
             "description": "Direction in which items without an explicit position are placed, set as the `grid-auto-flow` value. The `-dense` values fill earlier gaps with later items.",
             "defaultValue": "row"
@@ -48,7 +48,7 @@
         {
             "name": "render",
             "type": ["ReactElement", "function"],
-            "detailedType": "ReactElement | ((props: HTMLProps, state: Grid.Root.State) => ReactElement) | ((props: HTMLProps, state: Box.State) => ReactElement) | undefined",
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Box.State) => ReactElement) | ((props: HTMLProps, state: Grid.Root.State) => ReactElement) | undefined",
             "required": false,
             "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }

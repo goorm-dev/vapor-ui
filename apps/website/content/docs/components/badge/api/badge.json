@@ -4,8 +4,8 @@
     "props": [
         {
             "name": "colorPalette",
-            "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
-            "detailedType": "\"primary\" | \"success\" | \"warning\" | \"danger\" | \"hint\" | \"contrast\" | undefined",
+            "type": ["hint", "primary", "success", "warning", "danger", "contrast"],
+            "detailedType": "\"hint\" | \"primary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
             "required": false,
             "description": "Color palette of the badge, applied to its background and text.",
             "defaultValue": "primary"
@@ -20,8 +20,8 @@
         },
         {
             "name": "size",
-            "type": ["md", "sm", "lg"],
-            "detailedType": "\"md\" | \"sm\" | \"lg\" | undefined",
+            "type": ["sm", "md", "lg"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
             "required": false,
             "description": "Size of the badge, controlling height, padding, and typography.",
             "defaultValue": "md"
