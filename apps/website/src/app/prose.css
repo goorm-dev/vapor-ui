@@ -1,0 +1,42 @@
+@scope (.prose) to ([class~='not-prose'], [class~='not-prose'] *) {
+    :scope :where(h2):is(* + *) {
+        margin-top: 6.25rem;
+        margin-bottom: var(--vapor-size-space-300);
+
+        color: var(--vapor-color-foreground-normal);
+        font-family: var(--vapor-typography-fontFamily-sans);
+        font-size: var(--vapor-typography-fontSize-400);
+        font-style: normal;
+        font-weight: 600;
+        line-height: var(--vapor-typography-lineHeight-400); /* 150% */
+        letter-spacing: var(--vapor-typography-letterSpacing-300);
+    }
+    :scope :where(h3):is(* + *) {
+        margin-top: var(--vapor-size-space-700);
+        margin-bottom: var(--vapor-size-space-250);
+
+        color: var(--vapor-color-foreground-normal);
+        font-family: var(--vapor-typography-fontFamily-sans);
+        font-size: var(--vapor-typography-fontSize-200);
+        font-style: normal;
+        font-weight: 600;
+        line-height: var(--vapor-typography-lineHeight-200); /* 144.444% */
+        letter-spacing: var(--vapor-typography-letterSpacing-100);
+    }
+
+    :scope :where(hr + *, h2 + *, h3 + *, h4 + *) {
+        margin-top: 0;
+    }
+
+    :scope :where(ul, ol) {
+        margin: 0;
+    }
+
+    :scope :where(ul, ol) li {
+        margin: 0;
+    }
+
+    :scope :where(figure) {
+        margin-block: var(--vapor-size-space-250);
+    }
+}
