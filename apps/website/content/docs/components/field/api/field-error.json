@@ -1,5 +1,6 @@
 {
     "name": "FieldError",
+    "description": "Error message shown when the field fails validation. Use `match` to show it only for a specific validity state. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -25,7 +26,7 @@
             ],
             "detailedType": "boolean | \"badInput\" | \"customError\" | \"patternMismatch\" | \"rangeOverflow\" | \"rangeUnderflow\" | \"stepMismatch\" | \"tooLong\" | \"tooShort\" | \"typeMismatch\" | \"valueMissing\" | undefined",
             "required": false,
-            "description": "Determines whether to show the error message according to the field’s\n[ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState)."
+            "description": "Shows the message only for the given [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) key, such as `valueMissing` or `typeMismatch`. Set to `true` to always show it, letting an external library control its visibility. When omitted, the message shows whenever the field is invalid."
         },
         {
             "name": "style",

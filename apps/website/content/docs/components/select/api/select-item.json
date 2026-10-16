@@ -1,5 +1,6 @@
 {
     "name": "SelectItem",
+    "description": "Combines `Select.ItemPrimitive` and `Select.ItemIndicatorPrimitive` into a single part, with the check mark after the label. Renders a `<div>` element.",
     "props": [
         {
             "name": "value",
@@ -9,17 +10,18 @@
             "description": "A unique value that identifies this select item."
         },
         {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Label of the option, such as its text or an icon with text. The check mark is added after it."
+        },
+        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Select.Item.State) => (string | undefined)) | undefined",
             "required": false,
             "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "disabled",

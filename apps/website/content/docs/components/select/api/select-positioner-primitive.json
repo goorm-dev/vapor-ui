@@ -1,5 +1,6 @@
 {
     "name": "SelectPositionerPrimitive",
+    "description": "Positions the popup against its trigger and keeps it inside the viewport. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -81,8 +82,8 @@
         },
         {
             "name": "positionMethod",
-            "type": ["fixed", "absolute"],
-            "detailedType": "\"fixed\" | \"absolute\" | undefined",
+            "type": ["absolute", "fixed"],
+            "detailedType": "\"absolute\" | \"fixed\" | undefined",
             "required": false,
             "description": "Determines which CSS `position` property to use."
         },

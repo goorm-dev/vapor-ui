@@ -1,5 +1,6 @@
 {
     "name": "FieldRoot",
+    "description": "Root of the Field compound component, which connects a form control with its label, description, and validation messages. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

@@ -36,8 +36,14 @@ export const root = componentRecipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
+        /**
+         * Marks the text input as invalid, applying error styles. Sets `aria-invalid` on the `<input>` element.
+         */
         invalid: { true: {}, false: {} },
 
+        /**
+         * Size of the text input, controlling height, padding, and typography.
+         */
         size: {
             sm: {
                 paddingInline: vars.size.space[100],

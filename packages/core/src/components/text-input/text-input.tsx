@@ -19,6 +19,9 @@ import * as styles from './text-input.css';
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Single-line text field for short input such as a name, email address, or password. Renders an `<input>` element.
+ */
 export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) => {
     const {
         value: valueProp,
@@ -77,20 +80,19 @@ export interface TextInputProps
         Omit<VaporUIComponentProps<typeof BaseInput, TextInput.State>, 'size'>,
         TextInputVariants {
     /**
-     * The type of the input element. It determines the kind of data that can be entered.
-     * @default 'text'
+     * Kind of text the field accepts, such as an email address, password, or URL.
      */
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     /**
-     * The value of the input. Use when controlled.
+     * Current text in the field. Use when controlled.
      */
     value?: string;
     /**
-     * The default value of the input. Use when uncontrolled.
+     * Initial text in the field. Use when uncontrolled.
      */
     defaultValue?: string;
     /**
-     * Event handler called when the selected value of the input changes.
+     * Called when the text changes as the user types, pastes, or deletes. Receives the new text and the change event details.
      */
     onValueChange?: (value: string, event: TextInput.ChangeEventDetails) => void;
 }

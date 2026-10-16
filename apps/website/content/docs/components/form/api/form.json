@@ -1,5 +1,6 @@
 {
     "name": "Form",
+    "description": "Form that collects its fields' values and shows their validation errors in one place. Use with `Field` parts to validate on submit, blur, or change. Renders a `<form>` element.",
     "props": [
         {
             "name": "className",
@@ -53,7 +54,7 @@
     ],
     "typeRefs": {
         "Form.State": "{\n\n}",
-        "Form.Actions": "{\n  validate: (fieldName?: string) => void;\n}",
-        "Form.SubmitEventDetails": "{\n  reason: \"none\";\n  event: Event;\n}"
+        "Form.SubmitEventDetails": "{\n  reason: \"none\";\n  event: Event;\n}",
+        "Form.Actions": "{\n  validate: (fieldName?: string) => void;\n}"
     }
 }

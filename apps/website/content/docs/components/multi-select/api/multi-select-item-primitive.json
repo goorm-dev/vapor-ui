@@ -1,5 +1,6 @@
 {
     "name": "MultiSelectItemPrimitive",
+    "description": "Option in the popup that the user can select or deselect. Renders a `<div>` element.",
     "props": [
         {
             "name": "value",
@@ -9,17 +10,18 @@
             "description": "A unique value that identifies this select item."
         },
         {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Content shown inside the option, such as its label and `MultiSelect.ItemIndicatorPrimitive`."
+        },
+        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: MultiSelect.ItemPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
             "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "disabled",
