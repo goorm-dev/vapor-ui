@@ -1,63 +1,94 @@
 {
     "name": "ToastObject",
-    "displayName": "Toast.ToastObject",
-    "description": "Toast를 구성하는 ToastOptions 객체입니다.",
+    "description": "Options of one toast, passed to `add`, `update`, and `promise` of `useToastManager` or a `toastManager`.",
     "props": [
         {
             "name": "id",
             "type": ["string"],
+            "detailedType": "string | undefined",
             "required": false,
-            "description": "Toast의 고유 식별자입니다. 지정하지 않으면 자동으로 생성됩니다."
+            "description": "Unique identifier of the toast. Generated when omitted."
         },
         {
             "name": "title",
-            "type": ["string"],
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
             "required": false,
-            "description": "Toast의 제목입니다."
+            "description": "Title of the toast."
         },
         {
             "name": "description",
-            "type": ["string"],
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
             "required": false,
-            "description": "Toast의 설명 텍스트입니다."
+            "description": "Description of the toast."
         },
         {
             "name": "colorPalette",
             "type": ["success", "danger", "info"],
+            "detailedType": "\"success\" | \"danger\" | \"info\" | undefined",
             "required": false,
-            "description": "Toast의 색상 팔레트입니다. 각 팔레트에 따라 기본 아이콘이 자동으로 설정됩니다.",
+            "description": "Color palette of the toast. Also picks the default icon.",
             "defaultValue": "info"
         },
         {
             "name": "icon",
-            "type": ["ReactNode"],
+            "type": ["ReactElement"],
+            "detailedType": "ReactElement | undefined",
             "required": false,
-            "description": "Toast에 표시할 커스텀 아이콘입니다. 지정하지 않으면 `colorPalette`에 따른 기본 아이콘이 사용됩니다."
+            "description": "Icon shown in the toast. Replaces the default icon of `colorPalette`."
         },
         {
             "name": "close",
-            "type": ["false", "true"],
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
             "required": false,
-            "description": "닫기 버튼을 표시할지 여부입니다.",
+            "description": "Whether to show the close button.",
             "defaultValue": "true"
         },
         {
             "name": "actionProps",
             "type": ["ActionProps"],
+            "detailedType": "ActionProps | undefined",
             "required": false,
-            "description": "Toast 액션 버튼에 전달할 props입니다. `children`, `onClick`, `colorPalette`, `size`, `variant` 등 Button 컴포넌트의 props를 포함합니다."
+            "description": "Props of the action button, such as `children` and `onClick`. Also takes the `colorPalette`, `size`, and `variant` of Button; `colorPalette` defaults to `secondary`. The action button is shown only when this is set."
+        },
+        {
+            "name": "timeout",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "Time in milliseconds before the toast closes on its own. `0` keeps it open until closed.",
+            "defaultValue": "5000"
+        },
+        {
+            "name": "priority",
+            "type": ["low", "high"],
+            "detailedType": "\"low\" | \"high\" | undefined",
+            "required": false,
+            "description": "How urgently assistive technology announces the toast. `low` waits for the current speech to end; `high` interrupts it.",
+            "defaultValue": "low"
+        },
+        {
+            "name": "onClose",
+            "type": ["function"],
+            "detailedType": "(() => void) | undefined",
+            "required": false,
+            "description": "Called when the toast is closed."
+        },
+        {
+            "name": "onRemove",
+            "type": ["function"],
+            "detailedType": "(() => void) | undefined",
+            "required": false,
+            "description": "Called when the toast is removed after its closing animation completes."
         },
         {
             "name": "data",
             "type": ["object"],
+            "detailedType": "Data | undefined",
             "required": false,
-            "description": "Toast에 연결할 커스텀 데이터 객체입니다. 제네릭 타입으로 타입 안전성을 제공합니다."
-        },
-        {
-            "name": "priority",
-            "type": ["number"],
-            "required": false,
-            "description": "Toast의 우선순위입니다. 높은 값이 먼저 표시됩니다."
+            "description": "Custom data for the toast. Its type is the `Data` type parameter of `add`."
         }
     ]
 }
