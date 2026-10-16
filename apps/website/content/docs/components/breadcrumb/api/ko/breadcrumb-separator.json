@@ -1,27 +1,27 @@
 {
     "name": "BreadcrumbSeparator",
-    "description": "Breadcrumb 항목 사이에 놓이는 아이콘으로, 기본값은 슬래시이며 보조기술에는 숨겨집니다. `<li>` 요소로 렌더링됩니다.",
+    "description": "Breadcrumb 항목 사이에 놓이는 아이콘. 기본값은 슬래시이며 보조기술에는 숨겨집니다. `<li>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "구분자로 표시되는 아이콘(예: 쉐브론 아이콘). 기본 슬래시 아이콘을 대체합니다."
+            "description": "구분자로 표시할 아이콘(예: 쉐브론 아이콘). 기본 슬래시 아이콘을 대체합니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Breadcrumb.Separator.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Breadcrumb.Separator.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

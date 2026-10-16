@@ -1,13 +1,13 @@
 {
     "name": "ToolbarRoot",
-    "description": "Toolbar 복합 컴포넌트의 루트. 버튼과 입력이 가로로 놓이며 방향키로 이동할 수 있습니다. 내부 항목과 `size`를 공유합니다. `<div>` 요소로 렌더링됩니다.",
+    "description": "Toolbar 복합 컴포넌트의 루트. 사용자가 화살표 키로 오갈 수 있는 버튼과 input의 가로 배열입니다. 안에 있는 항목과 `size`를 공유합니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "툴바 버튼과 입력의 크기. 높이, 패딩, 타이포그래피를 결정합니다."
+            "description": "툴바 버튼과 input의 크기. 높이, 패딩, 타이포그래피를 결정합니다."
         },
         {
             "name": "variant",
@@ -22,35 +22,35 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Toolbar.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "툴바의 모든 버튼과 입력을 비활성화하고 모든 상호작용을 막습니다."
+            "description": "툴바의 모든 버튼과 input을 비활성화하고 모든 상호작용을 막습니다."
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`true`이면 키보드 탐색으로 툴바의 끝에 도달했을 때 포커스가 반대쪽 끝으로 이동합니다."
+            "description": "`true`이면 키보드 탐색으로 툴바의 끝에 도달했을 때 포커스를 반대쪽 끝으로 넘깁니다."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Toolbar.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Toolbar.Root.State) => ReactElement) | undefined",
             "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

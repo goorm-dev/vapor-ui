@@ -2,74 +2,74 @@
     "grid-item": {
         "description": {
             "source": "f7857473a45ebbbc",
-            "guide": 1,
+            "guide": 2,
             "terms": "ac589eefba6c2c89"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.colSpan": {
             "source": "c159ce463a569bc8",
-            "guide": 1,
+            "guide": 2,
             "terms": "f3a535d373c216cb"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.rowSpan": {
             "source": "1ff05cacda64e403",
-            "guide": 1,
+            "guide": 2,
             "terms": "f3a535d373c216cb"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "grid-root": {
         "description": {
             "source": "dd7f548cccc218ea",
-            "guide": 1,
+            "guide": 2,
             "terms": "1a6f83e43baea56f"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.flow": {
             "source": "649eb863a9aee2e5",
-            "guide": 1,
+            "guide": 2,
             "terms": "f3a535d373c216cb"
         },
         "props.inline": {
             "source": "910d2be52f059659",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.templateColumns": {
             "source": "124e21d643f9018b",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.templateRows": {
             "source": "b0735a07ee39178b",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         }
     }

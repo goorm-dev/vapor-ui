@@ -7,14 +7,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: VStack.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "inline",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "컨테이너를 `flex` 대신 `inline-flex`로 표시하여 주변 콘텐츠와 같은 줄에 배치합니다."
+            "description": "컨테이너를 `flex` 대신 `inline-flex`로 표시해 주변 콘텐츠와 같은 줄에 놓습니다."
         },
         {
             "name": "reverse",
@@ -28,7 +28,7 @@
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Box.State) => (CSSProperties | undefined)) | ((state: Flex.State) => (CSSProperties | undefined)) | ((state: VStack.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

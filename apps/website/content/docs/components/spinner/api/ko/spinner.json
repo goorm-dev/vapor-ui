@@ -7,14 +7,14 @@
             "type": ["inherit", "primary"],
             "detailedType": "\"inherit\" | \"primary\" | undefined",
             "required": false,
-            "description": "Spinner의 색상 팔레트. 회전하는 호의 스트로크에 적용됩니다. 채워진 배경 위처럼 부모 요소의 `color`에서 스트로크 색상을 가져오려면 `inherit`을 사용하세요."
+            "description": "스피너의 색상 팔레트. 회전하는 호의 선(stroke)에 적용됩니다. 채워진 배경 위처럼 부모 요소의 `color`에서 선 색상을 가져오려면 `inherit`를 사용하세요."
         },
         {
             "name": "size",
             "type": ["md", "lg", "xl"],
             "detailedType": "\"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Spinner의 크기. 너비, 높이, 스트로크 두께를 결정합니다.",
+            "description": "스피너의 크기. 너비, 높이, 선 두께를 결정합니다.",
             "defaultValue": "md"
         },
         {
@@ -22,14 +22,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Spinner.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Spinner.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

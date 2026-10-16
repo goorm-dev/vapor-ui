@@ -1,6 +1,6 @@
 {
     "name": "AvatarFallbackPrimitive",
-    "description": "아바타 이미지를 불러오지 못했거나 제공되지 않았을 때 이미지 대신 표시되는 폴백. `children`을 주지 않으면 `alt` 텍스트의 첫 글자를 `alt`로 정해진 배경색 위에 표시합니다. `<span>` 요소로 렌더링됩니다.",
+    "description": "아바타 이미지를 불러오지 못했거나 제공되지 않았을 때 이미지 대신 표시되는 폴백. `children`을 주지 않으면 `alt` 텍스트의 첫 글자를 `alt`에서 고른 배경색 위에 표시합니다. `<span>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",

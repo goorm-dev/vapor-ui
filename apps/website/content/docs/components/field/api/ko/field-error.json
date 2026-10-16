@@ -1,13 +1,13 @@
 {
     "name": "FieldError",
-    "description": "필드가 유효성 검사에 실패했을 때 표시되는 오류 메시지. 특정 유효성 상태일 때만 표시하려면 `match`를 사용하세요. `<div>` 요소로 렌더링됩니다.",
+    "description": "필드가 유효성 검사에 실패했을 때 표시되는 오류 메시지. 특정 유효성 상태에서만 표시하려면 `match`를 사용하세요. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Field.Error.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "match",
@@ -26,21 +26,21 @@
             ],
             "detailedType": "boolean | \"badInput\" | \"customError\" | \"patternMismatch\" | \"rangeOverflow\" | \"rangeUnderflow\" | \"stepMismatch\" | \"tooLong\" | \"tooShort\" | \"typeMismatch\" | \"valueMissing\" | undefined",
             "required": false,
-            "description": "주어진 [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) 키(`valueMissing`, `typeMismatch` 등)일 때만 메시지를 표시합니다. `true`로 설정하면 항상 표시하며, 외부 라이브러리가 표시 여부를 제어할 수 있습니다. 생략하면 필드가 유효하지 않을 때마다 메시지를 표시합니다."
+            "description": "`valueMissing`이나 `typeMismatch`처럼 지정한 [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) 키에서만 메시지를 표시합니다. `true`로 설정하면 항상 표시하며, 표시 여부를 외부 라이브러리가 제어할 수 있습니다. 생략하면 필드가 유효하지 않을 때마다 메시지를 표시합니다."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Field.Error.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Field.Error.State) => ReactElement) | undefined",
             "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

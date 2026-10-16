@@ -1,27 +1,27 @@
 {
     "name": "RadioGroupLabel",
-    "description": "라디오 그룹의 표시용 레이블. 그룹의 접근 가능한 이름으로도 쓰입니다. `<span>` 요소로 렌더링됩니다.",
+    "description": "RadioGroup의 눈에 보이는 레이블. 그룹의 접근 가능한 이름으로도 쓰입니다. `<span>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "레이블의 텍스트. 라디오가 답하는 질문 등을 넣습니다."
+            "description": "레이블의 텍스트. 라디오가 답하는 질문 등이 들어갑니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: RadioGroup.Label.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: RadioGroup.Label.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

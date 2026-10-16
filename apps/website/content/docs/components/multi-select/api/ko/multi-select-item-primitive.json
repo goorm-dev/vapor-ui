@@ -1,6 +1,6 @@
 {
     "name": "MultiSelectItemPrimitive",
-    "description": "사용자가 선택하거나 선택 해제할 수 있는 팝업의 옵션. `<div>` 요소로 렌더링됩니다.",
+    "description": "팝업 안에서 사용자가 선택하거나 선택을 해제할 수 있는 옵션. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "value",
@@ -14,14 +14,14 @@
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "옵션 안에 표시되는 콘텐츠. 레이블, `MultiSelect.ItemIndicatorPrimitive` 등."
+            "description": "옵션 안에 표시되는 콘텐츠(예: 레이블, `MultiSelect.ItemIndicatorPrimitive`)."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: MultiSelect.ItemPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "disabled",
@@ -35,21 +35,21 @@
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "키보드 텍스트 탐색에서 항목이 일치하는지 판단할 때 사용할 텍스트 레이블을 지정합니다.\n\n지정하지 않으면 항목의 텍스트 콘텐츠를 기본값으로 사용합니다."
+            "description": "키보드 텍스트 탐색에서 항목이 일치하는지 판단할 때 사용할 텍스트 레이블을 지정합니다.\n\n지정하지 않으면 항목의 텍스트 콘텐츠가 기본값입니다."
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: MultiSelect.ItemPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

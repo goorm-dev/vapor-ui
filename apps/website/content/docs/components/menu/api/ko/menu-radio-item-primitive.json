@@ -7,14 +7,14 @@
             "type": ["any"],
             "detailedType": "any",
             "required": true,
-            "description": "라디오 항목의 값.\n항목을 선택하면 MenuRadioGroup에 설정되는 값입니다."
+            "description": "라디오 항목의 값. 항목을 선택하면 MenuRadioGroup에 설정되는 값입니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Menu.RadioItemPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "closeOnClick",
@@ -35,35 +35,35 @@
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "키보드 텍스트 탐색에서 항목을 일치시킬 때 사용할 텍스트 레이블을 재정의합니다."
+            "description": "키보드 텍스트 탐색에서 항목과 일치시킬 때 사용할 텍스트 레이블을 대체합니다."
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
         },
         {
             "name": "onClick",
             "type": ["function"],
             "detailedType": "((event: BaseUIEvent<React.MouseEvent<HTMLDivElement, MouseEvent>>) => void) | undefined",
             "required": false,
-            "description": "Menu 항목의 클릭 이벤트 핸들러."
+            "description": "Menu 항목의 클릭 핸들러."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Menu.RadioItemPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Menu.RadioItemPrimitive.State) => ReactElement) | undefined",
             "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

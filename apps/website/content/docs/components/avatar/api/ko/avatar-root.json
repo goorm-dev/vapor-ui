@@ -1,6 +1,6 @@
 {
     "name": "AvatarRoot",
-    "description": "`Avatar.ImagePrimitive`와 `Avatar.FallbackPrimitive`를 하나의 파트로 합쳐 사용자의 프로필 이미지를 표시하고, 이미지가 없거나 불러오지 못하면 `alt`의 첫 글자를 대신 표시합니다. 프리미티브를 `children`으로 전달하거나 `imageElement` 또는 `fallbackElement`를 사용해 이미지나 폴백을 대체할 수 있습니다. `<span>` 요소로 렌더링됩니다.",
+    "description": "`Avatar.ImagePrimitive`와 `Avatar.FallbackPrimitive`를 하나의 파트로 합쳐 사용자의 프로필 이미지를 표시하고, 이미지가 없거나 불러오지 못하면 `alt`의 첫 글자를 표시합니다. 이미지나 폴백을 대체하려면 프리미티브를 `children`으로 전달하거나 `imageElement` 또는 `fallbackElement`를 사용하세요. `<span>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "shape",
@@ -37,14 +37,14 @@
             "type": ["ReactElement<AvatarFallbackPrimitive.Props>"],
             "detailedType": "ReactElement<AvatarFallbackPrimitive.Props> | undefined",
             "required": false,
-            "description": "기본 `Avatar.FallbackPrimitive`를 대체합니다. `children`이 주어지면 무시됩니다."
+            "description": "기본 `Avatar.FallbackPrimitive`를 대체합니다. `children`을 주면 무시됩니다."
         },
         {
             "name": "imageElement",
             "type": ["ReactElement<AvatarImagePrimitive.Props>"],
             "detailedType": "ReactElement<AvatarImagePrimitive.Props> | undefined",
             "required": false,
-            "description": "기본 `Avatar.ImagePrimitive`를 대체합니다. `children`이 주어지면 무시됩니다."
+            "description": "기본 `Avatar.ImagePrimitive`를 대체합니다. `children`을 주면 무시됩니다."
         },
         {
             "name": "delay",
@@ -58,7 +58,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "이미지를 미리 불러오지 않고 이미지 요소를 마운트한 상태로 유지하며 그 자리에서 로드하는지 여부.\n`loading=\"lazy\"`와 `next/image` 같은 최적화된 이미지 컴포넌트를 지원합니다."
+            "description": "이미지 요소를 미리 불러오지 않고 마운트된 상태로 유지하며 그 자리에서 불러올지 여부.\n`loading=\"lazy\"`와 `next/image` 같은 최적화된 이미지 컴포넌트를 지원합니다."
         },
         {
             "name": "style",

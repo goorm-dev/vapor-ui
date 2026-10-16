@@ -1,27 +1,27 @@
 {
     "name": "BreadcrumbEllipsisPrimitive",
-    "description": "접힌 항목을 대신하는 아이콘으로, 보조기술에는 숨겨집니다. `<span>` 요소로 렌더링됩니다.",
+    "description": "Breadcrumb 경로에서 접힌 항목을 대신하는 아이콘. 보조기술에는 숨겨집니다. `<span>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "접힌 항목에 표시되는 아이콘. 기본 더보기 아이콘을 대체합니다."
+            "description": "접힌 항목을 나타내는 아이콘. 기본 더보기 아이콘을 대체합니다."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Breadcrumb.EllipsisPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Breadcrumb.EllipsisPrimitive.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

@@ -7,7 +7,7 @@
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "버튼 안에 표시되는 아이콘. 기본 오른쪽 셰브론 아이콘을 대체합니다."
+            "description": "버튼 안에 표시되는 아이콘. 기본 오른쪽 쉐브론 아이콘을 대체합니다."
         },
         {
             "name": "className",
@@ -28,7 +28,7 @@
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Pagination.Next.State) => ReactElement) | undefined",
             "required": false,
-            "description": "컴포넌트의 HTML 요소를\n다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

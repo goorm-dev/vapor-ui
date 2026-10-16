@@ -1,20 +1,20 @@
 {
     "name": "MultiSelectTrigger",
-    "description": "`MultiSelect.TriggerPrimitive`, `MultiSelect.ValuePrimitive`, `MultiSelect.TriggerIconPrimitive`를 선택된 값과 쉐브론 아이콘을 보여주는 하나의 파트로 합칩니다. `<button>` 요소로 렌더링됩니다.",
+    "description": "`MultiSelect.TriggerPrimitive`, `MultiSelect.ValuePrimitive`, `MultiSelect.TriggerIconPrimitive`를 하나의 파트로 합쳐 선택된 값과 쉐브런 아이콘을 표시합니다. `<button>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "children",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
             "required": false,
-            "description": "렌더링되지 않습니다. 트리거는 항상 선택된 값과 쉐브론 아이콘을 표시합니다. 사용자 지정 콘텐츠를 구성하려면 `MultiSelect.TriggerPrimitive`를 사용하세요."
+            "description": "렌더링되지 않습니다. 트리거는 항상 선택된 값과 쉐브런 아이콘을 표시합니다. 커스텀 콘텐츠를 구성하려면 `MultiSelect.TriggerPrimitive`를 사용하세요."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: MultiSelect.Trigger.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "disabled",
@@ -28,14 +28,14 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`render` prop으로 대체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요."
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: MultiSelect.Trigger.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

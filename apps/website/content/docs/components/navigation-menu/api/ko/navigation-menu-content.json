@@ -14,7 +14,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "팝업이 닫혀 있는 동안에도 콘텐츠를 DOM에 마운트된 상태로 유지할지 여부.\n웹 크롤러를 위해 서버 사이드 렌더링 중에도 콘텐츠가 존재하도록 보장합니다."
+            "description": "팝업이 닫혀 있는 동안에도 콘텐츠를 DOM에 마운트해 둘지 여부. 웹 크롤러를 위해 서버 사이드 렌더링 중에도 콘텐츠가 존재하도록 합니다."
         },
         {
             "name": "style",
@@ -28,7 +28,7 @@
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Content.State) => ReactElement) | undefined",
             "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

@@ -1,13 +1,13 @@
 {
     "name": "TooltipRoot",
-    "description": "요소에 마우스를 올리거나 포커스하면 짧은 레이블을 표시하는 Tooltip 복합 컴포넌트의 루트. 열림 상태를 관리합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "description": "요소에 마우스를 올리거나 포커스하면 짧은 레이블을 보여 주는 Tooltip 복합 컴포넌트의 루트. 열림 상태를 관리합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "defaultOpen",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Tooltip이 처음에 열려 있는지 여부.\n\n제어 Tooltip을 렌더링하려면 `open` prop을 대신 사용하세요."
+            "description": "Tooltip이 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요."
         },
         {
             "name": "onOpenChange",
@@ -28,21 +28,21 @@
             "type": ["React.RefObject<Tooltip.Root.Actions | null>"],
             "detailedType": "React.RefObject<Tooltip.Root.Actions | null> | undefined",
             "required": false,
-            "description": "명령형 동작에 대한 ref.\n- `unmount`: Tooltip 팝업을 언마운트합니다.\n- `close`: 호출하면 Tooltip을 명령형으로 닫습니다."
+            "description": "명령형 동작을 위한 ref.\n- `unmount`: Tooltip 팝업을 언마운트합니다.\n- `close`: 호출하면 Tooltip을 명령형으로 닫습니다."
         },
         {
             "name": "children",
             "type": ["ReactNode", "function"],
             "detailedType": "ReactNode | ((arg: { payload: unknown; }) => ReactNode)",
             "required": false,
-            "description": "Tooltip의 콘텐츠.\n일반 React 노드이거나, 활성 트리거의 `payload`를 받는 렌더 함수일 수 있습니다."
+            "description": "Tooltip의 콘텐츠.\n일반 React 노드이거나 활성 트리거의 `payload`를 받는 렌더 함수일 수 있습니다."
         },
         {
             "name": "defaultTriggerId",
             "type": ["string", "null"],
             "detailedType": "string | null | undefined",
             "required": false,
-            "description": "Tooltip과 연결된 트리거의 ID.\n`defaultOpen` prop과 함께 사용하면 처음부터 열려 있는 Tooltip을 만들 때 유용합니다."
+            "description": "Tooltip과 연결된 트리거의 ID.\n`defaultOpen` prop과 함께 쓰면 처음에 열려 있는 Tooltip을 만들 때 유용합니다."
         },
         {
             "name": "disabled",
@@ -56,7 +56,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Tooltip 콘텐츠에 마우스를 올려도 Tooltip이 닫히지 않도록 할지 여부."
+            "description": "Tooltip을 닫지 않고 Tooltip 콘텐츠에 마우스를 올릴 수 있는지 여부."
         },
         {
             "name": "handle",
@@ -70,21 +70,21 @@
             "type": ["function"],
             "detailedType": "((open: boolean) => void) | undefined",
             "required": false,
-            "description": "Tooltip이 열리거나 닫힐 때 모든 애니메이션이 끝난 후 호출되는 이벤트 핸들러."
+            "description": "Tooltip이 열리거나 닫힌 뒤 애니메이션이 모두 끝나면 호출되는 이벤트 핸들러."
         },
         {
             "name": "trackCursorAxis",
             "type": ["none", "both", "x", "y"],
             "detailedType": "\"none\" | \"both\" | \"x\" | \"y\" | undefined",
             "required": false,
-            "description": "Tooltip이 커서를 따라갈 축을 결정합니다."
+            "description": "Tooltip이 커서를 따라갈 축."
         },
         {
             "name": "triggerId",
             "type": ["string", "null"],
             "detailedType": "string | null | undefined",
             "required": false,
-            "description": "Tooltip과 연결된 트리거의 ID.\n`open` prop과 함께 사용하면 제어 Tooltip을 만들 때 유용합니다.\nTooltip이 비제어일 때(즉 `open` prop을 설정하지 않았을 때)는 이 prop을 지정할 필요가 없습니다."
+            "description": "Tooltip과 연결된 트리거의 ID.\n`open` prop과 함께 쓰면 제어 Tooltip을 만들 때 유용합니다.\nTooltip이 비제어일 때(즉 `open` prop을 설정하지 않았을 때)는 이 prop을 지정할 필요가 없습니다."
         }
     ],
     "typeRefs": {

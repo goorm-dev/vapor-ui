@@ -2,182 +2,182 @@
     "meter-indicator-primitive": {
         "description": {
             "source": "4a53583c4a6aba0d",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "meter-label": {
         "description": {
             "source": "597cbc7f76cb4027",
-            "guide": 1,
+            "guide": 2,
             "terms": "1912fd938105e849"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "meter-root": {
         "description": {
             "source": "c4afc6576e74435f",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.format": {
             "source": "6cb6836760f8c058",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.getAriaValueText": {
             "source": "6240daa0c2eeb756",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.locale": {
             "source": "d9aab9fb0589f031",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.max": {
             "source": "cc7ffc1273d932a7",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.min": {
             "source": "d4ddfa4dd6b2a193",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.size": {
             "source": "311286278c014726",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.type": {
             "source": "4588755aadc36f88",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.value": {
             "source": "3173d9ff6d6577f0",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         }
     },
     "meter-track-primitive": {
         "description": {
             "source": "66933f30830670e8",
-            "guide": 1,
+            "guide": 2,
             "terms": "8a409d35b778cfe5"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "meter-track": {
         "description": {
             "source": "c0eb0cd72ce9610c",
-            "guide": 1,
+            "guide": 2,
             "terms": "f679222c3e4816ed"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.indicatorElement": {
             "source": "aef3090052dbb39a",
-            "guide": 1,
+            "guide": 2,
             "terms": "05fe6e9982082515"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "meter-value": {
         "description": {
             "source": "cfa544a91cbeb2af",
-            "guide": 1,
+            "guide": 2,
             "terms": "1912fd938105e849"
         },
         "props.children": {
             "source": "5b7444fec19d9aee",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     }

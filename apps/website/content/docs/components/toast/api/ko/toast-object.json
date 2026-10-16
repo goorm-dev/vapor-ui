@@ -1,6 +1,6 @@
 {
     "name": "ToastObject",
-    "description": "`useToastManager` 또는 `toastManager`의 `add`, `update`, `promise`에 전달하는 Toast 하나의 옵션.",
+    "description": "Toast 하나의 옵션. `useToastManager` 또는 `toastManager`의 `add`, `update`, `promise`에 전달합니다.",
     "props": [
         {
             "name": "id",
@@ -28,7 +28,7 @@
             "type": ["success", "danger", "info"],
             "detailedType": "\"success\" | \"danger\" | \"info\" | undefined",
             "required": false,
-            "description": "Toast의 컬러 팔레트. 기본 아이콘도 이 값으로 정해집니다.",
+            "description": "Toast의 컬러 팔레트. 기본 아이콘도 이 값에 따라 정해집니다.",
             "defaultValue": "info"
         },
         {
@@ -51,7 +51,7 @@
             "type": ["ActionProps"],
             "detailedType": "ActionProps | undefined",
             "required": false,
-            "description": "`children`, `onClick` 등 액션 버튼의 props. Button의 `colorPalette`, `size`, `variant`도 받으며, `colorPalette`의 기본값은 `secondary`입니다. 이 값을 설정한 경우에만 액션 버튼이 표시됩니다."
+            "description": "`children`, `onClick` 등 액션 버튼의 props. Button의 `colorPalette`, `size`, `variant`도 받으며, `colorPalette`의 기본값은 `secondary`입니다. 액션 버튼은 이 값을 설정했을 때만 표시됩니다."
         },
         {
             "name": "timeout",
@@ -66,7 +66,7 @@
             "type": ["low", "high"],
             "detailedType": "\"low\" | \"high\" | undefined",
             "required": false,
-            "description": "보조기술이 Toast를 얼마나 긴급하게 알리는지. `low`는 현재 음성이 끝날 때까지 기다리고, `high`는 현재 음성을 중단시킵니다.",
+            "description": "보조기술이 Toast를 얼마나 긴급하게 알리는지. `low`는 현재 음성이 끝날 때까지 기다리고, `high`는 현재 음성을 끊습니다.",
             "defaultValue": "low"
         },
         {
@@ -88,7 +88,7 @@
             "type": ["object"],
             "detailedType": "Data | undefined",
             "required": false,
-            "description": "Toast의 커스텀 데이터. 타입은 `add`의 `Data` 타입 매개변수입니다."
+            "description": "Toast의 사용자 정의 데이터. 타입은 `add`의 `Data` 타입 매개변수입니다."
         }
     ]
 }

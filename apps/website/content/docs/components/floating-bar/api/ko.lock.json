@@ -2,319 +2,319 @@
     "floating-bar-close": {
         "description": {
             "source": "1481e382e8b11cc4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.nativeButton": {
             "source": "cad78bc9f7fe7490",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "floating-bar-popup-primitive": {
         "description": {
             "source": "22dfbe60cace4227",
-            "guide": 1,
+            "guide": 2,
             "terms": "8737339371a9dd88"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.finalFocus": {
             "source": "cb6ee252d1de6dd1",
-            "guide": 1,
+            "guide": 2,
             "terms": "c6db445e670d5a6a"
         },
         "props.initialFocus": {
             "source": "207b164375e268a8",
-            "guide": 1,
+            "guide": 2,
             "terms": "c5576ed7609dcea6"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "floating-bar-popup": {
         "description": {
             "source": "3af53743d36d2ec3",
-            "guide": 1,
-            "terms": "176ed3253d455d36"
+            "guide": 2,
+            "terms": "7142ce0e04a77d58"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.finalFocus": {
             "source": "cb6ee252d1de6dd1",
-            "guide": 1,
+            "guide": 2,
             "terms": "c6db445e670d5a6a"
         },
         "props.initialFocus": {
             "source": "207b164375e268a8",
-            "guide": 1,
+            "guide": 2,
             "terms": "c5576ed7609dcea6"
         },
         "props.portalElement": {
             "source": "3597ccd2a40d22cc",
-            "guide": 1,
+            "guide": 2,
             "terms": "68ceb693abb725d9"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "floating-bar-portal-primitive": {
         "description": {
             "source": "438818d33594ee54",
-            "guide": 1,
+            "guide": 2,
             "terms": "89e6722106556dd8"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.container": {
             "source": "14dbbd8fcd1ffdc2",
-            "guide": 1,
+            "guide": 2,
             "terms": "89e6722106556dd8"
         },
         "props.keepMounted": {
             "source": "f1cabf3d00a37e20",
-            "guide": 1,
+            "guide": 2,
             "terms": "d5f42ce2c1083b5f"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "floating-bar-positioner-primitive": {
         "description": {
             "source": "9aa20893970ccaf4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2cc6de2cc3e742b2"
         },
         "props.align": {
             "source": "b736661aca18ff69",
-            "guide": 1,
+            "guide": 2,
             "terms": "b2607fc1dae382d6"
         },
         "props.alignOffset": {
             "source": "42529d536f86bd3e",
-            "guide": 1,
-            "terms": "a48bffc79c05ff98"
+            "guide": 2,
+            "terms": "0d745ccf59b559a5"
         },
         "props.anchor": {
             "source": "20014246492ca826",
-            "guide": 1,
+            "guide": 2,
             "terms": "facff3a033edca86"
         },
         "props.arrowPadding": {
             "source": "538c26d1db226eb0",
-            "guide": 1,
+            "guide": 2,
             "terms": "250a6001100731f5"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.collisionAvoidance": {
             "source": "5ccf7c207f32eecb",
-            "guide": 1,
-            "terms": "b2607fc1dae382d6"
+            "guide": 2,
+            "terms": "4502f9e85f2e33a8"
         },
         "props.collisionBoundary": {
             "source": "bbd2193fcc8cf7ca",
-            "guide": 1,
+            "guide": 2,
             "terms": "250a6001100731f5"
         },
         "props.collisionPadding": {
             "source": "76c4188372fd6789",
-            "guide": 1,
-            "terms": "4f53cda18c2baa0c"
+            "guide": 2,
+            "terms": "7ef68d9344d0684d"
         },
         "props.disableAnchorTracking": {
             "source": "bef7ea43d630ff8a",
-            "guide": 1,
-            "terms": "b2607fc1dae382d6"
+            "guide": 2,
+            "terms": "ee89753619bef649"
         },
         "props.positionMethod": {
             "source": "a855865d07fe8a04",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.side": {
             "source": "9267af2c97e34563",
-            "guide": 1,
-            "terms": "250a6001100731f5"
+            "guide": 2,
+            "terms": "54901f02e82e1543"
         },
         "props.sideOffset": {
             "source": "dffc3830b673c108",
-            "guide": 1,
-            "terms": "250a6001100731f5"
+            "guide": 2,
+            "terms": "1d797a342e024091"
         },
         "props.sticky": {
             "source": "973c513ffb55db30",
-            "guide": 1,
-            "terms": "9302aae7ae03bdef"
+            "guide": 2,
+            "terms": "79afbeffbbfe202f"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "floating-bar-root": {
         "description": {
             "source": "61e3eaf7792a9183",
-            "guide": 1,
+            "guide": 2,
             "terms": "696187dfb8a33fd2"
         },
         "props.actionsRef": {
             "source": "8702c6b998518131",
-            "guide": 1,
+            "guide": 2,
             "terms": "3dc9ff164840b150"
         },
         "props.children": {
             "source": "3ec2e9a9c5f76110",
-            "guide": 1,
+            "guide": 2,
             "terms": "880bb85721e505eb"
         },
         "props.defaultOpen": {
             "source": "60b4ccc6f8f4aadd",
-            "guide": 1,
+            "guide": 2,
             "terms": "61806d551a58f35c"
         },
         "props.defaultTriggerId": {
             "source": "6bafc1992e28180b",
-            "guide": 1,
+            "guide": 2,
             "terms": "47f73f7a70aa11e1"
         },
         "props.handle": {
             "source": "77bb6031354db59c",
-            "guide": 1,
+            "guide": 2,
             "terms": "c5797848e5fc3191"
         },
         "props.modal": {
             "source": "767e6a30acab91af",
-            "guide": 1,
+            "guide": 2,
             "terms": "f6dd481fdcc1b8ed"
         },
         "props.onOpenChange": {
             "source": "d272a2290729eac6",
-            "guide": 1,
+            "guide": 2,
             "terms": "917b5199bf8a587f"
         },
         "props.onOpenChangeComplete": {
             "source": "e43a54613f5fda3e",
-            "guide": 1,
+            "guide": 2,
             "terms": "917b5199bf8a587f"
         },
         "props.open": {
             "source": "742e8e4c23f9e24d",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.triggerId": {
             "source": "363d78051f842969",
-            "guide": 1,
+            "guide": 2,
             "terms": "0c64f2534e9520cf"
         }
     },
     "floating-bar-trigger": {
         "description": {
             "source": "b99ab995d7bc30a2",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.closeDelay": {
             "source": "c5c468afdc667481",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.delay": {
             "source": "e01dc4a8da9bcf7d",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.handle": {
             "source": "da2c9a8c9b212e04",
-            "guide": 1,
+            "guide": 2,
             "terms": "47f73f7a70aa11e1"
         },
         "props.nativeButton": {
             "source": "cad78bc9f7fe7490",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.openOnHover": {
             "source": "96320e26ae99549e",
-            "guide": 1,
+            "guide": 2,
             "terms": "47f73f7a70aa11e1"
         },
         "props.payload": {
             "source": "278b5077cb3466e6",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     }

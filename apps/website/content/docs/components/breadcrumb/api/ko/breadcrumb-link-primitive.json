@@ -1,6 +1,6 @@
 {
     "name": "BreadcrumbLinkPrimitive",
-    "description": "Breadcrumb 경로에 있는 페이지로의 링크. 사용자가 현재 있는 페이지의 링크에는 `current`를 설정하세요. `<a>` 요소로 렌더링됩니다.",
+    "description": "Breadcrumb 경로에 있는 페이지로 연결되는 링크. 사용자가 있는 페이지의 링크에는 `current`를 설정하세요. `<a>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "current",
@@ -23,14 +23,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Breadcrumb.LinkPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Breadcrumb.LinkPrimitive.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용되는 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

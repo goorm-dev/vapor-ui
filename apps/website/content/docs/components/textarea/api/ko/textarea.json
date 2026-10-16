@@ -7,7 +7,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "사용자가 입력할 때 콘텐츠에 맞춰 textarea의 높이를 늘리고, 수동 크기 조절을 끕니다.",
+            "description": "사용자가 입력할 때 textarea의 높이를 콘텐츠에 맞게 늘리고, 수동 크기 조절을 끕니다.",
             "defaultValue": "false"
         },
         {
@@ -39,7 +39,7 @@
             "type": ["function"],
             "detailedType": "((value: string, event: Textarea.ChangeEventDetails) => void) | undefined",
             "required": false,
-            "description": "사용자가 입력하거나 붙여넣거나 삭제해 텍스트가 바뀔 때 호출됩니다. 새 텍스트와 변경 이벤트 정보를 받습니다. `disabled` 또는 `readOnly`가 설정되어 있으면 호출되지 않습니다."
+            "description": "사용자가 입력하거나 붙여넣거나 삭제해서 텍스트가 바뀔 때 호출됩니다. 새 텍스트와 변경 이벤트 상세 정보를 받습니다. `disabled` 또는 `readOnly`가 설정된 동안에는 호출되지 않습니다."
         },
         {
             "name": "value",
@@ -53,14 +53,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Textarea.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 CSS 클래스, 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Textarea.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 스타일, 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

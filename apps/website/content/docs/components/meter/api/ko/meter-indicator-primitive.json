@@ -1,20 +1,20 @@
 {
     "name": "MeterIndicatorPrimitive",
-    "description": "현재 값에 해당하는 트랙 영역을 채웁니다. `<div>` 요소로 렌더링됩니다.",
+    "description": "트랙에서 현재 값에 해당하는 부분을 채웁니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Meter.IndicatorPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Meter.IndicatorPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

@@ -2,52 +2,52 @@
     "icon-button": {
         "description": {
             "source": "1a38e6334c87cf8f",
-            "guide": 1,
+            "guide": 2,
             "terms": "859742149d3ea99f"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.colorPalette": {
             "source": "795e529a6b9ac5b9",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.focusableWhenDisabled": {
             "source": "2aedce00ed5b519e",
-            "guide": 1,
+            "guide": 2,
             "terms": "63afee4cf0610e2a"
         },
         "props.nativeButton": {
             "source": "cad78bc9f7fe7490",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.shape": {
             "source": "0663412f96ea8ed3",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.size": {
             "source": "19b0218aac93dd71",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.variant": {
             "source": "77828d3c3c04ef14",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         }
     }

@@ -1,13 +1,13 @@
 {
     "name": "PopoverRoot",
-    "description": "트리거에 고정된 플로팅 패널에 상호작용 가능한 콘텐츠를 표시하는 Popover 복합 컴포넌트의 루트. 열림 상태를 관리합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "description": "Popover 복합 컴포넌트의 루트. 트리거에 고정된 플로팅 패널로 상호작용 가능한 콘텐츠를 표시합니다. 열림 상태를 관리합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "defaultOpen",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Popover가 처음에 열려 있는지 여부.\n\nPopover를 제어 컴포넌트로 렌더링하려면 `open` prop을 대신 사용하세요."
+            "description": "Popover가 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요."
         },
         {
             "name": "onOpenChange",
@@ -28,49 +28,49 @@
             "type": ["React.RefObject<Popover.Root.Actions | null>"],
             "detailedType": "React.RefObject<Popover.Root.Actions | null> | undefined",
             "required": false,
-            "description": "명령형 액션에 대한 ref.\n- `unmount`: Popover를 수동으로 언마운트합니다.\n외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 호출하면 Popover를 명령형으로 닫습니다."
+            "description": "명령형 액션에 대한 ref.\n- `unmount`: Popover를 수동으로 언마운트합니다. 외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 호출하면 Popover를 명령형으로 닫습니다."
         },
         {
             "name": "children",
             "type": ["ReactNode", "function"],
             "detailedType": "ReactNode | ((arg: { payload: unknown; }) => ReactNode)",
             "required": false,
-            "description": "Popover의 콘텐츠.\n일반 React 노드이거나, 활성 트리거의 `payload`를 받는 렌더 함수일 수 있습니다."
+            "description": "Popover의 콘텐츠. 일반 React 노드이거나 활성 트리거의 `payload`를 받는 렌더링 함수일 수 있습니다."
         },
         {
             "name": "defaultTriggerId",
             "type": ["string", "null"],
             "detailedType": "string | null | undefined",
             "required": false,
-            "description": "Popover와 연결된 트리거의 ID.\n`defaultOpen` prop과 함께 사용해 처음부터 열려 있는 Popover를 만들 때 유용합니다."
+            "description": "Popover와 연결된 트리거의 ID. `defaultOpen` prop과 함께 쓰면 처음에 열려 있는 Popover를 만들 때 유용합니다."
         },
         {
             "name": "handle",
             "type": ["PopoverHandle<unknown>"],
             "detailedType": "PopoverHandle<unknown> | undefined",
             "required": false,
-            "description": "Popover를 트리거와 연결하는 핸들.\n지정하면 외부 트리거가 Popover의 열림 상태를 제어할 수 있습니다."
+            "description": "Popover를 트리거와 연결하는 핸들. 지정하면 외부 트리거가 Popover의 열림 상태를 제어할 수 있습니다."
         },
         {
             "name": "modal",
             "type": ["boolean", "trap-focus"],
             "detailedType": "boolean | \"trap-focus\" | undefined",
             "required": false,
-            "description": "Popover가 열릴 때 모달 상태가 되는지 결정합니다.\n- `true`: 사용자 상호작용이 Popover로 제한됩니다. 문서 페이지 스크롤이 잠기고 바깥 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과의 사용자 상호작용을 허용합니다.\n- `'trap-focus'`: 포커스는 Popover 안에 갇히지만, 문서 페이지 스크롤은 잠기지 않고 바깥의 포인터 상호작용도 계속 활성화됩니다.\n\n터치 기기에서 `true` 모달은 바깥 탭을 막지만, 팝업이 뷰포트 너비를 거의 가득 채우지 않는 한 페이지는 스크롤할 수 있습니다. 이는 iOS 네이티브 동작과 같습니다.\n\n`modal`이 `true`이면 `<Popover.Popup>` 안에 `<Popover.Close>`를 렌더링할 때만 포커스 트랩이 활성화됩니다. 필요하면 Tailwind의 `sr-only` 유틸리티처럼 직접 작성한 CSS로 시각적으로 숨길 수 있습니다.\n\n`modal`이 `'trap-focus'`이면 터치스크린 리더 사용자가 팝업에서 빠져나올 수 있도록 `<Popover.Popup>` 안에 `<Popover.Close>`를 렌더링하세요."
+            "description": "Popover가 열렸을 때 모달 상태가 되는지 여부.\n- `true`: 사용자 상호작용이 Popover로 제한됩니다. 문서 페이지 스크롤이 잠기고 바깥 요소의 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 사용자 상호작용을 허용합니다.\n- `'trap-focus'`: 포커스는 Popover 안에 갇히지만 문서 페이지 스크롤은 잠기지 않고 바깥의 포인터 상호작용도 계속 활성화됩니다.\n\n터치 기기에서 `true` 모달은 바깥 탭을 막지만, 팝업이 뷰포트 너비를 거의 다 차지하지 않으면 페이지를 스크롤할 수 있습니다. 네이티브 iOS 동작과 같습니다.\n\n`modal`이 `true`이면 `<Popover.Close>`를 `<Popover.Popup>` 안에 렌더링할 때만 포커스 트랩이 활성화됩니다. 필요하면 Tailwind의 `sr-only` 유틸리티 같은 직접 작성한 CSS로 시각적으로 숨길 수 있습니다.\n\n`modal`이 `'trap-focus'`이면 터치 스크린 리더 사용자가 팝업에서 빠져나올 수 있도록 `<Popover.Close>`를 `<Popover.Popup>` 안에 렌더링하세요."
         },
         {
             "name": "onOpenChangeComplete",
             "type": ["function"],
             "detailedType": "((open: boolean) => void) | undefined",
             "required": false,
-            "description": "Popover가 열리거나 닫힌 뒤 모든 애니메이션이 끝났을 때 호출되는 이벤트 핸들러."
+            "description": "Popover가 열리거나 닫힌 뒤 애니메이션이 모두 끝나면 호출되는 이벤트 핸들러."
         },
         {
             "name": "triggerId",
             "type": ["string", "null"],
             "detailedType": "string | null | undefined",
             "required": false,
-            "description": "Popover와 연결된 트리거의 ID.\n`open` prop과 함께 사용해 제어 Popover를 만들 때 유용합니다.\nPopover가 비제어일 때(즉 `open` prop을 설정하지 않았을 때)는 이 prop을 지정할 필요가 없습니다."
+            "description": "Popover와 연결된 트리거의 ID. `open` prop과 함께 쓰면 제어 Popover를 만들 때 유용합니다. Popover가 비제어일 때(즉 `open` prop을 설정하지 않았을 때)는 이 prop을 지정할 필요가 없습니다."
         }
     ],
     "typeRefs": {

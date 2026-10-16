@@ -2,101 +2,101 @@
     "avatar-fallback-primitive": {
         "description": {
             "source": "f43bc4454a3a40c3",
-            "guide": 1,
+            "guide": 2,
             "terms": "1a6f83e43baea56f"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "avatar-image-primitive": {
         "description": {
             "source": "7ef2b4e3f6def302",
-            "guide": 1,
+            "guide": 2,
             "terms": "1c6ab826fbc86afe"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     },
     "avatar-root": {
         "description": {
             "source": "8a6530c544241e53",
-            "guide": 1,
+            "guide": 2,
             "terms": "65f6d9e1c27ec78b"
         },
         "props.className": {
             "source": "a9c3e1445b7312eb",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         },
         "props.delay": {
             "source": "9096954e0767e334",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.fallbackElement": {
             "source": "4755c2ad5ed7ecca",
-            "guide": 1,
+            "guide": 2,
             "terms": "060540aeb57361be"
         },
         "props.imageElement": {
             "source": "4b8be7db07469c75",
-            "guide": 1,
+            "guide": 2,
             "terms": "060540aeb57361be"
         },
         "props.keepMounted": {
             "source": "9854a4a9700e2277",
-            "guide": 1,
+            "guide": 2,
             "terms": "a48bffc79c05ff98"
         },
         "props.onLoadingStatusChange": {
             "source": "856b02a8a4121627",
-            "guide": 1,
+            "guide": 2,
             "terms": "d807d0b0e57e911d"
         },
         "props.render": {
             "source": "65377c3eea346be4",
-            "guide": 1,
+            "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
         "props.shape": {
             "source": "7d8e40003674af8e",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.size": {
             "source": "0f3435b03ee0acd4",
-            "guide": 1,
+            "guide": 2,
             "terms": "4f53cda18c2baa0c"
         },
         "props.style": {
             "source": "b083218372e4d4ff",
-            "guide": 1,
+            "guide": 2,
             "terms": "345ff40e5505524c"
         }
     }

@@ -7,14 +7,14 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Menu가 처음에 열려 있는지 여부.\n\n제어 Menu를 렌더링하려면 `open` prop을 대신 사용하세요."
+            "description": "Menu가 처음에 열려 있는지 여부.\n\n제어 Menu를 렌더링하려면 대신 `open` prop을 사용하세요."
         },
         {
             "name": "onOpenChange",
             "type": ["function"],
             "detailedType": "((open: boolean, eventDetails: Menu.SubmenuRoot.OpenEventDetails) => void) | undefined",
             "required": false,
-            "description": "Menu를 열거나 닫을 때 호출되는 이벤트 핸들러."
+            "description": "Menu가 열리거나 닫힐 때 호출되는 이벤트 핸들러."
         },
         {
             "name": "open",
@@ -28,21 +28,21 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Menu.SubmenuRoot.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",
             "type": ["CSSProperties", "function"],
             "detailedType": "CSSProperties | ((state: Menu.SubmenuRoot.State) => (CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "actionsRef",
             "type": ["React.RefObject<Menu.Root.Actions | null>"],
             "detailedType": "React.RefObject<Menu.Root.Actions | null> | undefined",
             "required": false,
-            "description": "명령형 동작에 대한 ref.\n- `unmount`: Menu를 수동으로 언마운트합니다.\n  외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 지정하면 Menu를 명령형으로 닫을 수 있습니다."
+            "description": "명령형 동작에 접근하는 ref.\n- `unmount`: Menu를 수동으로 언마운트합니다. 외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 지정하면 Menu를 명령형으로 닫을 수 있습니다."
         },
         {
             "name": "children",
@@ -56,7 +56,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "하위 메뉴 안에 있을 때 Escape 키를 누르면 전체 Menu를 닫을지, 현재 하위 메뉴만 닫을지 결정합니다.",
+            "description": "하위 메뉴 안에서 Escape 키를 누르면 전체 Menu를 닫을지, 현재 하위 메뉴만 닫을지 정합니다.",
             "defaultValue": "false"
         },
         {
@@ -71,35 +71,35 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "포인터를 항목 위로 옮길 때 항목을 강조할지 여부.\n이 prop을 비활성화하면 CSS `:hover`와 `:focus`(`data-highlighted`) 상태를 구분할 수 있습니다."
+            "description": "포인터를 항목 위로 옮기면 항목을 강조할지 여부. 이 prop을 비활성화하면 CSS `:hover`와 `:focus`(`data-highlighted`) 상태를 구분할 수 있습니다."
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "화살표 키를 사용할 때 목록 끝에 도달하면 키보드 포커스를 첫 항목으로 되돌릴지 여부."
+            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 첫 항목으로 되돌릴지 여부."
         },
         {
             "name": "onOpenChangeComplete",
             "type": ["function"],
             "detailedType": "((open: boolean) => void) | undefined",
             "required": false,
-            "description": "Menu를 열거나 닫을 때 모든 애니메이션이 끝난 뒤 호출되는 이벤트 핸들러."
+            "description": "Menu가 열리거나 닫힌 뒤 애니메이션이 모두 끝나면 호출되는 이벤트 핸들러."
         },
         {
             "name": "orientation",
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
             "required": false,
-            "description": "Menu의 시각적 방향.\n로빙 포커스에 위/아래 화살표 키를 쓸지, 왼쪽/오른쪽 화살표 키를 쓸지 제어합니다."
+            "description": "Menu의 시각적 방향.\n로빙 포커스가 위/아래 화살표 키를 쓸지 왼쪽/오른쪽 화살표 키를 쓸지 결정합니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Menu.SubmenuRoot.State) => ReactElement) | undefined",
             "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {

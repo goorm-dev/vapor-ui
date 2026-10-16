@@ -1,6 +1,6 @@
 {
     "name": "MeterRoot",
-    "description": "디스크 사용량이나 점수처럼 정해진 범위 안의 측정값을 표시합니다. `<div>` 요소로 렌더링됩니다.",
+    "description": "디스크 사용량이나 점수처럼 알려진 범위 안의 측정값을 표시합니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "value",
@@ -21,14 +21,14 @@
             "type": ["default", "warning"],
             "detailedType": "\"default\" | \"warning\" | undefined",
             "required": false,
-            "description": "미터에서 채워진 영역의 색상."
+            "description": "미터에서 채워진 부분의 색상."
         },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Meter.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 CSS 클래스. 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "format",
@@ -42,7 +42,7 @@
             "type": ["function"],
             "detailedType": "((formattedValue: string, value: number) => string) | undefined",
             "required": false,
-            "description": "미터의 현재 값인 `aria-valuenow`를 사람이 읽을 수 있는 텍스트로 대체하는 문자열을 반환하는 함수."
+            "description": "미터의 현재 값인 `aria-valuenow`를 사람이 읽을 수 있는 텍스트로 대체해 주는 문자열을 반환하는 함수."
         },
         {
             "name": "locale",
@@ -72,7 +72,7 @@
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Meter.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "요소에 적용할 스타일. 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",
