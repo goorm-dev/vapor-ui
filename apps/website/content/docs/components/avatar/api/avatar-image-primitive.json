@@ -25,6 +25,6 @@
         }
     ],
     "typeRefs": {
-        "Avatar.ImagePrimitive.State": "{\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n  imageLoadingStatus: \"idle\" | \"loading\" | \"loaded\" | \"error\";\n}"
+        "Avatar.ImagePrimitive.State": "{\n  transitionStatus: \"idle\" | \"starting\" | \"ending\" | undefined;\n  imageLoadingStatus: \"loading\" | \"idle\" | \"loaded\" | \"error\";\n}"
     }
 }

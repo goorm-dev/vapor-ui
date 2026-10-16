@@ -7,14 +7,14 @@
             "type": ["inherit", "primary"],
             "detailedType": "\"inherit\" | \"primary\" | undefined",
             "required": false,
-            "description": "Controls the stroke color of the spinning arc. Use `inherit` when placing the spinner on a colored or filled background; the stroke color will inherit from the parent element's `color` property."
+            "description": "Color palette of the spinner, applied to the stroke of the spinning arc. Use `inherit` to take the stroke color from the parent element's `color`, such as on a filled background."
         },
         {
             "name": "size",
             "type": ["md", "lg", "xl"],
             "detailedType": "\"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Controls the overall dimensions of the spinner.",
+            "description": "Size of the spinner, controlling width, height, and stroke width.",
             "defaultValue": "md"
         },
         {

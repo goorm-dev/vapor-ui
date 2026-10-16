@@ -1,11 +1,13 @@
 {
     "name": "Badge",
+    "description": "Small label that shows a status, category, or count next to other content. Renders a `<span>` element.",
     "props": [
         {
             "name": "colorPalette",
-            "type": ["hint", "primary", "success", "warning", "danger", "contrast"],
-            "detailedType": "\"hint\" | \"primary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
+            "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
+            "detailedType": "\"primary\" | \"success\" | \"warning\" | \"danger\" | \"hint\" | \"contrast\" | undefined",
             "required": false,
+            "description": "Color palette of the badge, applied to its background and text.",
             "defaultValue": "primary"
         },
         {
@@ -13,13 +15,15 @@
             "type": ["square", "pill"],
             "detailedType": "\"square\" | \"pill\" | undefined",
             "required": false,
+            "description": "Corner style of the badge.",
             "defaultValue": "square"
         },
         {
             "name": "size",
-            "type": ["sm", "md", "lg"],
-            "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
+            "type": ["md", "sm", "lg"],
+            "detailedType": "\"md\" | \"sm\" | \"lg\" | undefined",
             "required": false,
+            "description": "Size of the badge, controlling height, padding, and typography.",
             "defaultValue": "md"
         },
         {

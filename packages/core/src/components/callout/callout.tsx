@@ -13,6 +13,9 @@ import * as styles from './callout.css';
  * CalloutRoot
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the Callout compound component, a colored box that highlights a short message such as a notice, tip, or warning. Renders a `<div>` element.
+ */
 export const CalloutRoot = forwardRef<HTMLDivElement, CalloutRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(componentProps, [
@@ -35,6 +38,9 @@ CalloutRoot.displayName = 'CalloutRoot';
  * CalloutIcon
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Holds an icon inside the callout, sized to the height of one line of its text. Renders a `<div>` element.
+ */
 export const CalloutIcon = forwardRef<HTMLDivElement, CalloutIcon.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 

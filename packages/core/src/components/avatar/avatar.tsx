@@ -28,7 +28,7 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarContext>({
 /* -----------------------------------------------------------------------------------------------*/
 
 /**
- * Avatar component for displaying a user's profile image with an automatic initial-based fallback. Renders a `<span>` element.
+ * Combines `Avatar.ImagePrimitive` and `Avatar.FallbackPrimitive` into a single part that shows a user's profile image, falling back to the first letter of `alt` when the image is missing or fails to load. Pass the primitives as `children`, or use `imageElement` or `fallbackElement`, to replace the image or fallback. Renders a `<span>` element.
  */
 export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
     const { imageElement, fallbackElement, className, children, ...componentProps } =
@@ -134,7 +134,7 @@ AvatarImagePrimitive.displayName = 'Avatar.ImagePrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Fallback part of the avatar shown when the image fails to load or is not provided. Displays initials derived from the `alt` text. Renders a `<span>` element.
+ * Fallback shown in place of the avatar image when it fails to load or isn't provided. Shows the first letter of the `alt` text unless `children` are given, on a background color picked from `alt`. Renders a `<span>` element.
  */
 export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbackPrimitive.Props>(
     (props, ref) => {
@@ -231,6 +231,7 @@ export interface AvatarRootProps extends Assign<
     AvatarContext
 > {
     /**
+     * Replaces the default `Avatar.ImagePrimitive`. Ignored when `children` are given.
      * @deprecated Use children to compose Avatar.ImagePrimitive directly instead.
      * @example
      * <Avatar.Root src="..." alt="...">
@@ -240,6 +241,7 @@ export interface AvatarRootProps extends Assign<
      */
     imageElement?: ReactElement<AvatarImagePrimitive.Props>;
     /**
+     * Replaces the default `Avatar.FallbackPrimitive`. Ignored when `children` are given.
      * @deprecated Use children to compose Avatar.FallbackPrimitive directly instead.
      * @example
      * <Avatar.Root src="..." alt="...">

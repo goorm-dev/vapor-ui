@@ -14,12 +14,12 @@
             "type": ["sm", "md", "lg"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
             "required": false,
-            "description": "Size of the meter. Controls the height of the track."
+            "description": "Size of the meter, controlling the height of the track."
         },
         {
             "name": "type",
-            "type": ["default", "warning"],
-            "detailedType": "\"default\" | \"warning\" | undefined",
+            "type": ["warning", "default"],
+            "detailedType": "\"warning\" | \"default\" | undefined",
             "required": false,
             "description": "Color of the filled portion of the meter."
         },

@@ -7,7 +7,7 @@
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "detailedType": "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
             "required": false,
-            "description": "Color palette applied to the button. Controls the background, text, and border colors for all visual variants.",
+            "description": "Color palette of the button, applied to its background, text, and border according to `variant`.",
             "defaultValue": "primary"
         },
         {

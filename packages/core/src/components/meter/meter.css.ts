@@ -24,7 +24,7 @@ export const track = componentRecipe({
     defaultVariants: { size: 'md' },
     variants: {
         /**
-         * Size of the meter. Controls the height of the track.
+         * Size of the meter, controlling the height of the track.
          */
         size: {
             sm: { height: vars.size.dimension['050'] },
