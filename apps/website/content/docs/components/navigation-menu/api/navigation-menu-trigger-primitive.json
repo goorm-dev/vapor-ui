@@ -1,5 +1,6 @@
 {
     "name": "NavigationMenuTriggerPrimitive",
+    "description": "Button that opens the content of its item when hovered or clicked. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

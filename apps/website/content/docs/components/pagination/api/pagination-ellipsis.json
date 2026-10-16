@@ -2,6 +2,13 @@
     "name": "PaginationEllipsis",
     "props": [
         {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Icon shown for the skipped pages. Replaces the default more icon."
+        },
+        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Pagination.EllipsisPrimitive.State) => (string | undefined)) | undefined",

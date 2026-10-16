@@ -7,9 +7,11 @@
 3. [Language](#language)
 4. [Format](#format)
 5. [Component summary](#component-summary)
-6. [Prop descriptions](#prop-descriptions)
-7. [Complete example](#complete-example)
-8. [Checklist](#checklist)
+6. [Primitive vs combined parts](#primitive-vs-combined-parts)
+7. [Prop descriptions](#prop-descriptions)
+8. [Shared phrases](#shared-phrases)
+9. [Complete example](#complete-example)
+10. [Checklist](#checklist)
 
 ---
 
@@ -59,7 +61,6 @@ When custom props are defined via an `interface`, write JSDoc on the **interface
 export interface DialogRootProps
     extends DialogVariants, Omit<BaseDialog.Root.Props, 'disablePointerDismissal'> {
     /**
-     *
      * Closes the dialog when the overlay is clicked.
      */
     closeOnClickOverlay?: boolean;
@@ -141,15 +142,21 @@ The documentation site supports Korean and English, but the source is English. K
 
 ## Format
 
-**Always leave the first line of every JSDoc block empty.**
+**Put `/**` on its own line and start the text on the next line.**
 
-Do not write content on the line immediately after `/**`. Even single-line comments must use the multi-line form.
+Never write a one-line `/** ... */` block, even for a short description — this applies to internal types too. Don't add an empty ` *` line between `/**` and the text.
 
 ```tsx
-// ❌ content on first line
+// ❌ one-line block
 /** Button component for user interactions. */
 
-// ✅ first line is empty
+// ❌ empty line before the text
+/**
+ *
+ * Button component for user interactions.
+ */
+
+// ✅
 /**
  * Button component for user interactions.
  */
@@ -159,7 +166,7 @@ Do not write content on the line immediately after `/**`. Even single-line comme
 
 ## Component Summary
 
-The JSDoc block directly above the component declaration. It's the first thing a developer reads on the documentation site.
+The JSDoc block directly above `export const X = forwardRef(...)`. The extractor reads the JSDoc attached to that statement, so a block anywhere else (e.g. on the namespace) is not picked up. It's the first thing a developer reads on the documentation site.
 
 ### Rules
 
@@ -171,7 +178,7 @@ No line breaks inside the summary. Separate sentences with `.` only.
 /**
  * Button component for user interactions. Use for primary actions such as form submission, dialog triggers, and navigation.
  */
-export function Button(props: ButtonProps) { ... }
+export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => { ... });
 ```
 
 **2. Write for a developer who has never seen this component**
@@ -225,6 +232,32 @@ End the summary with the element the component renders by default. Wrap the HTML
 
 ---
 
+## Primitive vs Combined Parts
+
+Compound components often ship both a `XxxPrimitive` part and a part that assembles several primitives (e.g. `Tooltip.Popup` renders `Tooltip.PortalPrimitive` → `Tooltip.PositionerPrimitive` → `Tooltip.PopupPrimitive`). The two summaries must let a reader tell them apart at a glance.
+
+**Primitive** — describe the part itself: what it is, what it does, then the rendered element.
+
+```tsx
+/**
+ * Positions the tooltip popup relative to its trigger. Renders a `<div>` element.
+ */
+export const TooltipPositionerPrimitive = forwardRef(...);
+```
+
+**Combined part** — start with "Combines …", list the primitives it assembles, name the `xxxElement` props that replace each piece (if it has any), then the rendered element. Don't call it a "wrapper".
+
+```tsx
+/**
+ * Combines `Tooltip.PortalPrimitive`, `Tooltip.PositionerPrimitive`, and `Tooltip.PopupPrimitive` into a single part. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.
+ */
+export const TooltipPopup = forwardRef(...);
+```
+
+A styled part that doesn't assemble other primitives (it only adds Vapor styles to one Base UI part) is not a combined part — describe it like any other part.
+
+---
+
 ## Prop Descriptions
 
 Write on each property inside the Props interface or type declaration. In TypeScript projects, write on the Props interface — not on the component function — for better tool compatibility.
@@ -268,13 +301,11 @@ Explain what happens when the prop is set — especially when it interacts with 
 
 ```tsx
 /**
- *
  * Disables the button, blocking all interactions and dimming its appearance. Automatically set to `true` when `loading` is `true`.
  */
 disabled?: boolean;
 
 /**
- *
  * Shows a spinner and disables the button while `true`.
  */
 loading?: boolean;
@@ -309,7 +340,7 @@ onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 
 **5. Never document default values**
 
-Don't write the `@default` tag and don't write `Default:` inline. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag; it reads `defaultValue` from code — the component function's destructuring defaults, then the `defaultVariants` of the recipe the component calls — so a default written in JSDoc is rendered twice in the docs table (see the README's "Default values"). Existing `@default` tags in the codebase stay as they are — just don't add new ones.
+Don't write the `@default` tag and don't write `Default:` inline. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag; it reads `defaultValue` from code — the component function's destructuring defaults, then the `defaultVariants` of the recipe the component calls — so a default written in JSDoc is either ignored (`@default`) or rendered twice in the docs table (inline text). Remove any `@default` tag you find.
 
 ```tsx
 // ❌ default duplicated in the docs table
@@ -327,48 +358,109 @@ disabled?: boolean;
 disabled?: boolean;
 ```
 
+**6. Say what goes in `children`**
+
+Describe what the slot is for, with an example. For a function child, describe the arguments it receives.
+
+```tsx
+// ❌ restates the type
+/**
+ * Children of the component.
+ */
+children?: ReactNode;
+
+// ✅
+/**
+ * Content shown inside the badge, such as a label or count.
+ */
+children?: ReactNode;
+
+// ✅ function child
+/**
+ * Text shown for the selected value. As a function, receives the selected value and returns the label to display.
+ */
+children?: ReactNode | ((value: string) => ReactNode);
+```
+
+**7. Re-declare inherited props that have no description**
+
+Some Base UI parts declare a prop (often `children` or an event handler) without JSDoc. You can't edit Base UI, so re-declare the prop in the part's Props with the Base UI type and document it there — the extractor prefers vapor-ui's own declaration. Keep the type identical by indexing into the Base UI props.
+
+```tsx
+// before
+export namespace MenuTrigger {
+    export type State = BaseMenu.Trigger.State;
+    export type Props = VaporUIComponentProps<typeof BaseMenu.Trigger, State>;
+}
+
+// after
+export namespace MenuTrigger {
+    export type State = BaseMenu.Trigger.State;
+    export interface Props extends VaporUIComponentProps<typeof BaseMenu.Trigger, State> {
+        /**
+         * Content shown inside the trigger, such as a label or an icon.
+         */
+        children?: BaseMenu.Trigger.Props['children'];
+    }
+}
+```
+
+---
+
+## Shared Phrases
+
+Props that repeat across components start from the same sentence so readers (and agents) see the same meaning everywhere. Replace `{part}` with the part's name in plain words ("button", "checkbox", "text input"), then append only what differs for that component.
+
+| Prop                | Phrase                                                                                                       | Add when                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| `size`              | `Size of the {part}, controlling height, padding, and typography.`                                           | Drop the items the size doesn't change (e.g. an icon-only part)                         |
+| `invalid`           | `Marks the {part} as invalid, applying error styles.`                                                        | Append "Sets `aria-invalid` on the {element}." when the code sets it                    |
+| `disabled`          | `Disables the {part}, blocking all interactions.`                                                            | Mention props that force it (e.g. `loading`)                                            |
+| `children`          | `Content shown inside the {part}, such as …`                                                                 | Always give the example; see rule 6                                                     |
+| `portalElement`     | ``Replaces the default `X.PortalPrimitive`. Use to change the portal container.``                            | —                                                                                       |
+| `overlayElement`    | ``Replaces the default `X.OverlayPrimitive`. Use to change the backdrop.``                                   | —                                                                                       |
+| `positionerElement` | ``Replaces the default `X.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup.`` | Say what the positioner controls for that part (e.g. Sheet: the side it slides in from) |
+
 ---
 
 ## Complete Example
 
+```ts
+// badge.css.ts
+export const root = componentRecipe({
+    defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
+    variants: {
+        /**
+         * Color palette of the badge, applied to its background and text.
+         */
+        colorPalette: { primary: {}, hint: {}, danger: {}, success: {}, warning: {}, contrast: {} },
+
+        /**
+         * Size of the badge, controlling height, padding, and typography.
+         */
+        size: { sm: {}, md: {}, lg: {} },
+
+        /**
+         * Corner style of the badge.
+         */
+        shape: { square: {}, pill: {} },
+    },
+});
+```
+
 ```tsx
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    /**
-     * Text displayed on the button.
-     */
-    label: string;
-
-    /**
-     * Visual style of the button.
-     */
-    variant?: 'fill' | 'outline' | 'ghost';
-
-    /**
-     * Size of the button.
-     */
-    size?: 'sm' | 'md' | 'lg';
-
-    /**
-     * Disables the button, blocking all interactions. Automatically set to `true` when `loading` is `true`.
-     */
-    disabled?: boolean;
-
-    /**
-     * Shows a spinner and disables the button while `true`.
-     */
-    loading?: boolean;
-
-    /**
-     * Called when the button is clicked or activated via Enter or Space key.
-     */
-    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
+// badge.tsx
 /**
- * Button component for user interactions. Use for primary actions such as form submission, dialog triggers, and navigation. Renders a `<button>` element.
+ * Small label that shows a status, category, or count next to other content. Renders a `<span>` element.
  */
-export function Button({ label, variant = 'fill', size = 'md', ...props }: ButtonProps) {
+export const Badge = forwardRef<HTMLSpanElement, Badge.Props>((props, ref) => {
     // ...
+});
+
+export namespace Badge {
+    export type State = {};
+    // Standalone: no JSDoc on Props — variant docs live in badge.css.ts
+    export type Props = VaporUIComponentProps<'span', State> & BadgeVariants;
 }
 ```
 
@@ -382,7 +474,8 @@ export function Button({ label, variant = 'fill', size = 'md', ...props }: Butto
 
 **Format**
 
-- [ ] Every JSDoc block has an empty first line
+- [ ] `/**` is on its own line and the text starts on the next line
+- [ ] No one-line `/** ... */` blocks, including on internal types
 
 **Summary**
 
@@ -390,6 +483,7 @@ export function Button({ label, variant = 'fill', size = 'md', ...props }: Butto
 - [ ] Summary is a complete sentence describing what the component is
 - [ ] No internal implementation terms (`memoized`, `wrapper`, `token`, etc.)
 - [ ] Rendered HTML element is stated with backtick-wrapped tag (``Renders a `<x>` element.`` or `Doesn't render its own HTML element.`)
+- [ ] Combined parts start with "Combines …" and name their `xxxElement` props; primitives describe the part itself
 
 **Placement**
 
@@ -405,6 +499,8 @@ export function Button({ label, variant = 'fill', size = 'md', ...props }: Butto
 - [ ] Numeric props include unit and valid range
 - [ ] Props that interact with other props describe that interaction
 - [ ] Event handlers describe the exact trigger condition
+- [ ] `children` says what goes in the slot, with an example
+- [ ] Shared props (`size`, `invalid`, `disabled`, `children`) start from the shared phrase
 - [ ] No default values in descriptions — neither `@default` tags nor inline `Default:` text
 
 **Compound components**

@@ -11,6 +11,9 @@ import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
+/**
+ * Button that shows only an icon, for compact actions such as closing or editing. The icon is hidden from assistive technology, so give the button an `aria-label`. Renders a `<button>` element.
+ */
 export const IconButton = forwardRef<HTMLElement, IconButton.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 

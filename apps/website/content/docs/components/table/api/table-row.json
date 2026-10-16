@@ -1,5 +1,6 @@
 {
     "name": "TableRow",
+    "description": "Row of cells in the table, separated from the next row by a border. Renders a `<tr>` element.",
     "props": [
         {
             "name": "className",

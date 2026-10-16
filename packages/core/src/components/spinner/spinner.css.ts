@@ -17,8 +17,7 @@ export const root = componentRecipe({
     defaultVariants: { size: 'md' },
     variants: {
         /**
-         * Controls the overall dimensions of the spinner.
-         * @default 'md'
+         * Size of the spinner, controlling width, height, and stroke width.
          */
         size: {
             md: {
@@ -87,8 +86,7 @@ export const indicator = componentRecipe({
     defaultVariants: { colorPalette: 'primary' },
     variants: {
         /**
-         * Controls the stroke color of the spinning arc. Use `inherit` when placing the spinner on a colored or filled background; the stroke color will inherit from the parent element's `color` property.
-         * @default 'primary'
+         * Color palette of the spinner, applied to the stroke of the spinning arc. Use `inherit` to take the stroke color from the parent element's `color`, such as on a filled background.
          */
         colorPalette: {
             primary: { stroke: vars.color.background['primary'] },

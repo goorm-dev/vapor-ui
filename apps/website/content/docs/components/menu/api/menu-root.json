@@ -1,5 +1,6 @@
 {
     "name": "MenuRoot",
+    "description": "Root of the Menu compound component, a list of actions or options that opens from a trigger. Manages the open state and, when `disabled`, disables the trigger and every item. Doesn't render its own HTML element.",
     "props": [
         {
             "name": "defaultOpen",

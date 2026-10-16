@@ -1,5 +1,6 @@
 {
     "name": "TooltipPositionerPrimitive",
+    "description": "Positions the tooltip popup against its trigger and keeps it inside the viewport. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

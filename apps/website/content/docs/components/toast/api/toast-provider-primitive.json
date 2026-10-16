@@ -1,18 +1,20 @@
 {
     "name": "ToastProviderPrimitive",
+    "description": "Provides toast state to its children without showing any toasts, so you can build your own toast list from the other primitives. Doesn't render its own HTML element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Part of the app that can show toasts, typically the whole app."
+        },
         {
             "name": "toastManager",
             "type": ["ToastManager"],
             "detailedType": "ToastManager | undefined",
             "required": false,
-            "description": "A global manager for toasts to use outside of a React component."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
+            "description": "Toast manager created with `createToastManager`, for adding toasts from outside React components."
         },
         {
             "name": "limit",

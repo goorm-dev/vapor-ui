@@ -1,5 +1,6 @@
 {
     "name": "TableColumn",
+    "description": "Column inside `Table.ColumnGroup`, used to set the width or style of one or more columns. Renders a `<col>` element.",
     "props": [
         {
             "name": "className",

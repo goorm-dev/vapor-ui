@@ -13,6 +13,9 @@ import { useToggleGroupContext } from '../toggle-group/toggle-group';
 import * as styles from './toggle.css';
 import type { RootVariants } from './toggle.css';
 
+/**
+ * Two-state button that turns an option on or off, such as bold text formatting. Use alone or inside `ToggleGroup`. Renders a `<button>` element.
+ */
 export const Toggle = forwardRef<HTMLButtonElement, Toggle.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<RootVariants>()(componentProps, [
@@ -50,5 +53,10 @@ Toggle.displayName = 'Toggle';
 
 export namespace Toggle {
     export type State = BaseToggle.State;
-    export type Props = VaporUIComponentProps<typeof BaseToggle, State> & RootVariants;
+    export interface Props extends VaporUIComponentProps<typeof BaseToggle, State>, RootVariants {
+        /**
+         * Content shown inside the toggle, such as an icon. A single element child is hidden from assistive technologies, so give the toggle an `aria-label`.
+         */
+        children?: BaseToggle.Props['children'];
+    }
 }

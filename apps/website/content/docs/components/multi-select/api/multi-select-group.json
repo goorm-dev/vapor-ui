@@ -1,5 +1,6 @@
 {
     "name": "MultiSelectGroup",
+    "description": "Groups related options under a `MultiSelect.GroupLabel`. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

@@ -1,5 +1,6 @@
 {
     "name": "PopoverPopup",
+    "description": "Combines `Popover.PortalPrimitive`, `Popover.PositionerPrimitive`, and `Popover.PopupPrimitive` into a single part. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -13,14 +14,14 @@
             "type": ["ReactElement<PopoverPortalPrimitive.Props>"],
             "detailedType": "ReactElement<PopoverPortalPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for Popover.PortalPrimitive. If not provided, the default Popover.PortalPrimitive will be rendered."
+            "description": "Replaces the default `Popover.PortalPrimitive`. Use to change the portal container."
         },
         {
             "name": "positionerElement",
             "type": ["ReactElement<PopoverPositionerPrimitive.Props>"],
             "detailedType": "ReactElement<PopoverPositionerPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for Popover.PositionerPrimitive. If not provided, the default Popover.PositionerPrimitive will be rendered."
+            "description": "Replaces the default `Popover.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup."
         },
         {
             "name": "finalFocus",

@@ -7,7 +7,7 @@
             "type": ["none", "shimmer", "pulse"],
             "detailedType": "\"none\" | \"shimmer\" | \"pulse\" | undefined",
             "required": false,
-            "description": "Controls the animation style of the skeleton.",
+            "description": "Animation that shows the skeleton is loading.",
             "defaultValue": "shimmer"
         },
         {
@@ -15,7 +15,7 @@
             "type": ["square", "rounded"],
             "detailedType": "\"square\" | \"rounded\" | undefined",
             "required": false,
-            "description": "Controls the border radius of the skeleton.",
+            "description": "Corner style of the skeleton.",
             "defaultValue": "rounded"
         },
         {
@@ -23,7 +23,7 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Controls the height of the skeleton.",
+            "description": "Size of the skeleton, controlling height.",
             "defaultValue": "md"
         },
         {

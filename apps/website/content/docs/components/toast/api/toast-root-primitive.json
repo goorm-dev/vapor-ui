@@ -1,11 +1,13 @@
 {
     "name": "ToastRootPrimitive",
+    "description": "A single toast, colored by the `colorPalette` of its toast object. Renders a `<div>` element.",
     "props": [
         {
             "name": "toast",
             "type": ["ToastObjectType<any>"],
             "detailedType": "ToastObjectType<any>",
-            "required": true
+            "required": true,
+            "description": "Toast to show, usually one item of `useToastManager().toasts`. Its `colorPalette`, `icon`, `close`, and `actionProps` set the color, icon, close button, and action button of the toast."
         },
         {
             "name": "className",

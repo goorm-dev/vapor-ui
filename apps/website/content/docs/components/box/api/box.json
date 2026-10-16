@@ -1,5 +1,6 @@
 {
     "name": "Box",
+    "description": "Generic container for building layouts, styled with the `$css` prop or style props. Use when no other layout component fits. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

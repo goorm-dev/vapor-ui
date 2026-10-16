@@ -1,5 +1,6 @@
 {
     "name": "SheetDescription",
+    "description": "Paragraph that provides supplementary text for the sheet, linked to the sheet panel for assistive technologies. Renders a `<p>` element.",
     "props": [
         {
             "name": "className",

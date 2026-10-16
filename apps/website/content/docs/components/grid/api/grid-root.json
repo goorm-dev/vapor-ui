@@ -1,11 +1,13 @@
 {
     "name": "GridRoot",
+    "description": "Root of the Grid compound component, a container that lays out its children in rows and columns with CSS grid. Renders a `<div>` element.",
     "props": [
         {
             "name": "flow",
             "type": ["row", "column", "row-dense", "column-dense"],
             "detailedType": "\"row\" | \"column\" | \"row-dense\" | \"column-dense\" | undefined",
             "required": false,
+            "description": "Direction in which items without an explicit position are placed, set as the `grid-auto-flow` value. The `-dense` values fill earlier gaps with later items.",
             "defaultValue": "row"
         },
         {
@@ -19,7 +21,8 @@
             "name": "inline",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
-            "required": false
+            "required": false,
+            "description": "Displays the container as `inline-grid` instead of `grid`, so it sits inline with surrounding content."
         },
         {
             "name": "style",
@@ -32,13 +35,15 @@
             "name": "templateColumns",
             "type": ["string"],
             "detailedType": "string | undefined",
-            "required": false
+            "required": false,
+            "description": "Column tracks of the grid, set as the `grid-template-columns` value, such as `200px 1fr` or `repeat(3, 1fr)`."
         },
         {
             "name": "templateRows",
             "type": ["string"],
             "detailedType": "string | undefined",
-            "required": false
+            "required": false,
+            "description": "Row tracks of the grid, set as the `grid-template-rows` value, such as `auto 1fr` or `repeat(3, 1fr)`."
         },
         {
             "name": "render",

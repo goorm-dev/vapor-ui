@@ -1,5 +1,6 @@
 {
     "name": "TooltipPopup",
+    "description": "Combines `Tooltip.PortalPrimitive`, `Tooltip.PositionerPrimitive`, and `Tooltip.PopupPrimitive` into a single part. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -13,14 +14,14 @@
             "type": ["ReactElement<TooltipPortalPrimitive.Props>"],
             "detailedType": "ReactElement<TooltipPortalPrimitive.Props> | undefined",
             "required": false,
-            "description": "A custom element for Tooltip.PortalPrimitive. If not provided, the default Tooltip.PortalPrimitive will be rendered."
+            "description": "Replaces the default `Tooltip.PortalPrimitive`. Use to change the portal container."
         },
         {
             "name": "positionerElement",
             "type": ["ReactElement<TooltipPositionerPrimitive.Props>"],
             "detailedType": "ReactElement<TooltipPositionerPrimitive.Props> | undefined",
             "required": false,
-            "description": "A custom element for Tooltip.PositionerPrimitive. If not provided, the default Tooltip.PositionerPrimitive will be rendered."
+            "description": "Replaces the default `Tooltip.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup."
         },
         {
             "name": "style",

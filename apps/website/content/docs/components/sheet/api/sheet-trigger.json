@@ -1,5 +1,6 @@
 {
     "name": "SheetTrigger",
+    "description": "Button that opens the sheet when clicked. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

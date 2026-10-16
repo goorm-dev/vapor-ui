@@ -17,6 +17,9 @@ export const item = componentStyle({
 export const link = componentRecipe({
     defaultVariants: { size: 'md', current: false },
     variants: {
+        /**
+         * Size of the breadcrumb, controlling the typography of the links and the size of the separator and ellipsis icons.
+         */
         size: {
             sm: typography({ style: 'body4' }),
             md: typography({ style: 'body3' }),
@@ -24,6 +27,9 @@ export const link = componentRecipe({
             xl: typography({ style: 'body1' }),
         },
 
+        /**
+         * Marks the link as the current page, applying the active color and setting `aria-current="page"` and `aria-disabled` on the `<a>` element.
+         */
         current: {
             false: [
                 {

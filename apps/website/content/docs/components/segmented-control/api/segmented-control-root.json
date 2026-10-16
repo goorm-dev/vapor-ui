@@ -1,33 +1,34 @@
 {
     "name": "SegmentedControlRoot",
-    "description": "Root component for SegmentedControl. Renders a group of selectable segments with a sliding indicator. Use `SegmentedControlRootPrimitive` when you need to supply a custom indicator element. Renders a `<div>` element.",
+    "description": "Combines `SegmentedControl.RootPrimitive` and `SegmentedControl.IndicatorPrimitive` into a single part. Use `indicatorElement` to replace the indicator. Renders a `<div>` element.",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
-            "required": false
+            "required": false,
+            "description": "Size of the segmented control, controlling its padding and the height and padding of its segments."
         },
         {
             "name": "defaultValue",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "The default value of the SegmentedControl. This is used when you want the SegmentedControl to manage its own state. It should be the value of one of the SegmentedControl.Item components."
+            "description": "Value of the segment selected on first render, for an uncontrolled segmented control. Must match the `value` of a `SegmentedControl.Item`. When it is not set or matches no segment, the first enabled segment is selected."
         },
         {
             "name": "onValueChange",
             "type": ["function"],
             "detailedType": "((value: string, eventDetails: SegmentedControl.Root.ChangeEventDetails) => void) | undefined",
             "required": false,
-            "description": "Callback fired when the value of the SegmentedControl changes. It receives the new value and the original change event details from the underlying RadioGroup component. This is useful for handling side effects when the user selects a different segment."
+            "description": "Called when the user selects a different segment by clicking it or with the arrow keys. Receives the new value and the change event details."
         },
         {
             "name": "value",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "The controlled value of the SegmentedControl. This should be used in conjunction with `onValueChange` to update the value when the user interacts with the SegmentedControl."
+            "description": "Value of the selected segment, for a controlled segmented control. Use with `onValueChange` to update it when the user selects a segment."
         },
         {
             "name": "className",
@@ -41,7 +42,7 @@
             "type": ["ReactElement<SegmentedControlIndicatorPrimitive.Props>"],
             "detailedType": "ReactElement<SegmentedControlIndicatorPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for SegmentedControl.IndicatorPrimitive. If not provided, the default SegmentedControl.IndicatorPrimitive will be rendered."
+            "description": "Replaces the default `SegmentedControl.IndicatorPrimitive`. Use to change the look of the sliding highlight."
         },
         {
             "name": "disabled",

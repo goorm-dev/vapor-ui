@@ -1,5 +1,6 @@
 {
     "name": "TabsPanel",
+    "description": "Content area shown while the tab with the same `value` is active. Renders a `<div>` element.",
     "props": [
         {
             "name": "value",

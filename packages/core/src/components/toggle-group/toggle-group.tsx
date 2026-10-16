@@ -23,6 +23,9 @@ export const [ToggleGroupProvider, useToggleGroupContext] = createContext<Toggle
  * ToggleGroup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Groups `Toggle` buttons so they share a pressed state, letting one or, with `multiple`, several be pressed at a time. Renders a `<div>` element.
+ */
 export const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroup.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ToggleGroupVariants>()(componentProps, [
@@ -50,5 +53,15 @@ type ToggleGroupVariants = RootVariants;
 
 export namespace ToggleGroup {
     export type State = BaseToggleGroup.State;
-    export type Props = VaporUIComponentProps<typeof BaseToggleGroup, State> & ToggleGroupVariants;
+    export interface Props
+        extends VaporUIComponentProps<typeof BaseToggleGroup, State>, ToggleGroupVariants {
+        /**
+         * Direction of keyboard navigation between the toggles: Left and Right arrow keys for `horizontal`, Up and Down arrow keys for `vertical`. Doesn't change the layout.
+         */
+        orientation?: BaseToggleGroup.Props['orientation'];
+        /**
+         * Toggles shown in the group, such as `Toggle` buttons.
+         */
+        children?: BaseToggleGroup.Props['children'];
+    }
 }

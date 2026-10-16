@@ -12,6 +12,9 @@ export const root = componentRecipe({
 
     defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
     variants: {
+        /**
+         * Color palette of the badge, applied to its background and text.
+         */
         colorPalette: {
             primary: {
                 backgroundColor: vars.color.background['primary-weak'],
@@ -39,6 +42,9 @@ export const root = componentRecipe({
             },
         },
 
+        /**
+         * Corner style of the badge.
+         */
         shape: {
             square: {
                 borderRadius: vars.size.borderRadius['300'],
@@ -48,6 +54,9 @@ export const root = componentRecipe({
             },
         },
 
+        /**
+         * Size of the badge, controlling height, padding, and typography.
+         */
         size: {
             sm: {
                 gap: vars.size.space['025'],

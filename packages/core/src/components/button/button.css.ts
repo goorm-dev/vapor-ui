@@ -75,7 +75,7 @@ export const root = componentRecipe({
         },
 
         /**
-         * Color palette applied to the button. Controls the background, text, and border colors for all visual variants.
+         * Color palette of the button, applied to its background, text, and border according to `variant`.
          */
         colorPalette: {
             primary: {

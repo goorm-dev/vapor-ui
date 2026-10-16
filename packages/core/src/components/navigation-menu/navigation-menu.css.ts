@@ -16,6 +16,9 @@ export const list = componentRecipe({
 
     defaultVariants: { direction: 'horizontal' },
     variants: {
+        /**
+         * Layout direction of the menu items, which also sets the arrow keys that move focus between them.
+         */
         direction: {
             horizontal: { flexDirection: 'row' },
             vertical: { flexDirection: 'column' },
@@ -55,6 +58,9 @@ export const link = componentRecipe({
         size: 'md',
     },
     variants: {
+        /**
+         * Size of the links and triggers, controlling height, padding, and typography.
+         */
         size: {
             sm: {
                 gap: vars.size.space['075'],

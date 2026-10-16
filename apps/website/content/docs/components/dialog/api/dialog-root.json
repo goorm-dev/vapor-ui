@@ -1,6 +1,6 @@
 {
     "name": "DialogRoot",
-    "description": "Root of the Dialog compound component. Manages open state and provides size context to sub-parts. Doesn't render its own HTML element.",
+    "description": "Root of the Dialog compound component, a modal window that focuses the user on a task or a piece of information. Manages the open state and sets the popup size. Doesn't render its own HTML element.",
     "props": [
         {
             "name": "size",

@@ -20,6 +20,9 @@ import * as styles from './textarea.css';
  * Textarea
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Multi-line text field for longer input such as comments or descriptions. Set `autoResize` to grow its height with the content. Renders a `<textarea>` element.
+ */
 export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => {
     const {
         render,
@@ -135,15 +138,15 @@ export interface TextareaState {
 export interface TextareaFieldProps
     extends VaporUIComponentProps<'textarea', TextareaState>, TextareaVariants {
     /**
-     * The value of the textarea. Use when controlled.
+     * Current text in the field. Use when controlled.
      */
     value?: string;
     /**
-     * The default value of the textarea. Use when uncontrolled.
+     * Initial text in the field. Use when uncontrolled.
      */
     defaultValue?: string;
     /**
-     * Event handler called when the value of the textarea changes.
+     * Called when the text changes as the user types, pastes, or deletes. Receives the new text and the change event details. Not called while `disabled` or `readOnly` is set.
      */
     onValueChange?: (value: string, event: Textarea.ChangeEventDetails) => void;
 }

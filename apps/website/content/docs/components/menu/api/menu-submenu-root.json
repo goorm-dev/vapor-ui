@@ -1,5 +1,6 @@
 {
     "name": "MenuSubmenuRoot",
+    "description": "Root of a nested submenu inside a menu. Place `Menu.SubmenuTriggerItem` and `Menu.SubmenuPopup` inside it. Doesn't render its own HTML element.",
     "props": [
         {
             "name": "defaultOpen",

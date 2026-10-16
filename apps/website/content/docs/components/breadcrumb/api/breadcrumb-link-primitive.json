@@ -1,11 +1,13 @@
 {
     "name": "BreadcrumbLinkPrimitive",
+    "description": "Link to a page in the breadcrumb trail. Set `current` on the link for the page the user is on. Renders an `<a>` element.",
     "props": [
         {
             "name": "current",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
+            "description": "Marks the link as the current page, applying the active color and setting `aria-current=\"page\"` and `aria-disabled` on the `<a>` element.",
             "defaultValue": "false"
         },
         {
@@ -13,6 +15,7 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
+            "description": "Size of the breadcrumb, controlling the typography of the links and the size of the separator and ellipsis icons.",
             "defaultValue": "md"
         },
         {

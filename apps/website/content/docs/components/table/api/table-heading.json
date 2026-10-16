@@ -1,5 +1,6 @@
 {
     "name": "TableHeading",
+    "description": "Header cell that labels a column or row. Renders a `<th>` element.",
     "props": [
         {
             "name": "className",

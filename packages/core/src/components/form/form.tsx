@@ -5,6 +5,9 @@ import { Form as BaseForm } from '@base-ui/react/form';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+/**
+ * Form that collects its fields' values and shows their validation errors in one place. Use with `Field` parts to validate on submit, blur, or change. Renders a `<form>` element.
+ */
 export const Form = forwardRef<HTMLFormElement, Form.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 

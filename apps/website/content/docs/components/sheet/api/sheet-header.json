@@ -1,5 +1,6 @@
 {
     "name": "SheetHeader",
+    "description": "Top section of the sheet, typically containing the title and a close button. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

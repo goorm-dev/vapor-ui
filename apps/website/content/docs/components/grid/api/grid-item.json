@@ -1,5 +1,6 @@
 {
     "name": "GridItem",
+    "description": "Item inside `Grid.Root` that can be placed across or span several rows and columns. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -12,13 +13,15 @@
             "name": "colSpan",
             "type": ["string"],
             "detailedType": "string | undefined",
-            "required": false
+            "required": false,
+            "description": "Columns the item occupies, set as the `grid-column` value, such as `span 2` or `1 / 3`."
         },
         {
             "name": "rowSpan",
             "type": ["string"],
             "detailedType": "string | undefined",
-            "required": false
+            "required": false,
+            "description": "Rows the item occupies, set as the `grid-row` value, such as `span 2` or `1 / 3`."
         },
         {
             "name": "style",

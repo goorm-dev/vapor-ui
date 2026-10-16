@@ -1,13 +1,13 @@
 {
     "name": "AvatarRoot",
-    "description": "Avatar component for displaying a user's profile image with an automatic initial-based fallback. Renders a `<span>` element.",
+    "description": "Combines `Avatar.ImagePrimitive` and `Avatar.FallbackPrimitive` into a single part that shows a user's profile image, falling back to the first letter of `alt` when the image is missing or fails to load. Pass the primitives as `children`, or use `imageElement` or `fallbackElement`, to replace the image or fallback. Renders a `<span>` element.",
     "props": [
         {
             "name": "shape",
             "type": ["circle", "square"],
             "detailedType": "\"circle\" | \"square\" | undefined",
             "required": false,
-            "description": "Shape of the avatar border radius.",
+            "description": "Corner style of the avatar.",
             "defaultValue": "square"
         },
         {
@@ -15,7 +15,7 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the avatar. Controls the width, height, and border radius.",
+            "description": "Size of the avatar, controlling width, height, corner radius, and the typography of the fallback.",
             "defaultValue": "md"
         },
         {
@@ -36,13 +36,15 @@
             "name": "fallbackElement",
             "type": ["ReactElement<AvatarFallbackPrimitive.Props>"],
             "detailedType": "ReactElement<AvatarFallbackPrimitive.Props> | undefined",
-            "required": false
+            "required": false,
+            "description": "Replaces the default `Avatar.FallbackPrimitive`. Ignored when `children` are given."
         },
         {
             "name": "imageElement",
             "type": ["ReactElement<AvatarImagePrimitive.Props>"],
             "detailedType": "ReactElement<AvatarImagePrimitive.Props> | undefined",
-            "required": false
+            "required": false,
+            "description": "Replaces the default `Avatar.ImagePrimitive`. Ignored when `children` are given."
         },
         {
             "name": "delay",

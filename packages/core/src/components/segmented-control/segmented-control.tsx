@@ -47,7 +47,7 @@ const [SegmentedControlProvider, useSegmentedControlContext] =
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Primitive root component for SegmentedControl without a built-in indicator. Use when you need full control over indicator rendering by supplying a custom `SegmentedControlIndicatorPrimitive`. Renders a `<div>` element.
+ * Group of segments for switching between a few options or views, where only one segment is selected at a time. Has no sliding indicator of its own; add `SegmentedControl.IndicatorPrimitive` inside it to highlight the selection. Renders a `<div>` element.
  */
 export const SegmentedControlRootPrimitive = forwardRef<
     HTMLDivElement,
@@ -182,7 +182,7 @@ SegmentedControlRootPrimitive.displayName = 'SegmentedControl.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Root component for SegmentedControl. Renders a group of selectable segments with a sliding indicator. Use `SegmentedControlRootPrimitive` when you need to supply a custom indicator element. Renders a `<div>` element.
+ * Combines `SegmentedControl.RootPrimitive` and `SegmentedControl.IndicatorPrimitive` into a single part. Use `indicatorElement` to replace the indicator. Renders a `<div>` element.
  */
 export const SegmentedControlRoot = forwardRef<HTMLDivElement, SegmentedControlRoot.Props>(
     (props, ref) => {
@@ -203,7 +203,7 @@ export const SegmentedControlRoot = forwardRef<HTMLDivElement, SegmentedControlR
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * An individual selectable segment within a SegmentedControl. Use for text-based or mixed content segments. Renders a `<button>` element.
+ * Selectable segment of a segmented control, labeled with text or with text and an icon. Renders a `<button>` element.
  */
 export const SegmentedControlItem = forwardRef<HTMLButtonElement, SegmentedControlItem.Props>(
     (props, ref) => {
@@ -241,7 +241,7 @@ SegmentedControlItem.displayName = 'SegmentedControl.Item';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * An icon-only variant of SegmentedControl.Item with square proportions. Use when a segment contains only an icon and no label text. Renders a `<button>` element.
+ * Square segment of a segmented control that holds only an icon, with no label text. Renders a `<button>` element.
  */
 export const SegmentedControlIconItem = forwardRef<HTMLButtonElement, SegmentedControlItem.Props>(
     (props, ref) => {
@@ -264,7 +264,7 @@ SegmentedControlIconItem.displayName = 'SegmentedControl.IconOnlyItem';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * The sliding selection indicator for SegmentedControl. Automatically positions and sizes itself to highlight the currently selected segment. Renders a `<div>` element.
+ * Highlight that slides to the selected segment and matches its width. Hidden from assistive technologies. Renders a `<div>` element.
  */
 export const SegmentedControlIndicatorPrimitive = forwardRef<
     HTMLDivElement,
@@ -328,15 +328,15 @@ export interface SegmentedControlRootPrimitiveProps extends Omit<
     'onValueChange'
 > {
     /**
-     * The controlled value of the SegmentedControl. This should be used in conjunction with `onValueChange` to update the value when the user interacts with the SegmentedControl.
+     * Value of the selected segment, for a controlled segmented control. Use with `onValueChange` to update it when the user selects a segment.
      */
     value?: string;
     /**
-     * The default value of the SegmentedControl. This is used when you want the SegmentedControl to manage its own state. It should be the value of one of the SegmentedControl.Item components.
+     * Value of the segment selected on first render, for an uncontrolled segmented control. Must match the `value` of a `SegmentedControl.Item`. When it is not set or matches no segment, the first enabled segment is selected.
      */
     defaultValue?: string;
     /**
-     * Callback fired when the value of the SegmentedControl changes. It receives the new value and the original change event details from the underlying RadioGroup component. This is useful for handling side effects when the user selects a different segment.
+     * Called when the user selects a different segment by clicking it or with the arrow keys. Receives the new value and the change event details.
      */
     onValueChange?: (
         value: string,
@@ -353,7 +353,7 @@ export namespace SegmentedControlRootPrimitive {
 
 export interface SegmentedControlRootProps extends SegmentedControlRootPrimitive.Props {
     /**
-     * A Custom element for SegmentedControl.IndicatorPrimitive. If not provided, the default SegmentedControl.IndicatorPrimitive will be rendered.
+     * Replaces the default `SegmentedControl.IndicatorPrimitive`. Use to change the look of the sliding highlight.
      */
     indicatorElement?: ReactElement<SegmentedControlIndicatorPrimitive.Props>;
 }
@@ -369,9 +369,13 @@ export interface SegmentedControlItemProps extends VaporUIComponentProps<
     SegmentedControlItem.State
 > {
     /**
-     * The value of the item. This is used to determine which item is selected. It should be unique within the SegmentedControl.
+     * Value that identifies the segment when it is selected. Must be unique within the segmented control.
      */
     value: string;
+    /**
+     * Content shown inside the segment, such as a label or an icon.
+     */
+    children?: BaseRadio.Root.Props['children'];
 }
 
 export namespace SegmentedControlItem {

@@ -15,6 +15,9 @@ import * as styles from './field.css';
  * Field
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the Field compound component, which connects a form control with its label, description, and validation messages. Renders a `<div>` element.
+ */
 export const FieldRoot = forwardRef<HTMLDivElement, FieldRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -27,6 +30,9 @@ FieldRoot.displayName = 'Field.Root';
  * Field.Label
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Label for the field's control, linked to it for assistive technologies. Renders a `<label>` element.
+ */
 export const FieldLabel = forwardRef<HTMLElement, FieldLabel.Props>((props, ref) => {
     const { typography, foreground, className, ...componentProps } = resolveStyles(props);
 
@@ -44,6 +50,9 @@ FieldLabel.displayName = 'Field.Label';
  * Field.Description
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Helper text that explains the field, announced to assistive technologies with the control. Renders a `<p>` element.
+ */
 export const FieldDescription = forwardRef<HTMLParagraphElement, FieldDescription.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -63,6 +72,9 @@ FieldDescription.displayName = 'Field.Description';
  * Field.Error
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Error message shown when the field fails validation. Use `match` to show it only for a specific validity state. Renders a `<div>` element.
+ */
 export const FieldError = forwardRef<HTMLDivElement, FieldError.Props>((props, ref) => {
     const { match, className, ...componentProps } = resolveStyles(props);
 
@@ -81,6 +93,9 @@ FieldError.displayName = 'Field.Error';
  * Field.Success
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Success message shown when the field passes validation. Renders a `<div>` element.
+ */
 export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>((props, ref) => {
     const { match = 'valid', className, ...componentProps } = resolveStyles(props);
 
@@ -99,6 +114,9 @@ FieldSuccess.displayName = 'Field.Success';
  * Field.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Groups a single checkbox or radio with its own label and description inside a checkbox group or radio group field. Renders a `<div>` element.
+ */
 export const FieldItem = forwardRef<HTMLDivElement, FieldItem.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -129,10 +147,7 @@ export interface FieldErrorProps extends Omit<
     'match'
 > {
     /**
-     * Determines whether to show the error message according to the field’s
-     * [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).
-     * @links https://github.com/mui/base-ui/blob/62e28c641db6d90647936ff0367d2b27641b7830/packages/react/src/field/error/FieldError.tsx#L137
-     * @default false
+     * Shows the message only for the given [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) key, such as `valueMissing` or `typeMismatch`. Set to `true` to always show it, letting an external library control its visibility. When omitted, the message shows whenever the field is invalid.
      */
     match?: boolean | keyof Omit<BaseField.ValidityData['state'], 'valid'>;
 }
@@ -147,10 +162,7 @@ export interface FieldSuccessProps extends Omit<
     'match'
 > {
     /**
-     * Determines whether to show the success message according to the field’s
-     * [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).
-     * @links https://github.com/mui/base-ui/blob/62e28c641db6d90647936ff0367d2b27641b7830/packages/react/src/field/error/FieldError.tsx#L137
-     * @default 'valid'
+     * Controls when the message is shown. With `'valid'`, it shows once the field passes validation. Set to `true` to always show it, letting an external library control its visibility.
      */
     match?: boolean | 'valid';
 }

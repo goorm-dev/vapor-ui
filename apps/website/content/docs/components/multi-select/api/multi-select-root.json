@@ -1,17 +1,20 @@
 {
     "name": "MultiSelectRoot",
+    "description": "Root of the MultiSelect compound component, which lets the user pick several options from a list in a popup. Manages the selected values and open state, and passes `size`, `invalid`, and `placeholder` to its parts. Doesn't render its own HTML element.",
     "props": [
         {
             "name": "invalid",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
-            "required": false
+            "required": false,
+            "description": "Marks the multi-select as invalid, applying error styles. Sets `aria-invalid` on the trigger `<button>` element."
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false
+            "required": false,
+            "description": "Size of the multi-select, controlling minimum height, padding, typography, and the size of its icon and badges."
         },
         {
             "name": "defaultOpen",
@@ -56,10 +59,18 @@
             "description": "The value of the select. Use when controlled."
         },
         {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Parts of the multi-select, such as `MultiSelect.Trigger` and `MultiSelect.Popup`."
+        },
+        {
             "name": "placeholder",
             "type": ["ReactNode"],
             "detailedType": "ReactNode",
-            "required": false
+            "required": false,
+            "description": "Text shown in the trigger when no value is selected. The `children` of `MultiSelect.ValuePrimitive`, or the label of an item whose value is `null` in `items`, takes precedence over it."
         },
         {
             "name": "actionsRef",
@@ -74,12 +85,6 @@
             "detailedType": "string | undefined",
             "required": false,
             "description": "Provides a hint to the browser for autofill."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "disabled",

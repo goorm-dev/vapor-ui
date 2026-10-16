@@ -1,5 +1,6 @@
 {
     "name": "CardHeader",
+    "description": "Top section of the card, typically containing a title, separated from the body by a border. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

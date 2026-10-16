@@ -1,5 +1,6 @@
 {
     "name": "SheetTitle",
+    "description": "Heading that labels the sheet for assistive technologies. Renders an `<h2>` element.",
     "props": [
         {
             "name": "className",

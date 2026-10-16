@@ -1,5 +1,6 @@
 {
     "name": "TabsList",
+    "description": "Combines `Tabs.ListPrimitive` and `Tabs.IndicatorPrimitive` into a single part, with the indicator after the tab buttons. Use `indicatorElement` to replace the indicator. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -13,7 +14,7 @@
             "type": ["ReactElement<TabsIndicatorPrimitive.Props>"],
             "detailedType": "ReactElement<TabsIndicatorPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for Tabs.IndicatorPrimitive. If not provided, the default Tabs.IndicatorPrimitive will be rendered."
+            "description": "Replaces the default `Tabs.IndicatorPrimitive`. Use to change how the active tab is highlighted."
         },
         {
             "name": "style",

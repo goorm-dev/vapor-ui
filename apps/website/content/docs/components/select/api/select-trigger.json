@@ -1,18 +1,20 @@
 {
     "name": "SelectTrigger",
+    "description": "Combines `Select.TriggerPrimitive`, `Select.ValuePrimitive`, and `Select.TriggerIconPrimitive` into a single part that shows the selected value and a chevron icon. Renders a `<button>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Not rendered: the trigger always shows the selected value and a chevron icon. Use `Select.TriggerPrimitive` to compose custom content."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Select.Trigger.State) => (string | undefined)) | undefined",
             "required": false,
             "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "disabled",

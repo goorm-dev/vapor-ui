@@ -1,5 +1,6 @@
 {
     "name": "SheetResizeHandle",
+    "description": "Handle on the inner edge of the sheet that resizes it by dragging or with the arrow keys. Place it inside `Sheet.Popup`. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -13,7 +14,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Blocks drag and keyboard resizing.",
+            "description": "Disables the handle, blocking drag and keyboard resizing.",
             "defaultValue": "false"
         },
         {
@@ -21,7 +22,7 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "Pixels adjusted per arrow-key press.",
+            "description": "Distance the sheet resizes per arrow-key press, in pixels.",
             "defaultValue": "RESIZE_STEP"
         },
         {

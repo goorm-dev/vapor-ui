@@ -1,5 +1,6 @@
 {
     "name": "NavigationMenuLink",
+    "description": "Link to a page in the navigation menu. Set `current` on the link for the page the user is on. Renders an `<a>` element.",
     "props": [
         {
             "name": "className",
@@ -13,14 +14,14 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the link is the currently active page."
+            "description": "Marks the link as the current page, applying the active style and setting `aria-current=\"page\"`."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "Disables the link, blocking all interactions. Removes `href` and sets `aria-disabled` on the `<a>` element. Takes precedence over `disabled` on `NavigationMenu.Root`."
         },
         {
             "name": "closeOnClick",

@@ -1,5 +1,6 @@
 {
     "name": "MenuCheckboxItemPrimitive",
+    "description": "Menu item that toggles a setting on or off. Renders a `<div>` element.",
     "props": [
         {
             "name": "checked",

@@ -1,11 +1,13 @@
 {
     "name": "RadioGroupRoot",
+    "description": "Root of the RadioGroup compound component, which groups radios so only one can be selected at a time. Shares `size` and `invalid` with the radios inside it. Renders a `<div>` element.",
     "props": [
         {
             "name": "size",
             "type": ["md", "lg"],
             "detailedType": "\"md\" | \"lg\" | undefined",
             "required": false,
+            "description": "Size of the radios in the group, controlling their width and height. A `Radio.Root` that sets its own `size` keeps it.",
             "defaultValue": "md"
         },
         {
@@ -30,6 +32,13 @@
             "description": "The controlled value of the radio item that should be currently selected.\n\nTo render an uncontrolled radio group, use the `defaultValue` prop instead."
         },
         {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Radios shown in the group, such as `Radio.Root` or `RadioCard` items and an optional `RadioGroup.Label`."
+        },
+        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: RadioGroup.Root.State) => (string | undefined)) | undefined",
@@ -40,7 +49,8 @@
             "name": "invalid",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
-            "required": false
+            "required": false,
+            "description": "Marks the radio group as invalid, applying error styles to every radio and radio card inside it. Sets `aria-invalid` on the `<div>` element."
         },
         {
             "name": "disabled",

@@ -1,5 +1,6 @@
 {
     "name": "ToolbarSeparator",
+    "description": "Vertical line that separates groups of toolbar items. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

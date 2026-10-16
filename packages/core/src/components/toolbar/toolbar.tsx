@@ -27,6 +27,9 @@ const [ToolbarProvider, useToolbarContext] = createContext<ToolbarContext>({
  * Toolbar.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the Toolbar compound component, a horizontal row of buttons and inputs that users move between with the arrow keys. Shares `size` with the items inside it. Renders a `<div>` element.
+ */
 export const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -54,6 +57,9 @@ ToolbarRoot.displayName = 'ToolbarRoot';
  * Toolbar.Group
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Groups related toolbar items so they can be disabled together. Renders a `<div>` element.
+ */
 export const ToolbarGroup = forwardRef<HTMLDivElement, ToolbarGroup.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -67,6 +73,9 @@ ToolbarGroup.displayName = 'ToolbarGroup';
  * Toolbar.Button
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Ghost-style button for an action in the toolbar, sized by the `size` of `Toolbar.Root`. Renders a `<button>` element.
+ */
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButton.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const { size } = useToolbarContext();
@@ -91,6 +100,9 @@ ToolbarButton.displayName = 'ToolbarButton';
  * Toolbar.Input
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Text input inside the toolbar, sized by the `size` of `Toolbar.Root`. Renders an `<input>` element.
+ */
 export const ToolbarInput = forwardRef<HTMLInputElement, ToolbarInput.Props>((props, ref) => {
     const { render, onChange, onValueChange, className, ...componentProps } = resolveStyles(props);
     const { size } = useToolbarContext();
@@ -121,6 +133,9 @@ ToolbarInput.displayName = 'ToolbarInput';
  * Toolbar.Separator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Vertical line that separates groups of toolbar items. Renders a `<div>` element.
+ */
 export const ToolbarSeparator = forwardRef<HTMLDivElement, ToolbarSeparator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -148,7 +163,12 @@ type ToolbarState = {
 export interface ToolbarRootProps extends Omit<
     VaporUIComponentProps<typeof BaseToolbar.Root, ToolbarRoot.State>,
     'orientation'
-> {}
+> {
+    /**
+     * Disables every button and input in the toolbar, blocking all interactions.
+     */
+    disabled?: BaseToolbar.Root.Props['disabled'];
+}
 
 export namespace ToolbarRoot {
     export type State = BaseToolbar.Root.State;
@@ -170,7 +190,11 @@ export interface ToolbarInputProps extends Omit<
     'size'
 > {
     /**
-     * Callback fired when the value of the Input changes. It receives the new value and the original change event details from the underlying BaseToolbar.Input component.
+     * Value shown in the input when it first renders. Use when the input is not controlled.
+     */
+    defaultValue?: BaseToolbar.Input.Props['defaultValue'];
+    /**
+     * Called each time the input value changes, such as on every keystroke. Receives the new value.
      */
     onValueChange?: (value: string) => void;
 }

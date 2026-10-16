@@ -1,17 +1,20 @@
 {
     "name": "BreadcrumbItem",
+    "description": "Combines `Breadcrumb.ItemPrimitive` and `Breadcrumb.LinkPrimitive` into a single part, one linked entry of the breadcrumb trail. Renders an `<a>` element inside an `<li>` element.",
     "props": [
         {
             "name": "current",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
-            "required": false
+            "required": false,
+            "description": "Marks the link as the current page, applying the active color and setting `aria-current=\"page\"` and `aria-disabled` on the `<a>` element."
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false
+            "required": false,
+            "description": "Size of the breadcrumb, controlling the typography of the links and the size of the separator and ellipsis icons."
         },
         {
             "name": "className",
