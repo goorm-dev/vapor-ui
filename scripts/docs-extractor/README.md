@@ -61,11 +61,11 @@ This section is the specification of the generated JSON. The extractor implement
 
 ### Consumers
 
-| Consumer                                                                                                                | Reads                                                                     |
-| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`), at build time                                           | file name, `description`, `props[]`                                       |
-| `apps/website` LLM text (`src/utils/get-component-doc.ts`): the `.mdx` routes and the docs packed into `@vapor-ui/core` | `props[]`                                                                 |
-| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL)                                                       | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
+| Consumer                                                                                                                            | Reads                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`), at build time, from `ko/`                                           | file name, `description`, `props[]`                                       |
+| `apps/website` LLM text (`src/utils/get-component-doc.ts`), from `en/`: the `.mdx` routes and the docs packed into `@vapor-ui/core` | `props[]`                                                                 |
+| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL)                                                                   | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
 
 `get-component-info.mjs` still reads the old `apps/website/public/components/generated/` path, which exists only at tags released before the move.
 
