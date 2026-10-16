@@ -1,0 +1,64 @@
+{
+    "slug": "alert-dialog",
+    "section": "related",
+    "frameNodeId": "3062:63227",
+    "sectionTitle": "Related components",
+    "blocks": [
+        {
+            "id": "3062:63241",
+            "group": "Dialog vs Alert Dialog",
+            "variant": "basic",
+            "title": null,
+            "subtitle": "Alert Dialog",
+            "description": "사용자의 결정을 한 번 더 확인하거나, 되돌릴 수 없는 작업을 수행하기 전\nAlert dialog를 사용합니다.",
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Alert Dialog",
+                "sectionSubtitleReading": null,
+                "body": "사용자의 결정을 한 번 더 확인하거나, 되돌릴 수 없는 작업을 수행하기 전\nAlert dialog를 사용합니다."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": "I3062:63241;3027:8766;3062:63240",
+                    "type": "AlertDialog",
+                    "description": null,
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { AlertDialog } from \"@vapor-ui/composites\"\n\nexport default function AlertDialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3062:63241;3027:8766;3062:63240\" data-name=\"AlertDialog\" data-snippet-language=\"React\">\n      <AlertDialog.Root type=\"critical\" description=\"템플릿을 삭제해도 이미 생성된 모집·설문폼은 유지됩니다.\" title=\"템플릿을 삭제하시겠어요?\" cancel={{/* Code Connect Logic Instance */}} action={{/* Code Connect Logic Instance */}}>\n        {/* Missing snippet for undefined */}\n      </AlertDialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3062:63238",
+            "group": "Dialog vs Alert Dialog",
+            "variant": "basic",
+            "title": null,
+            "subtitle": "Dialog",
+            "description": "사용자로부터 폼 입력을 받아야 하거나, 작업과 관련된 정보를 보여줄 때\nDialog를 사용합니다.",
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Dialog",
+                "sectionSubtitleReading": null,
+                "body": "사용자로부터 폼 입력을 받아야 하거나, 작업과 관련된 정보를 보여줄 때\nDialog를 사용합니다."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": "I3062:63238;3027:8766;3062:63237",
+                    "type": "Dialog",
+                    "description": null,
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "import { Dialog } from \"@vapor-ui/composites\"\n\nexport default function Dialog() {\n  return (\n    <CodeConnectSnippet data-node-id=\"I3062:63238;3027:8766;3062:63237\" data-name=\"Dialog\" data-snippet-language=\"React\">\n      <Dialog.Root\n        size=\"md\"\n        title=\"새 그룹 만들기\"\n\n        action={{/* Code Connect Logic Instance */}}\n      >\n        {/* Missing snippet for 0:102 */}\n      </Dialog.Root>\n    </CodeConnectSnippet>\n  );\n}"
+                    }
+                }
+            ]
+        }
+    ]
+}

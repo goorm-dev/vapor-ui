@@ -1,0 +1,196 @@
+{
+    "slug": "dialog",
+    "section": "bestPractices",
+    "frameNodeId": "2213:38874",
+    "sectionTitle": "Best practices",
+    "blocks": [
+        {
+            "id": "3027:12860",
+            "group": "Do + Don't",
+            "variant": "columns",
+            "title": null,
+            "subtitle": "Title",
+            "description": null,
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Title",
+                "sectionSubtitleReading": null,
+                "body": null
+            },
+            "samples": [
+                {
+                    "label": "Do",
+                    "nodeId": "I3027:12860;3027:8906;3035:13195",
+                    "type": "💙Button",
+                    "description": "[새 그룹 만들기] 버튼을 눌러 띄워진 다이얼로그 타이틀은 [새 그룹 만들기]로 작성합니다.",
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "<Button size=\"lg\" colorPalette=\"primary\" variant=\"fill\" />"
+                    }
+                },
+                {
+                    "label": "Don't",
+                    "nodeId": "I3027:12860;3027:8914;3035:13205",
+                    "type": "💙Button",
+                    "description": "트리거가 된 버튼의 레이블과 다른 타이틀을 사용하지 마세요. 사용자가 진행 맥락을 \n혼동할 수 있습니다.",
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "<Button size=\"lg\" colorPalette=\"primary\" variant=\"fill\" />"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3035:13231",
+            "group": "Do + Don't",
+            "variant": "columns",
+            "title": null,
+            "subtitle": "Button label",
+            "description": null,
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Button label",
+                "sectionSubtitleReading": null,
+                "body": null
+            },
+            "samples": [
+                {
+                    "label": "Do",
+                    "nodeId": "I3035:13231;3027:8906;3035:13544",
+                    "type": "Dialog",
+                    "description": "버튼을 눌렀을 때 어떤 결과가 나오는지 사용자가 예상할 수 있게 레이블을 작성하세요.",
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"훈련생 추가 정보 등록\" action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
+                },
+                {
+                    "label": "Don't",
+                    "nodeId": "I3035:13231;3027:8914;3035:13623",
+                    "type": "Dialog",
+                    "description": "결과와 관련 없거나 ‘확인’ 같은 모호한 레이블을 사용하지 마세요.",
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"훈련생 추가 정보 등록\" action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3035:13714",
+            "group": "Do + Don't",
+            "variant": "columns",
+            "title": null,
+            "subtitle": "Close button",
+            "description": null,
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Close button",
+                "sectionSubtitleReading": null,
+                "body": null
+            },
+            "samples": [
+                {
+                    "label": "Do",
+                    "nodeId": "I3035:13714;3027:8906;3035:13943",
+                    "type": "Dialog",
+                    "description": "닫기 버튼은 하나만 제공합니다.",
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"훈련생 추가 정보 등록\" action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
+                },
+                {
+                    "label": "Don't",
+                    "nodeId": "I3035:13714;3027:8914;3035:14243",
+                    "type": "Dialog",
+                    "description": "[X] 버튼과 [닫기] 버튼을 중복 배치하지 마세요.",
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"훈련생 추가 정보 등록\" assistive={/* … */} action={/* … */}>\n  {/* body */}\n</Dialog.Root>"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3035:14337",
+            "group": "Do + Don't",
+            "variant": "columns",
+            "title": null,
+            "subtitle": "Scroll",
+            "description": null,
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Scroll",
+                "sectionSubtitleReading": null,
+                "body": null
+            },
+            "samples": [
+                {
+                    "label": "Do",
+                    "nodeId": "I3035:14337;3027:8906;3035:14502",
+                    "type": "Dialog",
+                    "description": "콘텐츠가 길어질 경우 스크롤을 사용하여 콘텐츠를 구성합니다. ",
+                    "code": {
+                        "source": "code-connect",
+                        "component": "Dialog",
+                        "importPath": "@vapor-ui/composites",
+                        "snippet": "<Dialog.Root size=\"md\" title=\"문제 미리보기\">\n  {/* body */}\n</Dialog.Root>"
+                    }
+                },
+                {
+                    "label": "Don't",
+                    "nodeId": "I3035:14337;3027:8914;3035:14706",
+                    "type": "(Header)",
+                    "description": "가로 스크롤을 사용하지 마세요. 레이아웃을 조정하거나, 더 큰 사이즈의 다이얼로그를 사용하세요.",
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "// Raw Figma markup — (Header) primitive, no Code Connect mapping\n// Custom header with title \"문제 미리보기\" and close IconButton"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3035:14792",
+            "group": "Pattern",
+            "variant": "basic",
+            "title": null,
+            "subtitle": "Dialog에서 결정한 작업의 완료를 알릴 경우 Toast를 사용하세요",
+            "description": "다이얼로그에서 결정은 이미 끝났으므로 성공 결과는 간략하게 전달합니다.",
+            "raw": {
+                "sectionTitle": null,
+                "sectionSubtitle": "Dialog에서 결정한 작업의 완료를 알릴 경우 Toast를 사용하세요",
+                "sectionSubtitleReading": null,
+                "body": "다이얼로그에서 결정은 이미 끝났으므로 성공 결과는 간략하게 전달합니다."
+            },
+            "samples": [
+                {
+                    "label": null,
+                    "nodeId": "I3035:14792;3027:8766;3035:15038",
+                    "type": "(Popup)",
+                    "description": null,
+                    "code": {
+                        "source": "figma-mcp",
+                        "component": null,
+                        "importPath": null,
+                        "snippet": "// Raw Figma markup — (Popup) primitive, no Code Connect mapping\n// Custom dialog \"초대하기\" with TextInput + IconButton + two secondary Buttons"
+                    }
+                }
+            ]
+        }
+    ]
+}
