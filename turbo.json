@@ -29,32 +29,33 @@
                 "$TURBO_ROOT$/packages/core/src/**",
                 "$TURBO_ROOT$/packages/core/tsconfig.json",
                 "$TURBO_ROOT$/scripts/docs-extractor/src/**",
+                "$TURBO_ROOT$/scripts/docs-extractor/package.json",
+                "$TURBO_ROOT$/scripts/docs-extractor/tsconfig.json",
+                "$TURBO_ROOT$/pnpm-lock.yaml",
+                "$TURBO_ROOT$/.prettierrc.js",
+                "package.json",
                 "content/docs/components/*/index.mdx"
             ],
-            "outputs": ["content/docs/components/*/api/*.json"]
+            // Hand-written files the extractor never touches (HAND_WRITTEN_FILES in
+            // scripts/docs-extractor/src/write.ts) stay out, so a cache hit can't restore an old copy.
+            "outputs": [
+                "content/docs/components/*/api/*.json",
+                "!content/docs/components/toast/api/toast-object.json"
+            ]
         },
         "build": {
             "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
             "outputs": [".next/**", "!.next/cache/**", "dist/**"]
         },
-        "typecheck": {
-            "dependsOn": ["^build"]
-        },
-        "test": {
-            "outputs": [],
-            "dependsOn": ["^build"]
-        },
+        "typecheck": { "dependsOn": ["^build"] },
+        "test": { "outputs": [], "dependsOn": ["^build"] },
         "test:regressions": {
             "dependsOn": ["storybook#build:storybook"],
             "cache": false
         },
-        "lint": {
-            "dependsOn": ["^lint"]
-        },
-        "clean": {
-            "cache": false
-        },
+        "lint": { "dependsOn": ["^lint"] },
+        "clean": { "cache": false },
         "build:storybook": {
             "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
             "inputs": ["$TURBO_DEFAULT$"],
