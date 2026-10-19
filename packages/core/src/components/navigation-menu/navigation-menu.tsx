@@ -1,12 +1,13 @@
 'use client';
 
-import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement } from 'react';
+import { forwardRef } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
+import type { HTMLProps } from '@base-ui/react/types';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
-import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
+import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
@@ -106,6 +107,8 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             href,
             disabled: disabledProp,
             className: classNameProp,
+            style: styleProp,
+            render: renderProp,
             ...componentProps
         } = resolveStyles(props);
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
@@ -116,12 +119,25 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             current,
         });
 
-        // NOTE: Preprocessing `classNameProp` below to account for the custom NavigationMenuLink State type.
+        // NOTE: Base UI passes its own Link State to callbacks; map it to the custom NavigationMenuLink State.
+        const toState = (state: BaseNavigationMenu.Link.State): NavigationMenuLink.State => ({
+            ...state,
+            current: state.active,
+            disabled: !!disabled,
+        });
         const className =
             typeof classNameProp === 'function'
-                ? (state: BaseNavigationMenu.Link.State) =>
-                      classNameProp({ ...state, current: state.active, disabled: !!disabled })
+                ? (state: BaseNavigationMenu.Link.State) => classNameProp(toState(state))
                 : classNameProp;
+        const style =
+            typeof styleProp === 'function'
+                ? (state: BaseNavigationMenu.Link.State) => styleProp(toState(state))
+                : styleProp;
+        const render =
+            typeof renderProp === 'function'
+                ? (renderProps: HTMLProps, state: BaseNavigationMenu.Link.State) =>
+                      renderProp(renderProps, toState(state))
+                : renderProp;
 
         return (
             <BaseNavigationMenu.Link
@@ -131,6 +147,8 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
                 aria-disabled={disabled ? 'true' : undefined}
                 active={current}
                 className={cn(styles.link({ size }), className)}
+                style={style}
+                render={render}
                 {...dataAttrs}
                 {...componentProps}
             />
@@ -255,7 +273,7 @@ export const NavigationMenuPositionerPrimitive = forwardRef<
     const {
         side = 'bottom',
         align = 'center',
-        sideOffset = 8,
+        sideOffset = 10,
         collisionAvoidance,
         className,
         ...componentProps
@@ -279,46 +297,13 @@ NavigationMenuPositionerPrimitive.displayName = 'NavigationMenu.PositionerPrimit
  * NavigationMenu.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-const DATA_SIDE = 'data-side';
-const DATA_ALIGN = 'data-align';
-
 export const NavigationMenuPopupPrimitive = forwardRef<
     HTMLElement,
     NavigationMenuPopupPrimitive.Props
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
-    const [side, setSide] = useState<NavigationMenuPositionerPrimitive.Props['side']>();
-    const [align, setAlign] = useState<NavigationMenuPositionerPrimitive.Props['align']>();
-
-    const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
-
-    const popupRef = useRef<HTMLDivElement>(null);
+    const { popupRef, arrowRef, position } = useArrowPosition();
     const composedRef = composeRefs(popupRef, ref);
-
-    useEffect(() => {
-        if (!popupRef.current) return;
-
-        const dataset = popupRef.current.dataset;
-        const { side: initialSide, align: initialAlign } = extractPositions(dataset);
-
-        if (initialSide) setSide(initialSide);
-        if (initialAlign) setAlign(initialAlign);
-    }, []);
-
-    const arrowRef = useMutationObserverRef<HTMLDivElement>({
-        callback: (mutations) => {
-            mutations.forEach((mutation) => {
-                const { attributeName, target: mutationTarget } = mutation;
-
-                const dataset = (mutationTarget as HTMLElement).dataset;
-                const { side: nextSide, align: nextAlign } = extractPositions(dataset);
-
-                if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
-                if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
-            });
-        },
-        options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
-    });
 
     return (
         <BaseNavigationMenu.Popup
@@ -336,46 +321,14 @@ export const NavigationMenuPopupPrimitive = forwardRef<
 });
 NavigationMenuPopupPrimitive.displayName = 'NavigationMenu.PopupPrimitive';
 
-const extractPositions = (dataset: DOMStringMap) => {
-    const currentSide = dataset.side as NavigationMenuPositionerPrimitive.Props['side'];
-    const currentAlign = dataset.align as NavigationMenuPositionerPrimitive.Props['align'];
-    return { side: currentSide, align: currentAlign };
-};
-
-/* -----------------------------------------------------------------------------------------------*/
-
-type ArrowPositionProps = Pick<NavigationMenuPositionerPrimitive.Props, 'side' | 'align'> & {
-    offset?: number;
-};
-
-const getArrowPosition = ({
-    side = 'top',
-    align = 'center',
-    offset = 12,
-}: ArrowPositionProps): CSSProperties => {
-    const positionMap = {
-        'top-start': { left: offset, right: 'unset' },
-        'top-end': { left: 'unset', right: offset },
-        'bottom-start': { left: offset, right: 'unset' },
-        'bottom-end': { left: 'unset', right: offset },
-        'left-start': { top: offset, bottom: 'unset' },
-        'left-end': { top: 'unset', bottom: offset },
-        'right-start': { top: offset, bottom: 'unset' },
-        'right-end': { top: 'unset', bottom: offset },
-    };
-
-    const key = `${side}-${align}` as keyof typeof positionMap;
-    return positionMap[key] || {};
-};
-
 /* -----------------------------------------------------------------------------------------------*/
 
 const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
     return (
         <svg
             width="16"
-            height="8"
-            viewBox="0 0 16 8"
+            height="7"
+            viewBox="0 0 16 7"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             {...props}
@@ -390,6 +343,18 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
                 fill="currentColor"
             />
         </svg>
+
+        //         <svg xmlns="http://www.w3.org/2000/svg" width="7" height="16" viewBox="0 0 7 16" fill="none">
+        // <g clip-path="url(#clip0_33569_6404)">
+        // <path d="M5.82031 8.93457C6.37971 8.43733 6.37971 7.56267 5.82031 7.06543L-0.249999 1.66992L-0.25 14.3301L5.82031 8.93457Z" stroke="#E1E1E1" stroke-width="1.5"/>
+        // <path d="M5.62805 7.24431C6.08814 7.64306 6.08814 8.35694 5.62805 8.75569L-1 14.5L-0.999999 1.5L5.62805 7.24431Z" fill="white"/>
+        // </g>
+        // <defs>
+        // <clipPath id="clip0_33569_6404">
+        // <rect width="16" height="7" fill="white" transform="matrix(4.37114e-08 -1 -1 -4.37114e-08 7 16)"/>
+        // </clipPath>
+        // </defs>
+        // </svg>
     );
 };
 

@@ -1,7 +1,9 @@
 import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
+import { foregrounds } from '~/styles/mixins/foreground.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
+import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
 export const overlay = componentStyle({
@@ -71,35 +73,30 @@ export const popup = componentRecipe({
     },
 });
 
-export const title = componentStyle({
-    lineHeight: vars.typography.lineHeight['200'],
-    letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal'],
-    fontSize: vars.typography.fontSize['200'],
-    fontWeight: vars.typography.fontWeight['700'],
-});
+export const title = componentStyle([
+    foregrounds({ color: 'normal' }),
+    typography({ style: 'heading5' }),
+]);
 
-export const description = componentStyle({
-    lineHeight: vars.typography.lineHeight['075'],
-    letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal'],
-    fontSize: vars.typography.fontSize['075'],
-    fontWeight: vars.typography.fontWeight['400'],
-});
+export const description = componentStyle([
+    foregrounds({ color: 'hint' }),
+    typography({ style: 'subtitle1' }),
+]);
 
 export const header = componentStyle({
     display: 'flex',
     flexShrink: 0,
     alignItems: 'center',
-    gap: vars.size.space['150'],
-    paddingBlock: 0,
+    gap: vars.size.space['250'],
+    paddingTop: vars.size.space['300'],
+    paddingBottom: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
-    height: vars.size.dimension['700'],
 });
 
 export const body = componentStyle({
-    paddingBlock: 0,
+    marginTop: vars.size.space['250'],
+    paddingBottom: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
     overflowY: 'auto',
@@ -108,7 +105,8 @@ export const body = componentStyle({
 export const footer = componentStyle({
     display: 'flex',
     alignItems: 'center',
-    paddingBlock: vars.size.space['200'],
+    paddingTop: vars.size.space['250'],
+    paddingBottom: vars.size.space['300'],
     paddingInline: vars.size.space['300'],
     width: '100%',
 });

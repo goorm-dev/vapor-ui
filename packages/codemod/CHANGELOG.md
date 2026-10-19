@@ -1,5 +1,11 @@
 # @vapor-ui/codemod
 
+## 1.1.0
+
+### Node
+
+- Require Node.js 24 or later ([#676](https://github.com/goorm-dev/vapor-ui/pull/676)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
 ## 1.0.0
 
 ### Codemod
