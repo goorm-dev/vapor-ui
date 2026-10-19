@@ -44,8 +44,8 @@ export const success = componentStyle([
 
 export const label = componentRecipe({
     base: {
-        display: 'inline-flex',
-        gap: vars.size.space['050'],
+        display: 'flex',
+        gap: vars.size.space['100'],
 
         selectors: {
             [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
