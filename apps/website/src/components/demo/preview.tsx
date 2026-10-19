@@ -2,31 +2,26 @@
 
 import * as React from 'react';
 
-import { EXAMPLE_LOADERS } from './_examples.generated';
-
 interface PreviewProps {
     file: string;
 }
 
-const MissingExample = ({ file }: { file: string }) => (
-    <div className="not-prose text-v-danger-500">Example not registered: {file}</div>
-);
-
 export function Preview({ file }: PreviewProps) {
-    const Component = React.useMemo(() => {
-        const loader = EXAMPLE_LOADERS[file];
-        if (!loader) {
-            const Fallback = () => <MissingExample file={file} />;
-            Fallback.displayName = 'MissingExample';
-            return Fallback;
+    const Preview = React.useMemo(() => {
+        const rest = file.replace(/^\/?content\//, '');
+        const Component = React.lazy(() => import(`../../../content/${rest}`));
+
+        if (!Component) {
+            return <div>Component({file}) Not Found</div>;
         }
-        return React.lazy(loader);
+
+        return <Component />;
     }, [file]);
 
     return (
         <React.Suspense fallback={null}>
             <div className="not-prose p-v-300 min-h-75 flex flex-col justify-center items-center">
-                <Component />
+                {Preview}
             </div>
         </React.Suspense>
     );

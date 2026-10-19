@@ -8,10 +8,7 @@
         "clean": "rm -rf node_modules .next .turbo .source",
         "dev": "next dev --turbo",
         "extract": "ts-api-extractor --config ./docs-extractor.config.mjs",
-        "gen:demo-manifest": "node scripts/gen-demo-manifest.mjs",
-        "postinstall": "fumadocs-mdx && pnpm gen:demo-manifest",
-        "predev": "pnpm gen:demo-manifest",
-        "prebuild": "pnpm gen:demo-manifest",
+        "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src",
         "start": "next start",
         "typecheck": "tsc --noEmit"

@@ -4,9 +4,13 @@ import * as React from 'react';
 
 import { Text } from '@vapor-ui/core';
 
-import { EXAMPLE_LOADERS } from '~/components/demo/_examples.generated';
-
-const ComponentError = ({ file, error }: { file: string | undefined; error: string }) => {
+const ComponentError = ({
+    componentPath,
+    error,
+}: {
+    componentPath: string | undefined;
+    error: string;
+}) => {
     return (
         <div className="p-5 text-center text-v-danger">
             <Text typography="heading1" foreground="danger-100" render={<h1 />} className="mb-4">
@@ -15,9 +19,9 @@ const ComponentError = ({ file, error }: { file: string | undefined; error: stri
             <Text typography="body2" foreground="danger-100">
                 {error}
             </Text>
-            {file && (
+            {componentPath && (
                 <Text typography="body2" foreground="danger-100">
-                    {file}
+                    {componentPath}
                 </Text>
             )}
         </div>
@@ -33,22 +37,14 @@ function ComponentLoading() {
     );
 }
 
-function useDynamicComponent(file?: string) {
+function useDynamicComponent(componentPath?: string) {
     const [component, setComponent] = React.useState<React.ComponentType | null>(null);
     const [error, setError] = React.useState<string | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
-        if (!file) {
-            setError('No file provided');
-            setIsLoading(false);
-            return;
-        }
-
-        const key = file.startsWith('/') ? file : `/${file.replace(/^\.\//, '')}`;
-        const loader = EXAMPLE_LOADERS[key];
-        if (!loader) {
-            setError(`Example not registered: ${key}`);
+        if (!componentPath) {
+            setError('No component path provided');
             setIsLoading(false);
             return;
         }
@@ -57,30 +53,34 @@ function useDynamicComponent(file?: string) {
             try {
                 setIsLoading(true);
                 setError(null);
-                const componentModule = await loader();
+
+                const componentModule = await import(
+                    `~/components/demo/examples/${componentPath}.tsx`
+                );
+
                 if (componentModule.default) {
                     setComponent(() => componentModule.default);
                 } else {
-                    setError(`Component "${file}" does not have a default export`);
+                    setError(`Component "${componentPath}" does not have a default export`);
                 }
             } catch (err) {
-                setError(`Could not load component: ${file}. ${(err as Error).message}`);
+                setError(`Could not load component: ${componentPath}. ${(err as Error).message}`);
             } finally {
                 setIsLoading(false);
             }
         };
 
         loadComponent();
-    }, [file]);
+    }, [componentPath]);
 
     return { component, error, isLoading };
 }
 
-export function DynamicComponent({ file }: { file?: string }) {
-    const { component: Component, error, isLoading } = useDynamicComponent(file);
+export function DynamicComponent({ componentPath }: { componentPath?: string }) {
+    const { component: Component, error, isLoading } = useDynamicComponent(componentPath);
 
     if (error) {
-        return <ComponentError file={file} error={error} />;
+        return <ComponentError componentPath={componentPath} error={error} />;
     }
 
     if (isLoading || !Component) {
