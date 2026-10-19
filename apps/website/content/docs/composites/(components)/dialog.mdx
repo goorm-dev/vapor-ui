@@ -8,7 +8,7 @@ description: 'Dialog는 페이지 위에 창을 띄워 사용자를 중요한 �
 
 ## Anatomy
 
-<DocsImage src="/composites/dialog/images/anatomy.webp" alt="Dialog anatomy" />
+<DocsImage src="/composites/dialog/images/test.png" alt="Dialog anatomy" />
 
 1. **Backdrop**
 2. **Title**
@@ -20,31 +20,9 @@ description: 'Dialog는 페이지 위에 창을 띄워 사용자를 중요한 �
 
 ## Examples
 
-### 커스텀이 필요할 때 사용하세요
+### Form
 
-원하는 데이터를 충분히 표현하기 어렵다면 Custom dialog를 사용하세요.
-
-{/* TODO(VAPOR-261): replace fallback with live Preview */}
-
-<div className="rounded-v-300 bg-v-canvas-200 h-56 not-prose my-v-300" />
-
-### 작업에 도움이 되는 보조 동작을 제공할 때 사용하세요
-
-주요 동작(Action button)과 함께 배치하며, 닫기 용도로는 사용하지 않습니다.
-
-{/* TODO(VAPOR-261): replace fallback with live Preview */}
-
-<div className="rounded-v-300 bg-v-canvas-200 h-56 not-prose my-v-300" />
-
-### 작업과 관련된 정보를 제공할 때 사용하세요
-
-정해진 높이(Max-height)를 넘길 경우 스크롤을 제공합니다.
-
-{/* TODO(VAPOR-261): replace fallback with live Preview */}
-
-<div className="rounded-v-300 bg-v-canvas-200 h-56 not-prose my-v-300" />
-
-### 사용자의 정보 입력이 필요할 경우 사용하세요
+사용자의 정보 입력이 필요할 경우 사용하세요.
 
 다음 단계를 진행하기 위해 사용자의 입력 값이 필수적으로 필요한 경우 사용합니다.
 
@@ -52,35 +30,52 @@ description: 'Dialog는 페이지 위에 창을 띄워 사용자를 중요한 �
 
 <div className="rounded-v-300 bg-v-canvas-200 h-56 not-prose my-v-300" />
 
-## Do + Don't
+### Information
 
-### Scroll
+작업과 관련된 정보를 제공할 때 사용하세요.
+
+정해진 높이(Max-height)를 넘길 경우 스크롤을 제공합니다.
+
+{/* TODO(VAPOR-261): replace fallback with live Preview */}
+
+<div className="rounded-v-300 bg-v-canvas-200 h-56 not-prose my-v-300" />
+
+### Assistive button
+
+작업에 도움이 되는 보조 동작을 제공할 때 사용하세요.
+
+주요 동작(Action button)과 함께 배치하며, 닫기 용도로는 사용하지 않습니다.
+
+{/* TODO(VAPOR-261): replace fallback with live Preview */}
+
+<div className="rounded-v-300 bg-v-canvas-200 h-56 not-prose my-v-300" />
+
+### Custom
+
+커스텀이 필요할 때 사용하세요.
+
+원하는 데이터를 충분히 표현하기 어렵다면 Custom dialog를 사용하세요.
+
+{/* TODO(VAPOR-261): replace fallback with live Preview */}
+
+<div className="rounded-v-300 bg-v-canvas-200 h-56 not-prose my-v-300" />
+
+## Do / Don’t
+
+### Title
 
 <DocsGrid cols={2}>
     <DoImage
         src="/composites/dialog/images/do-dont-01-do.webp"
-        alt="콘텐츠가 길어질 경우 스크롤을 사용하여 콘텐츠를 구성합니다."
-        caption="콘텐츠가 길어질 경우 스크롤을 사용하여 콘텐츠를 구성합니다."
+        alt="[새 그룹 만들기] 버튼을 눌러 띄워진 Dialog 타이틀은 [새 그룹 만들기]로 작성합니다."
+        caption="[새 그룹 만들기] 버튼을 눌러 띄워진 Dialog 타이틀은 [새 그룹 만들기]로 작성합니다."
     />
     <DontImage
         src="/composites/dialog/images/do-dont-01-dont.webp"
-        alt="가로 스크롤을 사용하지 마세요. 레이아웃을 조정하거나, 더 큰 사이즈의 Dialog를 사용하세요."
-        caption="가로 스크롤을 사용하지 마세요. 레이아웃을 조정하거나, 더 큰 사이즈의 Dialog를 사용하세요."
-    />
-</DocsGrid>
-
-### Close button
-
-<DocsGrid cols={2}>
-    <DoImage
-        src="/composites/dialog/images/do-dont-02-do.webp"
-        alt="닫기 버튼은 하나만 제공합니다."
-        caption="닫기 버튼은 하나만 제공합니다."
-    />
-    <DontImage
-        src="/composites/dialog/images/do-dont-02-dont.webp"
-        alt="[X] 버튼과 [닫기] 버튼을 중복 배치하지 마세요."
-        caption="[X] 버튼과 [닫기] 버튼을 중복 배치하지 마세요."
+        alt="트리거가 된 버튼의 레이블과 다른 타이틀을 사용하지 마세요. 사용자가 진행 맥락을 
+혼동할 수 있습니다."
+        caption="트리거가 된 버튼의 레이블과 다른 타이틀을 사용하지 마세요. 사용자가 진행 맥락을 
+혼동할 수 있습니다."
     />
 </DocsGrid>
 
@@ -88,31 +83,44 @@ description: 'Dialog는 페이지 위에 창을 띄워 사용자를 중요한 �
 
 <DocsGrid cols={2}>
     <DoImage
-        src="/composites/dialog/images/do-dont-03-do.webp"
+        src="/composites/dialog/images/do-dont-02-do.webp"
         alt="버튼을 눌렀을 때 어떤 결과가 나오는지 사용자가 예상할 수 있게 레이블을 작성하세요."
         caption="버튼을 눌렀을 때 어떤 결과가 나오는지 사용자가 예상할 수 있게 레이블을 작성하세요."
     />
     <DontImage
-        src="/composites/dialog/images/do-dont-03-dont.webp"
+        src="/composites/dialog/images/do-dont-02-dont.webp"
         alt="결과와 관련 없거나 ‘확인’ 같은 모호한 레이블을 사용하지 마세요."
         caption="결과와 관련 없거나 ‘확인’ 같은 모호한 레이블을 사용하지 마세요."
     />
 </DocsGrid>
 
-### Title
+### Close button
+
+<DocsGrid cols={2}>
+    <DoImage
+        src="/composites/dialog/images/do-dont-03-do.webp"
+        alt="닫기 버튼은 하나만 제공합니다."
+        caption="닫기 버튼은 하나만 제공합니다."
+    />
+    <DontImage
+        src="/composites/dialog/images/do-dont-03-dont.webp"
+        alt="[X] 버튼과 [닫기] 버튼을 중복 배치하지 마세요."
+        caption="[X] 버튼과 [닫기] 버튼을 중복 배치하지 마세요."
+    />
+</DocsGrid>
+
+### Scroll
 
 <DocsGrid cols={2}>
     <DoImage
         src="/composites/dialog/images/do-dont-04-do.webp"
-        alt="[새 그룹 만들기] 버튼을 눌러 띄워진 Dialog 타이틀은 [새 그룹 만들기]로 작성합니다."
-        caption="[새 그룹 만들기] 버튼을 눌러 띄워진 Dialog 타이틀은 [새 그룹 만들기]로 작성합니다."
+        alt="콘텐츠가 길어질 경우 스크롤을 사용하여 콘텐츠를 구성합니다."
+        caption="콘텐츠가 길어질 경우 스크롤을 사용하여 콘텐츠를 구성합니다."
     />
     <DontImage
         src="/composites/dialog/images/do-dont-04-dont.webp"
-        alt="트리거가 된 버튼의 레이블과 다른 타이틀을 사용하지 마세요. 사용자가 진행 맥락을 
-혼동할 수 있습니다."
-        caption="트리거가 된 버튼의 레이블과 다른 타이틀을 사용하지 마세요. 사용자가 진행 맥락을 
-혼동할 수 있습니다."
+        alt="가로 스크롤을 사용하지 마세요. 레이아웃을 조정하거나, 더 큰 사이즈의 Dialog를 사용하세요."
+        caption="가로 스크롤을 사용하지 마세요. 레이아웃을 조정하거나, 더 큰 사이즈의 Dialog를 사용하세요."
     />
 </DocsGrid>
 
@@ -127,11 +135,35 @@ Dialog에서 발생한 오류는 인라인 메시지로 알립니다. Alert dial
     alt="Dialog에서 발생한 오류는 인라인 메시지를 사용해 알리세요."
 />
 
-### Dialog에서 결정한 작업의 완료를 알릴 경우 Toast를 사용하세요
+### Dialog에서 결정한 작업의 완료를 알릴 경우 Toast를 사용하세요.
 
 다이얼로그에서 결정은 이미 끝났으므로 성공 결과는 간략하게 전달합니다.
 
 <DocsImage
     src="/composites/dialog/images/pattern-02.webp"
-    alt="Dialog에서 결정한 작업의 완료를 알릴 경우 Toast를 사용하세요"
+    alt="Dialog에서 결정한 작업의 완료를 알릴 경우 Toast를 사용하세요."
 />
+
+## Guidelines
+
+### Height
+
+Dialog의 최대 높이(Max-height)는 전체 화면 높이의 80%로 설정됩니다.
+
+<DocsImage src="/composites/dialog/images/guidelines-01.webp" alt="Height" />
+
+### Close behaivor
+
+Close button:
+
+Dialog는 헤더의 Close 버튼으로 닫을 수 있습니다.
+
+Backdrop 클릭 / ESC:
+
+배경을 클릭하거나 키보드 ESC를 눌러 Dialog를 닫을 수 있습니다.
+
+<DocsImage src="/composites/dialog/images/guidelines-02.webp" alt="Close behaivor" />
+
+### Scroll behaivor
+
+<DocsImage src="/composites/dialog/images/guidelines-03.webp" alt="Scroll behaivor" />

@@ -17,7 +17,7 @@ export const DocsImage = ({ src, alt, width = 868, height = 480, caption }: Docs
                 alt={alt}
                 width={width}
                 height={height}
-                className="aspect-video object-contain not-prose"
+                className="object-cover w-full h-auto not-prose"
             />
             {caption && (
                 <Text typography="body2" foreground="secondary" className="leading-v-100">

@@ -46,6 +46,33 @@ export function findSamples(root: FigmaNode): FigmaNode[] {
     return samples;
 }
 
+/** Find all content-item nodes, keeping outermost when nested.
+ *
+ *  Matches both the new `Item` INSTANCE wrapper and the legacy
+ *  `Component guide/Content block` INSTANCE/FRAME, so sections that still mix the two
+ *  layouts are emitted in document order without silently dropping the legacy entries. */
+export function findItems(root: FigmaNode): FigmaNode[] {
+    const items: FigmaNode[] = [];
+    const isItemNode = (n: FigmaNode): boolean => {
+        if (n.name === 'Item' && n.type === 'INSTANCE') return true;
+        if (
+            n.name === 'Component guide/Content block' ||
+            n.name === 'Component Guide/Content block'
+        )
+            return true;
+        return false;
+    };
+    const walkOuter = (n: FigmaNode): void => {
+        if (n !== root && isItemNode(n)) {
+            items.push(n);
+            return; // skip nested item nodes
+        }
+        for (const child of n.children ?? []) walkOuter(child);
+    };
+    walkOuter(root);
+    return items;
+}
+
 /** Find nearest ancestor matching predicate within a bounded ancestry list. */
 export function nearestAncestor(
     ancestors: FigmaNode[],

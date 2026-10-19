@@ -3,16 +3,15 @@ import { kebabCase } from 'es-toolkit';
 import { FigmaClient } from './figma.ts';
 import { downloadWebpImages } from './images.ts';
 import {
-    CONTENT_BLOCK_NAME,
-    mapMetaFromAncestry,
     readComponentMeta,
     readDoDontCaption,
+    readItemMeta,
     readSectionTitle,
     readText,
 } from './meta.ts';
 import { renderMdx } from './renderer.ts';
 import { discoverSections, findCoverFrame } from './sections.ts';
-import { collectAncestorsMap, findDescendants, findSamples } from './traverse.ts';
+import { findDescendants, findItems, findSamples } from './traverse.ts';
 import type { FigmaNode, Item, Section } from './types.ts';
 import { prepareOutputs, writeComponentMdx } from './writer.ts';
 
@@ -104,18 +103,47 @@ async function buildSectionItems(ctx: SectionBuildCtx): Promise<Item[]> {
 }
 
 async function buildGenericSampleItems(ctx: SectionBuildCtx): Promise<Item[]> {
+    const itemNodes = findItems(ctx.sectionFrame);
+    if (itemNodes.length === 0) return buildLegacyGenericItems(ctx);
+    const samplesByItem = itemNodes.map((n) => findSamples(n)[0]);
+    const jobs: Array<{ nodeId: string; baseName: string; itemIdx: number }> = [];
+    itemNodes.forEach((_, idx) => {
+        const sample = samplesByItem[idx];
+        if (!sample) return;
+        jobs.push({
+            nodeId: sample.id,
+            baseName: `${ctx.sectionKey.toLowerCase()}-${pad(idx + 1)}`,
+            itemIdx: idx,
+        });
+    });
+    const paths = await downloadWebpImages(
+        ctx.client,
+        ctx.fileKey,
+        jobs.map((j) => ({ nodeId: j.nodeId, baseName: j.baseName })),
+        ctx.publicDir,
+    );
+    return itemNodes.map((node, idx) => {
+        const meta = readItemMeta(node);
+        const sample = samplesByItem[idx];
+        const path = sample ? paths[sample.id] : undefined;
+        const item: Item = { ...meta };
+        if (path) item.image = path;
+        return item;
+    });
+}
+
+/** Fallback for sections that still use the legacy sample-only layout (no Item wrapper). */
+async function buildLegacyGenericItems(ctx: SectionBuildCtx): Promise<Item[]> {
     const samples = findSamples(ctx.sectionFrame);
     if (samples.length === 0) return [];
-    const ancestors = collectAncestorsMap(ctx.sectionFrame);
     const jobs = samples.map((s, idx) => ({
         nodeId: s.id,
         baseName: `${ctx.sectionKey.toLowerCase()}-${pad(idx + 1)}`,
     }));
     const paths = await downloadWebpImages(ctx.client, ctx.fileKey, jobs, ctx.publicDir);
     return samples.map((s) => {
-        const meta = mapMetaFromAncestry(s, [...(ancestors.get(s.id) ?? []), s]);
         const path = paths[s.id];
-        const item: Item = { ...meta };
+        const item: Item = {};
         if (path) item.image = path;
         return item;
     });
@@ -151,11 +179,19 @@ async function buildAnatomyItems(ctx: SectionBuildCtx): Promise<Item[]> {
     });
     const items: Item[] = [];
     for (const row of sortedRows) {
-        const textInstance = findDescendants(
+        // Pick the top-level guide text instance for this row (variant other than `body`,
+        // which is the placeholder slot). Depth-first search returns the body child first,
+        // so filter by variant to land on the row-name text.
+        const textInstances = findDescendants(
             row,
-            (n) => n.type === 'INSTANCE' && n.name === 'Component guide/Text',
-        )[0];
-        const name = textInstance ? readText(textInstance) : undefined;
+            (n) =>
+                n.type === 'INSTANCE' && (n.name === 'Component guide/Text' || n.name === 'Text'),
+        );
+        const nameInstance = textInstances.find((n) => {
+            const variant = n.componentProperties?.type?.value;
+            return typeof variant === 'string' && !variant.toLowerCase().includes('body');
+        });
+        const name = nameInstance ? readText(nameInstance) : undefined;
         if (!name) continue;
         const optional =
             findDescendants(row, (n) => n.type === 'TEXT' && n.name === '(Optional)').length > 0;
@@ -165,18 +201,19 @@ async function buildAnatomyItems(ctx: SectionBuildCtx): Promise<Item[]> {
 }
 
 async function buildDoDontItems(ctx: SectionBuildCtx): Promise<Item[]> {
-    const contentBlocks = findDescendants(
-        ctx.sectionFrame,
-        (n) => n.type === 'INSTANCE' && n.name === CONTENT_BLOCK_NAME,
+    const itemNodes = findItems(ctx.sectionFrame);
+    if (itemNodes.length === 0) return [];
+    const doFrames = itemNodes.map(
+        (n) => findDescendants(n, (c) => c.name === 'Do' && c.type === 'FRAME')[0],
+    );
+    const dontFrames = itemNodes.map(
+        (n) => findDescendants(n, (c) => c.name === "Don't" && c.type === 'FRAME')[0],
     );
     const jobs: Array<{ nodeId: string; baseName: string; slot: 'do' | 'dont'; itemIdx: number }> =
         [];
-    contentBlocks.forEach((block, idx) => {
-        const doFrame = findDescendants(block, (n) => n.name === 'Do' && n.type === 'FRAME')[0];
-        const dontFrame = findDescendants(
-            block,
-            (n) => n.name === "Don't" && n.type === 'FRAME',
-        )[0];
+    itemNodes.forEach((_, idx) => {
+        const doFrame = doFrames[idx];
+        const dontFrame = dontFrames[idx];
         const doSample = doFrame ? (findSamples(doFrame)[0] ?? doFrame) : undefined;
         const dontSample = dontFrame ? (findSamples(dontFrame)[0] ?? dontFrame) : undefined;
         if (doSample) {
@@ -202,15 +239,10 @@ async function buildDoDontItems(ctx: SectionBuildCtx): Promise<Item[]> {
         jobs.map((j) => ({ nodeId: j.nodeId, baseName: j.baseName })),
         ctx.publicDir,
     );
-    const ancestors = collectAncestorsMap(ctx.sectionFrame);
-    const items: Item[] = [];
-    contentBlocks.forEach((block, idx) => {
-        const meta = mapMetaFromAncestry(block, [...(ancestors.get(block.id) ?? []), block]);
-        const doFrame = findDescendants(block, (n) => n.name === 'Do' && n.type === 'FRAME')[0];
-        const dontFrame = findDescendants(
-            block,
-            (n) => n.name === "Don't" && n.type === 'FRAME',
-        )[0];
+    return itemNodes.map((node, idx) => {
+        const meta = readItemMeta(node);
+        const doFrame = doFrames[idx];
+        const dontFrame = dontFrames[idx];
         const doJob = jobs.find((j) => j.itemIdx === idx && j.slot === 'do');
         const dontJob = jobs.find((j) => j.itemIdx === idx && j.slot === 'dont');
         const item: Item = { ...meta };
@@ -224,20 +256,14 @@ async function buildDoDontItems(ctx: SectionBuildCtx): Promise<Item[]> {
             const caption = dontFrame ? readDoDontCaption(dontFrame) : undefined;
             if (caption) item.dont.caption = caption;
         }
-        items.push(item);
+        return item;
     });
-    return items;
 }
 
 async function buildExamplesItems(ctx: SectionBuildCtx): Promise<Item[]> {
-    const contentBlocks = findDescendants(
-        ctx.sectionFrame,
-        (n) => n.type === 'INSTANCE' && n.name === CONTENT_BLOCK_NAME,
-    );
-    const ancestors = collectAncestorsMap(ctx.sectionFrame);
-    return contentBlocks.map((block) =>
-        mapMetaFromAncestry(block, [...(ancestors.get(block.id) ?? []), block]),
-    );
+    const itemNodes = findItems(ctx.sectionFrame);
+    if (itemNodes.length === 0) return [];
+    return itemNodes.map((node) => readItemMeta(node));
 }
 
 function pad(n: number): string {

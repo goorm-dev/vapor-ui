@@ -144,7 +144,16 @@ function renderGeneric(key: string, section: Section, ctx: RenderInput): string 
 }
 
 function renderBulletsOrParagraph(text: string): string {
-    const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    // Paragraphs are already separated by blank lines in authored content.
+    const paragraphs = text
+        .split(/\n{2,}/)
+        .map((p) => p.trim())
+        .filter(Boolean);
+    if (paragraphs.length > 1) return paragraphs.join('\n\n');
+    const lines = text
+        .split(/\r?\n/)
+        .map((l) => l.trim())
+        .filter(Boolean);
     if (lines.length <= 1) return lines[0] ?? '';
     return lines.map((l) => (l.startsWith('- ') ? l : `- ${l}`)).join('\n');
 }
