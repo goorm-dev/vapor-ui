@@ -16,8 +16,8 @@ allowBuilds:
 # Unified React 19 for entire monorepo
 # Libraries (packages/*) maintain peerDependencies for React 17/18/19 compatibility
 catalog:
-    react: ^19.3.0
-    react-dom: ^19.3.0
+    react: ^19.3.1
+    react-dom: ^19.3.1
     '@types/react': ^19.3.0
     '@types/react-dom': ^19.3.0
     typescript: ^5.9.3
