@@ -29,28 +29,32 @@ if (!process.env.FIGMA_TOKEN && MAIN_REPO_ROOT !== REPO_ROOT) {
     loadEnv({ path: resolve(MAIN_REPO_ROOT, '.env') });
 }
 
+const CONTENT_ROOT = resolve(REPO_ROOT, 'apps/website/content/docs/composites/(components)');
+const PUBLIC_ROOT = resolve(REPO_ROOT, 'apps/website/public/composites');
+const LIVE_EXAMPLE_TICKET = 'VAPOR-261';
+
 const cli = meow(
     `
     Usage
       $ extract-composites <figma-url> [options]
 
     Options
-      --slug <slug>       Output slug (default: kebabCase of Figma canvas name)
-      --label <label>     Code Connect label (default: React)
-      --skip <names>      Comma-separated section names to skip
-      --output <dir>      Output root (default: apps/website/public/composites)
-      --clean             Remove slug directory before extraction
+      --slug <slug>    Output slug (default: kebabCase of Figma canvas name)
+      --skip <names>   Comma-separated section names to skip
+      --clean          Remove existing MDX + public dir before extraction
+
+    Output
+      MDX    apps/website/content/docs/composites/(components)/<slug>.mdx
+      Images apps/website/public/composites/<slug>/images/
 
     Env
-      FIGMA_TOKEN         Required. Loaded via dotenv from CWD .env or shell env.
+      FIGMA_TOKEN      Required. Loaded via dotenv from repo .env.
     `,
     {
         importMeta: import.meta,
         flags: {
             slug: { type: 'string' },
-            label: { type: 'string', default: 'React' },
             skip: { type: 'string' },
-            output: { type: 'string' },
             clean: { type: 'boolean', default: false },
         },
     },
@@ -69,24 +73,24 @@ if (!token) {
 }
 
 const { fileKey, nodeId } = parseFigmaUrl(figmaUrl);
-const outputRoot = cli.flags.output
-    ? resolve(cli.flags.output)
-    : resolve(REPO_ROOT, 'apps/website/public/composites');
 
 const result = await extract({
     fileKey,
     nodeId,
-    outputRoot,
+    contentFile: (slug) => resolve(CONTENT_ROOT, `${slug}.mdx`),
+    publicDir: (slug) => resolve(PUBLIC_ROOT, slug),
     slugOverride: cli.flags.slug,
-    label: cli.flags.label,
     skip: cli.flags.skip
         ?.split(',')
         .map((s) => s.trim())
         .filter(Boolean),
     clean: cli.flags.clean,
     token,
+    liveExampleTicket: LIVE_EXAMPLE_TICKET,
 });
 
-console.log(`✓ Extracted ${result.slug} → ${result.outputDir}`);
+console.log(`✓ Extracted ${result.slug}`);
+console.log(`  mdx    ${result.mdxPath}`);
+console.log(`  images ${result.publicDir}/images`);
 console.log(`  warnings: ${result.warnings.length}, errors: 0`);
 for (const w of result.warnings) console.log(`  ⚠ ${w}`);

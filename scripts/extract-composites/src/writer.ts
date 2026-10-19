@@ -1,16 +1,20 @@
 import { mkdir, rm, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { dirname } from 'node:path';
 
-import type { IndexJson } from './types.ts';
-
-export async function prepareOutputDir(dir: string, clean: boolean): Promise<void> {
+export async function prepareOutputs(
+    contentFile: string,
+    publicDir: string,
+    clean: boolean,
+): Promise<void> {
     if (clean) {
-        await rm(dir, { recursive: true, force: true });
+        await rm(publicDir, { recursive: true, force: true });
+        await rm(contentFile, { force: true });
     }
-    await mkdir(dir, { recursive: true });
+    await mkdir(dirname(contentFile), { recursive: true });
+    await mkdir(publicDir, { recursive: true });
 }
 
-export async function writeIndexJson(dir: string, data: IndexJson): Promise<void> {
-    const path = join(dir, 'index.json');
-    await writeFile(path, JSON.stringify(data, null, 4) + '\n');
+export async function writeComponentMdx(path: string, content: string): Promise<void> {
+    await mkdir(dirname(path), { recursive: true });
+    await writeFile(path, content);
 }

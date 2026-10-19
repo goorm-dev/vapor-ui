@@ -8,7 +8,7 @@ const DEFAULT_SKIP = new Set([
     '작성예정',
     'Related components',
     'Related Components',
-    'Component', // cover frame — carries component name/description, not a section
+    'Component', // legacy cover frame name
 ]);
 
 export const COVER_FRAME_NAME = 'Component';
@@ -21,7 +21,7 @@ export interface DiscoveredSection {
 
 /** Flatten top-level + 2nd-level section frames, applying skip list and cover exclusion. */
 export function discoverSections(canvas: FigmaNode, extraSkip: string[] = []): DiscoveredSection[] {
-    const skip = new Set([...DEFAULT_SKIP, ...extraSkip]);
+    const skip = new Set([...DEFAULT_SKIP, ...extraSkip, canvas.name]);
     const sections: DiscoveredSection[] = [];
     const seen = new Set<string>();
     const UNWRAP_NAMES = new Set(['Overview', 'Best practices']);
@@ -69,5 +69,9 @@ export function toSectionKey(rawName: string): string {
 }
 
 export function findCoverFrame(canvas: FigmaNode): FigmaNode | undefined {
-    return (canvas.children ?? []).find((c) => c.type === 'FRAME' && c.name === COVER_FRAME_NAME);
+    const children = canvas.children ?? [];
+    return (
+        children.find((c) => c.type === 'FRAME' && c.name === COVER_FRAME_NAME) ??
+        children.find((c) => c.type === 'FRAME' && c.name === canvas.name)
+    );
 }
