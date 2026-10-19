@@ -53,10 +53,7 @@ type CodeNode = {
 const DEMO_TAG = 'Demo';
 const DOC_GEN_META = /^doc-gen:file\b/;
 
-const readStringAttr = (
-    attrs: MdxJsxFlowElement['attributes'],
-    name: string,
-): string | null => {
+const readStringAttr = (attrs: MdxJsxFlowElement['attributes'], name: string): string | null => {
     for (const attr of attrs) {
         if (attr.type !== 'mdxJsxAttribute' || attr.name !== name) continue;
         if (typeof attr.value === 'string') return attr.value;

@@ -18,17 +18,10 @@ type DocGenFile = {
  * without running the remark pipeline here.
  */
 export const replaceDemoSelfClosing = (text: string): string =>
-    text.replace(
-        /<Demo\s+file=(["'])([^"']+)\1\s*\/>/g,
-        (_, _quote: string, file: string) => {
-            const config = JSON.stringify(
-                { file: fileToDocGenPath(file), codeblock: true },
-                null,
-                4,
-            );
-            return `<Demo file="${file}">\n\`\`\`json doc-gen:file\n${config}\n\`\`\`\n</Demo>`;
-        },
-    );
+    text.replace(/<Demo\s+file=(["'])([^"']+)\1\s*\/>/g, (_, _quote: string, file: string) => {
+        const config = JSON.stringify({ file: fileToDocGenPath(file), codeblock: true }, null, 4);
+        return `<Demo file="${file}">\n\`\`\`json doc-gen:file\n${config}\n\`\`\`\n</Demo>`;
+    });
 
 /**
  * Replace ```json doc-gen:file tags inside blocks MDX content
