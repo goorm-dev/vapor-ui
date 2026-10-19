@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { Card, Tabs } from '@vapor-ui/core';
+import { Tabs } from '@vapor-ui/core';
 
 import { DEVICE_TYPES, type DeviceType, TAB_TYPES, type TabType } from './constants';
 import { ErrorBoundary } from './error-boundary';
@@ -11,50 +11,40 @@ import { Preview } from './preview';
 import { ResponsiveControl } from './responsive-control';
 
 interface DemoProps {
-    /** Example file path, absolute from the Next.js app root (`apps/website/`), ending in
-     *  `.tsx` — e.g. `/content/docs/components/(components)/button/default-button.tsx`.
-     *  Preview, iframe preview and the Code tab all resolve from this single value — a
-     *  `remark-demo-source` plugin injects the Code tab's `doc-gen:file` block at MDX
-     *  build time, so authors never set the path twice. */
     file: string;
     children?: React.ReactNode;
     showResponsiveToggle?: boolean;
 }
 
-export const Demo = ({ file, children, showResponsiveToggle = false }: DemoProps) => {
+export const Demo = (props: DemoProps) => {
+    const { file, children, showResponsiveToggle = false } = props;
     const { selectedDevice, selectedTab, handleTabChange, handleDeviceChange } = useDemoState();
 
     return (
         <ErrorBoundary>
-            <Card.Root
-                render={
-                    <Tabs.Root
-                        value={selectedTab}
-                        onValueChange={handleTabChange}
-                        className="w-full rounded-v-300"
-                        variant="line"
-                        size="lg"
-                    />
-                }
-            >
-                <Card.Header className="p-0 border-b-0 pt-v-50 bg-v-canvas-100 rounded-t-v-300 relative @container">
+            <div className="rounded-v-500 bg-v-canvas-raised">
+                <Tabs.Root
+                    value={selectedTab}
+                    onValueChange={handleTabChange}
+                    className="w-full"
+                    variant="line"
+                >
                     <DemoHeader
                         selectedTab={selectedTab}
                         selectedDevice={selectedDevice}
                         showResponsiveToggle={showResponsiveToggle}
                         onDeviceChange={handleDeviceChange}
                     />
-                </Card.Header>
 
-                <Card.Body className="p-0 bg-v-canvas rounded-b-v-300 overflow-hidden">
                     <DemoPreviewPanel
                         file={file}
                         showResponsiveToggle={showResponsiveToggle}
                         selectedDevice={selectedDevice}
                     />
+
                     <DemoCodePanel>{children}</DemoCodePanel>
-                </Card.Body>
-            </Card.Root>
+                </Tabs.Root>
+            </div>
         </ErrorBoundary>
     );
 };
@@ -102,11 +92,11 @@ const DemoHeader = ({
     showResponsiveToggle,
     onDeviceChange,
 }: DemoHeaderProps) => {
-    const shouldShowDeviceToggle = selectedTab === TAB_TYPES.PREVIEW && showResponsiveToggle;
+    const shouldShowDeviceToggle = selectedTab === TAB_TYPES['PREVIEW'] && showResponsiveToggle;
 
     return (
-        <>
-            <Tabs.List $css={{ width: '100%', paddingInline: '$300' }}>
+        <div className="px-v-200 py-v-150">
+            <Tabs.List $css={{ border: 'none' }}>
                 {Object.values(TAB_TYPES).map((tab) => (
                     <Tabs.Button key={tab} value={tab}>
                         {tab}
@@ -117,7 +107,7 @@ const DemoHeader = ({
             {shouldShowDeviceToggle && (
                 <ResponsiveControl defaultValue={selectedDevice} onValueChange={onDeviceChange} />
             )}
-        </>
+        </div>
     );
 };
 
@@ -141,7 +131,7 @@ const DemoPreviewPanel = ({
     );
 
     return (
-        <Tabs.Panel value={TAB_TYPES.PREVIEW} className="rounded-t-none" keepMounted>
+        <Tabs.Panel value={TAB_TYPES['PREVIEW']} className="rounded-t-none" keepMounted>
             {children}
         </Tabs.Panel>
     );
@@ -156,7 +146,7 @@ interface DemoCodePanelProps {
 const DemoCodePanel = ({ children }: DemoCodePanelProps) => {
     return (
         <Tabs.Panel
-            value={TAB_TYPES.CODE}
+            value={TAB_TYPES['CODE']}
             className="flex flex-col gap-v-250 rounded-t-none rounded-b-v-300 bg-v-normal [&>figure]:m-0 [&>figure]:border-0 [&>figure]:rounded-none [&>figure:last-child]:rounded-b-v-300"
         >
             {children}

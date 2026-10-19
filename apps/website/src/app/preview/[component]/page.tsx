@@ -6,18 +6,12 @@ import { PreviewWrapper } from './preview-wrapper';
 
 interface PreviewPageProps {
     searchParams: Promise<{
-        path?: string;
+        file?: string;
         theme?: string;
     }>;
 }
 
-const ComponentError = ({
-    componentPath,
-    error,
-}: {
-    componentPath: string | undefined;
-    error: string;
-}) => {
+const ComponentError = ({ file, error }: { file: string | undefined; error: string }) => {
     return (
         <div className="p-5 text-center text-v-danger">
             <Text typography="heading1" foreground="danger-100" render={<h1 />} className="mb-4">
@@ -26,33 +20,29 @@ const ComponentError = ({
             <Text typography="body2" foreground="danger-100">
                 {error}
             </Text>
-            {componentPath && (
+            {file && (
                 <Text typography="body2" foreground="danger-100">
-                    {componentPath}
+                    {file}
                 </Text>
             )}
         </div>
     );
 };
 
-function isValidComponentPath(path?: string): boolean {
-    if (!path) return false;
-
-    const pathTraversalPattern = /\.\./;
-    if (pathTraversalPattern.test(path)) return false;
-
-    const validPathPattern = /^[a-zA-Z0-9/_-]+$/;
-    return validPathPattern.test(path);
+function isValidFile(file?: string): boolean {
+    if (!file) return false;
+    if (/\.\./.test(file)) return false;
+    return /^[\w./()-]+\.tsx$/.test(file);
 }
 
 export default async function Page({ searchParams }: PreviewPageProps) {
     const resolvedSearchParams = await searchParams;
-    const componentPath = resolvedSearchParams.path;
+    const file = resolvedSearchParams.file;
     const theme = resolvedSearchParams.theme || 'light';
 
-    if (!isValidComponentPath(componentPath)) {
-        return <ComponentError componentPath={componentPath} error="Invalid component path" />;
+    if (!isValidFile(file)) {
+        return <ComponentError file={file} error="Invalid file path" />;
     }
 
-    return <PreviewWrapper theme={theme} componentPath={componentPath} />;
+    return <PreviewWrapper theme={theme} file={file} />;
 }
