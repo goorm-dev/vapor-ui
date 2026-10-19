@@ -11,10 +11,11 @@ import { Preview } from './preview';
 import { ResponsiveControl } from './responsive-control';
 
 interface DemoProps {
-    /** Example file, relative to `apps/website/src/components/demo/examples/` and ending in
-     *  `.tsx` (e.g. `./button/default-button.tsx`). Preview, iframe preview and the Code tab
-     *  all resolve from this single value — a `remark-demo-source` plugin injects the Code
-     *  tab's `doc-gen:file` block at MDX build time, so authors never set the path twice. */
+    /** Example file path, absolute from the Next.js app root (`apps/website/`), ending in
+     *  `.tsx` — e.g. `/content/docs/components/(components)/button/default-button.tsx`.
+     *  Preview, iframe preview and the Code tab all resolve from this single value — a
+     *  `remark-demo-source` plugin injects the Code tab's `doc-gen:file` block at MDX
+     *  build time, so authors never set the path twice. */
     file: string;
     children?: React.ReactNode;
     showResponsiveToggle?: boolean;

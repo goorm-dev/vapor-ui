@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { fileToComponentPath } from './paths';
+import { normalizeFile } from './paths';
 
 interface PreviewProps {
     file: string;
@@ -10,8 +10,13 @@ interface PreviewProps {
 
 export function Preview({ file }: PreviewProps) {
     const Component = React.useMemo(() => {
-        const componentPath = fileToComponentPath(file);
-        return React.lazy(() => import(`./examples/${componentPath}.tsx`));
+        const normalized = normalizeFile(file);
+        // Climb back to `apps/website/` and resolve the author-provided path verbatim.
+        // `webpackInclude` keeps the generated chunk set to `.tsx` so the bundler does not
+        // try to import MDX or other content assets co-located with the example.
+        return React.lazy(() =>
+            import(/* webpackInclude: /\.tsx$/ */ `../../../${normalized}`),
+        );
     }, [file]);
 
     return (

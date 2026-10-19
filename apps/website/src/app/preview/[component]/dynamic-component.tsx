@@ -4,13 +4,7 @@ import * as React from 'react';
 
 import { Text } from '@vapor-ui/core';
 
-const ComponentError = ({
-    componentPath,
-    error,
-}: {
-    componentPath: string | undefined;
-    error: string;
-}) => {
+const ComponentError = ({ file, error }: { file: string | undefined; error: string }) => {
     return (
         <div className="p-5 text-center text-v-danger">
             <Text typography="heading1" foreground="danger-100" render={<h1 />} className="mb-4">
@@ -19,9 +13,9 @@ const ComponentError = ({
             <Text typography="body2" foreground="danger-100">
                 {error}
             </Text>
-            {componentPath && (
+            {file && (
                 <Text typography="body2" foreground="danger-100">
-                    {componentPath}
+                    {file}
                 </Text>
             )}
         </div>
@@ -37,14 +31,14 @@ function ComponentLoading() {
     );
 }
 
-function useDynamicComponent(componentPath?: string) {
+function useDynamicComponent(file?: string) {
     const [component, setComponent] = React.useState<React.ComponentType | null>(null);
     const [error, setError] = React.useState<string | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
-        if (!componentPath) {
-            setError('No component path provided');
+        if (!file) {
+            setError('No file provided');
             setIsLoading(false);
             return;
         }
@@ -54,33 +48,37 @@ function useDynamicComponent(componentPath?: string) {
                 setIsLoading(true);
                 setError(null);
 
+                const normalized = file.replace(/^\.?\//, '');
+                // Same dynamic-import strategy as the inline Preview: climb back to
+                // `apps/website/` and let the bundler resolve the author-provided path.
+                // `../../../../` from `apps/website/src/app/preview/[component]/`.
                 const componentModule = await import(
-                    `~/components/demo/examples/${componentPath}.tsx`
+                    /* webpackInclude: /\.tsx$/ */ `../../../../${normalized}`
                 );
 
                 if (componentModule.default) {
                     setComponent(() => componentModule.default);
                 } else {
-                    setError(`Component "${componentPath}" does not have a default export`);
+                    setError(`Component "${file}" does not have a default export`);
                 }
             } catch (err) {
-                setError(`Could not load component: ${componentPath}. ${(err as Error).message}`);
+                setError(`Could not load component: ${file}. ${(err as Error).message}`);
             } finally {
                 setIsLoading(false);
             }
         };
 
         loadComponent();
-    }, [componentPath]);
+    }, [file]);
 
     return { component, error, isLoading };
 }
 
-export function DynamicComponent({ componentPath }: { componentPath?: string }) {
-    const { component: Component, error, isLoading } = useDynamicComponent(componentPath);
+export function DynamicComponent({ file }: { file?: string }) {
+    const { component: Component, error, isLoading } = useDynamicComponent(file);
 
     if (error) {
-        return <ComponentError componentPath={componentPath} error={error} />;
+        return <ComponentError file={file} error={error} />;
     }
 
     if (isLoading || !Component) {

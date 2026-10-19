@@ -4,7 +4,7 @@ site_name: 'Meter - Vapor Core'
 description: 'Meter는 디스크 사용량이나 점수처럼 알려진 범위 안의 측정값을 표시합니다.'
 ---
 
-<Demo file="./meter/default-meter.tsx" />
+<Demo file="/content/docs/components/(components)/meter/default-meter.tsx" />
 
 `Meter.Label`과 `Meter.Value`는 한 줄에 놓이고 `Meter.Track`이 그 아래 전체 폭을 차지합니다. 이 배치는 자식 순서를 따르므로 `Meter.Value`는 `Meter.Track` 앞에 두세요. 뒤에 두면 값이 트랙 아래로 내려갑니다.
 
@@ -18,19 +18,19 @@ description: 'Meter는 디스크 사용량이나 점수처럼 알려진 범위 �
 
 `size`로 트랙의 높이를 조절합니다.
 
-<Demo file="./meter/meter-size.tsx" />
+<Demo file="/content/docs/components/(components)/meter/meter-size.tsx" />
 
 ### Type
 
 `type`으로 채워진 영역의 색상을 지정합니다. 색만으로는 위험 구간을 알 수 없으므로 레이블에도 함께 적어줍니다.
 
-<Demo file="./meter/meter-type.tsx" />
+<Demo file="/content/docs/components/(components)/meter/meter-type.tsx" />
 
 ### Range
 
 `min`, `max`로 범위를, `format`으로 표시 형식을 지정합니다. 값 텍스트가 단위만 담고 있다면 `getAriaValueText`로 무엇을 재는 값인지 함께 읽히도록 합니다.
 
-<Demo file="./meter/meter-range.tsx" />
+<Demo file="/content/docs/components/(components)/meter/meter-range.tsx" />
 
 ## Examples
 
@@ -40,7 +40,7 @@ description: 'Meter는 디스크 사용량이나 점수처럼 알려진 범위 �
 
 값이 스스로 바뀌는 미터에는 갱신을 멈출 수단을 함께 둡니다. 갱신 간격은 초당 3회를 넘기지 않습니다.
 
-<Demo file="./meter/meter-auto-update.tsx" />
+<Demo file="/content/docs/components/(components)/meter/meter-auto-update.tsx" />
 
 ## Accessibility
 

@@ -7,7 +7,7 @@
  * Zero external deps: walks the mdast tree with a plain recursion to keep the website
  * package graph lean.
  */
-import { EXAMPLES_DIR, fileToComponentPath } from '~/components/demo/paths';
+import { fileToDocGenPath } from '~/components/demo/paths';
 
 type MdxJsxAttribute = {
     type: 'mdxJsxAttribute';
@@ -53,15 +53,12 @@ const isDemoElement = (node: Node): node is MdxJsxFlowElement =>
     (node.type === 'mdxJsxFlowElement' || node.type === 'mdxJsxTextElement') &&
     (node as MdxJsxFlowElement).name === DEMO_TAG;
 
-export const buildDocGenBlock = (file: string): CodeNode => {
-    const relativePath = `./${EXAMPLES_DIR}/${fileToComponentPath(file)}.tsx`;
-    return {
-        type: 'code',
-        lang: 'json',
-        meta: 'doc-gen:file',
-        value: JSON.stringify({ file: relativePath, codeblock: true }, null, 4),
-    };
-};
+export const buildDocGenBlock = (file: string): CodeNode => ({
+    type: 'code',
+    lang: 'json',
+    meta: 'doc-gen:file',
+    value: JSON.stringify({ file: fileToDocGenPath(file), codeblock: true }, null, 4),
+});
 
 export function remarkDemoSource() {
     const visit = (node: Node): void => {

@@ -6,16 +6,16 @@ import { PreviewWrapper } from './preview-wrapper';
 
 interface PreviewPageProps {
     searchParams: Promise<{
-        path?: string;
+        file?: string;
         theme?: string;
     }>;
 }
 
 const ComponentError = ({
-    componentPath,
+    file,
     error,
 }: {
-    componentPath: string | undefined;
+    file: string | undefined;
     error: string;
 }) => {
     return (
@@ -26,33 +26,34 @@ const ComponentError = ({
             <Text typography="body2" foreground="danger-100">
                 {error}
             </Text>
-            {componentPath && (
+            {file && (
                 <Text typography="body2" foreground="danger-100">
-                    {componentPath}
+                    {file}
                 </Text>
             )}
         </div>
     );
 };
 
-function isValidComponentPath(path?: string): boolean {
-    if (!path) return false;
-
-    const pathTraversalPattern = /\.\./;
-    if (pathTraversalPattern.test(path)) return false;
-
-    const validPathPattern = /^[a-zA-Z0-9/_-]+$/;
-    return validPathPattern.test(path);
+/** Guard against path traversal and foreign extensions. The iframe URL is a `file`
+ *  parameter authored by MDX writers (not end users), but we still enforce a sanitising
+ *  allowlist so a hand-crafted URL can't walk out of `apps/website/`. */
+function isValidFile(file?: string): boolean {
+    if (!file) return false;
+    if (/\.\./.test(file)) return false;
+    // Allow slashes, letters, numbers, `_`, `-`, `.`, and the parens used by Next.js route
+    // groups (`(components)`). Require a `.tsx` extension.
+    return /^[\w./()-]+\.tsx$/.test(file);
 }
 
 export default async function Page({ searchParams }: PreviewPageProps) {
     const resolvedSearchParams = await searchParams;
-    const componentPath = resolvedSearchParams.path;
+    const file = resolvedSearchParams.file;
     const theme = resolvedSearchParams.theme || 'light';
 
-    if (!isValidComponentPath(componentPath)) {
-        return <ComponentError componentPath={componentPath} error="Invalid component path" />;
+    if (!isValidFile(file)) {
+        return <ComponentError file={file} error="Invalid component path" />;
     }
 
-    return <PreviewWrapper theme={theme} componentPath={componentPath} />;
+    return <PreviewWrapper theme={theme} file={file} />;
 }

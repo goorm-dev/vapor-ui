@@ -6,7 +6,7 @@ import { useTheme } from '@vapor-ui/core';
 
 import type { DeviceType } from './constants';
 import { DEVICE_WIDTH_MAP } from './constants';
-import { fileToComponentPath } from './paths';
+import { normalizeFile } from './paths';
 
 interface IframePreviewProps {
     file: string;
@@ -19,13 +19,13 @@ const getIframeWidth = (device: DeviceType) => DEVICE_WIDTH_MAP[device] || '100%
 export function IframePreview({ file, device }: IframePreviewProps) {
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
     const { resolvedTheme } = useTheme();
-    const componentPath = fileToComponentPath(file);
+    const normalized = normalizeFile(file);
 
     React.useEffect(() => {
         if (iframeRef.current && resolvedTheme) {
-            iframeRef.current.src = `/preview/component?path=${encodeURIComponent(componentPath)}&theme=${resolvedTheme}`;
+            iframeRef.current.src = `/preview/component?file=${encodeURIComponent(normalized)}&theme=${resolvedTheme}`;
         }
-    }, [componentPath, resolvedTheme]);
+    }, [normalized, resolvedTheme]);
 
     return (
         <div className="iframe-preview-container flex justify-center p-v-300">
@@ -34,7 +34,7 @@ export function IframePreview({ file, device }: IframePreviewProps) {
                 width={getIframeWidth(device)}
                 height="400px"
                 className="transition-[width] duration-200 ease-in-out max-w-full flex justify-center items-center"
-                title={`Preview of ${componentPath}`}
+                title={`Preview of ${normalized}`}
                 sandbox="allow-scripts allow-same-origin"
             />
         </div>
