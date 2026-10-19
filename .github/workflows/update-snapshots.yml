@@ -35,7 +35,7 @@ jobs:
               run: |
                   pnpm storybook test:regressions --update-snapshots
                   git add apps/storybook/__tests__/screenshots
-                  git diff --exit-code || git commit -m 'ci: update snapshots'
+                  git diff --cached --exit-code || git commit -m 'ci: update snapshots'
 
             - name: Update Snapshots
               uses: ad-m/github-push-action@master
