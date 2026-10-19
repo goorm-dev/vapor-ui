@@ -2,21 +2,25 @@
 
 import * as React from 'react';
 
-import { normalizeFile } from './paths';
+import { EXAMPLE_LOADERS } from './_examples.generated';
 
 interface PreviewProps {
     file: string;
 }
 
+const MissingExample = ({ file }: { file: string }) => (
+    <div className="not-prose text-v-danger-500">Example not registered: {file}</div>
+);
+
 export function Preview({ file }: PreviewProps) {
     const Component = React.useMemo(() => {
-        const normalized = normalizeFile(file);
-        // Climb back to `apps/website/` and resolve the author-provided path verbatim.
-        // `webpackInclude` keeps the generated chunk set to `.tsx` so the bundler does not
-        // try to import MDX or other content assets co-located with the example.
-        return React.lazy(() =>
-            import(/* webpackInclude: /\.tsx$/ */ `../../../${normalized}`),
-        );
+        const loader = EXAMPLE_LOADERS[file];
+        if (!loader) {
+            const Fallback = () => <MissingExample file={file} />;
+            Fallback.displayName = 'MissingExample';
+            return Fallback;
+        }
+        return React.lazy(loader);
     }, [file]);
 
     return (

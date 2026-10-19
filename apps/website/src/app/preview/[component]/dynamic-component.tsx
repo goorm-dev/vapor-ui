@@ -4,6 +4,8 @@ import * as React from 'react';
 
 import { Text } from '@vapor-ui/core';
 
+import { EXAMPLE_LOADERS } from '~/components/demo/_examples.generated';
+
 const ComponentError = ({ file, error }: { file: string | undefined; error: string }) => {
     return (
         <div className="p-5 text-center text-v-danger">
@@ -43,19 +45,19 @@ function useDynamicComponent(file?: string) {
             return;
         }
 
+        const key = file.startsWith('/') ? file : `/${file.replace(/^\.\//, '')}`;
+        const loader = EXAMPLE_LOADERS[key];
+        if (!loader) {
+            setError(`Example not registered: ${key}`);
+            setIsLoading(false);
+            return;
+        }
+
         const loadComponent = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
-
-                const normalized = file.replace(/^\.?\//, '');
-                // Same dynamic-import strategy as the inline Preview: climb back to
-                // `apps/website/` and let the bundler resolve the author-provided path.
-                // `../../../../` from `apps/website/src/app/preview/[component]/`.
-                const componentModule = await import(
-                    /* webpackInclude: /\.tsx$/ */ `../../../../${normalized}`
-                );
-
+                const componentModule = await loader();
                 if (componentModule.default) {
                     setComponent(() => componentModule.default);
                 } else {
