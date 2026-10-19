@@ -17,7 +17,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { normalizeFile } from '~/components/demo/paths';
+import { normalizeFile } from '~/utils/paths';
 
 interface Node {
     type: string;

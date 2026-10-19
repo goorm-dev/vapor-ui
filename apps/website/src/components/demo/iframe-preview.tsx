@@ -4,9 +4,10 @@ import * as React from 'react';
 
 import { useTheme } from '@vapor-ui/core';
 
+import { normalizeFile } from '~/utils/paths';
+
 import type { DeviceType } from './constants';
 import { DEVICE_WIDTH_MAP } from './constants';
-import { normalizeFile } from './paths';
 
 interface IframePreviewProps {
     file: string;
