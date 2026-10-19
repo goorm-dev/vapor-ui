@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useCallback, useMemo, useState } from 'react';
+import { forwardRef, useMemo, useState } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
@@ -38,11 +38,7 @@ export const [FieldProvider, useFieldContext] = createContext<FieldContext>({
 export const FieldRoot = forwardRef<HTMLDivElement, FieldRoot.Props>((props, ref) => {
     const { className, ...otherProps } = resolveStyles(props);
 
-    const [required, setRequiredState] = useState(false);
-
-    const setRequired = useCallback((next: boolean) => {
-        setRequiredState(next);
-    }, []);
+    const [required, setRequired] = useState(false);
 
     const contextValue = useMemo<FieldContext>(
         () => ({ required, setRequired }),
