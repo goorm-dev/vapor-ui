@@ -4,6 +4,8 @@ import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
 import lastModified from 'fumadocs-mdx/plugins/last-modified';
 import { z } from 'zod';
 
+import { remarkDemoSource } from './src/mdx-plugins/remark-demo-source';
+
 export const docs = defineDocs({
     dir: 'content/docs',
     docs: {
@@ -32,7 +34,10 @@ export default defineConfig({
                 id: 'package-manager',
             },
         },
-        remarkPlugins: [[remarkDocGen, { generators: [fileGenerator({})] }]],
+        remarkPlugins: [
+            remarkDemoSource,
+            [remarkDocGen, { generators: [fileGenerator({})] }],
+        ],
         rehypeCodeOptions: {
             ...rehypeCodeDefaultOptions,
             lazy: true,
