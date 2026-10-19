@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { Card, Tabs } from '@vapor-ui/core';
+import { Tabs } from '@vapor-ui/core';
 
 import { DEVICE_TYPES, type DeviceType, TAB_TYPES, type TabType } from './constants';
 import ErrorBoundary from './error-boundary';
@@ -22,27 +22,20 @@ export const Demo = (props: DemoProps) => {
 
     return (
         <ErrorBoundary>
-            <Card.Root
-                render={
-                    <Tabs.Root
-                        value={selectedTab}
-                        onValueChange={handleTabChange}
-                        className="w-full rounded-v-300"
-                        variant="line"
-                        size="lg"
-                    />
-                }
-            >
-                <Card.Header className="p-0 border-b-0 pt-v-50 bg-v-canvas-100 rounded-t-v-300 relative @container">
+            <div className="rounded-v-500 bg-v-canvas-raised">
+                <Tabs.Root
+                    value={selectedTab}
+                    onValueChange={handleTabChange}
+                    className="w-full"
+                    variant="line"
+                >
                     <DemoHeader
                         selectedTab={selectedTab}
                         selectedDevice={selectedDevice}
                         showResponsiveToggle={showResponsiveToggle}
                         onDeviceChange={handleDeviceChange}
                     />
-                </Card.Header>
 
-                <Card.Body className="p-0 bg-v-canvas rounded-b-v-300 overflow-hidden">
                     <Tabs.Panel value={TAB_TYPES['PREVIEW']} className="rounded-t-none" keepMounted>
                         <DemoPreviewPanel
                             name={name}
@@ -56,8 +49,8 @@ export const Demo = (props: DemoProps) => {
                     >
                         {children}
                     </Tabs.Panel>
-                </Card.Body>
-            </Card.Root>
+                </Tabs.Root>
+            </div>
         </ErrorBoundary>
     );
 };
@@ -108,8 +101,8 @@ const DemoHeader = ({
     const shouldShowDeviceToggle = selectedTab === TAB_TYPES['PREVIEW'] && showResponsiveToggle;
 
     return (
-        <>
-            <Tabs.List $css={{ width: '100%', paddingInline: '$300' }}>
+        <div className="px-v-200 py-v-150">
+            <Tabs.List $css={{ border: 'none' }}>
                 {Object.values(TAB_TYPES).map((tab) => (
                     <Tabs.Button key={tab} value={tab}>
                         {tab}
@@ -120,7 +113,7 @@ const DemoHeader = ({
             {shouldShowDeviceToggle && (
                 <ResponsiveControl defaultValue={selectedDevice} onValueChange={onDeviceChange} />
             )}
-        </>
+        </div>
     );
 };
 
