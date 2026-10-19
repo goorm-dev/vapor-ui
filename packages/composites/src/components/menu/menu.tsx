@@ -171,7 +171,7 @@ export interface MenuRootProps {
 
     /**
      * 트리거를 기준으로 팝업이 열리는 방향.
-     * @default "bottom"
+     * 최상위 `Menu.Root`에서는 `"bottom"`, 중첩 `Menu.Root` (SubmenuItem 아래)에서는 `"right"`를 기본값으로 갖는다.
      */
     side?: PositionerProps['side'];
 
@@ -191,7 +191,7 @@ export interface MenuRootProps {
     trigger?: RootSlots['trigger'];
 
     /**
-     * 그룹 내부에 표시할 요소.
+     * 메뉴 내부에 표시할 요소.
      */
     children: ReactNode;
 }
@@ -291,7 +291,7 @@ const SingleCheckGroup = ({
     const [value, setValueState] = useControlled<string | undefined>({
         name: 'MenuCheckGroup',
         controlled: valueProp,
-        default: defaultValue,
+        default: defaultValue ?? '',
     });
 
     const handleValueChange = useStableCallback((next: string) => {
@@ -442,6 +442,7 @@ export namespace MenuCheckGroup {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const MenuItem = ({
+    isDisabled,
     variant,
     label,
     description,
@@ -451,6 +452,7 @@ export const MenuItem = ({
 }: MenuItem.Props) => {
     return (
         <MenuPrimitives.Item
+            disabled={isDisabled}
             onClick={onClick}
             $css={{
                 color: variant === 'critical' ? '$fg-danger' : '$fg-normal',
@@ -478,6 +480,12 @@ export interface MenuItemProps {
      * <Menu.Item onClick={handleSelect} label="Copy" />
      */
     onClick: ItemProps['onClick'];
+
+    /**
+     * 아이템을 비활성화한다. 비활성화된 아이템은 클릭 시 액션을 실행하지 않는다.
+     * @default false
+     */
+    isDisabled?: ItemProps['disabled'];
 
     /**
      * 메뉴 아이템의 시각적 위계를 결정한다.
@@ -514,6 +522,7 @@ export namespace MenuItem {
 
 export const MenuCheckItem = ({
     value: valueProp,
+    isDisabled,
     onClick,
     leading,
     label,
@@ -532,6 +541,7 @@ export const MenuCheckItem = ({
         return (
             <MenuPrimitives.RadioItemPrimitive
                 closeOnClick
+                disabled={isDisabled}
                 value={valueProp}
                 onClick={onClick}
                 $css={{ display: 'grid', gap: '$000', ...itemLayout }}
@@ -557,6 +567,7 @@ export const MenuCheckItem = ({
     return (
         <MenuPrimitives.CheckboxItemPrimitive
             closeOnClick
+            disabled={isDisabled}
             checked={value.includes(valueProp)}
             onCheckedChange={() => handleValueChange(valueProp)}
             onClick={onClick}
@@ -584,6 +595,12 @@ export interface MenuCheckItemProps {
      * 항목이 대표하는 값. 그룹의 선택 상태 키로 사용된다.
      */
     value: string;
+
+    /**
+     * 아이템을 비활성화한다. 비활성화된 아이템은 클릭 시 액션을 실행하거나 선택되지 않는다.
+     * @default false
+     */
+    isDisabled?: RadioItemProps['disabled'];
 
     /**
      * 항목 클릭 시 호출된다. 선택 토글은 그룹이 처리하므로, 추가 사이드이펙트가 필요한 경우에만 지정한다.
@@ -648,7 +665,15 @@ export const MenuSubmenuItem = ({
     );
 };
 
+type SubmenuItemProps = MenuPrimitives.SubmenuTrigger.Props;
+
 export interface MenuSubmenuItemProps {
+    /**
+     * 아이템을 비활성화한다. 비활성화된 트리거는 메뉴를 열 수 없다.
+     * @default false
+     */
+    isDisabled?: SubmenuItemProps['disabled'];
+
     /**
      * 항목 좌측에 표시되는 요소. 레이블을 보충 설명하기 위한 요소를 배치한다.
      */
@@ -676,7 +701,7 @@ export namespace MenuSubmenuItem {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const Separator = () => {
+const Separator = () => {
     return (
         <MenuPrimitives.Separator
             $css={{
