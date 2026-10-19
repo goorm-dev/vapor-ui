@@ -1,61 +1,76 @@
 {
-    "name": "Root",
-    "displayName": "Pagination.Root",
-    "description": "Pagination의 최상위 컴포넌트입니다. div 요소를 기반으로, 표준 HTML 속성(className, style 등)을 지원합니다.",
+    "name": "PaginationRoot",
     "props": [
         {
-            "name": "defaultPage",
+            "name": "totalPages",
             "type": ["number"],
-            "defaultValue": "1",
-            "description": "초기 렌더링 시 활성화되어야 하는 페이지 번호입니다."
-        },
-        {
-            "name": "page",
-            "type": ["number"],
-            "defaultValue": "-",
-            "description": "활성화할 페이지의 제어된 값입니다. onPageChange와 함께 사용해야 합니다."
-        },
-        {
-            "name": "onPageChange",
-            "type": ["function"],
-            "defaultValue": "-",
-            "description": "값이 변경될 때 호출되는 이벤트 핸들러입니다."
+            "required": true,
+            "description": "The total number of pages."
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
-            "defaultValue": "md",
-            "description": "Pagination의 높이·타이포그래피 크기 등을 제어합니다."
+            "required": false
         },
         {
-            "name": "disabled",
-            "type": ["boolean"],
-            "defaultValue": "false",
-            "description": "Pagination의 비활성화 여부를 설정합니다."
-        },
-        {
-            "name": "totalPages",
-            "type": ["number"],
-            "defaultValue": "1",
-            "description": "화면에 표시할 전체 페이지 수를 설정합니다."
-        },
-        {
-            "name": "siblingCount",
-            "type": ["number"],
-            "defaultValue": "1",
-            "description": "현재 페이지 양쪽에 표시할 페이지 번호의 개수를 설정합니다."
+            "name": "onPageChange",
+            "type": [
+                "(page: number, eventDetails: { reason: \"item-press\"; event: KeyboardEvent | globalThis.MouseEvent | PointerEvent; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: HTMLElement | undefined; }) => void"
+            ],
+            "required": false,
+            "description": "Event handler called when the selected page of the pagination changes."
         },
         {
             "name": "boundaryCount",
             "type": ["number"],
-            "defaultValue": "1",
-            "description": "처음과 마지막에 표시할 페이지 번호의 개수를 설정합니다."
+            "required": false,
+            "description": "The number of page items to show for the start and end pages."
         },
         {
-            "name": "children",
-            "type": ["ReactNode"],
-            "defaultValue": "-",
-            "description": "네비게이션 메뉴의 자식 컴포넌트들입니다."
+            "name": "className",
+            "type": ["string | ((state: PaginationRootPrimitiveState) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "defaultPage",
+            "type": ["number"],
+            "required": false,
+            "description": "The default selected page of the paginations. Use when uncontrolled."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction."
+        },
+        {
+            "name": "page",
+            "type": ["number"],
+            "required": false,
+            "description": "The selected page of the paginations. Use when controlled."
+        },
+        {
+            "name": "siblingCount",
+            "type": ["number"],
+            "required": false,
+            "description": "The number of page items to show on each side of the current page item."
+        },
+        {
+            "name": "style",
+            "type": [
+                "CSSProperties | ((state: PaginationRootPrimitiveState) => (CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: PaginationRootPrimitiveState) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
         }
     ]
 }

@@ -1,101 +1,94 @@
 {
-    "name": "SubmenuRoot",
-    "displayName": "Menu.SubmenuRoot",
-    "description": "Submenu 하위의 요소를 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "name": "MenuSubmenuRoot",
     "props": [
         {
-            "name": "orientation",
-            "type": ["horizontal", "vertical"],
-            "required": false,
-            "description": "메뉴의 시각적 방향.\n회전 초점이 위쪽/아래쪽 화살표 키를 사용하는지 왼쪽/오른쪽 화살표 키를 사용하는지 제어합니다.",
-            "defaultValue": "vertical"
-        },
-        {
-            "name": "children",
-            "type": [
-                "undefined",
-                "null",
-                "string",
-                "number",
-                "false",
-                "true",
-                "ReactElement",
-                "Iterable<ReactNode>",
-                "ReactPortal"
-            ],
-            "required": true
-        },
-        {
-            "name": "loop",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "키보드 포커스를 화살표 키를 사용하여 목록 끝에 도달했을 때 첫 번째 항목으로 다시 루프할지 여부입니다.",
-            "defaultValue": "true"
-        },
-        {
-            "name": "disabled",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시해야 하는지 여부입니다.",
-            "defaultValue": "false"
-        },
-        {
-            "name": "open",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "메뉴가 현재 열려 있는지 여부입니다."
-        },
-        {
-            "name": "render",
-            "type": ["ReactElement"],
-            "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
-        },
-        {
             "name": "defaultOpen",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "메뉴가 처음에 열려 있는지 여부입니다.\n\n제어되는 메뉴를 렌더링하려면 대신 `open` 속성을 사용하세요.",
-            "defaultValue": "false"
+            "description": "Whether the menu is initially open.\n\nTo render a controlled menu, use the `open` prop instead."
         },
         {
             "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: ChangeEventDetails) => void"],
+            "type": ["(open: boolean, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void"],
             "required": false,
-            "description": "메뉴가 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
+            "description": "Event handler called when the menu is opened or closed."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the menu is currently open."
+        },
+        {
+            "name": "className",
+            "type": ["string | ((state: Menu.SubmenuRoot.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": [
+                "CSSProperties | ((state: Menu.SubmenuRoot.State) => (CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<MenuRootActions | null>"],
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: Manually unmounts the menu.\n  Call this after any externally controlled closing animation finishes.\n- `close`: When specified, the menu can be closed imperatively."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "required": false,
+            "description": "The content of the submenu."
+        },
+        {
+            "name": "closeParentOnEsc",
+            "type": ["boolean"],
+            "required": false,
+            "description": "When in a submenu, determines whether pressing the Escape key\ncloses the entire menu, or only the current child menu.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction."
+        },
+        {
+            "name": "highlightItemOnHover",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether moving the pointer over items should highlight them.\nDisabling this prop allows CSS `:hover` to be differentiated from the `:focus` (`data-highlighted`) state."
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys."
         },
         {
             "name": "onOpenChangeComplete",
             "type": ["(open: boolean) => void"],
             "required": false,
-            "description": "메뉴가 닫힐 때 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
+            "description": "Event handler called after any animations complete when the menu is opened or closed."
         },
         {
-            "name": "delay",
-            "type": ["number"],
+            "name": "orientation",
+            "type": ["MenuRootOrientation"],
             "required": false,
-            "description": "메뉴가 호버될 때 열리기 전에 대기하는 시간입니다. 밀리초 단위로 지정합니다.\n\n`openOnHover` 속성이 필요합니다.",
-            "defaultValue": "100"
+            "description": "The visual orientation of the menu.\nControls whether roving focus uses up/down or left/right arrow keys."
         },
         {
-            "name": "closeDelay",
-            "type": ["number"],
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: Menu.SubmenuRoot.State) => ReactElement)"
+            ],
             "required": false,
-            "description": "메뉴가 호버되어 열렸을 때 닫히기 전에 대기하는 시간입니다. 밀리초 단위로 지정합니다.\n\n`openOnHover` 속성이 필요합니다.",
-            "defaultValue": "0"
-        },
-        {
-            "name": "openOnHover",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "서브메뉴가 트리거에 마우스를 올렸을 때 열릴지 여부입니다.",
-            "defaultValue": "true"
-        },
-        {
-            "name": "actionsRef",
-            "type": ["RefObject<Actions>"],
-            "required": false,
-            "description": "명령적 행동에 대한 참조.\n- `unmount`: 지정되면 메뉴를 닫았을 때 언마운트되지 않습니다.\n대신 메뉴를 수동으로 마운트 해제하려면 'unmount' 기능을 호출해야 합니다.\n메뉴의 애니메이션이 외부 라이브러리에 의해 제어될 때 유용합니다.\n- `close`: 지정하면 메뉴를 긴급하게 닫을 수 있습니다."
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
         }
     ]
 }

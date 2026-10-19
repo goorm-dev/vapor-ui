@@ -1,13 +1,27 @@
 {
-    "name": "IconPrimitive",
-    "displayName": "Toast.IconPrimitive",
-    "description": "Toast의 아이콘을 표시합니다. `colorPalette`에 따라 기본 아이콘이 자동으로 설정됩니다. `<svg>` 요소를 렌더링합니다.",
+    "name": "ToastIconPrimitive",
     "props": [
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string | ((state: ToastIconPrimitive.State) => (string | undefined))"],
             "required": false,
-            "description": "요소에 적용된 CSS 클래스."
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": [
+                "CSSProperties | ((state: ToastIconPrimitive.State) => (CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: ToastIconPrimitive.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
         }
     ]
 }

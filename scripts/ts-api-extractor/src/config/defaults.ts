@@ -1,6 +1,10 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import type { ExtractorConfig } from '~/config/schema';
+
+// ESM shim: tsup emits ESM for `node24` target, so `__dirname` is undefined.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const CORE_PATH = path.resolve(__dirname, '../../../packages/core');
 const CORE_TSCONFIG_PATH = path.resolve(CORE_PATH, 'tsconfig.json');

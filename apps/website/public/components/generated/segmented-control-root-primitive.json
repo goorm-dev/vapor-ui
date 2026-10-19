@@ -31,7 +31,16 @@
         {
             "name": "className",
             "type": ["string | ((state: SegmentedControl.Root.State) => (string | undefined))"],
-            "required": false
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": [
+                "CSSProperties | ((state: SegmentedControl.Root.State) => (CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "disabled",
@@ -70,20 +79,12 @@
             "description": "Whether the user must choose a value before submitting a form."
         },
         {
-            "name": "style",
-            "type": [
-                "React.CSSProperties | ((state: SegmentedControl.Root.State) => (React.CSSProperties | undefined))"
-            ],
-            "required": false,
-            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
             "name": "render",
             "type": [
                 "ReactElement | ((props: HTMLProps, state: SegmentedControl.Root.State) => ReactElement)"
             ],
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
         }
     ]
 }

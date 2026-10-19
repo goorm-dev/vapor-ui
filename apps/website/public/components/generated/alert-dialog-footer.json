@@ -1,0 +1,28 @@
+{
+    "name": "AlertDialogFooter",
+    "description": "Bottom section of the alert dialog, typically containing action buttons. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string | ((state: AlertDialogFooter.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": [
+                "CSSProperties | ((state: AlertDialogFooter.State) => (CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: AlertDialogFooter.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
+        }
+    ]
+}

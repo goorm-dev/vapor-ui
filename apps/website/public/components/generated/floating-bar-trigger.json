@@ -1,22 +1,63 @@
 {
-    "name": "Trigger",
-    "displayName": "FloatingBar.Trigger",
-    "description": "FloatingBar의 트리거 요소로, 사용자가 상호작용하여 FloatingBar를 열 수 있는 버튼 역할을 합니다. HTML `<button>` 요소로 렌더링됩니다.",
+    "name": "FloatingBarTrigger",
     "props": [
+        {
+            "name": "className",
+            "type": ["string | ((state: FloatingBar.Trigger.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": [
+                "CSSProperties | ((state: FloatingBar.Trigger.State) => (CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before closing the popover that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before the popover may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop."
+        },
+        {
+            "name": "handle",
+            "type": ["PopoverHandle<unknown>"],
+            "required": false,
+            "description": "A handle to associate the trigger with a popover."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`).\nWhether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`)."
+        },
+        {
+            "name": "openOnHover",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the popover should also open when the trigger is hovered."
+        },
+        {
+            "name": "payload",
+            "type": ["unknown"],
+            "required": false,
+            "description": "A payload to pass to the popover when it is opened."
+        },
         {
             "name": "render",
             "type": [
-                "React.ReactElement",
-                "(props: TriggerProps, state: TriggerState) => React.ReactElement"
+                "ReactElement | ((props: HTMLProps, state: FloatingBar.Trigger.State) => ReactElement)"
             ],
-            "defaultValue": "undefined",
-            "description": "트리거 요소를 렌더링하는 함수 또는 컴포넌트입니다. 함수로 제공될 경우 props와 state를 인자로 받습니다."
-        },
-        {
-            "name": "disabled",
-            "type": ["boolean"],
-            "defaultValue": "false",
-            "description": "트리거 요소를 비활성화할지 여부를 설정합니다."
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
         }
     ]
 }

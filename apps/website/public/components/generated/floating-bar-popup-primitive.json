@@ -1,28 +1,43 @@
 {
-    "name": "PopupPrimitive",
-    "displayName": "FloatingBar.PopupPrimitive",
-    "description": "FloatingBar의 팝업 기본 요소로, 팝업의 기본 구조와 동작을 제공합니다. HTML `<div>` 요소로 렌더링됩니다.",
+    "name": "FloatingBarPopupPrimitive",
     "props": [
         {
             "name": "className",
-            "type": ["string"],
-            "defaultValue": "undefined",
-            "description": "FloatingBar 팝업에 적용할 CSS 클래스명입니다."
+            "type": ["string | ((state: FloatingBar.Popup.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
         },
         {
             "name": "style",
-            "type": ["CSSProperties"],
-            "defaultValue": "undefined",
-            "description": "FloatingBar 팝업에 적용할 인라인 스타일입니다."
+            "type": [
+                "CSSProperties | ((state: FloatingBar.Popup.State) => (CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "finalFocus",
+            "type": [
+                "false | true | React.RefObject<HTMLElement | null> | ((closeType: InteractionType) => (boolean | void | HTMLElement | null))"
+            ],
+            "required": false,
+            "description": "Determines the element to focus when the popover is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "initialFocus",
+            "type": [
+                "false | true | React.RefObject<HTMLElement | null> | ((openType: InteractionType) => (boolean | void | HTMLElement | null))"
+            ],
+            "required": false,
+            "description": "Determines the element to focus when the popover is opened.\nBy default, focus moves to the first tabbable element inside the popup, except when the popover\nis opened by touch — then the popup itself is focused to avoid opening the virtual keyboard.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (first tabbable element or popup).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing."
         },
         {
             "name": "render",
             "type": [
-                "React.ReactElement",
-                "(props: PopupProps, state: PopupState) => React.ReactElement"
+                "ReactElement | ((props: HTMLProps, state: FloatingBar.Popup.State) => ReactElement)"
             ],
-            "defaultValue": "undefined",
-            "description": "팝업 요소를 렌더링하는 함수 또는 컴포넌트입니다."
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
         }
     ]
 }

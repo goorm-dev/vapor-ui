@@ -16,7 +16,7 @@
         {
             "name": "onValueChange",
             "type": [
-                "(groupValue: string[], eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element | undefined; }) => void"
+                "(groupValue: string[], eventDetails: ToggleGroup.ChangeEventDetails) => void"
             ],
             "required": false,
             "description": "Callback fired when the pressed states of the toggle group changes."
@@ -32,6 +32,12 @@
             "type": ["string | ((state: ToggleGroup.State) => (string | undefined))"],
             "required": false,
             "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties | ((state: ToggleGroup.State) => (CSSProperties | undefined))"],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "disabled",
@@ -57,20 +63,12 @@
             "required": false
         },
         {
-            "name": "style",
-            "type": [
-                "React.CSSProperties | ((state: ToggleGroup.State) => (React.CSSProperties | undefined))"
-            ],
-            "required": false,
-            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
-        },
-        {
             "name": "render",
             "type": [
                 "ReactElement | ((props: HTMLProps, state: ToggleGroup.State) => ReactElement)"
             ],
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
         }
     ]
 }

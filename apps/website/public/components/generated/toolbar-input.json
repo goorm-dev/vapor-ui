@@ -19,6 +19,14 @@
             "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
         },
         {
+            "name": "style",
+            "type": [
+                "CSSProperties | ((state: Toolbar.Input.State) => (CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
             "name": "disabled",
             "type": ["boolean"],
             "required": false,
@@ -31,20 +39,12 @@
             "description": "When `true` the item remains focusable when disabled."
         },
         {
-            "name": "style",
-            "type": [
-                "React.CSSProperties | ((state: Toolbar.Input.State) => (React.CSSProperties | undefined))"
-            ],
-            "required": false,
-            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state.\nStyle applied to the element, or a function that returns a style object based on the component’s state."
-        },
-        {
             "name": "render",
             "type": [
                 "ReactElement | ((props: HTMLProps, state: Toolbar.Input.State) => ReactElement)"
             ],
             "required": false,
-            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
         }
     ]
 }

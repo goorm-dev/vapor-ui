@@ -1,13 +1,33 @@
 {
-    "name": "Close",
-    "displayName": "FloatingBar.Close",
-    "description": "FloatingBar의 닫기 버튼 요소로, 사용자가 상호작용하여 FloatingBar를 닫는 역할을 합니다. HTML `<button>` 요소로 렌더링됩니다.",
+    "name": "FloatingBarClose",
     "props": [
         {
+            "name": "className",
+            "type": ["string | ((state: FloatingBar.Close.State) => (string | undefined))"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+        },
+        {
+            "name": "style",
+            "type": [
+                "CSSProperties | ((state: FloatingBar.Close.State) => (CSSProperties | undefined))"
+            ],
+            "required": false,
+            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
+        },
+        {
             "name": "render",
-            "type": ["React.ReactElement", "(props: CloseProps) => React.ReactElement"],
-            "defaultValue": "undefined",
-            "description": "닫기 버튼을 렌더링하는 함수 또는 컴포넌트입니다."
+            "type": [
+                "ReactElement | ((props: HTMLProps, state: FloatingBar.Close.State) => ReactElement)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
         }
     ]
 }
