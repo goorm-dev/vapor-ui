@@ -262,6 +262,9 @@ importers:
       '@vapor-ui/color-generator':
         specifier: workspace:*
         version: link:../../packages/color-generator
+      '@vapor-ui/composites':
+        specifier: workspace:*
+        version: link:../../packages/composites
       '@vapor-ui/core':
         specifier: workspace:*
         version: link:../../packages/core
