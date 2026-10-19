@@ -124,15 +124,11 @@ const DemoPreviewPanel = ({
     showResponsiveToggle,
     selectedDevice,
 }: DemoPreviewPanelProps) => {
-    const children = showResponsiveToggle ? (
-        <IframePreview file={file} device={selectedDevice} />
-    ) : (
-        <Preview file={file} />
-    );
+    const Renderer = showResponsiveToggle ? IframePreview : Preview;
 
     return (
         <Tabs.Panel value={TAB_TYPES['PREVIEW']} className="rounded-t-none" keepMounted>
-            {children}
+            <Renderer file={file} device={selectedDevice} />
         </Tabs.Panel>
     );
 };
@@ -147,7 +143,7 @@ const DemoCodePanel = ({ children }: DemoCodePanelProps) => {
     return (
         <Tabs.Panel
             value={TAB_TYPES['CODE']}
-            className="flex flex-col gap-v-250 rounded-t-none rounded-b-v-300 bg-v-normal [&>figure]:m-0 [&>figure]:border-0 [&>figure]:rounded-none [&>figure:last-child]:rounded-b-v-300"
+            className="flex flex-col gap-v-250 [&>figure]:bg-inherit [&>figure]:m-0 [&>figure]:border-0 [&>figure]:rounded-none [&>figure:last-child]:rounded-b-v-300"
         >
             {children}
         </Tabs.Panel>
