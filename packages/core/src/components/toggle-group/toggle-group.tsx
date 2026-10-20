@@ -53,6 +53,7 @@ type ToggleGroupVariants = RootVariants;
 
 export namespace ToggleGroup {
     export type State = BaseToggleGroup.State;
+    export type ChangeEventDetails = BaseToggleGroup.ChangeEventDetails;
     export interface Props
         extends VaporUIComponentProps<typeof BaseToggleGroup, State>, ToggleGroupVariants {
         /**

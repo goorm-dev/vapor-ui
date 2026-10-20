@@ -14,14 +14,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: RadioGroup.Label.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
         },
         {
             "name": "style",
-            "type": ["CSSProperties", "function"],
-            "detailedType": "CSSProperties | ((state: RadioGroup.Label.State) => (CSSProperties | undefined)) | undefined",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: RadioGroup.Label.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "render",

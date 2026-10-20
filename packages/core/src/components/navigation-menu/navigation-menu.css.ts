@@ -203,7 +203,7 @@ export const arrow = componentStyle({
 
     selectors: {
         '&[data-side="top"]': {
-            bottom: '-8px',
+            bottom: '-7px',
             transform: 'rotate(-180deg)',
         },
         '&[data-side="right"]': {
@@ -211,7 +211,7 @@ export const arrow = componentStyle({
             transform: 'rotate(-90deg)',
         },
         '&[data-side="bottom"]': {
-            top: '-8px',
+            top: '-7px',
             transform: 'rotate(0deg)',
         },
         '&[data-side="left"]': {

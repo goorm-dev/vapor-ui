@@ -144,7 +144,7 @@ Every property of `Props`, including inherited ones, is checked against these ru
 1. `className` and `style`: kept.
 2. Tagged `@ignore` in its Base UI JSDoc (Base UI's internal `id`) and not re-declared by vapor-ui: dropped.
 3. Declared in React types, DOM lib types, or a `node_modules` package other than Base UI: dropped.
-4. Name starts with `data-` or `aria-`: dropped.
+4. Name starts with `data-` or `aria-` and not declared by Base UI: dropped. Base UI declares an `aria-` prop only when it is part of the API (e.g. Meter `aria-valuetext`).
 5. Declared in the sprinkles module, or named like a deprecated CSS shorthand (`$css`, `width`, `color`, …; full list in `src/policy.ts`): dropped.
 6. Anything else (own props, recipe variant props, Base UI props): kept.
 
