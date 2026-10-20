@@ -12,11 +12,17 @@ export interface DynamicCallSite {
     slots: Array<{ slotId: string; property: string; sourceExpr: string }>;
 }
 
+interface PendingInject {
+    openingEl: AnyProp;
+    attribute: AnyProp | null;
+    slotLits: string[];
+}
+
 export interface InjectContext {
     ms: MagicString;
     mode: 'dev' | 'prod';
-    /** JSX 컨테이너별 중복 삽입 방지 (동일 opening element 안에 여러 css() 있을 때). */
-    injectedElements: Set<number>;
+    /** openingEl.start → 해당 element 로 모인 slot 리터럴. flushInjects 가 소비. */
+    pending: Map<number, PendingInject>;
 }
 
 export interface InjectOutcome {
@@ -41,8 +47,8 @@ const WRAPPER_TYPES = new Set([
 
 /**
  * call 의 조상 체인을 훑어 `<Foo className={...}>` 위치를 찾고
- * `style={{ '--slot': _resolveToken(prop, expr), ... }}` 를 삽입한다.
- * 이미 style prop 있으면 spread syntax로 병합: `{...(existing), ...{slot}}`.
+ * 해당 opening element 의 slot 을 pending 버킷에 누적. 실제 삽입은
+ * `flushInjects` 가 모든 call 수집 후 element 단위로 한 번에 처리.
  */
 export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext): InjectOutcome {
     const found = findJsxAttribute(site.call, site.parents);
@@ -50,7 +56,14 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
 
     const { openingEl, attribute } = found;
 
-    // slot object literal 생성. helpers 는 소비자 코드에 자동 import.
+    // 기존 style attribute 가 머지 가능한 형태인지 확인.
+    if (attribute) {
+        const v = attribute.value;
+        if (v && !(v.type === 'JSXExpressionContainer' && v.expression)) {
+            return { success: false, error: mkErr(site.call, 'style-unmergeable') };
+        }
+    }
+
     const slotLits: string[] = [];
     for (const s of site.slots) {
         const varName = dynamicVarName(s.slotId, ctx.mode);
@@ -59,50 +72,47 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
             `'${varName}': _resolveToken(${JSON.stringify(s.property)}, ${s.sourceExpr})`,
         );
     }
-    const slotObj = `{ ${slotLits.join(', ')} }`;
 
-    // 동일 opening element 안 여러 css() 는 첫 site 만 style 주입,
-    // 이후 site 는 이미 있는 style 확장. 지금은 단순히 첫 site 만 처리하고
-    // 나머지는 skip (호출자가 rules 배열 보존).
-    if (ctx.injectedElements.has(openingEl.start)) {
-        return { success: true };
+    const key = openingEl.start;
+    const existing = ctx.pending.get(key);
+    if (existing) {
+        existing.slotLits.push(...slotLits);
+    } else {
+        ctx.pending.set(key, { openingEl, attribute, slotLits });
     }
-    ctx.injectedElements.add(openingEl.start);
+    return { success: true };
+}
 
-    if (!attribute) {
-        // 새 style attribute. className attribute 뒤에 삽입.
-        const insertPos = findAttributeInsertPos(openingEl);
-        ctx.ms.appendLeft(insertPos, ` style={${slotObj}}`);
-        return { success: true };
+/**
+ * pending 버킷을 MagicString 에 반영. opening element 당 한 번만 삽입/머지.
+ */
+export function flushInjects(ctx: InjectContext): void {
+    for (const p of ctx.pending.values()) {
+        if (p.slotLits.length === 0) continue;
+        const slotObj = `{ ${p.slotLits.join(', ')} }`;
+        const attr = p.attribute;
+
+        if (!attr) {
+            const insertPos = findAttributeInsertPos(p.openingEl);
+            ctx.ms.appendLeft(insertPos, ` style={${slotObj}}`);
+            continue;
+        }
+
+        const attrValue = attr.value;
+        if (!attrValue) {
+            ctx.ms.overwrite(attr.start, attr.end, `style={${slotObj}}`);
+            continue;
+        }
+
+        // JSXExpressionContainer 안 표현식 → spread 로 병합.
+        if (attrValue.type === 'JSXExpressionContainer' && attrValue.expression) {
+            const inner = attrValue.expression;
+            const existing = ctx.ms.original.slice(inner.start, inner.end);
+            const merged = `{ ...(${existing}), ...${slotObj} }`;
+            ctx.ms.overwrite(inner.start, inner.end, merged);
+        }
+        // 다른 형태(StringLiteral 등) 는 injectJsxStyleForCall 가 미리 error 로 거른다.
     }
-
-    // 기존 style attribute — spread syntax로 병합.
-    const attrValue = attribute.value;
-    if (!attrValue) {
-        // `style` 만 있고 value 없음 → 새로 대체.
-        ctx.ms.overwrite(attribute.start, attribute.end, `style={${slotObj}}`);
-        return { success: true };
-    }
-
-    // JSXExpressionContainer 안 표현식 → spread 로 병합.
-    // React style prop 은 object/undefined 만 받으므로 `...(existing)` 안전.
-    if (attrValue.type === 'JSXExpressionContainer' && attrValue.expression) {
-        const inner = attrValue.expression;
-        const existing = ctx.ms.original.slice(inner.start, inner.end);
-        const merged = `{ ...(${existing}), ...${slotObj} }`;
-        ctx.ms.overwrite(inner.start, inner.end, merged);
-
-        return { success: true };
-    }
-
-    return {
-        success: false,
-        error: {
-            code: 'dynamic-value',
-            message: 'Failed to inject style prop next to className={css(...)}.',
-            loc: { line: 0, column: 0 },
-        },
-    };
 }
 
 interface FoundJsx {

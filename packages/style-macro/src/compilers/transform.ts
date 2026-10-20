@@ -6,7 +6,12 @@ import type { AnyProp, BuildError, IRRule } from '~/models/types';
 
 import { directivePrologueEnd } from './directives';
 import { emitCss } from './emit-css';
-import { type DynamicCallSite, type InjectContext, injectJsxStyleForCall } from './jsx-inject';
+import {
+    type DynamicCallSite,
+    type InjectContext,
+    flushInjects,
+    injectJsxStyleForCall,
+} from './jsx-inject';
 import { walk } from './oxc-walk';
 import { parseCallArg } from './parse-call';
 
@@ -89,7 +94,7 @@ class Transformer {
         const injectCtx: InjectContext = {
             ms: this.#ms!,
             mode: this.#mode === 'hashed' ? 'prod' : 'dev',
-            injectedElements: new Set<number>(),
+            pending: new Map(),
         };
 
         for (const call of this.#callSites) {
@@ -141,6 +146,9 @@ class Transformer {
                 errors: this.#errors,
             };
         }
+
+        // 모든 call site 수집 후 opening element 단위로 style prop 삽입/머지.
+        flushInjects(injectCtx);
 
         // runtime helper import 자동 삽입 (필요 시).
         if (this.#needResolveToken) {
