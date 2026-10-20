@@ -3,7 +3,7 @@
     "ui": "tui",
     "tasks": {
         "storybook#dev": {
-            "dependsOn": ["@vapor-ui/core#build"]
+            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/style-macro#build"]
         },
         "website#dev": {
             "dependsOn": [
