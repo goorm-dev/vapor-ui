@@ -42,9 +42,11 @@ export default function Example() {
 }
 ```
 
-## 2. `$css` 속성
+## 2. `css()` 매크로 (권장)
 
-Vapor UI가 권장하는 기본 방식입니다. 별도의 CSS 파일 없이 컴포넌트에서 직접 스타일을 제어할 수 있습니다.
+Vapor UI가 권장하는 기본 방식입니다. [`@vapor-ui/style-macro`](https://github.com/goorm-dev/vapor-ui/blob/main/packages/style-macro/README.md) 의 `css()` 매크로를 사용하면 별도 CSS 파일 없이 컴포넌트에 스타일을 직접 전달할 수 있고, 번들러 플러그인이 호출부를 빌드 타임에 아토믹 classname 으로 변환합니다. 런타임 스타일 사전이 생성되지 않아 번들 사이즈가 작습니다.
+
+> 번들러에 `@vapor-ui/style-macro/vite`, `@vapor-ui/style-macro/next`, `@vapor-ui/style-macro/webpack` 중 하나를 등록해야 매크로가 동작합니다. 자세한 설정은 [패키지 README](https://github.com/goorm-dev/vapor-ui/blob/main/packages/style-macro/README.md) 를 참고하세요.
 
 ### 기본 CSS 속성 수정
 
@@ -52,15 +54,16 @@ CSS 속성을 객체 형태로 전달하여 스타일을 수정합니다.
 
 ```tsx
 import { Button } from '@vapor-ui/core';
+import { css } from '@vapor-ui/style-macro';
 
 export default function Example() {
     return (
         <Button
-            $css={{
+            className={css({
                 borderRadius: '9999px',
                 paddingInline: '20px',
                 fontWeight: 700,
-            }}
+            })}
         >
             기본 속성 수정
         </Button>
@@ -70,20 +73,21 @@ export default function Example() {
 
 ### 토큰 기반 스타일링
 
-디자인 토큰을 사용해 일관된 스타일을 유지하세요. 타입 지원을 통해 오타를 방지할 수 있습니다.
+디자인 토큰을 `$axis-key` 문자열로 참조하면 매크로가 해당 토큰을 CSS 변수로 치환합니다. 타입 지원으로 오타를 방지할 수 있습니다.
 
 ```tsx
 import { Button } from '@vapor-ui/core';
+import { css } from '@vapor-ui/style-macro';
 
 export default function Example() {
     return (
         <Button
-            $css={{
-                borderRadius: '$300',
-                paddingInline: '$300',
+            className={css({
+                borderRadius: '$radius-300',
+                paddingInline: '$space-300',
                 backgroundColor: '$bg-primary-100',
                 color: '$fg-normal-100',
-            }}
+            })}
         >
             토큰 기반 스타일
         </Button>
@@ -93,26 +97,51 @@ export default function Example() {
 
 ### 반응형 및 가상 선택자
 
-반응형 조건(breakpoints)과 가상 선택자(`_hover` 등)를 `$css` 안에서 한 번에 정의할 수 있습니다.
+가상 선택자(`:hover`, `::before` 등), 미디어 쿼리, 컨테이너 쿼리를 중첩 키로 작성합니다.
 
 ```tsx
 import { Button } from '@vapor-ui/core';
+import { css } from '@vapor-ui/style-macro';
 
 export default function Example() {
     return (
         <Button
-            $css={{
-                paddingInline: { default: '$200', md: '$300' },
-                backgroundColor: {
-                    default: '$bg-primary-100',
-                    _hover: '$bg-primary-200',
-                },
-            }}
+            className={css({
+                paddingInline: '$space-200',
+                backgroundColor: '$bg-primary-100',
+                ':hover': { backgroundColor: '$bg-primary-200' },
+                '@media (min-width: 768px)': { paddingInline: '$space-300' },
+            })}
         >
             반응형 + 가상 선택자
         </Button>
     );
 }
+```
+
+### 동적 값
+
+props·state 같은 런타임 값도 그대로 넘길 수 있습니다. 매크로가 해당 값을 CSS 변수로 승격해 `style` 속성에 자동 주입합니다.
+
+```tsx
+import { Button } from '@vapor-ui/core';
+import { css } from '@vapor-ui/style-macro';
+
+export default function Example({ accent }: { accent: string }) {
+    return <Button className={css({ color: accent })}>동적 색상</Button>;
+}
+```
+
+### 레거시 `$css` 속성 (deprecated)
+
+예전 코드베이스는 Sprinkles 기반의 `$css` prop 을 사용했습니다. 이 방식은 `@vapor-ui/core` 1.x 에서 계속 동작하지만 **deprecated** 되었고, 신규 코드에서는 사용하지 않습니다. 기존 사용부는 위의 `css()` 매크로로 점진적으로 이관하세요.
+
+```tsx
+// ⚠️ Deprecated — 신규 코드에서 사용 금지
+<Button $css={{ paddingInline: '$300' }} />
+
+// ✅ 권장
+<Button className={css({ paddingInline: '$space-300' })} />
 ```
 
 ## 3. 상태 기반 스타일링
