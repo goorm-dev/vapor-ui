@@ -92,12 +92,7 @@ const result = await extract({
     token,
 });
 
-console.log(`✓ Extracted ${result.slug}`);
-console.log(`  mdx    ${result.mdxPath}`);
-console.log(`  demos  ${result.componentDir}/demos`);
-console.log(`  images ${result.publicDir}/images`);
-console.log(`  warnings: ${result.warnings.length}`);
-for (const w of result.warnings) console.log(`  ⚠ ${w}`);
+for (const w of result.warnings) console.log(`⚠️ ${w}`);
 
 function parseOnly(raw: string | undefined): SectionTitle[] | undefined {
     if (!raw) return undefined;

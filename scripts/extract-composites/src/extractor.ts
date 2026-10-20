@@ -6,15 +6,8 @@ import { downloadWebpImages } from './images.ts';
 import { SLOT_NAMES, TEXT_NAMES, findItems, findTextByName, parseItemChildren } from './items.ts';
 import { discoverSections } from './sections.ts';
 import { renderTableForm } from './table.ts';
-import {
-    type FigmaNode,
-    type Item,
-    type ItemBlock,
-    SECTION_SLUG,
-    SECTION_WHITELIST,
-    type Section,
-    type SectionTitle,
-} from './types.ts';
+import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './types.ts';
+import { SECTION_SLUG, SECTION_WHITELIST } from './types.ts';
 import { prepareOutputs, renderMdx, writeComponentMdx } from './writer.ts';
 
 export interface ExtractOptions {
@@ -42,6 +35,9 @@ const pad = (n: number): string => n.toString().padStart(2, '0');
 
 export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
     const client = new FigmaClient(opts.token);
+
+    console.log(`문서 추출을 시작합니다. ${opts.clean ? '(clean mode)' : ''}\n`);
+
     const canvas = await client.getNode(opts.fileKey, opts.nodeId);
     const canvasName = canvas.name.trim();
     const slug = opts.slugOverride ?? kebabCase(canvasName);
@@ -54,6 +50,11 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
     await prepareOutputs(contentFile, publicDir, opts.clean);
 
     const discovered = discoverSections(canvas, warnings, only);
+
+    console.log(`발견된 섹션: ${discovered.length}개`);
+    console.log(discovered.map((d) => `- ${d.title}\n`).join(''));
+
+    console.log('내용을 분석하고 있습니다...\n');
 
     const sections: Section[] = [];
     for (const { title, frame } of discovered) {
@@ -83,8 +84,7 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
                         publicDir,
                     );
                     const rel = webpRel[targetNode.id];
-                    if (rel)
-                        blocks.push({ kind: 'docsImage', webpRel: rel, alt: currentSubtitle });
+                    if (rel) blocks.push({ kind: 'docsImage', webpRel: rel, alt: currentSubtitle });
                     else warnings.push(`sample export failed: ${targetNode.id} (${baseName})`);
                 } else if (child.kind === 'preview') {
                     const result = await extractPreview({
@@ -127,12 +127,18 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
     }
 
     const sortedSections = sortByPolicy(sections);
+
+    console.log(`총 ${sortedSections.length}개의 프레임을 마크다운으로 변환합니다...\n`);
+
     const mdx = renderMdx({
         slug,
         name: canvasName,
         sections: sortedSections,
     });
     await writeComponentMdx(contentFile, mdx);
+
+    console.log(`컴포넌트 문서가 작성되었습니다!`);
+    console.log(contentFile + '\n');
 
     return {
         slug,

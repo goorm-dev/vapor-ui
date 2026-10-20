@@ -2,7 +2,6 @@ export interface FigmaNode {
     id: string;
     name: string;
     type: string;
-    /** Figma REST only emits this when the layer is hidden; absent means visible. */
     visible?: boolean;
     characters?: string;
     children?: FigmaNode[];

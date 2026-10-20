@@ -1,4 +1,4 @@
-import { SECTION_WHITELIST, type FigmaNode, type SectionTitle } from './types.ts';
+import { type FigmaNode, SECTION_WHITELIST, type SectionTitle } from './types.ts';
 
 export const BLUE_PREFIX = '🟦';
 
@@ -34,7 +34,7 @@ export function discoverSections(
                     const key = title as SectionTitle;
                     if (found.has(key)) {
                         warnings.push(
-                            `duplicate section ignored: "${child.name}" (first match kept)`,
+                            `Duplicate section ignored: "${child.name}" (first match kept)`,
                         );
                     } else {
                         found.set(key, child);
