@@ -187,6 +187,24 @@ describe('transform — dynamic slots', () => {
         expect(out.code).not.toMatch(/import\s*\{[^}]*\bcolor\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/);
     });
 
+    it('keeps dynamic shorthand as the original property (no longhand expansion)', () => {
+        // 동적 `padding: w` 는 longhand 로 쪼개지 않는다. 런타임 값이 `'8px 16px'`
+        // 처럼 다중 값이면 각 longhand 가 전체 값을 받아 CSS 파싱이 실패한다.
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `function Comp({ p }) {`,
+            `  return <div className={css({ padding: p })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/dyn.tsx' });
+        expect(out.errors).toEqual([]);
+        // longhand 선언 없음.
+        expect(out.css ?? '').not.toMatch(/padding-top/);
+        expect(out.css ?? '').not.toMatch(/padding-right/);
+        // 원 shorthand 로 slot 참조.
+        expect(out.css ?? '').toMatch(/padding:\s*var\(--vapor-_[^)]+\)/);
+    });
+
     it('falls back to `{}` for properties without a token axis', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,

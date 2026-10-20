@@ -208,15 +208,18 @@ export function createParser(source: string) {
             `${cssProperty}|${selectorContext}|${sourceExpr}`,
         );
 
-        for (const e of expandShorthand(cssProperty, `var(--slot-${slotId})`)) {
-            rules.push({
-                kind: 'dynamic',
-                property: e.property,
-                slotId,
-                selectorContext,
-                sourceExpr,
-            });
-        }
+        // 동적 shorthand 는 longhand 로 분해하지 않고 원 property 를 유지한다.
+        // 런타임 값이 `'8px 16px'` 같은 다중 값일 때 각 longhand 에 전체 값을
+        // 복사하면 `padding-top: 8px 16px` 처럼 유효하지 않은 선언이 생겨
+        // 해당 longhand 가 초기값(0)으로 떨어진다. shorthand 그대로 두면
+        // CSS 가 다중 값을 올바르게 해석한다.
+        rules.push({
+            kind: 'dynamic',
+            property: cssProperty,
+            slotId,
+            selectorContext,
+            sourceExpr,
+        });
     }
 
     function pushStatic(
