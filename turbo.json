@@ -10,7 +10,8 @@
                 "@vapor-ui/core#build",
                 "@vapor-ui/icons#build",
                 "@vapor-ui/css-generator#build",
-                "@vapor-ui/color-generator#build"
+                "@vapor-ui/color-generator#build",
+                "@vapor-ui/style-macro#build"
             ],
             "outputs": ["dist/**"]
         },
