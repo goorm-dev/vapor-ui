@@ -16,59 +16,58 @@ interface Emitted {
     atRulePath: string[];
 }
 
-/** selectorContext 에서 앞쪽 at-rule 접두어와 leaf selector 분리. */
+/**
+ * selectorContext 에서 앞쪽 at-rule 접두어와 leaf selector 분리.
+ * 괄호 depth 0 에서 `:`, `[`, `&` 가 나오면 거기부터 leaf. 그 전까지는 at-rule 영역.
+ * 복합 미디어 쿼리(`@media (min-width: 768px) and (max-width: 1024px)`) 와
+ * 컨테이너 쿼리(`@container sidebar (min-width: 400px)`) 가 하나의 at-rule 로 유지됨.
+ */
 function extractAtRulePrefix(selectorContext: string) {
-    let i = 0;
-    while (selectorContext[i] === '@') {
-        const parenStart = selectorContext.indexOf('(', i);
-        if (parenStart === -1) break;
-        let depth = 0;
-        let j = parenStart;
-        for (; j < selectorContext.length; j++) {
-            if (selectorContext[j] === '(') depth++;
-            else if (selectorContext[j] === ')') {
-                depth--;
-                if (depth === 0) {
-                    j++;
-                    break;
-                }
-            }
-        }
-        i = j;
+    if (!selectorContext.startsWith('@')) {
+        return { atRule: null, leaf: selectorContext || 'base' };
     }
-    const atRule = i > 0 ? selectorContext.slice(0, i) : null;
-    const leaf = selectorContext.slice(i) || 'base';
-    return { atRule, leaf };
+
+    let depth = 0;
+    let prefixEnd = selectorContext.length;
+
+    for (let i = 0; i < selectorContext.length; i++) {
+        const c = selectorContext[i];
+        if (c === '(') depth++;
+        else if (c === ')') depth--;
+        else if (depth === 0 && (c === ':' || c === '[' || c === '&')) {
+            prefixEnd = i;
+            break;
+        }
+    }
+
+    const atRule = selectorContext.slice(0, prefixEnd).trim();
+    const leaf = selectorContext.slice(prefixEnd) || 'base';
+    return { atRule: atRule || null, leaf };
 }
 
+/** `@` 문자(괄호 밖) 기준으로 at-rule 유닛 분리. 괄호 안의 feature 는 유닛 경계로 사용하지 않음. */
 function splitAtRules(prefix: string): string[] {
     const units: string[] = [];
-    let i = 0;
-    while (i < prefix.length) {
-        const start = i;
-        const parenStart = prefix.indexOf('(', i);
-        if (parenStart === -1) break;
-        let depth = 0;
-        let j = parenStart;
-        for (; j < prefix.length; j++) {
-            if (prefix[j] === '(') depth++;
-            else if (prefix[j] === ')') {
-                depth--;
-                if (depth === 0) {
-                    j++;
-                    break;
-                }
-            }
+    let depth = 0;
+    let start = -1;
+
+    for (let i = 0; i < prefix.length; i++) {
+        const c = prefix[i];
+        if (c === '(') depth++;
+        else if (c === ')') depth--;
+        else if (c === '@' && depth === 0) {
+            if (start !== -1) units.push(prefix.slice(start, i).trim());
+            start = i;
         }
-        units.push(prefix.slice(start, j));
-        i = j;
     }
-    return units;
+
+    if (start !== -1) units.push(prefix.slice(start).trim());
+    return units.filter(Boolean);
 }
 
-/** `@media(min-width:768px)` → `@media (min-width: 768px)` */
-function formatAtRule(condensed: string): string {
-    return condensed.replace(/@([a-zA-Z-]+)\(/, '@$1 (').replace(/:/g, ': ');
+/** 공백 생략형(`@media(min-width:768px)`) 을 정식 표기로 보정. 이미 공백이 있으면 멱등. */
+function formatAtRule(s: string): string {
+    return s.replace(/@([a-zA-Z-]+)(?=\()/g, '@$1 ').replace(/([a-zA-Z-]+):(?=\S)/g, '$1: ');
 }
 
 function ruleKey(r: IRRule): string {
@@ -131,7 +130,15 @@ export function emitCss(rules: IRRule[], mode: ClassNameMode = 'readable'): Emit
     }
 
     const chunks: string[] = ['@layer vapor-utilities;', '', '@layer vapor-utilities {'];
-    for (const [pathKey, ruleList] of Array.from(grouped.entries())) {
+
+    // base 그룹(pathKey === '') 을 at-rule 그룹보다 먼저 emit.
+    // 같은 layer, 같은 specificity라서 뒤에 나오는 규칙이 이긴다. base가 뒤면
+    // `css({ '@media (...)': { padding: 8 }, padding: 4 })` 에서 media 규칙이 base 로 덮인다.
+    const entries = Array.from(grouped.entries()).sort(([a], [b]) =>
+        a === '' ? -1 : b === '' ? 1 : 0,
+    );
+
+    for (const [pathKey, ruleList] of entries) {
         if (!pathKey) {
             for (const r of ruleList) chunks.push(`  ${r}`);
         } else {

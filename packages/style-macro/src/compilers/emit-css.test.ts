@@ -78,4 +78,34 @@ describe('emitCss', () => {
         ];
         expect(emitCss(rules).cssText).toBe(emitCss(rules).cssText);
     });
+
+    it('emits base group before at-rule groups (cascade: at-rule must win)', () => {
+        const media = rule({ selectorContext: '@media(min-width:768px)', value: 'var(--m)' });
+        const base = rule({ value: 'var(--b)' });
+        const out = emitCss([media, base]);
+        const basePos = out.cssText.indexOf('var(--b)');
+        const mediaPos = out.cssText.indexOf('var(--m)');
+        expect(basePos).toBeGreaterThan(-1);
+        expect(mediaPos).toBeGreaterThan(basePos);
+    });
+
+    it('keeps compound @media (and-combined features) as a single at-rule', () => {
+        const out = emitCss([
+            rule({
+                selectorContext: '@media (min-width: 768px) and (max-width: 1024px)',
+            }),
+        ]);
+        expect(out.cssText).toMatch(
+            /@media \(min-width: 768px\) and \(max-width: 1024px\)\s*\{/,
+        );
+        // 두 번째 feature 가 별도 at-rule 블록으로 쪼개지면 안 됨.
+        expect(out.cssText).not.toMatch(/@and/);
+    });
+
+    it('supports @container queries with name + feature', () => {
+        const out = emitCss([
+            rule({ selectorContext: '@container sidebar (min-width: 400px)' }),
+        ]);
+        expect(out.cssText).toMatch(/@container sidebar \(min-width: 400px\)\s*\{/);
+    });
 });

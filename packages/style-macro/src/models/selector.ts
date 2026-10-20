@@ -37,8 +37,9 @@ export function composeSelector(className: string, key: string): string {
     }
 }
 
+/** CSS 공백 문자(space/tab/LF/CR/FF)만 하나로 축약 후 양끝 공백 제거. */
 function normalizeWhitespace(s: string): string {
-    return s.replace(/\s+/g, '');
+    return s.replace(/[ \t\n\r\f]+/g, ' ').trim();
 }
 
 export function composeContext(parent: string, key: string): string {
