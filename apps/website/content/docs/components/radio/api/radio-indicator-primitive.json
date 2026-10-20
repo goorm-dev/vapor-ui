@@ -6,7 +6,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Radio.IndicatorPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Radio.IndicatorPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "keepMounted",
@@ -15,13 +22,6 @@
             "required": false,
             "description": "Whether to keep the HTML element in the DOM when the radio button is inactive.",
             "defaultValue": "true"
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Radio.IndicatorPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "render",

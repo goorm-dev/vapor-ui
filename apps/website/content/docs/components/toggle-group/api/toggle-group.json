@@ -18,7 +18,7 @@
         {
             "name": "onValueChange",
             "type": ["function"],
-            "detailedType": "((groupValue: string[], eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element | undefined; }) => void) | undefined",
+            "detailedType": "((groupValue: string[], eventDetails: ToggleGroup.ChangeEventDetails) => void) | undefined",
             "required": false,
             "description": "Callback fired when the pressed states of the toggle group changes."
         },
@@ -34,7 +34,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: ToggleGroup.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: ToggleGroup.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "disabled",
@@ -64,13 +71,6 @@
             "required": false
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: ToggleGroup.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
-        },
-        {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: ToggleGroup.State) => ReactElement) | undefined",
@@ -79,6 +79,7 @@
         }
     ],
     "typeRefs": {
+        "ToggleGroup.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
         "ToggleGroup.State": "{\n  disabled: boolean;\n  multiple: boolean;\n  orientation: \"horizontal\" | \"vertical\";\n}"
     }
 }

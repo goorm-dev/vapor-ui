@@ -6,7 +6,7 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Grid.Item.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
         },
         {
             "name": "colSpan",
@@ -22,15 +22,15 @@
         },
         {
             "name": "style",
-            "type": ["CSSProperties", "function"],
-            "detailedType": "CSSProperties | ((state: Box.State) => (CSSProperties | undefined)) | ((state: Grid.Item.State) => (CSSProperties | undefined)) | undefined",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Grid.Item.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "render",
             "type": ["ReactElement", "function"],
-            "detailedType": "ReactElement | ((props: HTMLProps, state: Box.State) => ReactElement) | ((props: HTMLProps, state: Grid.Item.State) => ReactElement) | undefined",
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Grid.Item.State) => ReactElement) | undefined",
             "required": false,
             "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }

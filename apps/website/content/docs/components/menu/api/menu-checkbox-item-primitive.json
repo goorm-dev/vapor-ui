@@ -27,7 +27,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Menu.CheckboxItemPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Menu.CheckboxItemPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "closeOnClick",
@@ -65,13 +72,6 @@
             "description": "The click handler for the menu item."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Menu.CheckboxItemPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
-        },
-        {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Menu.CheckboxItemPrimitive.State) => ReactElement) | undefined",
@@ -80,7 +80,7 @@
         }
     ],
     "typeRefs": {
-        "Menu.CheckboxItemPrimitive.State": "{\n  disabled: boolean;\n  highlighted: boolean;\n  checked: boolean;\n}",
-        "Menu.CheckboxItemPrimitive.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"close-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"trigger-focus\"; event: FocusEvent; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"sibling-open\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  preventUnmountOnClose: () => void;\n}"
+        "Menu.CheckboxItemPrimitive.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"close-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"trigger-focus\"; event: FocusEvent; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"sibling-open\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  preventUnmountOnClose: () => void;\n}",
+        "Menu.CheckboxItemPrimitive.State": "{\n  disabled: boolean;\n  highlighted: boolean;\n  checked: boolean;\n}"
     }
 }

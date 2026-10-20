@@ -28,7 +28,21 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Meter.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Meter.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "aria-valuetext",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "A string value that provides a user-friendly name for `aria-valuenow`, the current value of the meter."
         },
         {
             "name": "format",
@@ -66,13 +80,6 @@
             "required": false,
             "description": "The minimum value",
             "defaultValue": "0"
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Meter.Root.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "render",

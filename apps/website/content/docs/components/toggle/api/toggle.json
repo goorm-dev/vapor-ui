@@ -25,7 +25,7 @@
         {
             "name": "onPressedChange",
             "type": ["function"],
-            "detailedType": "((pressed: boolean, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element | undefined; }) => void) | undefined",
+            "detailedType": "((pressed: boolean, eventDetails: Toggle.ChangeEventDetails) => void) | undefined",
             "required": false,
             "description": "Callback fired when the pressed state is changed."
         },
@@ -48,7 +48,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Toggle.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Toggle.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "disabled",
@@ -65,13 +72,6 @@
             "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Toggle.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
-        },
-        {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: Toggle.State) => ReactElement) | undefined",
@@ -80,6 +80,7 @@
         }
     ],
     "typeRefs": {
+        "Toggle.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
         "Toggle.State": "{\n  pressed: boolean;\n  disabled: boolean;\n}"
     }
 }

@@ -30,7 +30,7 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Avatar.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
         },
         {
             "name": "fallbackElement",
@@ -45,6 +45,13 @@
             "required": false
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Avatar.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
@@ -57,13 +64,6 @@
             "detailedType": "boolean | undefined",
             "required": false,
             "description": "Whether the image element stays mounted and loads in place instead of being preloaded.\nSupports `loading=\"lazy\"` and optimized image components such as `next/image`."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Avatar.Root.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "render",

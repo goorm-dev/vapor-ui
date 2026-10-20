@@ -6,7 +6,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Form.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Form.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "actionsRef",
@@ -30,13 +37,6 @@
             "description": "Event handler called when the form is submitted.\n`preventDefault()` is called on the native submit event when used."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Form.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
-        },
-        {
             "name": "validationMode",
             "type": ["onBlur", "onChange", "onSubmit"],
             "detailedType": "\"onBlur\" | \"onChange\" | \"onSubmit\" | undefined",
@@ -46,14 +46,14 @@
         {
             "name": "render",
             "type": ["ReactElement", "function"],
-            "detailedType": "ReactElement | ((props: HTMLProps, state: Form.State) => ReactElement) | ((props: React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, state: Form.State) => ReactElement) | undefined",
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Form.State) => ReactElement) | undefined",
             "required": false,
             "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ],
     "typeRefs": {
-        "Form.State": "{\n\n}",
         "Form.Actions": "{\n  validate: (fieldName?: string) => void;\n}",
-        "Form.SubmitEventDetails": "{\n  reason: \"none\";\n  event: Event;\n}"
+        "Form.SubmitEventDetails": "{\n  reason: \"none\";\n  event: Event;\n}",
+        "Form.State": "{\n\n}"
     }
 }

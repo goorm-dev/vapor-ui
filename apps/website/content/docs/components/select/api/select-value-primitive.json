@@ -6,7 +6,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Select.ValuePrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Select.ValuePrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "children",
@@ -14,13 +21,6 @@
             "detailedType": "ReactNode | ((value: any) => ReactNode)",
             "required": false,
             "description": "Accepts a function that returns a `ReactNode` to format the selected value.\nTreat the value as read-only: in `multiple` mode it may be a shared frozen array\nwhen nothing is selected."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Select.ValuePrimitive.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "render",

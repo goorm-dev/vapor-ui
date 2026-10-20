@@ -6,7 +6,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Field.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Field.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "actionsRef",
@@ -42,13 +49,6 @@
             "detailedType": "string | undefined",
             "required": false,
             "description": "Identifies the field when a form is submitted.\nTakes precedence over the `name` prop on the `<Field.Control>` component."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Field.Root.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "touched",
@@ -87,7 +87,7 @@
         }
     ],
     "typeRefs": {
-        "Field.Root.State": "{\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}",
-        "Field.Root.Actions": "{\n  validate: () => void;\n}"
+        "Field.Root.Actions": "{\n  validate: () => void;\n}",
+        "Field.Root.State": "{\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
     }
 }
