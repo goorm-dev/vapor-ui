@@ -1,0 +1,61 @@
+{
+    "name": "Root",
+    "displayName": "Pagination.Root",
+    "description": "Pagination의 최상위 컴포넌트입니다. div 요소를 기반으로, 표준 HTML 속성(className, style 등)을 지원합니다.",
+    "props": [
+        {
+            "name": "defaultPage",
+            "type": ["number"],
+            "defaultValue": "1",
+            "description": "초기 렌더링 시 활성화되어야 하는 페이지 번호입니다."
+        },
+        {
+            "name": "page",
+            "type": ["number"],
+            "defaultValue": "-",
+            "description": "활성화할 페이지의 제어된 값입니다. onPageChange와 함께 사용해야 합니다."
+        },
+        {
+            "name": "onPageChange",
+            "type": ["function"],
+            "defaultValue": "-",
+            "description": "값이 변경될 때 호출되는 이벤트 핸들러입니다."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "defaultValue": "md",
+            "description": "Pagination의 높이·타이포그래피 크기 등을 제어합니다."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "defaultValue": "false",
+            "description": "Pagination의 비활성화 여부를 설정합니다."
+        },
+        {
+            "name": "totalPages",
+            "type": ["number"],
+            "defaultValue": "1",
+            "description": "화면에 표시할 전체 페이지 수를 설정합니다."
+        },
+        {
+            "name": "siblingCount",
+            "type": ["number"],
+            "defaultValue": "1",
+            "description": "현재 페이지 양쪽에 표시할 페이지 번호의 개수를 설정합니다."
+        },
+        {
+            "name": "boundaryCount",
+            "type": ["number"],
+            "defaultValue": "1",
+            "description": "처음과 마지막에 표시할 페이지 번호의 개수를 설정합니다."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "defaultValue": "-",
+            "description": "네비게이션 메뉴의 자식 컴포넌트들입니다."
+        }
+    ]
+}
