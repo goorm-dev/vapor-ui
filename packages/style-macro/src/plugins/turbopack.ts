@@ -27,6 +27,9 @@ export default async function vaporStyleTurbopackLoader(
     const rawOpts = this.getOptions ? this.getOptions() : ({} as VaporPluginOptions);
     const opts = resolveOptions(rawOpts);
 
+    // Include filter — node_modules 와 비 JS/TS 파일 제외.
+    if (!opts.include(this.resourcePath)) return source;
+
     // Fast-path: no `@vapor-ui/style-macro` import in source → nothing to do.
     if (!source.includes('@vapor-ui/style-macro')) return source;
 
