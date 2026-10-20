@@ -141,11 +141,49 @@ describe('transform — dynamic slots', () => {
         expect(out.errors).toEqual([]);
         expect(out.code).toContain('_resolveToken');
         // 소비자 코드에 subpath import 라인 추가 (bundler-neutral).
+        // `_resolveToken` 뒤에 사용 axis 식별자가 함께 묶여 들어올 수 있음.
         expect(out.code).toMatch(
-            /import\s*\{\s*_resolveToken\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
+            /import\s*\{\s*_resolveToken[^}]*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
         );
         // 사용자의 `css` import 는 보존되고 helper specifier 가 섞여 들어가지 않음.
         expect(out.code).toMatch(/import\s*\{\s*css\s*\}\s*from\s*'@vapor-ui\/style-macro'/);
+    });
+
+    it('emits axis identifiers alongside _resolveToken from a single runtime subpath', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `function Comp({ c, w }) {`,
+            `  return <div className={css({ color: c, width: w })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/N.tsx' });
+        expect(out.errors).toEqual([]);
+        // `_resolveToken` 과 사용된 axis 가 한 import 라인에 묶여 들어옴.
+        expect(out.code).toMatch(
+            /import\s*\{\s*_resolveToken,\s*color,\s*dimension\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
+        );
+        // `_resolveToken` 의 첫 인자는 axis 식별자(문자열 아님).
+        expect(out.code).toMatch(/_resolveToken\(\s*color\s*,/);
+        expect(out.code).toMatch(/_resolveToken\(\s*dimension\s*,/);
+        // 과거 property-string 형태는 더 이상 emit 되지 않음.
+        expect(out.code).not.toMatch(/_resolveToken\(\s*['"]color['"]/);
+    });
+
+    it('falls back to `{}` for properties without a token axis', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `function Comp({ x }) {`,
+            `  return <div className={css({ 'grid-template-rows': x })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/O.tsx' });
+        expect(out.errors).toEqual([]);
+        // axis 룩업 실패 → `{}` 로 pass-through.
+        expect(out.code).toMatch(/_resolveToken\(\s*\{\s*\}\s*,/);
+        // axis 식별자 없이 `_resolveToken` 만 import.
+        expect(out.code).toMatch(
+            /import\s*\{\s*_resolveToken\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
+        );
     });
 
     it('merges an existing style prop by spreading', () => {

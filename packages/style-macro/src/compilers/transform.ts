@@ -3,6 +3,7 @@ import { parseSync } from 'oxc-parser';
 
 import type { ClassNameMode } from '~/models/class-name';
 import type { AnyProp, BuildError, IRRule } from '~/models/types';
+import { propertyToTokenAxis } from '~/tokens';
 
 import { directivePrologueEnd } from './directives';
 import { emitCss } from './emit-css';
@@ -44,6 +45,13 @@ const IMPORT_SOURCE = '@vapor-ui/style-macro';
 const IMPORT_NAME = 'css';
 const RUNTIME_IMPORT_SOURCE = '@vapor-ui/style-macro/__runtime__';
 
+/** kebab-case / camelCase 모두 `propertyToTokenAxis` 룩업. */
+function axisForProperty(property: string): string | null {
+    const camel = property.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+    const axis = (propertyToTokenAxis as Record<string, string>)[camel];
+    return axis ?? null;
+}
+
 interface CallRecord {
     node: AnyProp;
     parents: AnyProp[];
@@ -57,6 +65,7 @@ class Transformer {
     readonly #classes = new Set<string>();
     readonly #errors: BuildError[] = [];
     readonly #callSites: CallRecord[] = [];
+    readonly #axesUsed = new Set<string>();
 
     #bindingName: string | null = null;
     #ms: MagicString | null = null;
@@ -117,14 +126,26 @@ class Transformer {
                 .filter((x): x is NonNullable<typeof x> => x !== null);
 
             if (dynamicSlots.length > 0) {
+                // shorthand 는 같은 slotId 로 여러 property 를 만든다. 모두 같은
+                // axis 이므로 slotId 단위로 묶어 중복 slot 정의를 제거.
+                const bySlot = new Map<
+                    string,
+                    { slotId: string; axis: string | null; sourceExpr: string }
+                >();
+                for (const s of dynamicSlots) {
+                    if (bySlot.has(s.slotId)) continue;
+                    const axis = axisForProperty(s.property);
+                    if (axis) this.#axesUsed.add(axis);
+                    bySlot.set(s.slotId, {
+                        slotId: s.slotId,
+                        axis,
+                        sourceExpr: s.sourceExpr,
+                    });
+                }
                 const site: DynamicCallSite = {
                     call: call.node,
                     parents: call.parents,
-                    slots: dynamicSlots.map(({ slotId, property, sourceExpr }) => ({
-                        slotId,
-                        property,
-                        sourceExpr,
-                    })),
+                    slots: Array.from(bySlot.values()),
                 };
                 const outcome = injectJsxStyleForCall(site, injectCtx);
                 if (!outcome.success) {
@@ -255,11 +276,13 @@ class Transformer {
     #ensureRuntimeImport() {
         const specifiers: string[] = [];
         if (this.#needResolveToken) specifiers.push('_resolveToken');
+        if (this.#axesUsed.size > 0) {
+            specifiers.push(...Array.from(this.#axesUsed).sort());
+        }
         if (specifiers.length === 0) return;
 
         const inject = `import { ${specifiers.join(', ')} } from '${RUNTIME_IMPORT_SOURCE}';\n`;
         const insertPos = directivePrologueEnd(this.opts.source);
-
         this.#ms!.appendLeft(insertPos, inject);
     }
 }

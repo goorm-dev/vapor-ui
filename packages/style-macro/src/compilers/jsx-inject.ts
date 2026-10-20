@@ -9,7 +9,12 @@ export interface DynamicCallSite {
     /** parent chain at walk time (자기 자신 제외, top-down). */
     parents: AnyProp[];
     /** call 이 CSS var 참조로 사용한 slot 들. */
-    slots: Array<{ slotId: string; property: string; sourceExpr: string }>;
+    slots: Array<{
+        slotId: string;
+        /** 컴파일 타임에 결정된 토큰 axis 식별자. 없으면 `null` → emit 시 `{}` 리터럴 pass-through. */
+        axis: string | null;
+        sourceExpr: string;
+    }>;
 }
 
 interface PendingInject {
@@ -67,10 +72,10 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
     const slotLits: string[] = [];
     for (const s of site.slots) {
         const varName = dynamicVarName(s.slotId, ctx.mode);
-        // property 는 kebab-case. resolve-token 에서 camelCase 변환.
-        slotLits.push(
-            `'${varName}': _resolveToken(${JSON.stringify(s.property)}, ${s.sourceExpr})`,
-        );
+        // axis 는 `@vapor-ui/style-macro/__runtime__/tokens` 에서 import 된 식별자 이름.
+        // null 이면 token lookup 자체가 의미 없으므로 빈 객체 리터럴로 pass-through.
+        const axisRef = s.axis ?? '{}';
+        slotLits.push(`'${varName}': _resolveToken(${axisRef}, ${s.sourceExpr})`);
     }
 
     const key = openingEl.start;
