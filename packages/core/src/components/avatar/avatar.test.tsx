@@ -1,7 +1,6 @@
-import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 
-import { act, cleanup, render, waitFor } from '@testing-library/react';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
 import { Avatar } from '.';
@@ -223,23 +222,18 @@ describe('Avatar.Fallback', () => {
             }
         });
 
-        it('should hydrate without mismatch when alt is empty', async () => {
+        it('should hydrate without mismatch when alt is empty', () => {
             mockShiftingRandom();
             const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-            const container = document.createElement('div');
+            const container = document.body.appendChild(document.createElement('div'));
             container.innerHTML = renderToString(<AvatarFallbackTest alt="" />);
-            document.body.appendChild(container);
 
-            await act(async () => {
-                hydrateRoot(container, <AvatarFallbackTest alt="" />);
-            });
+            render(<AvatarFallbackTest alt="" />, { container, hydrate: true });
 
             expect(consoleError).not.toHaveBeenCalled();
-            container.remove();
         });
 
-        // Locks the alt-based mapping so it stays aligned with the legacy `@goorm-dev/vapor-core` Avatar.
         it.each([
             ['Max', 'violet'],
             ['Noah', 'red'],

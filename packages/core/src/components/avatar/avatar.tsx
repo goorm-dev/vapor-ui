@@ -166,7 +166,6 @@ AvatarFallbackPrimitive.displayName = 'Avatar.FallbackPrimitive';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-// get first letter of the name
 const getAvatarInitials = (name = 'vapor') => {
     return name.charAt(0).toUpperCase();
 };
@@ -191,8 +190,6 @@ const stringAsciiPRNG = (value: string, m: number) => {
     return random;
 };
 
-// Polynomial string hash for instance ids. Ids are mostly 7 characters long,
-// a length where `stringAsciiPRNG` almost never picks the first color.
 const stringHash = (value: string) =>
     value.split('').reduce((hash, letter) => (hash * 31 + letter.charCodeAt(0)) >>> 0, 0);
 
@@ -205,17 +202,6 @@ const DEFAULT_COLORS: string[] = [
     vars.color.green['500'],
     vars.color.orange['500'],
 ];
-
-/**
- * Returns the same color for the same alternative text, using the Linear Congruential Generator
- * algorithm shared with the legacy `@goorm-dev/vapor-core` Avatar.
- * Without alternative text, derives the color from the instance id instead of `Math.random()`,
- * so each avatar keeps its color across re-renders and the server and client render the same one.
- *
- * @param alt Alternative text
- * @param id Instance id from `useVaporId`
- * @returns Color CSS Variables
- */
 const getFallbackColor = (alt: string | undefined, id: string) => {
     if (alt) return DEFAULT_COLORS[stringAsciiPRNG(alt, DEFAULT_COLORS.length)];
 
