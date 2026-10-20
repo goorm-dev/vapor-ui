@@ -95,17 +95,13 @@ describe('emitCss', () => {
                 selectorContext: '@media (min-width: 768px) and (max-width: 1024px)',
             }),
         ]);
-        expect(out.cssText).toMatch(
-            /@media \(min-width: 768px\) and \(max-width: 1024px\)\s*\{/,
-        );
+        expect(out.cssText).toMatch(/@media \(min-width: 768px\) and \(max-width: 1024px\)\s*\{/);
         // 두 번째 feature 가 별도 at-rule 블록으로 쪼개지면 안 됨.
         expect(out.cssText).not.toMatch(/@and/);
     });
 
     it('supports @container queries with name + feature', () => {
-        const out = emitCss([
-            rule({ selectorContext: '@container sidebar (min-width: 400px)' }),
-        ]);
+        const out = emitCss([rule({ selectorContext: '@container sidebar (min-width: 400px)' })]);
         expect(out.cssText).toMatch(/@container sidebar \(min-width: 400px\)\s*\{/);
     });
 

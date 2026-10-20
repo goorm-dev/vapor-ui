@@ -184,7 +184,9 @@ describe('transform — dynamic slots', () => {
         // 생성 코드에서 `_resolveToken` 첫 인자는 사용자 지역변수가 아닌 alias.
         expect(out.code).toMatch(/_resolveToken\(\s*__vaporAxis_color\s*,/);
         // bare `color` 로 import 되지 않음.
-        expect(out.code).not.toMatch(/import\s*\{[^}]*\bcolor\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/);
+        expect(out.code).not.toMatch(
+            /import\s*\{[^}]*\bcolor\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
+        );
     });
 
     it('keeps dynamic shorthand as the original property (no longhand expansion)', () => {
