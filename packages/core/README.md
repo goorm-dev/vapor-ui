@@ -27,48 +27,53 @@ yarn add @vapor-ui/core
 
 > For detailed usage instructions, please refer to the [official documentation](https://vapor-ui.goorm.io/docs/getting-started/installation).
 
-## `styles` build-time utility
+## Styling with `css()`
 
-`@vapor-ui/core` ships a `styles({...})` macro that compiles to atomic class names at build time:
+Vapor UI components are styled at build time by [`@vapor-ui/style-macro`](../style-macro). Author inline styles with the `css()` macro — call sites compile down to atomic class names and (for dynamic values) a tiny `style={{ ... }}` prop:
 
 ```tsx
-import { styles } from '@vapor-ui/core';
+import { css } from '@vapor-ui/style-macro';
 
-export const Box = () => (
+export const Box = ({ accent }: { accent: string }) => (
     <div
-        className={styles({
-            padding: { default: '$400', sm: '$200' },
-            backgroundColor: '$blue-500',
-            color: { default: '$white', _hover: '$blue-100' },
+        className={css({
+            padding: '$space-400',
+            backgroundColor: '$background-primary',
+            color: accent,
+            ':hover': { color: '$foreground-accent' },
+            '@media (min-width: 768px)': { padding: '$space-600' },
         })}
     />
 );
 ```
 
-The macro requires `@vapor-ui/style-macro/unplugin` in your bundler:
+- `$<axis>-<name>` references a design token (e.g. `$space-400`, `$background-primary`). The macro resolves each one at build time.
+- Dynamic values (`color: accent`) are hoisted into CSS variables and emitted into the element's `style` prop automatically — no runtime className dictionary.
+- Nested keys drive selectors: `:hover`, `::before`, `[data-active="true"]`, `@media (...)`, `@container (...)`, `&.selected`.
 
-```js
-// vite.config.ts | rollup.config.mjs | next.config.mjs
-import vaporStyleMacro from '@vapor-ui/style-macro/unplugin';
+### Bundler setup
 
-// vite:   plugins: [vaporStyleMacro.vite()]
-// rollup: plugins: [vaporStyleMacro.rollup()]
-// next webpack: config.plugins.push(vaporStyleMacro.webpack())
+Install `@vapor-ui/style-macro` and wire its plugin into your build. Pick the entry that matches your bundler:
+
+```ts
+// vite.config.ts
+import vaporVitePlugin from '@vapor-ui/style-macro/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({ plugins: [vaporVitePlugin(), react()] });
 ```
 
-For raw `@custom-media` resolution (e.g. Next/PostCSS pipelines), also enable the helper:
+```ts
+// next.config.ts
+import vaporNextPlugin from '@vapor-ui/style-macro/next';
 
-```js
-// postcss.config.mjs
-export default {
-    plugins: {
-        '@vapor-ui/core/postcss': {},
-        // …other postcss plugins
-    },
-};
+export default vaporNextPlugin({ mode: 'auto' /* 'webpack' | 'turbopack' */ })({
+    // existing NextConfig fields
+});
 ```
 
-Override breakpoints by passing `{ sm, md, lg }` to the helper. See the migration guide for full details.
+Rolldown, Webpack and Turbopack entries are available at `@vapor-ui/style-macro/rolldown`, `@vapor-ui/style-macro/webpack` and `@vapor-ui/style-macro/turbopack`. See the [style-macro README](../style-macro/README.md) for the full option surface, supported value shapes, and the list of build-time errors the macro can raise.
 
 ## License
 
