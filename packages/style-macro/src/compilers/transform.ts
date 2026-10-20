@@ -1,6 +1,7 @@
 import MagicString from 'magic-string';
 import { parseSync } from 'oxc-parser';
 
+import { axisAliasName } from '~/models/axis-alias';
 import type { ClassNameMode } from '~/models/class-name';
 import type { AnyProp, BuildError, IRRule } from '~/models/types';
 import { propertyToTokenAxis } from '~/tokens';
@@ -277,7 +278,15 @@ class Transformer {
         const specifiers: string[] = [];
         if (this.#needResolveToken) specifiers.push('_resolveToken');
         if (this.#axesUsed.size > 0) {
-            specifiers.push(...Array.from(this.#axesUsed).sort());
+            // axis 를 `color as __vaporAxis_color` 로 alias 한다. 사용자 코드가
+            // `const color = …` 같은 흔한 이름을 쓰면 bare `color` import 는
+            // 지역 변수에 가려지거나(=토큰 룩업 실패) 모듈 최상위 중복 선언으로
+            // SyntaxError 를 낸다. prefix 로 충돌을 원천 차단.
+            specifiers.push(
+                ...Array.from(this.#axesUsed)
+                    .sort()
+                    .map((axis) => `${axis} as ${axisAliasName(axis)}`),
+            );
         }
         if (specifiers.length === 0) return;
 

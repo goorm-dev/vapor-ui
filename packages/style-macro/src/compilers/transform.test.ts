@@ -158,15 +158,33 @@ describe('transform — dynamic slots', () => {
         ].join('\n');
         const out = transform({ source, filename: '/N.tsx' });
         expect(out.errors).toEqual([]);
-        // `_resolveToken` 과 사용된 axis 가 한 import 라인에 묶여 들어옴.
+        // `_resolveToken` 과 사용된 axis 가 한 import 라인에 묶여 들어오고,
+        // 사용자 스코프 충돌을 막기 위해 axis 는 `__vaporAxis_<name>` alias 로 import.
         expect(out.code).toMatch(
-            /import\s*\{\s*_resolveToken,\s*color,\s*dimension\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
+            /import\s*\{\s*_resolveToken,\s*color\s+as\s+__vaporAxis_color,\s*dimension\s+as\s+__vaporAxis_dimension\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
         );
-        // `_resolveToken` 의 첫 인자는 axis 식별자(문자열 아님).
-        expect(out.code).toMatch(/_resolveToken\(\s*color\s*,/);
-        expect(out.code).toMatch(/_resolveToken\(\s*dimension\s*,/);
+        // `_resolveToken` 의 첫 인자는 axis alias 식별자(문자열·bare axis 이름 모두 아님).
+        expect(out.code).toMatch(/_resolveToken\(\s*__vaporAxis_color\s*,/);
+        expect(out.code).toMatch(/_resolveToken\(\s*__vaporAxis_dimension\s*,/);
+        expect(out.code).not.toMatch(/_resolveToken\(\s*color\s*,/);
         // 과거 property-string 형태는 더 이상 emit 되지 않음.
         expect(out.code).not.toMatch(/_resolveToken\(\s*['"]color['"]/);
+    });
+
+    it('aliases axis imports so user bindings named `color` or `space` do not collide', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            // 사용자가 로컬 `color` 변수를 쓰는 흔한 패턴.
+            `function Comp({ color }) {`,
+            `  return <div className={css({ color })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/collide.tsx' });
+        expect(out.errors).toEqual([]);
+        // 생성 코드에서 `_resolveToken` 첫 인자는 사용자 지역변수가 아닌 alias.
+        expect(out.code).toMatch(/_resolveToken\(\s*__vaporAxis_color\s*,/);
+        // bare `color` 로 import 되지 않음.
+        expect(out.code).not.toMatch(/import\s*\{[^}]*\bcolor\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/);
     });
 
     it('falls back to `{}` for properties without a token axis', () => {
@@ -180,10 +198,11 @@ describe('transform — dynamic slots', () => {
         expect(out.errors).toEqual([]);
         // axis 룩업 실패 → `{}` 로 pass-through.
         expect(out.code).toMatch(/_resolveToken\(\s*\{\s*\}\s*,/);
-        // axis 식별자 없이 `_resolveToken` 만 import.
+        // axis 식별자 없이 `_resolveToken` 만 import (alias 도 섞여 들어오지 않음).
         expect(out.code).toMatch(
             /import\s*\{\s*_resolveToken\s*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
         );
+        expect(out.code).not.toContain('__vaporAxis_');
     });
 
     it('merges an existing style prop by spreading', () => {

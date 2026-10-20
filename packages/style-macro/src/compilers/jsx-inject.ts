@@ -1,5 +1,6 @@
 import type MagicString from 'magic-string';
 
+import { axisAliasName } from '~/models/axis-alias';
 import { dynamicVarName } from '~/models/class-name';
 import type { AnyProp, BuildError } from '~/models/types';
 
@@ -72,9 +73,10 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
     const slotLits: string[] = [];
     for (const s of site.slots) {
         const varName = dynamicVarName(s.slotId, ctx.mode);
-        // axis 는 `@vapor-ui/style-macro/__runtime__/tokens` 에서 import 된 식별자 이름.
+        // axis 는 `@vapor-ui/style-macro/__runtime__` 에서 import 된 식별자 이름.
+        // 사용자 스코프 충돌을 피하기 위해 `__vaporAxis_<name>` alias 로 참조한다.
         // null 이면 token lookup 자체가 의미 없으므로 빈 객체 리터럴로 pass-through.
-        const axisRef = s.axis ?? '{}';
+        const axisRef = s.axis ? axisAliasName(s.axis) : '{}';
         slotLits.push(`'${varName}': _resolveToken(${axisRef}, ${s.sourceExpr})`);
     }
 
