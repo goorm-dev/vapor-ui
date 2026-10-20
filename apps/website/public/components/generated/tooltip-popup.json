@@ -1,43 +1,29 @@
 {
-    "name": "TooltipPopup",
+    "name": "Popup",
+    "displayName": "Tooltip.Popup",
+    "description": "Portal과 Positioner가 결합된 Tooltip Popup 컴포넌트입니다. 편의를 위해 제공됩니다.",
     "props": [
         {
             "name": "className",
-            "type": ["string | ((state: Tooltip.Popup.State) => (string | undefined))"],
+            "type": ["string", "(state: State) => string"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
-        },
-        {
-            "name": "portalElement",
-            "type": [
-                "ReactElement<TooltipPortalPrimitive.Props, string | JSXElementConstructor<any>>"
-            ],
-            "required": false,
-            "description": "A custom element for Tooltip.PortalPrimitive. If not provided, the default Tooltip.PortalPrimitive will be rendered."
-        },
-        {
-            "name": "positionerElement",
-            "type": [
-                "ReactElement<TooltipPositionerPrimitive.Props, string | JSXElementConstructor<any>>"
-            ],
-            "required": false,
-            "description": "A custom element for Tooltip.PositionerPrimitive. If not provided, the default Tooltip.PositionerPrimitive will be rendered."
-        },
-        {
-            "name": "style",
-            "type": [
-                "CSSProperties | ((state: Tooltip.Popup.State) => (CSSProperties | undefined))"
-            ],
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
+            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement | ((props: HTMLProps, state: Tooltip.Popup.State) => ReactElement)"
-            ],
+            "type": ["ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element with a different tag, or compose it with another component.\nAccepts a ReactElement or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
+        },
+        {
+            "name": "portalElement",
+            "type": ["ReactElement"],
+            "required": false
+        },
+        {
+            "name": "positionerElement",
+            "type": ["ReactElement"],
+            "required": false
         }
     ]
 }
