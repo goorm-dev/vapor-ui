@@ -11,7 +11,7 @@
  *      Demos (nav-bar, form patterns) keep working with authored blocks.
  *
  * File paths are absolute from `apps/website/` (e.g.
- * `/content/docs/components/(components)/button/default-button.tsx`), consistent with the
+ * `/content/docs/components/(components)/button/examples/default-button.tsx`), consistent with the
  * SSOT `file` prop contract.
  */
 import * as fs from 'node:fs';

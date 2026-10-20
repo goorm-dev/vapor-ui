@@ -4,7 +4,7 @@ site_name: 'ProgressBar - Vapor Core'
 description: 'ProgressBar는 시작과 끝이 있는 작업의 진행 정도를 보여줍니다. 디스크 사용량이나 점수처럼 고정된 척도의 측정값에는 Meter를 사용합니다.'
 ---
 
-<Demo file="/content/docs/components/(components)/progress-bar/default-progress-bar.tsx" />
+<Demo file="/content/docs/components/(components)/progress-bar/examples/default-progress-bar.tsx" />
 
 ## Property
 
@@ -14,13 +14,13 @@ description: 'ProgressBar는 시작과 끝이 있는 작업의 진행 정도를 
 
 Track의 높이를 설정합니다.
 
-<Demo file="/content/docs/components/(components)/progress-bar/progress-bar-size.tsx" />
+<Demo file="/content/docs/components/(components)/progress-bar/examples/progress-bar-size.tsx" />
 
 ### Type
 
 작업의 상태를 나타냅니다.
 
-<Demo file="/content/docs/components/(components)/progress-bar/progress-bar-type.tsx" />
+<Demo file="/content/docs/components/(components)/progress-bar/examples/progress-bar-type.tsx" />
 
 ### Value Text
 
@@ -28,13 +28,13 @@ Track의 높이를 설정합니다.
 
 백분율 대신 다른 표현이 필요하면 두 곳을 함께 바꿉니다. `getAriaValueText`는 보조기기가 듣는 `aria-valuetext`를, `ProgressBar.Value`의 `children` 함수는 화면 텍스트를 정합니다. 한쪽만 바꾸면 보는 사람과 듣는 사람이 다른 값을 받습니다.
 
-<Demo file="/content/docs/components/(components)/progress-bar/progress-bar-value-text.tsx" />
+<Demo file="/content/docs/components/(components)/progress-bar/examples/progress-bar-value-text.tsx" />
 
 ### Indeterminate
 
 `value`가 `null`이면 진행률을 알 수 없는 상태입니다. 40% 폭의 세그먼트가 Track을 한 방향으로 훑고, `aria-valuenow`는 쓰이지 않습니다.
 
-<Demo file="/content/docs/components/(components)/progress-bar/progress-bar-indeterminate.tsx" />
+<Demo file="/content/docs/components/(components)/progress-bar/examples/progress-bar-indeterminate.tsx" />
 
 ## Examples
 
@@ -48,7 +48,7 @@ Track의 높이를 설정합니다.
 
 단계마다 다른 문구가 필요하면 `render`나 `className` 함수의 두 번째 인수 `state.status`를 보세요. 값이 없으면 `indeterminate`, 최댓값에 닿으면 `complete`, 그 사이는 `progressing`입니다.
 
-<Demo file="/content/docs/components/(components)/progress-bar/progress-bar-description.tsx" />
+<Demo file="/content/docs/components/(components)/progress-bar/examples/progress-bar-description.tsx" />
 
 ## Accessibility
 
