@@ -1,57 +1,123 @@
 # extract-composites
 
-Figma composite 컴포넌트 문서를 vapor-ui website용 MDX 파일로 추출.
+Figma Composites 디자인 시스템 캔버스를 `apps/website`의 Composite 문서(MDX + demo TSX + WebP)로 추출.
 
-**Jira**: [VAPOR-260](https://goorm-io.atlassian.net/browse/VAPOR-260) (후속: [VAPOR-261](https://goorm-io.atlassian.net/browse/VAPOR-261) — Examples 라이브 Preview). Epic [VAPOR-53](https://goorm-io.atlassian.net/browse/VAPOR-53).
+## 추출 모델 (2단계)
 
-## 설치
-
-```sh
-pnpm install
+```
+Canvas
+└─ Section (FRAME/INSTANCE, 이름 "🟦<Title>", 캔버스 DFS)   ← h2 대제목
+   └─ Item (INSTANCE, 이름 "Item", "Item ...")              ← subtitle(h3) + body + slots
+      ├─ TEXT  "section subtitle"        → ### <text>
+      ├─ TEXT  "body"                    → paragraph
+      ├─ FRAME "Sample"                  → image (Export 프레임 우선)
+      ├─ FRAME "Preview"                 → <Demo file="demos/..." /> + demos/*.tsx
+      └─ FRAME "Table form"              → markdown table
 ```
 
-## 사용
+| 피그마 요소                | 조건                                                                                        | MDX 산출                                                                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Section**                | 캔버스 DFS, `type === 'FRAME' \|\| 'INSTANCE'`, 이름 `startsWith('🟦')` + strip = whitelist | `## <title>` (🟦 strip + trim)                                                                                              |
+| **Item** INSTANCE          | section 안 DFS, `name === 'Item'` 혹은 `startsWith('Item ')` / `'Item,'` / `'Item='`        | subtitle + body + slots 순서                                                                                                |
+| `Item ... (do not export)` | section 안                                                                                  | 무시                                                                                                                        |
+| `Text - x*` INSTANCE       | item 안                                                                                     | 무시                                                                                                                        |
+| TEXT `section subtitle`    | item 안                                                                                     | `### <text>`                                                                                                                |
+| TEXT `body`                | item 안                                                                                     | paragraph                                                                                                                   |
+| `Sample` 슬롯              | item 안                                                                                     | `![](/composites/<slug>/images/<section>-<idx>.webp)` — Slot 안 `Export` 프레임 있으면 그 프레임을, 없으면 Slot 자체를 추출 |
+| `Preview` 슬롯             | item 안                                                                                     | `<Demo file="demos/<section>-<idx>.tsx" />` + 코드는 Code Connect source                                                    |
+| `Table form` 슬롯          | item 안                                                                                     | 마크다운 테이블 (첫 행 header)                                                                                              |
+
+**Section Whitelist** (출력 순서): `Anatomy`, `Examples`, `Best practices`, `Patterns`, `Related components`, `Guidelines`.
+
+- Section 매칭에 🟦 prefix **필수**. FRAME 또는 INSTANCE 양쪽 수용 (Figma 컴포넌트 템플릿은 INSTANCE).
+- 캔버스 DFS로 전수 탐색, 매칭된 Section 내부는 하위 🟦 재귀 없음 (중첩 Section 금지).
+- 같은 whitelist 이름이 여러 번 발견되면 첫 매치만 채택 + stderr 경고.
+- 🟩 (legacy green prefix)는 **매칭 안 함**. 🟦만.
+- 피그마에 없는 whitelist 항목은 skip (경고 없이).
+
+## 파이프라인
+
+```mermaid
+flowchart TD
+    A["Figma REST<br/>GET /files/:key/nodes"] --> B["discoverSections<br/>canvas DFS<br/>🟦 prefix + whitelist"]
+    B --> C[(Section N개)]
+    C --> F["findItems: Item 인스턴스<br/>(do not export) 제외"]
+    F --> G{parseItemChildren<br/>자식 순서대로}
+    G -->|section subtitle/body| H[text block]
+    G -->|Sample slot| I["Export 프레임 우선<br/>→ Figma /images → WebP"]
+    G -->|Preview slot| J["Code Connect<br/>→ demos/&lt;section&gt;-&lt;idx&gt;.tsx"]
+    G -->|Table form slot| K[positional rows → md]
+    H --> L[writer: section → item]
+    I --> L
+    J --> L
+    K --> L
+    L --> M[("<slug>.mdx")]
+```
+
+## Figma 트리 구조
+
+```mermaid
+graph TD
+    Canvas[Component Canvas] --> S1[🟦Anatomy<br/>INSTANCE]
+    Canvas --> S2[🟦Examples<br/>INSTANCE]
+    Canvas --> S3[🟦Best practices<br/>INSTANCE]
+    Canvas --> S4[🟦Patterns<br/>INSTANCE]
+    Canvas --> S5[🟦Related components<br/>INSTANCE]
+    Canvas --> S6[🟦Guidelines<br/>INSTANCE]
+    S1 --> IS[Item slot<br/>SLOT]
+    IS --> IT1[Item<br/>INSTANCE]
+    IS --> IT2[Item<br/>INSTANCE]
+    IS -.skipped.-> IT3["Item (do not export)"]
+    IT1 --> T1[section subtitle<br/>TEXT]
+    IT1 --> T2[body<br/>TEXT]
+    IT1 --> SA[Sample<br/>FRAME]
+    IT1 --> PV[Preview<br/>FRAME]
+    IT1 --> TB[Table form<br/>FRAME]
+    SA --> EXP[Export<br/>FRAME, optional] --> SAI[→ PNG → WebP]
+    PV --> PVI[INSTANCE<br/>→ Code Connect]
+    TB --> TBR[Table row INSTANCE] --> TBS[Slot] --> TBC[Table cell INSTANCE] --> TBT[TEXT]
+```
+
+## 사용법
 
 ```sh
 pnpm -C scripts/extract-composites extract \
-  "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2192-33676"
+  "https://www.figma.com/design/<fileKey>/-Composites--Vapor-Design-System?node-id=<node>"
 ```
 
-| 플래그           | 기본값                   | 설명                                                                                                                                         |
-| ---------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<figma-url>`    | required                 | Figma Dev Mode 링크. `fileKey` + `nodeId` 파싱                                                                                               |
-| `--slug <slug>`  | 캔버스 `name` kebab-case | output 파일 이름 override                                                                                                                    |
-| `--skip <names>` | —                        | 콤마 구분, 추가 스킵 섹션 이름 (기본 스킵: `Properties`, `Specifications`, `작성예정`, `Related components`, cover frame, canvas 동명 frame) |
-| `--clean`        | false                    | MDX + public 디렉토리 삭제 후 추출                                                                                                           |
+### 플래그
+
+| 플래그           | 기본값                   | 설명                                                        |
+| ---------------- | ------------------------ | ----------------------------------------------------------- |
+| `<figma-url>`    | required                 | Dev URL. `fileKey` + `node-id` 파싱                         |
+| `--slug <slug>`  | 캔버스 `name` kebab-case | 출력 slug override                                          |
+| `--only <names>` | 전체 섹션                | 콤마 구분 Section whitelist (예: `--only Anatomy,Examples`) |
+| `--clean`        | false                    | MDX + public 디렉토리 삭제 후 재생성                        |
+| `--force`        | false                    | `demos/*.tsx` 덮어쓰기(기본은 skip)                         |
+
+## 환경 변수
+
+| 이름          | 설명                                                                  |
+| ------------- | --------------------------------------------------------------------- |
+| `FIGMA_TOKEN` | required. Figma personal access token. 레포 루트 `.env`에서 자동 로드 |
 
 ## 출력
 
-| 경로                                                           | 내용                                                     |
-| -------------------------------------------------------------- | -------------------------------------------------------- |
-| `apps/website/content/docs/composites/(components)/<slug>.mdx` | fumadocs 소스 MDX                                        |
-| `apps/website/public/composites/<slug>/images/*.webp`          | 섹션별 WebP (anatomy, do-dont-NN-do/dont, pattern-NN, …) |
+| 경로                                                                                 | 내용                                                              |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| `apps/website/content/docs/composites/(components)/<slug>.mdx`                       | MDX 본문                                                          |
+| `apps/website/content/docs/composites/(components)/<slug>/demos/<section>-<idx>.tsx` | Code Connect 데모 (수동 편집 가능; 기본 skip, `--force`로 덮어씀) |
+| `apps/website/public/composites/<slug>/images/<section>-<idx>.webp`                  | Sample 이미지 (`Export` 우선, 없으면 Slot)                        |
 
-MDX 상단에 `{/* AUTO-GENERATED — DO NOT EDIT */}` 헤더가 들어감. 수정이 필요하면 **Figma에서** 수정 후 재추출.
+## 설계 결정 요약
 
-## 섹션 매핑
-
-| Figma 섹션      | MDX 템플릿                                                                                                                     |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `anatomy`       | `## Anatomy` + `<DocsImage>` + ordered list                                                                                    |
-| `examples`      | `## Examples` + 각 `### subtitle` + description + TODO 주석 + fallback `<div>` placeholder (VAPOR-261에서 Live Preview로 교체) |
-| `doDont`        | `## Do + Don't` + `### subtitle` + `<DocsGrid cols={2}>` + `<DoImage>`/`<DontImage>` 쌍                                        |
-| `pattern`       | `## Pattern` + `### subtitle` + description + `<DocsImage>`                                                                    |
-| `guidelines` 등 | 동일 generic 패턴                                                                                                              |
-
-## Env
-
-| 변수          | 설명                                                                       |
-| ------------- | -------------------------------------------------------------------------- |
-| `FIGMA_TOKEN` | 필수. repo 루트 `.env` 자동 로드 (worktree는 메인 레포 `.env`도 fallback). |
-
-## 변경 사항 (VAPOR-260)
-
-- `index.json`, `examples/*.tsx` 생성 로직 제거. MDX 단일 산출물.
-- `--label` 플래그 제거 (Code Connect 미사용).
-- 경로 하드코딩 (`apps/website/content/...`, `apps/website/public/...`).
-- Cover frame 발견 로직 개선: `name === 'Component'` 또는 `name === <canvas name>` 모두 skip.
+- Section은 🟦 prefix 가진 FRAME/INSTANCE. 이름 = 🟦 strip 후 trim, slug는 whitelist 고정 매핑.
+- Section wrapper를 제거하고 🟦 서브섹션을 h2로 격상 — 문서 레벨이 한 단계씩 올라감 (subtitle은 h3).
+- 캔버스 DFS로 전수 탐색. 매칭된 Section 내부로는 재귀 X (중첩 Section 금지).
+- 중복 발견시 첫 매치 유지 + 경고. 출력 순서는 whitelist 순서 고정.
+- `Item` 매칭은 base + variant prefix (`Item `, `Item,`, `Item=`). `(do not export)` 명시 제외.
+- Sample 슬롯은 Slot 안 `Export` 프레임 우선, 없으면 Slot 자체.
+- Preview 데모는 Code Connect source 그대로 저장(import 자동 보강 없음). 매핑 없는 경우 TODO placeholder + stderr 경고.
+- `demos/*.tsx`는 기본 skip (수동 편집 보존). 재추출은 `--force`.
+- Table은 positional: 자식 index 0 = header, 나머지 = body. 셀 수 불일치는 패딩/trim + 경고.
+- 모든 누락/오류는 soft(exit 0 + stderr 경고).

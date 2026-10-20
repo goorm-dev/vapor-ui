@@ -1,77 +1,58 @@
-import { camelCase } from 'es-toolkit';
+import { SECTION_WHITELIST, type FigmaNode, type SectionTitle } from './types.ts';
 
-import type { FigmaNode } from './types.ts';
-
-const DEFAULT_SKIP = new Set([
-    'Properties',
-    'Specifications',
-    '작성예정',
-    'Related components',
-    'Related Components',
-    'Component', // legacy cover frame name
-]);
-
-export const COVER_FRAME_NAME = 'Component';
+export const BLUE_PREFIX = '🟦';
 
 export interface DiscoveredSection {
-    key: string;
+    title: SectionTitle;
     frame: FigmaNode;
-    rawName: string;
 }
 
-/** Flatten top-level + 2nd-level section frames, applying skip list and cover exclusion. */
-export function discoverSections(canvas: FigmaNode, extraSkip: string[] = []): DiscoveredSection[] {
-    const skip = new Set([...DEFAULT_SKIP, ...extraSkip, canvas.name]);
-    const sections: DiscoveredSection[] = [];
-    const seen = new Set<string>();
-    const UNWRAP_NAMES = new Set(['Overview', 'Best practices']);
+const WHITELIST_SET = new Set<string>(SECTION_WHITELIST);
 
-    for (const topLevel of canvas.children ?? []) {
-        if (topLevel.type !== 'FRAME') continue;
-        if (skip.has(topLevel.name)) continue;
-        if (UNWRAP_NAMES.has(topLevel.name)) {
-            // dive into Container children
-            const container = (topLevel.children ?? []).find((c) => c.name === 'Container');
-            const inner = container?.children ?? topLevel.children ?? [];
-            for (const sub of inner) {
-                if (sub.type !== 'FRAME') continue;
-                if (skip.has(sub.name)) continue;
-                addSection(sections, seen, sub);
+/** Strip the leading 🟦 and surrounding whitespace from a node name. */
+function stripBluePrefix(name: string): string | null {
+    const trimmed = name.trim();
+    if (!trimmed.startsWith(BLUE_PREFIX)) return null;
+    return trimmed.slice(BLUE_PREFIX.length).trim();
+}
+
+/** DFS the canvas and collect `🟦<Title>` FRAME/INSTANCE whose stripped title is in the
+ *  whitelist. First match wins per title; later duplicates are ignored with a warning.
+ *  Results are returned in whitelist order, filtered by `only` when provided. */
+export function discoverSections(
+    canvas: FigmaNode,
+    warnings: string[],
+    only?: Set<SectionTitle>,
+): DiscoveredSection[] {
+    const found = new Map<SectionTitle, FigmaNode>();
+
+    const walk = (n: FigmaNode): void => {
+        for (const child of n.children ?? []) {
+            if (child.type === 'FRAME' || child.type === 'INSTANCE') {
+                const title = stripBluePrefix(child.name);
+                if (title && WHITELIST_SET.has(title)) {
+                    const key = title as SectionTitle;
+                    if (found.has(key)) {
+                        warnings.push(
+                            `duplicate section ignored: "${child.name}" (first match kept)`,
+                        );
+                    } else {
+                        found.set(key, child);
+                    }
+                    // Do not recurse into a matched section: inner 🟦 titles are not promoted.
+                    continue;
+                }
             }
-        } else {
-            addSection(sections, seen, topLevel);
+            walk(child);
         }
+    };
+    walk(canvas);
+
+    const out: DiscoveredSection[] = [];
+    for (const title of SECTION_WHITELIST) {
+        if (only && !only.has(title)) continue;
+        const frame = found.get(title);
+        if (frame) out.push({ title, frame });
     }
-    return sections;
-}
-
-function addSection(sections: DiscoveredSection[], seen: Set<string>, frame: FigmaNode): void {
-    const key = toSectionKey(frame.name);
-    if (seen.has(key)) return;
-    seen.add(key);
-    sections.push({ key, frame, rawName: frame.name });
-}
-
-const SECTION_NAME_MAP: Record<string, string> = {
-    "Do + Don't": 'doDont',
-    'Do and Don’t': 'doDont',
-    'Do + Don’t': 'doDont',
-    Pattern: 'pattern',
-    Examples: 'examples',
-    Anatomy: 'anatomy',
-};
-
-export function toSectionKey(rawName: string): string {
-    if (SECTION_NAME_MAP[rawName]) return SECTION_NAME_MAP[rawName]!;
-    // Fallback: strip punctuation, camelCase
-    const cleaned = rawName.replace(/[+'’]/g, ' ').replace(/\s+/g, ' ').trim();
-    return camelCase(cleaned);
-}
-
-export function findCoverFrame(canvas: FigmaNode): FigmaNode | undefined {
-    const children = canvas.children ?? [];
-    return (
-        children.find((c) => c.type === 'FRAME' && c.name === COVER_FRAME_NAME) ??
-        children.find((c) => c.type === 'FRAME' && c.name === canvas.name)
-    );
+    return out;
 }

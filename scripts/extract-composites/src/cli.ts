@@ -5,6 +5,7 @@ import { execSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 
 import { extract } from './extractor.ts';
+import { SECTION_WHITELIST, type SectionTitle } from './types.ts';
 import { parseFigmaUrl } from './url.ts';
 
 function findRepoRoot(): string {
@@ -31,7 +32,6 @@ if (!process.env.FIGMA_TOKEN && MAIN_REPO_ROOT !== REPO_ROOT) {
 
 const CONTENT_ROOT = resolve(REPO_ROOT, 'apps/website/content/docs/composites/(components)');
 const PUBLIC_ROOT = resolve(REPO_ROOT, 'apps/website/public/composites');
-const LIVE_EXAMPLE_TICKET = 'VAPOR-261';
 
 const cli = meow(
     `
@@ -39,23 +39,26 @@ const cli = meow(
       $ extract-composites <figma-url> [options]
 
     Options
-      --slug <slug>    Output slug (default: kebabCase of Figma canvas name)
-      --skip <names>   Comma-separated section names to skip
-      --clean          Remove existing MDX + public dir before extraction
+      --slug <slug>   Output slug (default: kebabCase of Figma canvas name)
+      --only <names>  Comma-separated section whitelist (${SECTION_WHITELIST.join(', ')})
+      --clean         Remove existing MDX + public dir before extraction
+      --force         Overwrite existing demos/*.tsx files
 
     Output
-      MDX    apps/website/content/docs/composites/(components)/<slug>.mdx
-      Images apps/website/public/composites/<slug>/images/
+      MDX   apps/website/content/docs/composites/(components)/<slug>.mdx
+      TSX   apps/website/content/docs/composites/(components)/<slug>/demos/<section>-<idx>.tsx
+      Img   apps/website/public/composites/<slug>/images/<section>-<idx>.webp
 
     Env
-      FIGMA_TOKEN      Required. Loaded via dotenv from repo .env.
+      FIGMA_TOKEN     Required. Loaded via dotenv from repo .env.
     `,
     {
         importMeta: import.meta,
         flags: {
             slug: { type: 'string' },
-            skip: { type: 'string' },
+            only: { type: 'string' },
             clean: { type: 'boolean', default: false },
+            force: { type: 'boolean', default: false },
         },
     },
 );
@@ -74,23 +77,40 @@ if (!token) {
 
 const { fileKey, nodeId } = parseFigmaUrl(figmaUrl);
 
+const only = parseOnly(cli.flags.only);
+
 const result = await extract({
     fileKey,
     nodeId,
     contentFile: (slug) => resolve(CONTENT_ROOT, `${slug}.mdx`),
     publicDir: (slug) => resolve(PUBLIC_ROOT, slug),
+    componentDir: (slug) => resolve(CONTENT_ROOT, slug),
     slugOverride: cli.flags.slug,
-    skip: cli.flags.skip
-        ?.split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
     clean: cli.flags.clean,
+    force: cli.flags.force,
+    only,
     token,
-    liveExampleTicket: LIVE_EXAMPLE_TICKET,
 });
 
 console.log(`✓ Extracted ${result.slug}`);
 console.log(`  mdx    ${result.mdxPath}`);
+console.log(`  demos  ${result.componentDir}/demos`);
 console.log(`  images ${result.publicDir}/images`);
-console.log(`  warnings: ${result.warnings.length}, errors: 0`);
+console.log(`  warnings: ${result.warnings.length}`);
 for (const w of result.warnings) console.log(`  ⚠ ${w}`);
+
+function parseOnly(raw: string | undefined): SectionTitle[] | undefined {
+    if (!raw) return undefined;
+    const list = raw
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    const allowed = new Set<string>(SECTION_WHITELIST);
+    const bad = list.filter((n) => !allowed.has(n));
+    if (bad.length) {
+        console.error(`--only contains unknown sections: ${bad.join(', ')}`);
+        console.error(`known: ${SECTION_WHITELIST.join(', ')}`);
+        process.exit(1);
+    }
+    return list as SectionTitle[];
+}
