@@ -108,4 +108,34 @@ describe('emitCss', () => {
         ]);
         expect(out.cssText).toMatch(/@container sidebar \(min-width: 400px\)\s*\{/);
     });
+
+    it('orders @media groups by ascending min-width regardless of input order', () => {
+        // 1024 그룹 먼저, 768 그룹 뒤에 입력. 입력 순서대로 emit 되면 넓은 뷰포트에서
+        // 768 규칙이 1024 를 덮는 cascade 버그 발생.
+        const out = emitCss([
+            rule({ selectorContext: '@media (min-width: 1024px)', value: 'var(--w)' }),
+            rule({ selectorContext: '@media (min-width: 768px)', value: 'var(--n)' }),
+        ]);
+        const pos768 = out.cssText.indexOf('(min-width: 768px)');
+        const pos1024 = out.cssText.indexOf('(min-width: 1024px)');
+        expect(pos768).toBeGreaterThan(-1);
+        expect(pos1024).toBeGreaterThan(pos768);
+    });
+
+    it('places at-rules without a min-width after width-sorted groups, then by key', () => {
+        const out = emitCss([
+            rule({ selectorContext: '@media (hover: hover)', value: 'var(--h)' }),
+            rule({ selectorContext: '@media (min-width: 1024px)', value: 'var(--w)' }),
+            rule({ selectorContext: '@media (min-width: 480px)', value: 'var(--n)' }),
+            rule({ value: 'var(--b)' }),
+        ]);
+        const bPos = out.cssText.indexOf('var(--b)');
+        const nPos = out.cssText.indexOf('var(--n)');
+        const wPos = out.cssText.indexOf('var(--w)');
+        const hPos = out.cssText.indexOf('var(--h)');
+        // base < 480 < 1024 < hover.
+        expect(bPos).toBeLessThan(nPos);
+        expect(nPos).toBeLessThan(wPos);
+        expect(wPos).toBeLessThan(hPos);
+    });
 });
