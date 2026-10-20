@@ -31,18 +31,18 @@
             "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
-            "name": "disabled",
-            "type": ["boolean"],
-            "detailedType": "boolean | undefined",
-            "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
-        },
-        {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Collapsible.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
         },
         {
             "name": "render",
@@ -53,7 +53,7 @@
         }
     ],
     "typeRefs": {
-        "Collapsible.Root.State": "{\n  disabled: boolean;\n  open: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n}",
-        "Collapsible.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"none\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
+        "Collapsible.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"none\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "Collapsible.Root.State": "{\n  disabled: boolean;\n  open: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n}"
     }
 }

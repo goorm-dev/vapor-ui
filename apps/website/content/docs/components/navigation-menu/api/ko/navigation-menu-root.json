@@ -52,6 +52,13 @@
             "description": "메뉴의 모든 링크와 트리거를 비활성화해 모든 상호작용을 막습니다. 링크나 트리거에 설정한 `disabled`가 우선합니다."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: NavigationMenu.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "actionsRef",
             "type": ["React.RefObject<NavigationMenu.Root.Actions | null>"],
             "detailedType": "React.RefObject<NavigationMenu.Root.Actions | null> | undefined",
@@ -87,13 +94,6 @@
             "description": "탐색 메뉴의 방향."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: NavigationMenu.Root.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
-        },
-        {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Root.State) => ReactElement) | undefined",
@@ -102,8 +102,8 @@
         }
     ],
     "typeRefs": {
-        "NavigationMenu.Root.State": "{\n  open: boolean;\n  nested: boolean;\n}",
         "NavigationMenu.Root.Actions": "{\n  unmount: () => void;\n}",
-        "NavigationMenu.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"link-press\"; event: MouseEvent | PointerEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
+        "NavigationMenu.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"link-press\"; event: MouseEvent | PointerEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "NavigationMenu.Root.State": "{\n  open: boolean;\n  nested: boolean;\n}"
     }
 }

@@ -10,6 +10,13 @@
             "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Popover.PositionerPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "align",
             "type": ["center", "end", "start"],
             "detailedType": "\"center\" | \"end\" | \"start\" | undefined",
@@ -93,7 +100,7 @@
             "detailedType": "number | ((data: { side: \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\"; align: \"center\" | \"end\" | \"start\"; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number) | undefined",
             "required": false,
             "description": "앵커와 팝업 사이의 거리(픽셀). 앵커 요소와 포지셔너 요소의 크기, 방향, 정렬을 읽어 거리를 반환하는 함수도 받습니다.\n\n함수는 다음 속성을 가진 `data` 객체를 인수로 받습니다.\n- `data.anchor`: `width`와 `height` 속성을 가진 앵커 요소의 크기.\n- `data.positioner`: `width`와 `height` 속성을 가진 포지셔너 요소의 크기.\n- `data.side`: 포지셔너가 정렬된 앵커 요소의 방향.\n- `data.align`: 포지셔너가 지정한 방향을 기준으로 정렬된 방식.",
-            "defaultValue": "8"
+            "defaultValue": "10"
         },
         {
             "name": "sticky",
@@ -101,13 +108,6 @@
             "detailedType": "boolean | undefined",
             "required": false,
             "description": "앵커 요소가 스크롤되어 화면 밖으로 나간 뒤에도 팝업을 뷰포트 안에 유지할지 여부."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Popover.PositionerPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

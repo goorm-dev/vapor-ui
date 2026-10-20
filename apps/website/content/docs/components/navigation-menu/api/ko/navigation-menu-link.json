@@ -24,6 +24,13 @@
             "description": "링크를 비활성화해 모든 상호작용을 막습니다. `<a>` 요소에서 `href`를 제거하고 `aria-disabled`를 설정합니다. `NavigationMenu.Root`의 `disabled`보다 우선합니다."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: NavigationMenu.Link.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "closeOnClick",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
@@ -31,16 +38,9 @@
             "description": "링크를 클릭할 때 탐색 메뉴를 닫을지 여부."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: NavigationMenu.Link.State) => (React.CSSProperties | undefined)) | ((state: NavigationMenuLinkState) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
-        },
-        {
             "name": "render",
             "type": ["ReactElement", "function"],
-            "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Link.State) => ReactElement) | ((props: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, state: NavigationMenuLinkState) => ReactElement) | undefined",
+            "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Link.State) => ReactElement) | undefined",
             "required": false,
             "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }

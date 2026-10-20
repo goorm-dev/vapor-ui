@@ -20,7 +20,7 @@
         {
             "name": "onValueChange",
             "type": ["function"],
-            "detailedType": "((groupValue: string[], eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element | undefined; }) => void) | undefined",
+            "detailedType": "((groupValue: string[], eventDetails: ToggleGroup.ChangeEventDetails) => void) | undefined",
             "required": false,
             "description": "ToggleGroup의 눌림 상태가 바뀔 때 호출되는 콜백."
         },
@@ -53,6 +53,13 @@
             "description": "토글 사이의 키보드 탐색 방향. `horizontal`은 왼쪽·오른쪽 화살표 키, `vertical`은 위·아래 화살표 키를 사용합니다. 레이아웃은 바꾸지 않습니다."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: ToggleGroup.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
@@ -74,13 +81,6 @@
             "description": "`false`이면 그룹에서 하나의 항목만 누를 수 있습니다. 그룹의 항목 하나가 눌리면 나머지는 눌림이 해제됩니다. `true`이면 여러 항목을 누를 수 있습니다."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: ToggleGroup.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
-        },
-        {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: ToggleGroup.State) => ReactElement) | undefined",
@@ -89,6 +89,7 @@
         }
     ],
     "typeRefs": {
+        "ToggleGroup.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
         "ToggleGroup.State": "{\n  disabled: boolean;\n  multiple: boolean;\n  orientation: \"horizontal\" | \"vertical\";\n}"
     }
 }

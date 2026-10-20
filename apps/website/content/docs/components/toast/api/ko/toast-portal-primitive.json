@@ -10,6 +10,13 @@
             "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Toast.PortalPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "container",
             "type": [
                 "HTMLElement",
@@ -20,13 +27,6 @@
             "detailedType": "HTMLElement | ShadowRoot | React.RefObject<HTMLElement | ShadowRoot | null> | null | undefined",
             "required": false,
             "description": "포털 요소를 렌더링할 부모 요소."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Toast.PortalPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

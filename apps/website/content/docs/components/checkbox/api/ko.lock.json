@@ -3,7 +3,7 @@
         "description": {
             "source": "b8fe3dcc0b772470",
             "guide": 2,
-            "terms": "2dd8dcdba2b16492"
+            "terms": "1d20ed028e33f53d"
         },
         "props.children": {
             "source": "09f2edd47dd6cd76",
@@ -11,7 +11,7 @@
             "terms": "a48bffc79c05ff98"
         },
         "props.className": {
-            "source": "a9c3e1445b7312eb",
+            "source": "594324ed2c588d62",
             "guide": 2,
             "terms": "345ff40e5505524c"
         },
@@ -26,7 +26,7 @@
             "terms": "2dd8dcdba2b16492"
         },
         "props.style": {
-            "source": "b083218372e4d4ff",
+            "source": "b21e70bdc0150841",
             "guide": 2,
             "terms": "345ff40e5505524c"
         }
@@ -35,7 +35,7 @@
         "description": {
             "source": "cd8faa03d539ced2",
             "guide": 2,
-            "terms": "6dfb401b6ab6ea24"
+            "terms": "151ec804cfa42621"
         },
         "props.checked": {
             "source": "bf8d1e90ad67c8bb",
@@ -48,7 +48,7 @@
             "terms": "8700bca9b02d4aa6"
         },
         "props.className": {
-            "source": "a9c3e1445b7312eb",
+            "source": "594324ed2c588d62",
             "guide": 2,
             "terms": "345ff40e5505524c"
         },
@@ -128,7 +128,7 @@
             "terms": "4f53cda18c2baa0c"
         },
         "props.style": {
-            "source": "b083218372e4d4ff",
+            "source": "b21e70bdc0150841",
             "guide": 2,
             "terms": "345ff40e5505524c"
         },

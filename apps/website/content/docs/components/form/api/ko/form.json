@@ -10,6 +10,13 @@
             "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Form.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "actionsRef",
             "type": ["React.RefObject<Form.Actions | null>"],
             "detailedType": "React.RefObject<Form.Actions | null> | undefined",
@@ -31,13 +38,6 @@
             "description": "폼을 제출할 때 호출되는 이벤트 핸들러.\n사용하면 네이티브 submit 이벤트에서 `preventDefault()`가 호출됩니다."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Form.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
-        },
-        {
             "name": "validationMode",
             "type": ["onBlur", "onChange", "onSubmit"],
             "detailedType": "\"onBlur\" | \"onChange\" | \"onSubmit\" | undefined",
@@ -47,14 +47,14 @@
         {
             "name": "render",
             "type": ["ReactElement", "function"],
-            "detailedType": "ReactElement | ((props: HTMLProps, state: Form.State) => ReactElement) | ((props: React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, state: Form.State) => ReactElement) | undefined",
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Form.State) => ReactElement) | undefined",
             "required": false,
             "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {
-        "Form.State": "{\n\n}",
         "Form.Actions": "{\n  validate: (fieldName?: string) => void;\n}",
-        "Form.SubmitEventDetails": "{\n  reason: \"none\";\n  event: Event;\n}"
+        "Form.SubmitEventDetails": "{\n  reason: \"none\";\n  event: Event;\n}",
+        "Form.State": "{\n\n}"
     }
 }

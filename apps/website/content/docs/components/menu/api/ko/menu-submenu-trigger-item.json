@@ -17,6 +17,13 @@
             "description": "항목을 클릭할 때 호출됩니다."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Menu.SubmenuTriggerItem.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "closeDelay",
             "type": ["number"],
             "detailedType": "number | undefined",
@@ -57,13 +64,6 @@
             "detailedType": "boolean | undefined",
             "required": false,
             "description": "트리거에 호버할 때도 Menu를 열지 여부."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Menu.SubmenuTriggerItem.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

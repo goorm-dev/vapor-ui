@@ -98,5 +98,9 @@
     {
         "en": "offset",
         "ko": "오프셋"
+    },
+    {
+        "en": "indeterminate",
+        "ko": "indeterminate"
     }
 ]

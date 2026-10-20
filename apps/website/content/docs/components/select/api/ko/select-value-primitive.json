@@ -10,18 +10,18 @@
             "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
-            "name": "children",
-            "type": ["ReactNode", "function"],
-            "detailedType": "ReactNode | ((value: any) => ReactNode)",
-            "required": false,
-            "description": "선택된 값의 형식을 지정하는 `ReactNode`를 반환하는 함수를 받습니다. 값은 읽기 전용으로 다루세요. `multiple` 모드에서 아무것도 선택하지 않았을 때는 공유되는 고정(frozen) 배열일 수 있습니다."
-        },
-        {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Select.ValuePrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode", "function"],
+            "detailedType": "ReactNode | ((value: any) => ReactNode)",
+            "required": false,
+            "description": "선택된 값의 형식을 지정하는 `ReactNode`를 반환하는 함수를 받습니다. 값은 읽기 전용으로 다루세요. `multiple` 모드에서 아무것도 선택하지 않았을 때는 공유되는 고정(frozen) 배열일 수 있습니다."
         },
         {
             "name": "render",

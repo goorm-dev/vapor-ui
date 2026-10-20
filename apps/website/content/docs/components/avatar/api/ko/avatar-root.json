@@ -47,6 +47,13 @@
             "description": "기본 `Avatar.ImagePrimitive`를 대체합니다. `children`을 주면 무시됩니다."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Avatar.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
@@ -59,13 +66,6 @@
             "detailedType": "boolean | undefined",
             "required": false,
             "description": "이미지 요소를 미리 불러오지 않고 마운트된 상태로 유지하며 그 자리에서 불러올지 여부.\n`loading=\"lazy\"`와 `next/image` 같은 최적화된 이미지 컴포넌트를 지원합니다."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Avatar.Root.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

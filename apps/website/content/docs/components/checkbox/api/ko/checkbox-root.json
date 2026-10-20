@@ -1,6 +1,6 @@
 {
     "name": "CheckboxRoot",
-    "description": "옵션을 켜거나 끄는 체크박스. `indeterminate`로 혼합 상태도 표시할 수 있습니다. `<span>` 요소와 그 옆의 숨겨진 `<input>`으로 렌더링됩니다.",
+    "description": "옵션을 켜거나 끄는 체크박스. `indeterminate`로 혼합 상태도 표시할 수 있습니다. `<span>` 요소와 그 옆의 숨겨진 `<input>`을 렌더링합니다.",
     "props": [
         {
             "name": "invalid",
@@ -59,6 +59,13 @@
             "detailedType": "string | ((state: Checkbox.Root.State) => (string | undefined)) | undefined",
             "required": false,
             "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Checkbox.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "disabled",
@@ -131,13 +138,6 @@
             "description": "폼을 제출하기 전에 사용자가 체크박스를 반드시 체크해야 하는지 여부."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Checkbox.Root.State) => (React.CSSProperties | undefined)) | ((state: CheckboxRootState) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
-        },
-        {
             "name": "uncheckedValue",
             "type": ["string"],
             "detailedType": "string | undefined",
@@ -147,13 +147,13 @@
         {
             "name": "render",
             "type": ["ReactElement", "function"],
-            "detailedType": "ReactElement | ((props: HTMLProps, state: Checkbox.Root.State) => ReactElement) | ((props: HTMLProps, state: CheckboxRootState) => ReactElement) | undefined",
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Checkbox.Root.State) => ReactElement) | undefined",
             "required": false,
             "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ],
     "typeRefs": {
-        "Checkbox.Root.State": "{\n  invalid?: boolean;\n  checked: boolean;\n  disabled: boolean;\n  readOnly: boolean;\n  required: boolean;\n  indeterminate: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}",
-        "Checkbox.Root.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
+        "Checkbox.Root.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "Checkbox.Root.State": "{\n  invalid?: boolean;\n  checked: boolean;\n  disabled: boolean;\n  readOnly: boolean;\n  required: boolean;\n  indeterminate: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
     }
 }

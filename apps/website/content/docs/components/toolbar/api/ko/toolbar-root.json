@@ -32,18 +32,18 @@
             "description": "툴바의 모든 버튼과 input을 비활성화하고 모든 상호작용을 막습니다."
         },
         {
-            "name": "loopFocus",
-            "type": ["boolean"],
-            "detailedType": "boolean | undefined",
-            "required": false,
-            "description": "`true`이면 키보드 탐색으로 툴바의 끝에 도달했을 때 포커스를 반대쪽 끝으로 넘깁니다."
-        },
-        {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Toolbar.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "`true`이면 키보드 탐색으로 툴바의 끝에 도달했을 때 포커스를 반대쪽 끝으로 넘깁니다."
         },
         {
             "name": "render",

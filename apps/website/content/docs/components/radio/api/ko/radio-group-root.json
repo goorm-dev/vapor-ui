@@ -53,6 +53,13 @@
             "description": "라디오 그룹을 유효하지 않은 상태로 표시하고, 내부의 모든 라디오와 라디오 카드에 오류 스타일을 적용합니다. `<div>` 요소에 `aria-invalid`를 설정합니다."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: RadioGroup.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
@@ -95,13 +102,6 @@
             "description": "폼을 제출하기 전에 사용자가 값을 반드시 선택해야 하는지 여부."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: RadioGroup.Root.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
-        },
-        {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: RadioGroup.Root.State) => ReactElement) | undefined",
@@ -110,7 +110,7 @@
         }
     ],
     "typeRefs": {
-        "RadioGroup.Root.State": "{\n  readOnly: boolean;\n  required: boolean;\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}",
-        "RadioGroup.Root.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
+        "RadioGroup.Root.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "RadioGroup.Root.State": "{\n  readOnly: boolean;\n  required: boolean;\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
     }
 }

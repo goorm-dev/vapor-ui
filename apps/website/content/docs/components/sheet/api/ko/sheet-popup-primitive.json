@@ -10,6 +10,13 @@
             "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Sheet.PopupPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
             "name": "finalFocus",
             "type": ["boolean", "React.RefObject<HTMLElement | null>", "function"],
             "detailedType": "boolean | React.RefObject<HTMLElement | null> | ((closeType: \"\" | \"mouse\" | \"touch\" | \"pen\" | \"keyboard\") => (boolean | void | HTMLElement | null)) | undefined",
@@ -22,13 +29,6 @@
             "detailedType": "boolean | React.RefObject<HTMLElement | null> | ((openType: \"\" | \"mouse\" | \"touch\" | \"pen\" | \"keyboard\") => (boolean | void | HTMLElement | null)) | undefined",
             "required": false,
             "description": "Dialog가 열릴 때 포커스할 요소.\n기본적으로 포커스는 팝업 안의 첫 번째 탭 이동 가능한 요소로 옮겨지지만, 터치로 Dialog를 열면 가상 키보드가 열리지 않도록 팝업 자체에 포커스합니다.\n\n- `false`: 포커스를 옮기지 않습니다.\n- `true`: 기본 동작(첫 번째 탭 이동 가능한 요소 또는 팝업)에 따라 포커스를 옮깁니다.\n- `RefObject`: ref가 가리키는 요소로 포커스를 옮깁니다.\n- `function`: 상호작용 유형(`mouse`, `touch`, `pen`, `keyboard`)과 함께 호출됩니다.\n  포커스할 요소를 반환하거나, 기본 동작을 쓰려면 `true`, 기본 동작으로 대체하려면 `null`, 아무것도 하지 않으려면 `false`/`undefined`를 반환하세요."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Sheet.PopupPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
         },
         {
             "name": "render",

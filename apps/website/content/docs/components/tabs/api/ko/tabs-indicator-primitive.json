@@ -10,18 +10,18 @@
             "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
-            "name": "renderBeforeHydration",
-            "type": ["boolean"],
-            "detailedType": "boolean | undefined",
-            "required": false,
-            "description": "React가 하이드레이션하기 전에 스스로 렌더링할지 여부.\n서버 사이드 렌더링 뒤 인디케이터가 보이지 않는 시간을 최소화합니다."
-        },
-        {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Tabs.IndicatorPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "renderBeforeHydration",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "React가 하이드레이션하기 전에 스스로 렌더링할지 여부.\n서버 사이드 렌더링 뒤 인디케이터가 보이지 않는 시간을 최소화합니다."
         },
         {
             "name": "render",
