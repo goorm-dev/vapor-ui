@@ -13,7 +13,7 @@ To run a single test file: `pnpm vitest run src/components/button/button.test.ts
 Full rule files live in `.claude/rules/` at the repo root. Load them when you need deeper guidance:
 
 - `@.claude/rules/component-api.md` — component API, file structure, compound pattern, props typing
-- `@.claude/rules/styling.md` — Vanilla Extract styling, tokens, layer cascade, sprinkles
+- `@.claude/rules/styling.md` — Vanilla Extract styling, tokens, layer cascade, `css()` macro boundary
 - `@.claude/rules/typescript.md` — TypeScript conventions, naming, coding style
 - `@.claude/rules/testing.md` — testing stack, coverage expectations, fake timers
 - `@.claude/rules/docs.md` — Storybook story structure, `TestBed` story convention
@@ -49,7 +49,7 @@ Never use `Object.assign` to build compound namespace exports — use the 3-file
 
 ### Props Typing
 
-All components use `VaporUIComponentProps` from `~/utils/types`, which merges Base UI's `render` prop, the `$css` sprinkles prop, and stateful `className`/`style`:
+All components use `VaporUIComponentProps` from `~/utils/types`, which merges Base UI's `render` prop, the deprecated `$css` sprinkles prop (see the deprecation note below — new consumer code uses the `css()` macro from `@vapor-ui/style-macro`), and stateful `className`/`style`:
 
 ```tsx
 export namespace Button {
@@ -106,7 +106,7 @@ All styles live in `*.css.ts` files. No inline styles, no CSS modules.
 
 ### Three primitives
 
-- **`componentRecipe`** — components with variants. Placed inside `@layer vapor.components` automatically.
+- **`componentRecipe`** — components with variants. Placed inside `@layer vapor-components` automatically.
 - **`componentStyle`** — static, no-variant component parts.
 - **`interaction()` mixin** — include in `base` for any interactive element (hover/active/focus via `::before` overlay).
 
@@ -135,17 +135,35 @@ selectors: { [when.disabled()]: { opacity: 0.32 } }
 
 Always use the `vars` object from `~/styles/themes.css`. Never use hard-coded values.
 
-### `$css` prop
+### `css()` macro (consumer-facing styling)
 
-`$css` is the public API for sprinkle styles. Deprecated flat props (`padding`, `margin`, etc.) are being removed — always write `$css={{ padding: '150' }}` instead.
+User-facing composition (new components, docs examples, demo code) uses the `css()` macro from [`@vapor-ui/style-macro`](../style-macro). It compiles to atomic class names at build time with no runtime style dictionary:
+
+```tsx
+import { css } from '@vapor-ui/style-macro';
+
+<div
+    className={css({
+        padding: '$space-400',
+        color: accent, // dynamic → hoisted to a CSS var in `style={{ ... }}`
+        ':hover': { color: '$foreground-accent' },
+    })}
+/>;
+```
+
+Core component implementations stay on Vanilla Extract (`componentRecipe` / `componentStyle`) — the macro is for leaf product code and consumers assembling layouts.
+
+### `$css` prop (deprecated)
+
+The sprinkles-backed `$css` prop still works but is retained only for migration. New code should use the `css()` macro above; old `$css={{ padding: '150' }}` call sites will be removed over subsequent releases. The flat `padding`/`margin`/… variant props are also deprecated — do not reintroduce them.
 
 ### `@layer` cascade order
 
 ```text
-vapor.theme → vapor.reset → vapor.components → vapor.utilities → (no layer: user className)
+vapor-theme → vapor-reset → vapor-components → vapor-utilities → (no layer: user className)
 ```
 
-User `className` always wins over component styles without `!important`.
+`vapor-utilities` is where the `css()` macro emits atomic classes. User `className` without a layer always wins over component styles — no `!important` needed.
 
 ## Testing
 
