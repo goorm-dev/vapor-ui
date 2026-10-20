@@ -1,11 +1,11 @@
 'use client';
 
-import type { CSSProperties, ComponentProps, ReactElement } from 'react';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import type { ComponentProps, ReactElement } from 'react';
+import { forwardRef } from 'react';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
 
-import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
+import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
@@ -86,7 +86,7 @@ export const PopoverPositionerPrimitive = forwardRef<
     const {
         side = 'bottom',
         align = 'center',
-        sideOffset = 8,
+        sideOffset = 10,
         collisionAvoidance,
         ...componentProps
     } = resolveStyles(props);
@@ -108,48 +108,17 @@ PopoverPositionerPrimitive.displayName = 'Popover.PositionerPrimitive';
  * Popover.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-const DATA_SIDE = 'data-side';
-const DATA_ALIGN = 'data-align';
-
 /**
  * The popover panel, with an arrow that points at the trigger. Renders a `<div>` element.
  */
 export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrimitive.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
-
-        const [side, setSide] = useState<PopoverPositionerPrimitive.Props['side']>('bottom');
-        const [align, setAlign] = useState<PopoverPositionerPrimitive.Props['align']>('start');
-
-        const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
-
-        const popupRef = useRef<HTMLDivElement>(null);
-        const composedRef = composeRefs(popupRef, ref);
-
-        useEffect(() => {
-            if (!popupRef.current) return;
-
-            const dataset = popupRef.current.dataset;
-            const { side: initialSide, align: initialAlign } = extractPositions(dataset);
-
-            if (initialSide) setSide(initialSide);
-            if (initialAlign) setAlign(initialAlign);
-        }, []);
-
-        const arrowRef = useMutationObserverRef<HTMLDivElement>({
-            callback: (mutations) => {
-                mutations.forEach((mutation) => {
-                    const { attributeName, target: mutationTarget } = mutation;
-
-                    const dataset = (mutationTarget as HTMLElement).dataset;
-                    const { side: nextSide, align: nextAlign } = extractPositions(dataset);
-
-                    if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
-                    if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
-                });
-            },
-            options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
+        const { popupRef, arrowRef, position } = useArrowPosition({
+            initialSide: 'bottom',
+            initialAlign: 'start',
         });
+        const composedRef = composeRefs(popupRef, ref);
 
         return (
             <BasePopover.Popup
@@ -167,12 +136,6 @@ export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrim
     },
 );
 PopoverPopupPrimitive.displayName = 'Popover.PopupPrimitive';
-
-const extractPositions = (dataset: DOMStringMap) => {
-    const currentSide = dataset.side as PopoverPositionerPrimitive.Props['side'];
-    const currentAlign = dataset.align as PopoverPositionerPrimitive.Props['align'];
-    return { side: currentSide, align: currentAlign };
-};
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Popup
@@ -236,35 +199,9 @@ PopoverDescription.displayName = 'Popover.Description';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type ArrowPositionProps = Pick<PopoverPositionerPrimitive.Props, 'side' | 'align'> & {
-    offset?: number;
-};
-
-const getArrowPosition = ({
-    side = 'top',
-    align = 'center',
-    offset = 12,
-}: ArrowPositionProps): CSSProperties => {
-    const positionMap = {
-        'top-start': { left: offset, right: 'unset' },
-        'top-end': { left: 'unset', right: offset },
-        'bottom-start': { left: offset, right: 'unset' },
-        'bottom-end': { left: 'unset', right: offset },
-        'left-start': { top: offset, bottom: 'unset' },
-        'left-end': { top: 'unset', bottom: offset },
-        'right-start': { top: offset, bottom: 'unset' },
-        'right-end': { top: 'unset', bottom: offset },
-    };
-
-    const key = `${side}-${align}` as keyof typeof positionMap;
-    return positionMap[key] || {};
-};
-
-/* -----------------------------------------------------------------------------------------------*/
-
 const ArrowIcon = (props: ComponentProps<'svg'>) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 16" fill="none" {...props}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7 16" fill="none" {...props}>
             <path
                 d="M1.17969 8.93457C0.620294 8.43733 0.620294 7.56267 1.17969 7.06543L7.25 1.66992L7.25 14.3301L1.17969 8.93457Z"
                 stroke={vars.color.border.normal}

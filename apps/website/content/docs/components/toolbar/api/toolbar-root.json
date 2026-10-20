@@ -22,7 +22,7 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: Toolbar.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
         },
         {
             "name": "disabled",
@@ -32,18 +32,18 @@
             "description": "Disables every button and input in the toolbar, blocking all interactions."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Toolbar.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
             "description": "If `true`, using keyboard navigation will wrap focus to the other end of the toolbar once the end is reached."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: Toolbar.Root.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "render",

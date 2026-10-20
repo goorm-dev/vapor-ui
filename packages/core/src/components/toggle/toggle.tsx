@@ -53,6 +53,7 @@ Toggle.displayName = 'Toggle';
 
 export namespace Toggle {
     export type State = BaseToggle.State;
+    export type ChangeEventDetails = BaseToggle.ChangeEventDetails;
     export interface Props extends VaporUIComponentProps<typeof BaseToggle, State>, RootVariants {
         /**
          * Content shown inside the toggle, such as an icon. A single element child is hidden from assistive technologies, so give the toggle an `aria-label`.

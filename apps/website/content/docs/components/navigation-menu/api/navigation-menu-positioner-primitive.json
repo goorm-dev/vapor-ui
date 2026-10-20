@@ -7,7 +7,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: NavigationMenu.PositionerPrimitive.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: NavigationMenu.PositionerPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "align",
@@ -93,7 +100,7 @@
             "detailedType": "number | ((data: { side: \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\"; align: \"center\" | \"end\" | \"start\"; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number) | undefined",
             "required": false,
             "description": "Distance between the anchor and the popup in pixels.\nAlso accepts a function that returns the distance to read the dimensions of the anchor\nand positioner elements, along with its side and alignment.\n\nThe function takes a `data` object parameter with the following properties:\n- `data.anchor`: the dimensions of the anchor element with properties `width` and `height`.\n- `data.positioner`: the dimensions of the positioner element with properties `width` and `height`.\n- `data.side`: which side of the anchor element the positioner is aligned against.\n- `data.align`: how the positioner is aligned relative to the specified side.",
-            "defaultValue": "8"
+            "defaultValue": "10"
         },
         {
             "name": "sticky",
@@ -101,13 +108,6 @@
             "detailedType": "boolean | undefined",
             "required": false,
             "description": "Whether to maintain the popup in the viewport after\nthe anchor element was scrolled out of view."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: NavigationMenu.PositionerPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "render",

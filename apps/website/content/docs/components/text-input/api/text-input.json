@@ -45,7 +45,14 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: TextInput.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: TextInput.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "type",
@@ -53,13 +60,6 @@
             "detailedType": "\"search\" | \"text\" | \"tel\" | \"url\" | \"email\" | \"password\" | undefined",
             "required": false,
             "description": "Kind of text the field accepts, such as an email address, password, or URL."
-        },
-        {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: TextInput.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
         },
         {
             "name": "render",

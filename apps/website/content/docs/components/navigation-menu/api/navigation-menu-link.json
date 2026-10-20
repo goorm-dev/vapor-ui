@@ -7,7 +7,7 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: NavigationMenu.Link.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
         },
         {
             "name": "current",
@@ -24,6 +24,13 @@
             "description": "Disables the link, blocking all interactions. Removes `href` and sets `aria-disabled` on the `<a>` element. Takes precedence over `disabled` on `NavigationMenu.Root`."
         },
         {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: NavigationMenu.Link.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
             "name": "closeOnClick",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
@@ -31,16 +38,9 @@
             "description": "Whether to close the navigation menu when the link is clicked."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: NavigationMenu.Link.State) => (React.CSSProperties | undefined)) | ((state: NavigationMenuLinkState) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
-        },
-        {
             "name": "render",
             "type": ["ReactElement", "function"],
-            "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Link.State) => ReactElement) | ((props: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, state: NavigationMenuLinkState) => ReactElement) | undefined",
+            "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Link.State) => ReactElement) | undefined",
             "required": false,
             "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }

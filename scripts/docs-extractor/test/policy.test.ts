@@ -72,14 +72,20 @@ describe('policy', () => {
             expect(namesOf(prop('children', { source: 'react', isOptional: false }))).toEqual([]);
         });
 
-        it('data-·aria-로 시작하는 prop은 어디서 왔든 뺀다', () => {
+        it('data-·aria-로 시작하는 prop은 뺀다', () => {
             expect(
                 namesOf(
                     prop('data-testid'),
                     prop('aria-hidden'),
-                    prop('aria-label', { source: 'base-ui' }),
+                    prop('aria-label', { source: 'variants' }),
                 ),
             ).toEqual([]);
+        });
+
+        it('Base UI가 직접 선언한 aria- prop은 남긴다', () => {
+            expect(namesOf(prop('aria-valuetext', { source: 'base-ui' }))).toEqual([
+                'aria-valuetext',
+            ]);
         });
 
         it('sprinkles 모듈에서 온 prop은 뺀다', () => {

@@ -43,7 +43,7 @@
             "type": ["string", "function"],
             "detailedType": "string | ((state: RadioGroup.Root.State) => (string | undefined)) | undefined",
             "required": false,
-            "description": "CSS class applied to the element, or a function that returns a class based on the component’s state."
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
         },
         {
             "name": "invalid",
@@ -51,6 +51,13 @@
             "detailedType": "boolean | undefined",
             "required": false,
             "description": "Marks the radio group as invalid, applying error styles to every radio and radio card inside it. Sets `aria-invalid` on the `<div>` element."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: RadioGroup.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
         },
         {
             "name": "disabled",
@@ -95,13 +102,6 @@
             "description": "Whether the user must choose a value before submitting a form."
         },
         {
-            "name": "style",
-            "type": ["React.CSSProperties", "function"],
-            "detailedType": "React.CSSProperties | ((state: RadioGroup.Root.State) => (React.CSSProperties | undefined)) | undefined",
-            "required": false,
-            "description": "Style applied to the element, or a function that returns a style object based on the component’s state."
-        },
-        {
             "name": "render",
             "type": ["ReactElement", "function"],
             "detailedType": "ReactElement | ((props: HTMLProps, state: RadioGroup.Root.State) => ReactElement) | undefined",
@@ -110,7 +110,7 @@
         }
     ],
     "typeRefs": {
-        "RadioGroup.Root.State": "{\n  readOnly: boolean;\n  required: boolean;\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}",
-        "RadioGroup.Root.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
+        "RadioGroup.Root.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "RadioGroup.Root.State": "{\n  readOnly: boolean;\n  required: boolean;\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
     }
 }

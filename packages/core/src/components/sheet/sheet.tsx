@@ -449,7 +449,15 @@ SheetTitle.displayName = 'Sheet.Title';
  * Paragraph that provides supplementary text for the sheet, linked to the sheet panel for assistive technologies. Renders a `<p>` element.
  */
 export const SheetDescription = forwardRef<HTMLParagraphElement, SheetDescription.Props>(
-    (props, ref) => <Dialog.Description ref={ref} {...props} />,
+    ({ className, ...props }, ref) => {
+        return (
+            <Dialog.Description
+                ref={ref}
+                className={cn(styles.description, className)}
+                {...props}
+            />
+        );
+    },
 );
 SheetDescription.displayName = 'Sheet.Description';
 
