@@ -33,6 +33,7 @@
         "navigation-menu",
         "pagination",
         "popover",
+        "(components)/progress-bar",
         "radio-card",
         "radio",
         "select",

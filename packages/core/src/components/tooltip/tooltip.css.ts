@@ -5,7 +5,6 @@ import { vars } from '~/styles/themes.css';
 export const popup = componentStyle([
     typography({ style: 'body3' }),
     {
-        border: `0.0625rem solid ${vars.color.border.normal}`,
         borderRadius: vars.size.borderRadius['300'],
         boxShadow: vars.shadow.md,
         backgroundColor: vars.color.background['canvas-inverse'],

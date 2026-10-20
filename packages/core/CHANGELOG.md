@@ -1,5 +1,59 @@
 # @vapor-ui/core
 
+## 1.6.0
+
+### General changes
+
+- align component backgrounds with the canvas token hierarchy and expose `bg-canvas-inverse` in sprinkles ([#698](https://github.com/goorm-dev/vapor-ui/pull/698)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- Extract shared arrow positioning logic from `NavigationMenu`, `Popover`, and `Tooltip` into a `useArrowPosition` hook. Also bump the default `sideOffset` of these three primitives from `8` to `10`. ([#758](https://github.com/goorm-dev/vapor-ui/pull/758)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- add data-slots for all components ([#703](https://github.com/goorm-dev/vapor-ui/pull/703)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- apply `canvas-inverse` tokens to the tooltip/toast component. ([#696](https://github.com/goorm-dev/vapor-ui/pull/696)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Alertdialog
+
+- add new `AlertDialog` components ([#704](https://github.com/goorm-dev/vapor-ui/pull/704)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- add AlertDialog.Header ([#725](https://github.com/goorm-dev/vapor-ui/pull/725)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Avatar
+
+- update `@base-ui/react` to 1.8.0 — support `keepMounted` on `Avatar` with stacked image/fallback styles, accept functional updater in Toast `update` ([#729](https://github.com/goorm-dev/vapor-ui/pull/729)) - Thanks [@renovate](https://github.com/apps/renovate)!
+
+### Button
+
+- apply the light interaction layer to the `ghost` variant of `Button` and `IconButton` to match the design ([#747](https://github.com/goorm-dev/vapor-ui/pull/747)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Dialog
+
+- align `Dialog` header/body/footer padding with design — remove the fixed `Dialog.Header` height (56px) and use padding instead (top 24 / Header→Body 20 / Body→Footer 20 / bottom 24). Vertical spacing of existing dialogs will change. ([#760](https://github.com/goorm-dev/vapor-ui/pull/760)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Meter
+
+- add new `Meter` component ([#700](https://github.com/goorm-dev/vapor-ui/pull/700)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Progressbar
+
+- add new `ProgressBar` component ([#702](https://github.com/goorm-dev/vapor-ui/pull/702)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Radio Group
+
+- add RadioGroup.RequiredSymbol ([#753](https://github.com/goorm-dev/vapor-ui/pull/753)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Spinner
+
+- respect `prefers-reduced-motion` and hide decorative svg from assistive technology ([#689](https://github.com/goorm-dev/vapor-ui/pull/689)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Typography
+
+- fix the code font family name to `"Fira Code"` and apply it to the `code1` / `code2` typography styles ([#748](https://github.com/goorm-dev/vapor-ui/pull/748)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.3.1
+
 ## 1.5.1
 
 ### Css
