@@ -1,5 +1,5 @@
 ---
-'@vapor-ui/core': major
+'@vapor-ui/core': minor
 ---
 
 remove deprecated sprinkles
