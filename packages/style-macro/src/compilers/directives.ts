@@ -12,21 +12,29 @@
  */
 
 // Match ONE leading directive: optional whitespace, a quoted string, optional
-// semicolon, trailing newline (or EOF). Does not match block comments between
-// directives — strict reading of the spec allows comments but conservative here.
+// semicolon, trailing newline (or EOF).
 const LEADING_DIRECTIVE_RE = /^\s*(['"])(?:(?!\1)[^\\\r\n]|\\.)*\1\s*;?\s*(?:\r?\n|$)/;
+
+// Comments and whitespace that may appear BEFORE a directive. ES spec allows
+// comments to precede a directive prologue; TypeScript, SWC and others follow suit.
+const LEADING_COMMENTS_RE = /^(?:\s+|\/\/[^\n]*(?:\n|$)|\/\*[\s\S]*?\*\/)+/;
 
 /**
  * Offset in `code` immediately after the final directive-prologue statement.
- * Returns 0 if no directives present.
+ * Returns 0 when no directive is present (leading comments alone do not shift
+ * the insert point — imports can precede comments safely).
  */
 export function directivePrologueEnd(code: string): number {
     let pos = 0;
     while (true) {
         const slice = code.slice(pos);
-        const m = LEADING_DIRECTIVE_RE.exec(slice);
-        if (!m) break;
-        pos += m[0].length;
+        const commentM = LEADING_COMMENTS_RE.exec(slice);
+        const commentLen = commentM ? commentM[0].length : 0;
+        const after = slice.slice(commentLen);
+        const dirM = LEADING_DIRECTIVE_RE.exec(after);
+        if (!dirM) break;
+
+        pos += commentLen + dirM[0].length;
     }
     return pos;
 }

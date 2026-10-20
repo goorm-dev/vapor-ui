@@ -41,6 +41,23 @@ describe('directivePrologueEnd', () => {
         const pos = directivePrologueEnd(src);
         expect(src.slice(pos)).toBe(`import x from 'y';`);
     });
+
+    it('skips a leading line comment before the directive', () => {
+        const src = `// license header\n'use client';\nimport x from 'y';`;
+        const pos = directivePrologueEnd(src);
+        expect(src.slice(pos)).toBe(`import x from 'y';`);
+    });
+
+    it('skips a leading block comment before the directive', () => {
+        const src = `/* license */\n'use client';\nimport x from 'y';`;
+        const pos = directivePrologueEnd(src);
+        expect(src.slice(pos)).toBe(`import x from 'y';`);
+    });
+
+    it('returns 0 when leading comment present but no directive', () => {
+        const src = `// just a comment\nimport x from 'y';`;
+        expect(directivePrologueEnd(src)).toBe(0);
+    });
 });
 
 describe('insertAfterDirectives', () => {
