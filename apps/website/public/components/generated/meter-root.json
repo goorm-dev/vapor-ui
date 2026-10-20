@@ -20,7 +20,7 @@
             ],
             "required": false,
             "description": "미터의 크기. 트랙의 높이를 결정합니다.",
-            "defaultValue": "sm"
+            "defaultValue": "md"
         },
         {
             "name": "type",

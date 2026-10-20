@@ -15,7 +15,7 @@
         {
             "prop": "shape",
             "type": ["circle", "square"],
-            "default": "circle",
+            "default": "square",
             "description": "아바타 컴포넌트의 모양을 조절합니다."
         },
         {

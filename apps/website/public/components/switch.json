@@ -51,7 +51,7 @@
         {
             "prop": "size",
             "type": ["sm", "md", "lg"],
-            "default": "sm",
+            "default": "md",
             "description": "스위치의 크기를 설정합니다."
         },
         {

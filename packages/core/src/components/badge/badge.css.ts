@@ -10,7 +10,7 @@ export const root = componentRecipe({
         justifyContent: 'center',
     },
 
-    defaultVariants: { colorPalette: 'primary', size: 'sm', shape: 'square' },
+    defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
     variants: {
         colorPalette: {
             primary: {

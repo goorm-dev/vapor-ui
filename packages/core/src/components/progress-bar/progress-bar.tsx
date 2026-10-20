@@ -53,7 +53,7 @@ export const ProgressBarRoot = forwardRef<HTMLDivElement, ProgressBarRoot.Props>
     const {
         className,
         children,
-        size = 'sm',
+        size = 'md',
         type = 'default',
         value,
         min = 0,

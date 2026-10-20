@@ -21,7 +21,7 @@
             ],
             "required": false,
             "description": "Track의 높이입니다.",
-            "defaultValue": "sm"
+            "defaultValue": "md"
         },
         {
             "name": "type",

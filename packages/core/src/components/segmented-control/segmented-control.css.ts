@@ -30,7 +30,7 @@ export const root = componentRecipe({
         width: 'fit-content',
     },
 
-    defaultVariants: { size: 'lg' },
+    defaultVariants: { size: 'md' },
     variants: {
         size: {
             sm: {
@@ -79,7 +79,7 @@ export const item = componentRecipe({
         },
     ],
 
-    defaultVariants: { size: 'lg' },
+    defaultVariants: { size: 'md' },
     variants: {
         size: {
             sm: {
@@ -107,7 +107,7 @@ export const iconItem = componentRecipe({
         padding: 0,
     },
 
-    defaultVariants: { size: 'lg' },
+    defaultVariants: { size: 'md' },
     variants: {
         size: {
             sm: { width: vars.size.dimension['300'] },

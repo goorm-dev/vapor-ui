@@ -8,7 +8,7 @@
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
             "description": "브레드크럼 크기",
-            "defaultValue": "xl"
+            "defaultValue": "md"
         },
         {
             "name": "render",

@@ -52,7 +52,7 @@ export const link = componentRecipe({
     ],
 
     defaultVariants: {
-        size: 'sm',
+        size: 'md',
     },
     variants: {
         size: {
