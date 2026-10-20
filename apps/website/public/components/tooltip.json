@@ -69,7 +69,7 @@
         {
             "prop": "sideOffset",
             "type": ["number"],
-            "default": "6",
+            "default": "10",
             "description": "트리거와 툴팁 사이의 거리를 설정합니다."
         },
         {

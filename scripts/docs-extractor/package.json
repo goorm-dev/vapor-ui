@@ -24,7 +24,7 @@
         "@types/node": "^24.13.3",
         "@vitest/coverage-v8": "catalog:",
         "eslint": "catalog:",
-        "tsx": "^4.23.13",
+        "tsx": "^4.23.15",
         "typescript": "catalog:",
         "vitest": "catalog:"
     },

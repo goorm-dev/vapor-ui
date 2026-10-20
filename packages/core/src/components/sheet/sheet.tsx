@@ -400,7 +400,15 @@ SheetTitle.displayName = 'Sheet.Title';
  * -----------------------------------------------------------------------------------------------*/
 
 export const SheetDescription = forwardRef<HTMLParagraphElement, SheetDescription.Props>(
-    (props, ref) => <Dialog.Description ref={ref} {...props} />,
+    ({ className, ...props }, ref) => {
+        return (
+            <Dialog.Description
+                ref={ref}
+                className={cn(styles.description, className)}
+                {...props}
+            />
+        );
+    },
 );
 SheetDescription.displayName = 'Sheet.Description';
 

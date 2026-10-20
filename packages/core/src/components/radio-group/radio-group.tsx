@@ -18,7 +18,7 @@ import type { RootVariants } from './radio-group.css';
 import * as styles from './radio-group.css';
 
 type RadioGroupVariants = RootVariants;
-type RadioGroupSharedProps = RadioGroupVariants & { invalid?: boolean };
+type RadioGroupSharedProps = RadioGroupVariants & { invalid?: boolean; required?: boolean };
 
 type RadioGroupContext = RadioGroupSharedProps & {
     setLabelElementId?: (id?: string) => void;
@@ -44,17 +44,19 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((
     const [variantProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(componentProps, [
         'size',
         'invalid',
+        'required',
     ]);
 
-    const { invalid } = variantProps;
+    const { invalid, required } = variantProps;
     const dataAttrs = createDataAttributes({ invalid });
 
     return (
-        <RadioGroupProvider value={{ setLabelElementId, invalid, ...variantProps }}>
+        <RadioGroupProvider value={{ setLabelElementId, ...variantProps }}>
             <BaseRadioGroup
                 ref={ref}
                 aria-labelledby={labelElementId}
                 aria-invalid={invalid}
+                required={required}
                 className={cn(styles.root(), className)}
                 {...dataAttrs}
                 {...otherProps}
@@ -93,6 +95,38 @@ export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props
 });
 RadioGroupLabel.displayName = 'RadioGroup.Label';
 
+/* -------------------------------------------------------------------------------------------------
+ * RadioGroup.RequiredSymbol
+ * -----------------------------------------------------------------------------------------------*/
+
+export const RadioGroupRequiredSymbol = forwardRef<HTMLSpanElement, RadioGroupRequiredSymbol.Props>(
+    (props, ref) => {
+        const {
+            render,
+            className,
+            children: childrenProp,
+            ...componentProps
+        } = resolveStyles(props);
+        const { required } = useRadioGroupContext();
+
+        const children = childrenProp || '*';
+
+        return useRenderElement({
+            ref,
+            render,
+            enabled: !!required,
+            defaultTagName: 'span',
+            props: {
+                'aria-hidden': true,
+                className: cn(styles.requiredSymbol, className),
+                children,
+                ...componentProps,
+            },
+        });
+    },
+);
+RadioGroupRequiredSymbol.displayName = 'RadioGroup.RequiredSymbol';
+
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace RadioGroupRoot {
@@ -110,5 +144,10 @@ export interface RadioGroupLabelState {
 
 export namespace RadioGroupLabel {
     export type State = RadioGroupLabelState;
+    export type Props = VaporUIComponentProps<'span', State>;
+}
+
+export namespace RadioGroupRequiredSymbol {
+    export type State = {};
     export type Props = VaporUIComponentProps<'span', State>;
 }
