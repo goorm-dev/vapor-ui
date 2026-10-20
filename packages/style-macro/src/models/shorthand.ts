@@ -117,6 +117,11 @@ const TABLE: Record<string, Expansion> = {
     'border-radius': (v) => {
         // border-radius 는 축소형이 TL / TR / BR / BL 순서 (padding 과 대각선 방향 다름).
         const p = splitCssValue(v);
+        // elliptical corner 구문(`10px 5px / 20px`)이나 `!important` 플래그가
+        // 섞여 있으면 토큰 단위로 쪼개면 안 된다. 원 property 를 그대로 유지.
+        if (p.length > 4 || p.some((t) => t === '/' || t.startsWith('!'))) {
+            return [{ property: 'border-radius', value: v }];
+        }
         const tl = p[0];
         const tr = p[1] ?? tl;
         const br = p[2] ?? tl;

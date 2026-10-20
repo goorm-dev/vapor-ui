@@ -98,4 +98,22 @@ describe('expandShorthand', () => {
     it('passes through non-shorthand property unchanged', () => {
         expect(expandShorthand('color', 'red')).toEqual([{ property: 'color', value: 'red' }]);
     });
+
+    it('keeps border-radius intact when the elliptical `/` syntax is used', () => {
+        expect(expandShorthand('border-radius', '10px 5px / 20px')).toEqual([
+            { property: 'border-radius', value: '10px 5px / 20px' },
+        ]);
+    });
+
+    it('keeps border-radius intact when `!important` is present', () => {
+        expect(expandShorthand('border-radius', '8px !important')).toEqual([
+            { property: 'border-radius', value: '8px !important' },
+        ]);
+    });
+
+    it('keeps border-radius intact when more than 4 values are supplied', () => {
+        expect(expandShorthand('border-radius', '1px 2px 3px 4px 5px')).toEqual([
+            { property: 'border-radius', value: '1px 2px 3px 4px 5px' },
+        ]);
+    });
 });
