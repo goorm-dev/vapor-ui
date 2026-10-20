@@ -210,18 +210,11 @@ interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
 const Header = ({ title, description }: HeaderProps) => {
     return (
         <DialogPrimitives.Header
-            $css={{
-                position: 'relative',
-                display: 'grid',
-                gridTemplateColumns: '1fr 28px',
-                height: 'unset',
-                paddingTop: '$300',
-                gap: '$200',
-            }}
+            $css={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 28px' }}
         >
-            <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
+            <VStack $css={{ alignItems: 'flex-start', gap: '$050', flex: 1 }}>
                 <slots.title render={title} />
-                <slots.description render={description} $css={{ color: '$fg-hint' }} />
+                <slots.description render={description} />
             </VStack>
 
             <CloseButton />
@@ -261,7 +254,6 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
     const $css = {
         maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
-        marginTop: '$200',
         paddingBottom: overflowed ? '$250' : '$000',
         ...$cssProp,
     } satisfies typeof $cssProp;
@@ -287,8 +279,7 @@ const Footer = ({ action, assistive }: FooterProps) => {
             $css={{
                 display: 'grid',
                 gridTemplateAreas: '"assistive action"',
-                paddingTop: renderFooter ? '$200' : '$000',
-                paddingBottom: '$300',
+                paddingTop: renderFooter ? '$250' : '$000',
             }}
         >
             <slots.assistive

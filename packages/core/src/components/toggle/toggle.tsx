@@ -50,5 +50,6 @@ Toggle.displayName = 'Toggle';
 
 export namespace Toggle {
     export type State = BaseToggle.State;
+    export type ChangeEventDetails = BaseToggle.ChangeEventDetails;
     export type Props = VaporUIComponentProps<typeof BaseToggle, State> & RootVariants;
 }

@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 
+import type { ComponentRenderFn, HTMLProps } from '@base-ui/react/types';
 import type { useRender } from '@base-ui/react/use-render';
 
 import type { Sprinkles } from '~/styles/sprinkles.css';
@@ -29,7 +30,10 @@ export type Styles = {
 };
 
 export type VaporUIComponentProps<ElementType extends React.ElementType, State> = Styles &
-    Omit<useRender.ComponentProps<ElementType, State>, OmitColorProp<ElementType> | 'className'> & {
+    Omit<
+        useRender.ComponentProps<ElementType, State>,
+        OmitColorProp<ElementType> | 'className' | 'style' | 'render'
+    > & {
         /**
          * CSS class applied to the element, or a function that returns a class based on the component’s state.
          */
@@ -38,4 +42,9 @@ export type VaporUIComponentProps<ElementType extends React.ElementType, State> 
          * Style applied to the element, or a function that returns a style object based on the component’s state.
          */
         style?: StyleParams<State>;
+        /**
+         * Allows you to replace the component’s HTML element with a different tag, or compose it with another component.
+         * Accepts a ReactElement or a function that returns the element to render.
+         */
+        render?: React.ReactElement | ComponentRenderFn<HTMLProps, State>;
     };
