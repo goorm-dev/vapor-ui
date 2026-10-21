@@ -54,10 +54,6 @@ CONTRIBUTING에는 "큰 변경은 먼저 이슈로 논의한다"는 문장만 �
 - 반려되면 RFC 상태를 Rejected로 바꾸고 사유를 남깁니다. 반려된 RFC를 머지해 기록으로 남길지, PR만 닫을지는 제안자가 정합니다
 - ADR은 일반 PR과 같은 방식으로 리뷰합니다
 
-### 기존 결정의 이관
-
-개인 메모로 남아 있던 "API 레퍼런스는 자체 extractor로 만들고 커밋한다" 결정은 팀 ADR(ADR-0002)로 올립니다. ADR-0001은 이 RFC의 결론인 "RFC·ADR 프로세스를 쓴다"가 됩니다.
-
 ### 이 PR의 범위
 
 - `docs/rfcs/0001-rfc-adr-process.md` (이 문서)
@@ -69,7 +65,6 @@ CONTRIBUTING에는 "큰 변경은 먼저 이슈로 논의한다"는 문장만 �
 
 - CONTRIBUTING에 RFC 절차 추가
 - PR 템플릿에 RFC·ADR 링크 칸 추가
-- extractor 결정을 ADR-0002로 이관
 - 과거 결정을 ADR로 소급 작성
 - ADR 형식을 검사하는 CI
 
