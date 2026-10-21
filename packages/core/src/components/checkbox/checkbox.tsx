@@ -4,7 +4,6 @@ import type { ComponentProps } from 'react';
 import { forwardRef } from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
-import type { HTMLProps } from '@base-ui/react/types';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
@@ -13,6 +12,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
+import { adaptStatefulCallbacks } from '~/utils/stateful-props';
 import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './checkbox.css';
@@ -48,25 +48,11 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
     const { size, invalid, indeterminate } = variantProps;
     const dataAttrs = createDataAttributes({ invalid });
 
-    // NOTE: Base UI passes its own Root State to callbacks; extend it with the custom `invalid`.
-    // Callbacks must reach BaseCheckbox.Root unresolved, or they never see `checked` etc.
-    const toState = (state: BaseCheckbox.Root.State): CheckboxRoot.State => ({
-        ...state,
-        invalid,
-    });
-    const className =
-        typeof classNameProp === 'function'
-            ? (state: BaseCheckbox.Root.State) => classNameProp(toState(state))
-            : classNameProp;
-    const style =
-        typeof styleProp === 'function'
-            ? (state: BaseCheckbox.Root.State) => styleProp(toState(state))
-            : styleProp;
-    const render =
-        typeof renderProp === 'function'
-            ? (renderProps: HTMLProps, state: BaseCheckbox.Root.State) =>
-                  renderProp(renderProps, toState(state))
-            : renderProp;
+    // NOTE: Base UI calls these with its own Root state; add the custom `invalid` on top.
+    const { className, style, render } = adaptStatefulCallbacks(
+        { className: classNameProp, style: styleProp, render: renderProp },
+        (state: BaseCheckbox.Root.State): CheckboxRoot.State => ({ ...state, invalid }),
+    );
 
     const childrenRender = createRender(childrenProp, <CheckboxIndicatorPrimitive />);
     const children = useRenderElement({
