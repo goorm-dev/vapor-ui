@@ -1,6 +1,6 @@
 import { act } from 'react';
 
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
@@ -64,7 +64,7 @@ describe('<Tooltip.Root />', () => {
         await userEvent.unhover(trigger);
 
         act(() => vi.advanceTimersByTime(CLOSE_DELAY));
-        expect(rendered.queryByText('Tooltip content')).toBeNull();
+        await waitFor(() => expect(rendered.queryByText('Tooltip content')).toBeNull());
     });
 
     it('should open immediately when the trigger is focused', async () => {
@@ -88,7 +88,7 @@ describe('<Tooltip.Root />', () => {
 
         act(() => vi.advanceTimersByTime(CLOSE_DELAY));
 
-        expect(rendered.queryByText('Tooltip content')).toBeNull();
+        await waitFor(() => expect(rendered.queryByText('Tooltip content')).toBeNull());
     });
 
     describe('prop: keepMounted', () => {
@@ -139,7 +139,7 @@ describe('<Tooltip.Root />', () => {
             await userEvent.unhover(trigger);
 
             act(() => vi.advanceTimersByTime(CLOSE_DELAY));
-            expect(rendered.queryByText('Tooltip content')).toBeNull();
+            await waitFor(() => expect(rendered.queryByText('Tooltip content')).toBeNull());
         });
     });
 

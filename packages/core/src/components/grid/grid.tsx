@@ -19,7 +19,6 @@ import * as styles from './grid.css';
  * -----------------------------------------------------------------------------------------------*/
 
 type GridVariants = RootVariants & {
-    inline?: boolean;
     templateRows?: string;
     templateColumns?: string;
     flow?: CSSProperties['gridAutoFlow'];
@@ -34,7 +33,7 @@ export const GridRoot = forwardRef<HTMLDivElement, GridRoot.Props>((props, ref) 
         'flow',
     ]);
 
-    const { inline, templateRows, templateColumns, ...variants } = variantProps;
+    const { templateRows, templateColumns, ...variants } = variantProps;
 
     const cssVariables = assignInlineVars({
         [styles.gridTemplateRows]: templateRows,
@@ -44,7 +43,6 @@ export const GridRoot = forwardRef<HTMLDivElement, GridRoot.Props>((props, ref) 
     return (
         <Box
             ref={ref}
-            $css={{ display: inline ? 'inline-grid' : 'grid' }}
             style={{ ...cssVariables, ...style }}
             className={cn(styles.root(variants), className)}
             {...otherProps}

@@ -12,8 +12,12 @@ export const root = componentRecipe({
         gridTemplateColumns: gridTemplateColumns,
     },
 
-    defaultVariants: { flow: 'row' },
+    defaultVariants: { flow: 'row', inline: false },
     variants: {
+        inline: {
+            true: { display: 'inline-grid' },
+            false: { display: 'grid' },
+        },
         flow: {
             row: { gridAutoFlow: 'row' },
             column: { gridAutoFlow: 'column' },

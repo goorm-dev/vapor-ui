@@ -1,74 +1,15 @@
-import { mergeProps } from '@base-ui/react';
-
-import { deprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
 import { sprinkles } from '~/styles/sprinkles.css';
 
 import { createSplitProps } from './create-split-props';
 import { mergeStatefulProps } from './stateful-props';
-import type { DeprecatedSprinkles, Styles } from './types';
+import type { Styles } from './types';
 
 export const resolveStyles = <T extends object>(props: T) => {
-    const [layoutProps, _otherProps] = createSplitProps<Styles>()(props, ['$css']);
-    const [deprecatedProps, otherProps] = createSplitProps<DeprecatedSprinkles>()(_otherProps, [
-        'position',
-        'display',
-
-        // Flexbox
-        'alignItems',
-        'justifyContent',
-        'flexDirection',
-        'gap',
-
-        // Alignment
-        'alignContent',
-
-        // Spacing
-        'padding',
-        'paddingTop',
-        'paddingBottom',
-        'paddingLeft',
-        'paddingRight',
-        'margin',
-        'marginTop',
-        'marginBottom',
-        'marginLeft',
-        'marginRight',
-
-        // Dimensions
-        'width',
-        'height',
-        'minWidth',
-        'minHeight',
-        'maxWidth',
-        'maxHeight',
-
-        // Visual
-        'border',
-        'borderColor',
-        'borderRadius',
-        'backgroundColor',
-        'color',
-        'opacity',
-
-        // Behavior
-        'pointerEvents',
-        'overflow',
-        'textAlign',
-
-        // Shorthands
-        'paddingX',
-        'paddingY',
-        'marginX',
-        'marginY',
-    ]);
+    const [layoutProps, otherProps] = createSplitProps<Styles>()(props, ['$css']);
 
     const { className, style } = sprinkles(layoutProps.$css ?? {});
-    const deprecated = deprecatedSprinkles(deprecatedProps);
 
-    const mergedProps = mergeProps(
-        { className: deprecated.className, style: deprecated.style },
-        { className, style },
-    );
+    const mergedProps = { className, style };
 
     return mergeStatefulProps(mergedProps, otherProps) as T;
 };

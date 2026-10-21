@@ -237,20 +237,16 @@ describe('Textarea', () => {
             const rendered = render(<Textarea autoResize data-testid="textarea" />);
             const textarea = rendered.getByTestId('textarea') as HTMLTextAreaElement;
 
-            // Spy on style.height setter
-            const heightSetterSpy = vi.fn();
-            Object.defineProperty(textarea.style, 'height', {
-                configurable: true,
-                set: heightSetterSpy,
-                get: () =>
-                    heightSetterSpy.mock.calls[heightSetterSpy.mock.calls.length - 1]?.[0] || '',
-            });
+            const setPropertySpy = vi.spyOn(CSSStyleDeclaration.prototype, 'setProperty');
 
             await userEvent.type(textarea, 'Some content');
 
-            // Should first set to 'auto', then to calculated height
-            expect(heightSetterSpy).toHaveBeenCalledWith('auto');
-            expect(heightSetterSpy).toHaveBeenCalledWith(`${paddingBlock + lineHeight}px`);
+            const heightValues = setPropertySpy.mock.calls
+                .filter(([name]) => name === 'height')
+                .map(([, value]) => value);
+
+            expect(heightValues).toContain('auto');
+            expect(heightValues).toContain(`${paddingBlock + lineHeight}px`);
         });
 
         it('should handle value changes programmatically', async () => {

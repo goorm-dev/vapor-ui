@@ -102,9 +102,9 @@ const Row = ({
     keepMounted?: boolean;
     delay?: number;
 }) => (
-    <Flex flexDirection="column" gap="$100">
+    <Flex $css={{ flexDirection: 'column', gap: '$100' }}>
         <strong style={{ fontSize: 12 }}>{label}</strong>
-        <Flex gap="$200" alignItems="center">
+        <Flex $css={{ gap: '$200', alignItems: 'center' }}>
             {(
                 [
                     ['loaded', IMAGE_URL],
@@ -112,7 +112,10 @@ const Row = ({
                     ['no src', undefined],
                 ] as const
             ).map(([state, src]) => (
-                <Flex key={state} flexDirection="column" alignItems="center" gap="$050">
+                <Flex
+                    key={state}
+                    $css={{ flexDirection: 'column', alignItems: 'center', gap: '$050' }}
+                >
                     <Avatar.Root
                         size="xl"
                         shape="circle"
@@ -136,7 +139,7 @@ export const KeepMounted: Story = {
     render: () => (
         <>
             <style>{STACK_STYLES}</style>
-            <Flex flexDirection="column" gap="$300">
+            <Flex $css={{ flexDirection: 'column', gap: '$300' }}>
                 <Row label="A. keepMounted + 현재 스타일 (겹치기 없음)" keepMounted />
                 <Row label="B. keepMounted + 겹치기만" keepMounted rootClassName="kmStack" />
                 <Row

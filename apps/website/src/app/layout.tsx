@@ -3,6 +3,7 @@ import './global.css';
 import type { ReactNode } from 'react';
 
 import { ThemeProvider } from '@vapor-ui/core/theme-provider';
+import { buildColorSchemeScript } from '@vapor-ui/style-macro';
 import { Analytics } from '@vercel/analytics/next';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { Inter } from 'next/font/google';
@@ -15,6 +16,8 @@ import { AppToastProvider } from '~/providers';
 const inter = Inter({
     subsets: ['latin'],
 });
+
+const SCRIPT = buildColorSchemeScript({ defaultTheme: 'system' });
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (
@@ -40,6 +43,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     name="google-site-verification"
                     content="IbSc093-S7vjF7ZyDjbY43LENvMA-pguxJhDuSMuCmo"
                 />
+                <script dangerouslySetInnerHTML={{ __html: SCRIPT }} />
             </head>
             <body className="flex flex-col min-h-screen bg-v-canvas-100">
                 <RootProvider

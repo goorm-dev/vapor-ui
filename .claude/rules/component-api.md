@@ -76,7 +76,7 @@ Compound components may expose layout-convenience parts beyond the Base UI primi
 
 ## Props Typing
 
-Use `VaporUIComponentProps` (from `~/utils/types`) for all components — it merges Base UI `render` prop, Sprinkles `$css`, and stateful `className`/`style`:
+Use `VaporUIComponentProps` (from `~/utils/types`) for all components — it merges Base UI's `render` prop, the deprecated Sprinkles `$css` prop (retained for migration only; see [`.claude/rules/styling.md`](styling.md) for the `css()` macro replacement), and stateful `className`/`style`:
 
 ```tsx
 import type { VaporUIComponentProps } from '~/utils/types';

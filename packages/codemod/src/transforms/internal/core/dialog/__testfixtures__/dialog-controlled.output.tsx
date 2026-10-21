@@ -15,6 +15,7 @@ export const Component = () => {
                     <Dialog.Body>This is a controlled dialog</Dialog.Body>
                 </Dialog.Popup>
             </Dialog.Root>
+
             <Dialog.Root
                 open={secondOpen}
                 onOpenChange={(newOpen) => {

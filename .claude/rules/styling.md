@@ -1,5 +1,5 @@
 ---
-description: Vanilla Extract styling conventions for packages/core — recipes, variant wiring, state selectors, sprinkles, layers
+description: Vanilla Extract styling conventions for packages/core — recipes, variant wiring, state selectors, CSS variables, `css()` macro boundary, layers
 paths:
     - 'packages/core/src/**/*.css.ts'
     - 'packages/core/src/**/*.tsx'
@@ -32,7 +32,7 @@ cn(recipe className, sprinkles className + user className)
 
 ### `componentRecipe` — variant styles
 
-Use when a component or part has visual variants. All styles are automatically placed inside `@layer vapor.components`.
+Use when a component or part has visual variants. All styles are automatically placed inside `@layer vapor-components`.
 
 ```ts
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
@@ -209,28 +209,65 @@ selectors: {
 }
 ```
 
-## Sprinkles (`$css` prop)
+## Design Tokens
 
-`$css` accepts any CSS property with design-token–aware values. Token values produce a className; arbitrary values fall back to inline `style`.
+Always reference design tokens via the `vars` object from `~/styles/themes.css`. Never use hard-coded values.
+
+```ts
+// ✅
+color: vars.color.foreground.normal[200];
+padding: vars.size.space['150'];
+
+// ❌
+color: '#1a1a1a';
+padding: '12px';
+```
+
+## `css()` macro (consumer-facing styling)
+
+New call sites — docs, demos, product code that composes vapor components — use the `css({...})` macro from `@vapor-ui/style-macro`. It compiles to atomic classnames at build time with no runtime style dictionary. Dynamic values are hoisted to CSS vars and injected into the element's `style` prop automatically.
 
 ```tsx
-// ✅
+import { css } from '@vapor-ui/style-macro';
+
+<div
+    className={css({
+        padding: '$space-400',
+        color: accent, // dynamic → hoisted to a CSS var
+        ':hover': { color: '$foreground-accent' },
+        '@media (min-width: 768px)': { padding: '$space-600' },
+    })}
+/>;
+```
+
+- Internal `packages/core` component implementations stay on Vanilla Extract — do NOT replace `componentRecipe` / `componentStyle` with `css()` inside a component.
+- Any new code that previously would have reached for `$css` on a vapor component — e.g. a layout wrapper in docs or an ad-hoc style on a leaf div — reaches for `css()` instead.
+
+## Sprinkles (`$css` prop) — deprecated
+
+The `$css` prop still accepts any CSS property with design-token–aware values. It is kept for migration only; do not add new call sites. Prefer the `css()` macro above.
+
+```tsx
+// ✅ migrated to css()
+<div className={css({ padding: '$space-400', backgroundColor: '$background-primary' })} />
+
+// ⚠️ legacy — remains working but should not be used in new code
 <Box $css={{ padding: '150', backgroundColor: 'bg-primary-100' }} />
 
 // ❌ (deprecated flat props)
 <Box padding="150" backgroundColor="bg-primary-100" />
 ```
 
-Deprecated flat sprinkle props (`padding`, `margin`, `color`, etc.) are being phased out — always use `$css={{ ... }}` instead.
+Deprecated flat sprinkle props (`padding`, `margin`, `color`, etc.) are also being phased out.
 
 ## `@layer` Cascade Order
 
 ```text
-@layer vapor.theme       design token CSS variables
-@layer vapor.reset       browser default resets
-@layer vapor.components  componentRecipe / componentStyle output  ← components live here
-@layer vapor.utilities   sprinkles ($css) output
+@layer vapor-theme       design token CSS variables
+@layer vapor-reset       browser default resets
+@layer vapor-components  componentRecipe / componentStyle output  ← core components live here
+@layer vapor-utilities   `css()` macro output and deprecated sprinkles ($css)
 (no layer)               user-supplied className — always wins
 ```
 
-Any className without a layer declaration overrides `@layer vapor.components` regardless of specificity. This is why user `className` reliably overrides component styles without needing `!important`.
+Any className without a layer declaration overrides `@layer vapor-components` regardless of specificity. This is why user `className` reliably overrides component styles without needing `!important`.
