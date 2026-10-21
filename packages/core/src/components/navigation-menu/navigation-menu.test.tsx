@@ -308,6 +308,21 @@ describe('<NavigationMenu.Link />', () => {
         expect(link).toHaveAttribute('data-state-current', 'true');
     });
 
+    it('should not pass Base UI `active` to stateful callbacks', () => {
+        const rendered = render(
+            <NavItemTest
+                current
+                render={(props, state) => (
+                    <a {...props} data-has-active={String('active' in state)}>
+                        Home
+                    </a>
+                )}
+            />,
+        );
+
+        expect(rendered.getByTestId(NAV_LINK)).toHaveAttribute('data-has-active', 'false');
+    });
+
     it('should render with aria-current="page" when clicked', async () => {
         let link;
 

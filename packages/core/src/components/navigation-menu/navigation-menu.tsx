@@ -120,11 +120,12 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
         });
 
         // NOTE: Base UI calls these with its own Link state; map it to the custom NavigationMenuLink state.
+        // `active` is dropped, not just omitted from the type, so it doesn't leak through the spread.
         const { className, style, render } = adaptStatefulCallbacks(
             { className: classNameProp, style: styleProp, render: renderProp },
-            (state: BaseNavigationMenu.Link.State): NavigationMenuLink.State => ({
+            ({ active, ...state }: BaseNavigationMenu.Link.State): NavigationMenuLink.State => ({
                 ...state,
-                current: state.active,
+                current: active,
                 disabled: !!disabled,
             }),
         );
