@@ -3,7 +3,14 @@ import { kebabCase } from 'es-toolkit';
 import { extractPreview } from './code-connect.ts';
 import { FigmaClient } from './figma.ts';
 import { downloadWebpImages } from './images.ts';
-import { SLOT_NAMES, TEXT_NAMES, findItems, findTextByName, parseItemChildren } from './items.ts';
+import {
+    SLOT_NAMES,
+    TEXT_NAMES,
+    findExportFrame,
+    findItems,
+    findTextByName,
+    parseItemChildren,
+} from './items.ts';
 import { discoverSections } from './sections.ts';
 import { renderTableForm } from './table.ts';
 import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './types.ts';
@@ -73,10 +80,13 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
                 } else if (child.kind === 'body') {
                     blocks.push({ kind: 'body', text: child.text });
                 } else if (child.kind === 'sample') {
-                    const exportFrame = (child.node.children ?? []).find(
-                        (c) => c.name === SLOT_NAMES.export && c.type === 'FRAME',
-                    );
+                    const exportFrame = findExportFrame(child.node);
                     const targetNode = exportFrame ?? child.node;
+                    if (!exportFrame) {
+                        warnings.push(
+                            `${title} / item ${idx + 1} / sample: Export frame missing, used Sample fallback (${child.node.id})`,
+                        );
+                    }
                     const webpRel = await downloadWebpImages(
                         client,
                         opts.fileKey,
@@ -165,7 +175,7 @@ async function buildCaseBlock(
 ): Promise<Extract<ItemBlock, { kind: 'doCase' | 'dontCase' }> | undefined> {
     const caption = findTextByName(opts.caseFrame, TEXT_NAMES.caption) ?? '';
     if (!caption) opts.warnings.push(`${opts.locator}: caption TEXT missing`);
-    const target = pickCaseImageTarget(opts.caseFrame);
+    const target = pickCaseImageTarget(opts.caseFrame, opts.warnings, opts.locator);
     const webpRel = await downloadWebpImages(
         opts.client,
         opts.fileKey,
@@ -185,15 +195,23 @@ async function buildCaseBlock(
     };
 }
 
-/** Prefer a Sample slot inside the case frame (optionally its Export sub-frame),
- *  fall back to the case frame itself. */
-function pickCaseImageTarget(caseFrame: FigmaNode): FigmaNode {
+/** Prefer the Export frame inside the case's Sample slot (DFS so wrappers like
+ *  `Container` don't hide it), fall back to the Sample slot, then the case frame
+ *  itself. Each fallback is surfaced as a warning so silent mis-captures stop. */
+function pickCaseImageTarget(caseFrame: FigmaNode, warnings: string[], locator: string): FigmaNode {
     const sample = (caseFrame.children ?? []).find((c) => c.name === SLOT_NAMES.sample);
-    if (!sample) return caseFrame;
-    const exportFrame = (sample.children ?? []).find(
-        (c) => c.name === SLOT_NAMES.export && c.type === 'FRAME',
-    );
-    return exportFrame ?? sample;
+    if (!sample) {
+        warnings.push(
+            `${locator}: Sample slot missing, used case frame fallback (${caseFrame.id})`,
+        );
+        return caseFrame;
+    }
+    const exportFrame = findExportFrame(sample);
+    if (!exportFrame) {
+        warnings.push(`${locator}: Export frame missing, used Sample fallback (${sample.id})`);
+        return sample;
+    }
+    return exportFrame;
 }
 
 function sortByPolicy(sections: Section[]): Section[] {
