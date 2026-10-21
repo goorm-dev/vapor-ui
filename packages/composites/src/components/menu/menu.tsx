@@ -27,15 +27,14 @@ const submenuSlots = createSlots({
     trigger: MenuPrimitives.SubmenuTrigger,
 });
 
-export const MenuRoot = (props: MenuRoot.Props) => {
+export const MenuRoot = ({ modal, ...props }: MenuRoot.Props) => {
     const parent = useMenuContext();
     const contextValue = useMemo<MenuContextValue>(() => ({ nested: true }), []);
 
-    return (
-        <MenuContext.Provider value={contextValue}>
-            {parent === undefined ? <ParentMenu {...props} /> : <Submenu {...props} />}
-        </MenuContext.Provider>
-    );
+    const menu =
+        parent === undefined ? <ParentMenu modal={modal} {...props} /> : <Submenu {...props} />;
+
+    return <MenuContext.Provider value={contextValue}>{menu}</MenuContext.Provider>;
 };
 
 const ParentMenu = ({
@@ -63,7 +62,6 @@ const ParentMenu = ({
             onOpenChange={onOpenChange}
             modal={modal}
             actionsRef={actionsRef}
-
             disabled={isDisabled}
         >
             <rootSlots.trigger render={trigger} />
@@ -95,7 +93,7 @@ const Submenu = ({
     // slots
     trigger,
     children,
-}: MenuRoot.Props) => {
+}: Omit<MenuRoot.Props, 'modal'>) => {
     return (
         <MenuPrimitives.SubmenuRoot
             open={open}
@@ -637,6 +635,7 @@ export namespace MenuCheckItem {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const MenuSubmenuItem = ({
+    isDisabled,
     leading,
     description,
     label,
@@ -649,7 +648,10 @@ export const MenuSubmenuItem = ({
     });
 
     return (
-        <MenuPrimitives.SubmenuTrigger $css={{ display: 'grid', gap: '$000', ...itemLayout }}>
+        <MenuPrimitives.SubmenuTrigger
+            disabled={isDisabled}
+            $css={{ display: 'grid', gap: '$000', ...itemLayout }}
+        >
             <ItemLayout
                 leading={leading}
                 label={label}

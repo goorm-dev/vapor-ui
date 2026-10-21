@@ -86,7 +86,7 @@ export const subTriggerIcon = componentStyle([
 
 export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
-    foregrounds({ color: 'secondary' }),
+    foregrounds({ color: 'hint' }),
     {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['150'],
