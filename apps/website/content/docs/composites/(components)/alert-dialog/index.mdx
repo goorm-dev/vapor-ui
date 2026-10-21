@@ -9,35 +9,41 @@ slug: 'composites-문서-테스트-sk'
 
 <DocsImage src="/composites/composites-문서-테스트-sk/images/anatomy-01.webp" alt="" />
 
-| #   | Element            | Description                                                                   |
-| --- | ------------------ | ----------------------------------------------------------------------------- |
-| 1   | Title              | 가장 기본적인 사이즈로 사용합니다.                                            |
-| 2   | Description        | 중간 사이즈로 가로 스크롤이 필요할 경우 사용합니다.                           |
-| 3   | Content (optional) | 가장 큰 사이즈로 리치 콘텐츠(Rich content)를 2개 이상 배치할 경우 사용합니다. |
+| #   | Element            | Description                                                                                                           |
+| --- | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| 1   | Title              | Alert dialog가 실행할 작업을 설명합니다. aria-labelledby을 통해 Alert dialog의 레이블이 지정됩니다.                   |
+| 2   | Description        | Alert dialog 실행 이후 발생할 결과를 설명합니다. aria-describedby 속성을 통해 Alert dialog와 연결됩니다.              |
+| 3   | Content (optional) | 작업 내용과 관련된 콘텐츠로 구성됩니다. 가장 핵심이 되는 정보를 제공해야 할 때 선택적으로 사용합니다.                 |
+| 4   | Cancel button      | Alert dialog가 실행할 작업을 취소하는 버튼입니다. Alert dialog를 닫는 기능을 합니다.                                  |
+| 5   | Action button      | Alert dialog를 실행하는 버튼입니다. type=critical은 danger 버튼을 사용하고, type=confirm은 primary 버튼을 사용합니다. |
+| 6   | Header             | Title과 Description이 포함되어 있습니다. 필수적으로 사용해야 합니다.                                                  |
+| 7   | Body (optional)    | Content가 포함되어 있습니다. Content가 없을 경우 사용하지 않습니다.                                                   |
+| 8   | Footer             | Action button과 Cancel button이 포함되어 있습니다. 필수적으로 사용해야 합니다.                                        |
+| 9   | Backdrop           | 페이지와 상호작용을 차단하는 Overlay입니다. 클릭해도 Alert dialog가 닫히지 않습니다.                                  |
 
 ## Examples
 
-### 삭제, 초기화 같이 되돌릴 수 없는 결정 전에 사용하세요
+### 되돌릴 수 없는 작업 전에 사용하세요
 
-삭제, 초기화 등 재생성이 불가한 작업이나 심각한 데이터 손실이 발생할 수 있는 작업 전에 사용합니다.
+삭제, 초기화, 탈퇴처럼 데이터나 사용자가 직접 작업한 결과물이 사라지고 복구할 수 없는 작업 전에 사용하세요. 실수를 막기 위해 강한 경고가 필요할 때 사용합니다.
 
 <DocsImage
     src="/composites/composites-문서-테스트-sk/images/examples-01.webp"
-    alt="삭제, 초기화 같이 되돌릴 수 없는 결정 전에 사용하세요"
+    alt="되돌릴 수 없는 작업 전에 사용하세요"
 />
 
-### 확인 요청이 필요할 때 사용
+### 실행 전 확인이 필요한 작업에 사용하세요
 
-사용자의 사용자가 결정한 작업을 수행하기 전 확인을 요청할 때 사용하세요. 승인 없이는 건너뛸 수 없는 중요한 상황에 사용합니다.
+사용자가 결정한 작업을 실행하기 전 확인을 요청할 때 사용합니다. 실행하면 상태는 바뀌지만 큰 손실이 없거나 복구할 방법이 있는 상황에 사용합니다.
 
 <DocsImage
     src="/composites/composites-문서-테스트-sk/images/examples-02.webp"
-    alt="확인 요청이 필요할 때 사용"
+    alt="실행 전 확인이 필요한 작업에 사용하세요"
 />
 
 ## Best practices
 
-### Best practices
+### Button label
 
 <DocsGrid>
     <DoImage
@@ -67,16 +73,31 @@ slug: 'composites-문서-테스트-sk'
     />
 </DocsGrid>
 
-### Content
+### Button color
 
 <DocsGrid>
     <DoImage
         src="/composites/composites-문서-테스트-sk/images/best-practices-03-do.webp"
+        alt="버튼 레이블이 부정적이어도 사라지는 데이터가 없거나 되돌릴 수 있다면 Primary button을 사용하세요."
+        caption="버튼 레이블이 부정적이어도 사라지는 데이터가 없거나 되돌릴 수 있다면 Primary button을 사용하세요."
+    />
+    <DontImage
+        src="/composites/composites-문서-테스트-sk/images/best-practices-03-dont.webp"
+        alt="'마감', '중지'처럼 부정적인 레이블이라는 이유로 Danger button을 사용하지 마세요. Danger button을 자주 사용하면 사용자가 경고에 둔감해져 정말 위험한 작업에서도 경고를 가볍게 넘길 수 있습니다."
+        caption="'마감', '중지'처럼 부정적인 레이블이라는 이유로 Danger button을 사용하지 마세요. Danger button을 자주 사용하면 사용자가 경고에 둔감해져 정말 위험한 작업에서도 경고를 가볍게 넘길 수 있습니다."
+    />
+</DocsGrid>
+
+### Content
+
+<DocsGrid>
+    <DoImage
+        src="/composites/composites-문서-테스트-sk/images/best-practices-04-do.webp"
         alt="콘텐츠가 필요할 경우 최소한의 정보만 사용하세요. 사용자가 콘텐츠가 아닌 본문에 집중할 수 있도록 합니다."
         caption="콘텐츠가 필요할 경우 최소한의 정보만 사용하세요. 사용자가 콘텐츠가 아닌 본문에 집중할 수 있도록 합니다."
     />
     <DontImage
-        src="/composites/composites-문서-테스트-sk/images/best-practices-03-dont.webp"
+        src="/composites/composites-문서-테스트-sk/images/best-practices-04-dont.webp"
         alt="많은 양의 보조 콘텐츠를 담지 마세요. 콘텐츠 양이 많을 경우 페이지에서 내용을 보여준 후 Alert dialog는 실행 확인용으로만 사용하세요."
         caption="많은 양의 보조 콘텐츠를 담지 마세요. 콘텐츠 양이 많을 경우 페이지에서 내용을 보여준 후 Alert dialog는 실행 확인용으로만 사용하세요."
     />
@@ -103,6 +124,12 @@ Alert dialog와 Dialog는 시각적으로 유사하지만, 접근성과 동작�
     src="/composites/composites-문서-테스트-sk/images/related-components-01.webp"
     alt="Alert dialog vs Dialog"
 />
+
+| Size | Usage                                                                         |
+| ---- | ----------------------------------------------------------------------------- |
+| md   | 가장 기본적인 사이즈로 사용합니다.                                            |
+| lg   | 중간 사이즈로 가로 스크롤이 필요할 경우 사용합니다.                           |
+| xl   | 가장 큰 사이즈로 리치 콘텐츠(Rich content)를 2개 이상 배치할 경우 사용합니다. |
 
 ### Non-dialog
 
