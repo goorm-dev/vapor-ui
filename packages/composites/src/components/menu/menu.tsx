@@ -47,7 +47,6 @@ const ParentMenu = ({
     container,
 
     // variants
-    isDisabled,
     side,
     align,
 
@@ -62,7 +61,6 @@ const ParentMenu = ({
             onOpenChange={onOpenChange}
             modal={modal}
             actionsRef={actionsRef}
-            disabled={isDisabled}
         >
             <rootSlots.trigger render={trigger} />
 
@@ -86,7 +84,6 @@ const Submenu = ({
     container,
 
     // variants
-    isDisabled,
     side = 'right',
     align,
 
@@ -100,7 +97,6 @@ const Submenu = ({
             defaultOpen={defaultOpen}
             onOpenChange={onOpenChange}
             actionsRef={actionsRef}
-            disabled={isDisabled}
         >
             <submenuSlots.trigger render={trigger} />
 
@@ -154,12 +150,6 @@ export interface MenuRootProps {
      * actionsRef.current?.unmount();
      */
     actionsRef?: RootProps['actionsRef'];
-
-    /**
-     * 트리거를 비활성화한다. 비활성화된 트리거는 메뉴를 열 수 없다.
-     * @default false
-     */
-    isDisabled?: RootProps['disabled'];
 
     /**
      * Portal 대상 컨테이너. SSR·shadow DOM·특정 스택 컨텍스트에서 팝업 위치 제어가 필요할 때만 지정한다.

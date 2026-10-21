@@ -19,7 +19,6 @@ export default {
     argTypes: {
         open: { control: 'boolean' },
         modal: { control: 'boolean' },
-        isDisabled: { control: 'boolean' },
         side: { control: 'inline-radio', options: ['top', 'bottom', 'left', 'right'] },
         align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
     },
@@ -229,21 +228,22 @@ const TestBedRender = ({ open = true, ...props }: Menu.Root.Props) => {
                 <Menu.Root
                     open={open}
                     onOpenChange={() => {}}
-                    isDisabled={row.isDisabled}
                     container={container ?? undefined}
                     {...props}
                 >
                     <Menu.Group label="액션">
-                        <Menu.Item label="복사" onClick={() => {}} />
+                        <Menu.Item label="복사" onClick={() => {}} isDisabled={row.isDisabled} />
                         <Menu.Item
                             label="붙여넣기"
                             leading={<PlusOutlineIcon />}
                             onClick={() => {}}
+                            isDisabled={row.isDisabled}
                         />
                         <Menu.Item
                             label="링크 열기"
                             trailing={<ChevronDoubleRightOutlineIcon />}
                             onClick={() => {}}
+                            isDisabled={row.isDisabled}
                         />
                         <Menu.Item
                             label="삭제"
@@ -251,6 +251,7 @@ const TestBedRender = ({ open = true, ...props }: Menu.Root.Props) => {
                             leading={<TrashOutlineIcon />}
                             trailing={<ChevronDoubleRightOutlineIcon />}
                             onClick={() => {}}
+                            isDisabled={row.isDisabled}
                         />
                     </Menu.Group>
 
@@ -261,7 +262,12 @@ const TestBedRender = ({ open = true, ...props }: Menu.Root.Props) => {
                             value={row.hasSelection ? checkGroupValues[0] : undefined}
                         >
                             {checkGroupValues.map((value) => (
-                                <Menu.CheckItem key={value} label={value} value={value} />
+                                <Menu.CheckItem
+                                    key={value}
+                                    label={value}
+                                    value={value}
+                                    isDisabled={row.isDisabled}
+                                />
                             ))}
                         </Menu.CheckGroup>
                     ) : (
@@ -275,19 +281,32 @@ const TestBedRender = ({ open = true, ...props }: Menu.Root.Props) => {
                             }
                         >
                             {checkGroupValues.map((value) => (
-                                <Menu.CheckItem key={value} label={value} value={value} />
+                                <Menu.CheckItem
+                                    key={value}
+                                    label={value}
+                                    value={value}
+                                    isDisabled={row.isDisabled}
+                                />
                             ))}
                         </Menu.CheckGroup>
                     )}
 
                     <Menu.Root
-                        trigger={<Menu.SubmenuItem label="중첩 메뉴" />}
+                        trigger={<Menu.SubmenuItem label="중첩 메뉴" isDisabled={row.isDisabled} />}
                         open
                         onOpenChange={() => {}}
                     >
                         <Menu.CheckGroup mode="multiple" label="하위 옵션">
-                            <Menu.CheckItem label="하위 1" value="하위 1" />
-                            <Menu.CheckItem label="하위 2" value="하위 2" />
+                            <Menu.CheckItem
+                                label="하위 1"
+                                value="하위 1"
+                                isDisabled={row.isDisabled}
+                            />
+                            <Menu.CheckItem
+                                label="하위 2"
+                                value="하위 2"
+                                isDisabled={row.isDisabled}
+                            />
                         </Menu.CheckGroup>
                     </Menu.Root>
                 </Menu.Root>
