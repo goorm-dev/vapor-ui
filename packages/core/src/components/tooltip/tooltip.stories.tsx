@@ -264,6 +264,43 @@ export const TestBed: StoryObj = {
                         </Tooltip.Popup>
                     </Tooltip.Root>
                 </HStack>
+
+                <HStack
+                    $css={{
+                        marginBlock: '$800',
+                        paddingBlock: '$600',
+                        justifyContent: 'space-between',
+                        border: '1px solid black',
+                    }}
+                >
+                    <Tooltip.Root open>
+                        <Tooltip.Trigger
+                            delay={0}
+                            render={<Button $css={{ width: '480px' }}>Wide Trigger</Button>}
+                        />
+                        <Tooltip.Popup
+                            positionerElement={
+                                <Tooltip.PositionerPrimitive side="bottom" align="start" />
+                            }
+                        >
+                            Trigger center is outside
+                        </Tooltip.Popup>
+                    </Tooltip.Root>
+                    <Tooltip.Root open>
+                        <Tooltip.Trigger delay={0} render={<Button>Shift</Button>} />
+                        <Tooltip.Popup
+                            positionerElement={
+                                <Tooltip.PositionerPrimitive
+                                    side="bottom"
+                                    align="start"
+                                    collisionAvoidance={{ align: 'shift' }}
+                                />
+                            }
+                        >
+                            Start aligned, but shifted inside the viewport
+                        </Tooltip.Popup>
+                    </Tooltip.Root>
+                </HStack>
             </>
         );
     },
