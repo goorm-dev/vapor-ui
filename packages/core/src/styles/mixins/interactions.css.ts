@@ -84,6 +84,7 @@ export const interaction = componentRecipe({
             },
             roving: {
                 selectors: {
+                    '&[data-popup-open]::before': { opacity: 0.04 },
                     '&[data-highlighted]::before': { opacity: 0.08 },
                     '&[data-highlighted]:active::before': { opacity: 0.16 },
                 },

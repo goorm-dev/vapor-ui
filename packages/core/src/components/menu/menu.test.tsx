@@ -737,13 +737,19 @@ describe('<Menu.CheckboxItem>', () => {
 });
 
 describe('<Menu.RadioGroupItem>', () => {
-    const Test = () => (
+    const Test = ({ closeOnClick }: { closeOnClick?: boolean }) => (
         <Menu.Root defaultOpen>
             <Menu.Popup>
                 <Menu.RadioGroup>
-                    <Menu.RadioItem value="item1">Checkbox Item 1</Menu.RadioItem>
-                    <Menu.RadioItem value="item2">Checkbox Item 2</Menu.RadioItem>
-                    <Menu.RadioItem value="item3">Checkbox Item 3</Menu.RadioItem>
+                    <Menu.RadioItem closeOnClick={closeOnClick} value="item1">
+                        Checkbox Item 1
+                    </Menu.RadioItem>
+                    <Menu.RadioItem closeOnClick={closeOnClick} value="item2">
+                        Checkbox Item 2
+                    </Menu.RadioItem>
+                    <Menu.RadioItem closeOnClick={closeOnClick} value="item3">
+                        Checkbox Item 3
+                    </Menu.RadioItem>
                 </Menu.RadioGroup>
             </Menu.Popup>
         </Menu.Root>
@@ -758,7 +764,7 @@ describe('<Menu.RadioGroupItem>', () => {
     // });
 
     it('should add the correct ARIA attributes when clicked', async () => {
-        const rendered = render(<Test />);
+        const rendered = render(<Test closeOnClick={false} />);
         const [radio1, radio2, radio3] = rendered.getAllByRole('menuitemradio');
 
         expect(radio1).toHaveAttribute('aria-checked', 'false');
@@ -791,7 +797,7 @@ describe('<Menu.RadioGroupItem>', () => {
 
     describe('keyboard navigation', () => {
         it('should toggle the checked state when Space is pressed', async () => {
-            const rendered = render(<Test />);
+            const rendered = render(<Test closeOnClick={false} />);
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
 
             act(() => radio1.focus());
@@ -807,7 +813,7 @@ describe('<Menu.RadioGroupItem>', () => {
         });
 
         it('should toggle the checked state when Enter is pressed', async () => {
-            const rendered = render(<Test />);
+            const rendered = render(<Test closeOnClick={false} />);
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
 
             act(() => radio1.focus());
@@ -860,17 +866,13 @@ describe('<Menu.RadioGroupItem>', () => {
     });
 
     describe('prop: closeOnClick', () => {
-        it('should close the menu when clicked', async () => {
+        it('should close the menu when clicked by default', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
                     <Menu.Popup>
                         <Menu.RadioGroup>
-                            <Menu.RadioItem value="item1" closeOnClick>
-                                Radio Item 1
-                            </Menu.RadioItem>
-                            <Menu.RadioItem value="item2" closeOnClick>
-                                Radio Item 2
-                            </Menu.RadioItem>
+                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
                         </Menu.RadioGroup>
                     </Menu.Popup>
                 </Menu.Root>,
@@ -887,15 +889,19 @@ describe('<Menu.RadioGroupItem>', () => {
             expect(content).not.toBeInTheDocument();
         });
 
-        it('should not close the menu when clicked by default', async () => {
+        it('should not close the menu when `closeOnClick={false}`', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
                     <Menu.Trigger />
 
                     <Menu.Popup>
                         <Menu.RadioGroup defaultValue="item1">
-                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
-                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                            <Menu.RadioItem value="item1" closeOnClick={false}>
+                                Radio Item 1
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="item2" closeOnClick={false}>
+                                Radio Item 2
+                            </Menu.RadioItem>
                         </Menu.RadioGroup>
                     </Menu.Popup>
                 </Menu.Root>,
@@ -1037,8 +1043,12 @@ describe('<Menu.RadioGroupItem>', () => {
                 <Menu.Root defaultOpen>
                     <Menu.Popup>
                         <Menu.RadioGroup onValueChange={handleCheckedChange}>
-                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
-                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                            <Menu.RadioItem value="item1" closeOnClick={false}>
+                                Radio Item 1
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="item2" closeOnClick={false}>
+                                Radio Item 2
+                            </Menu.RadioItem>
                         </Menu.RadioGroup>
                     </Menu.Popup>
                 </Menu.Root>,
