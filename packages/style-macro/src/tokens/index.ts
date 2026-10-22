@@ -1,6 +1,6 @@
 // Compiler-side barrel — assembles `tokens` from the per-axis modules in
 // this folder. Runtime consumers should import directly from the sibling
-// `runtime.ts` (published as `@vapor-ui/style-macro/__runtime__/tokens`)
+// `runtime.ts` (published as `@vapor-ui/style-macro/__runtime__/tokens``
 // so the bundler can tree-shake axes the app does not actually use.
 import { backgroundColor } from './backgroundColor';
 import { borderColor } from './borderColor';
