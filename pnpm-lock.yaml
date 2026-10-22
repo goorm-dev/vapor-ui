@@ -617,7 +617,7 @@ importers:
     devDependencies:
       '@figma/code-connect':
         specifier: ^2.0.0
-        version: 2.0.0(supports-color@8.1.1)
+        version: 2.0.2(supports-color@10.2.2)
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -17423,7 +17423,7 @@ snapshots:
       jest-regex-util: 30.4.0
       jest-util: 30.4.1
       jest-worker: 30.4.1
-      picomatch: 4.0.5
+      picomatch: 4.0.7
       walker: 1.0.8
     optionalDependencies:
       fsevents: 2.3.3
@@ -17598,7 +17598,7 @@ snapshots:
       chalk: 4.1.2
       ci-info: 4.3.1
       graceful-fs: 4.2.11
-      picomatch: 4.0.5
+      picomatch: 4.0.7
 
   jest-validate@30.4.1:
     dependencies:
@@ -20737,7 +20737,7 @@ snapshots:
   vite@8.2.1(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.33.0
-      picomatch: 4.0.5
+      picomatch: 4.0.7
       postcss: 8.5.30
       rolldown: 1.2.14
       tinyglobby: 0.2.17
@@ -20753,7 +20753,7 @@ snapshots:
   vite@8.2.1(@types/node@24.13.3)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.33.0
-      picomatch: 4.0.5
+      picomatch: 4.0.7
       postcss: 8.5.30
       rolldown: 1.2.14
       tinyglobby: 0.2.17
@@ -20769,7 +20769,7 @@ snapshots:
   vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.33.0
-      picomatch: 4.0.5
+      picomatch: 4.0.7
       postcss: 8.5.30
       rolldown: 1.2.14
       tinyglobby: 0.2.17
