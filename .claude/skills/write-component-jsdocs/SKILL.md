@@ -49,7 +49,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 2. Describe side effects and interactions with other props
 3. For numeric props: include unit and valid range
 4. For event handlers: specify the exact trigger condition, not just "handler"
-5. Never document default values in JSDoc — neither the `@default` tag nor inline `Default:` text. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag at all; it reads `defaultValue` from code — the component function's destructuring defaults, then the `defaultVariants` of the recipe the component calls — so a default written in JSDoc shows up twice in the docs table (see the README's "Default values"). Existing `@default` tags stay as they are — just don't add new ones.
+5. Put a default in code, not in JSDoc. The docs table reads `defaultValue` from code: the component's destructuring defaults, a literal written before the props spread, then the `defaultVariants` of the recipe that declares the variant. For a Base UI prop vapor-ui passes through untouched, it falls back to Base UI's own `@default` (see `scripts/docs-extractor/README.md` "Default values"). Never write inline `Default:` text; it stays in the description and repeats the table. Write an `@default` tag only when the extractor can't read the default from code, such as a prop forwarded to another vapor-ui component. A vapor-ui `@default` is dropped from the description and not read as a default, so it shows only in editor hover.
 
 ## Review checklist
 
@@ -65,4 +65,4 @@ See the full checklist in [references/guide.md](references/guide.md#checklist).
 - [ ] Numeric props include unit and range
 - [ ] No JSDoc on individual variant values (`sm`, `md`, `fill`, `primary`, etc.)
 - [ ] No JSDoc on `export type XxxVariants`
-- [ ] No default values in descriptions — neither `@default` tags nor inline `Default:` text
+- [ ] No inline `Default:` text; `@default` only where the extractor can't read the default from code
