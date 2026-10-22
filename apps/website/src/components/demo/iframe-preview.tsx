@@ -6,35 +6,35 @@ import { useTheme } from '@vapor-ui/core';
 
 import type { DeviceType } from './constants';
 import { DEVICE_WIDTH_MAP } from './constants';
-import { fileToComponentPath } from './paths';
 
 interface IframePreviewProps {
-    file: string;
+    name: string;
     className?: string;
     device: DeviceType;
 }
+const getIframeWidth = (device: DeviceType) => {
+    return DEVICE_WIDTH_MAP[device] || '100%';
+};
 
-const getIframeWidth = (device: DeviceType) => DEVICE_WIDTH_MAP[device] || '100%';
-
-export function IframePreview({ file, device }: IframePreviewProps) {
+export function IframePreview(props: IframePreviewProps) {
+    const { name, device } = props;
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
     const { resolvedTheme } = useTheme();
-    const componentPath = fileToComponentPath(file);
-
     React.useEffect(() => {
         if (iframeRef.current && resolvedTheme) {
-            iframeRef.current.src = `/preview/component?path=${encodeURIComponent(componentPath)}&theme=${resolvedTheme}`;
+            // Set the iframe src with theme parameter
+            iframeRef.current.src = `/preview/component?path=${encodeURIComponent(name)}&theme=${resolvedTheme}`;
         }
-    }, [componentPath, resolvedTheme]);
+    }, [name, resolvedTheme]);
 
     return (
-        <div className="iframe-preview-container flex justify-center p-v-300">
+        <div className={'iframe-preview-container flex justify-center p-v-300'}>
             <iframe
                 ref={iframeRef}
                 width={getIframeWidth(device)}
                 height="400px"
                 className="transition-[width] duration-200 ease-in-out max-w-full flex justify-center items-center"
-                title={`Preview of ${componentPath}`}
+                title={`Preview of ${name}`}
                 sandbox="allow-scripts allow-same-origin"
             />
         </div>

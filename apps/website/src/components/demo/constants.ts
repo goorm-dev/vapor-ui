@@ -18,3 +18,8 @@ export const TAB_TYPES = {
 } as const;
 
 export type TabType = (typeof TAB_TYPES)[keyof typeof TAB_TYPES];
+
+export const DEFAULT_VALUES = {
+    DEVICE: DEVICE_TYPES.DESKTOP,
+    TAB: TAB_TYPES.PREVIEW,
+} as const;

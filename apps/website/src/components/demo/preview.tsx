@@ -2,22 +2,31 @@
 
 import * as React from 'react';
 
-import { fileToComponentPath } from './paths';
-
 interface PreviewProps {
-    file: string;
+    name: string;
 }
 
-export function Preview({ file }: PreviewProps) {
-    const Component = React.useMemo(() => {
-        const componentPath = fileToComponentPath(file);
-        return React.lazy(() => import(`./examples/${componentPath}.tsx`));
-    }, [file]);
+export function Preview(props: PreviewProps) {
+    const { name } = props;
+
+    const Preview = React.useMemo(() => {
+        const Component = React.lazy(() => import(`./examples/${name}.tsx`));
+
+        if (!Component) {
+            return <div>Component({name}) Not Found</div>;
+        }
+
+        return <Component />;
+    }, [name]);
 
     return (
         <React.Suspense fallback={null}>
-            <div className="not-prose p-v-300 min-h-75 flex flex-col justify-center items-center">
-                <Component />
+            <div
+                className={
+                    'not-prose p-v-300 min-h-[300px] flex flex-col justify-center items-center'
+                }
+            >
+                {Preview}
             </div>
         </React.Suspense>
     );
