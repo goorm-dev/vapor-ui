@@ -1,7 +1,6 @@
 import figma from 'figma';
-import type { SlotResult } from 'figma';
 
-import { bool, example, flags, icon, lines } from '../../utils/figma';
+import { bool, example, flags, icon, lines, pick, swap, text } from '../../utils/figma';
 
 const SEGMENTED_CONTROL_PART_ID = {
     root: 'segmented-control-root',
@@ -11,34 +10,21 @@ const SEGMENTED_CONTROL_PART_ID = {
 
 type SegmentedControlPart = keyof typeof SEGMENTED_CONTROL_PART_ID;
 
-// One SLOT per segment, left to right. Figma names the first one without a number.
-const SLOTS = [
-    'Slotlayer',
-    'Slotlayer2',
-    'Slotlayer3',
-    'Slotlayer4',
-    'Slotlayer5',
-    'Slotlayer6',
-    'Slotlayer7',
-];
+const ITEM_IDS: string[] = [SEGMENTED_CONTROL_PART_ID.item, SEGMENTED_CONTROL_PART_ID.iconItem];
 
 const instance = figma.selectedInstance;
 const part: SegmentedControlPart = figma.batch.part;
 
-// Skip slots known to be empty, then fold the rest into one tagged template, one per line.
-function filled(slots: (SlotResult | undefined)[]) {
-    return slots.filter(
-        (slot): slot is SlotResult => !!slot && slot.connectedInstances?.length !== 0,
-    );
-}
-
 function render() {
     if (part === 'root') {
-        const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg' });
+        const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg' });
         const disabled = bool(instance, 'disabled');
-        const items = lines(filled(SLOTS.map((name) => instance.getSlot(name))));
+        const items = instance.findConnectedInstances((node) =>
+            ITEM_IDS.includes(node.codeConnectId() ?? ''),
+        );
+        const children = items.length > 0 ? lines(items.map(example)) : '\n    {/* contents */}';
 
-        return figma.code`<SegmentedControl.Root size="${size}"${flags({ disabled })}>${items}
+        return figma.code`<SegmentedControl.Root size="${size}"${flags({ disabled })}>${children}
 </SegmentedControl.Root>`;
     }
 
@@ -48,9 +34,10 @@ function render() {
         if (button.type !== 'INSTANCE') return figma.code`<SegmentedControl.Item value="..." />`;
 
         const slot = button.findInstance('🟨Button/SlotLayer');
+        // The label property is lowercase `text` in Figma.
         const children =
             slot.type === 'INSTANCE'
-                ? figma.code`${icon(slot, 'hasLeadingIcon', 'LeadingIcon')}${slot.getString('text')}${icon(slot, 'hasTrailingIcon', 'TrailingIcon')}`
+                ? figma.code`${icon(slot, 'hasLeadingIcon', 'LeadingIcon')}${text(slot, 'text')}${icon(slot, 'hasTrailingIcon', 'TrailingIcon')}`
                 : '';
 
         return figma.code`<SegmentedControl.Item value="..."${flags({ disabled: bool(button, 'disabled') })}>${children}</SegmentedControl.Item>`;
@@ -61,7 +48,7 @@ function render() {
         return figma.code`<SegmentedControl.IconItem value="..." aria-label="..." />`;
 
     const slot = button.findInstance('🟨IconButton/SlotLayer');
-    const children = slot.type === 'INSTANCE' ? example(slot.getInstanceSwap('Icon')) : '';
+    const children = slot.type === 'INSTANCE' ? swap(slot, 'Icon') : '';
 
     return figma.code`<SegmentedControl.IconItem value="..." aria-label="..."${flags({ disabled: bool(button, 'disabled') })}>${children}</SegmentedControl.IconItem>`;
 }

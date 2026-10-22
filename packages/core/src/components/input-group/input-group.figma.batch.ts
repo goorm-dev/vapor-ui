@@ -1,6 +1,6 @@
 import figma from 'figma';
 
-import { example } from '../../utils/figma';
+import { example, pick } from '../../utils/figma';
 
 const INPUT_GROUP_PART_ID = {
     root: 'input-group-root',
@@ -15,13 +15,14 @@ const part: InputGroupPart = figma.batch.part;
 function render() {
     if (part === 'root') {
         const slot = instance.findInstance('🟨InputGroup/SlotLayer');
-        // `textinpput` is spelled that way in Figma.
-        const fieldId =
-            slot.type === 'INSTANCE'
-                ? slot.getEnum('type', { textinpput: 'text-input', textarea: 'textarea' })
-                : undefined;
         const field =
-            slot.type === 'INSTANCE' && fieldId ? example(slot.findConnectedInstance(fieldId)) : '';
+            slot.type === 'INSTANCE'
+                ? example(
+                      slot.findConnectedInstance(
+                          pick(slot, 'type', { textinput: 'text-input', textarea: 'textarea' }),
+                      ),
+                  )
+                : '';
         const counter = example(instance.findConnectedInstance(INPUT_GROUP_PART_ID.counter));
 
         return figma.code`<InputGroup.Root>
@@ -30,7 +31,6 @@ function render() {
 </InputGroup.Root>`;
     }
 
-    // The count text in Figma is a mock; the counter renders `count/maxLength` on its own.
     return figma.code`<InputGroup.Counter />`;
 }
 

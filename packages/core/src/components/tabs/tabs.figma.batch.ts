@@ -1,6 +1,6 @@
 import figma from 'figma';
 
-import { bool, example, flags, icon, lines } from '../../utils/figma';
+import { bool, example, flags, icon, lines, pick } from '../../utils/figma';
 
 const TABS_PART_ID = {
     root: 'tabs-root',
@@ -14,17 +14,16 @@ const part: TabsPart = figma.batch.part;
 
 function render() {
     if (part === 'root') {
-        const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
-        const orientation = instance.getEnum('orientation', {
+        const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+        const orientation = pick(instance, 'orientation', {
             horizontal: 'horizontal',
             vertical: 'vertical',
         });
-        const variant = instance.getEnum('variant', { line: 'line', fill: 'fill' });
+        const variant = pick(instance, 'variant', { line: 'line', fill: 'fill' });
         const buttons = instance.findConnectedInstances(
             (node) => node.codeConnectId() === TABS_PART_ID.button,
         );
 
-        // Figma has no List or Panel, so both are emitted as structural placeholders.
         return figma.code`<Tabs.Root size="${size}" orientation="${orientation}" variant="${variant}"${flags({ disabled: bool(instance, 'disabled') })}>
     <Tabs.List>${lines(buttons.map(example), '        ')}
     </Tabs.List>
@@ -32,7 +31,6 @@ function render() {
 </Tabs.Root>`;
     }
 
-    // The tab label is an unbound text layer in Figma; `selected` lives on Tabs.Root (`defaultValue`).
     const slot = instance.findInstance('🟨Tabs.Button/SlotLayer');
     const children =
         slot.type === 'INSTANCE'

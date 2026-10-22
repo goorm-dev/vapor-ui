@@ -29,7 +29,6 @@ function contents(layer: InstanceHandle, indent = '') {
     return figma.code`${lines(nodes.map(example), `${indent}    `)}\n${indent}`;
 }
 
-// The item label is an unbound text layer in Figma, so only the icons are read.
 function itemContents() {
     const slot = instance.findInstance('🟨Menu/SlotLayer');
     if (slot.type !== 'INSTANCE') return '{/* contents */}';
@@ -50,7 +49,6 @@ function render() {
         const popup = instance.findConnectedInstance(MENU_PART_ID.popup);
         const items = popup?.type === 'INSTANCE' ? contents(popup, '    ') : '{/* contents */}';
 
-        // Figma has no trigger; its position is only expressed through `side`/`align`.
         return figma.code`<Menu.Root>
     <Menu.Trigger>{/* trigger */}</Menu.Trigger>
     <Menu.Popup positionerElement={<Menu.PositionerPrimitive side="${side}" align="${align}" />}>${items}</Menu.Popup>

@@ -3,12 +3,12 @@
 // component=IconButton
 import figma from 'figma';
 
-import { bool, example, flags } from '../../utils/figma';
+import { bool, flags, pick, swap } from '../../utils/figma';
 
 const instance = figma.selectedInstance;
 
-const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
-const colorPalette = instance.getEnum('colorPalette', {
+const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+const colorPalette = pick(instance, 'colorPalette', {
     primary: 'primary',
     secondary: 'secondary',
     success: 'success',
@@ -16,12 +16,12 @@ const colorPalette = instance.getEnum('colorPalette', {
     danger: 'danger',
     contrast: 'contrast',
 });
-const variant = instance.getEnum('variant', { fill: 'fill', outline: 'outline', ghost: 'ghost' });
-const shape = instance.getEnum('shape', { square: 'square', circle: 'circle' });
+const variant = pick(instance, 'variant', { fill: 'fill', outline: 'outline', ghost: 'ghost' });
+const shape = pick(instance, 'shape', { square: 'square', circle: 'circle' });
 const disabled = bool(instance, 'disabled');
 
 const slot = instance.findInstance('🟨IconButton/SlotLayer');
-const icon = slot.type === 'INSTANCE' ? example(slot.getInstanceSwap('Icon')) : '';
+const icon = slot.type === 'INSTANCE' ? swap(slot, 'Icon') : '';
 
 export default {
     example: figma.code`<IconButton size="${size}" colorPalette="${colorPalette}" variant="${variant}" shape="${shape}" aria-label="..."${flags({ disabled })}>${icon}</IconButton>`,

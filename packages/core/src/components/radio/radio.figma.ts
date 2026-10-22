@@ -3,12 +3,11 @@
 // component=Radio.Root
 import figma from 'figma';
 
-import { bool, flags } from '../../utils/figma';
+import { bool, flags, pick } from '../../utils/figma';
 
 const instance = figma.selectedInstance;
 
-const size = instance.getEnum('size', { md: 'md', lg: 'lg' });
-// `selected` on 🟨Radio/SlotLayer is dropped: selection lives on RadioGroup.Root, not Radio.Root.
+const size = pick(instance, 'size', { md: 'md', lg: 'lg' });
 const props = flags({
     disabled: bool(instance, 'disabled'),
     invalid: bool(instance, 'invalid'),

@@ -1,5 +1,7 @@
 import figma from 'figma';
 
+import { pick } from '../../utils/figma';
+
 const TOOLTIP_PART_ID = {
     root: 'tooltip-root',
     popup: 'tooltip-popup',
@@ -14,13 +16,13 @@ function render() {
     if (part === 'root') {
         // `side`/`align` sit on the Figma root but on Tooltip.PositionerPrimitive in code, so the
         // root writes the popup itself instead of reusing the popup template. Figma has no trigger.
-        const side = instance.getEnum('side', {
+        const side = pick(instance, 'side', {
             top: 'top',
             bottom: 'bottom',
             left: 'left',
             right: 'right',
         });
-        const align = instance.getEnum('align', { start: 'start', center: 'center', end: 'end' });
+        const align = pick(instance, 'align', { start: 'start', center: 'center', end: 'end' });
 
         return figma.code`<Tooltip.Root>
     <Tooltip.Trigger>{/* trigger */}</Tooltip.Trigger>

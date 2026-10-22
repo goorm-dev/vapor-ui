@@ -1,6 +1,7 @@
 import figma from 'figma';
+import type { InstanceHandle } from 'figma';
 
-import { bool, example, flags } from '../../utils/figma';
+import { bool, example, flags, lines, pick } from '../../utils/figma';
 
 const RADIO_GROUP_PART_ID = {
     root: 'radio-group-root',
@@ -14,9 +15,22 @@ const instance = figma.selectedInstance;
 const part: RadioGroupPart = figma.batch.part;
 const { component } = figma.batch;
 
+const EMPTY = '\n    {/* contents */}';
+
+// The radios sit in the slot layer's `Slot`, each inside an unconnected 💙Field.label wrapper.
+function radios(slotLayer: InstanceHandle) {
+    // `type` is spelled `radio` and `RadioCard` in Figma.
+    const id = pick(slotLayer, 'type', { radio: 'radio', RadioCard: 'radio-card' });
+    const handles = slotLayer.findConnectedInstances((node) => node.codeConnectId() === id, {
+        traverseInstances: true,
+    });
+
+    return handles.length > 0 ? lines(handles.map(example)) : EMPTY;
+}
+
 function render() {
     if (part === 'root') {
-        const size = instance.getEnum('size', { md: 'md', lg: 'lg' });
+        const size = pick(instance, 'size', { md: 'md', lg: 'lg' });
         const props = flags({
             disabled: bool(instance, 'disabled'),
             invalid: bool(instance, 'invalid'),
@@ -24,18 +38,14 @@ function render() {
             required: bool(instance, 'required'),
         });
         const label = example(instance.findConnectedInstance(RADIO_GROUP_PART_ID.label));
-        // The radios live in the slot layer's `Slot`; its `type` has no code prop.
-        const slotLayer = instance.findInstance('🟨RadioGroup/SlotLayer');
-        const items = slotLayer.type === 'INSTANCE' ? (slotLayer.getSlot('Slot') ?? '') : '';
-        // RadioGroup.Root has no orientation prop yet (column only), so Figma's horizontal maps to a `$css` override.
-        const horizontal =
-            slotLayer.type === 'INSTANCE' &&
-            slotLayer.getEnum('orientation', { horizontal: true, vertical: false });
-        const css = horizontal ? ` $css={{ flexDirection: 'row' }}` : '';
 
-        return figma.code`<RadioGroup.Root size="${size}"${props}${css}>
-    ${label}
-    ${items}
+        // `orientation` is dropped: Root is a column that also holds the Label, so a `$css`
+        // override can't lay out only the radios horizontally.
+        const slotLayer = instance.findInstance('🟨RadioGroup/SlotLayer');
+        const items = slotLayer.type === 'INSTANCE' ? radios(slotLayer) : EMPTY;
+
+        return figma.code`<RadioGroup.Root size="${size}"${props}>
+    ${label}${items}
 </RadioGroup.Root>`;
     }
 

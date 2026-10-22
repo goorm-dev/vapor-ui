@@ -1,6 +1,6 @@
 import figma from 'figma';
 
-import { bool, example, flags, lines } from '../../utils/figma';
+import { bool, example, flags, lines, pick, text } from '../../utils/figma';
 
 const BREADCRUMB_PART_ID = {
     root: 'breadcrumb-root',
@@ -23,7 +23,7 @@ const CHILD_IDS: string[] = [
 
 function render() {
     if (part === 'root') {
-        const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+        const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
         const children = lines(
             instance
                 .findConnectedInstances((node) => CHILD_IDS.includes(node.codeConnectId() ?? ''))
@@ -36,13 +36,11 @@ function render() {
 
     if (part === 'item') {
         const current = bool(instance, 'current');
-        // Figma keeps the label in a different TEXT property per state.
-        const text = instance.getString(current ? 'page name' : 'Text');
+        const label = text(instance, current ? 'page name' : 'Text');
 
-        return figma.code`<Breadcrumb.Item${flags({ current })}>${text}</Breadcrumb.Item>`;
+        return figma.code`<Breadcrumb.Item${flags({ current })}>${label}</Breadcrumb.Item>`;
     }
 
-    // Separator/Ellipsis render their default icon when empty.
     return figma.code`<${component} />`;
 }
 

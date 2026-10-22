@@ -3,10 +3,12 @@
 // component=Spinner
 import figma from 'figma';
 
+import { pick } from '../../utils/figma';
+
 const instance = figma.selectedInstance;
 
-const size = instance.getEnum('size', { md: 'md', lg: 'lg', xl: 'xl' });
-const colorPalette = instance.getEnum('colorPalette', { primary: 'primary', inherit: 'inherit' });
+const size = pick(instance, 'size', { md: 'md', lg: 'lg', xl: 'xl' });
+const colorPalette = pick(instance, 'colorPalette', { primary: 'primary', inherit: 'inherit' });
 
 export default {
     example: figma.code`<Spinner size="${size}" colorPalette="${colorPalette}" />`,

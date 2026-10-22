@@ -1,7 +1,16 @@
 import figma from 'figma';
 import type { InstanceHandle } from 'figma';
 
-import { bool, connectedChildren, example, flags, icon, lines } from '../../utils/figma';
+import {
+    bool,
+    connectedChildren,
+    example,
+    flags,
+    icon,
+    lines,
+    pick,
+    placeholder,
+} from '../../utils/figma';
 
 const MULTI_SELECT_PART_ID = {
     root: 'multi-select-root',
@@ -27,55 +36,44 @@ function contents(layer: InstanceHandle, indent = '') {
     const nodes = connectedChildren(layer);
     if (nodes.length === 0) return '{/* contents */}';
 
-    return figma.code`${lines(nodes.map(renderNode), `${indent}    `)}\n${indent}`;
+    return figma.code`${lines(nodes.map(example), `${indent}    `)}\n${indent}`;
 }
 
-// Figma's MultiSelect.Group nests 💙Select.GroupLabel instead of 💙MultiSelect.GroupLabel.
-function renderNode(node: InstanceHandle) {
-    if (node.codeConnectId() === 'select-group-label') {
-        return figma.code`<MultiSelect.GroupLabel>{/* contents */}</MultiSelect.GroupLabel>`;
-    }
-
-    return example(node);
-}
-
-// Figma keeps size/invalid/readOnly and the value text on the Trigger; in code they belong to Root.
 function rootProps() {
     const trigger = instance.findConnectedInstance(MULTI_SELECT_PART_ID.trigger);
     if (trigger?.type !== 'INSTANCE') return '';
 
-    const size = trigger.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+    const size = pick(trigger, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
     const props = flags({
         invalid: bool(trigger, 'invalid'),
         readOnly: bool(trigger, 'readOnly'),
     });
 
-    // `type=badge` hides the Text layer and shows Badge instances, which have no value to read.
     const slot = trigger.findInstance('🟨MultiSelect.Trigger/SlotLayer');
-    let text = '';
-    if (slot.type === 'INSTANCE' && slot.getEnum('type', { text: true, badge: false })) {
-        const value = slot.getString('Text');
-        text = bool(slot, 'value') ? ` defaultValue={["${value}"]}` : ` placeholder="${value}"`;
-    }
+    const hint =
+        slot.type === 'INSTANCE' && pick(slot, 'type', { text: true, badge: false })
+            ? placeholder(slot)
+            : '';
 
-    return figma.code` size="${size}"${text}${props}`;
+    return figma.code` size="${size}"${hint}${props}`;
 }
 
 function render() {
     if (part === 'root') {
-        const side = instance.getEnum('side', {
+        const side = pick(instance, 'side', {
             bottom: 'bottom',
             top: 'top',
             right: 'right',
             left: 'left',
         });
-        const align = instance.getEnum('align', { start: 'start', center: 'center', end: 'end' });
+        const align = pick(instance, 'align', { start: 'start', center: 'center', end: 'end' });
 
         const popup = instance.findConnectedInstance(MULTI_SELECT_PART_ID.popup);
         const items = popup?.type === 'INSTANCE' ? contents(popup, '    ') : '{/* contents */}';
+        const trigger = child('trigger') || figma.code`<MultiSelect.Trigger />`;
 
         return figma.code`<MultiSelect.Root${rootProps()}>
-    ${child('trigger')}
+    ${trigger}
     <MultiSelect.Popup positionerElement={<MultiSelect.PositionerPrimitive side="${side}" align="${align}" />}>${items}</MultiSelect.Popup>
 </MultiSelect.Root>`;
     }
@@ -89,8 +87,8 @@ function render() {
     }
 
     if (part === 'item') {
-        // Figma's MultiSelect.Item reuses Select's slot layer, spelled with a lowercase `item`.
-        const slot = instance.findInstance('🟨Select.item/SlotLayer');
+        // `item` is lowercase in this layer name in Figma.
+        const slot = instance.findInstance('🟨MultiSelect.item/SlotLayer');
         const leading = slot.type === 'INSTANCE' ? icon(slot, 'hasLeadingIcon', 'LeadingIcon') : '';
 
         return figma.code`<MultiSelect.Item${flags({ disabled: bool(instance, 'disabled') })}>${leading}{/* contents */}</MultiSelect.Item>`;

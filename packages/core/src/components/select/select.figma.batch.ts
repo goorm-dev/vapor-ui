@@ -1,7 +1,16 @@
 import figma from 'figma';
 import type { InstanceHandle } from 'figma';
 
-import { bool, connectedChildren, example, flags, icon, lines } from '../../utils/figma';
+import {
+    bool,
+    connectedChildren,
+    example,
+    flags,
+    icon,
+    lines,
+    pick,
+    placeholder,
+} from '../../utils/figma';
 
 const SELECT_PART_ID = {
     root: 'select-root',
@@ -30,42 +39,38 @@ function contents(layer: InstanceHandle, indent = '') {
     return figma.code`${lines(nodes.map(example), `${indent}    `)}\n${indent}`;
 }
 
-// Figma keeps size/invalid/readOnly and the value text on the Trigger; in code they belong to Root.
 function rootProps() {
     const trigger = instance.findConnectedInstance(SELECT_PART_ID.trigger);
     if (trigger?.type !== 'INSTANCE') return '';
 
-    const size = trigger.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+    const size = pick(trigger, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
     const props = flags({
         invalid: bool(trigger, 'invalid'),
         readOnly: bool(trigger, 'readOnly'),
     });
 
     const slot = trigger.findInstance('🟨Select.Trigger/SlotLayer');
-    let text = '';
-    if (slot.type === 'INSTANCE') {
-        const attr = slot.getEnum('value', { true: 'defaultValue', false: 'placeholder' });
-        text = ` ${attr}="${slot.getString('Text')}"`;
-    }
+    const hint = slot.type === 'INSTANCE' ? placeholder(slot) : '';
 
-    return figma.code` size="${size}"${text}${props}`;
+    return figma.code` size="${size}"${hint}${props}`;
 }
 
 function render() {
     if (part === 'root') {
-        const side = instance.getEnum('side', {
+        const side = pick(instance, 'side', {
             bottom: 'bottom',
             top: 'top',
             right: 'right',
             left: 'left',
         });
-        const align = instance.getEnum('align', { start: 'start', center: 'center', end: 'end' });
+        const align = pick(instance, 'align', { start: 'start', center: 'center', end: 'end' });
 
         const popup = instance.findConnectedInstance(SELECT_PART_ID.popup);
         const items = popup?.type === 'INSTANCE' ? contents(popup, '    ') : '{/* contents */}';
+        const trigger = child('trigger') || figma.code`<Select.Trigger />`;
 
         return figma.code`<Select.Root${rootProps()}>
-    ${child('trigger')}
+    ${trigger}
     <Select.Popup positionerElement={<Select.PositionerPrimitive side="${side}" align="${align}" />}>${items}</Select.Popup>
 </Select.Root>`;
     }
@@ -79,8 +84,7 @@ function render() {
     }
 
     if (part === 'item') {
-        // `item` is lowercase in this layer name in Figma.
-        const slot = instance.findInstance('🟨Select.item/SlotLayer');
+        const slot = instance.findInstance('🟨Select.Item/SlotLayer');
         const leading = slot.type === 'INSTANCE' ? icon(slot, 'hasLeadingIcon', 'LeadingIcon') : '';
 
         return figma.code`<Select.Item${flags({ disabled: bool(instance, 'disabled') })}>${leading}{/* contents */}</Select.Item>`;

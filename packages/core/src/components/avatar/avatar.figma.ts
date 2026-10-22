@@ -3,13 +3,15 @@
 // component=Avatar.Root
 import figma from 'figma';
 
+import { pick } from '../../utils/figma';
+
 const instance = figma.selectedInstance;
 
-const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
-const shape = instance.getEnum('shape', { square: 'square', circle: 'circle' });
+const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+const shape = pick(instance, 'shape', { square: 'square', circle: 'circle' });
 
 export default {
-    example: figma.code`<Avatar.Root size="${size}" shape="${shape}" alt="..." src="..." />`,
+    example: figma.code`<Avatar.Root size="${size}" shape="${shape}" alt="..." />`,
     imports: ['import { Avatar } from "@vapor-ui/core"'],
     id: 'avatar',
     metadata: { nestable: true },

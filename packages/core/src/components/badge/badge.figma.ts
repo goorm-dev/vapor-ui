@@ -3,11 +3,11 @@
 // component=Badge
 import figma from 'figma';
 
-import { icon } from '../../utils/figma';
+import { icon, pick, text } from '../../utils/figma';
 
 const instance = figma.selectedInstance;
 
-const colorPalette = instance.getEnum('colorPalette', {
+const colorPalette = pick(instance, 'colorPalette', {
     primary: 'primary',
     success: 'success',
     warning: 'warning',
@@ -15,14 +15,14 @@ const colorPalette = instance.getEnum('colorPalette', {
     contrast: 'contrast',
     hint: 'hint',
 });
-const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg' });
-const shape = instance.getEnum('shape', { pill: 'pill', square: 'square' });
+const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg' });
+const shape = pick(instance, 'shape', { pill: 'pill', square: 'square' });
 
 const slot = instance.findInstance('🟨Badge/SlotLayer');
 
 const children =
     slot.type === 'INSTANCE'
-        ? figma.code`${icon(slot, 'hasLeadingIcon', 'LeadingIcon')}${slot.getString('Text')}${icon(slot, 'hasTrailingIcon', 'TrailingIcon')}`
+        ? figma.code`${icon(slot, 'hasLeadingIcon', 'LeadingIcon')}${text(slot, 'Text')}${icon(slot, 'hasTrailingIcon', 'TrailingIcon')}`
         : '';
 
 export default {

@@ -1,6 +1,6 @@
 import figma from 'figma';
 
-import { example, icon, lines } from '../../utils/figma';
+import { example, icon, lines, toggle } from '../../utils/figma';
 
 const TABLE_PART_ID = {
     root: 'table-root',
@@ -26,7 +26,6 @@ function child(name: TablePart) {
     );
 }
 
-/** Renders the connected descendants of the given parts one per line, or a placeholder if none. */
 function children(names: TablePart[]) {
     const ids: string[] = names.map((name) => TABLE_PART_ID[name]);
     const handles = instance.findConnectedInstances(
@@ -40,16 +39,15 @@ function children(names: TablePart[]) {
 `;
 }
 
-/** Leading/trailing icons plus the optional checkbox and avatar of a heading or cell slot. */
 function content(slotName: string, checkboxProp: string) {
     const slot = instance.findInstance(slotName);
     if (slot.type !== 'INSTANCE') return '{/* contents */}';
 
-    const checkbox = slot.getBoolean(checkboxProp)
+    const checkbox = toggle(slot, checkboxProp)
         ? example(slot.findConnectedInstance('checkbox'))
         : '';
     const avatar =
-        part === 'cell' && slot.getBoolean('hasAvatar')
+        part === 'cell' && toggle(slot, 'hasAvatar')
             ? example(slot.findConnectedInstance('avatar'))
             : '';
 
@@ -88,8 +86,8 @@ function render() {
         return figma.code`<Table.Heading>${content('🟨Table.Heading/SlotLayer', 'hasCheckbox')}</Table.Heading>`;
     }
 
-    // `hasChceckBox` is misspelled that way in Figma.
-    return figma.code`<Table.Cell>${content('🟨Table.Cell/SlotLayer', 'hasChceckBox')}</Table.Cell>`;
+    // The cell spells it `hasCheckBox`; the heading spells it `hasCheckbox`.
+    return figma.code`<Table.Cell>${content('🟨Table.Cell/SlotLayer', 'hasCheckBox')}</Table.Cell>`;
 }
 
 export default {

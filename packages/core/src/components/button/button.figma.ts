@@ -3,12 +3,12 @@
 // component=Button
 import figma from 'figma';
 
-import { bool, flags, icon } from '../../utils/figma';
+import { bool, flags, icon, pick, text } from '../../utils/figma';
 
 const instance = figma.selectedInstance;
 
-const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
-const colorPalette = instance.getEnum('colorPalette', {
+const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+const colorPalette = pick(instance, 'colorPalette', {
     primary: 'primary',
     secondary: 'secondary',
     success: 'success',
@@ -16,15 +16,16 @@ const colorPalette = instance.getEnum('colorPalette', {
     danger: 'danger',
     contrast: 'contrast',
 });
-const variant = instance.getEnum('variant', { fill: 'fill', outline: 'outline', ghost: 'ghost' });
+const variant = pick(instance, 'variant', { fill: 'fill', outline: 'outline', ghost: 'ghost' });
 
 const disabled = bool(instance, 'disabled');
 
 const slot = instance.findInstance('🟨Button/SlotLayer');
 
+// The label property is lowercase `text` in Figma.
 const children =
     slot.type === 'INSTANCE'
-        ? figma.code`${icon(slot, 'hasLeadingIcon', 'LeadingIcon')}${slot.getString('text')}${icon(slot, 'hasTrailingIcon', 'TrailingIcon')}`
+        ? figma.code`${icon(slot, 'hasLeadingIcon', 'LeadingIcon')}${text(slot, 'text')}${icon(slot, 'hasTrailingIcon', 'TrailingIcon')}`
         : '';
 
 export default {

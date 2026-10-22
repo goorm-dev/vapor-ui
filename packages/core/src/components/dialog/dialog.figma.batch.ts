@@ -1,6 +1,6 @@
 import figma from 'figma';
 
-import { example } from '../../utils/figma';
+import { example, pick } from '../../utils/figma';
 
 const DIALOG_PART_ID = {
     root: 'dialog-root',
@@ -22,7 +22,7 @@ function child(name: DialogPart) {
 
 function render() {
     if (part === 'root') {
-        const size = instance.getEnum('size', { md: 'md', lg: 'lg', xl: 'xl' });
+        const size = pick(instance, 'size', { md: 'md', lg: 'lg', xl: 'xl' });
         return figma.code`<Dialog.Root size="${size}">
     ${child('popup')}
 </Dialog.Root>`;

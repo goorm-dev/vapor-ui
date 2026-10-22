@@ -3,11 +3,11 @@
 // component=TextInput
 import figma from 'figma';
 
-import { bool, flags } from '../../utils/figma';
+import { bool, flags, pick, placeholder } from '../../utils/figma';
 
 const instance = figma.selectedInstance;
 
-const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
 const props = flags({
     disabled: bool(instance, 'disabled'),
     invalid: bool(instance, 'invalid'),
@@ -15,14 +15,10 @@ const props = flags({
 });
 
 const slot = instance.findInstance('🟨TextInput/SlotLayer');
-let text = '';
-if (slot.type === 'INSTANCE') {
-    const attr = slot.getEnum('value', { true: 'defaultValue', false: 'placeholder' });
-    text = ` ${attr}="${slot.getString('Text')}"`;
-}
+const hint = slot.type === 'INSTANCE' ? placeholder(slot) : '';
 
 export default {
-    example: figma.code`<TextInput size="${size}"${text}${props} />`,
+    example: figma.code`<TextInput size="${size}"${hint}${props} />`,
     imports: ['import { TextInput } from "@vapor-ui/core"'],
     id: 'text-input',
     metadata: { nestable: true },

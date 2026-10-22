@@ -3,17 +3,15 @@
 // component=Switch.Root
 import figma from 'figma';
 
-import { bool, flags } from '../../utils/figma';
+import { bool, flags, pick } from '../../utils/figma';
 
 const instance = figma.selectedInstance;
 
-const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg' });
+const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg' });
 const props = flags({
-    defaultChecked: bool(instance, 'checked'),
     disabled: bool(instance, 'disabled'),
     readOnly: bool(instance, 'readOnly'),
-    // Spelled `invaild` in Figma.
-    invalid: bool(instance, 'invaild'),
+    invalid: bool(instance, 'invalid'),
 });
 
 export default {

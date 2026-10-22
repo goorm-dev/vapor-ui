@@ -1,5 +1,7 @@
 import figma from 'figma';
 
+import { pick } from '../../utils/figma';
+
 const POPOVER_PART_ID = {
     root: 'popover-root',
     popup: 'popover-popup',
@@ -15,13 +17,13 @@ function render() {
         // `side`/`align` sit on the Figma root but on Popover.PositionerPrimitive in code, so the
         // root writes the popup itself instead of reusing the popup template. Figma has no trigger,
         // and its `Popover.Arrow` has no code part.
-        const side = instance.getEnum('side', {
+        const side = pick(instance, 'side', {
             top: 'top',
             bottom: 'bottom',
             left: 'left',
             right: 'right',
         });
-        const align = instance.getEnum('align', { start: 'start', center: 'center', end: 'end' });
+        const align = pick(instance, 'align', { start: 'start', center: 'center', end: 'end' });
 
         return figma.code`<Popover.Root>
     <Popover.Trigger>{/* trigger */}</Popover.Trigger>

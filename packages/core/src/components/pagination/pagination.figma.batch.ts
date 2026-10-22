@@ -1,6 +1,6 @@
 import figma from 'figma';
 
-import { bool, example, flags } from '../../utils/figma';
+import { bool, example, flags, pick } from '../../utils/figma';
 
 const PAGINATION_PART_ID = {
     root: 'pagination-root',
@@ -21,7 +21,7 @@ function child(name: PaginationPart) {
 
 function render() {
     if (part === 'root') {
-        const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+        const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
         const disabled = bool(instance, 'disabled');
 
         return figma.code`<Pagination.Root totalPages={10} size="${size}"${flags({ disabled })}>
@@ -36,7 +36,6 @@ function render() {
         return figma.code`<Pagination.Items />`;
     }
 
-    // Previous/Next render their default chevron icon when empty.
     const disabled = bool(instance, 'disabled');
     return figma.code`<${component}${flags({ disabled })} />`;
 }

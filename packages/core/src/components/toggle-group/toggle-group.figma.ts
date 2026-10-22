@@ -3,11 +3,11 @@
 // component=ToggleGroup
 import figma from 'figma';
 
-import { bool, example, flags, lines } from '../../utils/figma';
+import { bool, example, flags, lines, pick } from '../../utils/figma';
 
 const instance = figma.selectedInstance;
 
-const size = instance.getEnum('size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
+const size = pick(instance, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
 const disabled = bool(instance, 'disabled');
 
 const toggles = lines(

@@ -1,6 +1,6 @@
 import figma from 'figma';
 
-import { bool, example, flags } from '../../utils/figma';
+import { bool, example, flags, pick, toggle } from '../../utils/figma';
 
 const SHEET_PART_ID = {
     root: 'sheet-root',
@@ -30,15 +30,13 @@ function render() {
     }
 
     if (part === 'popup') {
-        // `side` lives on Sheet.PositionerPrimitive in code. Always emitted: Figma defaults to
-        // `left`, code to `right`.
-        const side = instance.getEnum('side', {
+        const side = pick(instance, 'side', {
             left: 'left',
             right: 'right',
             top: 'top',
             bottom: 'bottom',
         });
-        const handle = instance.getBoolean('showHandle')
+        const handle = toggle(instance, 'showHandle')
             ? figma.code`
     ${child('resizeHandle')}`
             : '';
@@ -50,7 +48,6 @@ function render() {
 </Sheet.Popup>`;
     }
 
-    // `align` is derived from the sheet's side in code, so only `disabled` maps.
     if (part === 'resizeHandle') {
         return figma.code`<Sheet.ResizeHandle${flags({ disabled: bool(instance, 'disabled') })} />`;
     }

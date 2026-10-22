@@ -3,7 +3,7 @@
     "components": [
         {
             "part": "root",
-            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6398",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6399",
             "component": "AlertDialog.Root",
             "source": "src/components/alert-dialog/alert-dialog.tsx"
         },

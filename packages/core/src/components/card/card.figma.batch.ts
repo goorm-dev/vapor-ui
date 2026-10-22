@@ -30,7 +30,7 @@ function render() {
 
     // Card.Body has no padding prop yet, so Figma's `hasPadding=false` maps to a `$css` override.
     const noPadding = part === 'body' && !bool(instance, 'hasPadding');
-    const css = noPadding ? ` $css={{ padding: '000' }}` : '';
+    const css = noPadding ? ` $css={{ padding: '$000' }}` : '';
 
     return figma.code`<${component}${css}>{/* contents */}</${component}>`;
 }
