@@ -131,7 +131,12 @@ export const Default: Story = {
                         value={multi}
                         onValueChange={setMulti}
                     >
-                        <Menu.CheckItem label="multiple 1" value="multiple 1" />
+                        <Menu.CheckItem
+                            leading={<HeartIcon />}
+                            label="multiple 1"
+                            value="multiple 1"
+                            trailing={<Kbd>⌘ U</Kbd>}
+                        />
                         <Menu.CheckItem label="multiple 2" value="multiple 2" />
                         <Menu.CheckItem label="multiple 3" value="multiple 3" />
                     </Menu.CheckGroup>

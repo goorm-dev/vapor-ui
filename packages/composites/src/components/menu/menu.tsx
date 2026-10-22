@@ -520,7 +520,7 @@ export const MenuCheckItem = ({
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
     const itemLayout = getItemLayout({
-        hasMarker: hasSelection,
+        hasMarker: mode === 'multiple' ? true : hasSelection,
         hasLeading: !!leading,
         hasTrailing: !!trailing,
     });
@@ -551,18 +551,18 @@ export const MenuCheckItem = ({
     }
 
     const { value, handleValueChange } = context;
+    const checked = value.includes(valueProp);
+    const handleCheckedChange = () => handleValueChange(valueProp);
 
     return (
         <MenuPrimitives.CheckboxItemPrimitive
             disabled={isDisabled}
-            checked={value.includes(valueProp)}
-            onCheckedChange={() => handleValueChange(valueProp)}
+            checked={checked}
+            onCheckedChange={handleCheckedChange}
             onClick={onClick}
             $css={{ display: 'grid', gap: '$000', ...itemLayout }}
         >
-            <MenuPrimitives.CheckboxItemIndicatorPrimitive $css={{ gridArea: 'marker' }}>
-                <ConfirmOutlineIcon />
-            </MenuPrimitives.CheckboxItemIndicatorPrimitive>
+            <MenuPrimitives.CheckboxItemIndicatorPrimitive $css={{ gridArea: 'marker' }} />
 
             <ItemLayout
                 leading={leading}
