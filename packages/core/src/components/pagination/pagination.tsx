@@ -588,6 +588,7 @@ export interface PaginationRootPrimitiveProps
     page?: number;
     /**
      * Page selected on first render, counted from `1`. Use when the component is not controlled.
+     * @default 1
      */
     defaultPage?: number;
     /**
@@ -597,14 +598,17 @@ export interface PaginationRootPrimitiveProps
 
     /**
      * Number of pages shown on each side of the selected page before the rest collapse into an ellipsis.
+     * @default 2
      */
     siblingCount?: number;
     /**
      * Number of pages always shown at the start and the end of the range.
+     * @default 1
      */
     boundaryCount?: number;
     /**
      * Disables the pagination, blocking all interactions on its buttons.
+     * @default false
      */
     disabled?: boolean;
 }
