@@ -353,13 +353,31 @@ MenuCheckboxItemPrimitive.displayName = 'Menu.CheckboxItemPrimitive';
  * MenuCheckboxItemIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+const CheckIcon = () => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            viewBox="0 0 17 18"
+            className={styles.icon}
+        >
+            <polyline points="2 9 7 14 15 5" />
+        </svg>
+    );
+};
+
 export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuCheckboxItemIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const {
+        keepMounted = true,
+        className,
+        children: childrenProp,
+        ...componentProps
+    } = resolveStyles(props);
 
-    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
+    const childrenRender = createRender(childrenProp, <CheckIcon />);
     const children = useRenderElement({
         render: childrenRender,
         props: { width: '100%', height: '100%' },
@@ -368,7 +386,8 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     return (
         <BaseMenu.CheckboxItemIndicator
             ref={ref}
-            className={cn(styles.indicator, className)}
+            keepMounted={keepMounted}
+            className={cn(styles.checkboxIndicator, className)}
             {...componentProps}
         >
             {children}
@@ -454,7 +473,7 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
     return (
         <BaseMenu.RadioItemIndicator
             ref={ref}
-            className={cn(styles.indicator, className)}
+            className={cn(styles.radioIndicator, className)}
             {...componentProps}
         >
             {children}
@@ -471,7 +490,7 @@ export const MenuRadioItem = forwardRef<HTMLElement, MenuRadioItem.Props>((props
 
     return (
         <MenuRadioItemPrimitive ref={ref} {...componentProps}>
-            <MenuRadioItemIndicatorPrimitive className={styles.indicator} />
+            <MenuRadioItemIndicatorPrimitive />
 
             {children}
         </MenuRadioItemPrimitive>

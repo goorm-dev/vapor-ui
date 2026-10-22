@@ -1,5 +1,6 @@
 import { calc } from '@vanilla-extract/css-utils';
 
+import { root as checkboxRoot } from '~/components/checkbox/checkbox.css';
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
@@ -107,7 +108,7 @@ export const groupLabel = componentStyle([
     },
 ]);
 
-export const indicator = componentStyle([
+export const radioIndicator = componentStyle([
     foregrounds({ color: 'normal' }),
     {
         display: 'flex',
@@ -118,3 +119,26 @@ export const indicator = componentStyle([
         height: vars.size.dimension['250'],
     },
 ]);
+
+const checkbox = checkboxRoot({ size: 'md', invalid: false });
+export const checkboxIndicator = componentStyle(checkbox);
+
+export const icon = componentStyle({
+    transition: 'all 0.2s',
+    width: vars.size.dimension[100],
+    height: vars.size.dimension[100],
+
+    fill: 'none',
+    stroke: vars.color.foreground.staticWhite,
+    strokeWidth: '4px',
+    strokeDasharray: '22',
+    strokeDashoffset: '66px',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+
+    selectors: {
+        [`${checkboxIndicator}[data-checked] > &`]: {
+            strokeDashoffset: '44px',
+        },
+    },
+});
