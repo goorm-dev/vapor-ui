@@ -640,11 +640,6 @@ export namespace PaginationButtonPrimitive {
     export type Props = PaginationButtonPrimitiveProps;
 }
 
-export namespace PaginationButton {
-    export type State = PaginationButtonPrimitive.State;
-    export type Props = PaginationButtonPrimitive.Props;
-}
-
 export interface PaginationPreviousPrimitiveState {
     [key: string]: unknown;
     /**
@@ -704,9 +699,4 @@ export interface PaginationEllipsisPrimitiveState {
 export namespace PaginationEllipsisPrimitive {
     export type State = PaginationEllipsisPrimitiveState;
     export type Props = VaporUIComponentProps<'span', State>;
-}
-
-export namespace PaginationEllipsis {
-    export type State = PaginationEllipsisPrimitive.State;
-    export type Props = PaginationEllipsisPrimitive.Props;
 }
