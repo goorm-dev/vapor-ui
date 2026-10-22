@@ -7,7 +7,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Collapsible 패널이 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요."
+            "description": "Collapsible 패널이 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
@@ -42,7 +43,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

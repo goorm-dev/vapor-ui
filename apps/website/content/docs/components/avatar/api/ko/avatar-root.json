@@ -58,14 +58,16 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "폴백을 표시하기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
+            "description": "폴백을 표시하기 전에 기다리는 시간. 밀리초 단위로 지정합니다.",
+            "defaultValue": "0"
         },
         {
             "name": "keepMounted",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "이미지 요소를 미리 불러오지 않고 마운트된 상태로 유지하며 그 자리에서 불러올지 여부.\n`loading=\"lazy\"`와 `next/image` 같은 최적화된 이미지 컴포넌트를 지원합니다."
+            "description": "이미지 요소를 미리 불러오지 않고 마운트된 상태로 유지하며 그 자리에서 불러올지 여부.\n`loading=\"lazy\"`와 `next/image` 같은 최적화된 이미지 컴포넌트를 지원합니다.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

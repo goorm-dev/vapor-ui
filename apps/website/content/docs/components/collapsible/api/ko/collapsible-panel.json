@@ -21,14 +21,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "브라우저의 기본 페이지 검색이 패널 콘텐츠를 찾아 펼칠 수 있게 합니다.\n\n`keepMounted` prop을 무시하고 `hidden=\"until-found\"`를 사용해 요소를 DOM에서 제거하지 않고 숨깁니다."
+            "description": "브라우저의 기본 페이지 검색이 패널 콘텐츠를 찾아 펼칠 수 있게 합니다.\n\n`keepMounted` prop을 무시하고 `hidden=\"until-found\"`를 사용해 요소를 DOM에서 제거하지 않고 숨깁니다.",
+            "defaultValue": "false"
         },
         {
             "name": "keepMounted",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "패널이 숨겨져 있는 동안에도 요소를 DOM에 유지할지 여부. `hiddenUntilFound`를 사용하면 이 prop은 무시됩니다."
+            "description": "패널이 숨겨져 있는 동안에도 요소를 DOM에 유지할지 여부. `hiddenUntilFound`를 사용하면 이 prop은 무시됩니다.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

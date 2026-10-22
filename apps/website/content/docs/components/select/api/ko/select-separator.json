@@ -21,7 +21,8 @@
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
             "required": false,
-            "description": "구분선의 방향."
+            "description": "구분선의 방향.",
+            "defaultValue": "horizontal"
         },
         {
             "name": "render",

@@ -7,7 +7,8 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "툴바 버튼과 input의 크기. 높이, 패딩, 타이포그래피를 결정합니다."
+            "description": "툴바 버튼과 input의 크기. 높이, 패딩, 타이포그래피를 결정합니다.",
+            "defaultValue": "md"
         },
         {
             "name": "variant",
@@ -43,7 +44,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`true`이면 키보드 탐색으로 툴바의 끝에 도달했을 때 포커스를 반대쪽 끝으로 넘깁니다."
+            "description": "`true`이면 키보드 탐색으로 툴바의 끝에 도달했을 때 포커스를 반대쪽 끝으로 넘깁니다.",
+            "defaultValue": "true"
         },
         {
             "name": "render",

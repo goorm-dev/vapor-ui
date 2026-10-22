@@ -21,7 +21,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "라디오 항목이 비활성 상태일 때도 HTML 요소를 DOM에 유지할지 여부."
+            "description": "라디오 항목이 비활성 상태일 때도 HTML 요소를 DOM에 유지할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

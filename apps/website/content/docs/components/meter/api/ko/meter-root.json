@@ -14,14 +14,16 @@
             "type": ["sm", "md", "lg"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
             "required": false,
-            "description": "미터의 크기. 트랙의 높이를 결정합니다."
+            "description": "미터의 크기. 트랙의 높이를 결정합니다.",
+            "defaultValue": "md"
         },
         {
             "name": "type",
             "type": ["default", "warning"],
             "detailedType": "\"default\" | \"warning\" | undefined",
             "required": false,
-            "description": "미터에서 채워진 부분의 색상."
+            "description": "미터에서 채워진 부분의 색상.",
+            "defaultValue": "default"
         },
         {
             "name": "className",

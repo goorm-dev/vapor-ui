@@ -21,7 +21,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "감싸고 있는 컨트롤이 사용자 상호작용을 무시할지 여부. `<Field.Root>`의 `disabled` prop이 이 값보다 우선합니다."
+            "description": "감싸고 있는 컨트롤이 사용자 상호작용을 무시할지 여부. `<Field.Root>`의 `disabled` prop이 이 값보다 우선합니다.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

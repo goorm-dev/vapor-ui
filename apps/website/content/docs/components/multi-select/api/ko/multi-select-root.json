@@ -7,21 +7,24 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "MultiSelect를 유효하지 않음으로 표시하고 오류 스타일을 적용합니다. 트리거 `<button>` 요소에 `aria-invalid`를 설정합니다."
+            "description": "MultiSelect를 유효하지 않음으로 표시하고 오류 스타일을 적용합니다. 트리거 `<button>` 요소에 `aria-invalid`를 설정합니다.",
+            "defaultValue": "false"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "MultiSelect의 크기. 최소 높이, 패딩, 타이포그래피, 아이콘과 배지의 크기를 결정합니다."
+            "description": "MultiSelect의 크기. 최소 높이, 패딩, 타이포그래피, 아이콘과 배지의 크기를 결정합니다.",
+            "defaultValue": "md"
         },
         {
             "name": "defaultOpen",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Select 팝업이 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요."
+            "description": "Select 팝업이 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "defaultValue",
@@ -91,7 +94,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "form",
@@ -105,7 +109,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "포인터를 항목 위로 옮기면 항목을 강조할지 여부. 이 prop을 비활성화하면 CSS `:hover`를 `:focus`(`data-highlighted`) 상태와 구분할 수 있습니다."
+            "description": "포인터를 항목 위로 옮기면 항목을 강조할지 여부. 이 prop을 비활성화하면 CSS `:hover`를 `:focus`(`data-highlighted`) 상태와 구분할 수 있습니다.",
+            "defaultValue": "true"
         },
         {
             "name": "id",
@@ -158,7 +163,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Select가 열렸을 때 모달 상태가 되는지 여부.\n- `true`: 사용자 상호작용이 Select로 제한됩니다. 문서 페이지 스크롤이 잠기고 바깥 요소의 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 상호작용할 수 있습니다.\n\n터치 기기에서 `true` 모달은 바깥쪽 탭을 막지만, 팝업이 뷰포트 너비를 거의 가득 채우지 않으면 페이지를 스크롤할 수 있습니다. 이는 iOS 네이티브 동작과 같습니다."
+            "description": "Select가 열렸을 때 모달 상태가 되는지 여부.\n- `true`: 사용자 상호작용이 Select로 제한됩니다. 문서 페이지 스크롤이 잠기고 바깥 요소의 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 상호작용할 수 있습니다.\n\n터치 기기에서 `true` 모달은 바깥쪽 탭을 막지만, 팝업이 뷰포트 너비를 거의 가득 채우지 않으면 페이지를 스크롤할 수 있습니다. 이는 iOS 네이티브 동작과 같습니다.",
+            "defaultValue": "true"
         },
         {
             "name": "name",
@@ -179,14 +185,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "사용자가 Select 팝업에서 다른 옵션을 선택하지 못하게 할지 여부."
+            "description": "사용자가 Select 팝업에서 다른 옵션을 선택하지 못하게 할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "required",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "폼을 제출하기 전에 사용자가 값을 반드시 선택해야 하는지 여부."
+            "description": "폼을 제출하기 전에 사용자가 값을 반드시 선택해야 하는지 여부.",
+            "defaultValue": "false"
         }
     ],
     "typeRefs": {

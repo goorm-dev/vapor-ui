@@ -7,7 +7,8 @@
             "type": ["inherit", "primary"],
             "detailedType": "\"inherit\" | \"primary\" | undefined",
             "required": false,
-            "description": "스피너의 색상 팔레트. 회전하는 호의 선(stroke)에 적용됩니다. 채워진 배경 위처럼 부모 요소의 `color`에서 선 색상을 가져오려면 `inherit`를 사용하세요."
+            "description": "스피너의 색상 팔레트. 회전하는 호의 선(stroke)에 적용됩니다. 채워진 배경 위처럼 부모 요소의 `color`에서 선 색상을 가져오려면 `inherit`를 사용하세요.",
+            "defaultValue": "primary"
         },
         {
             "name": "size",

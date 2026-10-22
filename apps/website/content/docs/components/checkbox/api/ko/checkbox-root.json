@@ -30,7 +30,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "체크박스가 처음에 체크되어 있는지 여부.\n\n제어 체크박스로 렌더링하려면 대신 `checked` prop을 사용하세요."
+            "description": "체크박스가 처음에 체크되어 있는지 여부.\n\n제어 체크박스로 렌더링하려면 대신 `checked` prop을 사용하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "onCheckedChange",
@@ -72,7 +73,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "form",
@@ -93,7 +95,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "체크박스가 체크도 체크 해제도 아닌 혼합 상태인지 여부."
+            "description": "체크박스가 체크도 체크 해제도 아닌 혼합 상태인지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "inputRef",
@@ -114,28 +117,32 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "parent",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "체크박스가 하위 체크박스 그룹을 제어하는지 여부.\n\n[Checkbox Group](https://base-ui.com/react/components/checkbox-group) 안에서 사용해야 합니다."
+            "description": "체크박스가 하위 체크박스 그룹을 제어하는지 여부.\n\n[Checkbox Group](https://base-ui.com/react/components/checkbox-group) 안에서 사용해야 합니다.",
+            "defaultValue": "false"
         },
         {
             "name": "readOnly",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "사용자가 체크박스를 체크하거나 체크 해제할 수 없게 할지 여부."
+            "description": "사용자가 체크박스를 체크하거나 체크 해제할 수 없게 할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "required",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "폼을 제출하기 전에 사용자가 체크박스를 반드시 체크해야 하는지 여부."
+            "description": "폼을 제출하기 전에 사용자가 체크박스를 반드시 체크해야 하는지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "uncheckedValue",

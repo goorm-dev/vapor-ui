@@ -45,14 +45,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "버튼이 비활성화되었을 때도 포커스할 수 있는지 여부."
+            "description": "버튼이 비활성화되었을 때도 포커스할 수 있는지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요."
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요.",
+            "defaultValue": "true"
         },
         {
             "name": "render",

@@ -21,7 +21,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "React가 하이드레이션하기 전에 스스로 렌더링할지 여부.\n서버 사이드 렌더링 뒤 인디케이터가 보이지 않는 시간을 최소화합니다."
+            "description": "React가 하이드레이션하기 전에 스스로 렌더링할지 여부.\n서버 사이드 렌더링 뒤 인디케이터가 보이지 않는 시간을 최소화합니다.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

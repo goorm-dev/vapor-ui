@@ -21,28 +21,32 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "Tooltip을 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
+            "description": "Tooltip을 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다.",
+            "defaultValue": "0"
         },
         {
             "name": "closeOnClick",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "이 트리거를 클릭하면 Tooltip을 닫을지 여부."
+            "description": "이 트리거를 클릭하면 Tooltip을 닫을지 여부.",
+            "defaultValue": "true"
         },
         {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "마우스를 올렸을 때 Tooltip을 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
+            "description": "마우스를 올렸을 때 Tooltip을 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다.",
+            "defaultValue": "600"
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`true`이면 이 트리거와 상호작용해도 Tooltip이 열리지 않습니다.\n트리거 요소에 `disabled` 속성이 적용되지는 않습니다.\n트리거 요소 자체를 비활성화하려면 `render` prop으로 트리거 요소에 `disabled` prop을 전달하세요."
+            "description": "`true`이면 이 트리거와 상호작용해도 Tooltip이 열리지 않습니다.\n트리거 요소에 `disabled` 속성이 적용되지는 않습니다.\n트리거 요소 자체를 비활성화하려면 `render` prop으로 트리거 요소에 `disabled` prop을 전달하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "handle",

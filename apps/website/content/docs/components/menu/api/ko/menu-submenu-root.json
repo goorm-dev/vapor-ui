@@ -7,7 +7,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Menu가 처음에 열려 있는지 여부.\n\n제어 Menu를 렌더링하려면 대신 `open` prop을 사용하세요."
+            "description": "Menu가 처음에 열려 있는지 여부.\n\n제어 Menu를 렌더링하려면 대신 `open` prop을 사용하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
@@ -64,21 +65,24 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "highlightItemOnHover",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "포인터를 항목 위로 옮기면 항목을 강조할지 여부. 이 prop을 비활성화하면 CSS `:hover`와 `:focus`(`data-highlighted`) 상태를 구분할 수 있습니다."
+            "description": "포인터를 항목 위로 옮기면 항목을 강조할지 여부. 이 prop을 비활성화하면 CSS `:hover`와 `:focus`(`data-highlighted`) 상태를 구분할 수 있습니다.",
+            "defaultValue": "true"
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 첫 항목으로 되돌릴지 여부."
+            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 첫 항목으로 되돌릴지 여부.",
+            "defaultValue": "true"
         },
         {
             "name": "onOpenChangeComplete",
@@ -92,7 +96,8 @@
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
             "required": false,
-            "description": "Menu의 시각적 방향.\n로빙 포커스가 위/아래 화살표 키를 쓸지 왼쪽/오른쪽 화살표 키를 쓸지 결정합니다."
+            "description": "Menu의 시각적 방향.\n로빙 포커스가 위/아래 화살표 키를 쓸지 왼쪽/오른쪽 화살표 키를 쓸지 결정합니다.",
+            "defaultValue": "vertical"
         },
         {
             "name": "render",

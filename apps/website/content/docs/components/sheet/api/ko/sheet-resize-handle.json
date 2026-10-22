@@ -23,7 +23,7 @@
             "detailedType": "number | undefined",
             "required": false,
             "description": "화살표 키를 한 번 누를 때 Sheet의 크기가 바뀌는 거리(픽셀).",
-            "defaultValue": "RESIZE_STEP"
+            "defaultValue": "16"
         },
         {
             "name": "style",

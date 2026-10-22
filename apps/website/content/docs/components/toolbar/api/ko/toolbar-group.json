@@ -21,7 +21,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`true`이면 그룹 안의 모든 툴바 항목이 비활성화됩니다."
+            "description": "`true`이면 그룹 안의 모든 툴바 항목이 비활성화됩니다.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

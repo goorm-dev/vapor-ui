@@ -21,7 +21,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "중첩되어 있어도 배경을 강제로 렌더링하는지 여부."
+            "description": "중첩되어 있어도 배경을 강제로 렌더링하는지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

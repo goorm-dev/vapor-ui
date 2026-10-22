@@ -35,7 +35,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.\n`<Field.Control>` 컴포넌트의 `disabled` prop보다 우선합니다."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.\n`<Field.Control>` 컴포넌트의 `disabled` prop보다 우선합니다.",
+            "defaultValue": "false"
         },
         {
             "name": "invalid",
@@ -70,14 +71,16 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "`validationMode=\"onChange\"`를 사용할 때 `validate` 콜백 사이에 기다리는 시간. 밀리초 단위로 지정합니다."
+            "description": "`validationMode=\"onChange\"`를 사용할 때 `validate` 콜백 사이에 기다리는 시간. 밀리초 단위로 지정합니다.",
+            "defaultValue": "0"
         },
         {
             "name": "validationMode",
             "type": ["onBlur", "onChange", "onSubmit"],
             "detailedType": "\"onBlur\" | \"onChange\" | \"onSubmit\" | undefined",
             "required": false,
-            "description": "필드의 유효성을 검사할 시점.\n`<Form>`의 `validationMode` prop보다 우선합니다.\n\n- `onSubmit`: 폼을 제출할 때 유효성 검사를 실행하고, 제출 후에는 값이 바뀔 때마다 다시 검사합니다.\n- `onBlur`: 컨트롤이 포커스를 잃을 때 유효성 검사를 실행합니다.\n- `onChange`: 컨트롤 값이 바뀔 때마다 유효성 검사를 실행합니다."
+            "description": "필드의 유효성을 검사할 시점.\n`<Form>`의 `validationMode` prop보다 우선합니다.\n\n- `onSubmit`: 폼을 제출할 때 유효성 검사를 실행하고, 제출 후에는 값이 바뀔 때마다 다시 검사합니다.\n- `onBlur`: 컨트롤이 포커스를 잃을 때 유효성 검사를 실행합니다.\n- `onChange`: 컨트롤 값이 바뀔 때마다 유효성 검사를 실행합니다.",
+            "defaultValue": "onSubmit"
         },
         {
             "name": "render",

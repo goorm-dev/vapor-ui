@@ -50,7 +50,8 @@
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
             "required": false,
-            "description": "토글 사이의 키보드 탐색 방향. `horizontal`은 왼쪽·오른쪽 화살표 키, `vertical`은 위·아래 화살표 키를 사용합니다. 레이아웃은 바꾸지 않습니다."
+            "description": "토글 사이의 키보드 탐색 방향. `horizontal`은 왼쪽·오른쪽 화살표 키, `vertical`은 위·아래 화살표 키를 사용합니다. 레이아웃은 바꾸지 않습니다.",
+            "defaultValue": "horizontal"
         },
         {
             "name": "style",
@@ -64,21 +65,24 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "ToggleGroup이 사용자 상호작용을 무시할지 여부."
+            "description": "ToggleGroup이 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 첫 항목으로 되돌릴지 여부."
+            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 첫 항목으로 되돌릴지 여부.",
+            "defaultValue": "true"
         },
         {
             "name": "multiple",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`false`이면 그룹에서 하나의 항목만 누를 수 있습니다. 그룹의 항목 하나가 눌리면 나머지는 눌림이 해제됩니다. `true`이면 여러 항목을 누를 수 있습니다."
+            "description": "`false`이면 그룹에서 하나의 항목만 누를 수 있습니다. 그룹의 항목 하나가 눌리면 나머지는 눌림이 해제됩니다. `true`이면 여러 항목을 누를 수 있습니다.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

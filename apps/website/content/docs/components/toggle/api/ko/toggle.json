@@ -23,7 +23,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "토글 버튼이 현재 눌려 있는지 여부.\n`pressed`의 비제어 대응 prop입니다."
+            "description": "토글 버튼이 현재 눌려 있는지 여부.\n`pressed`의 비제어 대응 prop입니다.",
+            "defaultValue": "false"
         },
         {
             "name": "onPressedChange",
@@ -72,14 +73,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요."
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요.",
+            "defaultValue": "true"
         },
         {
             "name": "render",

@@ -7,7 +7,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Popover가 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요."
+            "description": "Popover가 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
@@ -56,7 +57,8 @@
             "type": ["boolean", "trap-focus"],
             "detailedType": "boolean | \"trap-focus\" | undefined",
             "required": false,
-            "description": "Popover가 열렸을 때 모달 상태가 되는지 여부.\n- `true`: 사용자 상호작용이 Popover로 제한됩니다. 문서 페이지 스크롤이 잠기고, 바깥 요소의 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 사용자 상호작용할 수 있습니다.\n- `'trap-focus'`: 포커스는 Popover 안에 갇히지만, 문서 페이지 스크롤은 잠기지 않고 바깥의 포인터 상호작용도 계속 활성화됩니다.\n\n터치 기기에서 `true` 모달은 바깥 탭을 막지만, 팝업이 뷰포트 너비 거의 전체를 차지하지 않으면 페이지를 스크롤할 수 있습니다. 네이티브 iOS 동작과 같습니다.\n\n`modal`이 `true`이면 `<Popover.Close>`가 `<Popover.Popup>` 안에 렌더링될 때만 포커스 트랩이 활성화됩니다. 필요하면 직접 작성한 CSS로 시각적으로 숨길 수 있습니다(예: Tailwind의 `sr-only` 유틸리티).\n\n`modal`이 `'trap-focus'`이면 터치 스크린 리더가 팝업에서 빠져나갈 수 있도록 `<Popover.Close>`를 `<Popover.Popup>` 안에 렌더링하세요."
+            "description": "Popover가 열렸을 때 모달 상태가 되는지 여부.\n- `true`: 사용자 상호작용이 Popover로 제한됩니다. 문서 페이지 스크롤이 잠기고, 바깥 요소의 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 사용자 상호작용할 수 있습니다.\n- `'trap-focus'`: 포커스는 Popover 안에 갇히지만, 문서 페이지 스크롤은 잠기지 않고 바깥의 포인터 상호작용도 계속 활성화됩니다.\n\n터치 기기에서 `true` 모달은 바깥 탭을 막지만, 팝업이 뷰포트 너비 거의 전체를 차지하지 않으면 페이지를 스크롤할 수 있습니다. 네이티브 iOS 동작과 같습니다.\n\n`modal`이 `true`이면 `<Popover.Close>`가 `<Popover.Popup>` 안에 렌더링될 때만 포커스 트랩이 활성화됩니다. 필요하면 직접 작성한 CSS로 시각적으로 숨길 수 있습니다(예: Tailwind의 `sr-only` 유틸리티).\n\n`modal`이 `'trap-focus'`이면 터치 스크린 리더가 팝업에서 빠져나갈 수 있도록 `<Popover.Close>`를 `<Popover.Popup>` 안에 렌더링하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "onOpenChangeComplete",

@@ -7,14 +7,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "링크를 현재 페이지로 표시합니다. 활성 색상을 적용하고 `<a>` 요소에 `aria-current=\"page\"`와 `aria-disabled`를 설정합니다."
+            "description": "링크를 현재 페이지로 표시합니다. 활성 색상을 적용하고 `<a>` 요소에 `aria-current=\"page\"`와 `aria-disabled`를 설정합니다.",
+            "defaultValue": "false"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Breadcrumb의 크기. 링크의 타이포그래피와 구분자 및 생략 아이콘의 크기를 결정합니다."
+            "description": "Breadcrumb의 크기. 링크의 타이포그래피와 구분자 및 생략 아이콘의 크기를 결정합니다.",
+            "defaultValue": "md"
         },
         {
             "name": "className",

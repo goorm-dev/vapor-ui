@@ -49,7 +49,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "readOnly",

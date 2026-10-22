@@ -21,7 +21,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "팝업이 닫혀 있는 동안에도 콘텐츠를 DOM에 마운트해 둘지 여부. 웹 크롤러를 위해 서버 사이드 렌더링 중에도 콘텐츠가 존재하도록 합니다."
+            "description": "팝업이 닫혀 있는 동안에도 콘텐츠를 DOM에 마운트해 둘지 여부. 웹 크롤러를 위해 서버 사이드 렌더링 중에도 콘텐츠가 존재하도록 합니다.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

@@ -21,7 +21,8 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "한 번에 표시할 수 있는 Toast의 최대 개수. 제한을 넘으면 가장 오래된 Toast를 제거하지 않고 (`data-limited` 속성으로) `limited`로 표시하므로, 숨기거나 애니메이션으로 사라지게 할 수 있습니다."
+            "description": "한 번에 표시할 수 있는 Toast의 최대 개수. 제한을 넘으면 가장 오래된 Toast를 제거하지 않고 (`data-limited` 속성으로) `limited`로 표시하므로, 숨기거나 애니메이션으로 사라지게 할 수 있습니다.",
+            "defaultValue": "3"
         },
         {
             "name": "timeout",

@@ -28,21 +28,24 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "호버로 연 Menu를 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다."
+            "description": "호버로 연 Menu를 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다.",
+            "defaultValue": "0"
         },
         {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "호버했을 때 Menu를 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다."
+            "description": "호버했을 때 Menu를 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다.",
+            "defaultValue": "100"
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "label",
@@ -56,14 +59,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요."
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "openOnHover",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "트리거에 호버할 때도 Menu를 열지 여부."
+            "description": "트리거에 호버할 때도 Menu를 열지 여부.",
+            "defaultValue": "true"
         },
         {
             "name": "render",

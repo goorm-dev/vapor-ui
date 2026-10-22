@@ -7,21 +7,24 @@
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
             "required": false,
-            "description": "메뉴 항목의 레이아웃 방향. 항목 사이에서 포커스를 옮기는 화살표 키도 이 값으로 정해집니다."
+            "description": "메뉴 항목의 레이아웃 방향. 항목 사이에서 포커스를 옮기는 화살표 키도 이 값으로 정해집니다.",
+            "defaultValue": "horizontal"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "링크와 트리거의 크기. 높이, 패딩, 타이포그래피를 결정합니다."
+            "description": "링크와 트리거의 크기. 높이, 패딩, 타이포그래피를 결정합니다.",
+            "defaultValue": "md"
         },
         {
             "name": "defaultValue",
             "type": ["unknown"],
             "detailedType": "unknown",
             "required": false,
-            "description": "처음에 선택되어 있을 항목의 비제어 값.\n\n제어 컴포넌트로 렌더링하려면 대신 `value` prop을 사용하세요."
+            "description": "처음에 선택되어 있을 항목의 비제어 값.\n\n제어 컴포넌트로 렌더링하려면 대신 `value` prop을 사용하세요.",
+            "defaultValue": "null"
         },
         {
             "name": "onValueChange",
@@ -35,7 +38,8 @@
             "type": ["unknown"],
             "detailedType": "unknown",
             "required": false,
-            "description": "현재 열려 있어야 하는 탐색 메뉴 항목의 제어 값. null이나 undefined가 아니면 메뉴가 열리고, null이나 undefined이면 메뉴가 닫힙니다.\n\n비제어 컴포넌트로 렌더링하려면 대신 `defaultValue` prop을 사용하세요."
+            "description": "현재 열려 있어야 하는 탐색 메뉴 항목의 제어 값. null이나 undefined가 아니면 메뉴가 열리고, null이나 undefined이면 메뉴가 닫힙니다.\n\n비제어 컴포넌트로 렌더링하려면 대신 `defaultValue` prop을 사용하세요.",
+            "defaultValue": "null"
         },
         {
             "name": "className",
@@ -70,14 +74,16 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "탐색 팝업을 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
+            "description": "탐색 팝업을 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다.",
+            "defaultValue": "50"
         },
         {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "탐색 팝업을 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다."
+            "description": "탐색 팝업을 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다.",
+            "defaultValue": "50"
         },
         {
             "name": "onOpenChangeComplete",

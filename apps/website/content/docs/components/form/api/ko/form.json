@@ -42,7 +42,8 @@
             "type": ["onBlur", "onChange", "onSubmit"],
             "detailedType": "\"onBlur\" | \"onChange\" | \"onSubmit\" | undefined",
             "required": false,
-            "description": "폼을 검증할 시점.\n`<Field.Root>`의 `validationMode` prop이 이 값보다 우선합니다.\n\n- `onSubmit`(기본값): 폼을 제출할 때 필드를 검증하며, 이후에는 값이 바뀔 때마다 다시 검증합니다.\n- `onBlur`: 필드가 포커스를 잃을 때 검증합니다.\n- `onChange`: 필드의 값이 바뀔 때마다 검증합니다."
+            "description": "폼을 검증할 시점.\n`<Field.Root>`의 `validationMode` prop이 이 값보다 우선합니다.\n\n- `onSubmit`(기본값): 폼을 제출할 때 필드를 검증하며, 이후에는 값이 바뀔 때마다 다시 검증합니다.\n- `onBlur`: 필드가 포커스를 잃을 때 검증합니다.\n- `onChange`: 필드의 값이 바뀔 때마다 검증합니다.",
+            "defaultValue": "onSubmit"
         },
         {
             "name": "render",

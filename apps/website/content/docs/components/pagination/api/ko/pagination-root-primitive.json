@@ -14,7 +14,8 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "페이지네이션 버튼과 줄임표의 크기. 너비, 높이, 타이포그래피를 결정합니다."
+            "description": "페이지네이션 버튼과 줄임표의 크기. 너비, 높이, 타이포그래피를 결정합니다.",
+            "defaultValue": "md"
         },
         {
             "name": "onPageChange",

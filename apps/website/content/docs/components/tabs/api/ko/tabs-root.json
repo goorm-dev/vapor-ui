@@ -7,21 +7,24 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "탭 버튼의 크기. 높이와 타이포그래피를 결정합니다."
+            "description": "탭 버튼의 크기. 높이와 타이포그래피를 결정합니다.",
+            "defaultValue": "md"
         },
         {
             "name": "variant",
             "type": ["line", "fill"],
             "detailedType": "\"line\" | \"fill\" | undefined",
             "required": false,
-            "description": "탭의 시각적 스타일. `line`은 목록 테두리의 선으로 활성 탭을 표시하고, `fill`은 채워진 배경으로 활성 탭을 강조합니다."
+            "description": "탭의 시각적 스타일. `line`은 목록 테두리의 선으로 활성 탭을 표시하고, `fill`은 채워진 배경으로 활성 탭을 강조합니다.",
+            "defaultValue": "line"
         },
         {
             "name": "defaultValue",
             "type": ["any"],
             "detailedType": "any",
             "required": false,
-            "description": "기본값. 비제어 컴포넌트로 쓸 때 사용하세요.\n값이 `null`이면 활성화되는 Tab이 없습니다."
+            "description": "기본값. 비제어 컴포넌트로 쓸 때 사용하세요.\n값이 `null`이면 활성화되는 Tab이 없습니다.",
+            "defaultValue": "0"
         },
         {
             "name": "onValueChange",
@@ -63,14 +66,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "화살표 키로 포커스를 옮길 때 활성 탭을 자동으로 바꿀지 여부.\n그렇지 않으면 <kbd>Enter</kbd> 또는 <kbd>Space</kbd> 키를 눌러 탭을 활성화합니다."
+            "description": "화살표 키로 포커스를 옮길 때 활성 탭을 자동으로 바꿀지 여부.\n그렇지 않으면 <kbd>Enter</kbd> 또는 <kbd>Space</kbd> 키를 눌러 탭을 활성화합니다.",
+            "defaultValue": "false"
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 첫 항목으로 되돌릴지 여부."
+            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 첫 항목으로 되돌릴지 여부.",
+            "defaultValue": "true"
         },
         {
             "name": "orientation",

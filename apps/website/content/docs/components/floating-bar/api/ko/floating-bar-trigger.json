@@ -21,14 +21,16 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "호버로 열린 Popover를 닫기 전에 기다릴 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다."
+            "description": "호버로 열린 Popover를 닫기 전에 기다릴 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다.",
+            "defaultValue": "0"
         },
         {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "호버할 때 Popover가 열리기 전에 기다릴 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다."
+            "description": "호버할 때 Popover가 열리기 전에 기다릴 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다.",
+            "defaultValue": "300"
         },
         {
             "name": "handle",
@@ -42,14 +44,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요."
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요.",
+            "defaultValue": "true"
         },
         {
             "name": "openOnHover",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "트리거를 호버할 때도 Popover를 열지 여부."
+            "description": "트리거를 호버할 때도 Popover를 열지 여부.",
+            "defaultValue": "false"
         },
         {
             "name": "payload",
