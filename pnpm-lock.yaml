@@ -616,7 +616,7 @@ importers:
         version: 1.0.0(@vanilla-extract/css@1.21.3)(@vanilla-extract/dynamic@2.1.5)
     devDependencies:
       '@figma/code-connect':
-        specifier: ^2.0.0
+        specifier: ^2.0.2
         version: 2.0.2(supports-color@10.2.2)
       '@repo/eslint-config':
         specifier: workspace:*
@@ -20748,7 +20748,7 @@ snapshots:
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
-      postcss: 8.5.30
+      postcss: 8.5.31
       rolldown: 1.2.14
       tinyglobby: 0.2.17
     optionalDependencies:
@@ -20764,7 +20764,7 @@ snapshots:
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
-      postcss: 8.5.30
+      postcss: 8.5.31
       rolldown: 1.2.14
       tinyglobby: 0.2.17
     optionalDependencies:
@@ -20780,7 +20780,7 @@ snapshots:
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
-      postcss: 8.5.30
+      postcss: 8.5.31
       rolldown: 1.2.14
       tinyglobby: 0.2.17
     optionalDependencies:

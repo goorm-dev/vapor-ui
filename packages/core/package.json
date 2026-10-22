@@ -81,7 +81,7 @@
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {
-        "@figma/code-connect": "^2.0.0",
+        "@figma/code-connect": "^2.0.2",
         "@repo/eslint-config": "workspace:*",
         "@repo/rolldown-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
