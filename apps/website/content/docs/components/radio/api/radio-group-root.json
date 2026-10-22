@@ -1,0 +1,106 @@
+{
+    "name": "RadioGroupRoot",
+    "props": [
+        {
+            "name": "size",
+            "type": ["md", "lg"],
+            "detailedType": "\"md\" | \"lg\" | undefined",
+            "required": false,
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "The uncontrolled value of the radio button that should be initially selected.\n\nTo render a controlled radio group, use the `value` prop instead."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: unknown, eventDetails: RadioGroup.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Callback fired when the value changes."
+        },
+        {
+            "name": "value",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "The controlled value of the radio item that should be currently selected.\n\nTo render an uncontrolled radio group, use the `defaultValue` prop instead."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: RadioGroup.Root.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: RadioGroup.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component should ignore user interaction."
+        },
+        {
+            "name": "form",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Identifies the form that owns the radio inputs.\nUseful when the radio group is rendered outside the form."
+        },
+        {
+            "name": "inputRef",
+            "type": ["React.Ref<HTMLInputElement>"],
+            "detailedType": "React.Ref<HTMLInputElement> | undefined",
+            "required": false,
+            "description": "A ref to access the hidden input element."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Identifies the field when a form is submitted."
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the user should be unable to select a different radio button in the group."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the user must choose a value before submitting a form."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: RadioGroup.Root.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "RadioGroup.Root.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "RadioGroup.Root.State": "{\n  readOnly: boolean;\n  required: boolean;\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
+    }
+}

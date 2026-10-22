@@ -1,0 +1,45 @@
+{
+    "name": "SheetResizeHandle",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Sheet.ResizeHandle.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Blocks drag and keyboard resizing.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "step",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "Pixels adjusted per arrow-key press.",
+            "defaultValue": "RESIZE_STEP"
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Sheet.ResizeHandle.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Sheet.ResizeHandle.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Sheet.ResizeHandle.State": "{\n  side: \"bottom\" | \"left\" | \"right\" | \"top\";\n  disabled: boolean;\n}"
+    }
+}

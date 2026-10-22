@@ -1,0 +1,71 @@
+{
+    "name": "MenuRadioItemPrimitive",
+    "props": [
+        {
+            "name": "value",
+            "type": ["any"],
+            "detailedType": "any",
+            "required": true,
+            "description": "Value of the radio item.\nThis is the value that will be set in the MenuRadioGroup when the item is selected."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Menu.RadioItemPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Menu.RadioItemPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "closeOnClick",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether to close the menu when the item is clicked."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component should ignore user interaction."
+        },
+        {
+            "name": "label",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Overrides the text label to use when the item is matched during keyboard text navigation."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button."
+        },
+        {
+            "name": "onClick",
+            "type": ["function"],
+            "detailedType": "((event: BaseUIEvent<React.MouseEvent<HTMLDivElement, MouseEvent>>) => void) | undefined",
+            "required": false,
+            "description": "The click handler for the menu item."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Menu.RadioItemPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Menu.RadioItemPrimitive.State": "{\n  disabled: boolean;\n  highlighted: boolean;\n  checked: boolean;\n}"
+    }
+}

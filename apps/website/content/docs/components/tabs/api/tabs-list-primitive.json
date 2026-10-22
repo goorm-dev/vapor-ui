@@ -1,0 +1,29 @@
+{
+    "name": "TabsListPrimitive",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Tabs.ListPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Tabs.ListPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Tabs.ListPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Tabs.ListPrimitive.State": "{\n  orientation: \"horizontal\" | \"vertical\";\n  tabActivationDirection: \"none\" | \"left\" | \"right\" | \"up\" | \"down\";\n}"
+    }
+}

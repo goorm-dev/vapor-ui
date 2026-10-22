@@ -9,6 +9,10 @@ export const docs = defineDocs({
     docs: {
         async: true,
     },
+    // Only meta.json configures the sidebar; api/*.json next to a page is props data.
+    meta: {
+        files: ['**/meta.json'],
+    },
 });
 
 const themeSchema = z.object({

@@ -1,0 +1,50 @@
+{
+    "name": "FloatingBarPopup",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: FloatingBar.Popup.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "portalElement",
+            "type": ["ReactElement<FloatingBarPortalPrimitive.Props>"],
+            "detailedType": "ReactElement<FloatingBarPortalPrimitive.Props> | undefined",
+            "required": false,
+            "description": "A Custom element for FloatingBar.PortalPrimitive. If not provided, the default FloatingBar.PortalPrimitive will be rendered."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: FloatingBar.Popup.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "finalFocus",
+            "type": ["boolean", "React.RefObject<HTMLElement | null>", "function"],
+            "detailedType": "boolean | React.RefObject<HTMLElement | null> | ((closeType: \"\" | \"mouse\" | \"touch\" | \"pen\" | \"keyboard\") => (boolean | void | HTMLElement | null)) | undefined",
+            "required": false,
+            "description": "Determines the element to focus when the popover is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "initialFocus",
+            "type": ["boolean", "React.RefObject<HTMLElement | null>", "function"],
+            "detailedType": "boolean | React.RefObject<HTMLElement | null> | ((openType: \"\" | \"mouse\" | \"touch\" | \"pen\" | \"keyboard\") => (boolean | void | HTMLElement | null)) | undefined",
+            "required": false,
+            "description": "Determines the element to focus when the popover is opened.\nBy default, focus moves to the first tabbable element inside the popup, except when the popover\nis opened by touch — then the popup itself is focused to avoid opening the virtual keyboard.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (first tabbable element or popup).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, `null` to fall back to the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: FloatingBar.Popup.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "FloatingBar.Popup.State": "{\n  open: boolean;\n  side: \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\";\n  align: \"center\" | \"end\" | \"start\";\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n  instant: \"dismiss\" | \"click\" | \"focus\" | \"trigger-change\" | undefined;\n}"
+    }
+}

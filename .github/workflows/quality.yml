@@ -81,3 +81,26 @@ jobs:
 
             - name: Run Vitest
               run: pnpm test
+
+    docs-api:
+        name: Docs API
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
+            # Run the extractor itself, not through turbo, so a cached result can't hide a change.
+            - name: Regenerate API JSON
+              run: pnpm --filter website docs:api
+
+            - name: Check generated files are committed
+              run: |
+                  if [ -n "$(git status --porcelain -- apps/website/content)" ]; then
+                      git status --short -- apps/website/content
+                      git diff -- apps/website/content
+                      echo "::error::Generated API JSON is out of date. Run \`pnpm docs:api\` locally and commit the result."
+                      exit 1
+                  fi
