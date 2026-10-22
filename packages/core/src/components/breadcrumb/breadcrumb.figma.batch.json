@@ -1,0 +1,29 @@
+{
+    "templateFile": "./breadcrumb.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-1889",
+            "component": "Breadcrumb.Root",
+            "source": "src/components/breadcrumb/breadcrumb.tsx"
+        },
+        {
+            "part": "item",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-1882",
+            "component": "Breadcrumb.Item",
+            "source": "src/components/breadcrumb/breadcrumb.tsx"
+        },
+        {
+            "part": "separator",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-4118",
+            "component": "Breadcrumb.Separator",
+            "source": "src/components/breadcrumb/breadcrumb.tsx"
+        },
+        {
+            "part": "ellipsis",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-4133",
+            "component": "Breadcrumb.Ellipsis",
+            "source": "src/components/breadcrumb/breadcrumb.tsx"
+        }
+    ]
+}
