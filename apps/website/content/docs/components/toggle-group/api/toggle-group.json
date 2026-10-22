@@ -50,7 +50,8 @@
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
             "required": false,
-            "description": "Direction of keyboard navigation between the toggles: Left and Right arrow keys for `horizontal`, Up and Down arrow keys for `vertical`. Doesn't change the layout."
+            "description": "Direction of keyboard navigation between the toggles: Left and Right arrow keys for `horizontal`, Up and Down arrow keys for `vertical`. Doesn't change the layout.",
+            "defaultValue": "horizontal"
         },
         {
             "name": "style",
