@@ -74,7 +74,7 @@ TextInput.displayName = 'TextInput';
 
 type TextInputVariants = RootVariants;
 
-export interface TextInputProps
+interface TextInputProps
     extends
         Omit<VaporUIComponentProps<typeof BaseInput, TextInput.State>, 'size'>,
         TextInputVariants {
