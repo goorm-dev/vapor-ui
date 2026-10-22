@@ -22,7 +22,7 @@ export const Table = ({ children }: TableProps) => {
             <table
                 className={clsx(
                     'border-collapse',
-                    '[&_tr]:border-b [&_tr]:border-v-normal [&_tr>*:first-child]:w-44',
+                    '[&_tr]:border-b [&_tr]:border-v-normal [&_tr>*:first-child]:text-nowrap',
                     thStyle,
                     tdStyle,
                 )}
