@@ -43,24 +43,6 @@ export class FigmaClient {
         return out;
     }
 
-    async getCodeConnect(nodeId: string): Promise<CodeConnectEntry[]> {
-        try {
-            const data = await this.request<{ code_connected_nodes?: CodeConnectEntry[] }>(
-                `/code_connect?node_id=${encodeURIComponent(nodeId)}`,
-            );
-            return data.code_connected_nodes ?? [];
-        } catch {
-            return [];
-        }
-    }
-}
-
-export interface CodeConnectEntry {
-    label: string;
-    language: string;
-    source_location?: { file: string; line: number };
-    source?: string;
-    template_data?: { template?: string };
 }
 
 /** Drop hidden layers (`visible === false`) recursively.

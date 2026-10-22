@@ -98,7 +98,7 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
                     else warnings.push(`sample export failed: ${targetNode.id} (${baseName})`);
                 } else if (child.kind === 'preview') {
                     const result = await extractPreview({
-                        client,
+                        fileKey: opts.fileKey,
                         previewSlot: child.node,
                         componentDir,
                         baseName,

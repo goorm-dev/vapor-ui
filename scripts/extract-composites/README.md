@@ -45,7 +45,7 @@ flowchart TD
     F --> G{parseItemChildren<br/>자식 순서대로}
     G -->|section subtitle/body| H[text block]
     G -->|Sample slot| I["Export 프레임 우선<br/>→ Figma /images → WebP"]
-    G -->|Preview slot| J["Code Connect<br/>→ demos/&lt;section&gt;-&lt;idx&gt;.tsx"]
+    G -->|Preview slot| J["Code Connect (headless claude CLI)<br/>→ demos/&lt;section&gt;-&lt;idx&gt;.tsx"]
     G -->|Table form slot| K[positional rows → md]
     H --> L[writer: section → item]
     I --> L
@@ -99,7 +99,9 @@ pnpm -C scripts/extract-composites extract \
 
 | 이름          | 설명                                                                  |
 | ------------- | --------------------------------------------------------------------- |
-| `FIGMA_TOKEN` | required. Figma personal access token. 레포 루트 `.env`에서 자동 로드 |
+| `FIGMA_TOKEN` | required. Figma personal access token. 레포 루트 `.env`에서 자동 로드                                              |
+| `CLAUDE_BIN`  | optional. Claude CLI 바이너리 경로 (default `claude`). Preview 데모 추출용 headless subprocess 호출에 사용            |
+| `CLAUDE_MODEL`| optional. Claude 모델 ID (default `claude-haiku-5-5`). Opus 등으로 올리면 비용 상승                                    |
 
 ## 출력
 
@@ -117,7 +119,7 @@ pnpm -C scripts/extract-composites extract \
 - 중복 발견시 첫 매치 유지 + 경고. 출력 순서는 whitelist 순서 고정.
 - `Item` 매칭은 base + variant prefix (`Item `, `Item,`, `Item=`). `(do not export)` 명시 제외.
 - Sample 슬롯은 Slot 안 `Export` 프레임 우선, 없으면 Slot 자체.
-- Preview 데모는 Code Connect source 그대로 저장(import 자동 보강 없음). 매핑 없는 경우 TODO placeholder + stderr 경고.
+- Preview 데모는 Figma Dev Mode의 Code Connect snippet을 headless Claude CLI(`claude -p ... --allowed-tools mcp__plugin_figma_figma__get_design_context`)로 받아와 `import { <Component> } from '@vapor-ui/composites'` + `export default function Demo()`로 감싸 저장. 매핑 없거나 subprocess 실패 시 TODO placeholder + stderr 경고. Claude CLI와 Figma MCP 연결이 전제.
 - `demos/*.tsx`는 기본 skip (수동 편집 보존). 재추출은 `--force`.
 - Table은 positional: 자식 index 0 = header, 나머지 = body. 셀 수 불일치는 패딩/trim + 경고.
 - 모든 누락/오류는 soft(exit 0 + stderr 경고).

@@ -2,7 +2,7 @@ import { constants } from 'node:fs';
 import { access, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
-import type { FigmaClient } from './figma.ts';
+import { fetchCodeConnectSnippet } from './claude-cli.ts';
 import type { FigmaNode } from './types.ts';
 
 export interface PreviewResult {
@@ -12,7 +12,7 @@ export interface PreviewResult {
 }
 
 export interface ExtractPreviewOptions {
-    client: FigmaClient;
+    fileKey: string;
     previewSlot: FigmaNode;
     componentDir: string; // apps/website/content/docs/composites/(components)/<slug>
     baseName: string; // e.g. "examples-01"
@@ -20,33 +20,67 @@ export interface ExtractPreviewOptions {
     warnings: string[];
 }
 
-/** Pull Code Connect source for the first INSTANCE under `previewSlot`, write it to
- *  `<componentDir>/demos/<baseName>.tsx`, and return the MDX-relative path.
- *  - No instance under slot → placeholder.
- *  - Code Connect unregistered → placeholder + warning (R5a).
- *  - Existing file preserved unless `force` (S4c).
- *  - Source saved verbatim; no import synthesis (S2a). */
+/**
+ * Pull the Code Connect snippet for the first INSTANCE under `previewSlot`
+ * (the Preview slot → Container frame → component instance structure used in
+ * Figma), wrap it in a demo TSX module, and write it to
+ * `<componentDir>/demos/<baseName>.tsx`. Returns the MDX-relative path.
+ *
+ * - No instance under slot → placeholder.
+ * - Code Connect fetch fails or snippet empty → placeholder + warning.
+ * - Existing file preserved unless `force`.
+ *
+ * Resolution runs through a headless Claude CLI subprocess, which calls the
+ * Figma MCP tool `get_design_context` under the user's existing MCP connection
+ * and extracts the JSX inside the `<CodeConnectSnippet>` tag.
+ */
 export async function extractPreview(opts: ExtractPreviewOptions): Promise<PreviewResult> {
-    const { client, previewSlot, componentDir, baseName, force, warnings } = opts;
+    const { fileKey, previewSlot, componentDir, baseName, force, warnings } = opts;
     const relFile = join('demos', `${baseName}.tsx`);
     const absFile = join(componentDir, relFile);
+
     const instance = findFirstInstance(previewSlot);
     if (!instance) {
         warnings.push(`preview slot has no component instance: ${previewSlot.id}`);
         await writePlaceholder(absFile, baseName, previewSlot.id, 'no instance', force);
         return { file: relFile, placeholder: true, nodeId: previewSlot.id };
     }
-    const entries = await client.getCodeConnect(instance.id);
-    const source = pickSource(entries);
-    if (!source) {
+
+    if (!force && (await exists(absFile))) {
+        return { file: relFile, placeholder: false, nodeId: instance.id };
+    }
+
+    const result = await fetchCodeConnectSnippet(fileKey, instance.id);
+    if (!result) {
         warnings.push(
             `Code Connect missing for instance ${instance.name} (${instance.id}); placeholder written`,
         );
         await writePlaceholder(absFile, baseName, instance.id, 'unregistered', force);
         return { file: relFile, placeholder: true, nodeId: instance.id };
     }
-    await writeIfAllowed(absFile, source, force);
+
+    const content = renderDemo(result.componentName, result.snippet);
+    await mkdir(dirname(absFile), { recursive: true });
+    await writeFile(absFile, content, 'utf8');
     return { file: relFile, placeholder: false, nodeId: instance.id };
+}
+
+function renderDemo(componentName: string, snippet: string): string {
+    const indented = snippet
+        .trim()
+        .split('\n')
+        .map((line) => (line ? `            ${line}` : ''))
+        .join('\n');
+    return [
+        `import { ${componentName} } from '@vapor-ui/composites';`,
+        '',
+        'export default function Demo() {',
+        '    return (',
+        indented,
+        '    );',
+        '}',
+        '',
+    ].join('\n');
 }
 
 function findFirstInstance(root: FigmaNode): FigmaNode | undefined {
@@ -54,17 +88,6 @@ function findFirstInstance(root: FigmaNode): FigmaNode | undefined {
         if (child.type === 'INSTANCE') return child;
         const nested = findFirstInstance(child);
         if (nested) return nested;
-    }
-    return undefined;
-}
-
-function pickSource(
-    entries: Array<{ source?: string; template_data?: { template?: string } }>,
-): string | undefined {
-    for (const e of entries) {
-        if (typeof e.source === 'string' && e.source.trim()) return e.source;
-        const tmpl = e.template_data?.template;
-        if (typeof tmpl === 'string' && tmpl.trim()) return tmpl;
     }
     return undefined;
 }
@@ -85,10 +108,6 @@ async function writePlaceholder(
         '}',
         '',
     ].join('\n');
-    await writeIfAllowed(absFile, content, force);
-}
-
-async function writeIfAllowed(absFile: string, content: string, force: boolean): Promise<void> {
     await mkdir(dirname(absFile), { recursive: true });
     if (!force && (await exists(absFile))) return;
     await writeFile(absFile, content, 'utf8');
