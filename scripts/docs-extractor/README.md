@@ -172,15 +172,19 @@ A prop type is split into the top-level union members TypeScript prints (`src/re
 
 ### Default values
 
-Code is the only source. The first source that has a value for a prop wins:
+vapor-ui code comes first; Base UI's own declaration fills in for props that vapor-ui passes through untouched. The first source that has a value for a prop wins:
 
-1. A destructuring default for the prop in `export const <NamespaceName>`.
-2. `defaultVariants` of the recipe the component calls as `<styles>.<recipe>(…)`, where `<styles>` is a namespace import of a `.css` file and the recipe is created with `recipe()` or `componentRecipe()`.
+1. A destructuring default for the prop in `export const <NamespaceName>`. A name that refers to a literal constant reads as its value (`step = RESIZE_STEP` → `16`); any other expression is copied as written.
+2. A literal the implementation writes for the prop before a spread that carries the prop, in a JSX element (`<Positioner positionMethod="fixed" {...props} />`) or an object literal (`useRenderElement({ props: { nativeButton: true, ...props } })`). The caller can still override it, so it is the default. A spread carries the prop when its type has a property with the prop's own declaration.
+3. `defaultVariants` of the recipe whose `variants` declares the prop, where the recipe is created with `recipe()` or `componentRecipe()`. The prop's declaration is followed through the Variants type (`NonNullable<RecipeVariants<…>>`, `Pick`, `Omit`, intersections), not through the recipe the component calls, so a root that passes a variant to its parts through context (e.g. `TabsRoot` `size`) gets the part recipe's default. This assumes the value is passed on unchanged. When several recipes declare the prop with different defaults, there is no default.
+4. The `@default` tag on Base UI's declaration of the prop. `@default undefined` is no default. Skipped when the implementation writes the prop itself next to a spread that carries it: a non-literal value before the spread (`orientation={direction} {...props}`), or any value after it, which the caller can't override.
 
 Not extracted:
 
-- `@default` tags and `Default:` text in JSDoc. `Default:` text stays in the description as written.
-- Defaults that a root part passes to other parts through context (e.g. `TabsRoot` `size`): the root has no default of its own, and the part recipe's `defaultVariants` is not traced back to the root.
+- `@default` tags on vapor-ui's own declarations, and `Default:` text in JSDoc. `Default:` text stays in the description as written.
+- A prop declared by hand rather than through a recipe's Variants type, even when the component passes it to a recipe.
+- A default that lives in another vapor-ui component the prop is forwarded to (e.g. `PaginationRoot` → `Pagination.RootPrimitive`, `SheetRoot` → `Dialog.Root`).
+- A Base UI prop whose declaration has no `@default` tag (e.g. Radio `disabled`).
 
 ### Warnings
 
