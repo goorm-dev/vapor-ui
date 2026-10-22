@@ -33,14 +33,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "When `true` the item is disabled."
+            "description": "When `true` the item is disabled.",
+            "defaultValue": "false"
         },
         {
             "name": "focusableWhenDisabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "When `true` the item remains focusable when disabled."
+            "description": "When `true` the item remains focusable when disabled.",
+            "defaultValue": "true"
         },
         {
             "name": "render",

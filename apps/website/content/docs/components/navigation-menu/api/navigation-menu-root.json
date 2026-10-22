@@ -5,20 +5,23 @@
             "name": "direction",
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
-            "required": false
+            "required": false,
+            "defaultValue": "horizontal"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false
+            "required": false,
+            "defaultValue": "md"
         },
         {
             "name": "defaultValue",
             "type": ["unknown"],
             "detailedType": "unknown",
             "required": false,
-            "description": "The uncontrolled value of the item that should be initially selected.\n\nTo render a controlled navigation menu, use the `value` prop instead."
+            "description": "The uncontrolled value of the item that should be initially selected.\n\nTo render a controlled navigation menu, use the `value` prop instead.",
+            "defaultValue": "null"
         },
         {
             "name": "onValueChange",
@@ -32,7 +35,8 @@
             "type": ["unknown"],
             "detailedType": "unknown",
             "required": false,
-            "description": "The controlled value of the navigation menu item that should be currently open.\nWhen non-nullish, the menu will be open. When nullish, the menu will be closed.\n\nTo render an uncontrolled navigation menu, use the `defaultValue` prop instead."
+            "description": "The controlled value of the navigation menu item that should be currently open.\nWhen non-nullish, the menu will be open. When nullish, the menu will be closed.\n\nTo render an uncontrolled navigation menu, use the `defaultValue` prop instead.",
+            "defaultValue": "null"
         },
         {
             "name": "className",
@@ -66,14 +70,16 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before closing the navigation popup. Specified in milliseconds."
+            "description": "How long to wait before closing the navigation popup. Specified in milliseconds.",
+            "defaultValue": "50"
         },
         {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before opening the navigation popup. Specified in milliseconds."
+            "description": "How long to wait before opening the navigation popup. Specified in milliseconds.",
+            "defaultValue": "50"
         },
         {
             "name": "onOpenChangeComplete",

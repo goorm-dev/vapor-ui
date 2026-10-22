@@ -20,7 +20,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the backdrop is forced to render even when nested."
+            "description": "Whether the backdrop is forced to render even when nested.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

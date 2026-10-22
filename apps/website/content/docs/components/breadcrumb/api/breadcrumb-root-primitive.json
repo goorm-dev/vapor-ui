@@ -5,7 +5,8 @@
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false
+            "required": false,
+            "defaultValue": "md"
         },
         {
             "name": "className",

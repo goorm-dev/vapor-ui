@@ -5,13 +5,15 @@
             "name": "current",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
-            "required": false
+            "required": false,
+            "defaultValue": "false"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false
+            "required": false,
+            "defaultValue": "md"
         },
         {
             "name": "className",

@@ -54,7 +54,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
         },
         {
             "name": "form",
@@ -82,14 +83,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user should be unable to select a different radio button in the group."
+            "description": "Whether the user should be unable to select a different radio button in the group.",
+            "defaultValue": "false"
         },
         {
             "name": "required",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user must choose a value before submitting a form."
+            "description": "Whether the user must choose a value before submitting a form.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

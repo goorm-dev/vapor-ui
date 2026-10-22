@@ -19,7 +19,8 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "The maximum number of toasts that can be displayed at once.\nWhen the limit is exceeded, the oldest toasts are marked as `limited` (via the `data-limited`\nattribute) rather than removed, so they can be hidden or animated out."
+            "description": "The maximum number of toasts that can be displayed at once.\nWhen the limit is exceeded, the oldest toasts are marked as `limited` (via the `data-limited`\nattribute) rather than removed, so they can be hidden or animated out.",
+            "defaultValue": "3"
         },
         {
             "name": "timeout",

@@ -20,7 +20,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the toggle button is currently pressed.\nThis is the uncontrolled counterpart of `pressed`."
+            "description": "Whether the toggle button is currently pressed.\nThis is the uncontrolled counterpart of `pressed`.",
+            "defaultValue": "false"
         },
         {
             "name": "onPressedChange",
@@ -62,14 +63,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`).",
+            "defaultValue": "true"
         },
         {
             "name": "render",

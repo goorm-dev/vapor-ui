@@ -6,7 +6,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the tooltip is initially open.\n\nTo render a controlled tooltip, use the `open` prop instead."
+            "description": "Whether the tooltip is initially open.\n\nTo render a controlled tooltip, use the `open` prop instead.",
+            "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
@@ -48,14 +49,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the tooltip is disabled."
+            "description": "Whether the tooltip is disabled.",
+            "defaultValue": "false"
         },
         {
             "name": "disableHoverablePopup",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the tooltip contents can be hovered without closing the tooltip."
+            "description": "Whether the tooltip contents can be hovered without closing the tooltip.",
+            "defaultValue": "false"
         },
         {
             "name": "handle",
@@ -76,7 +79,8 @@
             "type": ["none", "both", "x", "y"],
             "detailedType": "\"none\" | \"both\" | \"x\" | \"y\" | undefined",
             "required": false,
-            "description": "Determines which axis the tooltip should track the cursor on."
+            "description": "Determines which axis the tooltip should track the cursor on.",
+            "defaultValue": "none"
         },
         {
             "name": "triggerId",

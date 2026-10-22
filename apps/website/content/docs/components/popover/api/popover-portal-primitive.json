@@ -32,7 +32,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to keep the portal mounted in the DOM while the popup is hidden."
+            "description": "Whether to keep the portal mounted in the DOM while the popup is hidden.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

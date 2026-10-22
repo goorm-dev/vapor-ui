@@ -6,7 +6,8 @@
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "detailedType": "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
             "required": false,
-            "description": "Color palette applied to the button. Controls the background, text, and border colors for all visual variants."
+            "description": "Color palette applied to the button. Controls the background, text, and border colors for all visual variants.",
+            "defaultValue": "primary"
         },
         {
             "name": "shape",
@@ -20,14 +21,16 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the button, controlling height, padding, and typography."
+            "description": "Size of the button, controlling height, padding, and typography.",
+            "defaultValue": "md"
         },
         {
             "name": "variant",
             "type": ["fill", "outline", "ghost"],
             "detailedType": "\"fill\" | \"outline\" | \"ghost\" | undefined",
             "required": false,
-            "description": "Visual style of the button."
+            "description": "Visual style of the button.",
+            "defaultValue": "fill"
         },
         {
             "name": "className",
@@ -48,14 +51,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the button should be focusable when disabled."
+            "description": "Whether the button should be focusable when disabled.",
+            "defaultValue": "false"
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`)."
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`).",
+            "defaultValue": "true"
         },
         {
             "name": "render",

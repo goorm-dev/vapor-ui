@@ -5,7 +5,8 @@
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false
+            "required": false,
+            "defaultValue": "md"
         },
         {
             "name": "variant",
@@ -39,7 +40,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "If `true`, using keyboard navigation will wrap focus to the other end of the toolbar once the end is reached."
+            "description": "If `true`, using keyboard navigation will wrap focus to the other end of the toolbar once the end is reached.",
+            "defaultValue": "true"
         },
         {
             "name": "render",

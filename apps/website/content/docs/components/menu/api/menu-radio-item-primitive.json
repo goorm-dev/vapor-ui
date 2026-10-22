@@ -27,14 +27,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to close the menu when the item is clicked."
+            "description": "Whether to close the menu when the item is clicked.",
+            "defaultValue": "false"
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
         },
         {
             "name": "label",
@@ -48,7 +50,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button."
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
         },
         {
             "name": "onClick",

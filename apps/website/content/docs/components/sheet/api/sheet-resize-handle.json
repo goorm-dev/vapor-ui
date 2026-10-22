@@ -22,7 +22,7 @@
             "detailedType": "number | undefined",
             "required": false,
             "description": "Pixels adjusted per arrow-key press.",
-            "defaultValue": "RESIZE_STEP"
+            "defaultValue": "16"
         },
         {
             "name": "style",

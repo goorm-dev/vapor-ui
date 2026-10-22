@@ -20,7 +20,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to keep the HTML element in the DOM when the radio item is inactive."
+            "description": "Whether to keep the HTML element in the DOM when the radio item is inactive.",
+            "defaultValue": "false"
         },
         {
             "name": "render",
