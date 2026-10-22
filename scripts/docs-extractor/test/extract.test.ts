@@ -786,6 +786,27 @@ describe('기본값', () => {
         });
     });
 
+    it('vapor-ui interface가 문서화하려고 다시 선언한 Base UI prop도 Base UI @default를 읽는다', () => {
+        const doc = extractOne({
+            'trigger/@base-ui/Trigger.d.ts': BASE_TRIGGER,
+            'trigger/trigger.tsx': `
+                import * as Base from './@base-ui/Trigger';
+
+                export namespace Trigger {
+                    export interface Props extends Base.TriggerProps {
+                        /**
+                         * 열리기 전 대기 시간(ms)
+                         */
+                        delay?: Base.TriggerProps['delay'];
+                    }
+                }
+                export const Trigger = (props: Trigger.Props) => <Base.Trigger {...props} />;
+            `,
+        });
+
+        expect(propOf(doc, 'delay')?.defaultValue).toBe('300');
+    });
+
     it('prop을 실어 나르는 spread 앞에 쓴 리터럴이 Base UI 기본값보다 앞선다', () => {
         const doc = extractTrigger(`
             export const Trigger = ({ delay, ...props }: Trigger.Props) => {
