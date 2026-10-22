@@ -66,9 +66,7 @@ const ParentMenu = ({
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} align={align}>
-                    <MenuPrimitives.PopupPrimitive $css={{ transitionDuration: '0.2s' }}>
-                        {children}
-                    </MenuPrimitives.PopupPrimitive>
+                    <MenuPrimitives.PopupPrimitive>{children}</MenuPrimitives.PopupPrimitive>
                 </MenuPrimitives.PositionerPrimitive>
             </MenuPrimitives.PortalPrimitive>
         </MenuPrimitives.Root>
@@ -102,7 +100,7 @@ const Submenu = ({
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} sideOffset={8} align={align}>
-                    <MenuPrimitives.SubmenuPopupPrimitive $css={{ transitionDuration: '0.2s' }}>
+                    <MenuPrimitives.SubmenuPopupPrimitive>
                         {children}
                     </MenuPrimitives.SubmenuPopupPrimitive>
                 </MenuPrimitives.PositionerPrimitive>

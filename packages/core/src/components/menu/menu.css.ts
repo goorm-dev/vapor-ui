@@ -17,7 +17,7 @@ export const popup = componentStyle({
     flexDirection: 'column',
 
     transformOrigin: 'var(--transform-origin)',
-    transition: 'ease 0.2s',
+    transition: 'ease 0.15s',
 
     border: `0.0625rem solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
