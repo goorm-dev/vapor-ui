@@ -64,21 +64,24 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the toggle group should ignore user interaction."
+            "description": "Whether the toggle group should ignore user interaction.",
+            "defaultValue": "false"
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys."
+            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
+            "defaultValue": "true"
         },
         {
             "name": "multiple",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "When `false` only one item in the group can be pressed. If any item in\nthe group becomes pressed, the others will become unpressed.\nWhen `true` multiple items can be pressed."
+            "description": "When `false` only one item in the group can be pressed. If any item in\nthe group becomes pressed, the others will become unpressed.\nWhen `true` multiple items can be pressed.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

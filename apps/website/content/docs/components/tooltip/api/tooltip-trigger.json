@@ -21,28 +21,32 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before closing the tooltip. Specified in milliseconds."
+            "description": "How long to wait before closing the tooltip. Specified in milliseconds.",
+            "defaultValue": "0"
         },
         {
             "name": "closeOnClick",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the tooltip should close when this trigger is clicked."
+            "description": "Whether the tooltip should close when this trigger is clicked.",
+            "defaultValue": "true"
         },
         {
             "name": "delay",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before opening the tooltip on hover. Specified in milliseconds."
+            "description": "How long to wait before opening the tooltip on hover. Specified in milliseconds.",
+            "defaultValue": "600"
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "If `true`, the tooltip will not open when interacting with this trigger.\nNote that this doesn't apply the `disabled` attribute to the trigger element.\nIf you want to disable the trigger element itself, you can pass the `disabled` prop to the trigger element via the `render` prop."
+            "description": "If `true`, the tooltip will not open when interacting with this trigger.\nNote that this doesn't apply the `disabled` attribute to the trigger element.\nIf you want to disable the trigger element itself, you can pass the `disabled` prop to the trigger element via the `render` prop.",
+            "defaultValue": "false"
         },
         {
             "name": "handle",

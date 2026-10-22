@@ -23,7 +23,7 @@
             "detailedType": "number | undefined",
             "required": false,
             "description": "Distance the sheet resizes per arrow-key press, in pixels.",
-            "defaultValue": "RESIZE_STEP"
+            "defaultValue": "16"
         },
         {
             "name": "style",

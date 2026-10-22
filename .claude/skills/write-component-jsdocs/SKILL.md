@@ -50,7 +50,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 2. Describe side effects and interactions with other props
 3. For numeric props: include unit and valid range
 4. For event handlers: specify the exact trigger condition, not just "handler"
-5. Never document default values in JSDoc — neither the `@default` tag nor inline `Default:` text. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag at all; it reads `defaultValue` from code — the component function's destructuring defaults, then the `defaultVariants` of the recipe the component calls. Remove any `@default` tag you find.
+5. Put a default in code, not in JSDoc. The docs table reads `defaultValue` from code: the component's destructuring defaults, a literal written before the props spread, then the `defaultVariants` of the recipe that declares the variant. For a Base UI prop vapor-ui passes through untouched, it falls back to Base UI's own `@default` (see `scripts/docs-extractor/README.md` "Default values"). Never write inline `Default:` text; it stays in the description and repeats the table. Write an `@default` tag only when the extractor can't read the default from code, such as a prop forwarded to another vapor-ui component. A vapor-ui `@default` is dropped from the description and not read as a default, so it shows only in editor hover.
 6. `children` — say what goes in the slot, with an example ("Content shown inside the badge, such as a label or count."). For a function child, describe its arguments. Never write just "Children of the component" or restate `ReactNode`.
 7. Inherited Base UI props with no description (e.g. `children`, `onClick`) — re-declare the prop in the part's Props `interface` with the Base UI type (`children?: BaseMenu.Trigger.Props['children']`) and write the JSDoc there. The extractor prefers vapor-ui's own declaration. Turn `export type Props = …` into `export interface Props extends … {}` when needed.
 8. Repeated props (`size`, `invalid`, `portalElement`, …) — start from the shared phrase in [references/guide.md](references/guide.md#shared-phrases) and add only what differs for that component.
@@ -72,4 +72,4 @@ See the full checklist in [references/guide.md](references/guide.md#checklist).
 - [ ] Shared props (`size`, `invalid`, …) follow the shared phrases
 - [ ] No JSDoc on individual variant values (`sm`, `md`, `fill`, `primary`, etc.)
 - [ ] No JSDoc on `export type XxxVariants`
-- [ ] No default values in descriptions — neither `@default` tags nor inline `Default:` text
+- [ ] No inline `Default:` text; `@default` only where the extractor can't read the default from code

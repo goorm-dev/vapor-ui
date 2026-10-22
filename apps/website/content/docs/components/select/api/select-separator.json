@@ -21,7 +21,8 @@
             "type": ["horizontal", "vertical"],
             "detailedType": "\"horizontal\" | \"vertical\" | undefined",
             "required": false,
-            "description": "The orientation of the separator."
+            "description": "The orientation of the separator.",
+            "defaultValue": "horizontal"
         },
         {
             "name": "render",

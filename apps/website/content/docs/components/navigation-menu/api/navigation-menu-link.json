@@ -35,7 +35,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to close the navigation menu when the link is clicked."
+            "description": "Whether to close the navigation menu when the link is clicked.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

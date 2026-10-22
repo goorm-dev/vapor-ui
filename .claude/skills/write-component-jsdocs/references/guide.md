@@ -338,24 +338,32 @@ onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 ```
 
-**5. Never document default values**
+**5. Put default values in code**
 
-Don't write the `@default` tag and don't write `Default:` inline. The extractor (`scripts/docs-extractor`) does not parse the `@default` tag; it reads `defaultValue` from code — the component function's destructuring defaults, then the `defaultVariants` of the recipe the component calls — so a default written in JSDoc is either ignored (`@default`) or rendered twice in the docs table (inline text). Remove any `@default` tag you find.
+The docs table reads `defaultValue` from code: the component's destructuring defaults, a literal written before the props spread, then the `defaultVariants` of the recipe that declares the variant. For a Base UI prop vapor-ui passes through untouched, it falls back to Base UI's own `@default` (see `scripts/docs-extractor/README.md` "Default values"). Don't write `Default:` inline: it stays in the description and repeats the table's default column.
+
+Write an `@default` tag only when the extractor can't read the default from code, such as a prop forwarded to another vapor-ui component. The extractor drops a vapor-ui `@default` from the description and doesn't read it as a default, so it only helps in editor hover.
 
 ```tsx
-// ❌ default duplicated in the docs table
+// ❌ inline text repeats the table's default column
 /**
- * Disables the button, blocking all interactions.
- * @default false
+ * Disables the button, blocking all interactions. Default: `false`
  */
 disabled?: boolean;
 
 // ✅ extractor picks the default up from `disabled = false` in the component
-//    (a variant's default comes from the recipe's `defaultVariants` the same way)
+//    (a variant's default comes from its recipe's `defaultVariants` the same way)
 /**
  * Disables the button, blocking all interactions.
  */
 disabled?: boolean;
+
+// ✅ forwarded to Pagination.RootPrimitive, which holds the default: the tag is the only record
+/**
+ * Page selected on first render when uncontrolled.
+ * @default 1
+ */
+defaultPage?: number;
 ```
 
 **6. Say what goes in `children`**
@@ -501,7 +509,7 @@ export namespace Badge {
 - [ ] Event handlers describe the exact trigger condition
 - [ ] `children` says what goes in the slot, with an example
 - [ ] Shared props (`size`, `invalid`, `disabled`, `children`) start from the shared phrase
-- [ ] No default values in descriptions — neither `@default` tags nor inline `Default:` text
+- [ ] No inline `Default:` text; `@default` only where the extractor can't read the default from code
 
 **Compound components**
 

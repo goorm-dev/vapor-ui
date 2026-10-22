@@ -7,7 +7,8 @@
             "type": ["sm", "md", "lg"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
             "required": false,
-            "description": "Size of the segmented control, controlling its padding and the height and padding of its segments."
+            "description": "Size of the segmented control, controlling its padding and the height and padding of its segments.",
+            "defaultValue": "md"
         },
         {
             "name": "defaultValue",
@@ -56,7 +57,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
         },
         {
             "name": "form",
@@ -84,14 +86,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user should be unable to select a different radio button in the group."
+            "description": "Whether the user should be unable to select a different radio button in the group.",
+            "defaultValue": "false"
         },
         {
             "name": "required",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user must choose a value before submitting a form."
+            "description": "Whether the user must choose a value before submitting a form.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

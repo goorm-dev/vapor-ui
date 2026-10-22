@@ -7,21 +7,24 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Marks the multi-select as invalid, applying error styles. Sets `aria-invalid` on the trigger `<button>` element."
+            "description": "Marks the multi-select as invalid, applying error styles. Sets `aria-invalid` on the trigger `<button>` element.",
+            "defaultValue": "false"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the multi-select, controlling minimum height, padding, typography, and the size of its icon and badges."
+            "description": "Size of the multi-select, controlling minimum height, padding, typography, and the size of its icon and badges.",
+            "defaultValue": "md"
         },
         {
             "name": "defaultOpen",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the select popup is initially open.\n\nTo render a controlled select popup, use the `open` prop instead."
+            "description": "Whether the select popup is initially open.\n\nTo render a controlled select popup, use the `open` prop instead.",
+            "defaultValue": "false"
         },
         {
             "name": "defaultValue",
@@ -91,7 +94,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
         },
         {
             "name": "form",
@@ -105,7 +109,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether moving the pointer over items should highlight them.\nDisabling this prop allows CSS `:hover` to be differentiated from the `:focus` (`data-highlighted`) state."
+            "description": "Whether moving the pointer over items should highlight them.\nDisabling this prop allows CSS `:hover` to be differentiated from the `:focus` (`data-highlighted`) state.",
+            "defaultValue": "true"
         },
         {
             "name": "id",
@@ -158,7 +163,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Determines if the select enters a modal state when open.\n- `true`: user interaction is limited to the select: document page scroll is locked and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n\nOn touch devices, a `true` modal blocks outside taps but leaves the page scrollable unless the popup spans nearly the full viewport width, matching native iOS behavior."
+            "description": "Determines if the select enters a modal state when open.\n- `true`: user interaction is limited to the select: document page scroll is locked and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n\nOn touch devices, a `true` modal blocks outside taps but leaves the page scrollable unless the popup spans nearly the full viewport width, matching native iOS behavior.",
+            "defaultValue": "true"
         },
         {
             "name": "name",
@@ -179,14 +185,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user should be unable to choose a different option from the select popup."
+            "description": "Whether the user should be unable to choose a different option from the select popup.",
+            "defaultValue": "false"
         },
         {
             "name": "required",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user must choose a value before submitting a form."
+            "description": "Whether the user must choose a value before submitting a form.",
+            "defaultValue": "false"
         }
     ],
     "typeRefs": {

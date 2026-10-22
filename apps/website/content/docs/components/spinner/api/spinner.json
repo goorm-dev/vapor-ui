@@ -7,7 +7,8 @@
             "type": ["inherit", "primary"],
             "detailedType": "\"inherit\" | \"primary\" | undefined",
             "required": false,
-            "description": "Color palette of the spinner, applied to the stroke of the spinning arc. Use `inherit` to take the stroke color from the parent element's `color`, such as on a filled background."
+            "description": "Color palette of the spinner, applied to the stroke of the spinning arc. Use `inherit` to take the stroke color from the parent element's `color`, such as on a filled background.",
+            "defaultValue": "primary"
         },
         {
             "name": "size",

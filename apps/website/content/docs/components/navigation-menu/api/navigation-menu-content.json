@@ -21,7 +21,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to keep the content mounted in the DOM while the popup is closed.\nEnsures the content is present during server-side rendering for web crawlers."
+            "description": "Whether to keep the content mounted in the DOM while the popup is closed.\nEnsures the content is present during server-side rendering for web crawlers.",
+            "defaultValue": "false"
         },
         {
             "name": "render",

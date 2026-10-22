@@ -58,14 +58,16 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "How long to wait before showing the fallback. Specified in milliseconds."
+            "description": "How long to wait before showing the fallback. Specified in milliseconds.",
+            "defaultValue": "0"
         },
         {
             "name": "keepMounted",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the image element stays mounted and loads in place instead of being preloaded.\nSupports `loading=\"lazy\"` and optimized image components such as `next/image`."
+            "description": "Whether the image element stays mounted and loads in place instead of being preloaded.\nSupports `loading=\"lazy\"` and optimized image components such as `next/image`.",
+            "defaultValue": "false"
         },
         {
             "name": "render",
