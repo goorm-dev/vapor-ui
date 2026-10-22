@@ -30,7 +30,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the switch is initially active.\n\nTo render a controlled switch, use the `checked` prop instead."
+            "description": "Whether the switch is initially active.\n\nTo render a controlled switch, use the `checked` prop instead.",
+            "defaultValue": "false"
         },
         {
             "name": "onCheckedChange",
@@ -72,7 +73,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction."
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
         },
         {
             "name": "form",
@@ -107,21 +109,24 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button."
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
         },
         {
             "name": "readOnly",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user should be unable to activate or deactivate the switch."
+            "description": "Whether the user should be unable to activate or deactivate the switch.",
+            "defaultValue": "false"
         },
         {
             "name": "required",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the user must activate the switch before submitting a form."
+            "description": "Whether the user must activate the switch before submitting a form.",
+            "defaultValue": "false"
         },
         {
             "name": "uncheckedValue",

@@ -7,7 +7,8 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the dialog is initially open.\n\nTo render a controlled dialog, use the `open` prop instead."
+            "description": "Whether the dialog is initially open.\n\nTo render a controlled dialog, use the `open` prop instead.",
+            "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
@@ -63,7 +64,8 @@
             "type": ["boolean", "trap-focus"],
             "detailedType": "boolean | \"trap-focus\" | undefined",
             "required": false,
-            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.\n\nWhen `modal` is `true` or `'trap-focus'`, render `<Dialog.Close>` inside `<Dialog.Popup>` so\ntouch screen readers can escape the popup."
+            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.\n\nWhen `modal` is `true` or `'trap-focus'`, render `<Dialog.Close>` inside `<Dialog.Popup>` so\ntouch screen readers can escape the popup.",
+            "defaultValue": "true"
         },
         {
             "name": "onOpenChangeComplete",

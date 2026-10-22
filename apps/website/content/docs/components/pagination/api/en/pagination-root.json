@@ -14,7 +14,8 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the pagination buttons and ellipsis, controlling width, height, and typography."
+            "description": "Size of the pagination buttons and ellipsis, controlling width, height, and typography.",
+            "defaultValue": "md"
         },
         {
             "name": "onPageChange",

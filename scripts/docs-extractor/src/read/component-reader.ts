@@ -1,5 +1,5 @@
 import type { ParsedComponent, ParsedProp } from '#model';
-import { getDefaultValuesForComponent } from '#read/default-values';
+import { createDefaultValueReader } from '#read/default-values';
 import { type PublicNames, createPublicNames } from '#read/public-names';
 import { classifyPropSource, isProjectOwned } from '#read/source-classifier';
 import { type TypePrinter, createTypePrinter } from '#read/type-printer/printer';
@@ -86,7 +86,7 @@ function extractParsedProp(
     symbol: TsSymbol,
     declNode: Node,
     printer: TypePrinter,
-    defaultValues: Record<string, string>,
+    readDefault: (symbol: TsSymbol) => string | undefined,
 ): ParsedProp {
     const name = symbol.getName();
 
@@ -97,7 +97,7 @@ function extractParsedProp(
         isIgnored: isIgnored(symbol),
         source: classifyPropSource(symbol),
         description: getPropDescription(symbol),
-        defaultValue: defaultValues[name],
+        defaultValue: readDefault(symbol),
     };
 }
 
@@ -122,7 +122,6 @@ function getTypeRefs(
 }
 
 function extractParsedComponent(
-    sourceFile: SourceFile,
     namespace: ModuleDeclaration,
     publicNames: PublicNames,
     reporter: Reporter,
@@ -133,19 +132,14 @@ function extractParsedComponent(
 
     const componentImplementation = findComponentValueDeclaration(namespace);
     const allSymbols = exportedProps.getType().getProperties();
-    const declaredPropNames = new Set(allSymbols.map((symbol) => symbol.getName()));
-    const defaultValues = getDefaultValuesForComponent(
-        sourceFile,
-        componentImplementation,
-        declaredPropNames,
-    );
+    const readDefault = createDefaultValueReader(componentImplementation);
 
     reporter.debug(`${namespaceName}: ${allSymbols.length} symbols`);
 
     const printer = createTypePrinter({ publicNames, namespace: namespaceName });
     const props = allSymbols.map((symbol) => {
         const declNode = symbol.getDeclarations()[0] ?? exportedProps;
-        return extractParsedProp(symbol, declNode, printer, defaultValues);
+        return extractParsedProp(symbol, declNode, printer, readDefault);
     });
 
     return {
@@ -170,7 +164,7 @@ export function parseSourceFile(
 
     for (const namespace of namespaces) {
         try {
-            const parsed = extractParsedComponent(sourceFile, namespace, publicNames, reporter);
+            const parsed = extractParsedComponent(namespace, publicNames, reporter);
             if (parsed) {
                 parsedComponents.push(parsed);
             }

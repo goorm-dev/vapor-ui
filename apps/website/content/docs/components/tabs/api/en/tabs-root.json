@@ -7,21 +7,24 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
-            "description": "Size of the tab buttons, controlling height and typography."
+            "description": "Size of the tab buttons, controlling height and typography.",
+            "defaultValue": "md"
         },
         {
             "name": "variant",
             "type": ["line", "fill"],
             "detailedType": "\"line\" | \"fill\" | undefined",
             "required": false,
-            "description": "Visual style of the tabs. `line` marks the active tab with a line on the border of the list, `fill` highlights the active tab with a filled background."
+            "description": "Visual style of the tabs. `line` marks the active tab with a line on the border of the list, `fill` highlights the active tab with a filled background.",
+            "defaultValue": "line"
         },
         {
             "name": "defaultValue",
             "type": ["any"],
             "detailedType": "any",
             "required": false,
-            "description": "The default value. Use when the component is not controlled.\nWhen the value is `null`, no Tab will be active."
+            "description": "The default value. Use when the component is not controlled.\nWhen the value is `null`, no Tab will be active.",
+            "defaultValue": "0"
         },
         {
             "name": "onValueChange",
@@ -63,14 +66,16 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to automatically change the active tab on arrow key focus.\nOtherwise, tabs will be activated using <kbd>Enter</kbd> or <kbd>Space</kbd> key press."
+            "description": "Whether to automatically change the active tab on arrow key focus.\nOtherwise, tabs will be activated using <kbd>Enter</kbd> or <kbd>Space</kbd> key press.",
+            "defaultValue": "false"
         },
         {
             "name": "loopFocus",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys."
+            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
+            "defaultValue": "true"
         },
         {
             "name": "orientation",

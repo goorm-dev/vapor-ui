@@ -81,6 +81,7 @@ export interface TextInputProps
         TextInputVariants {
     /**
      * Kind of text the field accepts, such as an email address, password, or URL.
+     * @default 'text'
      */
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     /**
