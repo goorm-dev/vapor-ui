@@ -16,7 +16,7 @@ export const popup = componentStyle({
     flexDirection: 'column',
 
     transformOrigin: 'var(--transform-origin)',
-    transition: 'transform 150ms, opacity 150ms',
+    transition: 'ease 0.2s',
 
     border: `0.0625rem solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
@@ -32,13 +32,25 @@ export const popup = componentStyle({
 
     selectors: {
         '&[data-starting-style], &[data-ending-style]': {
-            transform: 'scale(0.95)',
             opacity: 0,
+            translate: '0 -4px',
+        },
+        '&[data-ending-style]': {
+            transitionTimingFunction: 'cubic-bezier(0.5, 0, 1, 1)',
         },
     },
 });
 
-export const subPopup = popup;
+export const subPopup = componentStyle([
+    popup,
+    {
+        selectors: {
+            '&[data-starting-style], &[data-ending-style]': {
+                translate: '-4px 0',
+            },
+        },
+    },
+]);
 
 export const item = componentStyle([
     interaction({ type: 'roving' }),

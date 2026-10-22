@@ -66,7 +66,7 @@ const ParentMenu = ({
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} align={align}>
-                    <MenuPrimitives.PopupPrimitive $css={{ transition: 'none' }}>
+                    <MenuPrimitives.PopupPrimitive $css={{ transitionDuration: '0.2s' }}>
                         {children}
                     </MenuPrimitives.PopupPrimitive>
                 </MenuPrimitives.PositionerPrimitive>
@@ -102,7 +102,7 @@ const Submenu = ({
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} sideOffset={8} align={align}>
-                    <MenuPrimitives.SubmenuPopupPrimitive $css={{ transition: 'none' }}>
+                    <MenuPrimitives.SubmenuPopupPrimitive $css={{ transitionDuration: '0.2s' }}>
                         {children}
                     </MenuPrimitives.SubmenuPopupPrimitive>
                 </MenuPrimitives.PositionerPrimitive>
@@ -554,7 +554,6 @@ export const MenuCheckItem = ({
 
     return (
         <MenuPrimitives.CheckboxItemPrimitive
-            closeOnClick
             disabled={isDisabled}
             checked={value.includes(valueProp)}
             onCheckedChange={() => handleValueChange(valueProp)}

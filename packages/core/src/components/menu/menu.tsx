@@ -294,7 +294,7 @@ MenuSubmenuPopupPrimitive.displayName = 'Menu.SubmenuPopupPrimitive';
 
 export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const popup = <MenuPopupPrimitive ref={ref} {...props} />;
+        const popup = <MenuSubmenuPopupPrimitive ref={ref} {...props} />;
 
         const positionerRender = createRender(
             positionerElement,
@@ -323,6 +323,7 @@ MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
 export const MenuCheckboxItemPrimitive = forwardRef<HTMLElement, MenuCheckboxItem.Props>(
     (props, ref) => {
         const {
+            closeOnClick: closeOnClickProp,
             disabled: disabledProp,
             className,
             children,
@@ -331,10 +332,12 @@ export const MenuCheckboxItemPrimitive = forwardRef<HTMLElement, MenuCheckboxIte
 
         const { disabled: contextDisabled } = useMenuContext();
         const disabled = disabledProp || contextDisabled;
+        const closeOnClick = closeOnClickProp ?? false;
 
         return (
             <BaseMenu.CheckboxItem
                 ref={ref}
+                closeOnClick={closeOnClick}
                 disabled={disabled}
                 className={cn(styles.item, className)}
                 {...componentProps}
@@ -408,14 +411,21 @@ MenuRadioGroup.displayName = 'Menu.RadioGroup';
 
 export const MenuRadioItemPrimitive = forwardRef<HTMLElement, MenuRadioItemPrimitive.Props>(
     (props, ref) => {
-        const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
+        const {
+            closeOnClick: closeOnClickProp,
+            disabled: disabledProp,
+            className,
+            ...componentProps
+        } = resolveStyles(props);
 
         const { disabled: contextDisabled } = useMenuContext();
         const disabled = disabledProp || contextDisabled;
+        const closeOnClick = closeOnClickProp ?? true;
 
         return (
             <BaseMenu.RadioItem
                 ref={ref}
+                closeOnClick={closeOnClick}
                 disabled={disabled}
                 className={cn(styles.item, className)}
                 {...componentProps}
