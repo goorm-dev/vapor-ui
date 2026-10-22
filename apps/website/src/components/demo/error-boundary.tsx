@@ -1,22 +1,18 @@
 'use client';
 
-import { ErrorBoundary } from 'react-error-boundary';
+import type { PropsWithChildren } from 'react';
+import { type FallbackProps, ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function Fallback({ error }: { error: any }) {
+function Fallback({ error }: FallbackProps) {
+    const message = error instanceof Error ? error.message : String(error);
     return (
-        <div role="alert">
+        <div role="alert" className="not-prose">
             <p>Something went wrong:</p>
-            <pre style={{ color: 'red' }}>{error.message}</pre>
+            <pre className="text-v-danger-500 whitespace-pre-wrap">{message}</pre>
         </div>
     );
 }
 
-interface Props {
-    children: React.ReactNode;
-}
-
-export default function ErrorBoundaryImpl(props: Props) {
-    const { children } = props;
-    return <ErrorBoundary FallbackComponent={Fallback}>{children}</ErrorBoundary>;
+export function ErrorBoundary({ children }: PropsWithChildren) {
+    return <ReactErrorBoundary FallbackComponent={Fallback}>{children}</ReactErrorBoundary>;
 }

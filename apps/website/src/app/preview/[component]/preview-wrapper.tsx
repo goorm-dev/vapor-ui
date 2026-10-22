@@ -6,11 +6,11 @@ import { DynamicComponent } from './dynamic-component';
 
 interface PreviewWrapperProps {
     theme: string;
-    componentPath?: string;
+    file?: string;
     children?: React.ReactNode;
 }
 
-export function PreviewWrapper({ theme, componentPath, children }: PreviewWrapperProps) {
+export function PreviewWrapper({ theme, file, children }: PreviewWrapperProps) {
     // Sync theme changes (e.g., when user switches theme while iframe is open)
     React.useEffect(() => {
         const root = document.documentElement;
@@ -23,8 +23,8 @@ export function PreviewWrapper({ theme, componentPath, children }: PreviewWrappe
         }
     }, [theme]);
 
-    if (componentPath) {
-        return <DynamicComponent componentPath={componentPath} />;
+    if (file) {
+        return <DynamicComponent file={file} />;
     }
 
     return <>{children}</>;
