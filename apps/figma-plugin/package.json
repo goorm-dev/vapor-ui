@@ -38,6 +38,6 @@
         "tailwindcss": "^4.3.3",
         "typescript": "catalog:",
         "vite": "catalog:",
-        "vite-plugin-singlefile": "^2.3.3"
+        "vite-plugin-singlefile": "^2.3.4"
     }
 }

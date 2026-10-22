@@ -8,7 +8,8 @@ export default function FieldRequired() {
             <Field.Root name="required-field" validationMode="onChange">
                 <Field.Label $css={{ flexDirection: 'column' }}>
                     <Text typography="subtitle2" foreground="secondary-100">
-                        필수 입력 필드 <Text foreground="danger-100">*</Text>
+                        필수 입력 필드
+                        <Field.RequiredSymbol />
                     </Text>
                     <TextInput required placeholder="필수 입력 항목입니다" />
                 </Field.Label>
@@ -29,6 +30,7 @@ export default function FieldRequired() {
                         </Text>
                     </Text>
                     <TextInput placeholder="선택적으로 입력하세요" />
+                    <Field.RequiredSymbol />
                 </Field.Label>
                 <Field.Description>이 필드는 선택적으로 입력할 수 있습니다.</Field.Description>
             </Field.Root>

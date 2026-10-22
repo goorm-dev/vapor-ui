@@ -60,7 +60,7 @@
             "type": ["number", "OffsetFunction"],
             "required": false,
             "description": "앵커와 팝업 사이의 거리(픽셀)입니다.\n또한 앵커와 포지셔너 요소의 크기, 방향, 정렬을 읽어 거리를 반환하는 함수도 허용합니다.\n\n함수는 다음 속성을 가진 `data` 객체 매개변수를 받습니다:\n- `data.anchor`: `width`와 `height` 속성을 가진 앵커 요소의 크기\n- `data.positioner`: `width`와 `height` 속성을 가진 포지셔너 요소의 크기\n- `data.side`: 포지셔너가 앵커 요소의 어느 쪽에 정렬되어 있는지\n- `data.align`: 지정된 방향을 기준으로 포지셔너가 어떻게 정렬되어 있는지",
-            "defaultValue": "0"
+            "defaultValue": "10"
         },
         {
             "name": "alignOffset",

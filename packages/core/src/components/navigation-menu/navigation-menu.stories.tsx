@@ -234,6 +234,31 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                         />
                     </NavigationMenu.Root>
                 </HStack>
+
+                {/* Shifted Start Navigation Menu */}
+                <HStack $css={{ alignSelf: 'stretch', justifyContent: 'flex-end' }}>
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
+                                <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
+                                <NavigationMenu.Content>
+                                    <NavigationMenu.Link href="#">
+                                        Start aligned, but shifted inside the viewport
+                                    </NavigationMenu.Link>
+                                </NavigationMenu.Content>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+
+                        <NavigationMenu.Viewport
+                            positionerElement={
+                                <NavigationMenu.PositionerPrimitive
+                                    align="start"
+                                    collisionAvoidance={{ align: 'shift' }}
+                                />
+                            }
+                        />
+                    </NavigationMenu.Root>
+                </HStack>
             </VStack>
         );
     },

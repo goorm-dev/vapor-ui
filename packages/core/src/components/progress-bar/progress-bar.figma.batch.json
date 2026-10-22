@@ -1,0 +1,35 @@
+{
+    "templateFile": "./progress-bar.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7204",
+            "component": "ProgressBar.Root",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        },
+        {
+            "part": "label",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7142",
+            "component": "ProgressBar.Label",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        },
+        {
+            "part": "track",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7147",
+            "component": "ProgressBar.Track",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        },
+        {
+            "part": "value",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7165",
+            "component": "ProgressBar.Value",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        },
+        {
+            "part": "description",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7170",
+            "component": "ProgressBar.Description",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        }
+    ]
+}
