@@ -2,5 +2,9 @@
     "title": "Composites",
     "description": "Composite guides for Vapor UI patterns",
     "root": true,
-    "pages": ["---Components---", "(components)/*.mdx"]
+    "pages": [
+        "---Components---",
+        "(components)/dialog/index.mdx",
+        "(components)/alert-dialog/index.mdx"
+    ]
 }
