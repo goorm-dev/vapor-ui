@@ -1,0 +1,206 @@
+{
+    "progress-bar-description": {
+        "description": {
+            "source": "16d6d6fa23ea554a",
+            "guide": 2,
+            "terms": "1912fd938105e849"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "progress-bar-indicator-primitive": {
+        "description": {
+            "source": "c1752caf1655a315",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "progress-bar-label": {
+        "description": {
+            "source": "e94697b31ac32fc6",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "progress-bar-root": {
+        "description": {
+            "source": "cd1c81e9d3c53bcd",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.aria-valuetext": {
+            "source": "c63c3b2bebcc0e55",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.format": {
+            "source": "6cb6836760f8c058",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.getAriaValueText": {
+            "source": "9c6661e33d2a7a17",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.locale": {
+            "source": "d9aab9fb0589f031",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.max": {
+            "source": "00122463dffebaed",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.min": {
+            "source": "3533ea3052f13b4c",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.size": {
+            "source": "76babe7817ad52d3",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.type": {
+            "source": "70d46281202936c3",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.value": {
+            "source": "4b28c4d83fccf6d2",
+            "guide": 2,
+            "terms": "6a9c176b911fdc94"
+        }
+    },
+    "progress-bar-track-primitive": {
+        "description": {
+            "source": "ecbd0ffd2ddc8971",
+            "guide": 2,
+            "terms": "8a409d35b778cfe5"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "progress-bar-track": {
+        "description": {
+            "source": "55dbcf186d17ae33",
+            "guide": 2,
+            "terms": "8a409d35b778cfe5"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.indicatorElement": {
+            "source": "c112ec25ba18108c",
+            "guide": 2,
+            "terms": "99b6bf111eae84fd"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "progress-bar-value": {
+        "description": {
+            "source": "ba2bec274113dd9e",
+            "guide": 2,
+            "terms": "1a6f83e43baea56f"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

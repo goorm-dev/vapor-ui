@@ -1,0 +1,76 @@
+{
+    "name": "TextInput",
+    "description": "Single-line text field for short input such as a name, email address, or password. Renders an `<input>` element.",
+    "props": [
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Marks the text input as invalid, applying error styles. Sets `aria-invalid` on the `<input>` element.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Size of the text input, controlling height, padding, and typography.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Initial text in the field. Use when uncontrolled.",
+            "defaultValue": ""
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: string, event: TextInput.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Called when the text changes as the user types, pastes, or deletes. Receives the new text and the change event details."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Current text in the field. Use when controlled."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: TextInput.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: TextInput.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "type",
+            "type": ["search", "text", "tel", "url", "email", "password"],
+            "detailedType": "\"search\" | \"text\" | \"tel\" | \"url\" | \"email\" | \"password\" | undefined",
+            "required": false,
+            "description": "Kind of text the field accepts, such as an email address, password, or URL."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: TextInput.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "TextInput.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "TextInput.State": "{\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
+    }
+}

@@ -1,0 +1,98 @@
+{
+    "name": "DialogRoot",
+    "description": "Dialog 복합 컴포넌트의 루트. 사용자가 작업이나 정보 하나에 집중하게 하는 모달 창입니다. 열림 상태를 관리하고 팝업 크기를 설정합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["md", "lg", "xl"],
+            "detailedType": "\"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Dialog 팝업의 너비.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Dialog가 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["function"],
+            "detailedType": "((open: boolean, eventDetails: Dialog.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Dialog가 열리거나 닫힐 때 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Dialog가 현재 열려 있는지 여부."
+        },
+        {
+            "name": "closeOnClickOverlay",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "`true`이면 오버레이를 클릭할 때 Dialog가 닫힙니다.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<Dialog.Root.Actions | null>"],
+            "detailedType": "React.RefObject<Dialog.Root.Actions | null> | undefined",
+            "required": false,
+            "description": "명령형 액션에 접근하는 ref.\n- `unmount`: Dialog를 수동으로 언마운트합니다. 외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 호출하면 Dialog를 명령형으로 닫습니다."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode", "function"],
+            "detailedType": "ReactNode | ((arg: { payload: unknown; }) => ReactNode)",
+            "required": false,
+            "description": "Dialog의 콘텐츠. 일반 React 노드이거나 활성 트리거의 `payload`를 받는 렌더링 함수일 수 있습니다."
+        },
+        {
+            "name": "defaultTriggerId",
+            "type": ["string", "null"],
+            "detailedType": "string | null | undefined",
+            "required": false,
+            "description": "Dialog와 연결된 트리거의 ID. `defaultOpen` prop과 함께 쓰면 처음부터 열려 있는 Dialog를 만들 때 유용합니다."
+        },
+        {
+            "name": "handle",
+            "type": ["DialogHandle<unknown>"],
+            "detailedType": "DialogHandle<unknown> | undefined",
+            "required": false,
+            "description": "Dialog를 트리거와 연결하는 핸들. 지정하면 외부 트리거가 Dialog의 열림 상태를 제어할 수 있습니다. Dialog.createHandle() 메서드로 만들 수 있습니다."
+        },
+        {
+            "name": "modal",
+            "type": ["boolean", "trap-focus"],
+            "detailedType": "boolean | \"trap-focus\" | undefined",
+            "required": false,
+            "description": "Dialog가 열렸을 때 모달 상태가 되는지 여부.\n- `true`: 사용자 상호작용이 Dialog로만 제한됩니다. 포커스가 갇히고, 문서 페이지 스크롤이 잠기며, 바깥 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 상호작용할 수 있습니다.\n- `'trap-focus'`: 포커스는 Dialog 안에 갇히지만, 문서 페이지 스크롤은 잠기지 않고 바깥에 대한 포인터 상호작용도 계속 활성화됩니다.\n\n`modal`이 `true` 또는 `'trap-focus'`이면 터치 스크린 리더가 팝업에서 빠져나올 수 있도록 `<Dialog.Popup>` 안에 `<Dialog.Close>`를 렌더링하세요.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["function"],
+            "detailedType": "((open: boolean) => void) | undefined",
+            "required": false,
+            "description": "Dialog가 열리거나 닫힌 뒤 애니메이션이 모두 끝나면 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "triggerId",
+            "type": ["string", "null"],
+            "detailedType": "string | null | undefined",
+            "required": false,
+            "description": "Dialog와 연결된 트리거의 ID. `open` prop과 함께 쓰면 제어 Dialog를 만들 때 유용합니다. Dialog가 비제어일 때(즉 `open` prop을 설정하지 않았을 때)는 이 prop을 지정할 필요가 없습니다."
+        }
+    ],
+    "typeRefs": {
+        "Dialog.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"close-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  preventUnmountOnClose: () => void;\n}",
+        "Dialog.Root.Actions": "{\n  unmount: () => void;\n  close: () => void;\n}"
+    }
+}

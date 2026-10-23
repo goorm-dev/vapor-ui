@@ -1,3 +1,6 @@
+import { calc } from '@vanilla-extract/css-utils';
+
+import { root as checkboxRoot } from '~/components/checkbox/checkbox.css';
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
@@ -14,7 +17,7 @@ export const popup = componentStyle({
     flexDirection: 'column',
 
     transformOrigin: 'var(--transform-origin)',
-    transition: 'transform 150ms, opacity 150ms',
+    transition: 'ease 0.15s',
 
     border: `0.0625rem solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
@@ -30,13 +33,25 @@ export const popup = componentStyle({
 
     selectors: {
         '&[data-starting-style], &[data-ending-style]': {
-            transform: 'scale(0.95)',
             opacity: 0,
+            translate: '0 -4px',
+        },
+        '&[data-ending-style]': {
+            transitionTimingFunction: 'cubic-bezier(0.5, 0, 1, 1)',
         },
     },
 });
 
-export const subPopup = popup;
+export const subPopup = componentStyle([
+    popup,
+    {
+        selectors: {
+            '&[data-starting-style], &[data-ending-style]': {
+                translate: '-4px 0',
+            },
+        },
+    },
+]);
 
 export const item = componentStyle([
     interaction({ type: 'roving' }),
@@ -49,18 +64,14 @@ export const item = componentStyle([
         display: 'flex',
         alignItems: 'center',
         alignSelf: 'stretch',
-        justifyContent: 'space-between',
-        gap: vars.size.space['050'],
+        gap: vars.size.space['075'],
 
         border: 'none',
 
         borderRadius: vars.size.borderRadius['300'],
         cursor: 'pointer',
-        paddingRight: vars.size.space['150'],
-        paddingLeft: vars.size.space['250'],
-        paddingBlock: vars.size.space['050'],
-
-        height: vars.size.dimension['400'],
+        paddingBlock: vars.size.space['100'],
+        paddingInline: vars.size.space['150'],
 
         selectors: {
             [when.disabled()]: {
@@ -73,35 +84,61 @@ export const item = componentStyle([
 
 export const separator = componentStyle({
     flexShrink: 0,
-    marginBlock: vars.size.space['050'],
+    marginBlock: vars.size.space['075'],
+    marginInline: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
     height: '0.0625rem',
 });
 
-export const subTrigger = item;
+export const subTrigger = componentStyle([item, { paddingRight: vars.size.space['075'] }]);
+
+export const subTriggerIcon = componentStyle([
+    foregrounds({ color: 'secondary' }),
+    { marginLeft: 'auto' },
+]);
 
 export const groupLabel = componentStyle([
     typography({ style: 'subtitle2' }),
-    foregrounds({ color: 'secondary' }),
+    foregrounds({ color: 'hint' }),
     {
         paddingTop: vars.size.space['100'],
-        paddingRight: vars.size.space['050'],
+        paddingRight: vars.size.space['150'],
         paddingBottom: vars.size.space['050'],
-        paddingLeft: vars.size.space['250'],
+        paddingLeft: vars.size.space['150'],
     },
 ]);
 
-export const indicator = componentStyle([
+export const radioIndicator = componentStyle([
     foregrounds({ color: 'normal' }),
     {
-        position: 'absolute',
-        top: '50%',
-        left: vars.size.space['050'],
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transform: 'translateY(-50%)',
-        width: vars.size.dimension['150'],
-        height: vars.size.dimension['150'],
+        marginLeft: calc.multiply(vars.size.space['025'], -1),
+        width: vars.size.dimension['250'],
+        height: vars.size.dimension['250'],
     },
 ]);
+
+const checkbox = checkboxRoot({ size: 'md', invalid: false });
+export const checkboxIndicator = componentStyle(checkbox);
+
+export const icon = componentStyle({
+    transition: 'all 0.2s',
+    width: vars.size.dimension[100],
+    height: vars.size.dimension[100],
+
+    fill: 'none',
+    stroke: vars.color.foreground.staticWhite,
+    strokeWidth: '4px',
+    strokeDasharray: '22',
+    strokeDashoffset: '66px',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+
+    selectors: {
+        [`${checkboxIndicator}[data-checked] > &`]: {
+            strokeDashoffset: '44px',
+        },
+    },
+});

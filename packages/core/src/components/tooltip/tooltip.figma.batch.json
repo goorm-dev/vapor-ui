@@ -1,0 +1,17 @@
+{
+    "templateFile": "./tooltip.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33319-9260",
+            "component": "Tooltip.Root",
+            "source": "src/components/tooltip/tooltip.tsx"
+        },
+        {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33319-7192",
+            "component": "Tooltip.Popup",
+            "source": "src/components/tooltip/tooltip.tsx"
+        }
+    ]
+}

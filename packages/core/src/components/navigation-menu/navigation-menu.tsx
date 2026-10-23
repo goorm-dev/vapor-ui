@@ -4,14 +4,13 @@ import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
+import type { HTMLProps } from '@base-ui/react/types';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
-import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
-import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -22,7 +21,12 @@ import type { LinkVariants, ListVariants } from './navigation-menu.css';
 import * as styles from './navigation-menu.css';
 
 type NavigationMenuVariants = ListVariants & LinkVariants;
-type NavigationMenuSharedProps = NavigationMenuVariants & { disabled?: boolean };
+type NavigationMenuSharedProps = NavigationMenuVariants & {
+    /**
+     * Disables every link and trigger in the menu, blocking all interactions. A `disabled` set on a link or trigger takes precedence.
+     */
+    disabled?: boolean;
+};
 type NavigationMenuContextType = NavigationMenuSharedProps;
 
 const [NavigationMenuProvider, useNavigationMenuContext] = createContext<NavigationMenuContextType>(
@@ -37,6 +41,9 @@ const [NavigationMenuProvider, useNavigationMenuContext] = createContext<Navigat
  * NavigationMenu.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the NavigationMenu compound component, a set of site navigation links where some items open a panel of further links. Shares `direction`, `size`, and `disabled` with the parts inside it. Renders a `<nav>` element, or a `<div>` element when nested.
+ */
 export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -65,6 +72,9 @@ NavigationMenuRoot.displayName = 'NavigationMenu.Root';
  * NavigationMenu.List
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * List that holds the navigation items, laid out in the `direction` set on `NavigationMenu.Root`. Renders a `<ul>` element.
+ */
 export const NavigationMenuList = forwardRef<HTMLUListElement, NavigationMenuList.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -86,6 +96,9 @@ NavigationMenuList.displayName = 'NavigationMenu.List';
  * NavigationMenu.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Holds one navigation entry, either a link or a trigger with its content. Renders an `<li>` element.
+ */
 export const NavigationMenuItem = forwardRef<HTMLLIElement, NavigationMenuItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -99,6 +112,9 @@ NavigationMenuItem.displayName = 'NavigationMenu.Item';
  * NavigationMenu.Link
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Link to a page in the navigation menu. Set `current` on the link for the page the user is on. Renders an `<a>` element.
+ */
 export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLink.Props>(
     (props, ref) => {
         const {
@@ -106,6 +122,8 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             href,
             disabled: disabledProp,
             className: classNameProp,
+            style: styleProp,
+            render: renderProp,
             ...componentProps
         } = resolveStyles(props);
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
@@ -116,12 +134,25 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             current,
         });
 
-        // NOTE: Preprocessing `classNameProp` below to account for the custom NavigationMenuLink State type.
+        // NOTE: Base UI passes its own Link State to callbacks; map it to the custom NavigationMenuLink State.
+        const toState = (state: BaseNavigationMenu.Link.State): NavigationMenuLink.State => ({
+            ...state,
+            current: state.active,
+            disabled: !!disabled,
+        });
         const className =
             typeof classNameProp === 'function'
-                ? (state: BaseNavigationMenu.Link.State) =>
-                      classNameProp({ ...state, current: state.active, disabled: !!disabled })
+                ? (state: BaseNavigationMenu.Link.State) => classNameProp(toState(state))
                 : classNameProp;
+        const style =
+            typeof styleProp === 'function'
+                ? (state: BaseNavigationMenu.Link.State) => styleProp(toState(state))
+                : styleProp;
+        const render =
+            typeof renderProp === 'function'
+                ? (renderProps: HTMLProps, state: BaseNavigationMenu.Link.State) =>
+                      renderProp(renderProps, toState(state))
+                : renderProp;
 
         return (
             <BaseNavigationMenu.Link
@@ -131,6 +162,8 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
                 aria-disabled={disabled ? 'true' : undefined}
                 active={current}
                 className={cn(styles.link({ size }), className)}
+                style={style}
+                render={render}
                 {...dataAttrs}
                 {...componentProps}
             />
@@ -143,6 +176,9 @@ NavigationMenuLink.displayName = 'NavigationMenu.Link';
  * NavigationMenu.TriggerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that opens the content of its item when hovered or clicked. Renders a `<button>` element.
+ */
 export const NavigationMenuTriggerPrimitive = forwardRef<
     HTMLButtonElement,
     NavigationMenuTriggerPrimitive.Props
@@ -169,6 +205,9 @@ NavigationMenuTriggerPrimitive.displayName = 'NavigationMenu.TriggerPrimitive';
  * NavigationMenu.TriggerIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Chevron icon that shows whether the content of the item is open. Renders a `<span>` element.
+ */
 export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     NavigationMenuTriggerIndicatorPrimitive.Props
@@ -196,6 +235,9 @@ NavigationMenuTriggerIndicatorPrimitive.displayName = 'NavigationMenu.TriggerInd
  * NavigationMenu.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `NavigationMenu.TriggerPrimitive` and `NavigationMenu.TriggerIndicatorPrimitive` into a single part, with the chevron after the label. Renders a `<button>` element.
+ */
 export const NavigationMenuTrigger = forwardRef<HTMLButtonElement, NavigationMenuTrigger.Props>(
     (props, ref) => {
         const { children, ...componentProps } = props;
@@ -215,6 +257,9 @@ NavigationMenuTrigger.displayName = 'NavigationMenu.Trigger';
  * NavigationMenu.Content
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Holds the links shown in the panel while its item is open. Place it next to the trigger inside `NavigationMenu.Item`. Renders a `<div>` element.
+ */
 export const NavigationMenuContent = forwardRef<HTMLDivElement, NavigationMenuContent.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -234,6 +279,9 @@ NavigationMenuContent.displayName = 'NavigationMenu.Content';
  * NavigationMenu.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal container that renders the navigation menu panel outside the normal DOM hierarchy. Renders a `<div>` element.
+ */
 export const NavigationMenuPortalPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuPortalPrimitive.Props
@@ -248,6 +296,9 @@ NavigationMenuPortalPrimitive.displayName = 'NavigationMenu.PortalPrimitive';
  * NavigationMenu.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Positions the navigation menu panel against the open trigger and keeps it inside the viewport. Renders a `<div>` element.
+ */
 export const NavigationMenuPositionerPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuPositionerPrimitive.Props
@@ -279,21 +330,22 @@ NavigationMenuPositionerPrimitive.displayName = 'NavigationMenu.PositionerPrimit
  * NavigationMenu.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The navigation menu panel, with an arrow that points at the open trigger. Renders a `<nav>` element.
+ */
 export const NavigationMenuPopupPrimitive = forwardRef<
     HTMLElement,
     NavigationMenuPopupPrimitive.Props
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
-    const { popupRef, arrowRef, position } = useArrowPosition();
-    const composedRef = composeRefs(popupRef, ref);
 
     return (
         <BaseNavigationMenu.Popup
-            ref={composedRef}
+            ref={ref}
             className={cn(styles.popup, className)}
             {...componentProps}
         >
-            <BaseNavigationMenu.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+            <BaseNavigationMenu.Arrow className={styles.arrow}>
                 <ArrowIcon />
             </BaseNavigationMenu.Arrow>
 
@@ -344,6 +396,9 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
  * NavigationMenu.ViewportPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Clipping area inside the panel that shows the content of the open item. Renders a `<div>` element.
+ */
 export const NavigationMenuViewportPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuViewportPrimitive.Props
@@ -364,6 +419,9 @@ NavigationMenuViewportPrimitive.displayName = 'NavigationMenu.ViewportPrimitive'
  * NavigationMenu.Viewport
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `NavigationMenu.PortalPrimitive`, `NavigationMenu.PositionerPrimitive`, `NavigationMenu.PopupPrimitive`, and `NavigationMenu.ViewportPrimitive` into a single part. Use `portalElement`, `positionerElement`, or `popupElement` to replace the portal, positioner, or popup. Renders a `<div>` element.
+ */
 export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport.Props>(
     ({ portalElement, positionerElement, popupElement, ...props }, ref) => {
         const viewport = <NavigationMenuViewportPrimitive ref={ref} {...props} />;
@@ -431,13 +489,11 @@ export interface NavigationMenuLinkProps extends Omit<
     'active'
 > {
     /**
-     * Whether the link is the currently active page.
-     * @default false
+     * Marks the link as the current page, applying the active style and setting `aria-current="page"`.
      */
     current?: boolean;
     /**
-     * Whether the component should ignore user interaction.
-     * @default false
+     * Disables the link, blocking all interactions. Removes `href` and sets `aria-disabled` on the `<a>` element. Takes precedence over `disabled` on `NavigationMenu.Root`.
      */
     disabled?: boolean;
 }
@@ -459,7 +515,12 @@ export namespace NavigationMenuTrigger {
 
 export namespace NavigationMenuTriggerIndicatorPrimitive {
     export type State = BaseNavigationMenu.Icon.State;
-    export type Props = VaporUIComponentProps<typeof BaseNavigationMenu.Icon, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseNavigationMenu.Icon, State> {
+        /**
+         * Icon shown as the indicator. Replaces the default chevron down icon.
+         */
+        children?: BaseNavigationMenu.Icon.Props['children'];
+    }
 }
 
 export namespace NavigationMenuContent {
@@ -489,15 +550,15 @@ export namespace NavigationMenuViewportPrimitive {
 
 export interface NavigationMenuViewportProps extends NavigationMenuViewportPrimitive.Props {
     /**
-     * A Custom element for NavigationMenu.PortalPrimitive. If not provided, the default NavigationMenu.PortalPrimitive will be rendered.
+     * Replaces the default `NavigationMenu.PortalPrimitive`. Use to change the portal container.
      */
     portalElement?: ReactElement<NavigationMenuPortalPrimitive.Props>;
     /**
-     * A Custom element for NavigationMenu.PositionerPrimitive. If not provided, the default NavigationMenu.PositionerPrimitive will be rendered.
+     * Replaces the default `NavigationMenu.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup.
      */
     positionerElement?: ReactElement<NavigationMenuPositionerPrimitive.Props>;
     /**
-     * A Custom element for NavigationMenu.PopupPrimitive. If not provided, the default NavigationMenu.PopupPrimitive will be rendered.
+     * Replaces the default `NavigationMenu.PopupPrimitive`. Use to change the panel that holds the content.
      */
     popupElement?: ReactElement<NavigationMenuPopupPrimitive.Props>;
 }

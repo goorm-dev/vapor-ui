@@ -14,6 +14,9 @@ import { useRadioGroupContext } from '../radio-group';
 import type { RadioCardVariants } from './radio-card.css';
 import * as styles from './radio-card.css';
 
+/**
+ * Card-style radio button with room for a label or longer text, for picking one option from a set. Use inside `RadioGroup.Root`. Renders a `<span>` element and a hidden `<input>` beside it.
+ */
 export const RadioCard = forwardRef<HTMLElement, RadioCard.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const { invalid: contextInvalid } = useRadioGroupContext();
@@ -41,5 +44,11 @@ RadioCard.displayName = 'RadioCard';
 
 export namespace RadioCard {
     export type State = BaseRadio.Root.State;
-    export type Props = VaporUIComponentProps<typeof BaseRadio.Root, State> & RadioCardVariants;
+    export interface Props
+        extends VaporUIComponentProps<typeof BaseRadio.Root, State>, RadioCardVariants {
+        /**
+         * Content shown inside the card, such as a label or a short description of the option.
+         */
+        children?: BaseRadio.Root.Props['children'];
+    }
 }

@@ -1,0 +1,122 @@
+{
+    "name": "MenuRoot",
+    "description": "Menu 복합 컴포넌트의 루트. 트리거로 여는 동작 또는 옵션 목록입니다. 열림 상태를 관리하며, `disabled`이면 트리거와 모든 항목을 비활성화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "props": [
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Menu가 처음에 열려 있는지 여부.\n\n제어 Menu를 렌더링하려면 대신 `open` prop을 사용하세요.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["function"],
+            "detailedType": "((open: boolean, eventDetails: Menu.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Menu가 열리거나 닫힐 때 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Menu가 현재 열려 있는지 여부."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<Menu.Root.Actions | null>"],
+            "detailedType": "React.RefObject<Menu.Root.Actions | null> | undefined",
+            "required": false,
+            "description": "명령형 동작에 접근하는 ref.\n- `unmount`: Menu를 수동으로 언마운트합니다. 외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 지정하면 Menu를 명령형으로 닫을 수 있습니다."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode", "function"],
+            "detailedType": "ReactNode | ((arg: { payload: unknown; }) => ReactNode)",
+            "required": false,
+            "description": "Menu의 콘텐츠. 일반 React 노드이거나 활성 트리거의 `payload`를 받는 렌더 함수일 수 있습니다."
+        },
+        {
+            "name": "closeParentOnEsc",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "하위 메뉴 안에서 Escape 키를 누르면 전체 Menu를 닫을지, 현재 하위 메뉴만 닫을지 정합니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "defaultTriggerId",
+            "type": ["string", "null"],
+            "detailedType": "string | null | undefined",
+            "required": false,
+            "description": "Menu와 연결된 트리거의 ID. `defaultOpen` prop과 함께 쓰면 처음부터 열려 있는 Menu를 만들 때 유용합니다."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "handle",
+            "type": ["MenuHandle<unknown>"],
+            "detailedType": "MenuHandle<unknown> | undefined",
+            "required": false,
+            "description": "Menu를 트리거와 연결하는 핸들. 지정하면 외부 트리거가 Menu의 열림 상태를 제어할 수 있습니다."
+        },
+        {
+            "name": "highlightItemOnHover",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "포인터를 항목 위로 옮기면 항목을 강조할지 여부. 이 prop을 비활성화하면 CSS `:hover`와 `:focus`(`data-highlighted`) 상태를 구분할 수 있습니다.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 첫 항목으로 되돌릴지 여부.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "modal",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Menu가 열렸을 때 모달 상태가 되는지 여부.\n- `true`: 사용자 상호작용이 Menu로 제한됩니다. 문서 페이지 스크롤이 잠기고 바깥 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 상호작용할 수 있습니다.\n\n터치 기기에서 `true` 모달은 바깥 탭을 막지만, 팝업이 뷰포트 너비를 거의 가득 채우는 경우가 아니면 페이지를 스크롤할 수 있습니다. 네이티브 iOS 동작과 같습니다.\n\n중첩된 Menu는 이 prop을 무시하며, 호버로 연 Menu는 모달이 되지 않습니다.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["function"],
+            "detailedType": "((open: boolean) => void) | undefined",
+            "required": false,
+            "description": "Menu가 열리거나 닫힌 뒤 애니메이션이 모두 끝나면 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "detailedType": "\"horizontal\" | \"vertical\" | undefined",
+            "required": false,
+            "description": "Menu의 시각적 방향.\n로빙 포커스가 위/아래 화살표 키를 쓸지 왼쪽/오른쪽 화살표 키를 쓸지 결정합니다.",
+            "defaultValue": "vertical"
+        },
+        {
+            "name": "triggerId",
+            "type": ["string", "null"],
+            "detailedType": "string | null | undefined",
+            "required": false,
+            "description": "Menu와 연결된 트리거의 ID. `open` prop과 함께 쓰면 제어 Menu를 만들 때 유용합니다. Menu가 비제어일 때(즉 `open` prop을 설정하지 않았을 때)는 이 prop을 지정하지 않아도 됩니다."
+        }
+    ],
+    "typeRefs": {
+        "Menu.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"close-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"trigger-focus\"; event: FocusEvent; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"sibling-open\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  preventUnmountOnClose: () => void;\n}",
+        "Menu.Root.Actions": "{\n  unmount: () => void;\n  close: () => void;\n}"
+    }
+}

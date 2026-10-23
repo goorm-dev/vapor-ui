@@ -32,6 +32,9 @@ export const root = componentRecipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Size of the segmented control, controlling its padding and the height and padding of its segments.
+         */
         size: {
             sm: {
                 gap: vars.size.space['050'],

@@ -1,0 +1,61 @@
+{
+    "name": "Form",
+    "description": "Form that collects its fields' values and shows their validation errors in one place. Use with `Field` parts to validate on submit, blur, or change. Renders a `<form>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Form.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Form.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<Form.Actions | null>"],
+            "detailedType": "React.RefObject<Form.Actions | null> | undefined",
+            "required": false,
+            "description": "A ref to imperative actions.\n- `validate`: Validates all fields when called. Optionally pass a field name to validate a single field."
+        },
+        {
+            "name": "errors",
+            "type": ["Errors"],
+            "detailedType": "Errors | undefined",
+            "required": false,
+            "description": "Validation errors returned externally, typically after submission by a server or a form action.\nThis should be an object where keys correspond to the `name` attribute on `<Field.Root>`,\nand values correspond to error(s) related to that field."
+        },
+        {
+            "name": "onFormSubmit",
+            "type": ["function"],
+            "detailedType": "((formValues: Record<string, any>, eventDetails: Form.SubmitEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Event handler called when the form is submitted.\n`preventDefault()` is called on the native submit event when used."
+        },
+        {
+            "name": "validationMode",
+            "type": ["onBlur", "onChange", "onSubmit"],
+            "detailedType": "\"onBlur\" | \"onChange\" | \"onSubmit\" | undefined",
+            "required": false,
+            "description": "Determines when the form should be validated.\nThe `validationMode` prop on `<Field.Root>` takes precedence over this.\n\n- `onSubmit` (default): validates the field when the form is submitted, afterwards fields will re-validate on change.\n- `onBlur`: validates a field when it loses focus.\n- `onChange`: validates the field on every change to its value.",
+            "defaultValue": "onSubmit"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Form.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Form.Actions": "{\n  validate: (fieldName?: string) => void;\n}",
+        "Form.SubmitEventDetails": "{\n  reason: \"none\";\n  event: Event;\n}",
+        "Form.State": "{\n\n}"
+    }
+}

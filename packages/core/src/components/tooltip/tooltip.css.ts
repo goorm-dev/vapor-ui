@@ -1,3 +1,4 @@
+import { arrowAlign } from '~/styles/mixins/arrow-align';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
@@ -35,5 +36,7 @@ export const arrow = componentStyle({
             right: '-7px',
             transform: 'rotate(180deg)',
         },
+
+        ...arrowAlign({ block: vars.size.space['150'], inline: vars.size.space['075'] }),
     },
 });

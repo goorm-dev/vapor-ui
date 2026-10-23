@@ -8,7 +8,13 @@ export const root = componentRecipe({
     base: {},
     defaultVariants: { typography: 'body1', foreground: 'normal' },
     variants: {
+        /**
+         * Typography style of the text, setting font size, line height, font weight, and letter spacing.
+         */
         typography: typographyVariants,
+        /**
+         * Color of the text, chosen from the foreground color palette.
+         */
         foreground: foregroundVariants,
     },
 });
