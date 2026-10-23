@@ -1,5 +1,6 @@
 {
     "name": "CalloutIcon",
+    "description": "Holds an icon inside the callout, sized to the height of one line of its text. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

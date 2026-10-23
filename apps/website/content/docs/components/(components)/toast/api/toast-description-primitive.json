@@ -1,5 +1,6 @@
 {
     "name": "ToastDescriptionPrimitive",
+    "description": "Paragraph that shows the `description` of the toast. Renders a `<p>` element.",
     "props": [
         {
             "name": "className",

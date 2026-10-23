@@ -1,5 +1,6 @@
 {
     "name": "NavigationMenuList",
+    "description": "List that holds the navigation items, laid out in the `direction` set on `NavigationMenu.Root`. Renders a `<ul>` element.",
     "props": [
         {
             "name": "className",

@@ -1,11 +1,13 @@
 {
     "name": "TabsRoot",
+    "description": "Root of the Tabs compound component, which switches between related panels of content shown one at a time. Shares `size`, `variant`, `orientation`, and `disabled` with the parts inside it. Renders a `<div>` element.",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
+            "description": "Size of the tab buttons, controlling height and typography.",
             "defaultValue": "md"
         },
         {
@@ -13,6 +15,7 @@
             "type": ["line", "fill"],
             "detailedType": "\"line\" | \"fill\" | undefined",
             "required": false,
+            "description": "Visual style of the tabs. `line` marks the active tab with a line on the border of the list, `fill` highlights the active tab with a filled background.",
             "defaultValue": "line"
         },
         {
@@ -45,6 +48,13 @@
             "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
         },
         {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Disables every tab button, blocking all interactions."
+        },
+        {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Tabs.Root.State) => (React.CSSProperties | undefined)) | undefined",
@@ -58,13 +68,6 @@
             "required": false,
             "description": "Whether to automatically change the active tab on arrow key focus.\nOtherwise, tabs will be activated using <kbd>Enter</kbd> or <kbd>Space</kbd> key press.",
             "defaultValue": "false"
-        },
-        {
-            "name": "disabled",
-            "type": ["boolean"],
-            "detailedType": "boolean | undefined",
-            "required": false,
-            "description": "Whether the Tab is disabled.\n\nIf a first Tab on a `<Tabs.List>` is disabled, it won't initially be selected.\nInstead, the next enabled Tab will be selected.\nHowever, it does not work like this during server-side rendering, as it is not known\nduring pre-rendering which Tabs are disabled.\nTo work around it, ensure that `defaultValue` or `value` on `<Tabs.Root>` is set to an enabled Tab's value."
         },
         {
             "name": "loopFocus",

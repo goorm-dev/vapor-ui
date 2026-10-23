@@ -1,6 +1,14 @@
 {
     "name": "SelectPopup",
+    "description": "Combines `Select.PortalPrimitive`, `Select.PositionerPrimitive`, and `Select.PopupPrimitive` into a single part. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Options shown in the popup, such as `Select.Item`, `Select.Group`, or `Select.Separator`."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
@@ -13,14 +21,14 @@
             "type": ["ReactElement<SelectPortalPrimitive.Props>"],
             "detailedType": "ReactElement<SelectPortalPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for Select.PortalPrimitive. If not provided, the default Select.PortalPrimitive will be rendered."
+            "description": "Replaces the default `Select.PortalPrimitive`. Use to change the portal container."
         },
         {
             "name": "positionerElement",
             "type": ["ReactElement<SelectPositionerPrimitive.Props>"],
             "detailedType": "ReactElement<SelectPositionerPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for Select.PositionerPrimitive. If not provided, the default Select.PositionerPrimitive will be rendered."
+            "description": "Replaces the default `Select.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup."
         },
         {
             "name": "style",
@@ -28,12 +36,6 @@
             "detailedType": "React.CSSProperties | ((state: Select.Popup.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "finalFocus",

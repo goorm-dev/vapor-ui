@@ -1,5 +1,6 @@
 {
     "name": "PopoverRoot",
+    "description": "Root of the Popover compound component, which shows interactive content in a floating panel anchored to a trigger. Manages the open state. Doesn't render its own HTML element.",
     "props": [
         {
             "name": "defaultOpen",

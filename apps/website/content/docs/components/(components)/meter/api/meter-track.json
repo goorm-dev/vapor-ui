@@ -1,6 +1,6 @@
 {
     "name": "MeterTrack",
-    "description": "Represents the full range of the meter and renders `Meter.IndicatorPrimitive` inside. Renders a `<div>` element.",
+    "description": "Combines `Meter.TrackPrimitive` and `Meter.IndicatorPrimitive` into a single part. Use `indicatorElement` to replace the indicator. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -14,7 +14,7 @@
             "type": ["ReactElement<MeterIndicatorPrimitive.Props>"],
             "detailedType": "ReactElement<MeterIndicatorPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for Meter.IndicatorPrimitive. If not provided, the default Meter.IndicatorPrimitive will be rendered."
+            "description": "Replaces the default `Meter.IndicatorPrimitive`. Use to change the filled portion of the track."
         },
         {
             "name": "style",

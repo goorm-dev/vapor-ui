@@ -1,5 +1,6 @@
 {
     "name": "CollapsibleTrigger",
+    "description": "Button that opens and closes the collapsible panel when clicked. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

@@ -1,5 +1,6 @@
 {
     "name": "RadioCard",
+    "description": "Card-style radio button with room for a label or longer text, for picking one option from a set. Use inside `RadioGroup.Root`. Renders a `<span>` element and a hidden `<input>` beside it.",
     "props": [
         {
             "name": "value",
@@ -13,7 +14,15 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
+            "description": "Marks the radio card as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element. Inside an invalid `RadioGroup.Root`, the card is always invalid.",
             "defaultValue": "false"
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Content shown inside the card, such as a label or a short description of the option."
         },
         {
             "name": "className",

@@ -30,6 +30,9 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Switch that turns a single setting on or off. Renders a `<span>` element and a hidden `<input>` beside it.
+ */
 export const SwitchRoot = forwardRef<HTMLElement, SwitchRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
@@ -69,6 +72,9 @@ SwitchRoot.displayName = 'Switch.Root';
  * Switch.ThumbPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Round knob inside the switch that slides to the end of the track while the switch is on. Renders a `<span>` element.
+ */
 export const SwitchThumbPrimitive = forwardRef<HTMLSpanElement, SwitchThumbPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -89,7 +95,13 @@ SwitchThumbPrimitive.displayName = 'Switch.ThumbPrimitive';
 
 export namespace SwitchRoot {
     export type State = BaseSwitch.Root.State;
-    export type Props = VaporUIComponentProps<typeof BaseSwitch.Root, State> & SwitchSharedProps;
+    export interface Props
+        extends VaporUIComponentProps<typeof BaseSwitch.Root, State>, SwitchSharedProps {
+        /**
+         * Element shown inside the switch in place of the default `Switch.ThumbPrimitive`, such as a `Switch.ThumbPrimitive` with custom props. Anything other than a single element is ignored and the default thumb is shown.
+         */
+        children?: BaseSwitch.Root.Props['children'];
+    }
     export type ChangeEventDetails = BaseSwitch.Root.ChangeEventDetails;
 }
 

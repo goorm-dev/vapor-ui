@@ -1,5 +1,6 @@
 {
     "name": "TableFooter",
+    "description": "Group of rows at the bottom of the table, such as totals or summaries. Renders a `<tfoot>` element.",
     "props": [
         {
             "name": "className",

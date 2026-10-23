@@ -1,5 +1,6 @@
 {
     "name": "InputGroupRoot",
+    "description": "Root of the InputGroup compound component, which pairs a `TextInput` or `Textarea` with an `InputGroup.Counter` that tracks its length. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

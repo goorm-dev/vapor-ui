@@ -1,13 +1,20 @@
 {
     "name": "SegmentedControlItem",
-    "description": "An individual selectable segment within a SegmentedControl. Use for text-based or mixed content segments. Renders a `<button>` element.",
+    "description": "Selectable segment of a segmented control, labeled with text or with text and an icon. Renders a `<button>` element.",
     "props": [
         {
             "name": "value",
             "type": ["string"],
             "detailedType": "string",
             "required": true,
-            "description": "The value of the item. This is used to determine which item is selected. It should be unique within the SegmentedControl."
+            "description": "Value that identifies the segment when it is selected. Must be unique within the segmented control."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Content shown inside the segment, such as a label or an icon."
         },
         {
             "name": "className",

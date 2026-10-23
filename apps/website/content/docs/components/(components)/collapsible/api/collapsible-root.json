@@ -1,5 +1,6 @@
 {
     "name": "CollapsibleRoot",
+    "description": "Root of the Collapsible compound component, which shows and hides a panel of content. Manages the open state. Renders a `<div>` element.",
     "props": [
         {
             "name": "defaultOpen",

@@ -1,5 +1,6 @@
 {
     "name": "FloatingBarClose",
+    "description": "Button that closes the floating bar when clicked. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

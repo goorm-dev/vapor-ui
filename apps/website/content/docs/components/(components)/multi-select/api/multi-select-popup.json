@@ -1,6 +1,14 @@
 {
     "name": "MultiSelectPopup",
+    "description": "Combines `MultiSelect.PortalPrimitive`, `MultiSelect.PositionerPrimitive`, and `MultiSelect.PopupPrimitive` into a single part. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Options shown in the popup, such as `MultiSelect.Item`, `MultiSelect.Group`, or `MultiSelect.Separator`."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
@@ -13,14 +21,14 @@
             "type": ["ReactElement<MultiSelectPortalPrimitive.Props>"],
             "detailedType": "ReactElement<MultiSelectPortalPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for MultiSelect.PortalPrimitive. If not provided, the default MultiSelect.PortalPrimitive will be rendered."
+            "description": "Replaces the default `MultiSelect.PortalPrimitive`. Use to change the portal container."
         },
         {
             "name": "positionerElement",
             "type": ["ReactElement<MultiSelectPositionerPrimitive.Props>"],
             "detailedType": "ReactElement<MultiSelectPositionerPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for MultiSelect.PositionerPrimitive. If not provided, the default MultiSelect.PositionerPrimitive will be rendered."
+            "description": "Replaces the default `MultiSelect.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup."
         },
         {
             "name": "style",
@@ -28,12 +36,6 @@
             "detailedType": "React.CSSProperties | ((state: MultiSelect.Popup.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "finalFocus",

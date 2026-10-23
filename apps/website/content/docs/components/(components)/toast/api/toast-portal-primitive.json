@@ -1,5 +1,6 @@
 {
     "name": "ToastPortalPrimitive",
+    "description": "Portal container that renders the toast list outside the normal DOM hierarchy. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

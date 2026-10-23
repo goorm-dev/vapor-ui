@@ -1,5 +1,6 @@
 {
     "name": "FieldSuccess",
+    "description": "Success message shown when the field passes validation. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -13,7 +14,7 @@
             "type": ["boolean", "valid"],
             "detailedType": "boolean | \"valid\" | undefined",
             "required": false,
-            "description": "Determines whether to show the success message according to the field’s\n[ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState).",
+            "description": "Controls when the message is shown. With `'valid'`, it shows once the field passes validation. Set to `true` to always show it, letting an external library control its visibility.",
             "defaultValue": "valid"
         },
         {

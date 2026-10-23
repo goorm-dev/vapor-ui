@@ -1,18 +1,20 @@
 {
     "name": "PaginationRootPrimitive",
+    "description": "Navigation landmark labeled \"Pagination\" that manages the selected page and shares `size` and `disabled` with the parts inside it. Renders a `<nav>` element.",
     "props": [
         {
             "name": "totalPages",
             "type": ["number"],
             "detailedType": "number",
             "required": true,
-            "description": "The total number of pages."
+            "description": "Total number of pages. `Pagination.Next` is disabled once this page is selected."
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
+            "description": "Size of the pagination buttons and ellipsis, controlling width, height, and typography.",
             "defaultValue": "md"
         },
         {
@@ -20,14 +22,14 @@
             "type": ["function"],
             "detailedType": "((page: number, eventDetails: Pagination.RootPrimitive.ChangeEventDetails) => void) | undefined",
             "required": false,
-            "description": "Event handler called when the selected page of the pagination changes."
+            "description": "Called when a page button, `Pagination.Previous`, or `Pagination.Next` is clicked, with the new page and the event details. Call `eventDetails.cancel()` to keep the current page."
         },
         {
             "name": "boundaryCount",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "The number of page items to show for the start and end pages.",
+            "description": "Number of pages always shown at the start and the end of the range.",
             "defaultValue": "1"
         },
         {
@@ -42,7 +44,7 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "The default selected page of the paginations. Use when uncontrolled.",
+            "description": "Page selected on first render, counted from `1`. Use when the component is not controlled.",
             "defaultValue": "1"
         },
         {
@@ -50,7 +52,7 @@
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Whether the component should ignore user interaction.",
+            "description": "Disables the pagination, blocking all interactions on its buttons.",
             "defaultValue": "false"
         },
         {
@@ -58,14 +60,14 @@
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "The selected page of the paginations. Use when controlled."
+            "description": "Selected page, counted from `1`. Use when the component is controlled."
         },
         {
             "name": "siblingCount",
             "type": ["number"],
             "detailedType": "number | undefined",
             "required": false,
-            "description": "The number of page items to show on each side of the current page item.",
+            "description": "Number of pages shown on each side of the selected page before the rest collapse into an ellipsis.",
             "defaultValue": "2"
         },
         {

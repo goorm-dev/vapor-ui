@@ -1,5 +1,6 @@
 {
     "name": "FloatingBarPositionerPrimitive",
+    "description": "Fixes the floating bar to the bottom center of the viewport, above the safe area. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

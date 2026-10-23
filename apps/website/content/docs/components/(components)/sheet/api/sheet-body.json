@@ -1,5 +1,6 @@
 {
     "name": "SheetBody",
+    "description": "Scrollable main content area of the sheet. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

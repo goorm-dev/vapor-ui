@@ -1,5 +1,6 @@
 {
     "name": "SheetOverlayPrimitive",
+    "description": "Semi-transparent backdrop rendered behind the sheet popup. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

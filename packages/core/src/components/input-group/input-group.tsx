@@ -35,6 +35,9 @@ export const [InputGroupProvider, useInputGroupContext] = createContext<InputGro
  * InputGroup Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the InputGroup compound component, which pairs a `TextInput` or `Textarea` with an `InputGroup.Counter` that tracks its length. Renders a `<div>` element.
+ */
 export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((props, ref) => {
     const { className, render, ...componentProps } = resolveStyles(props);
 
@@ -69,6 +72,9 @@ InputGroupRoot.displayName = 'InputGroup.Root';
  * InputGroup Count
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Character count of the text input or textarea in the same `InputGroup.Root`, shown as `count/maxLength` when `maxLength` is set. Renders a `<span>` element.
+ */
 export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.Props>(
     (props, ref) => {
         const {
@@ -148,6 +154,9 @@ export namespace InputGroupRoot {
 export namespace InputGroupCounter {
     type RenderProps = { count: number; maxLength?: number; value: string };
     type ChildrenProps = {
+        /**
+         * Content shown inside the counter, such as custom count text. As a function, receives `count`, `maxLength`, and `value` of the input and returns the content to display. Replaces the default `count/maxLength` text.
+         */
         children?: React.ReactNode | ((props: RenderProps) => React.ReactNode);
     };
 

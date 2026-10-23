@@ -1,12 +1,13 @@
 {
     "name": "PaginationButtonPrimitive",
+    "description": "Button that selects the page set in `page` when clicked, highlighted while that page is selected. Renders a `<button>` element.",
     "props": [
         {
             "name": "page",
             "type": ["number"],
             "detailedType": "number",
             "required": true,
-            "description": "The controlled page number of the items that should be displayed."
+            "description": "Page this button selects when clicked. The button is marked as current while this page is selected."
         },
         {
             "name": "className",

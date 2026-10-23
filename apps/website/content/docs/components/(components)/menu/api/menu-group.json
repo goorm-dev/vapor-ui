@@ -1,5 +1,6 @@
 {
     "name": "MenuGroup",
+    "description": "Groups related menu items under a `Menu.GroupLabel`. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

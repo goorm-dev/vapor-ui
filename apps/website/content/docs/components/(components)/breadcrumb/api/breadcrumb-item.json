@@ -1,11 +1,13 @@
 {
     "name": "BreadcrumbItem",
+    "description": "Combines `Breadcrumb.ItemPrimitive` and `Breadcrumb.LinkPrimitive` into a single part, one linked entry of the breadcrumb trail. Renders an `<a>` element inside an `<li>` element.",
     "props": [
         {
             "name": "current",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
+            "description": "Marks the link as the current page, applying the active color and setting `aria-current=\"page\"` and `aria-disabled` on the `<a>` element.",
             "defaultValue": "false"
         },
         {

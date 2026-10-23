@@ -1,5 +1,6 @@
 {
     "name": "MenuRadioItemPrimitive",
+    "description": "Menu item that works like a radio button inside `Menu.RadioGroup`. Renders a `<div>` element.",
     "props": [
         {
             "name": "value",

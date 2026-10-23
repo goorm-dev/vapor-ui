@@ -1,5 +1,6 @@
 {
     "name": "SheetFooter",
+    "description": "Bottom section of the sheet, typically containing action buttons. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

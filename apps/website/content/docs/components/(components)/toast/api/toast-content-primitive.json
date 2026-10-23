@@ -1,5 +1,6 @@
 {
     "name": "ToastContentPrimitive",
+    "description": "Container for the text and buttons of a toast. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

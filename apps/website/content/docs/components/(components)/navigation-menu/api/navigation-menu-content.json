@@ -1,5 +1,6 @@
 {
     "name": "NavigationMenuContent",
+    "description": "Holds the links shown in the panel while its item is open. Place it next to the trigger inside `NavigationMenu.Item`. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

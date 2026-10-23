@@ -1,5 +1,6 @@
 {
     "name": "TableHeader",
+    "description": "Group of header rows at the top of the table. Renders a `<thead>` element.",
     "props": [
         {
             "name": "className",

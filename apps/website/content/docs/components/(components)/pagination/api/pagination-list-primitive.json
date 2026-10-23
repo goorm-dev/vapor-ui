@@ -1,5 +1,6 @@
 {
     "name": "PaginationListPrimitive",
+    "description": "Ordered list that lays out the pagination items in a row. Renders an `<ol>` element.",
     "props": [
         {
             "name": "className",

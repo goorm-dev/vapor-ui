@@ -1,5 +1,6 @@
 {
     "name": "FloatingBarRoot",
+    "description": "Root of the FloatingBar compound component, a bar that floats at the bottom center of the viewport to show contextual actions. Manages the open state. Doesn't render its own HTML element.",
     "props": [
         {
             "name": "defaultOpen",

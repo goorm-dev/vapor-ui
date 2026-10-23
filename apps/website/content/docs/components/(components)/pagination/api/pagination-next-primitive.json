@@ -1,6 +1,14 @@
 {
     "name": "PaginationNextPrimitive",
+    "description": "Button that moves to the next page when clicked, disabled on the last page. Renders a `<button>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Icon shown inside the button. Replaces the default right chevron icon."
+        },
         {
             "name": "className",
             "type": ["string", "function"],

@@ -1,18 +1,20 @@
 {
     "name": "ToolbarInput",
+    "description": "Text input inside the toolbar, sized by the `size` of `Toolbar.Root`. Renders an `<input>` element.",
     "props": [
         {
             "name": "defaultValue",
             "type": ["string", "number", "readonly string[]"],
             "detailedType": "string | number | readonly string[] | undefined",
-            "required": false
+            "required": false,
+            "description": "Value shown in the input when it first renders. Use when the input is not controlled."
         },
         {
             "name": "onValueChange",
             "type": ["function"],
             "detailedType": "((value: string) => void) | undefined",
             "required": false,
-            "description": "Callback fired when the value of the Input changes. It receives the new value and the original change event details from the underlying BaseToolbar.Input component."
+            "description": "Called each time the input value changes, such as on every keystroke. Receives the new value."
         },
         {
             "name": "className",

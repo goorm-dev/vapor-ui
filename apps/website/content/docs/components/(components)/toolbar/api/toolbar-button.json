@@ -1,5 +1,6 @@
 {
     "name": "ToolbarButton",
+    "description": "Ghost-style button for an action in the toolbar, sized by the `size` of `Toolbar.Root`. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

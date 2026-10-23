@@ -1,5 +1,6 @@
 {
     "name": "NavigationMenuTrigger",
+    "description": "Combines `NavigationMenu.TriggerPrimitive` and `NavigationMenu.TriggerIndicatorPrimitive` into a single part, with the chevron after the label. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

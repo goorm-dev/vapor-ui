@@ -1,5 +1,6 @@
 {
     "name": "HStack",
+    "description": "Flex container that arranges its children horizontally in a row. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -12,13 +13,15 @@
             "name": "inline",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
-            "required": false
+            "required": false,
+            "description": "Displays the container as `inline-flex` instead of `flex`, so it sits inline with surrounding content."
         },
         {
             "name": "reverse",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
-            "required": false
+            "required": false,
+            "description": "Reverses the order of the children, setting `flex-direction` to `row-reverse`."
         },
         {
             "name": "style",

@@ -1,5 +1,6 @@
 {
     "name": "PopoverClose",
+    "description": "Button that closes the popover when clicked. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

@@ -1,11 +1,13 @@
 {
     "name": "CheckboxRoot",
+    "description": "Checkbox that turns an option on or off, or shows a mixed state with `indeterminate`. Renders a `<span>` element and a hidden `<input>` beside it.",
     "props": [
         {
             "name": "invalid",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
+            "description": "Marks the checkbox as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element.",
             "defaultValue": "false"
         },
         {
@@ -13,6 +15,7 @@
             "type": ["md", "lg"],
             "detailedType": "\"md\" | \"lg\" | undefined",
             "required": false,
+            "description": "Size of the checkbox, controlling its width, height, and corner radius, and the size of its check mark.",
             "defaultValue": "md"
         },
         {
@@ -43,6 +46,13 @@
             "detailedType": "string | undefined",
             "required": false,
             "description": "The checkbox's value. Identifies it within a [Checkbox Group](https://base-ui.com/react/components/checkbox-group), falling back to `name` when omitted.\nWhen submitting a form, a checked box submits `value`; with no `value`, it submits the native \"on\"."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Element shown inside the checkbox in place of the default `Checkbox.IndicatorPrimitive`, such as a `Checkbox.IndicatorPrimitive` with custom props. Anything other than a single element is ignored and the default indicator is shown."
         },
         {
             "name": "className",

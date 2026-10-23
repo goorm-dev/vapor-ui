@@ -1,6 +1,14 @@
 {
     "name": "MenuPopupPrimitive",
+    "description": "The menu panel that holds the menu items. Renders a `<div>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Menu items shown in the panel, such as `Menu.Item`, `Menu.Group`, or `Menu.Separator`."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
@@ -14,12 +22,6 @@
             "detailedType": "React.CSSProperties | ((state: Menu.PopupPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "finalFocus",

@@ -19,6 +19,9 @@ export const root = componentRecipe({
 
     defaultVariants: { colorPalette: 'primary' },
     variants: {
+        /**
+         * Color palette of the callout, applied to its border, background, and text.
+         */
         colorPalette: {
             primary: {
                 border: `.0625rem solid ${vars.color.border.primary}`,

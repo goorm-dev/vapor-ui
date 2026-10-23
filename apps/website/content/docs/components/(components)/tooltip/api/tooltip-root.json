@@ -1,5 +1,6 @@
 {
     "name": "TooltipRoot",
+    "description": "Root of the Tooltip compound component, which shows a short label for an element on hover or focus. Manages the open state. Doesn't render its own HTML element.",
     "props": [
         {
             "name": "defaultOpen",

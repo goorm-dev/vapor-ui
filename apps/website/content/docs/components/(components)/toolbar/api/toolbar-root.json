@@ -1,11 +1,13 @@
 {
     "name": "ToolbarRoot",
+    "description": "Root of the Toolbar compound component, a horizontal row of buttons and inputs that users move between with the arrow keys. Shares `size` with the items inside it. Renders a `<div>` element.",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
+            "description": "Size of the toolbar buttons and inputs, controlling height, padding, and typography.",
             "defaultValue": "md"
         },
         {
@@ -13,6 +15,7 @@
             "type": ["outline", "ghost"],
             "detailedType": "\"outline\" | \"ghost\" | undefined",
             "required": false,
+            "description": "Visual style of the toolbar. `outline` adds a border and background, `ghost` leaves the toolbar transparent.",
             "defaultValue": "outline"
         },
         {
@@ -23,17 +26,18 @@
             "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
         },
         {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Disables every button and input in the toolbar, blocking all interactions."
+        },
+        {
             "name": "style",
             "type": ["React.CSSProperties", "function"],
             "detailedType": "React.CSSProperties | ((state: Toolbar.Root.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
-            "name": "disabled",
-            "type": ["boolean"],
-            "detailedType": "boolean | undefined",
-            "required": false
         },
         {
             "name": "loopFocus",

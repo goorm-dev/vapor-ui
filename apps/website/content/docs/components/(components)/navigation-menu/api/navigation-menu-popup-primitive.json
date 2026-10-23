@@ -1,5 +1,6 @@
 {
     "name": "NavigationMenuPopupPrimitive",
+    "description": "The navigation menu panel, with an arrow that points at the open trigger. Renders a `<nav>` element.",
     "props": [
         {
             "name": "className",

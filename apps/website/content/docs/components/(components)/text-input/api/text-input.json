@@ -1,11 +1,13 @@
 {
     "name": "TextInput",
+    "description": "Single-line text field for short input such as a name, email address, or password. Renders an `<input>` element.",
     "props": [
         {
             "name": "invalid",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
+            "description": "Marks the text input as invalid, applying error styles. Sets `aria-invalid` on the `<input>` element.",
             "defaultValue": "false"
         },
         {
@@ -13,6 +15,7 @@
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
+            "description": "Size of the text input, controlling height, padding, and typography.",
             "defaultValue": "md"
         },
         {
@@ -20,7 +23,7 @@
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "The default value of the input. Use when uncontrolled.",
+            "description": "Initial text in the field. Use when uncontrolled.",
             "defaultValue": ""
         },
         {
@@ -28,14 +31,14 @@
             "type": ["function"],
             "detailedType": "((value: string, event: TextInput.ChangeEventDetails) => void) | undefined",
             "required": false,
-            "description": "Event handler called when the selected value of the input changes."
+            "description": "Called when the text changes as the user types, pastes, or deletes. Receives the new text and the change event details."
         },
         {
             "name": "value",
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "The value of the input. Use when controlled."
+            "description": "Current text in the field. Use when controlled."
         },
         {
             "name": "className",
@@ -56,7 +59,7 @@
             "type": ["search", "text", "tel", "url", "email", "password"],
             "detailedType": "\"search\" | \"text\" | \"tel\" | \"url\" | \"email\" | \"password\" | undefined",
             "required": false,
-            "description": "The type of the input element. It determines the kind of data that can be entered."
+            "description": "Kind of text the field accepts, such as an email address, password, or URL."
         },
         {
             "name": "render",

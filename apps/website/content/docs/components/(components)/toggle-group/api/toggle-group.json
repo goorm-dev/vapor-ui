@@ -1,11 +1,13 @@
 {
     "name": "ToggleGroup",
+    "description": "Groups `Toggle` buttons so they share a pressed state, letting one or, with `multiple`, several be pressed at a time. Renders a `<div>` element.",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
+            "description": "Size of the toggles in the group, controlling their height and width. A `Toggle` that sets its own `size` keeps it.",
             "defaultValue": "md"
         },
         {
@@ -30,11 +32,26 @@
             "description": "The pressed state of the toggle group represented by an array of\nthe values of all pressed toggle buttons.\nThis is the controlled counterpart of `defaultValue`."
         },
         {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Toggles shown in the group, such as `Toggle` buttons."
+        },
+        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: ToggleGroup.State) => (string | undefined)) | undefined",
             "required": false,
             "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "detailedType": "\"horizontal\" | \"vertical\" | undefined",
+            "required": false,
+            "description": "Direction of keyboard navigation between the toggles: Left and Right arrow keys for `horizontal`, Up and Down arrow keys for `vertical`. Doesn't change the layout.",
+            "defaultValue": "horizontal"
         },
         {
             "name": "style",
@@ -66,13 +83,6 @@
             "required": false,
             "description": "When `false` only one item in the group can be pressed. If any item in\nthe group becomes pressed, the others will become unpressed.\nWhen `true` multiple items can be pressed.",
             "defaultValue": "false"
-        },
-        {
-            "name": "orientation",
-            "type": ["horizontal", "vertical"],
-            "detailedType": "\"horizontal\" | \"vertical\" | undefined",
-            "required": false,
-            "defaultValue": "horizontal"
         },
         {
             "name": "render",

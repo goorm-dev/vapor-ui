@@ -1,5 +1,6 @@
 {
     "name": "TableBody",
+    "description": "Group of rows that hold the main data of the table. Renders a `<tbody>` element.",
     "props": [
         {
             "name": "className",

@@ -1,5 +1,6 @@
 {
     "name": "MultiSelectGroupLabel",
+    "description": "Label for a group of options, announced to assistive technologies. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

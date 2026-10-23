@@ -1,5 +1,6 @@
 {
     "name": "MultiSelectItem",
+    "description": "Combines `MultiSelect.ItemPrimitive` and `MultiSelect.ItemIndicatorPrimitive` into a single part, with the check mark after the label. Renders a `<div>` element.",
     "props": [
         {
             "name": "value",
@@ -8,6 +9,13 @@
             "required": false,
             "description": "A unique value that identifies this select item.",
             "defaultValue": "null"
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Label of the option, such as its text or an icon with text. The check mark is added after it."
         },
         {
             "name": "className",
@@ -22,12 +30,6 @@
             "detailedType": "React.CSSProperties | ((state: MultiSelect.Item.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "disabled",

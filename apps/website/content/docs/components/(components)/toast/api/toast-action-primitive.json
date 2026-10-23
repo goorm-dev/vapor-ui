@@ -1,5 +1,6 @@
 {
     "name": "ToastActionPrimitive",
+    "description": "Button that runs the action of the toast, styled by the `actionProps` of the toast object. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

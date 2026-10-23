@@ -1,5 +1,6 @@
 {
     "name": "BreadcrumbListPrimitive",
+    "description": "Ordered list that lays out the breadcrumb items in a row. Renders an `<ol>` element.",
     "props": [
         {
             "name": "className",

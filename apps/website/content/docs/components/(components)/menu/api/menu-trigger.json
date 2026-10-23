@@ -1,6 +1,14 @@
 {
     "name": "MenuTrigger",
+    "description": "Button that opens the menu when clicked. Renders a `<button>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Content shown inside the trigger, such as a label or an icon."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
@@ -14,12 +22,6 @@
             "detailedType": "React.CSSProperties | ((state: Menu.Trigger.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "closeDelay",

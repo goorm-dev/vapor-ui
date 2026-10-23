@@ -34,7 +34,13 @@ export const textarea = componentRecipe({
     defaultVariants: { invalid: false, size: 'md', autoResize: false },
 
     variants: {
+        /**
+         * Marks the textarea as invalid, applying error styles. Sets `aria-invalid` on the `<textarea>` element.
+         */
         invalid: { true: {}, false: {} },
+        /**
+         * Grows the textarea's height to fit its content as the user types, and turns off manual resizing.
+         */
         autoResize: {
             true: {
                 resize: 'none',
@@ -43,6 +49,9 @@ export const textarea = componentRecipe({
             },
         },
 
+        /**
+         * Size of the textarea, controlling padding and typography.
+         */
         size: {
             sm: [
                 typography({ style: 'body3' }),

@@ -1,5 +1,6 @@
 {
     "name": "TooltipPortalPrimitive",
+    "description": "Portal container that renders the tooltip outside the normal DOM hierarchy. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

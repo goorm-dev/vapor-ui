@@ -36,6 +36,9 @@ const [PaginationProvider, usePaginationContext] = createContext<PaginationConte
  * Pagination.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Pagination.RootPrimitive` and `Pagination.ListPrimitive` into a single part, the root of a pagination control that lets users move between pages of content. Renders a `<nav>` element.
+ */
 export const PaginationRoot = forwardRef<HTMLElement, PaginationRoot.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
@@ -51,6 +54,9 @@ PaginationRoot.displayName = 'Pagination.Root';
  * Pagination.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Navigation landmark labeled "Pagination" that manages the selected page and shares `size` and `disabled` with the parts inside it. Renders a `<nav>` element.
+ */
 export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPrimitive.Props>(
     (props, ref) => {
         const {
@@ -126,6 +132,9 @@ PaginationRootPrimitive.displayName = 'Pagination.RootPrimitive';
  * Pagination.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Ordered list that lays out the pagination items in a row. Renders an `<ol>` element.
+ */
 export const PaginationListPrimitive = forwardRef<HTMLOListElement, PaginationListPrimitive.Props>(
     ({ render, className, ...props }, ref) => {
         return useRenderElement({
@@ -145,6 +154,9 @@ PaginationListPrimitive.displayName = 'Pagination.ListPrimitive';
  * Pagination.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * List item that holds one pagination control, such as a page button or an ellipsis. Renders an `<li>` element.
+ */
 export const PaginationItemPrimitive = forwardRef<HTMLLIElement, PaginationItemPrimitive.Props>(
     ({ render, className, ...props }, ref) => {
         return useRenderElement({
@@ -164,6 +176,9 @@ PaginationItemPrimitive.displayName = 'Pagination.ItemPrimitive';
  * Pagination.ButtonPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that selects the page set in `page` when clicked, highlighted while that page is selected. Renders a `<button>` element.
+ */
 export const PaginationButtonPrimitive = forwardRef<
     HTMLButtonElement,
     PaginationButtonPrimitive.Props
@@ -205,6 +220,9 @@ PaginationButtonPrimitive.displayName = 'Pagination.ButtonPrimitive';
  * Pagination.PreviousPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that moves to the previous page when clicked, disabled on the first page. Renders a `<button>` element.
+ */
 export const PaginationPreviousPrimitive = forwardRef<
     HTMLButtonElement,
     PaginationPreviousPrimitive.Props
@@ -257,6 +275,9 @@ PaginationPreviousPrimitive.displayName = 'Pagination.PreviousPrimitive';
  * Pagination.Previous
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Pagination.ItemPrimitive` and `Pagination.PreviousPrimitive` into a single part. Renders a `<button>` element inside an `<li>` element.
+ */
 export const PaginationPrevious = forwardRef<HTMLButtonElement, PaginationPrevious.Props>(
     (props, ref) => {
         return (
@@ -272,6 +293,9 @@ PaginationPrevious.displayName = 'Pagination.Previous';
  * Pagination.NextPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that moves to the next page when clicked, disabled on the last page. Renders a `<button>` element.
+ */
 export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationNextPrimitive.Props>(
     (props, ref) => {
         const {
@@ -329,6 +353,9 @@ PaginationNextPrimitive.displayName = 'Pagination.NextPrimitive';
  * Pagination.Next
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Pagination.ItemPrimitive` and `Pagination.NextPrimitive` into a single part. Renders a `<button>` element inside an `<li>` element.
+ */
 export const PaginationNext = forwardRef<HTMLButtonElement, PaginationNext.Props>((props, ref) => {
     return (
         <PaginationItemPrimitive>
@@ -342,6 +369,9 @@ PaginationNext.displayName = 'Pagination.Next';
  * Pagination.EllipsisPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Icon that stands in for skipped pages, hidden from assistive technologies. Renders a `<span>` element.
+ */
 export const PaginationEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     PaginationEllipsisPrimitive.Props
@@ -378,6 +408,9 @@ PaginationEllipsisPrimitive.displayName = 'Pagination.EllipsisPrimitive';
  * Pagination.Items
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Generates a page button for each visible page and an ellipsis for each skipped range, based on `totalPages`, `siblingCount`, and `boundaryCount` of the root. Place it between `Pagination.Previous` and `Pagination.Next`. Doesn't render its own HTML element.
+ */
 export const PaginationItems = ({ children: childrenProp }: PaginationItems.Props) => {
     const { page, totalPages, siblingCount, boundaryCount } = usePaginationContext();
 
@@ -546,34 +579,35 @@ export interface PaginationContext extends PaginationVariants {
 export interface PaginationRootPrimitiveProps
     extends PaginationVariants, VaporUIComponentProps<'nav', PaginationRootPrimitive.State> {
     /**
-     * The total number of pages.
+     * Total number of pages. `Pagination.Next` is disabled once this page is selected.
      */
     totalPages: number;
     /**
-     * The selected page of the paginations. Use when controlled.
+     * Selected page, counted from `1`. Use when the component is controlled.
      */
     page?: number;
     /**
-     * The default selected page of the paginations. Use when uncontrolled.
+     * Page selected on first render, counted from `1`. Use when the component is not controlled.
+     * @default 1
      */
     defaultPage?: number;
     /**
-     * Event handler called when the selected page of the pagination changes.
+     * Called when a page button, `Pagination.Previous`, or `Pagination.Next` is clicked, with the new page and the event details. Call `eventDetails.cancel()` to keep the current page.
      */
     onPageChange?: (page: number, eventDetails: PaginationRootPrimitive.ChangeEventDetails) => void;
 
     /**
-     * The number of page items to show on each side of the current page item.
+     * Number of pages shown on each side of the selected page before the rest collapse into an ellipsis.
      * @default 2
      */
     siblingCount?: number;
     /**
-     * The number of page items to show for the start and end pages.
+     * Number of pages always shown at the start and the end of the range.
      * @default 1
      */
     boundaryCount?: number;
     /**
-     * Whether the component should ignore user interaction.
+     * Disables the pagination, blocking all interactions on its buttons.
      * @default false
      */
     disabled?: boolean;
@@ -630,7 +664,7 @@ export interface PaginationButtonPrimitiveProps extends VaporUIComponentProps<
     PaginationButtonPrimitive.State
 > {
     /**
-     * The controlled page number of the items that should be displayed.
+     * Page this button selects when clicked. The button is marked as current while this page is selected.
      */
     page: number;
 }
@@ -650,7 +684,12 @@ export interface PaginationPreviousPrimitiveState {
 
 export namespace PaginationPreviousPrimitive {
     export type State = PaginationPreviousPrimitiveState;
-    export type Props = VaporUIComponentProps<'button', State>;
+    export interface Props extends VaporUIComponentProps<'button', State> {
+        /**
+         * Icon shown inside the button. Replaces the default left chevron icon.
+         */
+        children?: VaporUIComponentProps<'button', State>['children'];
+    }
 }
 
 export namespace PaginationPrevious {
@@ -668,7 +707,12 @@ export interface PaginationNextPrimitiveState {
 
 export namespace PaginationNextPrimitive {
     export type State = PaginationNextPrimitiveState;
-    export type Props = VaporUIComponentProps<'button', State>;
+    export interface Props extends VaporUIComponentProps<'button', State> {
+        /**
+         * Icon shown inside the button. Replaces the default right chevron icon.
+         */
+        children?: VaporUIComponentProps<'button', State>['children'];
+    }
 }
 
 export namespace PaginationNext {
@@ -680,6 +724,9 @@ export interface PaginationItemsPrimitiveProps extends Omit<
     ComponentPropsWithoutRef<typeof Fragment>,
     'children'
 > {
+    /**
+     * Content shown in place of the generated page buttons. As a function, receives the pages to show, each with a `type` (`NUM` for a page, `BREAK` for an ellipsis) and a page number in `value`.
+     */
     children?: React.ReactNode | ((pages: PageType[]) => React.ReactNode);
 }
 
@@ -698,5 +745,10 @@ export interface PaginationEllipsisPrimitiveState {
 
 export namespace PaginationEllipsisPrimitive {
     export type State = PaginationEllipsisPrimitiveState;
-    export type Props = VaporUIComponentProps<'span', State>;
+    export interface Props extends VaporUIComponentProps<'span', State> {
+        /**
+         * Icon shown for the skipped pages. Replaces the default more icon.
+         */
+        children?: VaporUIComponentProps<'span', State>['children'];
+    }
 }

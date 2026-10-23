@@ -1,6 +1,14 @@
 {
     "name": "SelectPopupPrimitive",
+    "description": "The popup panel that holds the options. Renders a `<div>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Options shown in the popup, such as `Select.Item`, `Select.Group`, or `Select.Separator`."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
@@ -14,12 +22,6 @@
             "detailedType": "React.CSSProperties | ((state: Select.PopupPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "finalFocus",

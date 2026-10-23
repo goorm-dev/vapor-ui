@@ -1,13 +1,20 @@
 {
     "name": "SegmentedControlIconItem",
-    "description": "An icon-only variant of SegmentedControl.Item with square proportions. Use when a segment contains only an icon and no label text. Renders a `<button>` element.",
+    "description": "Square segment of a segmented control that holds only an icon, with no label text. Renders a `<button>` element.",
     "props": [
         {
             "name": "value",
             "type": ["string"],
             "detailedType": "string",
             "required": true,
-            "description": "The value of the item. This is used to determine which item is selected. It should be unique within the SegmentedControl."
+            "description": "Value that identifies the segment when it is selected. Must be unique within the segmented control."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Content shown inside the segment, such as a label or an icon."
         },
         {
             "name": "className",

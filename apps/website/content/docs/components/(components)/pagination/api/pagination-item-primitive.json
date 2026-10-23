@@ -1,5 +1,6 @@
 {
     "name": "PaginationItemPrimitive",
+    "description": "List item that holds one pagination control, such as a page button or an ellipsis. Renders an `<li>` element.",
     "props": [
         {
             "name": "className",

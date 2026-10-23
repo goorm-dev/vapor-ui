@@ -1,6 +1,6 @@
 {
     "name": "DialogPopup",
-    "description": "Convenience wrapper that composes `Dialog.PortalPrimitive`, `Dialog.OverlayPrimitive`, and `Dialog.PopupPrimitive` into a single element. Use `portalElement` or `overlayElement` to replace individual parts. Renders a `<div>` element.",
+    "description": "Combines `Dialog.PortalPrimitive`, `Dialog.OverlayPrimitive`, and `Dialog.PopupPrimitive` into a single part. Use `portalElement` or `overlayElement` to replace the portal or overlay. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -14,14 +14,14 @@
             "type": ["ReactElement<DialogOverlayPrimitive.Props>"],
             "detailedType": "ReactElement<DialogOverlayPrimitive.Props> | undefined",
             "required": false,
-            "description": "Replaces the default `Dialog.OverlayPrimitive`. Use to customise backdrop appearance or behavior."
+            "description": "Replaces the default `Dialog.OverlayPrimitive`. Use to change the backdrop."
         },
         {
             "name": "portalElement",
             "type": ["ReactElement<DialogPortalPrimitive.Props>"],
             "detailedType": "ReactElement<DialogPortalPrimitive.Props> | undefined",
             "required": false,
-            "description": "Replaces the default `Dialog.PortalPrimitive`. Use to customise portal container behavior."
+            "description": "Replaces the default `Dialog.PortalPrimitive`. Use to change the portal container."
         },
         {
             "name": "style",

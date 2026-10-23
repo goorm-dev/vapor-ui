@@ -1,5 +1,6 @@
 {
     "name": "SelectGroup",
+    "description": "Groups related options under a `Select.GroupLabel`. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

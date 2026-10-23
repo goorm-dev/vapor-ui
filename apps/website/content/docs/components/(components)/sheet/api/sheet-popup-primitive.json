@@ -1,5 +1,6 @@
 {
     "name": "SheetPopupPrimitive",
+    "description": "The sheet panel itself, which slides in from the side set on `Sheet.PositionerPrimitive`. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

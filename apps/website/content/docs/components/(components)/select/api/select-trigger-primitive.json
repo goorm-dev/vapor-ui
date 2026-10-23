@@ -1,6 +1,14 @@
 {
     "name": "SelectTriggerPrimitive",
+    "description": "Button that opens the popup when clicked. Renders a `<button>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Content shown inside the trigger, such as `Select.ValuePrimitive` and `Select.TriggerIconPrimitive`."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
@@ -14,12 +22,6 @@
             "detailedType": "React.CSSProperties | ((state: Select.TriggerPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "disabled",

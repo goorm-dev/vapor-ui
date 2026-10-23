@@ -1,5 +1,6 @@
 {
     "name": "FieldItem",
+    "description": "Groups a single checkbox or radio with its own label and description inside a checkbox group or radio group field. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

@@ -14,6 +14,9 @@ export const root = componentRecipe({
 
     defaultVariants: { flow: 'row' },
     variants: {
+        /**
+         * Direction in which items without an explicit position are placed, set as the `grid-auto-flow` value. The `-dense` values fill earlier gaps with later items.
+         */
         flow: {
             row: { gridAutoFlow: 'row' },
             column: { gridAutoFlow: 'column' },

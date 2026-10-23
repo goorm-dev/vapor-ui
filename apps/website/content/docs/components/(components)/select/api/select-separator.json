@@ -1,5 +1,6 @@
 {
     "name": "SelectSeparator",
+    "description": "Line that visually separates groups of options. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

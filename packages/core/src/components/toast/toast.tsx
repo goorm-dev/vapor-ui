@@ -28,6 +28,9 @@ export const useToastManager = BaseToast.useToastManager as () => UseToastManage
  * ToastProvider
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Provides toast state to its children and shows each toast added through `useToastManager` or a `toastManager`, with an icon, title, description, action, and close button. Doesn't render its own HTML element.
+ */
 export const ToastProvider = ({ toastManager, ...props }: ToastProvider.Props) => {
     const { timeout = 4000, children, ...componentProps } = props;
 
@@ -77,6 +80,9 @@ const ToastList = () => {
  * Toast.ProviderPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Provides toast state to its children without showing any toasts, so you can build your own toast list from the other primitives. Doesn't render its own HTML element.
+ */
 export const ToastProviderPrimitive = ({
     toastManager,
     ...props
@@ -90,6 +96,9 @@ export const ToastProviderPrimitive = ({
  * Toast.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal container that renders the toast list outside the normal DOM hierarchy. Renders a `<div>` element.
+ */
 export const ToastPortalPrimitive = forwardRef<HTMLDivElement, ToastPortalPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -103,6 +112,9 @@ ToastPortalPrimitive.displayName = 'Toast.PortalPrimitive';
  * Toast.ViewportPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Fixed area of the screen where toasts stack. Renders a `<div>` element.
+ */
 export const ToastViewportPrimitive = forwardRef<HTMLDivElement, ToastViewportPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -128,6 +140,9 @@ const [ToastContextProvider, useToastContext] = createContext<ToastProps>({
     hookName: 'useToastContext',
 });
 
+/**
+ * A single toast, colored by the `colorPalette` of its toast object. Renders a `<div>` element.
+ */
 export const ToastRootPrimitive = forwardRef<HTMLDivElement, ToastRootPrimitive.Props>(
     (props, ref) => {
         const {
@@ -158,6 +173,9 @@ ToastRootPrimitive.displayName = 'Toast.RootPrimitive';
  * Toast.ContentPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Container for the text and buttons of a toast. Renders a `<div>` element.
+ */
 export const ToastContentPrimitive = forwardRef<HTMLDivElement, ToastContentPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -177,6 +195,9 @@ ToastContentPrimitive.displayName = 'Toast.ContentPrimitive';
  * Toast.TitlePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Heading that shows the `title` of the toast. Renders an `<h2>` element.
+ */
 export const ToastTitlePrimitive = forwardRef<HTMLHeadingElement, ToastTitlePrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -196,6 +217,9 @@ ToastTitlePrimitive.displayName = 'Toast.TitlePrimitive';
  * Toast.DescriptionPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Paragraph that shows the `description` of the toast. Renders a `<p>` element.
+ */
 export const ToastDescriptionPrimitive = forwardRef<
     HTMLParagraphElement,
     ToastDescriptionPrimitive.Props
@@ -222,6 +246,9 @@ const TOAST_ICONS: IconMapper = {
     danger: <WarningIcon color="white" size="16" />,
 };
 
+/**
+ * Icon of the toast. Shows the `icon` of the toast object, or a default icon for the `success` and `danger` color palettes. Renders an `<svg>` element.
+ */
 export const ToastIconPrimitive = forwardRef<SVGSVGElement, ToastIconPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -240,6 +267,9 @@ ToastIconPrimitive.displayName = 'Toast.IconPrimitive';
  * Toast.ActionPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that runs the action of the toast, styled by the `actionProps` of the toast object. Renders a `<button>` element.
+ */
 export const ToastActionPrimitive = forwardRef<HTMLButtonElement, ToastActionPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -262,6 +292,9 @@ ToastActionPrimitive.displayName = 'Toast.ActionPrimitive';
  * Toast.ClosePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Icon button that closes the toast. Hidden when the `close` option of the toast object is `false`. Renders a `<button>` element.
+ */
 export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimitive.Props>(
     (props, ref) => {
         const {
@@ -385,9 +418,13 @@ export namespace useToastManager {
 
 export interface ToastProviderPrimitiveProps extends BaseToast.Provider.Props {
     /**
-     * A global manager for toasts to use outside of a React component.
+     * Toast manager created with `createToastManager`, for adding toasts from outside React components.
      */
     toastManager?: ToastManager;
+    /**
+     * Part of the app that can show toasts, typically the whole app.
+     */
+    children?: BaseToast.Provider.Props['children'];
 }
 
 export namespace ToastProviderPrimitive {
@@ -414,6 +451,9 @@ export interface ToastRootPrimitiveProps extends Omit<
     VaporUIComponentProps<typeof BaseToast.Root, ToastRootPrimitive.State>,
     'toast'
 > {
+    /**
+     * Toast to show, usually one item of `useToastManager().toasts`. Its `colorPalette`, `icon`, `close`, and `actionProps` set the color, icon, close button, and action button of the toast.
+     */
     toast: ToastObjectType<AnyProp>;
 }
 

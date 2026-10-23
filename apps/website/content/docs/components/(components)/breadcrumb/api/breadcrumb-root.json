@@ -1,11 +1,13 @@
 {
     "name": "BreadcrumbRoot",
+    "description": "Combines `Breadcrumb.RootPrimitive` and `Breadcrumb.ListPrimitive` into a single part, the root of a breadcrumb trail that shows where the current page sits in the site hierarchy. Renders a `<nav>` element.",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
             "required": false,
+            "description": "Size of the breadcrumb, controlling the typography of the links and the size of the separator and ellipsis icons.",
             "defaultValue": "md"
         },
         {

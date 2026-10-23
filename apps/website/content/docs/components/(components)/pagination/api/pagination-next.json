@@ -1,6 +1,14 @@
 {
     "name": "PaginationNext",
+    "description": "Combines `Pagination.ItemPrimitive` and `Pagination.NextPrimitive` into a single part. Renders a `<button>` element inside an `<li>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Icon shown inside the button. Replaces the default right chevron icon."
+        },
         {
             "name": "className",
             "type": ["string", "function"],

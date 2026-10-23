@@ -1,5 +1,6 @@
 {
     "name": "FloatingBarPortalPrimitive",
+    "description": "Portal container that renders the floating bar outside the normal DOM hierarchy. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

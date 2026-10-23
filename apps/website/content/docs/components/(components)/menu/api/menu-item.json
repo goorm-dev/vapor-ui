@@ -1,5 +1,6 @@
 {
     "name": "MenuItem",
+    "description": "Interactive item in the menu that runs an action when selected. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

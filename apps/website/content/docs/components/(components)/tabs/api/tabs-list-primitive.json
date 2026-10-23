@@ -1,5 +1,6 @@
 {
     "name": "TabsListPrimitive",
+    "description": "Container that groups the tab buttons and moves focus between them with the arrow keys. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

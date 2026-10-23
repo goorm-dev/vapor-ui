@@ -1,5 +1,6 @@
 {
     "name": "TableRoot",
+    "description": "Root of the Table compound component, which displays data in rows and columns. Renders a `<table>` element.",
     "props": [
         {
             "name": "className",

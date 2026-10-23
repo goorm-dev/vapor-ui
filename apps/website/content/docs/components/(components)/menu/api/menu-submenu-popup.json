@@ -1,6 +1,14 @@
 {
     "name": "MenuSubmenuPopup",
+    "description": "Combines `Menu.PortalPrimitive`, `Menu.PositionerPrimitive`, and `Menu.PopupPrimitive` into a single part that opens to the right of its trigger item. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Nested menu items shown in the submenu panel, such as `Menu.Item` or `Menu.CheckboxItem`."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
@@ -13,14 +21,14 @@
             "type": ["ReactElement<MenuPortalPrimitive.Props>"],
             "detailedType": "ReactElement<MenuPortalPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered."
+            "description": "Replaces the default `Menu.PortalPrimitive`. Use to change the portal container."
         },
         {
             "name": "positionerElement",
             "type": ["ReactElement<MenuPositionerPrimitive.Props>"],
             "detailedType": "ReactElement<MenuPositionerPrimitive.Props> | undefined",
             "required": false,
-            "description": "A Custom element for Menu.PositionerPrimitive. If not provided, the default Menu.PositionerPrimitive will be rendered."
+            "description": "Replaces the default `Menu.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup."
         },
         {
             "name": "style",
@@ -28,12 +36,6 @@
             "detailedType": "React.CSSProperties | ((state: Menu.SubmenuPopup.State) => (React.CSSProperties | undefined)) | undefined",
             "required": false,
             "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
-        },
-        {
-            "name": "children",
-            "type": ["ReactNode"],
-            "detailedType": "ReactNode",
-            "required": false
         },
         {
             "name": "finalFocus",

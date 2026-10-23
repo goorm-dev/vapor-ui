@@ -1,5 +1,6 @@
 {
     "name": "TooltipTrigger",
+    "description": "Element that opens the tooltip when hovered or focused. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

@@ -1,5 +1,6 @@
 {
     "name": "ToastClosePrimitive",
+    "description": "Icon button that closes the toast. Hidden when the `close` option of the toast object is `false`. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

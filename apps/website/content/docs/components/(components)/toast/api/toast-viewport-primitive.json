@@ -1,5 +1,6 @@
 {
     "name": "ToastViewportPrimitive",
+    "description": "Fixed area of the screen where toasts stack. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

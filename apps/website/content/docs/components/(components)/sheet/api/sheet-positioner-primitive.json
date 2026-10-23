@@ -1,5 +1,6 @@
 {
     "name": "SheetPositionerPrimitive",
+    "description": "Places the sheet popup against the chosen edge of the viewport. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
@@ -13,6 +14,7 @@
             "type": ["bottom", "left", "right", "top"],
             "detailedType": "\"bottom\" | \"left\" | \"right\" | \"top\" | undefined",
             "required": false,
+            "description": "Edge of the viewport the sheet slides in from.",
             "defaultValue": "right"
         },
         {

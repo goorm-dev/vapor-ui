@@ -40,6 +40,9 @@ export const trigger = componentRecipe({
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
+        /**
+         * Size of the multi-select, controlling minimum height, padding, typography, and the size of its icon and badges.
+         */
         size: {
             sm: {
                 gap: vars.size.space['100'],
@@ -59,6 +62,9 @@ export const trigger = componentRecipe({
             },
         },
 
+        /**
+         * Marks the multi-select as invalid, applying error styles. Sets `aria-invalid` on the trigger `<button>` element.
+         */
         invalid: { true: {}, false: {} },
     },
 });

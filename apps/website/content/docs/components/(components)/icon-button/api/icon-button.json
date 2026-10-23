@@ -1,12 +1,13 @@
 {
     "name": "IconButton",
+    "description": "Button that shows only an icon, for compact actions such as closing or editing. The icon is hidden from assistive technology, so give the button an `aria-label`. Renders a `<button>` element.",
     "props": [
         {
             "name": "colorPalette",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "detailedType": "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
             "required": false,
-            "description": "Color palette applied to the button. Controls the background, text, and border colors for all visual variants.",
+            "description": "Color palette of the button, applied to its background, text, and border according to `variant`.",
             "defaultValue": "primary"
         },
         {
@@ -14,6 +15,7 @@
             "type": ["circle", "square"],
             "detailedType": "\"circle\" | \"square\" | undefined",
             "required": false,
+            "description": "Corner style of the icon button.",
             "defaultValue": "square"
         },
         {

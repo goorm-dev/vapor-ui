@@ -1,5 +1,6 @@
 {
     "name": "FieldDescription",
+    "description": "Helper text that explains the field, announced to assistive technologies with the control. Renders a `<p>` element.",
     "props": [
         {
             "name": "className",

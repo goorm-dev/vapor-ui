@@ -1,5 +1,6 @@
 {
     "name": "MenuCheckboxItem",
+    "description": "Combines `Menu.CheckboxItemPrimitive` and `Menu.CheckboxItemIndicatorPrimitive` into a single part, with the check mark after the label. Renders a `<div>` element.",
     "props": [
         {
             "name": "checked",

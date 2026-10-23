@@ -1,5 +1,6 @@
 {
     "name": "MenuRadioItem",
+    "description": "Combines `Menu.RadioItemPrimitive` and `Menu.RadioItemIndicatorPrimitive` into a single part, with the check mark after the label. Renders a `<div>` element.",
     "props": [
         {
             "name": "value",

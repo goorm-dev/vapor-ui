@@ -1,5 +1,6 @@
 {
     "name": "ToolbarGroup",
+    "description": "Groups related toolbar items so they can be disabled together. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

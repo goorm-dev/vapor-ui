@@ -1,5 +1,6 @@
 {
     "name": "CardRoot",
+    "description": "Root of the Card compound component, a bordered container that groups related content and actions. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

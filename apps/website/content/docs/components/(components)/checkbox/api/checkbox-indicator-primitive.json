@@ -1,6 +1,14 @@
 {
     "name": "CheckboxIndicatorPrimitive",
+    "description": "Check mark shown inside the checkbox while it is checked, or a dash while `indeterminate` is set. Renders a `<span>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Icon shown in place of the default check mark or dash, such as an icon component. The element receives a `width` and `height` of `100%`. Anything other than a single element is ignored and the default icon is shown."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
