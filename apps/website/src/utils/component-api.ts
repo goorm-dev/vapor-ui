@@ -23,7 +23,7 @@ const PAGES_DIR = path.join(process.cwd(), 'content/docs/components');
  * the file. Runs at build time on the server; returns undefined when the file is missing.
  */
 export function readComponentApi(name: string): ComponentApi | undefined {
-    const [file] = fs.globSync(`*/api/${name}.json`, { cwd: PAGES_DIR });
+    const [file] = fs.globSync(`**/api/${name}.json`, { cwd: PAGES_DIR });
     if (!file) return undefined;
 
     return JSON.parse(fs.readFileSync(path.join(PAGES_DIR, file), 'utf8'));

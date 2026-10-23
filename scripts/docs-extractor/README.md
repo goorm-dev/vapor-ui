@@ -80,10 +80,10 @@ The output file path and the fields listed here form the contract with these con
 ### Output files
 
 - One JSON file per component, in the `api/` folder of the page that documents it: `<pages>/<page>/api/<name>.json`, next to `<page>/index.mdx`. The name is the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
-- The page is the component's folder under `components/`: `src/components/avatar/` → `<pages>/avatar/`. `PAGE_FOR_COMPONENT` in `src/write.ts` lists the exceptions: `radio-group` is documented on `radio`, and `alert-dialog` and `theme-provider` have no components page, so nothing is written for them.
+- The page is the component's folder under `components/`: `src/components/avatar/` → the page whose URL slug is `avatar`, either `<pages>/avatar/` or inside a route group such as `<pages>/(components)/avatar/`. A real folder is part of the slug, so `<pages>/patterns/form/` is not the `form` page. `PAGE_FOR_COMPONENT` in `src/write.ts` lists the exceptions: `radio-group` is documented on `radio`, and `alert-dialog` and `theme-provider` have no components page, so nothing is written for them.
 - A component whose page folder doesn't exist fails the run. Add the page or an entry in `PAGE_FOR_COMPONENT`.
 - A full run deletes JSON files in any `<pages>/<page>/api/` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
-- `toast/api/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
+- `(components)/toast/api/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
 - The CLI formats the written files with Prettier.
 
 ### Fields
