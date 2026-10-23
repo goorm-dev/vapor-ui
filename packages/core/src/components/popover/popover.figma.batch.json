@@ -1,0 +1,17 @@
+{
+    "templateFile": "./popover.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33235-29339",
+            "component": "Popover.Root",
+            "source": "src/components/popover/popover.tsx"
+        },
+        {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33235-29378",
+            "component": "Popover.Popup",
+            "source": "src/components/popover/popover.tsx"
+        }
+    ]
+}

@@ -1,0 +1,59 @@
+{
+    "templateFile": "./table.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-7253",
+            "component": "Table.Root",
+            "source": "src/components/table/table.tsx"
+        },
+        {
+            "part": "header",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5770",
+            "component": "Table.Header",
+            "source": "src/components/table/table.tsx"
+        },
+        {
+            "part": "body",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5777",
+            "component": "Table.Body",
+            "source": "src/components/table/table.tsx"
+        },
+        {
+            "part": "footer",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5784",
+            "component": "Table.Footer",
+            "source": "src/components/table/table.tsx"
+        },
+        {
+            "part": "row",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5760",
+            "component": "Table.Row",
+            "source": "src/components/table/table.tsx"
+        },
+        {
+            "part": "heading",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35551-3279",
+            "component": "Table.Heading",
+            "source": "src/components/table/table.tsx"
+        },
+        {
+            "part": "cell",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35551-3281",
+            "component": "Table.Cell",
+            "source": "src/components/table/table.tsx"
+        },
+        {
+            "part": "columnGroup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-3815",
+            "component": "Table.ColumnGroup",
+            "source": "src/components/table/table.tsx"
+        },
+        {
+            "part": "column",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35551-3348",
+            "component": "Table.Column",
+            "source": "src/components/table/table.tsx"
+        }
+    ]
+}
