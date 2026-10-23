@@ -18,6 +18,10 @@ import IconStyleGuide from '~/components/icon-style-guide';
 import InstallSelector from '~/components/install-selector/install-selector';
 
 import { ColorPalette } from './components/color-swatch';
+import { DoImage } from './components/composites/do-image';
+import { DocsGrid } from './components/composites/docs-grid';
+import { DocsImage } from './components/composites/docs-image';
+import { DontImage } from './components/composites/dont-image';
 import { Tabs } from './components/docs-tabs';
 import { BasicColor, SemanticColor } from './components/foundation-color-tabs';
 import IntroLinkCardContainer from './components/intro-link-card-container';
@@ -54,6 +58,12 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         IntroLinkCardContainer,
         Step,
         Steps,
+
+        // composites
+        DocsImage,
+        DoImage,
+        DontImage,
+        DocsGrid,
         ...components,
     } as MDXComponents;
 };
