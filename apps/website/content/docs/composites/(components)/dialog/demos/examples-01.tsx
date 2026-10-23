@@ -8,11 +8,7 @@ export default function Demo() {
             trigger={<Button>새 그룹 만들기</Button>}
             size="md"
             title="새 그룹 만들기"
-            action={
-                <Button size="lg" colorPalette="primary" variant="fill">
-                    등록하기
-                </Button>
-            }
+            action={<Dialog.Action>등록하기</Dialog.Action>}
         >
             (content)
         </Dialog.Root>

@@ -7,8 +7,8 @@ slug: 'alert-dialog'
 
 <DocsImage src="/composites/alert-dialog/images/anatomy-01.webp" alt="" />
 
-| #   | Element            | Description                                                                                                           |     |
-| --- | ------------------ | --------------------------------------------------------------------------------------------------------------------- | --- |
+| #   | Element            | Description                                                                                                           |
+| --- | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
 | 1   | Title              | Alert dialog가 실행할 작업을 설명합니다. aria-labelledby을 통해 Alert dialog의 레이블이 지정됩니다.                   |
 | 2   | Description        | Alert dialog 실행 이후 발생할 결과를 설명합니다. aria-describedby을 통해 Alert dialog와 연결됩니다.                   |
 | 3   | Content (optional) | 작업 내용과 관련된 콘텐츠로 구성됩니다. 가장 핵심이 되는 정보를 제공해야 할 때 선택적으로 사용합니다.                 |
@@ -25,17 +25,13 @@ slug: 'alert-dialog'
 
 삭제, 초기화, 탈퇴처럼 사용자가 직접 작업한 결과물이 사라지고 데이터를 복구할 수 없는 작업 전에 사용하세요. 실수를 막기 위해 강한 경고가 필요할 때 사용합니다.
 
-{/* TODO(VAPOR-260): replace fallback with live Preview */}
-
-<div className="rounded-v-300 bg-v-canvas-200 h-56 not-prose my-v-300" />
+<Demo file="/content/docs/composites/(components)/alert-dialog/demos/examples-01.tsx" />
 
 ### 실행 전 확인이 필요한 작업에 사용하세요
 
 사용자가 결정한 작업을 실행하기 전 확인을 요청할 때 사용합니다. 실행하면 상태는 바뀌지만 큰 손실이 없거나 복구할 방법이 있는 상황에 사용합니다.
 
-{/* TODO(VAPOR-260): replace fallback with live Preview */}
-
-<div className="rounded-v-300 bg-v-canvas-200 h-56 not-prose my-v-300" />
+<Demo file="/content/docs/composites/(components)/alert-dialog/demos/examples-02.tsx" />
 
 ## Best practices
 
