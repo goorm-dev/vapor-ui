@@ -5,25 +5,98 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
-## 1.6.0
+## 1.7.0
 
-### Alertdialog
+### Alert Dialog
 
-- add AlertDialog.Header ([#725](https://github.com/goorm-dev/vapor-ui/pull/725)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+- align AlertDialog popup width with design (28.75rem) ([#767](https://github.com/goorm-dev/vapor-ui/pull/767)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Button
+### Avatar
 
-- apply the light interaction layer to the `ghost` variant of `Button` and `IconButton` to match the design ([#747](https://github.com/goorm-dev/vapor-ui/pull/747)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+- keep `Avatar` fallback color stable across re-renders and SSR hydration when `alt` is empty ([#777](https://github.com/goorm-dev/vapor-ui/pull/777)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Breadcrumb
+
+- fix(breadcrumb): remove `size` from `Breadcrumb.Item` / `Breadcrumb.LinkPrimitive` props ([#763](https://github.com/goorm-dev/vapor-ui/pull/763)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+    `size` on `Breadcrumb.Item` / `Breadcrumb.LinkPrimitive` never affected styling (only `Breadcrumb.Root`'s `size` is used) and leaked to the DOM as `<a size="...">`.
+
+    **Action required:** remove `size` from any `Breadcrumb.Item` / `Breadcrumb.LinkPrimitive` and set it on `Breadcrumb.Root` instead. Passing it there is now a type error.
+
+### Collapsible
+
+- refactor(collapsible): use `BaseCollapsible.Trigger.State` for `CollapsibleTrigger.State` ([#750](https://github.com/goorm-dev/vapor-ui/pull/750)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 ### Core
+
+- keep the arrow pointing at the trigger when the popup shifts ([#774](https://github.com/goorm-dev/vapor-ui/pull/774)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- Document every public component and prop with JSDoc so their descriptions reach the props tables and type hints. ([#769](https://github.com/goorm-dev/vapor-ui/pull/769)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- infer state in `style` and `render` callbacks instead of `any` ([#751](https://github.com/goorm-dev/vapor-ui/pull/751)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Field
+
+- add Field.RequiredSymbol ([#755](https://github.com/goorm-dev/vapor-ui/pull/755)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Menu
+
+- Add `Menu.SubmenuTrigger` primitive for nested menu triggers. And retune css values. ([#728](https://github.com/goorm-dev/vapor-ui/pull/728)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Pagination
+
+- remove unused internal `PaginationButton` and `PaginationEllipsis` type namespaces ([#784](https://github.com/goorm-dev/vapor-ui/pull/784)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Website
+
+- Ship the documentation in the package: every docs page (prose, demo code and props tables) is included as markdown under `@vapor-ui/core/docs/`, for example `docs/components/button.md`. ([#766](https://github.com/goorm-dev/vapor-ui/pull/766)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Etc.
+
+- add RadioGroup.RequiredSymbol ([#754](https://github.com/goorm-dev/vapor-ui/pull/754)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- re-export the public API of single-component barrels by name instead of `export *` (no public API change) ([#787](https://github.com/goorm-dev/vapor-ui/pull/787)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- remove `useAutoResize` and type-only exports that leaked through `export *` ([#787](https://github.com/goorm-dev/vapor-ui/pull/787)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+    - `TextInputProps` → `TextInput.Props`
+    - `TextareaFieldProps`, `TextareaState` → `Textarea.Props`, `Textarea.State`
+    - `ThemeProviderProps`, `ThemeConfig` → `ComponentProps<typeof ThemeProvider>`
+    - `ThemeScopeProps` → `ComponentProps<typeof ThemeScope>`
+    - `UseThemeProps`, `UseThemeReturn` → `ReturnType<typeof useTheme>`
+    - `useAutoResize`, `AutoResizeOptions` have no replacement (internal to `Textarea`)
+
+- remove unused internal `ToggleGroupProvider` and `useToggleGroupContext` exports ([#787](https://github.com/goorm-dev/vapor-ui/pull/787)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.3.2
+
+## 1.6.0
+
+### General changes
 
 - align component backgrounds with the canvas token hierarchy and expose `bg-canvas-inverse` in sprinkles ([#698](https://github.com/goorm-dev/vapor-ui/pull/698)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 - Extract shared arrow positioning logic from `NavigationMenu`, `Popover`, and `Tooltip` into a `useArrowPosition` hook. Also bump the default `sideOffset` of these three primitives from `8` to `10`. ([#758](https://github.com/goorm-dev/vapor-ui/pull/758)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Deps
+- add data-slots for all components ([#703](https://github.com/goorm-dev/vapor-ui/pull/703)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- apply `canvas-inverse` tokens to the tooltip/toast component. ([#696](https://github.com/goorm-dev/vapor-ui/pull/696)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Alertdialog
+
+- add new `AlertDialog` components ([#704](https://github.com/goorm-dev/vapor-ui/pull/704)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- add AlertDialog.Header ([#725](https://github.com/goorm-dev/vapor-ui/pull/725)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Avatar
 
 - update `@base-ui/react` to 1.8.0 — support `keepMounted` on `Avatar` with stacked image/fallback styles, accept functional updater in Toast `update` ([#729](https://github.com/goorm-dev/vapor-ui/pull/729)) - Thanks [@renovate](https://github.com/apps/renovate)!
+
+### Button
+
+- apply the light interaction layer to the `ghost` variant of `Button` and `IconButton` to match the design ([#747](https://github.com/goorm-dev/vapor-ui/pull/747)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 ### Dialog
 
@@ -48,14 +121,6 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 ### Typography
 
 - fix the code font family name to `"Fira Code"` and apply it to the `code1` / `code2` typography styles ([#748](https://github.com/goorm-dev/vapor-ui/pull/748)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
-
-### Etc.
-
-- add data-slots for all components ([#703](https://github.com/goorm-dev/vapor-ui/pull/703)) - Thanks [@noahchoii](https://github.com/noahchoii)!
-
-- add new `AlertDialog` components ([#704](https://github.com/goorm-dev/vapor-ui/pull/704)) - Thanks [@noahchoii](https://github.com/noahchoii)!
-
-- apply `canvas-inverse` tokens to the tooltip/toast component. ([#696](https://github.com/goorm-dev/vapor-ui/pull/696)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ### Updated Dependencies
 
