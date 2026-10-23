@@ -8,6 +8,7 @@
 
         "---Components---",
         "(components)/dialog/index.mdx",
-        "(components)/alert-dialog/index.mdx"
+        "(components)/alert-dialog/index.mdx",
+        "(components)/menu/index.mdx"
     ]
 }

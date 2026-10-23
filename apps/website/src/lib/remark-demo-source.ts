@@ -17,7 +17,8 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { normalizeFile } from '~/utils/paths';
+import { CONTENT_PATH } from '~/utils/content-loader';
+import { isAbsolutePath } from '~/utils/paths';
 
 interface Node {
     type: string;
@@ -72,7 +73,7 @@ const isDocGenCodeBlock = (node: Node): node is CodeNode => {
 };
 
 const resolveAbsolute = (file: string, cwd: string): string =>
-    path.resolve(cwd, normalizeFile(file));
+    isAbsolutePath(file) ? path.resolve(cwd, file.slice(1)) : path.resolve(cwd, CONTENT_PATH, file);
 
 const buildCodeBlockFromFile = (file: string, cwd: string): CodeNode | null => {
     const abs = resolveAbsolute(file, cwd);

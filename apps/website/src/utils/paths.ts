@@ -3,3 +3,5 @@ export const normalizeFile = (file: string): string => file.replace(/^\.?\//, ''
 
 /** Build the path form `fumadocs-docgen` and `replaceBlockDoc` expect. */
 export const fileToDocGenPath = (file: string): string => `./${normalizeFile(file)}`;
+
+export const isAbsolutePath = (file: string) => file.startsWith('/');

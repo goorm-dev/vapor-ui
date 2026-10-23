@@ -2,8 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { fileToDocGenPath } from '~/utils/paths';
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 type DocGenFile = {
@@ -19,7 +17,7 @@ type DocGenFile = {
  */
 export const replaceDemoSelfClosing = (text: string): string =>
     text.replace(/<Demo\s+file=(["'])([^"']+)\1\s*\/>/g, (_, _quote: string, file: string) => {
-        const config = JSON.stringify({ file: fileToDocGenPath(file), codeblock: true }, null, 4);
+        const config = JSON.stringify({ file: file, codeblock: true }, null, 4);
         return `<Demo file="${file}">\n\`\`\`json doc-gen:file\n${config}\n\`\`\`\n</Demo>`;
     });
 
