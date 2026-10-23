@@ -1,5 +1,13 @@
 # @vapor-ui/icons
 
+## 1.3.2
+
+### Etc.
+
+- Update icons from Figma ([#785](https://github.com/goorm-dev/vapor-ui/pull/785)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **Updated Basic Icons:** `PortforwardingIcon`, `ExportImageIcon`, `IntelliSenseInterfaceIcon`, `PortforwardingOutlineIcon`, `DividerOutlineIcon`, `StruckOutlineIcon`, `ImagePackOutlineIcon`, `BranchOutlineIcon`, `ContainerRunOutlineIcon`, `ContainerStopOutlineIcon`
+
 ## 1.3.1
 
 ### Icons
