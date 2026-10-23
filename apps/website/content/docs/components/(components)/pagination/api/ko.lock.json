@@ -26,56 +26,12 @@
             "terms": "345ff40e5505524c"
         }
     },
-    "pagination-button": {
-        "props.className": {
-            "source": "594324ed2c588d62",
-            "guide": 2,
-            "terms": "345ff40e5505524c"
-        },
-        "props.page": {
-            "source": "695d8f4e02db262f",
-            "guide": 2,
-            "terms": "4f53cda18c2baa0c"
-        },
-        "props.render": {
-            "source": "65377c3eea346be4",
-            "guide": 2,
-            "terms": "2dd8dcdba2b16492"
-        },
-        "props.style": {
-            "source": "b21e70bdc0150841",
-            "guide": 2,
-            "terms": "345ff40e5505524c"
-        }
-    },
     "pagination-ellipsis-primitive": {
         "description": {
             "source": "94d2261bf2761c39",
             "guide": 2,
             "terms": "1912fd938105e849"
         },
-        "props.children": {
-            "source": "c4d9668e5d73fc57",
-            "guide": 2,
-            "terms": "4f53cda18c2baa0c"
-        },
-        "props.className": {
-            "source": "594324ed2c588d62",
-            "guide": 2,
-            "terms": "345ff40e5505524c"
-        },
-        "props.render": {
-            "source": "65377c3eea346be4",
-            "guide": 2,
-            "terms": "2dd8dcdba2b16492"
-        },
-        "props.style": {
-            "source": "b21e70bdc0150841",
-            "guide": 2,
-            "terms": "345ff40e5505524c"
-        }
-    },
-    "pagination-ellipsis": {
         "props.children": {
             "source": "c4d9668e5d73fc57",
             "guide": 2,

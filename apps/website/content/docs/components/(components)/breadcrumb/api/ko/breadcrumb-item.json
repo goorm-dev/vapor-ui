@@ -11,14 +11,6 @@
             "defaultValue": "false"
         },
         {
-            "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
-            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false,
-            "description": "Breadcrumb의 크기. 링크의 타이포그래피와 구분자 및 생략 아이콘의 크기를 결정합니다.",
-            "defaultValue": "md"
-        },
-        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Breadcrumb.Item.State) => (string | undefined)) | undefined",

@@ -22,7 +22,7 @@
             "detailedType": "boolean | undefined",
             "required": false,
             "description": "체크박스 항목이 체크되지 않았을 때도 HTML 요소를 DOM에 유지할지 여부.",
-            "defaultValue": "false"
+            "defaultValue": "true"
         },
         {
             "name": "render",

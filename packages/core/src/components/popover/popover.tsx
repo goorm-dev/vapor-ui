@@ -5,11 +5,9 @@ import { forwardRef } from 'react';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
 
-import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
-import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -114,19 +112,14 @@ PopoverPositionerPrimitive.displayName = 'Popover.PositionerPrimitive';
 export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrimitive.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
-        const { popupRef, arrowRef, position } = useArrowPosition({
-            initialSide: 'bottom',
-            initialAlign: 'start',
-        });
-        const composedRef = composeRefs(popupRef, ref);
 
         return (
             <BasePopover.Popup
-                ref={composedRef}
+                ref={ref}
                 className={cn(styles.popup, className)}
                 {...componentProps}
             >
-                <BasePopover.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                <BasePopover.Arrow className={styles.arrow}>
                     <ArrowIcon />
                 </BasePopover.Arrow>
 

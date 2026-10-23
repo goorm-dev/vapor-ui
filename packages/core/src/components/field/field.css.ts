@@ -69,6 +69,11 @@ export const label = componentRecipe({
     },
 });
 
+export const requiredSymbol = componentStyle([
+    foregrounds({ color: 'danger' }),
+    typography({ style: 'subtitle2' }),
+]);
+
 export const item = componentStyle({
     display: 'flex',
     alignItems: 'flex-start',

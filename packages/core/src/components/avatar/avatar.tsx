@@ -7,6 +7,7 @@ import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { useRenderElement } from '~/hooks/use-render-element';
+import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
@@ -140,7 +141,8 @@ export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbac
     (props, ref) => {
         const { className, style, children, ...componentProps } = resolveStyles(props);
         const { size, alt, delay } = useAvatarContext();
-        const background = getRandomColor(alt ?? '');
+        const id = useVaporId();
+        const background = getFallbackColor(alt, id);
 
         const { style: mergedStyle } = mergeStatefulProps(
             { style: assignInlineVars({ [styles.fallbackBgVar]: background }) },
@@ -164,7 +166,6 @@ AvatarFallbackPrimitive.displayName = 'Avatar.FallbackPrimitive';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-// get first letter of the name
 const getAvatarInitials = (name = 'vapor') => {
     return name.charAt(0).toUpperCase();
 };
@@ -189,11 +190,8 @@ const stringAsciiPRNG = (value: string, m: number) => {
     return random;
 };
 
-const getRandomNumber = (maxNumber: number) => {
-    const randomNumber = Math.floor(Math.random() * maxNumber);
-
-    return randomNumber;
-};
+const stringHash = (value: string) =>
+    value.split('').reduce((hash, letter) => (hash * 31 + letter.charCodeAt(0)) >>> 0, 0);
 
 const DEFAULT_COLORS: string[] = [
     vars.color.red['500'],
@@ -204,19 +202,10 @@ const DEFAULT_COLORS: string[] = [
     vars.color.green['500'],
     vars.color.orange['500'],
 ];
+const getFallbackColor = (alt: string | undefined, id: string) => {
+    if (alt) return DEFAULT_COLORS[stringAsciiPRNG(alt, DEFAULT_COLORS.length)];
 
-/**
- * Returns a random color if the alternative text is an empty string.
- * Returns a specific color by the Linear Congruential Generator algorithm if the alternative text exists.
- *
- * @param value Alternative text
- * @param colors Types of colors to select from
- * @returns Color CSS Variables
- */
-const getRandomColor = (value: string, colors: string[] = DEFAULT_COLORS) => {
-    if (!value) return colors[getRandomNumber(colors.length)];
-
-    return colors[stringAsciiPRNG(value, colors.length)];
+    return DEFAULT_COLORS[stringHash(id) % DEFAULT_COLORS.length];
 };
 
 /* -----------------------------------------------------------------------------------------------*/

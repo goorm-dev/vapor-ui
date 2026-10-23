@@ -158,7 +158,7 @@ const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
 /**
  * Applies a light or dark theme to the page and shares it with `useTheme`. A `ThemeProvider` nested inside another only renders its children. Doesn't render its own HTML element.
  */
-const ThemeProvider = (props: ThemeProviderProps) => {
+export const ThemeProvider = (props: ThemeProviderProps) => {
     const context = useContext(ThemeContext);
 
     // NOTE: Preventing nested ThemeProviders
@@ -297,7 +297,7 @@ const Theme = ({
 /**
  * Returns the current theme and functions to change it. Throws when used outside a `ThemeProvider`.
  */
-const useTheme = (): UseThemeProps => {
+export const useTheme = (): UseThemeProps => {
     const context = useContext(ThemeContext);
 
     if (!context) {
@@ -324,7 +324,7 @@ interface ThemeScopeProps extends React.HTMLAttributes<HTMLDivElement> {
 /**
  * Applies a fixed light or dark theme to a section of the page, regardless of the global theme. Renders a `<div>` element.
  */
-const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) => {
+export const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) => {
     return (
         <div
             data-vapor-theme={forcedTheme}
@@ -337,6 +337,5 @@ const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) 
 };
 
 /* -----------------------------------------------------------------------------------------------*/
-export { ThemeProvider, ThemeScope, useTheme };
 export type { ThemeConfig, UseThemeProps, ThemeProviderProps, ThemeScopeProps };
 export type UseThemeReturn = UseThemeProps;

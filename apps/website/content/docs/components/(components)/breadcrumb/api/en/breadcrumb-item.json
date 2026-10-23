@@ -11,14 +11,6 @@
             "defaultValue": "false"
         },
         {
-            "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
-            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false,
-            "description": "Size of the breadcrumb, controlling the typography of the links and the size of the separator and ellipsis icons.",
-            "defaultValue": "md"
-        },
-        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Breadcrumb.Item.State) => (string | undefined)) | undefined",
