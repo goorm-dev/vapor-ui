@@ -1,6 +1,7 @@
 import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
+import { arrowAlign } from '~/styles/mixins/arrow-align';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
@@ -191,7 +192,7 @@ export const viewport = componentStyle({
 
 export const arrow = componentStyle({
     display: 'flex',
-    transition: `left ${durationVar} ${easingVar}`,
+    transition: `left ${durationVar} ${easingVar}, translate ${durationVar} ${easingVar}`,
 
     color: vars.color.background['canvas-overlay'],
 
@@ -216,6 +217,8 @@ export const arrow = componentStyle({
         '&[data-starting-style], &[data-ending-style]': {
             opacity: 0,
         },
+
+        ...arrowAlign({ block: vars.size.space['150'], inline: vars.size.space['150'] }),
     },
 });
 

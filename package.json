@@ -16,6 +16,7 @@
         "clean": "turbo run clean && rimraf node_modules .turbo",
         "codemod": "pnpm --filter @vapor-ui/codemod",
         "color-generator": "pnpm --filter @vapor-ui/color-generator",
+        "composites": "pnpm --filter @vapor-ui/composites",
         "core": "pnpm --filter @vapor-ui/core",
         "css-generator": "pnpm --filter @vapor-ui/css-generator",
         "dev": "turbo dev",

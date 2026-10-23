@@ -1,0 +1,47 @@
+{
+    "templateFile": "./multi-select.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-91285",
+            "component": "MultiSelect.Root",
+            "source": "src/components/multi-select/multi-select.tsx"
+        },
+        {
+            "part": "trigger",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-91337",
+            "component": "MultiSelect.Trigger",
+            "source": "src/components/multi-select/multi-select.tsx"
+        },
+        {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-97049",
+            "component": "MultiSelect.Popup",
+            "source": "src/components/multi-select/multi-select.tsx"
+        },
+        {
+            "part": "group",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-94713",
+            "component": "MultiSelect.Group",
+            "source": "src/components/multi-select/multi-select.tsx"
+        },
+        {
+            "part": "groupLabel",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-94648",
+            "component": "MultiSelect.GroupLabel",
+            "source": "src/components/multi-select/multi-select.tsx"
+        },
+        {
+            "part": "item",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-91322",
+            "component": "MultiSelect.Item",
+            "source": "src/components/multi-select/multi-select.tsx"
+        },
+        {
+            "part": "separator",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-94649",
+            "component": "MultiSelect.Separator",
+            "source": "src/components/multi-select/multi-select.tsx"
+        }
+    ]
+}
