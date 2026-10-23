@@ -25,7 +25,8 @@ function runCli(): void {
   Options
     --input           Directory to scan for component .tsx files
     --tsconfig        tsconfig.json used to resolve types
-    --pages           Directory holding one folder per page (<page>/index.mdx).
+    --pages           Directory holding one folder per page (<page>/index.mdx),
+                      directly or in a route group like (components)/.
                       Each component's JSON is written to <page>/api/en/,
                       mirrored to <page>/api/ko/ (see README)
     --component, -n   Extract only this component file (default: all)

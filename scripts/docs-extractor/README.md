@@ -80,11 +80,11 @@ The output file path and the fields listed here form the contract with these con
 ### Output files
 
 - One JSON file per component, in the `api/en/` folder of the page that documents it: `<pages>/<page>/api/en/<name>.json`, next to `<page>/index.mdx`. The name is the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
-- The page is the component's folder under `components/`: `src/components/avatar/` → `<pages>/avatar/`. `PAGE_FOR_COMPONENT` in `src/write.ts` lists the exceptions: `radio-group` is documented on `radio`, and `alert-dialog` and `theme-provider` have no components page, so nothing is written for them.
+- The page is the component's folder under `components/`: `src/components/avatar/` → the page whose URL slug is `avatar`, either `<pages>/avatar/` or inside a route group such as `<pages>/(components)/avatar/`. A real folder is part of the slug, so `<pages>/patterns/form/` is not the `form` page. `PAGE_FOR_COMPONENT` in `src/write.ts` lists the exceptions: `radio-group` is documented on `radio`, and `alert-dialog` and `theme-provider` have no components page, so nothing is written for them.
 - A component whose page folder doesn't exist fails the run. Add the page or an entry in `PAGE_FOR_COMPONENT`.
 - `api/ko/<name>.json` mirrors every `api/en/<name>.json` with the same structure. For each description, it keeps the Korean when `api/ko.lock.json` records the hash of the current English for it (`<name>` → `description` or `props.<prop>` → `source`), and writes the English otherwise, as a placeholder until `pnpm docs:translate` runs. The extractor never writes the lock and never calls an AI. A lock or an existing `ko/` file that is not valid JSON fails the run, so its translations are not replaced with English.
 - A full run deletes JSON files in any `<pages>/<page>/api/en/` that it did not write, with their `ko/` mirror, if they have a string `name` and a `props` array. It also deletes any `ko/` file whose `en/` file is gone. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
-- `toast/api/en/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
+- `(components)/toast/api/en/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
 - The CLI formats the written files with Prettier.
 
 ### Fields

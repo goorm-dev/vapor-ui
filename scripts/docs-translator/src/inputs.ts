@@ -31,7 +31,7 @@ export function loadInputs(flags: { pages: string; guide: string; glossary: stri
         pagesDir,
         guide: readGuide(flags.guide),
         glossary: JSON.parse(fs.readFileSync(flags.glossary, 'utf8')),
-        apiDirs: globSync('*/api', { cwd: pagesDir, absolute: true })
+        apiDirs: globSync('**/api', { cwd: pagesDir, absolute: true })
             .filter(
                 (dir) =>
                     fs.existsSync(path.join(dir, 'en')) ||
@@ -41,6 +41,10 @@ export function loadInputs(flags: { pages: string; guide: string; glossary: stri
     };
 }
 
-/** `<pagesDir>/meter/api` → `meter`. */
+/** `<pagesDir>/(components)/meter/api` → `meter`: route groups `(…)` are not part of the name. */
 export const pageName = (inputs: Inputs, apiDir: string) =>
-    path.relative(inputs.pagesDir, path.dirname(apiDir));
+    path
+        .relative(inputs.pagesDir, path.dirname(apiDir))
+        .split(path.sep)
+        .filter((segment) => !/^\(.+\)$/.test(segment))
+        .join('/');
