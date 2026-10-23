@@ -4,14 +4,13 @@ import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
+import type { HTMLProps } from '@base-ui/react/types';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
-import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
-import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -106,6 +105,8 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             href,
             disabled: disabledProp,
             className: classNameProp,
+            style: styleProp,
+            render: renderProp,
             ...componentProps
         } = resolveStyles(props);
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
@@ -116,12 +117,25 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             current,
         });
 
-        // NOTE: Preprocessing `classNameProp` below to account for the custom NavigationMenuLink State type.
+        // NOTE: Base UI passes its own Link State to callbacks; map it to the custom NavigationMenuLink State.
+        const toState = (state: BaseNavigationMenu.Link.State): NavigationMenuLink.State => ({
+            ...state,
+            current: state.active,
+            disabled: !!disabled,
+        });
         const className =
             typeof classNameProp === 'function'
-                ? (state: BaseNavigationMenu.Link.State) =>
-                      classNameProp({ ...state, current: state.active, disabled: !!disabled })
+                ? (state: BaseNavigationMenu.Link.State) => classNameProp(toState(state))
                 : classNameProp;
+        const style =
+            typeof styleProp === 'function'
+                ? (state: BaseNavigationMenu.Link.State) => styleProp(toState(state))
+                : styleProp;
+        const render =
+            typeof renderProp === 'function'
+                ? (renderProps: HTMLProps, state: BaseNavigationMenu.Link.State) =>
+                      renderProp(renderProps, toState(state))
+                : renderProp;
 
         return (
             <BaseNavigationMenu.Link
@@ -131,6 +145,8 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
                 aria-disabled={disabled ? 'true' : undefined}
                 active={current}
                 className={cn(styles.link({ size }), className)}
+                style={style}
+                render={render}
                 {...dataAttrs}
                 {...componentProps}
             />
@@ -284,16 +300,14 @@ export const NavigationMenuPopupPrimitive = forwardRef<
     NavigationMenuPopupPrimitive.Props
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
-    const { popupRef, arrowRef, position } = useArrowPosition();
-    const composedRef = composeRefs(popupRef, ref);
 
     return (
         <BaseNavigationMenu.Popup
-            ref={composedRef}
+            ref={ref}
             className={cn(styles.popup, className)}
             {...componentProps}
         >
-            <BaseNavigationMenu.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+            <BaseNavigationMenu.Arrow className={styles.arrow}>
                 <ArrowIcon />
             </BaseNavigationMenu.Arrow>
 

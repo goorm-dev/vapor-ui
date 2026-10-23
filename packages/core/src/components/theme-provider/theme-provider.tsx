@@ -145,7 +145,7 @@ const disableAnimation = (nonce?: string) => {
  * -----------------------------------------------------------------------------------------------*/
 const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
 
-const ThemeProvider = (props: ThemeProviderProps) => {
+export const ThemeProvider = (props: ThemeProviderProps) => {
     const context = useContext(ThemeContext);
 
     // NOTE: Preventing nested ThemeProviders
@@ -281,7 +281,7 @@ const Theme = ({
 /* -------------------------------------------------------------------------------------------------
  * useTheme Hook
  * -----------------------------------------------------------------------------------------------*/
-const useTheme = (): UseThemeProps => {
+export const useTheme = (): UseThemeProps => {
     const context = useContext(ThemeContext);
 
     if (!context) {
@@ -302,7 +302,7 @@ interface ThemeScopeProps extends React.HTMLAttributes<HTMLDivElement> {
     forcedTheme: ResolvedTheme;
 }
 
-const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) => {
+export const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) => {
     return (
         <div
             data-vapor-theme={forcedTheme}
@@ -315,6 +315,5 @@ const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) 
 };
 
 /* -----------------------------------------------------------------------------------------------*/
-export { ThemeProvider, ThemeScope, useTheme };
 export type { ThemeConfig, UseThemeProps, ThemeProviderProps, ThemeScopeProps };
 export type UseThemeReturn = UseThemeProps;

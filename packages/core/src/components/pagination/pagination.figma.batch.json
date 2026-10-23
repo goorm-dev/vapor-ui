@@ -1,0 +1,29 @@
+{
+    "templateFile": "./pagination.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38936-14565",
+            "component": "Pagination.Root",
+            "source": "src/components/pagination/pagination.tsx"
+        },
+        {
+            "part": "items",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38936-13552",
+            "component": "Pagination.Items",
+            "source": "src/components/pagination/pagination.tsx"
+        },
+        {
+            "part": "previous",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=51560-9297",
+            "component": "Pagination.Previous",
+            "source": "src/components/pagination/pagination.tsx"
+        },
+        {
+            "part": "next",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=51560-9327",
+            "component": "Pagination.Next",
+            "source": "src/components/pagination/pagination.tsx"
+        }
+    ]
+}
