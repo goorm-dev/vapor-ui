@@ -1,7 +1,8 @@
 packages:
     - apps/*
     - packages/*
-    - scripts/ts-api-extractor
+    - scripts/docs-extractor
+    - scripts/docs-translator
     - scripts/icon-extractor
     - scripts/extract-composites
 

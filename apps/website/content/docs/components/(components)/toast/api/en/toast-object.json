@@ -1,0 +1,94 @@
+{
+    "name": "ToastObject",
+    "description": "Options of one toast, passed to `add`, `update`, and `promise` of `useToastManager` or a `toastManager`.",
+    "props": [
+        {
+            "name": "id",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Unique identifier of the toast. Generated when omitted."
+        },
+        {
+            "name": "title",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Title of the toast."
+        },
+        {
+            "name": "description",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Description of the toast."
+        },
+        {
+            "name": "colorPalette",
+            "type": ["success", "danger", "info"],
+            "detailedType": "\"success\" | \"danger\" | \"info\" | undefined",
+            "required": false,
+            "description": "Color palette of the toast. Also picks the default icon.",
+            "defaultValue": "info"
+        },
+        {
+            "name": "icon",
+            "type": ["ReactElement"],
+            "detailedType": "ReactElement | undefined",
+            "required": false,
+            "description": "Icon shown in the toast. Replaces the default icon of `colorPalette`."
+        },
+        {
+            "name": "close",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether to show the close button.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "actionProps",
+            "type": ["ActionProps"],
+            "detailedType": "ActionProps | undefined",
+            "required": false,
+            "description": "Props of the action button, such as `children` and `onClick`. Also takes the `colorPalette`, `size`, and `variant` of Button; `colorPalette` defaults to `secondary`. The action button is shown only when this is set."
+        },
+        {
+            "name": "timeout",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "Time in milliseconds before the toast closes on its own. `0` keeps it open until closed.",
+            "defaultValue": "5000"
+        },
+        {
+            "name": "priority",
+            "type": ["low", "high"],
+            "detailedType": "\"low\" | \"high\" | undefined",
+            "required": false,
+            "description": "How urgently assistive technology announces the toast. `low` waits for the current speech to end; `high` interrupts it.",
+            "defaultValue": "low"
+        },
+        {
+            "name": "onClose",
+            "type": ["function"],
+            "detailedType": "(() => void) | undefined",
+            "required": false,
+            "description": "Called when the toast is closed."
+        },
+        {
+            "name": "onRemove",
+            "type": ["function"],
+            "detailedType": "(() => void) | undefined",
+            "required": false,
+            "description": "Called when the toast is removed after its closing animation completes."
+        },
+        {
+            "name": "data",
+            "type": ["object"],
+            "detailedType": "Data | undefined",
+            "required": false,
+            "description": "Custom data for the toast. Its type is the `Data` type parameter of `add`."
+        }
+    ]
+}

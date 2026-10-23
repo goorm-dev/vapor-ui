@@ -4,6 +4,9 @@ import { useRenderElement } from '~/hooks/use-render-element';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
+/**
+ * Generic container for building layouts, styled with the `$css` prop or style props. Use when no other layout component fits. Renders a `<div>` element.
+ */
 export const Box = forwardRef<HTMLDivElement, Box.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 

@@ -22,6 +22,9 @@ import * as styles from './radio.css';
 
 type RadioVariants = RootVariants;
 
+/**
+ * Radio button for picking one option from a set. Use inside `RadioGroup.Root`. Renders a `<span>` element and a hidden `<input>` beside it.
+ */
 export const RadioRoot = forwardRef<HTMLElement, RadioRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
@@ -60,6 +63,9 @@ RadioRoot.displayName = 'Radio.Root';
  * Radio.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Dot shown inside the radio while it is selected. Renders a `<span>` element.
+ */
 export const RadioIndicatorPrimitive = forwardRef<HTMLSpanElement, RadioIndicatorPrimitive.Props>(
     (props, ref) => {
         const { keepMounted = true, className, ...componentProps } = resolveStyles(props);
@@ -84,7 +90,13 @@ RadioIndicatorPrimitive.displayName = 'Radio.IndicatorPrimitive';
 
 export namespace RadioRoot {
     export type State = BaseRadio.Root.State;
-    export type Props = VaporUIComponentProps<typeof BaseRadio.Root, State> & RadioVariants;
+    export interface Props
+        extends VaporUIComponentProps<typeof BaseRadio.Root, State>, RadioVariants {
+        /**
+         * Element shown inside the radio in place of the default `Radio.IndicatorPrimitive`, such as a `Radio.IndicatorPrimitive` with custom props. Anything other than a single element is ignored and the default indicator is shown.
+         */
+        children?: BaseRadio.Root.Props['children'];
+    }
 }
 
 export namespace RadioIndicatorPrimitive {

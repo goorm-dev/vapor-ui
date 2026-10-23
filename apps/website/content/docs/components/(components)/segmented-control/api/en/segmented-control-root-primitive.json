@@ -1,0 +1,105 @@
+{
+    "name": "SegmentedControlRootPrimitive",
+    "description": "Group of segments for switching between a few options or views, where only one segment is selected at a time. Has no sliding indicator of its own; add `SegmentedControl.IndicatorPrimitive` inside it to highlight the selection. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | undefined",
+            "required": false,
+            "description": "Size of the segmented control, controlling its padding and the height and padding of its segments.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Value of the segment selected on first render, for an uncontrolled segmented control. Must match the `value` of a `SegmentedControl.Item`. When it is not set or matches no segment, the first enabled segment is selected."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: string, eventDetails: SegmentedControl.RootPrimitive.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Called when the user selects a different segment by clicking it or with the arrow keys. Receives the new value and the change event details."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Value of the selected segment, for a controlled segmented control. Use with `onValueChange` to update it when the user selects a segment."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: SegmentedControl.RootPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: SegmentedControl.RootPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "form",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Identifies the form that owns the radio inputs.\nUseful when the radio group is rendered outside the form."
+        },
+        {
+            "name": "inputRef",
+            "type": ["React.Ref<HTMLInputElement>"],
+            "detailedType": "React.Ref<HTMLInputElement> | undefined",
+            "required": false,
+            "description": "A ref to access the hidden input element."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Identifies the field when a form is submitted."
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the user should be unable to select a different radio button in the group.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the user must choose a value before submitting a form.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: SegmentedControl.RootPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "SegmentedControl.RootPrimitive.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "SegmentedControl.RootPrimitive.State": "{\n  readOnly: boolean;\n  required: boolean;\n  disabled: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
+    }
+}

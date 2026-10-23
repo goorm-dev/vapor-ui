@@ -10,6 +10,9 @@ export const root = componentRecipe({
     },
     defaultVariants: { shape: 'square' },
     variants: {
+        /**
+         * Corner style of the icon button.
+         */
         shape: {
             square: {},
             circle: { borderRadius: '9999px' },

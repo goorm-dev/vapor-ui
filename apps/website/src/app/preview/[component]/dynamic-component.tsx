@@ -54,9 +54,7 @@ function useDynamicComponent(componentPath?: string) {
                 setIsLoading(true);
                 setError(null);
 
-                const componentModule = await import(
-                    `~/components/demo/examples/${componentPath}.tsx`
-                );
+                const componentModule = await import(`~content/docs/${componentPath}.tsx`);
 
                 if (componentModule.default) {
                     setComponent(() => componentModule.default);

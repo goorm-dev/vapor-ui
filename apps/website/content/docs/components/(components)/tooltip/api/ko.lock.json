@@ -1,0 +1,289 @@
+{
+    "tooltip-popup-primitive": {
+        "description": {
+            "source": "2bfd099b2ac56934",
+            "guide": 2,
+            "terms": "4c4f7f248164553b"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "tooltip-popup": {
+        "description": {
+            "source": "a3d5721b06be80ee",
+            "guide": 2,
+            "terms": "7142ce0e04a77d58"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.portalElement": {
+            "source": "d8c0a345ea23506c",
+            "guide": 2,
+            "terms": "68ceb693abb725d9"
+        },
+        "props.positionerElement": {
+            "source": "9b23103759c9a8e6",
+            "guide": 2,
+            "terms": "968242164455d4ea"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "tooltip-portal-primitive": {
+        "description": {
+            "source": "d7465ca1ff3d6e1d",
+            "guide": 2,
+            "terms": "89e6722106556dd8"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.container": {
+            "source": "14dbbd8fcd1ffdc2",
+            "guide": 2,
+            "terms": "89e6722106556dd8"
+        },
+        "props.keepMounted": {
+            "source": "f1cabf3d00a37e20",
+            "guide": 2,
+            "terms": "d5f42ce2c1083b5f"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "tooltip-positioner-primitive": {
+        "description": {
+            "source": "0e3e81e6a8b589d9",
+            "guide": 2,
+            "terms": "77e0e4133f4e50e3"
+        },
+        "props.align": {
+            "source": "b736661aca18ff69",
+            "guide": 2,
+            "terms": "b2607fc1dae382d6"
+        },
+        "props.alignOffset": {
+            "source": "42529d536f86bd3e",
+            "guide": 2,
+            "terms": "0d745ccf59b559a5"
+        },
+        "props.anchor": {
+            "source": "20014246492ca826",
+            "guide": 2,
+            "terms": "facff3a033edca86"
+        },
+        "props.arrowPadding": {
+            "source": "538c26d1db226eb0",
+            "guide": 2,
+            "terms": "250a6001100731f5"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.collisionAvoidance": {
+            "source": "5ccf7c207f32eecb",
+            "guide": 2,
+            "terms": "4502f9e85f2e33a8"
+        },
+        "props.collisionBoundary": {
+            "source": "bbd2193fcc8cf7ca",
+            "guide": 2,
+            "terms": "250a6001100731f5"
+        },
+        "props.collisionPadding": {
+            "source": "76c4188372fd6789",
+            "guide": 2,
+            "terms": "7ef68d9344d0684d"
+        },
+        "props.disableAnchorTracking": {
+            "source": "bef7ea43d630ff8a",
+            "guide": 2,
+            "terms": "ee89753619bef649"
+        },
+        "props.positionMethod": {
+            "source": "a855865d07fe8a04",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.side": {
+            "source": "9267af2c97e34563",
+            "guide": 2,
+            "terms": "54901f02e82e1543"
+        },
+        "props.sideOffset": {
+            "source": "dffc3830b673c108",
+            "guide": 2,
+            "terms": "1d797a342e024091"
+        },
+        "props.sticky": {
+            "source": "973c513ffb55db30",
+            "guide": 2,
+            "terms": "79afbeffbbfe202f"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "tooltip-root": {
+        "description": {
+            "source": "54442f747de7c3f8",
+            "guide": 2,
+            "terms": "a019228564ae823d"
+        },
+        "props.actionsRef": {
+            "source": "386d1afa1856552f",
+            "guide": 2,
+            "terms": "b2607fc1dae382d6"
+        },
+        "props.children": {
+            "source": "e0b37b2f896ac5d1",
+            "guide": 2,
+            "terms": "880bb85721e505eb"
+        },
+        "props.defaultOpen": {
+            "source": "14b11badf3c05b38",
+            "guide": 2,
+            "terms": "61806d551a58f35c"
+        },
+        "props.defaultTriggerId": {
+            "source": "ae0c80fb1dfd6447",
+            "guide": 2,
+            "terms": "47f73f7a70aa11e1"
+        },
+        "props.disableHoverablePopup": {
+            "source": "fd1f83ccbfdff168",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.disabled": {
+            "source": "aa6a521febd8fc86",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.handle": {
+            "source": "95139fbb243cf619",
+            "guide": 2,
+            "terms": "c5797848e5fc3191"
+        },
+        "props.onOpenChange": {
+            "source": "a2b56164318bf915",
+            "guide": 2,
+            "terms": "917b5199bf8a587f"
+        },
+        "props.onOpenChangeComplete": {
+            "source": "8222d777222e444a",
+            "guide": 2,
+            "terms": "917b5199bf8a587f"
+        },
+        "props.open": {
+            "source": "8151f37dc311dab0",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.trackCursorAxis": {
+            "source": "6ffb660e12da0bef",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.triggerId": {
+            "source": "ba38efb0b79f784c",
+            "guide": 2,
+            "terms": "0c64f2534e9520cf"
+        }
+    },
+    "tooltip-trigger": {
+        "description": {
+            "source": "48ed8e74feb956be",
+            "guide": 2,
+            "terms": "3f97d30ff500acb9"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.closeDelay": {
+            "source": "dd8da08c145ddb07",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.closeOnClick": {
+            "source": "9fc464053b0e7db6",
+            "guide": 2,
+            "terms": "47f73f7a70aa11e1"
+        },
+        "props.delay": {
+            "source": "77130f06ae53378f",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.disabled": {
+            "source": "5a5593cd602a0043",
+            "guide": 2,
+            "terms": "ff8fb2694a0ec2b3"
+        },
+        "props.handle": {
+            "source": "65e00bfeaacc1d86",
+            "guide": 2,
+            "terms": "47f73f7a70aa11e1"
+        },
+        "props.payload": {
+            "source": "cca82be5511ceae3",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

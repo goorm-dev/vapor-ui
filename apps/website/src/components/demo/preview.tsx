@@ -10,7 +10,7 @@ export function Preview(props: PreviewProps) {
     const { name } = props;
 
     const Preview = React.useMemo(() => {
-        const Component = React.lazy(() => import(`./examples/${name}.tsx`));
+        const Component = React.lazy(() => import(`~content/docs/${name}.tsx`));
 
         if (!Component) {
             return <div>Component({name}) Not Found</div>;

@@ -1,0 +1,149 @@
+---
+title: 'Sheet'
+site_name: 'Sheet - Vapor Core'
+description: 'Sheet는 화면의 가장자리에서 슬라이드되어 나타나는 오버레이 컴포넌트입니다. 사이드바, 메뉴, 폼, 상세 정보 등을 표시할 때 사용합니다.'
+---
+
+<Demo name="components/(components)/sheet/demos/default-sheet">
+```json doc-gen:file
+{
+    "file": "./content/docs/components/(components)/sheet/demos/default-sheet.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### Side
+
+Sheet가 나타날 위치를 설정합니다. 기본값은 'right'입니다.
+
+<Demo name="components/(components)/sheet/demos/sheet-side">
+```json doc-gen:file
+{
+    "file": "./content/docs/components/(components)/sheet/demos/sheet-side.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Controlled State
+
+Sheet의 열림/닫힘 상태를 외부에서 제어합니다.
+
+<Demo name="components/(components)/sheet/demos/sheet-controlled">
+```json doc-gen:file
+{
+    "file": "./content/docs/components/(components)/sheet/demos/sheet-controlled.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Keep Mounted
+
+Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정합니다.
+
+<Demo name="components/(components)/sheet/demos/sheet-keep-mounted">
+```json doc-gen:file
+{
+    "file": "./content/docs/components/(components)/sheet/demos/sheet-keep-mounted.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Examples
+
+---
+
+### Custom Usage
+
+유연하게 Sheet를 사용합니다.
+
+<Demo name="components/(components)/sheet/demos/sheet-flexible">
+```json doc-gen:file
+{
+    "file": "./content/docs/components/(components)/sheet/demos/sheet-flexible.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Resizable
+
+Sheet의 크기를 자유자재로 조절하길 원한다면 `<Sheet.ResizeHandle />`을 사용하세요.
+
+조절 가능 영역을 제한하고 싶다면 `<Sheet.Popup />` 컴포넌트에 `min/max-height`, `min/max-width` 속성을 적용하세요.
+
+<Demo name="components/(components)/sheet/demos/resizable-sheet">
+```json doc-gen:file
+{
+    "file": "./content/docs/components/(components)/sheet/demos/resizable-sheet.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Props Table
+
+---
+
+### Sheet.Root
+
+<ComponentPropsTable componentName="sheet-root" />
+
+### Sheet.Trigger
+
+<ComponentPropsTable componentName="sheet-trigger" />
+
+### Sheet.Popup
+
+<ComponentPropsTable componentName="sheet-popup" />
+
+#### Sheet.PortalPrimitive
+
+<ComponentPropsTable componentName="sheet-portal-primitive" />
+
+#### Sheet.OverlayPrimitive
+
+<ComponentPropsTable componentName="sheet-overlay-primitive" />
+
+#### Sheet.PopupPrimitive
+
+<ComponentPropsTable componentName="sheet-popup-primitive" />
+
+#### Sheet.PositionerPrimitive
+
+<ComponentPropsTable componentName="sheet-positioner-primitive" />
+
+### Sheet.ResizeHandle
+
+<ComponentPropsTable componentName="sheet-resize-handle" />
+
+### Sheet.Header
+
+<ComponentPropsTable componentName="sheet-header" />
+
+### Sheet.Body
+
+<ComponentPropsTable componentName="sheet-body" />
+
+### Sheet.Footer
+
+<ComponentPropsTable componentName="sheet-footer" />
+
+### Sheet.Title
+
+<ComponentPropsTable componentName="sheet-title" />
+
+### Sheet.Description
+
+<ComponentPropsTable componentName="sheet-description" />
+
+### Sheet.Close
+
+<ComponentPropsTable componentName="sheet-close" />

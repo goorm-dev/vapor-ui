@@ -41,7 +41,8 @@ function isValidComponentPath(path?: string): boolean {
     const pathTraversalPattern = /\.\./;
     if (pathTraversalPattern.test(path)) return false;
 
-    const validPathPattern = /^[a-zA-Z0-9/_-]+$/;
+    // Parentheses allow route-group folders such as `components/(components)/table/demos/…`.
+    const validPathPattern = /^[a-zA-Z0-9/_()-]+$/;
     return validPathPattern.test(path);
 }
 
