@@ -15,7 +15,7 @@ const inputs = generateInputs([
     'src/index.ts',
     'src/styles/tailwind-preset.css.ts',
     'src/components/**/*.{ts,tsx}',
-    '!src/components/**/*.{stories,test,spec}.*',
+    '!src/components/**/*.{figma,stories,test,spec}.*',
 ]);
 
 // e.g., 'src/styles/foo.css' -> 'styles/foo.css'

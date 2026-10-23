@@ -28,6 +28,9 @@ const [SelectProvider, useSelectContext] = createContext<SelectContext>({
  * Select.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the Select compound component, which lets the user pick one option from a list in a popup. Manages the selected value and open state, and passes `size`, `invalid`, and `placeholder` to its parts. Doesn't render its own HTML element.
+ */
 export const SelectRoot = <Value,>(props: SelectRoot.Props<Value>) => {
     const [contextProps, otherProps] = createSplitProps<SelectContext>()(props, [
         'placeholder',
@@ -51,6 +54,9 @@ SelectRoot.displayName = 'Select.Root';
  * Select.TriggerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that opens the popup when clicked. Renders a `<button>` element.
+ */
 export const SelectTriggerPrimitive = forwardRef<HTMLButtonElement, SelectTriggerPrimitive.Props>(
     (props, ref) => {
         const {
@@ -83,6 +89,9 @@ SelectTriggerPrimitive.displayName = 'Select.TriggerPrimitive';
  * Select.ValuePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Shows the selected value inside the trigger, using the item's label from `items`, or the placeholder when nothing is selected. Renders a `<span>` element.
+ */
 export const SelectValuePrimitive = forwardRef<HTMLSpanElement, SelectValuePrimitive.Props>(
     (props, ref) => {
         const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
@@ -119,6 +128,8 @@ SelectValuePrimitive.displayName = 'Select.ValuePrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
+ * Placeholder text shown in the trigger when nothing is selected. Renders a `<span>` element.
+ *
  * @deprecated The `Select.PlaceholderPrimitive` component is deprecated and will be removed in a future release. Please use the `placeholder` prop on `Select.Root` instead and `data-placeholder` attribute for styling.
  */
 export const SelectPlaceholderPrimitive = forwardRef<
@@ -141,6 +152,9 @@ SelectPlaceholderPrimitive.displayName = 'Select.PlaceholderPrimitive';
  * Select.TriggerIconPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Chevron icon in the trigger that shows the popup can be opened. Renders a `<span>` element.
+ */
 export const SelectTriggerIconPrimitive = forwardRef<
     HTMLSpanElement,
     SelectTriggerIconPrimitive.Props
@@ -171,22 +185,26 @@ SelectTriggerIconPrimitive.displayName = 'Select.TriggerIconPrimitive';
  * Select.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerPrimitive.Props>(
-    (props, ref) => {
-        return (
-            <SelectTriggerPrimitive ref={ref} {...props}>
-                <SelectValuePrimitive />
-                <SelectTriggerIconPrimitive />
-            </SelectTriggerPrimitive>
-        );
-    },
-);
+/**
+ * Combines `Select.TriggerPrimitive`, `Select.ValuePrimitive`, and `Select.TriggerIconPrimitive` into a single part that shows the selected value and a chevron icon. Renders a `<button>` element.
+ */
+export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTrigger.Props>((props, ref) => {
+    return (
+        <SelectTriggerPrimitive ref={ref} {...props}>
+            <SelectValuePrimitive />
+            <SelectTriggerIconPrimitive />
+        </SelectTriggerPrimitive>
+    );
+});
 SelectTrigger.displayName = 'Select.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal container that renders the popup outside the normal DOM hierarchy. Renders a `<div>` element.
+ */
 export const SelectPortalPrimitive = forwardRef<HTMLDivElement, SelectPortalPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -200,6 +218,9 @@ SelectPortalPrimitive.displayName = 'Select.PortalPrimitive';
  * Select.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Positions the popup against its trigger and keeps it inside the viewport. Renders a `<div>` element.
+ */
 export const SelectPositionerPrimitive = forwardRef<
     HTMLDivElement,
     SelectPositionerPrimitive.Props
@@ -231,6 +252,9 @@ SelectPositionerPrimitive.displayName = 'Select.PositionerPrimitive';
  * Select.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The popup panel that holds the options. Renders a `<div>` element.
+ */
 export const SelectPopupPrimitive = forwardRef<HTMLDivElement, SelectPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -250,6 +274,9 @@ SelectPopupPrimitive.displayName = 'Select.PopupPrimitive';
  * Select.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Select.PortalPrimitive`, `Select.PositionerPrimitive`, and `Select.PopupPrimitive` into a single part. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.
+ */
 export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <SelectPopupPrimitive ref={ref} {...props} />;
@@ -275,6 +302,9 @@ SelectPopup.displayName = 'Select.Popup';
  * Select.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Option in the popup that the user can select. Renders a `<div>` element.
+ */
 export const SelectItemPrimitive = forwardRef<HTMLElement, SelectItemPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -290,6 +320,9 @@ SelectItemPrimitive.displayName = 'Select.ItemPrimitive';
  * Select.ItemIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Check mark shown while the item is selected. Renders a `<span>` element.
+ */
 export const SelectItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     SelectItemIndicatorPrimitive.Props
@@ -317,6 +350,9 @@ SelectItemIndicatorPrimitive.displayName = 'Select.ItemIndicatorPrimitive';
  * Select.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Select.ItemPrimitive` and `Select.ItemIndicatorPrimitive` into a single part, with the check mark after the label. Renders a `<div>` element.
+ */
 export const SelectItem = forwardRef<HTMLElement, SelectItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
@@ -334,6 +370,9 @@ SelectItem.displayName = 'Select.Item';
  * Select.Group
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Groups related options under a `Select.GroupLabel`. Renders a `<div>` element.
+ */
 export const SelectGroup = forwardRef<HTMLDivElement, SelectGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -345,6 +384,9 @@ SelectGroup.displayName = 'Select.Group';
  * Select.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Label for a group of options, announced to assistive technologies. Renders a `<div>` element.
+ */
 export const SelectGroupLabel = forwardRef<HTMLDivElement, SelectGroupLabel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -362,6 +404,9 @@ SelectGroupLabel.displayName = 'Select.GroupLabel';
  * Select.Separator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Line that visually separates groups of options. Renders a `<div>` element.
+ */
 export const SelectSeparator = forwardRef<HTMLDivElement, SelectSeparator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -384,10 +429,14 @@ type SelectContext = Pick<SelectRoot.Props<unknown>, 'items' | 'required' | 'pla
 export interface SelectRootProps<Value = unknown>
     extends SelectVariants, Omit<BaseSelect.Root.Props<Value, false>, 'multiple'> {
     /**
-     * The placeholder value to display when no value is selected.
-     * This is overridden by `children` of Select.Value if specified, or by a null item's label in `items`.
+     * Text shown in the trigger when no value is selected. The `children` of `Select.ValuePrimitive`, or the label of an item whose value is `null` in `items`, takes precedence over it.
      */
     placeholder?: ReactNode;
+
+    /**
+     * Parts of the select, such as `Select.Trigger` and `Select.Popup`.
+     */
+    children?: BaseSelect.Root.Props<Value, false>['children'];
 }
 
 export namespace SelectRoot {
@@ -400,12 +449,22 @@ export namespace SelectRoot {
 
 export namespace SelectTriggerPrimitive {
     export type State = BaseSelect.Trigger.State;
-    export type Props = VaporUIComponentProps<typeof BaseSelect.Trigger, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseSelect.Trigger, State> {
+        /**
+         * Content shown inside the trigger, such as `Select.ValuePrimitive` and `Select.TriggerIconPrimitive`.
+         */
+        children?: BaseSelect.Trigger.Props['children'];
+    }
 }
 
 export namespace SelectTrigger {
     export type State = SelectTriggerPrimitive.State;
-    export type Props = SelectTriggerPrimitive.Props;
+    export interface Props extends SelectTriggerPrimitive.Props {
+        /**
+         * Not rendered: the trigger always shows the selected value and a chevron icon. Use `Select.TriggerPrimitive` to compose custom content.
+         */
+        children?: BaseSelect.Trigger.Props['children'];
+    }
 }
 
 export namespace SelectValuePrimitive {
@@ -420,7 +479,12 @@ export namespace SelectPlaceholderPrimitive {
 
 export namespace SelectTriggerIconPrimitive {
     export type State = BaseSelect.Icon.State;
-    export type Props = VaporUIComponentProps<typeof BaseSelect.Icon, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseSelect.Icon, State> {
+        /**
+         * Icon shown in place of the default chevron icon.
+         */
+        children?: BaseSelect.Icon.Props['children'];
+    }
 }
 
 export namespace SelectPortalPrimitive {
@@ -435,16 +499,21 @@ export namespace SelectPositionerPrimitive {
 
 export namespace SelectPopupPrimitive {
     export type State = BaseSelect.Popup.State;
-    export type Props = VaporUIComponentProps<typeof BaseSelect.Popup, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseSelect.Popup, State> {
+        /**
+         * Options shown in the popup, such as `Select.Item`, `Select.Group`, or `Select.Separator`.
+         */
+        children?: BaseSelect.Popup.Props['children'];
+    }
 }
 
 export interface SelectPopupProps extends SelectPopupPrimitive.Props {
     /**
-     * A Custom element for Select.PortalPrimitive. If not provided, the default Select.PortalPrimitive will be rendered.
+     * Replaces the default `Select.PortalPrimitive`. Use to change the portal container.
      */
     portalElement?: ReactElement<SelectPortalPrimitive.Props>;
     /**
-     * A Custom element for Select.PositionerPrimitive. If not provided, the default Select.PositionerPrimitive will be rendered.
+     * Replaces the default `Select.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup.
      */
     positionerElement?: ReactElement<SelectPositionerPrimitive.Props>;
 }
@@ -456,17 +525,32 @@ export namespace SelectPopup {
 
 export namespace SelectItemPrimitive {
     export type State = BaseSelect.Item.State;
-    export type Props = VaporUIComponentProps<typeof BaseSelect.Item, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseSelect.Item, State> {
+        /**
+         * Content shown inside the option, such as its label and `Select.ItemIndicatorPrimitive`.
+         */
+        children?: BaseSelect.Item.Props['children'];
+    }
 }
 
 export namespace SelectItem {
     export type State = SelectItemPrimitive.State;
-    export type Props = SelectItemPrimitive.Props;
+    export interface Props extends SelectItemPrimitive.Props {
+        /**
+         * Label of the option, such as its text or an icon with text. The check mark is added after it.
+         */
+        children?: BaseSelect.Item.Props['children'];
+    }
 }
 
 export namespace SelectItemIndicatorPrimitive {
     export type State = BaseSelect.ItemIndicator.State;
-    export type Props = VaporUIComponentProps<typeof BaseSelect.ItemIndicator, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseSelect.ItemIndicator, State> {
+        /**
+         * Icon shown in place of the default check icon.
+         */
+        children?: BaseSelect.ItemIndicator.Props['children'];
+    }
 }
 
 export namespace SelectGroup {

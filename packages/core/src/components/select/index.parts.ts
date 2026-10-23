@@ -17,6 +17,8 @@ export {
     SelectItemPrimitive as ItemPrimitive,
     SelectItemIndicatorPrimitive as ItemIndicatorPrimitive,
 
-    /** @deprecated */
+    /**
+     * @deprecated
+     */
     SelectPlaceholderPrimitive as PlaceholderPrimitive,
 } from './select';

@@ -1,0 +1,68 @@
+{
+    "name": "MultiSelectItem",
+    "description": "Combines `MultiSelect.ItemPrimitive` and `MultiSelect.ItemIndicatorPrimitive` into a single part, with the check mark after the label. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "value",
+            "type": ["any"],
+            "detailedType": "any",
+            "required": false,
+            "description": "A unique value that identifies this select item.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Label of the option, such as its text or an icon with text. The check mark is added after it."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: MultiSelect.Item.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: MultiSelect.Item.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "label",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Specifies the text label to use when the item is matched during keyboard text navigation.\n\nDefaults to the item text content if not provided."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: MultiSelect.Item.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "MultiSelect.Item.State": "{\n  disabled: boolean;\n  selected: boolean;\n  highlighted: boolean;\n}"
+    }
+}

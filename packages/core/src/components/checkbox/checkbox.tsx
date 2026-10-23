@@ -5,6 +5,7 @@ import { forwardRef } from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 
+import { useFieldRequired } from '~/components/field/field';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
@@ -30,6 +31,9 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Checkbox that turns an option on or off, or shows a mixed state with `indeterminate`. Renders a `<span>` element and a hidden `<input>` beside it.
+ */
 export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(componentProps, [
@@ -39,6 +43,9 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
     ]);
 
     const { size, invalid, indeterminate } = variantProps;
+    const { required } = otherProps;
+
+    useFieldRequired(required);
 
     const childrenRender = createRender(childrenProp, <CheckboxIndicatorPrimitive />);
     const children = useRenderElement({
@@ -66,6 +73,9 @@ CheckboxRoot.displayName = 'Checkbox.Root';
  * Checkbox.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Check mark shown inside the checkbox while it is checked, or a dash while `indeterminate` is set. Renders a `<span>` element.
+ */
 export const CheckboxIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     CheckboxIndicatorPrimitive.Props
@@ -140,11 +150,22 @@ export interface CheckboxRootState extends BaseCheckbox.Root.State {
 
 export namespace CheckboxRoot {
     export type State = CheckboxRootState;
-    export type Props = VaporUIComponentProps<typeof BaseCheckbox.Root, State> & CheckboxVariants;
+    export interface Props
+        extends VaporUIComponentProps<typeof BaseCheckbox.Root, State>, CheckboxVariants {
+        /**
+         * Element shown inside the checkbox in place of the default `Checkbox.IndicatorPrimitive`, such as a `Checkbox.IndicatorPrimitive` with custom props. Anything other than a single element is ignored and the default indicator is shown.
+         */
+        children?: BaseCheckbox.Root.Props['children'];
+    }
     export type ChangeEventDetails = BaseCheckbox.Root.ChangeEventDetails;
 }
 
 export namespace CheckboxIndicatorPrimitive {
     export type State = BaseCheckbox.Indicator.State;
-    export type Props = VaporUIComponentProps<typeof BaseCheckbox.Indicator, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseCheckbox.Indicator, State> {
+        /**
+         * Icon shown in place of the default check mark or dash, such as an icon component. The element receives a `width` and `height` of `100%`. Anything other than a single element is ignored and the default icon is shown.
+         */
+        children?: BaseCheckbox.Indicator.Props['children'];
+    }
 }

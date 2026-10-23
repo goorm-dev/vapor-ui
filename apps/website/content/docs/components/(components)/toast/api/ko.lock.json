@@ -1,0 +1,346 @@
+{
+    "toast-action-primitive": {
+        "description": {
+            "source": "4063be402c73e364",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "toast-close-primitive": {
+        "description": {
+            "source": "2ead7b0328885547",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "toast-content-primitive": {
+        "description": {
+            "source": "9e67cf3487792bac",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "toast-description-primitive": {
+        "description": {
+            "source": "1f4f01d83425bade",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "toast-icon-primitive": {
+        "description": {
+            "source": "076b9288fcd0e9e6",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "toast-object": {
+        "description": {
+            "source": "2cf4afbcffdd5d09",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.actionProps": {
+            "source": "c11d336495e3a362",
+            "guide": 2,
+            "terms": "060540aeb57361be"
+        },
+        "props.close": {
+            "source": "39dee67940999b39",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.colorPalette": {
+            "source": "894cf29540da3f24",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.data": {
+            "source": "668c629f493c7c24",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.description": {
+            "source": "8fa1fdff5f986308",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.icon": {
+            "source": "5d8a269aecdc48b5",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.id": {
+            "source": "b720727b94ac54f1",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.onClose": {
+            "source": "dc967d57cf6372d6",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.onRemove": {
+            "source": "ba37bd0998857e8c",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.priority": {
+            "source": "1961ce1378fc6f24",
+            "guide": 2,
+            "terms": "baffbed9677c4b6b"
+        },
+        "props.timeout": {
+            "source": "a42f552a66c7c725",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.title": {
+            "source": "16a452fbc6e91e55",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "toast-portal-primitive": {
+        "description": {
+            "source": "30d22c1dd7c4e0ad",
+            "guide": 2,
+            "terms": "89e6722106556dd8"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.container": {
+            "source": "14dbbd8fcd1ffdc2",
+            "guide": 2,
+            "terms": "89e6722106556dd8"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "toast-provider-primitive": {
+        "description": {
+            "source": "254eabd024c776e5",
+            "guide": 2,
+            "terms": "bdb6a0103a92ad54"
+        },
+        "props.children": {
+            "source": "22d171efce71781d",
+            "guide": 2,
+            "terms": "24553c32f0c78530"
+        },
+        "props.limit": {
+            "source": "196f5a2699ca44cb",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.timeout": {
+            "source": "037be53501e74105",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.toastManager": {
+            "source": "62762cdbac30ad68",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "toast-provider": {
+        "description": {
+            "source": "9b72d262ebf27f95",
+            "guide": 2,
+            "terms": "bdb6a0103a92ad54"
+        },
+        "props.children": {
+            "source": "22d171efce71781d",
+            "guide": 2,
+            "terms": "24553c32f0c78530"
+        },
+        "props.limit": {
+            "source": "196f5a2699ca44cb",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.timeout": {
+            "source": "037be53501e74105",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.toastManager": {
+            "source": "62762cdbac30ad68",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "toast-root-primitive": {
+        "description": {
+            "source": "3e24e0641a304150",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.swipeDirection": {
+            "source": "f5465cedabc10ef4",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.toast": {
+            "source": "d0f13529e90ad1b0",
+            "guide": 2,
+            "terms": "f3a535d373c216cb"
+        }
+    },
+    "toast-title-primitive": {
+        "description": {
+            "source": "127968fc204102cd",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "toast-viewport-primitive": {
+        "description": {
+            "source": "43833c8b24d14404",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

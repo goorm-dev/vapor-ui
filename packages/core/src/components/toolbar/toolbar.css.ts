@@ -14,6 +14,9 @@ export const root = componentRecipe({
 
     defaultVariants: { variant: 'outline' },
     variants: {
+        /**
+         * Visual style of the toolbar. `outline` adds a border and background, `ghost` leaves the toolbar transparent.
+         */
         variant: {
             outline: {
                 border: '0.0625rem solid',
@@ -38,6 +41,9 @@ export const item = componentRecipe({
     base: {},
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Size of the toolbar buttons and inputs, controlling height, padding, and typography.
+         */
         size: {
             sm: { height: vars.size.dimension['300'] },
             md: { height: vars.size.dimension['400'] },
