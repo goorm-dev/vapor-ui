@@ -19,7 +19,7 @@ This package automatically generates JSON documentation for `packages/core` comp
 Run from the monorepo root:
 
 ```bash
-# Extract every component into apps/website/content/docs/components/<page>/api/
+# Extract every component into apps/website/content/docs/components/<page>/api/{en,ko}/
 pnpm docs:api
 
 # Re-extract whenever packages/core/src changes
@@ -61,11 +61,11 @@ This section is the specification of the generated JSON. The extractor implement
 
 ### Consumers
 
-| Consumer                                                                                                                | Reads                                                                     |
-| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`), at build time                                           | file name, `description`, `props[]`                                       |
-| `apps/website` LLM text (`src/utils/get-component-doc.ts`): the `.mdx` routes and the docs packed into `@vapor-ui/core` | `props[]`                                                                 |
-| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL)                                                       | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
+| Consumer                                                                                                                            | Reads                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`), at build time, from `ko/`                                           | file name, `description`, `props[]`                                       |
+| `apps/website` LLM text (`src/utils/get-component-doc.ts`), from `en/`: the `.mdx` routes and the docs packed into `@vapor-ui/core` | `props[]`                                                                 |
+| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL)                                                                   | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
 
 `get-component-info.mjs` still reads the old `apps/website/public/components/generated/` path, which exists only at tags released before the move.
 
@@ -79,11 +79,12 @@ The output file path and the fields listed here form the contract with these con
 
 ### Output files
 
-- One JSON file per component, in the `api/` folder of the page that documents it: `<pages>/<page>/api/<name>.json`, next to `<page>/index.mdx`. The name is the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
+- One JSON file per component, in the `api/en/` folder of the page that documents it: `<pages>/<page>/api/en/<name>.json`, next to `<page>/index.mdx`. The name is the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
 - The page is the component's folder under `components/`: `src/components/avatar/` → the page whose URL slug is `avatar`, either `<pages>/avatar/` or inside a route group such as `<pages>/(components)/avatar/`. A real folder is part of the slug, so `<pages>/patterns/form/` is not the `form` page. `PAGE_FOR_COMPONENT` in `src/write.ts` lists the exceptions: `radio-group` is documented on `radio`, and `alert-dialog` and `theme-provider` have no components page, so nothing is written for them.
 - A component whose page folder doesn't exist fails the run. Add the page or an entry in `PAGE_FOR_COMPONENT`.
-- A full run deletes JSON files in any `<pages>/<page>/api/` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
-- `(components)/toast/api/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
+- `api/ko/<name>.json` mirrors every `api/en/<name>.json` with the same structure. For each description, it keeps the Korean when `api/ko.lock.json` records the hash of the current English for it (`<name>` → `description` or `props.<prop>` → `source`), and writes the English otherwise, as a placeholder until `pnpm docs:translate` runs. The extractor never writes the lock and never calls an AI. A lock or an existing `ko/` file that is not valid JSON fails the run, so its translations are not replaced with English.
+- A full run deletes JSON files in any `<pages>/<page>/api/en/` that it did not write, with their `ko/` mirror, if they have a string `name` and a `props` array. It also deletes any `ko/` file whose `en/` file is gone. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
+- `(components)/toast/api/en/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
 - The CLI formats the written files with Prettier.
 
 ### Fields
@@ -206,7 +207,7 @@ Not extracted:
 ```text
 cli.ts ──► extract() ──► read/     source → ParsedComponent[]   (ts-morph, filesystem)
    │                └──► policy()  ParsedComponent[] → ComponentDoc[]   (pure)
-   └─────► writeDocs()  ComponentDoc[] → <pages>/<page>/api/*.json, then prettier
+   └─────► writeDocs()  ComponentDoc[] → <pages>/<page>/api/en/*.json + ko/ mirror, then prettier
 ```
 
 | Module            | Interface                                                                                      | Owns                                                                                                  |

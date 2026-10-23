@@ -2,6 +2,7 @@ packages:
     - apps/*
     - packages/*
     - scripts/docs-extractor
+    - scripts/docs-translator
     - scripts/icon-extractor
 
 engineStrict: true

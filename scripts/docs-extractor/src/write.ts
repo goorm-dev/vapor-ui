@@ -1,5 +1,6 @@
 import { ExtractorError } from '#errors';
 import type { ComponentDoc } from '#model';
+import { type Lock, mirrorDoc } from '#translation';
 import { globSync } from 'glob';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -28,7 +29,7 @@ const PAGE_FOR_COMPONENT: Record<string, string | null> = {
 };
 
 /**
- * Hand-written JSON that lives next to the generated files and is never removed
+ * Hand-written JSON that lives next to the generated files in `en/` and is never removed
  * as stale. `toast-object.json` documents the ToastOptions object used with
  * `useToastManager` (toast page), which has no component namespace to extract from.
  */
@@ -86,20 +87,114 @@ function isExtractorOutput(filePath: string): boolean {
     }
 }
 
+/** `<api>/en/<file>` → `<api>/ko/<file>`. */
+function koPathFor(enPath: string): string {
+    return path.join(path.dirname(path.dirname(enPath)), 'ko', path.basename(enPath));
+}
+
 /**
- * Deletes extractor JSON in any `<page>/api/` folder under `pagesDir` that is not in
- * `keep`, so a component that no longer exists doesn't leave its file behind.
- * Only files shaped like extractor output (`name` + `props[]`) are removed.
+ * Deletes extractor JSON in any `<page>/api/en/` folder under `pagesDir` that is not
+ * in `keep`, with its `ko/` mirror, so a component that no longer exists doesn't
+ * leave its files behind. Only files shaped like extractor output (`name` + `props[]`)
+ * are removed.
  */
 function removeStaleFiles(pagesDir: string, keep: string[]): string[] {
     const keepSet = new Set(keep);
-    const stale = globSync('**/api/*.json', { cwd: pagesDir, absolute: true })
+    const stale = globSync('**/api/en/*.json', { cwd: pagesDir, absolute: true })
         .filter((filePath) => !HAND_WRITTEN_FILES.has(path.basename(filePath)))
-        .filter((filePath) => !keepSet.has(filePath) && isExtractorOutput(filePath));
+        .filter((filePath) => !keepSet.has(filePath) && isExtractorOutput(filePath))
+        .flatMap((filePath) => [filePath, koPathFor(filePath)])
+        .filter((filePath) => fs.existsSync(filePath));
+    // A ko/ file left without its en/ source, e.g. after a hand deletion.
+    const orphans = globSync('**/api/ko/*.json', { cwd: pagesDir, absolute: true }).filter(
+        (filePath) =>
+            !fs.existsSync(
+                path.join(path.dirname(path.dirname(filePath)), 'en', path.basename(filePath)),
+            ),
+    );
+    stale.push(...orphans.filter((filePath) => !stale.includes(filePath)));
 
     for (const filePath of stale) fs.rmSync(filePath);
 
     return stale;
+}
+
+/**
+ * Parses an existing file the ko/ mirror depends on. Throws instead of treating a
+ * broken file as missing, which would silently replace its translations with English.
+ */
+function readTranslationFile(filePath: string, isValid: (data: unknown) => boolean): unknown {
+    let data: unknown;
+    try {
+        data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new ExtractorError(`Cannot read ${filePath}: ${message}`);
+    }
+    if (!isValid(data)) throw new ExtractorError(`Unexpected shape in ${filePath}`);
+    return data;
+}
+
+const isObject = (data: unknown) =>
+    typeof data === 'object' && data !== null && !Array.isArray(data);
+
+/** `<api>/ko.lock.json`, or `{}` when there is none. */
+function readLock(apiDir: string): Lock {
+    const lockPath = path.join(apiDir, 'ko.lock.json');
+    return fs.existsSync(lockPath) ? (readTranslationFile(lockPath, isObject) as Lock) : {};
+}
+
+/** `<api>/ko/<file>`, or undefined when there is none yet. */
+function readKoDoc(koPath: string): ComponentDoc | undefined {
+    if (!fs.existsSync(koPath)) return undefined;
+    return readTranslationFile(
+        koPath,
+        (data) => isObject(data) && Array.isArray((data as ComponentDoc).props),
+    ) as ComponentDoc;
+}
+
+export interface ApiDirFile {
+    /** File name without `.json`, the lock key. */
+    name: string;
+    en: ComponentDoc;
+    /** The current `ko/` file, if there is one. */
+    ko: ComponentDoc | undefined;
+    koPath: string;
+}
+
+/**
+ * Reads one page's `api/` folder: its lock, and every extractor-shaped `en/` file
+ * (hand-written ones included) with its `ko/` counterpart. Shared with the
+ * translate script so both read the folder by the same rules.
+ */
+export function readApiDir(apiDir: string): { lock: Lock; files: ApiDirFile[] } {
+    const files = globSync('en/*.json', { cwd: apiDir, absolute: true })
+        .sort()
+        .filter(isExtractorOutput)
+        .map((enPath) => {
+            const koPath = koPathFor(enPath);
+            return {
+                name: path.basename(enPath, '.json'),
+                en: JSON.parse(fs.readFileSync(enPath, 'utf8')) as ComponentDoc,
+                ko: readKoDoc(koPath),
+                koPath,
+            };
+        });
+    return { lock: readLock(apiDir), files };
+}
+
+/**
+ * Writes `<api>/ko/<file>` for every file readApiDir finds: the Korean text where
+ * the lock says it matches the current source text, the English elsewhere (see mirrorDoc).
+ */
+function mirrorApiDir(apiDir: string): string[] {
+    const { lock, files } = readApiDir(apiDir);
+
+    return files.map(({ name, en, ko, koPath }) => {
+        fs.mkdirSync(path.dirname(koPath), { recursive: true });
+        fs.writeFileSync(koPath, JSON.stringify(mirrorDoc(en, ko, lock[name]), null, 2));
+        return koPath;
+    });
 }
 
 export interface WriteResult {
@@ -114,9 +209,11 @@ export interface DocToWrite {
 }
 
 /**
- * Writes one `<kebab-case name>.json` per doc into the `api/` folder of the page
- * that documents it (see findApiDir), skipping docs mapped to no page. With `removeStale`, also deletes extractor
- * JSON this call didn't write — only safe when `docs` covers every component.
+ * Writes one `en/<kebab-case name>.json` per doc into the `api/` folder of the page
+ * that documents it (see findApiDir), skipping docs mapped to no page, then
+ * rewrites the `ko/` mirror of every `api/` folder it wrote to. With `removeStale`,
+ * also deletes extractor JSON this call didn't write — only safe when `docs` covers
+ * every component.
  */
 export function writeDocs(
     pagesDir: string,
@@ -127,17 +224,20 @@ export function writeDocs(
     const targets = docs.flatMap(({ doc, sourceFile }) => {
         const apiDir = findApiDir(sourceFile, root);
         return apiDir
-            ? [{ doc, filePath: path.join(apiDir, `${toKebabCase(doc.name)}.json`) }]
+            ? [{ doc, apiDir, filePath: path.join(apiDir, 'en', `${toKebabCase(doc.name)}.json`) }]
             : [];
     });
 
-    const written = targets.map(({ doc, filePath }) => {
+    const writtenEn = targets.map(({ doc, filePath }) => {
         fs.mkdirSync(path.dirname(filePath), { recursive: true });
         fs.writeFileSync(filePath, JSON.stringify(doc, null, 2));
         return filePath;
     });
 
-    return { written, removed: removeStale ? removeStaleFiles(root, written) : [] };
+    const removed = removeStale ? removeStaleFiles(root, writtenEn) : [];
+    const writtenKo = [...new Set(targets.map(({ apiDir }) => apiDir))].flatMap(mirrorApiDir);
+
+    return { written: [...writtenEn, ...writtenKo], removed };
 }
 
 /** Throws when prettier can't run; the caller decides whether that matters. */
