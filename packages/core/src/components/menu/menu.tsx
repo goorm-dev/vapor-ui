@@ -260,13 +260,10 @@ export const MenuSubmenuRoot = ({
 MenuSubmenuRoot.displayName = 'Menu.SubmenuRoot';
 
 /* -------------------------------------------------------------------------------------------------
- * Menu.SubmenuTriggerItem
+ * Menu.SubmenuTrigger
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * Menu item that opens a submenu, with a chevron icon at the end. Renders a `<div>` element.
- */
-export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTriggerItem.Props>(
+export const MenuSubmenuTrigger = forwardRef<HTMLElement, MenuSubmenuTrigger.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
         const { triggerRef } = useSubmenuContext();
@@ -279,9 +276,27 @@ export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTrigger
                 {...componentProps}
             >
                 {children}
-
-                <ChevronRightOutlineIcon />
             </BaseMenu.SubmenuTrigger>
+        );
+    },
+);
+MenuSubmenuTrigger.displayName = 'Menu.SubmenuTrigger';
+
+/* -------------------------------------------------------------------------------------------------
+ * Menu.SubmenuTriggerItem
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Menu item that opens a submenu, with a chevron icon at the end. Renders a `<div>` element.
+ */
+export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTriggerItem.Props>(
+    ({ children, ...props }, ref) => {
+        return (
+            <MenuSubmenuTrigger ref={ref} {...props}>
+                {children}
+
+                <ChevronRightOutlineIcon className={styles.subTriggerIcon} />
+            </MenuSubmenuTrigger>
         );
     },
 );
@@ -321,11 +336,11 @@ MenuSubmenuPopupPrimitive.displayName = 'Menu.SubmenuPopupPrimitive';
  */
 export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const popup = <MenuPopupPrimitive ref={ref} {...props} />;
+        const popup = <MenuSubmenuPopupPrimitive ref={ref} {...props} />;
 
         const positionerRender = createRender(
             positionerElement,
-            <MenuPositionerPrimitive side="right" sideOffset={0} />,
+            <MenuPositionerPrimitive side="right" sideOffset={8} />,
         );
         const positioner = useRenderElement({
             render: positionerRender,
@@ -353,6 +368,7 @@ MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
 export const MenuCheckboxItemPrimitive = forwardRef<HTMLElement, MenuCheckboxItem.Props>(
     (props, ref) => {
         const {
+            closeOnClick: closeOnClickProp,
             disabled: disabledProp,
             className,
             children,
@@ -361,10 +377,12 @@ export const MenuCheckboxItemPrimitive = forwardRef<HTMLElement, MenuCheckboxIte
 
         const { disabled: contextDisabled } = useMenuContext();
         const disabled = disabledProp || contextDisabled;
+        const closeOnClick = closeOnClickProp ?? false;
 
         return (
             <BaseMenu.CheckboxItem
                 ref={ref}
+                closeOnClick={closeOnClick}
                 disabled={disabled}
                 className={cn(styles.item, className)}
                 {...componentProps}
@@ -380,6 +398,19 @@ MenuCheckboxItemPrimitive.displayName = 'Menu.CheckboxItemPrimitive';
  * MenuCheckboxItemIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+const CheckIcon = () => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            viewBox="0 0 17 18"
+            className={styles.icon}
+        >
+            <polyline points="2 9 7 14 15 5" />
+        </svg>
+    );
+};
+
 /**
  * Check mark shown while the checkbox item is checked. Renders a `<span>` element.
  */
@@ -387,9 +418,14 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuCheckboxItemIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const {
+        keepMounted = true,
+        className,
+        children: childrenProp,
+        ...componentProps
+    } = resolveStyles(props);
 
-    const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
+    const childrenRender = createRender(childrenProp, <CheckIcon />);
     const children = useRenderElement({
         render: childrenRender,
         props: { width: '100%', height: '100%' },
@@ -398,7 +434,8 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     return (
         <BaseMenu.CheckboxItemIndicator
             ref={ref}
-            className={cn(styles.indicator, className)}
+            keepMounted={keepMounted}
+            className={cn(styles.checkboxIndicator, className)}
             {...componentProps}
         >
             {children}
@@ -419,9 +456,9 @@ export const MenuCheckboxItem = forwardRef<HTMLElement, MenuCheckboxItem.Props>(
 
     return (
         <MenuCheckboxItemPrimitive ref={ref} {...componentProps}>
-            {children}
-
             <MenuCheckboxItemIndicatorPrimitive />
+
+            {children}
         </MenuCheckboxItemPrimitive>
     );
 });
@@ -450,14 +487,21 @@ MenuRadioGroup.displayName = 'Menu.RadioGroup';
  */
 export const MenuRadioItemPrimitive = forwardRef<HTMLElement, MenuRadioItemPrimitive.Props>(
     (props, ref) => {
-        const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
+        const {
+            closeOnClick: closeOnClickProp,
+            disabled: disabledProp,
+            className,
+            ...componentProps
+        } = resolveStyles(props);
 
         const { disabled: contextDisabled } = useMenuContext();
         const disabled = disabledProp || contextDisabled;
+        const closeOnClick = closeOnClickProp ?? true;
 
         return (
             <BaseMenu.RadioItem
                 ref={ref}
+                closeOnClick={closeOnClick}
                 disabled={disabled}
                 className={cn(styles.item, className)}
                 {...componentProps}
@@ -489,7 +533,7 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
     return (
         <BaseMenu.RadioItemIndicator
             ref={ref}
-            className={cn(styles.indicator, className)}
+            className={cn(styles.radioIndicator, className)}
             {...componentProps}
         >
             {children}
@@ -509,11 +553,9 @@ export const MenuRadioItem = forwardRef<HTMLElement, MenuRadioItem.Props>((props
 
     return (
         <MenuRadioItemPrimitive ref={ref} {...componentProps}>
-            {children}
+            <MenuRadioItemIndicatorPrimitive />
 
-            <MenuRadioItemIndicatorPrimitive className={styles.indicator}>
-                <ConfirmOutlineIcon size="100%" />
-            </MenuRadioItemIndicatorPrimitive>
+            {children}
         </MenuRadioItemPrimitive>
     );
 });
@@ -603,7 +645,7 @@ export namespace MenuSubmenuRoot {
     export type OpenEventDetails = BaseMenu.SubmenuRoot.ChangeEventDetails;
 }
 
-export namespace MenuSubmenuTriggerItem {
+export namespace MenuSubmenuTrigger {
     export type State = BaseMenu.SubmenuTrigger.State;
     export interface Props extends VaporUIComponentProps<typeof BaseMenu.SubmenuTrigger, State> {
         /**
@@ -611,6 +653,11 @@ export namespace MenuSubmenuTriggerItem {
          */
         onClick?: BaseMenu.SubmenuTrigger.Props['onClick'];
     }
+}
+
+export namespace MenuSubmenuTriggerItem {
+    export type State = MenuSubmenuTrigger.State;
+    export type Props = VaporUIComponentProps<typeof MenuSubmenuTrigger, State>;
 }
 
 export namespace MenuSubmenuPopupPrimitive {

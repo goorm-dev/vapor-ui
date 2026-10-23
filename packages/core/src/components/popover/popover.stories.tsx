@@ -233,6 +233,24 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
                     </Popover.Popup>
                 </Popover.Root>
             </HStack>
+
+            <HStack $css={{ padding: '$200', paddingTop: '120px', border: '1px solid' }}>
+                <Popover.Root {...args} open>
+                    <Popover.Trigger
+                        render={<Button $css={{ width: '1000px' }}>Wide Trigger Popover</Button>}
+                    />
+                    <Popover.Popup
+                        positionerElement={
+                            <Popover.PositionerPrimitive side="bottom" align="start" />
+                        }
+                    >
+                        <Popover.Title>Wide Trigger Popover</Popover.Title>
+                        <Popover.Description>
+                            The trigger center is outside of this popover.
+                        </Popover.Description>
+                    </Popover.Popup>
+                </Popover.Root>
+            </HStack>
         </>
     ),
 };
