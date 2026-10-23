@@ -20,7 +20,7 @@ const { toLLMText } = await import('~/utils/get-llm-text');
 
 const CONTENT_DIR = path.resolve('content/docs');
 
-/** `components/button/index.mdx` → `components/button`, `(overview)/x.mdx` → `x`, root → `index`. */
+/** `components/(components)/button/index.mdx` → `components/button`, `(overview)/x.mdx` → `x`, root → `index`. */
 function toSlug(file: string): string {
     const segments = file
         .replace(/\.mdx?$/, '')

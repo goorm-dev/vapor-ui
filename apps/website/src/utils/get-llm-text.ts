@@ -21,7 +21,7 @@ interface LLMTextInput {
     description?: string;
     /** Site URL path, e.g. `/docs/components/button`. */
     url: string;
-    /** Path under `content/<contentType>/`, e.g. `components/button/index.mdx`. */
+    /** Path under `content/<contentType>/`, e.g. `components/(components)/button/index.mdx`. */
     path: string;
     /** Absolute file path, for resolving includes. */
     fullPath: string;

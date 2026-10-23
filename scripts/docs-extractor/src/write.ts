@@ -34,10 +34,20 @@ const PAGE_FOR_COMPONENT: Record<string, string | null> = {
  */
 const HAND_WRITTEN_FILES = new Set(['toast-object.json']);
 
+/** `(components)/avatar` → `avatar`: route groups `(…)` are not part of the page URL. */
+function toSlug(pageDir: string): string {
+    return pageDir
+        .split(path.sep)
+        .filter((segment) => !/^\(.+\)$/.test(segment))
+        .join('/');
+}
+
 /**
  * The `api/` folder of the page that documents the component declared in
  * `sourceFile` (`…/components/<folder>/…`): `<pagesDir>/<page>/api`, next to the
- * page's `index.mdx`. `null` for a folder mapped to no page.
+ * page's `index.mdx`. The page is matched by URL slug, so it can sit in a route
+ * group (`(components)/avatar`) but not in a real folder (`patterns/form` is not `form`).
+ * `null` for a folder mapped to no page.
  *
  * Throws ExtractorError when the page doesn't exist, so a new component without
  * a page fails loudly instead of being written nowhere.
@@ -53,16 +63,18 @@ export function findApiDir(sourceFile: string, pagesDir: string): string | null 
     const page = folder in PAGE_FOR_COMPONENT ? PAGE_FOR_COMPONENT[folder] : folder;
     if (page === null) return null;
 
-    const pageDir = path.join(pagesDir, page);
+    const pageDir = globSync('**/index.mdx', { cwd: pagesDir })
+        .map(path.dirname)
+        .find((dir) => toSlug(dir) === page);
 
-    if (!fs.existsSync(path.join(pageDir, 'index.mdx'))) {
+    if (!pageDir) {
         throw new ExtractorError(
-            `No page for ${sourceFile}: ${pageDir}/index.mdx does not exist. ` +
+            `No page for ${sourceFile}: no ${page}/index.mdx under ${pagesDir} (directly or in a route group). ` +
                 `Add the page, or map the component folder in PAGE_FOR_COMPONENT (src/write.ts).`,
         );
     }
 
-    return path.join(pageDir, 'api');
+    return path.join(pagesDir, pageDir, 'api');
 }
 
 function isExtractorOutput(filePath: string): boolean {
@@ -81,7 +93,7 @@ function isExtractorOutput(filePath: string): boolean {
  */
 function removeStaleFiles(pagesDir: string, keep: string[]): string[] {
     const keepSet = new Set(keep);
-    const stale = globSync('*/api/*.json', { cwd: pagesDir, absolute: true })
+    const stale = globSync('**/api/*.json', { cwd: pagesDir, absolute: true })
         .filter((filePath) => !HAND_WRITTEN_FILES.has(path.basename(filePath)))
         .filter((filePath) => !keepSet.has(filePath) && isExtractorOutput(filePath));
 
