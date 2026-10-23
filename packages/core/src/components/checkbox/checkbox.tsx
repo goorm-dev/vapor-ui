@@ -5,6 +5,7 @@ import { forwardRef } from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 
+import { useFieldRequired } from '~/components/field/field';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
@@ -46,6 +47,10 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
     ]);
 
     const { size, invalid, indeterminate } = variantProps;
+    const { required } = otherProps;
+
+    useFieldRequired(required);
+
     const dataAttrs = createDataAttributes({ invalid });
 
     // NOTE: Base UI calls these with its own Root state; add the custom `invalid` on top.

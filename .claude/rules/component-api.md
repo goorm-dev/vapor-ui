@@ -50,8 +50,10 @@ Prefer named exports over `default export`.
 
 ```tsx
 // index.ts
-export * from './button';
+export { Button } from './button';
 ```
+
+Re-export the public API by name. The barrel decides what is public, so a bare `export * from` is a lint error in `src/components/*/index.ts`.
 
 ### Compound entrypoint (3-file pattern)
 

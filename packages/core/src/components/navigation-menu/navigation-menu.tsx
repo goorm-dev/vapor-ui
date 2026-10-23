@@ -6,12 +6,10 @@ import { forwardRef } from 'react';
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
-import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { cn } from '~/utils/cn';
-import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -293,16 +291,14 @@ export const NavigationMenuPopupPrimitive = forwardRef<
     NavigationMenuPopupPrimitive.Props
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
-    const { popupRef, arrowRef, position } = useArrowPosition();
-    const composedRef = composeRefs(popupRef, ref);
 
     return (
         <BaseNavigationMenu.Popup
-            ref={composedRef}
+            ref={ref}
             className={cn(styles.popup, className)}
             {...componentProps}
         >
-            <BaseNavigationMenu.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+            <BaseNavigationMenu.Arrow className={styles.arrow}>
                 <ArrowIcon />
             </BaseNavigationMenu.Arrow>
 

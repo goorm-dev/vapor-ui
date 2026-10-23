@@ -5,6 +5,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Field as BaseField } from '@base-ui/react/field';
 import { useControlled } from '@base-ui/utils/useControlled';
 
+import { useFieldRequired } from '~/components/field/field';
 import { useInputGroup } from '~/components/input-group/input-group';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { cn } from '~/utils/cn';
@@ -61,6 +62,8 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
         setValue(newValue);
     };
 
+    useFieldRequired(required);
+
     const state: Textarea.State = useMemo(
         () => ({ disabled, readOnly, required, invalid }),
         [disabled, readOnly, required, invalid],
@@ -87,7 +90,7 @@ export interface AutoResizeOptions extends Pick<Textarea.Props, 'value' | 'autoR
     ref: React.RefObject<HTMLTextAreaElement | null>;
 }
 
-export function useAutoResize({ ref, value, autoResize }: AutoResizeOptions) {
+function useAutoResize({ ref, value, autoResize }: AutoResizeOptions) {
     const adjustHeight = useCallback(() => {
         if (!autoResize) return;
 
@@ -112,7 +115,7 @@ export function useAutoResize({ ref, value, autoResize }: AutoResizeOptions) {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export interface TextareaState {
+interface TextareaState {
     [key: string]: unknown;
     /**
      * Whether the component should ignore user interaction.
@@ -132,7 +135,7 @@ export interface TextareaState {
     invalid: boolean;
 }
 
-export interface TextareaFieldProps
+interface TextareaFieldProps
     extends VaporUIComponentProps<'textarea', TextareaState>, TextareaVariants {
     /**
      * The value of the textarea. Use when controlled.

@@ -5,10 +5,8 @@ import { forwardRef } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
-import { useArrowPosition } from '~/hooks/use-arrow-position';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { cn } from '~/utils/cn';
-import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -83,19 +81,14 @@ TooltipPositionerPrimitive.displayName = 'Tooltip.PositionerPrimitive';
 export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrimitive.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
-        const { popupRef, arrowRef, position } = useArrowPosition({
-            offset: (side) => (side === 'top' || side === 'bottom' ? 12 : 6),
-        });
-
-        const composedRef = composeRefs(popupRef, ref);
 
         return (
             <BaseTooltip.Popup
-                ref={composedRef}
+                ref={ref}
                 className={cn(styles.popup, className)}
                 {...componentProps}
             >
-                <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                <BaseTooltip.Arrow className={styles.arrow}>
                     <ArrowIcon />
                 </BaseTooltip.Arrow>
 

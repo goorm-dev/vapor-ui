@@ -1,3 +1,5 @@
+import { renderToString } from 'react-dom/server';
+
 import { cleanup, render, waitFor } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
@@ -177,6 +179,74 @@ describe('Avatar.Fallback', () => {
 
         fallback = await rendered.findByText(alt.charAt(0).toUpperCase());
         expect(fallback).toBeInTheDocument();
+    });
+
+    describe('background color', () => {
+        const getFallbackColor = (container: HTMLElement) =>
+            container
+                .querySelector('[style*="fallback-background-color"]')
+                ?.getAttribute('style')
+                ?.match(/color-([a-z]+)-500/)?.[1];
+
+        // Feed a different value on every call so any Math.random() usage changes the color.
+        const mockShiftingRandom = () => {
+            let call = 0;
+            return vi.spyOn(Math, 'random').mockImplementation(() => (call++ * 0.37) % 1);
+        };
+
+        afterEach(() => {
+            vi.restoreAllMocks();
+        });
+
+        it('should keep the same color across re-renders when alt is empty', () => {
+            mockShiftingRandom();
+
+            const rendered = render(<AvatarFallbackTest alt="" />);
+            const initial = getFallbackColor(rendered.container);
+
+            for (let i = 0; i < 6; i++) {
+                rendered.rerender(<AvatarFallbackTest alt="" />);
+                expect(getFallbackColor(rendered.container)).toBe(initial);
+            }
+        });
+
+        it('should keep the same color across re-renders when alt is omitted', () => {
+            mockShiftingRandom();
+
+            const rendered = render(<AvatarFallbackTest />);
+            const initial = getFallbackColor(rendered.container);
+
+            for (let i = 0; i < 6; i++) {
+                rendered.rerender(<AvatarFallbackTest />);
+                expect(getFallbackColor(rendered.container)).toBe(initial);
+            }
+        });
+
+        it('should hydrate without mismatch when alt is empty', () => {
+            mockShiftingRandom();
+            const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+            const container = document.body.appendChild(document.createElement('div'));
+            container.innerHTML = renderToString(<AvatarFallbackTest alt="" />);
+
+            render(<AvatarFallbackTest alt="" />, { container, hydrate: true });
+
+            expect(consoleError).not.toHaveBeenCalled();
+        });
+
+        it.each([
+            ['Max', 'violet'],
+            ['Noah', 'red'],
+            ['vapor', 'red'],
+            ['Alice', 'pink'],
+            ['홍길동', 'blue'],
+            ['김구름', 'grape'],
+            ['goorm', 'green'],
+        ])('should map alt "%s" to %s', (alt, color) => {
+            const rendered = render(<AvatarFallbackTest alt={alt} />);
+
+            expect(getFallbackColor(rendered.container)).toBe(color);
+        });
     });
 });
 

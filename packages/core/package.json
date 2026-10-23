@@ -58,6 +58,9 @@
     "scripts": {
         "build": "rimraf dist && rolldown -c rolldown.config.ts",
         "clean": "rimraf dist node_modules .turbo",
+        "figma:check": "figma connect publish --dry-run",
+        "figma:preview": "figma connect preview",
+        "figma:publish": "figma connect publish",
         "lint": "eslint ./src",
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",
@@ -78,6 +81,7 @@
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {
+        "@figma/code-connect": "^2.0.2",
         "@repo/eslint-config": "workspace:*",
         "@repo/rolldown-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
@@ -96,7 +100,7 @@
         "autoprefixer": "^10.5.4",
         "eslint": "catalog:",
         "happy-dom": "^20.11.1",
-        "postcss": "^8.5.30",
+        "postcss": "^8.5.31",
         "react": "catalog:",
         "react-dom": "catalog:",
         "rimraf": "^6.1.3",

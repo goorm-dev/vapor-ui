@@ -1,0 +1,41 @@
+{
+    "templateFile": "./sheet.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45273-10621",
+            "component": "Sheet.Root",
+            "source": "src/components/sheet/sheet.tsx"
+        },
+        {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45349-23524",
+            "component": "Sheet.Popup",
+            "source": "src/components/sheet/sheet.tsx"
+        },
+        {
+            "part": "resizeHandle",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45368-23901",
+            "component": "Sheet.ResizeHandle",
+            "source": "src/components/sheet/sheet.tsx"
+        },
+        {
+            "part": "header",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33961-4123",
+            "component": "Sheet.Header",
+            "source": "src/components/sheet/sheet.tsx"
+        },
+        {
+            "part": "body",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33961-4130",
+            "component": "Sheet.Body",
+            "source": "src/components/sheet/sheet.tsx"
+        },
+        {
+            "part": "footer",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33961-4126",
+            "component": "Sheet.Footer",
+            "source": "src/components/sheet/sheet.tsx"
+        }
+    ]
+}

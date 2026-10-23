@@ -5,6 +5,7 @@ import { forwardRef, useRef } from 'react';
 import { Input as BaseInput } from '@base-ui/react/input';
 import { useControlled } from '@base-ui/utils/useControlled';
 
+import { useFieldRequired } from '~/components/field/field';
 import { useInputGroup } from '~/components/input-group';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -50,6 +51,7 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
         state: 'value',
     });
 
+    useFieldRequired(required);
     useInputGroup({ value, maxLength });
 
     const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
@@ -72,7 +74,7 @@ TextInput.displayName = 'TextInput';
 
 type TextInputVariants = RootVariants;
 
-export interface TextInputProps
+interface TextInputProps
     extends
         Omit<VaporUIComponentProps<typeof BaseInput, TextInput.State>, 'size'>,
         TextInputVariants {
