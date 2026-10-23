@@ -35,13 +35,9 @@
                 "$TURBO_ROOT$/.prettierrc.js",
                 "package.json",
                 "content/docs/components/*/index.mdx",
-                // The ko/ mirror keeps a translation only when the lock matches, and
-                // mirrors hand-written en/ files too.
                 "content/docs/components/*/api/ko.lock.json",
                 "content/docs/components/toast/api/en/toast-object.json"
             ],
-            // Hand-written files the extractor never touches (HAND_WRITTEN_FILES in
-            // scripts/docs-extractor/src/write.ts) stay out, so a cache hit can't restore an old copy.
             "outputs": [
                 "content/docs/components/*/api/en/*.json",
                 "!content/docs/components/toast/api/en/toast-object.json",

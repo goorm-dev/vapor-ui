@@ -42,15 +42,12 @@ export class FigmaClient {
         }
         return out;
     }
-
 }
 
 /** Drop hidden layers (`visible === false`) recursively.
  *  Figma REST only emits `visible: false` for explicitly hidden layers; absent means visible.
  *  Centralizing here means every downstream traversal sees the pruned tree. */
 function pruneInvisible(node: FigmaNode): FigmaNode {
-    const children = (node.children ?? [])
-        .filter((c) => c.visible !== false)
-        .map(pruneInvisible);
+    const children = (node.children ?? []).filter((c) => c.visible !== false).map(pruneInvisible);
     return node.children ? { ...node, children } : node;
 }
