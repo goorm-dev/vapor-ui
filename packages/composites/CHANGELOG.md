@@ -1,6 +1,14 @@
 # @vapor-ui/composites
 
-## 1.0.0
+## 0.1.0
+
+### Alert Dialog
+
+- add new `AlertDialog` composites ([#725](https://github.com/goorm-dev/vapor-ui/pull/725)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Dialog
+
+- add new `Dialog` component ([#686](https://github.com/goorm-dev/vapor-ui/pull/686)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ### Menu
 
