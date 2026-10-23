@@ -1,0 +1,34 @@
+{
+    "name": "ToastProvider",
+    "props": [
+        {
+            "name": "toastManager",
+            "type": ["ToastManager"],
+            "detailedType": "ToastManager | undefined",
+            "required": false,
+            "description": "A global manager for toasts to use outside of a React component."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false
+        },
+        {
+            "name": "limit",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "The maximum number of toasts that can be displayed at once.\nWhen the limit is exceeded, the oldest toasts are marked as `limited` (via the `data-limited`\nattribute) rather than removed, so they can be hidden or animated out.",
+            "defaultValue": "3"
+        },
+        {
+            "name": "timeout",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "The default amount of time (in ms) before a toast is auto dismissed.\nA value of `0` will prevent the toast from being dismissed automatically.",
+            "defaultValue": "4000"
+        }
+    ]
+}

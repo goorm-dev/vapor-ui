@@ -1,0 +1,54 @@
+{
+    "name": "Skeleton",
+    "description": "A placeholder element that indicates content is loading. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "animation",
+            "type": ["none", "shimmer", "pulse"],
+            "detailedType": "\"none\" | \"shimmer\" | \"pulse\" | undefined",
+            "required": false,
+            "description": "Controls the animation style of the skeleton.",
+            "defaultValue": "shimmer"
+        },
+        {
+            "name": "shape",
+            "type": ["square", "rounded"],
+            "detailedType": "\"square\" | \"rounded\" | undefined",
+            "required": false,
+            "description": "Controls the border radius of the skeleton.",
+            "defaultValue": "rounded"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Controls the height of the skeleton.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Skeleton.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Skeleton.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Skeleton.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Skeleton.State": "{\n\n}"
+    }
+}

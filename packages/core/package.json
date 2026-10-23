@@ -53,7 +53,8 @@
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.cts",
     "files": [
-        "dist"
+        "dist",
+        "docs"
     ],
     "scripts": {
         "build": "rimraf dist && rolldown -c rolldown.config.ts",
@@ -62,6 +63,7 @@
         "figma:preview": "figma connect preview",
         "figma:publish": "figma connect publish",
         "lint": "eslint ./src",
+        "prepack": "pnpm --filter website docs:llms ../../packages/core/docs",
         "test": "vitest --run",
         "test:coverage": "vitest --coverage",
         "test:watch": "vitest",

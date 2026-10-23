@@ -12,19 +12,25 @@ This package automatically generates JSON documentation for `packages/core` comp
 
 - Location: `scripts/docs-extractor`
 - Modules: `extract()` (read + policy) behind a thin CLI that writes the files
-- Primary usage: `pnpm --filter website extract`
+- Primary usage: `pnpm docs:api` (run for you by `pnpm dev` and `pnpm build`)
 
 ## Quick Start
 
 Run from the monorepo root:
 
 ```bash
-# Extract every component into apps/website/public/components/generated
-pnpm --filter website extract
+# Extract every component into apps/website/content/docs/components/<page>/api/
+pnpm docs:api
+
+# Re-extract whenever packages/core/src changes
+pnpm docs:api:watch
 
 # Extract a specific component only
-pnpm --filter website extract --component Button
+pnpm --filter website docs:api --component Button
 ```
+
+`pnpm docs:api` is a cached turbo task. `website` `dev` and `build` depend on it, and the
+`Docs API` CI job fails when the committed JSON differs from what the source produces.
 
 There is no build step. The CLI runs straight from TypeScript source through `tsx`.
 Only `pnpm install` is required.
@@ -43,7 +49,7 @@ pnpm docs-extractor test
 | ------------- | ----- | -------- | -------------------------------------------- |
 | `--input`     | -     | yes      | Directory to scan for component `.tsx` files |
 | `--tsconfig`  | -     | yes      | `tsconfig.json` used to resolve types        |
-| `--out`       | -     | yes      | Directory the JSON files are written to      |
+| `--pages`     | -     | yes      | Directory with one folder per docs page      |
 | `--component` | `-n`  | no       | Extract only this component file             |
 | `--verbose`   | -     | no       | Print debug output                           |
 
@@ -55,13 +61,15 @@ This section is the specification of the generated JSON. The extractor implement
 
 ### Consumers
 
-| Consumer                                                          | Reads                                                                     |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`)    | file name, `description`, `props[]`                                       |
-| `apps/website` LLM text (`src/utils/get-component-doc.ts`)        | `props[]`                                                                 |
-| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL) | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
+| Consumer                                                                                                                | Reads                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`), at build time                                           | file name, `description`, `props[]`                                       |
+| `apps/website` LLM text (`src/utils/get-component-doc.ts`): the `.mdx` routes and the docs packed into `@vapor-ui/core` | `props[]`                                                                 |
+| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL)                                                       | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
 
-The output file path and the fields listed here form the contract with these consumers. The generated files are committed; extraction is run by hand, not in CI or the build.
+`get-component-info.mjs` still reads the old `apps/website/public/components/generated/` path, which exists only at tags released before the move.
+
+The output file path and the fields listed here form the contract with these consumers. The generated files are committed. `pnpm dev` and `pnpm build` regenerate them, and CI fails when they are out of date.
 
 ### Components
 
@@ -71,9 +79,11 @@ The output file path and the fields listed here form the contract with these con
 
 ### Output files
 
-- One JSON file per component in `--out`, named after the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
-- A full run deletes JSON files in `--out` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
-- `toast-object.json` in `--out` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
+- One JSON file per component, in the `api/` folder of the page that documents it: `<pages>/<page>/api/<name>.json`, next to `<page>/index.mdx`. The name is the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
+- The page is the component's folder under `components/`: `src/components/avatar/` → the page whose URL slug is `avatar`, either `<pages>/avatar/` or inside a route group such as `<pages>/(components)/avatar/`. A real folder is part of the slug, so `<pages>/patterns/form/` is not the `form` page. `PAGE_FOR_COMPONENT` in `src/write.ts` lists the exceptions: `radio-group` is documented on `radio`, and `alert-dialog` and `theme-provider` have no components page, so nothing is written for them.
+- A component whose page folder doesn't exist fails the run. Add the page or an entry in `PAGE_FOR_COMPONENT`.
+- A full run deletes JSON files in any `<pages>/<page>/api/` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
+- `(components)/toast/api/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
 - The CLI formats the written files with Prettier.
 
 ### Fields
@@ -196,19 +206,19 @@ Not extracted:
 ```text
 cli.ts ──► extract() ──► read/     source → ParsedComponent[]   (ts-morph, filesystem)
    │                └──► policy()  ParsedComponent[] → ComponentDoc[]   (pure)
-   └─────► writeDocs()  ComponentDoc[] → <out>/*.json, then prettier
+   └─────► writeDocs()  ComponentDoc[] → <pages>/<page>/api/*.json, then prettier
 ```
 
-| Module            | Interface                                                                         | Owns                                                                                                  |
-| ----------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `src/extract.ts`  | `extract({ inputPath, tsconfigPath, component?, reporter? }): { docs, failures }` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing          |
-| `src/read/`       | `parseSourceFile()`, `scanComponentFiles()`; only `extract()` imports them        | Component detection, descriptions, default values, source classification, public names, type printing |
-| `src/policy.ts`   | `policy(components: ParsedComponent[]): ComponentDoc[]`                           | README "Props", "Types" and the field shape. No ts-morph, no filesystem                               |
-| `src/write.ts`    | `writeDocs(outputDir, docs, { removeStale })`, `formatWithPrettier()`             | File names, JSON bytes, stale-file removal                                                            |
-| `src/cli.ts`      | the `--input`/`--tsconfig`/`--out` command                                        | Flags, the console reporter, exit codes                                                               |
-| `src/model.ts`    | `ParsedComponent`, `ComponentDoc` and their prop types, `joinTypeMembers()`       | The data passed between the modules above, and how type members are joined on one line                |
-| `src/reporter.ts` | `Reporter`, `silentReporter`                                                      | Where progress and warnings go; the CLI supplies the console one                                      |
-| `src/errors.ts`   | `ExtractorError`                                                                  | Bad input (missing path, unknown component), printed by the CLI without a stack                       |
+| Module            | Interface                                                                                      | Owns                                                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `src/extract.ts`  | `extract({ inputPath, tsconfigPath, component?, reporter? }): { docs, sourceFiles, failures }` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing          |
+| `src/read/`       | `parseSourceFile()`, `scanComponentFiles()`; only `extract()` imports them                     | Component detection, descriptions, default values, source classification, public names, type printing |
+| `src/policy.ts`   | `policy(components: ParsedComponent[]): ComponentDoc[]`                                        | README "Props", "Types" and the field shape. No ts-morph, no filesystem                               |
+| `src/write.ts`    | `writeDocs(pagesDir, docs, { removeStale })`, `findApiDir()`, `formatWithPrettier()`           | Which page folder a component goes to, file names, JSON bytes, stale-file removal                     |
+| `src/cli.ts`      | the `--input`/`--tsconfig`/`--pages` command                                                   | Flags, the console reporter, exit codes                                                               |
+| `src/model.ts`    | `ParsedComponent`, `ComponentDoc` and their prop types, `joinTypeMembers()`                    | The data passed between the modules above, and how type members are joined on one line                |
+| `src/reporter.ts` | `Reporter`, `silentReporter`                                                                   | Where progress and warnings go; the CLI supplies the console one                                      |
+| `src/errors.ts`   | `ExtractorError`                                                                               | Bad input (missing path, unknown component), printed by the CLI without a stack                       |
 
 Tests go through `extract()` (fixture sources on disk), `policy()` (plain data), `writeDocs()` (a temp directory) and two `read/` seams, the type printer's `createTypePrinter()` and the public names' `createPublicNames()` (source strings in an in-memory project), not through module internals.
 
