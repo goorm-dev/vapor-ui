@@ -52,11 +52,8 @@ pnpm format           # format all files with Prettier
 pnpm format:check     # check formatting without writing
 pnpm docs:api         # regenerate the props JSON next to each docs page (also run by dev/build)
 pnpm docs:api:watch   # same, rerun on every packages/core change
-<<<<<<< HEAD
-=======
 pnpm docs:translate   # translate missing Korean API docs with Claude (local only, never in CI)
 pnpm --filter website docs:translate:check  # what CI runs: list missing translations, no AI
->>>>>>> noahchoii/VAPOR-260
 ```
 
 ### Package shortcuts
