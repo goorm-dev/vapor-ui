@@ -1,47 +1,27 @@
-import path from 'node:path';
-import { type SourceFile, SyntaxKind, type VariableDeclaration } from 'ts-morph';
+import { isBaseUiPath } from '#read/source-classifier';
+import { Node, SyntaxKind, type Symbol as TsSymbol, type VariableDeclaration, ts } from 'ts-morph';
 
 type DefaultValues = Record<string, string>;
 
-// ──────────────────────────────────────────────────────────────
-// Import analysis utilities
-// ──────────────────────────────────────────────────────────────
-
-function findImportPaths(sourceFile: SourceFile, extension: string): string[] {
-    const seen = new Set<string>();
-
-    for (const importDecl of sourceFile.getImportDeclarations()) {
-        const modulePath = importDecl.getModuleSpecifierValue();
-
-        if (modulePath.endsWith(extension)) {
-            seen.add(modulePath);
-        }
+/** A literal reads as its value, and so does a name that refers to one (`step = RESIZE_STEP` → `16`). */
+function valueText(node: Node): string {
+    if (Node.isStringLiteral(node) || Node.isNoSubstitutionTemplateLiteral(node)) {
+        return node.getLiteralText();
     }
 
-    return [...seen];
-}
-
-function findNamespaceImportName(sourceFile: SourceFile, modulePath: string): string | null {
-    for (const importDecl of sourceFile.getImportDeclarations()) {
-        if (importDecl.getModuleSpecifierValue() !== modulePath) continue;
-
-        const namespaceImport = importDecl.getNamespaceImport();
-        if (namespaceImport) return namespaceImport.getText();
+    if (Node.isIdentifier(node) || Node.isPropertyAccessExpression(node)) {
+        const type = node.getType();
+        if (type.isStringLiteral() || type.isNumberLiteral()) return String(type.getLiteralValue());
+        if (type.isBooleanLiteral()) return type.getText();
     }
 
-    return null;
+    return node.getText();
 }
 
-function extractDestructuringDefaults(
-    componentImplementation: VariableDeclaration,
-    declaredPropNames?: Set<string>,
-): DefaultValues {
+function extractDestructuringDefaults(componentImplementation: VariableDeclaration): DefaultValues {
     const result: DefaultValues = {};
 
-    const initializer = componentImplementation.getInitializer();
-    if (!initializer) return result;
-
-    initializer.forEachDescendant((node) => {
+    componentImplementation.getInitializer()?.forEachDescendant((node) => {
         if (!node.isKind(SyntaxKind.BindingElement)) return;
 
         const initNode = node.getInitializer();
@@ -57,129 +37,211 @@ function extractDestructuringDefaults(
               ? propertyNameNode.getLiteralText()
               : nameNode.getText();
 
-        if (declaredPropNames && !declaredPropNames.has(name)) return;
         if (name in result) return;
 
-        if (
-            initNode.isKind(SyntaxKind.StringLiteral) ||
-            initNode.isKind(SyntaxKind.NoSubstitutionTemplateLiteral)
-        ) {
-            result[name] = initNode.getLiteralText();
-            return;
-        }
-
-        result[name] = initNode.getText();
+        result[name] = valueText(initNode);
     });
 
     return result;
 }
 
-interface CssImport {
-    modulePath: string;
-    resolvedPath: string;
+/**
+ * One entry of a JSX element's attributes or of an object literal, in source order.
+ * `literal` is set when the value is written as a literal; any other value leaves it unset.
+ */
+type PropsEntry = { name: string; literal?: string } | { spread: Node };
+
+function literalText(value: Node | undefined): string | undefined {
+    if (
+        Node.isStringLiteral(value) ||
+        Node.isNoSubstitutionTemplateLiteral(value) ||
+        Node.isNumericLiteral(value) ||
+        Node.isTrueLiteral(value) ||
+        Node.isFalseLiteral(value) ||
+        Node.isNullLiteral(value)
+    ) {
+        return valueText(value);
+    }
+
+    return undefined;
 }
 
-function findCssImports(sourceFile: SourceFile): CssImport[] {
-    const fileDir = path.dirname(sourceFile.getFilePath());
+function readPropsEntries(node: Node): PropsEntry[] | undefined {
+    if (Node.isJsxOpeningElement(node) || Node.isJsxSelfClosingElement(node)) {
+        return node.getAttributes().map((attribute): PropsEntry => {
+            if (Node.isJsxSpreadAttribute(attribute)) return { spread: attribute.getExpression() };
 
-    return findImportPaths(sourceFile, '.css').map((modulePath) => ({
-        modulePath,
-        resolvedPath: path.resolve(fileDir, `${modulePath}.ts`),
-    }));
+            const name = attribute.getNameNode().getText();
+            const initializer = attribute.getInitializer();
+            // `<Trigger nativeButton />` is `nativeButton={true}`.
+            if (!initializer) return { name, literal: 'true' };
+
+            const value = Node.isJsxExpression(initializer)
+                ? initializer.getExpression()
+                : initializer;
+            return { name, literal: literalText(value) };
+        });
+    }
+
+    if (Node.isObjectLiteralExpression(node)) {
+        return node.getProperties().map((property): PropsEntry => {
+            if (Node.isSpreadAssignment(property)) return { spread: property.getExpression() };
+
+            const nameNode = property.getNameNode();
+            const name = Node.isStringLiteral(nameNode)
+                ? nameNode.getLiteralText()
+                : nameNode.getText();
+            const value = Node.isPropertyAssignment(property)
+                ? property.getInitializer()
+                : undefined;
+            return { name, literal: literalText(value) };
+        });
+    }
+
+    return undefined;
 }
 
-function findRecipeUsageInComponent(
-    componentImplementation: VariableDeclaration,
-    styleName: string,
-): string | null {
-    const initializer = componentImplementation.getInitializer();
-    if (!initializer) return null;
+/** Whether spreading `expression` passes the prop itself on, judged by a shared declaration. */
+function spreadCarries(expression: Node, symbol: TsSymbol): boolean {
+    const declarations = new Set(symbol.getDeclarations().map((node) => node.compilerNode));
 
-    let foundRecipe: string | null = null;
+    return (
+        expression
+            .getType()
+            .getProperty(symbol.getName())
+            ?.getDeclarations()
+            .some((node) => declarations.has(node.compilerNode)) ?? false
+    );
+}
 
-    initializer.forEachDescendant((node) => {
-        if (foundRecipe || !node.isKind(SyntaxKind.CallExpression)) return;
+/**
+ * What the implementation itself writes for the prop where it passes the props on:
+ * - `default`: a literal before a spread that carries the prop, so the caller can still override it
+ *   (`<Positioner positionMethod="fixed" {...props} />`).
+ * - `set`: any other value it writes there, or a value after the spread that the caller can't override.
+ *   The prop no longer behaves as declared, so a declared default no longer applies.
+ */
+type WrittenValue = { kind: 'default'; value: string } | { kind: 'set' } | undefined;
 
-        const expr = node.getExpression();
-        if (!expr.isKind(SyntaxKind.PropertyAccessExpression)) return;
-
-        const objectName = expr.getExpression().getText();
-        if (objectName === styleName) {
-            foundRecipe = expr.getName();
-        }
+function createWrittenValueReader(componentImplementation: VariableDeclaration) {
+    const entryLists: PropsEntry[][] = [];
+    componentImplementation.getInitializer()?.forEachDescendant((node) => {
+        const entries = readPropsEntries(node);
+        if (entries?.some((entry) => 'spread' in entry)) entryLists.push(entries);
     });
 
-    return foundRecipe;
-}
+    return (symbol: TsSymbol): WrittenValue => {
+        const name = symbol.getName();
+        let result: WrittenValue;
 
-function parseRecipeDefaultVariants(
-    cssFile: SourceFile,
-    variableName: string,
-): DefaultValues | null {
-    const variableDecl = cssFile.getVariableDeclaration(variableName);
-    if (!variableDecl) return null;
+        for (const entries of entryLists) {
+            if (!entries.some((entry) => 'name' in entry && entry.name === name)) continue;
 
-    const callExpr = variableDecl.getInitializerIfKind(SyntaxKind.CallExpression);
-    if (!callExpr) return null;
-
-    const callee = callExpr.getExpression().getText();
-    if (callee !== 'recipe' && callee !== 'componentRecipe') return null;
-
-    const configObject = callExpr.getArguments()[0]?.asKind(SyntaxKind.ObjectLiteralExpression);
-    if (!configObject) return null;
-
-    const defaultVariantsProperty = configObject.getProperty('defaultVariants');
-    if (!defaultVariantsProperty) return null;
-
-    const defaultVariantsValue = defaultVariantsProperty
-        .asKind(SyntaxKind.PropertyAssignment)
-        ?.getInitializerIfKind(SyntaxKind.ObjectLiteralExpression);
-
-    if (!defaultVariantsValue) return null;
-
-    const result: DefaultValues = {};
-    defaultVariantsValue.getProperties().forEach((prop) => {
-        if (!prop.isKind(SyntaxKind.PropertyAssignment)) return;
-
-        const key = prop.getName();
-        const value = prop.getInitializer()?.getText().replace(/['"`]/g, '') || '';
-        result[key] = value;
-    });
-
-    return result;
-}
-
-export function getDefaultValuesForComponent(
-    sourceFile: SourceFile,
-    componentImplementation: VariableDeclaration | undefined,
-    declaredPropNames?: Set<string>,
-): DefaultValues {
-    if (!componentImplementation) return {};
-
-    const result: DefaultValues = {
-        ...extractDestructuringDefaults(componentImplementation, declaredPropNames),
-    };
-
-    const cssImports = findCssImports(sourceFile);
-    for (const cssImport of cssImports) {
-        const styleName = findNamespaceImportName(sourceFile, cssImport.modulePath);
-        if (!styleName) continue;
-
-        const recipeName = findRecipeUsageInComponent(componentImplementation, styleName);
-        if (!recipeName) continue;
-
-        const cssFile = sourceFile.getProject().getSourceFile(cssImport.resolvedPath);
-        if (!cssFile) continue;
-
-        const defaults = parseRecipeDefaultVariants(cssFile, recipeName);
-        if (!defaults) continue;
-
-        for (const [key, value] of Object.entries(defaults)) {
-            if (!(key in result)) {
-                result[key] = value;
+            let lastCarrier = -1;
+            for (const [index, entry] of entries.entries()) {
+                if ('spread' in entry && spreadCarries(entry.spread, symbol)) lastCarrier = index;
             }
+            if (lastCarrier === -1) continue;
+
+            for (const [index, entry] of entries.entries()) {
+                if (!('name' in entry) || entry.name !== name) continue;
+                if (index > lastCarrier || entry.literal === undefined) return { kind: 'set' };
+                result ??= { kind: 'default', value: entry.literal };
+            }
+        }
+
+        return result;
+    };
+}
+
+/**
+ * `defaultVariants` of the `recipe()` / `componentRecipe()` whose `variants` declares the prop.
+ * Following the declaration, not the recipe the component calls, reaches a default that a root
+ * passes to its parts through context.
+ */
+function getDeclaringRecipeDefault(symbol: TsSymbol): string | undefined {
+    const values = new Set<string | undefined>();
+
+    for (const declaration of symbol.getDeclarations()) {
+        if (!Node.isPropertyAssignment(declaration)) continue;
+
+        const variantsProperty = declaration
+            .getParentIfKind(SyntaxKind.ObjectLiteralExpression)
+            ?.getParentIfKind(SyntaxKind.PropertyAssignment);
+        if (variantsProperty?.getName() !== 'variants') continue;
+
+        const config = variantsProperty.getParentIfKind(SyntaxKind.ObjectLiteralExpression);
+        const callee = config
+            ?.getParentIfKind(SyntaxKind.CallExpression)
+            ?.getExpression()
+            .getText();
+        if (!config || (callee !== 'recipe' && callee !== 'componentRecipe')) continue;
+
+        const defaultValue = config
+            .getProperty('defaultVariants')
+            ?.asKind(SyntaxKind.PropertyAssignment)
+            ?.getInitializerIfKind(SyntaxKind.ObjectLiteralExpression)
+            ?.getProperty(declaration.getName())
+            ?.asKind(SyntaxKind.PropertyAssignment)
+            ?.getInitializer();
+
+        values.add(defaultValue && valueText(defaultValue));
+    }
+
+    // Recipes that declare the same variant with different defaults have no single answer.
+    return values.size === 1 ? [...values][0] : undefined;
+}
+
+/**
+ * The `@default` tag on Base UI's own declaration of the prop. A vapor-ui interface that re-declares
+ * the prop to document it hides that declaration, so the interface's base types are searched too.
+ * `undefined` means no default.
+ */
+function getBaseUiDefaultTag(symbol: TsSymbol): string | undefined {
+    for (const declaration of symbol.getDeclarations()) {
+        if (!isBaseUiPath(declaration.getSourceFile().getFilePath())) {
+            const owner = declaration.getParentIfKind(SyntaxKind.InterfaceDeclaration);
+            for (const base of owner?.getBaseTypes() ?? []) {
+                const inherited = base.getProperty(symbol.getName());
+                const text = inherited && getBaseUiDefaultTag(inherited);
+                if (text) return text;
+            }
+            continue;
+        }
+
+        for (const tag of ts.getJSDocTags(declaration.compilerNode)) {
+            if (tag.tagName.text !== 'default') continue;
+
+            const text = ts
+                .getTextOfJSDocComment(tag.comment)
+                ?.trim()
+                .replace(/^(['"`])(.*)\1$/s, '$2');
+            if (text && text !== 'undefined') return text;
         }
     }
 
-    return result;
+    return undefined;
+}
+
+/** README "Default values": the first source that has a value wins. */
+export function createDefaultValueReader(componentImplementation: VariableDeclaration | undefined) {
+    const destructuringDefaults = componentImplementation
+        ? extractDestructuringDefaults(componentImplementation)
+        : {};
+    const readWrittenValue = componentImplementation
+        ? createWrittenValueReader(componentImplementation)
+        : () => undefined;
+
+    return (symbol: TsSymbol): string | undefined => {
+        const name = symbol.getName();
+        if (name in destructuringDefaults) return destructuringDefaults[name];
+
+        const written = readWrittenValue(symbol);
+        if (written?.kind === 'default') return written.value;
+
+        return (
+            getDeclaringRecipeDefault(symbol) ??
+            (written?.kind === 'set' ? undefined : getBaseUiDefaultTag(symbol))
+        );
+    };
 }

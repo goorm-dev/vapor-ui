@@ -54,8 +54,14 @@ export const root = componentRecipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
+        /**
+         * Marks the checkbox as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element.
+         */
         invalid: { true: {}, false: {} },
 
+        /**
+         * Size of the checkbox, controlling its width, height, and corner radius, and the size of its check mark.
+         */
         size: {
             md: {
                 borderRadius: vars.size.borderRadius[100],

@@ -1,0 +1,51 @@
+{
+    "name": "NavigationMenuViewport",
+    "description": "`NavigationMenu.PortalPrimitive`, `NavigationMenu.PositionerPrimitive`, `NavigationMenu.PopupPrimitive`, `NavigationMenu.ViewportPrimitive`를 하나의 파트로 합칩니다. 포털, 포지셔너, 팝업을 대체하려면 `portalElement`, `positionerElement`, `popupElement`를 사용하세요. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: NavigationMenu.Viewport.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "popupElement",
+            "type": ["ReactElement<NavigationMenuPopupPrimitive.Props>"],
+            "detailedType": "ReactElement<NavigationMenuPopupPrimitive.Props> | undefined",
+            "required": false,
+            "description": "기본 `NavigationMenu.PopupPrimitive`를 대체합니다. 콘텐츠를 담는 패널을 바꿀 때 사용하세요."
+        },
+        {
+            "name": "portalElement",
+            "type": ["ReactElement<NavigationMenuPortalPrimitive.Props>"],
+            "detailedType": "ReactElement<NavigationMenuPortalPrimitive.Props> | undefined",
+            "required": false,
+            "description": "기본 `NavigationMenu.PortalPrimitive`를 대체합니다. 포털 컨테이너를 바꿀 때 사용하세요."
+        },
+        {
+            "name": "positionerElement",
+            "type": ["ReactElement<NavigationMenuPositionerPrimitive.Props>"],
+            "detailedType": "ReactElement<NavigationMenuPositionerPrimitive.Props> | undefined",
+            "required": false,
+            "description": "기본 `NavigationMenu.PositionerPrimitive`를 대체합니다. 팝업의 방향, 정렬, 오프셋을 바꿀 때 사용하세요."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: NavigationMenu.Viewport.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.Viewport.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "NavigationMenu.Viewport.State": "{\n\n}"
+    }
+}

@@ -36,7 +36,9 @@ type RootContext = {
     setMounted: React.Dispatch<React.SetStateAction<boolean>>;
     transitionStatus: TransitionStatus;
     popupRef: RefObject<HTMLDivElement | null>;
-    /** Owned by Sheet.Popup — undefined until the popup mounts and reports its id. */
+    /**
+     * Owned by Sheet.Popup — undefined until the popup mounts and reports its id.
+     */
     popupId: string | undefined;
     setPopupId: (id: string | undefined) => void;
 };
@@ -49,6 +51,9 @@ const [SheetRootProvider, useSheetRootContext] = createContext<RootContext>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the Sheet compound component, a panel that slides in from an edge of the viewport for supplementary content or tasks. Manages the open state. Doesn't render its own HTML element.
+ */
 export const SheetRoot = ({
     open: openProp,
     defaultOpen,
@@ -120,6 +125,9 @@ SheetRoot.displayName = 'Sheet.Root';
  * Sheet.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that opens the sheet when clicked. Renders a `<button>` element.
+ */
 export const SheetTrigger = forwardRef<HTMLButtonElement, SheetTrigger.Props>((props, ref) => (
     <Dialog.Trigger ref={ref} {...props} />
 ));
@@ -129,6 +137,9 @@ SheetTrigger.displayName = 'Sheet.Trigger';
  * Sheet.Close
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that closes the sheet when clicked. Renders a `<button>` element.
+ */
 export const SheetClose = forwardRef<HTMLButtonElement, SheetClose.Props>((props, ref) => (
     <Dialog.Close ref={ref} {...props} />
 ));
@@ -138,6 +149,9 @@ SheetClose.displayName = 'Sheet.Close';
  * Sheet.OverlayPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Semi-transparent backdrop rendered behind the sheet popup. Renders a `<div>` element.
+ */
 export const SheetOverlayPrimitive = forwardRef<HTMLDivElement, SheetOverlayPrimitive.Props>(
     (props, ref) => <Dialog.OverlayPrimitive ref={ref} {...props} />,
 );
@@ -147,6 +161,9 @@ SheetOverlayPrimitive.displayName = 'Sheet.OverlayPrimitive';
  * Sheet.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal container that renders the sheet outside the normal DOM hierarchy. Renders a `<div>` element.
+ */
 export const SheetPortalPrimitive = forwardRef<HTMLDivElement, SheetPortalPrimitive.Props>(
     (props, ref) => <Dialog.PortalPrimitive ref={ref} {...props} />,
 );
@@ -156,7 +173,12 @@ SheetPortalPrimitive.displayName = 'Sheet.PortalPrimitive';
  * Sheet.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-type PositionerType = { side?: 'top' | 'right' | 'bottom' | 'left' };
+type PositionerType = {
+    /**
+     * Edge of the viewport the sheet slides in from.
+     */
+    side?: 'top' | 'right' | 'bottom' | 'left';
+};
 
 const [SheetPositionerProvider, useSheetPositionerContext] = createContext<PositionerType>({
     name: 'SheetPositioner',
@@ -164,6 +186,9 @@ const [SheetPositionerProvider, useSheetPositionerContext] = createContext<Posit
     hookName: 'useSheetPositionerContext',
 });
 
+/**
+ * Places the sheet popup against the chosen edge of the viewport. Renders a `<div>` element.
+ */
 export const SheetPositionerPrimitive = forwardRef<HTMLDivElement, SheetPositionerPrimitive.Props>(
     (props, ref) => {
         const { render, ...componentProps } = resolveStyles(props);
@@ -195,6 +220,9 @@ SheetPositionerPrimitive.displayName = 'Sheet.PositionerPrimitive';
  * Sheet.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The sheet panel itself, which slides in from the side set on `Sheet.PositionerPrimitive`. Renders a `<div>` element.
+ */
 export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitive.Props>(
     (props, ref) => {
         const { className, id: idProp, ...componentProps } = resolveStyles(props);
@@ -229,6 +257,9 @@ SheetPopupPrimitive.displayName = 'Sheet.PopupPrimitive';
  * Sheet.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Sheet.PortalPrimitive`, `Sheet.OverlayPrimitive`, `Sheet.PositionerPrimitive`, and `Sheet.PopupPrimitive` into a single part. Use `portalElement`, `overlayElement`, or `positionerElement` to replace the portal, overlay, or positioner. Renders a `<div>` element.
+ */
 export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
         const popup = <SheetPopupPrimitive ref={ref} {...props} />;
@@ -268,6 +299,9 @@ SheetPopup.displayName = 'Sheet.Popup';
 
 const RESIZE_STEP = 16; // px per arrow key press (spec default)
 
+/**
+ * Handle on the inner edge of the sheet that resizes it by dragging or with the arrow keys. Place it inside `Sheet.Popup`. Renders a `<div>` element.
+ */
 export const SheetResizeHandle = forwardRef<HTMLDivElement, SheetResizeHandle.Props>(
     (props, ref) => {
         const {
@@ -357,6 +391,9 @@ SheetResizeHandle.displayName = 'Sheet.ResizeHandle';
  * Sheet.Header
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Top section of the sheet, typically containing the title and a close button. Renders a `<div>` element.
+ */
 export const SheetHeader = forwardRef<HTMLDivElement, SheetHeader.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -368,6 +405,9 @@ SheetHeader.displayName = 'Sheet.Header';
  * Sheet.Body
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Scrollable main content area of the sheet. Renders a `<div>` element.
+ */
 export const SheetBody = forwardRef<HTMLDivElement, SheetBody.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -379,6 +419,9 @@ SheetBody.displayName = 'Sheet.Body';
  * Sheet.Footer
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Bottom section of the sheet, typically containing action buttons. Renders a `<div>` element.
+ */
 export const SheetFooter = forwardRef<HTMLDivElement, SheetFooter.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -390,6 +433,9 @@ SheetFooter.displayName = 'Sheet.Footer';
  * Sheet.Title
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Heading that labels the sheet for assistive technologies. Renders an `<h2>` element.
+ */
 export const SheetTitle = forwardRef<HTMLHeadingElement, SheetTitle.Props>((props, ref) => (
     <Dialog.Title ref={ref} {...props} />
 ));
@@ -399,6 +445,9 @@ SheetTitle.displayName = 'Sheet.Title';
  * Sheet.Description
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Paragraph that provides supplementary text for the sheet, linked to the sheet panel for assistive technologies. Renders a `<p>` element.
+ */
 export const SheetDescription = forwardRef<HTMLParagraphElement, SheetDescription.Props>(
     ({ className, ...props }, ref) => {
         return (
@@ -443,13 +492,19 @@ export namespace SheetPortalPrimitive {
 }
 
 export interface SheetPositionerPrimitiveState {
-    /** The side of the sheet relative to the viewport. */
+    /**
+     * The side of the sheet relative to the viewport.
+     */
     side?: 'top' | 'right' | 'bottom' | 'left';
 
-    /** Whether the sheet is open. */
+    /**
+     * Whether the sheet is open.
+     */
     open: boolean;
 
-    /** Whether the sheet is closed. */
+    /**
+     * Whether the sheet is closed.
+     */
     closed: boolean;
 }
 
@@ -465,15 +520,15 @@ export namespace SheetPopupPrimitive {
 
 export interface SheetPopupProps extends SheetPopupPrimitive.Props {
     /**
-     * A Custom element for Sheet.PortalPrimitive. If not provided, the default Sheet.PortalPrimitive will be rendered.
+     * Replaces the default `Sheet.PortalPrimitive`. Use to change the portal container.
      */
     portalElement?: ReactElement<SheetPortalPrimitive.Props>;
     /**
-     * A Custom element for Sheet.OverlayPrimitive. If not provided, the default Sheet.OverlayPrimitive will be rendered.
+     * Replaces the default `Sheet.OverlayPrimitive`. Use to change the backdrop.
      */
     overlayElement?: ReactElement<SheetOverlayPrimitive.Props>;
     /**
-     * A Custom element for Sheet.PositionerPrimitive. If not provided, the default Sheet.PositionerPrimitive will be rendered.
+     * Replaces the default `Sheet.PositionerPrimitive`. Use to change the side the sheet slides in from.
      */
     positionerElement?: ReactElement<SheetPositionerPrimitive.Props>;
 }
@@ -484,10 +539,14 @@ export namespace SheetPopup {
 }
 
 export interface SheetResizeHandleState {
-    /** The side of the sheet relative to the viewport. */
+    /**
+     * The side of the sheet relative to the viewport.
+     */
     side: 'top' | 'right' | 'bottom' | 'left';
 
-    /** Whether resizing is disabled. */
+    /**
+     * Whether resizing is disabled.
+     */
     disabled: boolean;
 }
 
@@ -495,12 +554,11 @@ export namespace SheetResizeHandle {
     export type State = SheetResizeHandleState;
     export interface Props extends VaporUIComponentProps<'div', State> {
         /**
-         * Pixels adjusted per arrow-key press.
-         * @default 16
+         * Distance the sheet resizes per arrow-key press, in pixels.
          */
         step?: number;
         /**
-         * Blocks drag and keyboard resizing.
+         * Disables the handle, blocking drag and keyboard resizing.
          */
         disabled?: boolean;
     }

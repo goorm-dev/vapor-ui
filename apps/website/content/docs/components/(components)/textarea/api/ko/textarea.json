@@ -1,0 +1,77 @@
+{
+    "name": "Textarea",
+    "description": "댓글이나 설명처럼 긴 입력을 위한 여러 줄 텍스트 필드. `autoResize`를 설정하면 콘텐츠에 맞춰 높이가 늘어납니다. `<textarea>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "autoResize",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "사용자가 입력할 때 textarea의 높이를 콘텐츠에 맞게 늘리고, 수동 크기 조절을 끕니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "textarea를 유효하지 않은 상태로 표시하고 오류 스타일을 적용합니다. `<textarea>` 요소에 `aria-invalid`를 설정합니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "textarea의 크기. 패딩과 타이포그래피를 결정합니다.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "필드의 초기 텍스트. 비제어 컴포넌트로 쓸 때 사용하세요.",
+            "defaultValue": ""
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: string, event: Textarea.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "사용자가 입력하거나 붙여넣거나 삭제해서 텍스트가 바뀔 때 호출됩니다. 새 텍스트와 변경 이벤트 상세 정보를 받습니다. `disabled` 또는 `readOnly`가 설정된 동안에는 호출되지 않습니다."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "필드의 현재 텍스트. 제어 컴포넌트로 쓸 때 사용하세요."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Textarea.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Textarea.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Textarea.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Textarea.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "Textarea.State": "{\n  disabled: boolean;\n  readOnly: boolean;\n  required: boolean;\n  invalid: boolean;\n}"
+    }
+}

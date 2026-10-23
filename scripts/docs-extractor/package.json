@@ -7,6 +7,11 @@
     "imports": {
         "#*": "./src/*.ts"
     },
+    "exports": {
+        "./model": "./src/model.ts",
+        "./translation": "./src/translation.ts",
+        "./write": "./src/write.ts"
+    },
     "scripts": {
         "lint": "eslint ./src",
         "test": "vitest --run",

@@ -1,0 +1,100 @@
+{
+    "name": "TabsRoot",
+    "description": "관련된 콘텐츠 패널을 한 번에 하나씩 전환해 보여 주는 Tabs 복합 컴포넌트의 루트. `size`, `variant`, `orientation`, `disabled`를 내부 파트와 공유합니다. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "탭 버튼의 크기. 높이와 타이포그래피를 결정합니다.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "variant",
+            "type": ["line", "fill"],
+            "detailedType": "\"line\" | \"fill\" | undefined",
+            "required": false,
+            "description": "탭의 시각적 스타일. `line`은 목록 테두리의 선으로 활성 탭을 표시하고, `fill`은 채워진 배경으로 활성 탭을 강조합니다.",
+            "defaultValue": "line"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["any"],
+            "detailedType": "any",
+            "required": false,
+            "description": "기본값. 비제어 컴포넌트로 쓸 때 사용하세요.\n값이 `null`이면 활성화되는 Tab이 없습니다.",
+            "defaultValue": "0"
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: any, eventDetails: Tabs.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "새 값이 설정될 때 호출되는 콜백.\n\n이벤트의 `reason`은 클릭이나 키보드 탐색처럼 사용자가 일으킨 변경이면 `'none'`입니다. 비제어 루트에서 `defaultValue`를 생략했거나 `undefined`일 때 처음 자동으로 선택하거나 대체하는 경우(암묵적 초기값이 비활성화되었거나 없는 경우 포함)에는 `'initial'`입니다. 비제어 루트에서 선택된 탭이 비활성화되어 자동으로 대체하는 경우에는 `'disabled'`입니다. 선택된 탭이 제거되어 자동으로 대체하거나, 비제어 루트에서 명시한 `defaultValue`가 마운트된 탭과 끝내 일치하지 않는 경우에는 `'missing'`입니다.\n\n자동 변경에서 대체할 수 있는 활성화된 Tab이 없으면 선택된 값이 `null`일 수 있습니다.\n\n자동 변경은 취소할 수 없습니다. `'initial'`, `'disabled'`, `'missing'`일 때 `eventDetails.cancel()`을 호출해도 아무 효과가 없습니다."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "detailedType": "any",
+            "required": false,
+            "description": "현재 활성화된 `Tab`의 값. 제어 컴포넌트로 쓸 때 사용하세요.\n값이 `null`이면 활성화되는 Tab이 없습니다."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Tabs.Root.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "모든 탭 버튼을 비활성화하고 모든 상호작용을 막습니다."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Tabs.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "activateOnFocus",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "화살표 키로 포커스를 옮길 때 활성 탭을 자동으로 바꿀지 여부.\n그렇지 않으면 <kbd>Enter</kbd> 또는 <kbd>Space</kbd> 키를 눌러 탭을 활성화합니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 첫 항목으로 되돌릴지 여부.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "detailedType": "\"horizontal\" | \"vertical\" | undefined",
+            "required": false,
+            "description": "컴포넌트의 방향(레이아웃 흐름 방향).",
+            "defaultValue": "horizontal"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Tabs.Root.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Tabs.Root.ChangeEventDetails": "(\n  | { reason: \"none\"; }\n  | { reason: \"disabled\"; }\n  | { reason: \"missing\"; }\n  | { reason: \"initial\"; }\n) & {\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  activationDirection: \"none\" | \"left\" | \"right\" | \"up\" | \"down\";\n}",
+        "Tabs.Root.State": "{\n  orientation: \"horizontal\" | \"vertical\";\n  tabActivationDirection: \"none\" | \"left\" | \"right\" | \"up\" | \"down\";\n}"
+    }
+}

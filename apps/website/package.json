@@ -7,9 +7,11 @@
         "build": "next build",
         "clean": "rm -rf node_modules .next .turbo .source",
         "dev": "next dev --turbo",
-        "docs:api": "tsx --tsconfig ../../scripts/docs-extractor/tsconfig.json ../../scripts/docs-extractor/src/cli.ts --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --pages ./content/docs/components/(components)",
-        "docs:api:watch": "tsx watch --clear-screen=false --include '../../packages/core/src/**' --tsconfig ../../scripts/docs-extractor/tsconfig.json ../../scripts/docs-extractor/src/cli.ts --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --pages ./content/docs/components/(components)",
+        "docs:api": "tsx --tsconfig ../../scripts/docs-extractor/tsconfig.json ../../scripts/docs-extractor/src/cli.ts --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --pages ./content/docs/components",
+        "docs:api:watch": "tsx watch --clear-screen=false --include '../../packages/core/src/**' --tsconfig ../../scripts/docs-extractor/tsconfig.json ../../scripts/docs-extractor/src/cli.ts --input ../../packages/core --tsconfig ../../packages/core/tsconfig.json --pages ./content/docs/components",
         "docs:llms": "tsx scripts/build-llm-docs.ts",
+        "docs:translate": "tsx --tsconfig ../../scripts/docs-translator/tsconfig.json ../../scripts/docs-translator/src/cli.ts --pages ./content/docs/components",
+        "docs:translate:check": "tsx --tsconfig ../../scripts/docs-translator/tsconfig.json ../../scripts/docs-translator/src/check.ts --pages ./content/docs/components",
         "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src ./content",
         "start": "next start",
@@ -62,10 +64,10 @@
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "eslint": "catalog:",
-        "postcss": "^8.5.30",
+        "postcss": "^8.5.31",
         "shiki": "^3.23.0",
         "tailwindcss": "^4.3.3",
-        "tsx": "^4.23.13",
+        "tsx": "^4.23.15",
         "typescript": "catalog:"
     }
 }

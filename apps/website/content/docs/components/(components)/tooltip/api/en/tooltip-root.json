@@ -1,0 +1,98 @@
+{
+    "name": "TooltipRoot",
+    "description": "Root of the Tooltip compound component, which shows a short label for an element on hover or focus. Manages the open state. Doesn't render its own HTML element.",
+    "props": [
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the tooltip is initially open.\n\nTo render a controlled tooltip, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["function"],
+            "detailedType": "((open: boolean, eventDetails: Tooltip.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Event handler called when the tooltip is opened or closed."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the tooltip is currently open."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<Tooltip.Root.Actions | null>"],
+            "detailedType": "React.RefObject<Tooltip.Root.Actions | null> | undefined",
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: Unmounts the tooltip popup.\n- `close`: Closes the tooltip imperatively when called."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode", "function"],
+            "detailedType": "ReactNode | ((arg: { payload: unknown; }) => ReactNode)",
+            "required": false,
+            "description": "The content of the tooltip.\nThis can be a regular React node or a render function that receives the `payload` of the active trigger."
+        },
+        {
+            "name": "defaultTriggerId",
+            "type": ["string", "null"],
+            "detailedType": "string | null | undefined",
+            "required": false,
+            "description": "ID of the trigger that the tooltip is associated with.\nThis is useful in conjunction with the `defaultOpen` prop to create an initially open tooltip."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the tooltip is disabled.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "disableHoverablePopup",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the tooltip contents can be hovered without closing the tooltip.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "handle",
+            "type": ["TooltipHandle<unknown>"],
+            "detailedType": "TooltipHandle<unknown> | undefined",
+            "required": false,
+            "description": "A handle to associate the tooltip with a trigger.\nIf specified, allows external triggers to control the tooltip's open state.\nCan be created with the Tooltip.createHandle() method."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["function"],
+            "detailedType": "((open: boolean) => void) | undefined",
+            "required": false,
+            "description": "Event handler called after any animations complete when the tooltip is opened or closed."
+        },
+        {
+            "name": "trackCursorAxis",
+            "type": ["none", "both", "x", "y"],
+            "detailedType": "\"none\" | \"both\" | \"x\" | \"y\" | undefined",
+            "required": false,
+            "description": "Determines which axis the tooltip should track the cursor on.",
+            "defaultValue": "none"
+        },
+        {
+            "name": "triggerId",
+            "type": ["string", "null"],
+            "detailedType": "string | null | undefined",
+            "required": false,
+            "description": "ID of the trigger that the tooltip is associated with.\nThis is useful in conjunction with the `open` prop to create a controlled tooltip.\nThere's no need to specify this prop when the tooltip is uncontrolled (that is, when the `open` prop is not set)."
+        }
+    ],
+    "typeRefs": {
+        "Tooltip.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"trigger-focus\"; event: FocusEvent; }\n  | { reason: \"disabled\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  preventUnmountOnClose: () => void;\n}",
+        "Tooltip.Root.Actions": "{\n  unmount: () => void;\n  close: () => void;\n}"
+    }
+}

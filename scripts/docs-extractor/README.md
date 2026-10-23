@@ -19,7 +19,7 @@ This package automatically generates JSON documentation for `packages/core` comp
 Run from the monorepo root:
 
 ```bash
-# Extract every component into apps/website/content/docs/components/<page>/api/
+# Extract every component into apps/website/content/docs/components/<page>/api/{en,ko}/
 pnpm docs:api
 
 # Re-extract whenever packages/core/src changes
@@ -61,11 +61,11 @@ This section is the specification of the generated JSON. The extractor implement
 
 ### Consumers
 
-| Consumer                                                                                                                | Reads                                                                     |
-| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`), at build time                                           | file name, `description`, `props[]`                                       |
-| `apps/website` LLM text (`src/utils/get-component-doc.ts`): the `.mdx` routes and the docs packed into `@vapor-ui/core` | `props[]`                                                                 |
-| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL)                                                       | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
+| Consumer                                                                                                                            | Reads                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`), at build time, from `ko/`                                           | file name, `description`, `props[]`                                       |
+| `apps/website` LLM text (`src/utils/get-component-doc.ts`), from `en/`: the `.mdx` routes and the docs packed into `@vapor-ui/core` | `props[]`                                                                 |
+| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL)                                                                   | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
 
 `get-component-info.mjs` still reads the old `apps/website/public/components/generated/` path, which exists only at tags released before the move.
 
@@ -79,11 +79,12 @@ The output file path and the fields listed here form the contract with these con
 
 ### Output files
 
-- One JSON file per component, in the `api/` folder of the page that documents it: `<pages>/<page>/api/<name>.json`, next to `<page>/index.mdx`. The name is the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
-- The page is the component's folder under `components/`: `src/components/avatar/` → `<pages>/avatar/`. `PAGE_FOR_COMPONENT` in `src/write.ts` lists the exceptions: `radio-group` is documented on `radio`, and `alert-dialog` and `theme-provider` have no components page, so nothing is written for them.
+- One JSON file per component, in the `api/en/` folder of the page that documents it: `<pages>/<page>/api/en/<name>.json`, next to `<page>/index.mdx`. The name is the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
+- The page is the component's folder under `components/`: `src/components/avatar/` → the page whose URL slug is `avatar`, either `<pages>/avatar/` or inside a route group such as `<pages>/(components)/avatar/`. A real folder is part of the slug, so `<pages>/patterns/form/` is not the `form` page. `PAGE_FOR_COMPONENT` in `src/write.ts` lists the exceptions: `radio-group` is documented on `radio`, and `alert-dialog` and `theme-provider` have no components page, so nothing is written for them.
 - A component whose page folder doesn't exist fails the run. Add the page or an entry in `PAGE_FOR_COMPONENT`.
-- A full run deletes JSON files in any `<pages>/<page>/api/` that it did not write, if they have a string `name` and a `props` array. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
-- `toast/api/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
+- `api/ko/<name>.json` mirrors every `api/en/<name>.json` with the same structure. For each description, it keeps the Korean when `api/ko.lock.json` records the hash of the current English for it (`<name>` → `description` or `props.<prop>` → `source`), and writes the English otherwise, as a placeholder until `pnpm docs:translate` runs. The extractor never writes the lock and never calls an AI. A lock or an existing `ko/` file that is not valid JSON fails the run, so its translations are not replaced with English.
+- A full run deletes JSON files in any `<pages>/<page>/api/en/` that it did not write, with their `ko/` mirror, if they have a string `name` and a `props` array. It also deletes any `ko/` file whose `en/` file is gone. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
+- `(components)/toast/api/en/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
 - The CLI formats the written files with Prettier.
 
 ### Fields
@@ -182,15 +183,19 @@ A prop type is split into the top-level union members TypeScript prints (`src/re
 
 ### Default values
 
-Code is the only source. The first source that has a value for a prop wins:
+vapor-ui code comes first; Base UI's own declaration fills in for props that vapor-ui passes through untouched. The first source that has a value for a prop wins:
 
-1. A destructuring default for the prop in `export const <NamespaceName>`.
-2. `defaultVariants` of the recipe the component calls as `<styles>.<recipe>(…)`, where `<styles>` is a namespace import of a `.css` file and the recipe is created with `recipe()` or `componentRecipe()`.
+1. A destructuring default for the prop in `export const <NamespaceName>`. A name that refers to a literal constant reads as its value (`step = RESIZE_STEP` → `16`); any other expression is copied as written.
+2. A literal the implementation writes for the prop before a spread that carries the prop, in a JSX element (`<Positioner positionMethod="fixed" {...props} />`) or an object literal (`useRenderElement({ props: { nativeButton: true, ...props } })`). The caller can still override it, so it is the default. A spread carries the prop when its type has a property with the prop's own declaration.
+3. `defaultVariants` of the recipe whose `variants` declares the prop, where the recipe is created with `recipe()` or `componentRecipe()`. The prop's declaration is followed through the Variants type (`NonNullable<RecipeVariants<…>>`, `Pick`, `Omit`, intersections), not through the recipe the component calls, so a root that passes a variant to its parts through context (e.g. `TabsRoot` `size`) gets the part recipe's default. This assumes the value is passed on unchanged. When several recipes declare the prop with different defaults, there is no default.
+4. The `@default` tag on Base UI's declaration of the prop, also when a vapor-ui `interface` re-declares the prop to document it (the declaration is looked up on the interface's base types). `@default undefined` is no default. Skipped when the implementation writes the prop itself next to a spread that carries it: a non-literal value before the spread (`orientation={direction} {...props}`), or any value after it, which the caller can't override.
 
 Not extracted:
 
-- `@default` tags and `Default:` text in JSDoc. `Default:` text stays in the description as written.
-- Defaults that a root part passes to other parts through context (e.g. `TabsRoot` `size`): the root has no default of its own, and the part recipe's `defaultVariants` is not traced back to the root.
+- `@default` tags on vapor-ui's own declarations, and `Default:` text in JSDoc. `Default:` text stays in the description as written.
+- A prop declared by hand rather than through a recipe's Variants type, even when the component passes it to a recipe.
+- A default that lives in another vapor-ui component the prop is forwarded to (e.g. `PaginationRoot` → `Pagination.RootPrimitive`, `SheetRoot` → `Dialog.Root`).
+- A Base UI prop whose declaration has no `@default` tag (e.g. Radio `disabled`).
 
 ### Warnings
 
@@ -202,7 +207,7 @@ Not extracted:
 ```text
 cli.ts ──► extract() ──► read/     source → ParsedComponent[]   (ts-morph, filesystem)
    │                └──► policy()  ParsedComponent[] → ComponentDoc[]   (pure)
-   └─────► writeDocs()  ComponentDoc[] → <pages>/<page>/api/*.json, then prettier
+   └─────► writeDocs()  ComponentDoc[] → <pages>/<page>/api/en/*.json + ko/ mirror, then prettier
 ```
 
 | Module            | Interface                                                                                      | Owns                                                                                                  |

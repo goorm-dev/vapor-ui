@@ -506,37 +506,79 @@ describe('기본값', () => {
         expect(propOf(doc, 'size')?.defaultValue).toBe('sm');
     });
 
+    it('리터럴 상수를 가리키는 이름은 그 값으로 읽고, 그 밖의 식은 소스에 적힌 대로 옮긴다', () => {
+        const doc = extractOne({
+            'handle.tsx': `
+                const STEP = 16;
+                const SIDE = 'right';
+                const noop = () => {};
+
+                export namespace Handle {
+                    export type Props = { step?: number; side?: string; onMove?: () => void };
+                }
+                export const Handle = ({ step = STEP, side = SIDE, onMove = noop }: Handle.Props) => null;
+            `,
+        });
+
+        expect(doc.props.map((prop) => [prop.name, prop.defaultValue])).toEqual([
+            ['onMove', 'noop'],
+            ['side', 'right'],
+            ['step', '16'],
+        ]);
+    });
+
     const RECIPE_CSS = `
-        declare function recipe(config: unknown): (variants?: unknown) => string;
-        declare function componentRecipe(config: unknown): (variants?: unknown) => string;
-        declare function style(config: unknown): (variants?: unknown) => string;
+        type VariantGroups = Record<string, Record<string, unknown>>;
+        type Selection<V extends VariantGroups> = { [K in keyof V]?: keyof V[K] };
+        type Config<V extends VariantGroups> = { variants: V; defaultVariants?: Selection<V> };
+        declare function recipe<V extends VariantGroups>(config: Config<V>): (selection?: Selection<V>) => string;
+        declare function componentRecipe<V extends VariantGroups>(config: Config<V>): (selection?: Selection<V>) => string;
+        declare function style<V extends VariantGroups>(config: Config<V>): (selection?: Selection<V>) => string;
+        type RecipeVariants<R> = R extends (selection?: infer S) => string ? S : never;
 
         export const root = recipe({
             variants: { size: { sm: {}, md: {} }, mode: { light: {}, dark: {} } },
             defaultVariants: { size: 'md', mode: "dark" },
         });
         export const badge = componentRecipe({
+            variants: { shape: { pill: {}, square: {} } },
             defaultVariants: { shape: 'pill' },
         });
         export const plain = style({
+            variants: { tone: { soft: {}, bold: {} } },
+            defaultVariants: { tone: 'soft' },
+        });
+        export const compact = recipe({
+            variants: { size: { sm: {}, md: {} } },
             defaultVariants: { size: 'sm' },
         });
+        export const regular = recipe({
+            variants: { size: { sm: {}, md: {} } },
+            defaultVariants: { size: 'md' },
+        });
+
+        export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
+        export type BadgeVariants = NonNullable<RecipeVariants<typeof badge>>;
+        export type PlainVariants = NonNullable<RecipeVariants<typeof plain>>;
+        export type CompactVariants = NonNullable<RecipeVariants<typeof compact>>;
+        export type RegularVariants = NonNullable<RecipeVariants<typeof regular>>;
     `;
 
-    it('styles.<recipe>(…)로 호출한 recipe()·componentRecipe()의 defaultVariants를 읽는다', () => {
+    it('prop을 선언한 recipe()·componentRecipe()의 defaultVariants를 읽는다', () => {
         const docs = run(
             createFixture({
                 'button.css.ts': RECIPE_CSS,
                 'button.tsx': `
                     import * as styles from './button.css';
+                    import type { BadgeVariants, RootVariants } from './button.css';
 
                     export namespace Button {
-                        export type Props = { size?: string; mode?: string };
+                        export type Props = RootVariants;
                     }
                     export const Button = (props: Button.Props) => styles.root(props);
 
                     export namespace Badge {
-                        export type Props = { shape?: string };
+                        export type Props = BadgeVariants;
                     }
                     export const Badge = (props: Badge.Props) => styles.badge(props);
                 `,
@@ -557,79 +599,119 @@ describe('기본값', () => {
             'button.css.ts': RECIPE_CSS,
             'button.tsx': `
                 import * as styles from './button.css';
+                import type { RootVariants } from './button.css';
 
                 export namespace Button {
-                    export type Props = { size?: string };
+                    export type Props = RootVariants;
                 }
-                export const Button = ({ size = 'sm' }: Button.Props) => styles.root({ size });
+                export const Button = ({ size = 'sm', ...props }: Button.Props) => styles.root({ size, ...props });
             `,
         });
 
         expect(propOf(doc, 'size')?.defaultValue).toBe('sm');
     });
 
-    it('recipe가 아닌 호출이나 named import로 부른 recipe는 읽지 않는다', () => {
+    it('recipe가 아닌 호출의 defaultVariants나, recipe와 무관하게 선언한 prop은 읽지 않는다', () => {
         const docs = run(
             createFixture({
                 'button.css.ts': RECIPE_CSS,
                 'button.tsx': `
                     import * as styles from './button.css';
-                    import { root } from './button.css';
+                    import type { PlainVariants } from './button.css';
 
                     export namespace Plain {
-                        export type Props = { size?: string };
+                        export type Props = PlainVariants;
                     }
                     export const Plain = (props: Plain.Props) => styles.plain(props);
 
-                    export namespace Named {
-                        export type Props = { size?: string };
+                    export namespace Handwritten {
+                        export type Props = { size?: 'sm' | 'md' };
                     }
-                    export const Named = (props: Named.Props) => root(props);
+                    export const Handwritten = (props: Handwritten.Props) => styles.root(props);
                 `,
             }),
         );
 
-        expect(docs.map((doc) => propOf(doc, 'size'))).toEqual([
-            { name: 'size', type: ['string'], detailedType: 'string | undefined', required: false },
-            { name: 'size', type: ['string'], detailedType: 'string | undefined', required: false },
+        expect(docs.map((doc) => doc.props.map((prop) => [prop.name, prop.defaultValue]))).toEqual([
+            [['tone', undefined]],
+            [['size', undefined]],
         ]);
     });
 
-    it('context로 넘겨받는 기본값은 추출하지 않는다', () => {
+    it('context로 넘겨도 prop을 선언한 recipe의 기본값을 읽는다', () => {
         const docs = run(
             createFixture({
-                'tabs.css.ts': `
-                    declare function recipe(config: unknown): (variants?: unknown) => string;
-                    export const list = recipe({ defaultVariants: { size: 'md' } });
-                `,
+                'tabs.css.ts': RECIPE_CSS,
                 'tabs.tsx': `
                     import * as styles from './tabs.css';
+                    import type { RootVariants } from './tabs.css';
 
-                    declare const SizeContext: { Provider: (props: { value?: string }) => null };
-                    declare function useSize(): string | undefined;
+                    declare const SizeContext: { Provider: (props: { value?: RootVariants }) => null };
+                    declare function useSize(): RootVariants;
 
                     export namespace TabsRoot {
-                        export type Props = { size?: 'sm' | 'md' };
+                        export type Props = RootVariants;
                     }
-                    export const TabsRoot = ({ size }: TabsRoot.Props) => SizeContext.Provider({ value: size });
+                    export const TabsRoot = ({ size, mode }: TabsRoot.Props) => SizeContext.Provider({ value: { size, mode } });
 
                     export namespace TabsList {
                         export type Props = { label?: string };
                     }
-                    export const TabsList = (props: TabsList.Props) => styles.list({ size: useSize(), ...props });
+                    export const TabsList = (props: TabsList.Props) => styles.root(useSize());
                 `,
             }),
         );
 
-        expect(propOf(docs[0], 'size')).toEqual({
-            name: 'size',
-            type: ['sm', 'md'],
-            detailedType: '"sm" | "md" | undefined',
-            required: false,
-        });
+        expect(docs[0].props.map((prop) => [prop.name, prop.defaultValue])).toEqual([
+            ['mode', 'dark'],
+            ['size', 'md'],
+        ]);
     });
 
-    it('JSDoc의 @default는 기본값으로 읽지 않는다', () => {
+    it('Omit·교차 타입으로 합친 Variants도 각 prop을 선언한 recipe를 따라간다', () => {
+        const doc = extractOne({
+            'spinner.css.ts': RECIPE_CSS,
+            'spinner.tsx': `
+                import * as styles from './spinner.css';
+                import type { BadgeVariants, RootVariants } from './spinner.css';
+
+                export namespace Spinner {
+                    export type Props = Omit<RootVariants, 'mode'> & BadgeVariants;
+                }
+                export const Spinner = ({ size, shape }: Spinner.Props) => styles.root({ size }) + styles.badge({ shape });
+            `,
+        });
+
+        expect(doc.props.map((prop) => [prop.name, prop.defaultValue])).toEqual([
+            ['shape', 'pill'],
+            ['size', 'md'],
+        ]);
+    });
+
+    it('같은 variant를 선언한 recipe들의 기본값이 다르면 비운다', () => {
+        const docs = run(
+            createFixture({
+                'field.css.ts': RECIPE_CSS,
+                'field.tsx': `
+                    import type { CompactVariants, RegularVariants, RootVariants } from './field.css';
+
+                    export namespace Agreeing {
+                        export type Props = Pick<RootVariants, 'size'> & RegularVariants;
+                    }
+                    export const Agreeing = (props: Agreeing.Props) => null;
+
+                    export namespace Conflicting {
+                        export type Props = CompactVariants & RegularVariants;
+                    }
+                    export const Conflicting = (props: Conflicting.Props) => null;
+                `,
+            }),
+        );
+
+        expect(docs.map((doc) => propOf(doc, 'size')?.defaultValue)).toEqual(['md', undefined]);
+    });
+
+    it('vapor-ui가 선언한 prop의 JSDoc @default는 기본값으로 읽지 않는다', () => {
         const doc = extractOne({
             'button.tsx': `
                 export namespace Button {
@@ -645,6 +727,128 @@ describe('기본값', () => {
         });
 
         expect(propOf(doc, 'size')?.defaultValue).toBeUndefined();
+    });
+
+    const BASE_TRIGGER = `
+        export interface TriggerProps {
+            /**
+             * 열리기 전 대기 시간
+             * @default 300
+             */
+            delay?: number;
+            /**
+             * 위치 계산 방식
+             * @default 'absolute'
+             */
+            positionMethod?: 'absolute' | 'fixed';
+            /**
+             * 네이티브 button 렌더링 여부
+             * @default true
+             */
+            nativeButton?: boolean;
+            /**
+             * 열린 상태
+             * @default undefined
+             */
+            open?: boolean;
+        }
+        export declare const Trigger: (props: TriggerProps) => null;
+    `;
+
+    function extractTrigger(implementation: string) {
+        return extractOne({
+            'trigger/@base-ui/Trigger.d.ts': BASE_TRIGGER,
+            'trigger/trigger.tsx': `
+                import * as Base from './@base-ui/Trigger';
+                declare function useRenderElement(options: { props: object }): null;
+
+                export namespace Trigger {
+                    export type Props = Base.TriggerProps;
+                }
+                ${implementation}
+            `,
+        });
+    }
+
+    const defaultsOf = (doc: ReturnType<typeof extractOne>) =>
+        Object.fromEntries(doc.props.map((prop) => [prop.name, prop.defaultValue]));
+
+    it('Base UI 선언의 @default를 마지막 출처로 읽고, @default undefined는 기본값으로 보지 않는다', () => {
+        const doc = extractTrigger(`
+            export const Trigger = (props: Trigger.Props) => <Base.Trigger {...props} />;
+        `);
+
+        expect(defaultsOf(doc)).toEqual({
+            delay: '300',
+            nativeButton: 'true',
+            open: undefined,
+            positionMethod: 'absolute',
+        });
+    });
+
+    it('vapor-ui interface가 문서화하려고 다시 선언한 Base UI prop도 Base UI @default를 읽는다', () => {
+        const doc = extractOne({
+            'trigger/@base-ui/Trigger.d.ts': BASE_TRIGGER,
+            'trigger/trigger.tsx': `
+                import * as Base from './@base-ui/Trigger';
+
+                export namespace Trigger {
+                    export interface Props extends Base.TriggerProps {
+                        /**
+                         * 열리기 전 대기 시간(ms)
+                         */
+                        delay?: Base.TriggerProps['delay'];
+                    }
+                }
+                export const Trigger = (props: Trigger.Props) => <Base.Trigger {...props} />;
+            `,
+        });
+
+        expect(propOf(doc, 'delay')?.defaultValue).toBe('300');
+    });
+
+    it('prop을 실어 나르는 spread 앞에 쓴 리터럴이 Base UI 기본값보다 앞선다', () => {
+        const doc = extractTrigger(`
+            export const Trigger = ({ delay, ...props }: Trigger.Props) => {
+                useRenderElement({ props: { nativeButton: false, ...props } });
+                return <Base.Trigger positionMethod="fixed" delay={delay} {...props} />;
+            };
+        `);
+
+        expect(defaultsOf(doc)).toMatchObject({
+            delay: '300',
+            nativeButton: 'false',
+            positionMethod: 'fixed',
+        });
+    });
+
+    it('prop을 실어 나르지 않는 spread 앞의 리터럴은 기본값이 아니다', () => {
+        const doc = extractTrigger(`
+            declare const state: { open: boolean };
+            export const Trigger = (props: Trigger.Props) => (
+                <>
+                    <span positionMethod="fixed" {...state} />
+                    <Base.Trigger {...props} />
+                </>
+            );
+        `);
+
+        expect(propOf(doc, 'positionMethod')?.defaultValue).toBe('absolute');
+    });
+
+    it('spread 뒤에 덮어쓰거나 spread 앞에 리터럴이 아닌 값을 쓴 prop은 Base UI 기본값을 쓰지 않는다', () => {
+        const doc = extractTrigger(`
+            declare const fixed: boolean;
+            export const Trigger = (props: Trigger.Props) => (
+                <Base.Trigger nativeButton={fixed} {...props} positionMethod="fixed" />
+            );
+        `);
+
+        expect(defaultsOf(doc)).toMatchObject({
+            delay: '300',
+            nativeButton: undefined,
+            positionMethod: undefined,
+        });
     });
 });
 

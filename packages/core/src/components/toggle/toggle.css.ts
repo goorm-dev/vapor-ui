@@ -32,12 +32,18 @@ export const root = componentRecipe({
 
     defaultVariants: { size: 'md', variant: 'default' },
     variants: {
+        /**
+         * Size of the toggle, controlling its height and width. Inside a `ToggleGroup`, falls back to the group's `size` when not set.
+         */
         size: {
             sm: { gap: vars.size.space['075'], height: vars.size.dimension['300'] },
             md: { gap: vars.size.space['075'], height: vars.size.dimension['400'] },
             lg: { gap: vars.size.space['075'], height: vars.size.dimension['500'] },
             xl: { gap: vars.size.space['100'], height: vars.size.dimension['600'] },
         },
+        /**
+         * Color style of the toggle, applied to its content and to its background while pressed.
+         */
         variant: {
             default: {
                 color: vars.color.foreground['secondary'],

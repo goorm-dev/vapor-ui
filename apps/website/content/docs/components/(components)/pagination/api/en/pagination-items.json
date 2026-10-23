@@ -1,0 +1,13 @@
+{
+    "name": "PaginationItems",
+    "description": "Generates a page button for each visible page and an ellipsis for each skipped range, based on `totalPages`, `siblingCount`, and `boundaryCount` of the root. Place it between `Pagination.Previous` and `Pagination.Next`. Doesn't render its own HTML element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode", "function"],
+            "detailedType": "ReactNode | ((pages: PageType[]) => ReactNode)",
+            "required": false,
+            "description": "Content shown in place of the generated page buttons. As a function, receives the pages to show, each with a `type` (`NUM` for a page, `BREAK` for an ellipsis) and a page number in `value`."
+        }
+    ]
+}

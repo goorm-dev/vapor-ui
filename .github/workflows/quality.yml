@@ -1,4 +1,4 @@
-name: 'Code Quality Checks'
+name: "Code Quality Checks"
 
 on:
     push:
@@ -88,6 +88,9 @@ jobs:
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
+              with:
+                  # The PR merge commit and its base parent, for the guide version warning.
+                  fetch-depth: 2
 
             - name: Install
               uses: ./.github/composite/install
@@ -103,4 +106,22 @@ jobs:
                       git diff -- apps/website/content
                       echo "::error::Generated API JSON is out of date. Run \`pnpm docs:api\` locally and commit the result."
                       exit 1
+                  fi
+
+            # Judges translations by ko.lock.json only; never calls an AI.
+            - name: Check Korean translations
+              run: pnpm --filter website docs:translate:check
+
+            # A guide change only retranslates when its version changes, and only a
+            # person can tell whether it should, so this warns instead of failing.
+            - name: Warn when the translation guide changed without a version bump
+              # Runs even when the checks above fail, since that is when the warning matters.
+              if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+              run: |
+                  guide=scripts/docs-translator/guide.md
+                  # HEAD is the PR merge commit; HEAD^1 is the base it was built on.
+                  base_version="$(git show "HEAD^1:$guide" 2>/dev/null | grep -m1 '^version:' || true)"
+                  if [ -n "$base_version" ] && ! git diff --quiet HEAD^1 -- "$guide" \
+                      && [ "$base_version" = "$(grep -m1 '^version:' "$guide")" ]; then
+                      echo "::warning file=$guide::guide.md changed but its version did not. Bump version if translations should come out differently, then run \`pnpm docs:translate\`."
                   fi

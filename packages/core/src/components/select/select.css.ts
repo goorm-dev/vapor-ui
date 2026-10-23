@@ -38,6 +38,9 @@ export const trigger = componentRecipe({
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
+        /**
+         * Size of the select, controlling height, padding, typography, and icon size.
+         */
         size: {
             sm: {
                 gap: vars.size.space['100'],
@@ -61,6 +64,9 @@ export const trigger = componentRecipe({
             },
         },
 
+        /**
+         * Marks the select as invalid, applying error styles. Sets `aria-invalid` on the trigger `<button>` element.
+         */
         invalid: { true: {}, false: {} },
     },
 });

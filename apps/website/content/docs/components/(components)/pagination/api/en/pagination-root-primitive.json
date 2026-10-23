@@ -1,0 +1,92 @@
+{
+    "name": "PaginationRootPrimitive",
+    "description": "Navigation landmark labeled \"Pagination\" that manages the selected page and shares `size` and `disabled` with the parts inside it. Renders a `<nav>` element.",
+    "props": [
+        {
+            "name": "totalPages",
+            "type": ["number"],
+            "detailedType": "number",
+            "required": true,
+            "description": "Total number of pages. `Pagination.Next` is disabled once this page is selected."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Size of the pagination buttons and ellipsis, controlling width, height, and typography.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "onPageChange",
+            "type": ["function"],
+            "detailedType": "((page: number, eventDetails: Pagination.RootPrimitive.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Called when a page button, `Pagination.Previous`, or `Pagination.Next` is clicked, with the new page and the event details. Call `eventDetails.cancel()` to keep the current page."
+        },
+        {
+            "name": "boundaryCount",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "Number of pages always shown at the start and the end of the range.",
+            "defaultValue": "1"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Pagination.RootPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "defaultPage",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "Page selected on first render, counted from `1`. Use when the component is not controlled.",
+            "defaultValue": "1"
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Disables the pagination, blocking all interactions on its buttons.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "page",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "Selected page, counted from `1`. Use when the component is controlled."
+        },
+        {
+            "name": "siblingCount",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "Number of pages shown on each side of the selected page before the rest collapse into an ellipsis.",
+            "defaultValue": "2"
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Pagination.RootPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Pagination.RootPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Pagination.RootPrimitive.ChangeEventDetails": "{\n  reason: \"item-press\";\n  event: KeyboardEvent | MouseEvent | PointerEvent;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: HTMLElement | undefined;\n}",
+        "Pagination.RootPrimitive.State": "{\n  disabled: boolean;\n}"
+    }
+}

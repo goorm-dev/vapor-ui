@@ -7,7 +7,7 @@ export const replaceComponentDoc = (text: string) => {
         /<ComponentPropsTable\s+componentName="([^"]+)"\s*\/>/g,
         (_, componentName: string) => {
             try {
-                const json = readComponentApi(componentName);
+                const json = readComponentApi(componentName, 'en');
 
                 if (!json) {
                     return `> ⚠️ Spec file not found: \`${componentName}.json\``;

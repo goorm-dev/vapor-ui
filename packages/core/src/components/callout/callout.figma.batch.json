@@ -1,0 +1,17 @@
+{
+    "templateFile": "./callout.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=32842-2107",
+            "component": "Callout.Root",
+            "source": "src/components/callout/callout.tsx"
+        },
+        {
+            "part": "icon",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38611-28423",
+            "component": "Callout.Icon",
+            "source": "src/components/callout/callout.tsx"
+        }
+    ]
+}

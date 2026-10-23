@@ -1,0 +1,35 @@
+{
+    "templateFile": "./alert-dialog.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6399",
+            "component": "AlertDialog.Root",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        },
+        {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6367",
+            "component": "AlertDialog.Popup",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        },
+        {
+            "part": "header",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6376",
+            "component": "AlertDialog.Header",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        },
+        {
+            "part": "body",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6374",
+            "component": "AlertDialog.Body",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        },
+        {
+            "part": "footer",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6372",
+            "component": "AlertDialog.Footer",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        }
+    ]
+}
