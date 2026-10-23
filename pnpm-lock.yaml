@@ -983,7 +983,7 @@ importers:
   scripts/docs-translator:
     dependencies:
       '@anthropic-ai/claude-agent-sdk':
-        specifier: ^0.3.304
+        specifier: ^0.3.305
         version: 0.3.307(@anthropic-ai/sdk@0.134.0(zod@4.4.3))(@modelcontextprotocol/sdk@1.32.1(supports-color@10.2.2)(zod@4.4.3))(zod@4.4.3)
       '@vapor-ui/docs-extractor':
         specifier: workspace:*
