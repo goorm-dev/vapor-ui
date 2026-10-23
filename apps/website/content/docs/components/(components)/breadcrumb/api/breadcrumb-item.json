@@ -9,13 +9,6 @@
             "defaultValue": "false"
         },
         {
-            "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
-            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false,
-            "defaultValue": "md"
-        },
-        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Breadcrumb.Item.State) => (string | undefined)) | undefined",

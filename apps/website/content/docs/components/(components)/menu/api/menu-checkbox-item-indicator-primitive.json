@@ -21,7 +21,7 @@
             "detailedType": "boolean | undefined",
             "required": false,
             "description": "Whether to keep the HTML element in the DOM when the checkbox item is not checked.",
-            "defaultValue": "false"
+            "defaultValue": "true"
         },
         {
             "name": "render",
