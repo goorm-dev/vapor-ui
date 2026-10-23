@@ -1,6 +1,27 @@
-// TODO(code-connect): unregistered (figma node I4794:29785;4509:13620;4794:29753;4599:23464;4806:42112)
-// name: examples-01
+import { Menu } from '@vapor-ui/composites';
+import { Button } from '@vapor-ui/core';
+import {
+    BellOnOutlineIcon,
+    HelpCircleOutlineIcon,
+    MenuOutlineIcon,
+    SettingOutlineIcon,
+    ViewModuleOutlineIcon,
+} from '@vapor-ui/icons';
 
 export default function Demo() {
-    return null;
+    return (
+        <Menu.Root trigger={<Button>Open menu</Button>}>
+            <Menu.Group label="보기 유형">
+                <Menu.Item label="목록" leading={<MenuOutlineIcon />} onClick={() => {}} />
+                <Menu.Item label="보드" leading={<ViewModuleOutlineIcon />} onClick={() => {}} />
+            </Menu.Group>
+
+            <Menu.Group label="시스템 설정">
+                <Menu.Item label="알림" leading={<BellOnOutlineIcon />} onClick={() => {}} />
+                <Menu.Item label="일반" leading={<SettingOutlineIcon />} onClick={() => {}} />
+            </Menu.Group>
+
+            <Menu.Item label="도움말" leading={<HelpCircleOutlineIcon />} onClick={() => {}} />
+        </Menu.Root>
+    );
 }
