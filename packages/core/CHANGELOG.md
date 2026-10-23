@@ -12,23 +12,13 @@
 
 ### Breadcrumb
 
-- fix(breadcrumb): remove `size` from `Breadcrumb.Item` / `Breadcrumb.LinkPrimitive` props ([#763](https://github.com/goorm-dev/vapor-ui/pull/763)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+- removed `size` from `Breadcrumb.Item` / `Breadcrumb.LinkPrimitive` props.
 
-    `size` on `Breadcrumb.Item` / `Breadcrumb.LinkPrimitive` never affected styling (only `Breadcrumb.Root`'s `size` is used) and leaked to the DOM as `<a size="...">`.
-
-    **Action required:** remove `size` from any `Breadcrumb.Item` / `Breadcrumb.LinkPrimitive` and set it on `Breadcrumb.Root` instead. Passing it there is now a type error.
+    **Action required:** remove `size` from any `Breadcrumb.Item` / `Breadcrumb.LinkPrimitive` and set it on `Breadcrumb.Root` instead. Passing it there is now a type error. ([#763](https://github.com/goorm-dev/vapor-ui/pull/763)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 ### Collapsible
 
 - refactor(collapsible): use `BaseCollapsible.Trigger.State` for `CollapsibleTrigger.State` ([#750](https://github.com/goorm-dev/vapor-ui/pull/750)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
-
-### Core
-
-- keep the arrow pointing at the trigger when the popup shifts ([#774](https://github.com/goorm-dev/vapor-ui/pull/774)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
-
-- Document every public component and prop with JSDoc so their descriptions reach the props tables and type hints. ([#769](https://github.com/goorm-dev/vapor-ui/pull/769)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
-
-- infer state in `style` and `render` callbacks instead of `any` ([#751](https://github.com/goorm-dev/vapor-ui/pull/751)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 ### Field
 
@@ -42,13 +32,19 @@
 
 - remove unused internal `PaginationButton` and `PaginationEllipsis` type namespaces ([#784](https://github.com/goorm-dev/vapor-ui/pull/784)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Website
+### Radio Group
 
-- Ship the documentation in the package: every docs page (prose, demo code and props tables) is included as markdown under `@vapor-ui/core/docs/`, for example `docs/components/button.md`. ([#766](https://github.com/goorm-dev/vapor-ui/pull/766)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+- add RadioGroup.RequiredSymbol ([#754](https://github.com/goorm-dev/vapor-ui/pull/754)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ### Etc.
 
-- add RadioGroup.RequiredSymbol ([#754](https://github.com/goorm-dev/vapor-ui/pull/754)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+- keep the arrow pointing at the trigger when the popup shifts ([#774](https://github.com/goorm-dev/vapor-ui/pull/774)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- Document every public component and prop with JSDoc so their descriptions reach the props tables and type hints. ([#769](https://github.com/goorm-dev/vapor-ui/pull/769)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- infer state in `style` and `render` callbacks instead of `any` ([#751](https://github.com/goorm-dev/vapor-ui/pull/751)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- Ship the documentation in the package: every docs page (prose, demo code and props tables) is included as markdown under `@vapor-ui/core/docs/`, for example `docs/components/button.md`. ([#766](https://github.com/goorm-dev/vapor-ui/pull/766)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 - re-export the public API of single-component barrels by name instead of `export *` (no public API change) ([#787](https://github.com/goorm-dev/vapor-ui/pull/787)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
