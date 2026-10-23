@@ -44,7 +44,6 @@ export const root = componentRecipe({
     variants: {
         /**
          * Visual style of the button.
-         * @default 'fill'
          */
         variant: { fill: {}, outline: {}, ghost: {} },
     },
@@ -62,7 +61,6 @@ export interface DialogRootProps
     /**
      *
      * Closes the dialog when the overlay is clicked.
-     * @default true
      */
     closeOnClickOverlay?: boolean;
 }
@@ -272,14 +270,12 @@ Explain what happens when the prop is set — especially when it interacts with 
 /**
  *
  * Disables the button, blocking all interactions and dimming its appearance. Automatically set to `true` when `loading` is `true`.
- * @default false
  */
 disabled?: boolean;
 
 /**
  *
  * Shows a spinner and disables the button while `true`.
- * @default false
  */
 loading?: boolean;
 ```
@@ -309,6 +305,34 @@ onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
  * Called when the button is clicked or activated via Enter or Space key.
  */
 onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+```
+
+**5. Put default values in code**
+
+The docs table reads `defaultValue` from code: the component's destructuring defaults, a literal written before the props spread, then the `defaultVariants` of the recipe that declares the variant. For a Base UI prop vapor-ui passes through untouched, it falls back to Base UI's own `@default` (see `scripts/docs-extractor/README.md` "Default values"). Don't write `Default:` inline: it stays in the description and repeats the table's default column.
+
+Write an `@default` tag only when the extractor can't read the default from code, such as a prop forwarded to another vapor-ui component. The extractor drops a vapor-ui `@default` from the description and doesn't read it as a default, so it only helps in editor hover.
+
+```tsx
+// ❌ inline text repeats the table's default column
+/**
+ * Disables the button, blocking all interactions. Default: `false`
+ */
+disabled?: boolean;
+
+// ✅ extractor picks the default up from `disabled = false` in the component
+//    (a variant's default comes from its recipe's `defaultVariants` the same way)
+/**
+ * Disables the button, blocking all interactions.
+ */
+disabled?: boolean;
+
+// ✅ forwarded to Pagination.RootPrimitive, which holds the default: the tag is the only record
+/**
+ * Page selected on first render when uncontrolled.
+ * @default 1
+ */
+defaultPage?: number;
 ```
 
 ---
@@ -389,6 +413,7 @@ export function Button({ label, variant = 'fill', size = 'md', ...props }: Butto
 - [ ] Numeric props include unit and valid range
 - [ ] Props that interact with other props describe that interaction
 - [ ] Event handlers describe the exact trigger condition
+- [ ] No inline `Default:` text; `@default` only where the extractor can't read the default from code
 
 **Compound components**
 

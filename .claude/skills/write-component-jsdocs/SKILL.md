@@ -49,7 +49,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 2. Describe side effects and interactions with other props
 3. For numeric props: include unit and valid range
 4. For event handlers: specify the exact trigger condition, not just "handler"
-5. Use the `@default` JSDoc tag to indicate default values — never write `Default: \`value\`` inline in the description text
+5. Put a default in code, not in JSDoc. The docs table reads `defaultValue` from code: the component's destructuring defaults, a literal written before the props spread, then the `defaultVariants` of the recipe that declares the variant. For a Base UI prop vapor-ui passes through untouched, it falls back to Base UI's own `@default` (see `scripts/docs-extractor/README.md` "Default values"). Never write inline `Default:` text; it stays in the description and repeats the table. Write an `@default` tag only when the extractor can't read the default from code, such as a prop forwarded to another vapor-ui component. A vapor-ui `@default` is dropped from the description and not read as a default, so it shows only in editor hover.
 
 ## Review checklist
 
@@ -65,4 +65,4 @@ See the full checklist in [references/guide.md](references/guide.md#checklist).
 - [ ] Numeric props include unit and range
 - [ ] No JSDoc on individual variant values (`sm`, `md`, `fill`, `primary`, etc.)
 - [ ] No JSDoc on `export type XxxVariants`
-- [ ] Default values use `@default` tag, not inline `Default: \`value\`` text
+- [ ] No inline `Default:` text; `@default` only where the extractor can't read the default from code
