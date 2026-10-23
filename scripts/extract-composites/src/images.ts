@@ -23,7 +23,7 @@ export async function downloadWebpImages(
         const webpRel = join('images', `${job.baseName}.webp`);
         const webpAbs = join(outputDir, webpRel);
         await mkdir(dirname(webpAbs), { recursive: true });
-        await sharp(png).webp({ quality: 80 }).toFile(webpAbs);
+        await sharp(png).webp({ quality: 100 }).toFile(webpAbs);
         out[job.nodeId] = webpRel;
     }
     return out;

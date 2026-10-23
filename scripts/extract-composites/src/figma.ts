@@ -21,7 +21,7 @@ export class FigmaClient {
         );
         const entry = data.nodes[nodeId];
         if (!entry) throw new Error(`Node ${nodeId} not found in file ${fileKey}`);
-        return entry.document;
+        return pruneInvisible(entry.document);
     }
 
     async getImageUrls(
@@ -42,23 +42,12 @@ export class FigmaClient {
         }
         return out;
     }
-
-    async getCodeConnect(nodeId: string): Promise<CodeConnectEntry[]> {
-        try {
-            const data = await this.request<{ code_connected_nodes?: CodeConnectEntry[] }>(
-                `/code_connect?node_id=${encodeURIComponent(nodeId)}`,
-            );
-            return data.code_connected_nodes ?? [];
-        } catch {
-            return [];
-        }
-    }
 }
 
-export interface CodeConnectEntry {
-    label: string;
-    language: string;
-    source_location?: { file: string; line: number };
-    source?: string;
-    template_data?: { template?: string };
+/** Drop hidden layers (`visible === false`) recursively.
+ *  Figma REST only emits `visible: false` for explicitly hidden layers; absent means visible.
+ *  Centralizing here means every downstream traversal sees the pruned tree. */
+function pruneInvisible(node: FigmaNode): FigmaNode {
+    const children = (node.children ?? []).filter((c) => c.visible !== false).map(pruneInvisible);
+    return node.children ? { ...node, children } : node;
 }

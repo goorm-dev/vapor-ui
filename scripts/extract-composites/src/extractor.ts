@@ -1,289 +1,225 @@
 import { kebabCase } from 'es-toolkit';
 
-import { fetchAndSaveCodeConnect } from './codeConnect.ts';
+import { extractPreview } from './code-connect.ts';
 import { FigmaClient } from './figma.ts';
 import { downloadWebpImages } from './images.ts';
 import {
-    CONTENT_BLOCK_NAME,
-    mapMetaFromAncestry,
-    readComponentMeta,
-    readDoDontCaption,
-    readSectionTitle,
-    readText,
-} from './meta.ts';
-import { discoverSections, findCoverFrame } from './sections.ts';
-import { collectAncestorsMap, findDescendants, findSamples } from './traverse.ts';
-import type { FigmaNode, IndexJson, Item, Section } from './types.ts';
-import { prepareOutputDir, writeIndexJson } from './writer.ts';
+    SLOT_NAMES,
+    TEXT_NAMES,
+    findExportFrame,
+    findItems,
+    findTextByName,
+    parseItemChildren,
+} from './items.ts';
+import { discoverSections } from './sections.ts';
+import { renderTableForm } from './table.ts';
+import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './types.ts';
+import { SECTION_SLUG, SECTION_WHITELIST } from './types.ts';
+import { prepareOutputs, renderMdx, writeComponentMdx } from './writer.ts';
 
 export interface ExtractOptions {
     fileKey: string;
     nodeId: string;
-    outputRoot: string;
+    contentFile: (slug: string) => string;
+    publicDir: (slug: string) => string;
+    componentDir: (slug: string) => string;
     slugOverride?: string;
-    skip?: string[];
-    label: string;
     clean: boolean;
+    force: boolean;
+    only?: SectionTitle[];
     token: string;
 }
 
-export async function extract(opts: ExtractOptions): Promise<{
+export interface ExtractResult {
     slug: string;
-    outputDir: string;
+    mdxPath: string;
+    publicDir: string;
+    componentDir: string;
     warnings: string[];
-}> {
-    const warnings: string[] = [];
+}
+
+const pad = (n: number): string => n.toString().padStart(2, '0');
+
+export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
     const client = new FigmaClient(opts.token);
 
+    console.log(`문서 추출을 시작합니다. ${opts.clean ? '(clean mode)' : ''}\n`);
+
     const canvas = await client.getNode(opts.fileKey, opts.nodeId);
-    const cover = findCoverFrame(canvas);
-    const componentMeta = cover ? readComponentMeta(cover) : { name: canvas.name };
-    const slug = opts.slugOverride ?? kebabCase(componentMeta.name);
-    const outputDir = `${opts.outputRoot}/${slug}`;
+    const canvasName = canvas.name.trim();
+    const slug = opts.slugOverride ?? kebabCase(canvasName);
+    const warnings: string[] = [];
+    const only = opts.only ? new Set<SectionTitle>(opts.only) : undefined;
 
-    await prepareOutputDir(outputDir, opts.clean);
+    const contentFile = opts.contentFile(slug);
+    const publicDir = opts.publicDir(slug);
+    const componentDir = opts.componentDir(slug);
+    await prepareOutputs(contentFile, publicDir, opts.clean);
 
-    const discovered = discoverSections(canvas, opts.skip ?? []);
-    const sections: Record<string, Section> = {};
+    const discovered = discoverSections(canvas, warnings, only);
 
-    for (const d of discovered) {
-        const title = readSectionTitle(d.frame);
-        const section = await buildSection({
-            client,
-            sectionKey: d.key,
-            sectionFrame: d.frame,
-            fileKey: opts.fileKey,
-            outputDir,
-            label: opts.label,
-            warnings,
-            title,
-        });
-        sections[d.key] = section;
+    console.log(`발견된 섹션: ${discovered.length}개`);
+    console.log(discovered.map((d) => `- ${d.title}\n`).join(''));
+
+    console.log('내용을 분석하고 있습니다...\n');
+
+    const sections: Section[] = [];
+    for (const { title, frame } of discovered) {
+        const slugForSection = SECTION_SLUG[title];
+        const itemNodes = findItems(frame);
+        const items: Item[] = [];
+        for (let idx = 0; idx < itemNodes.length; idx++) {
+            const itemNode = itemNodes[idx]!;
+            const baseName = `${slugForSection}-${pad(idx + 1)}`;
+            const blocks: ItemBlock[] = [];
+            let currentSubtitle = '';
+            for (const child of parseItemChildren(itemNode)) {
+                if (child.kind === 'subtitle') {
+                    currentSubtitle = child.text;
+                    blocks.push({ kind: 'subtitle', text: child.text });
+                } else if (child.kind === 'body') {
+                    blocks.push({ kind: 'body', text: child.text });
+                } else if (child.kind === 'sample') {
+                    const exportFrame = findExportFrame(child.node);
+                    const targetNode = exportFrame ?? child.node;
+                    if (!exportFrame) {
+                        warnings.push(
+                            `${title} / item ${idx + 1} / sample: Export frame missing, used Sample fallback (${child.node.id})`,
+                        );
+                    }
+                    const webpRel = await downloadWebpImages(
+                        client,
+                        opts.fileKey,
+                        [{ nodeId: targetNode.id, baseName }],
+                        publicDir,
+                    );
+                    const rel = webpRel[targetNode.id];
+                    if (rel) blocks.push({ kind: 'docsImage', webpRel: rel, alt: currentSubtitle });
+                    else warnings.push(`sample export failed: ${targetNode.id} (${baseName})`);
+                } else if (child.kind === 'preview') {
+                    const result = await extractPreview({
+                        fileKey: opts.fileKey,
+                        previewSlot: child.node,
+                        componentDir,
+                        baseName,
+                        force: opts.force,
+                        warnings,
+                    });
+                    blocks.push({
+                        kind: 'demo',
+                        file: result.file,
+                        placeholder: result.placeholder,
+                        nodeId: result.nodeId,
+                    });
+                } else if (child.kind === 'table') {
+                    const locator = `${title} / item ${idx + 1} / table`;
+                    const md = renderTableForm(child.node, warnings, locator);
+                    if (md) blocks.push({ kind: 'table', markdown: md });
+                } else if (child.kind === 'doCase' || child.kind === 'dontCase') {
+                    const variant = child.kind === 'doCase' ? 'do' : 'dont';
+                    const caseBaseName = `${baseName}-${variant}`;
+                    const block = await buildCaseBlock({
+                        client,
+                        fileKey: opts.fileKey,
+                        caseFrame: child.node,
+                        variant,
+                        baseName: caseBaseName,
+                        publicDir,
+                        warnings,
+                        locator: `${title} / item ${idx + 1} / ${variant}`,
+                    });
+                    if (block) blocks.push(block);
+                }
+            }
+            items.push({ blocks });
+        }
+        sections.push({ title, slug: slugForSection, items });
     }
 
-    const index: IndexJson = {
+    const sortedSections = sortByPolicy(sections);
+
+    console.log(`총 ${sortedSections.length}개의 프레임을 마크다운으로 변환합니다...\n`);
+
+    const mdx = renderMdx({
         slug,
-        name: componentMeta.name,
-        ...(componentMeta.description ? { description: componentMeta.description } : {}),
-        source: {
-            fileKey: opts.fileKey,
-            nodeId: opts.nodeId,
-            extractedAt: new Date().toISOString(),
-        },
-        sections,
+        name: canvasName,
+        sections: sortedSections,
+    });
+    await writeComponentMdx(contentFile, mdx);
+
+    console.log(`컴포넌트 문서가 작성되었습니다!`);
+    console.log(contentFile + '\n');
+
+    return {
+        slug,
+        mdxPath: contentFile,
+        publicDir,
+        componentDir,
+        warnings,
     };
-
-    await writeIndexJson(outputDir, index);
-    return { slug, outputDir, warnings };
 }
 
-interface SectionBuildCtx {
+interface BuildCaseBlockOptions {
     client: FigmaClient;
-    sectionKey: string;
-    sectionFrame: FigmaNode;
     fileKey: string;
-    outputDir: string;
-    label: string;
+    caseFrame: FigmaNode;
+    variant: 'do' | 'dont';
+    baseName: string;
+    publicDir: string;
     warnings: string[];
-    title: string;
+    locator: string;
 }
 
-async function buildSection(ctx: SectionBuildCtx): Promise<Section> {
-    const items = await buildSectionItems(ctx);
-    const section: Section = { title: ctx.title, items };
-    // Anatomy carries a section-level diagram image
-    if (ctx.sectionKey === 'anatomy') {
-        const anatomyImage = await buildAnatomyImage(ctx);
-        if (anatomyImage) section.image = anatomyImage;
+async function buildCaseBlock(
+    opts: BuildCaseBlockOptions,
+): Promise<Extract<ItemBlock, { kind: 'doCase' | 'dontCase' }> | undefined> {
+    const caption = findTextByName(opts.caseFrame, TEXT_NAMES.caption) ?? '';
+    if (!caption) opts.warnings.push(`${opts.locator}: caption TEXT missing`);
+    const target = pickCaseImageTarget(opts.caseFrame, opts.warnings, opts.locator);
+    const webpRel = await downloadWebpImages(
+        opts.client,
+        opts.fileKey,
+        [{ nodeId: target.id, baseName: opts.baseName }],
+        opts.publicDir,
+    );
+    const rel = webpRel[target.id];
+    if (!rel) {
+        opts.warnings.push(`${opts.locator}: image export failed (${target.id})`);
+        return undefined;
     }
-    return section;
+    return {
+        kind: opts.variant === 'do' ? 'doCase' : 'dontCase',
+        webpRel: rel,
+        alt: caption,
+        caption,
+    };
 }
 
-async function buildSectionItems(ctx: SectionBuildCtx): Promise<Item[]> {
-    const key = ctx.sectionKey;
-    if (key === 'examples') return buildExamplesItems(ctx);
-    if (key === 'doDont') return buildDoDontItems(ctx);
-    if (key === 'anatomy') return buildAnatomyItems(ctx);
-    return buildGenericSampleItems(ctx);
-}
-
-/** Pattern / unknown: each Sample becomes one item with image + subtitle/description meta. */
-async function buildGenericSampleItems(ctx: SectionBuildCtx): Promise<Item[]> {
-    const samples = findSamples(ctx.sectionFrame);
-    if (samples.length === 0) return [];
-    const ancestors = collectAncestorsMap(ctx.sectionFrame);
-    const jobs = samples.map((s, idx) => ({
-        nodeId: s.id,
-        baseName: `${ctx.sectionKey.toLowerCase()}-${pad(idx + 1)}`,
-    }));
-    const paths = await downloadWebpImages(ctx.client, ctx.fileKey, jobs, ctx.outputDir);
-    return samples.map((s) => {
-        const meta = mapMetaFromAncestry(s, [...(ancestors.get(s.id) ?? []), s]);
-        const path = paths[s.id];
-        const item: Item = { ...meta };
-        if (path) item.image = path;
-        return item;
-    });
-}
-
-/** Anatomy section-level diagram image: export the Sample frame. */
-async function buildAnatomyImage(ctx: SectionBuildCtx): Promise<string | undefined> {
-    const samples = findSamples(ctx.sectionFrame);
-    if (samples.length === 0) return undefined;
-    const sample = samples[0]!;
-    const paths = await downloadWebpImages(
-        ctx.client,
-        ctx.fileKey,
-        [{ nodeId: sample.id, baseName: 'anatomy' }],
-        ctx.outputDir,
-    );
-    return paths[sample.id];
-}
-
-/** Anatomy items: measurement table rows {name, optional} from "Anatomy name" frame. */
-async function buildAnatomyItems(ctx: SectionBuildCtx): Promise<Item[]> {
-    // The table lives in a sibling frame named "Anatomy name"; each row is a frame
-    // named "description" containing a Component guide/Text (the name) and optionally
-    // an "(Optional)" TEXT marker.
-    const tableFrame = findDescendants(
-        ctx.sectionFrame,
-        (n) => n.type === 'FRAME' && n.name === 'Anatomy name',
-    )[0];
-    if (!tableFrame) return [];
-    const rows = (tableFrame.children ?? []).filter(
-        (c) => c.type === 'FRAME' && c.name === 'description',
-    );
-    // Sort by y, then x so numbered rows land in display order
-    const sortedRows = [...rows].sort((a, b) => {
-        const ay = a.absoluteBoundingBox?.y ?? 0;
-        const by = b.absoluteBoundingBox?.y ?? 0;
-        if (ay !== by) return ay - by;
-        return (a.absoluteBoundingBox?.x ?? 0) - (b.absoluteBoundingBox?.x ?? 0);
-    });
-    const items: Item[] = [];
-    for (const row of sortedRows) {
-        const textInstance = findDescendants(
-            row,
-            (n) => n.type === 'INSTANCE' && n.name === 'Component guide/Text',
-        )[0];
-        const name = textInstance ? readText(textInstance) : undefined;
-        if (!name) continue;
-        const optional =
-            findDescendants(row, (n) => n.type === 'TEXT' && n.name === '(Optional)').length > 0;
-        items.push({ name, optional });
-    }
-    return items;
-}
-
-/** Do+Don't: each Content block = 1 item with do + dont pair. */
-async function buildDoDontItems(ctx: SectionBuildCtx): Promise<Item[]> {
-    const contentBlocks = findDescendants(
-        ctx.sectionFrame,
-        (n) => n.type === 'INSTANCE' && n.name === CONTENT_BLOCK_NAME,
-    );
-    const jobs: Array<{ nodeId: string; baseName: string; slot: 'do' | 'dont'; itemIdx: number }> =
-        [];
-    contentBlocks.forEach((block, idx) => {
-        const doFrame = findDescendants(block, (n) => n.name === 'Do' && n.type === 'FRAME')[0];
-        const dontFrame = findDescendants(
-            block,
-            (n) => n.name === "Don't" && n.type === 'FRAME',
-        )[0];
-        const doSample = doFrame ? (findSamples(doFrame)[0] ?? doFrame) : undefined;
-        const dontSample = dontFrame ? (findSamples(dontFrame)[0] ?? dontFrame) : undefined;
-        if (doSample) {
-            jobs.push({
-                nodeId: doSample.id,
-                baseName: `do-dont-${pad(idx + 1)}-do`,
-                slot: 'do',
-                itemIdx: idx,
-            });
-        }
-        if (dontSample) {
-            jobs.push({
-                nodeId: dontSample.id,
-                baseName: `do-dont-${pad(idx + 1)}-dont`,
-                slot: 'dont',
-                itemIdx: idx,
-            });
-        }
-    });
-    const paths = await downloadWebpImages(
-        ctx.client,
-        ctx.fileKey,
-        jobs.map((j) => ({ nodeId: j.nodeId, baseName: j.baseName })),
-        ctx.outputDir,
-    );
-    const ancestors = collectAncestorsMap(ctx.sectionFrame);
-    const items: Item[] = [];
-    contentBlocks.forEach((block, idx) => {
-        const meta = mapMetaFromAncestry(block, [...(ancestors.get(block.id) ?? []), block]);
-        const doFrame = findDescendants(block, (n) => n.name === 'Do' && n.type === 'FRAME')[0];
-        const dontFrame = findDescendants(
-            block,
-            (n) => n.name === "Don't" && n.type === 'FRAME',
-        )[0];
-        const doJob = jobs.find((j) => j.itemIdx === idx && j.slot === 'do');
-        const dontJob = jobs.find((j) => j.itemIdx === idx && j.slot === 'dont');
-        const item: Item = { ...meta };
-        if (doJob && paths[doJob.nodeId]) {
-            item.do = { image: paths[doJob.nodeId]! };
-            const caption = doFrame ? readDoDontCaption(doFrame) : undefined;
-            if (caption) item.do.caption = caption;
-        }
-        if (dontJob && paths[dontJob.nodeId]) {
-            item.dont = { image: paths[dontJob.nodeId]! };
-            const caption = dontFrame ? readDoDontCaption(dontFrame) : undefined;
-            if (caption) item.dont.caption = caption;
-        }
-        items.push(item);
-    });
-    return items;
-}
-
-/** Examples: Content block > Sample slot/frame contains the sample instance. Code Connect. */
-async function buildExamplesItems(ctx: SectionBuildCtx): Promise<Item[]> {
-    const contentBlocks = findDescendants(
-        ctx.sectionFrame,
-        (n) => n.type === 'INSTANCE' && n.name === CONTENT_BLOCK_NAME,
-    );
-    const items: Item[] = [];
-    const ancestors = collectAncestorsMap(ctx.sectionFrame);
-    for (let idx = 0; idx < contentBlocks.length; idx++) {
-        const block = contentBlocks[idx]!;
-        const meta = mapMetaFromAncestry(block, [...(ancestors.get(block.id) ?? []), block]);
-        // Prefer a direct Sample child; otherwise take the first non-Component-guide instance
-        const sampleContainer = findSamples(block)[0];
-        const sampleInstance = sampleContainer
-            ? findDescendants(
-                  sampleContainer,
-                  (n) => n.type === 'INSTANCE' && !n.name.startsWith('Component guide/'),
-              )[0]
-            : findDescendants(
-                  block,
-                  (n) => n.type === 'INSTANCE' && !n.name.startsWith('Component guide/'),
-              )[0];
-        if (!sampleInstance) {
-            items.push(meta);
-            continue;
-        }
-        const result = await fetchAndSaveCodeConnect(
-            ctx.client,
-            sampleInstance.id,
-            ctx.outputDir,
-            `examples-${pad(idx + 1)}`,
-            ctx.label,
-            ctx.warnings,
+/** Prefer the Export frame inside the case's Sample slot (DFS so wrappers like
+ *  `Container` don't hide it), fall back to the Sample slot, then the case frame
+ *  itself. Each fallback is surfaced as a warning so silent mis-captures stop. */
+function pickCaseImageTarget(caseFrame: FigmaNode, warnings: string[], locator: string): FigmaNode {
+    const sample = (caseFrame.children ?? []).find((c) => c.name === SLOT_NAMES.sample);
+    if (!sample) {
+        warnings.push(
+            `${locator}: Sample slot missing, used case frame fallback (${caseFrame.id})`,
         );
-        items.push({
-            ...meta,
-            code: result.code,
-            codeLabel: result.codeLabel,
-        });
+        return caseFrame;
     }
-    return items;
+    const exportFrame = findExportFrame(sample);
+    if (!exportFrame) {
+        warnings.push(`${locator}: Export frame missing, used Sample fallback (${sample.id})`);
+        return sample;
+    }
+    return exportFrame;
 }
 
-function pad(n: number): string {
-    return n.toString().padStart(2, '0');
+function sortByPolicy(sections: Section[]): Section[] {
+    const map = new Map(sections.map((s) => [s.title, s]));
+    const out: Section[] = [];
+    for (const title of SECTION_WHITELIST) {
+        const s = map.get(title);
+        if (s) out.push(s);
+    }
+    return out;
 }

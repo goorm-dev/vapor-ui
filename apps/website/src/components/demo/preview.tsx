@@ -2,30 +2,26 @@
 
 import * as React from 'react';
 
+import { loadContentModule } from '~/utils/content-loader';
+
 interface PreviewProps {
-    name: string;
+    file: string;
 }
 
-export function Preview(props: PreviewProps) {
-    const { name } = props;
-
+export function Preview({ file }: PreviewProps) {
     const Preview = React.useMemo(() => {
-        const Component = React.lazy(() => import(`~content/docs/${name}.tsx`));
+        const Component = React.lazy(() => loadContentModule(file));
 
         if (!Component) {
-            return <div>Component({name}) Not Found</div>;
+            return <div>Component({file}) Not Found</div>;
         }
 
         return <Component />;
-    }, [name]);
+    }, [file]);
 
     return (
         <React.Suspense fallback={null}>
-            <div
-                className={
-                    'not-prose p-v-300 min-h-[300px] flex flex-col justify-center items-center'
-                }
-            >
+            <div className="not-prose p-v-300 min-h-75 flex flex-col justify-center items-center">
                 {Preview}
             </div>
         </React.Suspense>

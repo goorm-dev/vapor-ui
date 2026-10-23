@@ -2,7 +2,7 @@
     "name": "@vapor-ui/extract-composites",
     "version": "0.0.1",
     "private": true,
-    "description": "Figma composite documentation extractor (JSON + images + Code Connect)",
+    "description": "Figma composite documentation extractor (MDX + images)",
     "type": "module",
     "bin": {
         "extract-composites": "./bin.mjs"
