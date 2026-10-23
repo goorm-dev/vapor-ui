@@ -97,11 +97,11 @@ pnpm -C scripts/extract-composites extract \
 
 ## 환경 변수
 
-| 이름          | 설명                                                                  |
-| ------------- | --------------------------------------------------------------------- |
-| `FIGMA_TOKEN` | required. Figma personal access token. 레포 루트 `.env`에서 자동 로드                                              |
-| `CLAUDE_BIN`  | optional. Claude CLI 바이너리 경로 (default `claude`). Preview 데모 추출용 headless subprocess 호출에 사용            |
-| `CLAUDE_MODEL`| optional. Claude 모델 ID (default `claude-haiku-5-5`). Opus 등으로 올리면 비용 상승                                    |
+| 이름           | 설명                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------- |
+| `FIGMA_TOKEN`  | required. Figma personal access token. 레포 루트 `.env`에서 자동 로드                                      |
+| `CLAUDE_BIN`   | optional. Claude CLI 바이너리 경로 (default `claude`). Preview 데모 추출용 headless subprocess 호출에 사용 |
+| `CLAUDE_MODEL` | optional. Claude 모델 ID (default `claude-haiku-5-5`). Opus 등으로 올리면 비용 상승                        |
 
 ## 출력
 
