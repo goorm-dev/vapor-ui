@@ -25,6 +25,7 @@
         "@radix-ui/react-tabs": "^1.1.21",
         "@tanstack/react-table": "^8.21.3",
         "@vapor-ui/color-generator": "workspace:*",
+        "@vapor-ui/composites": "workspace:*",
         "@vapor-ui/core": "workspace:*",
         "@vapor-ui/css-generator": "workspace:*",
         "@vapor-ui/icons": "workspace:*",

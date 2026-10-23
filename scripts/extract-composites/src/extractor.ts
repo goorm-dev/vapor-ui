@@ -1,0 +1,225 @@
+import { kebabCase } from 'es-toolkit';
+
+import { extractPreview } from './code-connect.ts';
+import { FigmaClient } from './figma.ts';
+import { downloadWebpImages } from './images.ts';
+import {
+    SLOT_NAMES,
+    TEXT_NAMES,
+    findExportFrame,
+    findItems,
+    findTextByName,
+    parseItemChildren,
+} from './items.ts';
+import { discoverSections } from './sections.ts';
+import { renderTableForm } from './table.ts';
+import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './types.ts';
+import { SECTION_SLUG, SECTION_WHITELIST } from './types.ts';
+import { prepareOutputs, renderMdx, writeComponentMdx } from './writer.ts';
+
+export interface ExtractOptions {
+    fileKey: string;
+    nodeId: string;
+    contentFile: (slug: string) => string;
+    publicDir: (slug: string) => string;
+    componentDir: (slug: string) => string;
+    slugOverride?: string;
+    clean: boolean;
+    force: boolean;
+    only?: SectionTitle[];
+    token: string;
+}
+
+export interface ExtractResult {
+    slug: string;
+    mdxPath: string;
+    publicDir: string;
+    componentDir: string;
+    warnings: string[];
+}
+
+const pad = (n: number): string => n.toString().padStart(2, '0');
+
+export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
+    const client = new FigmaClient(opts.token);
+
+    console.log(`문서 추출을 시작합니다. ${opts.clean ? '(clean mode)' : ''}\n`);
+
+    const canvas = await client.getNode(opts.fileKey, opts.nodeId);
+    const canvasName = canvas.name.trim();
+    const slug = opts.slugOverride ?? kebabCase(canvasName);
+    const warnings: string[] = [];
+    const only = opts.only ? new Set<SectionTitle>(opts.only) : undefined;
+
+    const contentFile = opts.contentFile(slug);
+    const publicDir = opts.publicDir(slug);
+    const componentDir = opts.componentDir(slug);
+    await prepareOutputs(contentFile, publicDir, opts.clean);
+
+    const discovered = discoverSections(canvas, warnings, only);
+
+    console.log(`발견된 섹션: ${discovered.length}개`);
+    console.log(discovered.map((d) => `- ${d.title}\n`).join(''));
+
+    console.log('내용을 분석하고 있습니다...\n');
+
+    const sections: Section[] = [];
+    for (const { title, frame } of discovered) {
+        const slugForSection = SECTION_SLUG[title];
+        const itemNodes = findItems(frame);
+        const items: Item[] = [];
+        for (let idx = 0; idx < itemNodes.length; idx++) {
+            const itemNode = itemNodes[idx]!;
+            const baseName = `${slugForSection}-${pad(idx + 1)}`;
+            const blocks: ItemBlock[] = [];
+            let currentSubtitle = '';
+            for (const child of parseItemChildren(itemNode)) {
+                if (child.kind === 'subtitle') {
+                    currentSubtitle = child.text;
+                    blocks.push({ kind: 'subtitle', text: child.text });
+                } else if (child.kind === 'body') {
+                    blocks.push({ kind: 'body', text: child.text });
+                } else if (child.kind === 'sample') {
+                    const exportFrame = findExportFrame(child.node);
+                    const targetNode = exportFrame ?? child.node;
+                    if (!exportFrame) {
+                        warnings.push(
+                            `${title} / item ${idx + 1} / sample: Export frame missing, used Sample fallback (${child.node.id})`,
+                        );
+                    }
+                    const webpRel = await downloadWebpImages(
+                        client,
+                        opts.fileKey,
+                        [{ nodeId: targetNode.id, baseName }],
+                        publicDir,
+                    );
+                    const rel = webpRel[targetNode.id];
+                    if (rel) blocks.push({ kind: 'docsImage', webpRel: rel, alt: currentSubtitle });
+                    else warnings.push(`sample export failed: ${targetNode.id} (${baseName})`);
+                } else if (child.kind === 'preview') {
+                    const result = await extractPreview({
+                        fileKey: opts.fileKey,
+                        previewSlot: child.node,
+                        componentDir,
+                        baseName,
+                        force: opts.force,
+                        warnings,
+                    });
+                    blocks.push({
+                        kind: 'demo',
+                        file: result.file,
+                        placeholder: result.placeholder,
+                        nodeId: result.nodeId,
+                    });
+                } else if (child.kind === 'table') {
+                    const locator = `${title} / item ${idx + 1} / table`;
+                    const md = renderTableForm(child.node, warnings, locator);
+                    if (md) blocks.push({ kind: 'table', markdown: md });
+                } else if (child.kind === 'doCase' || child.kind === 'dontCase') {
+                    const variant = child.kind === 'doCase' ? 'do' : 'dont';
+                    const caseBaseName = `${baseName}-${variant}`;
+                    const block = await buildCaseBlock({
+                        client,
+                        fileKey: opts.fileKey,
+                        caseFrame: child.node,
+                        variant,
+                        baseName: caseBaseName,
+                        publicDir,
+                        warnings,
+                        locator: `${title} / item ${idx + 1} / ${variant}`,
+                    });
+                    if (block) blocks.push(block);
+                }
+            }
+            items.push({ blocks });
+        }
+        sections.push({ title, slug: slugForSection, items });
+    }
+
+    const sortedSections = sortByPolicy(sections);
+
+    console.log(`총 ${sortedSections.length}개의 프레임을 마크다운으로 변환합니다...\n`);
+
+    const mdx = renderMdx({
+        slug,
+        name: canvasName,
+        sections: sortedSections,
+    });
+    await writeComponentMdx(contentFile, mdx);
+
+    console.log(`컴포넌트 문서가 작성되었습니다!`);
+    console.log(contentFile + '\n');
+
+    return {
+        slug,
+        mdxPath: contentFile,
+        publicDir,
+        componentDir,
+        warnings,
+    };
+}
+
+interface BuildCaseBlockOptions {
+    client: FigmaClient;
+    fileKey: string;
+    caseFrame: FigmaNode;
+    variant: 'do' | 'dont';
+    baseName: string;
+    publicDir: string;
+    warnings: string[];
+    locator: string;
+}
+
+async function buildCaseBlock(
+    opts: BuildCaseBlockOptions,
+): Promise<Extract<ItemBlock, { kind: 'doCase' | 'dontCase' }> | undefined> {
+    const caption = findTextByName(opts.caseFrame, TEXT_NAMES.caption) ?? '';
+    if (!caption) opts.warnings.push(`${opts.locator}: caption TEXT missing`);
+    const target = pickCaseImageTarget(opts.caseFrame, opts.warnings, opts.locator);
+    const webpRel = await downloadWebpImages(
+        opts.client,
+        opts.fileKey,
+        [{ nodeId: target.id, baseName: opts.baseName }],
+        opts.publicDir,
+    );
+    const rel = webpRel[target.id];
+    if (!rel) {
+        opts.warnings.push(`${opts.locator}: image export failed (${target.id})`);
+        return undefined;
+    }
+    return {
+        kind: opts.variant === 'do' ? 'doCase' : 'dontCase',
+        webpRel: rel,
+        alt: caption,
+        caption,
+    };
+}
+
+/** Prefer the Export frame inside the case's Sample slot (DFS so wrappers like
+ *  `Container` don't hide it), fall back to the Sample slot, then the case frame
+ *  itself. Each fallback is surfaced as a warning so silent mis-captures stop. */
+function pickCaseImageTarget(caseFrame: FigmaNode, warnings: string[], locator: string): FigmaNode {
+    const sample = (caseFrame.children ?? []).find((c) => c.name === SLOT_NAMES.sample);
+    if (!sample) {
+        warnings.push(
+            `${locator}: Sample slot missing, used case frame fallback (${caseFrame.id})`,
+        );
+        return caseFrame;
+    }
+    const exportFrame = findExportFrame(sample);
+    if (!exportFrame) {
+        warnings.push(`${locator}: Export frame missing, used Sample fallback (${sample.id})`);
+        return sample;
+    }
+    return exportFrame;
+}
+
+function sortByPolicy(sections: Section[]): Section[] {
+    const map = new Map(sections.map((s) => [s.title, s]));
+    const out: Section[] = [];
+    for (const title of SECTION_WHITELIST) {
+        const s = map.get(title);
+        if (s) out.push(s);
+    }
+    return out;
+}

@@ -1,0 +1,160 @@
+---
+title: 'Dialog'
+slug: 'dialog'
+description: 'Dialog는 페이지 위에 창을 띄워 사용자를 중요한 정보에 집중시키거나, 특정 작업을 수행하도록 강제하는 컴포넌트입니다.'
+---
+
+## Anatomy
+
+<DocsImage src="/composites/dialog/images/anatomy-01.webp" alt="" />
+
+| #   | Element                     | Description                                                                                                                 |
+| --- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Title                       | Dialog가 실행할 작업을 설명합니다. aria-labelledby을 통해 Dialog의 레이블이 지정됩니다.                                     |
+| 2   | Description (optional)      | Dialog 실행 이후 발생할 결과를 설명합니다. aria-describedby을 통해 Dialog와 연결됩니다.                                     |
+| 3   | Content                     | 작업을 수행하기 위한 입력 폼 또는 정보성 콘텐츠로 구성됩니다.                                                               |
+| 4   | Assistive button (optional) | 보조 액션을 실행하는 버튼입니다. 상황에 따라 Assistive button을 표시하지 않을 수 있으며, 닫기 버튼으로 사용하지 않습니다.   |
+| 5   | Close button                | Dialog를 닫는 버튼입니다. Close button통해 Dialog가 닫히면 작업은 실행되지 않습니다.                                        |
+| 6   | Action button               | Dialog를 실행하는 버튼입니다. 입력 값을 제출하거나 사용자가 지정한 작업을 실행하는 기능을 합니다.                           |
+| 7   | Header                      | Title과 Description, Close button이 포함되어 있습니다.                                                                      |
+| 8   | Body                        | Content가 포함되어 있습니다. Dialog popup의 전체 높이가 최대 높이 값(80vh)을 넘을 경우 Scroll이 발생합니다.                 |
+| 9   | Footer (optional)           | Action button과 Assistive button이 포함되어 있습니다. 제출할 값이 없는 정보성(Information) Dialog의 경우 사용하지 않습니다. |
+| 10  | Backdrop                    | 페이지와 상호작용을 차단하는 Overlay입니다. 클릭하면 Dialog가 닫히며 작업은 실행되지 않습니다.                              |
+
+## Examples
+
+### 사용자의 정보 입력이 필요할 경우 사용하세요
+
+현재 작업을 이어가는 데 필요한 정보를 간단히 입력받을 때 사용합니다. 입력 항목이 많거나 여러 단계로 나뉜다면 페이지로 제공합니다.
+
+<Demo file="composites/(components)/dialog/demos/examples-01.tsx" />
+
+### 작업과 관련된 정보를 제공할 때 사용하세요
+
+현재 화면을 벗어나지 않고 상세 내용을 확인해야 하는 경우 사용합니다. 확인만 하는 정보라면 Footer 없이 제공합니다.
+
+<Demo file="composites/(components)/dialog/demos/examples-02.tsx" />
+
+### 사용자에게 필요한 정보를 안내하고 다음 행동으로 이어갈 때 사용하세요
+
+복사, 다운로드처럼 안내한 정보를 바로 활용하는 동작은 Assistive button으로 제공합니다. 주요 동작(Action button)과 함께 배치하며, 닫기 용도로는 사용하지 않습니다.
+
+<Demo file="composites/(components)/dialog/demos/examples-03.tsx" />
+
+## Best practices
+
+### Title
+
+<DocsGrid>
+    <DoImage
+        src="/composites/dialog/images/best-practices-01-do.webp"
+        alt="[새 그룹 만들기] 버튼을 눌러 띄워진 Dialog 타이틀은 [새 그룹 만들기]로 작성합니다."
+        caption="[새 그룹 만들기] 버튼을 눌러 띄워진 Dialog 타이틀은 [새 그룹 만들기]로 작성합니다."
+    />
+    <DontImage
+        src="/composites/dialog/images/best-practices-01-dont.webp"
+        alt="트리거가 된 버튼의 레이블과 다른 타이틀을 사용하지 마세요. 사용자가 진행 맥락을 혼동할 수 있습니다."
+        caption="트리거가 된 버튼의 레이블과 다른 타이틀을 사용하지 마세요. 사용자가 진행 맥락을 혼동할 수 있습니다."
+    />
+</DocsGrid>
+
+### Button label
+
+<DocsGrid>
+    <DoImage
+        src="/composites/dialog/images/best-practices-02-do.webp"
+        alt="버튼을 눌렀을 때 어떤 결과가 나오는지 사용자가 예상할 수 있게 레이블을 작성하세요."
+        caption="버튼을 눌렀을 때 어떤 결과가 나오는지 사용자가 예상할 수 있게 레이블을 작성하세요."
+    />
+    <DontImage
+        src="/composites/dialog/images/best-practices-02-dont.webp"
+        alt="결과와 관련 없거나 ‘확인’ 같은 모호한 레이블을 사용하지 마세요."
+        caption="결과와 관련 없거나 ‘확인’ 같은 모호한 레이블을 사용하지 마세요."
+    />
+</DocsGrid>
+
+### Close button
+
+<DocsGrid>
+    <DoImage
+        src="/composites/dialog/images/best-practices-03-do.webp"
+        alt="닫기 버튼은 Header에서만 제공합니다."
+        caption="닫기 버튼은 Header에서만 제공합니다."
+    />
+    <DontImage
+        src="/composites/dialog/images/best-practices-03-dont.webp"
+        alt="Footer의 Action button과 Assistive button을 닫기 버튼으로 사용하지 마세요."
+        caption="Footer의 Action button과 Assistive button을 닫기 버튼으로 사용하지 마세요."
+    />
+</DocsGrid>
+
+### Scroll
+
+<DocsGrid>
+    <DoImage
+        src="/composites/dialog/images/best-practices-04-do.webp"
+        alt="콘텐츠가 길어질 경우 스크롤을 사용하여 콘텐츠를 구성합니다."
+        caption="콘텐츠가 길어질 경우 스크롤을 사용하여 콘텐츠를 구성합니다."
+    />
+    <DontImage
+        src="/composites/dialog/images/best-practices-04-dont.webp"
+        alt="가로 스크롤을 사용하지 마세요. 레이아웃을 조정하거나, 더 큰 사이즈의 Dialog를 사용하세요."
+        caption="가로 스크롤을 사용하지 마세요. 레이아웃을 조정하거나, 더 큰 사이즈의 Dialog를 사용하세요."
+    />
+</DocsGrid>
+
+## Patterns
+
+### Dialog 작업 완료 후 알림
+
+Dialog에서 실행한 작업이 완료되면 Toast로 결과를 알리세요. 사용자는 이미 다이얼로그에서 결정을 내렸으므로 결과는 화면 흐름을 방해하지 않도록 간결하게 전달합니다.
+
+<DocsImage src="/composites/dialog/images/patterns-01.webp" alt="Dialog 작업 완료 후 알림" />
+
+### Dialog에서 발생한 오류 처리
+
+Dialog에서 발생한 오류는 인라인 메시지로 문제가 되는 부분을 바로 알리세요. 사용자가 Dialog를 벗어나지 않은 채 다시 작업할 수 있도록 안내해야 합니다.
+
+단, 세션 만료처럼 작업을 더 이상 이어갈 수 없는 경우에는 Alert dialog나 페이지로 안내합니다. 이때 Alert dialog는 Dialog 위에 겹쳐 띄우지 않고 기존 Dialog를 닫은 뒤 표시합니다.
+
+<DocsImage src="/composites/dialog/images/patterns-02.webp" alt="Dialog에서 발생한 오류 처리" />
+
+## Related components
+
+### Dialog vs Alert dialog
+
+Dialog와 Alert dialog는 시각적으로 유사하지만, 접근성과 동작이 다르기에 명확히 구분해서 사용해야 합니다.
+
+<DocsImage
+    src="/composites/dialog/images/related-components-01.webp"
+    alt="Dialog vs Alert dialog"
+/>
+
+| 구분           | Dialog                                            | Alert dialog                                      |
+| -------------- | ------------------------------------------------- | ------------------------------------------------- |
+| 목적           | 폼 입력, 정보 조회, 특정 입력 값을 받아야 할 경우 | 사용자 결정 확인, 되돌릴 수 없는 작업에 대한 확인 |
+| Close behaivor | Hearder의 Close button<br/>Backdrop 클릭 / ESC 키 | Footer에서 Cancel button으로 제공                 |
+| 사이즈         | md / lg / xl                                      | 단일 사이즈                                       |
+
+### Non-dialog
+
+너무 잦은 Dialog 사용은 사용자의 주의를 분산시키고 반사적으로 Dialog를 닫는 행동으로 이어질 수 있습니다. 사용자의 결정이 프로세스에 영향을 주지 않거나, 중요도가 낮은 정보라면 비모달(Non-dialog) 컴포넌트를 사용하세요.
+
+## Guidelines
+
+### Height
+
+Dialog popup의 최대 높이(Max-height)는 전체 화면 높이의 80%로 설정됩니다. 최대 높이를 넘을 경우 Body에 Scroll이 발생합니다.
+
+<DocsImage src="/composites/dialog/images/guidelines-01.webp" alt="Height" />
+
+### Close behaivor
+
+<DocsImage src="/composites/dialog/images/guidelines-02.webp" alt="Close behaivor" />
+
+### Scroll behaivor
+
+Scroll 발생 시 Body 영역에 Vertical scrollbar와 하단 Gradient dim이 표시됩니다. 스크롤 시에는 Header와 Footer는 고정이며 Body 영역만 스크롤 됩니다.
+Horizontal scroll은 사용하지 않으며 Horizontal scroll이 필요한 경우 레이아웃을 조정하거나, 더 큰 사이즈의 Dialog를 사용하세요.
+
+<DocsImage src="/composites/dialog/images/guidelines-03.webp" alt="Scroll behaivor" />

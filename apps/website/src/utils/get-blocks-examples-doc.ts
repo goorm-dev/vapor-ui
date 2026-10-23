@@ -10,6 +10,18 @@ type DocGenFile = {
 };
 
 /**
+ * Expand `<Demo file="/content/docs/.../default-button.tsx" />` into the long form that
+ * already carries the `doc-gen:file` block, so {@link replaceBlockDoc} can inline the file
+ * contents for LLM consumers. Mirrors the MDX-build-time behaviour of `remark-demo-source`
+ * without running the remark pipeline here.
+ */
+export const replaceDemoSelfClosing = (text: string): string =>
+    text.replace(/<Demo\s+file=(["'])([^"']+)\1\s*\/>/g, (_, _quote: string, file: string) => {
+        const config = JSON.stringify({ file: file, codeblock: true }, null, 4);
+        return `<Demo file="${file}">\n\`\`\`json doc-gen:file\n${config}\n\`\`\`\n</Demo>`;
+    });
+
+/**
  * Replace ```json doc-gen:file tags inside blocks MDX content
  * with actual file contents, so LLM can parse blocks source code.
  *

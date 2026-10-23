@@ -6,10 +6,13 @@
         "---Overview---",
         "index",
         "icons",
+
         "---Layouts---",
         "...(layouts)",
+
         "---Components---",
         "...(components)",
+
         "---UI Patterns---",
         "...patterns"
     ]

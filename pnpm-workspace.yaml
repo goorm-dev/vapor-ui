@@ -4,6 +4,7 @@ packages:
     - scripts/docs-extractor
     - scripts/docs-translator
     - scripts/icon-extractor
+    - scripts/extract-composites
 
 engineStrict: true
 
