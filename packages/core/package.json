@@ -101,7 +101,7 @@
         "@vitest/coverage-v8": "catalog:",
         "autoprefixer": "^10.5.4",
         "eslint": "catalog:",
-        "happy-dom": "^20.11.1",
+        "happy-dom": "^21.0.0",
         "postcss": "^8.5.31",
         "react": "catalog:",
         "react-dom": "catalog:",
