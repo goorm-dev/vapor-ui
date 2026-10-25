@@ -5,7 +5,8 @@ import type { Item, ItemBlock, Section } from './types.ts';
 
 export interface RenderInput {
     slug: string;
-    name: string;
+    title: string;
+    description: string;
     sections: Section[];
 }
 
@@ -40,7 +41,14 @@ export function renderMdx(input: RenderInput): string {
 
 function renderFrontmatter(input: RenderInput): string {
     const esc = (s: string) => s.replace(/"/g, '\\"');
-    return ['---', `title: "${esc(input.name)}"`, `slug: "${esc(input.slug)}"`, '---'].join('\n');
+    const siteName = `${input.title} - Vapor Composites`;
+    return [
+        '---',
+        `title: "${esc(input.title)}"`,
+        `description: "${esc(input.description)}"`,
+        `site_name: "${esc(siteName)}"`,
+        '---',
+    ].join('\n');
 }
 
 function renderSection(section: Section, slug: string): string {
