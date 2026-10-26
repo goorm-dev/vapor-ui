@@ -2,8 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { CONTENT_PATH } from '~/utils/content-loader';
-import { isAbsolutePath } from '~/utils/paths';
+import { CONTENT_PATH, isAbsolutePath } from '~/utils/paths';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
