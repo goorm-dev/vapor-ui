@@ -54,13 +54,19 @@ function renderSection(section: Section, slug: string): string {
 }
 
 type CaseBlock = Extract<ItemBlock, { kind: 'doCase' | 'dontCase' }>;
+type ListItemBlock = Extract<ItemBlock, { kind: 'listItem' }>;
 
 function isCaseBlock(block: ItemBlock): block is CaseBlock {
     return block.kind === 'doCase' || block.kind === 'dontCase';
 }
 
+function isListItemBlock(block: ItemBlock): block is ListItemBlock {
+    return block.kind === 'listItem';
+}
+
 /** Render item blocks in order; collapse any run of consecutive do/dont case blocks
- *  into a single `<DocsGrid>` wrapper. */
+ *  into a single `<DocsGrid>` wrapper, and any run of `listItem` blocks into a
+ *  single bulleted markdown list. */
 function renderItem(item: Item, slug: string): string {
     const parts: string[] = [];
     let i = 0;
@@ -75,6 +81,17 @@ function renderItem(item: Item, slug: string): string {
                 i++;
             }
             parts.push(renderDocsGrid(run, slug));
+            continue;
+        }
+        if (isListItemBlock(block)) {
+            const run: ListItemBlock[] = [];
+            while (i < item.blocks.length) {
+                const next = item.blocks[i]!;
+                if (!isListItemBlock(next)) break;
+                run.push(next);
+                i++;
+            }
+            parts.push(run.map((b) => `- ${b.markdown}`).join('\n'));
             continue;
         }
         parts.push(renderBlock(block, slug));
@@ -105,6 +122,8 @@ function renderBlock(block: ItemBlock, slug: string): string {
             return `### ${block.text}`;
         case 'body':
             return block.text;
+        case 'listItem':
+            return `- ${block.markdown}`;
         case 'docsImage':
             return `<DocsImage src="/composites/${slug}/${block.webpRel}" alt="${attr(block.alt)}" />`;
         case 'doCase':

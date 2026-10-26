@@ -20,7 +20,10 @@ export const TEXT_NAMES = {
     subtitle: 'section subtitle',
     body: 'body',
     caption: 'caption',
+    listLabel: 'list label',
 } as const;
+
+const BOLD_WEIGHT_THRESHOLD = 600;
 
 /** True when the node is an `Item` component instance.
  *  Matches exact `Item` and variant forms (`Item ...`, `Item, Prop=Val`, `Item=Val`). */
@@ -59,11 +62,51 @@ export function findItems(sectionFrame: FigmaNode): FigmaNode[] {
 export type ItemChild =
     | { kind: 'subtitle'; text: string }
     | { kind: 'body'; text: string }
+    | { kind: 'listItem'; markdown: string }
     | { kind: 'sample'; node: FigmaNode }
     | { kind: 'preview'; node: FigmaNode }
     | { kind: 'table'; node: FigmaNode }
     | { kind: 'doCase'; node: FigmaNode }
     | { kind: 'dontCase'; node: FigmaNode };
+
+/** Resolve the effective fontWeight for each UTF-16 code unit in a Figma TEXT
+ *  node, wrap contiguous bold runs (weight ≥ 600) in `**…**`, and move the
+ *  surrounding whitespace outside the markers so `**Close button: **` becomes
+ *  `**Close button:** `. */
+export function renderListLabelMarkdown(node: FigmaNode): string {
+    const text = node.characters ?? '';
+    if (!text) return '';
+    const baseWeight = node.style?.fontWeight ?? 400;
+    const overrides = node.characterStyleOverrides ?? [];
+    const table = node.styleOverrideTable ?? {};
+    const weightAt = (i: number): number => {
+        const id = overrides[i];
+        if (!id) return baseWeight;
+        const w = table[String(id)]?.fontWeight;
+        return w ?? baseWeight;
+    };
+    const isBold: boolean[] = [];
+    for (let i = 0; i < text.length; i++) {
+        isBold.push(weightAt(i) >= BOLD_WEIGHT_THRESHOLD);
+    }
+    const out: string[] = [];
+    let i = 0;
+    while (i < text.length) {
+        const bold = isBold[i]!;
+        let j = i;
+        while (j < text.length && isBold[j] === bold) j++;
+        const segment = text.slice(i, j);
+        if (bold) {
+            const m = segment.match(/^(\s*)([\s\S]*?)(\s*)$/);
+            if (m && m[2]) out.push(`${m[1]}**${m[2]}**${m[3]}`);
+            else out.push(segment);
+        } else {
+            out.push(segment);
+        }
+        i = j;
+    }
+    return out.join('').trim();
+}
 
 /** DFS `root`'s subtree for the first FRAME named `Export`. Direct-child `.find`
  *  misses the real target when designers wrap Export in a `Container` (or any other
@@ -114,6 +157,11 @@ export function parseItemChildren(item: FigmaNode): ItemChild[] {
                 }
                 if (child.name === TEXT_NAMES.body && child.characters?.trim()) {
                     out.push({ kind: 'body', text: child.characters.trim() });
+                    continue;
+                }
+                if (child.name === TEXT_NAMES.listLabel && child.characters?.trim()) {
+                    const markdown = renderListLabelMarkdown(child);
+                    if (markdown) out.push({ kind: 'listItem', markdown });
                     continue;
                 }
                 continue;
