@@ -48,7 +48,9 @@ function useDynamicComponent(file?: string) {
                 setIsLoading(true);
                 setError(null);
 
-                const componentModule = await await import(`~content/docs/${file}`);
+                // NOTE: If the demo root moves, update `CONTENT_PATH` (src/constants/demo.ts) and the
+                // same literal in src/components/demo/preview.tsx together.
+                const componentModule = await import(`~content/docs/${file}`);
 
                 if (componentModule.default) {
                     setComponent(() => componentModule.default);
