@@ -2,6 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { CONTENT_PATH } from '~/utils/content-loader';
+import { isAbsolutePath } from '~/utils/paths';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 type DocGenFile = {
@@ -10,15 +13,16 @@ type DocGenFile = {
 };
 
 /**
- * Expand `<Demo file="/content/docs/.../default-button.tsx" />` into the long form that
- * already carries the `doc-gen:file` block, so {@link replaceBlockDoc} can inline the file
- * contents for LLM consumers. Mirrors the MDX-build-time behaviour of `remark-demo-source`
- * without running the remark pipeline here.
+ * Replace `<Demo file="..." />` with a `doc-gen:file` block, so {@link replaceBlockDoc} can
+ * inline the file contents for LLM consumers. Mirrors the MDX-build-time behaviour of
+ * `remark-demo-source` without running the remark pipeline here: a relative `file` is
+ * resolved from `content/docs`, an absolute one from `apps/website`.
  */
 export const replaceDemoSelfClosing = (text: string): string =>
-    text.replace(/<Demo\s+file=(["'])([^"']+)\1\s*\/>/g, (_, _quote: string, file: string) => {
-        const config = JSON.stringify({ file: file, codeblock: true }, null, 4);
-        return `<Demo file="${file}">\n\`\`\`json doc-gen:file\n${config}\n\`\`\`\n</Demo>`;
+    text.replace(/<Demo\s+file=(["'])([^"']+)\1[^>]*\/>/g, (_, _quote: string, file: string) => {
+        const resolved = isAbsolutePath(file) ? file : `/${CONTENT_PATH}/${file}`;
+        const config = JSON.stringify({ file: resolved, codeblock: true }, null, 4);
+        return `\`\`\`json doc-gen:file\n${config}\n\`\`\``;
     });
 
 /**
