@@ -2,25 +2,28 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { toWebsitePath } from '~/utils/paths';
+import { CONTENT_PATH } from '~/constants/demo';
 
 const WEBSITE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
 /**
  * Replace `<Demo file="..." />` with a code block of the demo's source, so LLM consumers get the
  * code. Mirrors the MDX-build-time behaviour of `remark-demo-source` without running the remark
- * pipeline here.
+ * pipeline here: `file` is resolved from `content/docs`.
  */
 export const replaceDemoSelfClosing = (text: string): string =>
-    text.replace(/<Demo\s+file=(["'])([^"']+)\1[^>]*\/>/g, (_, _quote: string, file: string) => {
-        const filePath = path.join(WEBSITE_ROOT, toWebsitePath(file));
+    text.replace(
+        /<Demo\s+(?:[^>]*?\s)?file=(["'])([^"']+)\1[^>]*\/>/g,
+        (_, _quote: string, file: string) => {
+            const filePath = path.join(WEBSITE_ROOT, CONTENT_PATH, file);
 
-        if (!fs.existsSync(filePath)) {
-            return `> ⚠️ File not found: \`${file}\` (resolved to: ${filePath})`;
-        }
+            if (!fs.existsSync(filePath)) {
+                return `> ⚠️ File not found: \`${file}\` (resolved to: ${filePath})`;
+            }
 
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const fileExtension = path.extname(file).substring(1);
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            const fileExtension = path.extname(file).substring(1);
 
-        return `\`\`\`${fileExtension}\n${fileContent}\n\`\`\``;
-    });
+            return `\`\`\`${fileExtension}\n${fileContent}\n\`\`\``;
+        },
+    );

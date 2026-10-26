@@ -125,7 +125,7 @@ content/docs/components/(components)/button/
     └── ko.lock.json
 ```
 
-- A `<Demo file>` is the demo's path under `content/docs`, `.tsx` included. The website (`src/lib/remark-demo-source.ts`) and the LLM text (`src/utils/get-blocks-examples-doc.ts`) both read the demo's source from that one prop.
+- A `<Demo file>` is the demo's path relative to `content/docs`, including `.tsx`. The website (`src/lib/remark-demo-source.ts`) and the LLM text (`src/utils/get-blocks-examples-doc.ts`) both read the demo's source from that one prop.
 - Do not edit `api/` by hand (except `(components)/toast/api/en/toast-object.json`). Change the JSDoc in `packages/core`, run `pnpm docs:api`, then `pnpm docs:translate` for the Korean. `pnpm dev` and `pnpm build` regenerate them, and CI fails when the committed files are out of date.
 - `<ComponentPropsTable componentName="button" />` reads `api/ko/button.json` at build time; the LLM text (`get-component-doc.ts`) reads `api/en/`. A name with no JSON fails the build.
 - Only `meta.json` files configure the sidebar. A page folder is shown as a single page.

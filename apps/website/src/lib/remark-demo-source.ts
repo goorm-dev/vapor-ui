@@ -4,13 +4,13 @@
  * `<Demo file="…" />` self-closing — synthesise a code block whose body is the resolved demo
  * file. The Code tab renders this directly.
  *
- * A relative `file` is resolved from `content/docs`, an absolute one from `apps/website/` (e.g.
- * `/content/docs/components/(components)/button/demos/default-button.tsx`). See `toWebsitePath`.
+ * `file` is resolved from `content/docs` (e.g.
+ * `components/(components)/button/demos/default-button.tsx`).
  */
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { toWebsitePath } from '~/utils/paths';
+import { CONTENT_PATH } from '~/constants/demo';
 
 interface Node {
     type: string;
@@ -57,11 +57,10 @@ const isDemoElement = (node: Node): node is MdxJsxFlowElement =>
     (node.type === 'mdxJsxFlowElement' || node.type === 'mdxJsxTextElement') &&
     (node as MdxJsxFlowElement).name === DEMO_TAG;
 
-const buildCodeBlockFromFile = (file: string, cwd: string): CodeNode | null => {
-    const abs = path.resolve(cwd, toWebsitePath(file));
+const buildCodeBlockFromFile = (abs: string): CodeNode | null => {
     try {
         const raw = fs.readFileSync(abs, 'utf-8').trim();
-        const ext = path.extname(file).slice(1) || 'tsx';
+        const ext = path.extname(abs).slice(1) || 'tsx';
         return { type: 'code', lang: ext, meta: null, value: raw };
     } catch {
         return null;
@@ -75,7 +74,9 @@ export function remarkDemoSource() {
             if (isDemoElement(node)) {
                 const fileAttr = readStringAttr(node.attributes, 'file');
                 if (fileAttr && node.children.length === 0) {
-                    const inlined = buildCodeBlockFromFile(fileAttr, cwd);
+                    const inlined = buildCodeBlockFromFile(
+                        path.resolve(cwd, CONTENT_PATH, fileAttr),
+                    );
                     if (inlined) node.children.push(inlined);
                 }
             }
