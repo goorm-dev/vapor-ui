@@ -14,10 +14,10 @@ const item = getProperties(instance, null, {
         options: { true: true, false: undefined },
     },
     leading: { kind: 'instance-swap', name: 'leading', visibleWhen: '(has leading)' },
-    // FIXME: Figma 쪽 TEXT property 이름이 'has description' (라벨명과 불일치).
+    label: { kind: 'string', name: 'label' },
     description: {
         kind: 'string',
-        name: 'has description',
+        name: 'description',
         visibleWhen: '(has description)',
     },
     trailing: { kind: 'prop-slot', name: 'trailing', visibleWhen: '(has trailing)' },
@@ -27,7 +27,7 @@ export default {
     example: figma.code`
         <Menu.CheckItem
             value="" // TODO: 아이템을 특정하는 ID를 추가하세요.
-            label="Menu item" ${item.isDisabled} ${item.leading} ${item.description} ${item.trailing}
+            ${item.label} ${item.isDisabled} ${item.leading} ${item.description} ${item.trailing}
         />
     `,
     imports: ['import { Menu } from "@vapor-ui/composites"'],

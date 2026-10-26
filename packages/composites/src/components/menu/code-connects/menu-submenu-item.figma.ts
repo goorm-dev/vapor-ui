@@ -14,6 +14,7 @@ const item = getProperties(instance, null, {
         options: { true: true, false: undefined },
     },
     leading: { kind: 'instance-swap', name: 'leading', visibleWhen: '(has leading)' },
+    label: { kind: 'string', name: 'label' },
     description: { kind: 'string', name: 'description', visibleWhen: '(has description)' },
     trailing: { kind: 'prop-slot', name: 'trailing', visibleWhen: '(has trailing)' },
 });
@@ -25,7 +26,7 @@ const children = renderInnerInstances(instance, new Set(['Item', 'Item group', '
 
 export default {
     example: figma.code`
-        <Menu.Root trigger={<Menu.SubmenuItem label="Menu item" ${item.isDisabled} ${item.leading} ${item.description} ${item.trailing} />}>
+        <Menu.Root trigger={<Menu.SubmenuItem ${item.label} ${item.isDisabled} ${item.leading} ${item.description} ${item.trailing} />}>
             ${children}
         </Menu.Root>
     `,

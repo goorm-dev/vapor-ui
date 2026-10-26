@@ -14,6 +14,7 @@ const item = getProperties(instance, 'Item', {
         options: { true: true, false: undefined },
     },
     leading: { kind: 'instance-swap', name: 'leading', visibleWhen: '(has leading)' },
+    label: { kind: 'string', name: 'label' },
     description: { kind: 'string', name: 'description', visibleWhen: '(has description)' },
     trailing: { kind: 'prop-slot', name: 'trailing', visibleWhen: '(has trailing)' },
     variant: {
@@ -26,7 +27,7 @@ const item = getProperties(instance, 'Item', {
 export default {
     example: figma.code`
         <Menu.Item
-            label="Menu item" ${item.isDisabled} ${item.leading} ${item.description} ${item.trailing} ${item.variant}
+            ${item.label} ${item.isDisabled} ${item.leading} ${item.description} ${item.trailing} ${item.variant}
             onClick={() => {}}
         />
     `,
