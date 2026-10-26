@@ -690,9 +690,6 @@ importers:
       rolldown-plugin-dts:
         specifier: ^0.27.14
         version: 0.27.14(rolldown@1.2.14)(typescript@5.9.3)
-      rollup-plugin-node-externals:
-        specifier: ^8.1.2
-        version: 8.1.2(rollup@4.62.4)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
