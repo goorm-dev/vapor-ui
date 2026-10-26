@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import { config as loadEnv } from 'dotenv';
 import meow from 'meow';
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 
 import { extract } from './extractor.ts';
@@ -102,12 +102,14 @@ function runFormat(files: string[]): void {
     if (files.length === 0) return;
     console.log(`\nprettier --write ${files.length}개 파일을 포매팅합니다...`);
     try {
-        execSync(`pnpm -w exec prettier --write ${files.map((f) => `"${f}"`).join(' ')}`, {
+        execFileSync('pnpm', ['-w', 'exec', 'prettier', '--write', ...files], {
             cwd: REPO_ROOT,
             stdio: 'inherit',
         });
     } catch (err) {
-        console.error(`prettier format 실패: ${(err as Error).message}`);
+        console.warn(`\n⚠️ prettier 포매팅을 완료하지 못했습니다: ${(err as Error).message}`);
+        console.warn('   생성된 파일은 그대로 보존됩니다. 필요하면 수동으로 포매팅하세요.');
+        process.exitCode = 1;
     }
 }
 

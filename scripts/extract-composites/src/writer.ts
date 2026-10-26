@@ -40,7 +40,9 @@ export function renderMdx(input: RenderInput): string {
 }
 
 function renderFrontmatter(input: RenderInput): string {
-    const esc = (s: string) => s.replace(/"/g, '\\"');
+    // YAML double-quoted strings interpret `\x`, `\U`, `\n`, etc. as escapes,
+    // so backslashes must be doubled before quote escaping.
+    const esc = (s: string) => s.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
     const siteName = `${input.title} - Vapor Composites`;
     return [
         '---',
