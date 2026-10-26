@@ -3,7 +3,7 @@
 // component=Dialog
 import figma from 'figma';
 
-import { getProperties } from '../../utils/figma-utils';
+import { getProperties } from '../../../utils/figma-utils';
 
 const instance = figma.selectedInstance;
 
@@ -41,5 +41,5 @@ export default {
     `,
     imports: ['import { Dialog } from "@vapor-ui/composites"'],
     id: 'dialog',
-    metadata: { nestable: false },
+    metadata: { nestable: true },
 };

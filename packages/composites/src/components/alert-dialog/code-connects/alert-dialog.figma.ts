@@ -1,9 +1,9 @@
-// url=https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4606-26196&m=dev
+// url=https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4606-26196
 // source=src/components/alert-dialog/alert-dialog.tsx
 // component=AlertDialog
 import figma from 'figma';
 
-import { getProperties } from '../../utils/figma-utils';
+import { getProperties } from '../../../utils/figma-utils';
 
 const instance = figma.selectedInstance;
 
@@ -39,5 +39,5 @@ export default {
     `,
     imports: ['import { AlertDialog } from "@vapor-ui/composites"'],
     id: 'alert-dialog',
-    metadata: { nestable: false },
+    metadata: { nestable: true },
 };
