@@ -43,7 +43,13 @@ export const control = componentRecipe({
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
+        /**
+         * Marks the switch as invalid, applying error styles. Sets `aria-invalid` on the `<span>` element.
+         */
         invalid: { true: {}, false: {} },
+        /**
+         * Size of the switch, controlling its width, height, and padding, and the size of its thumb.
+         */
         size: {
             sm: {
                 padding: vars.size.space['025'],

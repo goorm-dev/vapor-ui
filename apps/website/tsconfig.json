@@ -19,6 +19,7 @@
             "~/.source": ["./.source/index.ts"],
             "fumadocs-mdx/collections/*": ["./.source/*"],
             "~/*": ["./src/*"],
+            "~content/*": ["./content/*"],
             "~public/*": ["./public/*"]
         },
         "plugins": [

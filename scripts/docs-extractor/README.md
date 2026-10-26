@@ -1,0 +1,256 @@
+# @vapor-ui/docs-extractor
+
+> **Internal Package** - This is a private package (`private: true`) for internal use only. Not published to npm.
+
+An internal CLI tool that extracts Vapor UI component metadata from TypeScript AST and generates JSON output for API documentation.
+
+## Overview
+
+This package automatically generates JSON documentation for `packages/core` components. The primary consumer is `apps/website`, which uses the extracted metadata to render component API references.
+
+**Key characteristics:**
+
+- Location: `scripts/docs-extractor`
+- Modules: `extract()` (read + policy) behind a thin CLI that writes the files
+- Primary usage: `pnpm docs:api` (run for you by `pnpm dev` and `pnpm build`)
+
+## Quick Start
+
+Run from the monorepo root:
+
+```bash
+# Extract every component into apps/website/content/docs/components/<page>/api/{en,ko}/
+pnpm docs:api
+
+# Re-extract whenever packages/core/src changes
+pnpm docs:api:watch
+
+# Extract a specific component only
+pnpm --filter website docs:api --component Button
+```
+
+`pnpm docs:api` is a cached turbo task. `website` `dev` and `build` depend on it, and the
+`Docs API` CI job fails when the committed JSON differs from what the source produces.
+
+There is no build step. The CLI runs straight from TypeScript source through `tsx`.
+Only `pnpm install` is required.
+
+Run package tests:
+
+```bash
+pnpm docs-extractor typecheck
+pnpm docs-extractor lint
+pnpm docs-extractor test
+```
+
+## CLI Reference
+
+| Option        | Short | Required | Description                                  |
+| ------------- | ----- | -------- | -------------------------------------------- |
+| `--input`     | -     | yes      | Directory to scan for component `.tsx` files |
+| `--tsconfig`  | -     | yes      | `tsconfig.json` used to resolve types        |
+| `--pages`     | -     | yes      | Directory with one folder per docs page      |
+| `--component` | `-n`  | no       | Extract only this component file             |
+| `--verbose`   | -     | no       | Print debug output                           |
+
+Paths are resolved against the current working directory. There is no config file: the extraction policy below is fixed in code.
+
+## Extraction Policy
+
+This section is the specification of the generated JSON. The extractor implements exactly these rules.
+
+### Consumers
+
+| Consumer                                                                                                                            | Reads                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `apps/website` `ComponentPropsTable` (MDX `componentName="…"`), at build time, from `ko/`                                           | file name, `description`, `props[]`                                       |
+| `apps/website` LLM text (`src/utils/get-component-doc.ts`), from `en/`: the `.mdx` routes and the docs packed into `@vapor-ui/core` | `props[]`                                                                 |
+| `skills/vapor-ui/scripts/get-component-info.mjs` (GitHub raw URL)                                                                   | file path at the `@vapor-ui/core@{version}` tag, `description`, `props[]` |
+
+`get-component-info.mjs` still reads the old `apps/website/public/components/generated/` path, which exists only at tags released before the move.
+
+The output file path and the fields listed here form the contract with these consumers. The generated files are committed. `pnpm dev` and `pnpm build` regenerate them, and CI fails when they are out of date.
+
+### Components
+
+- Scanned files: every `.tsx` file under `--input`, except `*.stories.tsx` and `*.test.tsx`.
+- A component is an exported `namespace` that contains an exported `Props`, declared with either `type` or `interface`.
+- Each namespace is one component. A compound component produces one entry per part (`AvatarRoot`, `AvatarImage`, …).
+
+### Output files
+
+- One JSON file per component, in the `api/en/` folder of the page that documents it: `<pages>/<page>/api/en/<name>.json`, next to `<page>/index.mdx`. The name is the namespace in kebab-case: `AvatarRoot` → `avatar-root.json`, `HStack` → `h-stack.json`.
+- The page is the component's folder under `components/`: `src/components/avatar/` → the page whose URL slug is `avatar`, either `<pages>/avatar/` or inside a route group such as `<pages>/(components)/avatar/`. A real folder is part of the slug, so `<pages>/patterns/form/` is not the `form` page. `PAGE_FOR_COMPONENT` in `src/write.ts` lists the exceptions: `radio-group` is documented on `radio`, and `alert-dialog` and `theme-provider` have no components page, so nothing is written for them.
+- A component whose page folder doesn't exist fails the run. Add the page or an entry in `PAGE_FOR_COMPONENT`.
+- `api/ko/<name>.json` mirrors every `api/en/<name>.json` with the same structure. For each description, it keeps the Korean when `api/ko.lock.json` records the hash of the current English for it (`<name>` → `description` or `props.<prop>` → `source`), and writes the English otherwise, as a placeholder until `pnpm docs:translate` runs. The extractor never writes the lock and never calls an AI. A lock or an existing `ko/` file that is not valid JSON fails the run, so its translations are not replaced with English.
+- A full run deletes JSON files in any `<pages>/<page>/api/en/` that it did not write, with their `ko/` mirror, if they have a string `name` and a `props` array. It also deletes any `ko/` file whose `en/` file is gone. A `--component` run deletes nothing, and neither does a run where any file or component failed to parse (it would look stale).
+- `(components)/toast/api/en/toast-object.json` is hand-written (the ToastOptions object for `useToastManager` has no namespace to extract) and is never deleted.
+- The CLI formats the written files with Prettier.
+
+### Fields
+
+```json
+{
+    "name": "AvatarRoot",
+    "description": "Avatar component for displaying a user's profile image with an automatic initial-based fallback. Renders a `<span>` element.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Size of the avatar. Controls the width, height, and border radius.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Avatar.Root.State) => (string | undefined)) | undefined",
+            "required": false
+        }
+    ],
+    "typeRefs": {
+        "Avatar.Root.State": "{\n  imageLoadingStatus: \"idle\" | \"error\" | \"loading\" | \"loaded\";\n}"
+    }
+}
+```
+
+| Field                  | Value                                                               |
+| ---------------------- | ------------------------------------------------------------------- |
+| `name`                 | Namespace name                                                      |
+| `description`          | See [Descriptions](#descriptions). Omitted when there is none       |
+| `props[].name`         | Property name                                                       |
+| `props[].type`         | Summary type, one member per element. See [Types](#types)           |
+| `props[].detailedType` | Full type on one line. See [Types](#types)                          |
+| `props[].required`     | `true` when the property is not optional                            |
+| `props[].description`  | See [Descriptions](#descriptions). Omitted when there is none       |
+| `props[].defaultValue` | See [Default values](#default-values). Omitted when there is none   |
+| `typeRefs`             | See [Type references](#type-references). Omitted when there is none |
+
+`displayName` and `defaultElement` are not produced.
+
+### Descriptions
+
+- JSDoc is the only source. Hand edits to the generated JSON are overwritten by the next run.
+- Text is copied as written in the source (English). Translation is not part of extraction.
+- Component description: the description text of the last JSDoc block on `export const <NamespaceName>`.
+- Prop description: the description text of the property's JSDoc. When the property is declared in several places (e.g. vapor-ui re-declares a Base UI prop), the vapor-ui declaration wins; otherwise the first declaration that has a JSDoc.
+- JSDoc tags (`@default`, `@deprecated`, `@example`, …) are dropped.
+
+### Props
+
+Every property of `Props`, including inherited ones, is checked against these rules in order. The first matching rule decides.
+
+1. `className` and `style`: kept.
+2. Tagged `@ignore` in its Base UI JSDoc (Base UI's internal `id`) and not re-declared by vapor-ui: dropped.
+3. Declared in React types, DOM lib types, or a `node_modules` package other than Base UI: dropped.
+4. Name starts with `data-` or `aria-` and not declared by Base UI: dropped. Base UI declares an `aria-` prop only when it is part of the API (e.g. Meter `aria-valuetext`).
+5. Declared in the sprinkles module, or named like a deprecated CSS shorthand (`$css`, `width`, `color`, …; full list in `src/policy.ts`): dropped.
+6. Anything else (own props, recipe variant props, Base UI props): kept.
+
+Props are sorted by group, then by name within a group. A prop joins the first group whose rule matches, checked in this sequence: required, composition, variants, state, base-ui, custom.
+
+| Order | Group       | Rule                                                                                            |
+| ----- | ----------- | ----------------------------------------------------------------------------------------------- |
+| 1     | required    | Not optional                                                                                    |
+| 2     | variants    | Declared in a `.css.ts` file                                                                    |
+| 3     | state       | `value`, `defaultValue`, `onChange`, `on*Change`, `open`/`checked`/… and their `default*` forms |
+| 4     | custom      | Everything else                                                                                 |
+| 5     | base-ui     | Declared in Base UI                                                                             |
+| 6     | composition | `asChild`, `render`                                                                             |
+
+### Types
+
+A prop type is split into the top-level union members TypeScript prints (`src/read/type-printer/printer.ts`). Both fields are built from those members.
+
+| Field          | `className?: string \| ((state: Badge.State) => string)`    |
+| -------------- | ----------------------------------------------------------- |
+| `type`         | `["string", "function"]`                                    |
+| `detailedType` | `"string \| ((state: Badge.State) => string) \| undefined"` |
+
+- `type` leaves out `undefined`, prints a function member as `function`, and prints a string literal without quotes: `"sm"` → `sm`.
+- `detailedType` keeps every member, `undefined` included, with quotes and parentheses as TypeScript writes them. A union kept by name that already contains `undefined` (`Intl.LocalesArgument`) is printed by that name alone, as TypeScript does.
+- `boolean`, `ReactNode` and `React.Ref<X>` are not expanded. A named union of values only (`type Side = "top" | "bottom"`) is expanded into its values, and so is a generic one (Base UI's `ClassNameParams<State>` reads `string | ((state: …) => …)`). Any other named union (`type Padding = number | {…}`, `Intl.LocalesArgument`) is kept by name wherever it appears: as the prop's type, a parameter, a return type or a property. A name kept this way is not listed in `typeRefs` unless it is a public vapor-ui name. The same applies to the properties of an object with no name, such as `sideOffset`'s `data`: it is printed one property at a time on one line (`{ side: "top" | "bottom"; anchor: { width: number; }; }`), with `name?: T` for an optional property. Callback parameters and return types follow the same rules: `(open: boolean) => void`, `(cb?: () => void) => void` for an optional parameter, and `(cb: (() => void) | undefined) => void` for a required one. Members that print the same are listed once. `null` and `undefined` come last.
+- Base UI types are printed with their public vapor-ui names, including types TypeScript turns into an anonymous object (Base UI's `ChangeEventDetails`) and type arguments (`React.RefObject<Menu.Root.Actions | null>`). When several names fit, the one declared in the component's own namespace wins. An anonymous Base UI type with no public name is printed as its structure, with a warning to re-export it from the component namespace. An object Base UI writes inline as the type of a parameter or a property (`sideOffset`'s `data` and its `anchor`) has no name to re-export, so it is printed as its structure without a warning. `ReactElement<X, …>` is printed as `ReactElement<X>`, or `ReactElement` when `X` is `unknown`.
+
+### Type references
+
+`typeRefs` maps each public vapor-ui type name that a documented prop's `detailedType` prints (`Collapsible.Root.State`, `Collapsible.Root.ChangeEventDetails`) to its definition, so a reader can see the fields behind the name.
+
+- Keys are the names exactly as `detailedType` prints them. A name that appears only inside another definition is not a key. Only names a component namespace re-exports from Base UI are listed; React and DOM types are not.
+- A value is the definition written out with one property per line: `{\n  open: boolean;\n}`. An optional property reads `name?: T` without `| undefined`. A union of objects, such as event details with one object per `reason`, reads as `(\n  | { reason: "a"; event: MouseEvent; }\n  | …\n) & {\n  cancel: () => void;\n}`: property lines every member prints the same are written once inside `& { … }`, and each member keeps its other properties on its own line, in the checker's order. When no line is shared, the objects are joined by `|` in full.
+- Property types follow [Types](#types): a named union of values is expanded, other names inside are kept as names and not listed in `typeRefs`.
+
+### Default values
+
+vapor-ui code comes first; Base UI's own declaration fills in for props that vapor-ui passes through untouched. The first source that has a value for a prop wins:
+
+1. A destructuring default for the prop in `export const <NamespaceName>`. A name that refers to a literal constant reads as its value (`step = RESIZE_STEP` → `16`); any other expression is copied as written.
+2. A literal the implementation writes for the prop before a spread that carries the prop, in a JSX element (`<Positioner positionMethod="fixed" {...props} />`) or an object literal (`useRenderElement({ props: { nativeButton: true, ...props } })`). The caller can still override it, so it is the default. A spread carries the prop when its type has a property with the prop's own declaration.
+3. `defaultVariants` of the recipe whose `variants` declares the prop, where the recipe is created with `recipe()` or `componentRecipe()`. The prop's declaration is followed through the Variants type (`NonNullable<RecipeVariants<…>>`, `Pick`, `Omit`, intersections), not through the recipe the component calls, so a root that passes a variant to its parts through context (e.g. `TabsRoot` `size`) gets the part recipe's default. This assumes the value is passed on unchanged. When several recipes declare the prop with different defaults, there is no default.
+4. The `@default` tag on Base UI's declaration of the prop, also when a vapor-ui `interface` re-declares the prop to document it (the declaration is looked up on the interface's base types). `@default undefined` is no default. Skipped when the implementation writes the prop itself next to a spread that carries it: a non-literal value before the spread (`orientation={direction} {...props}`), or any value after it, which the caller can't override.
+
+Not extracted:
+
+- `@default` tags on vapor-ui's own declarations, and `Default:` text in JSDoc. `Default:` text stays in the description as written.
+- A prop declared by hand rather than through a recipe's Variants type, even when the component passes it to a recipe.
+- A default that lives in another vapor-ui component the prop is forwarded to (e.g. `PaginationRoot` → `Pagination.RootPrimitive`, `SheetRoot` → `Dialog.Root`).
+- A Base UI prop whose declaration has no `@default` tag (e.g. Radio `disabled`).
+
+### Warnings
+
+- At the end of a run, one warning lists every component and prop without a description, as `Component` and `Component.prop`.
+- Missing JSDoc does not fail the run; the exit code stays 0.
+
+## Architecture
+
+```text
+cli.ts ──► extract() ──► read/     source → ParsedComponent[]   (ts-morph, filesystem)
+   │                └──► policy()  ParsedComponent[] → ComponentDoc[]   (pure)
+   └─────► writeDocs()  ComponentDoc[] → <pages>/<page>/api/en/*.json + ko/ mirror, then prettier
+```
+
+| Module            | Interface                                                                                      | Owns                                                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `src/extract.ts`  | `extract({ inputPath, tsconfigPath, component?, reporter? }): { docs, sourceFiles, failures }` | Scanning, reading every file, applying the policy, the missing-JSDoc warning. Writes nothing          |
+| `src/read/`       | `parseSourceFile()`, `scanComponentFiles()`; only `extract()` imports them                     | Component detection, descriptions, default values, source classification, public names, type printing |
+| `src/policy.ts`   | `policy(components: ParsedComponent[]): ComponentDoc[]`                                        | README "Props", "Types" and the field shape. No ts-morph, no filesystem                               |
+| `src/write.ts`    | `writeDocs(pagesDir, docs, { removeStale })`, `findApiDir()`, `formatWithPrettier()`           | Which page folder a component goes to, file names, JSON bytes, stale-file removal                     |
+| `src/cli.ts`      | the `--input`/`--tsconfig`/`--pages` command                                                   | Flags, the console reporter, exit codes                                                               |
+| `src/model.ts`    | `ParsedComponent`, `ComponentDoc` and their prop types, `joinTypeMembers()`                    | The data passed between the modules above, and how type members are joined on one line                |
+| `src/reporter.ts` | `Reporter`, `silentReporter`                                                                   | Where progress and warnings go; the CLI supplies the console one                                      |
+| `src/errors.ts`   | `ExtractorError`                                                                               | Bad input (missing path, unknown component), printed by the CLI without a stack                       |
+
+Tests go through `extract()` (fixture sources on disk), `policy()` (plain data), `writeDocs()` (a temp directory) and two `read/` seams, the type printer's `createTypePrinter()` and the public names' `createPublicNames()` (source strings in an in-memory project), not through module internals.
+
+ESLint (`eslint.config.mjs`) keeps `policy.ts` and `model.ts` free of `ts-morph`, `node:*`, `glob` and `meow`, and keeps `read/` from importing the policy, the writer or the CLI.
+
+## Quality Standards
+
+| Check      | Command        | Tool   |
+| ---------- | -------------- | ------ |
+| Type check | `tsc --noEmit` | tsc    |
+| Lint       | `eslint`       | eslint |
+| Test       | `vitest`       | vitest |
+
+## Troubleshooting
+
+### `Path does not exist`
+
+- Verify `--input` is correct relative to the current working directory
+
+### `No .tsx files found`
+
+- Confirm target files have the `.tsx` extension
+
+### `Component '<name>' not found`
+
+- Verify filename matches component name after normalization (case-insensitive, hyphens removed)
+
+### `module not found` when running from website
+
+- Run `pnpm install` — the website script runs `src/cli.ts` by relative path through `tsx`, and this package's dependencies (`ts-morph`, `glob`, `meow`) come from install, not from a build
+
+## License
+
+Internal use only.

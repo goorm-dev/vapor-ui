@@ -19,7 +19,9 @@ type MeterVariants = TrackVariants & IndicatorVariants;
 type MeterSharedProps = MeterVariants;
 
 type MeterContext = MeterSharedProps & {
-    /** Set by `Meter.Label` so the root can warn when the meter has no accessible name. */
+    /**
+     * Set by `Meter.Label` so the root can warn when the meter has no accessible name.
+     */
     hasLabelRef: RefObject<boolean>;
 };
 
@@ -153,7 +155,7 @@ MeterIndicatorPrimitive.displayName = 'Meter.IndicatorPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Represents the full range of the meter and renders `Meter.IndicatorPrimitive` inside. Renders a `<div>` element.
+ * Combines `Meter.TrackPrimitive` and `Meter.IndicatorPrimitive` into a single part. Use `indicatorElement` to replace the indicator. Renders a `<div>` element.
  */
 export const MeterTrack = forwardRef<HTMLDivElement, MeterTrack.Props>((props, ref) => {
     const { indicatorElement, ...componentProps } = props;
@@ -206,7 +208,7 @@ export namespace MeterIndicatorPrimitive {
 
 export interface MeterTrackProps extends Omit<MeterTrackPrimitive.Props, 'children'> {
     /**
-     * A Custom element for Meter.IndicatorPrimitive. If not provided, the default Meter.IndicatorPrimitive will be rendered.
+     * Replaces the default `Meter.IndicatorPrimitive`. Use to change the filled portion of the track.
      */
     indicatorElement?: ReactElement<MeterIndicatorPrimitive.Props>;
 }
@@ -218,5 +220,10 @@ export namespace MeterTrack {
 
 export namespace MeterValue {
     export type State = BaseMeter.Value.State;
-    export type Props = VaporUIComponentProps<typeof BaseMeter.Value, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseMeter.Value, State> {
+        /**
+         * Content shown inside the value. As a function, receives the formatted value and the raw number and returns what to display. Shows the formatted value when omitted.
+         */
+        children?: BaseMeter.Value.Props['children'];
+    }
 }

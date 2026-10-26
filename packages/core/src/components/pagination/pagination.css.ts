@@ -98,7 +98,12 @@ export const button = componentRecipe({
         },
     ],
     defaultVariants: { size: 'md' },
-    variants: { size: sizeVariants },
+    variants: {
+        /**
+         * Size of the pagination buttons and ellipsis, controlling width, height, and typography.
+         */
+        size: sizeVariants,
+    },
 });
 
 export const icon = componentStyle({

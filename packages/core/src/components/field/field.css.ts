@@ -58,7 +58,13 @@ export const label = componentRecipe({
     },
 
     variants: {
+        /**
+         * Typography style of the label text.
+         */
         typography: typographyVariants,
+        /**
+         * Text color of the label.
+         */
         foreground: foregroundVariants,
     },
 });

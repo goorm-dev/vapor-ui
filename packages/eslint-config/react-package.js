@@ -26,5 +26,18 @@ export const configs = [
             ],
         },
     },
+    {
+        files: ['src/components/*/index.ts'],
+        rules: {
+            'no-restricted-syntax': [
+                'error',
+                'WithStatement',
+                {
+                    selector: 'ExportAllDeclaration[exported=null]',
+                    message: 'Re-export the public API by name.',
+                },
+            ],
+        },
+    },
     ...storybook.configs['flat/recommended'],
 ];

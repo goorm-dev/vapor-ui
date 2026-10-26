@@ -12,6 +12,9 @@ export const root = componentRecipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Size of the toggles in the group, controlling their height and width. A `Toggle` that sets its own `size` keeps it.
+         */
         size: { sm: {}, md: {}, lg: {}, xl: {} },
     },
 });

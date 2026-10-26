@@ -28,6 +28,9 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbConte
  * Breadcrumb.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Navigation landmark labeled "Breadcrumb" that holds the breadcrumb trail and shares its size with the links, separators, and ellipsis inside it. Renders a `<nav>` element.
+ */
 export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     (props, ref) => {
         const { render, ...componentProps } = resolveStyles(props);
@@ -54,6 +57,9 @@ BreadcrumbRootPrimitive.displayName = 'Breadcrumb.RootPrimitive';
  * Breadcrumb.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Ordered list that lays out the breadcrumb items in a row. Renders an `<ol>` element.
+ */
 export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbListPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -75,6 +81,9 @@ BreadcrumbListPrimitive.displayName = 'Breadcrumb.ListPrimitive';
  * Breadcrumb.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Breadcrumb.RootPrimitive` and `Breadcrumb.ListPrimitive` into a single part, the root of a breadcrumb trail that shows where the current page sits in the site hierarchy. Renders a `<nav>` element.
+ */
 export const BreadcrumbRoot = forwardRef<HTMLElement, BreadcrumbRoot.Props>(
     ({ children, ...props }, ref) => {
         return (
@@ -90,6 +99,9 @@ BreadcrumbRoot.displayName = 'Breadcrumb.Root';
  * Breadcrumb.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * List item that holds one entry of the breadcrumb trail, such as a link or an ellipsis. Renders an `<li>` element.
+ */
 export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -111,6 +123,9 @@ BreadcrumbItemPrimitive.displayName = 'Breadcrumb.ItemPrimitive';
  * Breadcrumb.LinkPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Link to a page in the breadcrumb trail. Set `current` on the link for the page the user is on. Renders an `<a>` element.
+ */
 export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         const { render, current = false, className, ...componentProps } = resolveStyles(props);
@@ -139,6 +154,9 @@ BreadcrumbLinkPrimitive.displayName = 'Breadcrumb.LinkPrimitive';
  * Breadcrumb.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Breadcrumb.ItemPrimitive` and `Breadcrumb.LinkPrimitive` into a single part, one linked entry of the breadcrumb trail. Renders an `<a>` element inside an `<li>` element.
+ */
 export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbItem.Props>((props, ref) => {
     return (
         <BreadcrumbItemPrimitive>
@@ -152,6 +170,9 @@ BreadcrumbItem.displayName = 'Breadcrumb.Item';
  * Breadcrumb.Separator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Icon placed between breadcrumb items, a slash by default, hidden from assistive technologies. Renders an `<li>` element.
+ */
 export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator.Props>(
     (props, ref) => {
         const {
@@ -189,6 +210,9 @@ BreadcrumbSeparator.displayName = 'Breadcrumb.Separator';
  * Breadcrumb.EllipsisPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Icon that stands in for collapsed items in the breadcrumb trail, hidden from assistive technologies. Renders a `<span>` element.
+ */
 export const BreadcrumbEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     BreadcrumbEllipsisPrimitive.Props
@@ -222,6 +246,9 @@ BreadcrumbEllipsisPrimitive.displayName = 'Breadcrumb.EllipsisPrimitive';
  * BreadcrumbEllipsis
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Breadcrumb.ItemPrimitive` and `Breadcrumb.EllipsisPrimitive` into a single part, an entry that stands in for collapsed items. Renders a `<span>` element inside an `<li>` element.
+ */
 export const BreadcrumbEllipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisPrimitive.Props>(
     (props, ref) => {
         return (
@@ -277,12 +304,22 @@ export namespace BreadcrumbItem {
 
 export namespace BreadcrumbSeparator {
     export type State = {};
-    export type Props = VaporUIComponentProps<'li', State>;
+    export interface Props extends VaporUIComponentProps<'li', State> {
+        /**
+         * Icon shown as the separator, such as a chevron icon. Replaces the default slash icon.
+         */
+        children?: VaporUIComponentProps<'li', State>['children'];
+    }
 }
 
 export namespace BreadcrumbEllipsisPrimitive {
     export type State = {};
-    export type Props = VaporUIComponentProps<'span', State>;
+    export interface Props extends VaporUIComponentProps<'span', State> {
+        /**
+         * Icon shown for the collapsed items. Replaces the default more icon.
+         */
+        children?: VaporUIComponentProps<'span', State>['children'];
+    }
 }
 
 export namespace BreadcrumbEllipsis {
