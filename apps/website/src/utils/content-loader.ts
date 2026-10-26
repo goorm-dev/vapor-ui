@@ -1,7 +1,5 @@
 import { isAbsolutePath } from './paths';
 
-export const CONTENT_PATH = 'content/docs';
-
 /** `~content/docs/<rel>` 모듈 import — webpack 가 이 리터럴로 범위 결정 */
 const loadFromDocs = (rel: string) => import(`~content/docs/${rel}`);
 

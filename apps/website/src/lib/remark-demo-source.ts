@@ -17,8 +17,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { CONTENT_PATH } from '~/utils/content-loader';
-import { isAbsolutePath } from '~/utils/paths';
+import { CONTENT_PATH, isAbsolutePath } from '~/utils/paths';
 
 interface Node {
     type: string;
