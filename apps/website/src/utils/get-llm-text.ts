@@ -7,6 +7,7 @@ import remarkMdx from 'remark-mdx';
 import type { source } from '~/lib/source';
 import { replaceBlockDoc } from '~/utils/get-blocks-examples-doc';
 import { replaceComponentDoc } from '~/utils/get-component-doc';
+import { replaceCompositeDoc } from '~/utils/get-composite-doc';
 import { replaceFoundationDoc } from '~/utils/get-foundation-doc';
 import { replaceIconDoc } from '~/utils/get-icon-doc';
 
@@ -35,7 +36,7 @@ function processContent(content: string, contentType: ContentType): string {
         return baseContent;
     }
 
-    return replaceBlockDoc(replaceComponentDoc(baseContent));
+    return replaceBlockDoc(replaceComponentDoc(replaceCompositeDoc(baseContent)));
 }
 
 function getSourceUrl(contentType: ContentType, path: string): string {
