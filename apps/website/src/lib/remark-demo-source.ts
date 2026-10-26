@@ -17,7 +17,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { CONTENT_PATH } from '~/utils/paths';
+import { CONTENT_PATH } from '~/constants/demo';
 
 interface Node {
     type: string;
