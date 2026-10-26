@@ -18,11 +18,14 @@ type DocGenFile = {
  * `content/docs`.
  */
 export const replaceDemoSelfClosing = (text: string): string =>
-    text.replace(/<Demo\s+file=(["'])([^"']+)\1[^>]*\/>/g, (_, _quote: string, file: string) => {
-        const resolved = `/${CONTENT_PATH}/${file}`;
-        const config = JSON.stringify({ file: resolved, codeblock: true }, null, 4);
-        return `\`\`\`json doc-gen:file\n${config}\n\`\`\``;
-    });
+    text.replace(
+        /<Demo\s+(?:[^>]*?\s)?file=(["'])([^"']+)\1[^>]*\/>/g,
+        (_, _quote: string, file: string) => {
+            const resolved = `/${CONTENT_PATH}/${file}`;
+            const config = JSON.stringify({ file: resolved, codeblock: true }, null, 4);
+            return `\`\`\`json doc-gen:file\n${config}\n\`\`\``;
+        },
+    );
 
 /**
  * Replace ```json doc-gen:file tags inside blocks MDX content
