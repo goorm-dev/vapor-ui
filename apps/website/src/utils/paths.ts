@@ -1,9 +1,3 @@
-/** Strip the leading `/` or `./` so the path is relative to `apps/website/`. */
-export const normalizeFile = (file: string): string => file.replace(/^\.?\//, '');
-
-/** Build the path form `fumadocs-docgen` and `replaceBlockDoc` expect. */
-export const fileToDocGenPath = (file: string): string => `./${normalizeFile(file)}`;
-
 export const isAbsolutePath = (file: string) => file.startsWith('/');
 
 /**
@@ -11,3 +5,10 @@ export const isAbsolutePath = (file: string) => file.startsWith('/');
  * that module pulls every demo into the importer's bundle (its dynamic `import()` covers `content/docs`).
  */
 export const CONTENT_PATH = 'content/docs';
+
+/**
+ * Resolve a `<Demo file>` value to a path relative to `apps/website/`: an absolute `file` starts
+ * from `apps/website`, a relative one from `content/docs`. String-only so client code can import it.
+ */
+export const toWebsitePath = (file: string): string =>
+    isAbsolutePath(file) ? file.slice(1) : `${CONTENT_PATH}/${file}`;

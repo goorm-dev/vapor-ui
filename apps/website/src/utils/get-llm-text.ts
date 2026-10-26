@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMdx from 'remark-mdx';
 
 import type { source } from '~/lib/source';
-import { replaceBlockDoc, replaceDemoSelfClosing } from '~/utils/get-blocks-examples-doc';
+import { replaceDemoSelfClosing } from '~/utils/get-blocks-examples-doc';
 import { replaceComponentDoc } from '~/utils/get-component-doc';
 import { replaceFoundationDoc } from '~/utils/get-foundation-doc';
 import { replaceIconDoc } from '~/utils/get-icon-doc';
@@ -32,13 +32,7 @@ function processContent(content: string, contentType: ContentType): string {
     const steps =
         contentType === 'theme'
             ? [replaceIconDoc, replaceFoundationDoc]
-            : [
-                  replaceIconDoc,
-                  replaceFoundationDoc,
-                  replaceComponentDoc,
-                  replaceDemoSelfClosing,
-                  replaceBlockDoc,
-              ];
+            : [replaceIconDoc, replaceFoundationDoc, replaceComponentDoc, replaceDemoSelfClosing];
 
     return steps.reduce((text, step) => step(text), content);
 }
