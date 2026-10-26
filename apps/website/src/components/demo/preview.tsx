@@ -8,6 +8,8 @@ interface PreviewProps {
 
 export function Preview({ file }: PreviewProps) {
     const Preview = React.useMemo(() => {
+        // NOTE: If the demo root moves, update `CONTENT_PATH` (src/constants/demo.ts) and the same
+        // literal in src/app/preview/[component]/dynamic-component.tsx together.
         const Component = React.lazy(() => import(`~content/docs/${file}`));
 
         if (!Component) {
