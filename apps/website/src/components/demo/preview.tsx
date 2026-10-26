@@ -2,15 +2,13 @@
 
 import * as React from 'react';
 
-import { loadContentModule } from '~/utils/content-loader';
-
 interface PreviewProps {
     file: string;
 }
 
 export function Preview({ file }: PreviewProps) {
     const Preview = React.useMemo(() => {
-        const Component = React.lazy(() => loadContentModule(file));
+        const Component = React.lazy(() => import(`~content/docs/${file}`));
 
         if (!Component) {
             return <div>Component({file}) Not Found</div>;

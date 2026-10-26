@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { CONTENT_PATH } from '~/utils/paths';
+import { CONTENT_PATH } from '~/constants/demo';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

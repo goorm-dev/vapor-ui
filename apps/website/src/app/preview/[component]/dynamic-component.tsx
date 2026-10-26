@@ -4,8 +4,6 @@ import * as React from 'react';
 
 import { Text } from '@vapor-ui/core';
 
-import { loadContentModule } from '~/utils/content-loader';
-
 const ComponentError = ({ file, error }: { file: string | undefined; error: string }) => {
     return (
         <div className="p-5 text-center text-v-danger">
@@ -50,7 +48,7 @@ function useDynamicComponent(file?: string) {
                 setIsLoading(true);
                 setError(null);
 
-                const componentModule = await await loadContentModule(file);
+                const componentModule = await await import(`~content/docs/${file}`);
 
                 if (componentModule.default) {
                     setComponent(() => componentModule.default);
