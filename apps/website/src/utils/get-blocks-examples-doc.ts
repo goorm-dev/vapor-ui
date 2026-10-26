@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { resolveDemoFile } from '~/utils/paths';
+import { CONTENT_PATH } from '~/utils/paths';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -14,12 +14,12 @@ type DocGenFile = {
 /**
  * Replace `<Demo file="..." />` with a `doc-gen:file` block, so {@link replaceBlockDoc} can
  * inline the file contents for LLM consumers. Mirrors the MDX-build-time behaviour of
- * `remark-demo-source` without running the remark pipeline here: a relative `file` is
- * resolved from `content/docs`, an absolute one from `apps/website`.
+ * `remark-demo-source` without running the remark pipeline here: `file` is resolved from
+ * `content/docs`.
  */
 export const replaceDemoSelfClosing = (text: string): string =>
     text.replace(/<Demo\s+file=(["'])([^"']+)\1[^>]*\/>/g, (_, _quote: string, file: string) => {
-        const resolved = `/${resolveDemoFile(file)}`;
+        const resolved = `/${CONTENT_PATH}/${file}`;
         const config = JSON.stringify({ file: resolved, codeblock: true }, null, 4);
         return `\`\`\`json doc-gen:file\n${config}\n\`\`\``;
     });
