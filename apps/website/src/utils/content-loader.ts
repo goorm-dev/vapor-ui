@@ -1,4 +1,4 @@
-import { isAbsolutePath } from './paths';
+import { isWebsiteRootPath } from './paths';
 
 /** `~content/docs/<rel>` 모듈 import — webpack 가 이 리터럴로 범위 결정 */
 const loadFromDocs = (rel: string) => import(`~content/docs/${rel}`);
@@ -11,4 +11,4 @@ const loadFromContent = (rel: string) => import(`~content/${rel}`);
  * `~content/docs/` 리터럴은 이 파일에만 존재.
  */
 export const loadContentModule = (file: string) =>
-    isAbsolutePath(file) ? loadFromContent(file.slice('/content/'.length)) : loadFromDocs(file);
+    isWebsiteRootPath(file) ? loadFromContent(file.slice('/content/'.length)) : loadFromDocs(file);

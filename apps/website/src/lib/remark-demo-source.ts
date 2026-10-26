@@ -17,7 +17,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { CONTENT_PATH, isAbsolutePath } from '~/utils/paths';
+import { resolveDemoFile } from '~/utils/paths';
 
 interface Node {
     type: string;
@@ -71,11 +71,8 @@ const isDocGenCodeBlock = (node: Node): node is CodeNode => {
     return code.lang === 'json' && typeof code.meta === 'string' && DOC_GEN_META.test(code.meta);
 };
 
-const resolveAbsolute = (file: string, cwd: string): string =>
-    isAbsolutePath(file) ? path.resolve(cwd, file.slice(1)) : path.resolve(cwd, CONTENT_PATH, file);
-
 const buildCodeBlockFromFile = (file: string, cwd: string): CodeNode | null => {
-    const abs = resolveAbsolute(file, cwd);
+    const abs = path.resolve(cwd, resolveDemoFile(file));
     try {
         const raw = fs.readFileSync(abs, 'utf-8').trim();
         const ext = path.extname(file).slice(1) || 'tsx';

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { CONTENT_PATH, isAbsolutePath } from '~/utils/paths';
+import { resolveDemoFile } from '~/utils/paths';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -19,7 +19,7 @@ type DocGenFile = {
  */
 export const replaceDemoSelfClosing = (text: string): string =>
     text.replace(/<Demo\s+file=(["'])([^"']+)\1[^>]*\/>/g, (_, _quote: string, file: string) => {
-        const resolved = isAbsolutePath(file) ? file : `/${CONTENT_PATH}/${file}`;
+        const resolved = `/${resolveDemoFile(file)}`;
         const config = JSON.stringify({ file: resolved, codeblock: true }, null, 4);
         return `\`\`\`json doc-gen:file\n${config}\n\`\`\``;
     });
