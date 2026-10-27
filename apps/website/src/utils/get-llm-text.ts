@@ -13,6 +13,11 @@ import { replaceIconDoc } from '~/utils/get-icon-doc';
 
 const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 
+const SITE_ORIGIN = 'https://vapor-ui.goorm.io';
+
+const absolutizeImageSrcs = (text: string): string =>
+    text.replace(/(!\[[^\]]*\]\()(\/[^)]+)(\))/g, `$1${SITE_ORIGIN}$2$3`);
+
 type ContentType = 'docs' | 'theme';
 
 interface LLMTextInput {
@@ -32,13 +37,14 @@ interface LLMTextInput {
 function processContent(content: string, contentType: ContentType): string {
     const steps =
         contentType === 'theme'
-            ? [replaceIconDoc, replaceFoundationDoc]
+            ? [replaceIconDoc, replaceFoundationDoc, absolutizeImageSrcs]
             : [
                   replaceIconDoc,
                   replaceFoundationDoc,
                   replaceComponentDoc,
                   replaceDemoSelfClosing,
                   replaceCompositeDoc,
+                  absolutizeImageSrcs,
               ];
 
     return steps.reduce((text, step) => step(text), content);
