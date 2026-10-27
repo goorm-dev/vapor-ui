@@ -17,14 +17,10 @@ const toDoDontCaption = (attrs: Record<string, string>) =>
 export const replaceCompositeDoc = (text: string) => {
     let result = text;
 
-    result = result.replace(/<DoImage([\s\S]*?)\/>/g, (_, raw: string) => {
+    result = result.replace(/<(Dont|Do)Image([\s\S]*?)\/>/g, (_, kind: string, raw: string) => {
         const attrs = parseAttrs(raw);
-        return `**Do**: ${toDoDontCaption(attrs)}\n\n${toImage(attrs)}\n`;
-    });
-
-    result = result.replace(/<DontImage([\s\S]*?)\/>/g, (_, raw: string) => {
-        const attrs = parseAttrs(raw);
-        return `**Don't**: ${toDoDontCaption(attrs)}\n\n${toImage(attrs)}\n`;
+        const label = kind === 'Do' ? '**Do**' : "**Don't**";
+        return `${label}: ${toDoDontCaption(attrs)}\n\n${toImage(attrs)}\n`;
     });
 
     result = result.replace(/<DocsImage([\s\S]*?)\/>/g, (_, raw: string) => {
