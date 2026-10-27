@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import { config as loadEnv } from 'dotenv';
 import meow from 'meow';
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 
 import { extract } from './extractor.ts';
@@ -30,7 +30,8 @@ if (!process.env.FIGMA_TOKEN && MAIN_REPO_ROOT !== REPO_ROOT) {
     loadEnv({ path: resolve(MAIN_REPO_ROOT, '.env') });
 }
 
-const CONTENT_ROOT = resolve(REPO_ROOT, 'apps/website/content/docs/composites/(components)');
+const DOCS_ROOT = resolve(REPO_ROOT, 'apps/website/content/docs');
+const CONTENT_ROOT = resolve(DOCS_ROOT, 'composites/(components)');
 const PUBLIC_ROOT = resolve(REPO_ROOT, 'apps/website/public/composites');
 
 const cli = meow(
@@ -45,7 +46,7 @@ const cli = meow(
       --force         Overwrite existing demos/*.tsx files
 
     Output
-      MDX   apps/website/content/docs/composites/(components)/<slug>.mdx
+      MDX   apps/website/content/docs/composites/(components)/<slug>/index.mdx
       TSX   apps/website/content/docs/composites/(components)/<slug>/demos/<section>-<idx>.tsx
       Img   apps/website/public/composites/<slug>/images/<section>-<idx>.webp
 
@@ -82,9 +83,10 @@ const only = parseOnly(cli.flags.only);
 const result = await extract({
     fileKey,
     nodeId,
-    contentFile: (slug) => resolve(CONTENT_ROOT, `${slug}.mdx`),
+    contentFile: (slug) => resolve(CONTENT_ROOT, slug, 'index.mdx'),
     publicDir: (slug) => resolve(PUBLIC_ROOT, slug),
     componentDir: (slug) => resolve(CONTENT_ROOT, slug),
+    docsRoot: DOCS_ROOT,
     slugOverride: cli.flags.slug,
     clean: cli.flags.clean,
     force: cli.flags.force,
@@ -92,7 +94,27 @@ const result = await extract({
     token,
 });
 
+runFormat([result.mdxPath, ...result.demoFiles]);
+
 for (const w of result.warnings) console.log(`⚠️ ${w}`);
+
+function runFormat(files: string[]): void {
+    if (files.length === 0) return;
+    console.log(`\nprettier --write ${files.length}개 파일을 포매팅합니다...`);
+    try {
+        // Node's execFile cannot launch a `.cmd` shim directly, so point at
+        // the Windows pnpm entrypoint when running there.
+        const pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+        execFileSync(pnpmCmd, ['-w', 'exec', 'prettier', '--write', ...files], {
+            cwd: REPO_ROOT,
+            stdio: 'inherit',
+        });
+    } catch (err) {
+        console.warn(`\n⚠️ prettier 포매팅을 완료하지 못했습니다: ${(err as Error).message}`);
+        console.warn('   생성된 파일은 그대로 보존됩니다. 필요하면 수동으로 포매팅하세요.');
+        process.exitCode = 1;
+    }
+}
 
 function parseOnly(raw: string | undefined): SectionTitle[] | undefined {
     if (!raw) return undefined;

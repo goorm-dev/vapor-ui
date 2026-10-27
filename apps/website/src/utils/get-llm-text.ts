@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMdx from 'remark-mdx';
 
 import type { source } from '~/lib/source';
-import { replaceBlockDoc } from '~/utils/get-blocks-examples-doc';
+import { replaceDemoSelfClosing } from '~/utils/get-blocks-examples-doc';
 import { replaceComponentDoc } from '~/utils/get-component-doc';
 import { replaceCompositeDoc } from '~/utils/get-composite-doc';
 import { replaceFoundationDoc } from '~/utils/get-foundation-doc';
@@ -30,13 +30,18 @@ interface LLMTextInput {
 }
 
 function processContent(content: string, contentType: ContentType): string {
-    const baseContent = replaceFoundationDoc(replaceIconDoc(content));
+    const steps =
+        contentType === 'theme'
+            ? [replaceIconDoc, replaceFoundationDoc]
+            : [
+                  replaceIconDoc,
+                  replaceFoundationDoc,
+                  replaceComponentDoc,
+                  replaceDemoSelfClosing,
+                  replaceCompositeDoc,
+              ];
 
-    if (contentType === 'theme') {
-        return baseContent;
-    }
-
-    return replaceBlockDoc(replaceComponentDoc(replaceCompositeDoc(baseContent)));
+    return steps.reduce((text, step) => step(text), content);
 }
 
 function getSourceUrl(contentType: ContentType, path: string): string {

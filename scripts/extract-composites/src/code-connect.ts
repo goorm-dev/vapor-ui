@@ -6,7 +6,7 @@ import { fetchCodeConnectSnippet } from './claude-cli.ts';
 import type { FigmaNode } from './types.ts';
 
 export interface PreviewResult {
-    file: string; // relative to the component docs dir (e.g. "demos/examples-01.tsx")
+    file: string; // docs-root-relative path for <Demo file=""> (e.g. "composites/(components)/alert-dialog/demos/examples-01.tsx")
     placeholder: boolean;
     nodeId: string;
 }
@@ -16,6 +16,7 @@ export interface ExtractPreviewOptions {
     previewSlot: FigmaNode;
     componentDir: string; // apps/website/content/docs/composites/(components)/<slug>
     baseName: string; // e.g. "examples-01"
+    demoRef: string; // what goes into `<Demo file="…" />` — docs-root-relative, with .tsx extension
     force: boolean;
     warnings: string[];
 }
@@ -35,19 +36,18 @@ export interface ExtractPreviewOptions {
  * and extracts the JSX inside the `<CodeConnectSnippet>` tag.
  */
 export async function extractPreview(opts: ExtractPreviewOptions): Promise<PreviewResult> {
-    const { fileKey, previewSlot, componentDir, baseName, force, warnings } = opts;
-    const relFile = join('demos', `${baseName}.tsx`);
-    const absFile = join(componentDir, relFile);
+    const { fileKey, previewSlot, componentDir, baseName, demoRef, force, warnings } = opts;
+    const absFile = join(componentDir, 'demos', `${baseName}.tsx`);
 
     const instance = findFirstInstance(previewSlot);
     if (!instance) {
         warnings.push(`preview slot has no component instance: ${previewSlot.id}`);
         await writePlaceholder(absFile, baseName, previewSlot.id, 'no instance', force);
-        return { file: relFile, placeholder: true, nodeId: previewSlot.id };
+        return { file: demoRef, placeholder: true, nodeId: previewSlot.id };
     }
 
     if (!force && (await exists(absFile))) {
-        return { file: relFile, placeholder: false, nodeId: instance.id };
+        return { file: demoRef, placeholder: false, nodeId: instance.id };
     }
 
     const result = await fetchCodeConnectSnippet(fileKey, instance.id);
@@ -56,13 +56,13 @@ export async function extractPreview(opts: ExtractPreviewOptions): Promise<Previ
             `Code Connect missing for instance ${instance.name} (${instance.id}); placeholder written`,
         );
         await writePlaceholder(absFile, baseName, instance.id, 'unregistered', force);
-        return { file: relFile, placeholder: true, nodeId: instance.id };
+        return { file: demoRef, placeholder: true, nodeId: instance.id };
     }
 
     const content = renderDemo(result.componentName, result.snippet);
     await mkdir(dirname(absFile), { recursive: true });
     await writeFile(absFile, content, 'utf8');
-    return { file: relFile, placeholder: false, nodeId: instance.id };
+    return { file: demoRef, placeholder: false, nodeId: instance.id };
 }
 
 function renderDemo(componentName: string, snippet: string): string {
