@@ -28,8 +28,8 @@ const footer = getProperties(instance, '(Footer)', {
 export default {
     example: figma.code`
         <Dialog.Root
-            // ariaLabels={} 닫기 버튼의 aria-label을 지정하세요.
-            // trigger={} 트리거 요소를 입력하세요.
+            ariaLabels={} // TODO: 닫기 버튼의 aria-label을 지정하세요.
+            trigger={<Button>Open dialog</Button>}
             ${popup.size}
             ${header.title}
             ${header.description}
@@ -39,7 +39,10 @@ export default {
             ${body.children}
         </Dialog.Root>
     `,
-    imports: ['import { Dialog } from "@vapor-ui/composites"'],
+    imports: [
+        'import { Dialog } from "@vapor-ui/composites"',
+        'import { Button } from "@vapor-ui/core"',
+    ],
     id: 'dialog',
     metadata: { nestable: true },
 };

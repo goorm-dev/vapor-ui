@@ -28,6 +28,7 @@ const footer = getProperties(instance, '(Footer)', {
 export default {
     example: figma.code`
         <AlertDialog.Root
+            trigger={<Button>Open alert dialog</Button>} 트리거 요소를 입력하세요.
             ${popup.type}
             ${header.description}
             ${header.title}
@@ -37,7 +38,10 @@ export default {
             ${body.children}
         </AlertDialog.Root>
     `,
-    imports: ['import { AlertDialog } from "@vapor-ui/composites"'],
+    imports: [
+        'import { AlertDialog } from "@vapor-ui/composites"',
+        'import { Button } from "@vapor-ui/core"',
+    ],
     id: 'alert-dialog',
     metadata: { nestable: true },
 };

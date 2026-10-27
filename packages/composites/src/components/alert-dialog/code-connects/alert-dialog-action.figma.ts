@@ -1,4 +1,4 @@
-// url=https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4589-26510&m=dev
+// url=https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4589-26511&m=dev
 // source=src/components/alert-dialog/alert-dialog.tsx
 // component=AlertDialog.Action
 import figma from 'figma';
