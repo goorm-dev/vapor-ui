@@ -102,7 +102,10 @@ function runFormat(files: string[]): void {
     if (files.length === 0) return;
     console.log(`\nprettier --write ${files.length}개 파일을 포매팅합니다...`);
     try {
-        execFileSync('pnpm', ['-w', 'exec', 'prettier', '--write', ...files], {
+        // Node's execFile cannot launch a `.cmd` shim directly, so point at
+        // the Windows pnpm entrypoint when running there.
+        const pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+        execFileSync(pnpmCmd, ['-w', 'exec', 'prettier', '--write', ...files], {
             cwd: REPO_ROOT,
             stdio: 'inherit',
         });
