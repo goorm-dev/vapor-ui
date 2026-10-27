@@ -1,4 +1,4 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
-    "ignoreCommand": "bash -c 'if [[ \"$VERCEL_GIT_COMMIT_REF\" != renovate/* ]]; then exit 1; fi; git fetch origin main --depth=50; BASE=\"${VERCEL_GIT_PREVIOUS_SHA:-origin/main}\"; turbo query affected --base=\"$BASE\" --packages website --exit-code'"
+    "ignoreCommand": "bash -c 'if [[ \"$VERCEL_GIT_COMMIT_REF\" != renovate/* ]]; then exit 1; fi; if [[ -n \"$VERCEL_GIT_PREVIOUS_SHA\" ]]; then BASE=\"$VERCEL_GIT_PREVIOUS_SHA\"; else git fetch origin main:refs/remotes/origin/main --depth=50 || exit 1; BASE=\"origin/main\"; fi; turbo query affected --base=\"$BASE\" --packages website --exit-code'"
 }
