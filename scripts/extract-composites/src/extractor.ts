@@ -120,8 +120,15 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
                         publicDir,
                     );
                     const rel = webpRel[targetNode.id];
-                    if (rel) blocks.push({ kind: 'docsImage', webpRel: rel, alt: currentSubtitle });
-                    else warnings.push(`${locator}: export failed (${targetNode.id})`);
+                    if (rel) {
+                        const alt =
+                            title === 'Anatomy'
+                                ? sampleCount > 1
+                                    ? `${docTitle} 아나토미 구조 ${sampleIdx}`
+                                    : `${docTitle} 아나토미 구조`
+                                : currentSubtitle;
+                        blocks.push({ kind: 'docsImage', webpRel: rel, alt });
+                    } else warnings.push(`${locator}: export failed (${targetNode.id})`);
                 } else if (child.kind === 'preview') {
                     const absDemoFile = join(componentDir, 'demos', `${baseName}.tsx`);
                     const demoRef = relative(opts.docsRoot, absDemoFile);
