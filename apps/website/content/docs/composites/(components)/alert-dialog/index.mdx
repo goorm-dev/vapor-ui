@@ -6,7 +6,7 @@ site_name: 'Alert dialog - Vapor Composites'
 
 ## Anatomy
 
-<DocsImage src="/composites/alert-dialog/images/anatomy-01.webp" alt="" />
+<DocsImage src="/composites/alert-dialog/images/anatomy-01.webp" alt="Alert dialog 아나토미 구조" />
 
 | #   | Element            | Description                                                                                                           |
 | --- | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
@@ -121,12 +121,15 @@ Alert dialog와 Dialog는 시각적으로 유사하지만, 접근성과 동작�
 | 구분           | Alert dialog                                      | Dialog                                            |
 | -------------- | ------------------------------------------------- | ------------------------------------------------- |
 | 목적           | 사용자 결정 확인, 되돌릴 수 없는 작업에 대한 확인 | 폼 입력, 정보 조회, 특정 입력 값을 받아야 할 경우 |
-| Close behaivor | Footer에서 Cancel button으로 제공                 | Hearder의 Close button<br/>Backdrop 클릭 / ESC 키 |
-| 사이즈         | 단일 사이즈                                       | md / lg / xl                                      |
+| Close behaivor | Footer에서 Cancel button으로 제공                 | Hearder의 Close button, Backdrop 클릭, ESC 키     |
+| 사이즈         | 단일 사이즈                                       | md, lg, xl                                        |
 
 ### Non-dialog
 
 너무 잦은 Dialog 사용은 사용자의 주의를 분산시키고 반사적으로 Dialog를 닫는 행동으로 이어질 수 있습니다. 사용자의 결정이 프로세스에 영향을 주지 않거나, 중요도가 낮은 정보라면 비모달(Non-dialog) 컴포넌트를 사용하세요.
+
+- Popover
+- Toast
 
 ## Guidelines
 

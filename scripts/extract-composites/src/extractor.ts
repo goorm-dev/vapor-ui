@@ -85,29 +85,50 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
             const baseName = `${slugForSection}-${pad(idx + 1)}`;
             const blocks: ItemBlock[] = [];
             let currentSubtitle = '';
-            for (const child of parseItemChildren(itemNode)) {
+            const children = parseItemChildren(itemNode);
+            const sampleCount = children.filter((c) => c.kind === 'sample').length;
+            let sampleIdx = 0;
+            for (const child of children) {
                 if (child.kind === 'subtitle') {
                     currentSubtitle = child.text;
                     blocks.push({ kind: 'subtitle', text: child.text });
                 } else if (child.kind === 'body') {
                     blocks.push({ kind: 'body', text: child.text });
+                } else if (child.kind === 'listItem') {
+                    blocks.push({ kind: 'listItem', markdown: child.markdown });
+                } else if (child.kind === 'listGroup') {
+                    blocks.push({ kind: 'listGroup', items: child.items });
                 } else if (child.kind === 'sample') {
+                    sampleIdx++;
+                    const sampleBaseName =
+                        sampleCount > 1 ? `${baseName}-${pad(sampleIdx)}` : baseName;
+                    const locator =
+                        sampleCount > 1
+                            ? `${title} / item ${idx + 1} / sample ${sampleIdx}`
+                            : `${title} / item ${idx + 1} / sample`;
                     const exportFrame = findExportFrame(child.node);
                     const targetNode = exportFrame ?? child.node;
                     if (!exportFrame) {
                         warnings.push(
-                            `${title} / item ${idx + 1} / sample: Export frame missing, used Sample fallback (${child.node.id})`,
+                            `${locator}: Export frame missing, used Sample fallback (${child.node.id})`,
                         );
                     }
                     const webpRel = await downloadWebpImages(
                         client,
                         opts.fileKey,
-                        [{ nodeId: targetNode.id, baseName }],
+                        [{ nodeId: targetNode.id, baseName: sampleBaseName }],
                         publicDir,
                     );
                     const rel = webpRel[targetNode.id];
-                    if (rel) blocks.push({ kind: 'docsImage', webpRel: rel, alt: currentSubtitle });
-                    else warnings.push(`sample export failed: ${targetNode.id} (${baseName})`);
+                    if (rel) {
+                        const alt =
+                            title === 'Anatomy'
+                                ? sampleCount > 1
+                                    ? `${docTitle} 아나토미 구조 ${sampleIdx}`
+                                    : `${docTitle} 아나토미 구조`
+                                : currentSubtitle;
+                        blocks.push({ kind: 'docsImage', webpRel: rel, alt });
+                    } else warnings.push(`${locator}: export failed (${targetNode.id})`);
                 } else if (child.kind === 'preview') {
                     const absDemoFile = join(componentDir, 'demos', `${baseName}.tsx`);
                     const demoRef = relative(opts.docsRoot, absDemoFile);
