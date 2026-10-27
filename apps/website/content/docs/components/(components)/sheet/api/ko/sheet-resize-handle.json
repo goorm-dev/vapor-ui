@@ -1,0 +1,46 @@
+{
+    "name": "SheetResizeHandle",
+    "description": "Sheet의 안쪽 가장자리에 있는 핸들. 드래그하거나 화살표 키로 Sheet의 크기를 조절합니다. `Sheet.Popup` 안에 배치하세요. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Sheet.ResizeHandle.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "핸들을 비활성화하여 드래그와 키보드 크기 조절을 막습니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "step",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "화살표 키를 한 번 누를 때 Sheet의 크기가 바뀌는 거리(픽셀).",
+            "defaultValue": "16"
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Sheet.ResizeHandle.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Sheet.ResizeHandle.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Sheet.ResizeHandle.State": "{\n  side: \"bottom\" | \"left\" | \"right\" | \"top\";\n  disabled: boolean;\n}"
+    }
+}

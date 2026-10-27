@@ -1,0 +1,69 @@
+{
+    "toggle-group": {
+        "description": {
+            "source": "47fc4c93abf7425d",
+            "guide": 2,
+            "terms": "6dfb401b6ab6ea24"
+        },
+        "props.children": {
+            "source": "085cedbdc02e96fd",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.defaultValue": {
+            "source": "f36216d106b47a48",
+            "guide": 2,
+            "terms": "101f3298d2e4f644"
+        },
+        "props.disabled": {
+            "source": "0cb6d7d19811feef",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.loopFocus": {
+            "source": "76db443ceb9fd4b3",
+            "guide": 2,
+            "terms": "9a94fba5c1cf20d5"
+        },
+        "props.multiple": {
+            "source": "54bd74b71fc1513c",
+            "guide": 2,
+            "terms": "f3a535d373c216cb"
+        },
+        "props.onValueChange": {
+            "source": "7761a53bbaf07fd2",
+            "guide": 2,
+            "terms": "aeb23924c3cc3ef8"
+        },
+        "props.orientation": {
+            "source": "2fe8f9674b3f510b",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.size": {
+            "source": "448add69008e5e26",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.value": {
+            "source": "8d210dd0986aa850",
+            "guide": 2,
+            "terms": "4cf644c9280799f0"
+        }
+    }
+}

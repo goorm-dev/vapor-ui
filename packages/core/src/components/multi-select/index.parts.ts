@@ -17,6 +17,8 @@ export {
     MultiSelectItemPrimitive as ItemPrimitive,
     MultiSelectItemIndicatorPrimitive as ItemIndicatorPrimitive,
 
-    /** @deprecated */
+    /**
+     * @deprecated
+     */
     MultiSelectPlaceholderPrimitive as PlaceholderPrimitive,
 } from './multi-select';

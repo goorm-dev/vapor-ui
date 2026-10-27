@@ -1,0 +1,103 @@
+{
+    "collapsible-panel": {
+        "description": {
+            "source": "f00527ad26a38b05",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.hiddenUntilFound": {
+            "source": "dc4e5cb509e7299b",
+            "guide": 2,
+            "terms": "5ea3ee1ea0908549"
+        },
+        "props.keepMounted": {
+            "source": "f980c86c043b922d",
+            "guide": 2,
+            "terms": "5ea3ee1ea0908549"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "collapsible-root": {
+        "description": {
+            "source": "34d3a2c9a0a850bc",
+            "guide": 2,
+            "terms": "24a5e0de80167b3b"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.defaultOpen": {
+            "source": "9094dabbe3d8d800",
+            "guide": 2,
+            "terms": "fb2699b2cd12c837"
+        },
+        "props.disabled": {
+            "source": "beac01633b0203fa",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.onOpenChange": {
+            "source": "2ef2d713a15212c9",
+            "guide": 2,
+            "terms": "2a387c173c0570e2"
+        },
+        "props.open": {
+            "source": "6bc41d4e9f21b7cb",
+            "guide": 2,
+            "terms": "8c2d7a4f0bee24db"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "collapsible-trigger": {
+        "description": {
+            "source": "86c13c6762282814",
+            "guide": 2,
+            "terms": "8737339371a9dd88"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

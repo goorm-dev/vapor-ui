@@ -1,0 +1,61 @@
+{
+    "name": "ToolbarRoot",
+    "description": "Root of the Toolbar compound component, a horizontal row of buttons and inputs that users move between with the arrow keys. Shares `size` with the items inside it. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Size of the toolbar buttons and inputs, controlling height, padding, and typography.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "variant",
+            "type": ["outline", "ghost"],
+            "detailedType": "\"outline\" | \"ghost\" | undefined",
+            "required": false,
+            "description": "Visual style of the toolbar. `outline` adds a border and background, `ghost` leaves the toolbar transparent.",
+            "defaultValue": "outline"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Toolbar.Root.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Disables every button and input in the toolbar, blocking all interactions."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Toolbar.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "If `true`, using keyboard navigation will wrap focus to the other end of the toolbar once the end is reached.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Toolbar.Root.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Toolbar.Root.State": "{\n  disabled: boolean;\n  orientation: \"horizontal\" | \"vertical\";\n}"
+    }
+}

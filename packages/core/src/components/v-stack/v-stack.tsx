@@ -9,6 +9,9 @@ import { Flex } from '../flex';
 import * as styles from './v-stack.css';
 import type { RootVariants } from './v-stack.css';
 
+/**
+ * Flex container that arranges its children vertically in a column. Renders a `<div>` element.
+ */
 export const VStack = forwardRef<HTMLDivElement, VStack.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const [{ reverse }, otherProps] = createSplitProps<RootVariants>()(componentProps, ['reverse']);

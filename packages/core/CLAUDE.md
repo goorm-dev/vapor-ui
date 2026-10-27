@@ -30,7 +30,7 @@ src/components/button/
   button.css.ts      ← componentRecipe / componentStyle
   button.test.tsx    ← colocated test
   button.stories.tsx ← Default story (interactive) + TestBed story (visual regression baseline)
-  index.ts           ← export all from component file
+  index.ts           ← export { Button } from './button' (public names only, no bare export *)
 ```
 
 **Compound** — multi-part namespace API (e.g., `Dialog`, `Menu`):

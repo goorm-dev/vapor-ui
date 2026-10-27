@@ -262,7 +262,7 @@ import { Select } from '@vapor-ui/composites';
 </Select.Root>;
 ```
 
-위 두 경우에 해당하지 않는 flat 컴포넌트는 이 구조를 쓰지 않고 `export * from './<component>';` 한 줄만 둔다.
+위 두 경우에 해당하지 않는 flat 컴포넌트는 이 구조를 쓰지 않고 `export { <Component> } from './<component>';`처럼 공개할 이름만 적는다. `export * from`은 lint 오류다.
 
 ## 7. Preset wrapper는 primitive prop을 전체 상속한다 (§4 예외)
 

@@ -6,7 +6,13 @@
         "paths": {
             "~/*": ["./src/*"]
         },
-        "types": ["node", "vitest-axe/extend-expect", "vitest/globals", "@vitest/browser/context"]
+        "types": [
+            "node",
+            "vitest-axe/extend-expect",
+            "vitest/globals",
+            "@vitest/browser/context",
+            "@figma/code-connect/figma-types-no-require"
+        ]
     },
     "include": ["."],
     "exclude": ["dist", "build", "node_modules"]

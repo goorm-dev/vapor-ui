@@ -1,4 +1,5 @@
 import './global.css';
+import './prose.css';
 
 import type { ReactNode } from 'react';
 

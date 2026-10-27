@@ -1,0 +1,13 @@
+{
+    "name": "PaginationItems",
+    "description": "루트의 `totalPages`, `siblingCount`, `boundaryCount`에 따라 보이는 각 페이지의 페이지 버튼과 건너뛴 각 범위의 줄임표를 생성합니다. `Pagination.Previous`와 `Pagination.Next` 사이에 배치하세요. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode", "function"],
+            "detailedType": "ReactNode | ((pages: PageType[]) => ReactNode)",
+            "required": false,
+            "description": "생성된 페이지 버튼 대신 표시할 콘텐츠. 함수로 쓰면 표시할 페이지를 받으며, 각 페이지는 `type`(`NUM`은 페이지, `BREAK`는 줄임표)과 `value`의 페이지 번호를 가집니다."
+        }
+    ]
+}

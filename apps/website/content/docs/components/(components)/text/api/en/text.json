@@ -1,0 +1,98 @@
+{
+    "name": "Text",
+    "description": "Displays text in one of the design system's typography styles and foreground colors. Use the `render` prop to output a different element, such as a heading or paragraph. Renders a `<span>` element.",
+    "props": [
+        {
+            "name": "foreground",
+            "type": [
+                "hint",
+                "normal",
+                "white",
+                "primary-100",
+                "primary-200",
+                "primary",
+                "secondary-100",
+                "secondary-200",
+                "secondary",
+                "success-100",
+                "success-200",
+                "success",
+                "warning-100",
+                "warning-200",
+                "warning",
+                "danger-100",
+                "danger-200",
+                "danger",
+                "hint-100",
+                "hint-200",
+                "contrast-100",
+                "contrast-200",
+                "contrast",
+                "primary-strong",
+                "success-strong",
+                "warning-strong",
+                "danger-strong",
+                "normal-100",
+                "normal-200",
+                "inverse",
+                "staticWhite",
+                "staticBlack"
+            ],
+            "detailedType": "\"hint\" | \"normal\" | \"white\" | \"primary-100\" | \"primary-200\" | \"primary\" | \"secondary-100\" | \"secondary-200\" | \"secondary\" | \"success-100\" | \"success-200\" | \"success\" | \"warning-100\" | \"warning-200\" | \"warning\" | \"danger-100\" | \"danger-200\" | \"danger\" | \"hint-100\" | \"hint-200\" | \"contrast-100\" | \"contrast-200\" | \"contrast\" | \"primary-strong\" | \"success-strong\" | \"warning-strong\" | \"danger-strong\" | \"normal-100\" | \"normal-200\" | \"inverse\" | \"staticWhite\" | \"staticBlack\" | undefined",
+            "required": false,
+            "description": "Color of the text, chosen from the foreground color palette.",
+            "defaultValue": "normal"
+        },
+        {
+            "name": "typography",
+            "type": [
+                "body1",
+                "display1",
+                "display2",
+                "display3",
+                "display4",
+                "heading1",
+                "heading2",
+                "heading3",
+                "heading4",
+                "heading5",
+                "heading6",
+                "subtitle1",
+                "subtitle2",
+                "body2",
+                "body3",
+                "body4",
+                "code1",
+                "code2"
+            ],
+            "detailedType": "\"body1\" | \"display1\" | \"display2\" | \"display3\" | \"display4\" | \"heading1\" | \"heading2\" | \"heading3\" | \"heading4\" | \"heading5\" | \"heading6\" | \"subtitle1\" | \"subtitle2\" | \"body2\" | \"body3\" | \"body4\" | \"code1\" | \"code2\" | undefined",
+            "required": false,
+            "description": "Typography style of the text, setting font size, line height, font weight, and letter spacing.",
+            "defaultValue": "body1"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Text.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Text.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Text.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Text.State": "{\n\n}"
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "templateFile": "./tabs.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33159-8151",
+            "component": "Tabs.Root",
+            "source": "src/components/tabs/tabs.tsx"
+        },
+        {
+            "part": "button",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33159-8126",
+            "component": "Tabs.Button",
+            "source": "src/components/tabs/tabs.tsx"
+        }
+    ]
+}

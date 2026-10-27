@@ -58,10 +58,21 @@ export const label = componentRecipe({
     },
 
     variants: {
+        /**
+         * Typography style of the label text.
+         */
         typography: typographyVariants,
+        /**
+         * Text color of the label.
+         */
         foreground: foregroundVariants,
     },
 });
+
+export const requiredSymbol = componentStyle([
+    foregrounds({ color: 'danger' }),
+    typography({ style: 'subtitle2' }),
+]);
 
 export const item = componentStyle({
     display: 'flex',

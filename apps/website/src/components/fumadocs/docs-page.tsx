@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from 'react';
 
-import { AlignCenterOutlineIcon, EditOutlineIcon } from '@vapor-ui/icons';
+import { EditOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 import type { AnchorProviderProps, TOCItemType } from 'fumadocs-core/toc';
 import { TOCProvider, TOCScrollArea } from 'fumadocs-ui/components/toc';
@@ -158,28 +158,19 @@ export function CustomDocsPage({
                         id="nd-toc"
                     >
                         {tocOptions.header}
-                        <h3
-                            className="text-fd-muted-foreground inline-flex items-center gap-1.5 text-sm"
-                            id="toc-title"
-                        >
-                            <AlignCenterOutlineIcon className="size-4" />
-                            On this page
-                        </h3>
+
                         <TOCScrollArea>
-                            {tocOptions.style === 'clerk' ? (
-                                <TocClerk.TOCItems>
-                                    {toc.map((item) => (
-                                        <TocClerk.TOCItem key={item.url} item={item} />
-                                    ))}
-                                </TocClerk.TOCItems>
-                            ) : (
-                                <TocDefault.TOCItems>
-                                    {toc.map((item) => (
-                                        <TocDefault.TOCItem key={item.url} item={item} />
-                                    ))}
-                                </TocDefault.TOCItems>
-                            )}
+                            <TocClerk.TOCItems className="[&_svg]:invisible">
+                                {toc.map((item) => (
+                                    <TocClerk.TOCItem
+                                        key={item.url}
+                                        item={item}
+                                        className="text-v-hint font-v-500"
+                                    />
+                                ))}
+                            </TocClerk.TOCItems>
                         </TOCScrollArea>
+
                         {tocOptions.footer}
                     </div>
                 ))}

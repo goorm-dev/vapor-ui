@@ -33,7 +33,7 @@ export const root = componentRecipe({
     defaultVariants: { shape: 'rounded', size: 'md', animation: 'shimmer' },
     variants: {
         /**
-         * Controls the border radius of the skeleton.
+         * Corner style of the skeleton.
          */
         shape: {
             rounded: {
@@ -45,7 +45,7 @@ export const root = componentRecipe({
         },
 
         /**
-         * Controls the height of the skeleton.
+         * Size of the skeleton, controlling height.
          */
         size: {
             sm: { height: vars.size.dimension['200'] },
@@ -55,7 +55,7 @@ export const root = componentRecipe({
         },
 
         /**
-         * Controls the animation style of the skeleton.
+         * Animation that shows the skeleton is loading.
          */
         animation: {
             shimmer: {

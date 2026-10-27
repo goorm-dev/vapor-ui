@@ -18,7 +18,7 @@ import * as styles from './alert-dialog.css';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Root of the AlertDialog compound component. Manages open state. Doesn't render its own HTML element.
+ * Root of the AlertDialog compound component, a modal dialog that interrupts the user to confirm an important action. Manages the open state. Doesn't render its own HTML element.
  */
 export const AlertDialogRoot = (props: AlertDialogRoot.Props) => {
     return <BaseAlertDialog.Root {...props} />;
@@ -92,7 +92,7 @@ AlertDialogPopupPrimitive.displayName = 'AlertDialog.PopupPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Convenience wrapper that composes `AlertDialog.PortalPrimitive`, `AlertDialog.OverlayPrimitive`, and `AlertDialog.PopupPrimitive` into a single element. Use `portalElement` or `overlayElement` to replace individual parts. Renders a `<div>` element.
+ * Combines `AlertDialog.PortalPrimitive`, `AlertDialog.OverlayPrimitive`, and `AlertDialog.PopupPrimitive` into a single part. Use `portalElement` or `overlayElement` to replace the portal or overlay. Renders a `<div>` element.
  */
 export const AlertDialogPopup = forwardRef<HTMLDivElement, AlertDialogPopup.Props>(
     ({ portalElement, overlayElement, ...props }, ref) => {
@@ -203,7 +203,7 @@ AlertDialogDescription.displayName = 'AlertDialog.Description';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Top section of the dialog, typically containing the title and description. Renders a `<div>` element.
+ * Top section of the alert dialog, typically containing the title and description. Renders a `<div>` element.
  */
 export const AlertDialogHeader = forwardRef<HTMLDivElement, AlertDialogHeader.Props>(
     (props, ref) => {
@@ -297,11 +297,11 @@ export namespace AlertDialogPopupPrimitive {
 
 export interface AlertDialogPopupProps extends AlertDialogPopupPrimitive.Props {
     /**
-     * Replaces the default `AlertDialog.PortalPrimitive`. Use to customise portal container behavior.
+     * Replaces the default `AlertDialog.PortalPrimitive`. Use to change the portal container.
      */
     portalElement?: ReactElement<AlertDialogPortalPrimitive.Props>;
     /**
-     * Replaces the default `AlertDialog.OverlayPrimitive`. Use to customise backdrop appearance or behavior.
+     * Replaces the default `AlertDialog.OverlayPrimitive`. Use to change the backdrop.
      */
     overlayElement?: ReactElement<AlertDialogOverlayPrimitive.Props>;
 }

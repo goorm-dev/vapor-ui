@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/composites",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "",
     "keywords": [
         "react",
@@ -89,7 +89,7 @@
         "rolldown": "catalog:",
         "tinyglobby": "^0.2.17",
         "typescript": "catalog:",
-        "vitest": "^3.2.7"
+        "vitest": "^4.1.12"
     },
     "peerDependencies": {
         "@vapor-ui/core": "workspace:^",

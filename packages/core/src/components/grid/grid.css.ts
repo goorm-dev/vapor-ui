@@ -14,10 +14,16 @@ export const root = componentRecipe({
 
     defaultVariants: { flow: 'row', inline: false },
     variants: {
+        /**
+         * Displays the container as `inline-grid` instead of `grid`, so it sits inline with surrounding content.
+         */
         inline: {
             true: { display: 'inline-grid' },
             false: { display: 'grid' },
         },
+        /**
+         * Direction in which items without an explicit position are placed, set as the `grid-auto-flow` value. The `-dense` values fill earlier gaps with later items.
+         */
         flow: {
             row: { gridAutoFlow: 'row' },
             column: { gridAutoFlow: 'column' },

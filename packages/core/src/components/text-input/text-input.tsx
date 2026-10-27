@@ -5,6 +5,7 @@ import { forwardRef, useRef } from 'react';
 import { Input as BaseInput } from '@base-ui/react/input';
 import { useControlled } from '@base-ui/utils/useControlled';
 
+import { useFieldRequired } from '~/components/field/field';
 import { useInputGroup } from '~/components/input-group';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -19,6 +20,9 @@ import * as styles from './text-input.css';
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Single-line text field for short input such as a name, email address, or password. Renders an `<input>` element.
+ */
 export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) => {
     const {
         value: valueProp,
@@ -50,6 +54,7 @@ export const TextInput = forwardRef<HTMLElement, TextInput.Props>((props, ref) =
         state: 'value',
     });
 
+    useFieldRequired(required);
     useInputGroup({ value, maxLength });
 
     const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
@@ -72,25 +77,25 @@ TextInput.displayName = 'TextInput';
 
 type TextInputVariants = RootVariants;
 
-export interface TextInputProps
+interface TextInputProps
     extends
         Omit<VaporUIComponentProps<typeof BaseInput, TextInput.State>, 'size'>,
         TextInputVariants {
     /**
-     * The type of the input element. It determines the kind of data that can be entered.
+     * Kind of text the field accepts, such as an email address, password, or URL.
      * @default 'text'
      */
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     /**
-     * The value of the input. Use when controlled.
+     * Current text in the field. Use when controlled.
      */
     value?: string;
     /**
-     * The default value of the input. Use when uncontrolled.
+     * Initial text in the field. Use when uncontrolled.
      */
     defaultValue?: string;
     /**
-     * Event handler called when the selected value of the input changes.
+     * Called when the text changes as the user types, pastes, or deletes. Receives the new text and the change event details.
      */
     onValueChange?: (value: string, event: TextInput.ChangeEventDetails) => void;
 }

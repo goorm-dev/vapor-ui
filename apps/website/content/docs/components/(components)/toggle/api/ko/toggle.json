@@ -1,0 +1,99 @@
+{
+    "name": "Toggle",
+    "description": "굵게 같은 서식을 켜거나 끄는 두 가지 상태의 버튼. 단독으로 쓰거나 `ToggleGroup` 안에서 사용하세요. `<button>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "토글의 크기. 높이와 너비를 결정합니다. `ToggleGroup` 안에서 값을 지정하지 않으면 그룹의 `size`를 따릅니다.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "variant",
+            "type": ["default", "accent"],
+            "detailedType": "\"default\" | \"accent\" | undefined",
+            "required": false,
+            "description": "토글의 색상 스타일. 콘텐츠와 눌렸을 때의 배경에 적용됩니다.",
+            "defaultValue": "default"
+        },
+        {
+            "name": "defaultPressed",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "토글 버튼이 현재 눌려 있는지 여부.\n`pressed`의 비제어 대응 prop입니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onPressedChange",
+            "type": ["function"],
+            "detailedType": "((pressed: boolean, eventDetails: Toggle.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "눌림 상태가 바뀔 때 호출되는 콜백."
+        },
+        {
+            "name": "pressed",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "토글 버튼이 현재 눌려 있는지 여부.\n`defaultPressed`의 제어 대응 prop입니다."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "토글 그룹 안에서 사용할 때 토글을 식별하는 고유 문자열."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "아이콘 같은 토글 안에 표시되는 콘텐츠. 단일 요소 자식은 보조기술에서 숨겨지므로 토글에 `aria-label`을 지정하세요."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Toggle.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Toggle.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부.\n렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Toggle.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Toggle.ChangeEventDetails": "{\n  reason: \"none\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "Toggle.State": "{\n  pressed: boolean;\n  disabled: boolean;\n}"
+    }
+}

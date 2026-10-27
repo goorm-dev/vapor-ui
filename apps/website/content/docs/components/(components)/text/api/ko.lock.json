@@ -1,0 +1,34 @@
+{
+    "text": {
+        "description": {
+            "source": "175d78cb8ee64028",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.foreground": {
+            "source": "3716feba0855f6d0",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.typography": {
+            "source": "38ff05e31ad72f1c",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    }
+}

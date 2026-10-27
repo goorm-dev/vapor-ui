@@ -9,6 +9,9 @@ import { Flex } from '../flex';
 import type { RootVariants } from './h-stack.css';
 import * as styles from './h-stack.css';
 
+/**
+ * Flex container that arranges its children horizontally in a row. Renders a `<div>` element.
+ */
 export const HStack = forwardRef<HTMLDivElement, HStack.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const [{ reverse }, otherProps] = createSplitProps<RootVariants>()(componentProps, ['reverse']);
