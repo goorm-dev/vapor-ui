@@ -6,8 +6,16 @@ import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Flex } from '../flex';
 
-type VStackVariants = { reverse?: boolean };
+type VStackVariants = {
+    /**
+     * Reverses the order of the children, setting `flex-direction` to `column-reverse`.
+     */
+    reverse?: boolean;
+};
 
+/**
+ * Flex container that arranges its children vertically in a column. Renders a `<div>` element.
+ */
 export const VStack = forwardRef<HTMLDivElement, VStack.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
     const [vStackProps, otherProps] = createSplitProps<VStackVariants>()(componentProps, [

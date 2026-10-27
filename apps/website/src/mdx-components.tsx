@@ -16,9 +16,13 @@ import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
 import IconList from '~/components/icon-list/icon-list';
 import IconStyleGuide from '~/components/icon-style-guide';
 import InstallSelector from '~/components/install-selector/install-selector';
-import PropsTable from '~/components/props-table';
 
 import { ColorPalette } from './components/color-swatch';
+import { DoImage } from './components/composites/do-image';
+import { DocsGrid } from './components/composites/docs-grid';
+import { DocsImage } from './components/composites/docs-image';
+import { DontImage } from './components/composites/dont-image';
+import { Table } from './components/composites/table';
 import { Tabs } from './components/docs-tabs';
 import { BasicColor, SemanticColor } from './components/foundation-color-tabs';
 import IntroLinkCardContainer from './components/intro-link-card-container';
@@ -27,6 +31,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
     return {
         ...defaultMdxComponents,
 
+        table: Table,
         pre: ({ ref: _ref, ...props }) => (
             <CodeBlock {...props} className="bg-v-canvas-200 shadow-none ">
                 <Pre>{props.children}</Pre>
@@ -44,7 +49,6 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
 
         IconList,
         IconStyleGuide,
-        PropsTable,
         ColorPalette,
         Text,
         Box,
@@ -56,6 +60,12 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         IntroLinkCardContainer,
         Step,
         Steps,
+
+        // composites
+        DocsImage,
+        DoImage,
+        DontImage,
+        DocsGrid,
         ...components,
     } as MDXComponents;
 };

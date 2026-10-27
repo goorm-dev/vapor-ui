@@ -1,0 +1,59 @@
+{
+    "name": "DialogTrigger",
+    "description": "Button that opens the dialog when activated. Renders a `<button>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Dialog.Trigger.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Dialog.Trigger.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "handle",
+            "type": ["DialogHandle<unknown>"],
+            "detailedType": "DialogHandle<unknown> | undefined",
+            "required": false,
+            "description": "A handle to associate the trigger with a dialog.\nCan be created with the Dialog.createHandle() method."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "ID of the trigger. In addition to being forwarded to the rendered element,\nit is also used to specify the active trigger for the dialog in controlled mode (with the DialogRoot `triggerId` prop)."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (for example, `<div>`).",
+            "defaultValue": "true"
+        },
+        {
+            "name": "payload",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "A payload to pass to the dialog when it is opened."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Dialog.Trigger.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Dialog.Trigger.State": "{\n  disabled: boolean;\n  open: boolean;\n}"
+    }
+}

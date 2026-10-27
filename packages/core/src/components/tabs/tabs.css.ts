@@ -73,6 +73,9 @@ export const list = componentRecipe({
                 },
             },
         },
+        /**
+         * Visual style of the tabs. `line` marks the active tab with a line on the border of the list, `fill` highlights the active tab with a filled background.
+         */
         variant: {
             line: {
                 vars: {
@@ -116,6 +119,9 @@ export const button = componentRecipe({
 
     defaultVariants: { size: 'md', variant: 'line', orientation: 'horizontal' },
     variants: {
+        /**
+         * Size of the tab buttons, controlling height and typography.
+         */
         size: {
             sm: [typography({ style: 'subtitle2' }), { height: vars.size.space['300'] }],
             md: [{ height: vars.size.space['400'] }],
@@ -132,6 +138,9 @@ export const button = componentRecipe({
                 paddingInline: vars.size.space[200],
             },
         },
+        /**
+         * Visual style of the tabs. `line` marks the active tab with a line on the border of the list, `fill` highlights the active tab with a filled background.
+         */
         variant: {
             line: {
                 vars: {

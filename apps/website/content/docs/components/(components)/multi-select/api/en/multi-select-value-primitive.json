@@ -1,0 +1,44 @@
+{
+    "name": "MultiSelectValuePrimitive",
+    "description": "Shows the selected values inside the trigger as badges, using each item's label from `items`, or the placeholder when nothing is selected. Renders a `<span>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: MultiSelect.ValuePrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: MultiSelect.ValuePrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode", "function"],
+            "detailedType": "ReactNode | ((value: any) => ReactNode)",
+            "required": false,
+            "description": "Accepts a function that returns a `ReactNode` to format the selected value.\nTreat the value as read-only: in `multiple` mode it may be a shared frozen array\nwhen nothing is selected."
+        },
+        {
+            "name": "placeholder",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "The placeholder value to display when no value is selected.\nThis is overridden by `children` if specified, or by a null item's label in `items`."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: MultiSelect.ValuePrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "MultiSelect.ValuePrimitive.State": "{\n  value: any;\n  placeholder: boolean;\n}"
+    }
+}

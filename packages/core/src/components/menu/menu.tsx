@@ -28,6 +28,9 @@ const [MenuProvider, useMenuContext] = createContext<MenuContext>({
  * Menu.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root of the Menu compound component, a list of actions or options that opens from a trigger. Manages the open state and, when `disabled`, disables the trigger and every item. Doesn't render its own HTML element.
+ */
 export const MenuRoot = (props: MenuRoot.Props) => {
     const { disabled } = props;
 
@@ -43,6 +46,9 @@ MenuRoot.displayName = 'Menu.Root';
  * Menu.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that opens the menu when clicked. Renders a `<button>` element.
+ */
 export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTrigger.Props>((props, ref) => {
     const { disabled: disabledProp, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
@@ -57,6 +63,9 @@ MenuTrigger.displayName = 'Menu.Trigger';
  * Menu.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal container that renders the menu outside the normal DOM hierarchy. Renders a `<div>` element.
+ */
 export const MenuPortalPrimitive = forwardRef<HTMLDivElement, MenuPortalPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -70,6 +79,9 @@ MenuPortalPrimitive.displayName = 'Menu.PortalPrimitive';
  * Menu.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Positions the menu popup against its trigger and keeps it inside the viewport. Renders a `<div>` element.
+ */
 export const MenuPositionerPrimitive = forwardRef<HTMLDivElement, MenuPositionerPrimitive.Props>(
     (props, ref) => {
         // FIXME: Using resolveStyles causes all positioning-related style properties to reset, so it's temporarily disabled.
@@ -91,6 +103,9 @@ export const MenuPositionerPrimitive = forwardRef<HTMLDivElement, MenuPositioner
  * Menu.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The menu panel that holds the menu items. Renders a `<div>` element.
+ */
 export const MenuPopupPrimitive = forwardRef<HTMLDivElement, MenuPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -106,6 +121,9 @@ MenuPopupPrimitive.displayName = 'Menu.PopupPrimitive';
  * Menu.Content
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Menu.PortalPrimitive`, `Menu.PositionerPrimitive`, and `Menu.PopupPrimitive` into a single part. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.
+ */
 export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MenuPopupPrimitive ref={ref} {...props} />;
@@ -131,6 +149,9 @@ MenuPopup.displayName = 'Menu.Popup';
  * Menu.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Interactive item in the menu that runs an action when selected. Renders a `<div>` element.
+ */
 export const MenuItem = forwardRef<HTMLElement, MenuItem.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
@@ -152,6 +173,9 @@ MenuItem.displayName = 'Menu.Item';
  * Menu.Separator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Line that visually separates groups of menu items. Renders a `<div>` element.
+ */
 export const MenuSeparator = forwardRef<HTMLDivElement, MenuSeparator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -169,6 +193,9 @@ MenuSeparator.displayName = 'Menu.Separator';
  * Menu.Group
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Groups related menu items under a `Menu.GroupLabel`. Renders a `<div>` element.
+ */
 export const MenuGroup = forwardRef<HTMLDivElement, MenuGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -180,6 +207,9 @@ MenuGroup.displayName = 'Menu.Group';
  * Menu.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Label for a menu group, announced to assistive technologies. Renders a `<div>` element.
+ */
 export const MenuGroupLabel = forwardRef<HTMLDivElement, MenuGroupLabel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -204,6 +234,9 @@ type SubmenuContext = {
 
 const [SubmenuProvider, useSubmenuContext] = createContext<SubmenuContext>();
 
+/**
+ * Root of a nested submenu inside a menu. Place `Menu.SubmenuTriggerItem` and `Menu.SubmenuPopup` inside it. Doesn't render its own HTML element.
+ */
 export const MenuSubmenuRoot = ({
     closeParentOnEsc = false,
     disabled: disabledProp,
@@ -253,6 +286,9 @@ MenuSubmenuTrigger.displayName = 'Menu.SubmenuTrigger';
  * Menu.SubmenuTriggerItem
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Menu item that opens a submenu, with a chevron icon at the end. Renders a `<div>` element.
+ */
 export const MenuSubmenuTriggerItem = forwardRef<HTMLElement, MenuSubmenuTriggerItem.Props>(
     ({ children, ...props }, ref) => {
         return (
@@ -270,6 +306,9 @@ MenuSubmenuTriggerItem.displayName = 'Menu.SubmenuTriggerItem';
  * Menu.SubmenuPopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The submenu panel that holds the nested menu items. Returns focus to `Menu.SubmenuTriggerItem` when it closes. Renders a `<div>` element.
+ */
 export const MenuSubmenuPopupPrimitive = forwardRef<
     HTMLDivElement,
     MenuSubmenuPopupPrimitive.Props
@@ -292,6 +331,9 @@ MenuSubmenuPopupPrimitive.displayName = 'Menu.SubmenuPopupPrimitive';
  * Menu.SubmenuPopup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Menu.PortalPrimitive`, `Menu.PositionerPrimitive`, and `Menu.PopupPrimitive` into a single part that opens to the right of its trigger item. Use `portalElement` or `positionerElement` to replace the portal or positioner. Renders a `<div>` element.
+ */
 export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <MenuSubmenuPopupPrimitive ref={ref} {...props} />;
@@ -320,6 +362,9 @@ MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
  * Menu.CheckboxItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Menu item that toggles a setting on or off. Renders a `<div>` element.
+ */
 export const MenuCheckboxItemPrimitive = forwardRef<HTMLElement, MenuCheckboxItem.Props>(
     (props, ref) => {
         const {
@@ -366,6 +411,9 @@ const CheckIcon = () => {
     );
 };
 
+/**
+ * Check mark shown while the checkbox item is checked. Renders a `<span>` element.
+ */
 export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuCheckboxItemIndicatorPrimitive.Props
@@ -400,6 +448,9 @@ MenuCheckboxItemIndicatorPrimitive.displayName = 'Menu.CheckboxItemIndicatorPrim
  * Menu.CheckboxItem
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Menu.CheckboxItemPrimitive` and `Menu.CheckboxItemIndicatorPrimitive` into a single part, with the check mark after the label. Renders a `<div>` element.
+ */
 export const MenuCheckboxItem = forwardRef<HTMLElement, MenuCheckboxItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
@@ -417,6 +468,9 @@ MenuCheckboxItem.displayName = 'Menu.CheckboxItem';
  * Menu.RadioGroup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Groups radio items so that only one of them can be selected at a time. Renders a `<div>` element.
+ */
 export const MenuRadioGroup = forwardRef<HTMLDivElement, MenuRadioGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -428,6 +482,9 @@ MenuRadioGroup.displayName = 'Menu.RadioGroup';
  * Menu.RadioItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Menu item that works like a radio button inside `Menu.RadioGroup`. Renders a `<div>` element.
+ */
 export const MenuRadioItemPrimitive = forwardRef<HTMLElement, MenuRadioItemPrimitive.Props>(
     (props, ref) => {
         const {
@@ -458,6 +515,9 @@ MenuRadioItemPrimitive.displayName = 'Menu.RadioItemPrimitive';
  * Menu.RadioItemIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Check mark shown while the radio item is selected. Renders a `<span>` element.
+ */
 export const MenuRadioItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuRadioItemIndicatorPrimitive.Props
@@ -485,6 +545,9 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
  * Menu.RadioItem
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines `Menu.RadioItemPrimitive` and `Menu.RadioItemIndicatorPrimitive` into a single part, with the check mark after the label. Renders a `<div>` element.
+ */
 export const MenuRadioItem = forwardRef<HTMLElement, MenuRadioItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
@@ -510,7 +573,12 @@ export namespace MenuRoot {
 
 export namespace MenuTrigger {
     export type State = BaseMenu.Trigger.State;
-    export type Props = VaporUIComponentProps<typeof BaseMenu.Trigger, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseMenu.Trigger, State> {
+        /**
+         * Content shown inside the trigger, such as a label or an icon.
+         */
+        children?: BaseMenu.Trigger.Props['children'];
+    }
 }
 
 export namespace MenuPortalPrimitive {
@@ -525,17 +593,22 @@ export namespace MenuPositionerPrimitive {
 
 export namespace MenuPopupPrimitive {
     export type State = BaseMenu.Popup.State;
-    export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseMenu.Popup, State> {
+        /**
+         * Menu items shown in the panel, such as `Menu.Item`, `Menu.Group`, or `Menu.Separator`.
+         */
+        children?: BaseMenu.Popup.Props['children'];
+    }
 }
 
 export interface MenuPopupProps extends MenuPopupPrimitive.Props {
     /**
-     * A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered.
+     * Replaces the default `Menu.PortalPrimitive`. Use to change the portal container.
      */
     portalElement?: ReactElement<MenuPortalPrimitive.Props>;
 
     /**
-     * A Custom element for Menu.PositionerPrimitive. If not provided, the default Menu.PositionerPrimitive will be rendered.
+     * Replaces the default `Menu.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup.
      */
     positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
 }
@@ -574,7 +647,12 @@ export namespace MenuSubmenuRoot {
 
 export namespace MenuSubmenuTrigger {
     export type State = BaseMenu.SubmenuTrigger.State;
-    export type Props = VaporUIComponentProps<typeof BaseMenu.SubmenuTrigger, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseMenu.SubmenuTrigger, State> {
+        /**
+         * Called when the item is clicked.
+         */
+        onClick?: BaseMenu.SubmenuTrigger.Props['onClick'];
+    }
 }
 
 export namespace MenuSubmenuTriggerItem {
@@ -584,17 +662,22 @@ export namespace MenuSubmenuTriggerItem {
 
 export namespace MenuSubmenuPopupPrimitive {
     export type State = BaseMenu.Popup.State;
-    export type Props = VaporUIComponentProps<typeof BaseMenu.Popup, State>;
+    export interface Props extends VaporUIComponentProps<typeof BaseMenu.Popup, State> {
+        /**
+         * Nested menu items shown in the submenu panel, such as `Menu.Item` or `Menu.CheckboxItem`.
+         */
+        children?: BaseMenu.Popup.Props['children'];
+    }
 }
 
 export interface MenuSubmenuPopupProps extends MenuSubmenuPopupPrimitive.Props {
     /**
-     * A Custom element for Menu.PortalPrimitive. If not provided, the default Menu.PortalPrimitive will be rendered.
+     * Replaces the default `Menu.PortalPrimitive`. Use to change the portal container.
      */
     portalElement?: ReactElement<MenuPortalPrimitive.Props>;
 
     /**
-     * A Custom element for Menu.PositionerPrimitive. If not provided, the default Menu.PositionerPrimitive will be rendered.
+     * Replaces the default `Menu.PositionerPrimitive`. Use to change the side, alignment, or offset of the popup.
      */
     positionerElement?: ReactElement<MenuPositionerPrimitive.Props>;
 }

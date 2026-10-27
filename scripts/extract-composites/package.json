@@ -1,0 +1,29 @@
+{
+    "name": "@vapor-ui/extract-composites",
+    "version": "0.0.1",
+    "private": true,
+    "description": "Figma composite documentation extractor (MDX + images)",
+    "type": "module",
+    "bin": {
+        "extract-composites": "./bin.mjs"
+    },
+    "scripts": {
+        "extract": "tsx src/cli.ts",
+        "lint": "eslint ./src",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "dotenv": "^16.6.1",
+        "es-toolkit": "^1.52.0",
+        "meow": "^14.1.0",
+        "sharp": "^0.33.5",
+        "zod": "^4.6.7"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@types/node": "^24.13.3",
+        "eslint": "catalog:",
+        "tsx": "^4.23.15",
+        "typescript": "catalog:"
+    }
+}

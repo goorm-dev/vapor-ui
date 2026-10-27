@@ -10,13 +10,39 @@
                 "@vapor-ui/core#build",
                 "@vapor-ui/icons#build",
                 "@vapor-ui/css-generator#build",
-                "@vapor-ui/color-generator#build"
+                "@vapor-ui/color-generator#build",
+                "website#docs:api"
             ],
             "outputs": ["dist/**"]
         },
         "website#start": {
             "dependsOn": ["website#build"],
             "outputs": [".next/**", "!.next/cache/**"]
+        },
+        "website#build": {
+            "dependsOn": ["^build", "website#docs:api"],
+            "inputs": ["$TURBO_DEFAULT$", ".env*"],
+            "outputs": [".next/**", "!.next/cache/**"]
+        },
+        "website#docs:api": {
+            "inputs": [
+                "$TURBO_ROOT$/packages/core/src/**",
+                "$TURBO_ROOT$/packages/core/tsconfig.json",
+                "$TURBO_ROOT$/scripts/docs-extractor/src/**",
+                "$TURBO_ROOT$/scripts/docs-extractor/package.json",
+                "$TURBO_ROOT$/scripts/docs-extractor/tsconfig.json",
+                "$TURBO_ROOT$/pnpm-lock.yaml",
+                "$TURBO_ROOT$/.prettierrc.js",
+                "package.json",
+                "content/docs/components/*/index.mdx",
+                "content/docs/components/*/api/ko.lock.json",
+                "content/docs/components/toast/api/en/toast-object.json"
+            ],
+            "outputs": [
+                "content/docs/components/*/api/en/*.json",
+                "!content/docs/components/toast/api/en/toast-object.json",
+                "content/docs/components/*/api/ko/*.json"
+            ]
         },
         "build": {
             "dependsOn": ["^build"],

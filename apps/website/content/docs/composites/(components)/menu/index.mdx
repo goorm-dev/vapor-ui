@@ -1,0 +1,179 @@
+---
+title: 'Menu'
+description: '메뉴는 여러 옵션 중 하나를 실행할 수 있는 목록을 제공하는 컴포넌트입니다.'
+site_name: 'Menu - Vapor Composites'
+---
+
+## Anatomy
+
+<DocsImage src="/composites/menu/images/anatomy-01-01.webp" alt="Menu 아나토미 구조 1" />
+
+<DocsImage src="/composites/menu/images/anatomy-01-02.webp" alt="Menu 아나토미 구조 2" />
+
+| #   | Element                     | Description                                                                                                                                                 |
+| --- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Item                        | 메뉴에서 실행할 수 있는 하나의 동작입니다. 레이블을 표시하며, 필요하면 아래에 설명을 함께 표시합니다. 선택하면 동작이 실행되고 메뉴가 닫힙니다.             |
+| 2   | Leading element (optional)  | Item 레이블 앞에 표시하는 아이콘입니다. 항목의 의미를 빠르게 알아볼 수 있게 합니다.                                                                         |
+| 3   | Trailing element (optional) | Item 오른쪽 끝에 표시하는 보조 요소입니다. Badge, Kbd(키보드 단축키), Text를 추가하여 사용합니다.                                                           |
+| 4   | Submenu item                | 하위 메뉴를 여는 Item입니다. 오른쪽에 화살표 아이콘을 표시해 하위 메뉴가 있음을 알립니다. 하위 메뉴가 열려 있는 동안에는 열린 상태를 시각적으로 표시합니다. |
+| 5   | Submenu                     | Submenu item에서 열리는 하위 메뉴입니다. 상위 메뉴와 같은 Item으로 구성합니다.                                                                              |
+| 6   | Group label (optional)      | Item group의 이름을 나타내는 텍스트입니다. 그룹 맨 위에 표시해 묶인 항목의 공통 주제를 알려 줍니다.                                                         |
+| 7   | Separator                   | 서로 다른 그룹 사이를 나누는 구분선입니다. 메뉴 맨 아래에 오는 그룹 아래에는 넣지 않습니다.                                                                 |
+| 8   | Item group                  | 서로 관련 있는 Item을 하나로 묶는 영역입니다. Group label로 이름을 붙이거나 Separator로 다른 그룹과 구분합니다.                                             |
+| 9   | Check item: single          | 여러 항목 중 하나만 선택하는 Item입니다. 선택된 항목에 Checkmark icon를 표시하며 선택하면 메뉴가 닫힙니다.                                                  |
+| 10  | Check item: multiple        | 여러 항목을 동시에 선택할 수 있는 Item입니다. Checkbox로 선택 상태를 표시하며 선택해도 메뉴가 닫히지 않아 연달아 선택할 수 있습니다.                        |
+| 11  | Check group: single         | Check item: single을 묶는 그룹입니다. 그룹 안에서는 한 항목만 선택됩니다. 그룹 안에 Check item: multiple을 넣어 사용하지 않습니다.                          |
+| 12  | Check group: multiple       | Check item: multiple을 묶는 그룹입니다. 그룹 안에서 여러 항목을 함께 선택할 수 있습니다. 그룹 안에 Check item: single을 넣어 사용하지 않습니다.             |
+
+## Examples
+
+### 작업과 관련된 여러 항목들을 제공할 때 사용하세요
+
+작업과 관련된 옵션이 여러개 있을 때 하나의 인터페이스 안에 모아사용자가 필요로 할 때 제공합니다.
+
+<Demo file="composites/(components)/menu/demos/examples-01.tsx" />
+
+### 연관성이 높은 항목은 같은 그룹으로 묶어 사용하세요
+
+동일한 카테고리에 속하는 Item들을 묶어 하나의 Group으로 제공하고, Group label에는 카테고리를 작성합니다.
+
+<Demo file="composites/(components)/menu/demos/examples-02.tsx" />
+
+### 선택 가능한 옵션은 체크 아이콘이 포함된 Check item을 사용하세요
+
+단일 선택(Single)과 다중 선택(Multiple)을 구분하여 사용하세요. Check item의 경우 하나의 Item만 사용될 경우에도 Check group을 사용합니다.
+
+<Demo file="composites/(components)/menu/demos/examples-03.tsx" />
+
+### 최상위 항목의 하위 선택지를 제공할 때 사용하세요
+
+연관된 선택지를 하나의 항목으로 그룹화하여 최상위 메뉴를 간결하게 유지할 수 있습니다.
+
+<Demo file="composites/(components)/menu/demos/examples-04.tsx" />
+
+## Best practices
+
+### Separator
+
+<DocsGrid>
+    <DoImage
+        src="/composites/menu/images/best-practices-01-do.webp"
+        alt="Group과 Group, Item과 Group을 구분할 때 사용하세요. 연관된 Item들을 시각적으로 묶어주는 역할을 합니다."
+        caption="Group과 Group, Item과 Group을 구분할 때 사용하세요. 연관된 Item들을 시각적으로 묶어주는 역할을 합니다."
+    />
+    <DontImage
+        src="/composites/menu/images/best-practices-01-dont.webp"
+        alt="Group 안에는 Separator를 넣어 사용하지 마세요. 하나의 Group이 둘로 나뉜 것처럼 보여 Item 간 연관성을 파악하기 어렵습니다."
+        caption="Group 안에는 Separator를 넣어 사용하지 마세요. 하나의 Group이 둘로 나뉜 것처럼 보여 Item 간 연관성을 파악하기 어렵습니다."
+    />
+</DocsGrid>
+
+### Critical action
+
+<DocsGrid>
+    <DoImage
+        src="/composites/menu/images/best-practices-02-do.webp"
+        alt="삭제와 같이 되돌릴 수 없는 동작은 Variant=danger로 구분하고, 하단에 배치하여 오클릭을 방지하세요."
+        caption="삭제와 같이 되돌릴 수 없는 동작은 Variant=danger로 구분하고, 하단에 배치하여 오클릭을 방지하세요."
+    />
+    <DontImage
+        src="/composites/menu/images/best-practices-02-dont.webp"
+        alt="삭제 동작과 일반 동작에 동일한 컬러를 사용하지 마세요."
+        caption="삭제 동작과 일반 동작에 동일한 컬러를 사용하지 마세요."
+    />
+</DocsGrid>
+
+### Icon
+
+<DocsGrid>
+    <DoImage
+        src="/composites/menu/images/best-practices-03-do.webp"
+        alt="동일한 Icon 스타일을 사용하세요."
+        caption="동일한 Icon 스타일을 사용하세요."
+    />
+    <DontImage
+        src="/composites/menu/images/best-practices-03-dont.webp"
+        alt="Icon 스타일을 섞어서 사용하지 마세요."
+        caption="Icon 스타일을 섞어서 사용하지 마세요."
+    />
+</DocsGrid>
+
+### Item alignment
+
+<DocsGrid>
+    <DoImage
+        src="/composites/menu/images/best-practices-04-do.webp"
+        alt="구분선을 기준으로 같은 영역 안에 있는 Item의 텍스트 정렬을 동일하게 맞춰 사용하세요."
+        caption="구분선을 기준으로 같은 영역 안에 있는 Item의 텍스트 정렬을 동일하게 맞춰 사용하세요."
+    />
+    <DontImage
+        src="/composites/menu/images/best-practices-04-dont.webp"
+        alt="같은 영역 안에 Item의 정렬을 다르게 설정하지 마세요."
+        caption="같은 영역 안에 Item의 정렬을 다르게 설정하지 마세요."
+    />
+</DocsGrid>
+
+### Trailing element
+
+<DocsGrid>
+    <DoImage
+        src="/composites/menu/images/best-practices-05-do.webp"
+        alt="Trailing에는 한 가지 요소만 사용하세요."
+        caption="Trailing에는 한 가지 요소만 사용하세요."
+    />
+    <DontImage
+        src="/composites/menu/images/best-practices-05-dont.webp"
+        alt="Trailing에 요소를 중복으로 넣지 마세요. 불가피하게 두 개의 요소가 사용되어야 하는 경우 하나의 요소는 Lebel text와 붙여서 사용하세요. 이때 Text 레이아웃이 변경되기에 Custom menu 컴포넌트를 사용해야 합니다."
+        caption="Trailing에 요소를 중복으로 넣지 마세요. 불가피하게 두 개의 요소가 사용되어야 하는 경우 하나의 요소는 Lebel text와 붙여서 사용하세요. 이때 Text 레이아웃이 변경되기에 Custom menu 컴포넌트를 사용해야 합니다."
+    />
+</DocsGrid>
+
+### Min-width
+
+<DocsGrid>
+    <DoImage
+        src="/composites/menu/images/best-practices-06-do.webp"
+        alt="메뉴의 최소 너비를 유지하세요."
+        caption="메뉴의 최소 너비를 유지하세요."
+    />
+    <DontImage
+        src="/composites/menu/images/best-practices-06-dont.webp"
+        alt="트리거 너비에 맞춰 메뉴 너비를 강제로 축소하지 마세요."
+        caption="트리거 너비에 맞춰 메뉴 너비를 강제로 축소하지 마세요."
+    />
+</DocsGrid>
+
+### Width
+
+<DocsGrid>
+    <DoImage
+        src="/composites/menu/images/best-practices-07-do.webp"
+        alt="트리거가 메뉴의 기본 너비를 넘을 경우 트리거에 너비를 맞추세요."
+        caption="트리거가 메뉴의 기본 너비를 넘을 경우 트리거에 너비를 맞추세요."
+    />
+    <DontImage
+        src="/composites/menu/images/best-practices-07-dont.webp"
+        alt="메뉴 너비를 트리거 보다 좁게 사용하지 마세요."
+        caption="메뉴 너비를 트리거 보다 좁게 사용하지 마세요."
+    />
+</DocsGrid>
+
+## Guidelines
+
+### Width
+
+Menu의 기본 너비는 200px입니다. Item의 길이가 짧아졌을 때 시각적 균형을 맞추고 Menu의 너비가 지나치게 좁아지는 것을 방지하기 위해 최소 너비(Min-width)는 160px을 유지합니다.
+
+<DocsImage src="/composites/menu/images/guidelines-01.webp" alt="Width" />
+
+### Check behaivor
+
+Check group 중 단일 선택 Item은 Checked 상태가 되면 같은 그룹 안에 있는 모든 Check item에 indent가 발생합니다.
+
+<DocsImage src="/composites/menu/images/guidelines-02.webp" alt="Check behaivor" />
+
+### 텍스트 작성 및 처리
+
+기본적으로 메뉴 아이템에 들어가는 텍스트는 1줄로 작성합니다. 텍스트가 길어질 경우 줄바꿈 또는 Menu의 너비를 확장하여 사용자가 내용을 온전히 인지할 수 있도록 합니다.
+
+<DocsImage src="/composites/menu/images/guidelines-03.webp" alt="텍스트 작성 및 처리" />

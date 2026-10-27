@@ -141,7 +141,7 @@ export const CustomDocsLayout = (props: DocsLayoutProps) => {
         ) as ReactNode;
 
         const viewport = (
-            <SidebarViewport>
+            <SidebarViewport className="[&>div]:overscroll-auto">
                 {links
                     .filter((item) => item.type !== 'icon')
                     .map((item, i, arr) => (

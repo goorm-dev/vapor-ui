@@ -1,0 +1,30 @@
+{
+    "name": "NavigationMenuPopupPrimitive",
+    "description": "The navigation menu panel, with an arrow that points at the open trigger. Renders a `<nav>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: NavigationMenu.PopupPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: NavigationMenu.PopupPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: NavigationMenu.PopupPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "NavigationMenu.PopupPrimitive.State": "{\n  open: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n  side: \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\";\n  align: \"center\" | \"end\" | \"start\";\n  anchorHidden: boolean;\n}"
+    }
+}

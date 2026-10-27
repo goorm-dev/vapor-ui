@@ -1,0 +1,76 @@
+{
+    "name": "PopoverTrigger",
+    "description": "클릭하면 Popover를 여는 버튼. `<button>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Popover.Trigger.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Popover.Trigger.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "호버로 열린 Popover를 닫기 전에 기다리는 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다.",
+            "defaultValue": "0"
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "호버로 Popover를 열기 전에 기다리는 시간. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다.",
+            "defaultValue": "300"
+        },
+        {
+            "name": "handle",
+            "type": ["PopoverHandle<unknown>"],
+            "detailedType": "PopoverHandle<unknown> | undefined",
+            "required": false,
+            "description": "트리거를 Popover와 연결하는 핸들."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "`render` prop으로 요소를 바꿀 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부. 렌더링되는 요소가 버튼이 아니면(예: `<div>`) `false`로 설정하세요.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "openOnHover",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "트리거에 호버했을 때도 Popover를 열지 여부.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "payload",
+            "type": ["unknown"],
+            "detailedType": "unknown",
+            "required": false,
+            "description": "Popover가 열릴 때 전달할 페이로드."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Popover.Trigger.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Popover.Trigger.State": "{\n  disabled: boolean;\n  open: boolean;\n}"
+    }
+}

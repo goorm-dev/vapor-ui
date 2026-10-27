@@ -5,6 +5,20 @@ import { docs, theme } from 'fumadocs-mdx/collections/server';
 export const source = loader({
     baseUrl: '/docs',
     source: docs.toFumadocsSource(),
+    pageTree: {
+        transformers: [
+            {
+                folder(node) {
+                    node.children = node.children.map((child) =>
+                        child.type === 'folder' && child.index && child.children.length === 0
+                            ? child.index
+                            : child,
+                    );
+                    return node;
+                },
+            },
+        ],
+    },
 });
 
 export const themeSource = loader({

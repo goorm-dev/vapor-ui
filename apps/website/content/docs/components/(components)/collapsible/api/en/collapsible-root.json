@@ -1,0 +1,61 @@
+{
+    "name": "CollapsibleRoot",
+    "description": "Root of the Collapsible compound component, which shows and hides a panel of content. Manages the open state. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the collapsible panel is initially open.\n\nTo render a controlled collapsible, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["function"],
+            "detailedType": "((open: boolean, eventDetails: Collapsible.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Event handler called when the panel is opened or closed."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the collapsible panel is currently open.\n\nTo render an uncontrolled collapsible, use the `defaultOpen` prop instead."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Collapsible.Root.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Collapsible.Root.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Collapsible.Root.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Collapsible.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"none\"; event: Event; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "Collapsible.Root.State": "{\n  disabled: boolean;\n  open: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n}"
+    }
+}
