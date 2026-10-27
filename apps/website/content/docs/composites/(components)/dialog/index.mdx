@@ -22,7 +22,7 @@ slug: 'dialog'
 
 ## Examples
 
-### 사용자의 정보 입력이 필요할 경우 사용하세요
+### 사용자의 정보 입력이 필요할 때 사용하세요
 
 현재 작업을 이어가는 데 필요한 정보를 간단히 입력받을 때 사용합니다. 입력 항목이 많거나 여러 단계로 나뉜다면 페이지로 제공합니다.
 
@@ -34,7 +34,7 @@ slug: 'dialog'
 
 <Demo file="composites/(components)/dialog/demos/examples-02.tsx" />
 
-### 사용자에게 필요한 정보를 안내하고 다음 행동으로 이어갈 때 사용하세요
+### 필요한 정보를 안내하고 다음 행동을 유도할 때 사용하세요
 
 복사, 다운로드처럼 안내한 정보를 바로 활용하는 동작은 Assistive button으로 제공합니다. 주요 동작(Action button)과 함께 배치하며, 닫기 용도로는 사용하지 않습니다.
 
@@ -114,6 +114,9 @@ Dialog에서 실행한 작업이 완료되면 Toast로 결과를 알리세요. �
 
 Dialog에서 발생한 오류는 인라인 메시지로 문제가 되는 부분을 바로 알리세요. 사용자가 Dialog를 벗어나지 않은 채 다시 작업할 수 있도록 안내해야 합니다.
 
+- **Close button:** Dialog는 헤더의 Close 버튼으로 닫을 수 있습니다.
+- **Backdrop 클릭 / ESC 키:** Backdrop을 클릭하거나 키보드의 ESC 키를 눌러 Dialog를 닫을 수 있습니다.
+
 단, 세션 만료처럼 작업을 더 이상 이어갈 수 없는 경우에는 Alert dialog나 페이지로 안내합니다. 이때 Alert dialog는 Dialog 위에 겹쳐 띄우지 않고 기존 Dialog를 닫은 뒤 표시합니다.
 
 <DocsImage src="/composites/dialog/images/patterns-02.webp" alt="Dialog에서 발생한 오류 처리" />
@@ -129,15 +132,18 @@ Dialog와 Alert dialog는 시각적으로 유사하지만, 접근성과 동작�
     alt="Dialog vs Alert dialog"
 />
 
-| 구분           | Dialog                                            | Alert dialog                                      |
-| -------------- | ------------------------------------------------- | ------------------------------------------------- |
-| 목적           | 폼 입력, 정보 조회, 특정 입력 값을 받아야 할 경우 | 사용자 결정 확인, 되돌릴 수 없는 작업에 대한 확인 |
-| Close behaivor | Hearder의 Close button<br/>Backdrop 클릭 / ESC 키 | Footer에서 Cancel button으로 제공                 |
-| 사이즈         | md / lg / xl                                      | 단일 사이즈                                       |
+| 구분           | Dialog                                              | Alert dialog                                       |
+| -------------- | --------------------------------------------------- | -------------------------------------------------- |
+| 목적           | 폼 입력 / 정보 조회 / 특정 입력 값을 받아야 할 경우 | 사용자 결정 확인 / 되돌릴 수 없는 작업에 대한 확인 |
+| Close behaivor | Hearder의 Close button / Backdrop 클릭 / ESC 키     | Footer에서 Cancel button으로 제공                  |
+| 사이즈         | md / lg / xl                                        | 단일 사이즈                                        |
 
 ### Non-dialog
 
 너무 잦은 Dialog 사용은 사용자의 주의를 분산시키고 반사적으로 Dialog를 닫는 행동으로 이어질 수 있습니다. 사용자의 결정이 프로세스에 영향을 주지 않거나, 중요도가 낮은 정보라면 비모달(Non-dialog) 컴포넌트를 사용하세요.
+
+- Popover
+- Toast
 
 ## Guidelines
 
@@ -148,6 +154,9 @@ Dialog popup의 최대 높이(Max-height)는 전체 화면 높이의 80%로 설�
 <DocsImage src="/composites/dialog/images/guidelines-01.webp" alt="Height" />
 
 ### Close behaivor
+
+- **Close button:** Dialog는 헤더의 Close 버튼으로 닫을 수 있습니다.
+- **Backdrop 클릭 / ESC 키:** Backdrop을 클릭하거나 키보드의 ESC 키를 눌러 Dialog를 닫을 수 있습니다.
 
 <DocsImage src="/composites/dialog/images/guidelines-02.webp" alt="Close behaivor" />
 
