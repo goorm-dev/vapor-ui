@@ -16,7 +16,7 @@ const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 const SITE_ORIGIN = 'https://vapor-ui.goorm.io';
 
 const absolutizeImageSrcs = (text: string): string =>
-    text.replace(/(!\[[^\]]*\]\()(\/[^)]+)(\))/g, `$1${SITE_ORIGIN}$2$3`);
+    text.replace(/(!\[.*?\]\()(\/[^)]+)(\))/g, `$1${SITE_ORIGIN}$2$3`);
 
 type ContentType = 'docs' | 'theme';
 
