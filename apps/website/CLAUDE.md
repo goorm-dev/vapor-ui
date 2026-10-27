@@ -125,7 +125,7 @@ content/docs/components/(components)/button/
     └── ko.lock.json
 ```
 
-- A `<Demo file>` is the demo's path relative to `content/docs`, including `.tsx`. A `doc-gen:file` block takes the same file relative to `apps/website`: `./content/docs/components/(components)/button/demos/default-button.tsx`.
+- A `<Demo file>` is the demo's path relative to `content/docs`, including `.tsx`. The website (`src/lib/remark-demo-source.ts`) and the LLM text (`src/utils/get-blocks-examples-doc.ts`) both read the demo's source from that one prop.
 - Do not edit `api/` by hand (except `(components)/toast/api/en/toast-object.json`). Change the JSDoc in `packages/core`, run `pnpm docs:api`, then `pnpm docs:translate` for the Korean. `pnpm dev` and `pnpm build` regenerate them, and CI fails when the committed files are out of date.
 - `<ComponentPropsTable componentName="button" />` reads `api/ko/button.json` at build time; the LLM text (`get-component-doc.ts`) reads `api/en/`. A name with no JSON fails the build.
 - Only `meta.json` files configure the sidebar. A page folder is shown as a single page.
@@ -190,3 +190,13 @@ content/docs/components/(components)/button/
   Example: `string`
 - When displaying union types, separate values with spaces using inline code.
   Example: `small` `medium` `large`
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
