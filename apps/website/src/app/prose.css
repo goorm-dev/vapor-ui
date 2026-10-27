@@ -1,4 +1,9 @@
 @scope (.prose) to ([class~='not-prose'], [class~='not-prose'] *) {
+    :scope {
+        --tw-prose-bold: 600;
+        --tw-prose-bullets: var(--vapor-color-foreground-normal);
+    }
+
     :scope :where(p) {
         font-family: var(--vapor-typography-fontFamily-sans);
         font-size: var(--vapor-typography-fontSize-100);
@@ -9,7 +14,7 @@
     }
 
     :scope :where(h2):is(* + *) {
-        margin-top: 6.25rem;
+        margin-top: var(--vapor-size-space-900);
         margin-bottom: var(--vapor-size-space-300);
 
         color: var(--vapor-color-foreground-normal);
@@ -45,7 +50,7 @@
         margin: 0;
     }
 
-    :scope :where(figure) {
+    :scope :where(table, figure) {
         margin-block: var(--vapor-size-space-300);
     }
 }
