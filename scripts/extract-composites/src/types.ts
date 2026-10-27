@@ -37,6 +37,7 @@ export type ItemBlock =
     | { kind: 'subtitle'; text: string }
     | { kind: 'body'; text: string }
     | { kind: 'listItem'; markdown: string }
+    | { kind: 'listGroup'; items: string[] }
     | { kind: 'docsImage'; webpRel: string; alt: string }
     | { kind: 'doCase'; webpRel: string; alt: string; caption: string }
     | { kind: 'dontCase'; webpRel: string; alt: string; caption: string }

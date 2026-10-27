@@ -124,6 +124,8 @@ function renderBlock(block: ItemBlock, slug: string): string {
             return block.text;
         case 'listItem':
             return `- ${block.markdown}`;
+        case 'listGroup':
+            return block.items.map((m) => `- ${m}`).join('\n');
         case 'docsImage':
             return `<DocsImage src="/composites/${slug}/${block.webpRel}" alt="${attr(block.alt)}" />`;
         case 'doCase':

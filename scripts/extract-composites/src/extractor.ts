@@ -84,6 +84,8 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
                     blocks.push({ kind: 'body', text: child.text });
                 } else if (child.kind === 'listItem') {
                     blocks.push({ kind: 'listItem', markdown: child.markdown });
+                } else if (child.kind === 'listGroup') {
+                    blocks.push({ kind: 'listGroup', items: child.items });
                 } else if (child.kind === 'sample') {
                     sampleIdx++;
                     const sampleBaseName =
