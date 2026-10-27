@@ -6,7 +6,7 @@ site_name: 'Dialog - Vapor Composites'
 
 ## Anatomy
 
-<DocsImage src="/composites/dialog/images/anatomy-01.webp" alt="" />
+<DocsImage src="/composites/dialog/images/anatomy-01.webp" alt="Dialog 아나토미 구조" />
 
 | #   | Element                     | Description                                                                                                                 |
 | --- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
@@ -115,8 +115,8 @@ Dialog에서 실행한 작업이 완료되면 Toast로 결과를 알리세요. �
 
 Dialog에서 발생한 오류는 인라인 메시지로 문제가 되는 부분을 바로 알리세요. 사용자가 Dialog를 벗어나지 않은 채 다시 작업할 수 있도록 안내해야 합니다.
 
-- **Close button:** Dialog는 헤더의 Close 버튼으로 닫을 수 있습니다.
-- **Backdrop 클릭 / ESC 키:** Backdrop을 클릭하거나 키보드의 ESC 키를 눌러 Dialog를 닫을 수 있습니다.
+- **Field 입력값 오류:** Field의 Focus가 해제되는 즉시 Field 오류가 표시됩니다.
+- **서버 오류:** 서버 오류로 인해 Dialog 폼을 제출하지 못했을 경우 내부에 Callout 메시지를 표시합니다.
 
 단, 세션 만료처럼 작업을 더 이상 이어갈 수 없는 경우에는 Alert dialog나 페이지로 안내합니다. 이때 Alert dialog는 Dialog 위에 겹쳐 띄우지 않고 기존 Dialog를 닫은 뒤 표시합니다.
 
@@ -133,11 +133,11 @@ Dialog와 Alert dialog는 시각적으로 유사하지만, 접근성과 동작�
     alt="Dialog vs Alert dialog"
 />
 
-| 구분           | Dialog                                              | Alert dialog                                       |
-| -------------- | --------------------------------------------------- | -------------------------------------------------- |
-| 목적           | 폼 입력 / 정보 조회 / 특정 입력 값을 받아야 할 경우 | 사용자 결정 확인 / 되돌릴 수 없는 작업에 대한 확인 |
-| Close behaivor | Hearder의 Close button / Backdrop 클릭 / ESC 키     | Footer에서 Cancel button으로 제공                  |
-| 사이즈         | md / lg / xl                                        | 단일 사이즈                                        |
+| 구분           | Dialog                                            | Alert dialog                                      |
+| -------------- | ------------------------------------------------- | ------------------------------------------------- |
+| 목적           | 폼 입력, 정보 조회, 특정 입력 값을 받아야 할 경우 | 사용자 결정 확인, 되돌릴 수 없는 작업에 대한 확인 |
+| Close behaivor | Header의 Close button, Backdrop 클릭, ESC 키      | Footer에서 Cancel button으로 제공                 |
+| 사이즈         | md, lg, xl                                        | 단일 사이즈                                       |
 
 ### Non-dialog
 
