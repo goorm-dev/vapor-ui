@@ -36,7 +36,8 @@
 | Spinner                 | O (로딩 상태)                     | 1단계 (용도)   | Feedback |
 | Dialog                  | X (폼·확인·정보 안내 등)          | 2단계 (생김새) | Overlay  |
 | Menu                    | X (액션 목록·네비 링크·필터 옵션) | 2단계 (생김새) | Overlay  |
-| Popover, Sheet, Tooltip | X                                 | 2단계 (생김새) | Overlay  |
+| Popover, Sheet          | X                                 | 2단계 (생김새) | Overlay  |
+| Tooltip                 | X (설명·단축키·힌트·상태 안내 등) | 2단계 (생김새) | Overlay  |
 | FloatingBar             | X                                 | 2단계 (생김새) | Overlay  |
 
 ### 범주 정의
@@ -50,8 +51,8 @@
 | Data Display | 정적 데이터를 표현하는 요소                             | Avatar, Badge, Card, Table                                                                                                    |
 | Typography   | 텍스트 요소                                             | Text                                                                                                                          |
 | Navigation   | 라우트·위치 간 이동 수단                                | Breadcrumb, NavigationMenu, Pagination                                                                                        |
-| Disclosure   | 콘텐츠를 접고 펼치거나 패널을 전환하는 요소             | Collapsible, Tabs                                                                                                             |
-| Overlay      | 레이어 위에 뜨는 UI(모달·플로팅·팝업 포함)              | Dialog, FloatingBar, Menu, Popover, Sheet, Tooltip                                                                            |
+| Disclosure   | 같은 페이지 내에서 콘텐츠 영역을 접고 펼치거나 패널을 전환하는 요소 (WAI-ARIA의 Disclosure 패턴과는 별개의 Vapor 카탈로그 범주) | Collapsible, Tabs                                                                                                             |
+| Overlay      | 레이어 위에 뜨는 UI(모달·플로팅·팝업 포함)              | Alert Dialog, Dialog, FloatingBar, Menu, Popover, Sheet, Tooltip                                                              |
 | Feedback     | 수동적으로 상태나 알림을 전달하는 요소                  | Callout, Spinner, Toast                                                                                                       |
 
 `components/index.mdx`와 `composites/index.mdx`는 이 범주별로 `## <Category>` 섹션을 두고 각 섹션 안에 `<AllComponentsContainer>` grid를 둡니다. 각 카드는 `componentType` prop으로 범주를 재강조합니다.
