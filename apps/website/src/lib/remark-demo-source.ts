@@ -10,15 +10,14 @@
  *      replace it with the resolved file contents. Mirrors `fileGenerator` so multi-source
  *      Demos (nav-bar, form patterns) keep working with authored blocks.
  *
- * File paths are absolute from `apps/website/` (e.g.
- * `/content/docs/components/(components)/button/examples/default-button.tsx`), consistent with the
- * SSOT `file` prop contract.
+ * `<Demo file>` paths are relative to `content/docs` (e.g.
+ * `components/(components)/button/demos/default-button.tsx`). `doc-gen:file` paths are relative to
+ * `apps/website`, as `fileGenerator` and `replaceBlockDoc` read them.
  */
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { CONTENT_PATH } from '~/utils/content-loader';
-import { isAbsolutePath } from '~/utils/paths';
+import { CONTENT_PATH } from '~/constants/demo';
 
 interface Node {
     type: string;
@@ -72,14 +71,10 @@ const isDocGenCodeBlock = (node: Node): node is CodeNode => {
     return code.lang === 'json' && typeof code.meta === 'string' && DOC_GEN_META.test(code.meta);
 };
 
-const resolveAbsolute = (file: string, cwd: string): string =>
-    isAbsolutePath(file) ? path.resolve(cwd, file.slice(1)) : path.resolve(cwd, CONTENT_PATH, file);
-
-const buildCodeBlockFromFile = (file: string, cwd: string): CodeNode | null => {
-    const abs = resolveAbsolute(file, cwd);
+const buildCodeBlockFromFile = (abs: string): CodeNode | null => {
     try {
         const raw = fs.readFileSync(abs, 'utf-8').trim();
-        const ext = path.extname(file).slice(1) || 'tsx';
+        const ext = path.extname(abs).slice(1) || 'tsx';
         return { type: 'code', lang: ext, meta: null, value: raw };
     } catch {
         return null;
@@ -90,7 +85,7 @@ const inlineDocGenBlock = (block: CodeNode, cwd: string): CodeNode => {
     try {
         const config = JSON.parse(block.value) as { file?: string };
         if (typeof config.file === 'string') {
-            const inlined = buildCodeBlockFromFile(config.file, cwd);
+            const inlined = buildCodeBlockFromFile(path.join(cwd, config.file));
             if (inlined) return inlined;
         }
     } catch {
@@ -111,7 +106,9 @@ export function remarkDemoSource() {
             if (isDemoElement(node)) {
                 const fileAttr = readStringAttr(node.attributes, 'file');
                 if (fileAttr && node.children.length === 0) {
-                    const inlined = buildCodeBlockFromFile(fileAttr, cwd);
+                    const inlined = buildCodeBlockFromFile(
+                        path.resolve(cwd, CONTENT_PATH, fileAttr),
+                    );
                     if (inlined) node.children.push(inlined);
                 }
             }
