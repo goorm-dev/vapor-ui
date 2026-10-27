@@ -1,0 +1,4 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "ignoreCommand": "bash -c 'if [[ \"$VERCEL_GIT_COMMIT_REF\" == renovate/* ]]; then turbo query affected --base=$VERCEL_GIT_PREVIOUS_SHA --packages website --exit-code; else exit 1; fi'"
+}
