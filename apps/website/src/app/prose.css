@@ -1,5 +1,5 @@
 @scope (.prose) to ([class~='not-prose'], [class~='not-prose'] *) {
-    :scope :where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+    :scope :where(p) {
         font-family: var(--vapor-typography-fontFamily-sans);
         font-size: var(--vapor-typography-fontSize-100);
         line-height: var(--vapor-typography-lineHeight-100); /* 150% */
