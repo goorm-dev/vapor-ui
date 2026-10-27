@@ -1,11 +1,14 @@
 import { kebabCase } from 'es-toolkit';
+import { join, relative } from 'node:path';
 
 import { extractPreview } from './code-connect.ts';
 import { FigmaClient } from './figma.ts';
 import { downloadWebpImages } from './images.ts';
 import {
+    HEADER_INSTANCE_NAME,
     SLOT_NAMES,
     TEXT_NAMES,
+    findComponentHeader,
     findExportFrame,
     findItems,
     findTextByName,
@@ -23,6 +26,7 @@ export interface ExtractOptions {
     contentFile: (slug: string) => string;
     publicDir: (slug: string) => string;
     componentDir: (slug: string) => string;
+    docsRoot: string;
     slugOverride?: string;
     clean: boolean;
     force: boolean;
@@ -35,6 +39,7 @@ export interface ExtractResult {
     mdxPath: string;
     publicDir: string;
     componentDir: string;
+    demoFiles: string[];
     warnings: string[];
 }
 
@@ -56,6 +61,12 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
     const componentDir = opts.componentDir(slug);
     await prepareOutputs(contentFile, publicDir, opts.clean);
 
+    const { title: docTitle, description: docDescription } = resolveComponentMeta(
+        canvas,
+        canvasName,
+        warnings,
+    );
+
     const discovered = discoverSections(canvas, warnings, only);
 
     console.log(`발견된 섹션: ${discovered.length}개`);
@@ -63,6 +74,7 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
 
     console.log('내용을 분석하고 있습니다...\n');
 
+    const demoFiles: string[] = [];
     const sections: Section[] = [];
     for (const { title, frame } of discovered) {
         const slugForSection = SECTION_SLUG[title];
@@ -111,14 +123,18 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
                     if (rel) blocks.push({ kind: 'docsImage', webpRel: rel, alt: currentSubtitle });
                     else warnings.push(`${locator}: export failed (${targetNode.id})`);
                 } else if (child.kind === 'preview') {
+                    const absDemoFile = join(componentDir, 'demos', `${baseName}.tsx`);
+                    const demoRef = relative(opts.docsRoot, absDemoFile);
                     const result = await extractPreview({
                         fileKey: opts.fileKey,
                         previewSlot: child.node,
                         componentDir,
                         baseName,
+                        demoRef,
                         force: opts.force,
                         warnings,
                     });
+                    demoFiles.push(absDemoFile);
                     blocks.push({
                         kind: 'demo',
                         file: result.file,
@@ -156,7 +172,8 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
 
     const mdx = renderMdx({
         slug,
-        name: canvasName,
+        title: docTitle,
+        description: docDescription,
         sections: sortedSections,
     });
     await writeComponentMdx(contentFile, mdx);
@@ -169,8 +186,29 @@ export async function extract(opts: ExtractOptions): Promise<ExtractResult> {
         mdxPath: contentFile,
         publicDir,
         componentDir,
+        demoFiles,
         warnings,
     };
+}
+
+function resolveComponentMeta(
+    canvas: FigmaNode,
+    canvasName: string,
+    warnings: string[],
+): { title: string; description: string } {
+    const header = findComponentHeader(canvas);
+    if (!header) {
+        warnings.push(
+            `${HEADER_INSTANCE_NAME} INSTANCE (type=component) missing — frontmatter falls back to canvas name`,
+        );
+        return { title: canvasName, description: '' };
+    }
+    const title = findTextByName(header, TEXT_NAMES.componentName) ?? canvasName;
+    const description = findTextByName(header, TEXT_NAMES.componentDescription) ?? '';
+    if (!description) {
+        warnings.push(`${HEADER_INSTANCE_NAME}: "${TEXT_NAMES.componentDescription}" TEXT missing`);
+    }
+    return { title, description };
 }
 
 interface BuildCaseBlockOptions {

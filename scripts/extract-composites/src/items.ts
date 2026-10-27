@@ -19,12 +19,48 @@ export const TEXT_NAMES = {
     subtitle: 'section subtitle',
     body: 'body',
     caption: 'caption',
+    componentName: 'component name',
+    componentDescription: 'component description',
     listLabel: 'list label',
 } as const;
 
 export const LIST_INSTANCE_NAME = 'List text';
 
 const BOLD_WEIGHT_THRESHOLD = 600;
+
+export const HEADER_INSTANCE_NAME = 'Component guide/Header';
+export const HEADER_TYPE_PROP = 'type';
+export const HEADER_TYPE_COMPONENT_VALUE = 'component';
+
+/** DFS canvas for the `Component guide/Header` INSTANCE whose `type` variant is `component`.
+ *  Figma suffixes variant prop keys with `#<schemaId>`, so match by the segment before `#`. */
+export function findComponentHeader(canvas: FigmaNode): FigmaNode | undefined {
+    const walk = (n: FigmaNode): FigmaNode | undefined => {
+        for (const child of n.children ?? []) {
+            if (
+                child.type === 'INSTANCE' &&
+                child.name === HEADER_INSTANCE_NAME &&
+                hasTypeComponent(child)
+            ) {
+                return child;
+            }
+            const nested = walk(child);
+            if (nested) return nested;
+        }
+        return undefined;
+    };
+    return walk(canvas);
+}
+
+function hasTypeComponent(node: FigmaNode): boolean {
+    const props = node.componentProperties;
+    if (!props) return false;
+    for (const [key, prop] of Object.entries(props)) {
+        if (key.split('#')[0] !== HEADER_TYPE_PROP) continue;
+        if (prop.value === HEADER_TYPE_COMPONENT_VALUE) return true;
+    }
+    return false;
+}
 
 /** True when the node is an `Item` component instance.
  *  Matches exact `Item` and variant forms (`Item ...`, `Item, Prop=Val`, `Item=Val`). */
