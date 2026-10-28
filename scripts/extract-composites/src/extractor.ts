@@ -2,8 +2,6 @@ import { kebabCase } from 'es-toolkit';
 import { join, relative } from 'node:path';
 
 import { FigmaClient } from './clients/figma.ts';
-import { extractPreview } from './code-connect.ts';
-import { downloadWebpImages } from './images.ts';
 import {
     findComponentHeader,
     findExportFrame,
@@ -19,6 +17,8 @@ import {
 } from './shared/constants.ts';
 import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './shared/types.ts';
 import { SECTION_SLUG, SECTION_WHITELIST } from './shared/types.ts';
+import { extractPreview } from './tools/extractor/code-connect.ts';
+import { downloadWebpImages } from './tools/extractor/images.ts';
 import { prepareOutputs, writeComponentMdx } from './tools/renderer/io.ts';
 import { renderMdx } from './tools/renderer/mdx.ts';
 import { renderTableForm } from './tools/renderer/parse-table.ts';
