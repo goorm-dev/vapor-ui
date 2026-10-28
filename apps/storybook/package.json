@@ -11,6 +11,8 @@
         "test:regressions": "playwright test -c ./playwright.config.ts"
     },
     "dependencies": {
+        "@vapor-ui/core": "workspace:*",
+        "@vapor-ui/style-macro": "workspace:*",
         "react": "catalog:",
         "react-dom": "catalog:"
     },

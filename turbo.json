@@ -3,7 +3,7 @@
     "ui": "tui",
     "tasks": {
         "storybook#dev": {
-            "dependsOn": ["@vapor-ui/core#build"]
+            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/style-macro#build"]
         },
         "website#dev": {
             "dependsOn": [
@@ -11,6 +11,7 @@
                 "@vapor-ui/icons#build",
                 "@vapor-ui/css-generator#build",
                 "@vapor-ui/color-generator#build",
+                "@vapor-ui/style-macro#build",
                 "website#docs:api"
             ],
             "outputs": ["dist/**"]
@@ -58,7 +59,12 @@
         "lint": { "dependsOn": ["^lint"] },
         "clean": { "cache": false },
         "build:storybook": {
-            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
+            "dependsOn": [
+                "^build",
+                "@vapor-ui/core#build",
+                "@vapor-ui/icons#build",
+                "@vapor-ui/style-macro#build"
+            ],
             "inputs": ["$TURBO_DEFAULT$"],
             "outputs": ["storybook-static/**"]
         }

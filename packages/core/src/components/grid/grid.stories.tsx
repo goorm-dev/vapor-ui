@@ -38,14 +38,14 @@ export const Default: StoryObj<typeof Grid.Root> = {
     render: (args) => {
         return (
             <Grid.Root
-                $css={{
+                templateRows="repeat(3, minmax(40px, auto))"
+                templateColumns="1fr 1fr 1fr"
+                style={{
                     width: 400,
                     backgroundColor: 'GrayText',
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
-                templateRows="repeat(3, minmax(40px, auto))"
-                templateColumns="1fr 1fr 1fr"
                 {...args}
             >
                 <Grid.Item render={<Box>1</Box>} colSpan="1 / 3" />
@@ -62,14 +62,14 @@ export const TestBed: StoryObj<typeof Grid> = {
     render: (args) => {
         return (
             <Grid.Root
-                $css={{
+                templateRows="repeat(3, minmax(40px, auto))"
+                templateColumns="1fr 1fr 1fr"
+                style={{
                     width: '400px',
                     backgroundColor: 'GrayText',
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
-                templateRows="repeat(3, minmax(40px, auto))"
-                templateColumns="1fr 1fr 1fr"
                 {...args}
             >
                 <Grid.Item render={<Box>1</Box>} colSpan="1 / 3" />

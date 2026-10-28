@@ -55,7 +55,7 @@ export default function Scroll() {
                     const status = row.getValue<string>('status');
 
                     return (
-                        <Badge color={activeness[status]} shape="pill">
+                        <Badge colorPalette={activeness[status]} shape="pill">
                             {status.toUpperCase()}
                         </Badge>
                     );
@@ -270,7 +270,7 @@ const datas: Data[] = [
     { name: 'Lucas Park', status: 'active', role: 'developer', 'last-active': '1 hour ago' },
 ];
 
-const activeness: Record<string, Badge.Props['color']> = {
+const activeness: Record<string, Badge.Props['colorPalette']> = {
     active: 'success',
     inactive: 'hint',
 };
@@ -286,7 +286,7 @@ const FilterSelect = ({ content, triggerLabel, ...props }: FilterSelectProps) =>
     return (
         <MultiSelect.Root {...props}>
             <MultiSelect.TriggerPrimitive
-                render={<Button variant="fill" color="secondary" />}
+                render={<Button variant="fill" colorPalette="secondary" />}
                 style={{ width: 'unset' }}
             >
                 {triggerLabel}

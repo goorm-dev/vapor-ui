@@ -3,18 +3,19 @@
     "description": "Container that lays out its children with flexbox. Use for one-dimensional layouts that need custom direction, alignment, or spacing. Renders a `<div>` element.",
     "props": [
         {
+            "name": "inline",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Displays the container as `inline-flex` instead of `flex`, so it sits inline with surrounding content.",
+            "defaultValue": "false"
+        },
+        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Flex.State) => (string | undefined)) | undefined",
             "required": false,
             "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
-        },
-        {
-            "name": "inline",
-            "type": ["boolean"],
-            "detailedType": "boolean | undefined",
-            "required": false,
-            "description": "Displays the container as `inline-flex` instead of `flex`, so it sits inline with surrounding content."
         },
         {
             "name": "style",

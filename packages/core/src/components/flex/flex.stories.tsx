@@ -11,10 +11,7 @@ export const Default = {
             <>
                 <div>
                     <p>1. Flex / row direction / gap 050</p>
-                    <Flex
-                        $css={{ gap: '$050', padding: '$150' }}
-                        style={{ backgroundColor: 'lightskyblue' }}
-                    >
+                    <Flex style={{ backgroundColor: 'lightskyblue', gap: '4px', padding: '12px' }}>
                         <div style={{ backgroundColor: 'red', width: '100px', height: '100px' }} />
                         <div style={{ backgroundColor: 'blue', width: '100px', height: '100px' }} />
                         <div
@@ -26,8 +23,12 @@ export const Default = {
                     <p>2. Inline Flex / column direction / gap 300</p>
                     <Flex
                         inline
-                        $css={{ gap: '$300', padding: '$150', flexDirection: 'column' }}
-                        style={{ backgroundColor: 'lightgray' }}
+                        style={{
+                            backgroundColor: 'lightgray',
+                            gap: '24px',
+                            padding: '12px',
+                            flexDirection: 'column',
+                        }}
                     >
                         <div style={{ backgroundColor: 'red', width: '100px', height: '100px' }} />
                         <div style={{ backgroundColor: 'blue', width: '100px', height: '100px' }} />
@@ -48,10 +49,7 @@ export const TestBed = {
             <>
                 <div>
                     <p>1. Flex / row direction / gap 050</p>
-                    <Flex
-                        $css={{ gap: '$050', padding: '$150' }}
-                        style={{ backgroundColor: 'lightskyblue' }}
-                    >
+                    <Flex style={{ backgroundColor: 'lightskyblue', gap: '4px', padding: '12px' }}>
                         <div style={{ backgroundColor: 'red', width: '100px', height: '100px' }} />
                         <div style={{ backgroundColor: 'blue', width: '100px', height: '100px' }} />
                         <div
@@ -63,8 +61,13 @@ export const TestBed = {
                     <p>2. Inline Flex / column direction / gap 300</p>
                     <Flex
                         inline
-                        $css={{ gap: '$300', padding: '$150', flexDirection: 'column' }}
-                        style={{ backgroundColor: 'lightgray' }}
+
+                        style={{
+                            backgroundColor: 'lightgray',
+                            gap: '24px',
+                            padding: '12px',
+                            flexDirection: 'column',
+                        }}
                     >
                         <div style={{ backgroundColor: 'red', width: '100px', height: '100px' }} />
                         <div style={{ backgroundColor: 'blue', width: '100px', height: '100px' }} />

@@ -2,7 +2,7 @@
 
 이 문서의 규칙은 `packages/composites/**` 안에서 모두 지킨다.
 
-컴포넌트 작성의 구현 세부(슬롯 유틸, JSDoc 형식, `$css`, primitive prop 재정의, `namespace` 타입 export, `index.parts.ts` 구조)는 [`.claude/rules/composites.md`](../../.claude/rules/composites.md)에서 관리한다. 이 문서는 상위 정책과 경계, rules 파일은 그 정책을 코드로 옮기는 방법을 담는다. rules 파일은 `paths` frontmatter로 `packages/composites/**` 조작 시 자동 로드된다.
+컴포넌트 작성의 구현 세부(슬롯 유틸, JSDoc 형식, `css()` 매크로를 통한 스타일링, primitive prop 재정의, `namespace` 타입 export, `index.parts.ts` 구조)는 [`.claude/rules/composites.md`](../../.claude/rules/composites.md)에서 관리한다. 이 문서는 상위 정책과 경계, rules 파일은 그 정책을 코드로 옮기는 방법을 담는다. rules 파일은 `paths` frontmatter로 `packages/composites/**` 조작 시 자동 로드된다.
 
 ## 1. 패키지 개요
 
@@ -36,7 +36,7 @@
 
 - `packages/core/CLAUDE.md`의 규칙(타입스크립트, 파일·폴더 kebab-case, `index.ts` + `index.parts.ts` 재수출 패턴, Vanilla Extract 사용, 테스트 컨벤션)을 그대로 따른다.
 - 예외: composites 컴포넌트의 기본 형태는 Flat이다. Compound 네임스페이스는 §3의 아이템 나열 케이스에만 사용한다.
-- 슬롯 유틸(`createSlots`), 스타일(`$css`), primitive prop 재정의, `namespace` 타입 export, `index.parts.ts` 분리 규칙은 [`.claude/rules/composites.md`](../../.claude/rules/composites.md)에서 다룬다.
+- 슬롯 유틸(`createSlots`), 스타일(`className={css({...})}` — [`@vapor-ui/style-macro`](../style-macro)), primitive prop 재정의, `namespace` 타입 export, `index.parts.ts` 분리 규칙은 [`.claude/rules/composites.md`](../../.claude/rules/composites.md)에서 다룬다. 레거시 `$css` prop 은 deprecated — 신규 코드에서는 사용하지 않는다.
 
 ## 6. 테스트
 
@@ -52,5 +52,5 @@
 ## 8. 하지 말아야 할 것
 
 - Flat Component 설계가 확정되기 전에는 `src/components/` 아래 구현 코드를 수정하지 않는다.
-- 명시적인 지시가 없으면 `className` / `style` 오버라이드 prop을 추가하지 않는다. 오버라이드 정책은 아직 정하지 않았다. 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md#3-스타일은-css-prop으로-작성한다)의 `$css` 규칙을 따른다.
+- 명시적인 지시가 없으면 `className` / `style` 오버라이드 prop을 추가하지 않는다. 오버라이드 정책은 아직 정하지 않았다. 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md)의 `className={css({...})}` 규칙을 따른다 (`@vapor-ui/style-macro`).
 - `component.figma.tsx` (Code Connect) 파일을 손으로 작성하지 않는다. codegen 파이프라인이 생성한다.

@@ -3,25 +3,27 @@
     "description": "자식을 가로 방향 한 줄로 배치하는 Flex 컨테이너. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
-            "name": "className",
-            "type": ["string", "function"],
-            "detailedType": "string | ((state: HStack.State) => (string | undefined)) | undefined",
-            "required": false,
-            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
-        },
-        {
             "name": "inline",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "컨테이너를 `flex` 대신 `inline-flex`로 표시해 주변 콘텐츠와 같은 줄에 놓습니다."
+            "description": "컨테이너를 `flex` 대신 `inline-flex`로 표시해 주변 콘텐츠와 같은 줄에 놓습니다.",
+            "defaultValue": "false"
         },
         {
             "name": "reverse",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "자식의 순서를 뒤집어 `flex-direction`을 `row-reverse`로 설정합니다."
+            "description": "자식의 순서를 뒤집어 `flex-direction`을 `row-reverse`로 설정합니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: HStack.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "style",

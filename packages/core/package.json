@@ -80,6 +80,7 @@
         "@vapor-ui/hooks": "workspace:^",
         "@vapor-ui/icons": "workspace:^",
         "clsx": "^2.1.1",
+        "csstype": "^3.1.0",
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {

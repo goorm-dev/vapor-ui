@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import { vaporVitePlugin } from '@vapor-ui/style-macro/vite';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path, { dirname, join } from 'node:path';
@@ -83,6 +84,7 @@ const config: StorybookConfig = {
             },
 
             plugins: [
+                vaporVitePlugin(),
                 coreDistCssPassthrough,
                 vanillaExtractPlugin({
                     identifiers: ({ hash, filePath, debugId }) => {
