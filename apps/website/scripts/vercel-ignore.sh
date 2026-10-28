@@ -3,11 +3,9 @@ set -eo pipefail
 
 cd "$(git rev-parse --show-toplevel)"
 
-if [[ -n "$VERCEL_GIT_PREVIOUS_SHA" ]]; then
-  BASE="$VERCEL_GIT_PREVIOUS_SHA"
-else
-  git fetch origin main:refs/remotes/origin/main --depth=50 || exit 1
-  BASE="origin/main"
+if [[ "$VERCEL_GIT_COMMIT_REF" == "main" ]]; then
+  exit 1
 fi
 
-git diff --quiet "$BASE" HEAD -- apps/website
+git fetch origin main:refs/remotes/origin/main --depth=50 || exit 1
+git diff --quiet origin/main HEAD -- apps/website
