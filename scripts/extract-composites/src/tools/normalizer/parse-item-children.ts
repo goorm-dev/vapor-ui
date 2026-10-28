@@ -6,8 +6,8 @@ import {
     SLOT_NAMES,
     TEXT_NAMES,
 } from '../../shared/constants.ts';
-import { isItemInstance } from '../../items.ts';
 import type { FigmaNode } from '../../shared/types.ts';
+import { isItemInstance } from '../selector/find-items.ts';
 
 export type ItemChild =
     | { kind: 'subtitle'; text: string }

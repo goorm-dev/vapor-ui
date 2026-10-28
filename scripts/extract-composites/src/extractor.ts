@@ -2,12 +2,7 @@ import { kebabCase } from 'es-toolkit';
 import { join, relative } from 'node:path';
 
 import { FigmaClient } from './clients/figma.ts';
-import {
-    findComponentHeader,
-    findExportFrame,
-    findItems,
-    findTextByName,
-} from './items.ts';
+import { findComponentHeader, findExportFrame, findTextByName } from './items.ts';
 import { discoverSections } from './sections.ts';
 import { HEADER_INSTANCE_NAME, TEXT_NAMES } from './shared/constants.ts';
 import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './shared/types.ts';
@@ -19,6 +14,7 @@ import { parseItemChildren } from './tools/normalizer/parse-item-children.ts';
 import { renderTableForm } from './tools/normalizer/parse-table.ts';
 import { prepareOutputs, writeComponentMdx } from './tools/renderer/io.ts';
 import { renderMdx } from './tools/renderer/mdx.ts';
+import { findItems } from './tools/selector/find-items.ts';
 
 export interface ExtractOptions {
     fileKey: string;
