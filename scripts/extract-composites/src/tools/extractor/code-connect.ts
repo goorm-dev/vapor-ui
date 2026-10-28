@@ -2,8 +2,9 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 import type { FigmaNode } from '../../shared/types.ts';
-import { exists, findFirstInstance, renderDemo, writePlaceholder } from '../renderer/demo.ts';
+
 import { fetchCodeConnectSnippet } from './claude-cli.ts';
+import { exists, findFirstInstance, renderDemo, writePlaceholder } from './demo.ts';
 
 export interface PreviewResult {
     file: string; // docs-root-relative path for <Demo file=""> (e.g. "composites/(components)/alert-dialog/demos/examples-01.tsx")

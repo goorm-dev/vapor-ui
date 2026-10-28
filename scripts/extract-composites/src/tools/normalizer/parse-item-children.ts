@@ -7,7 +7,7 @@ import {
     TEXT_NAMES,
 } from '../../shared/constants.ts';
 import type { FigmaNode } from '../../shared/types.ts';
-import { isItemInstance } from '../selector/find-items.ts';
+import { isItemInstance } from '../selector/index.ts';
 
 export type ItemChild =
     | { kind: 'subtitle'; text: string }

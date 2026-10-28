@@ -1,9 +1,9 @@
 import type { FigmaClient } from '../../clients/figma.ts';
 import { SLOT_NAMES, TEXT_NAMES } from '../../shared/constants.ts';
 import { findExportFrame, findTextByName } from '../../shared/traverse.ts';
-import type { FigmaNode, ItemBlock, Section } from '../../shared/types.ts';
-import { SECTION_WHITELIST } from '../../shared/types.ts';
-import { downloadWebpImages } from '../extractor/images.ts';
+import type { FigmaNode, ItemBlock } from '../../shared/types.ts';
+
+import { downloadWebpImages } from './images.ts';
 
 export interface BuildCaseBlockOptions {
     client: FigmaClient;
@@ -58,14 +58,4 @@ function pickCaseImageTarget(caseFrame: FigmaNode, warnings: string[], locator: 
         return sample;
     }
     return exportFrame;
-}
-
-export function sortByPolicy(sections: Section[]): Section[] {
-    const map = new Map(sections.map((s) => [s.title, s]));
-    const out: Section[] = [];
-    for (const title of SECTION_WHITELIST) {
-        const s = map.get(title);
-        if (s) out.push(s);
-    }
-    return out;
 }
