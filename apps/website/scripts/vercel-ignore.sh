@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+cd "$(git rev-parse --show-toplevel)"
+
 if [[ -n "$VERCEL_GIT_PREVIOUS_SHA" ]]; then
   BASE="$VERCEL_GIT_PREVIOUS_SHA"
 else
