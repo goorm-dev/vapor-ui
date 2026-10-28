@@ -2,7 +2,6 @@ import type { FigmaClient } from '../../clients/figma.ts';
 import { SLOT_NAMES, TEXT_NAMES } from '../../shared/constants.ts';
 import { findExportFrame, findTextByName } from '../../shared/traverse.ts';
 import type { FigmaNode, ItemBlock } from '../../shared/types.ts';
-
 import { downloadWebpImages } from './images.ts';
 
 export interface BuildCaseBlockOptions {

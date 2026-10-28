@@ -2,7 +2,6 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 import type { FigmaNode } from '../../shared/types.ts';
-
 import { fetchCodeConnectSnippet } from './claude-cli.ts';
 import { exists, findFirstInstance, renderDemo, writePlaceholder } from './demo.ts';
 

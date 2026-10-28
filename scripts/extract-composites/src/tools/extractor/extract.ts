@@ -3,10 +3,9 @@ import { join, relative } from 'node:path';
 
 import type { FigmaClient } from '../../clients/figma.ts';
 import { findExportFrame } from '../../shared/traverse.ts';
-import type { ItemBlock, SectionTitle } from '../../shared/types.ts';
+import type { FigmaNode, ItemBlock, SectionTitle } from '../../shared/types.ts';
+import type { AnalyzedDoc, AnalyzedSection } from '../analyzer/index.ts';
 import { parseItemChildren, renderTableForm } from '../normalizer/index.ts';
-import type { SelectedDoc } from '../selector/index.ts';
-
 import { buildCaseBlock } from './case-block.ts';
 import { extractPreview } from './code-connect.ts';
 import { downloadWebpImages } from './images.ts';
@@ -44,117 +43,243 @@ export interface ExtractDeps {
 
 const pad = (n: number): string => n.toString().padStart(2, '0');
 
-export async function extract(doc: SelectedDoc, deps: ExtractDeps): Promise<ExtractedDoc> {
+export async function extract(doc: AnalyzedDoc, deps: ExtractDeps): Promise<ExtractedDoc> {
     if (deps.clean) await rm(deps.publicDir, { recursive: true, force: true });
     await mkdir(deps.publicDir, { recursive: true });
 
-    const extractedSections: ExtractedSection[] = [];
+    const sections: ExtractedSection[] = [];
     const demoFiles: string[] = [];
     for (const section of doc.sections) {
-        const extractedItems: ExtractedItem[] = [];
+        const items: ExtractedItem[] = [];
         for (let idx = 0; idx < section.itemNodes.length; idx++) {
-            const itemNode = section.itemNodes[idx]!;
-            const baseName = `${section.slug}-${pad(idx + 1)}`;
-            const blocks: ItemBlock[] = [];
-            const absDemoFiles: string[] = [];
-            let currentSubtitle = '';
-            const children = parseItemChildren(itemNode);
-            const sampleCount = children.filter((c) => c.kind === 'sample').length;
-            let sampleIdx = 0;
-            for (const child of children) {
-                if (child.kind === 'subtitle') {
-                    currentSubtitle = child.text;
-                    blocks.push({ kind: 'subtitle', text: child.text });
-                } else if (child.kind === 'body') {
-                    blocks.push({ kind: 'body', text: child.text });
-                } else if (child.kind === 'listItem') {
-                    blocks.push({ kind: 'listItem', markdown: child.markdown });
-                } else if (child.kind === 'listGroup') {
-                    blocks.push({ kind: 'listGroup', items: child.items });
-                } else if (child.kind === 'sample') {
-                    sampleIdx++;
-                    const sampleBaseName =
-                        sampleCount > 1 ? `${baseName}-${pad(sampleIdx)}` : baseName;
-                    const locator =
-                        sampleCount > 1
-                            ? `${section.title} / item ${idx + 1} / sample ${sampleIdx}`
-                            : `${section.title} / item ${idx + 1} / sample`;
-                    const exportFrame = findExportFrame(child.node);
-                    const targetNode = exportFrame ?? child.node;
-                    if (!exportFrame) {
-                        deps.warnings.push(
-                            `${locator}: Export frame missing, used Sample fallback (${child.node.id})`,
-                        );
-                    }
-                    const webpRel = await downloadWebpImages(
-                        deps.client,
-                        deps.fileKey,
-                        [{ nodeId: targetNode.id, baseName: sampleBaseName }],
-                        deps.publicDir,
-                    );
-                    const rel = webpRel[targetNode.id];
-                    if (rel) {
-                        const alt =
-                            section.title === 'Anatomy'
-                                ? sampleCount > 1
-                                    ? `${doc.docTitle} 아나토미 구조 ${sampleIdx}`
-                                    : `${doc.docTitle} 아나토미 구조`
-                                : currentSubtitle;
-                        blocks.push({ kind: 'docsImage', webpRel: rel, alt });
-                    } else {
-                        deps.warnings.push(`${locator}: export failed (${targetNode.id})`);
-                    }
-                } else if (child.kind === 'preview') {
-                    const absDemoFile = join(deps.componentDir, 'demos', `${baseName}.tsx`);
-                    const demoRef = relative(deps.docsRoot, absDemoFile);
-                    const result = await extractPreview({
-                        fileKey: deps.fileKey,
-                        previewSlot: child.node,
-                        componentDir: deps.componentDir,
-                        baseName,
-                        demoRef,
-                        force: deps.force,
-                        warnings: deps.warnings,
-                    });
-                    absDemoFiles.push(absDemoFile);
-                    demoFiles.push(absDemoFile);
-                    blocks.push({
-                        kind: 'demo',
-                        file: result.file,
-                        placeholder: result.placeholder,
-                        nodeId: result.nodeId,
-                    });
-                } else if (child.kind === 'table') {
-                    const locator = `${section.title} / item ${idx + 1} / table`;
-                    const md = renderTableForm(child.node, deps.warnings, locator);
-                    if (md) blocks.push({ kind: 'table', markdown: md });
-                } else if (child.kind === 'doCase' || child.kind === 'dontCase') {
-                    const variant = child.kind === 'doCase' ? 'do' : 'dont';
-                    const caseBaseName = `${baseName}-${variant}`;
-                    const block = await buildCaseBlock({
-                        client: deps.client,
-                        fileKey: deps.fileKey,
-                        caseFrame: child.node,
-                        variant,
-                        baseName: caseBaseName,
-                        publicDir: deps.publicDir,
-                        warnings: deps.warnings,
-                        locator: `${section.title} / item ${idx + 1} / ${variant}`,
-                    });
-                    if (block) blocks.push(block);
-                }
-            }
-            extractedItems.push({ blocks, absDemoFiles });
+            const item = await processItem(section, idx, section.itemNodes[idx]!, doc, deps);
+            items.push({ blocks: item.blocks, absDemoFiles: item.absDemoFiles });
+            demoFiles.push(...item.absDemoFiles);
         }
-        extractedSections.push({ title: section.title, slug: section.slug, items: extractedItems });
+        sections.push({ title: section.title, slug: section.slug, items });
     }
 
     return {
         slug: doc.slug,
         docTitle: doc.docTitle,
         docDescription: doc.docDescription,
-        sections: extractedSections,
+        sections,
         demoFiles,
         warnings: deps.warnings,
     };
+}
+
+async function processItem(
+    section: AnalyzedSection,
+    idx: number,
+    itemNode: FigmaNode,
+    doc: AnalyzedDoc,
+    deps: ExtractDeps,
+): Promise<ExtractedItem> {
+    const baseName = `${section.slug}-${pad(idx + 1)}`;
+    const children = parseItemChildren(itemNode);
+    const sampleCount = children.filter((c) => c.kind === 'sample').length;
+
+    const blocks: ItemBlock[] = [];
+    const absDemoFiles: string[] = [];
+    let currentSubtitle = '';
+    let sampleIdx = 0;
+
+    for (const child of children) {
+        switch (child.kind) {
+            case 'subtitle':
+                currentSubtitle = child.text;
+                blocks.push({ kind: 'subtitle', text: child.text });
+                break;
+            case 'body':
+                blocks.push({ kind: 'body', text: child.text });
+                break;
+            case 'listItem':
+                blocks.push({ kind: 'listItem', markdown: child.markdown });
+                break;
+            case 'listGroup':
+                blocks.push({ kind: 'listGroup', items: child.items });
+                break;
+            case 'sample': {
+                sampleIdx += 1;
+                const block = await handleSample({
+                    section,
+                    idx,
+                    doc,
+                    deps,
+                    sampleNode: child.node,
+                    baseName,
+                    sampleCount,
+                    sampleIdx,
+                    currentSubtitle,
+                });
+                if (block) blocks.push(block);
+                break;
+            }
+            case 'preview': {
+                const { block, absDemoFile } = await handlePreview({
+                    deps,
+                    previewSlot: child.node,
+                    componentDir: deps.componentDir,
+                    baseName,
+                });
+                absDemoFiles.push(absDemoFile);
+                blocks.push(block);
+                break;
+            }
+            case 'table': {
+                const block = handleTable({ section, idx, deps, tableNode: child.node });
+                if (block) blocks.push(block);
+                break;
+            }
+            case 'doCase':
+            case 'dontCase': {
+                const block = await handleCase({
+                    section,
+                    idx,
+                    deps,
+                    caseFrame: child.node,
+                    variant: child.kind === 'doCase' ? 'do' : 'dont',
+                    baseName,
+                });
+                if (block) blocks.push(block);
+                break;
+            }
+        }
+    }
+
+    return { blocks, absDemoFiles };
+}
+
+interface SampleContext {
+    section: AnalyzedSection;
+    idx: number;
+    doc: AnalyzedDoc;
+    deps: ExtractDeps;
+    sampleNode: FigmaNode;
+    baseName: string;
+    sampleCount: number;
+    sampleIdx: number;
+    currentSubtitle: string;
+}
+
+async function handleSample(
+    ctx: SampleContext,
+): Promise<Extract<ItemBlock, { kind: 'docsImage' }> | undefined> {
+    const sampleBaseName =
+        ctx.sampleCount > 1 ? `${ctx.baseName}-${pad(ctx.sampleIdx)}` : ctx.baseName;
+    const locator = sampleLocator(ctx.section.title, ctx.idx, ctx.sampleCount, ctx.sampleIdx);
+
+    const exportFrame = findExportFrame(ctx.sampleNode);
+    const targetNode = exportFrame ?? ctx.sampleNode;
+    if (!exportFrame) {
+        ctx.deps.warnings.push(
+            `${locator}: Export frame missing, used Sample fallback (${ctx.sampleNode.id})`,
+        );
+    }
+
+    const webpRel = await downloadWebpImages(
+        ctx.deps.client,
+        ctx.deps.fileKey,
+        [{ nodeId: targetNode.id, baseName: sampleBaseName }],
+        ctx.deps.publicDir,
+    );
+    const rel = webpRel[targetNode.id];
+    if (!rel) {
+        ctx.deps.warnings.push(`${locator}: export failed (${targetNode.id})`);
+        return undefined;
+    }
+
+    return {
+        kind: 'docsImage',
+        webpRel: rel,
+        alt: resolveSampleAlt(ctx),
+    };
+}
+
+function sampleLocator(
+    sectionTitle: SectionTitle,
+    itemIdx: number,
+    sampleCount: number,
+    sampleIdx: number,
+): string {
+    const prefix = `${sectionTitle} / item ${itemIdx + 1} / sample`;
+    return sampleCount > 1 ? `${prefix} ${sampleIdx}` : prefix;
+}
+
+function resolveSampleAlt(ctx: SampleContext): string {
+    if (ctx.section.title !== 'Anatomy') return ctx.currentSubtitle;
+    return ctx.sampleCount > 1
+        ? `${ctx.doc.docTitle} 아나토미 구조 ${ctx.sampleIdx}`
+        : `${ctx.doc.docTitle} 아나토미 구조`;
+}
+
+interface PreviewContext {
+    deps: ExtractDeps;
+    previewSlot: FigmaNode;
+    componentDir: string;
+    baseName: string;
+}
+
+async function handlePreview(ctx: PreviewContext): Promise<{
+    block: Extract<ItemBlock, { kind: 'demo' }>;
+    absDemoFile: string;
+}> {
+    const absDemoFile = join(ctx.componentDir, 'demos', `${ctx.baseName}.tsx`);
+    const demoRef = relative(ctx.deps.docsRoot, absDemoFile);
+    const result = await extractPreview({
+        fileKey: ctx.deps.fileKey,
+        previewSlot: ctx.previewSlot,
+        componentDir: ctx.componentDir,
+        baseName: ctx.baseName,
+        demoRef,
+        force: ctx.deps.force,
+        warnings: ctx.deps.warnings,
+    });
+    return {
+        block: {
+            kind: 'demo',
+            file: result.file,
+            placeholder: result.placeholder,
+            nodeId: result.nodeId,
+        },
+        absDemoFile,
+    };
+}
+
+interface TableContext {
+    section: AnalyzedSection;
+    idx: number;
+    deps: ExtractDeps;
+    tableNode: FigmaNode;
+}
+
+function handleTable(ctx: TableContext): Extract<ItemBlock, { kind: 'table' }> | undefined {
+    const locator = `${ctx.section.title} / item ${ctx.idx + 1} / table`;
+    const md = renderTableForm(ctx.tableNode, ctx.deps.warnings, locator);
+    return md ? { kind: 'table', markdown: md } : undefined;
+}
+
+interface CaseContext {
+    section: AnalyzedSection;
+    idx: number;
+    deps: ExtractDeps;
+    caseFrame: FigmaNode;
+    variant: 'do' | 'dont';
+    baseName: string;
+}
+
+async function handleCase(
+    ctx: CaseContext,
+): Promise<Extract<ItemBlock, { kind: 'doCase' | 'dontCase' }> | undefined> {
+    return buildCaseBlock({
+        client: ctx.deps.client,
+        fileKey: ctx.deps.fileKey,
+        caseFrame: ctx.caseFrame,
+        variant: ctx.variant,
+        baseName: `${ctx.baseName}-${ctx.variant}`,
+        publicDir: ctx.deps.publicDir,
+        warnings: ctx.deps.warnings,
+        locator: `${ctx.section.title} / item ${ctx.idx + 1} / ${ctx.variant}`,
+    });
 }

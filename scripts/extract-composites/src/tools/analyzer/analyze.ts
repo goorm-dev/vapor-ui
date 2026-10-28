@@ -2,19 +2,16 @@ import { kebabCase } from 'es-toolkit';
 
 import { HEADER_INSTANCE_NAME, TEXT_NAMES } from '../../shared/constants.ts';
 import { findTextByName } from '../../shared/traverse.ts';
-import {
-    SECTION_SLUG,
-    type FigmaNode,
-    type SectionTitle,
-} from '../../shared/types.ts';
-
+import { type FigmaNode, SECTION_SLUG, type SectionTitle } from '../../shared/types.ts';
 import { discoverSections } from './discover-sections.ts';
 import { findComponentHeader } from './find-component-header.ts';
+import { findItems } from './find-items.ts';
 
 export interface AnalyzedSection {
     title: SectionTitle;
     slug: string;
     frame: FigmaNode;
+    itemNodes: FigmaNode[];
 }
 
 export interface AnalyzedDoc {
@@ -43,6 +40,7 @@ export function analyze(canvas: FigmaNode, opts: AnalyzeOptions): AnalyzedDoc {
         title,
         slug: SECTION_SLUG[title],
         frame,
+        itemNodes: findItems(frame),
     }));
     return { slug, docTitle, docDescription, sections };
 }

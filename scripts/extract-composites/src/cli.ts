@@ -11,7 +11,6 @@ import { analyze } from './tools/analyzer/index.ts';
 import { extract } from './tools/extractor/index.ts';
 import { normalize } from './tools/normalizer/index.ts';
 import { render } from './tools/renderer/index.ts';
-import { select } from './tools/selector/index.ts';
 
 function findRepoRoot(): string {
     try {
@@ -105,8 +104,7 @@ console.log(`발견된 섹션: ${analyzed.sections.length}개`);
 console.log(analyzed.sections.map((s) => `- ${s.title}\n`).join(''));
 console.log('내용을 분석하고 있습니다...\n');
 
-const selected = select(analyzed);
-const extracted = await extract(selected, {
+const extracted = await extract(analyzed, {
     client,
     fileKey,
     publicDir,

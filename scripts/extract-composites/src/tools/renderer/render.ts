@@ -2,7 +2,6 @@ import { mkdir, rm } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
 import type { NormalizedDoc } from '../normalizer/index.ts';
-
 import { writeComponentMdx } from './io.ts';
 import { renderMdx } from './mdx.ts';
 
