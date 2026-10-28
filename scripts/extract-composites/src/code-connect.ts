@@ -1,9 +1,9 @@
-import { constants } from 'node:fs';
-import { access, mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 import { fetchCodeConnectSnippet } from './claude-cli.ts';
 import type { FigmaNode } from './shared/types.ts';
+import { exists, findFirstInstance, renderDemo, writePlaceholder } from './tools/renderer/demo.ts';
 
 export interface PreviewResult {
     file: string; // docs-root-relative path for <Demo file=""> (e.g. "composites/(components)/alert-dialog/demos/examples-01.tsx")
@@ -63,61 +63,4 @@ export async function extractPreview(opts: ExtractPreviewOptions): Promise<Previ
     await mkdir(dirname(absFile), { recursive: true });
     await writeFile(absFile, content, 'utf8');
     return { file: demoRef, placeholder: false, nodeId: instance.id };
-}
-
-function renderDemo(componentName: string, snippet: string): string {
-    const indented = snippet
-        .trim()
-        .split('\n')
-        .map((line) => (line ? `            ${line}` : ''))
-        .join('\n');
-    return [
-        `import { ${componentName} } from '@vapor-ui/composites';`,
-        '',
-        'export default function Demo() {',
-        '    return (',
-        indented,
-        '    );',
-        '}',
-        '',
-    ].join('\n');
-}
-
-function findFirstInstance(root: FigmaNode): FigmaNode | undefined {
-    for (const child of root.children ?? []) {
-        if (child.type === 'INSTANCE') return child;
-        const nested = findFirstInstance(child);
-        if (nested) return nested;
-    }
-    return undefined;
-}
-
-async function writePlaceholder(
-    absFile: string,
-    baseName: string,
-    nodeId: string,
-    reason: string,
-    force: boolean,
-): Promise<void> {
-    const content = [
-        `// TODO(code-connect): ${reason} (figma node ${nodeId})`,
-        `// name: ${baseName}`,
-        '',
-        'export default function Demo() {',
-        '    return null;',
-        '}',
-        '',
-    ].join('\n');
-    await mkdir(dirname(absFile), { recursive: true });
-    if (!force && (await exists(absFile))) return;
-    await writeFile(absFile, content, 'utf8');
-}
-
-async function exists(path: string): Promise<boolean> {
-    try {
-        await access(path, constants.F_OK);
-        return true;
-    } catch {
-        return false;
-    }
 }

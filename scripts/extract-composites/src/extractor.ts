@@ -19,8 +19,9 @@ import {
 } from './shared/constants.ts';
 import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './shared/types.ts';
 import { SECTION_SLUG, SECTION_WHITELIST } from './shared/types.ts';
-import { renderTableForm } from './table.ts';
-import { prepareOutputs, renderMdx, writeComponentMdx } from './writer.ts';
+import { prepareOutputs, writeComponentMdx } from './tools/renderer/io.ts';
+import { renderMdx } from './tools/renderer/mdx.ts';
+import { renderTableForm } from './tools/renderer/parse-table.ts';
 
 export interface ExtractOptions {
     fileKey: string;
