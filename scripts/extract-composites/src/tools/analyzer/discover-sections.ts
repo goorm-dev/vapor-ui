@@ -1,5 +1,5 @@
-import { BLUE_PREFIX } from './shared/constants.ts';
-import { type FigmaNode, SECTION_WHITELIST, type SectionTitle } from './shared/types.ts';
+import { BLUE_PREFIX } from '../../shared/constants.ts';
+import { type FigmaNode, SECTION_WHITELIST, type SectionTitle } from '../../shared/types.ts';
 
 export interface DiscoveredSection {
     title: SectionTitle;

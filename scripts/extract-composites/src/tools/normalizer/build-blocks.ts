@@ -1,6 +1,6 @@
 import type { FigmaClient } from '../../clients/figma.ts';
-import { findExportFrame, findTextByName } from '../../items.ts';
 import { SLOT_NAMES, TEXT_NAMES } from '../../shared/constants.ts';
+import { findExportFrame, findTextByName } from '../../shared/traverse.ts';
 import type { FigmaNode, ItemBlock, Section } from '../../shared/types.ts';
 import { SECTION_WHITELIST } from '../../shared/types.ts';
 import { downloadWebpImages } from '../extractor/images.ts';

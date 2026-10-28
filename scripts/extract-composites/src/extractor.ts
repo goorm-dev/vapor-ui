@@ -2,11 +2,12 @@ import { kebabCase } from 'es-toolkit';
 import { join, relative } from 'node:path';
 
 import { FigmaClient } from './clients/figma.ts';
-import { findComponentHeader, findExportFrame, findTextByName } from './items.ts';
-import { discoverSections } from './sections.ts';
 import { HEADER_INSTANCE_NAME, TEXT_NAMES } from './shared/constants.ts';
+import { findExportFrame, findTextByName } from './shared/traverse.ts';
 import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './shared/types.ts';
 import { SECTION_SLUG } from './shared/types.ts';
+import { discoverSections } from './tools/analyzer/discover-sections.ts';
+import { findComponentHeader } from './tools/analyzer/find-component-header.ts';
 import { extractPreview } from './tools/extractor/code-connect.ts';
 import { downloadWebpImages } from './tools/extractor/images.ts';
 import { buildCaseBlock, sortByPolicy } from './tools/normalizer/build-blocks.ts';

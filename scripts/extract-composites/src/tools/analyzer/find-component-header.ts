@@ -2,9 +2,8 @@ import {
     HEADER_INSTANCE_NAME,
     HEADER_TYPE_COMPONENT_VALUE,
     HEADER_TYPE_PROP,
-    SLOT_NAMES,
-} from './shared/constants.ts';
-import type { FigmaNode } from './shared/types.ts';
+} from '../../shared/constants.ts';
+import type { FigmaNode } from '../../shared/types.ts';
 
 /** DFS canvas for the `Component guide/Header` INSTANCE whose `type` variant is `component`.
  *  Figma suffixes variant prop keys with `#<schemaId>`, so match by the segment before `#`. */
@@ -34,29 +33,4 @@ function hasTypeComponent(node: FigmaNode): boolean {
         if (prop.value === HEADER_TYPE_COMPONENT_VALUE) return true;
     }
     return false;
-}
-
-/** DFS `root`'s subtree for the first FRAME named `Export`. Direct-child `.find`
- *  misses the real target when designers wrap Export in a `Container` (or any other
- *  wrapper) before placing it inside a `Sample` slot. */
-export function findExportFrame(root: FigmaNode): FigmaNode | undefined {
-    for (const child of root.children ?? []) {
-        if (child.name === SLOT_NAMES.export && child.type === 'FRAME') return child;
-        const nested = findExportFrame(child);
-        if (nested) return nested;
-    }
-    return undefined;
-}
-
-/** DFS the first TEXT node whose name matches, return its trimmed `characters`. */
-export function findTextByName(root: FigmaNode, name: string): string | undefined {
-    for (const child of root.children ?? []) {
-        if (child.type === 'TEXT' && child.name === name) {
-            const text = child.characters?.trim();
-            if (text) return text;
-        }
-        const nested = findTextByName(child, name);
-        if (nested) return nested;
-    }
-    return undefined;
 }
