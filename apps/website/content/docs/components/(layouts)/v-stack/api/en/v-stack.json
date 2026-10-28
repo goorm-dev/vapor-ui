@@ -3,25 +3,27 @@
     "description": "Flex container that arranges its children vertically in a column. Renders a `<div>` element.",
     "props": [
         {
-            "name": "className",
-            "type": ["string", "function"],
-            "detailedType": "string | ((state: VStack.State) => (string | undefined)) | undefined",
-            "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
-        },
-        {
             "name": "inline",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Displays the container as `inline-flex` instead of `flex`, so it sits inline with surrounding content."
+            "description": "Displays the container as `inline-flex` instead of `flex`, so it sits inline with surrounding content.",
+            "defaultValue": "false"
         },
         {
             "name": "reverse",
             "type": ["boolean"],
             "detailedType": "boolean | undefined",
             "required": false,
-            "description": "Reverses the order of the children, setting `flex-direction` to `column-reverse`."
+            "description": "Reverses the order of the children, setting `flex-direction` to `column-reverse`.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: VStack.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
         },
         {
             "name": "style",
