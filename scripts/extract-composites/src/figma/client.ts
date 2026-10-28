@@ -1,4 +1,4 @@
-import type { FigmaNode } from '../shared/types.ts';
+import type { FigmaNode } from '../model.ts';
 
 const BASE = 'https://api.figma.com/v1';
 
@@ -44,9 +44,8 @@ export class FigmaClient {
     }
 }
 
-/** Drop hidden layers (`visible === false`) recursively.
- *  Figma REST only emits `visible: false` for explicitly hidden layers; absent means visible.
- *  Centralizing here means every downstream traversal sees the pruned tree. */
+/** Figma REST는 명시적으로 숨긴 layer에만 `visible: false`를 내려주고, 필드 자체가 없으면
+ *  보이는 layer다. 여기서 한 번 쳐내면 downstream traversal이 모두 pruned tree만 본다. */
 function pruneInvisible(node: FigmaNode): FigmaNode {
     const children = (node.children ?? []).filter((c) => c.visible !== false).map(pruneInvisible);
     return node.children ? { ...node, children } : node;

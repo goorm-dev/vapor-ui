@@ -1,11 +1,8 @@
-import type { FigmaNode } from '../../shared/types.ts';
+import type { FigmaNode } from '../model.ts';
 
-/** Render a `Table form` node as a markdown table.
- *  - First direct child (positional) = header row.
- *  - Remaining direct children = body rows, in canvas order.
- *  - Within each row, cells are DFS-collected TEXT nodes (handles `Table row → Slot →
- *    Table cell → TEXT` nesting transparently).
- *  - Column count = max across rows. Short rows padded, long rows trimmed with warning. */
+/** `Table form` 노드를 markdown table로 직렬화. 첫 번째 direct child가 header, 나머지가 body.
+ *  각 row 안의 cell은 DFS로 TEXT를 긁어 모아 `Table row → Slot → Table cell → TEXT` 중첩을
+ *  투명하게 처리한다. column 수는 가장 긴 row 기준. 짧은 row는 채우고 긴 row는 자르면서 warning. */
 export function renderTableForm(
     tableForm: FigmaNode,
     warnings: string[],

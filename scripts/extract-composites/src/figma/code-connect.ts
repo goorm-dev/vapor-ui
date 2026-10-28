@@ -1,9 +1,9 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
-import type { FigmaNode } from '../../shared/types.ts';
+import type { FigmaNode } from '../model.ts';
+import { exists, findFirstInstance, renderDemo, writePlaceholder } from '../render/demo.ts';
 import { fetchCodeConnectSnippet } from './claude-cli.ts';
-import { exists, findFirstInstance, renderDemo, writePlaceholder } from './demo.ts';
 
 export interface PreviewResult {
     file: string; // docs-root-relative path for <Demo file=""> (e.g. "composites/(components)/alert-dialog/demos/examples-01.tsx")
@@ -21,20 +21,11 @@ export interface ExtractPreviewOptions {
     warnings: string[];
 }
 
-/**
- * Pull the Code Connect snippet for the first INSTANCE under `previewSlot`
- * (the Preview slot → Container frame → component instance structure used in
- * Figma), wrap it in a demo TSX module, and write it to
- * `<componentDir>/demos/<baseName>.tsx`. Returns the MDX-relative path.
- *
- * - No instance under slot → placeholder.
- * - Code Connect fetch fails or snippet empty → placeholder + warning.
- * - Existing file preserved unless `force`.
- *
- * Resolution runs through a headless Claude CLI subprocess, which calls the
- * Figma MCP tool `get_design_context` under the user's existing MCP connection
- * and extracts the JSX inside the `<CodeConnectSnippet>` tag.
- */
+/** Preview slot 하위 첫 INSTANCE의 Code Connect snippet을 받아 demo TSX로 쓰고 MDX-relative
+ *  path를 반환한다. placeholder로 떨어지는 조건:
+ *  - slot 밑에 INSTANCE가 없음
+ *  - Code Connect snippet fetch 실패 또는 비어있음
+ *  `force`가 false면 기존 파일은 보존해 손으로 쓴 demo를 덮어쓰지 않는다. */
 export async function extractPreview(opts: ExtractPreviewOptions): Promise<PreviewResult> {
     const { fileKey, previewSlot, componentDir, baseName, demoRef, force, warnings } = opts;
     const absFile = join(componentDir, 'demos', `${baseName}.tsx`);

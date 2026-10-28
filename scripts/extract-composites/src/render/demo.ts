@@ -2,9 +2,8 @@ import { constants } from 'node:fs';
 import { access, mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
-import type { FigmaNode } from '../../shared/types.ts';
+import type { FigmaNode } from '../model.ts';
 
-/** Serialize a Code Connect snippet into a demo TSX module ready for `<Demo file="…" />`. */
 export function renderDemo(componentName: string, snippet: string): string {
     const indented = snippet
         .trim()
@@ -23,8 +22,6 @@ export function renderDemo(componentName: string, snippet: string): string {
     ].join('\n');
 }
 
-/** DFS the first INSTANCE descendant of `root`.
- *  Used to locate the component instance under a Preview slot. */
 export function findFirstInstance(root: FigmaNode): FigmaNode | undefined {
     for (const child of root.children ?? []) {
         if (child.type === 'INSTANCE') return child;
@@ -34,9 +31,8 @@ export function findFirstInstance(root: FigmaNode): FigmaNode | undefined {
     return undefined;
 }
 
-/** Write a placeholder demo file when the real Code Connect snippet is unavailable.
- *  Respects `force`: skips write if the file already exists and `force` is false,
- *  so a hand-authored demo is preserved across re-runs. */
+/** `force`가 false이고 파일이 이미 있으면 쓰지 않는다. 손으로 작성한 demo를 재실행에서
+ *  보존하기 위함. */
 export async function writePlaceholder(
     absFile: string,
     baseName: string,

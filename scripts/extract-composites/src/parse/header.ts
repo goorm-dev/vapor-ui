@@ -2,11 +2,12 @@ import {
     HEADER_INSTANCE_NAME,
     HEADER_TYPE_COMPONENT_VALUE,
     HEADER_TYPE_PROP,
-} from '../../shared/constants.ts';
-import type { FigmaNode } from '../../shared/types.ts';
+    TEXT_NAMES,
+} from '../constants.ts';
+import type { FigmaNode } from '../model.ts';
+import { findTextByName } from '../traverse.ts';
 
-/** DFS canvas for the `Component guide/Header` INSTANCE whose `type` variant is `component`.
- *  Figma suffixes variant prop keys with `#<schemaId>`, so match by the segment before `#`. */
+/** Figma는 variant prop key에 `#<schemaId>`를 붙이므로 `#` 앞 segment로 비교한다. */
 export function findComponentHeader(canvas: FigmaNode): FigmaNode | undefined {
     const walk = (n: FigmaNode): FigmaNode | undefined => {
         for (const child of n.children ?? []) {
@@ -33,4 +34,24 @@ function hasTypeComponent(node: FigmaNode): boolean {
         if (prop.value === HEADER_TYPE_COMPONENT_VALUE) return true;
     }
     return false;
+}
+
+export function resolveComponentMeta(
+    canvas: FigmaNode,
+    canvasName: string,
+    warnings: string[],
+): { title: string; description: string } {
+    const header = findComponentHeader(canvas);
+    if (!header) {
+        warnings.push(
+            `${HEADER_INSTANCE_NAME} INSTANCE (type=component) missing — frontmatter falls back to canvas name`,
+        );
+        return { title: canvasName, description: '' };
+    }
+    const title = findTextByName(header, TEXT_NAMES.componentName) ?? canvasName;
+    const description = findTextByName(header, TEXT_NAMES.componentDescription) ?? '';
+    if (!description) {
+        warnings.push(`${HEADER_INSTANCE_NAME}: "${TEXT_NAMES.componentDescription}" TEXT missing`);
+    }
+    return { title, description };
 }

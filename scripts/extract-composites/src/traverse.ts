@@ -1,9 +1,8 @@
 import { SLOT_NAMES } from './constants.ts';
-import type { FigmaNode } from './types.ts';
+import type { FigmaNode } from './model.ts';
 
-/** DFS `root`'s subtree for the first FRAME named `Export`. Direct-child `.find`
- *  misses the real target when designers wrap Export in a `Container` (or any other
- *  wrapper) before placing it inside a `Sample` slot. */
+/** `Sample` slot 안의 Export FRAME을 DFS로 찾는다. 디자이너가 Export를 `Container` 같은
+ *  wrapper로 감쌀 때 direct-child `.find`는 놓치기 때문에 재귀가 필요하다. */
 export function findExportFrame(root: FigmaNode): FigmaNode | undefined {
     for (const child of root.children ?? []) {
         if (child.name === SLOT_NAMES.export && child.type === 'FRAME') return child;
@@ -13,7 +12,6 @@ export function findExportFrame(root: FigmaNode): FigmaNode | undefined {
     return undefined;
 }
 
-/** DFS the first TEXT node whose name matches, return its trimmed `characters`. */
 export function findTextByName(root: FigmaNode, name: string): string | undefined {
     for (const child of root.children ?? []) {
         if (child.type === 'TEXT' && child.name === name) {

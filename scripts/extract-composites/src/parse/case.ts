@@ -1,8 +1,8 @@
-import type { FigmaClient } from '../../clients/figma.ts';
-import { SLOT_NAMES, TEXT_NAMES } from '../../shared/constants.ts';
-import { findExportFrame, findTextByName } from '../../shared/traverse.ts';
-import type { FigmaNode, ItemBlock } from '../../shared/types.ts';
-import { downloadWebpImages } from './images.ts';
+import { SLOT_NAMES, TEXT_NAMES } from '../constants.ts';
+import type { FigmaClient } from '../figma/client.ts';
+import { downloadWebpImages } from '../figma/images.ts';
+import type { FigmaNode, ItemBlock } from '../model.ts';
+import { findExportFrame, findTextByName } from '../traverse.ts';
 
 export interface BuildCaseBlockOptions {
     client: FigmaClient;
@@ -40,9 +40,9 @@ export async function buildCaseBlock(
     };
 }
 
-/** Prefer the Export frame inside the case's Sample slot (DFS so wrappers like
- *  `Container` don't hide it), fall back to the Sample slot, then the case frame
- *  itself. Each fallback is surfaced as a warning so silent mis-captures stop. */
+/** Sample slot 안의 Export frame을 우선 쓰고 (Container 같은 wrapper에 가려지는 걸 대비해 DFS),
+ *  없으면 Sample slot, 그다음 case frame으로 fallback. 각 fallback은 warning으로 남겨 조용히
+ *  엉뚱한 이미지가 잡히는 일을 막는다. */
 function pickCaseImageTarget(caseFrame: FigmaNode, warnings: string[], locator: string): FigmaNode {
     const sample = (caseFrame.children ?? []).find((c) => c.name === SLOT_NAMES.sample);
     if (!sample) {

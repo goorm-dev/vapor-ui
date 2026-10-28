@@ -1,4 +1,4 @@
-import type { Item, ItemBlock, Section } from '../../shared/types.ts';
+import type { Item, ItemBlock, Section } from '../model.ts';
 
 export interface RenderInput {
     slug: string;
@@ -19,8 +19,8 @@ export function renderMdx(input: RenderInput): string {
 }
 
 function renderFrontmatter(input: RenderInput): string {
-    // YAML double-quoted strings interpret `\x`, `\U`, `\n`, etc. as escapes,
-    // so backslashes must be doubled before quote escaping.
+    // YAML double-quoted string은 `\x`, `\U`, `\n` 등을 escape로 해석하므로
+    // backslash를 먼저 두 번 치환한 뒤 quote를 처리한다.
     const esc = (s: string) => s.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
     const siteName = `${input.title} - Vapor Composites`;
     return [
@@ -53,9 +53,8 @@ function isListItemBlock(block: ItemBlock): block is ListItemBlock {
     return block.kind === 'listItem';
 }
 
-/** Render item blocks in order; collapse any run of consecutive do/dont case blocks
- *  into a single `<DocsGrid>` wrapper, and any run of `listItem` blocks into a
- *  single bulleted markdown list. */
+/** 연속된 do/dont case 블록은 하나의 `<DocsGrid>`로, 연속된 `listItem`은 하나의 bullet
+ *  list로 묶는다. */
 function renderItem(item: Item, slug: string): string {
     const parts: string[] = [];
     let i = 0;
@@ -133,7 +132,6 @@ function renderBlock(block: ItemBlock, slug: string): string {
     }
 }
 
-/** Escape a value for an MDX/HTML attribute. */
 function attr(value: string): string {
     return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/\r?\n/g, ' ');
 }

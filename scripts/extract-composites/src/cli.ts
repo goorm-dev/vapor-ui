@@ -4,13 +4,9 @@ import meow from 'meow';
 import { execFileSync, execSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 
-import { FigmaClient } from './clients/figma.ts';
-import { SECTION_WHITELIST, type SectionTitle } from './shared/types.ts';
-import { parseFigmaUrl } from './shared/url.ts';
-import { analyze } from './tools/analyzer/index.ts';
-import { extract } from './tools/extractor/index.ts';
-import { normalize } from './tools/normalizer/index.ts';
-import { render } from './tools/renderer/index.ts';
+import { extract } from './extract.ts';
+import { SECTION_WHITELIST, type SectionTitle } from './model.ts';
+import { parseFigmaUrl } from './url.ts';
 
 function findRepoRoot(): string {
     try {
@@ -82,57 +78,29 @@ if (!token) {
 
 const { fileKey, nodeId } = parseFigmaUrl(figmaUrl);
 const only = parseOnly(cli.flags.only);
-const onlySet = only ? new Set<SectionTitle>(only) : undefined;
 
-console.log(`문서 추출을 시작합니다. ${cli.flags.clean ? '(clean mode)' : ''}\n`);
-
-const client = new FigmaClient(token);
-const canvas = await client.getNode(fileKey, nodeId);
-const warnings: string[] = [];
-
-const analyzed = analyze(canvas, {
-    only: onlySet,
-    slugOverride: cli.flags.slug,
-    warnings,
-});
-
-const contentFile = resolve(CONTENT_ROOT, analyzed.slug, 'index.mdx');
-const publicDir = resolve(PUBLIC_ROOT, analyzed.slug);
-const componentDir = resolve(CONTENT_ROOT, analyzed.slug);
-
-console.log(`발견된 섹션: ${analyzed.sections.length}개`);
-console.log(analyzed.sections.map((s) => `- ${s.title}\n`).join(''));
-console.log('내용을 분석하고 있습니다...\n');
-
-const extracted = await extract(analyzed, {
-    client,
+const result = await extract({
     fileKey,
-    publicDir,
-    componentDir,
+    nodeId,
+    contentRoot: CONTENT_ROOT,
+    publicRoot: PUBLIC_ROOT,
     docsRoot: DOCS_ROOT,
-    force: cli.flags.force,
+    slugOverride: cli.flags.slug,
     clean: cli.flags.clean,
-    warnings,
+    force: cli.flags.force,
+    only,
+    token,
 });
-const normalized = normalize(extracted);
 
-console.log(`총 ${normalized.sections.length}개의 프레임을 마크다운으로 변환합니다...\n`);
+runFormat([result.mdxPath, ...result.demoFiles]);
 
-const rendered = await render(normalized, { contentFile, clean: cli.flags.clean });
-
-console.log(`컴포넌트 문서가 작성되었습니다!`);
-console.log(contentFile + '\n');
-
-runFormat([rendered.mdxPath, ...extracted.demoFiles]);
-
-for (const w of warnings) console.log(`⚠️ ${w}`);
+for (const w of result.warnings) console.log(`⚠️ ${w}`);
 
 function runFormat(files: string[]): void {
     if (files.length === 0) return;
     console.log(`\nprettier --write ${files.length}개 파일을 포매팅합니다...`);
     try {
-        // Node's execFile cannot launch a `.cmd` shim directly, so point at
-        // the Windows pnpm entrypoint when running there.
+        // Windows에서는 execFile이 `.cmd` shim을 직접 실행하지 못하므로 pnpm.cmd로 분기한다.
         const pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
         execFileSync(pnpmCmd, ['-w', 'exec', 'prettier', '--write', ...files], {
             cwd: REPO_ROOT,

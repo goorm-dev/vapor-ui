@@ -5,9 +5,9 @@ import {
     LIST_INSTANCE_NAME,
     SLOT_NAMES,
     TEXT_NAMES,
-} from '../../shared/constants.ts';
-import type { FigmaNode } from '../../shared/types.ts';
-import { isItemInstance } from '../analyzer/index.ts';
+} from '../constants.ts';
+import type { FigmaNode } from '../model.ts';
+import { isItemInstance } from './items.ts';
 
 export type ItemChild =
     | { kind: 'subtitle'; text: string }
@@ -20,18 +20,12 @@ export type ItemChild =
     | { kind: 'doCase'; node: FigmaNode }
     | { kind: 'dontCase'; node: FigmaNode };
 
-/** Walk `item` children in document order; produce typed child records.
- *  - `(do not export)` INSTANCE: ignored (policy #3).
- *  - TEXT with name `section subtitle`: subtitle.
- *  - TEXT with name `body`: body.
- *  - Node with name `Sample` / `Preview` / `Table form`: slot (do not recurse past slot).
- *  - Other wrapper frames: recurse. */
 export function parseItemChildren(item: FigmaNode): ItemChild[] {
     const out: ItemChild[] = [];
     const walkOrdered = (n: FigmaNode): void => {
         for (const child of n.children ?? []) {
             if (isItemInstance(child)) {
-                // Nested Item — not expected; skip to avoid duplication.
+                // Item 안의 Item은 중복 수집 방지 차원에서 건너뛴다.
                 continue;
             }
             if (child.type === 'INSTANCE' && child.name.startsWith(DO_NOT_EXPORT_MARKER)) {
@@ -85,10 +79,8 @@ export function parseItemChildren(item: FigmaNode): ItemChild[] {
     return out;
 }
 
-/** Resolve the effective fontWeight for each UTF-16 code unit in a Figma TEXT
- *  node, wrap contiguous bold runs (weight ≥ 600) in `**…**`, and move the
- *  surrounding whitespace outside the markers so `**Close button: **` becomes
- *  `**Close button:** `. */
+/** TEXT 노드의 UTF-16 code unit 단위로 bold run을 감지해 `**…**`로 감싼다. 공백은 marker
+ *  바깥으로 밀어 `**Close button: **`가 `**Close button:** `가 되도록 처리한다. */
 export function renderListLabelMarkdown(node: FigmaNode): string {
     const text = node.characters ?? '';
     if (!text) return '';
@@ -124,9 +116,8 @@ export function renderListLabelMarkdown(node: FigmaNode): string {
     return out.join('').trim();
 }
 
-/** Collect every TEXT leaf under a `List text` INSTANCE and render each as a
- *  bullet's markdown. Leaf names vary (e.g. `body`, `list label`); the wrapper
- *  identity is what defines a bullet, so names are ignored. */
+/** `List text` INSTANCE 밑의 TEXT leaf를 bullet 하나씩으로 뽑는다. leaf 이름이 `body`,
+ *  `list label` 등 혼재하므로 wrapper 정체성만 보고 이름은 무시한다. */
 export function collectListTextItems(root: FigmaNode): string[] {
     const items: string[] = [];
     const walk = (n: FigmaNode): void => {

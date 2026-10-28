@@ -24,16 +24,9 @@ export interface SnippetResult {
     componentName: string;
 }
 
-/**
- * Fetch the Code Connect snippet for a single Figma instance via a headless
- * Claude CLI subprocess. The CLI invokes `mcp__plugin_figma_figma__get_design_context`
- * through the user's existing Figma MCP connection, then returns the JSX
- * contained in the outermost `<CodeConnectSnippet>` tag as structured JSON.
- *
- * Requires `claude` on PATH (override via CLAUDE_BIN). Default model is Haiku 5.5
- * (override via CLAUDE_MODEL). Returns `undefined` on any subprocess or parse
- * failure so the caller can fall back to a placeholder.
- */
+/** 사용자의 Figma MCP 연결을 재사용하기 위해 headless Claude CLI 서브프로세스로 돌린다.
+ *  CLAUDE_BIN, CLAUDE_MODEL env로 교체 가능. 서브프로세스/파싱 실패 시 undefined를 반환해
+ *  호출자가 placeholder로 대체하도록 한다. */
 export async function fetchCodeConnectSnippet(
     fileKey: string,
     nodeId: string,
@@ -80,11 +73,7 @@ export async function fetchCodeConnectSnippet(
 
 const MAX_STDOUT = 10 * 1024 * 1024;
 
-/**
- * Spawn a subprocess with stdin closed and collect stdout as UTF-8. Rejects on
- * non-zero exit or stdout exceeding MAX_STDOUT so a stuck subprocess cannot
- * accumulate unbounded memory.
- */
+/** stdout이 MAX_STDOUT을 넘으면 kill해 멈춘 서브프로세스가 메모리를 끝없이 쌓지 못하게 한다. */
 function runSubprocess(cmd: string, args: string[]): Promise<string> {
     return new Promise((resolve, reject) => {
         const child = spawn(cmd, args, { stdio: ['ignore', 'pipe', 'pipe'] });
