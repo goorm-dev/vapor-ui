@@ -4,9 +4,14 @@ import meow from 'meow';
 import { execFileSync, execSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 
-import { extract } from './extractor.ts';
+import { FigmaClient } from './clients/figma.ts';
 import { SECTION_WHITELIST, type SectionTitle } from './shared/types.ts';
 import { parseFigmaUrl } from './shared/url.ts';
+import { analyze } from './tools/analyzer/index.ts';
+import { extract } from './tools/extractor/index.ts';
+import { normalize } from './tools/normalizer/index.ts';
+import { render } from './tools/renderer/index.ts';
+import { select } from './tools/selector/index.ts';
 
 function findRepoRoot(): string {
     try {
@@ -77,26 +82,52 @@ if (!token) {
 }
 
 const { fileKey, nodeId } = parseFigmaUrl(figmaUrl);
-
 const only = parseOnly(cli.flags.only);
+const onlySet = only ? new Set<SectionTitle>(only) : undefined;
 
-const result = await extract({
-    fileKey,
-    nodeId,
-    contentFile: (slug) => resolve(CONTENT_ROOT, slug, 'index.mdx'),
-    publicDir: (slug) => resolve(PUBLIC_ROOT, slug),
-    componentDir: (slug) => resolve(CONTENT_ROOT, slug),
-    docsRoot: DOCS_ROOT,
+console.log(`문서 추출을 시작합니다. ${cli.flags.clean ? '(clean mode)' : ''}\n`);
+
+const client = new FigmaClient(token);
+const canvas = await client.getNode(fileKey, nodeId);
+const warnings: string[] = [];
+
+const analyzed = analyze(canvas, {
+    only: onlySet,
     slugOverride: cli.flags.slug,
-    clean: cli.flags.clean,
-    force: cli.flags.force,
-    only,
-    token,
+    warnings,
 });
 
-runFormat([result.mdxPath, ...result.demoFiles]);
+const contentFile = resolve(CONTENT_ROOT, analyzed.slug, 'index.mdx');
+const publicDir = resolve(PUBLIC_ROOT, analyzed.slug);
+const componentDir = resolve(CONTENT_ROOT, analyzed.slug);
 
-for (const w of result.warnings) console.log(`⚠️ ${w}`);
+console.log(`발견된 섹션: ${analyzed.sections.length}개`);
+console.log(analyzed.sections.map((s) => `- ${s.title}\n`).join(''));
+console.log('내용을 분석하고 있습니다...\n');
+
+const selected = select(analyzed);
+const extracted = await extract(selected, {
+    client,
+    fileKey,
+    publicDir,
+    componentDir,
+    docsRoot: DOCS_ROOT,
+    force: cli.flags.force,
+    clean: cli.flags.clean,
+    warnings,
+});
+const normalized = normalize(extracted);
+
+console.log(`총 ${normalized.sections.length}개의 프레임을 마크다운으로 변환합니다...\n`);
+
+const rendered = await render(normalized, { contentFile, clean: cli.flags.clean });
+
+console.log(`컴포넌트 문서가 작성되었습니다!`);
+console.log(contentFile + '\n');
+
+runFormat([rendered.mdxPath, ...extracted.demoFiles]);
+
+for (const w of warnings) console.log(`⚠️ ${w}`);
 
 function runFormat(files: string[]): void {
     if (files.length === 0) return;
