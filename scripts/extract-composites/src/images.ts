@@ -2,7 +2,7 @@ import { mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import sharp from 'sharp';
 
-import type { FigmaClient } from './figma.ts';
+import type { FigmaClient } from './clients/figma.ts';
 
 export async function downloadWebpImages(
     client: FigmaClient,

@@ -1,4 +1,4 @@
-import type { FigmaNode } from './types.ts';
+import type { FigmaNode } from './shared/types.ts';
 
 /** Render a `Table form` node as a markdown table.
  *  - First direct child (positional) = header row.

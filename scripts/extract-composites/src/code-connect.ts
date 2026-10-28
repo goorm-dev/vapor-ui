@@ -3,7 +3,7 @@ import { access, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 import { fetchCodeConnectSnippet } from './claude-cli.ts';
-import type { FigmaNode } from './types.ts';
+import type { FigmaNode } from './shared/types.ts';
 
 export interface PreviewResult {
     file: string; // docs-root-relative path for <Demo file=""> (e.g. "composites/(components)/alert-dialog/demos/examples-01.tsx")

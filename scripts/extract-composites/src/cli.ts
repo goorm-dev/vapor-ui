@@ -5,8 +5,8 @@ import { execFileSync, execSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 
 import { extract } from './extractor.ts';
-import { SECTION_WHITELIST, type SectionTitle } from './types.ts';
-import { parseFigmaUrl } from './url.ts';
+import { SECTION_WHITELIST, type SectionTitle } from './shared/types.ts';
+import { parseFigmaUrl } from './shared/url.ts';
 
 function findRepoRoot(): string {
     try {

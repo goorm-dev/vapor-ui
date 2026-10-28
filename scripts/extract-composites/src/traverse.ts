@@ -1,4 +1,4 @@
-import type { FigmaNode } from './types.ts';
+import type { FigmaNode } from './shared/types.ts';
 
 export function walk(node: FigmaNode, visit: (n: FigmaNode, path: FigmaNode[]) => void): void {
     const stack: Array<{ node: FigmaNode; path: FigmaNode[] }> = [{ node, path: [] }];

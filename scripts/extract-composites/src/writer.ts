@@ -1,7 +1,7 @@
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
-import type { Item, ItemBlock, Section } from './types.ts';
+import type { Item, ItemBlock, Section } from './shared/types.ts';
 
 export interface RenderInput {
     slug: string;

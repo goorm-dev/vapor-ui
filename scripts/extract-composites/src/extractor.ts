@@ -1,13 +1,10 @@
 import { kebabCase } from 'es-toolkit';
 import { join, relative } from 'node:path';
 
+import { FigmaClient } from './clients/figma.ts';
 import { extractPreview } from './code-connect.ts';
-import { FigmaClient } from './figma.ts';
 import { downloadWebpImages } from './images.ts';
 import {
-    HEADER_INSTANCE_NAME,
-    SLOT_NAMES,
-    TEXT_NAMES,
     findComponentHeader,
     findExportFrame,
     findItems,
@@ -15,9 +12,14 @@ import {
     parseItemChildren,
 } from './items.ts';
 import { discoverSections } from './sections.ts';
+import {
+    HEADER_INSTANCE_NAME,
+    SLOT_NAMES,
+    TEXT_NAMES,
+} from './shared/constants.ts';
+import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './shared/types.ts';
+import { SECTION_SLUG, SECTION_WHITELIST } from './shared/types.ts';
 import { renderTableForm } from './table.ts';
-import type { FigmaNode, Item, ItemBlock, Section, SectionTitle } from './types.ts';
-import { SECTION_SLUG, SECTION_WHITELIST } from './types.ts';
 import { prepareOutputs, renderMdx, writeComponentMdx } from './writer.ts';
 
 export interface ExtractOptions {

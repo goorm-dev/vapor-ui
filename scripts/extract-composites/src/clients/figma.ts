@@ -1,4 +1,4 @@
-import type { FigmaNode } from './types.ts';
+import type { FigmaNode } from '../shared/types.ts';
 
 const BASE = 'https://api.figma.com/v1';
 
