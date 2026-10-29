@@ -1,4 +1,3 @@
-// source=src/components/alert-dialog/alert-dialog.tsx
 import figma from 'figma';
 
 import { getProperties } from '../../../utils/figma-utils';

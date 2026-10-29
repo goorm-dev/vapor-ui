@@ -1,4 +1,3 @@
-// source=src/components/dialog/dialog.tsx
 import figma from 'figma';
 
 import { getProperties } from '../../../utils/figma-utils';

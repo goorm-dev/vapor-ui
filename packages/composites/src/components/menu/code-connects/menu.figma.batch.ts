@@ -1,4 +1,3 @@
-// source=src/components/menu/menu.tsx
 import figma from 'figma';
 
 import { getProperties, renderInnerInstances } from '../../../utils/figma-utils';

@@ -37,8 +37,8 @@ paths:
 
 - 파일 상단에 directive 주석은 두지 않는다. `url`·`component`·`source`는 batch.json 엔트리값이 공급한다.
 - `import figma from 'figma'`와 상대 경로 helper(`../../../utils/figma-utils`)만 import한다. 그 외 import는 번들러가 거부한다.
-- 엔트리 접근은 캐스팅 없이 `const batch = figma.batch;`로 받는다. 별도 엔트리 타입을 선언하지 않는다.
-- **서브 컴포넌트별 섹션을 `build<SubComponentName>()` 함수로 분리한다.** 각 함수는 `{ example, imports }` 객체를 반환한다. 반환 타입은 명시하지 않는다.
+- 엔트리 접근은 캐스팅 없이 `const batch = figma.batch;`로 받는다.
+- **서브 컴포넌트별 섹션을 `build<SubComponentName>()` 함수로 분리한다.** 각 함수는 `{ example, imports }` 객체를 반환한다.
 - 여러 섹션이 공유하는 로직은 별도 헬퍼로 추출한다 (예: 버튼 slotLayer 추출 → `buildButtonSlot()`).
 - 최하단에 `build()` 디스패처를 두고 `switch (batch.part)`로 분기한다. `case`와 batch.json의 `part`는 1:1 매칭.
 - 마지막 `export default`는 다음 형태로 고정한다:
@@ -65,7 +65,8 @@ paths:
 
 ## 4. 공통 규칙
 
-- Figma 노드 조작은 `~/utils/figma-utils`의 `getProperties`·`renderInnerInstances`·`findChild`만 사용한다. helper는 그 파일 한 곳에만 둔다.
+- Figma 노드 조작은 `../../../utils/figma-utils`의 `getProperties`·`renderInnerInstances`·`findChild`만 사용한다. helper는 그 파일 한 곳에만 둔다.
+- `../../../utils/figma-utils`를 import 할 때 상대 경로만 사용한다.
 - `getProperties(instance, nodeName, spec)` 두 번째 인자는 하위 노드 이름 문자열(예: `'(Popup)'`, `'(Header)'`, `'(Footer)'`, `'Item'`) 또는 `null`(=instance 자체)이다. 괄호 네이밍은 Figma frame 이름을 그대로 쓴 것이다.
 - `example`의 JSX 문자열은 소비자가 그대로 복사해 쓸 수 있어야 한다. 결정이 필요한 자리(트리거, aria-label 등)에는 `// TODO: ...` 또는 `/* TODO: ... */` 주석으로 명시한다.
 - 템플릿 파일을 추가/삭제할 때 `packages/composites/figma.config.json`의 `codeConnect.include` 패턴이 새 파일을 커버하는지 확인한다. 현재 패턴은 `src/**/*.figma.ts` + `src/**/*.figma.batch.json`이다.
