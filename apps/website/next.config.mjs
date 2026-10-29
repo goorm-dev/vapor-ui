@@ -34,7 +34,6 @@ const config = {
     },
     images: {
         unoptimized: true,
-        qualities: [100],
         remotePatterns: [
             {
                 protocol: 'https',
