@@ -20,8 +20,8 @@
         "lint": "eslint ./src"
     },
     "dependencies": {
-        "magic-string": "^1.2.3",
-        "rolldown-plugin-dts": "^0.27.14",
+        "magic-string": "^1.4.5",
+        "rolldown-plugin-dts": "^0.29.0",
         "rollup-plugin-node-externals": "^8.1.2"
     },
     "devDependencies": {
@@ -35,6 +35,6 @@
         "typescript": "catalog:"
     },
     "peerDependencies": {
-        "rolldown": "^1.1.4"
+        "rolldown": "^1.2.16"
     }
 }
