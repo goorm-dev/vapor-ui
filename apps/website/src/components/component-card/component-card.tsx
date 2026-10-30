@@ -34,7 +34,6 @@ const CardWrapper = ({
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     style={{ objectFit: 'cover' }}
                     priority
-                    unoptimized={false}
                 />
             </Card.Header>
             <Card.Body className={styles.body} $css={{ overflow: 'hidden' }}>
