@@ -12,7 +12,7 @@ export async function downloadWebpImages(
 ): Promise<Record<string, string>> {
     if (jobs.length === 0) return {};
     const ids = jobs.map((j) => j.nodeId);
-    const urls = await client.getImageUrls(fileKey, ids, 3, 'png');
+    const urls = await client.getImageUrls(fileKey, ids, 2, 'png');
     const out: Record<string, string> = {};
     for (const job of jobs) {
         const url = urls[job.nodeId];
