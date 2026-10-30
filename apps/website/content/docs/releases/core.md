@@ -5,6 +5,12 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
+## 1.7.1
+
+### Website
+
+- Restore demo source code in the bundled `docs/**/*.md`. Since 1.7.0, pages showed a bare `<Demo file="..." />` tag instead of the example code. ([#806](https://github.com/goorm-dev/vapor-ui/pull/806)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
 ## 1.7.0
 
 ### Alert Dialog
