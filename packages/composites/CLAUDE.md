@@ -53,4 +53,4 @@
 
 - Flat Component 설계가 확정되기 전에는 `src/components/` 아래 구현 코드를 수정하지 않는다.
 - 명시적인 지시가 없으면 `className` / `style` 오버라이드 prop을 추가하지 않는다. 오버라이드 정책은 아직 정하지 않았다. 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md#3-스타일은-css-prop으로-작성한다)의 `$css` 규칙을 따른다.
-- `component.figma.tsx` (Code Connect) 파일을 손으로 작성하지 않는다. codegen 파이프라인이 생성한다.
+- Code Connect 템플릿은 서브 컴포넌트 보유 여부에 따라 batch(`<name>.figma.batch.json` + `<name>.figma.batch.ts`) 또는 단일 raw template(`<name>.figma.ts`) 중 하나로 작성한다. 상세 규칙은 [`.claude/rules/code-connect-composites.md`](../../.claude/rules/code-connect-composites.md)를 따른다.

@@ -1,0 +1,23 @@
+{
+    "templateFile": "./dialog.figma.batch.ts",
+    "components": [
+        {
+            "part": "dialog-root",
+            "component": "Dialog",
+            "source": "src/components/dialog/dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2337-38499&m=dev"
+        },
+        {
+            "part": "dialog-action",
+            "component": "Dialog.Action",
+            "source": "src/components/dialog/dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2328-28152&m=dev"
+        },
+        {
+            "part": "dialog-assistive",
+            "component": "Dialog.Assistive",
+            "source": "src/components/dialog/dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2328-28157&m=dev"
+        }
+    ]
+}
