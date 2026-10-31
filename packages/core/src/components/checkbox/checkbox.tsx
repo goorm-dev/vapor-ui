@@ -13,6 +13,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
+import { adaptStatefulCallbacks } from '~/utils/stateful-props';
 import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './checkbox.css';
@@ -35,7 +36,13 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
  * Checkbox that turns an option on or off, or shows a mixed state with `indeterminate`. Renders a `<span>` element and a hidden `<input>` beside it.
  */
 export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, ref) => {
-    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const {
+        className: classNameProp,
+        style: styleProp,
+        render: renderProp,
+        children: childrenProp,
+        ...componentProps
+    } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(componentProps, [
         'size',
         'invalid',
@@ -47,25 +54,35 @@ export const CheckboxRoot = forwardRef<HTMLElement, CheckboxRoot.Props>((props, 
 
     useFieldRequired(required);
 
+    const dataAttrs = createDataAttributes({ invalid });
+
+    // NOTE: Base UI calls these with its own Root state; add the custom `invalid` on top.
+    const { className, style, render } = adaptStatefulCallbacks(
+        { className: classNameProp, style: styleProp, render: renderProp },
+        (state: BaseCheckbox.Root.State): CheckboxRoot.State => ({ ...state, invalid }),
+    );
+
     const childrenRender = createRender(childrenProp, <CheckboxIndicatorPrimitive />);
     const children = useRenderElement({
         render: childrenRender,
     });
 
-    const root = useRenderElement({
-        ref,
-        state: { invalid },
-        render: <BaseCheckbox.Root />,
-        props: {
-            'aria-invalid': invalid,
-            indeterminate,
-            className: cn(styles.root({ invalid, size }), className),
-            children,
-            ...otherProps,
-        },
-    });
-
-    return <CheckboxProvider value={variantProps}>{root}</CheckboxProvider>;
+    return (
+        <CheckboxProvider value={variantProps}>
+            <BaseCheckbox.Root
+                ref={ref}
+                aria-invalid={invalid}
+                indeterminate={indeterminate}
+                className={cn(styles.root({ invalid, size }), className)}
+                style={style}
+                render={render}
+                {...dataAttrs}
+                {...otherProps}
+            >
+                {children}
+            </BaseCheckbox.Root>
+        </CheckboxProvider>
+    );
 });
 CheckboxRoot.displayName = 'Checkbox.Root';
 

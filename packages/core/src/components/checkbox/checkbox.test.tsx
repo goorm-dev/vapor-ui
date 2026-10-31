@@ -337,6 +337,67 @@ describe('Checkbox', () => {
             expect(indicator).toHaveAttribute('data-readonly');
         });
     });
+
+    describe('stateful callbacks', () => {
+        it('should resolve `className` with Base UI state and `invalid`', async () => {
+            const rendered = render(
+                <CheckboxTest
+                    invalid
+                    className={(state) =>
+                        [state.checked && 'is-checked', state.invalid && 'is-invalid']
+                            .filter(Boolean)
+                            .join(' ')
+                    }
+                />,
+            );
+            const checkbox = rendered.getByRole('checkbox');
+
+            expect(checkbox).toHaveClass('is-invalid');
+            expect(checkbox).not.toHaveClass('is-checked');
+
+            await userEvent.click(checkbox);
+
+            expect(checkbox).toHaveClass('is-checked');
+        });
+
+        it('should resolve `style` with Base UI state', () => {
+            const rendered = render(
+                <CheckboxTest
+                    defaultChecked
+                    disabled
+                    style={(state) => ({
+                        opacity: state.checked && state.disabled ? 0.5 : 1,
+                    })}
+                />,
+            );
+
+            expect(rendered.getByRole('checkbox')).toHaveStyle({ opacity: '0.5' });
+        });
+
+        it('should pass Base UI state and `invalid` to the `render` callback', () => {
+            const rendered = render(
+                <CheckboxTest
+                    defaultChecked
+                    invalid
+                    render={(props, state) => (
+                        <span
+                            {...props}
+                            data-testid="custom"
+                            data-state={`${state.checked}-${state.invalid}`}
+                        />
+                    )}
+                />,
+            );
+
+            expect(rendered.getByTestId('custom')).toHaveAttribute('data-state', 'true-true');
+        });
+
+        it('should keep the `data-invalid` attribute', () => {
+            const rendered = render(<CheckboxTest invalid />);
+
+            expect(rendered.getByRole('checkbox')).toHaveAttribute('data-invalid');
+        });
+    });
 });
 
 const LABEL_TEXT = 'Checkbox Label';
