@@ -1,6 +1,7 @@
 import { Text, VStack } from '@vapor-ui/core';
 import { CheckCircleIcon } from '@vapor-ui/icons';
-import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+import { ImageZoom } from './image-zoom';
 
 interface DoImageProps {
     src: string;
@@ -14,13 +15,7 @@ export const DoImage = ({ src, alt, caption, width = 400, height = 300 }: DoImag
     return (
         <VStack render={<figure />} className="gap-v-150">
             <div className="rounded-v-500 bg-v-canvas-raised flex items-center justify-center overflow-hidden">
-                <ImageZoom
-                    src={src}
-                    alt={alt}
-                    width={width}
-                    height={height}
-                    className="object-cover w-full h-auto not-prose"
-                />
+                <ImageZoom src={src} alt={alt} width={width} height={height} />
             </div>
             <figcaption className="flex gap-v-100">
                 <CheckCircleIcon aria-hidden className="text-v-success shrink-0 w-v-300 h-v-300" />
