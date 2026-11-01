@@ -129,6 +129,39 @@ Do not inline the merge expression in the JSX attribute (`disabled={disabledProp
 - Do not use `defaultProps` on function components — use parameter defaults instead.
 - When a function has 3+ parameters, prefer an object parameter.
 
+## Stateful Callbacks (`className` / `style` / `render`)
+
+Function `className` / `style` / `render` are **stateful callbacks**: they receive the **part state** — what the part's `X.State` declares. Base UI builds its own **Base state** (`checked`, `disabled`, `open`, field state…) inside its render and calls the callbacks there. A callback only sees that state if it reaches the Base UI part **as a function**.
+
+- Pass the callback to the Base UI part unresolved. `resolveStyles` and `cn()` keep functions intact, so passing their result straight through is safe.
+- Do not render a Base UI part through `useRenderElement({ state, render: <BaseX /> })` with user `className` / `style` in `props`. The hook resolves them against `state` before Base UI runs, so callbacks get only the Vapor-side fields and every Base UI field is `undefined` — with no type error, because `State` still promises them.
+- When the part state differs from the Base state — it adds fields (`Checkbox.Root` adds `invalid`) or replaces them (`NavigationMenu.Link` maps `active` to `current`) — pass the callbacks through `adaptStatefulCallbacks` (`~/utils/stateful-props`) with a `toPartState` mapper, and render the Base UI part directly. Re-create any `data-*` attribute that the dropped `useRenderElement` state used to emit, since styles select on it.
+- `toPartState` must return the part state exactly. Destructure out Base fields the part state omits (`({ active, ...state }) => …`); `Omit` in the type alone still lets them through the spread at runtime.
+
+```tsx
+// ❌ callbacks resolved early with { invalid } only — `state.checked` is always undefined
+useRenderElement({
+    state: { invalid },
+    render: <BaseCheckbox.Root />,
+    props: { className: cn(styles.root({ invalid }), className) },
+});
+
+// ✅ Base UI calls the callbacks with its own state; toPartState adds the custom field
+const { className, style, render } = adaptStatefulCallbacks(
+    { className: classNameProp, style: styleProp, render: renderProp },
+    (state: BaseCheckbox.Root.State): CheckboxRoot.State => ({ ...state, invalid }),
+);
+
+<BaseCheckbox.Root
+    className={cn(styles.root({ invalid }), className)}
+    style={style}
+    render={render}
+    {...createDataAttributes({ invalid })}
+/>;
+```
+
+`useRenderElement` with a `state` is fine when it renders a plain element (`defaultTagName`) or a user `render`: there the passed `state` is the whole `State`, so it must match the declared type exactly — declare it as `const state: X.State = …` so the compiler enforces that.
+
 ## Composition & Accessibility
 
 - Composition is via Base UI `render` prop — **not** `asChild`.
