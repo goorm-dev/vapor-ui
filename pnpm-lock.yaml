@@ -940,7 +940,7 @@ importers:
   scripts/docs-extractor:
     dependencies:
       glob:
-        specifier: ^14.0.0
+        specifier: ^14.0.3
         version: 14.0.3
       meow:
         specifier: ^14.1.0
@@ -980,7 +980,7 @@ importers:
         specifier: workspace:*
         version: link:../docs-extractor
       glob:
-        specifier: ^14.0.0
+        specifier: ^14.0.3
         version: 14.0.3
       meow:
         specifier: ^14.1.0

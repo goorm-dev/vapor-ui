@@ -20,7 +20,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "glob": "^14.0.0",
+        "glob": "^14.0.3",
         "meow": "^14.1.0",
         "ts-morph": "^28.0.0"
     },
