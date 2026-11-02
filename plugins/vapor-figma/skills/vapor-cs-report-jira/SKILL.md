@@ -92,7 +92,11 @@ Vapor 디자인 시스템 팀 CS 접수 창구는 **Jira VAPOR 프로젝트 하�
 mcp__plugin_atlassian_atlassian__getAccessibleAtlassianResources()
 ```
 
-반환값에서 goorm 조직 cloudId 확보 후 재사용. 2개 이상 리소스 반환되면 사용자에게 어느 사이트인지 확인.
+반환값은 아래와 같이 처리한 뒤 세션 내 재사용한다.
+
+- 반환 리소스가 **비어 있거나 goorm 조직(`goorm-io.atlassian.net`) 리소스가 없음** → 사용자에게 goorm Atlassian 접근 권한이 필요하다고 안내하고, **미리보기 생성과 `createJiraIssue` 호출을 중단**한다.
+- 반환 리소스가 **정확히 하나이며 goorm 조직** → 해당 cloudId를 바로 사용.
+- 반환 리소스가 **둘 이상** → goorm 조직 리소스가 포함돼 있는지 확인하고, 포함돼 있으면 해당 cloudId가 맞는지 사용자에게 한 번 확인받은 뒤 사용. 포함돼 있지 않으면 위 "없음" 규칙을 따른다.
 
 ## 1. 양식 매핑
 
@@ -185,7 +189,7 @@ Figma: https://www.figma.com/design/XXX?node-id=YYY
 mcp__plugin_atlassian_atlassian__createJiraIssue(
   cloudId=<확보한 cloudId>,
   projectKey="VAPOR",
-  issueTypeName="CS",
+  issueType="CS",
   summary=<위 [제목]>,
   description=<위 [본문]>,
   additional_fields={
@@ -198,8 +202,8 @@ mcp__plugin_atlassian_atlassian__createJiraIssue(
 
 - `assignee` 필드 자체를 payload에 넣지 말 것. "unassigned"라는 문자열이나 null을 명시적으로 넣는 것도 아니고 **키 자체를 생략**한다.
 - `labels`는 기존 라벨 유지가 필요 없으니 `["figma"]`로 세팅.
-- description 포맷은 ADF 변환이 필요할 수 있음 — 플레인 마크다운 전달 후 오류 발생 시 Atlassian MCP의 `getContentFormatGuide` 참고하여 재시도.
-- 이슈 타입 `CS` 존재 여부 불확실 시 `getJiraProjectIssueTypesMetadata`로 사전 확인 가능하나, 세션 중 반복 호출 지양 (한 번 성공하면 캐시).
+- `description`은 기본 포맷(`contentFormat="markdown"`)으로 플레인 마크다운을 그대로 전달한다. Atlassian MCP가 ADF로 자동 변환해 준다. HTML 포맷을 특별히 쓸 일이 생기면 발행 **전에** `executeRead(name="getContentFormatGuide", inputs={toolName: "createJiraIssue"})`로 포맷 가이드를 확인한 뒤 보내고, 포맷 관련 오류가 돌아오면 아래 "발행 실패 시" 규칙에 따라 사용자에게 보고하고 임의로 재시도하지 않는다.
+- 이슈 타입 `CS` 존재 여부가 불확실한 세션에서는 `executeRead(name="listJiraProjectIssueTypesMetadata", inputs={projectKey: "VAPOR"})`로 사전 확인할 수 있다. 한 번 확인했으면 세션 중 반복 호출하지 않는다.
 
 발행 성공 시:
 
