@@ -203,7 +203,7 @@ mcp__plugin_atlassian_atlassian__createJiraIssue(
 - `assignee` 필드 자체를 payload에 넣지 말 것. "unassigned"라는 문자열이나 null을 명시적으로 넣는 것도 아니고 **키 자체를 생략**한다.
 - `labels`는 기존 라벨 유지가 필요 없으니 `["figma"]`로 세팅.
 - `description`은 기본 포맷(`contentFormat="markdown"`)으로 플레인 마크다운을 그대로 전달한다. Atlassian MCP가 ADF로 자동 변환해 준다. HTML 포맷을 특별히 쓸 일이 생기면 발행 **전에** `executeRead(name="getContentFormatGuide", inputs={toolName: "createJiraIssue"})`로 포맷 가이드를 확인한 뒤 보내고, 포맷 관련 오류가 돌아오면 아래 "발행 실패 시" 규칙에 따라 사용자에게 보고하고 임의로 재시도하지 않는다.
-- 이슈 타입 `CS` 존재 여부가 불확실한 세션에서는 `executeRead(name="listJiraProjectIssueTypesMetadata", inputs={projectKey: "VAPOR"})`로 사전 확인할 수 있다. 한 번 확인했으면 세션 중 반복 호출하지 않는다.
+- 이슈 타입 `CS` 존재 여부가 불확실한 세션에서는 `executeRead(name="listJiraProjectIssueTypesMetadata", cloudId=<확보한 cloudId>, inputs={"projectIdOrKey": "VAPOR"})`로 사전 확인할 수 있다. `cloudId`는 반드시 top-level 인자로 전달하고 `inputs` 안에 넣지 않는다. 한 번 확인했으면 세션 중 반복 호출하지 않는다.
 
 발행 성공 시:
 
