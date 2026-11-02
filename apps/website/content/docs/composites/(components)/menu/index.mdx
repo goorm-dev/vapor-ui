@@ -182,13 +182,38 @@ Check group 중 단일 선택 Item은 Checked 상태가 되면 같은 그룹 안
 
 ---
 
-<CompositePropsTable
-    parts={[
-        { file: 'menu-root', name: 'Menu.Root' },
-        { file: 'menu-group', name: 'Menu.Group' },
-        { file: 'menu-check-group', name: 'Menu.CheckGroup' },
-        { file: 'menu-item', name: 'Menu.Item' },
-        { file: 'menu-check-item', name: 'Menu.CheckItem' },
-        { file: 'menu-submenu-item', name: 'Menu.SubmenuItem' },
-    ]}
-/>
+### Menu.Root
+
+여러 옵션 중 하나를 실행할 수 있는 목록을 제공하는 Menu의 루트 요소입니다.
+
+<CompositePropsTable part="menu-root" />
+
+### Menu.Group
+
+서로 관련 있는 Item을 하나로 묶는 그룹 요소입니다.
+
+<CompositePropsTable part="menu-group" />
+
+### Menu.CheckGroup
+
+서로 관련 있는 Check item을 묶는 그룹 요소입니다.
+
+<CompositePropsTable part="menu-check-group" />
+
+### Menu.Item
+
+특정 액션을 실행할 수 있는 동작 요소입니다.
+
+<CompositePropsTable part="menu-item" />
+
+### Menu.CheckItem
+
+선택 가능한 Item 요소입니다.
+
+<CompositePropsTable part="menu-check-item" />
+
+### Menu.SubmenuItem
+
+하위 메뉴를 여는 Item 요소입니다.
+
+<CompositePropsTable part="menu-submenu-item" />

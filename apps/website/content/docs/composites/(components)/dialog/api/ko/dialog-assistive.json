@@ -1,5 +1,6 @@
 {
     "name": "DialogAssistive",
+    "description": "Dialog의 동작을 취소하는 요소",
     "props": [
         {
             "name": "closeOnClick",

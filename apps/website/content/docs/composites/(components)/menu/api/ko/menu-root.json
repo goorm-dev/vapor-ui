@@ -1,5 +1,6 @@
 {
     "name": "MenuRoot",
+    "description": "여러 옵션 중 하나를 실행할 수 있는 목록을 제공하는 Menu의 루트 요소",
     "props": [
         {
             "name": "children",

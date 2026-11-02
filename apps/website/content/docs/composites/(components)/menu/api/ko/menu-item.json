@@ -1,5 +1,6 @@
 {
     "name": "MenuItem",
+    "description": "특정 액션을 실행할 수 있는 동작 요소",
     "props": [
         {
             "name": "label",

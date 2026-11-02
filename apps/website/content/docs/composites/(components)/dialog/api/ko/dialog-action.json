@@ -1,5 +1,6 @@
 {
     "name": "DialogAction",
+    "description": "Dialog의 주요 액션을 발생시키는 요소",
     "props": [
         {
             "name": "closeOnClick",

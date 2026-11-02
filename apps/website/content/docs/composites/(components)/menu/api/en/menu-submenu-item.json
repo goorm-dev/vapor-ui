@@ -1,5 +1,6 @@
 {
     "name": "MenuSubmenuItem",
+    "description": "하위 메뉴를 여는 Item 요소",
     "props": [
         {
             "name": "label",

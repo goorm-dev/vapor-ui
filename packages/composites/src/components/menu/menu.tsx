@@ -27,6 +27,9 @@ const submenuSlots = createSlots({
     trigger: MenuPrimitives.SubmenuTrigger,
 });
 
+/**
+ * 여러 옵션 중 하나를 실행할 수 있는 목록을 제공하는 Menu의 루트 요소
+ */
 export const MenuRoot = ({ modal, ...props }: MenuRoot.Props) => {
     const parent = useMenuContext();
     const contextValue = useMemo<MenuContextValue>(() => ({ nested: true }), []);
@@ -193,6 +196,9 @@ const groupSlots = createSlots({
     label: MenuPrimitives.GroupLabel,
 });
 
+/**
+ * 서로 관련 있는 Item을 하나로 묶는 그룹 요소
+ */
 export const MenuGroup = ({ label, children }: MenuGroup.Props) => {
     return (
         <>
@@ -260,6 +266,9 @@ const checkGroupSlots = createSlots({
     label: MenuPrimitives.GroupLabel,
 });
 
+/**
+ * 서로 관련 있는 Check item을 묶는 그룹 요소
+ */
 export const MenuCheckGroup = (props: MenuCheckGroup.Props) => {
     const { mode } = props;
 
@@ -427,6 +436,9 @@ export namespace MenuCheckGroup {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 특정 액션을 실행할 수 있는 동작 요소
+ */
 export const MenuItem = ({
     isDisabled,
     variant,
@@ -506,6 +518,9 @@ export namespace MenuItem {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 선택 가능한 Item 요소
+ */
 export const MenuCheckItem = ({
     value: valueProp,
     isDisabled,
@@ -621,6 +636,9 @@ export namespace MenuCheckItem {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 하위 메뉴를 여는 Item 요소
+ */
 export const MenuSubmenuItem = ({
     isDisabled,
     leading,

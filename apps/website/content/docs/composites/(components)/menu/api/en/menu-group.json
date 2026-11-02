@@ -1,5 +1,6 @@
 {
     "name": "MenuGroup",
+    "description": "서로 관련 있는 Item을 하나로 묶는 그룹 요소",
     "props": [
         {
             "name": "children",

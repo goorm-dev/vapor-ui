@@ -1,5 +1,6 @@
 {
     "name": "AlertDialogCancel",
+    "description": "AlertDialog의 동작을 취소시키는 요소",
     "props": [
         {
             "name": "closeOnClick",

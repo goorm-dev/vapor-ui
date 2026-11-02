@@ -1,5 +1,6 @@
 {
     "name": "MenuCheckGroup",
+    "description": "서로 관련 있는 Check item을 묶는 그룹 요소",
     "props": [
         {
             "name": "children",

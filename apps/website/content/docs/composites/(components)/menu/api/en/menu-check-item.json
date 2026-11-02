@@ -1,5 +1,6 @@
 {
     "name": "MenuCheckItem",
+    "description": "선택 가능한 Item 요소",
     "props": [
         {
             "name": "label",

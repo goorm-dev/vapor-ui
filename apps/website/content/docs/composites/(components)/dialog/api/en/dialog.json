@@ -1,5 +1,6 @@
 {
     "name": "Dialog",
+    "description": "페이지 위에 창을 띄워 사용자를 중요한 정보에 집중시키거나, 특정 작업을 수행하도록 강제하는 Dialog의 루트 요소",
     "props": [
         {
             "name": "ariaLabels",
