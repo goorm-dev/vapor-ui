@@ -45,15 +45,14 @@ export const PartTable = ({ partName, componentData }: PartTableProps) => {
                         <Text
                             typography="subtitle2"
                             foreground="normal-100"
-                            className="flex-shrink-0"
-                            $css={{ width: '150px' }}
+                            $css={{ width: '150px', flexShrink: 0 }}
                         >
                             Prop
                         </Text>
                         <Text typography="subtitle2" foreground="normal-100" $css={{ flex: 1 }}>
                             Type
                         </Text>
-                        <span className="w-5 h-6 flex-shrink-0" aria-hidden />
+                        <span className="w-5 h-6 shrink-0" aria-hidden />
                     </HStack>
 
                     {props.map((prop, index) => (

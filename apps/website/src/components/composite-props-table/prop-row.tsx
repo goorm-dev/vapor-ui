@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 
-import { Badge, Flex, HStack, Text, VStack } from '@vapor-ui/core';
+import { Badge, Collapsible, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 import { ChevronDownOutlineIcon, ChevronUpOutlineIcon } from '@vapor-ui/icons';
 
 import type { PropDefinition } from '~/utils/component-api';
@@ -30,12 +30,13 @@ export const PropRow = ({ prop, isLast, typeRefs }: PropRowProps) => {
     const referencedTypes = typeRefs ? collectReferencedTypes(types, typeRefs) : [];
 
     return (
-        <div className={`w-full ${isLast ? '' : 'border-b border-b-v-normal'}`}>
-            <button
-                type="button"
-                aria-expanded={open}
-                onClick={() => hasDetails && setOpen((prev) => !prev)}
-                disabled={!hasDetails}
+        <Collapsible.Root
+            open={open}
+            onOpenChange={setOpen}
+            disabled={!hasDetails}
+            className={`w-full ${isLast ? '' : 'border-b border-b-v-normal'}`}
+        >
+            <Collapsible.Trigger
                 className={`w-full text-left bg-transparent border-0 p-0 ${
                     hasDetails ? 'cursor-pointer' : 'cursor-default'
                 }`}
@@ -48,10 +49,7 @@ export const PropRow = ({ prop, isLast, typeRefs }: PropRowProps) => {
                         alignItems: 'center',
                     }}
                 >
-                    <HStack
-                        className="flex-shrink-0"
-                        $css={{ width: '150px', alignItems: 'center' }}
-                    >
+                    <HStack $css={{ width: '150px', alignItems: 'center', flexShrink: 0 }}>
                         <Text typography="body2" foreground="normal-100">
                             {prop.name}
                             {!prop.required && '?'}
@@ -69,7 +67,7 @@ export const PropRow = ({ prop, isLast, typeRefs }: PropRowProps) => {
                     </Flex>
 
                     <span
-                        className={`flex items-center justify-center w-5 h-6 flex-shrink-0 text-v-normal-200 ${
+                        className={`flex items-center justify-center w-5 h-6 shrink-0 text-v-normal-200 ${
                             hasDetails ? 'opacity-100' : 'opacity-0'
                         }`}
                         aria-hidden
@@ -81,9 +79,9 @@ export const PropRow = ({ prop, isLast, typeRefs }: PropRowProps) => {
                         )}
                     </span>
                 </HStack>
-            </button>
+            </Collapsible.Trigger>
 
-            {open && hasDetails && (
+            <Collapsible.Panel>
                 <VStack
                     $css={{
                         paddingInline: '$300',
@@ -131,8 +129,8 @@ export const PropRow = ({ prop, isLast, typeRefs }: PropRowProps) => {
                         </PropDetailRow>
                     )}
                 </VStack>
-            )}
-        </div>
+            </Collapsible.Panel>
+        </Collapsible.Root>
     );
 };
 
@@ -143,12 +141,7 @@ interface PropDetailRowProps {
 
 const PropDetailRow = ({ label, children }: PropDetailRowProps) => (
     <HStack $css={{ gap: '$300', alignItems: 'flex-start' }}>
-        <Text
-            typography="body2"
-            foreground="hint-100"
-            className="flex-shrink-0"
-            $css={{ width: '150px' }}
-        >
+        <Text typography="body2" foreground="hint-100" $css={{ width: '150px', flexShrink: 0 }}>
             {label}
         </Text>
         <Flex $css={{ flex: 1, flexDirection: 'column' }}>{children}</Flex>
