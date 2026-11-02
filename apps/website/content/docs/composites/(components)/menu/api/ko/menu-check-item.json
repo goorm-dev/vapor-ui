@@ -1,0 +1,54 @@
+{
+    "name": "MenuCheckItem",
+    "props": [
+        {
+            "name": "label",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": true,
+            "description": "항목의 텍스트 라벨."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "detailedType": "string",
+            "required": true,
+            "description": "항목이 대표하는 값. 그룹의 선택 상태 키로 사용된다."
+        },
+        {
+            "name": "description",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "항목의 동작을 설명하는 텍스트."
+        },
+        {
+            "name": "isDisabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "아이템을 비활성화한다. 비활성화된 아이템은 클릭 시 액션을 실행하거나 선택되지 않는다."
+        },
+        {
+            "name": "leading",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "항목 좌측에 표시되는 요소. 레이블을 보충 설명하기 위한 요소를 배치한다."
+        },
+        {
+            "name": "onClick",
+            "type": ["function"],
+            "detailedType": "((event: BaseUIEvent<React.MouseEvent<HTMLDivElement, MouseEvent>>) => void) | undefined",
+            "required": false,
+            "description": "항목 클릭 시 호출된다. 선택 토글은 그룹이 처리하므로, 추가 사이드이펙트가 필요한 경우에만 지정한다."
+        },
+        {
+            "name": "trailing",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "항목 우측에 표시되는 요소. 단축키나 보조 아이콘 등을 배치한다."
+        }
+    ]
+}

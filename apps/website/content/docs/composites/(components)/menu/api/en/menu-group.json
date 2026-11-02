@@ -1,0 +1,19 @@
+{
+    "name": "MenuGroup",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": true,
+            "description": "그룹 내부에 표시할 요소."
+        },
+        {
+            "name": "label",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": true,
+            "description": "그룹 상단에 표시되는 라벨. 스크린리더가 그룹 이름으로 낭독한다."
+        }
+    ]
+}

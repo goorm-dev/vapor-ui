@@ -1,0 +1,47 @@
+{
+    "name": "MenuCheckGroup",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": true,
+            "description": "그룹 내부에 표시할 요소."
+        },
+        {
+            "name": "label",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": true,
+            "description": "그룹 상단에 표시되는 라벨. 스크린리더가 그룹 이름으로 낭독한다."
+        },
+        {
+            "name": "mode",
+            "type": ["single", "multiple"],
+            "detailedType": "\"single\" | \"multiple\"",
+            "required": true,
+            "description": "선택 모드. `single`은 라디오 그룹처럼 최대 하나의 값만 선택된다."
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string", "string[]"],
+            "detailedType": "string | string[] | undefined",
+            "required": false,
+            "description": "마운트 시 초기 선택 값(비제어)."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: string) => void) | ((value: string[]) => void) | undefined",
+            "required": false,
+            "description": "선택이 바뀔 때 호출된다. 새로 선택된 값 하나가 전달된다."
+        },
+        {
+            "name": "value",
+            "type": ["string", "string[]"],
+            "detailedType": "string | string[] | undefined",
+            "required": false,
+            "description": "선택된 값(제어). 상태의 변경을 추적할 필요가 없다면 defaultValue를 사용한다."
+        }
+    ]
+}

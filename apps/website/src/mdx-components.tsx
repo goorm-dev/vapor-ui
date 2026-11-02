@@ -10,6 +10,7 @@ import AllComponentsContainer from '~/components/all-components-container';
 import { CodeBlock } from '~/components/code-block/code-block';
 import ComponentsCard from '~/components/component-card/component-card';
 import { ComponentPropsTable } from '~/components/component-props-table';
+import { CompositePropsTable } from '~/components/composite-props-table';
 import { Demo } from '~/components/demo/demo';
 import FoundationSizeTabs from '~/components/foundation-size-tabs';
 import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
@@ -43,6 +44,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         InstallSelector,
         AllComponentsContainer,
         ComponentPropsTable,
+        CompositePropsTable,
         ComponentsCard,
         FoundationSizeTabs,
         FoundationTypographyTabs,

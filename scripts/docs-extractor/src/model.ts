@@ -31,6 +31,8 @@ export interface ParsedProp {
     /** Tagged `@ignore` upstream and not re-declared by vapor-ui. */
     isIgnored?: boolean;
     source: PropSource;
+    /** Absolute paths of every file that declares this prop. Used to drop prop inherited from outside the input directory. */
+    declarationPaths: string[];
     description?: string;
     defaultValue?: string;
 }
