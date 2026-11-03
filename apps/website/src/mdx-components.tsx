@@ -10,13 +10,13 @@ import AllComponentsContainer from '~/components/all-components-container';
 import { CodeBlock } from '~/components/code-block/code-block';
 import ComponentsCard from '~/components/component-card/component-card';
 import { ComponentPropsTable } from '~/components/component-props-table';
-import { CompositePropsTable } from '~/components/composite-props-table';
 import { Demo } from '~/components/demo/demo';
 import FoundationSizeTabs from '~/components/foundation-size-tabs';
 import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
 import IconList from '~/components/icon-list/icon-list';
 import IconStyleGuide from '~/components/icon-style-guide';
 import InstallSelector from '~/components/install-selector/install-selector';
+import { PropsTable } from '~/components/props-table';
 
 import { ColorPalette } from './components/color-swatch';
 import { DoImage } from './components/composites/do-image';
@@ -44,7 +44,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         InstallSelector,
         AllComponentsContainer,
         ComponentPropsTable,
-        CompositePropsTable,
+        PropsTable,
         ComponentsCard,
         FoundationSizeTabs,
         FoundationTypographyTabs,
