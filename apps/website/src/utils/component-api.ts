@@ -7,6 +7,7 @@ export interface PropDefinition {
     required: boolean;
     description?: string;
     defaultValue?: string;
+    detailedType?: string;
 }
 
 export interface ComponentApi {
