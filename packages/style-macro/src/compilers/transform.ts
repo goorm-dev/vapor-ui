@@ -15,7 +15,7 @@ import {
     injectJsxStyleForCall,
 } from './jsx-inject';
 import { walk } from './oxc-walk';
-import { parseCallArg } from './parse-call';
+import { parseCallArg, type ParseCallResult } from './parse-call';
 
 // ────────────────────────────────────────────────────────────────
 // Public API
@@ -53,11 +53,31 @@ function axisForProperty(property: string): string | null {
     return axis ?? null;
 }
 
+/**
+ * `css()` 호출의 한 argument 를 어떻게 처리할지. `ObjectExpression` 리터럴은
+ * `_mkStyle({ property: className })` 로 치환하고 그 과정에서 parse-call 이
+ * 생성한 rules 가 CSS emit 에도 참여한다. 그 외(Identifier / MemberExpression /
+ * 등) 는 "이미 compile 된 VaporClass 값" 으로 간주하고 소스 표현식 그대로 둔
+ * 뒤 `_mergeStyles(...)` 안에 한 인자로 넣는다.
+ */
+type ArgRecord =
+    | {
+          kind: 'object';
+          node: AnyProp;
+          rules: IRRule[];
+          ternaries: ParseCallResult['ternaries'];
+          /** `#allRules` 에 기록된 base offset — emitCss 출력과 맞추기 위함. */
+          rulesOffset: number;
+      }
+    | {
+          kind: 'reference';
+          node: AnyProp;
+      };
+
 interface CallRecord {
     node: AnyProp;
     parents: AnyProp[];
-    rules: IRRule[];
-    ternaries: ReturnType<typeof parseCallArg>['ternaries'];
+    args: ArgRecord[];
 }
 
 class Transformer {
@@ -71,6 +91,8 @@ class Transformer {
     #bindingName: string | null = null;
     #ms: MagicString | null = null;
     #needResolveToken = false;
+    #needMkStyle = false;
+    #needMergeStyles = false;
 
     constructor(private readonly opts: TransformOpts) {
         this.#mode = opts.hash ? 'hashed' : 'readable';
@@ -99,54 +121,22 @@ class Transformer {
         }
 
         const emitted = emitCss(this.#allRules, this.#mode);
-        let cursor = 0;
+        const classNamesAll = emitted.classNamesPerRule;
 
         const injectCtx: InjectContext = {
-            ms: this.#ms!,
+            ms: this.#ms,
             mode: this.#mode === 'hashed' ? 'prod' : 'dev',
             pending: new Map(),
         };
 
         for (const call of this.#callSites) {
-            const count = call.rules.length;
-            const classNames = emitted.classNamesPerRule.slice(cursor, cursor + count);
-            cursor += count;
-            for (const c of classNames) this.#classes.add(c);
-
-            const dynamicSlots = call.rules
-                .map((r, i) =>
-                    r.kind === 'dynamic'
-                        ? {
-                              slotId: r.slotId,
-                              property: r.property,
-                              sourceExpr: r.sourceExpr,
-                              idx: i,
-                          }
-                        : null,
-                )
-                .filter((x): x is NonNullable<typeof x> => x !== null);
-
+            // dynamic slot 수집은 모든 object-arg 의 dynamic rules 통합.
+            const dynamicSlots = this.#collectDynamicSlots(call, classNamesAll);
             if (dynamicSlots.length > 0) {
-                // shorthand 는 같은 slotId 로 여러 property 를 만든다. 모두 같은
-                // axis 이므로 slotId 단위로 묶어 중복 slot 정의를 제거.
-                const bySlot = new Map<
-                    string,
-                    { slotId: string; axis: string | null; sourceExpr: string }
-                >();
-                for (const s of dynamicSlots) {
-                    if (bySlot.has(s.slotId)) continue;
-                    const axis = axisForProperty(s.property);
-                    if (axis) this.#axesUsed.add(axis);
-                    bySlot.set(s.slotId, {
-                        slotId: s.slotId,
-                        axis,
-                        sourceExpr: s.sourceExpr,
-                    });
-                }
                 const site: DynamicCallSite = {
                     call: call.node,
                     parents: call.parents,
-                    slots: Array.from(bySlot.values()),
+                    slots: dynamicSlots,
                 };
                 const outcome = injectJsxStyleForCall(site, injectCtx);
                 if (!outcome.success) {
@@ -156,8 +146,17 @@ class Transformer {
                 this.#needResolveToken = true;
             }
 
-            const replacement = this.#buildCallReplacement(classNames, call.ternaries);
-            this.#ms!.overwrite(call.node.start, call.node.end, replacement);
+            const replacement = this.#buildCallReplacement(call, classNamesAll);
+            this.#ms.overwrite(call.node.start, call.node.end, replacement);
+
+            // emit 결과 class 전수 보고
+            for (const arg of call.args) {
+                if (arg.kind !== 'object') continue;
+                for (let i = 0; i < arg.rules.length; i++) {
+                    const c = classNamesAll[arg.rulesOffset + i];
+                    if (c) this.#classes.add(c);
+                }
+            }
         }
 
         if (this.#errors.length) {
@@ -169,16 +168,11 @@ class Transformer {
             };
         }
 
-        // 모든 call site 수집 후 opening element 단위로 style prop 삽입/머지.
         flushInjects(injectCtx);
-
-        // runtime helper import 자동 삽입 (필요 시).
-        if (this.#needResolveToken) {
-            this.#ensureRuntimeImport();
-        }
+        this.#ensureRuntimeImport();
 
         return {
-            code: this.#ms!.toString(),
+            code: this.#ms.toString(),
             css: this.#allRules.length ? emitted.cssText : null,
             classes: [...this.#classes],
             errors: [],
@@ -186,7 +180,6 @@ class Transformer {
     }
 
     #shouldSkip(): boolean {
-        // package specifier가 소스에 없으면 import 자체가 없는 셈 → oxc parsing skip.
         return !this.opts.source.includes(IMPORT_SOURCE);
     }
 
@@ -213,75 +206,169 @@ class Transformer {
         if (!this.#bindingName) return;
         if (node.callee?.type !== 'Identifier' || node.callee.name !== this.#bindingName) return;
 
-        const arg = node.arguments?.[0];
-        const parsed = parseCallArg(arg, this.opts.source);
-        this.#errors.push(...parsed.errors);
-        if (parsed.errors.length) return;
+        const rawArgs: AnyProp[] = node.arguments ?? [];
+        if (rawArgs.length === 0) {
+            this.#errors.push(noArgError(node));
+            return;
+        }
 
-        // parents 는 walker 가 관리하는 라이브 스택. 저장 시 복사.
+        const args: ArgRecord[] = [];
+        for (const a of rawArgs) {
+            if (a.type === 'ObjectExpression') {
+                const parsed = parseCallArg(a, this.opts.source);
+                this.#errors.push(...parsed.errors);
+                if (parsed.errors.length) return;
+                args.push({
+                    kind: 'object',
+                    node: a,
+                    rules: parsed.rules,
+                    ternaries: parsed.ternaries,
+                    rulesOffset: this.#allRules.length,
+                });
+                this.#allRules.push(...parsed.rules);
+            } else {
+                args.push({ kind: 'reference', node: a });
+            }
+        }
+
         this.#callSites.push({
             node,
             parents: parents.slice(),
-            rules: parsed.rules,
-            ternaries: parsed.ternaries,
+            args,
         });
-        this.#allRules.push(...parsed.rules);
     };
 
+    /** call 안 모든 object-arg 의 dynamic rules 를 통합 slot 리스트로. */
+    #collectDynamicSlots(call: CallRecord, _classNamesAll: string[]) {
+        const bySlot = new Map<string, DynamicCallSite['slots'][number]>();
+        for (const arg of call.args) {
+            if (arg.kind !== 'object') continue;
+            for (let i = 0; i < arg.rules.length; i++) {
+                const r = arg.rules[i];
+                if (r.kind !== 'dynamic') continue;
+                if (bySlot.has(r.slotId)) continue;
+                const axis = axisForProperty(r.property);
+                if (axis) this.#axesUsed.add(axis);
+                bySlot.set(r.slotId, {
+                    slotId: r.slotId,
+                    axis,
+                    sourceExpr: r.sourceExpr,
+                });
+            }
+        }
+        return Array.from(bySlot.values());
+    }
+
     /**
-     * `css({...})` 호출을 className 문자열식으로 교체.
+     * `css(...)` 호출 전체를 바꿀 소스 문자열 생성.
+     *
+     * - 단일 object-arg → `_mkStyle({ 'selector|property': 'className', … })`
+     * - 단일 reference → 소스 표현식 그대로 (React 가 알아서 toString 호출)
+     * - 멀티 arg → `_mergeStyles(arg1, arg2, …)` wrap
      */
-    #buildCallReplacement(
-        classNames: string[],
-        ternaries: ReturnType<typeof parseCallArg>['ternaries'],
+    #buildCallReplacement(call: CallRecord, classNamesAll: string[]): string {
+        const rendered: string[] = [];
+        for (const arg of call.args) {
+            if (arg.kind === 'reference') {
+                rendered.push(this.opts.source.slice(arg.node.start, arg.node.end));
+            } else {
+                rendered.push(this.#renderMkStyle(arg, classNamesAll));
+            }
+        }
+
+        if (rendered.length === 1) {
+            const only = call.args[0];
+            // 단일 object → _mkStyle 문자열 그대로 사용 (이미 VaporClass).
+            if (only.kind === 'object') return rendered[0];
+            // 단일 reference → 그대로 통과. 사용자 코드의 ident 가 className 자리에
+            // 바로 들어가도 toString 이 자동 호출되므로 unwrap 불필요.
+            return rendered[0];
+        }
+
+        this.#needMergeStyles = true;
+        return `_mergeStyles(${rendered.join(', ')})`;
+    }
+
+    /**
+     * 하나의 object-arg 를 `_mkStyle({ 'key': 'className', … })` 리터럴로.
+     *
+     * key 는 `${selectorContext}|${property}` 복합으로, 같은 selector + property
+     * 를 가진 rules 중 **마지막만** 남긴다 (리뷰 #1 — 단일 css() 호출 안 property
+     * last-wins). `_mergeStyles` 도 for-in 으로 key 를 돌며 override 하므로 이
+     * 복합 key 체계가 "다른 selector 는 서로 머지하지 않고, 같은 selector 안의
+     * 같은 property 만 last-wins" 라는 정확한 의미를 유지한다.
+     *
+     * ternary 는 branch 별로 branch classes 를 **구분된 key** 로 삽입해 둘
+     * 중 한 쪽만 평가되도록 삼항식으로 분기한다.
+     */
+    #renderMkStyle(
+        arg: Extract<ArgRecord, { kind: 'object' }>,
+        classNamesAll: string[],
     ): string {
-        if (ternaries.length === 0) {
-            const uniq = Array.from(new Set(classNames)).sort().join(' ');
-            return jsSingleQuoted(uniq);
+        this.#needMkStyle = true;
+
+        const ternaryIdxs = new Set<number>();
+        for (const t of arg.ternaries) {
+            for (const i of t.consequentRuleIndexes) ternaryIdxs.add(i);
+            for (const i of t.alternateRuleIndexes) ternaryIdxs.add(i);
         }
 
-        // 모든 ternary 분기가 점유한 rule index 집합.
-        const ternaryIdx = new Set<number>();
-        for (const t of ternaries) {
-            for (const i of t.consequentRuleIndexes) ternaryIdx.add(i);
-            for (const i of t.alternateRuleIndexes) ternaryIdx.add(i);
+        // 1) ternary 와 무관한 rules — property last-wins 로 Map 수집.
+        const staticMap = new Map<string, string>();
+        for (let i = 0; i < arg.rules.length; i++) {
+            if (ternaryIdxs.has(i)) continue;
+            const r = arg.rules[i];
+            const className = classNamesAll[arg.rulesOffset + i];
+            if (!className) continue;
+            const key = mkKey(r.selectorContext, r.property);
+            staticMap.set(key, className);
         }
 
-        // rest = ternary 와 무관한 모든 rule 의 class (dedupe + sort).
-        const restClasses = classNames.filter((_, i) => !ternaryIdx.has(i));
-        const restUniq = Array.from(new Set(restClasses)).sort();
-        const restLit = jsSingleQuoted(restUniq.join(' '));
+        const entries: string[] = [];
+        for (const [key, className] of staticMap) {
+            entries.push(`${jsSingleQuoted(key)}: ${jsSingleQuoted(className)}`);
+        }
 
-        const parts: string[] = [];
-        if (restUniq.length > 0) parts.push(restLit);
-
-        for (const t of ternaries) {
-            const conseqUniq = Array.from(
-                new Set(t.consequentRuleIndexes.map((i) => classNames[i])),
-            ).sort();
-            const altUniq = Array.from(
-                new Set(t.alternateRuleIndexes.map((i) => classNames[i])),
-            ).sort();
-
-            const conseqLit = jsSingleQuoted(conseqUniq.join(' '));
-            const altLit = jsSingleQuoted(altUniq.join(' '));
+        // 2) ternary — 각 branch 의 property 를 구분된 key 로 삽입.
+        for (const t of arg.ternaries) {
             const testSrc = this.opts.source.slice(t.testStart, t.testEnd);
 
-            parts.push(`(${testSrc} ? ${conseqLit} : ${altLit})`);
+            // property 별로 두 branch 의 className 묶기.
+            const byProp = new Map<string, { conseq: string; alt: string }>();
+            for (const i of t.consequentRuleIndexes) {
+                const r = arg.rules[i];
+                const className = classNamesAll[arg.rulesOffset + i];
+                if (!className) continue;
+                const key = mkKey(r.selectorContext, r.property);
+                const e = byProp.get(key) ?? { conseq: '', alt: '' };
+                e.conseq = className;
+                byProp.set(key, e);
+            }
+            for (const i of t.alternateRuleIndexes) {
+                const r = arg.rules[i];
+                const className = classNamesAll[arg.rulesOffset + i];
+                if (!className) continue;
+                const key = mkKey(r.selectorContext, r.property);
+                const e = byProp.get(key) ?? { conseq: '', alt: '' };
+                e.alt = className;
+                byProp.set(key, e);
+            }
+
+            for (const [key, { conseq, alt }] of byProp) {
+                const expr = `(${testSrc} ? ${jsSingleQuoted(conseq)} : ${jsSingleQuoted(alt)})`;
+                entries.push(`${jsSingleQuoted(key)}: ${expr}`);
+            }
         }
 
-        if (parts.length === 1) return parts[0];
-        return `(${parts.join(" + ' ' + ")})`;
+        return entries.length === 0 ? `_mkStyle({})` : `_mkStyle({ ${entries.join(', ')} })`;
     }
 
     #ensureRuntimeImport() {
         const specifiers: string[] = [];
+        if (this.#needMkStyle) specifiers.push('_mkStyle');
+        if (this.#needMergeStyles) specifiers.push('_mergeStyles');
         if (this.#needResolveToken) specifiers.push('_resolveToken');
         if (this.#axesUsed.size > 0) {
-            // axis 를 `color as __vaporAxis_color` 로 alias 한다. 사용자 코드가
-            // `const color = …` 같은 흔한 이름을 쓰면 bare `color` import 는
-            // 지역 변수에 가려지거나(=토큰 룩업 실패) 모듈 최상위 중복 선언으로
-            // SyntaxError 를 낸다. prefix 로 충돌을 원천 차단.
             specifiers.push(
                 ...Array.from(this.#axesUsed)
                     .sort()
@@ -294,6 +381,12 @@ class Transformer {
         const insertPos = directivePrologueEnd(this.opts.source);
         this.#ms!.appendLeft(insertPos, inject);
     }
+}
+
+/** 복합 key 는 property-only 로 축약 가능하지만, selector 가 다른 분기의
+ *  같은 property 는 "다른 slot" 이어야 머지 로직이 꼬이지 않는다. */
+function mkKey(selectorContext: string, property: string): string {
+    return `${selectorContext}|${property}`;
 }
 
 function jsSingleQuoted(value: string) {
@@ -310,4 +403,15 @@ function jsSingleQuoted(value: string) {
 
 function emptyResult(source: string): TransformResult {
     return { code: source, css: null, classes: [], errors: [] };
+}
+
+function noArgError(node: AnyProp): BuildError {
+    return {
+        code: 'invalid-input-shape',
+        message: 'css() requires at least one argument.',
+        loc: {
+            line: node?.loc?.start?.line ?? 1,
+            column: node?.loc?.start?.column ?? 0,
+        },
+    };
 }
