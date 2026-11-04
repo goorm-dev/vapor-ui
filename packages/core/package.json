@@ -22,7 +22,9 @@
     "author": "Vapor Team <vapor.ui@goorm.io>",
     "sideEffects": [
         "**/*.css",
-        "**/*.css.ts"
+        "**/*.css.ts",
+        "**/*.css.vanilla.mjs",
+        "**/*.css.vanilla.cjs"
     ],
     "type": "module",
     "exports": {
