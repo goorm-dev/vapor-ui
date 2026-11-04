@@ -1,55 +1,55 @@
 export const fontSize = {
     /** › `--vapor-typography-fontSize-025`
      *
-     * › 10px` */
+     * › 10px */
     'fontSize-025': 'var(--vapor-typography-fontSize-025)',
     /** › `--vapor-typography-fontSize-050`
      *
-     * › 12px` */
+     * › 12px */
     'fontSize-050': 'var(--vapor-typography-fontSize-050)',
     /** › `--vapor-typography-fontSize-075`
      *
-     * › 14px` */
+     * › 14px */
     'fontSize-075': 'var(--vapor-typography-fontSize-075)',
     /** › `--vapor-typography-fontSize-100`
      *
-     * › 16px` */
+     * › 16px */
     'fontSize-100': 'var(--vapor-typography-fontSize-100)',
     /** › `--vapor-typography-fontSize-200`
      *
-     * › 18px` */
+     * › 18px */
     'fontSize-200': 'var(--vapor-typography-fontSize-200)',
     /** › `--vapor-typography-fontSize-300`
      *
-     * › 20px` */
+     * › 20px */
     'fontSize-300': 'var(--vapor-typography-fontSize-300)',
     /** › `--vapor-typography-fontSize-400`
      *
-     * › 24px` */
+     * › 24px */
     'fontSize-400': 'var(--vapor-typography-fontSize-400)',
     /** › `--vapor-typography-fontSize-500`
      *
-     * › 32px` */
+     * › 32px */
     'fontSize-500': 'var(--vapor-typography-fontSize-500)',
     /** › `--vapor-typography-fontSize-600`
      *
-     * › 38px` */
+     * › 38px */
     'fontSize-600': 'var(--vapor-typography-fontSize-600)',
     /** › `--vapor-typography-fontSize-700`
      *
-     * › 48px` */
+     * › 48px */
     'fontSize-700': 'var(--vapor-typography-fontSize-700)',
     /** › `--vapor-typography-fontSize-800`
      *
-     * › 64px` */
+     * › 64px */
     'fontSize-800': 'var(--vapor-typography-fontSize-800)',
     /** › `--vapor-typography-fontSize-900`
      *
-     * › 80px` */
+     * › 80px */
     'fontSize-900': 'var(--vapor-typography-fontSize-900)',
     /** › `--vapor-typography-fontSize-1000`
      *
-     * › 120px` */
+     * › 120px */
     'fontSize-1000': 'var(--vapor-typography-fontSize-1000)',
 } as const;
 
