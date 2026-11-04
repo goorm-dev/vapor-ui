@@ -1,6 +1,6 @@
 ---
 name: vapor-help
-description: Vapor Figma plugin 길잡이. 설치·첫 시작, 포함 스킬(vapor-figma-compose, vapor-cs-report-jira)의 역할·사용 예시, 상황별로 어떤 스킬을 써야 하는지 안내한다. `/vapor-help`로 명시 호출해야만 돌며, 질문에 답하고 사용자가 다시 보낼 prompt 예시만 돌려줄 뿐 작업을 실행하지 않는다. 디자이너가 "vapor-figma plugin 뭐야", "이 plugin으로 뭘 할 수 있어", "어떻게 써야 해", "처음 쓰는데 뭐부터 해야 해", "token 어긋난 거 어디로 보고해", "시안 만들 때 뭘 써야 해", "둘 중 뭐 써야 해" 같이 plugin 자체에 대해 물으면 사용한다.
+description: Vapor Figma plugin 길잡이. `/vapor-help`로 명시 호출해야만 돌며, 설치·첫 시작과 포함 스킬(vapor-figma-compose, vapor-cs-report-jira)의 역할·선택 기준을 대화로 안내한다. 질문에 답하고 다음에 보낼 prompt 예시를 돌려줄 뿐 작업을 실행하지 않는다.
 disable-model-invocation: true
 ---
 
@@ -73,7 +73,7 @@ disable-model-invocation: true
 
 실제 요청이 한쪽에 깔끔하게 들어맞지 않는 경우가 있다. 자주 생기는 네 가지:
 
-- **시안을 만들다가 라이브러리 결함을 발견한 경우.** `vapor-figma-compose`가 조립 중 variant·토큰 어긋남을 발견하면 "이거 Jira 티켓으로 올릴까요?"를 자연스럽게 묻는다. 두 스킬은 독립적으로 돌지만 흐름은 이어진다. `/vapor-help`는 이 흐름을 설명만 하고 직접 전환하지는 않는다.
+- **시안을 만들다가 라이브러리 결함을 발견한 경우.** `vapor-figma-compose`는 조립 중 발견한 라이브러리 결함을 보고에 적고, 끝에 "노션 `Vapor CS Archive`에 기록할까요?"를 한 번 묻는다 — 이 흐름은 노션 아카이브로 간다. Jira `VAPOR` 프로젝트에 CS 티켓으로 올리고 싶으면 그건 `vapor-cs-report-jira`의 역할이다. 두 스킬이 쓰는 접수처가 다르니, 디자이너에게 "Jira 티켓이 필요한지, 노션 아카이브로 충분한지"를 가볍게 확인해 맞는 쪽으로 안내한다. `/vapor-help`는 이 차이만 설명하고 직접 전환하지는 않는다.
 - **Figma 라이브러리 결함 vs 코드 패키지 결함.** `vapor-cs-report-jira`는 **Figma 라이브러리 결함만** 받는다. `@vapor-ui/*` npm 패키지의 런타임·빌드 이슈는 범위 밖이고 별도 Slack 워크플로우 봇으로 안내한다. 상세 분기 규칙은 [`vapor-cs-report-jira`의 "적용 범위" 섹션](https://github.com/goorm-dev/vapor-ui/blob/main/plugins/vapor-figma/skills/vapor-cs-report-jira/SKILL.md)에 있다 — 사용자가 애매한 사례를 들고 오면 거기로 안내한다.
 - **코드 생성(Figma → React 등).** 이 plugin에는 코드 생성 스킬이 없다. Vapor UI 코드 문서나 다른 plugin/도구를 쓴다.
 - **토큰 리뷰·접근성 리뷰 등 다른 검수.** 이 plugin에는 없다. 사용자가 묻는 그대로 "이 plugin 범위 밖"임을 밝히고, 알고 있는 다른 Vapor 리소스가 있으면 알려주되 지어내지 않는다.
