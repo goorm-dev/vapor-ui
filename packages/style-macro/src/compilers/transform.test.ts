@@ -640,13 +640,27 @@ describe('transform — A2-obj new API', () => {
         expect(out.errors[0].code).toMatch(/template-literal|invalid-combine/);
     });
 
-    it('className=template-literal (JSX 자리) — build error', () => {
+    it('className=template-literal (2 vapor classes) — build error', () => {
+        // 2 개 이상의 class identifier 를 className 자리 template literal 로
+        // 합치면 catch. 1개 + static 문자열은 허용 (vapor + DOM class 흔한 패턴).
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `import { base } from './base';`,
-            `const Cmp = () => <div className={\`\${base} extra\`} />;`,
+            `import { override } from './over';`,
+            `const Cmp = () => <div className={\`\${base} \${override}\`} />;`,
         ].join('\n');
         const out = transform({ source, filename: '/A8.tsx' });
         expect(out.errors.length).toBeGreaterThan(0);
+    });
+
+    it('className template with 1 vapor identifier + plain string — allowed', () => {
+        // vapor class 1개 + DOM class 문자열 합성은 유효 패턴.
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const cls = css({ color: '$fg-primary' });`,
+            `const Cmp = ({ on }) => <div className={on ? \`\${cls} active\` : cls} />;`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A9.tsx' });
+        expect(out.errors).toEqual([]);
     });
 });

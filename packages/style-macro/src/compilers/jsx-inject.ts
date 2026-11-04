@@ -3,6 +3,7 @@ import type MagicString from 'magic-string';
 import { axisAliasName } from '~/models/axis-alias';
 import { dynamicVarName } from '~/models/class-name';
 import type { AnyProp, BuildError } from '~/models/types';
+import { isUnitless } from '~/tokens/css-reference';
 
 export interface DynamicCallSite {
     /** call node (CallExpression). */
@@ -14,6 +15,9 @@ export interface DynamicCallSite {
         slotId: string;
         /** 컴파일 타임에 결정된 토큰 axis 식별자. 없으면 `null` → emit 시 `{}` 리터럴 pass-through. */
         axis: string | null;
+        /** CSS property (kebab 또는 camelCase). runtime 에서 숫자 값에 `px` 를
+         *  붙일지 결정하는 데 사용 — unitless property 는 숫자 그대로 통과. */
+        property: string;
         sourceExpr: string;
     }>;
 }
@@ -77,7 +81,10 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
         // 사용자 스코프 충돌을 피하기 위해 `__vaporAxis_<name>` alias 로 참조한다.
         // null 이면 token lookup 자체가 의미 없으므로 빈 객체 리터럴로 pass-through.
         const axisRef = s.axis ? axisAliasName(s.axis) : '{}';
-        slotLits.push(`'${varName}': _resolveToken(${axisRef}, ${s.sourceExpr})`);
+        // property 가 unitless 면 unit 인자 생략 → 숫자 값은 string 변환만.
+        // 그 외 property 는 'px' 를 꽂아 숫자 → '<n>px' 변환하도록 지시.
+        const unitArg = isUnitless(s.property) ? '' : `, 'px'`;
+        slotLits.push(`'${varName}': _resolveToken(${axisRef}, ${s.sourceExpr}${unitArg})`);
     }
 
     const key = openingEl.start;

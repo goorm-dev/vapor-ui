@@ -211,18 +211,25 @@ class Transformer {
     }
 
     /**
-     * JSX 의 `className={...}` 자리에서 template literal 은 property-aware
-     * 머지를 우회하기 때문에 리뷰 #1 (파일 간 cascade fragility) 가 재발한다.
-     * 명시적 `css(a, b)` 머지를 쓰도록 build error 로 안내한다.
+     * JSX 의 `className={...}` 자리에서 template literal 로 2개 이상의
+     * identifier 를 합치면 catch — property-aware 머지가 건너뛰어 리뷰 #1
+     * fragility 가 재발한다. identifier 1개 + static 문자열 (예:
+     * `\`\${cls} active\``) 은 흔한 "vapor + DOM class" 패턴이라 허용한다.
+     *
+     * import 로만 받은 참조는 지역 변수 추적으로 알 수 없지만, className
+     * 자리라는 context 가 분명하므로 보수적으로 catch 한다. 사용자가 두 class
+     * 를 합치는 의도라면 `css(a, b)` 로 머지해야 안전하다.
      */
     #onJsxAttribute = (node: AnyProp) => {
         if (node?.name?.type !== 'JSXIdentifier' || node.name.name !== 'className') return;
         const v = node.value;
         if (v?.type !== 'JSXExpressionContainer') return;
         const expr = v.expression;
-        if (expr?.type === 'TemplateLiteral' && (expr.expressions?.length ?? 0) > 0) {
-            this.#errors.push(templateLiteralError(expr));
-        }
+        if (expr?.type !== 'TemplateLiteral') return;
+        const identCount = (expr.expressions ?? []).filter(
+            (e: AnyProp) => e?.type === 'Identifier',
+        ).length;
+        if (identCount >= 2) this.#errors.push(templateLiteralError(expr));
     };
 
     /** `const x = css(...)` 로 선언된 지역 변수 이름을 추적. */
@@ -240,13 +247,17 @@ class Transformer {
     };
 
     /**
-     * Template literal 안에 `${vaporLocal}` 이 포함되어 있으면 build error.
-     * 예: `\`\${a} \${b}\`` — 단순 string 합성은 property-aware 머지를 건너뛴다.
+     * Template literal 안에 vapor class 가 **2개 이상** 섞여 있으면 build
+     * error. 단순 string 합성은 property-aware 머지를 건너뛰어 리뷰 #1
+     * fragility 가 재발한다. 정확히 한 개면 "vapor class + 외부 DOM class"
+     * 같은 흔한 패턴 (`\`\${cls} active\``) 이므로 허용한다.
      */
     #onTemplateLiteral = (node: AnyProp) => {
         if (!node?.expressions?.length) return;
+        let hits = 0;
         for (const expr of node.expressions) {
-            if (expr?.type === 'Identifier' && this.#vaporLocals.has(expr.name)) {
+            if (expr?.type === 'Identifier' && this.#vaporLocals.has(expr.name)) hits++;
+            if (hits >= 2) {
                 this.#errors.push(templateLiteralError(node));
                 return;
             }
@@ -303,6 +314,7 @@ class Transformer {
                 bySlot.set(r.slotId, {
                     slotId: r.slotId,
                     axis,
+                    property: r.property,
                     sourceExpr: r.sourceExpr,
                 });
             }
