@@ -13,7 +13,7 @@ description: Vapor UI와 함께 Tailwind CSS v4를 사용하세요.
 /* global.css */
 
 /* 1. 스타일 우선순위 정의 */
-@layer tw-theme, vapor, tw-utilities;
+@layer tw-theme, vapor-theme, vapor-reset, vapor-components, vapor-utilities, tw-utilities;
 
 @import '@vapor-ui/core/tailwind.css';
 
@@ -65,7 +65,7 @@ Vapor UI는 필요한 스타일 초기화를 포함합니다. Tailwind의 `prefl
 
 ```css
 /* preflight를 사용해야 하는 경우 */
-@layer tw-theme, vapor.theme, tw-base, vapor.reset, vapor.components, vapor.utilities, tw-utilities;
+@layer tw-theme, vapor-theme, tw-base, vapor-reset, vapor-components, vapor-utilities, tw-utilities;
 
 @import '@vapor-ui/core/tailwind.css';
 
