@@ -9,7 +9,20 @@ export type NextMode = 'auto' | 'webpack' | 'turbopack';
 
 export interface WithVaporPluginOptions extends VaporPluginOptions {
     mode?: NextMode;
-    /** Turbopack rule glob(s) for source files that may contain `styles`. */
+    /**
+     * Turbopack rule glob(s) for source files that may contain `css()`.
+     *
+     * Default: `**\/*.{tsx,jsx,ts,js,mts,mjs,cts,cjs}`. `.js`·`.mjs`·`.cjs`
+     * are included because consumers may author `css()` call sites outside of
+     * TypeScript files.
+     *
+     * Turbopack loader options are JSON serialized, so function-typed options
+     * (e.g. a custom `include` predicate) can not be forwarded to the loader.
+     * The loader applies `defaultInclude` internally — passing a function to
+     * `include` here is silently ignored under Turbopack. Narrow the file set
+     * through `turbopackGlob` instead, or stay on Webpack (`mode: 'webpack'`)
+     * when a predicate is required.
+     */
     turbopackGlob?: string | string[];
 }
 
@@ -20,7 +33,7 @@ interface NextConfigMutable {
     };
 }
 
-const DEFAULT_TURBOPACK_GLOB = '**/*.{tsx,jsx,ts}';
+const DEFAULT_TURBOPACK_GLOB = '**/*.{tsx,jsx,ts,js,mts,mjs,cts,cjs}';
 
 function detectTurbopack(): boolean {
     return Boolean(process.env.TURBOPACK);
