@@ -1,4 +1,5 @@
 export { _resolveToken } from './helpers/resolve-token';
+export { _mkStyle, _mergeStyles, _toClass } from './helpers/mk-style';
 
 export { backgroundColor } from './tokens/backgroundColor';
 export { borderColor } from './tokens/borderColor';
