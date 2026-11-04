@@ -1,17 +1,46 @@
-// Hash algorithm ported from adobe/react-spectrum s2 style-macro (Apache-2.0):
+// Base62 class-name encoding ported from adobe/react-spectrum s2 style-macro (Apache-2.0):
 // https://github.com/adobe/react-spectrum/blob/main/packages/%40react-spectrum/s2/style/style-macro.ts
-// style-macro 방식 djb2 + base62 조합. SHA1/base36 방식보다 짧고 URL-safe.
+//
+// Hash algorithm: murmur2 32-bit — matches StyleX, Compiled, and Panda CSS.
+// djb2 (Adobe S2 default) is natural-collision-prone on hex-shaped values
+// (`#1E1E1E` ↔ `#0f0f0f`, `#2B2B2B` ↔ `#1c1c1c`), which is safe for Adobe's
+// bounded design-token set but not for user-supplied CSS values.
 import type { Tuple } from './types';
 
 export type ClassNameMode = 'readable' | 'hashed';
 
-// djb2. http://www.cse.yorku.ca/~oz/hash.html
-function djb2(v: string): number {
-    let h = 5381;
-    for (let i = 0; i < v.length; i++) {
-        h = ((h << 5) + h + v.charCodeAt(i)) >>> 0;
+// murmur2 32-bit (little-endian), seed 0. Reference:
+// https://github.com/aappleby/smhasher/blob/master/src/MurmurHash2.cpp
+function murmur2(v: string): number {
+    const M = 0x5bd1e995;
+    const R = 24;
+    let len = v.length;
+    let h = len >>> 0;
+    let i = 0;
+    while (len >= 4) {
+        let k =
+            (v.charCodeAt(i) & 0xff) |
+            ((v.charCodeAt(i + 1) & 0xff) << 8) |
+            ((v.charCodeAt(i + 2) & 0xff) << 16) |
+            ((v.charCodeAt(i + 3) & 0xff) << 24);
+        k = Math.imul(k, M) >>> 0;
+        k = (k ^ (k >>> R)) >>> 0;
+        k = Math.imul(k, M) >>> 0;
+        h = Math.imul(h, M) >>> 0;
+        h = (h ^ k) >>> 0;
+        i += 4;
+        len -= 4;
     }
-    return h;
+    if (len >= 3) h = (h ^ ((v.charCodeAt(i + 2) & 0xff) << 16)) >>> 0;
+    if (len >= 2) h = (h ^ ((v.charCodeAt(i + 1) & 0xff) << 8)) >>> 0;
+    if (len >= 1) {
+        h = (h ^ (v.charCodeAt(i) & 0xff)) >>> 0;
+        h = Math.imul(h, M) >>> 0;
+    }
+    h = (h ^ (h >>> 13)) >>> 0;
+    h = Math.imul(h, M) >>> 0;
+    h = (h ^ (h >>> 15)) >>> 0;
+    return h >>> 0;
 }
 
 // [a-z][A-Z][0-9]. index >= 62 이면 '_' 접두 재귀.
@@ -34,7 +63,7 @@ function toBase62(value: number): string {
 }
 
 export function generateArbitraryValueSelector(v: string, atStart = false): string {
-    let c = toBase62(djb2(v));
+    let c = toBase62(murmur2(v));
     if (atStart && /^[0-9]/.test(c)) c = `_${c}`;
     return c;
 }
@@ -62,17 +91,20 @@ function stripTokenPrefix(input: string): string {
 }
 
 export function buildClassName(t: Tuple, mode: ClassNameMode = 'readable'): string {
-    const propHash = generateArbitraryValueSelector(`${t.property}|${t.selectorContext}`);
-    const valueHash = generateArbitraryValueSelector(t.value);
+    // StyleX / Compiled / Panda 패턴: (property, selectorContext, value) 전체를
+    // 한 번에 해시한다. 분리 해시(propHash + valueHash) 는 각 공간이 32-bit 로
+    // 좁아져 hex 값끼리 자연 충돌한다.
+    const hash = generateArbitraryValueSelector(
+        `${t.property}|${t.selectorContext}|${t.value}`,
+    );
 
     if (mode === 'hashed') {
-        return `_${propHash}${valueHash}`;
+        return `_${hash}`;
     }
 
     const propSlug = slug(t.property);
     const valueSlug = slug(stripTokenPrefix(t.rawValue ?? t.value));
-    const tail = generateArbitraryValueSelector(`${t.property}|${t.selectorContext}|${t.value}`);
-    return `vapor_${propSlug}_${valueSlug}_${tail}`;
+    return `vapor_${propSlug}_${valueSlug}_${hash}`;
 }
 
 /** dynamic slot 용 CSS var 이름. mode 별 접두: prod=`--_`, dev=`--vapor-_`. */

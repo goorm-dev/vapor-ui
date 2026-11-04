@@ -50,7 +50,7 @@ describe('buildClassName — readable (dev)', () => {
 });
 
 describe('buildClassName — hashed (prod)', () => {
-    it('shape: _<propHash><valueHash> (base62)', () => {
+    it('shape: _<hash> (base62)', () => {
         expect(buildClassName(t(), 'hashed')).toMatch(/^_[0-9a-zA-Z_]+$/);
     });
 
@@ -74,6 +74,49 @@ describe('buildClassName — hashed (prod)', () => {
     it('distinct cssValue → distinct class', () => {
         const a = buildClassName(t({ value: 'var(--a)' }), 'hashed');
         const b = buildClassName(t({ value: 'var(--b)' }), 'hashed');
+        expect(a).not.toBe(b);
+    });
+
+    // Regression: djb2 가 hex 값끼리 자연 충돌하던 쌍을 murmur2 는 분리한다.
+    // MaxLee-dev PR 752 리뷰에서 production hashed mode 가 두 색을 같은 class
+    // 로 묶어 스타일이 깨진다는 지적.
+    it('separates djb2-natural hex collisions (#1E1E1E vs #0f0f0f)', () => {
+        const a = buildClassName(
+            t({
+                property: 'backgroundColor',
+                value: '#1E1E1E',
+                rawValue: '#1E1E1E',
+            }),
+            'hashed',
+        );
+        const b = buildClassName(
+            t({
+                property: 'backgroundColor',
+                value: '#0f0f0f',
+                rawValue: '#0f0f0f',
+            }),
+            'hashed',
+        );
+        expect(a).not.toBe(b);
+    });
+
+    it('separates djb2-natural hex collisions (#2B2B2B vs #1c1c1c)', () => {
+        const a = buildClassName(
+            t({
+                property: 'color',
+                value: '#2B2B2B',
+                rawValue: '#2B2B2B',
+            }),
+            'hashed',
+        );
+        const b = buildClassName(
+            t({
+                property: 'color',
+                value: '#1c1c1c',
+                rawValue: '#1c1c1c',
+            }),
+            'hashed',
+        );
         expect(a).not.toBe(b);
     });
 });
