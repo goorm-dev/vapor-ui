@@ -13,6 +13,8 @@ export default {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
         type: { control: 'inline-radio', options: ['default', 'warning'] },
         label: { control: 'text' },
+        min: { control: { type: 'range', min: 0 } },
+        max: { control: { type: 'range', max: 100 } },
     },
 } satisfies Meta<typeof Meter>;
 
@@ -40,7 +42,7 @@ export const CustomValueText: Story = {
         value: 45,
         size: 'md',
         type: 'default',
-        valueText: (formatted, raw) => `${raw} / 100 (${formatted})`,
+        valueText: (formatted, raw, value) => `${raw} / ${value} (${formatted})`,
     },
     render: (args) => (
         <VStack $css={{ gap: '$200', width: '320px' }}>

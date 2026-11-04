@@ -27,8 +27,8 @@ export const Meter = ({
     label,
     valueText: valueTextProp,
 }: Meter.Props) => {
-    const valueText = (formattedValue: string, value: number) =>
-        valueTextProp ? valueTextProp(formattedValue, value) : formattedValue;
+    const valueText = (formattedValue: string, value: number, max: number) =>
+        valueTextProp ? valueTextProp(formattedValue, value, max) : formattedValue;
 
     return (
         <MeterPrimitives.Root
@@ -96,7 +96,9 @@ export interface MeterProps {
     label: Slots['label'];
 
     /**
-
+     * 현재 값을 숫자로 표시한다. 기본적으로 비율을 표시하며, 전달 받는 인자를 이용하여 커스텀할 수 있다.
+     * @example
+     * <Meter valueText={(formattedValue, value, max) => `${value} / ${max} (${formattedValue})`} />
      */
     valueText?: ValueFormatter;
 }

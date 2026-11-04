@@ -49,10 +49,27 @@ describe('Meter (composite)', () => {
         expect(valueNode).toHaveAttribute('aria-hidden', 'true');
     });
 
-    it('should omit the value text when `valueText` is not provided', () => {
-        const { container } = render(<Meter label={LABEL_TEXT} value={42} />);
+    it('should expose the resolved `max` as the third argument of `valueText`', () => {
+        const VALUE = 30;
+        const MAX = 150;
+        render(
+            <Meter
+                label={LABEL_TEXT}
+                value={VALUE}
+                max={MAX}
+                valueText={(_, value, max) => `${value} / ${max}`}
+            />,
+        );
 
-        expect(container.querySelector('[data-slots*="Meter.Value"]')).toBeNull();
+        expect(screen.getByText(`${VALUE} / ${MAX}`)).toBeInTheDocument();
+    });
+
+    it('should render the default value text when `valueText` is not provided', () => {
+        const { container } = render(<Meter label={LABEL_TEXT} value={42} />);
+        const valueText = container.querySelector('[data-slots*="Meter.Value"]');
+
+        expect(valueText).toBeInTheDocument();
+        expect(valueText).toHaveTextContent('42%');
     });
 
     it('should have no a11y violations', async () => {
