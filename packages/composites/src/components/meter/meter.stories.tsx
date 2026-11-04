@@ -16,11 +16,13 @@ export default {
         min: { control: { type: 'range', min: 0 } },
         max: { control: { type: 'range', max: 100 } },
     },
+    args: { min: 0, max: 100 },
 } satisfies Meta<typeof Meter>;
 
 type Story = StoryObj<typeof Meter>;
 
 export const Default: Story = {
+    argTypes: { max: { control: { type: 'range', max: 150 } } },
     args: {
         label: '저장 공간',
         value: 60,
