@@ -23,6 +23,7 @@ type MeterContext = MeterSharedProps & {
      * Set by `Meter.Label` so the root can warn when the meter has no accessible name.
      */
     hasLabelRef: RefObject<boolean>;
+    max: number;
 };
 
 const [MeterProvider, useMeterContext] = createContext<MeterContext>({
@@ -66,7 +67,7 @@ export const MeterRoot = forwardRef<HTMLDivElement, MeterRoot.Props>((props, ref
     }, [min, max, ariaLabel, ariaLabelledBy]);
 
     return (
-        <MeterProvider value={{ ...variantProps, hasLabelRef }}>
+        <MeterProvider value={{ ...variantProps, max, hasLabelRef }}>
             <BaseMeter.Root
                 ref={ref}
                 min={min}
@@ -176,10 +177,18 @@ MeterTrack.displayName = 'Meter.Track';
  * Shows the formatted value as text, hidden from assistive technology to avoid a duplicate announcement. Renders a `<span>` element.
  */
 export const MeterValue = forwardRef<HTMLSpanElement, MeterValue.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const { max } = useMeterContext();
+
+    const children =
+        typeof childrenProp === 'function'
+            ? (formattedValue: string, value: number) => childrenProp(formattedValue, value, max)
+            : childrenProp;
 
     return (
-        <BaseMeter.Value ref={ref} className={cn(styles.value, className)} {...componentProps} />
+        <BaseMeter.Value ref={ref} className={cn(styles.value, className)} {...componentProps}>
+            {children}
+        </BaseMeter.Value>
     );
 });
 MeterValue.displayName = 'Meter.Value';
@@ -218,12 +227,26 @@ export namespace MeterTrack {
     export type Props = MeterTrackProps;
 }
 
+type ValueChildrenParameters = [
+    ...Parameters<NonNullable<BaseMeter.Value.Props['children']>>,
+    max: number,
+];
+type ValueChildrenReturn = ReturnType<NonNullable<BaseMeter.Value.Props['children']>>;
+type ValueChildren = (...args: ValueChildrenParameters) => ValueChildrenReturn;
+
 export namespace MeterValue {
     export type State = BaseMeter.Value.State;
-    export interface Props extends VaporUIComponentProps<typeof BaseMeter.Value, State> {
+    export interface Props extends Omit<
+        VaporUIComponentProps<typeof BaseMeter.Value, State>,
+        'children'
+    > {
         /**
          * Content shown inside the value. As a function, receives the formatted value and the raw number and returns what to display. Shows the formatted value when omitted.
+         * @example
+         * <Meter.Value>
+         *   {(formattedValue, value, max) => `${value} / ${max} (${formattedValue})`}
+         * </Meter.Value>
          */
-        children?: BaseMeter.Value.Props['children'];
+        children?: ValueChildren;
     }
 }
