@@ -105,8 +105,10 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
             const ctx = makeCtx();
             const src = [
                 `import { css } from '@vapor-ui/style-macro';`,
-                // '$999' is not in the hardcoded token table → validation error
-                `const cls = css({ padding: '$999' });`,
+                // '$space-nope' is not in the hardcoded token table → validation error.
+                // token name 은 알파벳 시작이어야 한다 (리뷰 #8). `$999` 같은 숫자-only 는
+                // 사용자 문자열로 간주되어 토큰 치환 자체가 일어나지 않는다.
+                `const cls = css({ padding: '$space-nope' });`,
             ].join('\n');
             expect(() => callHook(hooks.transform, ctx, src, '/src/err.tsx')).toThrow();
             expect(ctx.error).toHaveBeenCalledTimes(1);

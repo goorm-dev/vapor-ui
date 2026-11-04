@@ -4,6 +4,7 @@ import { expandShorthand } from '~/models/shorthand';
 import { resolveToken } from '~/models/tokens';
 import type { AnyProp, BuildError, IRRule } from '~/models/types';
 import { normalizeValue } from '~/models/value';
+import { hyphenate } from '~/tokens/css-reference';
 
 export interface TernarySite {
     consequentRuleIndexes: number[];
@@ -29,18 +30,13 @@ const IDENTIFIER_PROPS = new Set([
     'grid-template-areas',
 ]);
 
-const HAS_TOKEN_REGEX = /\$[a-zA-Z0-9_-]+/;
-const TOKEN_SUBSTITUTE_REGEX = /\$([a-zA-Z0-9_-]+)/g;
+// token name 은 반드시 알파벳으로 시작한다 (tokens/* 전부 검사됨). 첫 글자를
+// `[a-zA-Z]` 로 제한하면 `content: '"$5"'` 같은 사용자 문자열 내부의 `$<숫자>`
+// 가 토큰으로 오인되어 빌드 에러로 이어지는 리뷰 #8 결함을 방지한다.
+const HAS_TOKEN_REGEX = /\$[a-zA-Z][a-zA-Z0-9_-]*/;
+const TOKEN_SUBSTITUTE_REGEX = /\$([a-zA-Z][a-zA-Z0-9_-]*)/g;
 
 /* ----- utils ----- */
-
-const toKebab = (prop: string) =>
-    prop.startsWith('--')
-        ? prop
-        : prop
-              .replace(/([A-Z])/g, '-$1')
-              .toLowerCase()
-              .replace(/^-/, '');
 
 const kebabToCamel = (prop: string) => prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
 
@@ -135,7 +131,7 @@ export function createParser(source: string) {
             return;
         }
 
-        const cssProperty = toKebab(name);
+        const cssProperty = hyphenate(name);
 
         // 최상위 삼항 → build-time 2-way 전개
         if (isTop && value?.type === 'ConditionalExpression') {

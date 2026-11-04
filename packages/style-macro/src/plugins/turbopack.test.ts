@@ -67,8 +67,9 @@ describe('turbopack', () => {
         const ctx = mkCtx('/src/err.tsx');
         const src = [
             `import { css } from '@vapor-ui/style-macro';`,
-            // $999 is not in the hardcoded token table → validation error
-            `const cls = css({ padding: '$999' });`,
+            // $space-nope is not in the hardcoded token table → validation error.
+            // token name 은 알파벳 시작이어야 한다 (리뷰 #8 참고).
+            `const cls = css({ padding: '$space-nope' });`,
         ].join('\n');
         await expect(run(ctx, src)).rejects.toThrow();
     });

@@ -353,7 +353,10 @@ describe('transform — token resolve (build error)', () => {
     });
 
     it('errors on unknown token', () => {
-        const source = src(`const cls = css({ padding: '$999' });`);
+        // token name 은 알파벳 시작 (`$5` 같은 숫자-only 는 token 이 아니라
+        // 사용자 문자열 — 리뷰 #8 참조). 유효 패턴이지만 tokens 테이블에
+        // 없는 이름을 써야 unknown-token 이 뜬다.
+        const source = src(`const cls = css({ padding: '$space-nope' });`);
         const out = transform({ source, filename: '/EM6.tsx' });
         expect(out.errors.length).toBeGreaterThan(0);
         expect(out.errors[0].code).toBe('unknown-token');
@@ -448,7 +451,7 @@ describe('transform — PR #752 review fixtures', () => {
         const source = src(`const cls = css({ WebkitLineClamp: 2 });`);
         const out = transform({ source, filename: '/R5a.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.css).toMatch(/-webkit-line-clamp:\s*2\s*;/);
+        expect(out.css).toMatch(/-webkit-line-clamp:\s*2\b/);
         // webkit-line-clamp 는 unitless.
         expect(out.css).not.toMatch(/-webkit-line-clamp:\s*2px/);
     });
@@ -459,12 +462,12 @@ describe('transform — PR #752 review fixtures', () => {
         );
         const out = transform({ source, filename: '/R5b.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.css).toMatch(/aspect-ratio:\s*1\s*;/);
+        expect(out.css).toMatch(/aspect-ratio:\s*1\b/);
         expect(out.css).not.toMatch(/aspect-ratio:\s*1px/);
-        expect(out.css).toMatch(/grid-column:\s*2\s*;/);
+        expect(out.css).toMatch(/grid-column:\s*2\b/);
         expect(out.css).not.toMatch(/grid-column:\s*2px/);
-        expect(out.css).toMatch(/scale:\s*1\s*;/);
-        expect(out.css).not.toMatch(/scale:\s*1px/);
+        expect(out.css).toMatch(/\bscale:\s*1\b/);
+        expect(out.css).not.toMatch(/\bscale:\s*1px/);
     });
 
     it('#5c dynamic numeric value gets px for unit-required properties', () => {

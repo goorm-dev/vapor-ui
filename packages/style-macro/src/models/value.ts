@@ -1,29 +1,8 @@
+import { isUnitless } from '~/tokens/css-reference';
 import { propertyToTokenAxis, tokens } from '~/tokens';
 
-const UNITLESS = new Set([
-    'opacity',
-    'z-index',
-    'zIndex',
-    'line-height',
-    'lineHeight',
-    'font-weight',
-    'fontWeight',
-    'flex',
-    'flex-grow',
-    'flexGrow',
-    'flex-shrink',
-    'flexShrink',
-    'order',
-    'columns',
-    'column-count',
-    'columnCount',
-    'zoom',
-    '-webkit-line-clamp',
-    'WebkitLineClamp',
-]);
-
 export interface NormalizeInput {
-    property: string; // camelCase
+    property: string; // camelCase or kebab — isUnitless 가 양쪽 지원.
     rawValue: string | number;
 }
 
@@ -38,12 +17,15 @@ export interface NormalizeOutput {
  * - number → unitless props 는 그대로, 그 외 `px` 추가
  * - `$token` → 하드코딩 tokens 조회 후 `var(...)` 문자열
  * - 그 외 문자열 → raw CSS 값으로 통과
+ *
+ * unitless 판단은 `tokens/css-reference.ts` 의 공통 레퍼런스에 위임해
+ * compile/runtime 양쪽이 같은 규약을 공유하도록 한다.
  */
 export function normalizeValue({ property, rawValue }: NormalizeInput): NormalizeOutput {
     const axis = (propertyToTokenAxis as Record<string, string>)[property];
 
     if (typeof rawValue === 'number') {
-        if (UNITLESS.has(property)) return { css: String(rawValue) };
+        if (isUnitless(property)) return { css: String(rawValue) };
         return { css: `${rawValue}px` };
     }
 
