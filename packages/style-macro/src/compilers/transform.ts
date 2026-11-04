@@ -93,6 +93,9 @@ class Transformer {
     #needResolveToken = false;
     #needMkStyle = false;
     #needMergeStyles = false;
+    /** `const x = css(...)` 로 선언된 지역 변수 이름. template literal 에
+     *  섞여 들어가면 build error 로 catch 하기 위해 추적한다. */
+    readonly #vaporLocals = new Set<string>();
 
     constructor(private readonly opts: TransformOpts) {
         this.#mode = opts.hash ? 'hashed' : 'readable';
@@ -109,7 +112,12 @@ class Transformer {
         this.#scanImports(program);
         this.#ms = new MagicString(source);
 
-        walk(program, { CallExpression: this.#onCallExpression });
+        walk(program, {
+            CallExpression: this.#onCallExpression,
+            JSXAttribute: this.#onJsxAttribute,
+            VariableDeclarator: this.#onVariableDeclarator,
+            TemplateLiteral: this.#onTemplateLiteral,
+        });
 
         if (this.#errors.length) {
             return {
@@ -201,6 +209,49 @@ class Transformer {
             }
         }
     }
+
+    /**
+     * JSX 의 `className={...}` 자리에서 template literal 은 property-aware
+     * 머지를 우회하기 때문에 리뷰 #1 (파일 간 cascade fragility) 가 재발한다.
+     * 명시적 `css(a, b)` 머지를 쓰도록 build error 로 안내한다.
+     */
+    #onJsxAttribute = (node: AnyProp) => {
+        if (node?.name?.type !== 'JSXIdentifier' || node.name.name !== 'className') return;
+        const v = node.value;
+        if (v?.type !== 'JSXExpressionContainer') return;
+        const expr = v.expression;
+        if (expr?.type === 'TemplateLiteral' && (expr.expressions?.length ?? 0) > 0) {
+            this.#errors.push(templateLiteralError(expr));
+        }
+    };
+
+    /** `const x = css(...)` 로 선언된 지역 변수 이름을 추적. */
+    #onVariableDeclarator = (node: AnyProp) => {
+        if (!this.#bindingName) return;
+        if (node?.id?.type !== 'Identifier' || !node.init) return;
+        const init = node.init;
+        if (
+            init.type === 'CallExpression' &&
+            init.callee?.type === 'Identifier' &&
+            init.callee.name === this.#bindingName
+        ) {
+            this.#vaporLocals.add(node.id.name);
+        }
+    };
+
+    /**
+     * Template literal 안에 `${vaporLocal}` 이 포함되어 있으면 build error.
+     * 예: `\`\${a} \${b}\`` — 단순 string 합성은 property-aware 머지를 건너뛴다.
+     */
+    #onTemplateLiteral = (node: AnyProp) => {
+        if (!node?.expressions?.length) return;
+        for (const expr of node.expressions) {
+            if (expr?.type === 'Identifier' && this.#vaporLocals.has(expr.name)) {
+                this.#errors.push(templateLiteralError(node));
+                return;
+            }
+        }
+    };
 
     #onCallExpression = (node: AnyProp, parents: AnyProp[]) => {
         if (!this.#bindingName) return;
@@ -403,6 +454,19 @@ function jsSingleQuoted(value: string) {
 
 function emptyResult(source: string): TransformResult {
     return { code: source, css: null, classes: [], errors: [] };
+}
+
+function templateLiteralError(node: AnyProp): BuildError {
+    return {
+        code: 'template-literal',
+        message:
+            'Template literal join of css() results bypasses property-aware merge. ' +
+            'Use css(a, b) instead so later arguments win per CSS property.',
+        loc: {
+            line: node?.loc?.start?.line ?? 1,
+            column: node?.loc?.start?.column ?? 0,
+        },
+    };
 }
 
 function noArgError(node: AnyProp): BuildError {

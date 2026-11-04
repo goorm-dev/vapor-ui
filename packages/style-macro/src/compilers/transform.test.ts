@@ -628,12 +628,13 @@ describe('transform — A2-obj new API', () => {
     });
 
     it('template literal join (backtick + interpolation) — build error', () => {
-        const source = [
-            `import { css } from '@vapor-ui/style-macro';`,
-            `import { base } from './base';`,
-            `import { override } from './override';`,
-            `const cls = \`\${base} \${override}\`;`,
-        ].join('\n');
+        // 로컬 선언된 vapor class 를 템플릿 literal 로 합치면 catch.
+        // (import 로만 받은 참조는 Phase 11 범위 밖 — compile 추적 어려움.)
+        const source = src(
+            `const base = css({ padding: '$space-100' });` +
+                `const override = css({ paddingTop: '$space-300' });` +
+                `const cls = \`\${base} \${override}\`;`,
+        );
         const out = transform({ source, filename: '/A7.tsx' });
         expect(out.errors.length).toBeGreaterThan(0);
         expect(out.errors[0].code).toMatch(/template-literal|invalid-combine/);

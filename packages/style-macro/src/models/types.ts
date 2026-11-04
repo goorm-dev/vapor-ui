@@ -10,7 +10,8 @@ export interface BuildError {
         | 'invalid-selector'
         | 'dynamic-value'
         | 'computed-key'
-        | 'spread';
+        | 'spread'
+        | 'template-literal';
     message: string;
     loc: { line: number; column: number };
     hint?: string;
