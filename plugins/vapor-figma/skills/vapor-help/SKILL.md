@@ -73,7 +73,7 @@ disable-model-invocation: true
 
 실제 요청이 한쪽에 깔끔하게 들어맞지 않는 경우가 있다. 자주 생기는 네 가지:
 
-- **시안을 만들다가 라이브러리 결함을 발견한 경우.** compose가 조립 중 발견한 variant·토큰 어긋남·Auto Layout 깨짐은 그냥 두지 말고 `vapor-cs-report-jira`로 이어 Jira `VAPOR` 프로젝트에 CS 티켓(label=figma)으로 정식 접수한다 — Vapor 팀이 트리아지할 창구는 Jira다. compose가 보고에 결함을 정리해 두면 그 내용 그대로 cs-report-jira에 넘기면 된다. `/vapor-help`는 이 흐름만 안내하고 직접 전환하지는 않는다 — 디자이너가 "이거 Jira 티켓으로 올려줘"처럼 명시 요청하면 그때 cs-report-jira가 받는다.
+- **시안을 만들다가 라이브러리 결함을 발견한 경우.** compose가 조립 중 발견한 variant·토큰 어긋남·Auto Layout 깨짐은 묻어두지 말고, 디자이너에게 "이걸 Jira 티켓으로 올릴까요?"를 한 번 묻는다. 디자이너가 승인하면 그때 `vapor-cs-report-jira`가 결함 정리를 받아 Jira `VAPOR` 프로젝트에 CS 티켓(label=figma)으로 발행한다 — Vapor 팀 트리아지 창구는 Jira다. 승인 없이 바로 넘기지 않는다. `/vapor-help`는 이 흐름만 설명하고 직접 전환하지는 않는다.
 - **Figma 라이브러리 결함 vs 코드 패키지 결함.** `vapor-cs-report-jira`는 **Figma 라이브러리 결함만** 받는다. `@vapor-ui/*` npm 패키지의 런타임·빌드 이슈는 범위 밖이고 별도 Slack 워크플로우 봇으로 안내한다. 상세 분기 규칙은 [`vapor-cs-report-jira`의 "적용 범위" 섹션](https://github.com/goorm-dev/vapor-ui/blob/main/plugins/vapor-figma/skills/vapor-cs-report-jira/SKILL.md)에 있다 — 사용자가 애매한 사례를 들고 오면 거기로 안내한다.
 - **코드 생성(Figma → React 등).** 이 plugin에는 코드 생성 스킬이 없다. Vapor UI 코드 문서나 다른 plugin/도구를 쓴다.
 - **토큰 리뷰·접근성 리뷰 등 다른 검수.** 이 plugin에는 없다. 사용자가 묻는 그대로 "이 plugin 범위 밖"임을 밝히고, 알고 있는 다른 Vapor 리소스가 있으면 알려주되 지어내지 않는다.
