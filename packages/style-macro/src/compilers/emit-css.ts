@@ -129,7 +129,19 @@ export function emitCss(rules: IRRule[], mode: ClassNameMode = 'readable'): Emit
         grouped.set(key, arr);
     }
 
-    const chunks: string[] = ['@layer vapor-utilities;', '', '@layer vapor-utilities {'];
+    const chunks: string[] = ['@layer vapor-utilities;', ''];
+
+    // dynamic slot CSS var 는 기본적으로 자식에게 상속된다. 같은 class 를
+    // 가진 중첩 element 라도 부모가 slot 값을 세팅하면 자식도 그대로 그려지는
+    // 리뷰 #6c 결함을 막으려면 상속을 명시적으로 차단해야 한다. @property 를
+    // @layer 바깥에 둬 미지원 브라우저가 레이어 자체를 날려버리지 않도록 한다.
+    for (const slot of dynamicSlots) {
+        const varName = dynamicVarName(slot.slotId, hashMode);
+        chunks.push(`@property ${varName} { syntax: '*'; inherits: false; }`);
+    }
+    if (dynamicSlots.length > 0) chunks.push('');
+
+    chunks.push('@layer vapor-utilities {');
 
     // 그룹 출력 순서는 cascade 결과를 좌우한다. 같은 layer·같은 specificity 는
     // 뒤에 등장한 규칙이 이기므로 작성자 의도와 다른 미디어 쿼리가 적용될 수 있다.

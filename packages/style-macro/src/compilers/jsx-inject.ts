@@ -112,10 +112,14 @@ export function flushInjects(ctx: InjectContext): void {
         }
 
         // JSXExpressionContainer 안 표현식 → spread 로 병합.
+        // slot 을 먼저, 사용자 style 을 뒤로 둔다. React 는 spread object 를
+        // 뒤에 오는 쪽이 이기는 순서로 머지하므로, 사용자가 명시적으로 style 로
+        // 넘긴 값(slot CSS var 포함)은 항상 slot 기본값을 override 한다.
+        // 리뷰 #6b 결함(주입 style 이 {...rest} 로 넘어온 style 을 덮음)을 해결.
         if (attrValue.type === 'JSXExpressionContainer' && attrValue.expression) {
             const inner = attrValue.expression;
             const existing = ctx.ms.original.slice(inner.start, inner.end);
-            const merged = `{ ...(${existing}), ...${slotObj} }`;
+            const merged = `{ ...${slotObj}, ...(${existing}) }`;
             ctx.ms.overwrite(inner.start, inner.end, merged);
         }
         // 다른 형태(StringLiteral 등) 는 injectJsxStyleForCall 가 미리 error 로 거른다.

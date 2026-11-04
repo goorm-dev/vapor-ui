@@ -234,8 +234,9 @@ describe('transform — dynamic slots', () => {
         ].join('\n');
         const out = transform({ source, filename: '/L.tsx' });
         expect(out.errors).toEqual([]);
-        // 원본 식(`myStyle`) 과 slot object 를 spread 로 결합.
-        expect(out.code).toMatch(/\{\s*\.\.\.\(myStyle\)\s*,\s*\.\.\.\{/);
+        // slot object 를 먼저, 사용자 `style` 을 뒤로 spread — 사용자 값이 slot
+        // 기본값을 override 할 수 있어야 하기 때문 (리뷰 #6b).
+        expect(out.code).toMatch(/\{\s*\.\.\.\{[^}]*--vapor[^}]*\}\s*,\s*\.\.\.\(myStyle\)\s*\}/);
         // helper import 는 `_resolveToken` 만 — `_mergeStyle` 은 inline spread 로 처리.
         expect(out.code).not.toContain('_mergeStyle');
     });
