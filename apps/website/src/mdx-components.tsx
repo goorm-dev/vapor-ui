@@ -24,7 +24,7 @@ import { DocsGrid } from './components/composites/docs-grid';
 import { DocsImage } from './components/composites/docs-image';
 import { DontImage } from './components/composites/dont-image';
 import { Table } from './components/composites/table';
-import { Tabs } from './components/docs-tabs';
+import { DocsTab, DocsTabs } from './components/docs-tabs';
 import { BasicColor, SemanticColor } from './components/foundation-color-tabs';
 import IntroLinkCardContainer from './components/intro-link-card-container';
 
@@ -57,7 +57,8 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         Badge,
         BasicColor,
         SemanticColor,
-        Tabs,
+        DocsTabs,
+        DocsTab,
         Image,
         IntroLinkCardContainer,
         Step,

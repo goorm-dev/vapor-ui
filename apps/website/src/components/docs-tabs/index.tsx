@@ -1,25 +1,28 @@
+import type { ReactNode } from 'react';
+
 import { Tabs as VaporTabs } from '@vapor-ui/core';
 
-interface TabsProps extends VaporTabs.Root.Props {
-    lists: { value: string; trigger: React.ReactNode; panel: React.ReactNode }[];
+export interface DocsTabsProps extends Omit<VaporTabs.Root.Props, 'defaultValue' | 'children'> {
+    items: string[];
+    defaultValue?: string;
+    children: ReactNode;
 }
 
-export const Tabs = ({ lists, ...props }: TabsProps) => {
-    return (
-        <VaporTabs.Root {...props}>
-            <VaporTabs.List>
-                {lists.map((list) => (
-                    <VaporTabs.Button key={list.value} value={list.value}>
-                        {list.trigger}
-                    </VaporTabs.Button>
-                ))}
-            </VaporTabs.List>
-
-            {lists.map((list) => (
-                <VaporTabs.Panel key={list.value} value={list.value}>
-                    {list.panel}
-                </VaporTabs.Panel>
+export const DocsTabs = ({ items, defaultValue, children, ...props }: DocsTabsProps) => (
+    <VaporTabs.Root defaultValue={defaultValue ?? items[0]} {...props}>
+        <VaporTabs.List>
+            {items.map((item) => (
+                <VaporTabs.Button key={item} value={item}>
+                    {item}
+                </VaporTabs.Button>
             ))}
-        </VaporTabs.Root>
-    );
-};
+        </VaporTabs.List>
+        {children}
+    </VaporTabs.Root>
+);
+
+export interface DocsTabProps extends VaporTabs.Panel.Props {
+    value: string;
+}
+
+export const DocsTab = (props: DocsTabProps) => <VaporTabs.Panel {...props} />;

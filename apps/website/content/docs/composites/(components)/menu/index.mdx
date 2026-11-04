@@ -4,6 +4,10 @@ description: '메뉴는 여러 옵션 중 하나를 실행할 수 있는 목록�
 site_name: 'Menu - Vapor Composites'
 ---
 
+<DocsTabs items={['Overview', 'Properties']}>
+
+<DocsTab value="Overview">
+
 ## Anatomy
 
 <DocsImage src="/composites/menu/images/anatomy-01-01.webp" alt="Menu 아나토미 구조 1" />
@@ -178,9 +182,9 @@ Check group 중 단일 선택 Item은 Checked 상태가 되면 같은 그룹 안
 
 <DocsImage src="/composites/menu/images/guidelines-03.webp" alt="텍스트 작성 및 처리" />
 
-## Props Table
+</DocsTab>
 
----
+<DocsTab value="Properties">
 
 ### Menu.Root
 
@@ -217,3 +221,7 @@ Check group 중 단일 선택 Item은 Checked 상태가 되면 같은 그룹 안
 하위 메뉴를 여는 Item 요소입니다.
 
 <PropsTable part="menu-submenu-item" />
+
+</DocsTab>
+
+</DocsTabs>
