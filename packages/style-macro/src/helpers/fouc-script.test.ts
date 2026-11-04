@@ -121,4 +121,56 @@ describe('buildColorSchemeScript', () => {
         );
         expect(setAttrCalls).toEqual([['data-vapor-theme', 'light']]);
     });
+
+    it('resolves stored "system" value through matchMedia instead of leaking it to the DOM', () => {
+        // Regression: localStorage 에 setTheme('system') 로 저장된 값이 그대로
+        // `data-vapor-theme="system"` 으로 세팅되어 CSS 가 매칭되지 않던 버그.
+        const setAttrCalls: Array<[string, string]> = [];
+        const fakeWindow = {
+            matchMedia: (_q: string) => ({ matches: true }), // OS prefers dark
+        };
+        const fakeLocalStorage = {
+            getItem: (_k: string) => 'system',
+        };
+        const fakeDocument = {
+            documentElement: {
+                setAttribute: (name: string, value: string) => {
+                    setAttrCalls.push([name, value]);
+                },
+            },
+        };
+        const s = buildColorSchemeScript({ defaultTheme: 'light' });
+        // eslint-disable-next-line no-new-func
+        new Function('window', 'localStorage', 'document', s)(
+            fakeWindow,
+            fakeLocalStorage,
+            fakeDocument,
+        );
+        expect(setAttrCalls).toEqual([['data-vapor-theme', 'dark']]);
+    });
+
+    it('resolves stored "system" value to light when OS prefers light', () => {
+        const setAttrCalls: Array<[string, string]> = [];
+        const fakeWindow = {
+            matchMedia: (_q: string) => ({ matches: false }),
+        };
+        const fakeLocalStorage = {
+            getItem: (_k: string) => 'system',
+        };
+        const fakeDocument = {
+            documentElement: {
+                setAttribute: (name: string, value: string) => {
+                    setAttrCalls.push([name, value]);
+                },
+            },
+        };
+        const s = buildColorSchemeScript({ defaultTheme: 'dark' });
+        // eslint-disable-next-line no-new-func
+        new Function('window', 'localStorage', 'document', s)(
+            fakeWindow,
+            fakeLocalStorage,
+            fakeDocument,
+        );
+        expect(setAttrCalls).toEqual([['data-vapor-theme', 'light']]);
+    });
 });

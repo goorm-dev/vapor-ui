@@ -45,6 +45,8 @@ export function buildColorSchemeScript(opts?: ColorSchemeScriptOpts) {
 
     // 축약된 IIFE. try/catch — private/incognito 모드에서 localStorage 접근 실패 방어.
     // 인젝션 안전성: 모든 문자열 값은 JSON.stringify 로 감쌈.
+    // `system` 값은 stored·default 어느 쪽이든 matchMedia 로 resolve 한다.
+    // DOM attribute 는 반드시 `light`|`dark` 둘 중 하나만 들어간다.
     return (
         `(function(){try{` +
         `var k=${JSON.stringify(storageKey)},` +
@@ -52,7 +54,8 @@ export function buildColorSchemeScript(opts?: ColorSchemeScriptOpts) {
         `d=${JSON.stringify(defaultTheme)};` +
         `var s=localStorage.getItem(k);` +
         `var m=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';` +
-        `var t=s||(d==='system'?m:d);` +
+        `var r=s||d;` +
+        `var t=r==='system'?m:r;` +
         `document.documentElement.setAttribute(a,t);` +
         `}catch(e){}})();`
     );
