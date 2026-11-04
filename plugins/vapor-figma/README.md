@@ -17,9 +17,26 @@ Claude Code에서 Vapor UI를 사용하는 디자이너의 Figma 작업을 돕�
 
 새 버전은 `/plugin marketplace update vapor-ui`로 받습니다.
 
+## 사용 안내
+
+plugin 자체 사용법·스킬 선택·상황별 안내는 Claude Code에서 `/vapor-help`로 물어볼 수 있습니다. 설치·첫 시작부터 각 스킬의 역할, 상황에 맞는 스킬 선택, 범위 안팎 구분까지 대화 형식으로 답합니다. 이 README에는 설치와 각 스킬 요약만 두고, 상세 사용법은 `/vapor-help`가 각 스킬의 SKILL.md를 live로 참조해 안내합니다.
+
 ## 스킬
 
 이 plugin에 포함된 스킬은 서로 독립적으로 동작합니다. 요청에 맞으면 Claude가 알아서 부르고, 아래 이름으로 직접 호출해도 됩니다.
+
+### `vapor-figma:vapor-help`
+
+이 plugin의 길잡이 스킬입니다. `/vapor-help`로 명시 호출할 때만 돌고, 질문에 답하고 다음에 보낼 prompt 예시를 돌려줄 뿐 작업을 실행하지 않습니다. 설치·첫 시작, 포함 스킬의 역할·사용 예시, 상황별 선택 기준을 안내합니다.
+
+**사용 예시**
+
+```
+/vapor-help 결제 확인 Dialog 시안 어떻게 만들어?
+/vapor-help Button hover 토큰 어긋난 거 어디로 보고해?
+/vapor-help 이 plugin으로 뭘 할 수 있어?
+```
+
 
 ### `vapor-figma:vapor-figma-compose`
 
