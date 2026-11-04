@@ -135,8 +135,35 @@ const TABLE: Record<string, Expansion> = {
     },
 };
 
+/**
+ * `!important` 를 shorthand 분해 전에 떼어내고 분해 후 각 longhand 에
+ * 다시 붙인다. 리뷰 #7 결함 — `'0 auto !important'` 를 공백 split 하면
+ * `!important` 가 하나의 값 조각처럼 fourSides 에 참여해
+ * `margin-bottom: !important` (값 없음) 같은 깨진 CSS 가 나왔다.
+ */
 export function expandShorthand(property: string, value: string) {
     const fn = TABLE[property];
-    if (fn) return fn(value);
-    return [{ property, value }];
+
+    // border-radius 는 '!important' / '/' (elliptical) / 4-token 초과 입력을
+    // 원본 그대로 유지하는 특수 정책을 쓴다. 이 정책을 보존하려면 `!important`
+    // 를 미리 떼면 안 된다 — 함수 내부 체크가 신호를 놓치기 때문.
+    if (property === 'border-radius') return fn ? fn(value) : [{ property, value }];
+
+    // 나머지 shorthand (margin/padding/inset/axis alias) 는 `!important` 가
+    // 공백 split 에 끼어들어 `margin-bottom: !important` 같은 깨진 longhand 가
+    // 생기는 리뷰 #7 결함을 막기 위해, 분해 전에 플래그를 제거하고 분해 후
+    // 각 longhand 에 다시 붙인다.
+    const importantMatch = /\s*!important\s*$/.exec(value);
+    const important = importantMatch !== null;
+    const stripped = important
+        ? value.slice(0, importantMatch.index).trim()
+        : value;
+
+    const expanded = fn ? fn(stripped) : [{ property, value: stripped }];
+
+    if (!important) return expanded;
+    return expanded.map(({ property: p, value: v }) => ({
+        property: p,
+        value: `${v} !important`,
+    }));
 }
