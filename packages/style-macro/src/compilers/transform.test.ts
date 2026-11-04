@@ -373,3 +373,167 @@ describe('transform — token resolve (build error)', () => {
         expect(out.errors[0].code).toBe('unknown-token');
     });
 });
+
+// PR #752 review (CHANGES_REQUESTED, 2026-11-04): 8 결함 regression snapshot.
+// 수정 전엔 전부 실패 상태로 먼저 commit (TDD red).
+describe('transform — PR #752 review fixtures', () => {
+    it('#1 longhand overrides shorthand when declared after (padding + paddingTop)', () => {
+        const source = src(
+            `const cls = css({ padding: '$space-100', paddingTop: '$space-300' });`,
+        );
+        const out = transform({ source, filename: '/R1.tsx' });
+        expect(out.errors).toEqual([]);
+        // emit 순서상 longhand(paddingTop)가 shorthand(padding) 뒤에 나와야 하고,
+        // 같은 element에서 두 class가 함께 붙을 때 property dedupe로 last-wins.
+        // 실제 테스트는 className 조합 후 cascade 모사.
+        const paddingTopIdx = out.css.lastIndexOf('padding-top:');
+        const paddingAllIdx = out.css.lastIndexOf('padding-top: var(--vapor-size-space-100)');
+        // paddingTop($space-300) 이 padding($space-100) 분해보다 뒤에 와야 함.
+        expect(paddingTopIdx).toBeGreaterThan(paddingAllIdx);
+    });
+
+    it('#2 max-width media queries preserve declaration order (desktop-first)', () => {
+        const source = src(
+            `const cls = css({` +
+                `  color: '$fg-primary',` +
+                `  '@media (max-width: 1024px)': { color: '$fg-secondary' },` +
+                `  '@media (max-width: 768px)': { color: '$fg-hint' },` +
+                `});`,
+        );
+        const out = transform({ source, filename: '/R2.tsx' });
+        expect(out.errors).toEqual([]);
+        const i1024 = out.css.indexOf('max-width: 1024px');
+        const i768 = out.css.indexOf('max-width: 768px');
+        expect(i1024).toBeGreaterThanOrEqual(0);
+        expect(i768).toBeGreaterThanOrEqual(0);
+        // desktop-first 선언 순서가 유지되어야 cascade 정상.
+        expect(i1024).toBeLessThan(i768);
+    });
+
+    it('#3 nested @media inside pseudo emits valid CSS', () => {
+        const source = src(
+            `const cls = css({` +
+                `  ':hover': {` +
+                `    color: '$fg-primary',` +
+                `    '@media (min-width: 768px)': { color: '$fg-secondary' },` +
+                `    '&.active': { color: '$fg-hint' },` +
+                `  },` +
+                `});`,
+        );
+        const out = transform({ source, filename: '/R3.tsx' });
+        expect(out.errors).toEqual([]);
+        // 잘못된 결과: `.x:hover@media (...)` 같은 유출.
+        expect(out.css).not.toMatch(/:hover@media/);
+        expect(out.css).not.toMatch(/:hover&/);
+        // 정상: @media 가 outer wrapping.
+        expect(out.css).toMatch(/@media \(min-width: 768px\)[\s\S]*:hover/);
+        // 정상: &.active 가 self-ref로 confined.
+        expect(out.css).toMatch(/:hover\.active|\.active[^{]*:hover/);
+    });
+
+    it('#4 comma selector does not leak to bare pseudo', () => {
+        const source = src(
+            `const cls = css({ ':hover, :focus-visible': { color: '$fg-primary' } });`,
+        );
+        const out = transform({ source, filename: '/R4.tsx' });
+        expect(out.errors).toEqual([]);
+        // bare `:focus-visible` (class prefix 없음) 가 유출되면 안 됨.
+        expect(out.css).not.toMatch(/,\s*:focus-visible\s*\{/);
+        // 각 콤마 branch 모두 class prefix 를 가져야 함.
+        const commaBlock = out.css.match(/\.[^{,]+:hover,\s*\.[^{]+:focus-visible\s*\{/);
+        expect(commaBlock).not.toBeNull();
+    });
+
+    it('#5a vendor prefix preserved (WebkitLineClamp)', () => {
+        const source = src(`const cls = css({ WebkitLineClamp: 2 });`);
+        const out = transform({ source, filename: '/R5a.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.css).toMatch(/-webkit-line-clamp:\s*2\s*;/);
+        // webkit-line-clamp 는 unitless.
+        expect(out.css).not.toMatch(/-webkit-line-clamp:\s*2px/);
+    });
+
+    it('#5b unitless properties do not get px (aspectRatio, gridColumn, scale)', () => {
+        const source = src(
+            `const cls = css({ aspectRatio: 1, gridColumn: 2, scale: 1 });`,
+        );
+        const out = transform({ source, filename: '/R5b.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.css).toMatch(/aspect-ratio:\s*1\s*;/);
+        expect(out.css).not.toMatch(/aspect-ratio:\s*1px/);
+        expect(out.css).toMatch(/grid-column:\s*2\s*;/);
+        expect(out.css).not.toMatch(/grid-column:\s*2px/);
+        expect(out.css).toMatch(/scale:\s*1\s*;/);
+        expect(out.css).not.toMatch(/scale:\s*1px/);
+    });
+
+    it('#5c dynamic numeric value gets px for unit-required properties', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `function Comp({ w }) {`,
+            `  return <div className={css({ width: w })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/R5c.tsx' });
+        expect(out.errors).toEqual([]);
+        // runtime helper 가 숫자 100 → '100px' 로 변환해야 함. 호출 안에 property axis
+        // 또는 unit 정보가 전달되어야 함.
+        expect(out.code).toMatch(/_resolveToken\(\s*__vaporAxis_\w+\s*,\s*w\b/);
+    });
+
+    it('#6a multi-token value resolves each fragment (padding)', () => {
+        const source = src(`const cls = css({ padding: '$space-100 $space-200' });`);
+        const out = transform({ source, filename: '/R6a.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.css).toContain('var(--vapor-size-space-100)');
+        expect(out.css).toContain('var(--vapor-size-space-200)');
+    });
+
+    it('#6b injected style does not override existing style prop', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `function Comp({ color, myStyle }) {`,
+            `  return <div style={myStyle} className={css({ color })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/R6b.tsx' });
+        expect(out.errors).toEqual([]);
+        // slot 변수 먼저, 사용자 style 이 뒤에 — 사용자가 이김.
+        expect(out.code).toMatch(
+            /\{\s*\.\.\.\{[^}]*--vapor[^}]*\}\s*,\s*\.\.\.\(myStyle\)\s*\}/,
+        );
+    });
+
+    it('#6c CSS variable does not inherit to nested same-class element', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `function Comp({ color }) {`,
+            `  return <div className={css({ color })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/R6c.tsx' });
+        expect(out.errors).toEqual([]);
+        // 각 slot var 는 @property inherits:false 선언을 가져야 함.
+        expect(out.css).toMatch(/@property\s+--vapor-_[^{]+\{[^}]*inherits:\s*false/);
+    });
+
+    it('#7 !important preserved on all expanded longhands (margin)', () => {
+        const source = src(`const cls = css({ margin: '0 auto !important' });`);
+        const out = transform({ source, filename: '/R7.tsx' });
+        expect(out.errors).toEqual([]);
+        // 각 longhand 모두 !important 와 원 값 조각 유지.
+        expect(out.css).toMatch(/margin-top:\s*0\s*!important/);
+        expect(out.css).toMatch(/margin-right:\s*auto\s*!important/);
+        expect(out.css).toMatch(/margin-bottom:\s*0\s*!important/);
+        expect(out.css).toMatch(/margin-left:\s*auto\s*!important/);
+        // 과거 버그: `margin-bottom: !important` (value 없음).
+        expect(out.css).not.toMatch(/margin-\w+:\s*!important/);
+    });
+
+    it('#8 `$` inside string literal is preserved, not treated as token', () => {
+        const source = src(`const cls = css({ ':before': { content: '"$5"' } });`);
+        const out = transform({ source, filename: '/R8.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.css).toMatch(/content:\s*"\$5"/);
+    });
+});
