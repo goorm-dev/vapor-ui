@@ -390,8 +390,8 @@ describe('transform — PR #752 review fixtures', () => {
         // emit 순서상 longhand(paddingTop)가 shorthand(padding) 뒤에 나와야 하고,
         // 같은 element에서 두 class가 함께 붙을 때 property dedupe로 last-wins.
         // 실제 테스트는 className 조합 후 cascade 모사.
-        const paddingTopIdx = out.css.lastIndexOf('padding-top:');
-        const paddingAllIdx = out.css.lastIndexOf('padding-top: var(--vapor-size-space-100)');
+        const paddingTopIdx = out.css!.lastIndexOf('padding-top:');
+        const paddingAllIdx = out.css!.lastIndexOf('padding-top: var(--vapor-size-space-100)');
         // paddingTop($space-300) 이 padding($space-100) 분해보다 뒤에 와야 함.
         expect(paddingTopIdx).toBeGreaterThan(paddingAllIdx);
     });
@@ -406,8 +406,8 @@ describe('transform — PR #752 review fixtures', () => {
         );
         const out = transform({ source, filename: '/R2.tsx' });
         expect(out.errors).toEqual([]);
-        const i1024 = out.css.indexOf('max-width: 1024px');
-        const i768 = out.css.indexOf('max-width: 768px');
+        const i1024 = out.css!.indexOf('max-width: 1024px');
+        const i768 = out.css!.indexOf('max-width: 768px');
         expect(i1024).toBeGreaterThanOrEqual(0);
         expect(i768).toBeGreaterThanOrEqual(0);
         // desktop-first 선언 순서가 유지되어야 cascade 정상.
@@ -444,7 +444,7 @@ describe('transform — PR #752 review fixtures', () => {
         // bare `:focus-visible` (class prefix 없음) 가 유출되면 안 됨.
         expect(out.css).not.toMatch(/,\s*:focus-visible\s*\{/);
         // 각 콤마 branch 모두 class prefix 를 가져야 함.
-        const commaBlock = out.css.match(/\.[^{,]+:hover,\s*\.[^{]+:focus-visible\s*\{/);
+        const commaBlock = out.css!.match(/\.[^{,]+:hover,\s*\.[^{]+:focus-visible\s*\{/);
         expect(commaBlock).not.toBeNull();
     });
 
@@ -539,5 +539,105 @@ describe('transform — PR #752 review fixtures', () => {
         const out = transform({ source, filename: '/R8.tsx' });
         expect(out.errors).toEqual([]);
         expect(out.css).toMatch(/content:\s*"\$5"/);
+    });
+});
+
+// Phase 7 — A2-obj red snapshot.
+// css() 가 object(toString 심음) 를 반환하도록 리팩터할 새 동작의 fixture.
+// Phase 9 (parse-call 치환 리팩터) 가 끝나기 전까지 전부 실패 상태로 유지.
+describe('transform — A2-obj new API', () => {
+    it('single css({...}) → _mkStyle({ property: className }) 치환', () => {
+        const source = src(`const cls = css({ padding: '$space-100' });`);
+        const out = transform({ source, filename: '/A1.tsx' });
+        expect(out.errors).toEqual([]);
+        // 기존: const cls = 'vapor_pt_..._pr_..._pb_..._pl_...';
+        // 새 결과: const cls = _mkStyle({ 'padding-top': '...', ... });
+        expect(out.code).toMatch(/_mkStyle\(\s*\{/);
+        expect(out.code).toMatch(/'padding-top'\s*:\s*'[^']+'/);
+        expect(out.code).toMatch(/import\s*\{[^}]*_mkStyle[^}]*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/);
+    });
+
+    it('css(a, b) — 두 참조 머지 → _mergeStyles(a, b) 치환', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `import { base } from './base';`,
+            `import { override } from './override';`,
+            `const cls = css(base, override);`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A2.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.code).toMatch(/_mergeStyles\(\s*base\s*,\s*override\s*\)/);
+    });
+
+    it('css(style, a) — 선언 + 참조 섞인 머지', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `import { base } from './base';`,
+            `const cls = css({ paddingTop: '$space-300' }, base);`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A3.tsx' });
+        expect(out.errors).toEqual([]);
+        // 선언이 먼저 _mkStyle 로 치환된 뒤 base 와 머지.
+        expect(out.code).toMatch(/_mergeStyles\(\s*_mkStyle\(\s*\{[\s\S]*?\}\s*\)\s*,\s*base\s*\)/);
+    });
+
+    it('className={base} — 지역 변수 참조는 그대로 유지 (runtime toString)', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const base = css({ color: '$fg-primary' });`,
+            `const Cmp = () => <div className={base} />;`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A4.tsx' });
+        expect(out.errors).toEqual([]);
+        // base 가 _mkStyle(...) 로 치환되었지만 JSX attribute 는 그대로.
+        // React 가 String(base) → toString() 호출.
+        expect(out.code).toMatch(/className=\{\s*base\s*\}/);
+    });
+
+    it('className={css({...})} 인라인 — _mkStyle 로 치환', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const Cmp = () => <div className={css({ padding: '$space-100' })} />;`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A5.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.code).toMatch(/className=\{\s*_mkStyle\(\s*\{/);
+    });
+
+    it('단일 호출 내 property last-wins — paddingTop 이 뒤에 선언되면 그것만 남김', () => {
+        const source = src(
+            `const cls = css({ padding: '$space-100', paddingTop: '$space-300' });`,
+        );
+        const out = transform({ source, filename: '/A6.tsx' });
+        expect(out.errors).toEqual([]);
+        // _mkStyle map 안에는 padding-top 키가 **딱 한 번**만 등장해야 함.
+        const matches = out.code!.match(/'padding-top'\s*:/g) ?? [];
+        expect(matches.length).toBe(1);
+        // 그리고 그 값은 space-300 에서 파생된 class 여야 함 — space-100 으로
+        // 분해된 padding-top class 는 _mkStyle 안에 없어야 함.
+        // (정확한 class 이름은 hash 라 정규식으로 패턴만 매치)
+        expect(out.code).toMatch(/'padding-top'\s*:\s*'[^']*_300/);
+    });
+
+    it('template literal join (backtick + interpolation) — build error', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `import { base } from './base';`,
+            `import { override } from './override';`,
+            `const cls = \`\${base} \${override}\`;`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A7.tsx' });
+        expect(out.errors.length).toBeGreaterThan(0);
+        expect(out.errors[0].code).toMatch(/template-literal|invalid-combine/);
+    });
+
+    it('className=template-literal (JSX 자리) — build error', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `import { base } from './base';`,
+            `const Cmp = () => <div className={\`\${base} extra\`} />;`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A8.tsx' });
+        expect(out.errors.length).toBeGreaterThan(0);
     });
 });
