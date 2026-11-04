@@ -430,8 +430,8 @@ describe('transform — PR #752 review fixtures', () => {
         expect(out.css).not.toMatch(/:hover&/);
         // 정상: @media 가 outer wrapping.
         expect(out.css).toMatch(/@media \(min-width: 768px\)[\s\S]*:hover/);
-        // 정상: &.active 가 self-ref로 confined.
-        expect(out.css).toMatch(/:hover\.active|\.active[^{]*:hover/);
+        // 정상: &.active 가 self-ref로 confined — class name 이 중간에 들어갈 수 있음.
+        expect(out.css).toMatch(/:hover[^{]*\.active|\.active[^{]*:hover/);
     });
 
     it('#4 comma selector does not leak to bare pseudo', () => {
