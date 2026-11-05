@@ -51,8 +51,6 @@ disable-model-invocation: true
 | `vapor-figma-compose`  | Figma 공식 plugin (`figma@claude-plugins-official`) — Figma MCP 서버와 `figma-use` 스킬이 필요                                              |
 | `vapor-cs-report-jira` | Atlassian 공식 plugin (`atlassian@claude-plugins-official`) — Jira에 이슈를 발행 / goorm Atlassian 사이트의 `VAPOR` 프로젝트 이슈 생성 권한 |
 
-두 스킬 모두 Figma 라이브러리 `Vapor Design System`, `[V2.0] [Goorm theme] Foundation` 사용 권한이 필요하다. 권한이 없으면 Vapor 디자인 시스템 팀에 요청한다.
-
 **상태를 묻는 것은 답이 바뀌는 경우에만 한다.** 예:
 
 - 질문이 Figma 시안 작성인데 사용자가 Figma 공식 plugin이 깔려 있는지 모를 때: 설치 명령어 한 줄만 알려주고 넘어간다.
