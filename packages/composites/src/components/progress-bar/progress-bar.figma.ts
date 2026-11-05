@@ -23,7 +23,7 @@ function parseNumber(text: string | undefined, fallback: number) {
 function resolveValueDisplay(): ValueDisplay {
     if (instance.getEnum('(indeterminate)', BOOLEAN_VARIANT)) return { kind: 'indeterminate' };
 
-    const valueText = findChild(instance, '(valueText)');
+    const valueText = findChild(instance, 'ValueText');
     if (!valueText) return { kind: 'hidden', value: 50 };
 
     const value = parseNumber(valueText.getString('value'), 50);
@@ -60,11 +60,11 @@ const root = getProperties(instance, null, {
     type: { kind: 'enum', name: 'type', options: { default: 'default', error: 'error' } },
 });
 
-const label = getProperties(instance, '(label)', {
+const label = getProperties(instance, 'Label', {
     label: { kind: 'string', name: 'label' },
 });
 
-const description = getProperties(instance, '(description)', {
+const description = getProperties(instance, 'Description', {
     description: { kind: 'string', name: 'description' },
 });
 
