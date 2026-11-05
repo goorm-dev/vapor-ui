@@ -42,28 +42,6 @@ export function readComponentApi(name: string, lang: 'en' | 'ko'): ComponentApi 
 }
 
 /**
- * Composites-only. Reads the API JSON a docs page points to by its exact path,
- * matching the `<Demo file="..." />` convention. `file` is the path to the API
- * JSON relative to `content/docs/`, e.g.
- * `composites/(components)/menu/api/ko/menu-root.json`. The lang segment
- * (`/en/` or `/ko/`) in `file` is rewritten to the requested `lang`, so the
- * caller can point at whichever language file is natural in the MDX and still
- * read the other side (the English source for the LLM output, or the Korean
- * translation for the UI).
- *
- * Kept separate from `readComponentApi` so migrating core docs to the same
- * file-based input can ship as its own PR; once core is migrated this should
- * replace `readComponentApi`.
- */
-export function _readComponentApi(file: string, lang: 'en' | 'ko'): ComponentApi | undefined {
-    const localized = file.replace(/\/(en|ko)\//, `/${lang}/`);
-    const resolved = path.resolve(DOCS_ROOT, localized);
-    if (!resolved.startsWith(`${DOCS_ROOT}${path.sep}`)) return undefined;
-    if (!existsSync(resolved)) return undefined;
-    return JSON.parse(readFileSync(resolved, 'utf8'));
-}
-
-/**
  * Pages live either directly under <root>/<page>/api/<lang>/<name>.json or inside
  * one route-group level: <root>/(<group>)/<page>/api/<lang>/<name>.json. Resolving
  * these two shapes directly avoids `fs.globSync`, which Turbopack's dev server
@@ -87,4 +65,26 @@ function findApiJson(root: string, name: string, lang: 'en' | 'ko'): string | un
         }
     }
     return undefined;
+}
+
+/**
+ * Composites-only. Reads the API JSON a docs page points to by its exact path,
+ * matching the `<Demo file="..." />` convention. `file` is the path to the API
+ * JSON relative to `content/docs/`, e.g.
+ * `composites/(components)/menu/api/ko/menu-root.json`. The lang segment
+ * (`/en/` or `/ko/`) in `file` is rewritten to the requested `lang`, so the
+ * caller can point at whichever language file is natural in the MDX and still
+ * read the other side (the English source for the LLM output, or the Korean
+ * translation for the UI).
+ *
+ * Kept separate from `readComponentApi` so migrating core docs to the same
+ * file-based input can ship as its own PR; once core is migrated this should
+ * replace `readComponentApi`.
+ */
+export function _readComponentApi(file: string, lang: 'en' | 'ko'): ComponentApi | undefined {
+    const localized = file.replace(/\/(en|ko)\//, `/${lang}/`);
+    const resolved = path.resolve(DOCS_ROOT, localized);
+    if (!resolved.startsWith(`${DOCS_ROOT}${path.sep}`)) return undefined;
+    if (!existsSync(resolved)) return undefined;
+    return JSON.parse(readFileSync(resolved, 'utf8'));
 }
