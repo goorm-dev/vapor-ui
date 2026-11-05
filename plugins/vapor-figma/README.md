@@ -23,7 +23,7 @@ plugin 자체 사용법·스킬 선택·상황별 안내는 Claude Code에서 `/
 
 ## 스킬
 
-이 plugin에 포함된 스킬은 서로 독립적으로 동작합니다. 요청에 맞으면 Claude가 알아서 부르고, 아래 이름으로 직접 호출해도 됩니다.
+이 plugin에 포함된 스킬은 서로 독립적으로 동작합니다. `vapor-figma-compose`와 `vapor-cs-report-jira`는 요청에 맞으면 Claude가 알아서 부르고, 아래 이름으로 직접 호출해도 됩니다. `vapor-help`는 자동 호출 대상이 아니며 `/vapor-help`로 명시 호출해야 돕니다.
 
 ### `vapor-figma:vapor-help`
 
