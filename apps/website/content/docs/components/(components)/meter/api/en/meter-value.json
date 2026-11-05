@@ -4,8 +4,8 @@
     "props": [
         {
             "name": "children",
-            "type": ["function", "null"],
-            "detailedType": "((formattedValue: string, value: number) => ReactNode) | null | undefined",
+            "type": ["function"],
+            "detailedType": "((args: [formattedValue: string, value: number, max: number]) => ReactNode) | undefined",
             "required": false,
             "description": "Content shown inside the value. As a function, receives the formatted value and the raw number and returns what to display. Shows the formatted value when omitted."
         },

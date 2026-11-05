@@ -4,8 +4,8 @@
     "props": [
         {
             "name": "children",
-            "type": ["function", "null"],
-            "detailedType": "((formattedValue: string, value: number) => ReactNode) | null | undefined",
+            "type": ["function"],
+            "detailedType": "((args: [formattedValue: string, value: number, max: number]) => ReactNode) | undefined",
             "required": false,
             "description": "값 안에 표시할 콘텐츠. 함수로 쓰면 포맷된 값과 원래 숫자를 받아 표시할 내용을 반환합니다. 생략하면 포맷된 값을 표시합니다."
         },
