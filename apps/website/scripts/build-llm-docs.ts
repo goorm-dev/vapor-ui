@@ -38,6 +38,25 @@ function readFrontmatter(raw: string, key: string): string | undefined {
     return value?.replace(/^(['"])(.*)\1$/, '$2');
 }
 
+/** Composite docs split Overview and Properties across sibling files; concat them so one page = one `.md`. */
+const isPropertiesFile = (file: string): boolean => /(?:^|\/)properties\.mdx?$/.test(file);
+const indexSiblingOf = (file: string): string => file.replace(/properties\.mdx?$/, 'index.mdx');
+
+async function renderFile(file: string): Promise<string> {
+    const fullPath = path.join(CONTENT_DIR, file);
+    const raw = fs.readFileSync(fullPath, 'utf8');
+    const slug = toSlug(file);
+    return toLLMText({
+        raw,
+        title: readFrontmatter(raw, 'title') ?? slug,
+        description: readFrontmatter(raw, 'description'),
+        url: `/docs/${slug === 'index' ? '' : slug}`.replace(/\/$/, ''),
+        path: file,
+        fullPath,
+        contentType: 'docs',
+    });
+}
+
 async function main() {
     const outDir = process.argv[2];
     if (!outDir) throw new Error('Usage: tsx scripts/build-llm-docs.ts <outDir>');
@@ -45,24 +64,21 @@ async function main() {
     const out = path.resolve(outDir);
     fs.rmSync(out, { recursive: true, force: true });
 
-    const files = fs.globSync('**/*.{md,mdx}', { cwd: CONTENT_DIR }).sort();
+    const allFiles = fs.globSync('**/*.{md,mdx}', { cwd: CONTENT_DIR }).sort();
+    const fileSet = new Set(allFiles);
+    const files = allFiles.filter((file) => {
+        if (!isPropertiesFile(file)) return true;
+        return !fileSet.has(indexSiblingOf(file));
+    });
 
     for (const file of files) {
-        const fullPath = path.join(CONTENT_DIR, file);
-        const raw = fs.readFileSync(fullPath, 'utf8');
-        const slug = toSlug(file);
+        let text = await renderFile(file);
+        const propertiesSibling = file.replace(/index\.mdx?$/, 'properties.mdx');
+        if (propertiesSibling !== file && fileSet.has(propertiesSibling)) {
+            text = `${text}\n\n${await renderFile(propertiesSibling)}`;
+        }
 
-        const text = await toLLMText({
-            raw,
-            title: readFrontmatter(raw, 'title') ?? slug,
-            description: readFrontmatter(raw, 'description'),
-            url: `/docs/${slug === 'index' ? '' : slug}`.replace(/\/$/, ''),
-            path: file,
-            fullPath,
-            contentType: 'docs',
-        });
-
-        const target = path.join(out, `${slug}.md`);
+        const target = path.join(out, `${toSlug(file)}.md`);
         fs.mkdirSync(path.dirname(target), { recursive: true });
         fs.writeFileSync(target, text);
     }

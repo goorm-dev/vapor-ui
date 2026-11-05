@@ -4,7 +4,7 @@ import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkMdx from 'remark-mdx';
 
-import type { source } from '~/lib/source';
+import { source } from '~/lib/source';
 import { replaceDemoSelfClosing } from '~/utils/get-blocks-examples-doc';
 import { replaceComponentDoc } from '~/utils/get-component-doc';
 import { replaceCompositeDoc } from '~/utils/get-composite-doc';
@@ -91,4 +91,28 @@ export async function getLLMText(
         fullPath: page.data.info.fullPath,
         contentType,
     });
+}
+
+const PROPERTIES_SLUG = 'properties';
+
+export const isPropertiesPage = (page: InferPageType<typeof source>): boolean =>
+    page.slugs.at(-1) === PROPERTIES_SLUG;
+
+/**
+ * Composite docs split Overview and Properties across two files served by tabbed
+ * routes; LLM output concats them back into one document so clients see the full
+ * page at the parent URL.
+ */
+export async function getLLMTextWithProperties(
+    page: InferPageType<typeof source>,
+    contentType: ContentType = 'docs',
+): Promise<string> {
+    const main = await getLLMText(page, contentType);
+    if (isPropertiesPage(page)) return main;
+
+    const propertiesPage = source.getPage([...page.slugs, PROPERTIES_SLUG]);
+    if (!propertiesPage) return main;
+
+    const properties = await getLLMText(propertiesPage, contentType);
+    return `${main}\n\n${properties}`;
 }

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { source } from '~/lib/source';
-import { getLLMText } from '~/utils/get-llm-text';
+import { getLLMTextWithProperties } from '~/utils/get-llm-text';
 
 export const revalidate = false;
 
@@ -12,7 +12,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ slu
 
     if (!page) notFound();
 
-    return new NextResponse(await getLLMText(page, 'docs'));
+    return new NextResponse(await getLLMTextWithProperties(page, 'docs'));
 }
 
 export function generateStaticParams() {
