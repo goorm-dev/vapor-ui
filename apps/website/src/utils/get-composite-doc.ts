@@ -37,9 +37,11 @@ const renderPropsTable = (file: string): string => {
         ...json.props.map((item) => {
             const name = `\`${escapeCell(item.name)}\``;
             const required = item.required ? 'Required' : 'Optional';
-            const typeStr = Array.isArray(item.type)
-                ? item.type.map((t) => `\`${String(t).replace(/\|/g, '\\|')}\``).join(', ')
-                : `\`${String(item.type).replace(/\|/g, '\\|')}\``;
+            const typeStr = item.detailedType
+                ? `\`${item.detailedType.replace(/\|/g, '\\|')}\``
+                : Array.isArray(item.type)
+                  ? item.type.map((t) => `\`${String(t).replace(/\|/g, '\\|')}\``).join(', ')
+                  : `\`${String(item.type).replace(/\|/g, '\\|')}\``;
             const defaultVal =
                 item.defaultValue !== undefined && item.defaultValue !== null
                     ? `\`${escapeCell(item.defaultValue)}\``
