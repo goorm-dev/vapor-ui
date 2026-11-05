@@ -21,7 +21,7 @@
             "type": ["single", "multiple"],
             "detailedType": "\"single\" | \"multiple\"",
             "required": true,
-            "description": "선택 모드. `single`은 라디오 그룹처럼 최대 하나의 값만 선택된다."
+            "description": "선택 방식을 결정한다.\n- `\"single\"` - 라디오 그룹처럼 최대 하나의 값만 선택된다.\n- `\"multiple\"` - 체크박스 그룹처럼 여러 값을 토글한다."
         },
         {
             "name": "defaultValue",
@@ -35,7 +35,7 @@
             "type": ["function"],
             "detailedType": "((value: string) => void) | ((value: string[]) => void) | undefined",
             "required": false,
-            "description": "선택이 바뀔 때 호출된다. 새로 선택된 값 하나가 전달된다."
+            "description": "선택이 바뀔 때 호출된다.\n- `\"single\"` - 새로 선택된 값 하나가 문자열로 전달된다.\n- `\"multiple\"` - 선택된 모든 값이 배열로 전달된다."
         },
         {
             "name": "value",
