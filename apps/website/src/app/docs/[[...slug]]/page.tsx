@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
             <DocsPageHeader
                 title={page.data.title}
                 description={page.data.description}
-                markdownUrl={`${SITE_URL}${page.url}.mdx`}
+                markdownUrl={`${SITE_URL}${page.url.replace(/\/properties$/, '')}.mdx`}
             />
             <DocsBody>
                 <MDX components={getMDXComponents({})} />
