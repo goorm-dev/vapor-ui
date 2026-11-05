@@ -2,10 +2,13 @@
 
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
+import type { Components } from 'react-markdown';
+import ReactMarkdown from 'react-markdown';
 
 import { Collapsible, Flex, HStack, Popover, Text } from '@vapor-ui/core';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
+import remarkGfm from 'remark-gfm';
 
 import { TypeChips } from './type-chips';
 import type { DetailedTypeSegment, HighlightedPropRow } from './types';
@@ -59,9 +62,9 @@ export const PropRow = ({ row }: PropRowProps) => {
                 }}
             >
                 <PropRowDetail condition={!!row.description} name="description">
-                    <Text typography="body2" foreground="normal">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={descriptionMarkdownCode}>
                         {row.description}
-                    </Text>
+                    </ReactMarkdown>
                 </PropRowDetail>
 
                 <PropRowDetail condition={!!row.detailedType} name="type">
@@ -82,6 +85,31 @@ export const PropRow = ({ row }: PropRowProps) => {
             </Collapsible.Panel>
         </Collapsible.Root>
     );
+};
+
+/* -----------------------------------------------------------------------------------------------*/
+
+const descriptionMarkdownCode: Components = {
+    p: ({ children }) => (
+        <Text typography="body2" foreground="normal">
+            {children}
+        </Text>
+    ),
+    code: ({ children }) => (
+        <Text
+            render={<code />}
+            typography="code1"
+            className="bg-v-gray-50 text-v-contrast rounded-v-200 px-v-50 py-v-25"
+        >
+            {children}
+        </Text>
+    ),
+    ul: ({ children }) => <ul className="list-disc pl-4 ">{children}</ul>,
+    li: ({ children }) => (
+        <Text render={<li />} typography="body2" className="my-v-50">
+            {children}
+        </Text>
+    ),
 };
 
 /* -----------------------------------------------------------------------------------------------*/
