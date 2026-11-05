@@ -28,7 +28,7 @@ const escapeCell = (value: string | number | boolean | null | undefined): string
 };
 
 const renderPropsTable = (part: string): string => {
-    const json = readComponentApi(part, 'en');
+    const json = readComponentApi(part, 'en', 'composites');
     if (!json) return `> ⚠️ Spec file not found: \`${part}.json\``;
     if (json.props.length === 0) return `> ⚠️ Props not found in \`${part}.json\``;
 

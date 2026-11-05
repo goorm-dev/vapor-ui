@@ -15,7 +15,7 @@ interface PropsTableProps {
 }
 
 export const PropsTable = async ({ part }: PropsTableProps) => {
-    const componentData = readComponentApi(part, 'ko');
+    const componentData = readComponentApi(part, 'ko', 'composites');
     if (!componentData) {
         throw new Error(`No API JSON for "${part}". Run \`pnpm docs:api\`.`);
     }

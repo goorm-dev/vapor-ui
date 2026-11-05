@@ -18,24 +18,29 @@ export interface ComponentApi {
     typeRefs?: Record<string, string>;
 }
 
-const PAGES_DIRS = [
-    path.join(process.cwd(), 'content/docs/components'),
-    path.join(process.cwd(), 'content/docs/composites'),
-];
+const PAGES_DIRS = {
+    components: path.join(process.cwd(), 'content/docs/components'),
+    composites: path.join(process.cwd(), 'content/docs/composites'),
+} as const;
+
+export type ComponentApiScope = keyof typeof PAGES_DIRS;
 
 /**
  * Reads `<page>/api/<lang>/<name>.json`, written next to each component page by
  * `pnpm docs:api`: `en` holds the English source from JSDoc, `ko` its Korean
  * translation from `pnpm docs:translate` (Composites JSDoc is already Korean, so
- * its `ko` mirror is the English source unchanged). Part names are unique across
- * pages, so the name alone finds the file. Runs at build time on the server;
- * returns undefined when the file is missing.
+ * its `ko` mirror is the English source unchanged). `scope` picks the docs root;
+ * core and composites can share a part name (`menu-root`, `menu-item`,
+ * `menu-group`) so callers must specify which side they want. Runs at build time
+ * on the server; returns undefined when the file is missing.
  */
-export function readComponentApi(name: string, lang: 'en' | 'ko'): ComponentApi | undefined {
-    for (const dir of PAGES_DIRS) {
-        const match = findApiJson(dir, name, lang);
-        if (match) return JSON.parse(readFileSync(match, 'utf8'));
-    }
+export function readComponentApi(
+    name: string,
+    lang: 'en' | 'ko',
+    scope: ComponentApiScope = 'components',
+): ComponentApi | undefined {
+    const match = findApiJson(PAGES_DIRS[scope], name, lang);
+    if (match) return JSON.parse(readFileSync(match, 'utf8'));
     return undefined;
 }
 
