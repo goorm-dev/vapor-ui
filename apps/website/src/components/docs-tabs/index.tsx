@@ -1,28 +1,39 @@
+'use client';
+
 import type { ReactNode } from 'react';
 
-import { Tabs as VaporTabs } from '@vapor-ui/core';
+import { Tabs } from '@vapor-ui/core';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-export interface DocsTabsProps extends Omit<VaporTabs.Root.Props, 'defaultValue' | 'children'> {
-    items: string[];
-    defaultValue?: string;
+interface DocsTabsProps {
     children: ReactNode;
 }
 
-export const DocsTabs = ({ items, defaultValue, children, ...props }: DocsTabsProps) => (
-    <VaporTabs.Root defaultValue={defaultValue ?? items[0]} {...props}>
-        <VaporTabs.List>
-            {items.map((item) => (
-                <VaporTabs.Button key={item} value={item}>
-                    {item}
-                </VaporTabs.Button>
-            ))}
-        </VaporTabs.List>
-        {children}
-    </VaporTabs.Root>
-);
+export const DocsTabs = ({ children }: DocsTabsProps) => {
+    const pathname = usePathname();
+    return (
+        <Tabs.Root value={pathname}>
+            <Tabs.List>{children}</Tabs.List>
+        </Tabs.Root>
+    );
+};
 
-export interface DocsTabProps extends VaporTabs.Panel.Props {
-    value: string;
+interface DocsTabProps {
+    href: string;
+    children: ReactNode;
 }
 
-export const DocsTab = (props: DocsTabProps) => <VaporTabs.Panel {...props} />;
+export const DocsTab = ({ href, children }: DocsTabProps) => (
+    <Tabs.Button
+        value={href}
+        nativeButton={false}
+        render={
+            <Link className="no-underline" href={href}>
+                {children}
+            </Link>
+        }
+    >
+        {children}
+    </Tabs.Button>
+);
