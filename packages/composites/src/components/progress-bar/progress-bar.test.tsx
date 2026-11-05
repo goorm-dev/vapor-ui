@@ -126,4 +126,65 @@ describe('<ProgressBar />', () => {
             '업로드에 실패했습니다',
         );
     });
+
+    it('should show a hidden warning icon before an error description', () => {
+        render(
+            <ProgressBar
+                value={42}
+                type="error"
+                label="업로드"
+                description="업로드에 실패했습니다"
+            />,
+        );
+        const description = screen.getByText('업로드에 실패했습니다');
+
+        expect(description.firstElementChild?.querySelector('svg')).toHaveAttribute(
+            'aria-hidden',
+            'true',
+        );
+        expect(screen.getByRole('progressbar')).toHaveAccessibleDescription(
+            '업로드에 실패했습니다',
+        );
+    });
+
+    it('should show no icon before a default description', () => {
+        render(<ProgressBar value={42} label="업로드" description="약 3분 남음" />);
+
+        expect(screen.getByText('약 3분 남음').querySelector('svg')).toBeNull();
+    });
+
+    it('should show no icon when an error has no description', () => {
+        const { container } = render(<ProgressBar value={42} type="error" label="업로드" />);
+
+        expect(container.querySelector('svg')).toBeNull();
+        expect(screen.getByRole('progressbar')).not.toHaveAttribute('aria-describedby');
+    });
+
+    it('should show no icon when an error description is empty', () => {
+        const { container } = render(
+            <ProgressBar value={42} type="error" label="업로드" description="" />,
+        );
+
+        expect(container.querySelector('svg')).toBeNull();
+    });
+
+    it('should show a hidden warning icon before an element error description', () => {
+        render(
+            <ProgressBar
+                value={42}
+                type="error"
+                label="업로드"
+                description={<p>업로드에 실패했습니다</p>}
+            />,
+        );
+        const bar = screen.getByRole('progressbar');
+        const described = document.getElementById(bar.getAttribute('aria-describedby') ?? '');
+        const element = screen.getByText('업로드에 실패했습니다');
+
+        expect(element.tagName).toBe('P');
+        expect(described).not.toBe(element);
+        expect(described).toContainElement(element);
+        expect(described?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+        expect(bar).toHaveAccessibleDescription('업로드에 실패했습니다');
+    });
 });

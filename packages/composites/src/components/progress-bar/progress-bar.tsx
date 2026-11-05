@@ -1,6 +1,7 @@
 'use client';
 
-import { ProgressBar as ProgressBarPrimitives } from '@vapor-ui/core';
+import { Box, ProgressBar as ProgressBarPrimitives } from '@vapor-ui/core';
+import { WarningIcon } from '@vapor-ui/icons';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -30,6 +31,13 @@ export const ProgressBar = ({
     valueText,
     description,
 }: ProgressBar.Props) => {
+    const hasErrorIcon =
+        type === 'error' &&
+        description !== null &&
+        description !== undefined &&
+        description !== '' &&
+        typeof description !== 'boolean';
+
     return (
         <ProgressBarPrimitives.Root
             value={value}
@@ -41,7 +49,33 @@ export const ProgressBar = ({
             <slots.label render={label} />
             <slots.valueText render={valueText} />
             <ProgressBarPrimitives.Track />
-            <slots.description render={description} />
+            <slots.description
+                render={
+                    hasErrorIcon ? (
+                        <>
+                            <Box
+                                render={<span />}
+                                $css={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    flexShrink: 0,
+                                    height: '1lh',
+                                }}
+                            >
+                                <WarningIcon />
+                            </Box>
+                            {description}
+                        </>
+                    ) : (
+                        description
+                    )
+                }
+                $css={
+                    hasErrorIcon
+                        ? { display: 'flex', alignItems: 'flex-start', gap: '$050' }
+                        : undefined
+                }
+            />
         </ProgressBarPrimitives.Root>
     );
 };
@@ -105,6 +139,7 @@ export interface ProgressBarProps {
     /**
      * 진행 상황을 보충하는 문장. 작업이 오래 걸리면 진행 단계에 맞춰 문구를 바꾸고("약 3분 남음"), 실패했다면 원인과 해결 방법을 적으세요.
      * `aria-describedby`로 연결됩니다.
+     * `type`이 `"error"`면 내용 앞에 항상 경고 아이콘이 붙습니다. 아이콘은 보조 기술에 전달되지 않으니 문장만으로 실패가 드러나게 쓰세요.
      */
     description?: Slots['description'];
 }
