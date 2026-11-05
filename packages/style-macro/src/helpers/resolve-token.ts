@@ -14,6 +14,20 @@ type AxisTable = Readonly<Record<string, string>>;
  * 해당 axis 테이블(`@vapor-ui/style-macro/__runtime__/tokens` 에서 import)
  * 을 첫 인자로 넘긴다. 런타임에 property → axis 룩업이 사라지고,
  * 사용 안 하는 axis 테이블은 bundler 가 제거 가능.
+ *
+ * TODO(unit-hybrid): 지금은 **모든** 숫자 값을 runtime 에서 처리하는 단일 전략
+ *   (C1). 리터럴 숫자(`css({ width: 100 })`) 도 runtime 호출이 발생한다.
+ *   향후 Compiled(Atlassian) 가 쓰는 hybrid 전략으로 전환할 여지 — 리터럴은
+ *   compile 시 바로 `"100px"` 리터럴로 치환하고, runtime 호출은 변수가 포함된
+ *   경우에만 유지. 전환 지점:
+ *     - 이 파일: 숫자 입력 handling 은 그대로 둬도 OK (리터럴이 안 들어와도
+ *       호환 유지).
+ *     - `compilers/jsx-inject.ts`: slot 생성 전에 `sourceExpr` 가 NumericLiteral
+ *       인지 검사하고, 맞으면 `_resolveToken` 호출 대신 `'<n>px'` 리터럴 문자열을
+ *       `style={{ '--...': '100px' }}` 로 직접 삽입.
+ *     - `compilers/parse-call.ts`: static rule 경로에서 이미 리터럴 숫자를 CSS
+ *       값으로 처리 중 → dynamic slot 쪽만 손대면 끝.
+ *   도입 기준은 번들 사이즈 측정 결과 (`apps/test-app` 과 실제 소비자 번들).
  */
 export function _resolveToken(
     axis: AxisTable,

@@ -74,6 +74,12 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
         }
     }
 
+    // TODO(unit-hybrid): 지금은 모든 dynamic slot 이 runtime `_resolveToken`
+    //   을 거친다 (unit 전략 C1). 리터럴 숫자 (예: `css({ width: 100 })`) 도
+    //   runtime 호출 비용을 지불한다. Compiled 의 hybrid 전략으로 전환하려면
+    //   이 루프에서 `s.sourceExpr` 가 숫자 리터럴인지 먼저 검사해, 맞으면
+    //   `_resolveToken` 호출 대신 `'<n>px'` 리터럴을 바로 삽입하면 된다.
+    //   relevant: `helpers/resolve-token.ts` 상단의 TODO(unit-hybrid).
     const slotLits: string[] = [];
     for (const s of site.slots) {
         const varName = dynamicVarName(s.slotId, ctx.mode);
