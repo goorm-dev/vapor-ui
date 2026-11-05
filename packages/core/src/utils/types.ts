@@ -23,6 +23,8 @@ export type Styles = {
      * $css prop for applying sprinkles styles.
      * Supports all CSS properties plus design tokens. Use responsive conditions and pseudo-states.
      *
+     * NOTE: this prop is planned to migrate to the build-time atomic CSS macro `css()` from `@vapor-ui/style-macro` in a future release.
+     *
      * @example
      * // Basic usage
      * <Box $css={{ padding: '$400', backgroundColor: 'bg-primary-100' }} />
