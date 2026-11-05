@@ -33,11 +33,10 @@ const renderPropsTable = (part: string): string => {
     if (json.props.length === 0) return `> ⚠️ Props not found in \`${part}.json\``;
 
     const table = markdownTable([
-        ['Prop', 'Type', 'Default', 'Description'],
+        ['Prop', 'Required', 'Type', 'Default', 'Description'],
         ...json.props.map((item) => {
-            const name = item.required
-                ? `**${escapeCell(item.name)}**`
-                : `\`${escapeCell(item.name)}\``;
+            const name = `\`${escapeCell(item.name)}\``;
+            const required = item.required ? 'Required' : 'Optional';
             const typeStr = Array.isArray(item.type)
                 ? item.type.map((t) => `\`${String(t).replace(/\|/g, '\\|')}\``).join(', ')
                 : `\`${String(item.type).replace(/\|/g, '\\|')}\``;
@@ -45,7 +44,7 @@ const renderPropsTable = (part: string): string => {
                 item.defaultValue !== undefined && item.defaultValue !== null
                     ? `\`${escapeCell(item.defaultValue)}\``
                     : '-';
-            return [name, typeStr, defaultVal, escapeCell(item.description)];
+            return [name, required, typeStr, defaultVal, escapeCell(item.description)];
         }),
     ]);
     return `\n${table}\n`;
