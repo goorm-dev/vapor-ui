@@ -247,7 +247,7 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
                 >
                     <ChevronDownOutlineIcon aria-hidden="true" />
                 </Menu.Trigger>
-                <Menu.Popup className="min-w-[200px]">
+                <Menu.Popup className="min-w-50">
                     {menuItems.map(({ label, action, handler, icon, isExternal }) => (
                         <Menu.Item key={label} onClick={() => handleMenuItemClick(action, handler)}>
                             {icon}
