@@ -287,29 +287,38 @@ export const SidebarLinkItem = createLinkItemRenderer({
 });
 
 /**
- * Composite docs ship tabbed sub-routes (e.g. `/menu/properties`) that aren't
- * registered in the sidebar. This matches a sub-route's parent entry as active
- * so the sibling tab stays highlighted and the folder stays expanded.
+ * Pages flagged `subpage: true` in frontmatter are hidden from the sidebar but
+ * stay in the page tree so `useTreePath` resolves them. The folder/item
+ * renderers below collapse single-subpage folders into one link and treat the
+ * subpage URL as "active on the parent" so the sibling entry stays highlighted.
  */
-const COMPOSITE_SUB_ROUTE = '/properties';
-
 const normalizeUrl = (url: string): string =>
     url.length > 1 && url.endsWith('/') ? url.slice(0, -1) : url;
 
-const isCompositeItemActive = (url: string, pathname: string): boolean => {
+const isSubpageNode = (node: PageTree.Node): boolean =>
+    (node as { subpage?: boolean }).subpage === true;
+
+/** Parent URL of a tree path currently resolving to a subpage leaf, else null. */
+const useActiveSubpageParentUrl = (): string | null => {
+    const treePath = useTreePath();
+    const leaf = treePath.at(-1);
+    if (!leaf || leaf.type !== 'page' || !isSubpageNode(leaf)) return null;
+    const url = normalizeUrl(leaf.url);
+    const slash = url.lastIndexOf('/');
+    return slash > 0 ? url.slice(0, slash) : null;
+};
+
+const isActiveForSubpages = (url: string, pathname: string, subpageParent: string | null): boolean => {
     const href = normalizeUrl(url);
     const path = normalizeUrl(pathname);
     if (href === path) return true;
-    if (!path.endsWith(COMPOSITE_SUB_ROUTE)) return false;
-    return path.slice(0, -COMPOSITE_SUB_ROUTE.length) === href;
+    return !!subpageParent && href === subpageParent;
 };
 
-const isPropertiesUrl = (url: string): boolean => normalizeUrl(url).endsWith(COMPOSITE_SUB_ROUTE);
-
-const hasOnlyPropertiesChild = (folder: PageTree.Folder): boolean => {
+const hasOnlySubpageChild = (folder: PageTree.Folder): boolean => {
     if (folder.children.length !== 1) return false;
     const [child] = folder.children;
-    return child?.type === 'page' && isPropertiesUrl(child.url);
+    return !!child && child.type === 'page' && isSubpageNode(child);
 };
 
 export const CompositeAwareSidebarItem: SidebarPageTreeComponents['Item'] = ({
@@ -318,13 +327,14 @@ export const CompositeAwareSidebarItem: SidebarPageTreeComponents['Item'] = ({
     item: PageTree.Item;
 }) => {
     const pathname = usePathname();
-    if (isPropertiesUrl(item.url)) return null;
+    const subpageParent = useActiveSubpageParentUrl();
+    if (isSubpageNode(item)) return null;
     return (
         <SidebarItem
             href={item.url}
             external={item.external}
             icon={item.icon}
-            active={isCompositeItemActive(item.url, pathname)}
+            active={isActiveForSubpages(item.url, pathname, subpageParent)}
         >
             {item.name}
         </SidebarItem>
@@ -332,9 +342,9 @@ export const CompositeAwareSidebarItem: SidebarPageTreeComponents['Item'] = ({
 };
 
 /**
- * When a composite folder only hosts the hidden `properties` sub-route, collapse
- * it back to a single sidebar link so the page tab (Overview/Properties) is the
- * only navigation surface — no stray chevron, no empty folder content.
+ * When a folder only hosts hidden subpages, collapse it back to a single
+ * sidebar link so the in-page tabs are the only navigation surface — no stray
+ * chevron, no empty folder content.
  */
 export const CompositeAwareSidebarFolder: SidebarPageTreeComponents['Folder'] = ({
     item,
@@ -345,14 +355,15 @@ export const CompositeAwareSidebarFolder: SidebarPageTreeComponents['Folder'] = 
 }) => {
     const pathname = usePathname();
     const treePath = useTreePath();
+    const subpageParent = useActiveSubpageParentUrl();
 
-    if (hasOnlyPropertiesChild(item) && item.index) {
+    if (hasOnlySubpageChild(item) && item.index) {
         return (
             <SidebarItem
                 href={item.index.url}
                 external={item.index.external}
                 icon={item.icon ?? item.index.icon}
-                active={isCompositeItemActive(item.index.url, pathname)}
+                active={isActiveForSubpages(item.index.url, pathname, subpageParent)}
             >
                 {item.index.name ?? item.name}
             </SidebarItem>
@@ -366,7 +377,7 @@ export const CompositeAwareSidebarFolder: SidebarPageTreeComponents['Folder'] = 
                 <SidebarFolderLink
                     href={item.index.url}
                     external={item.index.external}
-                    active={isCompositeItemActive(item.index.url, pathname)}
+                    active={isActiveForSubpages(item.index.url, pathname, subpageParent)}
                 >
                     {item.icon}
                     {item.name}

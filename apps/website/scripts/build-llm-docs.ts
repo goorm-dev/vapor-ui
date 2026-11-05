@@ -38,9 +38,14 @@ function readFrontmatter(raw: string, key: string): string | undefined {
     return value?.replace(/^(['"])(.*)\1$/, '$2');
 }
 
-/** Composite docs split Overview and Properties across sibling files; concat them so one page = one `.md`. */
-const isPropertiesFile = (file: string): boolean => /(?:^|\/)properties\.mdx?$/.test(file);
-const indexSiblingOf = (file: string): string => file.replace(/properties\.mdx?$/, 'index.mdx');
+/** Pages flagged `subpage: true` in frontmatter get folded into their sibling `index.mdx`. */
+function isSubpageFile(fullPath: string): boolean {
+    return readFrontmatter(fs.readFileSync(fullPath, 'utf8'), 'subpage') === 'true';
+}
+
+function siblingIndexOf(file: string): string {
+    return `${path.posix.dirname(file)}/index.mdx`;
+}
 
 async function renderFile(file: string): Promise<string> {
     const fullPath = path.join(CONTENT_DIR, file);
@@ -66,24 +71,33 @@ async function main() {
 
     const allFiles = fs.globSync('**/*.{md,mdx}', { cwd: CONTENT_DIR }).sort();
     const fileSet = new Set(allFiles);
-    const files = allFiles.filter((file) => {
-        if (!isPropertiesFile(file)) return true;
-        return !fileSet.has(indexSiblingOf(file));
-    });
 
-    for (const file of files) {
-        let text = await renderFile(file);
-        const propertiesSibling = file.replace(/index\.mdx?$/, 'properties.mdx');
-        if (propertiesSibling !== file && fileSet.has(propertiesSibling)) {
-            text = `${text}\n\n${await renderFile(propertiesSibling)}`;
+    const subpagesByParent = new Map<string, string[]>();
+    const parentFiles: string[] = [];
+    for (const file of allFiles) {
+        if (isSubpageFile(path.join(CONTENT_DIR, file))) {
+            const parent = siblingIndexOf(file);
+            const list = subpagesByParent.get(parent) ?? [];
+            list.push(file);
+            subpagesByParent.set(parent, list);
+            if (!fileSet.has(parent)) parentFiles.push(file);
+        } else {
+            parentFiles.push(file);
+        }
+    }
+
+    for (const file of parentFiles) {
+        const rendered = [await renderFile(file)];
+        for (const subpage of subpagesByParent.get(file) ?? []) {
+            rendered.push(await renderFile(subpage));
         }
 
         const target = path.join(out, `${toSlug(file)}.md`);
         fs.mkdirSync(path.dirname(target), { recursive: true });
-        fs.writeFileSync(target, text);
+        fs.writeFileSync(target, rendered.join('\n\n'));
     }
 
-    console.log(`Wrote ${files.length} pages to ${out}`);
+    console.log(`Wrote ${parentFiles.length} pages to ${out}`);
 }
 
 main().catch((error) => {

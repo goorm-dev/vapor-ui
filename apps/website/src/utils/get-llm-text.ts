@@ -93,26 +93,35 @@ export async function getLLMText(
     });
 }
 
-const PROPERTIES_SLUG = 'properties';
+type Page = InferPageType<typeof source>;
 
-export const isPropertiesPage = (page: InferPageType<typeof source>): boolean =>
-    page.slugs.at(-1) === PROPERTIES_SLUG;
+export const isSubpage = (page: Page): boolean =>
+    (page.data as { subpage?: unknown }).subpage === true;
+
+const parentSlugsOf = (page: Page): string[] => page.slugs.slice(0, -1);
+
+const findSubpagesOf = (page: Page): Page[] => {
+    const parentPath = page.slugs.join('/');
+    return source
+        .getPages()
+        .filter((candidate) => isSubpage(candidate) && parentSlugsOf(candidate).join('/') === parentPath);
+};
 
 /**
- * Composite docs split Overview and Properties across two files served by tabbed
- * routes; LLM output concats them back into one document so clients see the full
- * page at the parent URL.
+ * Composite docs can split content across sibling files flagged `subpage: true`
+ * in frontmatter; LLM output concats every subpage back into the parent so one
+ * URL returns the full document.
  */
-export async function getLLMTextWithProperties(
-    page: InferPageType<typeof source>,
+export async function getLLMTextWithSubpages(
+    page: Page,
     contentType: ContentType = 'docs',
 ): Promise<string> {
     const main = await getLLMText(page, contentType);
-    if (isPropertiesPage(page)) return main;
+    if (isSubpage(page)) return main;
 
-    const propertiesPage = source.getPage([...page.slugs, PROPERTIES_SLUG]);
-    if (!propertiesPage) return main;
+    const subpages = findSubpagesOf(page);
+    if (subpages.length === 0) return main;
 
-    const properties = await getLLMText(propertiesPage, contentType);
-    return `${main}\n\n${properties}`;
+    const rendered = await Promise.all(subpages.map((sub) => getLLMText(sub, contentType)));
+    return [main, ...rendered].join('\n\n');
 }
