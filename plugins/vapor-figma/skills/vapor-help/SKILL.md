@@ -46,9 +46,9 @@ disable-model-invocation: true
 
 **선행 조건** — 쓰려는 스킬에 맞춰서만 챙기면 된다:
 
-| 스킬 | 외부 의존성 |
-|---|---|
-| `vapor-figma-compose` | Figma 공식 plugin (`figma@claude-plugins-official`) — Figma MCP 서버와 `figma-use` 스킬이 필요 |
+| 스킬                   | 외부 의존성                                                                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `vapor-figma-compose`  | Figma 공식 plugin (`figma@claude-plugins-official`) — Figma MCP 서버와 `figma-use` 스킬이 필요                                              |
 | `vapor-cs-report-jira` | Atlassian 공식 plugin (`atlassian@claude-plugins-official`) — Jira에 이슈를 발행 / goorm Atlassian 사이트의 `VAPOR` 프로젝트 이슈 생성 권한 |
 
 두 스킬 모두 Figma 라이브러리 `Vapor Design System`, `[V2.0] [Goorm theme] Foundation` 사용 권한이 필요하다. 권한이 없으면 Vapor 디자인 시스템 팀에 요청한다.
@@ -61,11 +61,11 @@ disable-model-invocation: true
 
 ## 스킬 고르기
 
-| 하고 싶은 것 | 스킬 |
-|---|---|
-| Vapor core 라이브러리의 Stable 컴포넌트로 Figma 시안을 만들거나 고치고, 라이브러리와 연결된 instance를 유지하고 싶다 | [`vapor-figma-compose`](../vapor-figma-compose/SKILL.md) |
+| 하고 싶은 것                                                                                                                                                                       | 스킬                                                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Vapor core 라이브러리의 Stable 컴포넌트로 Figma 시안을 만들거나 고치고, 라이브러리와 연결된 instance를 유지하고 싶다                                                               | [`vapor-figma-compose`](../vapor-figma-compose/SKILL.md)   |
 | Figma 라이브러리 자체 결함(variant 누락·토큰 어긋남·Auto Layout 깨짐·instance override 이상·publish 반영 지연 등)을 Jira `VAPOR` 프로젝트에 `CS` 티켓(label=figma)으로 올리고 싶다 | [`vapor-cs-report-jira`](../vapor-cs-report-jira/SKILL.md) |
-| plugin 자체 안내가 필요하다 | `/vapor-help` (이 스킬) |
+| plugin 자체 안내가 필요하다                                                                                                                                                        | `/vapor-help` (이 스킬)                                    |
 
 **추천 전에 그 SKILL.md를 읽는다.** 사용자에게 보여줄 예시 prompt는 그 파일의 `description` frontmatter나 본문에 적힌 사용자 발화 중 하나를 뽑아 쓴다. 이 map이 임의로 지어내지 않는다 — 라이브러리/권한 요구나 적용 범위가 바뀌었을 수 있다.
 

@@ -37,7 +37,6 @@ plugin 자체 사용법·스킬 선택·상황별 안내는 Claude Code에서 `/
 /vapor-help 이 plugin으로 뭘 할 수 있어?
 ```
 
-
 ### `vapor-figma:vapor-figma-compose`
 
 Vapor core 라이브러리(`Vapor Design System`)의 🟢 Stable 컴포넌트로 Figma 시안을 구성합니다. 시안 속 컴포넌트를 detach하지 않고 라이브러리 원본과 연결된 instance로 유지하는 것이 목표이며, Composites·Alpha·Archive·Deprecated 컴포넌트는 다루지 않습니다.
