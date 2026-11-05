@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 import { Text, VStack } from '@vapor-ui/core';
 
 import type { PropDefinition } from '~/utils/component-api';
-import { readComponentApi } from '~/utils/component-api';
+import { _readComponentApi } from '~/utils/component-api';
 
 import { getHighlightDetailedType } from './get-highlight-detailed-type';
 import { getHighlightTokens } from './get-highlight-tokens';
@@ -11,13 +11,13 @@ import { PropRow } from './prop-row';
 import type { HighlightedPropRow } from './types';
 
 interface PropsTableProps {
-    part: string;
+    file: string;
 }
 
-export const PropsTable = async ({ part }: PropsTableProps) => {
-    const componentData = readComponentApi(part, 'ko', 'composites');
+export const PropsTable = async ({ file }: PropsTableProps) => {
+    const componentData = _readComponentApi(file, 'ko');
     if (!componentData) {
-        throw new Error(`No API JSON for "${part}". Run \`pnpm docs:api\`.`);
+        throw new Error(`No API JSON for "${file}". Run \`pnpm docs:api\`.`);
     }
 
     const { props, typeRefs } = componentData;

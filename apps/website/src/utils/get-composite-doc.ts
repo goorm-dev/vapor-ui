@@ -1,6 +1,6 @@
 import { markdownTable } from 'markdown-table';
 
-import { readComponentApi } from '~/utils/component-api';
+import { _readComponentApi } from '~/utils/component-api';
 
 const parseAttrs = (raw: string): Record<string, string> => {
     const attrs: Record<string, string> = {};
@@ -27,10 +27,10 @@ const escapeCell = (value: string | number | boolean | null | undefined): string
     return str;
 };
 
-const renderPropsTable = (part: string): string => {
-    const json = readComponentApi(part, 'en', 'composites');
-    if (!json) return `> ⚠️ Spec file not found: \`${part}.json\``;
-    if (json.props.length === 0) return `> ⚠️ Props not found in \`${part}.json\``;
+const renderPropsTable = (file: string): string => {
+    const json = _readComponentApi(file, 'en');
+    if (!json) return `> ⚠️ Spec file not found: \`${file}\``;
+    if (json.props.length === 0) return `> ⚠️ Props not found in \`${file}\``;
 
     const table = markdownTable([
         ['Prop', 'Required', 'Type', 'Default', 'Description'],
@@ -66,11 +66,11 @@ export const replaceCompositeDoc = (text: string) => {
 
     result = result.replace(/<\/?DocsGrid\s*>/g, '');
 
-    result = result.replace(/<PropsTable\s+part="([^"]+)"\s*\/>/g, (_, part: string) => {
+    result = result.replace(/<PropsTable\s+file="([^"]+)"\s*\/>/g, (_, file: string) => {
         try {
-            return renderPropsTable(part);
+            return renderPropsTable(file);
         } catch (err) {
-            return `> ⚠️ Error rendering props for \`${part}\`: ${(err as Error).message}`;
+            return `> ⚠️ Error rendering props for \`${file}\`: ${(err as Error).message}`;
         }
     });
 

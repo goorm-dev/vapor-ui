@@ -18,30 +18,49 @@ export interface ComponentApi {
     typeRefs?: Record<string, string>;
 }
 
-const PAGES_DIRS = {
-    components: path.join(process.cwd(), 'content/docs/components'),
-    composites: path.join(process.cwd(), 'content/docs/composites'),
-} as const;
+const PAGES_DIRS = [
+    path.join(process.cwd(), 'content/docs/components'),
+    path.join(process.cwd(), 'content/docs/composites'),
+];
 
-export type ComponentApiScope = keyof typeof PAGES_DIRS;
+const DOCS_ROOT = path.join(process.cwd(), 'content/docs');
 
 /**
  * Reads `<page>/api/<lang>/<name>.json`, written next to each component page by
  * `pnpm docs:api`: `en` holds the English source from JSDoc, `ko` its Korean
  * translation from `pnpm docs:translate` (Composites JSDoc is already Korean, so
- * its `ko` mirror is the English source unchanged). `scope` picks the docs root;
- * core and composites can share a part name (`menu-root`, `menu-item`,
- * `menu-group`) so callers must specify which side they want. Runs at build time
- * on the server; returns undefined when the file is missing.
+ * its `ko` mirror is the English source unchanged). Part names are unique across
+ * pages, so the name alone finds the file. Runs at build time on the server;
+ * returns undefined when the file is missing.
  */
-export function readComponentApi(
-    name: string,
-    lang: 'en' | 'ko',
-    scope: ComponentApiScope = 'components',
-): ComponentApi | undefined {
-    const match = findApiJson(PAGES_DIRS[scope], name, lang);
-    if (match) return JSON.parse(readFileSync(match, 'utf8'));
+export function readComponentApi(name: string, lang: 'en' | 'ko'): ComponentApi | undefined {
+    for (const dir of PAGES_DIRS) {
+        const match = findApiJson(dir, name, lang);
+        if (match) return JSON.parse(readFileSync(match, 'utf8'));
+    }
     return undefined;
+}
+
+/**
+ * Composites-only. Reads the API JSON a docs page points to by its exact path,
+ * matching the `<Demo file="..." />` convention. `file` is the path to the API
+ * JSON relative to `content/docs/`, e.g.
+ * `composites/(components)/menu/api/ko/menu-root.json`. The lang segment
+ * (`/en/` or `/ko/`) in `file` is rewritten to the requested `lang`, so the
+ * caller can point at whichever language file is natural in the MDX and still
+ * read the other side (the English source for the LLM output, or the Korean
+ * translation for the UI).
+ *
+ * Kept separate from `readComponentApi` so migrating core docs to the same
+ * file-based input can ship as its own PR; once core is migrated this should
+ * replace `readComponentApi`.
+ */
+export function _readComponentApi(file: string, lang: 'en' | 'ko'): ComponentApi | undefined {
+    const localized = file.replace(/\/(en|ko)\//, `/${lang}/`);
+    const resolved = path.resolve(DOCS_ROOT, localized);
+    if (!resolved.startsWith(`${DOCS_ROOT}${path.sep}`)) return undefined;
+    if (!existsSync(resolved)) return undefined;
+    return JSON.parse(readFileSync(resolved, 'utf8'));
 }
 
 /**
