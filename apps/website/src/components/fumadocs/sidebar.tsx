@@ -315,10 +315,9 @@ const isActiveForSubpages = (url: string, pathname: string, subpageParent: strin
     return !!subpageParent && href === subpageParent;
 };
 
-const hasOnlySubpageChild = (folder: PageTree.Folder): boolean => {
-    if (folder.children.length !== 1) return false;
-    const [child] = folder.children;
-    return !!child && child.type === 'page' && isSubpageNode(child);
+const hasOnlySubpageChildren = (folder: PageTree.Folder): boolean => {
+    if (folder.children.length === 0) return false;
+    return folder.children.every((child) => child.type === 'page' && isSubpageNode(child));
 };
 
 export const CompositeAwareSidebarItem: SidebarPageTreeComponents['Item'] = ({
@@ -357,7 +356,7 @@ export const CompositeAwareSidebarFolder: SidebarPageTreeComponents['Folder'] = 
     const treePath = useTreePath();
     const subpageParent = useActiveSubpageParentUrl();
 
-    if (hasOnlySubpageChild(item) && item.index) {
+    if (hasOnlySubpageChildren(item) && item.index) {
         return (
             <SidebarItem
                 href={item.index.url}
