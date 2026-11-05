@@ -3,6 +3,7 @@ import type * as React from 'react';
 import type { ComponentRenderFn, HTMLProps } from '@base-ui/react/types';
 import type { useRender } from '@base-ui/react/use-render';
 
+import type { DeprecatedSprinkles as OriginalDeprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
 import type { Sprinkles } from '~/styles/sprinkles.css';
 
 import type { ClassNameParams, StyleParams } from './stateful-props';
@@ -19,22 +20,24 @@ type CssProps = Sprinkles;
 
 export type Styles = {
     /**
-     * Sprinkles 기반 유틸리티 스타일 prop. 지금도 그대로 사용할 수 있지만, 향후
-     * 컴파일 타임 atomic CSS 로 동작하는 `@vapor-ui/style-macro` 의 `css()` 매크로
-     * 로 전환될 예정이다. 매크로가 아직 도그푸딩 중이라 한동안 두 방식이 공존한다.
+     * $css prop for applying sprinkles styles.
+     * Supports all CSS properties plus design tokens. Use responsive conditions and pseudo-states.
      *
      * @example
-     * // 지금 쓸 수 있는 방식
-     * <Button $css={{ backgroundColor: '$bg-primary', gap: '$100' }} />
+     * // Basic usage
+     * <Box $css={{ padding: '$400', backgroundColor: 'bg-primary-100' }} />
      *
-     * // 앞으로 권장될 방식 (매크로 안정화 이후)
-     * import { css } from '@vapor-ui/style-macro';
-     * <Button className={css({ backgroundColor: '$bg-primary', gap: '$space-100' })} />
+     * // Responsive
+     * <Box $css={{ display: { sm: 'block', lg: 'flex' }, gap: { sm: '$100', lg: '$300' } }} />
+     *
+     * // Pseudo-states
+     * <Button $css={{ backgroundColor: { _hover: 'bg-primary-200' } }} />
      */
     $css?: CssProps;
 };
 
 export type VaporUIComponentProps<ElementType extends React.ElementType, State> = Styles &
+    DeprecatedSprinkles &
     Omit<
         useRender.ComponentProps<ElementType, State>,
         OmitColorProp<ElementType> | 'className' | 'style' | 'render'
@@ -57,3 +60,188 @@ export type VaporUIComponentProps<ElementType extends React.ElementType, State> 
          */
         render?: React.ReactElement | ComponentRenderFn<HTMLProps, State>;
     };
+
+/**
+ * Deprecated CSS utility props. Use `$css` prop instead.
+ */
+export interface DeprecatedSprinkles {
+    /**
+     * @deprecated Use `$css={{ position: ... }}` instead
+     */
+    position?: OriginalDeprecatedSprinkles['position'];
+
+    /**
+     * @deprecated Use `$css={{ display: ... }}` instead
+     */
+    display?: OriginalDeprecatedSprinkles['display'];
+
+    /**
+     * @deprecated Use `$css={{ alignItems: ... }}` instead
+     */
+    alignItems?: OriginalDeprecatedSprinkles['alignItems'];
+
+    /**
+     * @deprecated Use `$css={{ justifyContent: ... }}` instead
+     */
+    justifyContent?: OriginalDeprecatedSprinkles['justifyContent'];
+
+    /**
+     * @deprecated Use `$css={{ flexDirection: ... }}` instead
+     */
+    flexDirection?: OriginalDeprecatedSprinkles['flexDirection'];
+
+    /**
+     * @deprecated Use `$css={{ gap: ... }}` instead
+     */
+    gap?: OriginalDeprecatedSprinkles['gap'];
+
+    /**
+     * @deprecated Use `$css={{ alignContent: ... }}` instead
+     */
+    alignContent?: OriginalDeprecatedSprinkles['alignContent'];
+
+    /**
+     * @deprecated Use `$css={{ padding: ... }}` instead
+     */
+    padding?: OriginalDeprecatedSprinkles['padding'];
+
+    /**
+     * @deprecated Use `$css={{ paddingTop: ... }}` instead
+     */
+    paddingTop?: OriginalDeprecatedSprinkles['paddingTop'];
+
+    /**
+     * @deprecated Use `$css={{ paddingBottom: ... }}` instead
+     */
+    paddingBottom?: OriginalDeprecatedSprinkles['paddingBottom'];
+
+    /**
+     * @deprecated Use `$css={{ paddingLeft: ... }}` instead
+     */
+    paddingLeft?: OriginalDeprecatedSprinkles['paddingLeft'];
+
+    /**
+     * @deprecated Use `$css={{ paddingRight: ... }}` instead
+     */
+    paddingRight?: OriginalDeprecatedSprinkles['paddingRight'];
+
+    /**
+     * @deprecated Use `$css={{ paddingX: ... }}` instead
+     */
+    paddingX?: OriginalDeprecatedSprinkles['paddingX'];
+
+    /**
+     * @deprecated Use `$css={{ paddingY: ... }}` instead
+     */
+    paddingY?: OriginalDeprecatedSprinkles['paddingY'];
+
+    /**
+     * @deprecated Use `$css={{ margin: ... }}` instead
+     */
+    margin?: OriginalDeprecatedSprinkles['margin'];
+
+    /**
+     * @deprecated Use `$css={{ marginTop: ... }}` instead
+     */
+    marginTop?: OriginalDeprecatedSprinkles['marginTop'];
+
+    /**
+     * @deprecated Use `$css={{ marginBottom: ... }}` instead
+     */
+    marginBottom?: OriginalDeprecatedSprinkles['marginBottom'];
+
+    /**
+     * @deprecated Use `$css={{ marginLeft: ... }}` instead
+     */
+    marginLeft?: OriginalDeprecatedSprinkles['marginLeft'];
+
+    /**
+     * @deprecated Use `$css={{ marginRight: ... }}` instead
+     */
+    marginRight?: OriginalDeprecatedSprinkles['marginRight'];
+
+    /**
+     * @deprecated Use `$css={{ marginX: ... }}` instead
+     */
+    marginX?: OriginalDeprecatedSprinkles['marginX'];
+
+    /**
+     * @deprecated Use `$css={{ marginY: ... }}` instead
+     */
+    marginY?: OriginalDeprecatedSprinkles['marginY'];
+
+    /**
+     * @deprecated Use `$css={{ width: ... }}` instead
+     */
+    width?: OriginalDeprecatedSprinkles['width'];
+
+    /**
+     * @deprecated Use `$css={{ height: ... }}` instead
+     */
+    height?: OriginalDeprecatedSprinkles['height'];
+
+    /**
+     * @deprecated Use `$css={{ minWidth: ... }}` instead
+     */
+    minWidth?: OriginalDeprecatedSprinkles['minWidth'];
+
+    /**
+     * @deprecated Use `$css={{ minHeight: ... }}` instead
+     */
+    minHeight?: OriginalDeprecatedSprinkles['minHeight'];
+
+    /**
+     * @deprecated Use `$css={{ maxWidth: ... }}` instead
+     */
+    maxWidth?: OriginalDeprecatedSprinkles['maxWidth'];
+
+    /**
+     * @deprecated Use `$css={{ maxHeight: ... }}` instead
+     */
+    maxHeight?: OriginalDeprecatedSprinkles['maxHeight'];
+
+    /**
+     * @deprecated Use `$css={{ border: ... }}` instead
+     */
+    border?: OriginalDeprecatedSprinkles['border'];
+
+    /**
+     * @deprecated Use `$css={{ borderColor: ... }}` instead
+     */
+    borderColor?: OriginalDeprecatedSprinkles['borderColor'];
+
+    /**
+     * @deprecated Use `$css={{ borderRadius: ... }}` instead
+     */
+    borderRadius?: OriginalDeprecatedSprinkles['borderRadius'];
+
+    /**
+     * @deprecated Use `$css={{ backgroundColor: ... }}` instead
+     */
+    backgroundColor?: OriginalDeprecatedSprinkles['backgroundColor'];
+
+    /**
+     * @deprecated Use `$css={{ color: ... }}` instead
+     */
+    color?: OriginalDeprecatedSprinkles['color'];
+
+    /**
+     * @deprecated Use `$css={{ opacity: ... }}` instead
+     */
+    opacity?: OriginalDeprecatedSprinkles['opacity'];
+
+    /**
+     * @deprecated Use `$css={{ pointerEvents: ... }}` instead
+     */
+    pointerEvents?: OriginalDeprecatedSprinkles['pointerEvents'];
+
+    /**
+     * @deprecated Use `$css={{ overflow: ... }}` instead
+     */
+    overflow?: OriginalDeprecatedSprinkles['overflow'];
+
+    /**
+     * @deprecated Use `$css={{ textAlign: ... }}` instead
+     */
+    textAlign?: OriginalDeprecatedSprinkles['textAlign'];
+}
