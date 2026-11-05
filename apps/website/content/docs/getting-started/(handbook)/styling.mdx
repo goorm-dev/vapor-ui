@@ -46,6 +46,12 @@ export default function Example() {
 
 Vapor UI가 권장하는 기본 방식입니다. 별도의 CSS 파일 없이 컴포넌트에서 직접 스타일을 제어할 수 있습니다.
 
+<Callout>
+    `$css` 속성은 향후 컴파일 타임에 atomic CSS 를 생성하는 `@vapor-ui/style-macro` 의 `css()`
+    매크로로 전환될 수 있습니다. 현재는 베타 버전으로 안정성을 테스트하는 중이며, 안정성이
+    확보되는대로 전환 가이드를 제공할 예정입니다. 그 전까지는 `$css` 속성을 사용해주세요.
+</Callout>
+
 ### 기본 CSS 속성 수정
 
 CSS 속성을 객체 형태로 전달하여 스타일을 수정합니다.

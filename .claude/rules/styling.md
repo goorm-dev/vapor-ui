@@ -241,24 +241,26 @@ import { css } from '@vapor-ui/style-macro';
 ```
 
 - Internal `packages/core` component implementations stay on Vanilla Extract — do NOT replace `componentRecipe` / `componentStyle` with `css()` inside a component.
-- Any new code that previously would have reached for `$css` on a vapor component — e.g. a layout wrapper in docs or an ad-hoc style on a leaf div — reaches for `css()` instead.
+- Inside this monorepo (core / composites / website) new ad-hoc styles — layout wrappers in docs, one-off styles on a leaf div — reach for `css()` first. The macro is being dogfooded here before we recommend it to external consumers.
 
-## Sprinkles (`$css` prop) — deprecated
+## Sprinkles (`$css` prop)
 
-The `$css` prop still accepts any CSS property with design-token–aware values. It is kept for migration only; do not add new call sites. Prefer the `css()` macro above.
+The `$css` prop is still a supported public API: it accepts any CSS property with design-token–aware values. External consumers of `@vapor-ui/core` / `@vapor-ui/composites` can keep using it, and we do not tag it with `@deprecated`.
+
+Inside this monorepo, prefer the `css()` macro for new code — same reasoning as the dogfooding note above. The two APIs coexist until the macro is stable enough to announce a formal transition.
 
 ```tsx
-// ✅ migrated to css()
+// ✅ internal preference (css() macro)
 <div className={css({ padding: '$space-400', backgroundColor: '$background-primary' })} />
 
-// ⚠️ legacy — remains working but should not be used in new code
+// ✅ external consumer code — still supported
 <Box $css={{ padding: '150', backgroundColor: 'bg-primary-100' }} />
 
-// ❌ (deprecated flat props)
+// ❌ (deprecated flat props — unchanged, these ARE being phased out)
 <Box padding="150" backgroundColor="bg-primary-100" />
 ```
 
-Deprecated flat sprinkle props (`padding`, `margin`, `color`, etc.) are also being phased out.
+Flat sprinkle props exposed through `DeprecatedSprinkles` (`padding`, `margin`, `color`, etc.) remain `@deprecated` and are being phased out — migrate those to `$css` or `css()`.
 
 ## `@layer` Cascade Order
 
@@ -266,7 +268,7 @@ Deprecated flat sprinkle props (`padding`, `margin`, `color`, etc.) are also bei
 @layer vapor-theme       design token CSS variables
 @layer vapor-reset       browser default resets
 @layer vapor-components  componentRecipe / componentStyle output  ← core components live here
-@layer vapor-utilities   `css()` macro output and deprecated sprinkles ($css)
+@layer vapor-utilities   `css()` macro output and sprinkles ($css)
 (no layer)               user-supplied className — always wins
 ```
 

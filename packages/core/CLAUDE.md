@@ -49,7 +49,7 @@ Never use `Object.assign` to build compound namespace exports — use the 3-file
 
 ### Props Typing
 
-All components use `VaporUIComponentProps` from `~/utils/types`, which merges Base UI's `render` prop, the deprecated `$css` sprinkles prop (see the deprecation note below — new consumer code uses the `css()` macro from `@vapor-ui/style-macro`), and stateful `className`/`style`:
+All components use `VaporUIComponentProps` from `~/utils/types`, which merges Base UI's `render` prop, the Sprinkles `$css` prop (still supported for external consumers; see the note below for the planned transition to the `css()` macro from `@vapor-ui/style-macro`), and stateful `className`/`style`:
 
 ```tsx
 export namespace Button {
@@ -153,9 +153,13 @@ import { css } from '@vapor-ui/style-macro';
 
 Core component implementations stay on Vanilla Extract (`componentRecipe` / `componentStyle`) — the macro is for leaf product code and consumers assembling layouts.
 
-### `$css` prop (deprecated)
+### `$css` prop
 
-The sprinkles-backed `$css` prop still works but is retained only for migration. New code should use the `css()` macro above; old `$css={{ padding: '150' }}` call sites will be removed over subsequent releases. The flat `padding`/`margin`/… variant props are also deprecated — do not reintroduce them.
+The sprinkles-backed `$css` prop is still a supported public API. External consumers of `@vapor-ui/core` and `@vapor-ui/composites` can keep using `$css={{ padding: '150' }}` and we do not mark it with `@deprecated`.
+
+The `css()` macro from `@vapor-ui/style-macro` is being dogfooded inside this monorepo (core / composites / website) first. Once the macro is proven stable, consumer-facing docs will announce the transition and a codemod will migrate `$css` call sites. Until then both APIs coexist.
+
+The flat `padding`/`margin`/… variant props exposed via `DeprecatedSprinkles` remain `@deprecated` — do not reintroduce them, and migrate existing callers to `$css={{ padding: '…' }}`.
 
 ### `@layer` cascade order
 
