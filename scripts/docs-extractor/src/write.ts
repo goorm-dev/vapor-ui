@@ -43,12 +43,20 @@ function toSlug(pageDir: string): string {
         .join('/');
 }
 
+/** Every page folder under `pagesDir`, relative to it. */
+function listPageDirs(pagesDir: string): string[] {
+    return globSync('**/index.mdx', { cwd: pagesDir }).map(path.dirname);
+}
+
 /**
  * The `api/` folder of the page that documents the component declared in
  * `sourceFile` (`…/components/<folder>/…`): `<pagesDir>/<page>/api`, next to the
  * page's `index.mdx`. The page is matched by URL slug, so it can sit in a route
  * group (`(components)/avatar`) but not in a real folder (`patterns/form` is not `form`).
  * `null` for a folder mapped to no page.
+ *
+ * `pageDirs` defaults to walking `pagesDir`; a caller placing many docs walks it
+ * once and passes the list in.
  *
  * Throws ExtractorError when the page doesn't exist, so a new component without
  * a page fails loudly instead of being written nowhere.
@@ -202,11 +210,6 @@ function mirrorApiDir(apiDir: string): string[] {
 export interface WriteResult {
     written: string[];
     removed: string[];
-}
-
-/** Every page folder under `pagesDir`, relative to it. Walking the tree is the slow part, so a caller writing many docs lists once. */
-function listPageDirs(pagesDir: string): string[] {
-    return globSync('**/index.mdx', { cwd: pagesDir }).map(path.dirname);
 }
 
 export interface DocToWrite {

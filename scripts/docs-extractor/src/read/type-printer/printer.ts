@@ -69,7 +69,7 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
      * Narrow, cheap checks come before the ones that walk the type graph.
      */
     function print(type: Type, location: Node | undefined): string {
-        // Only three branches use TypeScript's own text, so it is read when one of them claims the type.
+        // Most branches never use TypeScript's own text, so it is read only when a branch returns it.
         const rawText = () => rawTextOf(type, location);
 
         // `ReactNode` prints by name; a generic alias keeps its arguments, e.g. `React.Ref<HTMLDivElement>`.
