@@ -7,8 +7,8 @@ import { Collapsible, Flex, HStack, Popover, Text } from '@vapor-ui/core';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
-import type { DetailedTypeSegment, HighlightedPropRow } from './types';
 import { TypeChips } from './type-chips';
+import type { DetailedTypeSegment, HighlightedPropRow } from './types';
 
 interface PropRowProps {
     row: HighlightedPropRow;

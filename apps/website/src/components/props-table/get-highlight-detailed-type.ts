@@ -69,10 +69,7 @@ export async function getHighlightDetailedType(
     });
 }
 
-async function resolveDefinitions(
-    refNames: Set<string>,
-    typeRefs: Record<string, string>,
-): Promise<Map<string, ReactNode>> {
+async function resolveDefinitions(refNames: Set<string>, typeRefs: Record<string, string>) {
     const entries = await Promise.all(
         [...refNames].map(
             async (name) => [name, await getHighlightTokens(typeRefs[name])] as const,
@@ -88,7 +85,7 @@ async function resolveDefinitions(
  * reference names that span multiple tokens (e.g. shiki splits
  * `Dialog.Root` into three tokens inside a function signature).
  */
-function flattenTokens(hast: Root): FlatToken[] {
+function flattenTokens(hast: Root) {
     const pre = hast.children.find(
         (child): child is Element => child.type === 'element' && child.tagName === 'pre',
     );
@@ -141,7 +138,7 @@ function flattenTokens(hast: Root): FlatToken[] {
  * literals or line/block comments). Matches are non-overlapping and chosen
  * longest-first so that `Dialog.Root` wins over `Dialog` when both are refs.
  */
-function findRefMatches(raw: string, tokens: FlatToken[], refNames: string[]): RefMatch[] {
+function findRefMatches(raw: string, tokens: FlatToken[], refNames: string[]) {
     const matches: RefMatch[] = [];
     let cursor = 0;
 
@@ -171,11 +168,7 @@ function findRefMatches(raw: string, tokens: FlatToken[], refNames: string[]): R
     return matches;
 }
 
-function findTokenRange(
-    tokens: FlatToken[],
-    start: number,
-    end: number,
-): { firstTokenIdx: number; lastTokenIdx: number } | null {
+function findTokenRange(tokens: FlatToken[], start: number, end: number) {
     const firstTokenIdx = tokens.findIndex((t) => t.start <= start && start < t.end);
     if (firstTokenIdx === -1) return null;
 
@@ -187,7 +180,7 @@ function findTokenRange(
     return { firstTokenIdx, lastTokenIdx };
 }
 
-function overlapsStringOrComment(tokens: FlatToken[], first: number, last: number): boolean {
+function overlapsStringOrComment(tokens: FlatToken[], first: number, last: number) {
     for (let i = first; i <= last; i++) {
         if (tokens[i].isStringOrComment) return true;
     }
@@ -200,7 +193,7 @@ function overlapsStringOrComment(tokens: FlatToken[], first: number, last: numbe
  * match are emitted unchanged. All sliced spans inherit the original token's
  * hast properties so shiki's syntax colors survive the split.
  */
-function buildPieces(tokens: FlatToken[], matches: RefMatch[]): Piece[] {
+function buildPieces(tokens: FlatToken[], matches: RefMatch[]) {
     const pieces: Piece[] = [];
 
     for (let i = 0; i < tokens.length; i++) {
@@ -259,7 +252,7 @@ function toPiece(token: FlatToken): Piece {
     return { kind: 'text', text: token.text };
 }
 
-function groupPieces(pieces: Piece[]): Group[] {
+function groupPieces(pieces: Piece[]) {
     const groups: Group[] = [];
     for (const piece of pieces) {
         const refName = piece.kind === 'span' ? piece.refName : undefined;
@@ -273,14 +266,14 @@ function groupPieces(pieces: Piece[]): Group[] {
     return groups;
 }
 
-function renderGroup(group: Group): ReactNode {
+function renderGroup(group: Group) {
     const children: ElementContent[] = group.pieces.map((piece) =>
         piece.kind === 'span' ? piece.span : ({ type: 'text', value: piece.text } as HastText),
     );
     return hastToReact({ type: 'root', children });
 }
 
-function getSpanText(span: Element): string {
+function getSpanText(span: Element) {
     return span.children.map((child) => (child.type === 'text' ? child.value : '')).join('');
 }
 
@@ -292,17 +285,17 @@ function cloneSpanWithText(span: Element, text: string): Element {
     };
 }
 
-function isIdentifierBoundary(text: string, start: number, length: number): boolean {
+function isIdentifierBoundary(text: string, start: number, length: number) {
     const prev = text[start - 1];
     const next = text[start + length];
     return !isIdChar(prev) && !isIdChar(next);
 }
 
-function isIdChar(c: string | undefined): boolean {
+function isIdChar(c: string | undefined) {
     return !!c && /[A-Za-z0-9_$]/.test(c);
 }
 
-function isStringOrCommentToken(text: string): boolean {
+function isStringOrCommentToken(text: string) {
     const trimmed = text.trimStart();
     if (!trimmed) return false;
     if (trimmed.startsWith("'") || trimmed.startsWith('"') || trimmed.startsWith('`')) return true;

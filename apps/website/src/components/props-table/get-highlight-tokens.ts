@@ -1,7 +1,5 @@
 import 'server-only';
 
-import type { ReactNode } from 'react';
-
 import { hastToReact } from '~/lib/hast-to-react';
 
 import { extractTokens, highlightToHast } from './highlighter';
@@ -11,7 +9,7 @@ import { extractTokens, highlightToHast } from './highlighter';
  * wrapper. The caller is responsible for wrapping the result in a `<span>` (inline) or
  * `<pre>` (block). Returns the plain text unchanged when `code` is empty.
  */
-export async function getHighlightTokens(code: string, lang = 'ts'): Promise<ReactNode> {
+export async function getHighlightTokens(code: string, lang = 'ts') {
     if (!code) return code;
     const hast = await highlightToHast(code, lang);
     const tokens = extractTokens(hast);
