@@ -308,7 +308,11 @@ const useActiveSubpageParentUrl = (): string | null => {
     return slash > 0 ? url.slice(0, slash) : null;
 };
 
-const isActiveForSubpages = (url: string, pathname: string, subpageParent: string | null): boolean => {
+const isActiveForSubpages = (
+    url: string,
+    pathname: string,
+    subpageParent: string | null,
+): boolean => {
     const href = normalizeUrl(url);
     const path = normalizeUrl(pathname);
     if (href === path) return true;

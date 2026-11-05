@@ -85,7 +85,9 @@ function getPropDescription(symbol: TsSymbol): string | undefined {
 function getDeclarationPaths(symbol: TsSymbol): string[] {
     return [
         ...new Set(
-            symbol.getDeclarations().map((declaration) => declaration.getSourceFile().getFilePath()),
+            symbol
+                .getDeclarations()
+                .map((declaration) => declaration.getSourceFile().getFilePath()),
         ),
     ];
 }

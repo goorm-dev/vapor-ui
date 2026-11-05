@@ -104,7 +104,10 @@ const findSubpagesOf = (page: Page): Page[] => {
     const parentPath = page.slugs.join('/');
     return source
         .getPages()
-        .filter((candidate) => isSubpage(candidate) && parentSlugsOf(candidate).join('/') === parentPath);
+        .filter(
+            (candidate) =>
+                isSubpage(candidate) && parentSlugsOf(candidate).join('/') === parentPath,
+        );
 };
 
 /**
