@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+
 import { Text, VStack } from '@vapor-ui/core';
 
 import type { PropDefinition } from '~/utils/component-api';
@@ -86,7 +88,7 @@ async function highlightProp(
         name: prop.name,
         description: prop.description,
         required: prop.required,
-        types: highlightedTypes,
+        types: highlightedTypes.map((node, index) => <Fragment key={index}>{node}</Fragment>),
         detailedType,
         defaultValue,
     };
