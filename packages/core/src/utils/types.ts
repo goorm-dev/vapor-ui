@@ -19,12 +19,17 @@ type CssProps = Sprinkles;
 
 export type Styles = {
     /**
-     * @deprecated
-     * @vapor-ui/style-macro를 사용해주세요.
+     * Sprinkles 기반 유틸리티 스타일 prop. 지금도 그대로 사용할 수 있지만, 향후
+     * 컴파일 타임 atomic CSS 로 동작하는 `@vapor-ui/style-macro` 의 `css()` 매크로
+     * 로 전환될 예정이다. 매크로가 아직 도그푸딩 중이라 한동안 두 방식이 공존한다.
      *
      * @example
+     * // 지금 쓸 수 있는 방식
+     * <Button $css={{ backgroundColor: '$bg-primary', gap: '$100' }} />
+     *
+     * // 앞으로 권장될 방식 (매크로 안정화 이후)
      * import { css } from '@vapor-ui/style-macro';
-     * <Button className={css({ backgroundColor: '$bg-primary', gap: '$space-100'  })} />
+     * <Button className={css({ backgroundColor: '$bg-primary', gap: '$space-100' })} />
      */
     $css?: CssProps;
 };

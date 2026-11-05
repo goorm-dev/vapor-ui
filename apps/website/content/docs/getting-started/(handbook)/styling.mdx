@@ -132,15 +132,17 @@ export default function Example({ accent }: { accent: string }) {
 }
 ```
 
-### 레거시 `$css` 속성 (deprecated)
+### Sprinkles 기반 `$css` 속성
 
-예전 코드베이스는 Sprinkles 기반의 `$css` prop 을 사용했습니다. 이 방식은 `@vapor-ui/core` 1.x 에서 계속 동작하지만 **deprecated** 되었고, 신규 코드에서는 사용하지 않습니다. 기존 사용부는 위의 `css()` 매크로로 점진적으로 이관하세요.
+Sprinkles 기반의 `$css` prop 은 지금도 그대로 사용할 수 있습니다. `@vapor-ui/core` 가 제공하는 모든 컴포넌트에서 받을 수 있으며, 기존 사용부는 수정 없이 계속 동작합니다.
+
+> 📣 **예정된 변경 안내.** 향후 `$css` 은 컴파일 타임 atomic CSS 로 동작하는 위의 `css()` 매크로로 완전히 대체될 예정입니다. 현재는 Vapor UI 내부 패키지에서 먼저 매크로를 적용·검증하는 도그푸딩 단계이며, 안정성이 확인되는 대로 외부에서도 권장 방식이 전환됩니다. 신규 코드에서 `$css` 를 쓰더라도 당장 문제는 없지만, 이후 전환 가이드가 공지될 예정이라는 점을 참고하세요.
 
 ```tsx
-// ⚠️ Deprecated — 신규 코드에서 사용 금지
+// Sprinkles 기반 (현재도 유효)
 <Button $css={{ paddingInline: '$300' }} />
 
-// ✅ 권장
+// 컴파일 타임 매크로 (안정화 이후 권장)
 <Button className={css({ paddingInline: '$space-300' })} />
 ```
 
