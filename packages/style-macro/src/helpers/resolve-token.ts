@@ -15,29 +15,35 @@ type AxisTable = Readonly<Record<string, string>>;
  * 을 첫 인자로 넘긴다. 런타임에 property → axis 룩업이 사라지고,
  * 사용 안 하는 axis 테이블은 bundler 가 제거 가능.
  *
- * TODO(unit-hybrid): 지금은 **모든** 숫자 값을 runtime 에서 처리하는 단일 전략
- *   (C1). 리터럴 숫자(`css({ width: 100 })`) 도 runtime 호출이 발생한다.
- *   향후 Compiled(Atlassian) 가 쓰는 hybrid 전략으로 전환할 여지 — 리터럴은
- *   compile 시 바로 `"100px"` 리터럴로 치환하고, runtime 호출은 변수가 포함된
- *   경우에만 유지. 전환 지점:
- *     - 이 파일: 숫자 입력 handling 은 그대로 둬도 OK (리터럴이 안 들어와도
- *       호환 유지).
- *     - `compilers/jsx-inject.ts`: slot 생성 전에 `sourceExpr` 가 NumericLiteral
- *       인지 검사하고, 맞으면 `_resolveToken` 호출 대신 `'<n>px'` 리터럴 문자열을
- *       `style={{ '--...': '100px' }}` 로 직접 삽입.
- *     - `compilers/parse-call.ts`: static rule 경로에서 이미 리터럴 숫자를 CSS
- *       값으로 처리 중 → dynamic slot 쪽만 손대면 끝.
- *   도입 기준은 번들 사이즈 측정 결과 (`apps/test-app` 과 실제 소비자 번들).
+ * NOTE(unit-strategy): 리터럴 숫자는 이미 compile 시 완전 처리된다 —
+ *   `parse-call.ts` 의 `extractStaticValue` 가 Literal / -Literal / expression-free
+ *   TemplateLiteral 을 static 으로 판정해 atomic CSS rule 로 직접 emit 하므로
+ *   이 함수는 호출조차 되지 않는다. runtime 이 실제로 담당하는 건 **변수 참조**
+ *   (Identifier, CallExpression, BinaryExpression 등) 뿐.
+ *
+ *   즉 Vapor 는 이미 Compiled(Atlassian) 의 hybrid 전략과 같은 패턴 —
+ *   리터럴=compile, 변수=runtime — 으로 동작한다.
+ *
+ *   향후 Compiled 스타일로 더 다듬을 지점 두 가지 (번들·UX 측면):
+ *     1. 역할 분리 — 지금 이 함수는 token lookup + 숫자 unit 결합 + raw pass-through
+ *        세 가지를 겸한다. Compiled 의 `ix(val, suffix)` 처럼 숫자 unit 전용 helper
+ *        `_ix` 를 뽑으면 axis 테이블이 필요 없는 slot 은 훨씬 작은 함수로 참조할 수
+ *        있다 (`compilers/jsx-inject.ts` 가 slot 별로 어느 helper 쓸지 결정).
+ *     2. undefined sentinel — `_resolveToken(..., undefined)` 결과를 그대로 넘기면
+ *        React 가 style attribute 에서 변수 자체를 제거해 부모 상속이 끊긴다.
+ *        Compiled 의 `|| 'var(--slot, )'` self-reference fallback 을 jsx-inject 의
+ *        slot emit 지점에서 자동 삽입하면 상속 체인을 유지할 수 있다.
  */
 export function _resolveToken(
     axis: AxisTable,
     value: unknown,
     unit?: string,
-): string | number | null | undefined {
+): string | undefined {
+    if (value == null) return undefined;
     if (typeof value === 'number') {
         return unit ? `${value}${unit}` : String(value);
     }
-    if (typeof value !== 'string') return value as string | null | undefined;
+    if (typeof value !== 'string') return String(value);
     if (!value.startsWith('$')) return value;
 
     const key = value.slice(1);

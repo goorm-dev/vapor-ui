@@ -91,6 +91,7 @@ class Transformer {
     #bindingName: string | null = null;
     #ms: MagicString | null = null;
     #needResolveToken = false;
+    #needIx = false;
     #needMkStyle = false;
     #needMergeStyles = false;
     /** `const x = css(...)` 로 선언된 지역 변수 이름. template literal 에
@@ -151,7 +152,10 @@ class Transformer {
                     if (outcome.error) this.#errors.push(outcome.error);
                     continue;
                 }
-                this.#needResolveToken = true;
+                // jsx-inject 가 slot 별로 _resolveToken / _ix 중 어느 쪽을 썼는지
+                // ctx 플래그로 알려준다. 둘 다 활성일 수 있다.
+                if (injectCtx.needResolveToken) this.#needResolveToken = true;
+                if (injectCtx.needIx) this.#needIx = true;
             }
 
             const replacement = this.#buildCallReplacement(call, classNamesAll);
@@ -431,6 +435,7 @@ class Transformer {
         if (this.#needMkStyle) specifiers.push('_mkStyle');
         if (this.#needMergeStyles) specifiers.push('_mergeStyles');
         if (this.#needResolveToken) specifiers.push('_resolveToken');
+        if (this.#needIx) specifiers.push('_ix');
         if (this.#axesUsed.size > 0) {
             specifiers.push(
                 ...Array.from(this.#axesUsed)

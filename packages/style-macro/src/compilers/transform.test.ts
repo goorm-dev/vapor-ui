@@ -210,7 +210,7 @@ describe('transform — dynamic slots', () => {
         expect(out.css ?? '').toMatch(/padding:\s*var\(--vapor-_[^)]+\)/);
     });
 
-    it('falls back to `{}` for properties without a token axis', () => {
+    it('uses `_ix` (not `_resolveToken`) for properties without a token axis', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `function Comp({ x }) {`,
@@ -219,13 +219,30 @@ describe('transform — dynamic slots', () => {
         ].join('\n');
         const out = transform({ source, filename: '/O.tsx' });
         expect(out.errors).toEqual([]);
-        // axis 룩업 실패 → `{}` 로 pass-through.
-        expect(out.code).toMatch(/_resolveToken\(\s*\{\s*\}\s*,/);
-        // axis 식별자 alias 없이 `_resolveToken` 만 (A2 전환 후 _mkStyle 는 섞일 수 있음).
-        expect(out.code).toMatch(
-            /import\s*\{[^}]*\b_resolveToken\b[^}]*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
-        );
+        // axis 없는 slot 은 숫자-unit 전용 _ix 로 직행 — token lookup 코드가
+        // bundle 에 포함되지 않는다.
+        expect(out.code).toMatch(/_ix\(\s*x\s*,\s*'px'\s*\)/);
+        // _resolveToken 참조도, axis alias 도 없어야 함.
+        expect(out.code).not.toContain('_resolveToken');
         expect(out.code).not.toContain('__vaporAxis_');
+        // runtime import 는 _ix 포함.
+        expect(out.code).toMatch(
+            /import\s*\{[^}]*\b_ix\b[^}]*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
+        );
+    });
+
+    it('wraps slot values with `?? var(..., )` sentinel for undefined safety', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `function Comp({ color }) {`,
+            `  return <div className={css({ color })} />;`,
+            `}`,
+        ].join('\n');
+        const out = transform({ source, filename: '/sentinel.tsx' });
+        expect(out.errors).toEqual([]);
+        // undefined 를 넘겨도 slot 변수가 self-reference fallback 으로 유지되어
+        // 부모 상속 체인이 끊기지 않도록 모든 slot emit 에 sentinel 을 붙인다.
+        expect(out.code).toMatch(/\?\?\s*'var\(--[^)]+,\s*\)'/);
     });
 
     it('merges an existing style prop by spreading', () => {

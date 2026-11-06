@@ -33,6 +33,10 @@ export interface InjectContext {
     mode: 'dev' | 'prod';
     /** openingEl.start → 해당 element 로 모인 slot 리터럴. flushInjects 가 소비. */
     pending: Map<number, PendingInject>;
+    /** slot emit 중 하나라도 `_ix` 를 썼는지 — transform 이 runtime import 삽입 시 사용. */
+    needIx?: boolean;
+    /** slot emit 중 하나라도 `_resolveToken` 을 썼는지 — transform 이 runtime import 삽입 시 사용. */
+    needResolveToken?: boolean;
 }
 
 export interface InjectOutcome {
@@ -74,23 +78,40 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
         }
     }
 
-    // TODO(unit-hybrid): 지금은 모든 dynamic slot 이 runtime `_resolveToken`
-    //   을 거친다 (unit 전략 C1). 리터럴 숫자 (예: `css({ width: 100 })`) 도
-    //   runtime 호출 비용을 지불한다. Compiled 의 hybrid 전략으로 전환하려면
-    //   이 루프에서 `s.sourceExpr` 가 숫자 리터럴인지 먼저 검사해, 맞으면
-    //   `_resolveToken` 호출 대신 `'<n>px'` 리터럴을 바로 삽입하면 된다.
-    //   relevant: `helpers/resolve-token.ts` 상단의 TODO(unit-hybrid).
+    // NOTE(unit-strategy): 리터럴 숫자는 `parse-call.ts` 의 extractStaticValue
+    //   가 static 으로 판정해 dynamic slot 자체가 생성되지 않는다 — 여기 루프에
+    //   들어오는 slot 은 전부 변수 참조(Identifier/CallExpression/BinaryExpression
+    //   등). 즉 Vapor 는 이미 Compiled(Atlassian) 의 hybrid 패턴과 동일.
+    //
+    //   slot 의 axis 가 null 이면 token lookup 자체가 의미 없으므로 숫자-unit
+    //   전용 helper `_ix` 로 분기 — axis null 만 쓰는 번들은 `_resolveToken` 과
+    //   토큰 테이블 코드를 tree-shake 할 수 있다.
+    //
+    //   모든 slot emit 뒤에 `?? 'var(<varName>, )'` sentinel fallback 을 붙인다.
+    //   사용자가 undefined 를 넘겨도 slot 변수가 "선언만 유지, 값은 비어있음"
+    //   상태로 남아 CSS 가 invalid-at-computed-value-time → `unset` 으로 떨어져
+    //   부모 색상·크기 상속 체인이 끊기지 않는다 (리뷰 #6c sentinel 후속).
     const slotLits: string[] = [];
     for (const s of site.slots) {
         const varName = dynamicVarName(s.slotId, ctx.mode);
-        // axis 는 `@vapor-ui/style-macro/__runtime__` 에서 import 된 식별자 이름.
-        // 사용자 스코프 충돌을 피하기 위해 `__vaporAxis_<name>` alias 로 참조한다.
-        // null 이면 token lookup 자체가 의미 없으므로 빈 객체 리터럴로 pass-through.
-        const axisRef = s.axis ? axisAliasName(s.axis) : '{}';
         // property 가 unitless 면 unit 인자 생략 → 숫자 값은 string 변환만.
         // 그 외 property 는 'px' 를 꽂아 숫자 → '<n>px' 변환하도록 지시.
         const unitArg = isUnitless(s.property) ? '' : `, 'px'`;
-        slotLits.push(`'${varName}': _resolveToken(${axisRef}, ${s.sourceExpr}${unitArg})`);
+
+        let call: string;
+        if (s.axis === null) {
+            // 토큰 lookup 불필요 → _ix 로 직행.
+            call = `_ix(${s.sourceExpr}${unitArg})`;
+            ctx.needIx = true;
+        } else {
+            // axis 는 `@vapor-ui/style-macro/__runtime__` 에서 import 된 식별자 이름.
+            // 사용자 스코프 충돌을 피하기 위해 `__vaporAxis_<name>` alias 로 참조한다.
+            const axisRef = axisAliasName(s.axis);
+            call = `_resolveToken(${axisRef}, ${s.sourceExpr}${unitArg})`;
+            ctx.needResolveToken = true;
+        }
+
+        slotLits.push(`'${varName}': ${call} ?? 'var(${varName},)'`);
     }
 
     const key = openingEl.start;
