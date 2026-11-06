@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useRef } from 'react';
+import { createContext, forwardRef, useCallback, useContext, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 
 import { AlertDialog as AlertDialogPrimitives, Button, VStack } from '@vapor-ui/core';
@@ -33,27 +33,33 @@ const slots = createSlots({
     action: Button,
 });
 
-export const AlertDialogRoot = ({
-    // functions
-    open,
-    onOpenChange,
-    defaultOpen,
-    actionsRef: actionsRefProp,
-    container,
-    keepMounted,
+export const AlertDialogRoot = forwardRef<HTMLDivElement, AlertDialogRoot.Props>((props, ref) => {
+    const {
+        // functions
+        open,
+        onOpenChange,
+        defaultOpen,
+        actionsRef: actionsRefProp,
+        container,
+        keepMounted,
 
-    // variants
-    type,
+        // DOM
+        id,
+        className,
 
-    // slots
-    trigger,
+        // variants
+        type,
 
-    title,
-    description,
-    cancel,
-    action,
-    children,
-}: AlertDialogRoot.Props) => {
+        // slots
+        trigger,
+
+        title,
+        description,
+        cancel,
+        action,
+        children,
+    } = props;
+
     const fallbackActionsRef = useRef<AlertDialogPrimitives.Root.Actions>(null);
     const actionsRef = actionsRefProp ?? fallbackActionsRef;
     const close = useCallback(() => actionsRef.current?.close(), [actionsRef]);
@@ -75,7 +81,7 @@ export const AlertDialogRoot = ({
                     keepMounted={keepMounted}
                 >
                     <AlertDialogPrimitives.OverlayPrimitive />
-                    <AlertDialogPrimitives.PopupPrimitive>
+                    <AlertDialogPrimitives.PopupPrimitive ref={ref} id={id} className={className}>
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
                         <Footer action={action} cancel={cancel} />
@@ -84,11 +90,13 @@ export const AlertDialogRoot = ({
             </AlertDialogPrimitives.Root>
         </AlertDialogContext.Provider>
     );
-};
+});
+AlertDialogRoot.displayName = 'AlertDialog.Root';
 
 type Slots = SlotProps<typeof slots, 'title'>;
 type RootProps = AlertDialogPrimitives.Root.Props;
 type PortalProps = AlertDialogPrimitives.PortalPrimitive.Props;
+type PopupProps = AlertDialogPrimitives.PopupPrimitive.Props;
 
 export interface AlertDialogProps {
     /**
@@ -141,6 +149,19 @@ export interface AlertDialogProps {
      * @default "critical"
      */
     type: 'critical' | 'confirm';
+
+    /**
+     * Popup DOM 노드의 id. aria-controls 연결, QA selector 등에 사용한다.
+     *
+     * 기본값 `keepMounted: false`에서는 다이얼로그가 닫힌 동안 Popup이 언마운트되므로,
+     * 같은 조건에서 `ref.current`는 `null`이다.
+     */
+    id?: PopupProps['id'];
+
+    /**
+     * Popup DOM 노드의 className.
+     */
+    className?: PopupProps['className'];
 
     /**
      * 다이얼로그의 목적을 한 문장으로 전달한다.
@@ -232,14 +253,11 @@ const Footer = ({ action, cancel }: FooterProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const AlertDialogAction = ({
-    closeOnClick = true,
-    onClick,
-    children,
-    ...props
-}: AlertDialogAction.Props) => {
+export const AlertDialogAction = forwardRef<HTMLElement, AlertDialogAction.Props>((props, ref) => {
+    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
+
     const { close, type } = useAlertDialogContext();
-    const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
+    const handleClick = (event: Parameters<NonNullable<ButtonProps['onClick']>>[0]) => {
         onClick?.(event);
 
         if (event.defaultPrevented) return;
@@ -249,22 +267,54 @@ export const AlertDialogAction = ({
 
     return (
         <Button
+            ref={ref}
+            id={id}
             size="lg"
             colorPalette={type === 'critical' ? 'danger' : 'primary'}
+            disabled={isDisabled}
+            className={className}
             onClick={handleClick}
-            {...props}
         >
             {children}
         </Button>
     );
-};
+});
+AlertDialogAction.displayName = 'AlertDialog.Action';
 
-interface AlertDialogActionProps extends Omit<Button.Props, 'size' | 'colorPalette' | 'variant'> {
+interface AlertDialogActionProps {
+    /**
+     * Action DOM 노드의 id. aria-controls 연결, QA selector 등에 사용한다.
+     */
+    id?: ButtonProps['id'];
+
+    /**
+     * 버튼을 비활성화한다. 비활성화된 버튼은 클릭 시 액션을 실행하지 않는다.
+     * @default false
+     */
+    isDisabled?: ButtonProps['disabled'];
+
     /**
      * 클릭 시 다이얼로그를 자동으로 닫을지 여부.
      * @default true
      */
     closeOnClick?: boolean;
+
+    /**
+     * Action DOM 노드에 추가할 className.
+     */
+    className?: ButtonProps['className'];
+
+    /**
+     * 버튼 클릭 시 호출되는 이벤트 핸들러.
+     * @example
+     * <AlertDialog.Action onClick={handleDelete}>삭제</AlertDialog.Action>
+     */
+    onClick?: ButtonProps['onClick'];
+
+    /**
+     * 버튼 내부에 표시할 요소. 보통 주요 액션을 설명하는 짧은 라벨 텍스트를 넣는다.
+     */
+    children: ButtonProps['children'];
 }
 
 export namespace AlertDialogAction {
@@ -273,36 +323,77 @@ export namespace AlertDialogAction {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const AlertDialogCancel = ({
-    closeOnClick = true,
-    onClick,
-    children,
-    ...props
-}: AlertDialogCancel.Props) => {
-    const { close } = useAlertDialogContext();
-    const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
-        onClick?.(event);
+export const AlertDialogCancel = forwardRef<HTMLElement, AlertDialogCancel.Props>((props, ref) => {
+    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
 
-        if (event.defaultPrevented) return;
-        if (!closeOnClick) return;
-        close();
-    };
+    const { close } = useAlertDialogContext();
+    const handleClick = useCallback(
+        (event: Parameters<NonNullable<ButtonProps['onClick']>>[0]) => {
+            onClick?.(event);
+
+            if (event.defaultPrevented) return;
+            if (!closeOnClick) return;
+            close();
+        },
+        [close, closeOnClick, onClick],
+    );
 
     return (
-        <Button size="lg" colorPalette="secondary" onClick={handleClick} {...props}>
+        <Button
+            ref={ref}
+            id={id}
+            size="lg"
+            colorPalette="secondary"
+            disabled={isDisabled}
+            className={className}
+            onClick={handleClick}
+        >
             {children}
         </Button>
     );
-};
+});
+AlertDialogCancel.displayName = 'AlertDialog.Cancel';
 
-interface AlertDialogCancelProps extends Omit<Button.Props, 'size' | 'colorPalette' | 'variant'> {
+interface AlertDialogCancelProps {
+    /**
+     * Cancel DOM 노드의 id. aria-controls 연결, QA selector 등에 사용한다.
+     */
+    id?: ButtonProps['id'];
+
+    /**
+     * 버튼을 비활성화한다. 비활성화된 버튼은 클릭 시 액션을 실행하지 않는다.
+     * @default false
+     */
+    isDisabled?: ButtonProps['disabled'];
+
     /**
      * 클릭 시 다이얼로그를 자동으로 닫을지 여부.
      * @default true
      */
     closeOnClick?: boolean;
+
+    /**
+     * Cancel DOM 노드에 추가할 className.
+     */
+    className?: ButtonProps['className'];
+
+    /**
+     * 버튼 클릭 시 호출되는 이벤트 핸들러.
+     * @example
+     * <AlertDialog.Cancel onClick={handleCancel}>취소</AlertDialog.Cancel>
+     */
+    onClick?: ButtonProps['onClick'];
+
+    /**
+     * 버튼 내부에 표시할 요소. 보통 취소 액션을 설명하는 짧은 라벨 텍스트를 넣는다.
+     */
+    children: ButtonProps['children'];
 }
 
 export namespace AlertDialogCancel {
     export type Props = AlertDialogCancelProps;
 }
+
+/* -----------------------------------------------------------------------------------------------*/
+
+type ButtonProps = Button.Props;
