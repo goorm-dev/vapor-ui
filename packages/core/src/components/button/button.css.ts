@@ -1,6 +1,7 @@
-import { createVar } from '@vanilla-extract/css';
+import { createVar, globalStyle } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
+import { layers } from '~/styles/layers.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentRecipe } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
@@ -13,6 +14,7 @@ const variables = {
     ghostForeground: createVar('ghost-foreground'),
     background: createVar('background'),
     borderColor: createVar('border-color'),
+    iconSize: createVar('icon-size'),
 };
 
 export const root = componentRecipe({
@@ -46,6 +48,7 @@ export const root = componentRecipe({
                     gap: vars.size.space['050'],
                     paddingInline: vars.size.space['100'],
                     height: vars.size.dimension['300'],
+                    vars: { [variables.iconSize]: vars.size.dimension['200'] },
                 },
             ],
             md: [
@@ -54,6 +57,7 @@ export const root = componentRecipe({
                     gap: vars.size.space['075'],
                     paddingInline: vars.size.space['150'],
                     height: vars.size.dimension['400'],
+                    vars: { [variables.iconSize]: vars.size.dimension['200'] },
                 },
             ],
             lg: [
@@ -62,6 +66,7 @@ export const root = componentRecipe({
                     gap: vars.size.space['100'],
                     paddingInline: vars.size.space['200'],
                     height: vars.size.dimension['500'],
+                    vars: { [variables.iconSize]: vars.size.dimension['250'] },
                 },
             ],
             xl: [
@@ -70,6 +75,7 @@ export const root = componentRecipe({
                     gap: vars.size.space['100'],
                     paddingInline: vars.size.space['300'],
                     height: vars.size.dimension['600'],
+                    vars: { [variables.iconSize]: vars.size.dimension['300'] },
                 },
             ],
         },
@@ -90,8 +96,8 @@ export const root = componentRecipe({
             secondary: {
                 vars: {
                     [variables.foreground]: vars.color.foreground['normal'],
-                    [variables.outlineForeground]: vars.color.foreground['secondary'],
-                    [variables.ghostForeground]: vars.color.foreground['secondary'],
+                    [variables.outlineForeground]: vars.color.foreground['normal'],
+                    [variables.ghostForeground]: vars.color.foreground['normal'],
                     [variables.background]: vars.color.background['secondary'],
                     [variables.borderColor]: vars.color.border.secondary,
                 },
@@ -126,8 +132,8 @@ export const root = componentRecipe({
             contrast: {
                 vars: {
                     [variables.foreground]: vars.color.foreground.inverse,
-                    [variables.outlineForeground]: vars.color.foreground['secondary'],
-                    [variables.ghostForeground]: vars.color.foreground['secondary'],
+                    [variables.outlineForeground]: vars.color.foreground['contrast'],
+                    [variables.ghostForeground]: vars.color.foreground['contrast'],
                     [variables.background]: vars.color.background['contrast'],
                     [variables.borderColor]: vars.color.border.contrast,
                 },
@@ -155,6 +161,13 @@ export const root = componentRecipe({
                 },
             ],
         },
+    },
+});
+
+// Direct-child svg only, at lower specificity than IconButton's own icon rule so IconButton keeps its sizing.
+globalStyle(`${root.classNames.base} > svg`, {
+    '@layer': {
+        [layers.components]: { width: variables.iconSize, height: variables.iconSize },
     },
 });
 
