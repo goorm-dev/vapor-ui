@@ -52,5 +52,7 @@
 ## 8. 하지 말아야 할 것
 
 - Flat Component 설계가 확정되기 전에는 `src/components/` 아래 구현 코드를 수정하지 않는다.
-- 명시적인 지시가 없으면 `className` / `style` 오버라이드 prop을 추가하지 않는다. 오버라이드 정책은 아직 정하지 않았다. 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md#3-스타일은-css-prop으로-작성한다)의 `$css` 규칙을 따른다.
+- `style` 오버라이드 prop은 추가하지 않는다. 토큰 기반 디자인 결정을 보호한다. 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md#3-스타일은-css-prop으로-작성한다)의 `$css` 규칙을 따른다.
+- `className`은 Popup DOM 노드와 공개 서브컴포넌트(`Dialog.Action`, `Menu.Item` 등)에 한해 노출한다(core 기본 클래스에 **덧붙여지는** 방식). Portal·Overlay·Positioner 등 중간 노드와 `trigger` slot에는 별도 prop을 추가하지 않는다. 자세한 규칙은 [`.claude/rules/composites.md §8`](../../.claude/rules/composites.md#8-refidclassname-기본-api).
+- `ref`·`id`는 `className`과 같은 범위(Popup + 공개 서브컴포넌트)로만 노출한다.
 - `component.figma.tsx` (Code Connect) 파일을 손으로 작성하지 않는다. codegen 파이프라인이 생성한다.

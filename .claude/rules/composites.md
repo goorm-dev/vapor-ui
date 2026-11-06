@@ -97,7 +97,7 @@ export interface DialogProps {
 
 ## 3. 스타일은 `$css` prop으로 작성한다
 
-Composites는 `className` / `style` 오버라이드를 소비자에게 노출하지 않는다(→ [`CLAUDE.md §8`](../../packages/composites/CLAUDE.md)). 컴포넌트 내부 스타일은 `@vapor-ui/core` primitive가 제공하는 `$css` prop을 사용한다. `$css`는 디자인 토큰(`$300`, `$basic-gray-500` 등)을 지원하므로 하드코딩된 색상·간격 값을 사용하지 않는다.
+Composites는 내부 스타일을 `style` prop으로는 소비자에게 노출하지 않는다. `className`과 `ref`·`id` 세 가지는 Popup DOM 노드와 공개 서브컴포넌트에 한해 노출한다(→ [§8 `ref`·`id`·`className` 기본 API](#8-refidclassname-기본-api), [`CLAUDE.md §8`](../../packages/composites/CLAUDE.md)). 컴포넌트 내부 스타일은 `@vapor-ui/core` primitive가 제공하는 `$css` prop을 사용한다. `$css`는 디자인 토큰(`$300`, `$basic-gray-500` 등)을 지원하므로 하드코딩된 색상·간격 값을 사용하지 않는다.
 
 **규칙**
 
@@ -305,6 +305,61 @@ export namespace DialogAssistive {
 
 ---
 
+## 8. `ref`·`id`·`className` 기본 API
+
+Composites는 소비자에게 **Popup DOM 노드**와 **공개 서브컴포넌트**에 한해 세 가지 DOM 접근 API를 노출한다.
+
+- `ref` — DOM 노드 측정·포커스 이동 등에 사용.
+- `id` — `aria-controls` 연결, QA selector 매칭에 사용.
+- `className` — 외부 스타일링 유틸의 selector 사용. core 기본 클래스에 **덧붙여진다**(override 아님).
+
+### 어디에 바인딩하나
+
+- **Root 컴포넌트** (`Dialog.Root`, `AlertDialog.Root`, `Menu.Root`): 실제 DOM 노드인 Popup primitive(`PopupPrimitive` / `SubmenuPopupPrimitive`)에 forwarding. Portal·Overlay·Positioner 중간 노드는 소비자가 접근할 필요가 없다.
+- **공개 서브컴포넌트** (`Dialog.Action`, `Dialog.Assistive`, `AlertDialog.Action`, `AlertDialog.Cancel`, `Menu.Item`, `Menu.CheckItem`, `Menu.SubmenuItem`, `Menu.Group`, `Menu.CheckGroup`): 각자가 렌더링하는 primitive의 DOM 노드에 forwarding.
+- **Trigger slot**: 추가 prop을 붙이지 않는다. 소비자가 `trigger={<Button ref={r} id="x" className="y"/>}` 형태로 slot render에 직접 지정한다.
+- **Group wrapper의 `<Separator/>`**: `Menu.Group`·`Menu.CheckGroup`은 `<><Separator/><Group/><Separator/></>` 형태라 `id`·`className`·`ref`는 **안쪽 Group/RadioGroup에만** 적용된다.
+
+### 구현 패턴
+
+- `ref`를 전달해야 하는 모든 컴포넌트는 `forwardRef<HTMLElementType, Props>`로 선언한다. 일반 함수 컴포넌트에서 `ref`를 받는 패턴(React 19 ref-as-prop 등)은 쓰지 않는다.
+- `forwardRef`를 쓸 때는 **파라미터 구조분해 대신 함수 블록 안에서 `const { ... } = props;`로 분해**한다. 파라미터에서 바로 구조분해하면 `forwardRef(((prop1, prop2, ...), ref) => ...)` 처럼 depth 2를 넘는 구조가 생겨 가독성이 떨어진다.
+- `.displayName`을 `'Namespace.Part'` 형태로 설정한다.
+- `id`·`className`은 Props 인터페이스에 §4대로 primitive props에서 alias로 가져와 선언한다.
+- rest spread로 primitive에 넘기지 말고, 노출하기로 결정한 prop만 **명시적으로 발라내 전달**한다. `data-*`, `aria-*`, `on*Event` 등 소비자가 임의로 넘기는 HTML 속성은 자동으로 전달되지 않으므로, 필요한 것은 Props 인터페이스에 올려 통과시킨다.
+
+```ts
+type PopupProps = DialogPrimitives.PopupPrimitive.Props;
+
+export interface DialogProps {
+    /** Popup DOM 노드의 id. aria-controls 연결, QA selector 등에 사용한다. */
+    id?: PopupProps['id'];
+    /** Popup DOM 노드에 추가할 className. */
+    className?: PopupProps['className'];
+    /* ...그 외 프로퍼티 */
+}
+
+export const DialogRoot = forwardRef<HTMLDivElement, DialogRoot.Props>((props, ref) => {
+    const { id, className /* , ...그 외 프로퍼티 */ } = props;
+
+    return (
+        <DialogPrimitives.Root /* ...그 외 프로퍼티 */>
+            <DialogPrimitives.PortalPrimitive>
+                <DialogPrimitives.PopupPrimitive ref={ref} id={id} className={className}>
+                    {/* ... */}
+                </DialogPrimitives.PopupPrimitive>
+            </DialogPrimitives.PortalPrimitive>
+        </DialogPrimitives.Root>
+    );
+});
+DialogRoot.displayName = 'Dialog.Root';
+```
+
+### 범위 밖
+
+- 이벤트 핸들러(`onFocus`, `onKeyDown` 등) — 역할별 cherry-pick 정책이 수립되기 전까지 컴포넌트별 전용 핸들러(`onOpenChange` 등)만 노출한다.
+- `style` prop — 토큰 기반 디자인 결정 보호를 위해 이번 규칙에서도 금지한다. 세부 색상·간격은 `$css` 또는 소비자 측 `className`으로 해결한다.
+
 ## 체크리스트
 
 컴포넌트 PR을 올리기 전에 아래를 확인한다.
@@ -316,3 +371,6 @@ export namespace DialogAssistive {
 - [ ] `export namespace <Component> { export type Props = ... }` 패턴으로 타입을 노출했다.
 - [ ] 서브 컴포넌트가 있는 컴포넌트라면 `index.parts.ts`를 두고 `index.ts`에서 namespace로 재수출했다.
 - [ ] Preset wrapper라면 §7의 판정 기준 4개를 모두 만족하고, `Omit`으로 preset key를 봉인했다.
+- [ ] Root는 Popup으로, 공개 서브컴포넌트는 자신이 렌더링하는 primitive로 `ref`·`id`·`className`을 forwarding한다(§8). Trigger slot에는 별도 prop을 추가하지 않는다.
+- [ ] `ref`를 노출하는 컴포넌트는 `forwardRef`를 사용하고, props는 파라미터가 아닌 함수 블록 안에서 `const { ... } = props;`로 분해한다(§8).
+- [ ] primitive로 rest spread 하지 않고, 노출하기로 결정한 prop만 명시적으로 발라내 전달한다. 소비자가 자주 요구할 만한 HTML 속성(`disabled`, `aria-*` 등)은 Props 인터페이스에 올려 통로를 열어 둔다(§8).

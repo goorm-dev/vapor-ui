@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import {
     createContext,
+    forwardRef,
     useCallback,
     useContext,
     useEffect,
@@ -20,7 +21,7 @@ import type { AriaLabelProps } from '~/utils/types';
 
 export interface DialogContext {
     close: () => void;
-    ariaLabels: Dialog.Props['ariaLabels'];
+    ariaLabels: DialogRoot.Props['ariaLabels'];
 }
 
 export const DialogContext = createContext<DialogContext | undefined>(undefined);
@@ -45,27 +46,33 @@ const slots = createSlots({
     action: Button,
 });
 
-export const Dialog = ({
-    // functional
-    open,
-    defaultOpen,
-    onOpenChange,
-    actionsRef: actionsRefProp,
-    container,
-    keepMounted,
-    ariaLabels,
+export const DialogRoot = forwardRef<HTMLDivElement, DialogRoot.Props>((props, ref) => {
+    const {
+        // functional
+        open,
+        defaultOpen,
+        onOpenChange,
+        actionsRef: actionsRefProp,
+        container,
+        keepMounted,
+        ariaLabels,
 
-    // variants
-    size,
+        // DOM
+        id,
+        className,
 
-    // slots
-    title,
-    description,
-    trigger,
-    assistive,
-    action,
-    children,
-}: Dialog.Props) => {
+        // variants
+        size,
+
+        // slots
+        title,
+        description,
+        trigger,
+        assistive,
+        action,
+        children,
+    } = props;
+
     const actionsRef = useRef<DialogPrimitives.Root.Actions>(null);
     const mergedRef = actionsRefProp ?? actionsRef;
     const close = useCallback(() => mergedRef.current?.close(), [mergedRef]);
@@ -86,7 +93,7 @@ export const Dialog = ({
                 <DialogPrimitives.PortalPrimitive container={container} keepMounted={keepMounted}>
                     <DialogPrimitives.OverlayPrimitive />
 
-                    <DialogPrimitives.PopupPrimitive>
+                    <DialogPrimitives.PopupPrimitive ref={ref} id={id} className={className}>
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
                         <Footer action={action} assistive={assistive} />
@@ -95,12 +102,14 @@ export const Dialog = ({
             </DialogPrimitives.Root>
         </DialogContext.Provider>
     );
-};
+});
+DialogRoot.displayName = 'Dialog.Root';
 
 type Slots = SlotProps<typeof slots, 'title'>;
 type AriaLabels = AriaLabelProps<'close'>;
 type RootProps = DialogPrimitives.Root.Props;
 type PortalProps = DialogPrimitives.PortalPrimitive.Props;
+type PopupProps = DialogPrimitives.PopupPrimitive.Props;
 
 export interface DialogProps {
     /**
@@ -162,6 +171,19 @@ export interface DialogProps {
     size?: RootProps['size'];
 
     /**
+     * Popup DOM 노드의 id. aria-controls 연결, QA selector 등에 사용한다.
+     *
+     * 기본값 `keepMounted: false`에서는 다이얼로그가 닫힌 동안 Popup이 언마운트되므로,
+     * 같은 조건에서 `ref.current`는 `null`이다.
+     */
+    id?: PopupProps['id'];
+
+    /**
+     * Popup DOM 노드에 추가할 className.
+     */
+    className?: PopupProps['className'];
+
+    /**
      * 다이얼로그의 목적을 한 문장으로 전달한다.
      */
     title: Slots['title'];
@@ -198,14 +220,14 @@ export interface DialogProps {
     children?: ReactNode;
 }
 
-export namespace Dialog {
+export namespace DialogRoot {
     export type Actions = DialogPrimitives.Root.Actions;
     export type Props = DialogProps;
 }
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
+interface HeaderProps extends Pick<DialogRoot.Props, 'title' | 'description'> {}
 
 const Header = ({ title, description }: HeaderProps) => {
     return (
@@ -269,7 +291,7 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {}
+interface FooterProps extends Pick<DialogRoot.Props, 'action' | 'assistive'> {}
 
 const Footer = ({ action, assistive }: FooterProps) => {
     const renderFooter = action || assistive;
@@ -293,48 +315,9 @@ const Footer = ({ action, assistive }: FooterProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const DialogAction = ({
-    closeOnClick = true,
-    onClick,
-    children,
-    ...props
-}: DialogAction.Props) => {
-    const { close } = useDialogContext();
-    const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
-        onClick?.(event);
+export const DialogAction = forwardRef<HTMLElement, DialogAction.Props>((props, ref) => {
+    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
 
-        if (event.defaultPrevented) return;
-        if (!closeOnClick) return;
-        close();
-    };
-
-    return (
-        <Button size="lg" colorPalette="primary" onClick={handleClick} {...props}>
-            {children}
-        </Button>
-    );
-};
-
-interface DialogActionProps extends Omit<Button.Props, 'size' | 'colorPalette' | 'variant'> {
-    /**
-     * 클릭 시 다이얼로그를 자동으로 닫을지 여부.
-     * @default true
-     */
-    closeOnClick?: boolean;
-}
-
-export namespace DialogAction {
-    export type Props = DialogActionProps;
-}
-
-/* -----------------------------------------------------------------------------------------------*/
-
-export const DialogAssistive = ({
-    closeOnClick = true,
-    onClick,
-    children,
-    ...props
-}: DialogAssistive.Props) => {
     const { close } = useDialogContext();
     const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
         onClick?.(event);
@@ -346,25 +329,131 @@ export const DialogAssistive = ({
 
     return (
         <Button
+            ref={ref}
+            id={id}
             size="lg"
-            colorPalette="secondary"
-            variant="outline"
+            colorPalette="primary"
+            disabled={isDisabled}
+            className={className}
             onClick={handleClick}
-            {...props}
         >
             {children}
         </Button>
     );
-};
+});
+DialogAction.displayName = 'Dialog.Action';
 
-interface DialogAssistiveProps extends Omit<Button.Props, 'size' | 'colorPalette' | 'variant'> {
+interface DialogActionProps {
+    /**
+     * Action DOM 노드의 id. aria-controls 연결, QA selector 등에 사용한다.
+     */
+    id?: ButtonProps['id'];
+
+    /**
+     * 버튼을 비활성화한다. 비활성화된 버튼은 클릭 시 액션을 실행하지 않는다.
+     * @default false
+     */
+    isDisabled?: ButtonProps['disabled'];
+
     /**
      * 클릭 시 다이얼로그를 자동으로 닫을지 여부.
      * @default true
      */
     closeOnClick?: boolean;
+
+    /**
+     * Action DOM 노드에 추가할 className.
+     */
+    className?: ButtonProps['className'];
+
+    /**
+     * 버튼 클릭 시 호출되는 이벤트 핸들러.
+     * @example
+     * <Dialog.Action onClick={handleConfirm}>확인</Dialog.Action>
+     */
+    onClick?: ButtonProps['onClick'];
+
+    /**
+     * 버튼 내부에 표시할 요소. 보통 액션을 설명하는 짧은 라벨 텍스트를 넣는다.
+     */
+    children: ButtonProps['children'];
+}
+
+export namespace DialogAction {
+    export type Props = DialogActionProps;
+}
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export const DialogAssistive = forwardRef<HTMLElement, DialogAssistive.Props>((props, ref) => {
+    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
+
+    const { close } = useDialogContext();
+    const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
+        onClick?.(event);
+
+        if (event.defaultPrevented) return;
+        if (!closeOnClick) return;
+        close();
+    };
+
+    return (
+        <Button
+            ref={ref}
+            id={id}
+            size="lg"
+            colorPalette="secondary"
+            variant="outline"
+            disabled={isDisabled}
+            className={className}
+            onClick={handleClick}
+        >
+            {children}
+        </Button>
+    );
+});
+DialogAssistive.displayName = 'Dialog.Assistive';
+
+interface DialogAssistiveProps {
+    /**
+     * Assistive DOM 노드의 id. aria-controls 연결, QA selector 등에 사용한다.
+     */
+    id?: ButtonProps['id'];
+
+    /**
+     * 버튼을 비활성화한다. 비활성화된 버튼은 클릭 시 액션을 실행하지 않는다.
+     * @default false
+     */
+    isDisabled?: ButtonProps['disabled'];
+
+    /**
+     * 클릭 시 다이얼로그를 자동으로 닫을지 여부.
+     * @default true
+     */
+    closeOnClick?: boolean;
+
+    /**
+     * Assistive DOM 노드에 추가할 className.
+     */
+    className?: ButtonProps['className'];
+
+    /**
+     * 버튼 클릭 시 호출되는 이벤트 핸들러.
+     * @example
+     * <Dialog.Assistive onClick={handleCancel}>취소</Dialog.Assistive>
+     */
+    onClick?: ButtonProps['onClick'];
+
+    /**
+     * 버튼 내부에 표시할 요소. 보통 보조 액션을 설명하는 짧은 라벨 텍스트를 넣는다.
+     */
+    children: ButtonProps['children'];
 }
 
 export namespace DialogAssistive {
     export type Props = DialogAssistiveProps;
 }
+
+/* -----------------------------------------------------------------------------------------------*/
+
+type ButtonProps = Button.Props;
