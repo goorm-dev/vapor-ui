@@ -1,0 +1,23 @@
+{
+    "templateFile": "./alert-dialog.figma.batch.ts",
+    "components": [
+        {
+            "part": "alert-dialog-root",
+            "component": "AlertDialog",
+            "source": "src/components/alert-dialog/alert-dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4606-26196"
+        },
+        {
+            "part": "alert-dialog-action",
+            "component": "AlertDialog.Action",
+            "source": "src/components/alert-dialog/alert-dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4589-26511&m=dev"
+        },
+        {
+            "part": "alert-dialog-cancel",
+            "component": "AlertDialog.Cancel",
+            "source": "src/components/alert-dialog/alert-dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4589-26516&m=dev"
+        }
+    ]
+}
