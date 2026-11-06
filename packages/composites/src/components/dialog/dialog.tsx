@@ -45,6 +45,9 @@ const slots = createSlots({
     action: Button,
 });
 
+/**
+ * 페이지 위에 창을 띄워 사용자를 중요한 정보에 집중시키거나, 특정 작업을 수행하도록 강제하는 Dialog의 루트 요소
+ */
 export const Dialog = ({
     // functional
     open,
@@ -293,6 +296,9 @@ const Footer = ({ action, assistive }: FooterProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Dialog의 주요 액션을 발생시키는 요소
+ */
 export const DialogAction = ({
     closeOnClick = true,
     onClick,
@@ -329,6 +335,9 @@ export namespace DialogAction {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Dialog의 동작을 취소하는 요소
+ */
 export const DialogAssistive = ({
     closeOnClick = true,
     onClick,

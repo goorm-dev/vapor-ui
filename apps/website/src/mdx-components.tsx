@@ -16,6 +16,7 @@ import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
 import IconList from '~/components/icon-list/icon-list';
 import IconStyleGuide from '~/components/icon-style-guide';
 import InstallSelector from '~/components/install-selector/install-selector';
+import { PropsTable } from '~/components/props-table';
 
 import { ColorPalette } from './components/color-swatch';
 import { DoImage } from './components/composites/do-image';
@@ -23,7 +24,7 @@ import { DocsGrid } from './components/composites/docs-grid';
 import { DocsImage } from './components/composites/docs-image';
 import { DontImage } from './components/composites/dont-image';
 import { Table } from './components/composites/table';
-import { Tabs } from './components/docs-tabs';
+import { DocsTab, DocsTabs } from './components/docs-tabs';
 import { BasicColor, SemanticColor } from './components/foundation-color-tabs';
 import IntroLinkCardContainer from './components/intro-link-card-container';
 
@@ -43,6 +44,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         InstallSelector,
         AllComponentsContainer,
         ComponentPropsTable,
+        PropsTable,
         ComponentsCard,
         FoundationSizeTabs,
         FoundationTypographyTabs,
@@ -55,7 +57,8 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         Badge,
         BasicColor,
         SemanticColor,
-        Tabs,
+        DocsTabs,
+        DocsTab,
         Image,
         IntroLinkCardContainer,
         Step,

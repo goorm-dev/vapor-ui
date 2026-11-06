@@ -27,6 +27,9 @@ const submenuSlots = createSlots({
     trigger: MenuPrimitives.SubmenuTrigger,
 });
 
+/**
+ * 여러 옵션 중 하나를 실행할 수 있는 목록을 제공하는 Menu의 루트 요소
+ */
 export const MenuRoot = ({ modal, ...props }: MenuRoot.Props) => {
     const parent = useMenuContext();
     const contextValue = useMemo<MenuContextValue>(() => ({ nested: true }), []);
@@ -193,6 +196,9 @@ const groupSlots = createSlots({
     label: MenuPrimitives.GroupLabel,
 });
 
+/**
+ * 서로 관련 있는 Item을 하나로 묶는 그룹 요소
+ */
 export const MenuGroup = ({ label, children }: MenuGroup.Props) => {
     return (
         <>
@@ -260,6 +266,9 @@ const checkGroupSlots = createSlots({
     label: MenuPrimitives.GroupLabel,
 });
 
+/**
+ * 서로 관련 있는 Check item을 묶는 그룹 요소
+ */
 export const MenuCheckGroup = (props: MenuCheckGroup.Props) => {
     const { mode } = props;
 
@@ -353,7 +362,9 @@ type CheckGroupSlots = SlotProps<typeof checkGroupSlots, 'label'>;
 
 export interface MenuSingleCheckGroupProps {
     /**
-     * 선택 모드. `single`은 라디오 그룹처럼 최대 하나의 값만 선택된다.
+     * 선택 방식을 결정한다.
+     * - `"single"` - 라디오 그룹처럼 최대 하나의 값만 선택된다.
+     * - `"multiple"` - 체크박스 그룹처럼 여러 값을 토글한다.
      */
     mode: 'single';
 
@@ -368,7 +379,9 @@ export interface MenuSingleCheckGroupProps {
     defaultValue?: string;
 
     /**
-     * 선택이 바뀔 때 호출된다. 새로 선택된 값 하나가 전달된다.
+     * 선택이 바뀔 때 호출된다.
+     * - `"single"` - 새로 선택된 값 하나가 문자열로 전달된다.
+     * - `"multiple"` - 선택된 모든 값이 배열로 전달된다.
      * @example
      * <Menu.CheckGroup mode="single" onValueChange={(value) => setValue(value)} />
      */
@@ -387,7 +400,9 @@ export interface MenuSingleCheckGroupProps {
 
 export interface MenuMultipleCheckGroupProps {
     /**
-     * 선택 모드. `multiple`은 체크박스 그룹처럼 여러 값을 토글한다.
+     * 선택 방식을 결정한다.
+     * - `"single"` - 라디오 그룹처럼 최대 하나의 값만 선택된다.
+     * - `"multiple"` - 체크박스 그룹처럼 여러 값을 토글한다.
      */
     mode: 'multiple';
 
@@ -403,7 +418,9 @@ export interface MenuMultipleCheckGroupProps {
     defaultValue?: string[];
 
     /**
-     * 선택이 바뀔 때 호출된다. 토글 이후의 전체 선택 배열이 전달된다.
+     * 선택이 바뀔 때 호출된다.
+     * - `"single"` - 새로 선택된 값 하나가 문자열로 전달된다.
+     * - `"multiple"` - 선택된 모든 값이 배열로 전달된다.
      * @example
      * <Menu.CheckGroup mode="multiple" onValueChange={(values) => setValues(values)} />
      */
@@ -427,6 +444,9 @@ export namespace MenuCheckGroup {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 특정 액션을 실행할 수 있는 동작 요소
+ */
 export const MenuItem = ({
     isDisabled,
     variant,
@@ -506,6 +526,9 @@ export namespace MenuItem {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 선택 가능한 Item 요소
+ */
 export const MenuCheckItem = ({
     value: valueProp,
     isDisabled,
@@ -621,6 +644,9 @@ export namespace MenuCheckItem {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 하위 메뉴를 여는 Item 요소
+ */
 export const MenuSubmenuItem = ({
     isDisabled,
     leading,

@@ -4,7 +4,7 @@ import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkMdx from 'remark-mdx';
 
-import type { source } from '~/lib/source';
+import { source } from '~/lib/source';
 import { replaceDemoSelfClosing } from '~/utils/get-blocks-examples-doc';
 import { replaceComponentDoc } from '~/utils/get-component-doc';
 import { replaceCompositeDoc } from '~/utils/get-composite-doc';
@@ -91,4 +91,40 @@ export async function getLLMText(
         fullPath: page.data.info.fullPath,
         contentType,
     });
+}
+
+type Page = InferPageType<typeof source>;
+
+export const isSubpage = (page: Page): boolean =>
+    (page.data as { subpage?: unknown }).subpage === true;
+
+const parentSlugsOf = (page: Page): string[] => page.slugs.slice(0, -1);
+
+const findSubpagesOf = (page: Page): Page[] => {
+    const parentPath = page.slugs.join('/');
+    return source
+        .getPages()
+        .filter(
+            (candidate) =>
+                isSubpage(candidate) && parentSlugsOf(candidate).join('/') === parentPath,
+        );
+};
+
+/**
+ * Composite docs can split content across sibling files flagged `subpage: true`
+ * in frontmatter; LLM output concats every subpage back into the parent so one
+ * URL returns the full document.
+ */
+export async function getLLMTextWithSubpages(
+    page: Page,
+    contentType: ContentType = 'docs',
+): Promise<string> {
+    const main = await getLLMText(page, contentType);
+    if (isSubpage(page)) return main;
+
+    const subpages = findSubpagesOf(page);
+    if (subpages.length === 0) return main;
+
+    const rendered = await Promise.all(subpages.map((sub) => getLLMText(sub, contentType)));
+    return [main, ...rendered].join('\n\n');
 }
