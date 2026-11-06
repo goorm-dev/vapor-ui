@@ -13,7 +13,7 @@ type SlotHost = ElementType;
 type HostProps<H extends SlotHost> = ComponentProps<H>;
 
 type SlotComponentProps<H extends SlotHost> = Omit<HostProps<H>, 'render' | 'children'> & {
-    render?: ReactNode;
+    render?: HostProps<H>['children'];
 };
 
 type SlotComponent<H extends SlotHost> = (props: SlotComponentProps<H>) => ReactElement | null;
