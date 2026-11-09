@@ -1,0 +1,28 @@
+---
+name: implement-figma
+description: Figma 시안 하나를 vapor-ui 코드로 옮긴다. "이 Figma 시안 vapor-ui로 구현해줘", "figma to code", "시안 코드로 옮겨줘"처럼 Figma URL과 함께 구현을 요청할 때 쓴다. 구현 뒤 채점까지 한 번에 하려면 figma-to-code 스킬을 쓴다.
+---
+
+# Figma 시안을 vapor-ui 코드로
+
+Figma MCP 서버가 연결돼 있어야 한다. 없으면 설치를 안내하고 멈춘다.
+
+## 순서
+
+1. URL에서 `fileKey`와 `nodeId`를 뽑는다. `node-id=1-234`는 `1:234`로 바꾼다.
+2. Figma MCP `get_design_context`로 노드 트리와 Code Connect 스니펫을, `get_screenshot`으로 이미지를 받는다.
+3. 라이브러리 인스턴스(💙로 시작하는 노드)는 vapor-ui 컴포넌트로 옮긴다. Code Connect 스니펫이 있으면 그 태그와 props를 그대로 쓴다. 없으면 `references/design-system-recognition.md`로 이름과 variant를 대응한다.
+4. props와 파트 구성이 확실하지 않으면 components 스킬로 설치된 버전의 props와 예제를 확인한다.
+5. 오토 레이아웃 프레임은 `references/figma-layout-mapping.md`대로 `VStack`·`HStack`·`Box`·`Grid`로 옮기고, 간격·반경·색은 `references/token-mapping.md`의 토큰으로 `$css`에 쓴다.
+6. 사용자가 정한 위치에 파일을 쓴다. 정하지 않았으면 레포 구조를 보고 고른 뒤 알린다.
+
+## 지킬 것
+
+- 시안의 라이브러리 인스턴스는 하나도 빼지 않는다. 화면에서 안 보이게 하려고 지우지 않는다.
+- Code Connect 스니펫의 variant props(`size`, `colorPalette` 등)는 바꾸지 않는다.
+- `position: absolute`, 색 리터럴(hex·rgb·hsl), 토큰 눈금에 있는 px 값을 쓰지 않는다. 토큰으로 쓴다.
+- 텍스트 문구는 시안을 따른다.
+
+## 끝나면
+
+쓰거나 고친 파일 경로를 모두 적어 둔다. check-components와 check-styling이 그 경로를 받는다. 변환 예시는 `references/conversion-examples.md`에 있다.

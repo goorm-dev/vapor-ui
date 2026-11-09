@@ -1,93 +1,105 @@
 ---
 title: Agent Skills
-description: AI Agent에서 Vapor UI 스킬을 설치하고 사용하는 방법
+description: AI Agent에서 vapor-ui 플러그인을 설치하고 Figma 시안을 코드로 옮겨 채점하는 방법
 ---
 
-이 문서에서는 AI Agent에서 Vapor UI 스킬을 설치하고 활용하는 방법을 설명합니다.
-
-## 개요
-
-Vapor UI 스킬은 AI Agent가 Vapor UI 컴포넌트를 이해하고 코드를 생성할 수 있도록 돕는 Agent Skill입니다. 컴포넌트 조회, 예제 코드 생성, Figma 디자인 변환 등의 기능을 제공합니다.
+vapor-ui 플러그인은 AI Agent가 Vapor UI 컴포넌트를 조회하고, Figma 시안을 vapor-ui 코드로 옮기고, 그 결과를 채점하게 돕는 스킬 묶음입니다. 코드를 작성하는 개발자용입니다. Figma에서 시안을 만드는 디자이너용 플러그인은 `vapor-figma`입니다.
 
 ## 설치
+
+Claude Code에서는 플러그인으로 설치합니다.
+
+```
+/plugin marketplace add goorm-dev/vapor-ui
+/plugin install vapor-ui@vapor-ui
+```
+
+새 버전은 `/plugin marketplace update vapor-ui`로 받습니다.
+
+그 밖의 에이전트에서는 Agent Skills CLI로 설치합니다.
 
 ```bash
 npx skills add goorm-dev/vapor-ui
 ```
 
-설치가 완료되면 AI Agent가 자동으로 스킬을 인식합니다.
+이전에 설치한 `vapor-ui` 스킬은 이제 플러그인 설치 방법만 안내합니다. 플러그인을 설치한 뒤 지워도 됩니다.
 
-## 사용 방법
+## 필요한 환경
 
-### 자동 트리거
+| 필요한 것              | 쓰는 스킬                                           | 준비 방법                                                                                                     |
+| ---------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Figma MCP 서버         | `implement-figma`                                   | Figma 공식 MCP 서버를 에이전트에 연결합니다                                                                   |
+| `@vapor-ui/figma-eval` | `check-components`, `check-styling`, `visual-score` | 앱 패키지에 devDependency로 설치합니다                                                                        |
+| Code Connect 템플릿    | `check-components`                                  | `@vapor-ui/core`, `@vapor-ui/icons`, `@vapor-ui/composites`를 `@vapor-ui/figma-eval`과 같은 릴리스로 맞춥니다 |
+| `FIGMA_ACCESS_TOKEN`   | `check-components`, `visual-score`                  | 시안 파일을 읽을 수 있는 Figma 개인 토큰을 환경 변수로 둡니다                                                 |
+| Playwright             | `visual-score`                                      | 앱 패키지에 설치하고 `npx playwright install chromium`을 실행합니다                                           |
 
-다음과 같은 요청 시 스킬이 자동으로 활성화됩니다:
+컴포넌트 패키지는 Code Connect 템플릿을 `figma-eval/` 폴더에 담아 배포합니다. figma-eval은 설치된 버전의 템플릿으로 정답을 만들기 때문에, 이 폴더가 없는 예전 버전의 컴포넌트는 채점하지 않습니다.
 
-- "vapor-ui 컴포넌트 목록 보여줘"
-- "Button 컴포넌트 사용법 알려줘"
-- "vapor-ui로 로그인 페이지 만들어줘"
-- "이 Figma 디자인을 코드로 변환해줘"
-- "아이콘 찾아줘"
+## 스킬
 
-### 명시적 호출
+| 스킬               | 하는 일                                                                   |
+| ------------------ | ------------------------------------------------------------------------- |
+| `components`       | 설치된 버전 기준으로 컴포넌트 목록, props, 예제 코드, 아이콘을 조회합니다 |
+| `implement-figma`  | Figma 시안 하나를 vapor-ui 코드로 옮깁니다                                |
+| `check-components` | 관문 1. 시안의 컴포넌트와 props가 코드에 모두 들어갔는지 채점합니다       |
+| `check-styling`    | 관문 2. `position: absolute`와 하드코딩한 색·px 값을 검사합니다           |
+| `visual-score`     | 실행 중인 앱 화면을 시안과 비교해 시각 점수를 잽니다                      |
+| `figma-to-code`    | 위 스킬을 순서대로 불러 구현부터 시각 점수까지 한 번에 진행합니다         |
 
-```
-/vapor-ui Button 사용법 알려줘
-```
+플러그인으로 설치하면 스킬 이름 앞에 `vapor-ui:`가 붙습니다(`/vapor-ui:figma-to-code`). 요청에 맞는 스킬을 에이전트가 알아서 고르므로, 이름을 몰라도 "이 시안 구현하고 채점까지 해줘"처럼 말하면 됩니다.
 
-## 주요 기능
+`figma-to-code`는 구현한 뒤 관문 2개를 돌리고, 통과하지 못하면 실패한 항목만 고쳐 최대 2번 다시 채점합니다. 마지막에 시각 점수를 잴 때 앱 URL, 화면을 감싼 요소의 selector, 로그인 상태 파일을 묻습니다. 앱은 직접 띄워 둡니다.
 
-### 컴포넌트 조회
+## 점수 읽는 법
 
-사용 가능한 컴포넌트 목록과 상세 정보(props, variants)를 조회합니다.
+`figma-to-code`는 관문을 통과했는지와 상관없이 개선 전후 점수, 남은 실패 항목, 예외 개수를 항상 보여 줍니다.
 
-**예시 요청:**
+### 관문 1: 컴포넌트 재현율
 
-- "어떤 컴포넌트가 있어?"
-- "Avatar 컴포넌트 props 알려줘"
-- "폼 관련 컴포넌트 뭐 있어?"
+시안에 놓인 라이브러리 컴포넌트를 Code Connect 템플릿으로 JSX 줄로 바꾼 것이 정답 집합입니다. 재현율은 정답 집합의 줄 가운데 코드에 같은 태그, props, 부모로 나타난 비율입니다. 문구와 레이아웃은 보지 않습니다.
 
-### 예제 코드 생성
+| 결과         | 뜻                                                                   |
+| ------------ | -------------------------------------------------------------------- |
+| `pass`       | 모든 줄이 코드에 있습니다                                            |
+| `fail`       | 빠진 줄(`missing`)이나 props가 다른 줄(`mismatch`)이 있습니다        |
+| `unscorable` | 템플릿이 없거나 실행에 실패한 컴포넌트가 있어 점수를 내지 않았습니다 |
 
-컴포넌트별 예제 코드를 조회하고, 요청에 맞는 UI 코드를 생성합니다.
+`unscorable`은 대부분 vapor-ui 쪽에 Code Connect가 빠진 경우라 사용자 코드로는 고칠 수 없습니다.
 
-**예시 요청:**
+### 관문 2: absolute·하드코딩 값
 
-- "Button 예제 코드 보여줘"
-- "navbar block1 코드 참고해서 만들어줘"
-- "로그인 폼 만들어줘"
+`position: absolute`와 색 리터럴(hex, rgb, hsl)은 모두 실패입니다. px 값은 그 속성의 토큰 눈금에 있는 값이면 실패입니다. 토큰으로 쓸 수 있었다는 뜻입니다.
 
-### 아이콘 검색
+### 시각 점수
 
-`@vapor-ui/icons` 패키지의 아이콘을 검색합니다.
+시각 점수는 기록용이고 합격선이 없습니다.
 
-**예시 요청:**
+| 점수        | 뜻                                                       |
+| ----------- | -------------------------------------------------------- |
+| Block-Match | 시안과 화면의 글자 상자, 컴포넌트 상자가 짝지어지는 정도 |
+| Position    | 짝지어진 상자의 위치가 가까운 정도                       |
+| Layout IoU  | 컴포넌트 종류별 영역이 겹치는 정도                       |
 
-- "arrow 아이콘 찾아줘"
-- "outline 스타일 아이콘 목록"
-- "검색 아이콘 이름이 뭐야?"
+Block-Match와 Position은 글자를 문자열로 짝짓습니다. 실제 데이터를 그리는 화면은 문구가 시안과 달라 점수가 낮게 나옵니다.
 
-### Figma 디자인 변환
+## 예외의 의미
 
-Figma URL을 제공하면 디자인을 분석하여 Vapor UI 코드로 변환합니다.
+예외는 관문 판정에서 빼고 개수만 보고하는 항목입니다. 실패가 아니지만, 개수가 많으면 토큰이나 컴포넌트로 옮길 수 있는 부분이 숨어 있지 않은지 확인합니다.
 
-**예시 요청:**
+**관문 1의 제외.** 컴포넌트가 스스로 그리는 요소라서 코드에 쓸 수 없는 인스턴스입니다.
 
-- "이 Figma 디자인 코드로 만들어줘: https://figma.com/design/..."
-- "시안 구현해줘"
+- `part-draws-icon`: 파트가 그리는 아이콘입니다. `Select.Trigger`의 화살표가 해당합니다.
+- `part-draws-itself`: 파트가 조건 없이 그리는 컴포넌트입니다. composites `Dialog`의 닫기 버튼이 해당합니다.
+- `inside-self-closing-part`: 자식을 받지 않는 파트 안, 슬롯 밖에 그려진 인스턴스입니다.
 
-## 버전 지정
+**관문 2의 예외.** 토큰으로 쓸 수 없거나 쓰지 않는 것이 맞는 값입니다.
 
-프로젝트의 Vapor UI 버전을 자동으로 감지합니다. 특정 버전을 사용하려면 직접 지정할 수 있습니다.
-
-**자동 감지:**
-스킬이 프로젝트의 `package.json` 또는 lock 파일을 분석하여 설치된 버전을 확인합니다.
-
-**직접 지정:**
-
-```
-1.0.0-beta.12 버전 기준으로 Button 사용법 알려줘
-```
+- 에셋
+- sr-only
+- 1px 테두리
+- 토큰 눈금 밖 px: 대응하는 토큰이 없는 값
+- 입력창 아이콘
 
 ## 참고 자료
 

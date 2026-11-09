@@ -7,7 +7,7 @@
 **Action**:
 
 1. Extract file_key=ABC123, node_id=1-234
-2. Call `mcp__figma-dev-mode-mcp-server__get_design_context`
+2. Call Figma MCP `get_design_context`
 3. Analyze response:
     - Root: Frame with `layoutMode: VERTICAL`, `itemSpacing: 16`
     - Child 1: `💙Field` with Label "Email"

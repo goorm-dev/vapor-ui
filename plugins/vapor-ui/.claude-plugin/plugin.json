@@ -1,0 +1,6 @@
+{
+    "name": "vapor-ui",
+    "description": "Implement Figma designs as vapor-ui code and grade the result with @vapor-ui/figma-eval",
+    "version": "0.1.0",
+    "author": { "name": "Vapor Team", "email": "vapor.ui@goorm.io" }
+}

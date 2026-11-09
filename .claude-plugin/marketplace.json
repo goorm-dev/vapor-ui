@@ -11,7 +11,12 @@
         {
             "name": "vapor-figma",
             "source": "./plugins/vapor-figma",
-            "description": "Compose Figma designs from the Vapor core library without detaching instances"
+            "description": "For designers: compose Figma designs from the Vapor core library without detaching instances"
+        },
+        {
+            "name": "vapor-ui",
+            "source": "./plugins/vapor-ui",
+            "description": "For developers: implement Figma designs as vapor-ui code and grade them with @vapor-ui/figma-eval"
         }
     ]
 }
