@@ -15,7 +15,12 @@ Claude Code에서 Vapor core 라이브러리(Figma 팀 라이브러리 `Vapor De
 /plugin install vapor-figma@vapor-ui
 ```
 
-새 버전은 `/plugin marketplace update vapor-ui`로 받습니다.
+새 버전은 터미널에서 마켓플레이스 목록을 갱신한 뒤 플러그인을 업데이트해 받습니다. 마켓플레이스만 갱신하면 설치된 플러그인은 바뀌지 않습니다.
+
+```bash
+claude plugin marketplace update vapor-ui
+claude plugin update vapor-figma@vapor-ui
+```
 
 ## 사용
 

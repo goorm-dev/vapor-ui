@@ -13,12 +13,13 @@ node scripts/detect-version.mjs [앱 경로]   # CORE: x.y.z / ICONS: x.y.z
 
 컴포넌트 스크립트에는 `CORE`, 아이콘 스크립트에는 `ICONS` 버전을 넘긴다.
 
-| 알고 싶은 것       | 명령                                                                       |
-| ------------------ | -------------------------------------------------------------------------- |
-| 컴포넌트 목록      | `node scripts/get-component-list.mjs <CORE>`                               |
-| props와 설명       | `node scripts/get-component-info.mjs <CORE> <component> [part]`            |
-| 예제 코드          | `node scripts/get-component-examples.mjs <CORE> <component> [example]`     |
-| 아이콘 목록과 검색 | `node scripts/get-icon-list.mjs <ICONS> [keyword] [--outline \| --filled]` |
+| 알고 싶은 것    | 명령                                                                                         |
+| --------------- | -------------------------------------------------------------------------------------------- |
+| 컴포넌트 목록   | `node scripts/get-component-list.mjs <CORE>`                                                 |
+| props와 설명    | `node scripts/get-component-info.mjs <CORE> <component> [part]`                              |
+| 예제 코드       | `node scripts/get-component-examples.mjs <CORE> <component> [example]`                       |
+| 아이콘 검색     | `node scripts/get-icon-list.mjs <ICONS> [keyword]`                                           |
+| 스타일별 아이콘 | `node scripts/get-icon-list.mjs <ICONS> --outline` 또는 `--filled`. 키워드와 함께 쓸 수 없다 |
 
 컴포넌트 이름은 폴더 이름(kebab-case)이다. 모르면 목록부터 본다. 파일 구조와 URL 규칙은 `references/component-structure.md`, `references/url-patterns.md`에 있다.
 
