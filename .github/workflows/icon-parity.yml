@@ -65,7 +65,8 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Build icons
-              run: pnpm --filter @vapor-ui/icons build
+              # figma-eval builds first: the icons build runs its CLI.
+              run: pnpm --filter "@vapor-ui/icons..." build
 
             - name: Install Chromium
               run: pnpm --filter @repo/icon-extractor exec playwright install --with-deps chromium
