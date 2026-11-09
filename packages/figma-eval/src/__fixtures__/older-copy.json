@@ -1,0 +1,15 @@
+{
+    "document": {
+        "id": "0:1",
+        "name": "Screen",
+        "type": "FRAME",
+        "children": [
+            { "id": "2:1", "name": "Badge", "type": "INSTANCE", "componentId": "1:1" },
+            { "id": "2:2", "name": "Tag", "type": "INSTANCE", "componentId": "1:2" }
+        ]
+    },
+    "components": {
+        "1:1": { "key": "K-BADGE-OLD", "name": "💙Badge" },
+        "1:2": { "key": "K-TAG-OLD", "name": "💙Tag" }
+    }
+}
