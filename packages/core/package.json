@@ -47,18 +47,20 @@
             }
         },
         "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
-        "./styles.css": "./dist/styles/themes.css.ts.vanilla.css"
+        "./styles.css": "./dist/styles/themes.css.ts.vanilla.css",
+        "./figma-eval/*": "./figma-eval/*"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.cts",
     "files": [
         "dist",
-        "docs"
+        "docs",
+        "figma-eval"
     ],
     "scripts": {
-        "build": "rimraf dist && rolldown -c rolldown.config.ts",
-        "clean": "rimraf dist node_modules .turbo",
+        "build": "rimraf dist figma-eval && rolldown -c rolldown.config.ts && figma-eval build",
+        "clean": "rimraf dist figma-eval node_modules .turbo",
         "figma:check": "figma connect publish --dry-run",
         "figma:preview": "figma connect preview",
         "figma:publish": "figma connect publish",
@@ -97,6 +99,7 @@
         "@types/react-dom": "catalog:",
         "@vanilla-extract/rollup-plugin": "^1.5.4",
         "@vanilla-extract/vite-plugin": "^5.2.6",
+        "@vapor-ui/figma-eval": "workspace:*",
         "@vitest/browser": "catalog:",
         "@vitest/coverage-v8": "catalog:",
         "autoprefixer": "^10.5.4",

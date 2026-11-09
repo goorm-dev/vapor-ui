@@ -545,6 +545,9 @@ importers:
       '@vapor-ui/core':
         specifier: workspace:^
         version: link:../core
+      '@vapor-ui/figma-eval':
+        specifier: workspace:*
+        version: link:../figma-eval
       '@vitest/browser':
         specifier: ^3.2.7
         version: 3.2.7(playwright@1.62.1)(vite@7.3.7(@types/node@22.19.21)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@4.1.12)
@@ -657,6 +660,9 @@ importers:
       '@vanilla-extract/vite-plugin':
         specifier: ^5.2.6
         version: 5.2.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(supports-color@10.2.2)(tsx@4.23.15)(vite@7.3.7(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))(yaml@2.9.0)
+      '@vapor-ui/figma-eval':
+        specifier: workspace:*
+        version: link:../figma-eval
       '@vitest/browser':
         specifier: 'catalog:'
         version: 3.2.7(playwright@1.62.1)(vite@7.3.7(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@4.1.12)
@@ -907,6 +913,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
+      '@vapor-ui/figma-eval':
+        specifier: workspace:*
+        version: link:../figma-eval
       eslint:
         specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)(supports-color@10.2.2)

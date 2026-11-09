@@ -5,12 +5,16 @@ import { join } from 'node:path';
 import { compare } from './compare';
 import type { FigmaTree } from './expected';
 import { expectedSet } from './expected';
-import { fromRepo } from './library';
+import { buildPackage, fromInstalled, fromRepo } from './library';
 import { writeEntries } from './map';
 
-const USAGE = `usage: figma-eval expected <tree.json | figma URL> --repo <root>
-       figma-eval compare <tree.json | figma URL> <paths...> [--json] --repo <root>
-       figma-eval map [--repo <root>]`;
+const USAGE = `usage: figma-eval expected <tree.json | figma URL> [--repo <root>]
+       figma-eval compare <tree.json | figma URL> <paths...> [--json] [--repo <root>]
+       figma-eval map [--repo <root>]
+       figma-eval build
+
+Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
+build runs in packages/core, composites or icons and writes their figma-eval/ folder.`;
 
 async function loadTree(arg: string): Promise<FigmaTree> {
     if (!arg.startsWith('http')) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
@@ -70,12 +74,21 @@ if (command === 'map') {
     await map(repo ?? process.cwd());
     process.exit(0);
 }
-if ((command !== 'expected' && command !== 'compare') || !src || !repo) {
+if (command === 'build') {
+    try {
+        buildPackage(process.cwd(), join(process.cwd(), 'figma-eval'));
+    } catch (e) {
+        console.error(`figma-eval build: ${(e as Error).message}`);
+        process.exit(1);
+    }
+    process.exit(0);
+}
+if ((command !== 'expected' && command !== 'compare') || !src) {
     console.error(USAGE);
     process.exit(1);
 }
 
-const library = await fromRepo(repo);
+const library = repo ? await fromRepo(repo) : await fromInstalled(process.cwd());
 const expected = expectedSet(await loadTree(src), library);
 
 if (command === 'expected') {

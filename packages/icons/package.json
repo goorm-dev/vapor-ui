@@ -32,17 +32,19 @@
                 "types": "./dist/types/index.d.cts",
                 "default": "./dist/index.cjs"
             }
-        }
+        },
+        "./figma-eval/*": "./figma-eval/*"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
     "types": "./dist/types/index.d.ts",
     "files": [
-        "dist"
+        "dist",
+        "figma-eval"
     ],
     "scripts": {
-        "build": "rimraf dist && tsup",
-        "clean": "rimraf dist .turbo node_modules",
+        "build": "rimraf dist figma-eval && tsup && figma-eval build",
+        "clean": "rimraf dist figma-eval .turbo node_modules",
         "figma:check": "figma connect publish --dry-run",
         "figma:publish": "figma connect publish",
         "lint": "eslint ./src",
@@ -57,6 +59,7 @@
         "@repo/typescript-config": "workspace:*",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
+        "@vapor-ui/figma-eval": "workspace:*",
         "eslint": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",

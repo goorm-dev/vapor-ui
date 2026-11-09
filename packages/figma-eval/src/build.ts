@@ -1,9 +1,9 @@
-import { globSync, readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, globSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import ts from 'typescript';
 
 import { FIGMA_KEY } from './figma-mock';
-import type { Tables } from './library';
+import type { Pkg, Tables } from './library';
 
 const IMPORT = /^import\s[\s\S]*?from\s+['"]([^'"]+)['"];?[ \t]*$/gm;
 const FIGMA = `globalThis[Symbol.for(${JSON.stringify(FIGMA_KEY.description)})]`;
@@ -33,6 +33,36 @@ export function transformTemplate(
     return `${imports.join('\n')}\n${body}`;
 }
 
+// Writes each template (wrapped) and every helper it imports by relative path to outDir, at its path in pkgDir.
+// `figma-eval build` ships them as JS (.mjs, since composites has no "type": "module"). fromRepo writes TypeScript and
+// leaves stripping the types to Node, as .mts for the same reason.
+export function writeTemplates(pkgDir: string, templates: string[], outDir: string, js: boolean) {
+    const ext = js ? '.mjs' : '.mts';
+    const written = new Set<string>();
+    const write = (file: string, wrap: boolean) => {
+        if (written.has(file)) return;
+        written.add(file);
+        let text = transformTemplate(readFileSync(join(pkgDir, file), 'utf8'), wrap, (spec) => {
+            const dep = spec.endsWith('.ts') ? spec : `${spec}.ts`;
+            write(join(dirname(file), dep), false);
+            return dep.replace(/\.ts$/, ext);
+        });
+        if (js)
+            text = ts.transpileModule(text, {
+                fileName: file,
+                compilerOptions: {
+                    module: ts.ModuleKind.ESNext,
+                    target: ts.ScriptTarget.ESNext,
+                    verbatimModuleSyntax: true,
+                },
+            }).outputText;
+        const out = join(outDir, file.replace(/\.ts$/, ext));
+        mkdirSync(dirname(out), { recursive: true });
+        writeFileSync(out, text);
+    };
+    for (const t of templates) write(t, true);
+}
+
 const tsx = (file: string, text: string) =>
     ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 
@@ -59,9 +89,9 @@ const mentions = (name: string, decl: ts.Node) => {
 // Icons a core part draws itself (Select.Trigger's chevron), keyed by displayName: a design that shows one inside the
 // part expects nothing from the code. A part owns the '@vapor-ui/icons' imports its declaration mentions, plus those of
 // every same-file declaration it mentions, transitively.
-function internalIcons(root: string) {
+function internalIcons(core: string) {
     const out: Tables['internalIcons'] = {};
-    const components = join(root, 'packages/core/src/components');
+    const components = join(core, 'src/components');
     for (const dir of readdirSync(components))
         for (const f of readdirSync(join(components, dir)).filter((f) => /^[^.]+\.tsx$/.test(f))) {
             const sf = tsx(f, readFileSync(join(components, dir, f), 'utf8'));
@@ -107,7 +137,7 @@ function internalIcons(root: string) {
 // Variant defaults of core parts, so code that omits a default prop still matches (<Button> is variant "fill").
 // ponytail: `<dir>.css.ts` recipe names map to parts by convention (root → Button and Button.Root, trigger →
 // Select.Trigger); a recipe named otherwise is missed.
-function defaults(root: string) {
+function defaults(core: string) {
     const out: Tables['defaults'] = {};
     const pascal = (s: string) => s.replace(/(^|-)(\w)/g, (_, __, c: string) => c.toUpperCase());
     const literal = (obj: ts.ObjectLiteralExpression) =>
@@ -127,7 +157,7 @@ function defaults(root: string) {
                         : p.initializer.getText(),
                 ]),
         );
-    const components = join(root, 'packages/core/src/components');
+    const components = join(core, 'src/components');
     for (const dir of readdirSync(components)) {
         let src;
         try {
@@ -173,8 +203,11 @@ export function codeConnectFiles(pkgDir: string): string[] {
 
 // Components a Figma library instance can stand for: the ones core's Code Connect files connect.
 // A core export no file connects (VStack, Box) is layout, not a library part.
-function libraryComponents(root: string) {
-    const core = join(root, 'packages/core');
+function libraryComponents(core: string) {
+    if (!existsSync(join(core, 'figma.config.json')))
+        throw new Error(
+            `composites' internalParts needs core's Code Connect files, and ${core} has no figma.config.json`,
+        );
     const names = new Set<string>();
     for (const f of codeConnectFiles(core)) {
         const text = readFileSync(join(core, f), 'utf8');
@@ -212,11 +245,11 @@ function fixedReturns(fn: Component): ts.Expression[] {
 // internalParts: library components a non-preset public part always draws itself (Dialog.Root's close IconButton),
 // so a code author cannot add or remove them. Anything a condition guards stays expected, and so does a slot's
 // content (Dialog's action Button), which the caller passes: the walk never enters createSlots() arguments.
-function composites(root: string) {
+function composites(pkgDir: string) {
     const presets: Tables['presets'] = {};
     const internalParts: Tables['internalParts'] = {};
-    const library = libraryComponents(root);
-    const components = join(root, 'packages/composites/src/components');
+    const library = libraryComponents(join(pkgDir, '../core'));
+    const components = join(pkgDir, 'src/components');
     for (const dir of readdirSync(components)) {
         let parts;
         try {
@@ -317,6 +350,14 @@ function composites(root: string) {
     return { presets, internalParts };
 }
 
-export function extractTables(root: string): Tables {
-    return { internalIcons: internalIcons(root), defaults: defaults(root), ...composites(root) };
-}
+// The tables a package ships, each built from that package's source. composites reads core's sources next to it.
+export const TABLES_OF = {
+    core: (dir: string) => ({ internalIcons: internalIcons(dir), defaults: defaults(dir) }),
+    composites,
+    icons: () => ({}),
+} satisfies Record<Pkg, (dir: string) => Partial<Tables>>;
+
+export const extractTables = (root: string): Tables => ({
+    ...TABLES_OF.core(join(root, 'packages/core')),
+    ...TABLES_OF.composites(join(root, 'packages/composites')),
+});

@@ -15,9 +15,10 @@
     },
     "main": "dist/index.mjs",
     "bin": {
-        "figma-eval": "./dist/bin/cli.mjs"
+        "figma-eval": "./bin/figma-eval.mjs"
     },
     "files": [
+        "bin",
         "dist"
     ],
     "scripts": {
