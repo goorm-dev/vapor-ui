@@ -7,13 +7,16 @@ import type { FigmaTree } from './expected';
 import { expectedSet } from './expected';
 import { buildPackage, fromInstalled, fromRepo } from './library';
 import { parseFigmaUrl, writeEntries } from './map';
+import { checkStyling } from './styling';
 
 const USAGE = `usage: figma-eval expected <tree.json | figma URL> [--repo <root>]
        figma-eval compare <tree.json | figma URL> <paths...> [--json] [--repo <root>]
+       figma-eval styling <files...> [--json]
        figma-eval map [--repo <root>]
        figma-eval build
 
 Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
+styling checks the given files for absolute positioning and hardcoded values; pass only the files that changed.
 build runs in packages/core, composites or icons and writes their figma-eval/ folder.
 compare exits 0 on pass, 1 on fail, 2 when the design cannot be graded.`;
 
@@ -84,6 +87,26 @@ if (command === 'build') {
         process.exit(1);
     }
     process.exit(0);
+}
+if (command === 'styling' && src) {
+    const result = checkStyling(
+        positional.slice(1).map((path) => ({ path, text: readFileSync(path, 'utf8') })),
+    );
+    if (json) console.log(JSON.stringify(result, null, 2));
+    else {
+        const { absolute, hardcoded, exempt } = result;
+        console.log(
+            result.result === 'pass'
+                ? '관문 2 통과'
+                : `관문 2 실패  absolute ${absolute.length}, 하드코딩 ${hardcoded.length}`,
+        );
+        for (const h of absolute) console.log(`absolute  ${h.at}  ${h.text}`);
+        for (const h of hardcoded) console.log(`하드코딩  ${h.at}  ${h.text}`);
+        console.log(
+            `예외(관문 제외): 에셋 ${exempt.asset.length}, sr-only ${exempt.srOnly.length}, 1px 테두리 ${exempt.border1px.length}, 토큰 눈금 밖 px ${exempt.untokenized.length}, 입력창 아이콘 ${exempt.inputIcon.length}`,
+        );
+    }
+    process.exit(result.result === 'pass' ? 0 : 1);
 }
 if ((command !== 'expected' && command !== 'compare') || !src) {
     console.error(USAGE);

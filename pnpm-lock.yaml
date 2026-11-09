@@ -855,6 +855,9 @@ importers:
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
+      '@vapor-ui/design-tokens':
+        specifier: workspace:*
+        version: link:../design-tokens
       eslint:
         specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)(supports-color@10.2.2)
