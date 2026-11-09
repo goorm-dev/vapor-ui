@@ -95,17 +95,16 @@ export const header = componentStyle({
 });
 
 export const body = componentStyle({
-    marginTop: vars.size.space['250'],
-    paddingBottom: 0,
+    paddingBlock: vars.size.space['250'],
     paddingInline: vars.size.space['300'],
     width: '100%',
     overflowY: 'auto',
+    scrollPaddingBlock: vars.size.space['250'],
 });
 
 export const footer = componentStyle({
     display: 'flex',
     alignItems: 'center',
-    paddingTop: vars.size.space['250'],
     paddingBottom: vars.size.space['300'],
     paddingInline: vars.size.space['300'],
     width: '100%',

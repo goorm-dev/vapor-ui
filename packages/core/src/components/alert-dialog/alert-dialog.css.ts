@@ -77,16 +77,18 @@ export const header = componentStyle({
 });
 
 export const body = componentStyle({
-    padding: vars.size.space['300'],
-    paddingBottom: vars.size.space['000'],
+    paddingBlock: vars.size.space['250'],
+    paddingInline: vars.size.space['300'],
     width: '100%',
     overflowY: 'auto',
+    scrollPaddingBlock: vars.size.space['250'],
 });
 
 export const footer = componentStyle({
     display: 'flex',
     alignItems: 'center',
     gap: vars.size.space[100],
-    padding: vars.size.space['300'],
+    paddingBottom: vars.size.space['300'],
+    paddingInline: vars.size.space['300'],
     width: '100%',
 });

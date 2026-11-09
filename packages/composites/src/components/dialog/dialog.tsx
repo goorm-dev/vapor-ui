@@ -89,7 +89,7 @@ export const Dialog = ({
                     <DialogPrimitives.PopupPrimitive>
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
-                        <Footer action={action} assistive={assistive} />
+                        <Footer action={action} assistive={assistive} hasBody={!!children} />
                     </DialogPrimitives.PopupPrimitive>
                 </DialogPrimitives.PortalPrimitive>
             </DialogPrimitives.Root>
@@ -254,7 +254,6 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
     const $css = {
         maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
-        paddingBottom: overflowed ? '$250' : '$000',
         ...$cssProp,
     } satisfies typeof $cssProp;
 
@@ -269,17 +268,22 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {}
+interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {
+    hasBody: boolean;
+}
 
-const Footer = ({ action, assistive }: FooterProps) => {
+const Footer = ({ action, assistive, hasBody }: FooterProps) => {
     const renderFooter = action || assistive;
+
+    // Without a Body, the empty Footer is the popup's bottom padding.
+    if (!renderFooter && hasBody) return null;
 
     return (
         <DialogPrimitives.Footer
             $css={{
                 display: 'grid',
                 gridTemplateAreas: '"assistive action"',
-                paddingTop: renderFooter ? '$250' : '$000',
+                paddingTop: renderFooter && !hasBody ? '$250' : '$000',
             }}
         >
             <slots.assistive

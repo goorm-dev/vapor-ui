@@ -78,7 +78,7 @@ export const AlertDialogRoot = ({
                     <AlertDialogPrimitives.PopupPrimitive>
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
-                        <Footer action={action} cancel={cancel} />
+                        <Footer action={action} cancel={cancel} hasBody={!!children} />
                     </AlertDialogPrimitives.PopupPrimitive>
                 </AlertDialogPrimitives.PortalPrimitive>
             </AlertDialogPrimitives.Root>
@@ -205,23 +205,25 @@ const Header = ({ title, description }: HeaderProps) => {
 interface BodyProps extends Pick<AlertDialogRoot.Props, 'children'> {}
 
 const Body = ({ children }: BodyProps) => {
-    if (children === null || children === undefined) return null;
-    // if (!children) return null;
+    if (!children) return null;
 
     return <AlertDialogPrimitives.Body>{children}</AlertDialogPrimitives.Body>;
 };
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface FooterProps extends Pick<AlertDialogRoot.Props, 'action' | 'cancel'> {}
+interface FooterProps extends Pick<AlertDialogRoot.Props, 'action' | 'cancel'> {
+    hasBody: boolean;
+}
 
-const Footer = ({ action, cancel }: FooterProps) => {
+const Footer = ({ action, cancel, hasBody }: FooterProps) => {
     return (
         <AlertDialogPrimitives.Footer
             $css={{
                 display: 'grid',
                 gap: '$100',
                 gridTemplateAreas: '"cancel action"',
+                paddingTop: hasBody ? '$000' : '$250',
             }}
         >
             <slots.cancel render={cancel} $css={{ gridArea: 'cancel' }} />
