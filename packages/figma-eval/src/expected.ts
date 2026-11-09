@@ -7,7 +7,7 @@ import ts from 'typescript';
 
 import type { FigmaNode } from './figma-mock';
 import { makeHandles, render, texts, withContext } from './figma-mock';
-import type { Entry, Library } from './library';
+import type { Entry, Library, Pkg } from './library';
 
 export interface FigmaTree {
     document: FigmaNode;
@@ -35,6 +35,7 @@ interface Kept extends Element {
 
 interface Owner {
     name: string;
+    pkg: Pkg;
     nested: Map<string, string>;
     byPart: Map<string, Kept>;
     root: Kept | undefined;
@@ -225,7 +226,12 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
                 )
                     return;
                 // A core component a composites part draws itself, outside any slot (Dialog.Root's close IconButton).
-                else if (!slotted && ownParts.get(partName(owner.name))?.has(partName(nameOf(n))))
+                // Only a composites owner: core 💙Dialog and composites Dialog share a part name.
+                else if (
+                    owner.pkg === 'composites' &&
+                    !slotted &&
+                    ownParts.get(partName(owner.name))?.has(partName(nameOf(n)))
+                )
                     return;
                 // A part its template writes self-closing takes no children in code, so an instance in it outside
                 // any slot is the part's own drawing (the Breadcrumb.Ellipsis inside <Pagination.Items />).
@@ -265,7 +271,13 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
             }
             const rootTag = kept[0]?.tag ?? parent;
             for (const ch of n.children ?? [])
-                visit(ch, rootTag, { name: nameOf(n), nested, byPart, root: kept[0] }, [], false);
+                visit(
+                    ch,
+                    rootTag,
+                    { name: nameOf(n), pkg: c.entry.pkg, nested, byPart, root: kept[0] },
+                    [],
+                    false,
+                );
             return;
         }
         if (n.type === 'INSTANCE' && isLib(nameOf(n))) {

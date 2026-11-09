@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { FigmaTree } from './expected';
 import { expectedSet } from './expected';
 import { FIGMA_KEY } from './figma-mock';
-import type { Library, Tables, TemplateFn } from './library';
+import type { Library, Pkg, Tables, TemplateFn } from './library';
 
 interface Handle {
     findInstance(
@@ -33,14 +33,14 @@ const template =
 const fixed = (id: string, code: string) => template(id, () => figma.code`${code}`);
 
 function fakeLibrary(
-    templates: Record<string, { name: string; run: TemplateFn }>,
+    templates: Record<string, { name: string; run: TemplateFn; pkg?: Pkg }>,
     tables: Partial<Tables> = {},
 ): Library {
     return {
         entries: Object.fromEntries(
-            Object.entries(templates).map(([key, { name }]) => [
+            Object.entries(templates).map(([key, { name, pkg = 'core' }]) => [
                 key,
-                { name, template: key, batch: null },
+                { name, pkg, template: key, batch: null },
             ]),
         ),
         tables: { internalIcons: {}, internalParts: {}, presets: {}, defaults: {}, ...tables },
@@ -93,6 +93,43 @@ describe('expectedSet', () => {
         expect(sorted(lines)).toEqual([
             '<SearchOutlineIcon data-in="Select.Trigger" />',
             '<Select.Trigger />',
+        ]);
+    });
+
+    const dialogWithClose = (internalParts: Tables['internalParts'], pkg: Pkg = 'composites') =>
+        expectedSet(
+            fixture('internal-part'),
+            fakeLibrary(
+                {
+                    'K-DIALOG': {
+                        name: '💙Dialog',
+                        pkg,
+                        run: fixed('dialog', '<Dialog.Root>{children}</Dialog.Root>'),
+                    },
+                    'K-ICON': {
+                        name: '💙IconButton',
+                        run: fixed('icon', '<IconButton aria-label="Close" />'),
+                    },
+                },
+                { internalParts },
+            ),
+        ).lines;
+
+    it('drops a core instance the composite part always draws itself', () => {
+        expect(dialogWithClose({ 'Dialog.Root': ['IconButton'] })).toEqual(['<Dialog.Root />']);
+    });
+
+    it('keeps a core instance under a core owner that shares the composite part name', () => {
+        expect(sorted(dialogWithClose({ 'Dialog.Root': ['IconButton'] }, 'core'))).toEqual([
+            '<Dialog.Root />',
+            '<IconButton aria-label="*" data-in="Dialog.Root" />',
+        ]);
+    });
+
+    it('expects a core instance the part draws only under a condition, when the design draws it', () => {
+        expect(sorted(dialogWithClose({}))).toEqual([
+            '<Dialog.Root />',
+            '<IconButton aria-label="*" data-in="Dialog.Root" />',
         ]);
     });
 

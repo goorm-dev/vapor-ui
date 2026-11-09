@@ -8,8 +8,11 @@ import { extractTables, transformTemplate } from './build';
 import type { Batch } from './figma-mock';
 
 // One Code Connect template (one row of it for a batch template), keyed in `entries` by Figma component (set) key.
+export type Pkg = 'core' | 'composites' | 'icons';
+
 export interface Entry {
     name: string;
+    pkg: Pkg;
     template: string;
     batch: Batch | null;
 }
@@ -40,9 +43,16 @@ export interface Library {
 
 // Tables from the repo's source, templates transformed and run in place. entriesFile holds `{ entries }`.
 export async function fromRepo(root: string, entriesFile: string): Promise<Library> {
-    const { entries } = JSON.parse(readFileSync(entriesFile, 'utf8')) as {
-        entries: Record<string, Entry>;
+    const raw = JSON.parse(readFileSync(entriesFile, 'utf8')) as {
+        entries: Record<string, Omit<Entry, 'pkg'>>;
     };
+    const entries: Record<string, Entry> = {};
+    for (const [key, e] of Object.entries(raw.entries)) {
+        const pkg = e.template.match(/^packages\/(core|composites|icons)\//)?.[1] as
+            Pkg | undefined;
+        if (!pkg) throw new Error(`template outside core, composites, icons: ${e.template}`);
+        entries[key] = { ...e, pkg };
+    }
     const tables = extractTables(root);
 
     // .mts: a .ts file outside a "type": "module" package would load as CommonJS.

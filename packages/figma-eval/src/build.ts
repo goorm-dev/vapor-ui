@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { globSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import ts from 'typescript';
 
@@ -161,14 +161,56 @@ function defaults(root: string) {
     return out;
 }
 
+// Components a Figma library instance can stand for: the ones core's Code Connect files connect, within
+// figma.config.json's include and exclude. A core export no file connects (VStack, Box) is layout, not a library part.
+function libraryComponents(root: string) {
+    const core = join(root, 'packages/core');
+    const { include, exclude } = (
+        JSON.parse(readFileSync(join(core, 'figma.config.json'), 'utf8')) as {
+            codeConnect: { include: string[]; exclude?: string[] };
+        }
+    ).codeConnect;
+    const names = new Set<string>();
+    for (const f of globSync(include, { cwd: core, exclude })) {
+        const text = readFileSync(join(core, f), 'utf8');
+        if (f.endsWith('.json'))
+            for (const c of (JSON.parse(text) as { components: { component: string }[] })
+                .components)
+                names.add(c.component);
+        else {
+            const name = text.match(/^\/\/ component=(.+)$/m)?.[1].trim();
+            if (name) names.add(name);
+        }
+    }
+    return names;
+}
+
+type Component = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration;
+
+// What a component returns whatever its props are: a concise body, or a block's only return sitting directly in it.
+// An early return or a return under `if` means the props pick what is drawn.
+function fixedReturns(fn: Component): ts.Expression[] {
+    const body = fn.body;
+    if (!body) return [];
+    if (!ts.isBlock(body)) return [body];
+    const returns: ts.ReturnStatement[] = [];
+    (function find(n: ts.Node) {
+        if (ts.isReturnStatement(n)) returns.push(n);
+        if (!ts.isFunctionLike(n)) ts.forEachChild(n, find);
+    })(body);
+    const [only] = returns;
+    return returns.length === 1 && only.parent === body && only.expression ? [only.expression] : [];
+}
+
 // composites preset wrappers (rules/composites.md §7): a public part that returns one core element with fixed
 // literal props and `{...props}`, so <Dialog.Action> is <Button size="lg" colorPalette="primary">.
-// internalParts: core components a non-preset public part draws itself (Dialog.Root's close IconButton), through
-// same-file declarations it mentions. Not through other public parts, and not through createSlots(): a slot renders
-// what the caller passes (Dialog's action Button), which the design draws as its own part.
+// internalParts: library components a non-preset public part always draws itself (Dialog.Root's close IconButton),
+// so a code author cannot add or remove them. Anything a condition guards stays expected, and so does a slot's
+// content (Dialog's action Button), which the caller passes: the walk never enters createSlots() arguments.
 function composites(root: string) {
     const presets: Tables['presets'] = {};
     const internalParts: Tables['internalParts'] = {};
+    const library = libraryComponents(root);
     const components = join(root, 'packages/composites/src/components');
     for (const dir of readdirSync(components)) {
         let parts;
@@ -187,67 +229,84 @@ function composites(root: string) {
             ]),
         );
         const sf = tsx('x.tsx', readFileSync(join(components, dir, `${dir}.tsx`), 'utf8'));
-        const core = new Set<string>();
-        for (const s of sf.statements)
-            if (fromModule(s, '@vapor-ui/core'))
-                for (const e of namedImports(s)) if (!e.propertyName) core.add(e.name.text);
+        // local name → core export (DialogPrimitives → Dialog)
+        const core = new Map<string, string>();
+        const fns = new Map<string, Component>();
         for (const s of sf.statements) {
-            if (!ts.isVariableStatement(s)) continue;
-            for (const d of s.declarationList.declarations) {
-                const name = publicName.get(d.name.getText());
-                const init = d.initializer;
-                if (!name || !init || !ts.isArrowFunction(init)) continue;
-                const returns: ts.Expression[] = [];
-                (function find(n: ts.Node) {
-                    if (ts.isReturnStatement(n) && n.expression) returns.push(n.expression);
-                    if (!ts.isArrowFunction(n) || n === init) ts.forEachChild(n, find);
-                })(init);
-                const el =
-                    returns.length === 1 &&
-                    (ts.isParenthesizedExpression(returns[0]) ? returns[0].expression : returns[0]);
-                const open =
-                    el &&
-                    (ts.isJsxElement(el)
-                        ? el.openingElement
-                        : ts.isJsxSelfClosingElement(el)
-                          ? el
-                          : null);
-                if (
-                    !open ||
-                    !core.has(open.tagName.getText()) ||
-                    !open.attributes.properties.some(ts.isJsxSpreadAttribute)
-                )
-                    continue;
+            if (fromModule(s, '@vapor-ui/core'))
+                for (const e of namedImports(s))
+                    core.set(e.name.text, (e.propertyName ?? e.name).getText());
+            else if (ts.isFunctionDeclaration(s) && s.name) fns.set(s.name.text, s);
+            else if (ts.isVariableStatement(s))
+                for (const d of s.declarationList.declarations) {
+                    const init = d.initializer;
+                    if (
+                        ts.isIdentifier(d.name) &&
+                        init &&
+                        (ts.isArrowFunction(init) || ts.isFunctionExpression(init))
+                    )
+                        fns.set(d.name.text, init);
+                }
+        }
+
+        for (const [local, name] of publicName) {
+            const fn = fns.get(local);
+            if (!fn) continue;
+            const returns: ts.Expression[] = [];
+            (function find(n: ts.Node) {
+                if (ts.isReturnStatement(n) && n.expression) returns.push(n.expression);
+                if (!ts.isFunctionLike(n) || n === fn) ts.forEachChild(n, find);
+            })(fn);
+            const el =
+                returns.length === 1 &&
+                (ts.isParenthesizedExpression(returns[0]) ? returns[0].expression : returns[0]);
+            const open =
+                el &&
+                (ts.isJsxElement(el)
+                    ? el.openingElement
+                    : ts.isJsxSelfClosingElement(el)
+                      ? el
+                      : null);
+            const tag = open && core.get(open.tagName.getText());
+            if (open && tag && open.attributes.properties.some(ts.isJsxSpreadAttribute)) {
                 const props: Record<string, string> = {};
                 for (const a of open.attributes.properties)
                     if (ts.isJsxAttribute(a) && a.initializer && ts.isStringLiteral(a.initializer))
                         props[a.name.getText()] = a.initializer.text;
-                presets[name] = { tag: open.tagName.getText(), props };
+                presets[name] = { tag, props };
+                continue;
             }
-        }
 
-        const decls = new Map<string, ts.VariableDeclaration>();
-        for (const s of sf.statements)
-            if (ts.isVariableStatement(s))
-                for (const d of s.declarationList.declarations) {
-                    const slots =
-                        d.initializer &&
-                        ts.isCallExpression(d.initializer) &&
-                        d.initializer.expression.getText() === 'createSlots';
-                    if (ts.isIdentifier(d.name) && !slots) decls.set(d.name.text, d);
+            const drawn = new Set<string>();
+            const seen = new Set<Component>([fn]);
+            // Walks only JSX nesting: a condition, a call or a variable on the way ends the path.
+            const visit = (n: ts.Node): void => {
+                if (ts.isParenthesizedExpression(n) || ts.isJsxExpression(n)) {
+                    if (n.expression) visit(n.expression);
+                    return;
                 }
-        const drawsOf = (name: string, seen: Set<string>): string[] => {
-            const decl = decls.get(name);
-            if (!decl || seen.has(name)) return [];
-            seen.add(name);
-            return [...mentions(name, decl)].flatMap((id) =>
-                core.has(id) ? [id] : decls.has(id) && !publicName.has(id) ? drawsOf(id, seen) : [],
-            );
-        };
-        for (const [local, name] of publicName) {
-            if (presets[name] || !decls.has(local)) continue;
-            const own = [...new Set(drawsOf(local, new Set()))].sort();
-            if (own.length) internalParts[name] = own;
+                if (ts.isJsxFragment(n)) return n.children.forEach(visit);
+                if (!ts.isJsxElement(n) && !ts.isJsxSelfClosingElement(n)) return;
+                const o = ts.isJsxElement(n) ? n.openingElement : n;
+                const [head, ...member] = o.tagName.getText().split('.');
+                if (publicName.has(head)) return;
+                const inner = member.length ? undefined : fns.get(head);
+                if (inner) {
+                    if (!seen.has(inner)) {
+                        seen.add(inner);
+                        fixedReturns(inner).forEach(visit);
+                    }
+                    return;
+                }
+                const exported = core.get(head);
+                const component = exported && [exported, ...member].join('.');
+                if (component && library.has(component)) drawn.add(component);
+                for (const a of o.attributes.properties)
+                    if (ts.isJsxAttribute(a) && a.initializer) visit(a.initializer);
+                if (ts.isJsxElement(n)) n.children.forEach(visit);
+            };
+            fixedReturns(fn).forEach(visit);
+            if (drawn.size) internalParts[name] = [...drawn].sort();
         }
     }
     return { presets, internalParts };
