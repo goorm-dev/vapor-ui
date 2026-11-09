@@ -12,7 +12,13 @@ description: Figma 시안을 vapor-ui 코드로 구현하고, 관문 2개(컴포
 Figma URL과 코드를 쓸 위치를 받는다. 아래가 갖춰졌는지 먼저 확인하고, 빠진 것이 있으면 모두 한꺼번에 알리고 멈춘다.
 
 - Figma MCP 서버 연결
-- `@vapor-ui/figma-eval` 설치. `npx --no figma-eval 2>&1 | grep -q '^usage: figma-eval'`이 성공하면 설치돼 있다. `npx --no figma-eval`은 설치돼 있어도 종료 코드 1로 끝나고 npm 경고가 앞에 붙을 수 있으니, 종료 코드나 첫 줄로 판단하지 않는다.
+- `@vapor-ui/figma-eval` 설치. `@vapor-ui/core`가 설치된 폴더(모노레포면 앱 폴더)에서 아래를 실행해 grep이 성공하면 설치돼 있다. `npx --no figma-eval`은 설치돼 있어도 종료 코드 1로 끝나고 npm 경고가 앞에 붙을 수 있으니, 출력을 파일로 받은 뒤 확인한다.
+
+    ```bash
+    npx --no figma-eval >"${TMPDIR:-/tmp}/figma-eval-check.out" 2>&1
+    grep -q '^usage: figma-eval' "${TMPDIR:-/tmp}/figma-eval-check.out"
+    ```
+
 - `FIGMA_ACCESS_TOKEN`
 
 ## 흐름

@@ -30,7 +30,12 @@ npx --no figma-eval compare "<Figma URL>" <경로...> --json 2>"${TMPDIR:-/tmp}/
 JSON이 나와도 stderr에 `@vapor-ui/<pkg> is not installed` 또는 `@vapor-ui/<pkg> ships no figma-eval tables`가 있으면 그 패키지 컴포넌트는 채점되지 않았다. 시안에 그 패키지 컴포넌트가 있으면 거짓 `pass`가 나오거나 `unscorable` 항목이 생긴다.
 
 - `pass`여도 그냥 합격으로 보고하지 않는다. "`pass`, 단 `<pkg>` 미채점"으로 보고한다. 시안에 그 패키지 컴포넌트가 있는지는 이 결과로 알 수 없다.
-- `node_modules/@vapor-ui/<pkg>`가 없으면 설치를, 있으면 `@vapor-ui/figma-eval`과 같은 릴리스로 올리기를 안내한다. 예전 버전은 채점 표가 없어서 설치돼 있어도 `is not installed`로 찍힐 수 있다.
+- 같은 폴더에서 아래 명령으로 설치 여부를 확인한다. 실패하면 설치를, 성공하면 `@vapor-ui/figma-eval`과 같은 릴리스로 올리기를 안내한다. 예전 버전은 채점 표가 없어서 설치돼 있어도 `is not installed`로 찍힐 수 있다. 모노레포에서는 패키지가 루트로 끌어올려져 앱 폴더의 `node_modules`에 없을 수 있으니 폴더를 직접 보지 않는다.
+
+    ```bash
+    node --input-type=module -e "import.meta.resolve('@vapor-ui/<pkg>')"
+    ```
+
 - 이 줄이 특정 `unscorable` 항목의 원인이라고 단정하지 않는다. JSON에는 항목의 패키지가 없다. 설치하거나 올린 뒤 다시 돌려서 남는 항목이 vapor-ui 쪽 원인이다.
 
 ## 결과 읽기
