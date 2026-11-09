@@ -18,7 +18,8 @@ const USAGE = `usage: figma-eval expected <tree.json | figma URL> [--repo <root>
 Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
 styling checks the given files for absolute positioning and hardcoded values; pass only the files that changed.
 build runs in packages/core, composites or icons and writes their figma-eval/ folder.
-compare exits 0 on pass, 1 on fail, 2 when the design cannot be graded.`;
+compare exits 0 on pass, 1 on fail, 2 when the design cannot be graded.
+styling exits 0 on pass, 1 on fail, 2 when a file cannot be read.`;
 
 async function loadTree(arg: string): Promise<FigmaTree> {
     if (!arg.startsWith('http')) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
@@ -88,24 +89,30 @@ if (command === 'build') {
     }
     process.exit(0);
 }
-if (command === 'styling' && src) {
-    const result = checkStyling(
-        positional.slice(1).map((path) => ({ path, text: readFileSync(path, 'utf8') })),
-    );
-    if (json) console.log(JSON.stringify(result, null, 2));
-    else {
-        const { absolute, hardcoded, exempt } = result;
-        console.log(
-            result.result === 'pass'
-                ? '관문 2 통과'
-                : `관문 2 실패  absolute ${absolute.length}, 하드코딩 ${hardcoded.length}`,
-        );
-        for (const h of absolute) console.log(`absolute  ${h.at}  ${h.text}`);
-        for (const h of hardcoded) console.log(`하드코딩  ${h.at}  ${h.text}`);
-        console.log(
-            `예외(관문 제외): 에셋 ${exempt.asset.length}, sr-only ${exempt.srOnly.length}, 1px 테두리 ${exempt.border1px.length}, 토큰 눈금 밖 px ${exempt.untokenized.length}, 입력창 아이콘 ${exempt.inputIcon.length}`,
-        );
+// No files is a pass, as in the spike: nothing changed, nothing to fail.
+if (command === 'styling') {
+    let files: { path: string; text: string }[] = [];
+    try {
+        files = positional.slice(1).map((path) => ({ path, text: readFileSync(path, 'utf8') }));
+    } catch (e) {
+        // Exit 2 so a caller can tell an unreadable path from a gate failure.
+        console.error(`figma-eval styling: ${(e as Error).message}`);
+        process.exit(2);
     }
+    const result = checkStyling(files);
+    const { absolute, hardcoded, exempt } = result;
+    const out = json
+        ? JSON.stringify(result, null, 2)
+        : [
+              result.result === 'pass'
+                  ? '관문 2 통과'
+                  : `관문 2 실패  absolute ${absolute.length}, 하드코딩 ${hardcoded.length}`,
+              ...absolute.map((h) => `absolute  ${h.at}  ${h.text}`),
+              ...hardcoded.map((h) => `하드코딩  ${h.at}  ${h.text}`),
+              `예외(관문 제외): 에셋 ${exempt.asset.length}, sr-only ${exempt.srOnly.length}, 1px 테두리 ${exempt.border1px.length}, 토큰 눈금 밖 px ${exempt.untokenized.length}, 입력창 아이콘 ${exempt.inputIcon.length}`,
+          ].join('\n');
+    // A pipe takes stdout asynchronously on macOS, and process.exit drops what it has not taken (64 KiB).
+    await new Promise((resolve) => process.stdout.write(`${out}\n`, resolve));
     process.exit(result.result === 'pass' ? 0 : 1);
 }
 if ((command !== 'expected' && command !== 'compare') || !src) {
