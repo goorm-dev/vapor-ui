@@ -35,8 +35,8 @@
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "@vapor-ui/design-tokens": "workspace:*",
         "@types/node": "^24.13.3",
+        "@vapor-ui/design-tokens": "workspace:*",
         "eslint": "catalog:",
         "rimraf": "^6.1.3",
         "tsup": "^8.5.1",
