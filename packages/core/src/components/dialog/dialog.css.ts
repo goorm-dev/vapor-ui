@@ -95,7 +95,8 @@ export const header = componentStyle({
 });
 
 export const body = componentStyle({
-    paddingBlock: vars.size.space['250'],
+    marginBlock: vars.size.space['150'],
+    paddingBlock: vars.size.space['100'],
     paddingInline: vars.size.space['300'],
     width: '100%',
     overflowY: 'auto',
