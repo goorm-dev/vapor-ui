@@ -161,17 +161,22 @@ function defaults(root: string) {
     return out;
 }
 
-// Components a Figma library instance can stand for: the ones core's Code Connect files connect, within
-// figma.config.json's include and exclude. A core export no file connects (VStack, Box) is layout, not a library part.
-function libraryComponents(root: string) {
-    const core = join(root, 'packages/core');
+// A package's Code Connect files, relative to pkgDir, within its figma.config.json include and exclude.
+export function codeConnectFiles(pkgDir: string): string[] {
     const { include, exclude } = (
-        JSON.parse(readFileSync(join(core, 'figma.config.json'), 'utf8')) as {
+        JSON.parse(readFileSync(join(pkgDir, 'figma.config.json'), 'utf8')) as {
             codeConnect: { include: string[]; exclude?: string[] };
         }
     ).codeConnect;
+    return globSync(include, { cwd: pkgDir, exclude }).sort();
+}
+
+// Components a Figma library instance can stand for: the ones core's Code Connect files connect.
+// A core export no file connects (VStack, Box) is layout, not a library part.
+function libraryComponents(root: string) {
+    const core = join(root, 'packages/core');
     const names = new Set<string>();
-    for (const f of globSync(include, { cwd: core, exclude })) {
+    for (const f of codeConnectFiles(core)) {
         const text = readFileSync(join(core, f), 'utf8');
         if (f.endsWith('.json'))
             for (const c of (JSON.parse(text) as { components: { component: string }[] })

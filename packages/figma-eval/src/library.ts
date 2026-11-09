@@ -7,9 +7,10 @@ import { pathToFileURL } from 'node:url';
 import { extractTables, transformTemplate } from './build';
 import type { Batch } from './figma-mock';
 
-// One Code Connect template (one row of it for a batch template), keyed in `entries` by Figma component (set) key.
-export type Pkg = 'core' | 'composites' | 'icons';
+export const PACKAGES = ['core', 'composites', 'icons'] as const;
+export type Pkg = (typeof PACKAGES)[number];
 
+// One Code Connect template (one row of it for a batch template), keyed in `entries` by Figma component (set) key.
 export interface Entry {
     name: string;
     pkg: Pkg;
@@ -41,18 +42,27 @@ export interface Library {
     runTemplate(entry: Entry): TemplateFn;
 }
 
-// Tables from the repo's source, templates transformed and run in place. entriesFile holds `{ entries }`.
-export async function fromRepo(root: string, entriesFile: string): Promise<Library> {
-    const raw = JSON.parse(readFileSync(entriesFile, 'utf8')) as {
-        entries: Record<string, Omit<Entry, 'pkg'>>;
-    };
+// What `figma-eval map` writes to packages/<pkg>/figma-entries.json, keyed by Figma component (set) key.
+// template is relative to the package directory.
+export interface StoredEntry {
+    name: string;
+    url: string;
+    template: string;
+    batch: Batch | null;
+}
+
+export const readEntries = (pkgDir: string): Record<string, StoredEntry> =>
+    JSON.parse(readFileSync(join(pkgDir, 'figma-entries.json'), 'utf8'));
+
+// Entries from the three packages' figma-entries.json, tables from the repo's source, templates transformed and run in
+// place.
+export async function fromRepo(root: string): Promise<Library> {
     const entries: Record<string, Entry> = {};
-    for (const [key, e] of Object.entries(raw.entries)) {
-        const pkg = e.template.match(/^packages\/(core|composites|icons)\//)?.[1] as
-            Pkg | undefined;
-        if (!pkg) throw new Error(`template outside core, composites, icons: ${e.template}`);
-        entries[key] = { ...e, pkg };
-    }
+    for (const pkg of PACKAGES)
+        for (const [key, { name, template, batch }] of Object.entries(
+            readEntries(join(root, 'packages', pkg)),
+        ))
+            entries[key] = { name, pkg, template: join('packages', pkg, template), batch };
     const tables = extractTables(root);
 
     // .mts: a .ts file outside a "type": "module" package would load as CommonJS.

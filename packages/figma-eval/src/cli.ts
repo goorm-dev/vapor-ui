@@ -6,9 +6,11 @@ import { compare } from './compare';
 import type { FigmaTree } from './expected';
 import { expectedSet } from './expected';
 import { fromRepo } from './library';
+import { writeEntries } from './map';
 
-const USAGE = `usage: figma-eval expected <tree.json | figma URL> --repo <root> --entries <file>
-       figma-eval compare <tree.json | figma URL> <paths...> [--json] --repo <root> --entries <file>`;
+const USAGE = `usage: figma-eval expected <tree.json | figma URL> --repo <root>
+       figma-eval compare <tree.json | figma URL> <paths...> [--json] --repo <root>
+       figma-eval map [--repo <root>]`;
 
 async function loadTree(arg: string): Promise<FigmaTree> {
     if (!arg.startsWith('http')) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
@@ -36,20 +38,44 @@ function parseArgs(argv: string[]) {
     for (let i = 0; i < argv.length; i++) {
         const a = argv[i];
         if (a === '--json') json = true;
-        else if (a === '--repo' || a === '--entries') flags.set(a, argv[++i]);
+        else if (a === '--repo') flags.set(a, argv[++i]);
         else positional.push(a);
     }
-    return { positional, json, repo: flags.get('--repo'), entries: flags.get('--entries') };
+    return { positional, json, repo: flags.get('--repo') };
 }
 
-const { positional, json, repo, entries } = parseArgs(process.argv.slice(2));
+async function map(root: string) {
+    const token = process.env.FIGMA_ACCESS_TOKEN;
+    if (!token) {
+        console.error(
+            'figma-eval map: FIGMA_ACCESS_TOKEN is not set. It needs read access to the library files the Code Connect URLs point to.',
+        );
+        process.exit(1);
+    }
+    const { counts, unpublished } = await writeEntries(root, token).catch((e: Error) => {
+        console.error(`figma-eval map: ${e.message}`);
+        process.exit(1);
+    });
+    for (const [pkg, n] of Object.entries(counts))
+        console.log(`packages/${pkg}/figma-entries.json  ${n} entries`);
+    if (unpublished.length) {
+        console.error(`not published in Figma, so left out:\n  ${unpublished.join('\n  ')}`);
+        process.exit(1);
+    }
+}
+
+const { positional, json, repo } = parseArgs(process.argv.slice(2));
 const [command, src, ...paths] = positional;
-if ((command !== 'expected' && command !== 'compare') || !src || !repo || !entries) {
+if (command === 'map') {
+    await map(repo ?? process.cwd());
+    process.exit(0);
+}
+if ((command !== 'expected' && command !== 'compare') || !src || !repo) {
     console.error(USAGE);
     process.exit(1);
 }
 
-const library = await fromRepo(repo, entries);
+const library = await fromRepo(repo);
 const expected = expectedSet(await loadTree(src), library);
 
 if (command === 'expected') {

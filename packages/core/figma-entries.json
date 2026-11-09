@@ -1,0 +1,910 @@
+{
+    "000bdceb1e4302cd136c0aa34c5d423d53309564": {
+        "name": "💙Switch",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38155-22524",
+        "template": "src/components/switch/switch.figma.ts",
+        "batch": null
+    },
+    "01fa1d1d0493d0113509a5ce3d649859b4ed60c4": {
+        "name": "💙Dialog.Popup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-3400",
+        "template": "src/components/dialog/dialog.figma.batch.ts",
+        "batch": {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-3400",
+            "component": "Dialog.Popup",
+            "source": "src/components/dialog/dialog.tsx"
+        }
+    },
+    "0adcd3188ea26e1647ada34e18199cf693e22139": {
+        "name": "💙 Select.Item",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33205-13626",
+        "template": "src/components/select/select.figma.batch.ts",
+        "batch": {
+            "part": "item",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33205-13626",
+            "component": "Select.Item",
+            "source": "src/components/select/select.tsx"
+        }
+    },
+    "0ae436f8c145b2b091994a0cf250edea8a63a01c": {
+        "name": "💙IconButton",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=32283-3971",
+        "template": "src/components/icon-button/icon-button.figma.ts",
+        "batch": null
+    },
+    "0d3ee588b7e3a87c2bcff8686563b4c808d9da4a": {
+        "name": "💙Callout.Icon",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38611-28423",
+        "template": "src/components/callout/callout.figma.batch.ts",
+        "batch": {
+            "part": "icon",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38611-28423",
+            "component": "Callout.Icon",
+            "source": "src/components/callout/callout.tsx"
+        }
+    },
+    "1923386cb72a5057c04fc3c91324a359047baff1": {
+        "name": "💙Table.Row",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5760",
+        "template": "src/components/table/table.figma.batch.ts",
+        "batch": {
+            "part": "row",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5760",
+            "component": "Table.Row",
+            "source": "src/components/table/table.tsx"
+        }
+    },
+    "1c883146deb7ec352db40b92e91788f82008887e": {
+        "name": "💙InputGroup.Counter",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=47458-5227",
+        "template": "src/components/input-group/input-group.figma.batch.ts",
+        "batch": {
+            "part": "counter",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=47458-5227",
+            "component": "InputGroup.Counter",
+            "source": "src/components/input-group/input-group.tsx"
+        }
+    },
+    "20a26ce1f4194806ddfe9ac722905a0865811bf9": {
+        "name": "💙Breadcrumb",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-1889",
+        "template": "src/components/breadcrumb/breadcrumb.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-1889",
+            "component": "Breadcrumb.Root",
+            "source": "src/components/breadcrumb/breadcrumb.tsx"
+        }
+    },
+    "20a34d210d9478541e45d84d7916ec845c783c72": {
+        "name": "💙Breadcrumb.Separator",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-4118",
+        "template": "src/components/breadcrumb/breadcrumb.figma.batch.ts",
+        "batch": {
+            "part": "separator",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-4118",
+            "component": "Breadcrumb.Separator",
+            "source": "src/components/breadcrumb/breadcrumb.tsx"
+        }
+    },
+    "21361e3fa498aeb3accffc345520a7395d2ebabe": {
+        "name": "💙MultiSelect.Trigger",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-91337",
+        "template": "src/components/multi-select/multi-select.figma.batch.ts",
+        "batch": {
+            "part": "trigger",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-91337",
+            "component": "MultiSelect.Trigger",
+            "source": "src/components/multi-select/multi-select.tsx"
+        }
+    },
+    "28678707bad2c0e093f3073e423f28397cc6a713": {
+        "name": "💙Table",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-7253",
+        "template": "src/components/table/table.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-7253",
+            "component": "Table.Root",
+            "source": "src/components/table/table.tsx"
+        }
+    },
+    "28d433de11ee5a0c7381cc4623fa0c3d53c5ca0c": {
+        "name": "💙Sheet.Header",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33961-4123",
+        "template": "src/components/sheet/sheet.figma.batch.ts",
+        "batch": {
+            "part": "header",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33961-4123",
+            "component": "Sheet.Header",
+            "source": "src/components/sheet/sheet.tsx"
+        }
+    },
+    "298e34d17af8e5483aa128f2a100636edb1f9d96": {
+        "name": "💙MultiSelect",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-91285",
+        "template": "src/components/multi-select/multi-select.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-91285",
+            "component": "MultiSelect.Root",
+            "source": "src/components/multi-select/multi-select.tsx"
+        }
+    },
+    "2aaf3830a16db364e3dade02085b421cec755e74": {
+        "name": "💙AlertDialog.Body",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6374",
+        "template": "src/components/alert-dialog/alert-dialog.figma.batch.ts",
+        "batch": {
+            "part": "body",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6374",
+            "component": "AlertDialog.Body",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        }
+    },
+    "2fdbd657a63073fe55e8971b844f8601cdfcf34d": {
+        "name": "💙RadioGroup.Label",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34520-3844",
+        "template": "src/components/radio-group/radio-group.figma.batch.ts",
+        "batch": {
+            "part": "label",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34520-3844",
+            "component": "RadioGroup.Label",
+            "source": "src/components/radio-group/radio-group.tsx"
+        }
+    },
+    "31a1bb20e208e21a7bb757fc85da0c7ff6cb8de2": {
+        "name": "💙Table.ColumnGroup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-3815",
+        "template": "src/components/table/table.figma.batch.ts",
+        "batch": {
+            "part": "columnGroup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-3815",
+            "component": "Table.ColumnGroup",
+            "source": "src/components/table/table.tsx"
+        }
+    },
+    "3c33c88fe0f01b2e4851836bfda906c920779dac": {
+        "name": "💙Pagination.Next",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=51560-9327",
+        "template": "src/components/pagination/pagination.figma.batch.ts",
+        "batch": {
+            "part": "next",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=51560-9327",
+            "component": "Pagination.Next",
+            "source": "src/components/pagination/pagination.tsx"
+        }
+    },
+    "3f31f8d0111833cdef4a3db2cd939c5cdf836f2d": {
+        "name": "💙SegmentedControl.IconItem",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=42080-1944",
+        "template": "src/components/segmented-control/segmented-control.figma.batch.ts",
+        "batch": {
+            "part": "iconItem",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=42080-1944",
+            "component": "SegmentedControl.IconItem",
+            "source": "src/components/segmented-control/segmented-control.tsx"
+        }
+    },
+    "3f35ac4b5b3bc94b2ee7e6d98c3211031cda228b": {
+        "name": "💙Dialog.Header",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52648-4279",
+        "template": "src/components/dialog/dialog.figma.batch.ts",
+        "batch": {
+            "part": "header",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52648-4279",
+            "component": "Dialog.Header",
+            "source": "src/components/dialog/dialog.tsx"
+        }
+    },
+    "3f743c739d566a4bd0230e4fed71a976ea008969": {
+        "name": "💙AlertDialog.Popup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6367",
+        "template": "src/components/alert-dialog/alert-dialog.figma.batch.ts",
+        "batch": {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6367",
+            "component": "AlertDialog.Popup",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        }
+    },
+    "405d7ff8830cd0a183e33c96a94f5208a9b45e0c": {
+        "name": "💙Meter.Label",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6620",
+        "template": "src/components/meter/meter.figma.batch.ts",
+        "batch": {
+            "part": "label",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6620",
+            "component": "Meter.Label",
+            "source": "src/components/meter/meter.tsx"
+        }
+    },
+    "43eb2d7fb990ac782733aac162b5ebf9eb87a770": {
+        "name": "💙MultiSelect.GroupLabel",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-94648",
+        "template": "src/components/multi-select/multi-select.figma.batch.ts",
+        "batch": {
+            "part": "groupLabel",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-94648",
+            "component": "MultiSelect.GroupLabel",
+            "source": "src/components/multi-select/multi-select.tsx"
+        }
+    },
+    "446ba977618ff7f2731448c2d484154fc1dde328": {
+        "name": "💙RadioGroup.RequiredSymbol",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=51436-3206",
+        "template": "src/components/radio-group/radio-group.figma.batch.ts",
+        "batch": {
+            "part": "requiredSymbol",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=51436-3206",
+            "component": "RadioGroup.RequiredSymbol",
+            "source": "src/components/radio-group/radio-group.tsx"
+        }
+    },
+    "478087a31ff61069fff3fa2cb5104285d3ac0126": {
+        "name": "💙Radio",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=32855-12558",
+        "template": "src/components/radio/radio.figma.ts",
+        "batch": null
+    },
+    "4ee70d9d4bae339bef4966b9c0ad3ed5af3f738c": {
+        "name": "💙AlertDialog.Footer",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6372",
+        "template": "src/components/alert-dialog/alert-dialog.figma.batch.ts",
+        "batch": {
+            "part": "footer",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6372",
+            "component": "AlertDialog.Footer",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        }
+    },
+    "52743fcc6e6e192592878e3ac8614b3283553766": {
+        "name": "💙Callout",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=32842-2107",
+        "template": "src/components/callout/callout.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=32842-2107",
+            "component": "Callout.Root",
+            "source": "src/components/callout/callout.tsx"
+        }
+    },
+    "574ec215897841f97c3a3b60f0628356d82b1121": {
+        "name": "💙Card.Body",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=532-111",
+        "template": "src/components/card/card.figma.batch.ts",
+        "batch": {
+            "part": "body",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=532-111",
+            "component": "Card.Body",
+            "source": "src/components/card/card.tsx"
+        }
+    },
+    "58159e1c6b5a02ae6c921e269e382812cefef459": {
+        "name": "💙 MultiSelect.Popup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-97049",
+        "template": "src/components/multi-select/multi-select.figma.batch.ts",
+        "batch": {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-97049",
+            "component": "MultiSelect.Popup",
+            "source": "src/components/multi-select/multi-select.tsx"
+        }
+    },
+    "5a39b94aab96994d9233140e4d6df3285b843e33": {
+        "name": "💙Table.Column",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35551-3348",
+        "template": "src/components/table/table.figma.batch.ts",
+        "batch": {
+            "part": "column",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35551-3348",
+            "component": "Table.Column",
+            "source": "src/components/table/table.tsx"
+        }
+    },
+    "5c6129e3164d70a987cf511302e4b8b305951093": {
+        "name": "💙Table.Body",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5777",
+        "template": "src/components/table/table.figma.batch.ts",
+        "batch": {
+            "part": "body",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5777",
+            "component": "Table.Body",
+            "source": "src/components/table/table.tsx"
+        }
+    },
+    "5d8612f3a822c13549bdc85d8cd07a42c6a9a6d3": {
+        "name": "💙Table.Footer",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5784",
+        "template": "src/components/table/table.figma.batch.ts",
+        "batch": {
+            "part": "footer",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5784",
+            "component": "Table.Footer",
+            "source": "src/components/table/table.tsx"
+        }
+    },
+    "609a14f28a060e7e950804d592f2814b15b4e73a": {
+        "name": "💙Card.Footer",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=553-512",
+        "template": "src/components/card/card.figma.batch.ts",
+        "batch": {
+            "part": "footer",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=553-512",
+            "component": "Card.Footer",
+            "source": "src/components/card/card.tsx"
+        }
+    },
+    "60de3f93a784c96beff3186a1ac4c7a86fb5d384": {
+        "name": "💙Sheet.Footer",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33961-4126",
+        "template": "src/components/sheet/sheet.figma.batch.ts",
+        "batch": {
+            "part": "footer",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33961-4126",
+            "component": "Sheet.Footer",
+            "source": "src/components/sheet/sheet.tsx"
+        }
+    },
+    "6188553d7adc68db9c0d4b9f442221356b24c52c": {
+        "name": "💙 Select.Popup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33213-3724",
+        "template": "src/components/select/select.figma.batch.ts",
+        "batch": {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33213-3724",
+            "component": "Select.Popup",
+            "source": "src/components/select/select.tsx"
+        }
+    },
+    "660355097a18a5188a32396b5bf4ab9df1380ed1": {
+        "name": "💙Tooltip.Popup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33319-7192",
+        "template": "src/components/tooltip/tooltip.figma.batch.ts",
+        "batch": {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33319-7192",
+            "component": "Tooltip.Popup",
+            "source": "src/components/tooltip/tooltip.tsx"
+        }
+    },
+    "67b043bee93e00bdf099dc796207a3737ab33f8b": {
+        "name": "💙Pagination",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38936-14565",
+        "template": "src/components/pagination/pagination.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38936-14565",
+            "component": "Pagination.Root",
+            "source": "src/components/pagination/pagination.tsx"
+        }
+    },
+    "67dfac75b7ef388b077302474df743ef89550206": {
+        "name": "💙Select.GroupLabel",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33213-3717",
+        "template": "src/components/select/select.figma.batch.ts",
+        "batch": {
+            "part": "groupLabel",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33213-3717",
+            "component": "Select.GroupLabel",
+            "source": "src/components/select/select.tsx"
+        }
+    },
+    "69f44dcb8bc2a5f0663c1141d15902fb8bd229d4": {
+        "name": "💙Sheet.Body",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33961-4130",
+        "template": "src/components/sheet/sheet.figma.batch.ts",
+        "batch": {
+            "part": "body",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33961-4130",
+            "component": "Sheet.Body",
+            "source": "src/components/sheet/sheet.tsx"
+        }
+    },
+    "6b9d3ec103313d506a68456678c717281b79b5a0": {
+        "name": "💙Popover",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33235-29339",
+        "template": "src/components/popover/popover.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33235-29339",
+            "component": "Popover.Root",
+            "source": "src/components/popover/popover.tsx"
+        }
+    },
+    "6c60e12ea999459851cd97b32330673dd52853ac": {
+        "name": "💙Meter.Value",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6641",
+        "template": "src/components/meter/meter.figma.batch.ts",
+        "batch": {
+            "part": "value",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6641",
+            "component": "Meter.Value",
+            "source": "src/components/meter/meter.tsx"
+        }
+    },
+    "715b8a0043169e6aa20c4ec37589ec524cd3766d": {
+        "name": "💙Toggle",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=44171-7845",
+        "template": "src/components/toggle/toggle.figma.ts",
+        "batch": null
+    },
+    "77622e5628a07a669380269be3d2691c7ed91f71": {
+        "name": "💙AlertDialog",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6399",
+        "template": "src/components/alert-dialog/alert-dialog.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6399",
+            "component": "AlertDialog.Root",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        }
+    },
+    "78e6c7c76ec04503d5b9c9b416e257587ba04103": {
+        "name": "💙Card",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=553-519",
+        "template": "src/components/card/card.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=553-519",
+            "component": "Card.Root",
+            "source": "src/components/card/card.tsx"
+        }
+    },
+    "792290da1bc480361ff114fca38fd90ae93e6777": {
+        "name": "💙 MultiSelect.Group",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-94713",
+        "template": "src/components/multi-select/multi-select.figma.batch.ts",
+        "batch": {
+            "part": "group",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-94713",
+            "component": "MultiSelect.Group",
+            "source": "src/components/multi-select/multi-select.tsx"
+        }
+    },
+    "7bbbc1ccd74df4f19c84c2142fdeb0e47fe8be9d": {
+        "name": "💙Checkbox",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=32855-4382",
+        "template": "src/components/checkbox/checkbox.figma.ts",
+        "batch": null
+    },
+    "7fdcb2ba08b5bce349bdefdda2ea99bd3256be21": {
+        "name": "💙Spinner",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=41669-92378",
+        "template": "src/components/spinner/spinner.figma.ts",
+        "batch": null
+    },
+    "811f7ab59bfdbddf979428a20dadab0edba3c3cd": {
+        "name": "💙ProgressBar.Description",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7170",
+        "template": "src/components/progress-bar/progress-bar.figma.batch.ts",
+        "batch": {
+            "part": "description",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7170",
+            "component": "ProgressBar.Description",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        }
+    },
+    "819f3c293c408d817afd6d82d168af41fed82103": {
+        "name": "💙 MultiSelect.Item",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-91322",
+        "template": "src/components/multi-select/multi-select.figma.batch.ts",
+        "batch": {
+            "part": "item",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-91322",
+            "component": "MultiSelect.Item",
+            "source": "src/components/multi-select/multi-select.tsx"
+        }
+    },
+    "82ff2d034f7179fa445b20abe4515f173a4559ac": {
+        "name": "💙Sheet.ResizeHandle",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45368-23901",
+        "template": "src/components/sheet/sheet.figma.batch.ts",
+        "batch": {
+            "part": "resizeHandle",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45368-23901",
+            "component": "Sheet.ResizeHandle",
+            "source": "src/components/sheet/sheet.tsx"
+        }
+    },
+    "83ffb2297fbf0af47c879243dd7386011f13e58c": {
+        "name": "💙Table.Cell",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35551-3281",
+        "template": "src/components/table/table.figma.batch.ts",
+        "batch": {
+            "part": "cell",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35551-3281",
+            "component": "Table.Cell",
+            "source": "src/components/table/table.tsx"
+        }
+    },
+    "8423a87f385564ac2f48782a8aa656b20e523123": {
+        "name": "💙Pagination.Previous",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=51560-9297",
+        "template": "src/components/pagination/pagination.figma.batch.ts",
+        "batch": {
+            "part": "previous",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=51560-9297",
+            "component": "Pagination.Previous",
+            "source": "src/components/pagination/pagination.tsx"
+        }
+    },
+    "845449aff5854ea62d5a51a1af512d23023e3aa0": {
+        "name": "💙SegmentedControl",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=41595-76880",
+        "template": "src/components/segmented-control/segmented-control.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=41595-76880",
+            "component": "SegmentedControl.Root",
+            "source": "src/components/segmented-control/segmented-control.tsx"
+        }
+    },
+    "8c16b865f5261953ff13b25d98151a19f5ef7387": {
+        "name": "💙Sheet.Popup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45349-23524",
+        "template": "src/components/sheet/sheet.figma.batch.ts",
+        "batch": {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45349-23524",
+            "component": "Sheet.Popup",
+            "source": "src/components/sheet/sheet.tsx"
+        }
+    },
+    "8c582403a072e2229c07a5312c57d13a99f9166f": {
+        "name": "💙Avatar",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=7127-131",
+        "template": "src/components/avatar/avatar.figma.ts",
+        "batch": null
+    },
+    "8dd24017bca67c31c06e93a77c7815fbb93af45c": {
+        "name": "💙ProgressBar",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7204",
+        "template": "src/components/progress-bar/progress-bar.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7204",
+            "component": "ProgressBar.Root",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        }
+    },
+    "954b9c15efbd2714202862c4a41e59b37d91fb48": {
+        "name": "💙RadioGroup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34525-16366",
+        "template": "src/components/radio-group/radio-group.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34525-16366",
+            "component": "RadioGroup.Root",
+            "source": "src/components/radio-group/radio-group.tsx"
+        }
+    },
+    "971463ce409c7685fea22a258c2176c16f299ad9": {
+        "name": "💙RadioCard",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35544-2227",
+        "template": "src/components/radio-card/radio-card.figma.ts",
+        "batch": null
+    },
+    "9a5741ce156e73d0fc6a1ae0f13cfdd1faa915b3": {
+        "name": "💙Select.Trigger",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=40221-30567",
+        "template": "src/components/select/select.figma.batch.ts",
+        "batch": {
+            "part": "trigger",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=40221-30567",
+            "component": "Select.Trigger",
+            "source": "src/components/select/select.tsx"
+        }
+    },
+    "a0f09d9423ea8755dc676de31815001872e69c5a": {
+        "name": "💙Button",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=44343-7629",
+        "template": "src/components/button/button.figma.ts",
+        "batch": null
+    },
+    "a5ec9696a83510c976287d2ab27aedd2dd040c8e": {
+        "name": "💙Pagination.Items",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38936-13552",
+        "template": "src/components/pagination/pagination.figma.batch.ts",
+        "batch": {
+            "part": "items",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=38936-13552",
+            "component": "Pagination.Items",
+            "source": "src/components/pagination/pagination.tsx"
+        }
+    },
+    "abfe3af144c02b62fa47f5d5341fb1f3e2162fe1": {
+        "name": "💙Dialog.Footer",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52648-4894",
+        "template": "src/components/dialog/dialog.figma.batch.ts",
+        "batch": {
+            "part": "footer",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52648-4894",
+            "component": "Dialog.Footer",
+            "source": "src/components/dialog/dialog.tsx"
+        }
+    },
+    "afb794cddbdff1571925962a6cdf955e40472110": {
+        "name": "💙Card.Header",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=532-574",
+        "template": "src/components/card/card.figma.batch.ts",
+        "batch": {
+            "part": "header",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=532-574",
+            "component": "Card.Header",
+            "source": "src/components/card/card.tsx"
+        }
+    },
+    "b12073f2fedfb12f65955e40f40d1f2f731d53f3": {
+        "name": "💙\bSelect.Separator",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-95885",
+        "template": "src/components/select/select.figma.batch.ts",
+        "batch": {
+            "part": "separator",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-95885",
+            "component": "Select.Separator",
+            "source": "src/components/select/select.tsx"
+        }
+    },
+    "b3af5494f77f0b2458539c5bf55849232e867bdb": {
+        "name": "💙Breadcrumb.Ellipsis",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-4133",
+        "template": "src/components/breadcrumb/breadcrumb.figma.batch.ts",
+        "batch": {
+            "part": "ellipsis",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-4133",
+            "component": "Breadcrumb.Ellipsis",
+            "source": "src/components/breadcrumb/breadcrumb.tsx"
+        }
+    },
+    "b5ddba7c9e517dc901dccc903880226c546566c9": {
+        "name": "💙\bMultiSelect.Separator",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-94649",
+        "template": "src/components/multi-select/multi-select.figma.batch.ts",
+        "batch": {
+            "part": "separator",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34564-94649",
+            "component": "MultiSelect.Separator",
+            "source": "src/components/multi-select/multi-select.tsx"
+        }
+    },
+    "c0e99d67ac40c6e13a078be1bc463aa3ee853f5f": {
+        "name": "💙Breadcrumb.Item",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-1882",
+        "template": "src/components/breadcrumb/breadcrumb.figma.batch.ts",
+        "batch": {
+            "part": "item",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33044-1882",
+            "component": "Breadcrumb.Item",
+            "source": "src/components/breadcrumb/breadcrumb.tsx"
+        }
+    },
+    "c2997cf93bb259beb7d9de15a290f453cec4e4f0": {
+        "name": "💙TextInput",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=34413-14570",
+        "template": "src/components/text-input/text-input.figma.ts",
+        "batch": null
+    },
+    "c9b8b3cb8890612d8ef277fe884b3c44dd7b8bf7": {
+        "name": "💙SegmentedControl.Item",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=42080-1943",
+        "template": "src/components/segmented-control/segmented-control.figma.batch.ts",
+        "batch": {
+            "part": "item",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=42080-1943",
+            "component": "SegmentedControl.Item",
+            "source": "src/components/segmented-control/segmented-control.tsx"
+        }
+    },
+    "d32a8202ab1cf4776a2297d0660e367b6eac984b": {
+        "name": "💙Meter.Track",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6625",
+        "template": "src/components/meter/meter.figma.batch.ts",
+        "batch": {
+            "part": "track",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6625",
+            "component": "Meter.Track",
+            "source": "src/components/meter/meter.tsx"
+        }
+    },
+    "df27a582d93b371e74ab1d7a89b9c8140ed58e45": {
+        "name": "💙Badge",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=7128-320",
+        "template": "src/components/badge/badge.figma.ts",
+        "batch": null
+    },
+    "dfbb0e73f45d2791fd80bf919de10e6f2e2aca01": {
+        "name": "💙 Select.Group",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33213-3775",
+        "template": "src/components/select/select.figma.batch.ts",
+        "batch": {
+            "part": "group",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33213-3775",
+            "component": "Select.Group",
+            "source": "src/components/select/select.tsx"
+        }
+    },
+    "dfbbbb9be2fd1630525062197f3524eb5b380740": {
+        "name": "💙ProgressBar.Value",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7165",
+        "template": "src/components/progress-bar/progress-bar.figma.batch.ts",
+        "batch": {
+            "part": "value",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7165",
+            "component": "ProgressBar.Value",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        }
+    },
+    "e2572b8432fc6858b7bd61f1ad27c63cd3440fde": {
+        "name": "💙Dialog.Body",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52648-4888",
+        "template": "src/components/dialog/dialog.figma.batch.ts",
+        "batch": {
+            "part": "body",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52648-4888",
+            "component": "Dialog.Body",
+            "source": "src/components/dialog/dialog.tsx"
+        }
+    },
+    "e30f2d2b6eeb6de6dead47a9b18280cfc660e3e9": {
+        "name": "💙InputGroup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=47458-5217",
+        "template": "src/components/input-group/input-group.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=47458-5217",
+            "component": "InputGroup.Root",
+            "source": "src/components/input-group/input-group.tsx"
+        }
+    },
+    "e4f46127fbab1019657383a4fe8b8d5310155acd": {
+        "name": "💙Sheet",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45273-10621",
+        "template": "src/components/sheet/sheet.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45273-10621",
+            "component": "Sheet.Root",
+            "source": "src/components/sheet/sheet.tsx"
+        }
+    },
+    "e58343988fc4588122b742adc9fc13db0c010b4a": {
+        "name": "💙Meter",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6766",
+        "template": "src/components/meter/meter.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6766",
+            "component": "Meter.Root",
+            "source": "src/components/meter/meter.tsx"
+        }
+    },
+    "e6db9f9e6338b3e10b526d1697264058e42b563f": {
+        "name": "💙Table.Heading",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35551-3279",
+        "template": "src/components/table/table.figma.batch.ts",
+        "batch": {
+            "part": "heading",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35551-3279",
+            "component": "Table.Heading",
+            "source": "src/components/table/table.tsx"
+        }
+    },
+    "eb84b7288746454956af16e158e37bfa7a056c62": {
+        "name": "💙Tooltip",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33319-9260",
+        "template": "src/components/tooltip/tooltip.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33319-9260",
+            "component": "Tooltip.Root",
+            "source": "src/components/tooltip/tooltip.tsx"
+        }
+    },
+    "ed108ce61888e1d3756fd94656731c203ed932cd": {
+        "name": "💙Tabs",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33159-8151",
+        "template": "src/components/tabs/tabs.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33159-8151",
+            "component": "Tabs.Root",
+            "source": "src/components/tabs/tabs.tsx"
+        }
+    },
+    "f03aea220e0d242525f43fa6cf1ea51bf20b7e24": {
+        "name": "💙ProgressBar.Label",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7142",
+        "template": "src/components/progress-bar/progress-bar.figma.batch.ts",
+        "batch": {
+            "part": "label",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7142",
+            "component": "ProgressBar.Label",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        }
+    },
+    "f24aeee16bfcbfa2aaf0f9b6e1d604e8401f4814": {
+        "name": "💙Dialog",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-3385",
+        "template": "src/components/dialog/dialog.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-3385",
+            "component": "Dialog.Root",
+            "source": "src/components/dialog/dialog.tsx"
+        }
+    },
+    "f44581346c114d85fc92044b554a3f2fca973ebe": {
+        "name": "💙ProgressBar.Track",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7147",
+        "template": "src/components/progress-bar/progress-bar.figma.batch.ts",
+        "batch": {
+            "part": "track",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-7147",
+            "component": "ProgressBar.Track",
+            "source": "src/components/progress-bar/progress-bar.tsx"
+        }
+    },
+    "f510473708e958a92ff1754a53a1b4dfc099f86e": {
+        "name": "💙Popover.Popup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33235-29378",
+        "template": "src/components/popover/popover.figma.batch.ts",
+        "batch": {
+            "part": "popup",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33235-29378",
+            "component": "Popover.Popup",
+            "source": "src/components/popover/popover.tsx"
+        }
+    },
+    "f56464100caef3c7c81dbb6c205afb86456048cf": {
+        "name": "💙toggleGroup",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=45635-12436",
+        "template": "src/components/toggle-group/toggle-group.figma.ts",
+        "batch": null
+    },
+    "f587c9265287983a195f5884ea8ca2cb5ea87215": {
+        "name": "💙Select",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=40221-30523",
+        "template": "src/components/select/select.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=40221-30523",
+            "component": "Select.Root",
+            "source": "src/components/select/select.tsx"
+        }
+    },
+    "fa0e23a3999c461c1216a057229deb26c05842d1": {
+        "name": "💙Table.Header",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5770",
+        "template": "src/components/table/table.figma.batch.ts",
+        "batch": {
+            "part": "header",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=35562-5770",
+            "component": "Table.Header",
+            "source": "src/components/table/table.tsx"
+        }
+    },
+    "fb1479d01247a948d581000992931039577dcba7": {
+        "name": "Tabs.Button ",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33159-8126",
+        "template": "src/components/tabs/tabs.figma.batch.ts",
+        "batch": {
+            "part": "button",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=33159-8126",
+            "component": "Tabs.Button",
+            "source": "src/components/tabs/tabs.tsx"
+        }
+    },
+    "fd43f45fc44e2a81b9d4778cecedebc625049368": {
+        "name": "💙AlertDialog.Header",
+        "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6376",
+        "template": "src/components/alert-dialog/alert-dialog.figma.batch.ts",
+        "batch": {
+            "part": "header",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=52431-6376",
+            "component": "AlertDialog.Header",
+            "source": "src/components/alert-dialog/alert-dialog.tsx"
+        }
+    }
+}
