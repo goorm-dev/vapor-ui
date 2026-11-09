@@ -19,7 +19,7 @@ import {
     writtenUnionMembers,
 } from '#read/type-printer/members';
 import { TYPE_FORMAT_FLAGS, type TypePrinterOptions } from '#read/type-printer/shared';
-import type { Node, Type } from 'ts-morph';
+import type { Node, Type, ts } from 'ts-morph';
 
 export interface TypePrinter {
     /**
@@ -37,6 +37,24 @@ export interface TypePrinter {
     definition(type: Type, location: Node): string;
 }
 
+/**
+ * TypeScript's own text for a type read at a location, the expensive part of printing.
+ * The same type is read at the same place many times, across components too (a shared
+ * style prop's type is several hundred thousand characters), so each pair is printed once.
+ * Keyed by the compiler's type object, so the cache lives exactly as long as that program.
+ */
+const rawTexts = new WeakMap<ts.Type, Map<ts.Node | undefined, string>>();
+function rawTextOf(type: Type, location: Node | undefined): string {
+    let byLocation = rawTexts.get(type.compilerType);
+    if (!byLocation) rawTexts.set(type.compilerType, (byLocation = new Map()));
+    let text = byLocation.get(location?.compilerNode);
+    if (text === undefined) {
+        text = location ? type.getText(location, TYPE_FORMAT_FLAGS) : type.getText();
+        byLocation.set(location?.compilerNode, text);
+    }
+    return text;
+}
+
 export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions): TypePrinter {
     /**
      * The public names chosen while printing a prop; unset while printing a definition, whose names are not followed.
@@ -51,13 +69,14 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
      * Narrow, cheap checks come before the ones that walk the type graph.
      */
     function print(type: Type, location: Node | undefined): string {
-        const rawText = location ? type.getText(location, TYPE_FORMAT_FLAGS) : type.getText();
+        // Most branches never use TypeScript's own text, so it is read only when a branch returns it.
+        const rawText = () => rawTextOf(type, location);
 
         // `ReactNode` prints by name; a generic alias keeps its arguments, e.g. `React.Ref<HTMLDivElement>`.
         if (isPreservedReactAlias(type)) {
             const args = type.getAliasTypeArguments();
-            if (args.length > 0) return withPrintedArguments(rawText, args, location);
-            return type.getAliasSymbol()?.getName() ?? rawText;
+            if (args.length > 0) return withPrintedArguments(rawText(), args, location);
+            return type.getAliasSymbol()?.getName() ?? rawText();
         }
 
         const primitive = primitiveText(type);
@@ -89,7 +108,7 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
         // Inside a parameter or a return type, a union splits as it does at the top level.
         // A union kept by name returns here: `members()` hands it straight back to `print()`.
         if (type.isUnion()) {
-            if (keepsUnionName(type)) return rawText;
+            if (keepsUnionName(type)) return rawText();
             return joinTypeMembers(members(type, location));
         }
 
@@ -100,7 +119,7 @@ export function createTypePrinter({ publicNames, namespace }: TypePrinterOptions
         }
 
         const args = type.getAliasSymbol() ? type.getAliasTypeArguments() : type.getTypeArguments();
-        return withPrintedArguments(rawText, args, location);
+        return withPrintedArguments(rawText(), args, location);
     }
 
     /**
