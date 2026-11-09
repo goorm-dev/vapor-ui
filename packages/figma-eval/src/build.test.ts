@@ -12,6 +12,31 @@ import type { Pkg } from './library';
 
 const root = fileURLToPath(new URL('./__fixtures__/repo', import.meta.url));
 
+describe('defaults and presets of the real packages', () => {
+    const { defaults, presets } = extractTables(
+        fileURLToPath(new URL('../../..', import.meta.url)),
+    );
+
+    it('gives a part the defaults of the core component it renders with {...props}', () => {
+        expect(defaults.IconButton).toMatchObject({
+            size: 'md',
+            colorPalette: 'primary',
+            variant: 'fill',
+        });
+    });
+
+    it("gives a root the defaults its parts' recipes agree on", () => {
+        expect(defaults['Tabs.Root']).toMatchObject({ size: 'md', variant: 'line' });
+    });
+
+    it('keeps every branch of a preset prop the wrapper picks from context', () => {
+        expect(presets['AlertDialog.Action']).toEqual({
+            tag: 'Button',
+            props: { size: 'lg', colorPalette: ['danger', 'primary'] },
+        });
+    });
+});
+
 describe('internalParts', () => {
     const { internalParts } = extractTables(root);
 
@@ -93,7 +118,7 @@ describe('figma-eval build', () => {
 
         for (const js of [template, helper]) expect(js).not.toMatch(/from\s+['"]figma['"]/);
         expect(template).toContain(`from '../../utils/figma.mjs'`);
-        expect(expectedSet(tree, await fromInstalled(app)).lines).toEqual([
+        expect(expectedSet(tree, await fromInstalled(app)).lines.map((l) => l.line)).toEqual([
             '<IconButton size="lg" />',
             '<HeartIcon />',
         ]);
@@ -147,7 +172,7 @@ describe('figma-eval build', () => {
             '@vapor-ui/composites is not installed, its components are not graded',
         );
         expect(library.tables.internalParts).toEqual({});
-        expect(expectedSet(tree, library).lines).toEqual([
+        expect(expectedSet(tree, library).lines.map((l) => l.line)).toEqual([
             '<IconButton size="lg" />',
             '<HeartIcon />',
         ]);

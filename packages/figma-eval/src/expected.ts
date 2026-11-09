@@ -15,10 +15,31 @@ export interface FigmaTree {
     componentSets?: Record<string, { key: string; name: string }>;
 }
 
+// pkg: the package whose template wrote the line, so a composites Dialog.Root is not met by core's.
+export interface ExpectedLine {
+    line: string;
+    pkg: Pkg;
+}
+
+// A library instance the design draws that is not a line, and why (compare --json `excluded`).
+export interface Excluded {
+    node: string;
+    name: string;
+    reason: 'part-draws-icon' | 'part-draws-itself' | 'inside-self-closing-part';
+}
+
+// A library instance that could not be read, so the design cannot be graded (compare --json `unscorable`).
+export interface Unscorable {
+    node: string;
+    name: string;
+    cause: 'no-template' | 'template-error';
+    message?: string;
+}
+
 export interface ExpectedSet {
-    lines: string[];
-    errors: string[];
-    unmapped: string[];
+    lines: ExpectedLine[];
+    excluded: Excluded[];
+    unscorable: Unscorable[];
 }
 
 interface Element {
@@ -178,15 +199,21 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
         return e ? { id: idOf(library, e), entry: e } : null;
     };
     const handle = makeHandles({ connected });
-    const lines = new Set<string>();
-    const errors: string[] = [];
-    const unmapped = new Set<string>();
-    const isLib = (name: string) => /^(💙|❤️)/u.test(name);
+    // One line per instance, so three identical Buttons in the design need three in the code.
+    const lines: ExpectedLine[] = [];
+    const excluded: Excluded[] = [];
+    const unscorable: Unscorable[] = [];
+    // A library instance is one the entries connect, or one named like a library component that nothing installed
+    // connects: 💙 core, ❤️ icons, and 🩵 on a composites part's layer ("Dialog/🩵Action"). ponytail: an unprefixed
+    // instance with no entry (a composites root when composites is not installed) only surfaces through its 🩵 layers.
+    const marked = (s: string) => /(^|\/)(💙|❤️|🩵)/u.test(s);
+    const isLib = (n: FigmaNode) =>
+        n.type === 'INSTANCE' && (connected(n) !== null || marked(nameOf(n)) || marked(n.name));
 
     // Library parts the design draws in a node's subtree, the node included.
     const drawn = (n: FigmaNode, out = new Set<string>()) => {
         if (n.visible === false) return out;
-        if (n.type === 'INSTANCE' && isLib(nameOf(n))) out.add(partName(nameOf(n)));
+        if (isLib(n)) out.add(partName(nameOf(n)));
         for (const c of n.children ?? []) drawn(c, out);
         return out;
     };
@@ -217,6 +244,8 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
         const c = connected(n);
         if (c) {
             let parent = parentTag;
+            const exclude = (reason: Excluded['reason']) =>
+                void excluded.push({ node: n.id, name: nameOf(n), reason });
             if (owner) {
                 const nestedIn = owner.nested.get(n.id);
                 if (nestedIn !== undefined) parent = nestedIn;
@@ -224,7 +253,7 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
                 else if (
                     ownIcons.get(partName(trail.at(-1) ?? owner.name))?.has(partName(nameOf(n)))
                 )
-                    return;
+                    return exclude('part-draws-icon');
                 // A core component a composites part draws itself, outside any slot (Dialog.Root's close IconButton).
                 // Only a composites owner: core 💙Dialog and composites Dialog share a part name.
                 else if (
@@ -232,10 +261,11 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
                     !slotted &&
                     ownParts.get(partName(owner.name))?.has(partName(nameOf(n)))
                 )
-                    return;
+                    return exclude('part-draws-itself');
                 // A part its template writes self-closing takes no children in code, so an instance in it outside
                 // any slot is the part's own drawing (the Breadcrumb.Ellipsis inside <Pagination.Items />).
-                else if (!slotted && owner.root?.selfClosing) return;
+                else if (!slotted && owner.root?.selfClosing)
+                    return exclude('inside-self-closing-part');
                 else {
                     const el =
                         trail.map((t) => owner.byPart.get(partName(t))).findLast(Boolean) ??
@@ -257,7 +287,12 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
                 const parts = drawn(n);
                 kept = parse(render(example)).children.flatMap((el) => keep(el, parts, null, []));
             } catch (e) {
-                errors.push(`${n.name} (${n.id}): ${(e as Error).message}`);
+                unscorable.push({
+                    node: n.id,
+                    name: nameOf(n),
+                    cause: 'template-error',
+                    message: (e as Error).message,
+                });
                 return;
             }
             // An outer template can render an instance that sits deeper in Figma (Table.Root renders the
@@ -265,7 +300,7 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
             const nested = new Map(owner?.nested);
             const byPart = new Map<string, Kept>();
             for (const el of kept) {
-                lines.add(line(el.tag, el.attrs, el.parent ?? parent));
+                lines.push({ line: line(el.tag, el.attrs, el.parent ?? parent), pkg: c.entry.pkg });
                 for (const id of el.nested) nested.set(id, el.tag);
                 byPart.set(partName(el.tag), el);
             }
@@ -280,12 +315,12 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
                 );
             return;
         }
-        if (n.type === 'INSTANCE' && isLib(nameOf(n))) {
-            unmapped.add(nameOf(n));
+        if (isLib(n)) {
+            unscorable.push({ node: n.id, name: nameOf(n), cause: 'no-template' });
             trail = [...trail, nameOf(n)];
         }
         for (const ch of n.children ?? []) visit(ch, parentTag, owner, trail, slotted);
     }
     visit(document, null, null, [], false);
-    return { lines: [...lines], errors, unmapped: [...unmapped] };
+    return { lines, excluded, unscorable };
 }

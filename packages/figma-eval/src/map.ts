@@ -69,9 +69,19 @@ async function publishedByNode(fileKeys: Set<string>, token: string) {
     return byNode;
 }
 
-const nodeOf = (url: string) => {
+// A Figma design URL's file (its branch, on a branch URL) and node: node-id=I529-7899%3B2847-43442 is I529:7899;2847:43442.
+export const parseFigmaUrl = (url: string) => {
     const u = new URL(url);
-    return `${u.pathname.split('/')[2]}/${(u.searchParams.get('node-id') ?? '').replace('-', ':')}`;
+    const path = u.pathname.split('/');
+    return {
+        fileKey: path[3] === 'branch' ? path[4] : path[2],
+        nodeId: (u.searchParams.get('node-id') ?? '').replaceAll('-', ':'),
+    };
+};
+
+const nodeOf = (url: string) => {
+    const { fileKey, nodeId } = parseFigmaUrl(url);
+    return `${fileKey}/${nodeId}`;
 };
 
 // Writes packages/<pkg>/figma-entries.json for core, composites and icons: every Code Connect entry keyed by the Figma

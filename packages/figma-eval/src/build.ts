@@ -137,6 +137,9 @@ function internalIcons(core: string) {
 // Variant defaults of core parts, so code that omits a default prop still matches (<Button> is variant "fill").
 // ponytail: `<dir>.css.ts` recipe names map to parts by convention (root → Button and Button.Root, trigger →
 // Select.Trigger); a recipe named otherwise is missed.
+// A root also takes a default its own recipe lacks from the file's other recipes when they all agree on it: Tabs.Root
+// hands size and variant to its parts through context, and Tabs.Button's recipe defaults them. A part that renders
+// another core component with `{...props}` takes that component's defaults under its own: IconButton is a Button.
 function defaults(core: string) {
     const out: Tables['defaults'] = {};
     const pascal = (s: string) => s.replace(/(^|-)(\w)/g, (_, __, c: string) => c.toUpperCase());
@@ -158,6 +161,7 @@ function defaults(core: string) {
                 ]),
         );
     const components = join(core, 'src/components');
+    const roots = (dir: string) => [pascal(dir), `${pascal(dir)}.Root`];
     for (const dir of readdirSync(components)) {
         let src;
         try {
@@ -165,6 +169,7 @@ function defaults(core: string) {
         } catch {
             continue;
         }
+        const recipes: Record<string, string>[] = [];
         for (const s of ts.createSourceFile('x.ts', src, ts.ScriptTarget.Latest, true).statements) {
             if (!ts.isVariableStatement(s)) continue;
             for (const d of s.declarationList.declarations) {
@@ -179,14 +184,51 @@ function defaults(core: string) {
                     ts.forEachChild(n, find);
                 })(d);
                 if (!dv) continue;
+                recipes.push(dv);
                 const name = d.name.getText();
-                const tags =
-                    name === 'root'
-                        ? [pascal(dir), `${pascal(dir)}.Root`]
-                        : [`${pascal(dir)}.${pascal(name)}`];
+                const tags = name === 'root' ? roots(dir) : [`${pascal(dir)}.${pascal(name)}`];
                 for (const t of tags) out[t] = dv;
             }
         }
+        const agreed: Record<string, string> = {};
+        for (const k of new Set(recipes.flatMap(Object.keys))) {
+            const values = new Set(recipes.flatMap((r) => (k in r ? [r[k]] : [])));
+            if (values.size === 1) agreed[k] = [...values][0];
+        }
+        if (Object.keys(agreed).length)
+            for (const t of roots(dir)) out[t] = { ...agreed, ...out[t] };
+    }
+    for (const dir of readdirSync(components)) {
+        const file = join(components, dir, `${dir}.tsx`);
+        if (!existsSync(file)) continue;
+        const sf = tsx(file, readFileSync(file, 'utf8'));
+        const siblings = new Set(
+            sf.statements.flatMap((s) =>
+                ts.isImportDeclaration(s) &&
+                ts.isStringLiteral(s.moduleSpecifier) &&
+                /^\.\.\/[\w-]+$/.test(s.moduleSpecifier.text)
+                    ? namedImports(s).map((e) => e.name.text)
+                    : [],
+            ),
+        );
+        let base: string | undefined;
+        (function find(n: ts.Node) {
+            const o = ts.isJsxElement(n)
+                ? n.openingElement
+                : ts.isJsxSelfClosingElement(n)
+                  ? n
+                  : null;
+            const tag = o?.tagName.getText();
+            if (
+                o &&
+                tag &&
+                siblings.has(tag) &&
+                o.attributes.properties.some(ts.isJsxSpreadAttribute)
+            )
+                base ??= tag;
+            ts.forEachChild(n, find);
+        })(sf);
+        if (base && out[base]) for (const t of roots(dir)) out[t] = { ...out[base], ...out[t] };
     }
     return out;
 }
@@ -224,6 +266,15 @@ function libraryComponents(core: string) {
 }
 
 type Component = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration;
+
+// The strings a ternary of string literals can produce, or undefined when any branch is not one.
+function conditionalStrings(e: ts.Expression): string[] | undefined {
+    if (ts.isParenthesizedExpression(e)) return conditionalStrings(e.expression);
+    if (ts.isStringLiteral(e)) return [e.text];
+    if (!ts.isConditionalExpression(e)) return undefined;
+    const [a, b] = [conditionalStrings(e.whenTrue), conditionalStrings(e.whenFalse)];
+    return a && b ? [...new Set([...a, ...b])].sort() : undefined;
+}
 
 // What a component returns whatever its props are: a concise body, or a block's only return sitting directly in it.
 // An early return or a return under `if` means the props pick what is drawn.
@@ -307,10 +358,17 @@ function composites(pkgDir: string) {
                       : null);
             const tag = open && core.get(open.tagName.getText());
             if (open && tag && open.attributes.properties.some(ts.isJsxSpreadAttribute)) {
-                const props: Record<string, string> = {};
-                for (const a of open.attributes.properties)
-                    if (ts.isJsxAttribute(a) && a.initializer && ts.isStringLiteral(a.initializer))
+                const props: Tables['presets'][string]['props'] = {};
+                for (const a of open.attributes.properties) {
+                    if (!ts.isJsxAttribute(a) || !a.initializer) continue;
+                    if (ts.isStringLiteral(a.initializer))
                         props[a.name.getText()] = a.initializer.text;
+                    // colorPalette={type === 'critical' ? 'danger' : 'primary'}: either branch is right code.
+                    else if (ts.isJsxExpression(a.initializer) && a.initializer.expression) {
+                        const branches = conditionalStrings(a.initializer.expression);
+                        if (branches) props[a.name.getText()] = branches;
+                    }
+                }
                 presets[name] = { tag, props };
                 continue;
             }

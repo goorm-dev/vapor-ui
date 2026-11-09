@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-import type { FigmaTree } from './expected';
+import type { ExpectedLine, FigmaTree } from './expected';
 import { expectedSet } from './expected';
 import { FIGMA_KEY } from './figma-mock';
 import type { Library, Pkg, Tables, TemplateFn } from './library';
@@ -48,7 +48,8 @@ function fakeLibrary(
     };
 }
 
-const sorted = (lines: string[]) => [...lines].sort();
+const text = (lines: ExpectedLine[]) => lines.map((l) => l.line);
+const sorted = (lines: ExpectedLine[]) => text(lines).sort();
 
 describe('expectedSet', () => {
     it('drops an instance outside any slot inside a part its template writes self-closing', () => {
@@ -113,21 +114,21 @@ describe('expectedSet', () => {
                 },
                 { internalParts },
             ),
-        ).lines;
+        ).lines.map((l) => l.line);
 
     it('drops a core instance the composite part always draws itself', () => {
         expect(dialogWithClose({ 'Dialog.Root': ['IconButton'] })).toEqual(['<Dialog.Root />']);
     });
 
     it('keeps a core instance under a core owner that shares the composite part name', () => {
-        expect(sorted(dialogWithClose({ 'Dialog.Root': ['IconButton'] }, 'core'))).toEqual([
+        expect([...dialogWithClose({ 'Dialog.Root': ['IconButton'] }, 'core')].sort()).toEqual([
             '<Dialog.Root />',
             '<IconButton aria-label="*" data-in="Dialog.Root" />',
         ]);
     });
 
     it('expects a core instance the part draws only under a condition, when the design draws it', () => {
-        expect(sorted(dialogWithClose({}))).toEqual([
+        expect([...dialogWithClose({})].sort()).toEqual([
             '<Dialog.Root />',
             '<IconButton aria-label="*" data-in="Dialog.Root" />',
         ]);
@@ -204,7 +205,7 @@ describe('expectedSet', () => {
 
         const { lines } = expectedSet(fixture('literal-props'), library);
 
-        expect(lines).toEqual(['<Pagination.Root aria-label="*" title="*" size="md" />']);
+        expect(text(lines)).toEqual(['<Pagination.Root aria-label="*" title="*" size="md" />']);
     });
 
     it('finds an older published copy by name only when the name is unique in entries', () => {
@@ -214,13 +215,15 @@ describe('expectedSet', () => {
             'K-TAG-B': { name: '💙Tag', run: fixed('tag-b', '<Tag />') },
         });
 
-        const { lines, unmapped } = expectedSet(fixture('older-copy'), library);
+        const { lines, unscorable } = expectedSet(fixture('older-copy'), library);
 
-        expect(lines).toEqual(['<Badge />']);
-        expect(unmapped).toEqual(['💙Tag']);
+        expect(text(lines)).toEqual(['<Badge />']);
+        expect(unscorable).toEqual([
+            { node: expect.any(String), name: '💙Tag', cause: 'no-template' },
+        ]);
     });
 
-    it('records a template that throws in errors and keeps grading the rest', () => {
+    it('records a template that throws as unscorable and keeps grading the rest', () => {
         const library = fakeLibrary({
             'K-CHIP': {
                 name: '💙Chip',
@@ -231,9 +234,105 @@ describe('expectedSet', () => {
             'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') },
         });
 
-        const { lines, errors } = expectedSet(fixture('template-error'), library);
+        const { lines, unscorable } = expectedSet(fixture('template-error'), library);
 
-        expect(errors).toEqual(['Broken (2:1): boom']);
-        expect(lines).toEqual(['<Badge />']);
+        expect(unscorable).toEqual([
+            { node: '2:1', name: '💙Chip', cause: 'template-error', message: 'boom' },
+        ]);
+        expect(text(lines)).toEqual(['<Badge />']);
+    });
+
+    it('expects a connected instance whatever its name, and records why it drops one', () => {
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    {
+                        id: '2:1',
+                        name: 'Login',
+                        type: 'INSTANCE',
+                        componentId: '1:1',
+                        children: [
+                            { id: '2:2', name: 'GoogleIcon', type: 'INSTANCE', componentId: '1:2' },
+                        ],
+                    },
+                ],
+            },
+            components: {
+                '1:1': { key: 'K-BUTTON', name: '💙Button' },
+                '1:2': { key: 'K-GOOGLE', name: 'GoogleIcon' },
+            },
+        };
+        const library = fakeLibrary({
+            'K-BUTTON': {
+                name: '💙Button',
+                run: template(
+                    'button',
+                    (h) =>
+                        figma.code`<Button>${h.findInstance('GoogleIcon').executeTemplate().example}</Button>`,
+                ),
+            },
+            'K-GOOGLE': {
+                name: 'GoogleIcon',
+                pkg: 'icons',
+                run: fixed('google', '<GoogleIcon />'),
+            },
+        });
+
+        expect(expectedSet(tree, library).lines).toEqual([
+            { line: '<Button />', pkg: 'core' },
+            { line: '<GoogleIcon data-in="Button" />', pkg: 'icons' },
+        ]);
+        expect(
+            expectedSet(fixture('internal-part'), {
+                ...fakeLibrary(
+                    {
+                        'K-DIALOG': {
+                            name: '💙Dialog',
+                            pkg: 'composites',
+                            run: fixed('d', '<Dialog.Root />'),
+                        },
+                        'K-ICON': { name: '💙IconButton', run: fixed('i', '<IconButton />') },
+                    },
+                    { internalParts: { 'Dialog.Root': ['IconButton'] } },
+                ),
+            }).excluded,
+        ).toEqual([{ node: '2:2', name: '💙IconButton', reason: 'part-draws-itself' }]);
+    });
+
+    it('cannot grade a composites part no installed package connects', () => {
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    {
+                        id: '2:1',
+                        name: 'Dialog',
+                        type: 'INSTANCE',
+                        componentId: '1:1',
+                        children: [
+                            {
+                                id: '2:2',
+                                name: 'Dialog/🩵Action',
+                                type: 'INSTANCE',
+                                componentId: '1:2',
+                            },
+                        ],
+                    },
+                ],
+            },
+            components: {
+                '1:1': { key: 'K-DIALOG', name: 'Dialog' },
+                '1:2': { key: 'K-ACTION', name: 'Action' },
+            },
+        };
+
+        expect(expectedSet(tree, fakeLibrary({})).unscorable).toEqual([
+            { node: '2:2', name: 'Action', cause: 'no-template' },
+        ]);
     });
 });

@@ -24,8 +24,9 @@ export interface Tables {
     internalIcons: Record<string, string[]>;
     // composites part → core components it draws itself (Dialog.Root's close IconButton)
     internalParts: Record<string, string[]>;
-    // composites wrapper → the core element it renders, with fixed props (Dialog.Action is a primary lg Button)
-    presets: Record<string, { tag: string; props: Record<string, string> }>;
+    // composites wrapper → the core element it renders, with fixed props (Dialog.Action is a primary lg Button). A
+    // list is a prop the wrapper picks from its context: AlertDialog.Action is danger or primary.
+    presets: Record<string, { tag: string; props: Record<string, string | string[]> }>;
     // core part → recipe defaultVariants (Button is variant "fill")
     defaults: Record<string, Record<string, string>>;
 }
