@@ -70,7 +70,7 @@ npx skills add goorm-dev/vapor-ui
 | `fail`       | 빠진 줄(`missing`)이나 props가 다른 줄(`mismatch`)이 있습니다        |
 | `unscorable` | 템플릿이 없거나 실행에 실패한 컴포넌트가 있어 점수를 내지 않았습니다 |
 
-`unscorable`은 대부분 vapor-ui 쪽에 Code Connect가 빠진 경우라 사용자 코드로는 고칠 수 없습니다.
+`unscorable`은 설치되지 않았거나 채점 표가 없는 예전 버전의 패키지가 있을 때 생길 수 있습니다. 이때는 패키지를 `@vapor-ui/figma-eval`과 같은 릴리스로 설치하거나 올린 뒤 다시 채점합니다. 그 뒤에도 남는 항목은 vapor-ui 쪽에 Code Connect가 빠진 경우라 사용자 코드로는 고칠 수 없습니다. `unscorable`이어도 빠진 줄과 props가 다른 줄은 코드로 고칠 수 있습니다.
 
 ### 관문 2: absolute·하드코딩 값
 

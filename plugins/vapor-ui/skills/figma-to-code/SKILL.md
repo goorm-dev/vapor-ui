@@ -12,7 +12,7 @@ description: Figma 시안을 vapor-ui 코드로 구현하고, 관문 2개(컴포
 Figma URL과 코드를 쓸 위치를 받는다. 아래가 갖춰졌는지 먼저 확인하고, 빠진 것이 있으면 모두 한꺼번에 알리고 멈춘다.
 
 - Figma MCP 서버 연결
-- `@vapor-ui/figma-eval` 설치. `npx --no figma-eval`의 출력이 `usage: figma-eval`로 시작하면 설치돼 있다. 이 명령은 설치돼 있어도 종료 코드 1로 끝나니 종료 코드로 판단하지 않는다.
+- `@vapor-ui/figma-eval` 설치. `npx --no figma-eval 2>&1 | grep -q '^usage: figma-eval'`이 성공하면 설치돼 있다. `npx --no figma-eval`은 설치돼 있어도 종료 코드 1로 끝나고 npm 경고가 앞에 붙을 수 있으니, 종료 코드나 첫 줄로 판단하지 않는다.
 - `FIGMA_ACCESS_TOKEN`
 
 ## 흐름
@@ -21,9 +21,9 @@ Figma URL과 코드를 쓸 위치를 받는다. 아래가 갖춰졌는지 먼저
 2. **check-components**와 **check-styling**을 그 경로로 돌린다. 이 결과가 "개선 전"이다.
 3. 두 관문이 모두 통과할 때까지 고치고 2번을 다시 돌린다. **최대 2회**까지만 고친다.
     - check-components의 `missing`·`mismatch` 줄과 check-styling의 실패 줄만 고친다. 통과한 부분은 건드리지 않는다.
+    - check-components가 `unscorable`이어도 `rows`의 `missing`·`mismatch`는 고친다. `unscorable` 항목은 고칠 대상이 아니다. 고칠 줄이 남지 않으면 회차가 남아도 멈춘다.
     - 관문 스킬이 실행 오류로 멈췄으면 고치지 않는다. 오류를 보고하고 멈춘다.
-    - check-components가 패키지를 설치하라고 안내했으면 설치를 사용자에게 맡기고 멈춘다. 설치한 뒤 2번부터 다시 한다.
-    - 그 밖의 `unscorable`이면 고치지 않는다. 사용자 코드로 풀 수 없는 원인이다. 원인을 보고하고 3번을 건너뛴다.
+    - "`pass`, 단 `<pkg>` 미채점"은 고칠 줄이 없는 상태로 본다. 패키지 설치나 업그레이드 안내는 흐름을 멈추지 말고 최종 보고에 담는다.
 4. **visual-score**로 시각 점수를 잰다. 앱 URL, selector, 로그인 상태 파일은 이때 묻는다. 관문을 통과하지 못했어도 잰다.
 
 ## 보고
