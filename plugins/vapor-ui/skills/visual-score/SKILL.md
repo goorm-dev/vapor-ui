@@ -18,7 +18,7 @@ description: 실행 중인 앱 화면을 Figma 시안과 비교해 시각 점수
 ## 실행
 
 ```bash
-npx --no figma-eval visual "<Figma URL>" "<앱 URL>" [--selector "<css>"] [--storage-state <file>] --json 2>"${TMPDIR:-/tmp}/figma-eval.err"
+npx --no figma-eval visual "<Figma URL>" "<앱 URL>" [--selector "<css>"] [--storage-state <file>] --json 2>"${TMPDIR:-/tmp}/figma-eval-visual.err"
 ```
 
 `figma-eval`을 찾지 못하면 `@vapor-ui/figma-eval` 설치를, Playwright가 없다는 안내가 나오면 그 안내를 그대로 전한다. stderr 파일에 `usage: figma-eval` 줄이 있으면 설치된 버전에 `visual` 명령이 없다. 버전을 올리라고 안내하고 멈춘다. 그 밖에 stdout이 JSON이 아니면 실행 오류다. stderr 파일 내용을 그대로 전하고 멈춘다.

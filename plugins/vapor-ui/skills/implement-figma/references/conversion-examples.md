@@ -83,13 +83,10 @@ Frame (VERTICAL, itemSpacing: 24)
         <Card.Header>User Profile</Card.Header>
         <Card.Body>
             <HStack $css={{ gap: '$200', alignItems: 'center' }}>
-                <Avatar.Root size="lg">
-                    <Avatar.ImagePrimitive src="/avatar.jpg" />
-                    <Avatar.FallbackPrimitive>JD</Avatar.FallbackPrimitive>
-                </Avatar.Root>
+                <Avatar.Root size="lg" src="/avatar.jpg" alt="John Doe" />
                 <VStack $css={{ gap: '$100' }}>
                     <Text $css={{ fontWeight: 'bold' }}>John Doe</Text>
-                    <Text $css={{ color: 'hint-100' }}>john@example.com</Text>
+                    <Text $css={{ color: '$fg-hint-100' }}>john@example.com</Text>
                 </VStack>
             </HStack>
         </Card.Body>

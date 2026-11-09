@@ -17,8 +17,8 @@ Figma URL과 코드를 쓸 위치를 받는다. 아래가 갖춰졌는지 먼저
 
 ## 흐름
 
-1. **implement-figma**로 구현한다. 쓰거나 고친 파일 경로를 모으고, figma-eval을 실행할 폴더(`@vapor-ui/core`가 설치된 폴더) 기준 경로로 바꿔 둔다.
-2. **check-components**와 **check-styling**을 그 경로로 돌린다. 이 결과가 "개선 전"이다.
+1. **implement-figma**로 구현한다. 쓰거나 고친 파일 경로와, 화면이 가져다 쓴 기존 컴포넌트 파일 경로를 따로 모으고, figma-eval을 실행할 폴더(`@vapor-ui/core`가 설치된 폴더) 기준 경로로 바꿔 둔다.
+2. **check-components**에는 두 목록을 모두, **check-styling**에는 쓰거나 고친 파일만 넘긴다. 둘은 차례로 돌린다. 이 결과가 "개선 전"이다.
 3. 두 관문이 모두 통과할 때까지 고치고 2번을 다시 돌린다. **최대 2회**까지만 고친다.
     - check-components의 `missing`·`mismatch` 줄과 check-styling의 실패 줄만 고친다. 통과한 부분은 건드리지 않는다.
     - check-components가 `unscorable`이어도 `rows`의 `missing`·`mismatch`는 고친다. `unscorable` 항목은 고칠 대상이 아니다. 고칠 줄이 남지 않으면 회차가 남아도 멈춘다.

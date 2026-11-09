@@ -7,14 +7,14 @@ description: 관문 1. Figma 시안의 vapor-ui 컴포넌트와 props가 코드�
 
 ## 준비
 
-- 입력은 Figma URL(노드 하나)과 구현한 파일 경로들이다. 경로를 모르면 묻는다. 디렉터리도 받는다. 경로는 명령을 실행하는 폴더 기준으로 넘긴다.
+- 입력은 Figma URL(노드 하나)과 화면 코드 경로들이다. 이번에 쓴 파일뿐 아니라, 화면이 렌더하는 컴포넌트를 정의한 기존 파일도 넣는다. 넘긴 파일 밖에서 그려지는 컴포넌트는 `missing`이 된다. 경로를 모르면 묻는다. 디렉터리도 받는다. 경로는 명령을 실행하는 폴더 기준으로 넘긴다.
 - `@vapor-ui/core`가 설치된 패키지 폴더에서 실행한다. 모노레포면 앱 폴더다.
 - `FIGMA_ACCESS_TOKEN`이 비어 있으면 Figma 개인 토큰을 넣으라고 안내하고 멈춘다.
 
 ## 실행
 
 ```bash
-npx --no figma-eval compare "<Figma URL>" <경로...> --json 2>"${TMPDIR:-/tmp}/figma-eval.err"
+npx --no figma-eval compare "<Figma URL>" <경로...> --json 2>"${TMPDIR:-/tmp}/figma-eval-compare.err"
 ```
 
 `--no`는 npm에서 이름이 같은 다른 패키지를 내려받지 않게 한다. stderr는 파일로 따로 받아 읽는다. 섞이면 npm 경고와 안내 줄 때문에 JSON을 읽을 수 없다.

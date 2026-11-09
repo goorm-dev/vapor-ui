@@ -13,7 +13,7 @@ description: 관문 2. 구현 코드에 absolute 배치와 하드코딩한 색·
 ## 실행
 
 ```bash
-npx --no figma-eval styling <파일...> --json 2>"${TMPDIR:-/tmp}/figma-eval.err"
+npx --no figma-eval styling <파일...> --json 2>"${TMPDIR:-/tmp}/figma-eval-styling.err"
 ```
 
 `figma-eval`을 찾지 못하면 `@vapor-ui/figma-eval`을 devDependency로 설치하라고 안내하고 멈춘다. stderr 파일에 `usage: figma-eval` 줄이 있으면 설치된 버전에 `styling` 명령이 없다. 버전을 올리라고 안내하고 멈춘다. 그 밖에 stdout이 JSON이 아니면 실행 오류다. 종료 코드가 1이어도 `fail`로 세지 말고 stderr 파일 내용을 그대로 전한 뒤 멈춘다.
