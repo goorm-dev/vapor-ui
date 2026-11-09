@@ -312,6 +312,69 @@ describe('compare', () => {
         ]);
     });
 
+    it('lets an element inside .map() meet every line the design repeats it for', () => {
+        const rows = run(
+            [
+                '<Table.Cell />',
+                '<Table.Cell />',
+                '<Table.Cell />',
+                '<Button disabled />',
+                '<Button disabled />',
+            ],
+            [
+                "import { Button, Table } from '@vapor-ui/core';",
+                'export const App = ({ rows }) => (',
+                '    <>',
+                '        {rows.map((r) => <Table.Cell key={r} />)}',
+                '        <Button disabled />',
+                '    </>',
+                ');',
+            ],
+        );
+
+        expect(rows.map((r) => r.status)).toEqual(['ok', 'ok', 'ok', 'ok', 'missing']);
+    });
+
+    it('counts an icon the code passes around as a value, once per mention', () => {
+        const rows = run(
+            [
+                { line: '<DashboardOutlineIcon />', pkg: 'icons' },
+                { line: '<LockOutlineIcon />', pkg: 'icons' },
+                { line: '<LockOutlineIcon />', pkg: 'icons' },
+            ],
+            [
+                "import { DashboardOutlineIcon, LockOutlineIcon } from '@vapor-ui/icons';",
+                'const NAV = [{ icon: DashboardOutlineIcon }, { icon: LockOutlineIcon }];',
+                'export const App = () => <nav>{NAV.map((n) => <n.icon key="x" />)}</nav>;',
+            ],
+        );
+
+        expect(rows.map((r) => r.status)).toEqual(['ok', 'ok', 'missing']);
+    });
+
+    it('accepts an expression it cannot read for a flag or a value, but not one whose consts rule the value out', () => {
+        const rows = run(
+            [
+                '<Button disabled />',
+                '<Button colorPalette="primary" />',
+                '<Badge colorPalette="danger" />',
+            ],
+            [
+                "import { Badge, Button } from '@vapor-ui/core';",
+                "const TONE = { a: 'success', b: 'hint' };",
+                'export const App = ({ isPaused, tone, s }) => (',
+                '    <>',
+                '        <Button disabled={isPaused} />',
+                '        <Button colorPalette={tone} />',
+                '        <Badge colorPalette={TONE[s]} />',
+                '    </>',
+                ');',
+            ],
+        );
+
+        expect(rows.map((r) => r.status)).toEqual(['ok', 'ok', 'mismatch']);
+    });
+
     it('reports the result the exit code follows', () => {
         const result = (unscorable: number, source: string) =>
             compare(

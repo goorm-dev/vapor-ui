@@ -3,7 +3,10 @@
 // props mismatch; no such tag at all is missing. Both count as not recalled.
 // Code side: each JSX element whose tag is imported from '@vapor-ui/*' (named, aliased or namespace import, any
 // subpath), under the name the package exports; its parent is the nearest one above that the expected set names, so
-// layout elements in between (Box, HStack) do not count. One code element meets one line at most.
+// layout elements in between (Box, HStack) do not count. One code element meets one line at most, except one inside a
+// .map() callback, which draws once per item and so may meet every line the design repeats it for. An icon named as a
+// value (`{ icon: LockOutlineIcon }`) counts once per mention, with no props, under any parent. A prop given as an expression
+// whose consts hold no string (`disabled={isPaused}`) matches any expected value: the scan cannot tell it is wrong.
 // A local component (PascalCase function in a scanned file) is inlined at each call site, with the JSX passed to it as
 // props or children rendered where its body reads that prop, so <SideToolTab icon={<MemoIcon />}> puts MemoIcon in
 // the IconButton the tab draws. Its body is read only there, against its own file's imports; one that nothing renders
@@ -28,7 +31,23 @@ interface CodeElement {
     above: string[];
     props: Record<string, PropValue>;
     at: string;
+    repeats: boolean;
+    // An icon named as a value: where it renders is unknown, so it fits any parent.
+    anyParent?: true;
 }
+
+// Inside the callback of a .map()/.flatMap() call, between the node and the nearest enclosing component body.
+const inMap = (n: ts.Node) => {
+    for (let p = n.parent; p && !ts.isSourceFile(p); p = p.parent)
+        if (
+            (ts.isArrowFunction(p) || ts.isFunctionExpression(p)) &&
+            ts.isCallExpression(p.parent) &&
+            ts.isPropertyAccessExpression(p.parent.expression) &&
+            ['map', 'flatMap'].includes(p.parent.expression.name.text)
+        )
+            return true;
+    return false;
+};
 
 // local name → what it stands for: an export of a @vapor-ui package, or (namespace) the package itself.
 type Imports = Map<string, { pkg: Pkg; name: string | null }>;
@@ -204,8 +223,40 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
             vapor: Imports,
             bound = new Map<string, { nodes: ts.Node[]; vapor: Imports }>(),
             depth = 0,
+            // The call site of the component being inlined sits in a .map() callback.
+            repeated = false,
         ) {
-            if (skipped.has(n)) return;
+            if (skipped.has(n) || ts.isImportDeclaration(n)) return;
+            const where = (x: ts.Node) => {
+                const sf = x.getSourceFile();
+                return `${sf.fileName}:${sf.getLineAndCharacterOfPosition(x.getStart()).line + 1}`;
+            };
+            // An icon named as a value; a tag name or a member name is not one.
+            const p = n.parent;
+            if (
+                ts.isIdentifier(n) &&
+                !(
+                    (ts.isJsxOpeningElement(p) ||
+                        ts.isJsxSelfClosingElement(p) ||
+                        ts.isJsxClosingElement(p)) &&
+                    p.tagName === n
+                ) &&
+                !(ts.isPropertyAccessExpression(p) && p.name === n) &&
+                !(ts.isPropertyAssignment(p) && p.name === n) &&
+                !ts.isJsxAttribute(p)
+            ) {
+                const icon = resolveTag(n.text, vapor);
+                if (icon?.pkg === 'icons')
+                    out.push({
+                        ...icon,
+                        above: [],
+                        props: {},
+                        at: where(n),
+                        repeats: repeated || inMap(n),
+                        anyParent: true,
+                    });
+                return;
+            }
             const read =
                 ts.isJsxExpression(n) &&
                 n.expression &&
@@ -216,7 +267,7 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
                       : null);
             const passed = read ? bound.get(read) : undefined;
             if (passed) {
-                for (const b of passed.nodes) visit(b, parent, passed.vapor, new Map(), depth);
+                for (const b of passed.nodes) visit(b, parent, passed.vapor, new Map(), depth, repeated);
                 return;
             }
             if (ts.isJsxElement(n) || ts.isJsxSelfClosingElement(n)) {
@@ -238,7 +289,7 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
                             });
                     if (ts.isJsxElement(n)) args.set('children', { nodes: [...n.children], vapor });
                     // The call site's children and props are rendered where the body reads them, not here as well.
-                    return visit(local.body, parent, local.imports, args, depth + 1);
+                    return visit(local.body, parent, local.imports, args, depth + 1, repeated || inMap(n));
                 }
                 if (resolved) {
                     let { tag, pkg } = resolved;
@@ -265,9 +316,7 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
                                     ? e.text
                                     : { expr: e?.getText(), values: e ? strings(e) : new Set() };
                     }
-                    const at = n.getSourceFile();
-                    const where = `${at.fileName}:${at.getLineAndCharacterOfPosition(n.getStart()).line + 1}`;
-                    out.push({ tag, pkg, above: parent, props, at: where });
+                    out.push({ tag, pkg, above: parent, props, at: where(n), repeats: repeated || inMap(n) });
                     parent = [tag, ...parent];
                     // render={<Toggle />} makes the element render as Toggle, so its children (not the render
                     // element itself, an attribute) sit inside a Toggle.
@@ -284,14 +333,14 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
                         (ts.isJsxSelfClosingElement(as) || ts.isJsxElement(as)) &&
                         resolveTag(open(as).tagName.getText(), vapor);
                     if (ts.isJsxElement(n) && asTag) {
-                        visit(n.openingElement, parent, vapor, bound, depth);
+                        visit(n.openingElement, parent, vapor, bound, depth, repeated);
                         for (const c of n.children)
-                            visit(c, [asTag.tag, ...parent], vapor, bound, depth);
+                            visit(c, [asTag.tag, ...parent], vapor, bound, depth, repeated);
                         return;
                     }
                 }
             }
-            ts.forEachChild(n, (c) => void visit(c, parent, vapor, bound, depth));
+            ts.forEachChild(n, (c) => void visit(c, parent, vapor, bound, depth, repeated));
         })(sf, [], importsOf(sf));
         return out;
     }
@@ -308,7 +357,8 @@ export function compare(expected: ExpectedSet, files: SourceFile[], tables: Tabl
         (want === '*' && got !== undefined) ||
         want === '...' ||
         (want === true && got === 'true') ||
-        (typeof got === 'object' && typeof want === 'string' && got.values.has(want));
+        (typeof got === 'object' && typeof want === 'string' && got.values.has(want)) ||
+        (typeof got === 'object' && (want === true || !got.values.size));
 
     const wants = expected.lines.map(({ line, pkg }) => ({ ...parseLine(line), pkg }));
     const tags = new Set(wants.map((w) => w.tag));
@@ -323,17 +373,19 @@ export function compare(expected: ExpectedSet, files: SourceFile[], tables: Tabl
                 const got = c.props[k];
                 return `${k}: ${JSON.stringify(v)} → ${(typeof got === 'object' ? got.expr : undefined) ?? JSON.stringify(got ?? null)}`;
             }),
-        ...(want.parent && c.parent !== want.parent
+        ...(want.parent && !c.anyParent && c.parent !== want.parent
             ? [`data-in: ${want.parent} → ${c.parent ?? 'none'}`]
             : []),
     ];
     const sameTag = (w: (typeof wants)[number], c: (typeof code)[number]) =>
         c.tag === w.tag && c.pkg === w.pkg;
     // Each line gets its own code element: a maximum matching (augmenting paths), so one <Button disabled> cannot
-    // stand for both the enabled and the disabled Button the design draws.
-    const fits = wants.map((w) =>
+    // stand for both the enabled and the disabled Button the design draws. A .map() element sits outside the matching
+    // and takes whatever lines are left that it fits.
+    const fitting = wants.map((w) =>
         code.flatMap((c, j) => (sameTag(w, c) && !diff(w, c).length ? [j] : [])),
     );
+    const fits = fitting.map((js) => js.filter((j) => !code[j].repeats));
     const owner = new Map<number, number>(); // code index → line index
     const assign = (i: number, seen: Set<number>): boolean =>
         fits[i].some((j) => {
@@ -346,6 +398,10 @@ export function compare(expected: ExpectedSet, files: SourceFile[], tables: Tabl
         });
     for (let i = 0; i < wants.length; i++) assign(i, new Set());
     const hit = new Map([...owner].map(([j, i]) => [i, code[j]]));
+    for (let i = 0; i < wants.length; i++) {
+        const j = hit.has(i) ? undefined : fitting[i].find((x) => code[x].repeats);
+        if (j !== undefined) hit.set(i, code[j]);
+    }
     // The closest candidate for a miss is never an element another line already matched: that element is accounted
     // for, and showing its props as this line's diff reads as if correct code were wrong.
     const used = new Set(hit.values());
