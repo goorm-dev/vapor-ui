@@ -352,6 +352,29 @@ describe('compare', () => {
         expect(rows.map((r) => r.status)).toEqual(['ok', 'ok', 'missing']);
     });
 
+    it('follows props spread into a local component, and counts an icon prop the body renders under another name', () => {
+        const rows = run(
+            [
+                { line: '<DashboardOutlineIcon />', pkg: 'icons' },
+                { line: '<ChevronDownOutlineIcon />', pkg: 'icons' },
+            ],
+            [
+                "import { DashboardOutlineIcon, ChevronDownOutlineIcon } from '@vapor-ui/icons';",
+                'function Content({ icon }) { return <>{icon}</>; }',
+                'function Item(props) { return <Content {...props} />; }',
+                'function NavIcon({ icon: Icon }) { return <Icon />; }',
+                'export const App = () => (',
+                '    <>',
+                '        <Item icon={<DashboardOutlineIcon />} />',
+                '        <NavIcon icon={ChevronDownOutlineIcon} />',
+                '    </>',
+                ');',
+            ],
+        );
+
+        expect(rows.map((r) => r.status)).toEqual(['ok', 'ok']);
+    });
+
     it('accepts an expression it cannot read for a flag or a value, but not one whose consts rule the value out', () => {
         const rows = run(
             [

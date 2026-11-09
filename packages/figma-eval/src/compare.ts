@@ -49,6 +49,10 @@ const inMap = (n: ts.Node) => {
     return false;
 };
 
+// Inside an inlined component body: prop name → the call-site nodes passed for it, read against the call site's
+// imports; used once the body renders it.
+type Bound = Map<string, { nodes: ts.Node[]; vapor: Imports; used?: boolean }>;
+
 // local name → what it stands for: an export of a @vapor-ui package, or (namespace) the package itself.
 type Imports = Map<string, { pkg: Pkg; name: string | null }>;
 
@@ -221,7 +225,7 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
             n: ts.Node,
             parent: string[],
             vapor: Imports,
-            bound = new Map<string, { nodes: ts.Node[]; vapor: Imports }>(),
+            bound: Bound = new Map(),
             depth = 0,
             // The call site of the component being inlined sits in a .map() callback.
             repeated = false,
@@ -267,7 +271,9 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
                       : null);
             const passed = read ? bound.get(read) : undefined;
             if (passed) {
-                for (const b of passed.nodes) visit(b, parent, passed.vapor, new Map(), depth, repeated);
+                passed.used = true;
+                for (const b of passed.nodes)
+                    visit(b, parent, passed.vapor, new Map(), depth, repeated);
                 return;
             }
             if (ts.isJsxElement(n) || ts.isJsxSelfClosingElement(n)) {
@@ -275,9 +281,11 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
                 const resolved = resolveTag(text, vapor);
                 const local = !resolved && components.get(text);
                 if (local && depth < 4) {
-                    const args = new Map<string, { nodes: ts.Node[]; vapor: Imports }>();
+                    const args: Bound = new Map();
                     for (const a of open(n).attributes.properties)
-                        if (
+                        // <Content {...props} /> hands on what the enclosing component was given.
+                        if (ts.isJsxSpreadAttribute(a)) for (const [k, v] of bound) args.set(k, v);
+                        else if (
                             ts.isJsxAttribute(a) &&
                             a.initializer &&
                             ts.isJsxExpression(a.initializer) &&
@@ -289,7 +297,22 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
                             });
                     if (ts.isJsxElement(n)) args.set('children', { nodes: [...n.children], vapor });
                     // The call site's children and props are rendered where the body reads them, not here as well.
-                    return visit(local.body, parent, local.imports, args, depth + 1, repeated || inMap(n));
+                    visit(local.body, parent, local.imports, args, depth + 1, repeated || inMap(n));
+                    // An icon prop the body never reads as {icon} (it renders `{ icon: Icon }` as <Icon />) still
+                    // draws: count the icon the call site names.
+                    for (const a of args.values())
+                        if (!a.used && a.nodes.length === 1 && ts.isIdentifier(a.nodes[0])) {
+                            a.used = true;
+                            visit(
+                                a.nodes[0],
+                                parent,
+                                a.vapor,
+                                new Map(),
+                                depth,
+                                repeated || inMap(n),
+                            );
+                        }
+                    return;
                 }
                 if (resolved) {
                     let { tag, pkg } = resolved;
@@ -316,7 +339,14 @@ function scan(files: SourceFile[], presets: Tables['presets']) {
                                     ? e.text
                                     : { expr: e?.getText(), values: e ? strings(e) : new Set() };
                     }
-                    out.push({ tag, pkg, above: parent, props, at: where(n), repeats: repeated || inMap(n) });
+                    out.push({
+                        tag,
+                        pkg,
+                        above: parent,
+                        props,
+                        at: where(n),
+                        repeats: repeated || inMap(n),
+                    });
                     parent = [tag, ...parent];
                     // render={<Toggle />} makes the element render as Toggle, so its children (not the render
                     // element itself, an attribute) sit inside a Toggle.
