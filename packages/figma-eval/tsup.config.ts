@@ -9,5 +9,5 @@ export default defineConfig({
     sourcemap: false,
     splitting: false,
     minify: false,
-    external: ['typescript'],
+    external: ['typescript', 'playwright'],
 });

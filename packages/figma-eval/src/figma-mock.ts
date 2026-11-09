@@ -15,6 +15,15 @@ export interface FigmaNode {
     componentProperties?: Record<string, { value: string | boolean }>;
     componentPropertyReferences?: Record<string, string>;
     characters?: string;
+    absoluteBoundingBox?: Rect | null;
+    absoluteRenderBounds?: Rect | null;
+}
+
+export interface Rect {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 }
 
 export type Batch = Record<string, unknown>;

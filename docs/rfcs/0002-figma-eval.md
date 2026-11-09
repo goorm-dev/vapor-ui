@@ -50,26 +50,28 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 시
 
 `packages/figma-eval`에 `@vapor-ui/figma-eval`을 새로 만들고 PoC를 TypeScript로 옮깁니다. `typescript`는 JSX 파싱에 쓰는 정식 dependency가 됩니다.
 
-| 진입점                          | 역할                                                              |
-| ------------------------------- | ----------------------------------------------------------------- |
-| `figma-eval expected <tree.json | Figma URL>`                                                       | 정답 집합을 출력한다                             |
-| `figma-eval compare <tree.json  | Figma URL> <코드 경로…> [--json]`                                 | 재현율, props 불일치, 누락, 제외 내역을 보고한다 |
-| `figma-eval build`              | 컴포넌트 패키지 빌드에서 템플릿과 표를 컴파일한다                 |
-| `figma-eval map`                | 토큰으로 `entries` 표를 생성한다. 사람이 실행하고 결과를 커밋한다 |
-| JS API `expectedSet`, `compare` | 비공개 벤치가 import해서 쓴다                                     |
+| 진입점                                                                                                     | 역할                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `figma-eval expected <tree.json \| Figma URL>`                                                             | 정답 집합을 출력한다                                                                                      |
+| `figma-eval compare <tree.json \| Figma URL> <코드 경로…> [--json]`                                        | 재현율, props 불일치, 누락, 제외 내역을 보고한다                                                          |
+| `figma-eval build`                                                                                         | 컴포넌트 패키지 빌드에서 템플릿과 표를 컴파일한다                                                         |
+| `figma-eval map`                                                                                           | 토큰으로 `entries` 표를 생성한다. 사람이 실행하고 결과를 커밋한다                                         |
+| `figma-eval visual <tree.json \| Figma URL> <앱 URL> [--selector <css>] [--storage-state <파일>] [--json]` | 실행 중인 앱을 프레임 크기로 열어 Block-Match, Position, Layout IoU를 기록한다. 합격·불합격은 내지 않는다 |
+| JS API `expectedSet`, `compare`, `visualScore`                                                             | 비공개 벤치가 import해서 쓴다                                                                             |
 
 빌드는 `@vapor-ui/codemod`처럼 tsup으로 하고 `src`는 한 단계로 둡니다.
 
-| 파일            | 역할                                                              |
-| --------------- | ----------------------------------------------------------------- |
-| `figma-mock.ts` | 템플릿이 import하는 `figma` 모듈의 대역                           |
-| `expected.ts`   | REST 트리 → 정답 집합                                             |
-| `compare.ts`    | 정답 집합과 생성 코드의 대조                                      |
-| `library.ts`    | 템플릿과 표를 공급하는 포트와 어댑터 두 개                        |
-| `map.ts`        | `figma-eval map`                                                  |
-| `build.ts`      | `figma-eval build`, 소스에서 표를 추출하는 함수, 템플릿 변환 함수 |
-| `cli.ts`        | 명령 진입점. fetch와 파일 읽기는 이 파일에서만 한다               |
-| `index.ts`      | JS API                                                            |
+| 파일            | 역할                                                                                                           |
+| --------------- | -------------------------------------------------------------------------------------------------------------- |
+| `figma-mock.ts` | 템플릿이 import하는 `figma` 모듈의 대역                                                                        |
+| `expected.ts`   | REST 트리 → 정답 집합                                                                                          |
+| `compare.ts`    | 정답 집합과 생성 코드의 대조                                                                                   |
+| `library.ts`    | 템플릿과 표를 공급하는 포트와 어댑터 두 개                                                                     |
+| `map.ts`        | `figma-eval map`                                                                                               |
+| `build.ts`      | `figma-eval build`, 소스에서 표를 추출하는 함수, 템플릿 변환 함수                                              |
+| `visual.ts`     | `figma-eval visual`. 시안과 렌더링 결과의 텍스트·컴포넌트 박스를 비교한다. Playwright는 이 파일에서만 불러온다 |
+| `cli.ts`        | 명령 진입점. fetch와 파일 읽기는 이 파일에서만 한다                                                            |
+| `index.ts`      | JS API                                                                                                         |
 
 `figma-mock`, `expected`, `compare`는 데이터만 받습니다. REST 트리는 객체로, 생성 코드는 `{ path, text }[]`로 받습니다.
 
