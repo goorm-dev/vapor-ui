@@ -1,6 +1,6 @@
 ---
 name: implement-figma
-description: Figma 시안 하나를 vapor-ui 코드로 옮긴다. "이 Figma 시안 vapor-ui로 구현해줘", "figma to code", "시안 코드로 옮겨줘"처럼 Figma URL과 함께 구현을 요청할 때 쓴다. 구현 뒤 채점까지 한 번에 하려면 figma-to-code 스킬을 쓴다.
+description: Figma 시안 하나를 채점 없이 vapor-ui 코드로만 옮긴다. "채점 없이 구현만", "점수는 필요 없고 코드만", "implement only, no grading"처럼 사용자가 검증을 빼 달라고 분명히 말할 때, 또는 figma-to-code가 구현 단계에서 부를 때만 쓴다. Figma URL과 함께 구현을 요청하는 평소 말투는 figma-to-code 스킬이 맡는다.
 ---
 
 # Figma 시안을 vapor-ui 코드로
