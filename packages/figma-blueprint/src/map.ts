@@ -27,7 +27,7 @@ function connections(pkgDir: string): Connection[] {
 }
 
 // Code Connect URLs whose entry, as the package's source states it now (url, template, batch row), is not in its
-// figma-entries.json. Rerun `figma-eval map` to add them.
+// figma-entries.json. Rerun `figma-blueprint map` to add them.
 export function missingEntries(pkgDir: string): string[] {
     const stored = existsSync(join(pkgDir, 'figma-entries.json'))
         ? Object.values(readEntries(pkgDir))

@@ -65,7 +65,7 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Build icons
-              # figma-eval builds first: the icons build runs its CLI.
+              # figma-blueprint builds first: the icons build runs its CLI.
               run: pnpm --filter "@vapor-ui/icons..." build
 
             - name: Install Chromium

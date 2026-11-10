@@ -1,21 +1,21 @@
 {
-    "name": "@vapor-ui/figma-eval",
+    "name": "@vapor-ui/figma-blueprint",
     "version": "0.0.0",
-    "description": "Grades generated vapor-ui code against a Figma design through Code Connect templates",
+    "description": "Builds the vapor-ui element tree a Figma design requires, through Code Connect templates",
     "keywords": [
         "vapor-ui",
         "figma",
         "code connect",
-        "eval"
+        "blueprint"
     ],
     "repository": {
         "type": "git",
         "url": "git+https://github.com/goorm-dev/vapor-ui.git",
-        "directory": "packages/figma-eval"
+        "directory": "packages/figma-blueprint"
     },
     "main": "dist/index.mjs",
     "bin": {
-        "figma-eval": "./bin/figma-eval.mjs"
+        "figma-blueprint": "./bin/figma-blueprint.mjs"
     },
     "files": [
         "bin",

@@ -44,18 +44,18 @@
                 "default": "./dist/components/*/index.cjs"
             }
         },
-        "./figma-eval/*": "./figma-eval/*"
+        "./figma-blueprint/*": "./figma-blueprint/*"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.cts",
     "files": [
         "dist",
-        "figma-eval"
+        "figma-blueprint"
     ],
     "scripts": {
-        "build": "rimraf dist figma-eval && rolldown -c rolldown.config.ts && figma-eval build",
-        "clean": "rimraf dist figma-eval node_modules .turbo",
+        "build": "rimraf dist figma-blueprint && rolldown -c rolldown.config.ts && figma-blueprint build",
+        "clean": "rimraf dist figma-blueprint node_modules .turbo",
         "lint": "eslint ./src",
         "test": "vitest --run --passWithNoTests",
         "test:coverage": "vitest --coverage --passWithNoTests",
@@ -81,7 +81,7 @@
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "@vapor-ui/core": "workspace:^",
-        "@vapor-ui/figma-eval": "workspace:*",
+        "@vapor-ui/figma-blueprint": "workspace:*",
         "@vitest/browser": "^3.2.7",
         "@vitest/coverage-v8": "^3.2.7",
         "eslint": "catalog:",

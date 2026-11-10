@@ -7,12 +7,12 @@ import { expectedSet } from './expected';
 import { buildPackage, fromInstalled, fromRepo } from './library';
 import { parseFigmaUrl, writeEntries } from './map';
 
-const USAGE = `usage: figma-eval expected <tree.json | figma URL> [--repo <root>]
-       figma-eval map [--repo <root>]
-       figma-eval build
+const USAGE = `usage: figma-blueprint expected <tree.json | figma URL> [--repo <root>]
+       figma-blueprint map [--repo <root>]
+       figma-blueprint build
 
 Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
-build runs in packages/core, composites or icons and writes their figma-eval/ folder.`;
+build runs in packages/core, composites or icons and writes their figma-blueprint/ folder.`;
 
 async function loadTree(arg: string): Promise<FigmaTree> {
     if (!arg.startsWith('http')) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
@@ -42,12 +42,12 @@ async function map(root: string) {
     const token = process.env.FIGMA_ACCESS_TOKEN;
     if (!token) {
         console.error(
-            'figma-eval map: FIGMA_ACCESS_TOKEN is not set. It needs read access to the library files the Code Connect URLs point to.',
+            'figma-blueprint map: FIGMA_ACCESS_TOKEN is not set. It needs read access to the library files the Code Connect URLs point to.',
         );
         process.exit(1);
     }
     const { counts, unpublished } = await writeEntries(root, token).catch((e: Error) => {
-        console.error(`figma-eval map: ${e.message}`);
+        console.error(`figma-blueprint map: ${e.message}`);
         process.exit(1);
     });
     for (const [pkg, n] of Object.entries(counts))
@@ -66,9 +66,9 @@ if (command === 'map') {
 }
 if (command === 'build') {
     try {
-        buildPackage(process.cwd(), join(process.cwd(), 'figma-eval'));
+        buildPackage(process.cwd(), join(process.cwd(), 'figma-blueprint'));
     } catch (e) {
-        console.error(`figma-eval build: ${(e as Error).message}`);
+        console.error(`figma-blueprint build: ${(e as Error).message}`);
         process.exit(1);
     }
     process.exit(0);

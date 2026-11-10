@@ -3,7 +3,7 @@
 // Nested templates are not run inline: executeTemplate() returns an INSTANCE section, rendered as a marker that
 // expected.ts uses to find which element the nested instance sits in.
 
-export const FIGMA_KEY = Symbol.for('@vapor-ui/figma-eval');
+export const FIGMA_KEY = Symbol.for('@vapor-ui/figma-blueprint');
 
 export interface FigmaNode {
     id: string;

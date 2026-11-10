@@ -34,8 +34,8 @@ export function transformTemplate(
 }
 
 // Writes each template (wrapped) and every helper it imports by relative path to outDir, at its path in pkgDir.
-// `figma-eval build` ships them as JS (.mjs, since composites has no "type": "module"). fromRepo writes TypeScript and
-// leaves stripping the types to Node, as .mts for the same reason.
+// `figma-blueprint build` ships them as JS (.mjs, since composites has no "type": "module"). fromRepo writes TypeScript
+// and leaves stripping the types to Node, as .mts for the same reason.
 export function writeTemplates(pkgDir: string, templates: string[], outDir: string, js: boolean) {
     const ext = js ? '.mjs' : '.mts';
     const written = new Set<string>();

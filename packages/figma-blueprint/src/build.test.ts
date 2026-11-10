@@ -58,19 +58,19 @@ afterAll(() => {
     for (const app of apps) rmSync(app, { recursive: true, force: true });
 });
 
-// An app with the fixture packages installed the way a consumer gets them: figma-eval/ from `figma-eval build`, next
-// to a package.json that exports it.
+// An app with the fixture packages installed the way a consumer gets them: figma-blueprint/ from
+// `figma-blueprint build`, next to a package.json that exports it.
 function install(pkgs: Pkg[]) {
-    const app = mkdtempSync(join(tmpdir(), 'figma-eval-app-'));
+    const app = mkdtempSync(join(tmpdir(), 'figma-blueprint-app-'));
     apps.push(app);
     for (const pkg of pkgs) {
         const dir = join(app, 'node_modules/@vapor-ui', pkg);
-        buildPackage(join(root, 'packages', pkg), join(dir, 'figma-eval'));
+        buildPackage(join(root, 'packages', pkg), join(dir, 'figma-blueprint'));
         writeFileSync(
             join(dir, 'package.json'),
             JSON.stringify({
                 name: `@vapor-ui/${pkg}`,
-                exports: { './figma-eval/*': './figma-eval/*' },
+                exports: { './figma-blueprint/*': './figma-blueprint/*' },
             }),
         );
     }
@@ -78,7 +78,7 @@ function install(pkgs: Pkg[]) {
 }
 
 const shipped = (app: string, pkg: Pkg, file: string) =>
-    readFileSync(join(app, 'node_modules/@vapor-ui', pkg, 'figma-eval', file), 'utf8');
+    readFileSync(join(app, 'node_modules/@vapor-ui', pkg, 'figma-blueprint', file), 'utf8');
 
 const tree: FigmaTree = {
     document: {
@@ -102,7 +102,7 @@ const tree: FigmaTree = {
     },
 };
 
-describe('figma-eval build', () => {
+describe('figma-blueprint build', () => {
     afterEach(() => {
         vi.restoreAllMocks();
     });
@@ -146,9 +146,9 @@ describe('figma-eval build', () => {
         expect({ ...core, ...composites }).toEqual(extractTables(root));
     });
 
-    it('rewrites figma-eval/ from scratch, to the same bytes', () => {
+    it('rewrites figma-blueprint/ from scratch, to the same bytes', () => {
         const app = install(['core']);
-        const out = join(app, 'node_modules/@vapor-ui/core/figma-eval');
+        const out = join(app, 'node_modules/@vapor-ui/core/figma-blueprint');
         const files = () =>
             readdirSync(out, { recursive: true, encoding: 'utf8' })
                 .filter((f) => /\.(mjs|json)$/.test(f))
@@ -169,7 +169,7 @@ describe('figma-eval build', () => {
         const library = await fromInstalled(app);
 
         expect(error).toHaveBeenCalledWith(
-            '@vapor-ui/composites is not installed, its components are not graded',
+            '@vapor-ui/composites is not installed, its components are left out',
         );
         expect(library.tables.internalParts).toEqual({});
         expect(expectedSet(tree, library).lines.map((l) => l.line)).toEqual([

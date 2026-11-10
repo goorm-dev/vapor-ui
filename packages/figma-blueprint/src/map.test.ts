@@ -7,7 +7,7 @@ const dir = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 describe('missingEntries', () => {
     it.each(['core', 'composites', 'icons'])(
-        'packages/%s/figma-entries.json holds every Code Connect entry (rerun `figma-eval map` if not)',
+        'packages/%s/figma-entries.json holds every Code Connect entry (rerun `figma-blueprint map` if not)',
         (pkg) => {
             expect(missingEntries(dir(`../../${pkg}`))).toEqual([]);
         },

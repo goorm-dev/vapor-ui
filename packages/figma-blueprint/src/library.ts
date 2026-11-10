@@ -44,7 +44,7 @@ export interface Library {
     runTemplate(entry: Entry): TemplateFn;
 }
 
-// What `figma-eval map` writes to packages/<pkg>/figma-entries.json, keyed by Figma component (set) key.
+// What `figma-blueprint map` writes to packages/<pkg>/figma-entries.json, keyed by Figma component (set) key.
 // template is relative to the package directory.
 export interface StoredEntry {
     name: string;
@@ -56,8 +56,8 @@ export interface StoredEntry {
 export const readEntries = (pkgDir: string): Record<string, StoredEntry> =>
     JSON.parse(readFileSync(join(pkgDir, 'figma-entries.json'), 'utf8'));
 
-// What `figma-eval build` writes to <package>/figma-eval/tables.json: the package's entries and its share of the
-// tables, those built from its own source (core: internalIcons and defaults, composites: presets and internalParts).
+// What `figma-blueprint build` writes to <package>/figma-blueprint/tables.json: the package's entries and its share of
+// the tables, those built from its own source (core: internalIcons and defaults, composites: presets and internalParts).
 // The templates and their helpers sit next to it under templates/, at their path in the package.
 type Shipped = { entries: Record<string, Omit<Entry, 'pkg'>> } & Partial<Tables>;
 
@@ -71,8 +71,8 @@ interface Templates {
 
 const templatesOf = (entries: Shipped['entries']) => Object.values(entries).map((e) => e.template);
 
-// `figma-eval build`, run in packages/core, composites or icons. Rewrites outDir from scratch, so a rerun on the same
-// source writes the same bytes.
+// `figma-blueprint build`, run in packages/core, composites or icons. Rewrites outDir from scratch, so a rerun on the
+// same source writes the same bytes.
 export function buildPackage(pkgDir: string, outDir: string) {
     const { name } = JSON.parse(readFileSync(join(pkgDir, 'package.json'), 'utf8')) as {
         name: string;
@@ -113,9 +113,9 @@ async function load(packages: Templates[], tables: Tables): Promise<Library> {
 }
 
 // Entries from the three packages' figma-entries.json and tables from the repo's source. Templates go through the
-// same writeTemplates as `figma-eval build`, left as TypeScript.
+// same writeTemplates as `figma-blueprint build`, left as TypeScript.
 export async function fromRepo(root: string): Promise<Library> {
-    const tmp = mkdtempSync(join(tmpdir(), 'figma-eval-'));
+    const tmp = mkdtempSync(join(tmpdir(), 'figma-blueprint-'));
     try {
         const packages = PACKAGES.map((pkg): Templates => {
             const pkgDir = join(root, 'packages', pkg);
@@ -130,8 +130,8 @@ export async function fromRepo(root: string): Promise<Library> {
     }
 }
 
-// What `figma-eval build` shipped in the @vapor-ui packages that cwd resolves. A package that is not installed is
-// left out, with a line on stderr: its components are not graded.
+// What `figma-blueprint build` shipped in the @vapor-ui packages that cwd resolves. A package that is not installed is
+// left out, with a line on stderr.
 export async function fromInstalled(cwd: string): Promise<Library> {
     const require = createRequire(join(cwd, 'package.json'));
     const tables: Tables = { internalIcons: {}, internalParts: {}, presets: {}, defaults: {} };
@@ -139,13 +139,13 @@ export async function fromInstalled(cwd: string): Promise<Library> {
     for (const pkg of PACKAGES) {
         let file;
         try {
-            file = require.resolve(`@vapor-ui/${pkg}/figma-eval/tables.json`);
+            file = require.resolve(`@vapor-ui/${pkg}/figma-blueprint/tables.json`);
         } catch (e) {
             const why =
                 (e as NodeJS.ErrnoException).code === 'ERR_PACKAGE_PATH_NOT_EXPORTED'
-                    ? 'ships no figma-eval tables'
+                    ? 'ships no figma-blueprint tables'
                     : 'is not installed';
-            console.error(`@vapor-ui/${pkg} ${why}, its components are not graded`);
+            console.error(`@vapor-ui/${pkg} ${why}, its components are left out`);
             continue;
         }
         const { entries, ...share } = JSON.parse(readFileSync(file, 'utf8')) as Shipped;
