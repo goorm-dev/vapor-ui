@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 
-import { Box, Flex, HStack, Text } from '@vapor-ui/core';
+import { Flex, HStack, Text } from '@vapor-ui/core';
 
 interface TypeChipsProps {
     types: ReactNode[];
@@ -9,7 +9,15 @@ interface TypeChipsProps {
 
 export const TypeChips = ({ types }: TypeChipsProps) => {
     return (
-        <Flex $css={{ flex: 1, flexWrap: 'wrap', gap: '$100', alignItems: 'center' }}>
+        <Flex
+            $css={{
+                flex: 1,
+                flexWrap: 'wrap',
+                rowGap: '$050',
+                columnGap: '$100',
+                alignItems: 'center',
+            }}
+        >
             {types.map((typeValue, index) => (
                 <Fragment key={index}>
                     <HStack $css={{ alignItems: 'center', gap: '$100' }}>
@@ -18,16 +26,20 @@ export const TypeChips = ({ types }: TypeChipsProps) => {
                         </Text>
                     </HStack>
 
-                    <Box
+                    <Text
                         aria-hidden
+                        render={<code />}
+                        typography="code1"
                         $css={{
                             display: index === types.length - 1 ? 'none' : 'block',
                             userSelect: 'none',
                             color: '$fg-hint',
                         }}
                     >
-                        |
-                    </Box>
+                        <span className="line">
+                            <span>|</span>
+                        </span>
+                    </Text>
                 </Fragment>
             ))}
         </Flex>

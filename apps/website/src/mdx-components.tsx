@@ -27,6 +27,7 @@ import { Table } from './components/composites/table';
 import { DocsTab, DocsTabs } from './components/docs-tabs';
 import { BasicColor, SemanticColor } from './components/foundation-color-tabs';
 import IntroLinkCardContainer from './components/intro-link-card-container';
+import { InlineCode } from './components/ui/inline-code';
 
 export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
     return {
@@ -38,6 +39,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
                 <Pre>{props.children}</Pre>
             </CodeBlock>
         ),
+        code: InlineCode,
         CodeBlock,
         ...TabsComponents,
         Demo,

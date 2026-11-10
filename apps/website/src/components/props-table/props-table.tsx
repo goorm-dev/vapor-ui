@@ -35,7 +35,7 @@ export const PropsTable = async ({ file }: PropsTableProps) => {
     const optionalRows = rows.filter((row) => !row.required);
 
     return (
-        <VStack className="not-prose" $css={{ gap: '$500' }}>
+        <VStack className="not-prose" $css={{ gap: '$400' }}>
             <PropsAccordion name="Required" rows={requiredRows} />
             <PropsAccordion name="Optional" rows={optionalRows} />
         </VStack>
@@ -53,12 +53,12 @@ const PropsAccordion = ({ name, rows }: PropsAccordionProps) => {
     if (rows.length === 0) return null;
 
     return (
-        <VStack $css={{ gap: '$200' }}>
-            <Text $css={{ marginTop: '$300', marginLeft: '$300' }} typography="subtitle1">
+        <VStack>
+            <Text $css={{ marginBlock: '$100', marginLeft: '$150' }} typography="subtitle1">
                 {name}
             </Text>
 
-            <div className="border-v-normal border-y">
+            <div className="border-v-normal border-t">
                 {rows.map((row) => (
                     <PropRow key={row.key} row={row} />
                 ))}
