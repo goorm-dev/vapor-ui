@@ -8,11 +8,39 @@ import {
 } from '@repo/rolldown-config/plugins';
 import { vanillaExtractPlugin } from '@vanilla-extract/rollup-plugin';
 import path from 'node:path';
-import type { PreRenderedAsset } from 'rolldown';
+import type { PreRenderedAsset, RolldownPlugin } from 'rolldown';
 import { defineConfig } from 'rolldown';
+
+const AGGREGATE_SOURCES = [
+    'styles/variables.css.ts.vanilla.css',
+    'styles/themes.css.ts.vanilla.css',
+] as const;
+
+const aggregateStylesCss = (): RolldownPlugin => ({
+    name: 'aggregate-styles-css',
+    generateBundle(_options, bundle) {
+        const parts: string[] = [];
+
+        for (const fileName of AGGREGATE_SOURCES) {
+            const asset = bundle[fileName];
+            if (asset?.type === 'asset' && typeof asset.source === 'string') {
+                parts.push(asset.source);
+            }
+        }
+
+        if (parts.length !== AGGREGATE_SOURCES.length) return;
+
+        this.emitFile({
+            type: 'asset',
+            fileName: 'styles/index.css',
+            source: parts.join('\n'),
+        });
+    },
+});
 
 const inputs = generateInputs([
     'src/index.ts',
+    'src/styles/create-layers.css.ts',
     'src/styles/tailwind-preset.css.ts',
     'src/components/**/*.{ts,tsx}',
     '!src/components/**/*.{figma,stories,test,spec}.*',
@@ -55,6 +83,7 @@ export default defineConfig([
             dataSlots(),
             vanillaExtractPlugin({ identifiers }),
             cleanLayerDeclaration(),
+            aggregateStylesCss(),
         ],
         output: {
             format: 'esm',
@@ -76,6 +105,7 @@ export default defineConfig([
             dataSlots(),
             vanillaExtractPlugin({ identifiers }),
             cleanLayerDeclaration(),
+            aggregateStylesCss(),
         ],
         output: {
             format: 'cjs',

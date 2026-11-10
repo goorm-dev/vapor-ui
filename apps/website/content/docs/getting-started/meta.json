@@ -13,6 +13,7 @@
         "(handbook)/(tokens)",
         "(handbook)/styling",
         "(handbook)/theming",
+        "(handbook)/css-layers",
         "(handbook)/tailwindcss-v4",
         "(handbook)/composition",
 

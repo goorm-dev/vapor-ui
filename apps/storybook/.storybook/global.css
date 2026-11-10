@@ -1,3 +1,6 @@
+@import '@vapor-ui/core/layers.css';
+@import '@vapor-ui/core/styles.css';
+
 * {
     font-family: Arial;
 }

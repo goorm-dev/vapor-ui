@@ -49,7 +49,8 @@
             }
         },
         "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
-        "./styles.css": "./dist/styles/themes.css.ts.vanilla.css"
+        "./styles.css": "./dist/styles/index.css",
+        "./layers.css": "./dist/styles/create-layers.css.ts.vanilla.css"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
