@@ -212,6 +212,33 @@ test('an icon passed as a value counts, an icon named in a comment does not', ()
     assert.equal(cite('Button', `${IMPORTS}const As = Button;\n`, 3), 1);
 });
 
+test('a tag under an import alias counts as the export it names', () => {
+    const named = 'import { Button as Btn } from \'@vapor-ui/core\';\n<Btn size="lg" />\n';
+    assert.equal(cite('Button', named, 2), 0);
+    const part = "import { Dialog as D } from '@vapor-ui/core';\n<D.Root open />\n";
+    assert.equal(cite('Dialog.Root', part, 2), 0);
+    const namespace = 'import * as V from \'@vapor-ui/core\';\n<V.Button size="lg" />\n';
+    assert.equal(cite('Button', namespace, 2), 0);
+    const subpath = "import { Button as B } from '@vapor-ui/core/button';\n<B />\n";
+    assert.equal(cite('Button', subpath, 2), 0);
+    const icon =
+        "import {\n    RefreshOutlineIcon as Retry, // refresh\n} from '@vapor-ui/icons';\n<Retry />\n";
+    assert.equal(cite('RefreshOutlineIcon', icon, 4, { pkg: 'icons' }), 0);
+    const iconValue = "import * as I from '@vapor-ui/icons';\nconst icon = I.LockOutlineIcon;\n";
+    assert.equal(cite('LockOutlineIcon', iconValue, 2, { pkg: 'icons' }), 0);
+});
+
+test('a vapor import alias decides what a tag is, whatever its local name', () => {
+    const swapped = "import { IconButton as Button } from '@vapor-ui/core';\n<Button />\n";
+    assert.equal(cite('Button', swapped, 2), 1);
+    const local = "import { Button } from './ui';\n<Button />\n";
+    assert.equal(cite('Button', local, 2), 0);
+    const typeOnly = "import type { Button as B } from '@vapor-ui/core';\n<B />\n";
+    assert.equal(cite('Button', typeOnly, 2), 1);
+    const commented = "// import { Button as B } from '@vapor-ui/core';\n<B />\n";
+    assert.equal(cite('Button', commented, 2), 1);
+});
+
 test('a duplicated, missing or unknown id refuses with exit 3', () => {
     const dup = run(BLUEPRINT, [...OK, OK[2]]);
     assert.equal(dup.code, 3);
