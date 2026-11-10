@@ -4,9 +4,9 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 
+import { blueprint } from './blueprint';
+import type { BlueprintNode, FigmaTree } from './blueprint';
 import { extractTables } from './build';
-import { expectedSet } from './expected';
-import type { FigmaTree } from './expected';
 import { buildPackage, fromInstalled } from './library';
 import type { Pkg } from './library';
 
@@ -102,6 +102,11 @@ const tree: FigmaTree = {
     },
 };
 
+const treeNodes: BlueprintNode[] = [
+    { id: '2:1', tag: 'IconButton', props: ['size="lg"'], pkg: 'core', children: [] },
+    { id: '2:2', tag: 'HeartIcon', props: [], pkg: 'icons', children: [] },
+];
+
 describe('figma-blueprint build', () => {
     afterEach(() => {
         vi.restoreAllMocks();
@@ -118,10 +123,7 @@ describe('figma-blueprint build', () => {
 
         for (const js of [template, helper]) expect(js).not.toMatch(/from\s+['"]figma['"]/);
         expect(template).toContain(`from '../../utils/figma.mjs'`);
-        expect(expectedSet(tree, await fromInstalled(app)).lines.map((l) => l.line)).toEqual([
-            '<IconButton size="lg" />',
-            '<HeartIcon />',
-        ]);
+        expect(blueprint(tree, await fromInstalled(app)).nodes).toEqual(treeNodes);
     });
 
     it("ships each package's own share of the tables, which together are what fromRepo extracts", () => {
@@ -172,9 +174,6 @@ describe('figma-blueprint build', () => {
             '@vapor-ui/composites is not installed, its components are left out',
         );
         expect(library.tables.internalParts).toEqual({});
-        expect(expectedSet(tree, library).lines.map((l) => l.line)).toEqual([
-            '<IconButton size="lg" />',
-            '<HeartIcon />',
-        ]);
+        expect(blueprint(tree, library).nodes).toEqual(treeNodes);
     });
 });

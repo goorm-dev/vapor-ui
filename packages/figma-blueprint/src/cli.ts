@@ -1,17 +1,18 @@
-#!/usr/bin/env node
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { FigmaTree } from './expected';
-import { expectedSet } from './expected';
+import type { Blueprint, BlueprintNode, FigmaTree } from './blueprint';
+import { blueprint } from './blueprint';
 import { buildPackage, fromInstalled, fromRepo } from './library';
 import { parseFigmaUrl, writeEntries } from './map';
 
-const USAGE = `usage: figma-blueprint expected <tree.json | figma URL> [--repo <root>]
+const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <root>]
        figma-blueprint map [--repo <root>]
        figma-blueprint build
 
+Prints the elements the design requires, one per line with the Figma node id it came from.
 Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
+Exits 2 when an instance could not be read (unscorable), so the design cannot be fully graded.
 build runs in packages/core, composites or icons and writes their figma-blueprint/ folder.`;
 
 async function loadTree(arg: string): Promise<FigmaTree> {
@@ -28,61 +29,79 @@ async function loadTree(arg: string): Promise<FigmaTree> {
 }
 
 function parseArgs(argv: string[]) {
-    const flags = new Map<string, string>();
     const positional: string[] = [];
+    let json = false;
+    let repo: string | undefined;
     for (let i = 0; i < argv.length; i++) {
         const a = argv[i];
-        if (a === '--repo') flags.set(a, argv[++i]);
+        if (a === '--json') json = true;
+        else if (a === '--repo') repo = argv[++i];
         else positional.push(a);
     }
-    return { positional, repo: flags.get('--repo') };
+    return { positional, json, repo };
 }
 
 async function map(root: string) {
     const token = process.env.FIGMA_ACCESS_TOKEN;
-    if (!token) {
-        console.error(
-            'figma-blueprint map: FIGMA_ACCESS_TOKEN is not set. It needs read access to the library files the Code Connect URLs point to.',
+    if (!token)
+        throw new Error(
+            'FIGMA_ACCESS_TOKEN is not set. It needs read access to the library files the Code Connect URLs point to.',
         );
-        process.exit(1);
-    }
-    const { counts, unpublished } = await writeEntries(root, token).catch((e: Error) => {
-        console.error(`figma-blueprint map: ${e.message}`);
-        process.exit(1);
-    });
+    const { counts, unpublished } = await writeEntries(root, token);
     for (const [pkg, n] of Object.entries(counts))
         console.log(`packages/${pkg}/figma-entries.json  ${n} entries`);
-    if (unpublished.length) {
-        console.error(`not published in Figma, so left out:\n  ${unpublished.join('\n  ')}`);
-        process.exit(1);
-    }
+    if (!unpublished.length) return 0;
+    console.error(`not published in Figma, so left out:\n  ${unpublished.join('\n  ')}`);
+    return 1;
 }
 
-const { positional, repo } = parseArgs(process.argv.slice(2));
-const [command, src] = positional;
-if (command === 'map') {
-    await map(repo ?? process.cwd());
-    process.exit(0);
+// A node, then its children two spaces in, as the code writes them.
+function text({ nodes, excluded, unscorable }: Blueprint) {
+    const out: string[] = [];
+    const walk = (list: BlueprintNode[], depth: number) => {
+        for (const n of list) {
+            const jsx = `<${[n.tag, ...n.props].join(' ')} />`;
+            out.push(`${'  '.repeat(depth)}${jsx}  ${n.id}${n.anyParent ? '  (any parent)' : ''}`);
+            walk(n.children, depth + 1);
+        }
+    };
+    walk(nodes, 0);
+    if (excluded.length)
+        out.push('excluded:', ...excluded.map((e) => `  ${e.name} (${e.node}): ${e.reason}`));
+    if (unscorable.length)
+        out.push(
+            'unscorable:',
+            ...unscorable.map(
+                (u) => `  ${u.name} (${u.node}): ${u.cause}${u.message ? ` ${u.message}` : ''}`,
+            ),
+        );
+    return out.join('\n');
 }
-if (command === 'build') {
-    try {
+
+async function run(argv: string[]) {
+    const { positional, json, repo } = parseArgs(argv);
+    const [command] = positional;
+    if (command === 'map') return map(repo ?? process.cwd());
+    if (command === 'build') {
         buildPackage(process.cwd(), join(process.cwd(), 'figma-blueprint'));
-    } catch (e) {
-        console.error(`figma-blueprint build: ${(e as Error).message}`);
-        process.exit(1);
+        return 0;
     }
-    process.exit(0);
-}
-if (command !== 'expected' || !src) {
-    console.error(USAGE);
-    process.exit(1);
+    if (!command || positional.length > 1) {
+        console.error(USAGE);
+        return 1;
+    }
+    const library = repo ? await fromRepo(repo) : await fromInstalled(process.cwd());
+    const result = blueprint(await loadTree(command), library);
+    console.log(json ? JSON.stringify(result, null, 2) : text(result));
+    return result.unscorable.length ? 2 : 0;
 }
 
-const library = repo ? await fromRepo(repo) : await fromInstalled(process.cwd());
-const expected = expectedSet(await loadTree(src), library);
-
-const unscorable = expected.unscorable.map(
-    (u) => `${u.name} (${u.node}): ${u.cause}${u.message ? ` ${u.message}` : ''}`,
-);
-console.log(expected.lines.map((l) => l.line).join('\n'));
-if (unscorable.length) console.error(`unscorable:\n  ${unscorable.join('\n  ')}`);
+// The exit code; bin/figma-blueprint.mjs sets it.
+export async function main(argv: string[]): Promise<number> {
+    try {
+        return await run(argv);
+    } catch (e) {
+        console.error(`figma-blueprint: ${(e as Error).message}`);
+        return 1;
+    }
+}

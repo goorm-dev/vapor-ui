@@ -1,7 +1,7 @@
 // The `figma` module Code Connect templates import, backed by a Figma REST node tree instead of Figma's servers.
 // A template runs as a function (see build.ts), so `figma.selectedInstance` / `figma.batch` read the top of a stack.
 // Nested templates are not run inline: executeTemplate() returns an INSTANCE section, rendered as a marker that
-// expected.ts uses to find which element the nested instance sits in.
+// blueprint.ts uses to find which element the nested instance sits in.
 
 export const FIGMA_KEY = Symbol.for('@vapor-ui/figma-blueprint');
 
@@ -30,7 +30,7 @@ interface InstanceSection {
 }
 
 const stack: Context[] = [];
-// Copy a template read from Figma text during the current run; expected.ts turns props holding it into "*".
+// Copy a template read from Figma text during the current run; blueprint.ts turns props holding it into "*".
 export const texts = new Set<unknown>();
 
 const code = (strings: readonly string[], ...values: unknown[]) => ({
@@ -107,7 +107,7 @@ export interface Connection<E> {
 
 type Visit = { traverseInstances?: boolean } | undefined;
 
-// connected(node) answers whether the node has a template, the hook expected.ts provides.
+// connected(node) answers whether the node has a template, the hook blueprint.ts provides.
 export function makeHandles<E>(tree: { connected(n: FigmaNode): Connection<E> | null }) {
     const cache = new Map<string, object>();
     const visible = (n: FigmaNode) => n.visible !== false;
@@ -170,7 +170,7 @@ export function makeHandles<E>(tree: { connected(n: FigmaNode): Connection<E> | 
             codeConnectId: () => tree.connected(n)?.id ?? null,
             hasCodeConnect: () => !!tree.connected(n),
             getPropertyValue: (name: string) => prop(n, name)?.value ?? errorHandle(name),
-            // ponytail: copy never reaches the expected set, so a missing text property (older component copies)
+            // ponytail: copy never reaches the blueprint, so a missing text property (older component copies)
             // answers '' instead of failing the whole template the way Figma's drift check would.
             getString(name: string) {
                 const v = prop(n, name)?.value ?? '';

@@ -1,8 +1,9 @@
-// Expected set of a Figma frame: one line per element the code must contain.
+// Blueprint of a Figma frame: the tree of elements the code must contain, library instances only.
 // Each visible Code Connect instance runs its own template against the REST node (figma-mock.ts) and contributes
 // the elements its snippet draws itself. A connected instance inside another one counts only when the outer template
 // renders it (executeTemplate marker) or it sits in a SLOT; otherwise the part draws it itself (Select.Trigger's chevron).
-// Line rules: literal props only, no "false", no placeholder, aria-label → "*", data-in = tag of the element it sits in.
+// Prop rules: literal props only, no "false", no placeholder, aria-label → "*". A node sits under the library element
+// it is in; layout frames do not count.
 import ts from 'typescript';
 
 import type { FigmaNode } from './figma-mock';
@@ -15,13 +16,21 @@ export interface FigmaTree {
     componentSets?: Record<string, { key: string; name: string }>;
 }
 
-// pkg: the package whose template wrote the line, so a composites Dialog.Root is not met by core's.
-export interface ExpectedLine {
-    line: string;
+// id: the Figma instance whose template wrote the node; the second and later elements one template writes are
+// "<id>#1", "<id>#2"... in snippet order.
+// pkg: the package whose template wrote the node, so a composites Dialog.Root is not met by core's.
+// anyParent: Figma's nesting is not the code's here (inside a self-closing part), so the node sits under its owner's
+// root for reading and its position must not be judged.
+export interface BlueprintNode {
+    id: string;
+    tag: string;
+    props: string[];
     pkg: Pkg;
+    anyParent?: true;
+    children: BlueprintNode[];
 }
 
-// A library instance the design draws that is not a line, and why.
+// A library instance the design draws that is not a node, and why.
 export interface Excluded {
     node: string;
     name: string;
@@ -36,8 +45,9 @@ export interface Unscorable {
     message?: string;
 }
 
-export interface ExpectedSet {
-    lines: ExpectedLine[];
+export interface Blueprint {
+    version: 2;
+    nodes: BlueprintNode[];
     excluded: Excluded[];
     unscorable: Unscorable[];
 }
@@ -50,14 +60,19 @@ interface Element {
     selfClosing: boolean;
 }
 
-interface Kept extends Element {
-    parent: string | null;
+// A kept snippet element and the node it became.
+interface Kept {
+    el: Element;
+    node: BlueprintNode;
 }
+
+// Where a node goes: under `node`, `any` when its position must not be judged; null is the top level.
+type Place = { node: BlueprintNode; any: boolean } | null;
 
 interface Owner {
     name: string;
     pkg: Pkg;
-    nested: Map<string, string>;
+    nested: Map<string, BlueprintNode>;
     byPart: Map<string, Kept>;
     root: Kept | undefined;
 }
@@ -171,7 +186,7 @@ const byPartName = (table: Record<string, string[]>) =>
     new Map(Object.entries(table).map(([k, v]) => [partName(k), new Set(v.map(partName))]));
 
 // ---------- the walk
-export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
+export function blueprint(tree: FigmaTree, library: Library): Blueprint {
     const { entries } = library;
     // A design can hold an older copy of a library component under a key that is no longer published, and Figma still
     // connects it. ponytail: match those by name, only where the name is unique in the entries.
@@ -199,8 +214,8 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
         return e ? { id: idOf(library, e), entry: e } : null;
     };
     const handle = makeHandles({ connected });
-    // One line per instance, so three identical Buttons in the design need three in the code.
-    const lines: ExpectedLine[] = [];
+    // One node per instance, so three identical Buttons in the design need three in the code.
+    const nodes: BlueprintNode[] = [];
     const excluded: Excluded[] = [];
     const unscorable: Unscorable[] = [];
     // A library instance is one the entries connect, or one named like a library component that nothing installed
@@ -218,22 +233,22 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
         return out;
     };
     // Of a snippet only the elements the design draws (or that hold one, or hold a nested instance) are expected.
-    const keep = (el: Element, parts: Set<string>, parent: string | null, out: Kept[]) => {
+    // Returns the element's node, or none; `out` gets every kept element in snippet order.
+    const keep = (el: Element, parts: Set<string>, pkg: Pkg, out: Kept[]): BlueprintNode[] => {
         const below: Kept[] = [];
-        for (const c of el.children) keep(c, parts, el.tag, below);
-        if (below.length || el.nested.length || parts.has(partName(el.tag)))
-            out.push({ ...el, parent }, ...below);
-        return out;
+        const children = el.children.flatMap((c) => keep(c, parts, pkg, below));
+        if (!children.length && !el.nested.length && !parts.has(partName(el.tag))) return [];
+        const node: BlueprintNode = { id: '', tag: el.tag, props: el.attrs, pkg, children };
+        out.push({ el, node }, ...below);
+        return [node];
     };
-    const line = (tag: string, attrs: string[], parent: string | null) =>
-        `<${[tag, ...attrs, ...(parent ? [`data-in="${parent}"`] : [])].join(' ')} />`;
 
     // owner: the nearest connected instance above, with the elements its snippet kept.
     // trail: names of the library instances passed since the owner, innermost last.
     // slotted: a SLOT node or a 🟨 slot layer was passed since the owner, the places a designer puts content.
     function visit(
         n: FigmaNode,
-        parentTag: string | null,
+        at: Place,
         owner: Owner | null,
         trail: string[],
         slotted: boolean,
@@ -243,12 +258,11 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
             slotted = true;
         const c = connected(n);
         if (c) {
-            let parent = parentTag;
             const exclude = (reason: Excluded['reason']) =>
                 void excluded.push({ node: n.id, name: nameOf(n), reason });
             if (owner) {
                 const nestedIn = owner.nested.get(n.id);
-                if (nestedIn !== undefined) parent = nestedIn;
+                if (nestedIn) at = { node: nestedIn, any: false };
                 // An icon the nearest part draws itself in code (Select.Trigger's chevron) is not expected.
                 else if (
                     ownIcons.get(partName(trail.at(-1) ?? owner.name))?.has(partName(nameOf(n)))
@@ -264,20 +278,23 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
                     return exclude('part-draws-itself');
                 // A part its template writes self-closing takes no children in code, so an instance in it outside
                 // any slot is the part's own drawing (the Breadcrumb.Ellipsis inside <Pagination.Items />).
-                else if (!slotted && owner.root?.selfClosing)
+                else if (!slotted && owner.root?.el.selfClosing)
                     return exclude('inside-self-closing-part');
-                else {
-                    const el =
+                // An owner that kept no element (Dialog.Action's own output is dropped as not drawn) leaves the place
+                // it was put in.
+                else if (owner.root) {
+                    const k =
                         trail.map((t) => owner.byPart.get(partName(t))).findLast(Boolean) ??
                         owner.root;
                     // A part the template writes self-closing (<Table.Column />) holds nothing in code: Figma's
                     // nesting is not the code's there (Figma's Table is column-major), so the parent is left open.
-                    // No element at all (Dialog.Action's own template output is dropped as not drawn): keep the
-                    // parent the owner was placed in.
-                    parent = el ? (el.selfClosing ? null : el.tag) : parent;
+                    at = k.el.selfClosing
+                        ? { node: owner.root.node, any: true }
+                        : { node: k.node, any: false };
                 }
             }
-            let kept: Kept[];
+            const kept: Kept[] = [];
+            let top: BlueprintNode[];
             try {
                 texts.clear();
                 const { example } = withContext(
@@ -285,7 +302,9 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
                     library.runTemplate(c.entry),
                 );
                 const parts = drawn(n);
-                kept = parse(render(example)).children.flatMap((el) => keep(el, parts, null, []));
+                top = parse(render(example)).children.flatMap((el) =>
+                    keep(el, parts, c.entry.pkg, kept),
+                );
             } catch (e) {
                 unscorable.push({
                     node: n.id,
@@ -299,17 +318,19 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
             // ColumnGroup Figma nests in Table.Body), so what every owner above rendered carries down.
             const nested = new Map(owner?.nested);
             const byPart = new Map<string, Kept>();
-            for (const el of kept) {
-                lines.push({ line: line(el.tag, el.attrs, el.parent ?? parent), pkg: c.entry.pkg });
-                for (const id of el.nested) nested.set(id, el.tag);
-                byPart.set(partName(el.tag), el);
+            for (const [i, k] of kept.entries()) {
+                k.node.id = i ? `${n.id}#${i}` : n.id;
+                for (const id of k.el.nested) nested.set(id, k.node);
+                byPart.set(partName(k.el.tag), k);
             }
-            const rootTag = kept[0]?.tag ?? parent;
+            if (at?.any) for (const node of top) node.anyParent = true;
+            (at ? at.node.children : nodes).push(...top);
+            const root = kept[0];
             for (const ch of n.children ?? [])
                 visit(
                     ch,
-                    rootTag,
-                    { name: nameOf(n), pkg: c.entry.pkg, nested, byPart, root: kept[0] },
+                    root ? { node: root.node, any: false } : at,
+                    { name: nameOf(n), pkg: c.entry.pkg, nested, byPart, root },
                     [],
                     false,
                 );
@@ -319,8 +340,8 @@ export function expectedSet(tree: FigmaTree, library: Library): ExpectedSet {
             unscorable.push({ node: n.id, name: nameOf(n), cause: 'no-template' });
             trail = [...trail, nameOf(n)];
         }
-        for (const ch of n.children ?? []) visit(ch, parentTag, owner, trail, slotted);
+        for (const ch of n.children ?? []) visit(ch, at, owner, trail, slotted);
     }
     visit(document, null, null, [], false);
-    return { lines, excluded, unscorable };
+    return { version: 2, nodes, excluded, unscorable };
 }

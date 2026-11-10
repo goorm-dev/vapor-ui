@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-import type { ExpectedLine, FigmaTree } from './expected';
-import { expectedSet } from './expected';
+import type { Blueprint, BlueprintNode, FigmaTree } from './blueprint';
+import { blueprint } from './blueprint';
 import { FIGMA_KEY } from './figma-mock';
 import type { Library, Pkg, Tables, TemplateFn } from './library';
 
@@ -48,10 +48,23 @@ function fakeLibrary(
     };
 }
 
-const text = (lines: ExpectedLine[]) => lines.map((l) => l.line);
-const sorted = (lines: ExpectedLine[]) => text(lines).sort();
+// Each node as one line: data-in is the tag of the node it sits under, left out at the top level and where its
+// position must not be judged.
+const lines = ({ nodes }: Blueprint) => {
+    const out: string[] = [];
+    const walk = (list: BlueprintNode[], parent?: string) => {
+        for (const n of list) {
+            const at = parent && !n.anyParent ? [`data-in="${parent}"`] : [];
+            out.push(`<${[n.tag, ...n.props, ...at].join(' ')} />`);
+            walk(n.children, n.tag);
+        }
+    };
+    walk(nodes);
+    return out;
+};
+const sorted = (result: Blueprint) => lines(result).sort();
 
-describe('expectedSet', () => {
+describe('blueprint lines', () => {
     it('drops an instance outside any slot inside a part its template writes self-closing', () => {
         const library = fakeLibrary({
             'K-ITEMS': {
@@ -65,9 +78,9 @@ describe('expectedSet', () => {
             'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') },
         });
 
-        const { lines } = expectedSet(fixture('self-closing-part'), library);
+        const result = blueprint(fixture('self-closing-part'), library);
 
-        expect(sorted(lines)).toEqual(['<Badge />', '<Pagination.Items />']);
+        expect(sorted(result)).toEqual(['<Badge />', '<Pagination.Items />']);
     });
 
     it('drops an icon the nearest part draws itself', () => {
@@ -89,32 +102,34 @@ describe('expectedSet', () => {
             { internalIcons: { 'Select.Trigger': ['ChevronDownOutlineIcon'] } },
         );
 
-        const { lines } = expectedSet(fixture('internal-icon'), library);
+        const result = blueprint(fixture('internal-icon'), library);
 
-        expect(sorted(lines)).toEqual([
+        expect(sorted(result)).toEqual([
             '<SearchOutlineIcon data-in="Select.Trigger" />',
             '<Select.Trigger />',
         ]);
     });
 
     const dialogWithClose = (internalParts: Tables['internalParts'], pkg: Pkg = 'composites') =>
-        expectedSet(
-            fixture('internal-part'),
-            fakeLibrary(
-                {
-                    'K-DIALOG': {
-                        name: '💙Dialog',
-                        pkg,
-                        run: fixed('dialog', '<Dialog.Root>{children}</Dialog.Root>'),
+        lines(
+            blueprint(
+                fixture('internal-part'),
+                fakeLibrary(
+                    {
+                        'K-DIALOG': {
+                            name: '💙Dialog',
+                            pkg,
+                            run: fixed('dialog', '<Dialog.Root>{children}</Dialog.Root>'),
+                        },
+                        'K-ICON': {
+                            name: '💙IconButton',
+                            run: fixed('icon', '<IconButton aria-label="Close" />'),
+                        },
                     },
-                    'K-ICON': {
-                        name: '💙IconButton',
-                        run: fixed('icon', '<IconButton aria-label="Close" />'),
-                    },
-                },
-                { internalParts },
+                    { internalParts },
+                ),
             ),
-        ).lines.map((l) => l.line);
+        );
 
     it('drops a core instance the composite part always draws itself', () => {
         expect(dialogWithClose({ 'Dialog.Root': ['IconButton'] })).toEqual(['<Dialog.Root />']);
@@ -154,9 +169,9 @@ describe('expectedSet', () => {
             'K-COLUMN': { name: '💙Table.Column', run: fixed('column', '<Table.Column />') },
         });
 
-        const { lines } = expectedSet(fixture('outer-render'), library);
+        const result = blueprint(fixture('outer-render'), library);
 
-        expect(sorted(lines)).toEqual([
+        expect(sorted(result)).toEqual([
             '<Table.Body data-in="Table.Root" />',
             '<Table.Column data-in="Table.ColumnGroup" />',
             '<Table.ColumnGroup data-in="Table.Root" />',
@@ -183,9 +198,9 @@ describe('expectedSet', () => {
             },
         });
 
-        const { lines } = expectedSet(fixture('usage-hint'), library);
+        const result = blueprint(fixture('usage-hint'), library);
 
-        expect(sorted(lines)).toEqual([
+        expect(sorted(result)).toEqual([
             '<Button colorPalette="primary" data-in="Dialog.Root" />',
             '<Dialog.Root />',
         ]);
@@ -203,9 +218,9 @@ describe('expectedSet', () => {
             },
         });
 
-        const { lines } = expectedSet(fixture('literal-props'), library);
+        const result = blueprint(fixture('literal-props'), library);
 
-        expect(text(lines)).toEqual(['<Pagination.Root aria-label="*" title="*" size="md" />']);
+        expect(lines(result)).toEqual(['<Pagination.Root aria-label="*" title="*" size="md" />']);
     });
 
     it('finds an older published copy by name only when the name is unique in entries', () => {
@@ -215,10 +230,10 @@ describe('expectedSet', () => {
             'K-TAG-B': { name: '💙Tag', run: fixed('tag-b', '<Tag />') },
         });
 
-        const { lines, unscorable } = expectedSet(fixture('older-copy'), library);
+        const result = blueprint(fixture('older-copy'), library);
 
-        expect(text(lines)).toEqual(['<Badge />']);
-        expect(unscorable).toEqual([
+        expect(lines(result)).toEqual(['<Badge />']);
+        expect(result.unscorable).toEqual([
             { node: expect.any(String), name: '💙Tag', cause: 'no-template' },
         ]);
     });
@@ -234,12 +249,12 @@ describe('expectedSet', () => {
             'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') },
         });
 
-        const { lines, unscorable } = expectedSet(fixture('template-error'), library);
+        const result = blueprint(fixture('template-error'), library);
 
-        expect(unscorable).toEqual([
+        expect(result.unscorable).toEqual([
             { node: '2:1', name: '💙Chip', cause: 'template-error', message: 'boom' },
         ]);
-        expect(text(lines)).toEqual(['<Badge />']);
+        expect(lines(result)).toEqual(['<Badge />']);
     });
 
     it('expects a connected instance whatever its name, and records why it drops one', () => {
@@ -281,12 +296,17 @@ describe('expectedSet', () => {
             },
         });
 
-        expect(expectedSet(tree, library).lines).toEqual([
-            { line: '<Button />', pkg: 'core' },
-            { line: '<GoogleIcon data-in="Button" />', pkg: 'icons' },
+        expect(blueprint(tree, library).nodes).toEqual([
+            {
+                id: '2:1',
+                tag: 'Button',
+                props: [],
+                pkg: 'core',
+                children: [{ id: '2:2', tag: 'GoogleIcon', props: [], pkg: 'icons', children: [] }],
+            },
         ]);
         expect(
-            expectedSet(fixture('internal-part'), {
+            blueprint(fixture('internal-part'), {
                 ...fakeLibrary(
                     {
                         'K-DIALOG': {
@@ -331,8 +351,171 @@ describe('expectedSet', () => {
             },
         };
 
-        expect(expectedSet(tree, fakeLibrary({})).unscorable).toEqual([
+        expect(blueprint(tree, fakeLibrary({})).unscorable).toEqual([
             { node: '2:2', name: 'Action', cause: 'no-template' },
         ]);
+    });
+});
+
+describe('blueprint tree', () => {
+    const badge = { 'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') } };
+
+    it('ids every element a template writes by its instance, "#n" for the second on, and nests what it renders', () => {
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    {
+                        id: '2:1',
+                        name: 'Card',
+                        type: 'INSTANCE',
+                        componentId: '1:1',
+                        children: [
+                            { id: '2:2', name: 'First', type: 'INSTANCE', componentId: '1:2' },
+                            {
+                                id: '2:9',
+                                name: 'Layout',
+                                type: 'FRAME',
+                                children: [
+                                    {
+                                        id: '2:3',
+                                        name: 'Second',
+                                        type: 'INSTANCE',
+                                        componentId: '1:2',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            components: {
+                '1:1': { key: 'K-CARD', name: '💙Card' },
+                '1:2': { key: 'K-BADGE', name: '💙Badge' },
+            },
+        };
+        const library = fakeLibrary({
+            ...badge,
+            'K-CARD': {
+                name: '💙Card',
+                run: template(
+                    'card',
+                    (h) =>
+                        figma.code`<Card.Root><Card.Header>${h.findInstance('First').executeTemplate().example}</Card.Header><Card.Body>${h.findInstance('Second').executeTemplate().example}</Card.Body></Card.Root>`,
+                ),
+            },
+        });
+
+        expect(blueprint(tree, library).nodes).toEqual([
+            {
+                id: '2:1',
+                tag: 'Card.Root',
+                props: [],
+                pkg: 'core',
+                children: [
+                    {
+                        id: '2:1#1',
+                        tag: 'Card.Header',
+                        props: [],
+                        pkg: 'core',
+                        children: [
+                            { id: '2:2', tag: 'Badge', props: [], pkg: 'core', children: [] },
+                        ],
+                    },
+                    {
+                        id: '2:1#2',
+                        tag: 'Card.Body',
+                        props: [],
+                        pkg: 'core',
+                        children: [
+                            { id: '2:3', tag: 'Badge', props: [], pkg: 'core', children: [] },
+                        ],
+                    },
+                ],
+            },
+        ]);
+    });
+
+    it('puts a node whose position is open under its owner root, marked anyParent', () => {
+        const library = fakeLibrary({
+            ...badge,
+            'K-ITEMS': { name: '💙Pagination.Items', run: fixed('items', '<Pagination.Items />') },
+            'K-ELLIPSIS': {
+                name: '💙Breadcrumb.Ellipsis',
+                run: fixed('ellipsis', '<Breadcrumb.Ellipsis />'),
+            },
+        });
+
+        expect(blueprint(fixture('self-closing-part'), library).nodes).toEqual([
+            {
+                id: '2:1',
+                tag: 'Pagination.Items',
+                props: [],
+                pkg: 'core',
+                children: [
+                    {
+                        id: '2:4',
+                        tag: 'Badge',
+                        props: [],
+                        pkg: 'core',
+                        anyParent: true,
+                        children: [],
+                    },
+                ],
+            },
+        ]);
+    });
+
+    it('lists an instance with no library ancestor at the top level, layout frames left out', () => {
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    {
+                        id: '3:1',
+                        name: 'Header',
+                        type: 'FRAME',
+                        children: [
+                            { id: '2:1', name: 'Badge', type: 'INSTANCE', componentId: '1:1' },
+                        ],
+                    },
+                    {
+                        id: '3:2',
+                        name: 'Body',
+                        type: 'FRAME',
+                        children: [
+                            {
+                                id: '3:3',
+                                name: 'Row',
+                                type: 'FRAME',
+                                children: [
+                                    {
+                                        id: '2:2',
+                                        name: 'Badge',
+                                        type: 'INSTANCE',
+                                        componentId: '1:1',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            components: { '1:1': { key: 'K-BADGE', name: '💙Badge' } },
+        };
+
+        expect(blueprint(tree, fakeLibrary(badge))).toEqual({
+            version: 2,
+            nodes: [
+                { id: '2:1', tag: 'Badge', props: [], pkg: 'core', children: [] },
+                { id: '2:2', tag: 'Badge', props: [], pkg: 'core', children: [] },
+            ],
+            excluded: [],
+            unscorable: [],
+        });
     });
 });
