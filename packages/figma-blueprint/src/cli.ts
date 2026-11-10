@@ -3,8 +3,8 @@ import { join } from 'node:path';
 
 import type { Blueprint, BlueprintNode, FigmaTree } from './blueprint/blueprint';
 import { blueprint } from './blueprint/blueprint';
+import { fromInstalled, fromRepo } from './catalog/catalog';
 import { parseFigmaUrl, writeEntries } from './entries/map';
-import { fromInstalled, fromRepo } from './library/library';
 import { buildPackage } from './ship/ship';
 
 const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <root>]
@@ -93,8 +93,8 @@ async function run(argv: string[]) {
         console.error(USAGE);
         return 1;
     }
-    const library = repo ? await fromRepo(repo) : await fromInstalled(process.cwd());
-    const result = blueprint(await loadTree(command), library);
+    const catalog = repo ? await fromRepo(repo) : await fromInstalled(process.cwd());
+    const result = blueprint(await loadTree(command), catalog);
     console.log(json ? JSON.stringify(result, null, 2) : text(result));
     return result.unscorable.length ? 2 : 0;
 }

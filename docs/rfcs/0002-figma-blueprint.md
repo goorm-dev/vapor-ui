@@ -30,12 +30,16 @@ Figma MCP만 사용하여 Code Connect 스니펫을 모아 정답을 만드는 �
 
 ### 용어
 
-| 용어      | 뜻                                                                                                                                     |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| 정답 트리 | 한 시안에서 생성 코드에 반드시 있어야 하는 요소의 트리. 노드 하나는 태그, 리터럴 props, Figma node id로 이루어진다                     |
-| 노드 id   | 노드를 쓴 템플릿의 Figma 인스턴스 id. 템플릿 하나가 요소를 여럿 쓰면 첫 요소는 `<id>`, 나머지는 스니펫 순서대로 `<id>#1`, `<id>#2`이다 |
-| 제외 사유 | 시안이 그리는 라이브러리 인스턴스가 정답 트리에 들어가지 않는 이유에 붙인 이름                                                         |
-| 채점 불가 | 시안의 정보 일부를 확인할 수 없어서 그 시안은 끝까지 채점할 수 없다는 결과                                                             |
+| 용어        | 뜻                                                                                                                                                         |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 정답 트리   | 한 시안에서 생성 코드에 반드시 있어야 하는 요소의 트리. 노드 하나는 태그, 리터럴 props, Figma node id로 이루어진다                                         |
+| 노드 id     | 노드를 쓴 템플릿의 Figma 인스턴스 id. 템플릿 하나가 요소를 여럿 쓰면 첫 요소는 `<id>`, 나머지는 스니펫 순서대로 `<id>#1`, `<id>#2`이다                     |
+| 제외 사유   | 시안이 그리는 라이브러리 인스턴스가 정답 트리에 들어가지 않는 이유에 붙인 이름                                                                             |
+| 채점 불가   | 시안의 정보 일부를 확인할 수 없어서 그 시안은 끝까지 채점할 수 없다는 결과                                                                                 |
+| `entries`   | Figma 컴포넌트 키 → Code Connect 템플릿(batch면 그 행)의 표. 패키지마다 `figma-entries.json`으로 커밋하고, `figma-blueprint entries`가 Figma에 물어 만든다 |
+| ship        | 컴포넌트 패키지를 빌드할 때 템플릿과 헬퍼를 JS로 컴파일해 표와 함께 `figma-blueprint/` 폴더에 담는 단계. `figma-blueprint ship`이 한다                     |
+| `Catalog`   | 정답 트리를 만드는 쪽이 템플릿과 표를 받는 포트 `{ entries, tables, runTemplate }`. `fromRepo`와 `fromInstalled`가 만든다                                  |
+| `blueprint` | 시안 트리와 `Catalog`를 받아 정답 트리를 내는 함수                                                                                                         |
 
 ```text
 <Dialog.Popup />  3066:58954
@@ -68,7 +72,7 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 | `figma-blueprint entries`                           | 토큰으로 `entries` 표를 생성한다. 사람이 실행하고 결과를 커밋한다 |
 | JS API `blueprint`, `fromInstalled`, `fromRepo`     | 플러그인 스킬과 비공개 벤치가 import해서 쓴다                     |
 
-빌드는 `@vapor-ui/codemod`처럼 tsup으로 합니다. `src`는 데이터가 흐르는 순서대로 `entries/ → ship/ → library/ → blueprint/` 네 단계로 나눕니다. 각 단계는 자기가 만드는 산출물의 형식을 가지고, 뒤 단계는 앞 단계를 import할 수 있지만 거꾸로는 하지 않습니다.
+빌드는 `@vapor-ui/codemod`처럼 tsup으로 합니다. `src`는 데이터가 흐르는 순서대로 `entries/ → ship/ → catalog/ → blueprint/` 네 단계로 나눕니다. 각 단계는 자기가 만드는 산출물의 형식을 가지고, 뒤 단계는 앞 단계를 import할 수 있지만 거꾸로는 하지 않습니다.
 
 | 파일                      | 만드는 것                                                                         |
 | ------------------------- | --------------------------------------------------------------------------------- |
@@ -78,7 +82,7 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 | `ship/templates.ts`       | 함수로 감싼 템플릿과 헬퍼                                                         |
 | `ship/tables.ts`          | 소스에서 추출한 표                                                                |
 | `ship/ship.ts`            | `figma-blueprint ship`. 패키지의 `figma-blueprint/` 폴더                          |
-| `library/library.ts`      | 템플릿과 표를 공급하는 포트와 어댑터 두 개                                        |
+| `catalog/catalog.ts`      | 템플릿과 표를 공급하는 `Catalog` 포트와 어댑터 두 개                              |
 | `blueprint/figma-mock.ts` | 템플릿이 import하는 `figma` 모듈의 대역                                           |
 | `blueprint/blueprint.ts`  | REST 트리 → 정답 트리                                                             |
 | `cli.ts`                  | 명령 진입점                                                                       |
@@ -86,7 +90,7 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 
 `figma-mock`과 `blueprint`는 데이터만 받습니다. REST 트리는 객체로 받습니다.
 
-템플릿과 표는 `library` 포트 `{ entries, tables, runTemplate }` 하나로 받습니다. 어댑터는 두 개입니다. `fromRepo`는 레포 소스에서 표를 추출하고 템플릿을 그 자리에서 변환해 실행합니다. `fromInstalled`는 `node_modules`에 설치된 컴포넌트 패키지의 `figma-blueprint/` 폴더를 읽습니다. 두 어댑터는 같은 변환 함수를 씁니다.
+템플릿과 표는 `Catalog` 포트 `{ entries, tables, runTemplate }` 하나로 받습니다. 어댑터는 두 개입니다. `fromRepo`는 레포 소스에서 표를 추출하고 템플릿을 그 자리에서 변환해 실행합니다. `fromInstalled`는 `node_modules`에 설치된 컴포넌트 패키지의 `figma-blueprint/` 폴더를 읽습니다. 두 어댑터는 같은 변환 함수를 씁니다.
 
 테스트는 소스 옆 `*.test.ts`에 두고, 손으로 만든 REST 트리는 `src/__fixtures__/*.json`에 둡니다.
 

@@ -9,7 +9,7 @@ import type { BlueprintNode, FigmaTree } from '../blueprint/blueprint';
 import type { Pkg } from '../entries/entries-file';
 import { buildPackage } from '../ship/ship';
 import { extractTables } from '../ship/tables';
-import { fromInstalled } from './library';
+import { fromInstalled } from './catalog';
 
 const root = fileURLToPath(new URL('../__fixtures__/repo', import.meta.url));
 
@@ -128,12 +128,12 @@ describe('figma-blueprint ship', () => {
         const app = install(['core', 'icons']);
         const error = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-        const library = await fromInstalled(app);
+        const catalog = await fromInstalled(app);
 
         expect(error).toHaveBeenCalledWith(
             '@vapor-ui/composites is not installed, its components are left out',
         );
-        expect(library.tables.internalParts).toEqual({});
-        expect(blueprint(tree, library).nodes).toEqual(treeNodes);
+        expect(catalog.tables.internalParts).toEqual({});
+        expect(blueprint(tree, catalog).nodes).toEqual(treeNodes);
     });
 });

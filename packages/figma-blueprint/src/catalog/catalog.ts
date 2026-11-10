@@ -23,7 +23,7 @@ export interface Entry {
     batch: Batch | null;
 }
 
-export interface Library {
+export interface Catalog {
     entries: Record<string, Entry>;
     tables: Tables;
     runTemplate(entry: Entry): TemplateFn;
@@ -37,7 +37,7 @@ interface Templates {
     ext: string;
 }
 
-async function load(packages: Templates[], tables: Tables): Promise<Library> {
+async function load(packages: Templates[], tables: Tables): Promise<Catalog> {
     const entries: Record<string, Entry> = {};
     const runs = new Map<string, TemplateFn>();
     for (const { pkg, entries: own, dir, ext } of packages)
@@ -62,7 +62,7 @@ async function load(packages: Templates[], tables: Tables): Promise<Library> {
 
 // Entries from the three packages' figma-entries.json and tables from the repo's source. Templates go through the
 // same writeTemplates as `figma-blueprint ship`, left as TypeScript.
-export async function fromRepo(root: string): Promise<Library> {
+export async function fromRepo(root: string): Promise<Catalog> {
     const tmp = mkdtempSync(join(tmpdir(), 'figma-blueprint-'));
     try {
         const packages = PACKAGES.map((pkg): Templates => {
@@ -80,7 +80,7 @@ export async function fromRepo(root: string): Promise<Library> {
 
 // What `figma-blueprint ship` shipped in the @vapor-ui packages that cwd resolves. A package that is not installed is
 // left out, with a line on stderr.
-export async function fromInstalled(cwd: string): Promise<Library> {
+export async function fromInstalled(cwd: string): Promise<Catalog> {
     const require = createRequire(join(cwd, 'package.json'));
     const tables: Tables = { internalIcons: {}, internalParts: {}, presets: {}, defaults: {} };
     const packages: Templates[] = [];

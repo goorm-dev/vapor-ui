@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
+import type { Catalog } from '../catalog/catalog';
 import type { Pkg } from '../entries/entries-file';
-import type { Library } from '../library/library';
 import type { Tables } from '../ship/tables';
 import { FIGMA_KEY } from '../ship/templates';
 import type { TemplateFn } from '../ship/templates';
@@ -35,10 +35,10 @@ const template =
 
 const fixed = (id: string, code: string) => template(id, () => figma.code`${code}`);
 
-function fakeLibrary(
+function fakeCatalog(
     templates: Record<string, { name: string; run: TemplateFn; pkg?: Pkg }>,
     tables: Partial<Tables> = {},
-): Library {
+): Catalog {
     return {
         entries: Object.fromEntries(
             Object.entries(templates).map(([key, { name, pkg = 'core' }]) => [
@@ -69,7 +69,7 @@ const sorted = (result: Blueprint) => lines(result).sort();
 
 describe('blueprint lines', () => {
     it('drops an instance outside any slot inside a part its template writes self-closing', () => {
-        const library = fakeLibrary({
+        const catalog = fakeCatalog({
             'K-ITEMS': {
                 name: '💙Pagination.Items',
                 run: fixed('items', '<Pagination.Items />'),
@@ -81,13 +81,13 @@ describe('blueprint lines', () => {
             'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') },
         });
 
-        const result = blueprint(fixture('self-closing-part'), library);
+        const result = blueprint(fixture('self-closing-part'), catalog);
 
         expect(sorted(result)).toEqual(['<Badge />', '<Pagination.Items />']);
     });
 
     it('drops an icon the nearest part draws itself', () => {
-        const library = fakeLibrary(
+        const catalog = fakeCatalog(
             {
                 'K-TRIGGER': {
                     name: '💙Select.Trigger',
@@ -105,7 +105,7 @@ describe('blueprint lines', () => {
             { internalIcons: { 'Select.Trigger': ['ChevronDownOutlineIcon'] } },
         );
 
-        const result = blueprint(fixture('internal-icon'), library);
+        const result = blueprint(fixture('internal-icon'), catalog);
 
         expect(sorted(result)).toEqual([
             '<SearchOutlineIcon data-in="Select.Trigger" />',
@@ -117,7 +117,7 @@ describe('blueprint lines', () => {
         lines(
             blueprint(
                 fixture('internal-part'),
-                fakeLibrary(
+                fakeCatalog(
                     {
                         'K-DIALOG': {
                             name: '💙Dialog',
@@ -153,7 +153,7 @@ describe('blueprint lines', () => {
     });
 
     it('gives an instance an outer template renders that outer tag as parent, through inner owners', () => {
-        const library = fakeLibrary({
+        const catalog = fakeCatalog({
             'K-TABLE': {
                 name: '💙Table',
                 run: template(
@@ -172,7 +172,7 @@ describe('blueprint lines', () => {
             'K-COLUMN': { name: '💙Table.Column', run: fixed('column', '<Table.Column />') },
         });
 
-        const result = blueprint(fixture('outer-render'), library);
+        const result = blueprint(fixture('outer-render'), catalog);
 
         expect(sorted(result)).toEqual([
             '<Table.Body data-in="Table.Root" />',
@@ -183,7 +183,7 @@ describe('blueprint lines', () => {
     });
 
     it('drops a <X>...</X> usage hint, and an owner whose output is all dropped passes its parent down', () => {
-        const library = fakeLibrary({
+        const catalog = fakeCatalog({
             'K-DIALOG': {
                 name: '💙Dialog',
                 run: fixed(
@@ -201,7 +201,7 @@ describe('blueprint lines', () => {
             },
         });
 
-        const result = blueprint(fixture('usage-hint'), library);
+        const result = blueprint(fixture('usage-hint'), catalog);
 
         expect(sorted(result)).toEqual([
             '<Button colorPalette="primary" data-in="Dialog.Root" />',
@@ -210,7 +210,7 @@ describe('blueprint lines', () => {
     });
 
     it('writes aria-label and Figma text values as "*" and drops numeric props', () => {
-        const library = fakeLibrary({
+        const catalog = fakeCatalog({
             'K-PAGINATION': {
                 name: '💙Pagination',
                 run: template(
@@ -221,19 +221,19 @@ describe('blueprint lines', () => {
             },
         });
 
-        const result = blueprint(fixture('literal-props'), library);
+        const result = blueprint(fixture('literal-props'), catalog);
 
         expect(lines(result)).toEqual(['<Pagination.Root aria-label="*" title="*" size="md" />']);
     });
 
     it('finds an older published copy by name only when the name is unique in entries', () => {
-        const library = fakeLibrary({
+        const catalog = fakeCatalog({
             'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') },
             'K-TAG-A': { name: '💙Tag', run: fixed('tag-a', '<Tag />') },
             'K-TAG-B': { name: '💙Tag', run: fixed('tag-b', '<Tag />') },
         });
 
-        const result = blueprint(fixture('older-copy'), library);
+        const result = blueprint(fixture('older-copy'), catalog);
 
         expect(lines(result)).toEqual(['<Badge />']);
         expect(result.unscorable).toEqual([
@@ -242,7 +242,7 @@ describe('blueprint lines', () => {
     });
 
     it('records a template that throws as unscorable and keeps grading the rest', () => {
-        const library = fakeLibrary({
+        const catalog = fakeCatalog({
             'K-CHIP': {
                 name: '💙Chip',
                 run: () => {
@@ -252,7 +252,7 @@ describe('blueprint lines', () => {
             'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') },
         });
 
-        const result = blueprint(fixture('template-error'), library);
+        const result = blueprint(fixture('template-error'), catalog);
 
         expect(result.unscorable).toEqual([
             { node: '2:1', name: '💙Chip', cause: 'template-error', message: 'boom' },
@@ -283,7 +283,7 @@ describe('blueprint lines', () => {
                 '1:2': { key: 'K-GOOGLE', name: 'GoogleIcon' },
             },
         };
-        const library = fakeLibrary({
+        const catalog = fakeCatalog({
             'K-BUTTON': {
                 name: '💙Button',
                 run: template(
@@ -299,7 +299,7 @@ describe('blueprint lines', () => {
             },
         });
 
-        expect(blueprint(tree, library).nodes).toEqual([
+        expect(blueprint(tree, catalog).nodes).toEqual([
             {
                 id: '2:1',
                 tag: 'Button',
@@ -310,7 +310,7 @@ describe('blueprint lines', () => {
         ]);
         expect(
             blueprint(fixture('internal-part'), {
-                ...fakeLibrary(
+                ...fakeCatalog(
                     {
                         'K-DIALOG': {
                             name: '💙Dialog',
@@ -354,7 +354,7 @@ describe('blueprint lines', () => {
             },
         };
 
-        expect(blueprint(tree, fakeLibrary({})).unscorable).toEqual([
+        expect(blueprint(tree, fakeCatalog({})).unscorable).toEqual([
             { node: '2:2', name: 'Action', cause: 'no-template' },
         ]);
     });
@@ -399,7 +399,7 @@ describe('blueprint tree', () => {
                 '1:2': { key: 'K-BADGE', name: '💙Badge' },
             },
         };
-        const library = fakeLibrary({
+        const catalog = fakeCatalog({
             ...badge,
             'K-CARD': {
                 name: '💙Card',
@@ -411,7 +411,7 @@ describe('blueprint tree', () => {
             },
         });
 
-        expect(blueprint(tree, library).nodes).toEqual([
+        expect(blueprint(tree, catalog).nodes).toEqual([
             {
                 id: '2:1',
                 tag: 'Card.Root',
@@ -442,7 +442,7 @@ describe('blueprint tree', () => {
     });
 
     it('puts a node whose position is open under its owner root, marked anyParent', () => {
-        const library = fakeLibrary({
+        const catalog = fakeCatalog({
             ...badge,
             'K-ITEMS': { name: '💙Pagination.Items', run: fixed('items', '<Pagination.Items />') },
             'K-ELLIPSIS': {
@@ -451,7 +451,7 @@ describe('blueprint tree', () => {
             },
         });
 
-        expect(blueprint(fixture('self-closing-part'), library).nodes).toEqual([
+        expect(blueprint(fixture('self-closing-part'), catalog).nodes).toEqual([
             {
                 id: '2:1',
                 tag: 'Pagination.Items',
@@ -511,7 +511,7 @@ describe('blueprint tree', () => {
             components: { '1:1': { key: 'K-BADGE', name: '💙Badge' } },
         };
 
-        expect(blueprint(tree, fakeLibrary(badge))).toEqual({
+        expect(blueprint(tree, fakeCatalog(badge))).toEqual({
             version: 2,
             nodes: [
                 { id: '2:1', tag: 'Badge', props: [], pkg: 'core', children: [] },

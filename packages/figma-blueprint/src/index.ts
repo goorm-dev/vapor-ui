@@ -6,7 +6,7 @@ export type {
     FigmaTree,
     Unscorable,
 } from './blueprint/blueprint';
-export { fromInstalled, fromRepo } from './library/library';
-export type { Entry, Library } from './library/library';
+export { fromInstalled, fromRepo } from './catalog/catalog';
+export type { Catalog, Entry } from './catalog/catalog';
 export type { Tables } from './ship/tables';
 export type { TemplateFn } from './ship/templates';

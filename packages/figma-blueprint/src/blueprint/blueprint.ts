@@ -6,8 +6,8 @@
 // it is in; layout frames do not count.
 import ts from 'typescript';
 
+import type { Catalog, Entry } from '../catalog/catalog';
 import type { Pkg } from '../entries/entries-file';
-import type { Entry, Library } from '../library/library';
 import type { FigmaNode } from './figma-mock';
 import { makeHandles, render, texts, withContext } from './figma-mock';
 
@@ -97,12 +97,12 @@ const dummy: object = {
     executeTemplate: () => ({ example: [] }),
 };
 const ids = new WeakMap<Entry, string | null>();
-const idOf = (library: Library, entry: Entry) => {
+const idOf = (catalog: Catalog, entry: Entry) => {
     if (!ids.has(entry)) {
         let id: string | null = null;
         try {
             id =
-                withContext({ handle: dummy, batch: entry.batch }, library.runTemplate(entry)).id ??
+                withContext({ handle: dummy, batch: entry.batch }, catalog.runTemplate(entry)).id ??
                 null;
         } catch {
             // a template that cannot run without a real instance has no id
@@ -187,14 +187,14 @@ const byPartName = (table: Record<string, string[]>) =>
     new Map(Object.entries(table).map(([k, v]) => [partName(k), new Set(v.map(partName))]));
 
 // ---------- the walk
-export function blueprint(tree: FigmaTree, library: Library): Blueprint {
-    const { entries } = library;
+export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
+    const { entries } = catalog;
     // A design can hold an older copy of a library component under a key that is no longer published, and Figma still
     // connects it. ponytail: match those by name, only where the name is unique in the entries.
     const byName = new Map<string, Entry | null>();
     for (const e of Object.values(entries)) byName.set(e.name, byName.has(e.name) ? null : e);
-    const ownIcons = byPartName(library.tables.internalIcons);
-    const ownParts = byPartName(library.tables.internalParts);
+    const ownIcons = byPartName(catalog.tables.internalIcons);
+    const ownParts = byPartName(catalog.tables.internalParts);
 
     const { document, components = {}, componentSets = {} } = tree;
     const nameOf = (n: FigmaNode) => {
@@ -212,7 +212,7 @@ export function blueprint(tree: FigmaTree, library: Library): Blueprint {
     };
     const connected = (n: FigmaNode) => {
         const e = n.type === 'INSTANCE' && entryOf(n);
-        return e ? { id: idOf(library, e), entry: e } : null;
+        return e ? { id: idOf(catalog, e), entry: e } : null;
     };
     const handle = makeHandles({ connected });
     // One node per instance, so three identical Buttons in the design need three in the code.
@@ -300,7 +300,7 @@ export function blueprint(tree: FigmaTree, library: Library): Blueprint {
                 texts.clear();
                 const { example } = withContext(
                     { handle: handle(n), batch: c.entry.batch },
-                    library.runTemplate(c.entry),
+                    catalog.runTemplate(c.entry),
                 );
                 const parts = drawn(n);
                 top = parse(render(example)).children.flatMap((el) =>
