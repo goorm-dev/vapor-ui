@@ -12,22 +12,23 @@ description: Figma 시안을 vapor-ui 코드로 구현하고, 관문 2개(컴포
 Figma URL과 코드를 쓸 위치를 받는다. 아래가 갖춰졌는지 먼저 확인하고, 빠진 것이 있으면 모두 한꺼번에 알리고 멈춘다.
 
 - Figma MCP 서버 연결
-- `@vapor-ui/figma-eval` 설치. `@vapor-ui/core`가 설치된 폴더(모노레포면 앱 폴더)에서 아래를 실행해 grep이 성공하면 설치돼 있다. `npx --no figma-eval`은 설치돼 있어도 종료 코드 1로 끝나고 npm 경고가 앞에 붙을 수 있으니, 출력을 파일로 받은 뒤 확인한다.
+- `@vapor-ui/figma-blueprint` 설치. `@vapor-ui/core`가 설치된 폴더(모노레포면 앱 폴더)에서 아래를 실행해 grep이 성공하면 설치돼 있다. `npx --no figma-blueprint`는 설치돼 있어도 종료 코드 1로 끝나고 npm 경고가 앞에 붙을 수 있으니, 출력을 파일로 받은 뒤 확인한다.
 
     ```bash
-    npx --no figma-eval >"${TMPDIR:-/tmp}/figma-eval-check.out" 2>&1
-    grep -q '^usage: figma-eval' "${TMPDIR:-/tmp}/figma-eval-check.out"
+    npx --no figma-blueprint >"${TMPDIR:-/tmp}/figma-blueprint-check.out" 2>&1
+    grep -q '^usage: figma-blueprint' "${TMPDIR:-/tmp}/figma-blueprint-check.out"
     ```
 
 - `FIGMA_ACCESS_TOKEN`
 
 ## 흐름
 
-1. **implement-figma**로 구현한다. 쓰거나 고친 파일 경로와, 화면이 가져다 쓴 기존 컴포넌트 파일 경로를 따로 모으고, figma-eval을 실행할 폴더(`@vapor-ui/core`가 설치된 폴더) 기준 경로로 바꿔 둔다.
-2. **check-components**에는 두 목록을 모두, **check-styling**에는 쓰거나 고친 파일만 넘긴다. 둘은 차례로 돌린다. 이 결과가 "개선 전"이다.
+1. **implement-figma**로 구현한다. 진입점(시안을 구현한 화면 컴포넌트) 경로와 쓰거나 고친 파일 경로를 모은다.
+2. **check-components**에는 진입점과 쓰거나 고친 파일을, **check-styling**에는 쓰거나 고친 파일만 넘긴다. 둘은 차례로 돌린다. 이 결과가 "개선 전"이다.
 3. 두 관문이 모두 통과할 때까지 고치고 2번을 다시 돌린다. **최대 2회**까지만 고친다.
-    - check-components의 `missing`·`mismatch` 줄과 check-styling의 실패 줄만 고친다. 통과한 부분은 건드리지 않는다.
-    - check-components가 `unscorable`이어도 `rows`의 `missing`·`mismatch`는 고친다. `unscorable` 항목은 고칠 대상이 아니다. 고칠 줄이 남지 않으면 회차가 남아도 멈춘다.
+    - check-components의 `failures`·`evidence` 줄과 check-styling의 실패 줄만 고친다. 통과한 부분은 건드리지 않는다.
+    - 다시 돌릴 때 check-components의 정답 트리는 다시 뽑지 않고, 검증 서브에이전트는 새로 띄운다.
+    - check-components의 채점 불가 항목(정답 트리의 `unscorable`, `unscorable` 판정)은 고칠 대상이 아니다. 고칠 줄이 남지 않으면 회차가 남아도 멈춘다.
     - 관문 스킬이 실행 오류로 멈췄으면 고치지 않는다. 오류를 보고하고 멈춘다.
     - "`pass`, 단 `<pkg>` 미채점"은 고칠 줄이 없는 상태로 본다. 패키지 설치나 업그레이드 안내는 흐름을 멈추지 말고 최종 보고에 담는다.
 4. **visual-score**로 시각 점수를 잰다. 앱 URL, selector, 로그인 상태 파일은 이때 묻는다. 관문을 통과하지 못했어도 잰다. visual-score가 시각 점수를 건너뛰었으면 그 사실과 이유를 보고에 적는다.
@@ -38,11 +39,11 @@ Figma URL과 코드를 쓸 위치를 받는다. 아래가 갖춰졌는지 먼저
 
 관문 결과와 상관없이 항상 아래 표를 낸다. 고치지 않았으면 "개선 후" 열은 "개선 전"과 같다.
 
-| 항목            | 개선 전                          | 개선 후   |
-| --------------- | -------------------------------- | --------- |
-| 관문 1 재현율   | `ok/total`, pass·fail·unscorable | 같은 형식 |
-| 관문 2 실패 수  | n, pass·fail                     | 같은 형식 |
-| styling 예외 수 | 종류별 n                         | 종류별 n  |
-| compare 제외 수 | 사유별 n                         | 사유별 n  |
+| 항목            | 개선 전                             | 개선 후   |
+| --------------- | ----------------------------------- | --------- |
+| 관문 1 재현율   | `ok/scorable`, pass·fail·unscorable | 같은 형식 |
+| 관문 2 실패 수  | n, pass·fail                        | 같은 형식 |
+| styling 예외 수 | 종류별 n                            | 종류별 n  |
+| 관문 1 제외 수  | 사유별 n                            | 사유별 n  |
 
 표 아래에 남은 실패 항목을 파일과 줄 번호로 모두 적고, 시각 점수 3종(Block-Match, Position, Layout IoU)을 적는다. 고친 횟수와 각 회차에 무엇을 고쳤는지 한 줄씩 적는다.

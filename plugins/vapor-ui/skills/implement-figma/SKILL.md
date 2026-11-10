@@ -26,4 +26,4 @@ Figma MCP 서버가 연결돼 있어야 한다. 없으면 설치를 안내하고
 
 ## 끝나면
 
-쓰거나 고친 파일 경로와, 화면이 가져다 쓴 기존 컴포넌트 파일 경로를 따로 적어 둔다. check-components는 둘 다, check-styling은 쓰거나 고친 파일만 받는다. 변환 예시는 `references/conversion-examples.md`에 있다.
+진입점(시안을 구현한 화면 컴포넌트) 경로와 쓰거나 고친 파일 경로를 적어 둔다. check-components는 둘 다, check-styling은 쓰거나 고친 파일만 받는다. 변환 예시는 `references/conversion-examples.md`에 있다.

@@ -1,59 +1,97 @@
 ---
 name: check-components
-description: 관문 1. Figma 시안의 vapor-ui 컴포넌트와 props가 코드에 빠짐없이 들어갔는지 `figma-eval compare`로 채점한다. "컴포넌트 재현율 확인", "시안 컴포넌트 다 들어갔어?", "check components", "figma-eval compare 돌려줘"처럼 말하거나 Figma 시안 구현을 검증할 때 쓴다.
+description: 관문 1. Figma 시안이 요구하는 vapor-ui 컴포넌트와 props가 코드에 모두 들어갔는지 검증한다. figma-blueprint로 정답 트리를 뽑고, 새 검증 서브에이전트가 코드를 직접 읽어 노드마다 판정하고, tally.mjs로 집계한다. "컴포넌트 재현율 확인", "시안 컴포넌트 다 들어갔어?", "check components"처럼 말하거나 Figma 시안 구현을 검증할 때 쓴다.
 ---
 
 # 관문 1: 컴포넌트 재현율
 
 ## 준비
 
-- 입력은 Figma URL(노드 하나)과 화면 코드 경로들이다. 이번에 쓴 파일뿐 아니라, 화면이 렌더하는 컴포넌트를 정의한 기존 파일도 넣는다. 넘긴 파일 밖에서 그려지는 컴포넌트는 `missing`이 된다. 경로를 모르면 묻는다. 디렉터리도 받는다. 경로는 명령을 실행하는 폴더 기준으로 넘긴다.
-- `@vapor-ui/core`가 설치된 패키지 폴더에서 실행한다. 모노레포면 앱 폴더다.
+- Figma URL(노드 하나).
+- **진입점**: 시안을 구현한 화면 컴포넌트 파일. 이번 세션에서 구현했다면 그 파일이고, 아니면 사용자에게 묻는다. 진입점이 쓰는 다른 파일은 검증자가 따라가므로 모으지 않는다.
+- 이번 세션이 쓰거나 고친 파일 목록. 없으면 빈 목록이다.
+- `@vapor-ui/core`가 설치된 패키지 폴더에서 실행한다. 모노레포면 앱 폴더다. 이 폴더의 절대 경로가 아래의 `<root>`다.
 - `FIGMA_ACCESS_TOKEN`이 비어 있으면 Figma 개인 토큰을 넣으라고 안내하고 멈춘다.
 
-## 실행
+## 1. 정답 트리 뽑기
 
 ```bash
-npx --no figma-eval compare "<Figma URL>" <경로...> --json 2>"${TMPDIR:-/tmp}/figma-eval-compare.err"
+OUT="${TMPDIR:-/tmp}/vapor-check-components"; mkdir -p "$OUT"
+npx --no figma-blueprint "<Figma URL>" --json >"$OUT/blueprint.json" 2>"$OUT/blueprint.err"
 ```
 
 `--no`는 npm에서 이름이 같은 다른 패키지를 내려받지 않게 한다. stderr는 파일로 따로 받아 읽는다. 섞이면 npm 경고와 안내 줄 때문에 JSON을 읽을 수 없다.
 
-**stdout이 JSON이 아니면 채점 결과가 아니라 실행 오류다.** 종료 코드가 1이어도 `fail`로 세지 않는다. stderr를 그대로 전하고 멈춘다.
+| 종료 코드 | 뜻                                                                    |
+| --------- | --------------------------------------------------------------------- |
+| 0         | 정답 트리를 냈다                                                      |
+| 2         | 정답 트리를 냈지만 읽지 못한 인스턴스가 `unscorable`에 있다. 계속한다 |
+| 1         | 실행 오류다                                                           |
 
-| stderr                         | 조치                                                         |
-| ------------------------------ | ------------------------------------------------------------ |
-| `npm error 404` … `figma-eval` | `@vapor-ui/figma-eval`을 devDependency로 설치하라고 안내한다 |
-| `ENOENT`                       | 경로가 실행 폴더 기준인지 확인하고 다시 돌린다               |
-| `403`                          | `FIGMA_ACCESS_TOKEN`이 시안 파일을 읽을 수 있는지 확인한다   |
+**stdout이 JSON이 아니면 실행 오류다.** 검증을 진행하지 않는다. stderr를 그대로 전하고 멈춘다.
 
-JSON이 나와도 stderr에 `@vapor-ui/<pkg> is not installed` 또는 `@vapor-ui/<pkg> ships no figma-eval tables`가 있으면 그 패키지 컴포넌트는 채점되지 않았다. 시안에 그 패키지 컴포넌트가 있으면 거짓 `pass`가 나오거나 `unscorable` 항목이 생긴다.
+| stderr                              | 조치                                                              |
+| ----------------------------------- | ----------------------------------------------------------------- |
+| `npm error 404` … `figma-blueprint` | `@vapor-ui/figma-blueprint`를 devDependency로 설치하라고 안내한다 |
+| `403`                               | `FIGMA_ACCESS_TOKEN`이 시안 파일을 읽을 수 있는지 확인한다        |
+
+JSON이 나와도 stderr에 `@vapor-ui/<pkg> is not installed` 또는 `@vapor-ui/<pkg> ships no figma-blueprint tables`가 있으면 그 패키지 컴포넌트는 정답 트리에서 빠졌다. 시안에 그 패키지 컴포넌트가 있으면 거짓 `pass`가 나오거나 `unscorable` 항목이 생긴다.
 
 - `pass`여도 그냥 합격으로 보고하지 않는다. "`pass`, 단 `<pkg>` 미채점"으로 보고한다. 시안에 그 패키지 컴포넌트가 있는지는 이 결과로 알 수 없다.
-- 같은 폴더에서 아래 명령으로 설치 여부를 확인한다. 실패하면 설치를, 성공하면 `@vapor-ui/figma-eval`과 같은 릴리스로 올리기를 안내한다. 예전 버전은 채점 표가 없어서 설치돼 있어도 `is not installed`로 찍힐 수 있다. 모노레포에서는 패키지가 루트로 끌어올려져 앱 폴더의 `node_modules`에 없을 수 있으니 폴더를 직접 보지 않는다.
+- 같은 폴더에서 아래 명령으로 설치 여부를 확인한다. 실패하면 설치를, 성공하면 `@vapor-ui/figma-blueprint`와 같은 릴리스로 올리기를 안내한다. 예전 버전은 정답 표가 없어서 설치돼 있어도 `is not installed`로 찍힐 수 있다. 모노레포에서는 패키지가 루트로 끌어올려져 앱 폴더의 `node_modules`에 없을 수 있으니 폴더를 직접 보지 않는다.
 
     ```bash
     node --input-type=module -e "import.meta.resolve('@vapor-ui/<pkg>')"
     ```
 
-- 이 줄이 특정 `unscorable` 항목의 원인이라고 단정하지 않는다. JSON에는 항목의 패키지가 없다. 설치하거나 올린 뒤 다시 돌려서 남는 항목이 vapor-ui 쪽 원인이다.
+- 이 줄이 특정 `unscorable` 항목의 원인이라고 단정하지 않는다. JSON 항목에는 패키지가 없다. 설치하거나 올린 뒤 다시 돌려서 남는 항목이 vapor-ui 쪽 원인이다.
 
-## 결과 읽기
+## 2. 검증 서브에이전트
 
-JSON이 나왔을 때 종료 코드와 `result`는 같다.
+새 서브에이전트를 띄운다(Claude Code는 `Agent` 도구, `general-purpose`). 프롬프트는 `references/verifier.md` 전문을 그대로 붙이고, 그 아래에 입력 다섯 줄만 붙인다. 경로는 모두 절대 경로다.
 
-| 종료 코드 | `result`     | 뜻                                            |
-| --------- | ------------ | --------------------------------------------- |
-| 0         | `pass`       | 정답 집합의 모든 줄이 코드에 있다             |
-| 1         | `fail`       | 빠졌거나 props가 다른 줄이 있다               |
-| 2         | `unscorable` | 시안 일부를 확인할 수 없어 점수를 내지 않았다 |
+```text
+blueprint: <$OUT/blueprint.json>
+entry: <진입점>
+root: <root>
+changed: <쓰거나 고친 파일, 쉼표로 구분. 없으면 없음>
+report: <$OUT/report.json>
+```
 
-보고에는 아래를 모두 담는다.
+**생성 맥락은 넘기지 않는다.** 대화 내용, 시안 스크린샷, 무엇을 어떻게 구현했는지, 이전 관문 결과를 넣지 않는다. 자기 코드를 자기가 채점하지 않게 하려는 것이다. 서브에이전트를 띄울 수 없는 에이전트면 `references/verifier.md`대로 직접 판정하고, 보고에 "자기 채점"이라고 적는다.
 
-- 재현율 `ok/total (recall)`
-- `status: "mismatch"` 줄마다 `line`, `diff`, `closest`(가장 가까운 코드 위치)
-- `status: "missing"` 줄마다 `line`
-- 제외(`excluded`) 개수와 사유별 개수. 사유는 컴포넌트가 스스로 그리는 아이콘·파트라서 코드에 쓸 수 없는 인스턴스다. 실패가 아니다.
-- `unscorable`이면 `cause`와 `message`. 합격이라고 말하지 않는다. 채점되지 않은 패키지가 없는데도 남는 항목은 vapor-ui 쪽 Code Connect 누락이나 템플릿 오류라 사용자 코드로는 고칠 수 없다. `unscorable`이어도 `rows`의 `missing`·`mismatch`는 사용자 코드로 고칠 수 있다.
+## 3. 집계
 
-`line`은 정답 JSX 한 줄이고, `data-in`은 그 요소의 부모 컴포넌트다. 문구와 레이아웃은 보지 않는다.
+```bash
+node "<이 스킬 폴더>/scripts/tally.mjs" "$OUT/blueprint.json" "$OUT/report.json" --root <root> --json
+```
+
+| 종료 코드 | `result`     | 뜻                                                                      |
+| --------- | ------------ | ----------------------------------------------------------------------- |
+| 0         | `pass`       | 모든 노드가 `ok`이고 채점 불가가 없다                                   |
+| 1         | `fail`       | 채점할 수 있는 노드 중 `ok`가 아닌 것이 있다. `evidence` 실패도 든다    |
+| 2         | `unscorable` | 채점할 수 있는 노드는 모두 `ok`지만 정답 트리나 판정에 채점 불가가 있다 |
+| 3         | 없음         | 보고가 정답 트리와 맞지 않는다(id 누락·중복·모르는 id·모르는 상태)      |
+
+3이면 stderr를 붙여 검증 서브에이전트에게 보고를 고치게 하고 다시 집계한다. 직접 판정을 채우지 않는다.
+
+`evidence`는 `ok` 판정의 `at` 줄에 그 태그가 없다는 뜻이다. 거짓 통과를 막는 기계 검사다.
+
+## 4. 재확인
+
+`failures`와 `evidence`의 줄마다 인용된 코드를 직접 다시 읽는다. `missing`이면 그 태그를 코드에서 찾는다.
+
+- 판정을 뒤집을 코드 줄을 찾았을 때만 보고 JSON의 그 판정을 고친다. `status`와 `at`을 바꾸고 `note`에 `재확인:`으로 근거를 적는다.
+- 줄을 찾지 못하면 판정을 그대로 둔다.
+- 고쳤으면 3의 집계를 다시 돌린다. 마지막 집계가 이 관문의 결과다.
+
+## 보고
+
+- 결과와 재현율 `ok/scorable (recall)`, 상태별 개수
+- `failures`의 줄마다 id, 태그, 상태, `at`, `note`. `changed`가 붙은 줄은 이번 세션이 바꾼 파일이라고 표시한다
+- 남은 `evidence` 실패마다 id, 태그, `at`, `reason`
+- 재확인에서 고친 판정마다 이전 판정, 새 판정, 근거 줄
+- 제외(`excluded`) 개수와 사유별 개수. 컴포넌트가 스스로 그리는 아이콘·파트라서 코드에 쓸 수 없는 인스턴스다. 실패가 아니다
+- `unscorable`이면 정답 트리의 `unscorable` 항목마다 `name`, `cause`와, `unscorable` 판정마다 `note`. 합격이라고 말하지 않는다. 채점되지 않은 패키지가 없는데도 남는 정답 트리 항목은 vapor-ui 쪽 Code Connect 누락이나 템플릿 오류라 사용자 코드로는 고칠 수 없다
+
+문구와 레이아웃은 이 관문에서 보지 않는다.
