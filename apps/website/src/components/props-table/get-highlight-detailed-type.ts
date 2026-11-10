@@ -40,16 +40,18 @@ export async function getHighlightDetailedType(
 ): Promise<DetailedTypeSegment[]> {
     if (!raw) return [];
 
+    const source = formatUnionSource(raw);
+
     const refNames = typeRefs
         ? Object.keys(typeRefs)
-              .filter((name) => raw.includes(name))
+              .filter((name) => source.includes(name))
               .sort((a, b) => b.length - a.length)
         : [];
 
-    const hast = await highlightToHast(raw, 'ts');
+    const hast = await highlightToHast(source, 'ts');
     const tokens = flattenTokens(hast);
 
-    const matches = refNames.length > 0 ? findRefMatches(raw, tokens, refNames) : [];
+    const matches = refNames.length > 0 ? findRefMatches(source, tokens, refNames) : [];
     const pieces = buildPieces(tokens, matches);
     const groups = groupPieces(pieces);
 
@@ -301,4 +303,75 @@ function isStringOrCommentToken(text: string) {
     if (trimmed.startsWith("'") || trimmed.startsWith('"') || trimmed.startsWith('`')) return true;
     if (trimmed.startsWith('//') || trimmed.startsWith('/*')) return true;
     return false;
+}
+
+/**
+ * Rewrites a union type so each top-level member sits on its own line, prefixed
+ * with `| `. Nested unions inside generics, tuples, calls, object types, or
+ * string/template literals are preserved as-is. For non-unions (single
+ * top-level member) the original source is returned unchanged.
+ */
+function formatUnionSource(raw: string): string {
+    const parts = splitTopLevelUnion(raw);
+    if (parts.length < 2) return raw;
+    return parts.map((part) => `| ${part}`).join('\n');
+}
+
+function splitTopLevelUnion(src: string): string[] {
+    const out: string[] = [];
+    let buf = '';
+    let depth = 0;
+    let quote: '"' | "'" | '`' | null = null;
+
+    for (let i = 0; i < src.length; i++) {
+        const c = src[i];
+
+        if (quote) {
+            buf += c;
+            if (c === '\\' && i + 1 < src.length) {
+                buf += src[++i];
+                continue;
+            }
+            if (c === quote) quote = null;
+            continue;
+        }
+
+        if (c === '"' || c === "'" || c === '`') {
+            quote = c;
+            buf += c;
+            continue;
+        }
+
+        if (c === '<' || c === '(' || c === '[' || c === '{') {
+            depth++;
+            buf += c;
+            continue;
+        }
+
+        if (c === '>') {
+            // `=>` is an arrow token, not a generic close.
+            if (src[i - 1] !== '=') depth--;
+            buf += c;
+            continue;
+        }
+
+        if (c === ')' || c === ']' || c === '}') {
+            depth--;
+            buf += c;
+            continue;
+        }
+
+        if (c === '|' && depth === 0) {
+            const trimmed = buf.trim();
+            if (trimmed) out.push(trimmed);
+            buf = '';
+            continue;
+        }
+
+        buf += c;
+    }
+
+    const tail = buf.trim();
+    if (tail) out.push(tail);
+    return out;
 }
