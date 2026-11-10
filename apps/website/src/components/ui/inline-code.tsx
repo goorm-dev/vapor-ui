@@ -7,7 +7,7 @@ export const InlineCode = ({ typography = 'code1', className, children, ...props
             render={<code />}
             typography={typography}
             className={clsx(
-                'not-prose bg-v-gray-50 text-v-contrast rounded-v-200 px-v-50 py-v-0',
+                'not-prose not-[pre>&]:bg-v-gray-50 not-[pre>&]:text-v-contrast not-[pre>&]:rounded-v-200 not-[pre>&]:px-v-50 not-[pre>&]:py-v-0 not-[pre>&]:border not-[pre>&]:border-v-normal',
                 className,
             )}
             {...props}
