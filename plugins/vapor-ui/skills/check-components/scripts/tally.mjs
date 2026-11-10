@@ -97,10 +97,25 @@ function checkEvidence(node, at, root, presets, files) {
         : `lines ${line}-${line + SPAN - 1} do not contain ${names.map((n) => `"${n}"`).join(' or ')}`;
 }
 
+const FIELDS = { id: 'string', status: 'string', at: 'string', note: 'string', changed: 'boolean' };
+
+function shapeProblem(v) {
+    if (typeof v !== 'object' || v === null || Array.isArray(v))
+        return `is ${JSON.stringify(v)}, not an object`;
+    if (v.id === undefined || v.status === undefined) return 'needs id and status';
+    const wrong = Object.entries(FIELDS).find(([k, t]) => v[k] !== undefined && typeof v[k] !== t);
+    return wrong ? `${wrong[0]} must be a ${wrong[1]}` : null;
+}
+
 function tally(blueprint, report, root) {
     if (!Array.isArray(blueprint?.nodes)) refuse('blueprint has no nodes array');
     if (report?.version !== 1 || !Array.isArray(report.verdicts))
         refuse('report must be { version: 1, verdicts: [...] }');
+    const shapes = report.verdicts
+        .map((v, i) => [i, shapeProblem(v)])
+        .filter(([, p]) => p)
+        .map(([i, p]) => `verdicts[${i}] ${p}`);
+    if (shapes.length) refuse(`report has malformed verdicts:\n  ${shapes.join('\n  ')}`);
 
     const nodes = flatten(blueprint.nodes);
     const byId = new Map(nodes.map((n) => [n.id, n]));
