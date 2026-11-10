@@ -1,6 +1,7 @@
 import type { StoryObj } from '@storybook/react-vite';
 
 import { AlertDialog } from '.';
+import { Box } from '../box';
 import { Button } from '../button';
 
 export default {
@@ -30,35 +31,37 @@ export const Default: Story = {
 export const TestBed: Story = {
     parameters: { docs: { disable: true } },
     render: (args) => (
-        <>
-            <AlertDialog.Root {...args} open>
-                <AlertDialog.Trigger>hihi</AlertDialog.Trigger>
-                <AlertDialog.PortalPrimitive>
-                    <AlertDialog.OverlayPrimitive />
-                    <AlertDialog.PopupPrimitive>
-                        <AlertDialog.Body>
-                            <AlertDialog.Title>다이얼로그입니다.</AlertDialog.Title>
-                            <AlertDialog.Description>
-                                기본 형태의 다이얼로그입니다.
-                            </AlertDialog.Description>
-                        </AlertDialog.Body>
-                        <AlertDialog.Footer $css={{ flexDirection: 'column' }}>
-                            <AlertDialog.Close
-                                render={<Button $css={{ width: '100%' }} colorPalette="danger" />}
-                            >
-                                확인
-                            </AlertDialog.Close>
-                            <AlertDialog.Close
-                                render={
-                                    <Button $css={{ width: '100%' }} colorPalette="secondary" />
-                                }
-                            >
-                                닫기
-                            </AlertDialog.Close>
-                        </AlertDialog.Footer>
-                    </AlertDialog.PopupPrimitive>
-                </AlertDialog.PortalPrimitive>
-            </AlertDialog.Root>
-        </>
+        <AlertDialog.Root {...args} open>
+            <AlertDialog.PortalPrimitive>
+                <AlertDialog.OverlayPrimitive />
+                <AlertDialog.PopupPrimitive>
+                    <AlertDialog.Header>
+                        <AlertDialog.Title>Title</AlertDialog.Title>
+                        <AlertDialog.Description>Description</AlertDialog.Description>
+                    </AlertDialog.Header>
+                    <AlertDialog.Body>
+                        <Box
+                            $css={{
+                                backgroundColor: 'var(--vapor-color-gray-100)',
+                                height: '60px',
+                                borderRadius: '10px',
+                            }}
+                        />
+                    </AlertDialog.Body>
+                    <AlertDialog.Footer>
+                        <AlertDialog.Close
+                            render={<Button $css={{ flex: 1 }} colorPalette="secondary" />}
+                        >
+                            Cancel button
+                        </AlertDialog.Close>
+                        <AlertDialog.Close
+                            render={<Button $css={{ flex: 1 }} colorPalette="danger" />}
+                        >
+                            Action button
+                        </AlertDialog.Close>
+                    </AlertDialog.Footer>
+                </AlertDialog.PopupPrimitive>
+            </AlertDialog.PortalPrimitive>
+        </AlertDialog.Root>
     ),
 };

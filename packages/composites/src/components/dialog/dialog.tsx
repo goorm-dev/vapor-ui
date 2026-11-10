@@ -209,9 +209,7 @@ interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
 
 const Header = ({ title, description }: HeaderProps) => {
     return (
-        <DialogPrimitives.Header
-            $css={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 28px' }}
-        >
+        <DialogPrimitives.Header $css={{ display: 'grid', gridTemplateColumns: '1fr 28px' }}>
             <VStack $css={{ alignItems: 'flex-start', gap: '$050', flex: 1 }}>
                 <slots.title render={title} />
                 <slots.description render={description} />
@@ -241,27 +239,37 @@ const CloseButton = () => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+const hasMoreBelow = (element: HTMLElement) =>
+    element.scrollHeight - element.clientHeight - element.scrollTop > 1;
+
 const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Props) => {
     const bodyRef = useRef<HTMLDivElement>(null);
-    const [overflowed, setOverflowed] = useState(false);
+    const [moreBelow, setMoreBelow] = useState(false);
 
     useEffect(() => {
         const element = bodyRef.current;
         if (!element) return;
 
-        setOverflowed(element.scrollHeight - element.clientHeight > 1);
+        setMoreBelow(hasMoreBelow(element));
     }, []);
 
+    // The fade signals hidden content, so it drops once the end is reached and the last ring shows in full.
+    // Tab scrolling stops 24px up so a ring clears the 20px fade.
     const $css = {
-        maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
-        paddingBottom: overflowed ? '$250' : '$000',
+        maskImage: moreBelow ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
+        scrollPaddingBottom: '$300',
         ...$cssProp,
     } satisfies typeof $cssProp;
 
     if (!children) return null;
 
     return (
-        <DialogPrimitives.Body ref={bodyRef} $css={$css} {...props}>
+        <DialogPrimitives.Body
+            ref={bodyRef}
+            $css={$css}
+            onScroll={(event) => setMoreBelow(hasMoreBelow(event.currentTarget))}
+            {...props}
+        >
             {children}
         </DialogPrimitives.Body>
     );
@@ -272,15 +280,11 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {}
 
 const Footer = ({ action, assistive }: FooterProps) => {
-    const renderFooter = action || assistive;
+    if (!action && !assistive) return null;
 
     return (
         <DialogPrimitives.Footer
-            $css={{
-                display: 'grid',
-                gridTemplateAreas: '"assistive action"',
-                paddingTop: renderFooter ? '$250' : '$000',
-            }}
+            $css={{ display: 'grid', gridTemplateAreas: '"assistive action"' }}
         >
             <slots.assistive
                 render={assistive}
