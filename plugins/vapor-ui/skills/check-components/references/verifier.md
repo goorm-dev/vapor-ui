@@ -63,7 +63,7 @@ node --input-type=module -e "console.log(import.meta.resolve('@vapor-ui/composit
 
 **위치**: 코드에서 그 요소의 조상 가운데, 정답 트리 어딘가에 나오는 태그 중 가장 가까운 것이 정답 트리의 부모 노드와 같은지 본다. 부모 태그가 여럿이면 부모 노드에 짝지은 바로 그 요소여야 한다. `Box`·`HStack`·`VStack`·`Grid`·`div`처럼 정답 트리에 없는 태그는 건너뛴다. 최상위 노드는 그런 조상이 없어야 한다. `anyParent` 노드는 위치를 보지 않고, `position`으로 판정하지 않는다.
 
-**`at`**: `root` 기준 상대 경로(또는 절대 경로)와 요소의 여는 태그가 있는 줄 번호, `src/screens/Foo.tsx:42`. `tally.mjs`가 `ok`마다 그 줄부터 세 줄 안에 그 태그를 여는 JSX 태그(`<Dialog.Popup`, 프리셋이면 `<Dialog.Action`)가 있는지 기계적으로 확인한다. 주석, 문자열, JSX 글자, import 줄은 증거가 아니다. `<IconButton`은 `Button`이 아니고 `<Dialog.Root`는 `Checkbox.Root`가 아니다. 아이콘만은 값으로 넘긴 이름(`icon={LockIcon}`)도 증거로 친다. JS·TS 소스 파일(`.js`·`.jsx`·`.ts`·`.tsx`·`.mjs`·`.cjs`·`.mts`·`.cts`)만 인용한다.
+**`at`**: `root` 기준 상대 경로(또는 절대 경로)와 요소의 여는 태그가 있는 줄 번호, `src/screens/Foo.tsx:42`. `tally.mjs`가 `ok`마다 그 줄부터 세 줄 안에 그 태그를 여는 JSX 태그(`<Dialog.Popup`, 프리셋이면 `<Dialog.Action`)가 있는지 기계적으로 확인한다. 주석, 문자열, JSX 글자, import 줄은 증거가 아니다. `<IconButton`은 `Button`이 아니고 `<Dialog.Root`는 `Checkbox.Root`가 아니다. 태그 이름은 그 파일의 `@vapor-ui/core`·`composites`·`icons` import로 푼다(`<Btn`은 `Button as Btn`이면 `Button`, `<V.Button`은 `* as V`면 `Button`). vapor import가 없는 이름은 쓰인 그대로 본다. 아이콘만은 값으로 넘긴 이름(`icon={LockIcon}`)도 증거로 친다. JS·TS 소스 파일(`.js`·`.jsx`·`.ts`·`.tsx`·`.mjs`·`.cjs`·`.mts`·`.cts`)만 인용한다.
 
 **`changed`**: `at`의 파일이 `changed`에 있으면 `"changed": true`를 붙인다. 판정 기준은 바꾸지 않는다.
 

@@ -83,11 +83,41 @@ const BEFORE_EXPRESSION = new Set([
 ]);
 const startsExpression = (prev) =>
     prev === '' || BEFORE_EXPRESSION.has(prev) || /^[([{,;:=!&|?+\-*%~^>]$/.test(prev);
+const VAPOR = /^@vapor-ui\/(core|composites|icons)(\/|$)/;
 
-// What a source file shows as rendered, in the order it is written:
-// tags  JSX opening tags, name as written ("D.Root"), with the line of the name.
-// refs  dotted identifiers in code outside imports, comments, strings and JSX text, for icons passed as values.
-// Comments, strings, JSX text and import declarations never yield either.
+// The [local, exported] pairs an import clause binds: `Button as Btn` → [Btn, Button], `* as V` → [V, *].
+// Type-only imports bind nothing that renders; default imports are left to their local name.
+function bindings(tokens) {
+    if (tokens[0] === 'type' && tokens[1] !== ',' && tokens[1] !== 'from') return [];
+    const out = [];
+    for (let k = 0; k < tokens.length && tokens[k] !== 'from'; k++) {
+        if (tokens[k] === '*') out.push([tokens[(k += 2)], '*']);
+        else if (tokens[k] === '{')
+            while (k < tokens.length && tokens[k] !== '}') {
+                const entry = [];
+                for (k++; k < tokens.length && tokens[k] !== ',' && tokens[k] !== '}'; k++)
+                    entry.push(tokens[k]);
+                if (entry.length && !(entry[0] === 'type' && entry.length > 1))
+                    out.push([entry[1] === 'as' ? entry[2] : entry[0], entry[0]]);
+            }
+    }
+    return out;
+}
+
+// A tag as written → the vapor export it renders. A vapor import decides; any other name stands for itself, since a
+// local module can re-export the component under its own name.
+function resolveTag(name, imports) {
+    const [head, ...rest] = name.split('.');
+    const exported = imports.get(head);
+    if (exported === undefined) return name;
+    return (exported === '*' ? rest : [exported, ...rest]).join('.');
+}
+
+// What a source file shows as rendered:
+// imports  local name → vapor export it binds (`*` for a namespace), from @vapor-ui/core|composites|icons.
+// tags     JSX opening tags, name as written ("D.Root"), with the line of the name.
+// refs     dotted identifiers in code outside imports, comments, strings and JSX text, for icons passed as values.
+// Comments, strings, JSX text and import declarations never yield a tag or a ref.
 function scan(src) {
     const starts = [0];
     for (let k = 0; k < src.length; k++) if (src[k] === '\n') starts.push(k + 1);
@@ -101,12 +131,14 @@ function scan(src) {
         }
         return lo + 1;
     };
+    const imports = new Map();
     const tags = [];
     const refs = [];
     // Frames: code (braces counted to find its closing `}`), template, tag (attributes), children (JSX text).
     const stack = [{ kind: 'code', depth: 0 }];
     let prev = '';
-    let inImport = false;
+    // Tokens of the import declaration being read, until its module string.
+    let clause = null;
     let i = 0;
     const skipPast = (end, from) => {
         const k = src.indexOf(end, from);
@@ -187,9 +219,11 @@ function scan(src) {
         else if (c === '"' || c === "'") {
             let k = i + 1;
             while (k < src.length && src[k] !== c && src[k] !== '\n') k += src[k] === '\\' ? 2 : 1;
+            if (clause && VAPOR.test(src.slice(i + 1, k)))
+                for (const [local, exported] of bindings(clause)) imports.set(local, exported);
+            clause = null;
             i = k + 1;
             prev = 'value';
-            inImport = false;
         } else if (c === '`') {
             stack.push({ kind: 'template' });
             i++;
@@ -212,10 +246,12 @@ function scan(src) {
                 i++;
             } else i = next;
         } else if (c === '{') {
+            clause?.push(c);
             f.depth++;
             prev = '{';
             i++;
         } else if (c === '}') {
+            clause?.push(c);
             if (f.depth === 0 && stack.length > 1) stack.pop();
             else f.depth--;
             prev = '}';
@@ -225,21 +261,22 @@ function scan(src) {
             const name = src.slice(i, end);
             const after = src.slice(end).match(/^\s*(.)/)?.[1];
             if (name === 'import' && stack.length === 1 && after !== '(' && after !== '.')
-                inImport = true;
-            else if (!inImport && !BEFORE_EXPRESSION.has(name))
-                refs.push({ name, line: lineOf(i) });
+                clause = [];
+            else if (clause) clause.push(name);
+            else if (!BEFORE_EXPRESSION.has(name)) refs.push({ name, line: lineOf(i) });
             prev = name;
             i = end;
         } else if (/\d/.test(c)) {
             while (/[\w.]/.test(src[i] ?? '')) i++;
             prev = 'value';
         } else {
-            if (c === ';') inImport = false;
+            if (c === ';') clause = null;
+            else if (c === ',' || c === '*') clause?.push(c);
             prev = c;
             i++;
         }
     }
-    return { tags, refs };
+    return { imports, tags, refs };
 }
 
 // Per cited file, read once: its line count and what it shows. null when it cannot be read.
@@ -269,7 +306,7 @@ function checkEvidence(node, at, root, presets, files) {
     // An icon can be passed as a value (icon={LockIcon}); every other element must be opened as JSX.
     const shown = node.pkg === 'icons' ? [...source.tags, ...source.refs] : source.tags;
     const cited = (e) => e.line >= line && e.line < line + SPAN;
-    return shown.some((e) => cited(e) && names.has(e.name))
+    return shown.some((e) => cited(e) && names.has(resolveTag(e.name, source.imports)))
         ? null
         : `lines ${line}-${line + SPAN - 1} open no ${[...names].map((n) => `<${n}>`).join(' or ')}`;
 }
