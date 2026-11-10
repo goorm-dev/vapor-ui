@@ -830,7 +830,7 @@ describe('blueprint boxes and texts', () => {
             { id: '3:2', text: 'Title', box: box(12, 14, 70, 20) },
             { id: 'I2:1;2', text: 'Save', box: box(30, 70, 40, 20) },
             { id: '3:7', text: 'First', box: box(0, 200, 100, 20) },
-            { id: '3:7#1', text: 'Second', box: box(0, 220, 100, 20) },
+            { id: '3:7#1', text: 'Second', box: box(0, 240, 100, 20) },
         ]);
     });
 
