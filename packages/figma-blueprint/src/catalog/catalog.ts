@@ -79,7 +79,7 @@ export async function fromRepo(root: string): Promise<Catalog> {
 }
 
 // What `figma-blueprint ship` shipped in the @vapor-ui packages that cwd resolves. A package that is not installed is
-// left out, with a line on stderr.
+// left out, with a line on stderr, and its instances in a design are unscorable.
 export async function fromInstalled(cwd: string): Promise<Catalog> {
     const require = createRequire(join(resolve(cwd), 'package.json'));
     const tables: Tables = { internalIcons: {}, internalParts: {}, presets: {}, defaults: {} };
@@ -93,7 +93,7 @@ export async function fromInstalled(cwd: string): Promise<Catalog> {
                 (e as NodeJS.ErrnoException).code === 'ERR_PACKAGE_PATH_NOT_EXPORTED'
                     ? 'ships no figma-blueprint tables'
                     : 'is not installed';
-            console.error(`@vapor-ui/${pkg} ${why}, its components are left out`);
+            console.error(`@vapor-ui/${pkg} ${why}, its instances are unscorable`);
             continue;
         }
         const { entries, ...share } = JSON.parse(readFileSync(file, 'utf8')) as Shipped;

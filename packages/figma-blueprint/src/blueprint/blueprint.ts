@@ -9,6 +9,7 @@ import ts from 'typescript';
 import type { Catalog, Entry } from '~/catalog/catalog';
 import type { Pkg } from '~/entries/entries-file';
 
+import compositesEntries from '../../../composites/figma-entries.json';
 import type { Box, TextLine } from './design';
 import { boxesIn, textsIn } from './design';
 import type { FigmaNode } from './figma-mock';
@@ -54,10 +55,11 @@ export interface Excluded {
 }
 
 // A library instance that could not be read, so the design cannot be graded.
+// not-installed: a composites component while composites is not installed; message says so.
 export interface Unscorable {
     node: string;
     name: string;
-    cause: 'no-template' | 'template-error';
+    cause: 'no-template' | 'template-error' | 'not-installed';
     message?: string;
     box?: Box;
 }
@@ -115,6 +117,9 @@ const dummy: object = {
     hasCodeConnect: () => false,
     executeTemplate: () => ({ example: [] }),
 };
+// A composites component's Figma name carries no marker, so without composites installed only its key tells it from
+// another library's. ponytail: keys as of this build; a component composites publishes later goes unseen until rebuilt.
+const compositesKeys = new Set<string | undefined>(Object.keys(compositesEntries));
 const ids = new WeakMap<Entry, string | null>();
 const idOf = (catalog: Catalog, entry: Entry) => {
     if (!ids.has(entry)) {
@@ -223,17 +228,22 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     const ownParts = byPartName(catalog.tables.internalParts);
 
     const { document, components = {}, componentSets = {} } = tree;
-    const nameOf = (n: FigmaNode) => {
-        const c = n.componentId === undefined ? undefined : components[n.componentId];
-        return (
-            (c?.componentSetId === undefined ? undefined : componentSets[c.componentSetId])?.name ??
-            c?.name ??
-            n.name
-        );
-    };
-    const entryOf = (n: FigmaNode) => {
+    const componentOf = (n: FigmaNode) => {
         const c = n.componentId === undefined ? undefined : components[n.componentId];
         const set = c?.componentSetId === undefined ? undefined : componentSets[c.componentSetId];
+        return { c, set };
+    };
+    const nameOf = (n: FigmaNode) => {
+        const { c, set } = componentOf(n);
+        return set?.name ?? c?.name ?? n.name;
+    };
+    const fromComposites = (n: FigmaNode) => {
+        const { c, set } = componentOf(n);
+        return compositesKeys.has(set?.key) || compositesKeys.has(c?.key);
+    };
+    const hasComposites = Object.values(entries).some((e) => e.pkg === 'composites');
+    const entryOf = (n: FigmaNode) => {
+        const { c, set } = componentOf(n);
         return (
             c &&
             ((set && entries[set.key]) ??
@@ -250,12 +260,12 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     const nodes: BlueprintNode[] = [];
     const excluded: Excluded[] = [];
     const unscorable: Unscorable[] = [];
-    // A library instance is one the entries connect, or one named like a library component that nothing installed
-    // connects: 💙 core, ❤️ icons, and 🩵 on a composites part's layer ("Dialog/🩵Action"). ponytail: an unprefixed
-    // instance with no entry (a composites root when composites is not installed) only surfaces through its 🩵 layers.
+    // A library instance is one the entries connect, a composites component, or one named like a library component that
+    // nothing installed connects: 💙 core, ❤️ icons, and 🩵 on a composites part's layer ("Dialog/🩵Action").
     const marked = (s: string) => /(^|\/)(💙|❤️|🩵)/u.test(s);
     const isLib = (n: FigmaNode) =>
-        n.type === 'INSTANCE' && (connected(n) !== null || marked(nameOf(n)) || marked(n.name));
+        n.type === 'INSTANCE' &&
+        (connected(n) !== null || fromComposites(n) || marked(nameOf(n)) || marked(n.name));
     const boxOf = boxesIn(document);
 
     // Library parts the design draws in a node's subtree, the node included.
@@ -384,6 +394,22 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
                     [],
                     false,
                 );
+            return;
+        }
+        // A composites component nothing installed connects draws what it holds itself (Dialog's close IconButton), so
+        // none of that can be a node either.
+        if (n.type === 'INSTANCE' && fromComposites(n)) {
+            unscorable.push({
+                node: n.id,
+                name: nameOf(n),
+                cause: hasComposites ? 'no-template' : 'not-installed',
+                ...(!hasComposites && {
+                    message:
+                        '@vapor-ui/composites is not installed or ships no figma-blueprint tables',
+                }),
+                ...boxed,
+            });
+            excludeIn(n, 'inside-unscorable');
             return;
         }
         if (isLib(n)) {

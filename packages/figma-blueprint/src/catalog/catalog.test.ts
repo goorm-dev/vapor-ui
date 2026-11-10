@@ -140,7 +140,7 @@ describe('figma-blueprint ship', () => {
         const catalog = await fromInstalled(app);
 
         expect(error).toHaveBeenCalledWith(
-            '@vapor-ui/composites is not installed, its components are left out',
+            '@vapor-ui/composites is not installed, its instances are unscorable',
         );
         expect(catalog.tables.internalParts).toEqual({});
         expect(blueprint(tree, catalog).nodes).toEqual(treeNodes);
