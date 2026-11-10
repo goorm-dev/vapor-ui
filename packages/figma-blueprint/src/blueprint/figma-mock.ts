@@ -20,6 +20,8 @@ export interface FigmaNode {
 export interface Context {
     handle: object;
     batch: Batch | null;
+    // Copy a template read from Figma text during this run; blueprint.ts turns props holding it into "*".
+    texts: Set<unknown>;
 }
 
 interface InstanceSection {
@@ -28,8 +30,6 @@ interface InstanceSection {
 }
 
 const stack: Context[] = [];
-// Copy a template read from Figma text during the current run; blueprint.ts turns props holding it into "*".
-export const texts = new Set<unknown>();
 
 const code = (strings: readonly string[], ...values: unknown[]) => ({
     type: 'SECTIONS',
@@ -136,7 +136,7 @@ export function makeHandles<E>(tree: { connected(n: FigmaNode): Connection<E> | 
     }
 
     const textHandle = (n: FigmaNode) => {
-        texts.add(n.characters);
+        top().texts.add(n.characters);
         return {
             type: 'TEXT',
             name: n.name,
@@ -172,7 +172,7 @@ export function makeHandles<E>(tree: { connected(n: FigmaNode): Connection<E> | 
             // answers '' instead of failing the whole template the way Figma's drift check would.
             getString(name: string) {
                 const v = prop(n, name)?.value ?? '';
-                texts.add(v);
+                top().texts.add(v);
                 return v;
             },
             getBoolean(name: string, options?: Record<string, unknown>) {

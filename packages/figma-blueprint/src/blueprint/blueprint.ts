@@ -9,7 +9,7 @@ import ts from 'typescript';
 import type { Catalog, Entry } from '../catalog/catalog';
 import type { Pkg } from '../entries/entries-file';
 import type { FigmaNode } from './figma-mock';
-import { makeHandles, render, texts, withContext } from './figma-mock';
+import { makeHandles, render, withContext } from './figma-mock';
 
 export interface FigmaTree {
     document: FigmaNode;
@@ -102,8 +102,10 @@ const idOf = (catalog: Catalog, entry: Entry) => {
         let id: string | null = null;
         try {
             id =
-                withContext({ handle: dummy, batch: entry.batch }, catalog.runTemplate(entry)).id ??
-                null;
+                withContext(
+                    { handle: dummy, batch: entry.batch, texts: new Set() },
+                    catalog.runTemplate(entry),
+                ).id ?? null;
         } catch {
             // a template that cannot run without a real instance has no id
         }
@@ -115,7 +117,7 @@ const idOf = (catalog: Catalog, entry: Entry) => {
 // ---------- snippet → elements
 type Jsx = ts.JsxElement | ts.JsxSelfClosingElement;
 const open = (n: Jsx) => (ts.isJsxElement(n) ? n.openingElement : n);
-function attrsOf(el: Jsx) {
+function attrsOf(el: Jsx, texts: Set<unknown>) {
     const out: string[] = [];
     for (const a of open(el).attributes.properties) {
         if (!ts.isJsxAttribute(a)) continue;
@@ -136,7 +138,7 @@ function attrsOf(el: Jsx) {
     return out;
 }
 // One snippet as an element tree; a marker becomes the id of the nested instance in the element it sits in.
-function parse(code: string) {
+function parse(code: string, texts: Set<unknown>) {
     const sf = ts.createSourceFile(
         'x.tsx',
         `<>${code}</>`,
@@ -149,7 +151,7 @@ function parse(code: string) {
         if (ts.isJsxElement(n) || ts.isJsxSelfClosingElement(n)) {
             const tag = open(n).tagName.getText();
             if (tag === '__nested') {
-                at.nested.push(attrsOf(n)[0].slice(4, -1));
+                at.nested.push(attrsOf(n, texts)[0].slice(4, -1));
                 return;
             }
             // <Button>...</Button> is a usage hint the template adds (Dialog's trigger), not something the design draws.
@@ -163,7 +165,7 @@ function parse(code: string) {
                 return;
             const el: Element = {
                 tag,
-                attrs: attrsOf(n),
+                attrs: attrsOf(n, texts),
                 children: [],
                 nested: [],
                 selfClosing: ts.isJsxSelfClosingElement(n),
@@ -297,13 +299,13 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
             const kept: Kept[] = [];
             let top: BlueprintNode[];
             try {
-                texts.clear();
+                const texts = new Set<unknown>();
                 const { example } = withContext(
-                    { handle: handle(n), batch: c.entry.batch },
+                    { handle: handle(n), batch: c.entry.batch, texts },
                     catalog.runTemplate(c.entry),
                 );
                 const parts = drawn(n);
-                top = parse(render(example)).children.flatMap((el) =>
+                top = parse(render(example), texts).children.flatMap((el) =>
                     keep(el, parts, c.entry.pkg, kept),
                 );
             } catch (e) {
