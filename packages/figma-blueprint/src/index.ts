@@ -2,8 +2,12 @@ export { blueprint } from '~/blueprint/blueprint';
 export type {
     Blueprint,
     BlueprintNode,
+    Box,
     Excluded,
     FigmaTree,
+    FigmaVariables,
+    Frame,
+    TextLine,
     Unscorable,
 } from '~/blueprint/blueprint';
 export { fromInstalled, fromRepo } from '~/catalog/catalog';

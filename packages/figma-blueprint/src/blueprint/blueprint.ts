@@ -3,14 +3,19 @@
 // the elements its snippet draws itself. A connected instance inside another one counts only when the outer template
 // renders it (executeTemplate marker) or it sits in a SLOT; otherwise the part draws it itself (Select.Trigger's chevron).
 // Prop rules: literal props only, no "false", no placeholder, no "..." example, aria-label → "*". A node sits under
-// the library element it is in; layout frames do not count.
+// the library element it is in; layout frames do not count. What the design draws besides library instances is
+// design.ts.
 import ts from 'typescript';
 
 import type { Catalog, Entry } from '~/catalog/catalog';
 import type { Pkg } from '~/entries/entries-file';
 
+import type { Box, FigmaVariables, Frame, TextLine } from './design';
+import { boxesIn, layers } from './design';
 import type { FigmaNode } from './figma-mock';
 import { makeHandles, render, withContext } from './figma-mock';
+
+export type { Box, FigmaVariables, Frame, TextLine };
 
 export interface FigmaTree {
     document: FigmaNode;
@@ -27,6 +32,7 @@ export interface FigmaTree {
 // pkg: the package whose template wrote the node, so a composites Dialog.Root is not met by core's.
 // anyParent: Figma's nesting is not the code's here (inside a self-closing part), so the node sits under its owner's
 // root for reading and its position must not be judged.
+// box: the instance's, shared by every element its template writes.
 export interface BlueprintNode {
     id: string;
     tag: string;
@@ -34,15 +40,18 @@ export interface BlueprintNode {
     pkg: Pkg;
     anyParent?: true;
     children: BlueprintNode[];
+    box?: Box;
 }
 
 // A library instance the design draws that is not a node, and why. One inside an excluded instance shares its reason;
 // one inside an unscorable instance is inside-unscorable.
+// box: the code still draws it, so visual scoring still measures it.
 export interface Excluded {
     node: string;
     name: string;
     reason:
         'part-draws-icon' | 'part-draws-itself' | 'inside-self-closing-part' | 'inside-unscorable';
+    box?: Box;
 }
 
 // A library instance that could not be read, so the design cannot be graded.
@@ -51,13 +60,20 @@ export interface Unscorable {
     name: string;
     cause: 'no-template' | 'template-error';
     message?: string;
+    box?: Box;
 }
 
+// size: the graded frame's, which boxes are relative to. styles: whether token names are Figma variable names, or the
+// variable ids the tree carries because no variables response was at hand.
 export interface Blueprint {
-    version: 2;
+    version: 3;
+    size?: { w: number; h: number };
     nodes: BlueprintNode[];
     excluded: Excluded[];
     unscorable: Unscorable[];
+    frames: Frame[];
+    texts: TextLine[];
+    styles: 'ok' | 'no-variables-api';
 }
 
 interface Element {
@@ -200,7 +216,11 @@ const byPartName = (table: Record<string, string[]>) =>
     new Map(Object.entries(table).map(([k, v]) => [partName(k), new Set(v.map(partName))]));
 
 // ---------- the walk
-export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
+export function blueprint(
+    tree: FigmaTree,
+    catalog: Catalog,
+    variables?: FigmaVariables,
+): Blueprint {
     const { entries } = catalog;
     // A design can hold an older copy of a library component under a key that is no longer published, and Figma still
     // connects it. ponytail: match those by name, only where the name is unique in the entries and the component comes
@@ -244,6 +264,7 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     const marked = (s: string) => /(^|\/)(💙|❤️|🩵)/u.test(s);
     const isLib = (n: FigmaNode) =>
         n.type === 'INSTANCE' && (connected(n) !== null || marked(nameOf(n)) || marked(n.name));
+    const boxOf = boxesIn(document);
 
     // Library parts the design draws in a node's subtree, the node included.
     const drawn = (n: FigmaNode, out = new Set<string>()) => {
@@ -256,7 +277,9 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     const excludeIn = (n: FigmaNode, reason: Excluded['reason']) => {
         for (const c of n.children ?? []) {
             if (c.visible === false) continue;
-            if (isLib(c)) excluded.push({ node: c.id, name: nameOf(c), reason });
+            const box = boxOf(c.absoluteBoundingBox);
+            if (isLib(c))
+                excluded.push({ node: c.id, name: nameOf(c), reason, ...(box && { box }) });
             excludeIn(c, reason);
         }
     };
@@ -284,10 +307,12 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
         if (n.visible === false) return;
         if (n.type === 'SLOT' || (n.type === 'INSTANCE' && nameOf(n).startsWith('🟨')))
             slotted = true;
+        const box = boxOf(n.absoluteBoundingBox);
+        const boxed = box && { box };
         const c = connected(n);
         if (c) {
             const exclude = (reason: Excluded['reason']) => {
-                excluded.push({ node: n.id, name: nameOf(n), reason });
+                excluded.push({ node: n.id, name: nameOf(n), reason, ...boxed });
                 excludeIn(n, reason);
             };
             if (owner) {
@@ -341,6 +366,7 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
                     name: nameOf(n),
                     cause: 'template-error',
                     message: (e as Error).message,
+                    ...boxed,
                 });
                 excludeIn(n, 'inside-unscorable');
                 return;
@@ -351,6 +377,7 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
             const byPart = new Map<string, Kept>();
             for (const [i, k] of kept.entries()) {
                 k.node.id = i ? `${n.id}#${i}` : n.id;
+                if (box) k.node.box = box;
                 for (const id of k.el.nested) nested.set(id, k.node);
                 byPart.set(partName(k.el.tag), k);
             }
@@ -368,11 +395,20 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
             return;
         }
         if (isLib(n)) {
-            unscorable.push({ node: n.id, name: nameOf(n), cause: 'no-template' });
+            unscorable.push({ node: n.id, name: nameOf(n), cause: 'no-template', ...boxed });
             trail = [...trail, nameOf(n)];
         }
         for (const ch of n.children ?? []) visit(ch, at, owner, trail, slotted);
     }
     visit(document, null, null, [], false);
-    return { version: 2, nodes, excluded, unscorable };
+    const frame = document.absoluteBoundingBox;
+    return {
+        version: 3,
+        ...(frame && { size: { w: frame.width, h: frame.height } }),
+        nodes,
+        excluded,
+        unscorable,
+        ...layers(document, isLib, variables),
+        styles: variables ? 'ok' : 'no-variables-api',
+    };
 }

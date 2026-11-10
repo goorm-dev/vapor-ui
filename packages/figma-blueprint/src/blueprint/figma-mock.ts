@@ -15,6 +15,24 @@ export interface FigmaNode {
     componentProperties?: Record<string, { value: string | boolean }>;
     componentPropertyReferences?: Record<string, string>;
     characters?: string;
+    absoluteBoundingBox?: Rect | null;
+    absoluteRenderBounds?: Rect | null;
+    layoutPositioning?: string;
+    // A property → one alias, a list per paint or text range (fills, fontSize), or a map per corner or axis
+    // (rectangleCornerRadii, size).
+    boundVariables?: Record<string, Alias | Alias[] | Record<string, Alias>>;
+}
+
+export interface Rect {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+export interface Alias {
+    type: 'VARIABLE_ALIAS';
+    id: string;
 }
 
 export interface Context {

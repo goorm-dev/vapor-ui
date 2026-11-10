@@ -1,0 +1,351 @@
+{
+    "document": {
+        "id": "0:1",
+        "name": "Screen",
+        "type": "FRAME",
+        "absoluteBoundingBox": {
+            "x": 100,
+            "y": 200,
+            "width": 400,
+            "height": 300
+        },
+        "boundVariables": {
+            "fills": [
+                {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:canvas/9:1"
+                }
+            ]
+        },
+        "children": [
+            {
+                "id": "3:1",
+                "name": "Header",
+                "type": "FRAME",
+                "absoluteBoundingBox": {
+                    "x": 110,
+                    "y": 210,
+                    "width": 380,
+                    "height": 40
+                },
+                "boundVariables": {
+                    "fills": [
+                        {
+                            "type": "VARIABLE_ALIAS",
+                            "id": "VariableID:surface/9:2"
+                        }
+                    ],
+                    "rectangleCornerRadii": {
+                        "RECTANGLE_TOP_LEFT_CORNER_RADIUS": {
+                            "type": "VARIABLE_ALIAS",
+                            "id": "VariableID:radius/9:3"
+                        },
+                        "RECTANGLE_TOP_RIGHT_CORNER_RADIUS": {
+                            "type": "VARIABLE_ALIAS",
+                            "id": "VariableID:radius/9:3"
+                        },
+                        "RECTANGLE_BOTTOM_LEFT_CORNER_RADIUS": {
+                            "type": "VARIABLE_ALIAS",
+                            "id": "VariableID:radius/9:3"
+                        },
+                        "RECTANGLE_BOTTOM_RIGHT_CORNER_RADIUS": {
+                            "type": "VARIABLE_ALIAS",
+                            "id": "VariableID:radius/9:3"
+                        }
+                    }
+                },
+                "children": [
+                    {
+                        "id": "3:2",
+                        "name": "Title",
+                        "type": "TEXT",
+                        "characters": "Title",
+                        "absoluteBoundingBox": {
+                            "x": 110,
+                            "y": 210,
+                            "width": 80,
+                            "height": 30
+                        },
+                        "absoluteRenderBounds": {
+                            "x": 112,
+                            "y": 214,
+                            "width": 70,
+                            "height": 20
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "3:3",
+                "name": "Dot",
+                "type": "RECTANGLE",
+                "layoutPositioning": "ABSOLUTE",
+                "absoluteBoundingBox": {
+                    "x": 480,
+                    "y": 205,
+                    "width": 8,
+                    "height": 8
+                }
+            },
+            {
+                "id": "3:4",
+                "name": "Plain",
+                "type": "FRAME",
+                "absoluteBoundingBox": {
+                    "x": 100,
+                    "y": 260,
+                    "width": 400,
+                    "height": 40
+                }
+            },
+            {
+                "id": "3:5",
+                "name": "Hidden",
+                "type": "FRAME",
+                "visible": false,
+                "absoluteBoundingBox": {
+                    "x": 100,
+                    "y": 200,
+                    "width": 50,
+                    "height": 50
+                },
+                "boundVariables": {
+                    "fills": [
+                        {
+                            "type": "VARIABLE_ALIAS",
+                            "id": "VariableID:surface/9:2"
+                        }
+                    ]
+                },
+                "children": [
+                    {
+                        "id": "3:6",
+                        "name": "Secret",
+                        "type": "TEXT",
+                        "characters": "Secret",
+                        "absoluteBoundingBox": {
+                            "x": 100,
+                            "y": 200,
+                            "width": 50,
+                            "height": 20
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "2:1",
+                "name": "Card",
+                "type": "INSTANCE",
+                "componentId": "1:1",
+                "absoluteBoundingBox": {
+                    "x": 120,
+                    "y": 260,
+                    "width": 200,
+                    "height": 100
+                },
+                "children": [
+                    {
+                        "id": "I2:1;1",
+                        "name": "Surface",
+                        "type": "FRAME",
+                        "absoluteBoundingBox": {
+                            "x": 120,
+                            "y": 260,
+                            "width": 200,
+                            "height": 100
+                        },
+                        "boundVariables": {
+                            "fills": [
+                                {
+                                    "type": "VARIABLE_ALIAS",
+                                    "id": "VariableID:surface/9:2"
+                                }
+                            ],
+                            "paddingLeft": {
+                                "type": "VARIABLE_ALIAS",
+                                "id": "VariableID:space/9:4"
+                            }
+                        },
+                        "children": [
+                            {
+                                "id": "I2:1;2",
+                                "name": "Label",
+                                "type": "TEXT",
+                                "characters": "Save",
+                                "absoluteBoundingBox": {
+                                    "x": 130,
+                                    "y": 270,
+                                    "width": 40,
+                                    "height": 20
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "I2:1;3",
+                        "name": "Slot",
+                        "type": "SLOT",
+                        "absoluteBoundingBox": {
+                            "x": 120,
+                            "y": 300,
+                            "width": 200,
+                            "height": 60
+                        },
+                        "children": [
+                            {
+                                "id": "2:2",
+                                "name": "Row",
+                                "type": "FRAME",
+                                "absoluteBoundingBox": {
+                                    "x": 120,
+                                    "y": 300,
+                                    "width": 200,
+                                    "height": 30
+                                },
+                                "boundVariables": {
+                                    "itemSpacing": {
+                                        "type": "VARIABLE_ALIAS",
+                                        "id": "VariableID:space/9:4"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "2:3",
+                                "name": "Badge",
+                                "type": "INSTANCE",
+                                "componentId": "1:2",
+                                "absoluteBoundingBox": {
+                                    "x": 130,
+                                    "y": 335,
+                                    "width": 40,
+                                    "height": 20
+                                },
+                                "boundVariables": {
+                                    "fills": [
+                                        {
+                                            "type": "VARIABLE_ALIAS",
+                                            "id": "VariableID:surface/9:2"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "I2:1;4",
+                        "name": "LocalRow",
+                        "type": "INSTANCE",
+                        "componentId": "1:9",
+                        "absoluteBoundingBox": {
+                            "x": 120,
+                            "y": 330,
+                            "width": 200,
+                            "height": 30
+                        },
+                        "boundVariables": {
+                            "strokes": [
+                                {
+                                    "type": "VARIABLE_ALIAS",
+                                    "id": "VariableID:border/9:5"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "4:1",
+                "name": "Sidebar",
+                "type": "INSTANCE",
+                "componentId": "1:9",
+                "absoluteBoundingBox": {
+                    "x": 420,
+                    "y": 260,
+                    "width": 80,
+                    "height": 200
+                },
+                "boundVariables": {
+                    "strokes": [
+                        {
+                            "type": "VARIABLE_ALIAS",
+                            "id": "VariableID:border/9:5"
+                        }
+                    ]
+                },
+                "children": [
+                    {
+                        "id": "I4:1;1",
+                        "name": "Panel",
+                        "type": "FRAME",
+                        "absoluteBoundingBox": {
+                            "x": 420,
+                            "y": 260,
+                            "width": 80,
+                            "height": 100
+                        },
+                        "boundVariables": {
+                            "paddingLeft": {
+                                "type": "VARIABLE_ALIAS",
+                                "id": "VariableID:space/9:4"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "3:7",
+                "name": "Note",
+                "type": "TEXT",
+                "characters": "First\n\u200b\nSecond",
+                "absoluteBoundingBox": {
+                    "x": 100,
+                    "y": 400,
+                    "width": 100,
+                    "height": 40
+                }
+            },
+            {
+                "id": "3:8",
+                "name": "Blank",
+                "type": "TEXT",
+                "characters": "   ",
+                "absoluteBoundingBox": {
+                    "x": 100,
+                    "y": 450,
+                    "width": 100,
+                    "height": 20
+                }
+            },
+            {
+                "id": "5:1",
+                "name": "Chip",
+                "type": "INSTANCE",
+                "componentId": "1:3",
+                "absoluteBoundingBox": {
+                    "x": 100,
+                    "y": 470,
+                    "width": 60,
+                    "height": 24
+                }
+            }
+        ]
+    },
+    "components": {
+        "1:1": {
+            "key": "K-CARD",
+            "name": "💙Card"
+        },
+        "1:9": {
+            "key": "K-LOCAL",
+            "name": "LocalRow"
+        },
+        "1:2": {
+            "key": "K-BADGE",
+            "name": "💙Badge"
+        },
+        "1:3": {
+            "key": "K-CHIP",
+            "name": "💙Chip"
+        }
+    }
+}
