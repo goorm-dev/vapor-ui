@@ -156,6 +156,55 @@ test('a tag on a later line of a multi-line opening element counts', () => {
     assert.equal(code, 0);
 });
 
+const IMPORTS = [
+    "import { Button, Checkbox, Dialog, IconButton } from '@vapor-ui/core';",
+    "import { LockOutlineIcon } from '@vapor-ui/icons';",
+    '',
+].join('\n');
+
+// One node of `tag`, judged ok at `line` of a single file.
+function cite(tag, text, line, { pkg = 'core', path = 'src/one.tsx' } = {}) {
+    const blueprint = { ...BLUEPRINT, nodes: [node('1:1', tag, [], { pkg })] };
+    return run(blueprint, [{ id: '1:1', status: 'ok', at: `${path}:${line}` }], {
+        files: { [path]: text },
+    }).code;
+}
+
+test('a comment naming the tag is not evidence', () => {
+    for (const comment of ['{/* TODO: Button */}', '// <Button> goes here', '/* <Button> */'])
+        assert.equal(cite('Button', `${IMPORTS}${comment}\n<div />\n<div />\n`, 3), 1, comment);
+});
+
+test('a tag whose name only contains the expected one is not evidence', () => {
+    assert.equal(cite('Button', `${IMPORTS}<IconButton aria-label="x" />\n`, 3), 1);
+    assert.equal(cite('Checkbox.Root', `${IMPORTS}<Dialog.Root open />\n`, 3), 1);
+    assert.equal(cite('Checkbox.Root', `${IMPORTS}<Checkbox.Root size="md" />\n`, 3), 0);
+});
+
+test('a string naming the tag is not evidence', () => {
+    assert.equal(cite('Button', `${IMPORTS}<span title="<Button>">Button</span>\n`, 3), 1);
+    assert.equal(cite('Button', `${IMPORTS}const tag = '<Button>';\n`, 3), 1);
+});
+
+test('a line in a file that is not JS or TS source is not evidence', () => {
+    const json = JSON.stringify({ tag: 'Button', jsx: '<Button>' }, null, 2);
+    assert.equal(cite('Button', json, 2, { path: 'blueprint-copy.json' }), 1);
+    assert.equal(cite('Button', '# Screen\n\n<Button>확인</Button>\n', 3, { path: 'notes.md' }), 1);
+});
+
+test('a tag after JSX text holding quotes and slashes still counts', () => {
+    const text = `${IMPORTS}<p>Don't open https://example.com "now"</p>\n<Button size="lg">확인</Button>\n`;
+    assert.equal(cite('Button', text, 4), 0);
+});
+
+test('an icon passed as a value counts, an icon named in a comment does not', () => {
+    const items = `${IMPORTS}const items = [{ icon: LockOutlineIcon, label: '잠금' }];\n`;
+    assert.equal(cite('LockOutlineIcon', items, 3, { pkg: 'icons' }), 0);
+    const comment = `${IMPORTS}// LockOutlineIcon\nconst items = [];\n`;
+    assert.equal(cite('LockOutlineIcon', comment, 3, { pkg: 'icons' }), 1);
+    assert.equal(cite('Button', `${IMPORTS}const As = Button;\n`, 3), 1);
+});
+
 test('a duplicated, missing or unknown id refuses with exit 3', () => {
     const dup = run(BLUEPRINT, [...OK, OK[2]]);
     assert.equal(dup.code, 3);
