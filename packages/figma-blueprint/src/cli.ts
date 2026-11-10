@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import type { Blueprint, BlueprintNode, FigmaTree } from './blueprint';
@@ -13,7 +13,8 @@ const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <
 Prints the elements the design requires, one per line with the Figma node id it came from.
 Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
 Exits 2 when an instance could not be read (unscorable), so the design cannot be fully graded.
-build runs in packages/core, composites or icons and writes their figma-blueprint/ folder.`;
+build runs in packages/core, composites or icons and writes their figma-blueprint/ folder.
+FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current directory.`;
 
 async function loadTree(arg: string): Promise<FigmaTree> {
     if (!arg.startsWith('http')) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
@@ -79,6 +80,7 @@ function text({ nodes, excluded, unscorable }: Blueprint) {
 }
 
 async function run(argv: string[]) {
+    if (existsSync('.env')) process.loadEnvFile();
     const { positional, json, repo } = parseArgs(argv);
     const [command] = positional;
     if (command === 'map') return map(repo ?? process.cwd());

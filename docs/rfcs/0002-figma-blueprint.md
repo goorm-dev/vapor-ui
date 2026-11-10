@@ -55,7 +55,7 @@ figma-blueprint는 Figma 서버가 하는 일을 로컬에서 재현합니다.
 3. 템플릿을 실행합니다. 템플릿이 import하는 `figma` 모듈 자리에는 REST 노드를 읽어 같은 API(`selectedInstance`, `getEnum`, `getInstanceSwap`, `findConnectedInstances` 등)를 제공하는 대역을 넣습니다.
 4. 템플릿이 낸 JSX 스니펫에서 시안이 실제로 그리는 파트만 남겨 노드로 만들고, 가장 가까운 라이브러리 조상 노드 아래에 둡니다.
 
-MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 시안 트리 JSON을 직접 넘기면 토큰도 필요 없습니다.
+MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토큰은 셸 환경 변수나 현재 디렉터리의 `.env`에서 읽습니다. 시안 트리 JSON을 직접 넘기면 토큰도 필요 없습니다.
 
 ### 패키지 구성
 

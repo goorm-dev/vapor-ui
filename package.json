@@ -24,6 +24,7 @@
         "docs:api:watch": "pnpm --filter website docs:api:watch",
         "docs:translate": "pnpm --filter website docs:translate",
         "docs-extractor": "pnpm --filter @vapor-ui/docs-extractor",
+        "figma-blueprint": "pnpm --filter @vapor-ui/figma-blueprint",
         "figma-codegen-plugin": "pnpm --filter figma-codegen-plugin",
         "figma-plugin": "pnpm --filter figma-plugin",
         "format": "pnpm format:package && prettier --write .",

@@ -25,6 +25,7 @@
         "build": "tsup",
         "clean": "rimraf dist node_modules coverage .turbo",
         "dev": "tsup --watch",
+        "figma:entries": "tsup && node bin/figma-blueprint.mjs map --repo ../..",
         "lint": "eslint ./src",
         "test": "vitest --run --passWithNoTests",
         "typecheck": "tsc --noEmit"
