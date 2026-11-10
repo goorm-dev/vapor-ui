@@ -74,19 +74,19 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 
 빌드는 `@vapor-ui/codemod`처럼 tsup으로 합니다. `src`는 데이터가 흐르는 순서대로 `entries/ → ship/ → catalog/ → blueprint/` 네 단계로 나눕니다. 각 단계는 자기가 만드는 산출물의 형식을 가지고, 뒤 단계는 앞 단계를 import할 수 있지만 거꾸로는 하지 않습니다.
 
-| 파일                      | 만드는 것                                                                         |
-| ------------------------- | --------------------------------------------------------------------------------- |
-| `entries/code-connect.ts` | 패키지의 Code Connect 파일과 거기서 읽은 연결(URL, 템플릿, batch 행)              |
-| `entries/entries-file.ts` | `figma-entries.json`의 형식과 읽기, 빠진 항목 검사                                |
-| `entries/map.ts`          | `figma-blueprint entries`. Figma에 컴포넌트 키를 물어 `figma-entries.json`을 쓴다 |
-| `ship/templates.ts`       | 함수로 감싼 템플릿과 헬퍼                                                         |
-| `ship/tables.ts`          | 소스에서 추출한 표                                                                |
-| `ship/ship.ts`            | `figma-blueprint ship`. 패키지의 `figma-blueprint/` 폴더                          |
-| `catalog/catalog.ts`      | 템플릿과 표를 공급하는 `Catalog` 포트와 어댑터 두 개                              |
-| `blueprint/figma-mock.ts` | 템플릿이 import하는 `figma` 모듈의 대역                                           |
-| `blueprint/blueprint.ts`  | REST 트리 → 정답 트리                                                             |
-| `cli.ts`                  | 명령 진입점                                                                       |
-| `index.ts`                | JS API                                                                            |
+| 파일                       | 만드는 것                                                                         |
+| -------------------------- | --------------------------------------------------------------------------------- |
+| `entries/code-connect.ts`  | 패키지의 Code Connect 파일과 거기서 읽은 연결(URL, 템플릿, batch 행)              |
+| `entries/entries-file.ts`  | `figma-entries.json`의 형식과 읽기, 빠진 항목 검사                                |
+| `entries/write-entries.ts` | `figma-blueprint entries`. Figma에 컴포넌트 키를 물어 `figma-entries.json`을 쓴다 |
+| `ship/templates.ts`        | 함수로 감싼 템플릿과 헬퍼                                                         |
+| `ship/tables.ts`           | 소스에서 추출한 표                                                                |
+| `ship/ship.ts`             | `figma-blueprint ship`. 패키지의 `figma-blueprint/` 폴더                          |
+| `catalog/catalog.ts`       | 템플릿과 표를 공급하는 `Catalog` 포트와 어댑터 두 개                              |
+| `blueprint/figma-mock.ts`  | 템플릿이 import하는 `figma` 모듈의 대역                                           |
+| `blueprint/blueprint.ts`   | REST 트리 → 정답 트리                                                             |
+| `cli.ts`                   | 명령 진입점                                                                       |
+| `index.ts`                 | JS API                                                                            |
 
 `figma-mock`과 `blueprint`는 데이터만 받습니다. REST 트리는 객체로 받습니다.
 

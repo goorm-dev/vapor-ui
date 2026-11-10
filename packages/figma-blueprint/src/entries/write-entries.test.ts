@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseFigmaUrl } from './map';
+import { parseFigmaUrl } from './write-entries';
 
 describe('parseFigmaUrl', () => {
     it('turns every dash of a nested node id into a colon', () => {
