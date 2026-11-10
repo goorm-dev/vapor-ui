@@ -1,7 +1,7 @@
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import type { Batch } from '~/entries/code-connect';
@@ -81,7 +81,7 @@ export async function fromRepo(root: string): Promise<Catalog> {
 // What `figma-blueprint ship` shipped in the @vapor-ui packages that cwd resolves. A package that is not installed is
 // left out, with a line on stderr.
 export async function fromInstalled(cwd: string): Promise<Catalog> {
-    const require = createRequire(join(cwd, 'package.json'));
+    const require = createRequire(join(resolve(cwd), 'package.json'));
     const tables: Tables = { internalIcons: {}, internalParts: {}, presets: {}, defaults: {} };
     const packages: Templates[] = [];
     for (const pkg of PACKAGES) {

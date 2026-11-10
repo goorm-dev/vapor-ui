@@ -1,6 +1,6 @@
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -123,6 +123,14 @@ describe('figma-blueprint ship', () => {
         buildPackage(join(root, 'packages/core'), out);
 
         expect(files()).toEqual(before);
+    });
+
+    it('reads the packages a directory relative to the working directory resolves', async () => {
+        const app = install(['core', 'composites', 'icons']);
+
+        const catalog = await fromInstalled(relative(process.cwd(), app));
+
+        expect(blueprint(tree, catalog).nodes).toEqual(treeNodes);
     });
 
     it('leaves out a package that is not installed and names it on stderr', async () => {
