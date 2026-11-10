@@ -211,10 +211,12 @@ export function scoreVisual(design, rendered) {
     return { blockMatch, position, layout, layoutByType, matched, unmatchedRef };
 }
 
-// Runs in the page. One block per text node line box; the blueprint splits Figma text into lines the same way.
-function measureText() {
+// Runs in the page. One block per text node line box; the blueprint splits Figma text into lines the same way. Only
+// text under the selected element counts, so an app shell around the screen cannot stand in for a missing line.
+function measureText(selector) {
+    const root = selector ? document.querySelector(selector) : document.body;
     const out = [];
-    const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     for (let n; (n = w.nextNode());) {
         const words = n.textContent?.trim();
         if (!words) continue;
@@ -271,7 +273,7 @@ function measureText() {
         });
     }
     // Figma draws input values and placeholders as TEXT nodes; the DOM keeps them in attributes.
-    for (const el of document.querySelectorAll(
+    for (const el of root.querySelectorAll(
         'input:not([type=hidden]):not([type=checkbox]):not([type=radio]), textarea',
     )) {
         const b = el.getBoundingClientRect();
@@ -283,8 +285,9 @@ function measureText() {
 }
 
 // Runs in the page, with DOM_TYPES passed in. Icons are <svg> elements, so an icon pasted as <img src="x.svg"> does not
-// count. Outermost element of each type only, except icons.
-function measureComps(classTypes) {
+// count. Outermost element of each type under the selected element only, except icons.
+function measureComps({ classTypes, selector }) {
+    const root = selector ? document.querySelector(selector) : document.body;
     const typeOf = (el) => {
         if (el.tagName === 'svg') return 'Icon';
         if (
@@ -299,11 +302,11 @@ function measureComps(classTypes) {
         return found.includes('IconButton') ? 'IconButton' : (found[0] ?? null);
     };
     const out = [];
-    for (const el of document.querySelectorAll('body *')) {
+    for (const el of root.querySelectorAll('*')) {
         const t = typeOf(el);
         if (!t) continue;
         let nested = false;
-        for (let p = el.parentElement; p; p = p.parentElement)
+        for (let p = el.parentElement; p && root.contains(p); p = p.parentElement)
             if (typeOf(p) === t) {
                 nested = true;
                 break;
@@ -353,8 +356,10 @@ export async function visualScore(
             : { x: 0, y: 0 };
         if (!origin) return failed(`no element matches ${selector}`);
         const shift = (b) => ({ ...b, x: b.x - origin.x, y: b.y - origin.y });
-        const blocks = (await page.evaluate(measureText)).map(shift);
-        const comps = (await page.evaluate(measureComps, DOM_TYPES)).map(shift);
+        const blocks = (await page.evaluate(measureText, selector)).map(shift);
+        const comps = (await page.evaluate(measureComps, { classTypes: DOM_TYPES, selector })).map(
+            shift,
+        );
         return { version: 1, result: 'scored', ...scoreVisual(design, { blocks, comps }), errors };
     } catch (e) {
         return failed(String(e));
