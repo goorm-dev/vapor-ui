@@ -208,6 +208,23 @@ test('an unscorable verdict leaves the recall denominator and makes the result u
     assert.equal(out.scorable, 2);
 });
 
+test('an unscorable verdict without a note refuses with exit 3', () => {
+    const { code, err } = run(BLUEPRINT, [...OK.slice(0, 2), { id: '1:3', status: 'unscorable' }]);
+    assert.equal(code, 3);
+    assert.match(err, /1:3.*note/);
+});
+
+test('recall is not applicable when no node is scorable', () => {
+    const verdicts = OK.map(({ id }) => ({ id, status: 'unscorable', note: 'generated code' }));
+    const { code, out } = run(BLUEPRINT, verdicts);
+    assert.equal(code, 2);
+    assert.equal(out.result, 'unscorable');
+    assert.equal(out.scorable, 0);
+    assert.equal(out.recall, null);
+    const text = run(BLUEPRINT, verdicts, { json: false });
+    assert.match(text.out, /^recall: 0\/0 \(n\/a\)/m);
+});
+
 test('a verdict that is not { id, status, at?, note?, changed? } refuses with exit 3', () => {
     const bad = [
         null,
