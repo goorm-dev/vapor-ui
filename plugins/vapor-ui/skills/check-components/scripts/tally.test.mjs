@@ -52,14 +52,18 @@ const OK = [
     { id: '1:3', status: 'ok', at: 'src/screen.tsx:7' },
 ];
 
-function run(blueprint, verdicts, { files = { 'src/screen.tsx': SCREEN }, json = true } = {}) {
+function run(
+    blueprint,
+    verdicts,
+    { files = { 'src/screen.tsx': SCREEN }, json = true, report = { version: 1, verdicts } } = {},
+) {
     const root = mkdtempSync(join(tmpdir(), 'tally-'));
     for (const [path, text] of Object.entries(files)) {
         mkdirSync(dirname(join(root, path)), { recursive: true });
         writeFileSync(join(root, path), text);
     }
     writeFileSync(join(root, 'blueprint.json'), JSON.stringify(blueprint));
-    writeFileSync(join(root, 'report.json'), JSON.stringify({ version: 1, verdicts }));
+    writeFileSync(join(root, 'report.json'), JSON.stringify(report));
     const args = [TALLY, 'blueprint.json', 'report.json', '--root', root];
     const r = spawnSync(process.execPath, json ? [...args, '--json'] : args, {
         cwd: root,
@@ -202,6 +206,23 @@ test('an unscorable verdict leaves the recall denominator and makes the result u
     assert.equal(code, 2);
     assert.equal(out.recall, 1);
     assert.equal(out.scorable, 2);
+});
+
+test('a verdict that is not { id, status, at?, note?, changed? } refuses with exit 3', () => {
+    const bad = [
+        null,
+        'ok',
+        { status: 'ok', at: 'src/screen.tsx:7' },
+        { id: '1:3', status: 'ok', at: 7 },
+        { id: '1:3', status: 'missing', note: ['x'] },
+        { id: '1:3', status: 'ok', at: 'src/screen.tsx:7', changed: 'yes' },
+    ];
+    for (const v of bad) {
+        const { code, err } = run(BLUEPRINT, [...OK.slice(0, 2), v]);
+        assert.equal(code, 3, JSON.stringify(v));
+        assert.doesNotMatch(err, /TypeError/);
+        assert.match(err, /verdicts\[2\]/);
+    }
 });
 
 test('an anyParent node cannot be judged on position', () => {
