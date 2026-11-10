@@ -187,7 +187,7 @@ export const header = componentStyle({
 
 export const body = componentStyle({
     flex: 1,
-    marginBlock: 'unset',
+    margin: 'unset',
     paddingBlock: vars.size.space[100],
     paddingInline: vars.size.space[150],
     height: '100%',

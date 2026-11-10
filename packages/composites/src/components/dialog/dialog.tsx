@@ -89,7 +89,7 @@ export const Dialog = ({
                     <DialogPrimitives.PopupPrimitive>
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
-                        <Footer action={action} assistive={assistive} hasBody={!!children} />
+                        <Footer action={action} assistive={assistive} />
                     </DialogPrimitives.PopupPrimitive>
                 </DialogPrimitives.PortalPrimitive>
             </DialogPrimitives.Root>
@@ -209,9 +209,7 @@ interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
 
 const Header = ({ title, description }: HeaderProps) => {
     return (
-        <DialogPrimitives.Header
-            $css={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 28px' }}
-        >
+        <DialogPrimitives.Header $css={{ display: 'grid', gridTemplateColumns: '1fr 28px' }}>
             <VStack $css={{ alignItems: 'flex-start', gap: '$050', flex: 1 }}>
                 <slots.title render={title} />
                 <slots.description render={description} />
@@ -279,23 +277,14 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {
-    hasBody: boolean;
-}
+interface FooterProps extends Pick<Dialog.Props, 'action' | 'assistive'> {}
 
-const Footer = ({ action, assistive, hasBody }: FooterProps) => {
-    const renderFooter = action || assistive;
-
-    // Without a Body, the empty Footer is the popup's bottom padding.
-    if (!renderFooter && hasBody) return null;
+const Footer = ({ action, assistive }: FooterProps) => {
+    if (!action && !assistive) return null;
 
     return (
         <DialogPrimitives.Footer
-            $css={{
-                display: 'grid',
-                gridTemplateAreas: '"assistive action"',
-                paddingTop: renderFooter && !hasBody ? '$250' : '$000',
-            }}
+            $css={{ display: 'grid', gridTemplateAreas: '"assistive action"' }}
         >
             <slots.assistive
                 render={assistive}

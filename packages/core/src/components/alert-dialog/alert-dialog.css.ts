@@ -33,6 +33,7 @@ export const popup = componentStyle({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
+    gap: vars.size.space['250'],
 
     transform: 'translate(-50%,-50%)',
     transitionDuration: '0.15s',
@@ -42,6 +43,7 @@ export const popup = componentStyle({
     boxShadow: vars.shadow.xl,
 
     backgroundColor: vars.color.background['canvas-overlay'],
+    padding: vars.size.space['300'],
     width: '28.75rem',
     maxWidth: calc.subtract('100vw', calc.multiply(SPACING, 2)),
     maxHeight: '80vh',
@@ -69,18 +71,19 @@ export const description = componentStyle([
 ]);
 
 export const header = componentStyle({
-    paddingTop: vars.size.space['300'],
-    paddingBottom: vars.size.space['000'],
-    paddingInline: vars.size.space['300'],
     width: '100%',
     overflowY: 'auto',
 });
 
+// A scroll container clips its children, so the body bleeds into the popup padding and gives the
+// same amount back as padding. Focus rings of edge children fit inside, the scrollbar stays at the
+// popup edge, and while scrolling the clip edge sits 12px from the header and footer.
 export const body = componentStyle({
-    marginBlock: vars.size.space['150'],
+    alignSelf: 'stretch',
+    marginBlock: calc.multiply(vars.size.space['100'], -1),
+    marginInline: calc.multiply(vars.size.space['300'], -1),
     paddingBlock: vars.size.space['100'],
     paddingInline: vars.size.space['300'],
-    width: '100%',
     overflowY: 'auto',
     scrollPaddingBlock: vars.size.space['250'],
 });
@@ -89,7 +92,5 @@ export const footer = componentStyle({
     display: 'flex',
     alignItems: 'center',
     gap: vars.size.space[100],
-    paddingBottom: vars.size.space['300'],
-    paddingInline: vars.size.space['300'],
     width: '100%',
 });
