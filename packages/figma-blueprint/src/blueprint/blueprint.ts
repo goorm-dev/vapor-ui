@@ -36,11 +36,13 @@ export interface BlueprintNode {
     children: BlueprintNode[];
 }
 
-// A library instance the design draws that is not a node, and why.
+// A library instance the design draws that is not a node, and why. One inside an excluded instance shares its reason;
+// one inside an unscorable instance is inside-unscorable.
 export interface Excluded {
     node: string;
     name: string;
-    reason: 'part-draws-icon' | 'part-draws-itself' | 'inside-self-closing-part';
+    reason:
+        'part-draws-icon' | 'part-draws-itself' | 'inside-self-closing-part' | 'inside-unscorable';
 }
 
 // A library instance that could not be read, so the design cannot be graded.
@@ -250,6 +252,14 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
         for (const c of n.children ?? []) drawn(c, out);
         return out;
     };
+    // The library instances inside one that is not a node cannot be nodes either.
+    const excludeIn = (n: FigmaNode, reason: Excluded['reason']) => {
+        for (const c of n.children ?? []) {
+            if (c.visible === false) continue;
+            if (isLib(c)) excluded.push({ node: c.id, name: nameOf(c), reason });
+            excludeIn(c, reason);
+        }
+    };
     // Of a snippet only the elements the design draws (or that hold one, or hold a nested instance) are expected.
     // Returns the element's node, or none; `out` gets every kept element in snippet order.
     const keep = (el: Element, parts: Set<string>, pkg: Pkg, out: Kept[]): BlueprintNode[] => {
@@ -276,8 +286,10 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
             slotted = true;
         const c = connected(n);
         if (c) {
-            const exclude = (reason: Excluded['reason']) =>
-                void excluded.push({ node: n.id, name: nameOf(n), reason });
+            const exclude = (reason: Excluded['reason']) => {
+                excluded.push({ node: n.id, name: nameOf(n), reason });
+                excludeIn(n, reason);
+            };
             if (owner) {
                 const nestedIn = owner.nested.get(n.id);
                 if (nestedIn) at = { node: nestedIn, any: false };
@@ -330,6 +342,7 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
                     cause: 'template-error',
                     message: (e as Error).message,
                 });
+                excludeIn(n, 'inside-unscorable');
                 return;
             }
             // An outer template can render an instance that sits deeper in Figma (Table.Root renders the

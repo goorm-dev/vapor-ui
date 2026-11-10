@@ -363,6 +363,134 @@ describe('blueprint lines', () => {
         expect(lines(result)).toEqual(['<Badge />']);
     });
 
+    it('excludes the library instances inside an excluded one for the same reason', () => {
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    {
+                        id: '2:1',
+                        name: 'Dialog',
+                        type: 'INSTANCE',
+                        componentId: '1:1',
+                        children: [
+                            {
+                                id: '2:2',
+                                name: 'Close',
+                                type: 'INSTANCE',
+                                componentId: '1:2',
+                                children: [
+                                    {
+                                        id: '2:3',
+                                        name: 'Icon',
+                                        type: 'INSTANCE',
+                                        componentId: '1:3',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            components: {
+                '1:1': { key: 'K-DIALOG', name: '💙Dialog' },
+                '1:2': { key: 'K-ICON', name: '💙IconButton' },
+                '1:3': { key: 'K-CLOSE', name: '❤️CloseOutlineIcon' },
+            },
+        };
+        const catalog = fakeCatalog(
+            {
+                'K-DIALOG': {
+                    name: '💙Dialog',
+                    pkg: 'composites',
+                    run: fixed('d', '<Dialog.Root />'),
+                },
+                'K-ICON': { name: '💙IconButton', run: fixed('i', '<IconButton />') },
+            },
+            { internalParts: { 'Dialog.Root': ['IconButton'] } },
+        );
+
+        expect(blueprint(tree, catalog).excluded).toEqual([
+            { node: '2:2', name: '💙IconButton', reason: 'part-draws-itself' },
+            { node: '2:3', name: '❤️CloseOutlineIcon', reason: 'part-draws-itself' },
+        ]);
+    });
+
+    it('excludes the library instances inside an unscorable one as inside-unscorable', () => {
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    {
+                        id: '2:1',
+                        name: 'Broken',
+                        type: 'INSTANCE',
+                        componentId: '1:1',
+                        children: [
+                            {
+                                id: '2:2',
+                                name: '🟨Chip/SlotLayer',
+                                type: 'INSTANCE',
+                                componentId: '1:9',
+                                children: [
+                                    {
+                                        id: '2:3',
+                                        name: 'Heart',
+                                        type: 'INSTANCE',
+                                        componentId: '1:2',
+                                    },
+                                ],
+                            },
+                            {
+                                id: '2:4',
+                                name: 'Layout',
+                                type: 'FRAME',
+                                children: [
+                                    {
+                                        id: '2:5',
+                                        name: 'Badge',
+                                        type: 'INSTANCE',
+                                        componentId: '1:3',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            components: {
+                '1:1': { key: 'K-CHIP', name: '💙Chip' },
+                '1:2': { key: 'K-HEART', name: '❤️HeartIcon' },
+                '1:3': { key: 'K-BADGE', name: '💙Badge' },
+                '1:9': { key: 'K-SLOT', name: '🟨Chip/SlotLayer' },
+            },
+        };
+        const catalog = fakeCatalog({
+            'K-CHIP': {
+                name: '💙Chip',
+                run: () => {
+                    throw new Error('boom');
+                },
+            },
+            'K-HEART': { name: '❤️HeartIcon', pkg: 'icons', run: fixed('heart', '<HeartIcon />') },
+            'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') },
+        });
+
+        expect(blueprint(tree, catalog)).toEqual({
+            version: 2,
+            nodes: [],
+            excluded: [
+                { node: '2:3', name: '❤️HeartIcon', reason: 'inside-unscorable' },
+                { node: '2:5', name: '💙Badge', reason: 'inside-unscorable' },
+            ],
+            unscorable: [{ node: '2:1', name: '💙Chip', cause: 'template-error', message: 'boom' }],
+        });
+    });
+
     it('expects a connected instance whatever its name, and records why it drops one', () => {
         const tree: FigmaTree = {
             document: {

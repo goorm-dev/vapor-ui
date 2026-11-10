@@ -136,7 +136,7 @@ core, composites, icons는 각각 아래처럼 바뀝니다.
 
 ### 출력과 종료 코드
 
-시안의 모든 라이브러리 인스턴스는 정답 트리의 노드가 되거나, 제외 사유나 채점 불가 원인 하나를 가져야 합니다.
+시안의 모든 라이브러리 인스턴스는 정답 트리의 노드가 되거나, 제외 사유나 채점 불가 원인 하나를 가져야 합니다. 제외된 인스턴스 안의 라이브러리 인스턴스는 바깥 인스턴스와 같은 제외 사유를 받습니다. 템플릿 실행이 실패한 인스턴스 안의 라이브러리 인스턴스는 제외 사유 `inside-unscorable`을 받습니다. 둘 다 노드는 만들지 않습니다.
 
 | 종료 코드 | 조건                                                                                  |
 | --------- | ------------------------------------------------------------------------------------- |
@@ -183,13 +183,13 @@ core, composites, icons는 각각 아래처럼 바뀝니다.
 }
 ```
 
-| 필드                 | 값                                                                                                                                  |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `nodes[].props`      | `size="md"`, `disabled`, `aria-label="*"`처럼 JSX에 쓰는 모양 그대로                                                                |
-| `nodes[].pkg`        | 노드를 쓴 템플릿의 패키지. composites `Dialog.Root`와 core `Dialog.Root`를 가른다                                                   |
-| `nodes[].anyParent`  | 위치를 판정하지 않는 노드에만 `true`                                                                                                |
-| `excluded[].reason`  | `part-draws-icon`(`internalIcons`), `part-draws-itself`(`internalParts`), `inside-self-closing-part`(self-closing 파트 안, 슬롯 밖) |
-| `unscorable[].cause` | `no-template`, `template-error`. `template-error`는 오류 문구를 `message`에 담는다                                                  |
+| 필드                 | 값                                                                                                                                                                                         |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `nodes[].props`      | `size="md"`, `disabled`, `aria-label="*"`처럼 JSX에 쓰는 모양 그대로                                                                                                                       |
+| `nodes[].pkg`        | 노드를 쓴 템플릿의 패키지. composites `Dialog.Root`와 core `Dialog.Root`를 가른다                                                                                                          |
+| `nodes[].anyParent`  | 위치를 판정하지 않는 노드에만 `true`                                                                                                                                                       |
+| `excluded[].reason`  | `part-draws-icon`(`internalIcons`), `part-draws-itself`(`internalParts`), `inside-self-closing-part`(self-closing 파트 안, 슬롯 밖), `inside-unscorable`(템플릿 실행이 실패한 인스턴스 안) |
+| `unscorable[].cause` | `no-template`, `template-error`. `template-error`는 오류 문구를 `message`에 담는다                                                                                                         |
 
 ### 검증
 
