@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { describe, test } from 'node:test';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
-import { designFromBlueprint, scoreVisual } from './visual.mjs';
+import { designFromBlueprint, scoreVisual, visualScore } from './visual.mjs';
 
 const VISUAL = join(dirname(fileURLToPath(import.meta.url)), 'visual.mjs');
 
@@ -212,6 +213,53 @@ describe('scoreVisual', () => {
         assert.equal(s.matched, '1/2 ref, 1 gen');
         assert.deepEqual(s.unmatchedRef, ['Second']);
         assert.equal(s.position, 1);
+    });
+});
+
+// Playwright from the folder node --test runs in, as visual.mjs finds it. The plugin itself has none.
+async function findChromium() {
+    try {
+        const path = createRequire(join(process.cwd(), 'package.json')).resolve('playwright');
+        const pw = await import(pathToFileURL(path).href);
+        return pw.chromium ?? pw.default.chromium;
+    } catch {
+        return null;
+    }
+}
+
+const chromium = await findChromium();
+
+describe('visualScore', { skip: !chromium && 'playwright is not installed in the cwd' }, () => {
+    // An app shell whose sidebar repeats a design line and draws an icon, around the graded screen.
+    const page = `data:text/html,${encodeURIComponent(`<body style="margin:0">
+        <nav style="position:absolute;left:0;top:0;width:100px;height:100px">
+            <span>Second line</span><svg width="16" height="16"></svg>
+        </nav>
+        <main id="screen" style="position:absolute;left:100px;top:0;width:200px;height:100px">
+            <p style="position:absolute;left:0;top:0;margin:0">First line</p>
+        </main>
+    </body>`)}`;
+    const shell = {
+        width: 300,
+        height: 100,
+        blocks: [
+            { text: 'First line', x: 0, y: 0, w: 60, h: 20 },
+            { text: 'Second line', x: 0, y: 20, w: 60, h: 20 },
+        ],
+        comps: [{ type: 'Icon', x: 0, y: 40, w: 16, h: 16 }],
+    };
+
+    test('with a selector, measures only text and components inside that element', async () => {
+        const r = await visualScore(shell, page, chromium, { selector: '#screen' });
+        assert.equal(r.result, 'scored');
+        assert.deepEqual(r.unmatchedRef, ['Second line']);
+        assert.equal(r.layoutByType.Icon, '0.00 (1→0)');
+    });
+
+    test('without a selector, measures the whole page', async () => {
+        const r = await visualScore(shell, page, chromium);
+        assert.deepEqual(r.unmatchedRef, []);
+        assert.match(r.layoutByType.Icon, /\(1→1\)$/);
     });
 });
 
