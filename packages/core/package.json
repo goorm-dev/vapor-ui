@@ -59,7 +59,7 @@
         "figma-blueprint"
     ],
     "scripts": {
-        "build": "rimraf dist figma-blueprint && rolldown -c rolldown.config.ts && figma-blueprint build",
+        "build": "rimraf dist figma-blueprint && rolldown -c rolldown.config.ts && figma-blueprint ship",
         "clean": "rimraf dist figma-blueprint node_modules .turbo",
         "figma:check": "figma connect publish --dry-run",
         "figma:preview": "figma connect preview",

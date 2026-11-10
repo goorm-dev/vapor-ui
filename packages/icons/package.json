@@ -43,7 +43,7 @@
         "figma-blueprint"
     ],
     "scripts": {
-        "build": "rimraf dist figma-blueprint && tsup && figma-blueprint build",
+        "build": "rimraf dist figma-blueprint && tsup && figma-blueprint ship",
         "clean": "rimraf dist figma-blueprint .turbo node_modules",
         "figma:check": "figma connect publish --dry-run",
         "figma:publish": "figma connect publish",

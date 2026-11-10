@@ -54,7 +54,7 @@
         "figma-blueprint"
     ],
     "scripts": {
-        "build": "rimraf dist figma-blueprint && rolldown -c rolldown.config.ts && figma-blueprint build",
+        "build": "rimraf dist figma-blueprint && rolldown -c rolldown.config.ts && figma-blueprint ship",
         "clean": "rimraf dist figma-blueprint node_modules .turbo",
         "lint": "eslint ./src",
         "test": "vitest --run --passWithNoTests",

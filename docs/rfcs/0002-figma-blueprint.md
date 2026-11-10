@@ -64,25 +64,25 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 | 진입점                                              | 역할                                                              |
 | --------------------------------------------------- | ----------------------------------------------------------------- |
 | `figma-blueprint <tree.json \| Figma URL> [--json]` | 정답 트리를 출력한다                                              |
-| `figma-blueprint build`                             | 컴포넌트 패키지 빌드에서 템플릿과 표를 컴파일한다                 |
-| `figma-blueprint map`                               | 토큰으로 `entries` 표를 생성한다. 사람이 실행하고 결과를 커밋한다 |
+| `figma-blueprint ship`                              | 컴포넌트 패키지 빌드에서 템플릿과 표를 컴파일한다                 |
+| `figma-blueprint entries`                           | 토큰으로 `entries` 표를 생성한다. 사람이 실행하고 결과를 커밋한다 |
 | JS API `blueprint`, `fromInstalled`, `fromRepo`     | 플러그인 스킬과 비공개 벤치가 import해서 쓴다                     |
 
 빌드는 `@vapor-ui/codemod`처럼 tsup으로 합니다. `src`는 데이터가 흐르는 순서대로 `entries/ → ship/ → library/ → blueprint/` 네 단계로 나눕니다. 각 단계는 자기가 만드는 산출물의 형식을 가지고, 뒤 단계는 앞 단계를 import할 수 있지만 거꾸로는 하지 않습니다.
 
-| 파일                      | 만드는 것                                                                     |
-| ------------------------- | ----------------------------------------------------------------------------- |
-| `entries/code-connect.ts` | 패키지의 Code Connect 파일과 거기서 읽은 연결(URL, 템플릿, batch 행)          |
-| `entries/entries-file.ts` | `figma-entries.json`의 형식과 읽기, 빠진 항목 검사                            |
-| `entries/map.ts`          | `figma-blueprint map`. Figma에 컴포넌트 키를 물어 `figma-entries.json`을 쓴다 |
-| `ship/templates.ts`       | 함수로 감싼 템플릿과 헬퍼                                                     |
-| `ship/tables.ts`          | 소스에서 추출한 표                                                            |
-| `ship/ship.ts`            | `figma-blueprint build`. 패키지의 `figma-blueprint/` 폴더                     |
-| `library/library.ts`      | 템플릿과 표를 공급하는 포트와 어댑터 두 개                                    |
-| `blueprint/figma-mock.ts` | 템플릿이 import하는 `figma` 모듈의 대역                                       |
-| `blueprint/blueprint.ts`  | REST 트리 → 정답 트리                                                         |
-| `cli.ts`                  | 명령 진입점                                                                   |
-| `index.ts`                | JS API                                                                        |
+| 파일                      | 만드는 것                                                                         |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| `entries/code-connect.ts` | 패키지의 Code Connect 파일과 거기서 읽은 연결(URL, 템플릿, batch 행)              |
+| `entries/entries-file.ts` | `figma-entries.json`의 형식과 읽기, 빠진 항목 검사                                |
+| `entries/map.ts`          | `figma-blueprint entries`. Figma에 컴포넌트 키를 물어 `figma-entries.json`을 쓴다 |
+| `ship/templates.ts`       | 함수로 감싼 템플릿과 헬퍼                                                         |
+| `ship/tables.ts`          | 소스에서 추출한 표                                                                |
+| `ship/ship.ts`            | `figma-blueprint ship`. 패키지의 `figma-blueprint/` 폴더                          |
+| `library/library.ts`      | 템플릿과 표를 공급하는 포트와 어댑터 두 개                                        |
+| `blueprint/figma-mock.ts` | 템플릿이 import하는 `figma` 모듈의 대역                                           |
+| `blueprint/blueprint.ts`  | REST 트리 → 정답 트리                                                             |
+| `cli.ts`                  | 명령 진입점                                                                       |
+| `index.ts`                | JS API                                                                            |
 
 `figma-mock`과 `blueprint`는 데이터만 받습니다. REST 트리는 객체로 받습니다.
 
@@ -92,7 +92,7 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 
 ### 템플릿과 표의 배포
 
-core, composites, icons는 빌드할 때 `figma-blueprint build`로 자기 Code Connect 템플릿과 헬퍼(`utils/figma` 등)를 JS로 컴파일하고 아래 표와 함께 별도 폴더에 담아 배포합니다. `@vapor-ui/core`가 이미 `files: ["dist", "docs"]`로 문서를 함께 배포하는 것과 같은 방식입니다. figma-blueprint는 실행할 때 소비자 레포의 `node_modules`에서 이 폴더를 읽습니다. 그래서 정답 트리는 소비자가 실제로 설치한 버전의 API를 따릅니다.
+core, composites, icons는 빌드할 때 `figma-blueprint ship`으로 자기 Code Connect 템플릿과 헬퍼(`utils/figma` 등)를 JS로 컴파일하고 아래 표와 함께 별도 폴더에 담아 배포합니다. `@vapor-ui/core`가 이미 `files: ["dist", "docs"]`로 문서를 함께 배포하는 것과 같은 방식입니다. figma-blueprint는 실행할 때 소비자 레포의 `node_modules`에서 이 폴더를 읽습니다. 그래서 정답 트리는 소비자가 실제로 설치한 버전의 API를 따릅니다.
 
 | 표              | 내용                                                                                                                   | 출처                    | 쓰는 쪽                    |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------- | -------------------------- |
@@ -102,18 +102,18 @@ core, composites, icons는 빌드할 때 `figma-blueprint build`로 자기 Code 
 | `presets`       | composites wrapper → 렌더링하는 core 요소와 고정 props (`Dialog.Action` = `<Button size="lg" colorPalette="primary">`) | composites 소스         | 검증 에이전트(치환)        |
 | `defaults`      | core 파트 → recipe `defaultVariants` (`Button`의 `variant="fill"`)                                                     | core 소스               | 검증 에이전트(생략값 보충) |
 
-`entries`만 Figma에 물어야 만들 수 있습니다. 컴포넌트 키는 라이브러리를 발행할 때 Figma가 붙이는 값이라 레포에 없습니다. 키는 라이브러리를 다시 발행할 때만 바뀌므로, `figma-blueprint map`으로 생성한 결과를 각 패키지에 커밋합니다. 빌드와 CI에는 토큰이 필요 없습니다. 나머지 네 표는 빌드할 때 소스에서 만듭니다.
+`entries`만 Figma에 물어야 만들 수 있습니다. 컴포넌트 키는 라이브러리를 발행할 때 Figma가 붙이는 값이라 레포에 없습니다. 키는 라이브러리를 다시 발행할 때만 바뀌므로, `figma-blueprint entries`로 생성한 결과를 각 패키지에 커밋합니다. 빌드와 CI에는 토큰이 필요 없습니다. 나머지 네 표는 빌드할 때 소스에서 만듭니다.
 
 core, composites, icons는 각각 아래처럼 바뀝니다.
 
-- 패키지 루트의 `figma.config.json` 옆에 `figma-entries.json`을 커밋합니다. `figma-blueprint map`이 생성합니다.
+- 패키지 루트의 `figma.config.json` 옆에 `figma-entries.json`을 커밋합니다. `figma-blueprint entries`가 생성합니다.
 - 빌드 산출물 `figma-blueprint/` 폴더를 `dist`와 나란히 둡니다. git에는 넣지 않고 `files`와 `clean` 스크립트에 추가합니다.
 - `figma-blueprint/tables.json`에는 자기 패키지 몫의 `entries`와 나머지 네 표가 들어갑니다. core는 `internalIcons`와 `defaults`, composites는 `presets`와 `internalParts`를 가집니다.
 - `figma-blueprint/templates/` 아래에 템플릿과 헬퍼를 소스 경로 그대로 컴파일합니다.
 - `exports`에 `"./figma-blueprint/*": "./figma-blueprint/*"`를 추가합니다.
 - `@vapor-ui/figma-blueprint`는 devDependencies(`workspace:*`)에만 넣습니다. 런타임 dependencies에는 넣지 않습니다.
 
-`figma-blueprint build`는 템플릿 모듈 본문을 함수로 감쌉니다. 인스턴스마다 `figma.selectedInstance`를 바꿔 다시 실행하기 위해서입니다. 이때 `import figma from 'figma'`는 `globalThis[Symbol.for('@vapor-ui/figma-blueprint')]` 조회로 바꿉니다. 컴파일된 템플릿은 figma-blueprint의 파일 경로를 몰라도 실행 중인 대역을 찾습니다.
+`figma-blueprint ship`은 템플릿 모듈 본문을 함수로 감쌉니다. 인스턴스마다 `figma.selectedInstance`를 바꿔 다시 실행하기 위해서입니다. 이때 `import figma from 'figma'`는 `globalThis[Symbol.for('@vapor-ui/figma-blueprint')]` 조회로 바꿉니다. 컴파일된 템플릿은 figma-blueprint의 파일 경로를 몰라도 실행 중인 대역을 찾습니다.
 
 ### 정답 트리 규칙
 

@@ -7,7 +7,7 @@ import type { Tables } from './tables';
 import { TABLES_OF } from './tables';
 import { writeTemplates } from './templates';
 
-// What `figma-blueprint build` writes to <package>/figma-blueprint/tables.json: the package's entries and its share of
+// What `figma-blueprint ship` writes to <package>/figma-blueprint/tables.json: the package's entries and its share of
 // the tables, those built from its own source (core: internalIcons and defaults, composites: presets and internalParts).
 // The templates and their helpers sit next to it under templates/, at their path in the package.
 export type Shipped = { entries: Record<string, Omit<StoredEntry, 'url'>> } & Partial<Tables>;
@@ -15,7 +15,7 @@ export type Shipped = { entries: Record<string, Omit<StoredEntry, 'url'>> } & Pa
 export const templatesOf = (entries: Shipped['entries']) =>
     Object.values(entries).map((e) => e.template);
 
-// `figma-blueprint build`, run in packages/core, composites or icons. Rewrites outDir from scratch, so a rerun on the
+// `figma-blueprint ship`, run in packages/core, composites or icons. Rewrites outDir from scratch, so a rerun on the
 // same source writes the same bytes.
 export function buildPackage(pkgDir: string, outDir: string) {
     const { name } = JSON.parse(readFileSync(join(pkgDir, 'package.json'), 'utf8')) as {

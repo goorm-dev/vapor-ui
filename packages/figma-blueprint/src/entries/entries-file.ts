@@ -7,7 +7,7 @@ import { connections } from './code-connect';
 export const PACKAGES = ['core', 'composites', 'icons'] as const;
 export type Pkg = (typeof PACKAGES)[number];
 
-// What `figma-blueprint map` writes to packages/<pkg>/figma-entries.json, keyed by Figma component (set) key.
+// What `figma-blueprint entries` writes to packages/<pkg>/figma-entries.json, keyed by Figma component (set) key.
 // template is relative to the package directory.
 export interface StoredEntry {
     name: string;
@@ -20,7 +20,7 @@ export const readEntries = (pkgDir: string): Record<string, StoredEntry> =>
     JSON.parse(readFileSync(join(pkgDir, 'figma-entries.json'), 'utf8'));
 
 // Code Connect URLs whose entry, as the package's source states it now (url, template, batch row), is not in its
-// figma-entries.json. Rerun `figma-blueprint map` to add them.
+// figma-entries.json. Rerun `figma-blueprint entries` to add them.
 export function missingEntries(pkgDir: string): string[] {
     const stored = existsSync(join(pkgDir, 'figma-entries.json'))
         ? Object.values(readEntries(pkgDir))

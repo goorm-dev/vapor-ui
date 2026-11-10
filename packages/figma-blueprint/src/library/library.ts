@@ -61,7 +61,7 @@ async function load(packages: Templates[], tables: Tables): Promise<Library> {
 }
 
 // Entries from the three packages' figma-entries.json and tables from the repo's source. Templates go through the
-// same writeTemplates as `figma-blueprint build`, left as TypeScript.
+// same writeTemplates as `figma-blueprint ship`, left as TypeScript.
 export async function fromRepo(root: string): Promise<Library> {
     const tmp = mkdtempSync(join(tmpdir(), 'figma-blueprint-'));
     try {
@@ -78,7 +78,7 @@ export async function fromRepo(root: string): Promise<Library> {
     }
 }
 
-// What `figma-blueprint build` shipped in the @vapor-ui packages that cwd resolves. A package that is not installed is
+// What `figma-blueprint ship` shipped in the @vapor-ui packages that cwd resolves. A package that is not installed is
 // left out, with a line on stderr.
 export async function fromInstalled(cwd: string): Promise<Library> {
     const require = createRequire(join(cwd, 'package.json'));

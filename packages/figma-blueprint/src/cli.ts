@@ -8,13 +8,13 @@ import { fromInstalled, fromRepo } from './library/library';
 import { buildPackage } from './ship/ship';
 
 const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <root>]
-       figma-blueprint map [--repo <root>]
-       figma-blueprint build
+       figma-blueprint entries [--repo <root>]
+       figma-blueprint ship
 
 Prints the elements the design requires, one per line with the Figma node id it came from.
 Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
 Exits 2 when an instance could not be read (unscorable), so the design cannot be fully graded.
-build runs in packages/core, composites or icons and writes their figma-blueprint/ folder.
+ship runs in packages/core, composites or icons and writes their figma-blueprint/ folder.
 FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current directory.`;
 
 async function loadTree(arg: string): Promise<FigmaTree> {
@@ -43,7 +43,7 @@ function parseArgs(argv: string[]) {
     return { positional, json, repo };
 }
 
-async function map(root: string) {
+async function entries(root: string) {
     const token = process.env.FIGMA_ACCESS_TOKEN;
     if (!token)
         throw new Error(
@@ -84,8 +84,8 @@ async function run(argv: string[]) {
     if (existsSync('.env')) process.loadEnvFile();
     const { positional, json, repo } = parseArgs(argv);
     const [command] = positional;
-    if (command === 'map') return map(repo ?? process.cwd());
-    if (command === 'build') {
+    if (command === 'entries') return entries(repo ?? process.cwd());
+    if (command === 'ship') {
         buildPackage(process.cwd(), join(process.cwd(), 'figma-blueprint'));
         return 0;
     }

@@ -19,7 +19,7 @@ afterAll(() => {
 });
 
 // An app with the fixture packages installed the way a consumer gets them: figma-blueprint/ from
-// `figma-blueprint build`, next to a package.json that exports it.
+// `figma-blueprint ship`, next to a package.json that exports it.
 function install(pkgs: Pkg[]) {
     const app = mkdtempSync(join(tmpdir(), 'figma-blueprint-app-'));
     apps.push(app);
@@ -67,7 +67,7 @@ const treeNodes: BlueprintNode[] = [
     { id: '2:2', tag: 'HeartIcon', props: [], pkg: 'icons', children: [] },
 ];
 
-describe('figma-blueprint build', () => {
+describe('figma-blueprint ship', () => {
     afterEach(() => {
         vi.restoreAllMocks();
     });
