@@ -20,12 +20,16 @@ FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current di
 async function loadTree(arg: string): Promise<FigmaTree> {
     if (!arg.startsWith('http')) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
     const { fileKey, nodeId } = parseFigmaUrl(arg);
+    if (!nodeId) throw new Error(`the URL has no node-id, so there is no frame to read: ${arg}`);
     const r = await fetch(
         `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${encodeURIComponent(nodeId)}`,
         { headers: { 'X-Figma-Token': process.env.FIGMA_ACCESS_TOKEN ?? '' } },
     );
     if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
-    return ((await r.json()) as { nodes: Record<string, FigmaTree> }).nodes[nodeId];
+    const tree = ((await r.json()) as { nodes: Record<string, FigmaTree | null> }).nodes[nodeId];
+    if (!tree)
+        throw new Error(`node ${nodeId} is not in file ${fileKey}; it may have been deleted`);
+    return tree;
 }
 
 function parseArgs(argv: string[]) {
