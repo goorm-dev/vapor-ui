@@ -1,11 +1,11 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { Blueprint, BlueprintNode, FigmaTree } from './blueprint/blueprint';
-import { blueprint } from './blueprint/blueprint';
-import { fromInstalled, fromRepo } from './catalog/catalog';
-import { parseFigmaUrl, writeEntries } from './entries/write-entries';
-import { buildPackage } from './ship/ship';
+import type { Blueprint, BlueprintNode, FigmaTree } from '~/blueprint/blueprint';
+import { blueprint } from '~/blueprint/blueprint';
+import { fromInstalled, fromRepo } from '~/catalog/catalog';
+import { parseFigmaUrl, writeEntries } from '~/entries/write-entries';
+import { buildPackage } from '~/ship/ship';
 
 const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <root>]
        figma-blueprint entries [--repo <root>]

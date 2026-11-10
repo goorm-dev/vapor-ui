@@ -11,7 +11,10 @@
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,
-        "types": ["node"]
+        "types": ["node"],
+        "paths": {
+            "~/*": ["./src/*"]
+        }
     },
     "include": ["."],
     "exclude": ["node_modules", "dist", "src/__fixtures__"]

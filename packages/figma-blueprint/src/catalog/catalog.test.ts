@@ -4,11 +4,12 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 
-import { blueprint } from '../blueprint/blueprint';
-import type { BlueprintNode, FigmaTree } from '../blueprint/blueprint';
-import type { Pkg } from '../entries/entries-file';
-import { buildPackage } from '../ship/ship';
-import { extractTables } from '../ship/tables';
+import { blueprint } from '~/blueprint/blueprint';
+import type { BlueprintNode, FigmaTree } from '~/blueprint/blueprint';
+import type { Pkg } from '~/entries/entries-file';
+import { buildPackage } from '~/ship/ship';
+import { extractTables } from '~/ship/tables';
+
 import { fromInstalled } from './catalog';
 
 const root = fileURLToPath(new URL('../__fixtures__/repo', import.meta.url));

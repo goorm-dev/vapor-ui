@@ -4,15 +4,15 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import type { Batch } from '../entries/code-connect';
-import { PACKAGES, readEntries } from '../entries/entries-file';
-import type { Pkg } from '../entries/entries-file';
-import type { Shipped } from '../ship/ship';
-import { templatesOf } from '../ship/ship';
-import { extractTables } from '../ship/tables';
-import type { Tables } from '../ship/tables';
-import { writeTemplates } from '../ship/templates';
-import type { TemplateFn } from '../ship/templates';
+import type { Batch } from '~/entries/code-connect';
+import { PACKAGES, readEntries } from '~/entries/entries-file';
+import type { Pkg } from '~/entries/entries-file';
+import type { Shipped } from '~/ship/ship';
+import { templatesOf } from '~/ship/ship';
+import { extractTables } from '~/ship/tables';
+import type { Tables } from '~/ship/tables';
+import { writeTemplates } from '~/ship/templates';
+import type { TemplateFn } from '~/ship/templates';
 
 // One Code Connect template (one row of it for a batch template), keyed in `entries` by Figma component (set) key.
 // template is relative to the package directory.

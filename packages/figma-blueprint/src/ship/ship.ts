@@ -1,8 +1,9 @@
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { StoredEntry } from '../entries/entries-file';
-import { PACKAGES, readEntries } from '../entries/entries-file';
+import type { StoredEntry } from '~/entries/entries-file';
+import { PACKAGES, readEntries } from '~/entries/entries-file';
+
 import type { Tables } from './tables';
 import { TABLES_OF } from './tables';
 import { writeTemplates } from './templates';

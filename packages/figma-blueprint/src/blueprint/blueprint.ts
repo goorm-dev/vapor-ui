@@ -6,8 +6,9 @@
 // it is in; layout frames do not count.
 import ts from 'typescript';
 
-import type { Catalog, Entry } from '../catalog/catalog';
-import type { Pkg } from '../entries/entries-file';
+import type { Catalog, Entry } from '~/catalog/catalog';
+import type { Pkg } from '~/entries/entries-file';
+
 import type { FigmaNode } from './figma-mock';
 import { makeHandles, render, withContext } from './figma-mock';
 

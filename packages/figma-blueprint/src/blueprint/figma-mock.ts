@@ -2,8 +2,8 @@
 // A template runs as a function (see ship/templates.ts), so `figma.selectedInstance` / `figma.batch` read the top of a
 // stack. Nested templates are not run inline: executeTemplate() returns an INSTANCE section, rendered as a marker that
 // blueprint.ts uses to find which element the nested instance sits in.
-import type { Batch } from '../entries/code-connect';
-import { FIGMA_KEY } from '../ship/templates';
+import type { Batch } from '~/entries/code-connect';
+import { FIGMA_KEY } from '~/ship/templates';
 
 export interface FigmaNode {
     id: string;

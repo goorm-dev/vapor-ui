@@ -1,11 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-import type { Catalog } from '../catalog/catalog';
-import type { Pkg } from '../entries/entries-file';
-import type { Tables } from '../ship/tables';
-import { FIGMA_KEY } from '../ship/templates';
-import type { TemplateFn } from '../ship/templates';
+import type { Catalog } from '~/catalog/catalog';
+import type { Pkg } from '~/entries/entries-file';
+import type { Tables } from '~/ship/tables';
+import { FIGMA_KEY } from '~/ship/templates';
+import type { TemplateFn } from '~/ship/templates';
+
 import type { Blueprint, BlueprintNode, FigmaTree } from './blueprint';
 import { blueprint } from './blueprint';
 

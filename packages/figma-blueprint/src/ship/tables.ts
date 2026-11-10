@@ -2,8 +2,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import ts from 'typescript';
 
-import { codeConnectFiles } from '../entries/code-connect';
-import type { Pkg } from '../entries/entries-file';
+import { codeConnectFiles } from '~/entries/code-connect';
+import type { Pkg } from '~/entries/entries-file';
 
 export interface Tables {
     // core part → icons it draws itself (Select.Trigger's chevron)
