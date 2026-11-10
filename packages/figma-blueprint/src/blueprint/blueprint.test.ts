@@ -337,13 +337,11 @@ describe('blueprint lines', () => {
         });
 
         expect(blueprint(tree, catalog)).toEqual({
-            version: 3,
+            version: 4,
             nodes: [{ id: '2:1', tag: 'Dialog.Root', props: [], pkg: 'composites', children: [] }],
             excluded: [],
             unscorable: [],
-            frames: [],
             texts: [],
-            styles: 'no-variables-api',
         });
     });
 
@@ -484,16 +482,14 @@ describe('blueprint lines', () => {
         });
 
         expect(blueprint(tree, catalog)).toEqual({
-            version: 3,
+            version: 4,
             nodes: [],
             excluded: [
                 { node: '2:3', name: '❤️HeartIcon', reason: 'inside-unscorable' },
                 { node: '2:5', name: '💙Badge', reason: 'inside-unscorable' },
             ],
             unscorable: [{ node: '2:1', name: '💙Chip', cause: 'template-error', message: 'boom' }],
-            frames: [],
             texts: [],
-            styles: 'no-variables-api',
         });
     });
 
@@ -749,16 +745,14 @@ describe('blueprint tree', () => {
         };
 
         expect(blueprint(tree, fakeCatalog(badge))).toEqual({
-            version: 3,
+            version: 4,
             nodes: [
                 { id: '2:1', tag: 'Badge', props: [], pkg: 'core', children: [] },
                 { id: '2:2', tag: 'Badge', props: [], pkg: 'core', children: [] },
             ],
             excluded: [],
             unscorable: [],
-            frames: [],
             texts: [],
-            styles: 'no-variables-api',
         });
     });
 });
@@ -781,7 +775,7 @@ describe('blueprint with two copies of the package loaded', () => {
     });
 });
 
-describe('blueprint boxes, frames and texts', () => {
+describe('blueprint boxes and texts', () => {
     const catalog = fakeCatalog({
         'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') },
         'K-CARD': {
@@ -793,15 +787,7 @@ describe('blueprint boxes, frames and texts', () => {
             ),
         },
     });
-    // "surface" is listed under another node id than the tree's, as a library variable can be.
-    const variables = {
-        'VariableID:canvas/9:1': { key: 'canvas', name: 'background/canvas' },
-        'VariableID:surface/40:1': { key: 'surface', name: 'color-background-surface' },
-        'VariableID:radius/9:3': { key: 'radius', name: 'border-radius-300' },
-        'VariableID:space/9:4': { key: 'space', name: 'space-200' },
-        'VariableID:border/9:5': { key: 'border', name: 'color-border-normal' },
-    };
-    const result = blueprint(fixture('design-layers'), catalog, variables);
+    const result = blueprint(fixture('design-layers'), catalog);
     const box = (x: number, y: number, w: number, h: number) => ({ x, y, w, h });
 
     it('boxes each library instance relative to the graded frame, every element of one template on its instance box', () => {
@@ -835,78 +821,6 @@ describe('blueprint boxes, frames and texts', () => {
                         ],
                     },
                 ],
-            },
-        ]);
-    });
-
-    it('lists layers outside every library instance, local components included, that bind a variable or leave auto layout', () => {
-        expect(result.styles).toBe('ok');
-        expect(result.frames).toEqual([
-            {
-                id: '0:1',
-                name: 'Screen',
-                box: box(0, 0, 400, 300),
-                tokens: { fills: 'background/canvas' },
-            },
-            {
-                id: '3:1',
-                name: 'Header',
-                box: box(10, 10, 380, 40),
-                tokens: {
-                    fills: 'color-background-surface',
-                    rectangleCornerRadii: 'border-radius-300',
-                },
-            },
-            { id: '3:3', name: 'Dot', box: box(380, 5, 8, 8), absolute: true, tokens: {} },
-            {
-                id: '4:1',
-                name: 'Sidebar',
-                box: box(320, 60, 80, 200),
-                tokens: { strokes: 'color-border-normal' },
-            },
-            {
-                id: 'I4:1;1',
-                name: 'Panel',
-                box: box(320, 60, 80, 100),
-                tokens: { paddingLeft: 'space-200' },
-            },
-        ]);
-    });
-
-    it('keeps variable ids as tokens when no variables response is given', () => {
-        const raw = blueprint(fixture('design-layers'), catalog);
-
-        expect(raw.styles).toBe('no-variables-api');
-        expect(raw.frames.find((f) => f.id === '3:1')?.tokens).toEqual({
-            fills: 'VariableID:surface/9:2',
-            rectangleCornerRadii: 'VariableID:radius/9:3',
-        });
-    });
-
-    it('gives each corner its own token when the corners bind different variables', () => {
-        const alias = (id: string) => ({ type: 'VARIABLE_ALIAS' as const, id });
-        const tree: FigmaTree = {
-            document: {
-                id: '0:1',
-                name: 'Screen',
-                type: 'FRAME',
-                boundVariables: {
-                    rectangleCornerRadii: {
-                        RECTANGLE_TOP_LEFT_CORNER_RADIUS: alias('VariableID:radius/9:3'),
-                        RECTANGLE_TOP_RIGHT_CORNER_RADIUS: alias('VariableID:space/9:4'),
-                    },
-                },
-            },
-        };
-
-        expect(blueprint(tree, catalog, variables).frames).toEqual([
-            {
-                id: '0:1',
-                name: 'Screen',
-                tokens: {
-                    'rectangleCornerRadii.RECTANGLE_TOP_LEFT_CORNER_RADIUS': 'border-radius-300',
-                    'rectangleCornerRadii.RECTANGLE_TOP_RIGHT_CORNER_RADIUS': 'space-200',
-                },
             },
         ]);
     });

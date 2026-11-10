@@ -5,8 +5,6 @@ export type {
     Box,
     Excluded,
     FigmaTree,
-    FigmaVariables,
-    Frame,
     TextLine,
     Unscorable,
 } from '~/blueprint/blueprint';

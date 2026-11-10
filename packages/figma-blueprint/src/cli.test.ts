@@ -48,15 +48,13 @@ describe('figma-blueprint <tree>', () => {
 
         expect(code).toBe(0);
         expect(JSON.parse(stdout)).toEqual({
-            version: 3,
+            version: 4,
             nodes: [
                 { id: '2:1', tag: 'IconButton', props: ['size="lg"'], pkg: 'core', children: [] },
             ],
             excluded: [],
             unscorable: [],
-            frames: [],
             texts: [],
-            styles: 'no-variables-api',
         });
     });
 
@@ -86,70 +84,17 @@ describe('figma-blueprint <tree>', () => {
                 'unscorable:',
                 '  💙Chip (2:4): no-template',
                 'texts: 0',
-                'styles: no-variables-api',
             ].join('\n'),
         );
     });
 
-    const card = {
-        id: '3:1',
-        name: 'Card',
-        type: 'FRAME',
-        layoutPositioning: 'ABSOLUTE',
-        boundVariables: { fills: [{ type: 'VARIABLE_ALIAS' as const, id: 'VariableID:k1/9:1' }] },
-        children: [{ id: '3:2', name: 'Title', type: 'TEXT', characters: 'Hi' }],
-    };
-
-    it('names tokens from a saved variables response and prints the frames flat', async () => {
-        const variables = join(dir, 'variables.json');
-        writeFileSync(
-            variables,
-            JSON.stringify({
-                status: 200,
-                error: false,
-                meta: {
-                    variables: {
-                        'VariableID:k1/9:1': { key: 'k1', name: 'background/canvas/canvas' },
-                    },
-                },
-            }),
-        );
-
-        const { code, stdout } = await run('frames', [card], '--variables', variables);
-
-        expect(code).toBe(0);
-        expect(stdout).toBe(
-            ['frames:', '  Card (3:1)  absolute  fills=background/canvas/canvas', 'texts: 0'].join(
-                '\n',
-            ),
-        );
-    });
-
-    it('keeps variable ids and says so without a variables response, still exiting 0', async () => {
-        const { code, stdout } = await run('raw', [card]);
-
-        expect(code).toBe(0);
-        expect(stdout).toBe(
-            [
-                'frames:',
-                '  Card (3:1)  absolute  fills=VariableID:k1/9:1',
-                'texts: 0',
-                'styles: no-variables-api',
-            ].join('\n'),
-        );
-    });
-
-    it('falls back to variable ids when the variables API refuses a URL source', async () => {
-        const nodes = { document: { id: '0:1', name: 'Screen', type: 'FRAME', children: [card] } };
-        vi.stubGlobal(
-            'fetch',
-            vi.fn(async (url: string) =>
-                url.endsWith('/variables/local')
-                    ? new Response('{"status":403,"error":true}', { status: 403 })
-                    : Response.json({ nodes: { '0:1': nodes } }),
-            ),
-        );
-        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    it('reads a URL source with the one nodes request, no variables API', async () => {
+        const tree: FigmaTree = {
+            document: { id: '0:1', name: 'Screen', type: 'FRAME', children: [iconButton] },
+            components,
+        };
+        const request = vi.fn(async () => Response.json({ nodes: { '0:1': tree } }));
+        vi.stubGlobal('fetch', request);
         const log = vi.spyOn(console, 'log').mockImplementation(() => {});
 
         const code = await main([
@@ -160,10 +105,20 @@ describe('figma-blueprint <tree>', () => {
         ]);
 
         expect(code).toBe(0);
-        expect(error).toHaveBeenCalledWith(expect.stringContaining('403'));
-        const result = JSON.parse(log.mock.calls.map((c) => c.join(' ')).join('\n'));
-        expect(result.styles).toBe('no-variables-api');
-        expect(result.frames[0].tokens).toEqual({ fills: 'VariableID:k1/9:1' });
+        expect(request).toHaveBeenCalledTimes(1);
+        expect(request).toHaveBeenCalledWith(
+            'https://api.figma.com/v1/files/FILE/nodes?ids=0%3A1',
+            expect.anything(),
+        );
+        expect(JSON.parse(log.mock.calls.map((c) => c.join(' ')).join('\n'))).toEqual({
+            version: 4,
+            nodes: [
+                { id: '2:1', tag: 'IconButton', props: ['size="lg"'], pkg: 'core', children: [] },
+            ],
+            excluded: [],
+            unscorable: [],
+            texts: [],
+        });
     });
 
     it('exits 1 with a message when the tree cannot be read', async () => {

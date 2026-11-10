@@ -17,10 +17,6 @@ export interface FigmaNode {
     characters?: string;
     absoluteBoundingBox?: Rect | null;
     absoluteRenderBounds?: Rect | null;
-    layoutPositioning?: string;
-    // A property → one alias, a list per paint or text range (fills, fontSize), or a map per corner or axis
-    // (rectangleCornerRadii, size).
-    boundVariables?: Record<string, Alias | Alias[] | Record<string, Alias>>;
 }
 
 export interface Rect {
@@ -28,11 +24,6 @@ export interface Rect {
     y: number;
     width: number;
     height: number;
-}
-
-export interface Alias {
-    type: 'VARIABLE_ALIAS';
-    id: string;
 }
 
 export interface Context {

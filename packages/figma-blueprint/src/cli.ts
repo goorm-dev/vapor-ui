@@ -1,72 +1,44 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { Blueprint, BlueprintNode, FigmaTree, FigmaVariables } from '~/blueprint/blueprint';
+import type { Blueprint, BlueprintNode, FigmaTree } from '~/blueprint/blueprint';
 import { blueprint } from '~/blueprint/blueprint';
 import { fromInstalled, fromRepo } from '~/catalog/catalog';
 import { parseFigmaUrl, writeEntries } from '~/entries/write-entries';
 import { buildPackage } from '~/ship/ship';
 
-const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <root>] [--variables <variables.json>]
+const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <root>]
        figma-blueprint entries [--repo <root>]
        figma-blueprint ship
 
 Prints the elements the design requires, one per line with the Figma node id it came from.
 Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
-Token names come from the file's variables API for a URL, or from --variables (a saved variables/local response).
-Without either, tokens stay Figma variable ids and styles is no-variables-api.
 Exits 2 when an instance could not be read (unscorable), so the design cannot be fully graded.
 ship runs in packages/core, composites or icons and writes their figma-blueprint/ folder.
 FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current directory.`;
 
-const figma = (path: string) =>
-    fetch(`https://api.figma.com/v1/files/${path}`, {
-        headers: { 'X-Figma-Token': process.env.FIGMA_ACCESS_TOKEN ?? '' },
-    });
-
-const variablesIn = (response: unknown, from: string) => {
-    const v = (response as { meta?: { variables?: FigmaVariables } }).meta?.variables;
-    if (!v) throw new Error(`${from} is not a variables/local response (no meta.variables)`);
-    return v;
-};
-
-// Only a URL names the file, so a tree.json gets token names from a saved response or not at all.
-async function load(arg: string, variablesFile: string | undefined) {
-    const saved = variablesFile
-        ? variablesIn(JSON.parse(readFileSync(variablesFile, 'utf8')), variablesFile)
-        : undefined;
-    if (!arg.startsWith('http'))
-        return { tree: JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree, variables: saved };
+async function loadTree(arg: string): Promise<FigmaTree> {
+    if (!arg.startsWith('http')) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
     const { fileKey, nodeId } = parseFigmaUrl(arg);
-    const r = await figma(`${fileKey}/nodes?ids=${encodeURIComponent(nodeId)}`);
+    const r = await fetch(
+        `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${encodeURIComponent(nodeId)}`,
+        { headers: { 'X-Figma-Token': process.env.FIGMA_ACCESS_TOKEN ?? '' } },
+    );
     if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
-    const tree = ((await r.json()) as { nodes: Record<string, FigmaTree> }).nodes[nodeId];
-    if (saved) return { tree, variables: saved };
-    const v = await figma(`${fileKey}/variables/local`);
-    // The variables API is Enterprise only: elsewhere it answers 403 (or 404), and the tree is still worth printing.
-    if (v.status === 403 || v.status === 404) {
-        console.error(
-            `figma-blueprint: the variables API answered ${v.status}, so tokens stay Figma variable ids`,
-        );
-        return { tree, variables: undefined };
-    }
-    if (!v.ok) throw new Error(`variables: ${v.status} ${await v.text()}`);
-    return { tree, variables: variablesIn(await v.json(), 'the variables API') };
+    return ((await r.json()) as { nodes: Record<string, FigmaTree> }).nodes[nodeId];
 }
 
 function parseArgs(argv: string[]) {
     const positional: string[] = [];
     let json = false;
     let repo: string | undefined;
-    let variables: string | undefined;
     for (let i = 0; i < argv.length; i++) {
         const a = argv[i];
         if (a === '--json') json = true;
         else if (a === '--repo') repo = argv[++i];
-        else if (a === '--variables') variables = argv[++i];
         else positional.push(a);
     }
-    return { positional, json, repo, variables };
+    return { positional, json, repo };
 }
 
 async function entries(root: string) {
@@ -83,9 +55,8 @@ async function entries(root: string) {
     return 1;
 }
 
-// A node, then its children two spaces in, as the code writes them. Frames and texts are flat: their position is not
-// judged.
-function text({ nodes, excluded, unscorable, frames, texts, styles }: Blueprint) {
+// A node, then its children two spaces in, as the code writes them.
+function text({ nodes, excluded, unscorable, texts }: Blueprint) {
     const out: string[] = [];
     const walk = (list: BlueprintNode[], depth: number) => {
         for (const n of list) {
@@ -104,25 +75,13 @@ function text({ nodes, excluded, unscorable, frames, texts, styles }: Blueprint)
                 (u) => `  ${u.name} (${u.node}): ${u.cause}${u.message ? ` ${u.message}` : ''}`,
             ),
         );
-    if (frames.length)
-        out.push(
-            'frames:',
-            ...frames.map((f) =>
-                [
-                    `  ${f.name} (${f.id})`,
-                    ...(f.absolute ? ['absolute'] : []),
-                    ...Object.entries(f.tokens).map(([k, v]) => `${k}=${v}`),
-                ].join('  '),
-            ),
-        );
     out.push(`texts: ${texts.length}`);
-    if (styles !== 'ok') out.push(`styles: ${styles}`);
     return out.join('\n');
 }
 
 async function run(argv: string[]) {
     if (existsSync('.env')) process.loadEnvFile();
-    const { positional, json, repo, variables: variablesFile } = parseArgs(argv);
+    const { positional, json, repo } = parseArgs(argv);
     const [command] = positional;
     if (command === 'entries') return entries(repo ?? process.cwd());
     if (command === 'ship') {
@@ -134,8 +93,7 @@ async function run(argv: string[]) {
         return 1;
     }
     const catalog = repo ? await fromRepo(repo) : await fromInstalled(process.cwd());
-    const { tree, variables } = await load(command, variablesFile);
-    const result = blueprint(tree, catalog, variables);
+    const result = blueprint(await loadTree(command), catalog);
     console.log(json ? JSON.stringify(result, null, 2) : text(result));
     return result.unscorable.length ? 2 : 0;
 }

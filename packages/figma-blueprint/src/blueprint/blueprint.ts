@@ -3,19 +3,18 @@
 // the elements its snippet draws itself. A connected instance inside another one counts only when the outer template
 // renders it (executeTemplate marker) or it sits in a SLOT; otherwise the part draws it itself (Select.Trigger's chevron).
 // Prop rules: literal props only, no "false", no placeholder, no "..." example, aria-label → "*". A node sits under
-// the library element it is in; layout frames do not count. What the design draws besides library instances is
-// design.ts.
+// the library element it is in; layout frames do not count.
 import ts from 'typescript';
 
 import type { Catalog, Entry } from '~/catalog/catalog';
 import type { Pkg } from '~/entries/entries-file';
 
-import type { Box, FigmaVariables, Frame, TextLine } from './design';
-import { boxesIn, layers } from './design';
+import type { Box, TextLine } from './design';
+import { boxesIn, textsIn } from './design';
 import type { FigmaNode } from './figma-mock';
 import { makeHandles, render, withContext } from './figma-mock';
 
-export type { Box, FigmaVariables, Frame, TextLine };
+export type { Box, TextLine };
 
 export interface FigmaTree {
     document: FigmaNode;
@@ -63,17 +62,14 @@ export interface Unscorable {
     box?: Box;
 }
 
-// size: the graded frame's, which boxes are relative to. styles: whether token names are Figma variable names, or the
-// variable ids the tree carries because no variables response was at hand.
+// size: the graded frame's, which boxes are relative to.
 export interface Blueprint {
-    version: 3;
+    version: 4;
     size?: { w: number; h: number };
     nodes: BlueprintNode[];
     excluded: Excluded[];
     unscorable: Unscorable[];
-    frames: Frame[];
     texts: TextLine[];
-    styles: 'ok' | 'no-variables-api';
 }
 
 interface Element {
@@ -216,11 +212,7 @@ const byPartName = (table: Record<string, string[]>) =>
     new Map(Object.entries(table).map(([k, v]) => [partName(k), new Set(v.map(partName))]));
 
 // ---------- the walk
-export function blueprint(
-    tree: FigmaTree,
-    catalog: Catalog,
-    variables?: FigmaVariables,
-): Blueprint {
+export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     const { entries } = catalog;
     // A design can hold an older copy of a library component under a key that is no longer published, and Figma still
     // connects it. ponytail: match those by name, only where the name is unique in the entries and the component comes
@@ -403,12 +395,11 @@ export function blueprint(
     visit(document, null, null, [], false);
     const frame = document.absoluteBoundingBox;
     return {
-        version: 3,
+        version: 4,
         ...(frame && { size: { w: frame.width, h: frame.height } }),
         nodes,
         excluded,
         unscorable,
-        ...layers(document, isLib, variables),
-        styles: variables ? 'ok' : 'no-variables-api',
+        texts: textsIn(document),
     };
 }
