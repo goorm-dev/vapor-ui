@@ -75,7 +75,7 @@ node "<이 스킬 폴더>/scripts/tally.mjs" "$OUT/blueprint.json" "$OUT/report.
 
 3이면 stderr를 붙여 검증 서브에이전트에게 보고를 고치게 하고 다시 집계한다. 직접 판정을 채우지 않는다.
 
-`evidence`는 `ok` 판정의 `at` 줄에 그 태그가 없다는 뜻이다. 거짓 통과를 막는 기계 검사다.
+`evidence`는 `ok` 판정의 `at`부터 세 줄 안에 그 태그를 여는 JSX 태그가 없다는 뜻이다. 주석·문자열·import에 적힌 이름은 치지 않는다. 거짓 통과를 막는 기계 검사다.
 
 `reason: "no library instances in the design"`은 정답 트리에 노드도 `unscorable` 항목도 없다는 뜻이다. 시안이 라이브러리 인스턴스를 detach했거나 일반 프레임과 텍스트로만 그려져 있다. 코드로 고칠 문제가 아니다. 코드를 고치지 않고 이 사유를 그대로 보고한다.
 

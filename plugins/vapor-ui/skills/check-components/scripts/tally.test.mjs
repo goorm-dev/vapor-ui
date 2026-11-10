@@ -193,8 +193,15 @@ test('a line in a file that is not JS or TS source is not evidence', () => {
 });
 
 test('a tag after JSX text holding quotes and slashes still counts', () => {
-    const text = `${IMPORTS}<p>Don't open https://example.com "now"</p>\n<Button size="lg">확인</Button>\n`;
-    assert.equal(cite('Button', text, 4), 0);
+    const text = [
+        `${IMPORTS}const Screen = () => (`,
+        '    <>',
+        `        <p>Don't open https://example.com "now" /* or later</p>`,
+        '        <Button size="lg">확인</Button>',
+        '    </>',
+        ');',
+    ].join('\n');
+    assert.equal(cite('Button', text, 6), 0);
 });
 
 test('an icon passed as a value counts, an icon named in a comment does not', () => {

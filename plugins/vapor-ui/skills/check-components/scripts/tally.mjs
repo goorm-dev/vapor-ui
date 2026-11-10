@@ -60,17 +60,199 @@ function presetNames(root) {
     }
 }
 
-const lastName = (tag) => tag.split('.').at(-1);
+const SOURCE = /\.[cm]?[jt]sx?$/;
+const ID_START = /[A-Za-z_$]/;
+const ID = /[\w$]/;
+// Words after which `<` opens JSX and `/` opens a regex, as after an operator.
+const BEFORE_EXPRESSION = new Set([
+    'return',
+    'yield',
+    'await',
+    'case',
+    'default',
+    'else',
+    'do',
+    'in',
+    'of',
+    'typeof',
+    'void',
+    'delete',
+    'new',
+    'throw',
+    'extends',
+]);
+const startsExpression = (prev) =>
+    prev === '' || BEFORE_EXPRESSION.has(prev) || /^[([{,;:=!&|?+\-*%~^>]$/.test(prev);
 
-// An import names every tag the file uses, so it is never evidence that one is rendered.
-function withoutImports(lines) {
+// What a source file shows as rendered, in the order it is written:
+// tags  JSX opening tags, name as written ("D.Root"), with the line of the name.
+// refs  dotted identifiers in code outside imports, comments, strings and JSX text, for icons passed as values.
+// Comments, strings, JSX text and import declarations never yield either.
+function scan(src) {
+    const starts = [0];
+    for (let k = 0; k < src.length; k++) if (src[k] === '\n') starts.push(k + 1);
+    const lineOf = (at) => {
+        let lo = 0;
+        let hi = starts.length - 1;
+        while (lo < hi) {
+            const mid = (lo + hi + 1) >> 1;
+            if (starts[mid] <= at) lo = mid;
+            else hi = mid - 1;
+        }
+        return lo + 1;
+    };
+    const tags = [];
+    const refs = [];
+    // Frames: code (braces counted to find its closing `}`), template, tag (attributes), children (JSX text).
+    const stack = [{ kind: 'code', depth: 0 }];
+    let prev = '';
     let inImport = false;
-    return lines.map((l) => {
-        if (/^\s*import\b/.test(l)) inImport = true;
-        if (!inImport) return l;
-        if (/\bfrom\s*['"]|^\s*import\s*['"]|;\s*$/.test(l)) inImport = false;
-        return '';
-    });
+    let i = 0;
+    const skipPast = (end, from) => {
+        const k = src.indexOf(end, from);
+        return k < 0 ? src.length : k + end.length;
+    };
+    const readName = (from) => {
+        let k = from;
+        while (
+            k < src.length &&
+            (ID.test(src[k]) || (src[k] === '.' && ID_START.test(src[k + 1] ?? '')))
+        )
+            k++;
+        return k;
+    };
+    // `<` at i opens an element when a name or `>` follows, possibly on the next line.
+    const openElement = () => {
+        let k = i + 1;
+        while (/\s/.test(src[k] ?? '')) k++;
+        if (src[k] === '>') {
+            stack.push({ kind: 'children' });
+            return k + 1;
+        }
+        if (!ID_START.test(src[k] ?? '')) return -1;
+        const end = readName(k);
+        tags.push({ name: src.slice(k, end), line: lineOf(k) });
+        stack.push({ kind: 'tag' });
+        return end;
+    };
+    const closeElement = () => {
+        if (stack.length > 1) stack.pop();
+        prev = 'value';
+    };
+    while (i < src.length) {
+        const f = stack.at(-1);
+        const c = src[i];
+        const two = src.slice(i, i + 2);
+        if (f.kind === 'template') {
+            if (c === '\\') i += 2;
+            else if (c === '`') {
+                stack.pop();
+                prev = 'value';
+                i++;
+            } else if (two === '${') {
+                stack.push({ kind: 'code', depth: 0 });
+                prev = '';
+                i += 2;
+            } else i++;
+        } else if (f.kind === 'tag') {
+            if (c === '"' || c === "'") i = skipPast(c, i + 1);
+            else if (two === '//') i = skipPast('\n', i);
+            else if (two === '/*') i = skipPast('*/', i + 2);
+            else if (c === '{') {
+                stack.push({ kind: 'code', depth: 0 });
+                prev = '';
+                i++;
+            } else if (two === '/>') {
+                closeElement();
+                i += 2;
+            } else if (c === '>') {
+                stack[stack.length - 1] = { kind: 'children' };
+                i++;
+            } else i++;
+        } else if (f.kind === 'children') {
+            if (c === '{') {
+                stack.push({ kind: 'code', depth: 0 });
+                prev = '';
+                i++;
+            } else if (c === '<' && /^<\s*\//.test(src.slice(i, i + 64))) {
+                i = skipPast('>', i);
+                closeElement();
+            } else if (c === '<') {
+                const next = openElement();
+                i = next < 0 ? i + 1 : next;
+            } else i++;
+        } else if (/\s/.test(c)) i++;
+        else if (two === '//') i = skipPast('\n', i);
+        else if (two === '/*') i = skipPast('*/', i + 2);
+        else if (c === '"' || c === "'") {
+            let k = i + 1;
+            while (k < src.length && src[k] !== c && src[k] !== '\n') k += src[k] === '\\' ? 2 : 1;
+            i = k + 1;
+            prev = 'value';
+            inImport = false;
+        } else if (c === '`') {
+            stack.push({ kind: 'template' });
+            i++;
+        } else if (c === '/' && startsExpression(prev)) {
+            let k = i + 1;
+            let inClass = false;
+            while (k < src.length && src[k] !== '\n' && (inClass || src[k] !== '/')) {
+                if (src[k] === '\\') k++;
+                else if (src[k] === '[') inClass = true;
+                else if (src[k] === ']') inClass = false;
+                k++;
+            }
+            i = k + 1;
+            while (ID.test(src[i] ?? '')) i++;
+            prev = 'value';
+        } else if (c === '<' && startsExpression(prev)) {
+            const next = openElement();
+            if (next < 0) {
+                prev = '<';
+                i++;
+            } else i = next;
+        } else if (c === '{') {
+            f.depth++;
+            prev = '{';
+            i++;
+        } else if (c === '}') {
+            if (f.depth === 0 && stack.length > 1) stack.pop();
+            else f.depth--;
+            prev = '}';
+            i++;
+        } else if (ID_START.test(c)) {
+            const end = readName(i);
+            const name = src.slice(i, end);
+            const after = src.slice(end).match(/^\s*(.)/)?.[1];
+            if (name === 'import' && stack.length === 1 && after !== '(' && after !== '.')
+                inImport = true;
+            else if (!inImport && !BEFORE_EXPRESSION.has(name))
+                refs.push({ name, line: lineOf(i) });
+            prev = name;
+            i = end;
+        } else if (/\d/.test(c)) {
+            while (/[\w.]/.test(src[i] ?? '')) i++;
+            prev = 'value';
+        } else {
+            if (c === ';') inImport = false;
+            prev = c;
+            i++;
+        }
+    }
+    return { tags, refs };
+}
+
+// Per cited file, read once: its line count and what it shows. null when it cannot be read.
+function readSource(path, files) {
+    if (!files.has(path)) {
+        try {
+            const src = readFileSync(path, 'utf8');
+            files.set(path, { lines: src.split('\n').length, ...scan(src) });
+        } catch {
+            files.set(path, null);
+        }
+    }
+    return files.get(path);
 }
 
 function checkEvidence(node, at, root, presets, files) {
@@ -78,23 +260,18 @@ function checkEvidence(node, at, root, presets, files) {
     const m = /^(.+):(\d+)$/.exec(at);
     if (!m) return `at is not file:line`;
     const [, file, lineText] = m;
-    const path = isAbsolute(file) ? file : join(root, file);
-    if (!files.has(path)) {
-        try {
-            files.set(path, withoutImports(readFileSync(path, 'utf8').split('\n')));
-        } catch {
-            files.set(path, null);
-        }
-    }
-    const lines = files.get(path);
-    if (!lines) return `${file} does not exist`;
+    if (!SOURCE.test(file)) return `${file} is not a JS or TS source file`;
+    const source = readSource(isAbsolute(file) ? file : join(root, file), files);
+    if (!source) return `${file} does not exist`;
     const line = Number(lineText);
-    if (line < 1 || line > lines.length) return `${file} has ${lines.length} lines`;
-    const names = [node.tag, ...(presets.get(node.tag) ?? [])].map(lastName);
-    const window = lines.slice(line - 1, line - 1 + SPAN).join('\n');
-    return names.some((n) => window.includes(n))
+    if (line < 1 || line > source.lines) return `${file} has ${source.lines} lines`;
+    const names = new Set([node.tag, ...(presets.get(node.tag) ?? [])]);
+    // An icon can be passed as a value (icon={LockIcon}); every other element must be opened as JSX.
+    const shown = node.pkg === 'icons' ? [...source.tags, ...source.refs] : source.tags;
+    const cited = (e) => e.line >= line && e.line < line + SPAN;
+    return shown.some((e) => cited(e) && names.has(e.name))
         ? null
-        : `lines ${line}-${line + SPAN - 1} do not contain ${names.map((n) => `"${n}"`).join(' or ')}`;
+        : `lines ${line}-${line + SPAN - 1} open no ${[...names].map((n) => `<${n}>`).join(' or ')}`;
 }
 
 const FIELDS = { id: 'string', status: 'string', at: 'string', note: 'string', changed: 'boolean' };
