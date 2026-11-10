@@ -29,6 +29,22 @@ export async function highlightToHast(code: string, lang = 'ts'): Promise<Root> 
         lang,
         themes: { light: 'github-light', dark: 'github-dark' },
         defaultColor: false,
+        transformers: [
+            {
+                span(node) {
+                    const style = (node.properties.style as string | undefined) ?? '';
+                    node.properties.style = style
+                        .replace(
+                            /--shiki-light:#24292E+/,
+                            '--shiki-light:var(--vapor-color-foreground-normal)',
+                        )
+                        .replace(
+                            /--shiki-dark:#E1E4E8+/,
+                            '--shiki-dark:var(--vapor-color-foreground-normal)',
+                        );
+                },
+            },
+        ],
     });
 }
 
