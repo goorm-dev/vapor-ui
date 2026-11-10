@@ -29,6 +29,7 @@ Figma URL과 코드를 쓸 위치를 받는다. 아래가 갖춰졌는지 먼저
     - check-components의 `failures`·`evidence` 줄만 고친다. 통과한 부분은 건드리지 않는다.
     - 다시 돌릴 때 check-components의 정답 트리는 다시 뽑지 않고, 검증 서브에이전트는 새로 띄운다.
     - check-components의 채점 불가 항목(정답 트리의 `unscorable`, `unscorable` 판정)은 고칠 대상이 아니다. 고칠 줄이 남지 않으면 회차가 남아도 멈춘다.
+    - `reason: "no library instances in the design"`이 붙은 `unscorable`은 시안에 채점할 라이브러리 인스턴스가 없다는 뜻이다. 코드를 고치지 않고 멈추며, 보고에 이 사유를 적는다.
     - 관문 스킬이 실행 오류로 멈췄으면 고치지 않는다. 오류를 보고하고 멈춘다.
     - "`pass`, 단 `<pkg>` 미채점"은 고칠 줄이 없는 상태로 본다. 패키지 설치나 업그레이드 안내는 흐름을 멈추지 말고 최종 보고에 담는다.
 4. **visual-score**로 시각 점수를 잰다. 시안 입력으로 check-components가 쓴 `blueprint.json`을 넘긴다. 앱 URL, selector, 로그인 상태 파일은 이때 묻는다. 관문을 통과하지 못했어도 잰다. visual-score가 시각 점수를 건너뛰었으면 그 사실과 이유를 보고에 적는다.

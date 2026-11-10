@@ -164,15 +164,19 @@ function tally(blueprint, report, root) {
 
     const total = nodes.length;
     const scorable = total - counts.unscorable;
+    const unscorable = blueprint.unscorable ?? [];
+    // Nothing graded is not a pass: a design of detached instances and plain frames gives an empty tree.
+    const empty = total === 0 && !unscorable.length;
     const result =
         counts.ok < scorable
             ? 'fail'
-            : counts.unscorable || blueprint.unscorable?.length
+            : scorable === 0 || counts.unscorable || unscorable.length
               ? 'unscorable'
               : 'pass';
     return {
         version: 1,
         result,
+        ...(empty && { reason: 'no library instances in the design' }),
         recall: scorable ? counts.ok / scorable : null,
         ok: counts.ok,
         scorable,
@@ -180,7 +184,7 @@ function tally(blueprint, report, root) {
         counts,
         failures,
         evidence,
-        unscorable: blueprint.unscorable ?? [],
+        unscorable,
         excluded: blueprint.excluded ?? [],
     };
 }
@@ -189,7 +193,7 @@ function text(t) {
     const row = (r) =>
         `  ${r.status.padEnd(10)} ${r.tag}  ${r.id}${r.at ? `  ${r.at}` : ''}${r.changed ? ' (changed)' : ''}`;
     const out = [
-        `result: ${t.result}`,
+        `result: ${t.result}${t.reason ? ` (${t.reason})` : ''}`,
         `recall: ${t.ok}/${t.scorable} (${t.recall === null ? 'n/a' : t.recall.toFixed(3)}), total ${t.total}`,
         Object.entries(t.counts)
             .map(([k, v]) => `${k} ${v}`)
