@@ -227,6 +227,48 @@ describe('blueprint lines', () => {
         expect(lines(result)).toEqual(['<Pagination.Root aria-label="*" title="*" size="md" />']);
     });
 
+    it('drops a "..." example value a template writes, but not aria-label or Figma text that reads "..."', () => {
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    { id: '2:1', name: 'Radio', type: 'INSTANCE', componentId: '1:1' },
+                    {
+                        id: '2:2',
+                        name: 'Chip',
+                        type: 'INSTANCE',
+                        componentId: '1:2',
+                        children: [{ id: '2:3', name: 'Label', type: 'TEXT', characters: '...' }],
+                    },
+                ],
+            },
+            components: {
+                '1:1': { key: 'K-RADIO', name: '💙Radio' },
+                '1:2': { key: 'K-CHIP', name: '💙Chip' },
+            },
+        };
+        const catalog = fakeCatalog({
+            'K-RADIO': {
+                name: '💙Radio',
+                run: fixed('radio', '<Radio.Root value="..." aria-label="..." size="md" />'),
+            },
+            'K-CHIP': {
+                name: '💙Chip',
+                run: template(
+                    'chip',
+                    (h) => figma.code`<Chip label="${h.findText('Label').textContent}" />`,
+                ),
+            },
+        });
+
+        expect(lines(blueprint(tree, catalog))).toEqual([
+            '<Radio.Root aria-label="*" size="md" />',
+            '<Chip label="*" />',
+        ]);
+    });
+
     it('finds an older published copy by name only when the name is unique in entries', () => {
         const catalog = fakeCatalog({
             'K-BADGE': { name: '💙Badge', run: fixed('badge', '<Badge />') },

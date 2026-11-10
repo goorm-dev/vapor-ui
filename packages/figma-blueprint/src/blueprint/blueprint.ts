@@ -2,8 +2,8 @@
 // Each visible Code Connect instance runs its own template against the REST node (figma-mock.ts) and contributes
 // the elements its snippet draws itself. A connected instance inside another one counts only when the outer template
 // renders it (executeTemplate marker) or it sits in a SLOT; otherwise the part draws it itself (Select.Trigger's chevron).
-// Prop rules: literal props only, no "false", no placeholder, aria-label → "*". A node sits under the library element
-// it is in; layout frames do not count.
+// Prop rules: literal props only, no "false", no placeholder, no "..." example, aria-label → "*". A node sits under
+// the library element it is in; layout frames do not count.
 import ts from 'typescript';
 
 import type { Catalog, Entry } from '~/catalog/catalog';
@@ -131,6 +131,8 @@ function attrsOf(el: Jsx, texts: Set<unknown>) {
             if (e.text === 'false') continue;
             // Copy never matches the generated wording, so a prop holding Figma text only has to be present.
             const v = k === 'aria-label' || texts.has(e.text) ? '*' : e.text;
+            // Any other "..." is a template's example value where the design has none (<Radio.Root value="..." />).
+            if (v === '...') continue;
             out.push(`${k}=${v.includes('"') ? `{${JSON.stringify(v)}}` : `"${v}"`}`);
         } else if (e?.kind === ts.SyntaxKind.TrueKeyword) out.push(k);
         // A number cannot come from a Figma property, so it is a template's example value (totalPages={10}).
