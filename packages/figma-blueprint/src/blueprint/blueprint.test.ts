@@ -591,6 +591,69 @@ describe('blueprint lines', () => {
             { node: '2:2', name: 'Action', cause: 'no-template' },
         ]);
     });
+
+    it('cannot grade a composites component when composites is not installed, nor read what it draws', () => {
+        const composites = JSON.parse(
+            readFileSync(
+                new URL('../../../composites/figma-entries.json', import.meta.url),
+                'utf8',
+            ),
+        ) as Record<string, { name: string }>;
+        const [dialogKey] = Object.entries(composites).find(([, e]) => e.name === 'Dialog') ?? [];
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    {
+                        id: '2:1',
+                        name: 'Dialog',
+                        type: 'INSTANCE',
+                        componentId: '1:1',
+                        children: [
+                            {
+                                id: 'I2:1;3',
+                                name: 'Close',
+                                type: 'INSTANCE',
+                                componentId: '1:2',
+                            },
+                        ],
+                    },
+                ],
+            },
+            components: {
+                '1:1': { key: dialogKey ?? '', name: 'Dialog', remote: true },
+                '1:2': { key: 'K-ICON-BUTTON', name: '💙IconButton', remote: true },
+            },
+        };
+        const core = {
+            'K-ICON-BUTTON': { name: '💙IconButton', run: fixed('ib', '<IconButton />') },
+        };
+
+        const result = blueprint(tree, fakeCatalog(core));
+        expect(result.nodes).toEqual([]);
+        expect(result.unscorable).toEqual([
+            {
+                node: '2:1',
+                name: 'Dialog',
+                cause: 'not-installed',
+                message: expect.stringContaining('@vapor-ui/composites'),
+            },
+        ]);
+        expect(result.excluded).toEqual([
+            { node: 'I2:1;3', name: '💙IconButton', reason: 'inside-unscorable' },
+        ]);
+
+        // An installed composites older than the design's component has no template for it.
+        const older = fakeCatalog({
+            ...core,
+            'K-MENU': { name: 'Menu', run: fixed('menu', '<Menu.Root />'), pkg: 'composites' },
+        });
+        expect(blueprint(tree, older).unscorable).toEqual([
+            { node: '2:1', name: 'Dialog', cause: 'no-template' },
+        ]);
+    });
 });
 
 describe('blueprint tree', () => {
