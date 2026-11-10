@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { FigmaTree } from './blueprint';
+import type { FigmaTree } from './blueprint/blueprint';
 import { main } from './cli';
 
 const repo = fileURLToPath(new URL('./__fixtures__/repo', import.meta.url));

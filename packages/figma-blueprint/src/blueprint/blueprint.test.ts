@@ -1,10 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
+import type { Pkg } from '../entries/entries-file';
+import type { Library } from '../library/library';
+import type { Tables } from '../ship/tables';
+import { FIGMA_KEY } from '../ship/templates';
+import type { TemplateFn } from '../ship/templates';
 import type { Blueprint, BlueprintNode, FigmaTree } from './blueprint';
 import { blueprint } from './blueprint';
-import { FIGMA_KEY } from './figma-mock';
-import type { Library, Pkg, Tables, TemplateFn } from './library';
 
 interface Handle {
     findInstance(
@@ -23,7 +26,7 @@ const figma = Reflect.get(globalThis, FIGMA_KEY) as {
 
 const fixture = (name: string) =>
     JSON.parse(
-        readFileSync(new URL(`./__fixtures__/${name}.json`, import.meta.url), 'utf8'),
+        readFileSync(new URL(`../__fixtures__/${name}.json`, import.meta.url), 'utf8'),
     ) as FigmaTree;
 
 const template =

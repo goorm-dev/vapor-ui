@@ -1,14 +1,18 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { TABLES_OF, extractTables, writeTemplates } from './build';
-import type { Batch } from './figma-mock';
-
-export const PACKAGES = ['core', 'composites', 'icons'] as const;
-export type Pkg = (typeof PACKAGES)[number];
+import type { Batch } from '../entries/code-connect';
+import { PACKAGES, readEntries } from '../entries/entries-file';
+import type { Pkg } from '../entries/entries-file';
+import type { Shipped } from '../ship/ship';
+import { templatesOf } from '../ship/ship';
+import { extractTables } from '../ship/tables';
+import type { Tables } from '../ship/tables';
+import { writeTemplates } from '../ship/templates';
+import type { TemplateFn } from '../ship/templates';
 
 // One Code Connect template (one row of it for a batch template), keyed in `entries` by Figma component (set) key.
 // template is relative to the package directory.
@@ -19,47 +23,11 @@ export interface Entry {
     batch: Batch | null;
 }
 
-export interface Tables {
-    // core part → icons it draws itself (Select.Trigger's chevron)
-    internalIcons: Record<string, string[]>;
-    // composites part → core components it draws itself (Dialog.Root's close IconButton)
-    internalParts: Record<string, string[]>;
-    // composites wrapper → the core element it renders, with fixed props (Dialog.Action is a primary lg Button). A
-    // list is a prop the wrapper picks from its context: AlertDialog.Action is danger or primary.
-    presets: Record<string, { tag: string; props: Record<string, string | string[]> }>;
-    // core part → recipe defaultVariants (Button is variant "fill")
-    defaults: Record<string, Record<string, string>>;
-}
-
-export interface TemplateResult {
-    id?: string;
-    example?: unknown;
-}
-
-export type TemplateFn = () => TemplateResult;
-
 export interface Library {
     entries: Record<string, Entry>;
     tables: Tables;
     runTemplate(entry: Entry): TemplateFn;
 }
-
-// What `figma-blueprint map` writes to packages/<pkg>/figma-entries.json, keyed by Figma component (set) key.
-// template is relative to the package directory.
-export interface StoredEntry {
-    name: string;
-    url: string;
-    template: string;
-    batch: Batch | null;
-}
-
-export const readEntries = (pkgDir: string): Record<string, StoredEntry> =>
-    JSON.parse(readFileSync(join(pkgDir, 'figma-entries.json'), 'utf8'));
-
-// What `figma-blueprint build` writes to <package>/figma-blueprint/tables.json: the package's entries and its share of
-// the tables, those built from its own source (core: internalIcons and defaults, composites: presets and internalParts).
-// The templates and their helpers sit next to it under templates/, at their path in the package.
-type Shipped = { entries: Record<string, Omit<Entry, 'pkg'>> } & Partial<Tables>;
 
 // A package's entries, with their templates written (wrapped) under dir/templates, `ext` in place of `.ts`.
 interface Templates {
@@ -67,26 +35,6 @@ interface Templates {
     entries: Shipped['entries'];
     dir: string;
     ext: string;
-}
-
-const templatesOf = (entries: Shipped['entries']) => Object.values(entries).map((e) => e.template);
-
-// `figma-blueprint build`, run in packages/core, composites or icons. Rewrites outDir from scratch, so a rerun on the
-// same source writes the same bytes.
-export function buildPackage(pkgDir: string, outDir: string) {
-    const { name } = JSON.parse(readFileSync(join(pkgDir, 'package.json'), 'utf8')) as {
-        name: string;
-    };
-    const pkg = PACKAGES.find((p) => name === `@vapor-ui/${p}`);
-    if (!pkg) throw new Error(`runs in @vapor-ui/{${PACKAGES.join(',')}}, not in ${name}`);
-    const entries: Shipped['entries'] = {};
-    for (const [key, e] of Object.entries(readEntries(pkgDir)))
-        entries[key] = { name: e.name, template: e.template, batch: e.batch };
-    rmSync(outDir, { recursive: true, force: true });
-    mkdirSync(outDir, { recursive: true });
-    writeTemplates(pkgDir, templatesOf(entries), join(outDir, 'templates'), true);
-    const shipped: Shipped = { entries, ...TABLES_OF[pkg](pkgDir) };
-    writeFileSync(join(outDir, 'tables.json'), `${JSON.stringify(shipped)}\n`);
 }
 
 async function load(packages: Templates[], tables: Tables): Promise<Library> {

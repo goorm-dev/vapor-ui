@@ -68,17 +68,21 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 | `figma-blueprint map`                               | 토큰으로 `entries` 표를 생성한다. 사람이 실행하고 결과를 커밋한다 |
 | JS API `blueprint`, `fromInstalled`, `fromRepo`     | 플러그인 스킬과 비공개 벤치가 import해서 쓴다                     |
 
-빌드는 `@vapor-ui/codemod`처럼 tsup으로 하고 `src`는 한 단계로 둡니다.
+빌드는 `@vapor-ui/codemod`처럼 tsup으로 합니다. `src`는 데이터가 흐르는 순서대로 `entries/ → ship/ → library/ → blueprint/` 네 단계로 나눕니다. 각 단계는 자기가 만드는 산출물의 형식을 가지고, 뒤 단계는 앞 단계를 import할 수 있지만 거꾸로는 하지 않습니다.
 
-| 파일            | 역할                                                                   |
-| --------------- | ---------------------------------------------------------------------- |
-| `figma-mock.ts` | 템플릿이 import하는 `figma` 모듈의 대역                                |
-| `blueprint.ts`  | REST 트리 → 정답 트리                                                  |
-| `library.ts`    | 템플릿과 표를 공급하는 포트와 어댑터 두 개                             |
-| `map.ts`        | `figma-blueprint map`                                                  |
-| `build.ts`      | `figma-blueprint build`, 소스에서 표를 추출하는 함수, 템플릿 변환 함수 |
-| `cli.ts`        | 명령 진입점. fetch와 파일 읽기는 이 파일에서만 한다                    |
-| `index.ts`      | JS API                                                                 |
+| 파일                      | 만드는 것                                                                     |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| `entries/code-connect.ts` | 패키지의 Code Connect 파일과 거기서 읽은 연결(URL, 템플릿, batch 행)          |
+| `entries/entries-file.ts` | `figma-entries.json`의 형식과 읽기, 빠진 항목 검사                            |
+| `entries/map.ts`          | `figma-blueprint map`. Figma에 컴포넌트 키를 물어 `figma-entries.json`을 쓴다 |
+| `ship/templates.ts`       | 함수로 감싼 템플릿과 헬퍼                                                     |
+| `ship/tables.ts`          | 소스에서 추출한 표                                                            |
+| `ship/ship.ts`            | `figma-blueprint build`. 패키지의 `figma-blueprint/` 폴더                     |
+| `library/library.ts`      | 템플릿과 표를 공급하는 포트와 어댑터 두 개                                    |
+| `blueprint/figma-mock.ts` | 템플릿이 import하는 `figma` 모듈의 대역                                       |
+| `blueprint/blueprint.ts`  | REST 트리 → 정답 트리                                                         |
+| `cli.ts`                  | 명령 진입점                                                                   |
+| `index.ts`                | JS API                                                                        |
 
 `figma-mock`과 `blueprint`는 데이터만 받습니다. REST 트리는 객체로 받습니다.
 

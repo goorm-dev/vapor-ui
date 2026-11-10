@@ -1,10 +1,11 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { Blueprint, BlueprintNode, FigmaTree } from './blueprint';
-import { blueprint } from './blueprint';
-import { buildPackage, fromInstalled, fromRepo } from './library';
-import { parseFigmaUrl, writeEntries } from './map';
+import type { Blueprint, BlueprintNode, FigmaTree } from './blueprint/blueprint';
+import { blueprint } from './blueprint/blueprint';
+import { parseFigmaUrl, writeEntries } from './entries/map';
+import { fromInstalled, fromRepo } from './library/library';
+import { buildPackage } from './ship/ship';
 
 const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <root>]
        figma-blueprint map [--repo <root>]

@@ -1,9 +1,9 @@
 // The `figma` module Code Connect templates import, backed by a Figma REST node tree instead of Figma's servers.
-// A template runs as a function (see build.ts), so `figma.selectedInstance` / `figma.batch` read the top of a stack.
-// Nested templates are not run inline: executeTemplate() returns an INSTANCE section, rendered as a marker that
+// A template runs as a function (see ship/templates.ts), so `figma.selectedInstance` / `figma.batch` read the top of a
+// stack. Nested templates are not run inline: executeTemplate() returns an INSTANCE section, rendered as a marker that
 // blueprint.ts uses to find which element the nested instance sits in.
-
-export const FIGMA_KEY = Symbol.for('@vapor-ui/figma-blueprint');
+import type { Batch } from '../entries/code-connect';
+import { FIGMA_KEY } from '../ship/templates';
 
 export interface FigmaNode {
     id: string;
@@ -16,8 +16,6 @@ export interface FigmaNode {
     componentPropertyReferences?: Record<string, string>;
     characters?: string;
 }
-
-export type Batch = Record<string, unknown>;
 
 export interface Context {
     handle: object;

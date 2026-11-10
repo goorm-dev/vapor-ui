@@ -1,44 +1,9 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 
-import { codeConnectFiles } from './build';
-import type { Batch } from './figma-mock';
-import { PACKAGES, readEntries } from './library';
-import type { Pkg, StoredEntry } from './library';
-
-type Connection = Omit<StoredEntry, 'name'>;
-
-// Every Code Connect entry a package ships: a `*.figma.ts` with a `// url=` header, or one row of a
-// `*.figma.batch.json`. template is relative to pkgDir.
-function connections(pkgDir: string): Connection[] {
-    return codeConnectFiles(pkgDir).flatMap((f): Connection[] => {
-        const text = readFileSync(join(pkgDir, f), 'utf8');
-        if (!f.endsWith('.json')) {
-            const url = text.match(/^\/\/ url=(\S+)/m)?.[1];
-            return url ? [{ url, template: f, batch: null }] : [];
-        }
-        const { templateFile, components } = JSON.parse(text) as {
-            templateFile: string;
-            components: (Batch & { url: string })[];
-        };
-        const template = join(dirname(f), templateFile);
-        return components.map((batch) => ({ url: batch.url, template, batch }));
-    });
-}
-
-// Code Connect URLs whose entry, as the package's source states it now (url, template, batch row), is not in its
-// figma-entries.json. Rerun `figma-blueprint map` to add them.
-export function missingEntries(pkgDir: string): string[] {
-    const stored = existsSync(join(pkgDir, 'figma-entries.json'))
-        ? Object.values(readEntries(pkgDir))
-        : [];
-    const have = new Set(
-        stored.map(({ url, template, batch }) => JSON.stringify({ url, template, batch })),
-    );
-    return connections(pkgDir)
-        .filter((c) => !have.has(JSON.stringify(c)))
-        .map((c) => c.url);
-}
+import { connections } from './code-connect';
+import { PACKAGES } from './entries-file';
+import type { Pkg, StoredEntry } from './entries-file';
 
 interface Published {
     key: string;

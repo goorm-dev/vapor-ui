@@ -1,66 +1,20 @@
-import { existsSync, globSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import ts from 'typescript';
 
-import { FIGMA_KEY } from './figma-mock';
-import type { Pkg, Tables } from './library';
+import { codeConnectFiles } from '../entries/code-connect';
+import type { Pkg } from '../entries/entries-file';
 
-const IMPORT = /^import\s[\s\S]*?from\s+['"]([^'"]+)['"];?[ \t]*$/gm;
-const FIGMA = `globalThis[Symbol.for(${JSON.stringify(FIGMA_KEY.description)})]`;
-
-// A template's module body becomes a function, so each instance re-runs it under its own figma.selectedInstance.
-// `figma` is looked up on globalThis, where figma-mock registers itself, so the output needs no path to this package.
-// resolveImport maps every other import specifier to where the transformed copy of that file lives.
-export function transformTemplate(
-    source: string,
-    wrap: boolean,
-    resolveImport: (spec: string) => string,
-): string {
-    const imports: string[] = [];
-    let body = source.replace(IMPORT, (stmt: string, spec: string) => {
-        if (spec === 'figma') {
-            if (/^import\s+type\s/.test(stmt)) return '';
-            const name = stmt.match(/^import\s+(\w+)\s+from\s/)?.[1];
-            if (!name) throw new Error(`unsupported import from 'figma': ${stmt}`);
-            imports.push(`const ${name} = ${FIGMA};`);
-            return '';
-        }
-        imports.push(stmt.replace(/(['"])[^'"]+\1/, `'${resolveImport(spec)}'`));
-        return '';
-    });
-    if (wrap)
-        body = `export default function __run() {\n${body.replace(/^export default /m, 'return ')}\n}`;
-    return `${imports.join('\n')}\n${body}`;
-}
-
-// Writes each template (wrapped) and every helper it imports by relative path to outDir, at its path in pkgDir.
-// `figma-blueprint build` ships them as JS (.mjs, since composites has no "type": "module"). fromRepo writes TypeScript
-// and leaves stripping the types to Node, as .mts for the same reason.
-export function writeTemplates(pkgDir: string, templates: string[], outDir: string, js: boolean) {
-    const ext = js ? '.mjs' : '.mts';
-    const written = new Set<string>();
-    const write = (file: string, wrap: boolean) => {
-        if (written.has(file)) return;
-        written.add(file);
-        let text = transformTemplate(readFileSync(join(pkgDir, file), 'utf8'), wrap, (spec) => {
-            const dep = spec.endsWith('.ts') ? spec : `${spec}.ts`;
-            write(join(dirname(file), dep), false);
-            return dep.replace(/\.ts$/, ext);
-        });
-        if (js)
-            text = ts.transpileModule(text, {
-                fileName: file,
-                compilerOptions: {
-                    module: ts.ModuleKind.ESNext,
-                    target: ts.ScriptTarget.ESNext,
-                    verbatimModuleSyntax: true,
-                },
-            }).outputText;
-        const out = join(outDir, file.replace(/\.ts$/, ext));
-        mkdirSync(dirname(out), { recursive: true });
-        writeFileSync(out, text);
-    };
-    for (const t of templates) write(t, true);
+export interface Tables {
+    // core part → icons it draws itself (Select.Trigger's chevron)
+    internalIcons: Record<string, string[]>;
+    // composites part → core components it draws itself (Dialog.Root's close IconButton)
+    internalParts: Record<string, string[]>;
+    // composites wrapper → the core element it renders, with fixed props (Dialog.Action is a primary lg Button). A
+    // list is a prop the wrapper picks from its context: AlertDialog.Action is danger or primary.
+    presets: Record<string, { tag: string; props: Record<string, string | string[]> }>;
+    // core part → recipe defaultVariants (Button is variant "fill")
+    defaults: Record<string, Record<string, string>>;
 }
 
 const tsx = (file: string, text: string) =>
@@ -231,16 +185,6 @@ function defaults(core: string) {
         if (base && out[base]) for (const t of roots(dir)) out[t] = { ...out[base], ...out[t] };
     }
     return out;
-}
-
-// A package's Code Connect files, relative to pkgDir, within its figma.config.json include and exclude.
-export function codeConnectFiles(pkgDir: string): string[] {
-    const { include, exclude } = (
-        JSON.parse(readFileSync(join(pkgDir, 'figma.config.json'), 'utf8')) as {
-            codeConnect: { include: string[]; exclude?: string[] };
-        }
-    ).codeConnect;
-    return globSync(include, { cwd: pkgDir, exclude }).sort();
 }
 
 // Components a Figma library instance can stand for: the ones core's Code Connect files connect.

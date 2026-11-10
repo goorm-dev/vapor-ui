@@ -6,9 +6,10 @@
 // it is in; layout frames do not count.
 import ts from 'typescript';
 
+import type { Pkg } from '../entries/entries-file';
+import type { Entry, Library } from '../library/library';
 import type { FigmaNode } from './figma-mock';
 import { makeHandles, render, texts, withContext } from './figma-mock';
-import type { Entry, Library, Pkg } from './library';
 
 export interface FigmaTree {
     document: FigmaNode;
