@@ -210,6 +210,38 @@ describe('blueprint lines', () => {
         ]);
     });
 
+    it('keeps an element whose children are Figma text that reads "..."', () => {
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    {
+                        id: '2:1',
+                        name: 'Button',
+                        type: 'INSTANCE',
+                        componentId: '1:1',
+                        children: [{ id: '2:2', name: 'Label', type: 'TEXT', characters: '...' }],
+                    },
+                ],
+            },
+            components: { '1:1': { key: 'K-BUTTON', name: '💙Button' } },
+        };
+        const catalog = fakeCatalog({
+            'K-BUTTON': {
+                name: '💙Button',
+                run: template(
+                    'button',
+                    (h) =>
+                        figma.code`<Button size="md">${h.findText('Label').textContent}</Button>`,
+                ),
+            },
+        });
+
+        expect(lines(blueprint(tree, catalog))).toEqual(['<Button size="md" />']);
+    });
+
     it('writes aria-label and Figma text values as "*" and drops numeric props', () => {
         const catalog = fakeCatalog({
             'K-PAGINATION': {

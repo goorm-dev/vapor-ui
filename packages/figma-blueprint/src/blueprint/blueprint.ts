@@ -161,9 +161,11 @@ function parse(code: string, texts: Set<unknown>) {
                 at.nested.push(attrsOf(n, texts)[0].slice(4, -1));
                 return;
             }
-            // <Button>...</Button> is a usage hint the template adds (Dialog's trigger), not something the design draws.
+            // <Button>...</Button> is a usage hint the template adds (Dialog's trigger), not something the design draws,
+            // unless the "..." is the design's own text.
             if (
                 ts.isJsxElement(n) &&
+                !texts.has('...') &&
                 n.children
                     .map((c) => c.getText())
                     .join('')
