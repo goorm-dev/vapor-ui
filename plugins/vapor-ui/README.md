@@ -19,7 +19,7 @@ Claude Code가 아닌 에이전트는 `npx skills add goorm-dev/vapor-ui`로 설
 | `implement-figma`  | 채점 없이 Figma 시안을 vapor-ui 코드로만 옮긴다                          |
 | `check-components` | 관문 1, 컴포넌트 재현율(`figma-blueprint` 정답 트리 + 검증 서브에이전트) |
 | `check-styling`    | 관문 2, absolute·하드코딩 값(`figma-eval styling`)                       |
-| `visual-score`     | 시각 점수(`figma-eval visual`)                                           |
+| `visual-score`     | 시각 점수(`figma-blueprint` 정답 트리 + `visual.mjs`)                    |
 | `figma-to-code`    | 구현 → 관문 2개 → 최대 2회 개선 → 시각 점수                              |
 
 ## 필요한 환경

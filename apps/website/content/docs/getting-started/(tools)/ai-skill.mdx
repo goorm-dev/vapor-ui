@@ -34,7 +34,7 @@ npx skills add goorm-dev/vapor-ui
 | 필요한 것                   | 쓰는 스킬                          | 준비 방법                                                                                                          |
 | --------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | Figma MCP 서버              | `implement-figma`                  | Figma 공식 MCP 서버를 에이전트에 연결합니다                                                                        |
-| `@vapor-ui/figma-blueprint` | `check-components`                 | 앱 패키지에 devDependency로 설치합니다                                                                             |
+| `@vapor-ui/figma-blueprint` | `check-components`, `visual-score` | 앱 패키지에 devDependency로 설치합니다                                                                             |
 | Code Connect 템플릿         | `check-components`                 | `@vapor-ui/core`, `@vapor-ui/icons`, `@vapor-ui/composites`를 `@vapor-ui/figma-blueprint`와 같은 릴리스로 맞춥니다 |
 | `FIGMA_ACCESS_TOKEN`        | `check-components`, `visual-score` | 시안 파일을 읽을 수 있는 Figma 개인 토큰을 환경 변수로 둡니다                                                      |
 | Playwright                  | `visual-score`                     | 앱 패키지에 설치하고 `npx playwright install chromium`을 실행합니다                                                |
@@ -92,13 +92,17 @@ npx skills add goorm-dev/vapor-ui
 
 시각 점수는 기록용이고 합격선이 없습니다.
 
-| 점수        | 뜻                                                       |
-| ----------- | -------------------------------------------------------- |
-| Block-Match | 시안과 화면의 글자 상자, 컴포넌트 상자가 짝지어지는 정도 |
-| Position    | 짝지어진 상자의 위치가 가까운 정도                       |
-| Layout IoU  | 컴포넌트 종류별 영역이 겹치는 정도                       |
+| 점수        | 뜻                                                    |
+| ----------- | ----------------------------------------------------- |
+| Block-Match | 시안과 화면의 글자 줄이 문자열로 짝지어진 면적의 비율 |
+| Position    | 짝지어진 글자 줄의 위치가 가까운 정도                 |
+| Layout IoU  | 컴포넌트 종류별 영역이 겹치는 정도                    |
+
+시안 쪽 정답은 관문 1과 같은 `figma-blueprint` 정답 트리에서 읽습니다. 글자 줄과 컴포넌트 박스가 그 안에 들어 있습니다.
 
 Block-Match와 Position은 글자를 문자열로 짝짓습니다. 실제 데이터를 그리는 화면은 문구가 시안과 달라 점수가 낮게 나옵니다.
+
+점수와 함께 화면에서 찾지 못한 시안 글자 줄과, 컴포넌트 종류별 IoU와 개수(`0.42 (3→2)`는 시안 3개, 화면 2개)를 보여 줍니다. 무엇이 빠지거나 옮겨졌는지 여기서 찾습니다.
 
 ## 예외의 의미
 
