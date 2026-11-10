@@ -50,11 +50,11 @@ const figmaType = (name) => {
 // unscorable instance whose type has a DOM counterpart. Excluded ones count because the code still draws them (a
 // Select's chevron is an <svg> in the DOM too).
 export function designFromBlueprint(bp) {
-    if (bp?.version !== 3)
+    if (bp?.version !== 4)
         throw new Error(
-            typeof bp?.version === 'number' && bp.version > 3
-                ? `blueprint version ${bp.version} is newer than this script reads (3). Update the vapor-ui plugin.`
-                : `blueprint version ${bp?.version ?? '(none)'} is not 3. Upgrade @vapor-ui/figma-blueprint.`,
+            typeof bp?.version === 'number' && bp.version > 4
+                ? `blueprint version ${bp.version} is newer than this script reads (4). Update the vapor-ui plugin.`
+                : `blueprint version ${bp?.version ?? '(none)'} is not 4. Upgrade @vapor-ui/figma-blueprint.`,
         );
     if (!bp.size)
         throw new Error('the blueprint has no size: the Figma frame carries no bounds to score.');

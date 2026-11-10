@@ -20,14 +20,12 @@ const node = (tag, b, children = []) => ({
     ...(b && { box: b }),
 });
 const blueprint = (extra = {}) => ({
-    version: 3,
+    version: 4,
     size: { w: 400, h: 300 },
     nodes: [],
     excluded: [],
     unscorable: [],
-    frames: [],
     texts: [],
-    styles: 'ok',
     ...extra,
 });
 
@@ -132,7 +130,7 @@ describe('designFromBlueprint', () => {
             () => designFromBlueprint({ nodes: [] }),
             /Upgrade @vapor-ui\/figma-blueprint/,
         );
-        assert.throws(() => designFromBlueprint(blueprint({ version: 4 })), /vapor-ui plugin/);
+        assert.throws(() => designFromBlueprint(blueprint({ version: 5 })), /vapor-ui plugin/);
         assert.throws(() => designFromBlueprint(blueprint({ size: undefined })), /no size/);
     });
 });
@@ -234,8 +232,8 @@ describe('cli', () => {
         assert.match(r.stderr, /usage: node visual\.mjs/);
     });
 
-    test('exits 1 on a blueprint older than version 3, before looking for playwright', () => {
-        const r = run(file('old.json', blueprint({ version: 2 })), 'http://localhost:3000');
+    test('exits 1 on a blueprint older than version 4, before looking for playwright', () => {
+        const r = run(file('old.json', blueprint({ version: 3 })), 'http://localhost:3000');
         assert.equal(r.status, 1);
         assert.match(r.stderr, /Upgrade @vapor-ui\/figma-blueprint/);
     });
