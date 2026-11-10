@@ -128,6 +128,8 @@ function tally(blueprint, report, root) {
             problems.push(`${v.id}: status "${v.status}" is not one of ${STATUSES.join(', ')}`);
         else if (v.status === 'position' && byId.get(v.id).anyParent)
             problems.push(`${v.id}: anyParent node cannot be judged on position`);
+        else if (v.status === 'unscorable' && !v.note?.trim())
+            problems.push(`${v.id}: unscorable needs a note saying what could not be read`);
         verdicts.set(v.id, v);
     }
     for (const n of nodes) if (!verdicts.has(n.id)) problems.push(`missing id ${n.id}`);
@@ -171,7 +173,7 @@ function tally(blueprint, report, root) {
     return {
         version: 1,
         result,
-        recall: scorable ? counts.ok / scorable : 1,
+        recall: scorable ? counts.ok / scorable : null,
         ok: counts.ok,
         scorable,
         total,
@@ -188,7 +190,7 @@ function text(t) {
         `  ${r.status.padEnd(10)} ${r.tag}  ${r.id}${r.at ? `  ${r.at}` : ''}${r.changed ? ' (changed)' : ''}`;
     const out = [
         `result: ${t.result}`,
-        `recall: ${t.ok}/${t.scorable} (${t.recall.toFixed(3)}), total ${t.total}`,
+        `recall: ${t.ok}/${t.scorable} (${t.recall === null ? 'n/a' : t.recall.toFixed(3)}), total ${t.total}`,
         Object.entries(t.counts)
             .map(([k, v]) => `${k} ${v}`)
             .join(', '),
