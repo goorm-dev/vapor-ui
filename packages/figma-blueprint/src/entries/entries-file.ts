@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { Batch } from './code-connect';
+import type { CodeConnectEntry } from './code-connect';
 import { connections } from './code-connect';
 
 export const PACKAGES = ['core', 'composites', 'icons'] as const;
@@ -9,11 +9,8 @@ export type Pkg = (typeof PACKAGES)[number];
 
 // What `figma-blueprint entries` writes to packages/<pkg>/figma-entries.json, keyed by Figma component (set) key.
 // template is relative to the package directory.
-export interface StoredEntry {
+export interface StoredEntry extends CodeConnectEntry {
     name: string;
-    url: string;
-    template: string;
-    batch: Batch | null;
 }
 
 export const readEntries = (pkgDir: string): Record<string, StoredEntry> =>
