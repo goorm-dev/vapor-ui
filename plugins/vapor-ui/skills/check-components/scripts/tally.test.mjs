@@ -225,6 +225,17 @@ test('recall is not applicable when no node is scorable', () => {
     assert.match(text.out, /^recall: 0\/0 \(n\/a\)/m);
 });
 
+test('a design with no library instance to grade is unscorable, not pass', () => {
+    const empty = { ...BLUEPRINT, nodes: [] };
+    const { code, out } = run(empty, []);
+    assert.equal(code, 2);
+    assert.equal(out.result, 'unscorable');
+    assert.equal(out.recall, null);
+    assert.match(out.reason, /no library instances in the design/);
+    const text = run(empty, [], { json: false });
+    assert.match(text.out, /^result: unscorable \(no library instances in the design\)$/m);
+});
+
 test('a verdict that is not { id, status, at?, note?, changed? } refuses with exit 3', () => {
     const bad = [
         null,
