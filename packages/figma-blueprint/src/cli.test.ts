@@ -121,6 +121,21 @@ describe('figma-blueprint <tree>', () => {
         });
     });
 
+    it('exits 1 naming the cause when the URL has no node-id or the node is gone', async () => {
+        const request = vi.fn(async () => Response.json({ nodes: { '1:2': null } }));
+        vi.stubGlobal('fetch', request);
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        expect(await main(['https://www.figma.com/design/FILE/Name', '--repo', repo])).toBe(1);
+        expect(error).toHaveBeenLastCalledWith(expect.stringMatching(/no node-id/));
+        expect(request).not.toHaveBeenCalled();
+
+        expect(
+            await main(['https://www.figma.com/design/FILE/Name?node-id=1-2', '--repo', repo]),
+        ).toBe(1);
+        expect(error).toHaveBeenLastCalledWith(expect.stringMatching(/node 1:2 .*FILE/));
+    });
+
     it('exits 1 with a message when the tree cannot be read', async () => {
         const error = vi.spyOn(console, 'error').mockImplementation(() => {});
 
