@@ -35,7 +35,7 @@ npx --no figma-blueprint "<Figma URL>" --json >"$OUT/blueprint.json" 2>"$OUT/blu
 | `npm error 404` … `figma-blueprint` | `@vapor-ui/figma-blueprint`를 devDependency로 설치하라고 안내한다 |
 | `403`                               | `FIGMA_ACCESS_TOKEN`이 시안 파일을 읽을 수 있는지 확인한다        |
 
-JSON이 나와도 stderr에 `@vapor-ui/<pkg> is not installed` 또는 `@vapor-ui/<pkg> ships no figma-blueprint tables`가 있으면 그 패키지 컴포넌트는 정답 트리에서 빠졌다. 시안에 그 패키지 컴포넌트가 있으면 거짓 `pass`가 나오거나 `unscorable` 항목이 생긴다.
+JSON이 나와도 stderr에 `@vapor-ui/<pkg> is not installed` 또는 `@vapor-ui/<pkg> ships no figma-blueprint tables`가 있으면 그 패키지는 채점되지 않았다. composites 컴포넌트는 정답 트리의 `unscorable`에 `not-installed`로 남는다. core·icons 컴포넌트는 정답 트리에서 빠지므로, 시안에 있으면 거짓 `pass`가 나올 수 있다.
 
 - `pass`여도 그냥 합격으로 보고하지 않는다. "`pass`, 단 `<pkg>` 미채점"으로 보고한다. 시안에 그 패키지 컴포넌트가 있는지는 이 결과로 알 수 없다.
 - 같은 폴더에서 아래 명령으로 설치 여부를 확인한다. 실패하면 설치를, 성공하면 `@vapor-ui/figma-blueprint`와 같은 릴리스로 올리기를 안내한다. 예전 버전은 정답 표가 없어서 설치돼 있어도 `is not installed`로 찍힐 수 있다. 모노레포에서는 패키지가 루트로 끌어올려져 앱 폴더의 `node_modules`에 없을 수 있으니 폴더를 직접 보지 않는다.
