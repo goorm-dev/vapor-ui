@@ -833,4 +833,37 @@ describe('blueprint boxes and texts', () => {
             { id: '3:7#1', text: 'Second', box: box(0, 220, 100, 20) },
         ]);
     });
+
+    it('keeps the height of a blank line, and leaves blank lines above and below the glyphs out of render bounds', () => {
+        const frame = { x: 0, y: 0, width: 400, height: 200 };
+        const text = (id: string, characters: string, y: number, height: number) => ({
+            id,
+            name: 'copy',
+            type: 'TEXT',
+            characters,
+            absoluteBoundingBox: { x: 0, y, width: 200, height },
+        });
+        const tree: FigmaTree = {
+            document: {
+                id: '20:1',
+                name: 'Frame',
+                type: 'FRAME',
+                absoluteBoundingBox: frame,
+                children: [
+                    text('20:2', '첫째 줄\n​\n셋째 줄', 0, 60),
+                    {
+                        ...text('20:3', '\nA\nB\n', 100, 80),
+                        absoluteRenderBounds: { x: 0, y: 120, width: 200, height: 40 },
+                    },
+                ],
+            },
+        };
+
+        expect(blueprint(tree, fakeCatalog({})).texts).toEqual([
+            { id: '20:2', text: '첫째 줄', box: box(0, 0, 200, 20) },
+            { id: '20:2#1', text: '셋째 줄', box: box(0, 40, 200, 20) },
+            { id: '20:3', text: 'A', box: box(0, 120, 200, 20) },
+            { id: '20:3#1', text: 'B', box: box(0, 140, 200, 20) },
+        ]);
+    });
 });
