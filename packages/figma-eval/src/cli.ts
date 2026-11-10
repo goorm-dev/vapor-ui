@@ -1,21 +1,18 @@
 #!/usr/bin/env node
-import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
-import { compare } from './compare';
 import type { FigmaTree } from './expected';
 import { expectedSet } from './expected';
 import { buildPackage, fromInstalled, fromRepo } from './library';
 import { parseFigmaUrl, writeEntries } from './map';
 
 const USAGE = `usage: figma-eval expected <tree.json | figma URL> [--repo <root>]
-       figma-eval compare <tree.json | figma URL> <paths...> [--json] [--repo <root>]
        figma-eval map [--repo <root>]
        figma-eval build
 
 Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
-build runs in packages/core, composites or icons and writes their figma-eval/ folder.
-compare exits 0 on pass, 1 on fail, 2 when the design cannot be graded.`;
+build runs in packages/core, composites or icons and writes their figma-eval/ folder.`;
 
 async function loadTree(arg: string): Promise<FigmaTree> {
     if (!arg.startsWith('http')) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
@@ -30,24 +27,15 @@ async function loadTree(arg: string): Promise<FigmaTree> {
     return ((await r.json()) as { nodes: Record<string, FigmaTree> }).nodes[nodeId];
 }
 
-const sourcePaths = (p: string) =>
-    statSync(p).isDirectory()
-        ? readdirSync(p, { recursive: true, encoding: 'utf8' })
-              .filter((f) => /\.[jt]sx?$/.test(f) && !f.includes('node_modules'))
-              .map((f) => join(p, f))
-        : [p];
-
 function parseArgs(argv: string[]) {
     const flags = new Map<string, string>();
     const positional: string[] = [];
-    let json = false;
     for (let i = 0; i < argv.length; i++) {
         const a = argv[i];
-        if (a === '--json') json = true;
-        else if (a === '--repo') flags.set(a, argv[++i]);
+        if (a === '--repo') flags.set(a, argv[++i]);
         else positional.push(a);
     }
-    return { positional, json, repo: flags.get('--repo') };
+    return { positional, repo: flags.get('--repo') };
 }
 
 async function map(root: string) {
@@ -70,8 +58,8 @@ async function map(root: string) {
     }
 }
 
-const { positional, json, repo } = parseArgs(process.argv.slice(2));
-const [command, src, ...paths] = positional;
+const { positional, repo } = parseArgs(process.argv.slice(2));
+const [command, src] = positional;
 if (command === 'map') {
     await map(repo ?? process.cwd());
     process.exit(0);
@@ -85,7 +73,7 @@ if (command === 'build') {
     }
     process.exit(0);
 }
-if ((command !== 'expected' && command !== 'compare') || !src) {
+if (command !== 'expected' || !src) {
     console.error(USAGE);
     process.exit(1);
 }
@@ -96,31 +84,5 @@ const expected = expectedSet(await loadTree(src), library);
 const unscorable = expected.unscorable.map(
     (u) => `${u.name} (${u.node}): ${u.cause}${u.message ? ` ${u.message}` : ''}`,
 );
-if (command === 'expected') {
-    console.log(expected.lines.map((l) => l.line).join('\n'));
-    if (unscorable.length) console.error(`unscorable:\n  ${unscorable.join('\n  ')}`);
-} else {
-    // rows[].at is relative to where figma-eval runs.
-    const files = paths.flatMap(sourcePaths).map((path) => ({
-        path: relative(process.cwd(), path),
-        text: readFileSync(path, 'utf8'),
-    }));
-    const result = compare(expected, files, library.tables);
-    if (json) console.log(JSON.stringify(result, null, 2));
-    else {
-        console.log(`재현율 ${result.ok}/${result.total} (${result.recall.toFixed(2)})`);
-        for (const r of result.rows)
-            if (r.status === 'mismatch')
-                console.log(
-                    `props 불일치  ${r.line}\n              ${r.diff.join(', ')}  (${r.closest})`,
-                );
-        for (const r of result.rows)
-            if (r.status === 'missing') console.log(`없음          ${r.line}`);
-        if (result.excluded.length)
-            console.log(
-                `제외: ${result.excluded.map((e) => `${e.name} (${e.reason})`).join(', ')}`,
-            );
-        if (unscorable.length) console.log(`채점 불가:\n  ${unscorable.join('\n  ')}`);
-    }
-    process.exitCode = { pass: 0, fail: 1, unscorable: 2 }[result.result];
-}
+console.log(expected.lines.map((l) => l.line).join('\n'));
+if (unscorable.length) console.error(`unscorable:\n  ${unscorable.join('\n  ')}`);

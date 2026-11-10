@@ -21,14 +21,14 @@ export interface ExpectedLine {
     pkg: Pkg;
 }
 
-// A library instance the design draws that is not a line, and why (compare --json `excluded`).
+// A library instance the design draws that is not a line, and why.
 export interface Excluded {
     node: string;
     name: string;
     reason: 'part-draws-icon' | 'part-draws-itself' | 'inside-self-closing-part';
 }
 
-// A library instance that could not be read, so the design cannot be graded (compare --json `unscorable`).
+// A library instance that could not be read, so the design cannot be graded.
 export interface Unscorable {
     node: string;
     name: string;
