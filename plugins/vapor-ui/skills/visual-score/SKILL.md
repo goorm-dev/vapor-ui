@@ -18,7 +18,7 @@ description: 실행 중인 앱 화면을 Figma 시안과 비교해 시각 점수
 
 ## 시안 입력
 
-- 같은 흐름에서 check-components가 `$OUT/blueprint.json`을 이미 썼으면 그 파일을 넘긴다. 두 관문이 같은 시안 스냅숏으로 채점된다.
+- 같은 흐름에서 check-components가 `$OUT/blueprint.json`을 이미 썼으면 그 파일을 넘긴다. 관문 1과 시각 점수가 같은 시안 스냅숏으로 채점된다.
 - 없으면 Figma URL을 넘긴다. 스크립트가 `npx --no figma-blueprint <URL> --json`을 대신 돌린다. 이때만 `@vapor-ui/figma-blueprint` 설치와 `FIGMA_ACCESS_TOKEN`이 필요하다. 토큰이 비어 있으면 안내하고 멈춘다.
 
 ## 실행
