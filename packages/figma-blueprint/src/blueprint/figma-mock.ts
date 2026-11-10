@@ -29,8 +29,6 @@ interface InstanceSection {
     guid: string;
 }
 
-const stack: Context[] = [];
-
 const code = (strings: readonly string[], ...values: unknown[]) => ({
     type: 'SECTIONS',
     language: 'typescript',
@@ -68,7 +66,8 @@ const top = () => {
     return ctx;
 };
 
-Reflect.set(globalThis, FIGMA_KEY, {
+const standIn = {
+    stack: [] as Context[],
     code,
     helpers: { react },
     get selectedInstance() {
@@ -80,7 +79,11 @@ Reflect.set(globalThis, FIGMA_KEY, {
     get batch() {
         return top().batch ?? {};
     },
-});
+};
+// One stand-in per process, with the run stack on it: a template binds the first one registered, so a second copy of
+// this module (another install, a test runner re-evaluating the package) must run templates through the same one.
+const { stack } = ((globalThis as unknown as Record<symbol, typeof standIn>)[FIGMA_KEY] ??=
+    standIn);
 
 export function withContext<T>(ctx: Context, fn: () => T): T {
     stack.push(ctx);

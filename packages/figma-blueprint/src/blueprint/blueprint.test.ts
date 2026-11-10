@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { Catalog } from '~/catalog/catalog';
 import type { Pkg } from '~/entries/entries-file';
@@ -751,5 +751,23 @@ describe('blueprint tree', () => {
             excluded: [],
             unscorable: [],
         });
+    });
+});
+
+describe('blueprint with two copies of the package loaded', () => {
+    it("runs templates bound to the first copy's figma under the second copy", async () => {
+        const catalog = fakeCatalog({
+            'K-PAGINATION': { name: '💙Pagination', run: fixed('p', '<Pagination.Root />') },
+        });
+        vi.resetModules();
+        const second = await import('~/index');
+
+        const result = second.blueprint(fixture('literal-props'), catalog);
+
+        expect(result.unscorable).toEqual([]);
+        expect(lines(result)).toEqual(['<Pagination.Root />']);
+        expect(lines(blueprint(fixture('literal-props'), catalog))).toEqual([
+            '<Pagination.Root />',
+        ]);
     });
 });
