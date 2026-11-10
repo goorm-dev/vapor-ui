@@ -284,6 +284,34 @@ describe('blueprint lines', () => {
         ]);
     });
 
+    it('does not take a component local to the design file for an older copy of a library one', () => {
+        const tree: FigmaTree = {
+            document: {
+                id: '0:1',
+                name: 'Screen',
+                type: 'FRAME',
+                children: [
+                    { id: '2:1', name: 'Dialog', type: 'INSTANCE', componentId: '1:1' },
+                    { id: '2:2', name: 'Dialog', type: 'INSTANCE', componentId: '1:2' },
+                ],
+            },
+            components: {
+                '1:1': { key: 'K-DIALOG-OLD', name: 'Dialog', remote: true },
+                '1:2': { key: 'K-PRODUCT-DIALOG', name: 'Dialog', remote: false },
+            },
+        };
+        const catalog = fakeCatalog({
+            'K-DIALOG': { name: 'Dialog', pkg: 'composites', run: fixed('d', '<Dialog.Root />') },
+        });
+
+        expect(blueprint(tree, catalog)).toEqual({
+            version: 2,
+            nodes: [{ id: '2:1', tag: 'Dialog.Root', props: [], pkg: 'composites', children: [] }],
+            excluded: [],
+            unscorable: [],
+        });
+    });
+
     it('records a template that throws as unscorable and keeps grading the rest', () => {
         const catalog = fakeCatalog({
             'K-CHIP': {

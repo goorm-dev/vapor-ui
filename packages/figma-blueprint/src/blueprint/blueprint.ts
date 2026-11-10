@@ -14,7 +14,11 @@ import { makeHandles, render, withContext } from './figma-mock';
 
 export interface FigmaTree {
     document: FigmaNode;
-    components?: Record<string, { key: string; name: string; componentSetId?: string }>;
+    // remote: false for a component defined in the design file itself, not a library.
+    components?: Record<
+        string,
+        { key: string; name: string; componentSetId?: string; remote?: boolean }
+    >;
     componentSets?: Record<string, { key: string; name: string }>;
 }
 
@@ -195,7 +199,8 @@ const byPartName = (table: Record<string, string[]>) =>
 export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     const { entries } = catalog;
     // A design can hold an older copy of a library component under a key that is no longer published, and Figma still
-    // connects it. ponytail: match those by name, only where the name is unique in the entries.
+    // connects it. ponytail: match those by name, only where the name is unique in the entries and the component comes
+    // from a library (a design file's own "Dialog" is not one).
     const byName = new Map<string, Entry | null>();
     for (const e of Object.values(entries)) byName.set(e.name, byName.has(e.name) ? null : e);
     const ownIcons = byPartName(catalog.tables.internalIcons);
@@ -213,7 +218,12 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     const entryOf = (n: FigmaNode) => {
         const c = n.componentId === undefined ? undefined : components[n.componentId];
         const set = c?.componentSetId === undefined ? undefined : componentSets[c.componentSetId];
-        return c && ((set && entries[set.key]) ?? entries[c.key] ?? byName.get(nameOf(n)));
+        return (
+            c &&
+            ((set && entries[set.key]) ??
+                entries[c.key] ??
+                (c.remote === false ? undefined : byName.get(nameOf(n))))
+        );
     };
     const connected = (n: FigmaNode) => {
         const e = n.type === 'INSTANCE' && entryOf(n);
