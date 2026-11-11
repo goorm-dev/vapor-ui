@@ -92,7 +92,7 @@
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.3",
         "@testing-library/user-event": "^14.6.8",
-        "@types/node": "^22.20.5",
+        "@types/node": "catalog:",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "@vanilla-extract/rollup-plugin": "^1.5.4",
@@ -101,7 +101,7 @@
         "@vitest/coverage-v8": "catalog:",
         "autoprefixer": "^10.5.4",
         "eslint": "catalog:",
-        "happy-dom": "^20.11.1",
+        "happy-dom": "catalog:",
         "postcss": "^8.5.32",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -110,7 +110,7 @@
         "rolldown-plugin-dts": "^0.27.14",
         "typescript": "catalog:",
         "vitest": "catalog:",
-        "vitest-axe": "^1.0.0-pre.5"
+        "vitest-axe": "catalog:"
     },
     "peerDependencies": {
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",

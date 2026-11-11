@@ -10,6 +10,8 @@ export default {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
         type: { control: 'inline-radio', options: ['default', 'warning'] },
         value: { control: { type: 'range', min: 0, max: 100 } },
+        min: { control: { type: 'range' } },
+        max: { control: { type: 'range' } },
     },
 } as Meta<typeof Meter.Root>;
 

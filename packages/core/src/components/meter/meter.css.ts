@@ -60,9 +60,9 @@ export const label = componentStyle([
 ]);
 
 export const value = componentStyle([
-    typography({ style: 'subtitle1' }),
+    typography({ style: 'body2' }),
     {
-        color: vars.color.foreground['secondary'],
+        color: vars.color.foreground['hint'],
     },
 ]);
 
