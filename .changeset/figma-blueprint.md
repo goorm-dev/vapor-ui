@@ -1,5 +1,5 @@
 ---
-'@vapor-ui/figma-blueprint': minor
+'@vapor-ui/figma-blueprint': patch
 '@vapor-ui/core': patch
 '@vapor-ui/composites': patch
 '@vapor-ui/icons': patch
