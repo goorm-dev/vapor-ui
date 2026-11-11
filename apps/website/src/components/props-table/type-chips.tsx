@@ -28,17 +28,15 @@ export const TypeChips = ({ types }: TypeChipsProps) => {
 
                     <Text
                         aria-hidden
-                        render={<code />}
+                        // render={<code />}
                         typography="code1"
                         $css={{
                             display: index === types.length - 1 ? 'none' : 'block',
                             userSelect: 'none',
-                            color: '$fg-hint',
+                            color: '#D73A49',
                         }}
                     >
-                        <span className="line">
-                            <span>|</span>
-                        </span>
+                        |
                     </Text>
                 </Fragment>
             ))}
