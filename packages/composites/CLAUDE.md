@@ -41,6 +41,38 @@
 ## 6. 테스트
 
 - 유닛 테스트는 `vitest`와 `@testing-library/react`로 작성한다. 각 컴포넌트 폴더 안에 함께 두고, core와 동일한 셋업을 사용한다.
+- `ref` / `id` / `className` DOM API를 노출하는 컴포넌트는 `~/utils/test-utils`의 `testConformance` 유틸로 검증한다. 유틸이 `describe('DOM API conformance')` 아래 `forwards ref` · `applies id` · `applies className` 세 가지 `it`을 등록한다. 소비자는 상위 `describe` + `afterEach(cleanup)`을 래핑하고, `render` 콜백과 `refInstanceof` 옵션만 넘긴다. 공개 서브컴포넌트가 추가될 때마다 인라인 테스트를 반복 작성하지 말고 유틸을 호출한다.
+
+    ```tsx
+    import { testConformance } from '~/utils/test-utils';
+
+    describe('Dialog.Root', () => {
+        afterEach(cleanup);
+
+        testConformance<HTMLDivElement>(
+            async ({ ref, id, className }) => {
+                const rendered = render(
+                    <Dialog.Root
+                        ref={ref}
+                        id={id}
+                        className={className}
+                        title="타이틀"
+                        trigger={<button type="button">열기</button>}
+                        ariaLabels={{ close: '닫기' }}
+                    >
+                        바디
+                    </Dialog.Root>,
+                );
+                await userEvent.click(rendered.getByText('열기'));
+
+                return { node: rendered.getByRole('dialog') };
+            },
+            { refInstanceof: HTMLDivElement },
+        );
+    });
+    ```
+
+    `refInstanceof`는 Popup 계열이면 `HTMLDivElement`, Button 기반 서브(`Dialog.Action`, `AlertDialog.Cancel` 등)이면 `HTMLButtonElement`로 지정한다. 유틸은 `ref.current === node` identity와 `instanceof` 두 가지를 모두 검증한다.
 - 시각적 회귀 테스트는 `apps/storybook`에서 단일 Playwright 스위트로 실행한다. `apps/storybook/__tests__/regressions.test.ts`가 `name.startsWith('Test Bed')`인 모든 스토리를 캡처하며, 기준 스크린샷은 `apps/storybook/__tests__/screenshots/`에 있다. composites 스토리는 `title`을 `Composites/<Name>` 형태로 두면 자동으로 포함된다.
 
 ## 7. Storybook
