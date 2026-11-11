@@ -1,71 +1,88 @@
-import { createRef } from 'react';
 import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { testConformance } from '~/utils/test-utils';
+
 import { Dialog } from '.';
 
-describe('Dialog composite — DOM API', () => {
+describe('Dialog.Root', () => {
     afterEach(cleanup);
 
-    const renderOpen = async (
-        extraProps: Partial<React.ComponentProps<typeof Dialog.Root>> = {},
-        action?: React.ReactNode,
-    ) => {
-        const rendered = render(
-            <Dialog.Root
-                title="타이틀"
-                description="본문"
-                trigger={<button type="button">열기</button>}
-                ariaLabels={{ close: '닫기' }}
-                action={action}
-                {...extraProps}
-            >
-                바디
-            </Dialog.Root>,
-        );
+    testConformance<HTMLDivElement>(
+        async ({ ref, id, className }) => {
+            const rendered = render(
+                <Dialog.Root
+                    ref={ref}
+                    id={id}
+                    ariaLabels={{ close: '닫기' }}
+                    title="타이틀"
+                    description="본문"
+                    trigger={<button type="button">열기</button>}
+                    className={className}
+                >
+                    바디
+                </Dialog.Root>,
+            );
+            await userEvent.click(rendered.getByText('열기'));
 
-        await userEvent.click(rendered.getByText('열기'));
+            return { node: rendered.getByRole('dialog') };
+        },
+        { refInstanceof: HTMLDivElement },
+    );
+});
 
-        return rendered;
-    };
+describe('Dialog.Action', () => {
+    afterEach(cleanup);
 
-    it('forwards ref to the Popup DOM node', async () => {
-        const ref = createRef<HTMLDivElement>();
-        const rendered = await renderOpen({ ref });
+    testConformance<HTMLButtonElement>(
+        async ({ ref, id, className }) => {
+            const rendered = render(
+                <Dialog.Root
+                    title="타이틀"
+                    description="본문"
+                    trigger={<button type="button">열기</button>}
+                    ariaLabels={{ close: '닫기' }}
+                    action={
+                        <Dialog.Action ref={ref} id={id} className={className}>
+                            확인
+                        </Dialog.Action>
+                    }
+                >
+                    바디
+                </Dialog.Root>,
+            );
+            await userEvent.click(rendered.getByText('열기'));
 
-        const dialog = rendered.getByRole('dialog');
-        expect(ref.current).toBe(dialog);
-    });
+            return { node: rendered.getByText('확인') };
+        },
+        { refInstanceof: HTMLButtonElement },
+    );
+});
 
-    it('applies id to the Popup DOM node', async () => {
-        const rendered = await renderOpen({ id: 'my-dialog' });
-        expect(rendered.getByRole('dialog').id).toBe('my-dialog');
-    });
+describe('Dialog.Assistive', () => {
+    afterEach(cleanup);
 
-    it('merges className onto the Popup DOM node without replacing core classes', async () => {
-        const rendered = await renderOpen({ className: 'custom-popup' });
-        const dialog = rendered.getByRole('dialog');
+    testConformance<HTMLButtonElement>(
+        async ({ ref, id, className }) => {
+            const rendered = render(
+                <Dialog.Root
+                    title="타이틀"
+                    description="본문"
+                    trigger={<button type="button">열기</button>}
+                    ariaLabels={{ close: '닫기' }}
+                    assistive={
+                        <Dialog.Assistive ref={ref} id={id} className={className}>
+                            취소
+                        </Dialog.Assistive>
+                    }
+                >
+                    바디
+                </Dialog.Root>,
+            );
+            await userEvent.click(rendered.getByText('열기'));
 
-        expect(dialog).toHaveClass('custom-popup');
-        expect(dialog.className.split(/\s+/).length).toBeGreaterThan(1);
-    });
-
-    it('forwards ref/id/className on Dialog.Action', async () => {
-        const ref = createRef<HTMLButtonElement>();
-        await renderOpen(
-            {},
-            <Dialog.Action
-                ref={ref as unknown as React.Ref<HTMLElement>}
-                id="action-btn"
-                className="action-custom"
-            >
-                확인
-            </Dialog.Action>,
-        );
-
-        const button = ref.current as unknown as HTMLButtonElement | null;
-        expect(button).not.toBeNull();
-        expect(button?.id).toBe('action-btn');
-        expect(button?.className).toContain('action-custom');
-    });
+            return { node: rendered.getByText('취소') };
+        },
+        { refInstanceof: HTMLButtonElement },
+    );
 });

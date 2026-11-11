@@ -1,77 +1,73 @@
-import { createRef } from 'react';
 import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { testConformance } from '~/utils/test-utils';
+
 import { Menu } from '.';
 
-describe('Menu composite — DOM API', () => {
+describe('Menu.Root', () => {
     afterEach(cleanup);
 
-    const renderOpen = async (
-        extraProps: Partial<React.ComponentProps<typeof Menu.Root>> = {},
-        children?: React.ReactNode,
-    ) => {
-        const rendered = render(
-            <Menu.Root trigger={<button type="button">열기</button>} {...extraProps}>
-                {children ?? <Menu.Item label="사본" onClick={() => {}} />}
-            </Menu.Root>,
-        );
+    testConformance<HTMLDivElement>(
+        async ({ ref, id, className }) => {
+            const rendered = render(
+                <Menu.Root
+                    ref={ref}
+                    id={id}
+                    trigger={<button type="button">열기</button>}
+                    className={className}
+                >
+                    <Menu.Item label="사본" onClick={() => {}} />
+                </Menu.Root>,
+            );
+            await userEvent.click(rendered.getByText('열기'));
 
-        await userEvent.click(rendered.getByText('열기'));
+            return { node: rendered.getByRole('menu') };
+        },
+        { refInstanceof: HTMLDivElement },
+    );
+});
 
-        return rendered;
-    };
+describe('Menu.Item', () => {
+    afterEach(cleanup);
 
-    it('forwards ref to the Popup DOM node', async () => {
-        const ref = createRef<HTMLDivElement>();
-        const rendered = await renderOpen({ ref });
+    testConformance<HTMLDivElement>(
+        async ({ ref, id, className }) => {
+            const rendered = render(
+                <Menu.Root trigger={<button type="button">열기</button>}>
+                    <Menu.Item
+                        ref={ref}
+                        id={id}
+                        className={className}
+                        label="사본"
+                        onClick={() => {}}
+                    />
+                </Menu.Root>,
+            );
+            await userEvent.click(rendered.getByText('열기'));
 
-        const menu = rendered.getByRole('menu');
-        expect(ref.current).toBe(menu);
-    });
+            return { node: rendered.getByRole('menuitem') };
+        },
+        { refInstanceof: HTMLDivElement },
+    );
+});
 
-    it('applies id to the Popup DOM node', async () => {
-        const rendered = await renderOpen({ id: 'my-menu' });
-        expect(rendered.getByRole('menu').id).toBe('my-menu');
-    });
+describe('Menu.Group', () => {
+    afterEach(cleanup);
 
-    it('merges className onto the Popup DOM node', async () => {
-        const rendered = await renderOpen({ className: 'custom-menu' });
-        const menu = rendered.getByRole('menu');
+    testConformance<HTMLDivElement>(
+        async ({ ref, id, className }) => {
+            const rendered = render(
+                <Menu.Root trigger={<button type="button">열기</button>}>
+                    <Menu.Group ref={ref} id={id} className={className} label="그룹">
+                        <Menu.Item label="A" onClick={() => {}} />
+                    </Menu.Group>
+                </Menu.Root>,
+            );
+            await userEvent.click(rendered.getByText('열기'));
 
-        expect(menu).toHaveClass('custom-menu');
-        expect(menu.className.split(/\s+/).length).toBeGreaterThan(1);
-    });
-
-    it('forwards ref/id/className on Menu.Item', async () => {
-        const ref = createRef<HTMLDivElement>();
-        const rendered = await renderOpen(
-            {},
-            <Menu.Item
-                ref={ref}
-                id="item-copy"
-                className="item-custom"
-                label="사본"
-                onClick={() => {}}
-            />,
-        );
-
-        const item = rendered.getByRole('menuitem');
-        expect(ref.current).toBe(item);
-        expect(item.id).toBe('item-copy');
-        expect(item.className).toContain('item-custom');
-    });
-
-    it('forwards id/className on Menu.Group', async () => {
-        const rendered = await renderOpen(
-            {},
-            <Menu.Group label="그룹" id="g1" className="group-custom">
-                <Menu.Item label="A" onClick={() => {}} />
-            </Menu.Group>,
-        );
-
-        const group = rendered.getByRole('group');
-        expect(group.id).toBe('g1');
-        expect(group.className).toContain('group-custom');
-    });
+            return { node: rendered.getByRole('group') };
+        },
+        { refInstanceof: HTMLDivElement },
+    );
 });
