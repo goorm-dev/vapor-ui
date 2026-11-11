@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-describe('@vapor-ui/core', () => {
+describe('@vapor-ui/composites', () => {
     it('should export all components from the components directory', () => {
         const componentsDir = path.join(__dirname, 'components');
 
