@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -266,8 +266,11 @@ describe('visualScore', { skip: !chromium && 'playwright is not installed in the
 describe('cli', () => {
     // A folder with no node_modules above it that holds playwright.
     const cwd = mkdtempSync(join(tmpdir(), 'visual-'));
+    // An npm global prefix of our own, so a playwright installed globally on this machine is not found.
+    const prefix = mkdtempSync(join(tmpdir(), 'visual-prefix-'));
+    const env = { ...process.env, npm_config_prefix: prefix };
     const run = (...args) =>
-        spawnSync(process.execPath, [VISUAL, ...args], { cwd, encoding: 'utf8' });
+        spawnSync(process.execPath, [VISUAL, ...args], { cwd, env, encoding: 'utf8' });
     const file = (name, json) => {
         const p = join(cwd, name);
         writeFileSync(p, JSON.stringify(json));
@@ -290,5 +293,32 @@ describe('cli', () => {
         const r = run(file('ok.json', blueprint()), 'http://localhost:3000');
         assert.equal(r.status, 1);
         assert.match(r.stderr, /playwright is not installed.*npx playwright install chromium/);
+    });
+
+    test('uses a playwright installed in the npm global root', () => {
+        const globalPrefix = mkdtempSync(join(tmpdir(), 'visual-global-'));
+        const globalEnv = { ...process.env, npm_config_prefix: globalPrefix };
+        const root = spawnSync('npm', ['root', '-g'], {
+            env: globalEnv,
+            encoding: 'utf8',
+        }).stdout.trim();
+        const pkg = join(root, 'playwright');
+        mkdirSync(pkg, { recursive: true });
+        writeFileSync(
+            join(pkg, 'package.json'),
+            JSON.stringify({ name: 'playwright', main: 'index.js' }),
+        );
+        writeFileSync(
+            join(pkg, 'index.js'),
+            "exports.chromium = { launch: async () => { throw new Error('stub chromium'); } };",
+        );
+        const r = spawnSync(
+            process.execPath,
+            [VISUAL, file('ok.json', blueprint()), 'http://localhost:3000'],
+            { cwd, env: globalEnv, encoding: 'utf8' },
+        );
+        assert.equal(r.status, 1);
+        assert.match(r.stderr, /chromium did not launch: stub chromium/);
+        assert.doesNotMatch(r.stderr, /not installed/);
     });
 });

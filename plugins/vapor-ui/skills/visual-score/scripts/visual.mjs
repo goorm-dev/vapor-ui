@@ -13,7 +13,8 @@ import { pathToFileURL } from 'node:url';
 const USAGE =
     'usage: node visual.mjs <blueprint.json | figma URL> <app URL> [--selector <css>] [--storage-state <file>] [--screenshot <file>] [--json]';
 
-const INSTALL = 'Install it with `npm i -D playwright` and `npx playwright install chromium`.';
+const INSTALL =
+    'Install it in the app with `npm i -D playwright` and `npx playwright install chromium`, or globally with `npm i -g playwright` and `playwright install chromium`.';
 
 // Library component types with a DOM counterpart, by the vapor class prefix their element carries (button-abc12).
 // TableCell is a <td>/<th> with a table-* class, Icon an <svg>.
@@ -417,14 +418,23 @@ function loadBlueprint(src) {
     }
 }
 
-// From the user's project, not the plugin folder, which has no node_modules.
-async function loadChromium() {
-    let path;
+function resolvePlaywright(dir) {
     try {
-        path = createRequire(join(process.cwd(), 'package.json')).resolve('playwright');
+        return createRequire(join(dir, 'package.json')).resolve('playwright');
     } catch {
-        throw new SetupError(`playwright is not installed. ${INSTALL}`);
+        return undefined;
     }
+}
+
+// From the user's project, not the plugin folder, which has no node_modules, then from npm's global root.
+// pnpm, yarn and volta keep their globals elsewhere and are not looked up.
+async function loadChromium() {
+    const path =
+        resolvePlaywright(process.cwd()) ??
+        resolvePlaywright(
+            spawnSync('npm', ['root', '-g'], { encoding: 'utf8' }).stdout?.trim() ?? '',
+        );
+    if (!path) throw new SetupError(`playwright is not installed. ${INSTALL}`);
     const pw = await import(pathToFileURL(path).href);
     return pw.chromium ?? pw.default.chromium;
 }
