@@ -32,7 +32,14 @@ export const Default: Story = {
         value: 150,
         max: 300,
         label: 'report.pdf 업로드',
-        valueText: (_, value) => (value === null ? null : `${value}MB / 300MB`),
+        valueText: (_, value) =>
+            value === null ? null : (
+                <>
+                    <span>{value}MB</span>
+                    <span>/</span>
+                    <span>300MB</span>
+                </>
+            ),
         description: '업로드 중...',
     },
 };
@@ -52,7 +59,14 @@ export const FormattedValueText: Story = {
 
 const valueTexts = {
     percent: (formattedValue, value) => (value === null ? null : formattedValue),
-    bytes: (_, value) => (value === null ? null : `${value}MB / 300MB`),
+    bytes: (_, value) =>
+        value === null ? null : (
+            <>
+                <span>{value}MB</span>
+                <span>/</span>
+                <span>300MB</span>
+            </>
+        ),
 } satisfies Record<string, ProgressBar.Props['valueText']>;
 
 const TestBedRender = () => {

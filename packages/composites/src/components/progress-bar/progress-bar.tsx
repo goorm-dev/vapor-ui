@@ -47,7 +47,7 @@ export const ProgressBar = ({
             type={type}
         >
             <slots.label render={label} />
-            <slots.valueText render={valueText} />
+            <slots.valueText render={valueText} $css={{ display: 'flex', gap: '$025' }} />
             <ProgressBarPrimitives.Track />
             <slots.description
                 render={
@@ -128,9 +128,10 @@ export interface ProgressBarProps {
     /**
      * 진행 값을 화면에 표시할 텍스트로 바꾸는 함수. `(formattedValue, value)`를 받으며 `formattedValue`는 `"42%"` 형태의 백분율 문자열입니다.
      * `"150MB / 300MB"`처럼 단위가 있는 값을 보여줄 때 사용하고 indeterminate 상태(`value`가 `null`)에서는 `null`을 반환해 값을 숨기세요.
+     * 현재 값, `/`, 최댓값을 각각 `<span>`으로 나눠 반환하면 디자인대로 2px 간격이 생깁니다. 문자열 하나로 반환하면 이 간격은 적용되지 않습니다.
      * 스크린 리더는 이 텍스트가 아니라 `value`를 읽으며, 읽을 문구를 바꾸려면 `getAriaValueText`를 사용하세요.
      * @example
-     * <ProgressBar value={150} max={300} label="report.pdf 다운로드" valueText={(_, value) => (value === null ? null : `${value}MB / 300MB`)} />
+     * <ProgressBar value={150} max={300} label="report.pdf 다운로드" valueText={(_, value) => (value === null ? null : <><span>{value}MB</span><span>/</span><span>300MB</span></>)} />
      * // 실패하면 현재 값 대신 전체 크기만 보여줍니다.
      * <ProgressBar type="error" value={150} max={300} label="report.pdf 다운로드" valueText={() => '300MB'} description="다운로드에 실패했습니다. 네트워크 연결을 확인한 뒤 다시 시도하세요." />
      */

@@ -48,7 +48,7 @@ function renderValueProps(display: ValueDisplay) {
             return {
                 value: figma.code`value={${display.value}}`,
                 max: figma.code`max={${display.max}}`,
-                valueText: figma.code`valueText={(_, value) => \`\${value} / ${display.max}\`}`,
+                valueText: figma.code`valueText={(_, value) => <><span>{value}</span><span>/</span><span>${display.max}</span></>}`,
             };
     }
 }
