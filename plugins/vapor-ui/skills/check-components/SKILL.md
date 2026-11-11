@@ -11,7 +11,7 @@ description: 관문 1. Figma 시안이 요구하는 vapor-ui 컴포넌트와 pro
 - **진입점**: 시안을 구현한 화면 컴포넌트 파일. 이번 세션에서 구현했다면 그 파일이고, 아니면 사용자에게 묻는다. 진입점이 쓰는 다른 파일은 검증자가 따라가므로 모으지 않는다.
 - 이번 세션이 쓰거나 고친 파일 목록. 없으면 빈 목록이다.
 - `@vapor-ui/core`가 설치된 패키지 폴더에서 실행한다. 모노레포면 앱 폴더다. 이 폴더의 절대 경로가 아래의 `<root>`다.
-- `FIGMA_ACCESS_TOKEN`이 비어 있으면 Figma 개인 토큰을 넣으라고 안내하고 멈춘다.
+- `FIGMA_ACCESS_TOKEN`이 비어 있으면 `/vapor-ui:setup`을 실행하라고 안내하고 멈춘다.
 
 ## 1. 정답 트리 뽑기
 
@@ -30,19 +30,15 @@ npx --no figma-blueprint "<Figma URL>" --json >"$OUT/blueprint.json" 2>"$OUT/blu
 
 **stdout이 JSON이 아니면 실행 오류다.** 검증을 진행하지 않는다. stderr를 그대로 전하고 멈춘다.
 
-| stderr                              | 조치                                                              |
-| ----------------------------------- | ----------------------------------------------------------------- |
-| `npm error 404` … `figma-blueprint` | `@vapor-ui/figma-blueprint`를 devDependency로 설치하라고 안내한다 |
-| `403`                               | `FIGMA_ACCESS_TOKEN`이 시안 파일을 읽을 수 있는지 확인한다        |
+| stderr                              | 조치                                                       |
+| ----------------------------------- | ---------------------------------------------------------- |
+| `npm error 404` … `figma-blueprint` | `/vapor-ui:setup`을 실행하라고 안내한다                    |
+| `403`                               | `FIGMA_ACCESS_TOKEN`이 시안 파일을 읽을 수 있는지 확인한다 |
 
 JSON이 나와도 stderr에 `@vapor-ui/<pkg> is not installed` 또는 `@vapor-ui/<pkg> ships no figma-blueprint tables`가 있으면 그 패키지는 채점되지 않았다. composites 컴포넌트는 정답 트리의 `unscorable`에 `not-installed`로 남는다. core·icons 컴포넌트는 정답 트리에서 빠지므로, 시안에 있으면 거짓 `pass`가 나올 수 있다.
 
 - `pass`여도 그냥 합격으로 보고하지 않는다. "`pass`, 단 `<pkg>` 미채점"으로 보고한다. 시안에 그 패키지 컴포넌트가 있는지는 이 결과로 알 수 없다.
-- 같은 폴더에서 아래 명령으로 설치 여부를 확인한다. 실패하면 설치를, 성공하면 `@vapor-ui/figma-blueprint`와 같은 릴리스로 올리기를 안내한다. 예전 버전은 정답 표가 없어서 설치돼 있어도 `is not installed`로 찍힐 수 있다. 모노레포에서는 패키지가 루트로 끌어올려져 앱 폴더의 `node_modules`에 없을 수 있으니 폴더를 직접 보지 않는다.
-
-    ```bash
-    node --input-type=module -e "import.meta.resolve('@vapor-ui/<pkg>')"
-    ```
+- `/vapor-ui:setup`을 실행하라고 안내한다. setup이 그 패키지를 설치하거나 정답 표가 들어 있는 버전으로 올린다.
 
 - 이 줄이 특정 `unscorable` 항목의 원인이라고 단정하지 않는다. JSON 항목에는 패키지가 없다. 설치하거나 올린 뒤 다시 돌려서 남는 항목이 vapor-ui 쪽 원인이다.
 

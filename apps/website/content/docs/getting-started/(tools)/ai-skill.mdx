@@ -31,13 +31,15 @@ npx skills add goorm-dev/vapor-ui
 
 ## 필요한 환경
 
-| 필요한 것                   | 쓰는 스킬                          | 준비 방법                                                                                                          |
-| --------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Figma MCP 서버              | `implement-figma`                  | Figma 공식 MCP 서버를 에이전트에 연결합니다                                                                        |
-| `@vapor-ui/figma-blueprint` | `check-components`, `visual-score` | 앱 패키지에 devDependency로 설치합니다                                                                             |
-| Code Connect 템플릿         | `check-components`                 | `@vapor-ui/core`, `@vapor-ui/icons`, `@vapor-ui/composites`를 `@vapor-ui/figma-blueprint`와 같은 릴리스로 맞춥니다 |
-| `FIGMA_ACCESS_TOKEN`        | `check-components`, `visual-score` | 시안 파일을 읽을 수 있는 Figma 개인 토큰을 환경 변수로 둡니다                                                      |
-| Playwright                  | `visual-score`                     | 앱 패키지에 설치하고 `npx playwright install chromium`을 실행합니다                                                |
+처음 쓰기 전에 앱 폴더에서 `/vapor-ui:setup`을 한 번 실행합니다. 아래 항목을 확인하고, 빠진 패키지는 고른 것만 설치합니다. 토큰과 Figma MCP는 준비 방법을 안내합니다.
+
+| 필요한 것                   | 쓰는 스킬                          | 준비 방법                                                                                                           |
+| --------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Figma MCP 서버              | `implement-figma`                  | Figma 공식 MCP 서버를 에이전트에 연결합니다                                                                         |
+| `@vapor-ui/figma-blueprint` | `check-components`, `visual-score` | 앱 패키지에 devDependency로 설치합니다                                                                              |
+| Code Connect 템플릿         | `check-components`                 | `@vapor-ui/core`, `@vapor-ui/icons`, `@vapor-ui/composites`를 `figma-blueprint/` 폴더가 들어 있는 버전으로 올립니다 |
+| `FIGMA_ACCESS_TOKEN`        | `check-components`, `visual-score` | 시안 파일을 읽을 수 있는 Figma 개인 토큰을 환경 변수로 둡니다                                                       |
+| Playwright                  | `visual-score`                     | 앱 패키지나 npm 전역에 설치하고 chromium을 받습니다                                                                 |
 
 컴포넌트 패키지는 Code Connect 템플릿을 `figma-blueprint/` 폴더에 담아 배포합니다. figma-blueprint는 설치된 버전의 템플릿으로 정답을 만들기 때문에, 이 폴더가 없는 예전 버전의 컴포넌트는 채점하지 않습니다.
 
@@ -46,6 +48,7 @@ npx skills add goorm-dev/vapor-ui
 | 스킬               | 하는 일                                                                                         |
 | ------------------ | ----------------------------------------------------------------------------------------------- |
 | `components`       | 설치된 버전 기준으로 컴포넌트 목록, props, 예제 코드, 아이콘을 조회합니다                       |
+| `setup`            | 아래 스킬이 쓰는 환경을 확인하고 빠진 것을 설치합니다. 사용자가 직접 실행합니다                 |
 | `implement-figma`  | 채점 없이 Figma 시안 하나를 vapor-ui 코드로만 옮깁니다                                          |
 | `check-components` | 관문 1. 시안의 컴포넌트와 props가 코드에 모두 들어갔는지 검증 에이전트가 코드를 읽고 판정합니다 |
 | `visual-score`     | 실행 중인 앱 화면을 시안과 비교해 시각 점수를 잽니다                                            |
@@ -81,7 +84,7 @@ npx skills add goorm-dev/vapor-ui
 | `fail`       | `ok`가 아닌 노드가 있습니다                                                         |
 | `unscorable` | 판정한 노드는 모두 `ok`지만, 판정하지 못한 노드나 템플릿이 없는 컴포넌트가 있습니다 |
 
-`unscorable`은 설치되지 않았거나 정답 표가 없는 예전 버전의 패키지가 있을 때 생길 수 있습니다. 이때는 패키지를 `@vapor-ui/figma-blueprint`와 같은 릴리스로 설치하거나 올린 뒤 다시 채점합니다. 그 뒤에도 남는 항목은 vapor-ui 쪽에 Code Connect가 빠진 경우라 사용자 코드로는 고칠 수 없습니다.
+`unscorable`은 설치되지 않았거나 정답 표가 없는 예전 버전의 패키지가 있을 때 생길 수 있습니다. 이때는 `/vapor-ui:setup`으로 패키지를 설치하거나 `figma-blueprint/` 폴더가 들어 있는 버전으로 올린 뒤 다시 채점합니다. 그 뒤에도 남는 항목은 vapor-ui 쪽에 Code Connect가 빠진 경우라 사용자 코드로는 고칠 수 없습니다.
 
 ### 시각 점수
 

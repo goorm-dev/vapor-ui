@@ -19,7 +19,7 @@ description: 실행 중인 앱 화면을 Figma 시안과 비교해 시각 점수
 ## 시안 입력
 
 - 같은 흐름에서 check-components가 `$OUT/blueprint.json`을 이미 썼으면 그 파일을 넘긴다. 관문 1과 시각 점수가 같은 시안 스냅숏으로 채점된다.
-- 없으면 Figma URL을 넘긴다. 스크립트가 `npx --no figma-blueprint <URL> --json`을 대신 돌린다. 이때만 `@vapor-ui/figma-blueprint` 설치와 `FIGMA_ACCESS_TOKEN`이 필요하다. 토큰이 비어 있으면 안내하고 멈춘다.
+- 없으면 Figma URL을 넘긴다. 스크립트가 `npx --no figma-blueprint <URL> --json`을 대신 돌린다. 이때만 `@vapor-ui/figma-blueprint` 설치와 `FIGMA_ACCESS_TOKEN`이 필요하다. 토큰이 비어 있으면 `/vapor-ui:setup`을 실행하라고 안내하고 멈춘다.
 
 ## 실행
 
@@ -39,11 +39,11 @@ node "<이 스킬 폴더>/scripts/visual.mjs" "<blueprint.json 또는 Figma URL>
 
 | stderr                                     | 조치                                                                                                  |
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| `playwright is not installed`              | 안내 문구를 그대로 전한다                                                                             |
-| `chromium did not launch`                  | 안내 문구를 그대로 전한다                                                                             |
+| `playwright is not installed`              | `/vapor-ui:setup`을 실행하라고 안내한다                                                               |
+| `chromium did not launch`                  | `/vapor-ui:setup`을 실행하라고 안내한다                                                               |
 | `Upgrade @vapor-ui/figma-blueprint`        | 정답 트리가 시각 점수에 쓰는 박스를 담기 전 버전이다. `@vapor-ui/figma-blueprint`를 올리라고 안내한다 |
 | `Update the vapor-ui plugin`               | 정답 트리가 이 스크립트보다 새 버전이다. 플러그인을 업데이트하라고 안내한다                           |
-| `figma-blueprint failed` … `npm error 404` | `@vapor-ui/figma-blueprint`를 devDependency로 설치하라고 안내한다                                     |
+| `figma-blueprint failed` … `npm error 404` | `/vapor-ui:setup`을 실행하라고 안내한다                                                               |
 | `figma-blueprint failed` … `403`           | `FIGMA_ACCESS_TOKEN`이 시안 파일을 읽을 수 있는지 확인한다                                            |
 | 그 밖                                      | stderr 파일 내용을 그대로 전한다                                                                      |
 
