@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/figma-blueprint",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "Builds the vapor-ui element tree a Figma design requires, through Code Connect templates",
     "keywords": [
         "vapor-ui",
