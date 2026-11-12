@@ -1,0 +1,41 @@
+{
+    "name": "MenuSubmenuItem",
+    "description": "하위 메뉴를 여는 Item 요소",
+    "props": [
+        {
+            "name": "label",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": true,
+            "description": "항목의 텍스트 라벨."
+        },
+        {
+            "name": "description",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "항목의 동작을 설명하는 텍스트."
+        },
+        {
+            "name": "isDisabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "아이템을 비활성화한다. 비활성화된 트리거는 메뉴를 열 수 없다."
+        },
+        {
+            "name": "leading",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "항목 좌측에 표시되는 요소. 레이블을 보충 설명하기 위한 요소를 배치한다."
+        },
+        {
+            "name": "trailing",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "항목 우측에 표시되는 요소. 단축키나 보조 아이콘 등을 배치한다."
+        }
+    ]
+}

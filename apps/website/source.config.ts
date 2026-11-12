@@ -1,14 +1,25 @@
 import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins';
-import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
+import { defineConfig, defineDocs, frontmatterSchema } from 'fumadocs-mdx/config';
 import lastModified from 'fumadocs-mdx/plugins/last-modified';
 import { z } from 'zod';
 
 import { remarkDemoSource } from './src/lib/remark-demo-source';
 
+const docsFrontmatterSchema = frontmatterSchema.extend({
+    /**
+     * `true` on a sibling `.mdx` served as an in-page tab (e.g. Properties).
+     * The LLM/source layers fold these back into the parent URL and hide them
+     * from sidebars so the parent is the one canonical entry.
+     */
+    subpage: z.boolean().optional(),
+    site_name: z.string().optional(),
+});
+
 export const docs = defineDocs({
     dir: 'content/docs',
     docs: {
         async: true,
+        schema: docsFrontmatterSchema,
     },
     // Only meta.json configures the sidebar; api/{en,ko}/*.json next to a page is props data.
     meta: {

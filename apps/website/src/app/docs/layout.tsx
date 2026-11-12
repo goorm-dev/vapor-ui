@@ -2,6 +2,10 @@ import type { ReactNode } from 'react';
 
 import { baseOptions } from '~/app/layout.config';
 import { CustomDocsLayout } from '~/components/fumadocs/docs-layout';
+import {
+    SubpageAwareSidebarFolder,
+    SubpageAwareSidebarItem,
+} from '~/components/fumadocs/subpage-sidebar';
 import { ThemeToggle } from '~/components/theme-toggle';
 import { VersionSelector } from '~/components/version-selector';
 import { navLinks } from '~/constants/site-links';
@@ -22,6 +26,10 @@ export default function Layout({ children }: { children: ReactNode }) {
             containerProps={{ className: 'isolate' }}
             tree={source.pageTree}
             sidebar={{
+                components: {
+                    Folder: SubpageAwareSidebarFolder,
+                    Item: SubpageAwareSidebarItem,
+                },
                 tabs: {
                     transform: (tab) => {
                         return {

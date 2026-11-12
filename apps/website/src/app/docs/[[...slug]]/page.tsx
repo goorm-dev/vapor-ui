@@ -5,6 +5,7 @@ import { CustomDocsPage, DocsBody } from '~/components/fumadocs/docs-page';
 import { SITE_URL } from '~/constants/domain';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
+import { isSubpage } from '~/utils/get-llm-text';
 import { generatePageMetadata } from '~/utils/metadata';
 
 export default async function Page({ params }: { params: Promise<{ slug?: string[] }> }) {
@@ -27,7 +28,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
             <DocsPageHeader
                 title={page.data.title}
                 description={page.data.description}
-                markdownUrl={`${SITE_URL}${page.url}.mdx`}
+                markdownUrl={`${SITE_URL}${isSubpage(page) ? page.url.replace(/\/[^/]+$/, '') : page.url}.mdx`}
             />
             <DocsBody>
                 <MDX components={getMDXComponents({})} />

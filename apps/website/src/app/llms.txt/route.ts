@@ -1,6 +1,7 @@
 import type { Page } from 'fumadocs-core/source';
 
 import { source } from '~/lib/source';
+import { isSubpage } from '~/utils/get-llm-text';
 
 export const revalidate = false;
 
@@ -30,7 +31,7 @@ export async function GET() {
     const result: string[] = [];
 
     // Process docs
-    const docsPages = source.getPages();
+    const docsPages = source.getPages().filter((page) => !isSubpage(page));
     result.push(...processPages(docsPages, 'Docs'));
 
     return new Response(result.join('\n\n'));

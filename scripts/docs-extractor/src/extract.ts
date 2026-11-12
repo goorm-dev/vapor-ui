@@ -1,5 +1,5 @@
 import type { ComponentDoc } from '#model';
-import { policy } from '#policy';
+import { type PolicyOptions, policy } from '#policy';
 import { createComponentReader } from '#read/component-reader';
 import { scanComponentFiles } from '#read/scan';
 import { type Reporter, silentReporter } from '#reporter';
@@ -14,6 +14,8 @@ export interface ExtractOptions {
     component?: string;
     /** Defaults to a silent reporter. */
     reporter?: Reporter;
+    /** Keep only props declared under `inputPath` */
+    onlyLocalJsDoc?: boolean;
 }
 
 export interface ExtractResult {
@@ -65,8 +67,10 @@ export function extract(options: ExtractOptions): ExtractResult {
         }
     });
 
-    // policy() maps one component to one doc, in order, so sourceFiles lines up with docs.
-    const docs = policy(parsed);
+    const policyOptions: PolicyOptions = options.onlyLocalJsDoc
+        ? { onlyUnderPath: path.resolve(options.inputPath) }
+        : {};
+    const docs = policy(parsed, policyOptions);
 
     const missingDocs = findMissingDocs(docs);
     if (missingDocs.length > 0) {
