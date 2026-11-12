@@ -1,0 +1,11 @@
+{
+    "K-HEART": {
+        "name": "❤️HeartIcon",
+        "url": "https://www.figma.com/design/I/Icons?node-id=1-1",
+        "template": "src/icon.figma.batch.ts",
+        "batch": {
+            "url": "https://www.figma.com/design/I/Icons?node-id=1-1",
+            "component": "HeartIcon"
+        }
+    }
+}

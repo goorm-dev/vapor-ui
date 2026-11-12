@@ -1,0 +1,198 @@
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import type { FigmaTree } from '~/blueprint/blueprint';
+
+import { main } from './cli';
+
+const repo = fileURLToPath(new URL('./__fixtures__/repo', import.meta.url));
+const dir = mkdtempSync(join(tmpdir(), 'figma-blueprint-cli-'));
+afterAll(() => rmSync(dir, { recursive: true, force: true }));
+
+const components = {
+    '1:1': { key: 'K-ICON-BUTTON', name: '💙IconButton' },
+    '1:2': { key: 'K-HEART', name: '❤️HeartIcon' },
+    '1:3': { key: 'K-CHIP', name: '💙Chip' },
+};
+const iconButton = {
+    id: '2:1',
+    name: 'IconButton',
+    type: 'INSTANCE',
+    componentId: '1:1',
+    componentProperties: { Size: { value: 'Lg' } },
+};
+
+async function run(name: string, children: FigmaTree['document'][], ...flags: string[]) {
+    const file = join(dir, `${name}.json`);
+    const tree: FigmaTree = {
+        document: { id: '0:1', name: 'Screen', type: 'FRAME', children },
+        components,
+    };
+    writeFileSync(file, JSON.stringify(tree));
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const code = await main([file, '--repo', repo, ...flags]);
+    return { code, stdout: log.mock.calls.map((c) => c.join(' ')).join('\n') };
+}
+
+describe('figma-blueprint <tree>', () => {
+    beforeEach(() => {
+        vi.stubEnv('FIGMA_ACCESS_TOKEN', 'TOKEN');
+    });
+    afterEach(() => {
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
+        vi.unstubAllEnvs();
+    });
+
+    it('prints the Blueprint object with --json and exits 0', async () => {
+        const { code, stdout } = await run('json', [iconButton], '--json');
+
+        expect(code).toBe(0);
+        expect(JSON.parse(stdout)).toEqual({
+            version: 4,
+            nodes: [
+                { id: '2:1', tag: 'IconButton', props: ['size="lg"'], pkg: 'core', children: [] },
+            ],
+            excluded: [],
+            unscorable: [],
+            texts: [],
+        });
+    });
+
+    it('prints one node per line, nested by indent, and exits 2 when an instance is unscorable', async () => {
+        const { code, stdout } = await run('text', [
+            {
+                ...iconButton,
+                children: [
+                    {
+                        id: '2:2',
+                        name: 'Slot',
+                        type: 'SLOT',
+                        children: [
+                            { id: '2:3', name: 'Heart', type: 'INSTANCE', componentId: '1:2' },
+                        ],
+                    },
+                ],
+            },
+            { id: '2:4', name: 'Chip', type: 'INSTANCE', componentId: '1:3' },
+        ]);
+
+        expect(code).toBe(2);
+        expect(stdout).toBe(
+            [
+                '<IconButton size="lg" />  2:1',
+                '  <HeartIcon />  2:3  (any parent)',
+                'unscorable:',
+                '  💙Chip (2:4): no-template',
+                'texts: 0',
+            ].join('\n'),
+        );
+    });
+
+    it('reads a URL source with the one nodes request, no variables API', async () => {
+        const tree: FigmaTree = {
+            document: { id: '0:1', name: 'Screen', type: 'FRAME', children: [iconButton] },
+            components,
+        };
+        const request = vi.fn(async () => Response.json({ nodes: { '0:1': tree } }));
+        vi.stubGlobal('fetch', request);
+        const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+        const code = await main([
+            'https://www.figma.com/design/FILE/Name?node-id=0-1',
+            '--repo',
+            repo,
+            '--json',
+        ]);
+
+        expect(code).toBe(0);
+        expect(request).toHaveBeenCalledTimes(1);
+        expect(request).toHaveBeenCalledWith(
+            'https://api.figma.com/v1/files/FILE/nodes?ids=0%3A1',
+            expect.anything(),
+        );
+        expect(JSON.parse(log.mock.calls.map((c) => c.join(' ')).join('\n'))).toEqual({
+            version: 4,
+            nodes: [
+                { id: '2:1', tag: 'IconButton', props: ['size="lg"'], pkg: 'core', children: [] },
+            ],
+            excluded: [],
+            unscorable: [],
+            texts: [],
+        });
+    });
+
+    it('exits 1 naming the cause when the URL has no node-id or the node is gone', async () => {
+        const request = vi.fn(async () => Response.json({ nodes: { '1:2': null } }));
+        vi.stubGlobal('fetch', request);
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        expect(await main(['https://www.figma.com/design/FILE/Name', '--repo', repo])).toBe(1);
+        expect(error).toHaveBeenLastCalledWith(expect.stringMatching(/no node-id/));
+        expect(request).not.toHaveBeenCalled();
+
+        expect(
+            await main(['https://www.figma.com/design/FILE/Name?node-id=1-2', '--repo', repo]),
+        ).toBe(1);
+        expect(error).toHaveBeenLastCalledWith(expect.stringMatching(/node 1:2 .*FILE/));
+    });
+
+    it('reads a file whose name starts with "http" as a file, not a URL', async () => {
+        const request = vi.fn();
+        vi.stubGlobal('fetch', request);
+        vi.spyOn(console, 'log').mockImplementation(() => {});
+        const tree: FigmaTree = {
+            document: { id: '0:1', name: 'Screen', type: 'FRAME', children: [iconButton] },
+            components,
+        };
+        writeFileSync(join(dir, 'http-tree.json'), JSON.stringify(tree));
+        const cwd = process.cwd();
+        process.chdir(dir);
+        try {
+            expect(await main(['http-tree.json', '--repo', repo])).toBe(0);
+        } finally {
+            process.chdir(cwd);
+        }
+        expect(request).not.toHaveBeenCalled();
+    });
+
+    it('names the missing node when the response has no nodes', async () => {
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async () => Response.json({})),
+        );
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        expect(
+            await main(['https://www.figma.com/design/FILE/Name?node-id=1-2', '--repo', repo]),
+        ).toBe(1);
+        expect(error).toHaveBeenLastCalledWith(
+            expect.stringMatching(/node 1:2 is not in file FILE/),
+        );
+    });
+
+    it('exits 1 before any request when FIGMA_ACCESS_TOKEN is not set', async () => {
+        vi.stubEnv('FIGMA_ACCESS_TOKEN', '');
+        const request = vi.fn();
+        vi.stubGlobal('fetch', request);
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        expect(
+            await main(['https://www.figma.com/design/FILE/Name?node-id=1-2', '--repo', repo]),
+        ).toBe(1);
+        expect(error).toHaveBeenLastCalledWith(
+            expect.stringMatching(/FIGMA_ACCESS_TOKEN is not set\. It needs read access to /),
+        );
+        expect(request).not.toHaveBeenCalled();
+    });
+
+    it('exits 1 with a message when the tree cannot be read', async () => {
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        expect(await main([join(dir, 'missing.json'), '--repo', repo])).toBe(1);
+        expect(error).toHaveBeenCalledWith(expect.stringMatching(/^figma-blueprint: /));
+    });
+});

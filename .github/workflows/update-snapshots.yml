@@ -30,7 +30,8 @@ jobs:
                   git config user.email "$(git log -n 1 --pretty=format:%ae)"
 
             - name: Build Icons
-              run: pnpm icons build
+              # figma-blueprint builds first: the icons build runs its CLI.
+              run: pnpm --filter "@vapor-ui/icons..." build
 
             - name: Build Storybook
               run: pnpm build:storybook

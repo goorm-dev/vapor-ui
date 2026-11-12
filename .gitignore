@@ -65,3 +65,6 @@ pr_body.md
 
 # Page docs packed into @vapor-ui/core on publish (pnpm --filter website docs:llms)
 packages/core/docs/
+
+# Code Connect templates and tables `figma-blueprint build` packs into core, composites and icons
+packages/*/figma-blueprint/

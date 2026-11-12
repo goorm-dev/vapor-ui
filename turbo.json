@@ -44,10 +44,15 @@
                 "content/docs/components/*/api/ko/*.json"
             ]
         },
+        "@vapor-ui/figma-blueprint#build": {
+            "dependsOn": ["^build"],
+            "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/composites/figma-entries.json"],
+            "outputs": ["dist/**"]
+        },
         "build": {
             "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
-            "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+            "outputs": [".next/**", "!.next/cache/**", "dist/**", "figma-blueprint/**"]
         },
         "typecheck": { "dependsOn": ["^build"] },
         "test": { "outputs": [], "dependsOn": ["^build"] },
