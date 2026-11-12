@@ -164,7 +164,9 @@ export const root = componentRecipe({
     },
 });
 
-// Direct-child svg only, at lower specificity than IconButton's own icon rule so IconButton keeps its sizing.
+// TODO: Remove once Button supports Composites; slot styling belongs there.
+// Kept so generated code can't inject arbitrary icon sizes that drift from Figma.
+// Direct-child svg only, at lower specificity than IconButton's icon rule so IconButton keeps its sizing.
 globalStyle(`${root.classNames.base} > svg`, {
     '@layer': {
         [layers.components]: { width: variables.iconSize, height: variables.iconSize },
