@@ -17,6 +17,8 @@ paths:
 6. [서브 컴포넌트는 `index.parts.ts`로 분리한다](#6-서브-컴포넌트는-indexpartsts로-분리한다)
 7. [Preset wrapper는 primitive prop을 전체 상속한다 (§4 예외)](#7-preset-wrapper는-primitive-prop을-전체-상속한다-4-예외)
 
+> Code Connect 템플릿(`*.figma.ts`, `*.figma.batch.{json,ts}`) 작성 규칙은 [`.claude/rules/code-connect-composites.md`](./code-connect-composites.md)에서 다룬다. 해당 파일은 `code-connects/` 경로를 touch할 때 자동 로드된다.
+
 ---
 
 ## 1. 슬롯은 `createSlots`로 만든다
@@ -375,3 +377,4 @@ DialogRoot.displayName = 'Dialog.Root';
 - [ ] `ref`를 노출하는 컴포넌트는 `forwardRef`를 사용하고, props는 파라미터가 아닌 함수 블록 안에서 `const { ... } = props;`로 분해한다(§8).
 - [ ] primitive로 rest spread 하지 않고, 노출하기로 결정한 prop만 명시적으로 발라내 전달한다. 소비자가 자주 요구할 만한 HTML 속성(`disabled`, `aria-*` 등)은 Props 인터페이스에 올려 통로를 열어 둔다(§8).
 - [ ] `ref` / `id` / `className`을 노출하는 공개 컴포넌트는 `~/utils/test-utils`의 `testConformance<T>(render, { refInstanceof })`로 검증한다. 인라인 ref·id·className 테스트를 서브마다 반복하지 않는다. `refInstanceof`는 Popup이면 `HTMLDivElement`, Button 기반이면 `HTMLButtonElement`로 지정한다.
+- [ ] Code Connect 템플릿은 [`code-connect-composites.md`](./code-connect-composites.md)의 체크리스트도 통과했다.

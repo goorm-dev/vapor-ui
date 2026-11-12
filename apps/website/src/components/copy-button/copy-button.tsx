@@ -55,11 +55,12 @@ const assertValidMarkdownUrl = (url: string) => {
     }
 };
 
-const openWindowOrThrow = (url: string) => {
-    const opened = window.open(url, '_blank', 'noopener,noreferrer');
-    if (!opened) {
-        throw new Error('새 탭을 열지 못했습니다. 팝업 차단 설정을 확인해 주세요.');
-    }
+const openInNewTab = (url: string) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.click();
 };
 
 type CopyButtonProps = {
@@ -78,7 +79,7 @@ const openLLMChat = (llmType: keyof typeof LLM_URLS, docUrl: string) => {
 
     const prompt = encodeURIComponent(`${docUrl}${LLM_PROMPT_MESSAGE}`);
     const url = `${LLM_URLS[llmType]}?q=${prompt}`;
-    openWindowOrThrow(url);
+    openInNewTab(url);
 };
 
 const trackCopyButtonEvent = (action: CopyButtonAction, markdownUrl: string) => {
@@ -180,7 +181,7 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
                 label: '마크다운으로 보기',
                 icon: markdownIcon,
                 action: COPY_BUTTON_ACTIONS.VIEW_MARKDOWN,
-                handler: () => openWindowOrThrow(markdownUrl),
+                handler: () => openInNewTab(markdownUrl),
                 isExternal: true,
             },
             {
@@ -246,7 +247,7 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
                 >
                     <ChevronDownOutlineIcon aria-hidden="true" />
                 </Menu.Trigger>
-                <Menu.Popup className="min-w-[200px]">
+                <Menu.Popup className="min-w-50">
                     {menuItems.map(({ label, action, handler, icon, isExternal }) => (
                         <Menu.Item key={label} onClick={() => handleMenuItemClick(action, handler)}>
                             {icon}

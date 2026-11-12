@@ -1,0 +1,41 @@
+{
+    "templateFile": "./menu.figma.batch.ts",
+    "components": [
+        {
+            "part": "menu-root",
+            "component": "Menu.Root",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3199-26103&m=dev"
+        },
+        {
+            "part": "menu-group",
+            "component": "Menu.Group",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3213-27184&m=dev"
+        },
+        {
+            "part": "menu-check-group",
+            "component": "Menu.CheckGroup",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4754-39350&m=dev"
+        },
+        {
+            "part": "menu-item",
+            "component": "Menu.Item",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3375-18689&m=dev"
+        },
+        {
+            "part": "menu-check-item",
+            "component": "Menu.CheckItem",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3375-18738&m=dev"
+        },
+        {
+            "part": "menu-submenu-item",
+            "component": "Menu.SubmenuItem",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3658-11355&m=dev"
+        }
+    ]
+}

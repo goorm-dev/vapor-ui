@@ -29,7 +29,7 @@
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "eslint": "catalog:",
-        "rimraf": "^6.1.3",
+        "rimraf": "^6.1.4",
         "rolldown": "catalog:",
         "tinyglobby": "^0.2.17",
         "typescript": "catalog:"
