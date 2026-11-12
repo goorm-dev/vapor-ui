@@ -17,16 +17,23 @@ Exits 2 when an instance could not be read (unscorable), so the design cannot be
 ship runs in packages/core, composites or icons and writes their figma-blueprint/ folder.
 FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current directory.`;
 
+function figmaToken(reads: string) {
+    const token = process.env.FIGMA_ACCESS_TOKEN;
+    if (!token) throw new Error(`FIGMA_ACCESS_TOKEN is not set. It needs read access to ${reads}.`);
+    return token;
+}
+
 async function loadTree(arg: string): Promise<FigmaTree> {
-    if (!arg.startsWith('http')) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
+    if (!/^https?:\/\//.test(arg)) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
     const { fileKey, nodeId } = parseFigmaUrl(arg);
     if (!nodeId) throw new Error(`the URL has no node-id, so there is no frame to read: ${arg}`);
+    const token = figmaToken('the design file the URL points to');
     const r = await fetch(
         `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${encodeURIComponent(nodeId)}`,
-        { headers: { 'X-Figma-Token': process.env.FIGMA_ACCESS_TOKEN ?? '' } },
+        { headers: { 'X-Figma-Token': token } },
     );
     if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
-    const tree = ((await r.json()) as { nodes: Record<string, FigmaTree | null> }).nodes[nodeId];
+    const tree = ((await r.json()) as { nodes?: Record<string, FigmaTree | null> }).nodes?.[nodeId];
     if (!tree)
         throw new Error(`node ${nodeId} is not in file ${fileKey}; it may have been deleted`);
     return tree;
@@ -46,11 +53,7 @@ function parseArgs(argv: string[]) {
 }
 
 async function entries(root: string) {
-    const token = process.env.FIGMA_ACCESS_TOKEN;
-    if (!token)
-        throw new Error(
-            'FIGMA_ACCESS_TOKEN is not set. It needs read access to the library files the Code Connect URLs point to.',
-        );
+    const token = figmaToken('the library files the Code Connect URLs point to');
     const { counts, unpublished } = await writeEntries(root, token);
     for (const [pkg, n] of Object.entries(counts))
         console.log(`packages/${pkg}/figma-entries.json  ${n} entries`);

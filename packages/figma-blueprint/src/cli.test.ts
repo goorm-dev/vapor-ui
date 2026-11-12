@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { FigmaTree } from '~/blueprint/blueprint';
 
@@ -38,9 +38,13 @@ async function run(name: string, children: FigmaTree['document'][], ...flags: st
 }
 
 describe('figma-blueprint <tree>', () => {
+    beforeEach(() => {
+        vi.stubEnv('FIGMA_ACCESS_TOKEN', 'TOKEN');
+    });
     afterEach(() => {
         vi.restoreAllMocks();
         vi.unstubAllGlobals();
+        vi.unstubAllEnvs();
     });
 
     it('prints the Blueprint object with --json and exits 0', async () => {
@@ -134,6 +138,55 @@ describe('figma-blueprint <tree>', () => {
             await main(['https://www.figma.com/design/FILE/Name?node-id=1-2', '--repo', repo]),
         ).toBe(1);
         expect(error).toHaveBeenLastCalledWith(expect.stringMatching(/node 1:2 .*FILE/));
+    });
+
+    it('reads a file whose name starts with "http" as a file, not a URL', async () => {
+        const request = vi.fn();
+        vi.stubGlobal('fetch', request);
+        vi.spyOn(console, 'log').mockImplementation(() => {});
+        const tree: FigmaTree = {
+            document: { id: '0:1', name: 'Screen', type: 'FRAME', children: [iconButton] },
+            components,
+        };
+        writeFileSync(join(dir, 'http-tree.json'), JSON.stringify(tree));
+        const cwd = process.cwd();
+        process.chdir(dir);
+        try {
+            expect(await main(['http-tree.json', '--repo', repo])).toBe(0);
+        } finally {
+            process.chdir(cwd);
+        }
+        expect(request).not.toHaveBeenCalled();
+    });
+
+    it('names the missing node when the response has no nodes', async () => {
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async () => Response.json({})),
+        );
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        expect(
+            await main(['https://www.figma.com/design/FILE/Name?node-id=1-2', '--repo', repo]),
+        ).toBe(1);
+        expect(error).toHaveBeenLastCalledWith(
+            expect.stringMatching(/node 1:2 is not in file FILE/),
+        );
+    });
+
+    it('exits 1 before any request when FIGMA_ACCESS_TOKEN is not set', async () => {
+        vi.stubEnv('FIGMA_ACCESS_TOKEN', '');
+        const request = vi.fn();
+        vi.stubGlobal('fetch', request);
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        expect(
+            await main(['https://www.figma.com/design/FILE/Name?node-id=1-2', '--repo', repo]),
+        ).toBe(1);
+        expect(error).toHaveBeenLastCalledWith(
+            expect.stringMatching(/FIGMA_ACCESS_TOKEN is not set\. It needs read access to /),
+        );
+        expect(request).not.toHaveBeenCalled();
     });
 
     it('exits 1 with a message when the tree cannot be read', async () => {
