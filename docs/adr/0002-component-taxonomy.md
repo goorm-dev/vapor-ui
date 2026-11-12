@@ -43,16 +43,16 @@
 
 문서 사이트 카탈로그의 범주를 다음 8개로 정의하고, 각 범주의 포함 기준을 아래와 같이 둡니다.
 
-| 범주         | 포함 기준                                                                                                 | 현재 소속                                                                                                                     |
-| ------------ | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Actions      | 사용자 명령을 트리거하는 요소                                                                             | Button, IconButton                                                                                                            |
-| Forms        | 사용자 입력을 수집하거나 입력 요소를 그룹화하는 wrapper                                                   | Checkbox, Field, InputGroup, MultiSelect, Radio, RadioCard, RadioGroup, Select, SegmentedControl, Switch, TextInput, Textarea |
-| Data Display | 정적 데이터를 표현하는 요소                                                                               | Avatar, Badge, Card, Table                                                                                                    |
-| Typography   | 텍스트 요소                                                                                               | Text                                                                                                                          |
-| Navigation   | 라우트·위치 간 이동 수단                                                                                  | Breadcrumb, NavigationMenu, Pagination                                                                                        |
-| Disclosure   | 같은 페이지 내에서 콘텐츠 영역을 접고 펼치거나 패널을 전환하는 요소 (WAI-ARIA의 Disclosure 패턴과는 별개) | Collapsible, Tabs                                                                                                             |
-| Overlay      | 레이어 위에 뜨는 UI(모달·플로팅·팝업 포함)                                                                | Alert Dialog, Dialog, FloatingBar, Menu, Popover, Sheet, Tooltip                                                              |
-| Feedback     | 수동적으로 상태나 알림을 전달하는 요소                                                                    | Callout, Spinner, Toast                                                                                                       |
+| 범주         | 포함 기준                                                                                                 | 현재 소속                                                                                                   |
+| ------------ | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Actions      | 사용자 명령을 트리거하는 요소                                                                             | Button, IconButton, SegmentedControl, Toggle, ToggleGroup, Toolbar                                          |
+| Forms        | 사용자 입력을 수집하거나 입력 요소를 그룹화하는 wrapper                                                   | Checkbox, Field, InputGroup, MultiSelect, Radio, RadioCard, RadioGroup, Select, Switch, TextInput, Textarea |
+| Data Display | 정적 데이터를 표현하는 요소                                                                               | Avatar, Badge, Card, Meter, Table                                                                           |
+| Typography   | 텍스트 요소                                                                                               | Text                                                                                                        |
+| Navigation   | 라우트·위치 간 이동 수단                                                                                  | Breadcrumb, NavigationMenu, Pagination                                                                      |
+| Disclosure   | 같은 페이지 내에서 콘텐츠 영역을 접고 펼치거나 패널을 전환하는 요소 (WAI-ARIA의 Disclosure 패턴과는 별개) | Collapsible, Tabs                                                                                           |
+| Overlay      | 레이어 위에 뜨는 UI(모달·플로팅·팝업 포함)                                                                | Alert Dialog, Dialog, FloatingBar, Menu, Popover, Sheet, Tooltip                                            |
+| Feedback     | 수동적으로 상태나 알림을 전달하는 요소                                                                    | Callout, ProgressBar, Spinner, Toast                                                                        |
 
 `components/index.mdx`와 `composites/index.mdx`는 이 범주별로 `## <Category>` 섹션을 두고 각 섹션 안에 `<AllComponentsContainer>` grid를 둡니다. 각 카드는 `componentType` prop으로 범주를 재강조합니다.
 
