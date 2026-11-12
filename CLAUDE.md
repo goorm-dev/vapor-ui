@@ -10,14 +10,15 @@ An open-source React UI component library and design system maintained by goorm.
 
 **Packages** (`packages/`) — published to npm:
 
-| Package                     | Role                                                                                                                                                      |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@vapor-ui/core`            | 40+ accessible React components. Headless-first via `@base-ui/react`, zero-runtime styling via Vanilla Extract, variant system via `recipe()` + Sprinkles |
-| `@vapor-ui/hooks`           | Shared React hooks for state and UI management — used internally by `core` and available to consumers                                                     |
-| `@vapor-ui/icons`           | SVG-to-React icon components, synced automatically from Figma                                                                                             |
-| `@vapor-ui/color-generator` | OKLCH-based WCAG-compliant color palette generator — produces design tokens used by `css-generator`                                                       |
-| `@vapor-ui/css-generator`   | Generates CSS variables and themes from design tokens produced by `color-generator`                                                                       |
-| `@vapor-ui/codemod`         | jscodeshift-based automated code migration tools for major version upgrades                                                                               |
+| Package                     | Role                                                                                                                                                                                               |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@vapor-ui/core`            | 40+ accessible React components. Headless-first via `@base-ui/react`, zero-runtime styling via Vanilla Extract, variant system via `recipe()` + Sprinkles                                          |
+| `@vapor-ui/hooks`           | Shared React hooks for state and UI management — used internally by `core` and available to consumers                                                                                              |
+| `@vapor-ui/icons`           | SVG-to-React icon components, synced automatically from Figma                                                                                                                                      |
+| `@vapor-ui/color-generator` | OKLCH-based WCAG-compliant color palette generator — produces design tokens used by `css-generator`                                                                                                |
+| `@vapor-ui/css-generator`   | Generates CSS variables and themes from design tokens produced by `color-generator`                                                                                                                |
+| `@vapor-ui/codemod`         | jscodeshift-based automated code migration tools for major version upgrades                                                                                                                        |
+| `@vapor-ui/style-macro`     | Build-time `css()` macro — compiles to atomic class strings; every rule is collected into one sorted sheet at `@vapor-utilities;` (Vite / Next webpack + Turbopack / webpack / rolldown + PostCSS) |
 
 **Apps** (`apps/`) — not published:
 

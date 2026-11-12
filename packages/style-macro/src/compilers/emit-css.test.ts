@@ -118,7 +118,7 @@ describe('emitCss', () => {
         expect(pos1024).toBeGreaterThan(pos768);
     });
 
-    it('places at-rules without a min-width after width-sorted groups, then by key', () => {
+    it('places at-rules without a width feature before width-sorted groups (Compiled sortAtRules)', () => {
         const out = emitCss([
             rule({ selectorContext: '@media (hover: hover)', value: 'var(--h)' }),
             rule({ selectorContext: '@media (min-width: 1024px)', value: 'var(--w)' }),
@@ -129,9 +129,88 @@ describe('emitCss', () => {
         const nPos = out.cssText.indexOf('var(--n)');
         const wPos = out.cssText.indexOf('var(--w)');
         const hPos = out.cssText.indexOf('var(--h)');
-        // base < 480 < 1024 < hover.
-        expect(bPos).toBeLessThan(nPos);
+        // base < hover(width 없음) < 480 < 1024.
+        expect(bPos).toBeLessThan(hPos);
+        expect(hPos).toBeLessThan(nPos);
         expect(nPos).toBeLessThan(wPos);
-        expect(wPos).toBeLessThan(hPos);
+    });
+});
+
+// 수집기가 프로젝트 전체 룰을 한 번에 넘기므로, 입력(=파일) 순서와 무관하게
+// cascade 가 결정되어야 한다 (Compiled 단일 시트 정렬).
+describe('emitCss — cross-file ordering is input-order independent', () => {
+    const pos = (css: string, needle: string) => {
+        const i = css.indexOf(needle);
+        expect(i, needle).toBeGreaterThan(-1);
+        return i;
+    };
+
+    it('@media override from a later file lands after the base rule from an earlier file', () => {
+        const base = rule({ property: 'padding-top', value: '16px' });
+        const media = rule({
+            property: 'padding-top',
+            value: '8px',
+            selectorContext: '@media(max-width:768px)',
+        });
+        for (const order of [
+            [base, media],
+            [media, base],
+        ]) {
+            const css = emitCss(order).cssText;
+            expect(pos(css, 'padding-top: 16px')).toBeLessThan(
+                pos(css, '@media (max-width: 768px)'),
+            );
+        }
+    });
+
+    it(':hover from one file beats base from another regardless of order', () => {
+        const base = rule({ property: 'color', value: 'red' });
+        const hover = rule({ property: 'color', value: 'blue', selectorContext: ':hover' });
+        for (const order of [
+            [base, hover],
+            [hover, base],
+        ]) {
+            const css = emitCss(order).cssText;
+            expect(pos(css, 'color: red')).toBeLessThan(pos(css, ':hover'));
+        }
+    });
+
+    it('longhand beats shorthand regardless of order', () => {
+        const short = rule({ property: 'border', value: '1px solid' });
+        const long = rule({ property: 'border-top-color', value: 'red' });
+        for (const order of [
+            [short, long],
+            [long, short],
+        ]) {
+            const css = emitCss(order).cssText;
+            expect(pos(css, 'border: 1px solid')).toBeLessThan(pos(css, 'border-top-color: red'));
+        }
+    });
+
+    it('max-width media queries are emitted widest first', () => {
+        const w1024 = rule({
+            property: 'color',
+            value: 'a',
+            selectorContext: '@media(max-width:1024px)',
+        });
+        const w768 = rule({
+            property: 'color',
+            value: 'b',
+            selectorContext: '@media(max-width:768px)',
+        });
+        for (const order of [
+            [w1024, w768],
+            [w768, w1024],
+        ]) {
+            const css = emitCss(order).cssText;
+            expect(pos(css, '(max-width: 1024px)')).toBeLessThan(pos(css, '(max-width: 768px)'));
+        }
+    });
+
+    it('identical rules across files dedupe to one class', () => {
+        const a = rule({ property: 'color', value: 'red' });
+        const out = emitCss([a, { ...a }]);
+        expect(out.classNamesPerRule[0]).toBe(out.classNamesPerRule[1]);
+        expect(out.cssText.match(/color: red/g)).toHaveLength(1);
     });
 });

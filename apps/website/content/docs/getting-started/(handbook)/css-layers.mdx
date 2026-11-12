@@ -9,12 +9,12 @@ Vapor UI는 모든 컴포넌트 스타일을 [CSS Cascade Layer](https://develop
 
 Vapor UI는 네 개의 레이어를 사용합니다. 아래로 갈수록 우선순위가 높습니다.
 
-| 레이어             | 포함 스타일                                          |
-| ------------------ | ---------------------------------------------------- |
-| `vapor-theme`      | 테마 토큰(`--vapor-color-*` 등)과 라이트/다크 바인딩 |
-| `vapor-reset`      | `*`, `html`, `body` 등에 적용되는 전역 reset         |
-| `vapor-components` | 각 컴포넌트의 base, variant, recipe 스타일           |
-| `vapor-utilities`  | Sprinkles · Tailwind preset 유틸리티                 |
+| 레이어             | 포함 스타일                                                  |
+| ------------------ | ------------------------------------------------------------ |
+| `vapor-theme`      | 테마 토큰(`--vapor-color-*` 등)과 라이트/다크 바인딩         |
+| `vapor-reset`      | `*`, `html`, `body` 등에 적용되는 전역 reset                 |
+| `vapor-components` | 각 컴포넌트의 base, variant, recipe 스타일                   |
+| `vapor-utilities`  | `@vapor-ui/style-macro` 의 `css()` 가 생성한 atomic 유틸리티 |
 
 ## 엔트리 구성
 
@@ -35,6 +35,23 @@ Vapor UI는 네 개의 레이어를 사용합니다. 아래로 갈수록 우선�
 ```
 
 `layers.css` 가 먼저 import 되어 레이어 순서를 확정한 뒤, `styles.css` 의 토큰과 reset 이 각 레이어에 올바르게 배치됩니다.
+
+### `@vapor-ui/style-macro` 를 사용하는 경우
+
+`css()` 매크로로 작성한 스타일은 번들러가 파일마다 방출하지 않고, 프로젝트 전체를 모아 **한 번에 정렬한 뒤** `vapor-utilities` 레이어에 넣습니다. 그 삽입 위치를 CSS 에서 `@vapor-utilities;` 로 한 번만 지정합니다.
+
+```css title="global.css"
+@import '@vapor-ui/core/layers.css';
+@import '@vapor-ui/core/styles.css';
+
+@vapor-utilities;
+```
+
+- 이 한 줄이 없으면 `css()` 스타일이 전혀 방출되지 않습니다.
+- 여러 CSS 파일에 중복해서 적으면 전체 유틸리티가 그 수만큼 중복됩니다.
+- 정렬 순서(shorthand → longhand → `:hover` 등 pseudo → `@media`)는 파일·청크 순서와 무관하게 고정되므로, 다른 파일에서 전달한 `className` 의 `@media` / `:hover` override 가 항상 base 를 이깁니다.
+
+번들러별 설정은 [`@vapor-ui/style-macro` README](https://github.com/goorm-dev/vapor-ui/tree/main/packages/style-macro) 를 참고하세요.
 
 ## 레이어 순서 커스터마이징
 

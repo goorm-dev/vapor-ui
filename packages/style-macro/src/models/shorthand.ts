@@ -155,9 +155,7 @@ export function expandShorthand(property: string, value: string) {
     // 각 longhand 에 다시 붙인다.
     const importantMatch = /\s*!important\s*$/.exec(value);
     const important = importantMatch !== null;
-    const stripped = important
-        ? value.slice(0, importantMatch.index).trim()
-        : value;
+    const stripped = important ? value.slice(0, importantMatch.index).trim() : value;
 
     const expanded = fn ? fn(stripped) : [{ property, value: stripped }];
 

@@ -1,7 +1,5 @@
-import type { VaporPluginOptions } from './_factory';
+import type { VaporPluginOptions } from './_options';
 import vaporStyleTurbopackLoader, { type TurbopackLoaderContext } from './turbopack';
-
-const DATA_CSS_IMPORT_RE = /import "data:text\/css,([^"]+)";?/g;
 
 function mkCtx(resourcePath: string, opts: VaporPluginOptions = {}): TurbopackLoaderContext {
     return {
@@ -22,53 +20,35 @@ describe('turbopack', () => {
         expect(out).toBe(src);
     });
 
-    it('prepends exactly one data:text/css import when css() is used', async () => {
+    it('rewrites css() to a string literal without any CSS import', async () => {
         const ctx = mkCtx('/src/A.tsx');
         const src = [
             `import { css } from '@vapor-ui/style-macro';`,
             `const cls = css({ padding: '$space-400' });`,
         ].join('\n');
         const out = await run(ctx, src);
-        const cssImports = Array.from(out.matchAll(DATA_CSS_IMPORT_RE));
-        expect(cssImports.length).toBe(1);
+        expect(out).not.toContain('data:text/css');
+        expect(out).toMatch(/const cls = '_padding-top_space-400_[A-Za-z0-9]{12}/);
     });
 
-    it('encodes CSS into the data URI so decoding recovers the payload', async () => {
-        const ctx = mkCtx('/src/B.tsx');
+    it('honours include/exclude globs passed as loader options', async () => {
         const src = [
             `import { css } from '@vapor-ui/style-macro';`,
-            `const cls = css({ padding: '$space-400', color: '$fg-primary' });`,
+            `const cls = css({ padding: '$space-400' });`,
         ].join('\n');
-        const out = await run(ctx, src);
-        const match = out.match(/import "data:text\/css,([^"]+)";?/);
-        expect(match).not.toBeNull();
-        const css = decodeURIComponent(match![1]!);
-        expect(css).toMatch(/--vapor/);
-    });
-
-    it('percent-encodes reserved CSS characters (semicolons, commas, quotes) so the URI stays valid', async () => {
-        const ctx = mkCtx('/src/C.tsx');
-        const src = [
-            `import { css } from '@vapor-ui/style-macro';`,
-            `const cls = css({ padding: '$space-400', color: '$fg-primary' });`,
-        ].join('\n');
-        const out = await run(ctx, src);
-        const match = out.match(/import "data:text\/css,([^"]+)";?/);
-        expect(match).not.toBeNull();
-        const raw = match![1]!;
-        // Reserved data-URI chars must be percent-encoded, not passed literal.
-        expect(raw).not.toContain(';');
-        expect(raw).not.toContain(',');
-        expect(raw).not.toContain('"');
-        expect(raw).not.toContain('\n');
+        const excluded = mkCtx('/repo/src/skip/A.tsx', { root: '/repo', exclude: ['src/skip/**'] });
+        expect(await run(excluded, src)).toBe(src);
+        const included = mkCtx('/repo/node_modules/@acme/ui/dist/a.js', {
+            root: '/repo',
+            include: ['node_modules/@acme/ui/dist/**'],
+        });
+        expect(await run(included, src)).not.toBe(src);
     });
 
     it('throws when the transform reports a build error', async () => {
         const ctx = mkCtx('/src/err.tsx');
         const src = [
             `import { css } from '@vapor-ui/style-macro';`,
-            // $space-nope is not in the hardcoded token table → validation error.
-            // token name 은 알파벳 시작이어야 한다 (리뷰 #8 참고).
             `const cls = css({ padding: '$space-nope' });`,
         ].join('\n');
         await expect(run(ctx, src)).rejects.toThrow();

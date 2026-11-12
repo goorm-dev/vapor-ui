@@ -5,16 +5,18 @@ import { transform } from './transform';
 const src = (body: string) => [`import { css } from '@vapor-ui/style-macro';`, body].join('\n');
 
 describe('transform — static syntax', () => {
-    it('rewrites css({ prop: literal }) to _mkStyle object', () => {
+    it('rewrites css({ prop: literal }) to a class-list string literal', () => {
         const out = transform({
             source: src(`const cls = css({ padding: '$space-400' });`),
             filename: '/A.tsx',
         });
         expect(out.errors).toEqual([]);
         expect(out.css).toContain('padding-top');
-        // 단일 object 호출 → _mkStyle({ 'base|prop': 'cls', … }) 리터럴.
-        expect(out.code).toMatch(/const cls = _mkStyle\(\s*\{/);
-        expect(out.code).toMatch(/'base\|padding-top'\s*:\s*'[^']+'/);
+        // 단일 object 호출 → 순수 string literal. 런타임 import 없음.
+        expect(out.code).toMatch(
+            /const cls = '_padding-top_space-400_[A-Za-z0-9]{12}(?: _[^']+)*';/,
+        );
+        expect(out.code).not.toContain('__runtime__');
     });
 
     it('supports nested :hover selector', () => {
@@ -162,7 +164,6 @@ describe('transform — dynamic slots', () => {
         expect(out.errors).toEqual([]);
         // `_resolveToken` 과 사용된 axis 가 한 import 라인에 묶여 들어오고,
         // 사용자 스코프 충돌을 막기 위해 axis 는 `__vaporAxis_<name>` alias 로 import.
-        // (A2 전환 후 _mkStyle 도 같은 import 안에 섞일 수 있음.)
         expect(out.code).toMatch(
             /import\s*\{[^}]*\b_resolveToken\b[^}]*\bcolor\s+as\s+__vaporAxis_color\b[^}]*\bdimension\s+as\s+__vaporAxis_dimension\b[^}]*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
         );
@@ -275,19 +276,19 @@ describe('transform — ternary (entry-level)', () => {
     });
 
     it('(#2) handles ternary on shorthand property (padding)', () => {
-        // A2-obj: padding → padding-top/right/bottom/left 4 longhand 로 전개 되며,
-        // 각 longhand 가 _mkStyle object 안에서 독립 ternary 로 분기된다.
+        // padding → padding-top/right/bottom/left 4 longhand 로 전개 되며,
+        // 각 longhand 가 _ax([...]) 안에서 독립 ternary 로 분기된다.
         const source = src(`const cls = css({ padding: compact ? '$space-100' : '$space-400' });`);
         const out = transform({ source, filename: '/T2.tsx' });
         expect(out.errors).toEqual([]);
-        // _mkStyle 안에 4 개의 `(compact ? 'A' : 'B')` ternary 가 들어 있어야 함.
+        // _ax 안에 4 개의 `(compact ? 'A' : 'B')` ternary 가 들어 있어야 함.
         const ternaryCount = (out.code.match(/compact\s*\?/g) ?? []).length;
         expect(ternaryCount).toBe(4);
-        // 4 개 longhand property 가 모두 등장.
-        expect(out.code).toMatch(/'base\|padding-top'\s*:\s*\(/);
-        expect(out.code).toMatch(/'base\|padding-right'\s*:\s*\(/);
-        expect(out.code).toMatch(/'base\|padding-bottom'\s*:\s*\(/);
-        expect(out.code).toMatch(/'base\|padding-left'\s*:\s*\(/);
+        expect(out.code).toMatch(/_ax\(\[/);
+        // 4 개 longhand 가 CSS 에 모두 등장.
+        for (const p of ['padding-top', 'padding-right', 'padding-bottom', 'padding-left']) {
+            expect(out.css).toContain(p);
+        }
     });
 
     it('(#3) handles dynamic value + ternary in same call', () => {
@@ -332,10 +333,8 @@ describe('transform — ternary (entry-level)', () => {
         expect(out.errors).toEqual([]);
         // 삼항 식 유지 + static class (display) 는 rest 에 join.
         expect(out.code).toMatch(/cond\s*\?/);
-        // A2-obj: static prop 과 ternary 가 모두 같은 _mkStyle object 안에 공존.
-        expect(out.code).toMatch(/_mkStyle\(\s*\{/);
-        expect(out.code).toMatch(/'base\|display'\s*:/);
-        expect(out.code).toMatch(/'base\|color'\s*:\s*\(/);
+        // static prop 과 ternary 가 모두 같은 _ax([...]) 안에 공존.
+        expect(out.code).toMatch(/_ax\(\[\s*'_display_flex_[A-Za-z0-9]{12}'\s*,\s*\(cond\s*\?/);
     });
 });
 
@@ -406,9 +405,7 @@ describe('transform — token resolve (build error)', () => {
 // 수정 전엔 전부 실패 상태로 먼저 commit (TDD red).
 describe('transform — PR #752 review fixtures', () => {
     it('#1 longhand overrides shorthand when declared after (padding + paddingTop)', () => {
-        const source = src(
-            `const cls = css({ padding: '$space-100', paddingTop: '$space-300' });`,
-        );
+        const source = src(`const cls = css({ padding: '$space-100', paddingTop: '$space-300' });`);
         const out = transform({ source, filename: '/R1.tsx' });
         expect(out.errors).toEqual([]);
         // emit 순서상 longhand(paddingTop)가 shorthand(padding) 뒤에 나와야 하고,
@@ -482,9 +479,7 @@ describe('transform — PR #752 review fixtures', () => {
     });
 
     it('#5b unitless properties do not get px (aspectRatio, gridColumn, scale)', () => {
-        const source = src(
-            `const cls = css({ aspectRatio: 1, gridColumn: 2, scale: 1 });`,
-        );
+        const source = src(`const cls = css({ aspectRatio: 1, gridColumn: 2, scale: 1 });`);
         const out = transform({ source, filename: '/R5b.tsx' });
         expect(out.errors).toEqual([]);
         expect(out.css).toMatch(/aspect-ratio:\s*1\b/);
@@ -527,9 +522,7 @@ describe('transform — PR #752 review fixtures', () => {
         const out = transform({ source, filename: '/R6b.tsx' });
         expect(out.errors).toEqual([]);
         // slot 변수 먼저, 사용자 style 이 뒤에 — 사용자가 이김.
-        expect(out.code).toMatch(
-            /\{\s*\.\.\.\{[^}]*--vapor[^}]*\}\s*,\s*\.\.\.\(myStyle\)\s*\}/,
-        );
+        expect(out.code).toMatch(/\{\s*\.\.\.\{[^}]*--vapor[^}]*\}\s*,\s*\.\.\.\(myStyle\)\s*\}/);
     });
 
     it('#6c CSS variable does not inherit to nested same-class element', () => {
@@ -566,24 +559,18 @@ describe('transform — PR #752 review fixtures', () => {
     });
 });
 
-// Phase 7 — A2-obj red snapshot.
-// css() 가 object(toString 심음) 를 반환하도록 리팩터할 새 동작의 fixture.
-// Phase 9 (parse-call 치환 리팩터) 가 끝나기 전까지 전부 실패 상태로 유지.
-describe('transform — A2-obj new API', () => {
-    it('single css({...}) → _mkStyle({ property: className }) 치환', () => {
+// css() 는 순수 string 을 반환한다. 정적 인자는 compile-time 에 접고,
+// 런타임 값이 섞일 때만 _ax([...]) 로 감싼다 (Compiled ax 패턴).
+describe('transform — string result & _ax composition', () => {
+    it('single css({...}) → class-list literal, no runtime import', () => {
         const source = src(`const cls = css({ padding: '$space-100' });`);
         const out = transform({ source, filename: '/A1.tsx' });
         expect(out.errors).toEqual([]);
-        // 기존: const cls = 'vapor_pt_..._pr_..._pb_..._pl_...';
-        // 새 결과: const cls = _mkStyle({ 'padding-top': '...', ... });
-        expect(out.code).toMatch(/_mkStyle\(\s*\{/);
-        // key 는 `${selectorContext}|${property}` 복합 (리뷰 #1 last-wins 를 위한
-        // slot 역할). 같은 selector 안 같은 property 끼리만 head-to-head.
-        expect(out.code).toMatch(/'base\|padding-top'\s*:\s*'[^']+'/);
-        expect(out.code).toMatch(/import\s*\{[^}]*_mkStyle[^}]*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/);
+        expect(out.code).toMatch(/const cls = '(?:_[^' ]+ ){3}_[^' ]+';/);
+        expect(out.code).not.toContain('__runtime__');
     });
 
-    it('css(a, b) — 두 참조 머지 → _mergeStyles(a, b) 치환', () => {
+    it('css(a, b) — 두 참조 머지 → _ax([a, b]) 치환 + runtime import', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `import { base } from './base';`,
@@ -592,10 +579,13 @@ describe('transform — A2-obj new API', () => {
         ].join('\n');
         const out = transform({ source, filename: '/A2.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.code).toMatch(/_mergeStyles\(\s*base\s*,\s*override\s*\)/);
+        expect(out.code).toMatch(/_ax\(\[\s*base\s*,\s*override\s*\]\)/);
+        expect(out.code).toMatch(
+            /import\s*\{[^}]*\b_ax\b[^}]*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
+        );
     });
 
-    it('css(style, a) — 선언 + 참조 섞인 머지', () => {
+    it('css(style, a) — 선언 literal 이 앞, 참조가 뒤', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `import { base } from './base';`,
@@ -603,11 +593,27 @@ describe('transform — A2-obj new API', () => {
         ].join('\n');
         const out = transform({ source, filename: '/A3.tsx' });
         expect(out.errors).toEqual([]);
-        // 선언이 먼저 _mkStyle 로 치환된 뒤 base 와 머지.
-        expect(out.code).toMatch(/_mergeStyles\(\s*_mkStyle\(\s*\{[\s\S]*?\}\s*\)\s*,\s*base\s*\)/);
+        expect(out.code).toMatch(
+            /_ax\(\[\s*'_padding-top_space-300_[A-Za-z0-9]{12}'\s*,\s*base\s*\]\)/,
+        );
     });
 
-    it('className={base} — 지역 변수 참조는 그대로 유지 (runtime toString)', () => {
+    it('css(style, {...}) — 정적 object 둘은 compile-time 에 group last-wins 로 접힘', () => {
+        const source = src(
+            `const cls = css({ paddingTop: '$space-100', color: '$fg-primary' }, { paddingTop: '$space-300' });`,
+        );
+        const out = transform({ source, filename: '/A3b.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.code).not.toContain('_ax(');
+        const m = /const cls = '([^']+)';/.exec(out.code);
+        expect(m).not.toBeNull();
+        const classes = m![1].split(' ');
+        expect(classes).toHaveLength(2);
+        expect(classes.filter((c) => c.startsWith('_padding-top_'))).toHaveLength(1);
+        expect(classes.find((c) => c.startsWith('_padding-top_'))).toContain('space-300');
+    });
+
+    it('className={base} — 지역 변수 참조는 그대로 유지', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `const base = css({ color: '$fg-primary' });`,
@@ -615,38 +621,30 @@ describe('transform — A2-obj new API', () => {
         ].join('\n');
         const out = transform({ source, filename: '/A4.tsx' });
         expect(out.errors).toEqual([]);
-        // base 가 _mkStyle(...) 로 치환되었지만 JSX attribute 는 그대로.
-        // React 가 String(base) → toString() 호출.
         expect(out.code).toMatch(/className=\{\s*base\s*\}/);
     });
 
-    it('className={css({...})} 인라인 — _mkStyle 로 치환', () => {
+    it('className={css({...})} 인라인 — string literal 로 치환', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `const Cmp = () => <div className={css({ padding: '$space-100' })} />;`,
         ].join('\n');
         const out = transform({ source, filename: '/A5.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.code).toMatch(/className=\{\s*_mkStyle\(\s*\{/);
+        expect(out.code).toMatch(/className=\{\s*'_padding-top_space-100_/);
     });
 
     it('단일 호출 내 property last-wins — paddingTop 이 뒤에 선언되면 그것만 남김', () => {
-        const source = src(
-            `const cls = css({ padding: '$space-100', paddingTop: '$space-300' });`,
-        );
+        const source = src(`const cls = css({ padding: '$space-100', paddingTop: '$space-300' });`);
         const out = transform({ source, filename: '/A6.tsx' });
         expect(out.errors).toEqual([]);
-        // _mkStyle map 안에는 padding-top key 가 **딱 한 번**만 등장해야 함.
-        // key 는 복합 `base|padding-top` 형태.
-        const matches = out.code!.match(/'base\|padding-top'\s*:/g) ?? [];
-        expect(matches.length).toBe(1);
-        // 그리고 그 값은 space-300 에서 파생된 class 여야 함.
-        expect(out.code).toMatch(/'base\|padding-top'\s*:\s*'[^']*space-300/);
+        const m = /const cls = '([^']+)';/.exec(out.code);
+        const tops = m![1].split(' ').filter((c) => c.startsWith('_padding-top_'));
+        expect(tops).toHaveLength(1);
+        expect(tops[0]).toContain('space-300');
     });
 
     it('template literal join (backtick + interpolation) — build error', () => {
-        // 로컬 선언된 vapor class 를 템플릿 literal 로 합치면 catch.
-        // (import 로만 받은 참조는 Phase 11 범위 밖 — compile 추적 어려움.)
         const source = src(
             `const base = css({ padding: '$space-100' });` +
                 `const override = css({ paddingTop: '$space-300' });` +
@@ -658,8 +656,6 @@ describe('transform — A2-obj new API', () => {
     });
 
     it('className=template-literal (2 vapor classes) — build error', () => {
-        // 2 개 이상의 class identifier 를 className 자리 template literal 로
-        // 합치면 catch. 1개 + static 문자열은 허용 (vapor + DOM class 흔한 패턴).
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `import { base } from './base';`,
@@ -671,7 +667,6 @@ describe('transform — A2-obj new API', () => {
     });
 
     it('className template with 1 vapor identifier + plain string — allowed', () => {
-        // vapor class 1개 + DOM class 문자열 합성은 유효 패턴.
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `const cls = css({ color: '$fg-primary' });`,

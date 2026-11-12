@@ -1,27 +1,17 @@
-import { createHash } from 'node:crypto';
 import { createUnplugin } from 'unplugin';
 
 import { formatBuildError } from '~/compilers/code-frame';
-import { insertAfterDirectives } from '~/compilers/directives';
 import { transform } from '~/compilers/transform';
-import type { ColorSchemeScriptOpts } from '~/helpers/fouc-script';
-import { resolveOptions } from '~/plugins/_options';
 
-interface FileRecord {
-    css: string;
-    classes: string[];
-}
+import { type VaporPluginOptions, resolveOptions } from './_options';
 
-const VIRTUAL_PREFIX = '~vapor-style/';
-const VIRTUAL_SUFFIX = '.css';
-const PUBLIC_PREFIX = '~vapor-style/';
+export type { VaporPluginOptions };
 
-function hashContent(input: string): string {
-    return createHash('sha1').update(input).digest('hex').slice(0, 12);
-}
-
-const records = new Map<string, FileRecord>();
-
+/**
+ * JS 변환만 담당하는 공용 unplugin. `css()` 호출을 class string 으로 치환한다.
+ * CSS 는 여기서 방출하지 않는다 — 각 번들러의 CSS 파이프라인이 `@vapor-utilities;`
+ * 를 수집 결과로 치환한다 (`_collect.ts`).
+ */
 export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
     const opts = resolveOptions(rawOpts ?? {});
 
@@ -29,36 +19,13 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
         name: 'vapor-style-macro',
         enforce: 'pre',
 
-        resolveId(id) {
-            if (id.startsWith(PUBLIC_PREFIX)) return id;
-            return null;
-        },
-
-        loadInclude(id) {
-            return id.startsWith(VIRTUAL_PREFIX);
-        },
-
-        load(id) {
-            if (!id.startsWith(VIRTUAL_PREFIX)) return null;
-            const hash = id.slice(VIRTUAL_PREFIX.length, -VIRTUAL_SUFFIX.length);
-            const rec = records.get(hash);
-            if (!rec) return null;
-            return rec.css;
-        },
-
         transformInclude(id) {
-            const cleaned = id.split('?')[0];
-            if (cleaned.startsWith(VIRTUAL_PREFIX)) return false;
-            return opts.include(cleaned);
+            return opts.include(id.split('?')[0]);
         },
 
         transform(code, id) {
             const filename = id.split('?')[0];
-            const result = transform({
-                source: code,
-                filename,
-                hash: opts.hash,
-            });
+            const result = transform({ source: code, filename, hash: opts.hash });
 
             if (result.errors.length) {
                 const msg = result.errors
@@ -68,26 +35,7 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
                 return null;
             }
 
-            const prependLines: string[] = [];
-
-            if (result.css) {
-                const hash = hashContent(result.css);
-                records.set(hash, { css: result.css, classes: result.classes });
-                prependLines.push(`import "${PUBLIC_PREFIX}${hash}${VIRTUAL_SUFFIX}";`);
-            }
-
-            if (!prependLines.length) return null;
-
-            return {
-                code: insertAfterDirectives(result.code, prependLines),
-                map: null,
-            };
+            return result.code === code ? null : { code: result.code, map: null };
         },
     };
 });
-
-export interface VaporPluginOptions {
-    include?: (id: string) => boolean;
-    hash?: boolean;
-    injectColorScheme?: boolean | ColorSchemeScriptOpts;
-}

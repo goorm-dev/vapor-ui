@@ -1,6 +1,10 @@
 # @vapor-ui/style-macro
 
-빌드 타임에 동작하는 atomic CSS-in-JS 유틸리티. `css({...})` 호출을 아토믹 classname과 CSS 청크로 변환.
+빌드 타임에 동작하는 atomic CSS-in-JS 유틸리티. `css({...})` 호출을 아토믹 class 문자열로 치환하고, 프로젝트 전체의 룰을 모아 **단일 시트** 로 방출한다.
+
+- 반환값은 순수 `string` — Server Component 에서 만들어 Client Component 로 넘겨도 된다.
+- cascade 는 Compiled(Atlassian) 의 단일 시트 정렬을 따른다: shorthand < longhand < `:link/:visited/:focus-within/:focus/:focus-visible/:hover/:active` < at-rule(`min-width` 오름 / `max-width` 내림). 파일·청크 순서와 무관하게 한 파일의 `:hover`/`@media`/longhand 가 다른 파일의 base 를 이긴다.
+- `css(a, b)` 합성은 `selector|property` 슬롯 단위 last-wins. 인자가 전부 정적이면 compile-time 에 끝나고, 런타임 값이 섞이면 `_ax([...])` 가 같은 규칙으로 머지한다 (외부 class 는 통과).
 
 ## 사용
 
@@ -25,7 +29,13 @@ function Button() {
 }
 ```
 
-번들러 config:
+번들러 config. CSS 진입점에 `@vapor-utilities;` 를 **반드시** 한 번 적는다 — 그 자리에 프로젝트 전체 룰이 정렬되어 들어간다. 없으면 스타일이 방출되지 않는다 (Vite/webpack 은 빌드 끝에 경고).
+
+```css
+/* src/styles.css */
+@import '@vapor-ui/core/styles.css';
+@vapor-utilities;
+```
 
 ```ts
 // vite.config.ts
@@ -44,7 +54,7 @@ export default defineConfig({
 import { vaporNextPlugin } from '@vapor-ui/style-macro/next';
 import type { NextConfig } from 'next';
 
-const withVapor = vaporNextPlugin({});
+const withVapor = vaporNextPlugin();
 const nextConfig: NextConfig = {/* config options here */};
 
 export default withVapor(nextConfig);
@@ -52,31 +62,37 @@ export default withVapor(nextConfig);
 
 ## Entry points
 
-| Subpath                             | 용도                                                               |
-| ----------------------------------- | ------------------------------------------------------------------ |
-| `@vapor-ui/style-macro`             | 소비자용 `css()` + `buildColorSchemeScript()` + 타입               |
-| `@vapor-ui/style-macro/vite`        | Vite plugin                                                        |
-| `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                     |
-| `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                     |
-| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin                                                    |
-| `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                        |
-| `@vapor-ui/style-macro/__runtime__` | **내부용** — plugin 이 소비자 코드에 자동 inject. 직접 import 금지 |
+| Subpath                             | 용도                                                                                                                                        |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@vapor-ui/style-macro`             | 소비자용 `css()` + `buildColorSchemeScript()` + 타입                                                                                        |
+| `@vapor-ui/style-macro/vite`        | Vite plugin                                                                                                                                 |
+| `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                                                                                              |
+| `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                                                                                              |
+| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin                                                                                                                             |
+| `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                                                                                                 |
+| `@vapor-ui/style-macro/css-loader`  | webpack / Turbopack CSS loader — `@vapor-utilities;` 치환 (next plugin 이 내부 사용)                                                        |
+| `@vapor-ui/style-macro/postcss`     | PostCSS 플러그인 — 전용 어댑터 없는 번들러(rolldown, Parcel, 순수 webpack)용 `@vapor-utilities;` 치환. Next 에서는 불필요, Turbopack 비호환 |
+| `@vapor-ui/style-macro/__runtime__` | **내부용** — plugin 이 소비자 코드에 자동 inject. 직접 import 금지                                                                          |
 
 ## Plugin 옵션
 
 ```ts
 interface VaporPluginOptions {
-    include?: (id: string) => boolean;
+    include?: string[];
+    exclude?: string[];
+    root?: string;
     hash?: boolean;
     injectColorScheme?: boolean | ColorSchemeScriptOpts;
 }
 ```
 
-| 옵션                | 기본값                                               | 설명                                                                            |
-| ------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `include`           | `*.{ts,tsx,js,jsx,mts,mjs,cts,cjs}` − `node_modules` | 변환 대상 파일 필터                                                             |
-| `hash`              | `process.env.NODE_ENV === 'production'`              | class name hash 모드 (readable vs hashed)                                       |
-| `injectColorScheme` | `true`                                               | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능 |
+| 옵션                | 기본값                                  | 설명                                                                                                                                                                    |
+| ------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `include`           | `[]`                                    | 추가 대상 glob (`root` 기준, picomatch). 기본 대상(`root` 하위 JS/TS, `node_modules` 제외)에 **더해진다**. prebuilt 패키지 포함 예: `['node_modules/@acme/ui/dist/**']` |
+| `exclude`           | `[]`                                    | 제외 glob (`root` 기준). `include` 보다 우선                                                                                                                            |
+| `root`              | `process.cwd()`                         | 스캔 루트 · glob 기준 경로                                                                                                                                              |
+| `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                               |
+| `injectColorScheme` | `true`                                  | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                         |
 
 ## 지원하는 값
 
@@ -207,8 +223,8 @@ export default function Root({ children }) {
 
 같은 입력 (`source`, `hash` 모드) → 같은 출력 (`code`, `css`, `classes`).
 
-- Class name: call site 에서 정렬 (static path)
-- CSS: condition bucket 안에서 정렬
+- Class name: `_<group6><value6>` — group = hash(selector|property), value = hash(value). dev 는 앞에 읽을 수 있는 slug 가 붙지만 끝 12자는 동일해 `_ax` 키가 일치한다.
+- CSS: bucket(shorthand 깊이 → base → LVFHA → at-rule) → at-rule 비교 → 입력 순서. 수집 모드에서는 프로젝트 전체가 한 번에 정렬된다.
 - Shorthand: 자식 property 전개 순서 고정
 
 ## 내부 구조
@@ -222,6 +238,9 @@ export default function Root({ children }) {
 | `src/compilers/directives.ts`  | `'use client'` directive 보존 (import 삽입 위치 결정)          |
 | `src/models/*.ts`              | class name, selector, shorthand, token, value 모델             |
 | `src/plugins/*.ts`             | 번들러 adapter (unplugin + turbopack loader)                   |
+| `src/models/sort.ts`           | cascade bucket · at-rule 정렬 (Compiled 이식)                  |
+| `src/plugins/_collect.ts`      | 소스 스캔 → 전체 IR → 단일 `emitCss`                           |
+| `src/helpers/ax.ts`            | runtime `_ax` — group 단위 class 머지 (`__runtime__`)          |
 | `src/helpers/resolve-token.ts` | runtime `_resolveToken` helper (`__runtime__` subpath 로 노출) |
 
 `transform(source, opts)` 는 public API 아님 — plugin 내부 전용.

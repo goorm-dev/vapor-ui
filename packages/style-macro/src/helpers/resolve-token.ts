@@ -34,11 +34,7 @@ type AxisTable = Readonly<Record<string, string>>;
  *        Compiled 의 `|| 'var(--slot, )'` self-reference fallback 을 jsx-inject 의
  *        slot emit 지점에서 자동 삽입하면 상속 체인을 유지할 수 있다.
  */
-export function _resolveToken(
-    axis: AxisTable,
-    value: unknown,
-    unit?: string,
-): string | undefined {
+export function _resolveToken(axis: AxisTable, value: unknown, unit?: string): string | undefined {
     if (value == null) return undefined;
     if (typeof value === 'number') {
         return unit ? `${value}${unit}` : String(value);

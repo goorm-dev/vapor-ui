@@ -24,55 +24,57 @@ function callHook(hook: AnyProp, ctx: AnyProp, ...args: AnyProp[]): AnyProp {
     return fn.apply(ctx, args);
 }
 
-describe('unplugin — hook contract (baseline before refactor)', () => {
-    describe('resolveId', () => {
-        it('returns the id as-is for ids starting with the public prefix', () => {
-            const hooks = getHooks();
-            const ctx = makeCtx();
-            const id = '~vapor-style/abcdef012345.css';
-            expect(callHook(hooks.resolveId, ctx, id)).toBe(id);
-        });
-
-        it('returns null / undefined for unrelated ids', () => {
-            const hooks = getHooks();
-            const ctx = makeCtx();
-            expect(callHook(hooks.resolveId, ctx, '/some/file.ts')).toBeFalsy();
-        });
-    });
-
-    describe('loadInclude', () => {
-        it('returns true for ids starting with the virtual prefix', () => {
-            const hooks = getHooks();
-            const ctx = makeCtx();
-            expect(callHook(hooks.loadInclude, ctx, '~vapor-style/deadbeef0000.css')).toBe(true);
-        });
-
-        it('returns false for unrelated ids', () => {
-            const hooks = getHooks();
-            const ctx = makeCtx();
-            expect(callHook(hooks.loadInclude, ctx, '/src/App.tsx')).toBe(false);
-        });
+describe('unplugin — JS transform only', () => {
+    it('does not register virtual-module hooks (CSS is collected elsewhere)', () => {
+        const hooks = getHooks();
+        expect(hooks.resolveId).toBeUndefined();
+        expect(hooks.load).toBeUndefined();
     });
 
     describe('transformInclude', () => {
-        it('excludes ids starting with the virtual prefix so we do not recurse', () => {
-            const hooks = getHooks();
-            const ctx = makeCtx();
-            expect(callHook(hooks.transformInclude, ctx, '~vapor-style/x.css')).toBe(false);
-        });
-
         it('includes .tsx source files', () => {
             const hooks = getHooks();
             const ctx = makeCtx();
             expect(callHook(hooks.transformInclude, ctx, '/src/App.tsx')).toBe(true);
         });
 
-        it('excludes node_modules', () => {
+        it('excludes node_modules by default', () => {
             const hooks = getHooks();
             const ctx = makeCtx();
             expect(
                 callHook(hooks.transformInclude, ctx, '/repo/node_modules/foo/dist/index.js'),
             ).toBe(false);
+        });
+
+        it('`include` globs opt node_modules packages in (relative to root)', () => {
+            const hooks = getHooks({
+                root: '/repo',
+                include: ['node_modules/@acme/ui/dist/**'],
+            });
+            const ctx = makeCtx();
+            expect(
+                callHook(hooks.transformInclude, ctx, '/repo/node_modules/@acme/ui/dist/a.js'),
+            ).toBe(true);
+            expect(
+                callHook(hooks.transformInclude, ctx, '/repo/node_modules/other/dist/a.js'),
+            ).toBe(false);
+        });
+
+        it('`exclude` globs win over defaults and `include`', () => {
+            const hooks = getHooks({
+                root: '/repo',
+                include: ['src/**'],
+                exclude: ['src/**/*.test.tsx'],
+            });
+            const ctx = makeCtx();
+            expect(callHook(hooks.transformInclude, ctx, '/repo/src/A.tsx')).toBe(true);
+            expect(callHook(hooks.transformInclude, ctx, '/repo/src/A.test.tsx')).toBe(false);
+        });
+
+        it('`include` never admits non-source extensions', () => {
+            const hooks = getHooks({ root: '/repo', include: ['assets/**'] });
+            const ctx = makeCtx();
+            expect(callHook(hooks.transformInclude, ctx, '/repo/assets/a.css')).toBe(false);
         });
     });
 
@@ -85,7 +87,7 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
             expect(out).toBeNull();
         });
 
-        it('prepends exactly one virtual CSS import per css()-bearing file', () => {
+        it('rewrites css() to a string literal and emits no CSS import', () => {
             const hooks = getHooks();
             const ctx = makeCtx();
             const src = [
@@ -94,9 +96,8 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
             ].join('\n');
             const out = callHook(hooks.transform, ctx, src, '/src/A.tsx');
             expect(out).not.toBeNull();
-            const cssImports = out.code.match(/import\s+"~vapor-style\/[a-f0-9]+\.css";?/g) ?? [];
-            expect(cssImports.length).toBe(1);
-            // Original named import must survive
+            expect(out.code).not.toMatch(/import\s+["'][^"']*\.css["']/);
+            expect(out.code).toMatch(/const cls = '_padding-top_space-400_[A-Za-z0-9]{12}/);
             expect(out.code).toContain(`import { css } from '@vapor-ui/style-macro';`);
         });
 
@@ -105,48 +106,10 @@ describe('unplugin — hook contract (baseline before refactor)', () => {
             const ctx = makeCtx();
             const src = [
                 `import { css } from '@vapor-ui/style-macro';`,
-                // '$space-nope' is not in the hardcoded token table → validation error.
-                // token name 은 알파벳 시작이어야 한다 (리뷰 #8). `$999` 같은 숫자-only 는
-                // 사용자 문자열로 간주되어 토큰 치환 자체가 일어나지 않는다.
                 `const cls = css({ padding: '$space-nope' });`,
             ].join('\n');
             expect(() => callHook(hooks.transform, ctx, src, '/src/err.tsx')).toThrow();
             expect(ctx.error).toHaveBeenCalledTimes(1);
         });
     });
-
-    describe('load resolves CSS produced by an earlier transform', () => {
-        it('returns the CSS whose hash is embedded in the emitted import', () => {
-            const hooks = getHooks();
-            const ctx = makeCtx();
-            const src = [
-                `import { css } from '@vapor-ui/style-macro';`,
-                `const cls = css({ padding: '$space-400', color: '$fg-primary' });`,
-            ].join('\n');
-            const out = callHook(hooks.transform, ctx, src, '/src/C.tsx');
-            const match = out.code.match(/import "(~vapor-style\/[a-f0-9]+\.css)";?/);
-            expect(match).not.toBeNull();
-            const virtualId = match![1];
-
-            expect(callHook(hooks.loadInclude, ctx, virtualId)).toBe(true);
-            const css = callHook(hooks.load, ctx, virtualId);
-            expect(typeof css).toBe('string');
-            expect(css.length).toBeGreaterThan(0);
-            // The resolved CSS should reference the CSS custom properties the
-            // transform generated for the tokens used above.
-            expect(css).toMatch(/--vapor/);
-        });
-
-        it('returns null / undefined for an unknown virtual id', () => {
-            const hooks = getHooks();
-            const ctx = makeCtx();
-            const out = callHook(hooks.load, ctx, '~vapor-style/000000000000.css');
-            expect(out).toBeFalsy();
-        });
-    });
 });
-
-// The FOUC guard moved from the factory (`vite.transformIndexHtml`) into
-// the vite adapter file (`src/plugins/vite.ts`). FOUC-specific tests now
-// live in `plugins.test.ts` under the `vite adapter — FOUC plugin
-// composition` describe block.

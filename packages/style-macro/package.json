@@ -58,7 +58,8 @@
         "csstype": "^3.2.3",
         "magic-string": "^0.30.21",
         "oxc-parser": "^0.138.0",
-        "unplugin": "^3.3.0"
+        "unplugin": "^3.3.0",
+        "picomatch": "^4.0.7"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
@@ -74,7 +75,8 @@
         "tsup": "^8.5.1",
         "typescript": "catalog:",
         "vite": "^7.3.6",
-        "vitest": "^3.2.6"
+        "vitest": "^3.2.6",
+        "@types/picomatch": "^4.0.2"
     },
     "publishConfig": {
         "access": "public"

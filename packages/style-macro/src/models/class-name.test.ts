@@ -12,8 +12,8 @@ const t = (overrides: Partial<Tuple> = {}): Tuple => ({
 });
 
 describe('buildClassName — readable (dev)', () => {
-    it('shape: vapor_<propSlug>_<valueSlug>_<tail>', () => {
-        expect(buildClassName(t())).toMatch(/^vapor_padding_space-400_[0-9a-zA-Z_]+$/);
+    it('shape: _<propSlug>_<valueSlug>_<group6><value6>', () => {
+        expect(buildClassName(t())).toMatch(/^_padding_space-400_[0-9a-zA-Z]{12}$/);
     });
 
     it('same tuple → same class', () => {
@@ -28,7 +28,7 @@ describe('buildClassName — readable (dev)', () => {
                 rawValue: '$fg-primary',
             }),
         );
-        expect(cls).toMatch(/^vapor_background-color_fg-primary_[0-9a-zA-Z_]+$/);
+        expect(cls).toMatch(/^_background-color_fg-primary_[0-9a-zA-Z]{12}$/);
     });
 
     it('distinct selectorContext → distinct tail', () => {
@@ -45,13 +45,13 @@ describe('buildClassName — readable (dev)', () => {
 
     it('slug escapes special chars (# → x, . → d, etc.)', () => {
         const cls = buildClassName(t({ property: 'color', value: '#ff0000', rawValue: '#ff0000' }));
-        expect(cls).toMatch(/^vapor_color_xff0000_[0-9a-zA-Z_]+$/);
+        expect(cls).toMatch(/^_color_xff0000_[0-9a-zA-Z]{12}$/);
     });
 });
 
 describe('buildClassName — hashed (prod)', () => {
-    it('shape: _<hash> (base62)', () => {
-        expect(buildClassName(t(), 'hashed')).toMatch(/^_[0-9a-zA-Z_]+$/);
+    it('shape: _<group6><value6> (base62, fixed 13 chars)', () => {
+        expect(buildClassName(t(), 'hashed')).toMatch(/^_[0-9a-zA-Z]{12}$/);
     });
 
     it('same tuple → same class', () => {
@@ -118,6 +118,21 @@ describe('buildClassName — hashed (prod)', () => {
             'hashed',
         );
         expect(a).not.toBe(b);
+    });
+});
+
+describe('buildClassName — group tail', () => {
+    it('same selector+property, different value → same group, different value hash', () => {
+        const a = buildClassName(t({ value: 'var(--a)' }), 'hashed');
+        const b = buildClassName(t({ value: 'var(--b)' }), 'hashed');
+        expect(a.slice(1, 7)).toBe(b.slice(1, 7));
+        expect(a.slice(7)).not.toBe(b.slice(7));
+    });
+
+    it('readable and hashed share the same 12-char tail', () => {
+        const dev = buildClassName(t());
+        const prod = buildClassName(t(), 'hashed');
+        expect(dev.slice(-12)).toBe(prod.slice(-12));
     });
 });
 

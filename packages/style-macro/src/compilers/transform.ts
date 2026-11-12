@@ -1,6 +1,7 @@
 import MagicString from 'magic-string';
 import { parseSync } from 'oxc-parser';
 
+import { _ax } from '~/helpers/ax';
 import { axisAliasName } from '~/models/axis-alias';
 import type { ClassNameMode } from '~/models/class-name';
 import type { AnyProp, BuildError, IRRule } from '~/models/types';
@@ -15,7 +16,7 @@ import {
     injectJsxStyleForCall,
 } from './jsx-inject';
 import { walk } from './oxc-walk';
-import { parseCallArg, type ParseCallResult } from './parse-call';
+import { type ParseCallResult, parseCallArg } from './parse-call';
 
 // ────────────────────────────────────────────────────────────────
 // Public API
@@ -24,6 +25,8 @@ import { parseCallArg, type ParseCallResult } from './parse-call';
 export interface TransformResult {
     code: string;
     css: string | null;
+    /** 이 파일의 IR. 수집기가 여러 파일 rules 를 모아 한 번에 emit 할 때 사용. */
+    rules: IRRule[];
     classes: string[];
     errors: BuildError[];
 }
@@ -55,10 +58,10 @@ function axisForProperty(property: string): string | null {
 
 /**
  * `css()` 호출의 한 argument 를 어떻게 처리할지. `ObjectExpression` 리터럴은
- * `_mkStyle({ property: className })` 로 치환하고 그 과정에서 parse-call 이
- * 생성한 rules 가 CSS emit 에도 참여한다. 그 외(Identifier / MemberExpression /
- * 등) 는 "이미 compile 된 VaporClass 값" 으로 간주하고 소스 표현식 그대로 둔
- * 뒤 `_mergeStyles(...)` 안에 한 인자로 넣는다.
+ * class 리스트 string 으로 치환하고 그 과정에서 parse-call 이 생성한 rules 가
+ * CSS emit 에도 참여한다. 그 외(Identifier / MemberExpression / 등) 는 "이미
+ * compile 된 class string" 으로 간주하고 소스 표현식 그대로 `_ax([...])` 안에
+ * 한 인자로 넣는다.
  */
 type ArgRecord =
     | {
@@ -92,8 +95,7 @@ class Transformer {
     #ms: MagicString | null = null;
     #needResolveToken = false;
     #needIx = false;
-    #needMkStyle = false;
-    #needMergeStyles = false;
+    #needAx = false;
     /** `const x = css(...)` 로 선언된 지역 변수 이름. template literal 에
      *  섞여 들어가면 build error 로 catch 하기 위해 추적한다. */
     readonly #vaporLocals = new Set<string>();
@@ -124,6 +126,7 @@ class Transformer {
             return {
                 code: source,
                 css: null,
+                rules: [],
                 classes: [],
                 errors: this.#errors,
             };
@@ -175,6 +178,7 @@ class Transformer {
             return {
                 code: source,
                 css: null,
+                rules: [],
                 classes: [],
                 errors: this.#errors,
             };
@@ -186,6 +190,7 @@ class Transformer {
         return {
             code: this.#ms.toString(),
             css: this.#allRules.length ? emitted.cssText : null,
+            rules: this.#allRules,
             classes: [...this.#classes],
             errors: [],
         };
@@ -329,111 +334,98 @@ class Transformer {
     /**
      * `css(...)` 호출 전체를 바꿀 소스 문자열 생성.
      *
-     * - 단일 object-arg → `_mkStyle({ 'selector|property': 'className', … })`
-     * - 단일 reference → 소스 표현식 그대로 (React 가 알아서 toString 호출)
-     * - 멀티 arg → `_mergeStyles(arg1, arg2, …)` wrap
+     * 반환값은 항상 **string** 이다 (RSC 직렬화 경계를 그대로 통과).
+     * - object-arg 끼리는 compile-time 에 group(selector|property) 단위
+     *   last-wins 로 접어 하나의 class 리스트 literal 로 만든다.
+     * - reference-arg(지역 변수·props 등 런타임 값) 가 섞이면 `_ax([...])` 로
+     *   감싸 런타임에서 같은 규칙으로 머지한다. ternary 가 있는 object 도 분기
+     *   표현식을 품어야 하므로 `_ax` 경로를 탄다.
      */
     #buildCallReplacement(call: CallRecord, classNamesAll: string[]): string {
-        const rendered: string[] = [];
+        const literalParts: string[] = [];
+        const exprParts: string[] = [];
+        let needsRuntime = false;
+
         for (const arg of call.args) {
             if (arg.kind === 'reference') {
-                rendered.push(this.opts.source.slice(arg.node.start, arg.node.end));
+                needsRuntime = true;
+                exprParts.push(this.opts.source.slice(arg.node.start, arg.node.end));
+                continue;
+            }
+            const { staticClasses, ternaryExprs } = this.#renderObjectArg(arg, classNamesAll);
+            if (ternaryExprs.length) needsRuntime = true;
+            if (needsRuntime) {
+                if (staticClasses.length) exprParts.push(jsSingleQuoted(staticClasses.join(' ')));
+                exprParts.push(...ternaryExprs);
             } else {
-                rendered.push(this.#renderMkStyle(arg, classNamesAll));
+                literalParts.push(...staticClasses);
             }
         }
 
-        if (rendered.length === 1) {
-            const only = call.args[0];
-            // 단일 object → _mkStyle 문자열 그대로 사용 (이미 VaporClass).
-            if (only.kind === 'object') return rendered[0];
-            // 단일 reference → 그대로 통과. 사용자 코드의 ident 가 className 자리에
-            // 바로 들어가도 toString 이 자동 호출되므로 unwrap 불필요.
-            return rendered[0];
+        if (!needsRuntime) {
+            return jsSingleQuoted(_ax(literalParts));
         }
 
-        this.#needMergeStyles = true;
-        return `_mergeStyles(${rendered.join(', ')})`;
+        this.#needAx = true;
+        const all = literalParts.length
+            ? [jsSingleQuoted(literalParts.join(' ')), ...exprParts]
+            : exprParts;
+        return `_ax([${all.join(', ')}])`;
     }
 
     /**
-     * 하나의 object-arg 를 `_mkStyle({ 'key': 'className', … })` 리터럴로.
-     *
-     * key 는 `${selectorContext}|${property}` 복합으로, 같은 selector + property
-     * 를 가진 rules 중 **마지막만** 남긴다 (리뷰 #1 — 단일 css() 호출 안 property
-     * last-wins). `_mergeStyles` 도 for-in 으로 key 를 돌며 override 하므로 이
-     * 복합 key 체계가 "다른 selector 는 서로 머지하지 않고, 같은 selector 안의
-     * 같은 property 만 last-wins" 라는 정확한 의미를 유지한다.
-     *
-     * ternary 는 branch 별로 branch classes 를 **구분된 key** 로 삽입해 둘
-     * 중 한 쪽만 평가되도록 삼항식으로 분기한다.
+     * 하나의 object-arg 를 class 조각으로.
+     * - static rules → className 목록 (같은 selector|property 는 마지막만, 리뷰 #1)
+     * - ternary → `(test ? 'A' : 'B')` 표현식 목록. 두 branch 가 같은 group 이므로
+     *   `_ax` 가 static 쪽과 함께 last-wins 처리한다.
      */
-    #renderMkStyle(
+    #renderObjectArg(
         arg: Extract<ArgRecord, { kind: 'object' }>,
         classNamesAll: string[],
-    ): string {
-        this.#needMkStyle = true;
-
+    ): { staticClasses: string[]; ternaryExprs: string[] } {
         const ternaryIdxs = new Set<number>();
         for (const t of arg.ternaries) {
             for (const i of t.consequentRuleIndexes) ternaryIdxs.add(i);
             for (const i of t.alternateRuleIndexes) ternaryIdxs.add(i);
         }
 
-        // 1) ternary 와 무관한 rules — property last-wins 로 Map 수집.
         const staticMap = new Map<string, string>();
         for (let i = 0; i < arg.rules.length; i++) {
             if (ternaryIdxs.has(i)) continue;
             const r = arg.rules[i];
             const className = classNamesAll[arg.rulesOffset + i];
             if (!className) continue;
-            const key = mkKey(r.selectorContext, r.property);
-            staticMap.set(key, className);
+            staticMap.set(mkKey(r.selectorContext, r.property), className);
         }
 
-        const entries: string[] = [];
-        for (const [key, className] of staticMap) {
-            entries.push(`${jsSingleQuoted(key)}: ${jsSingleQuoted(className)}`);
-        }
-
-        // 2) ternary — 각 branch 의 property 를 구분된 key 로 삽입.
+        const ternaryExprs: string[] = [];
         for (const t of arg.ternaries) {
             const testSrc = this.opts.source.slice(t.testStart, t.testEnd);
-
-            // property 별로 두 branch 의 className 묶기.
             const byProp = new Map<string, { conseq: string; alt: string }>();
-            for (const i of t.consequentRuleIndexes) {
+            const put = (i: number, side: 'conseq' | 'alt') => {
                 const r = arg.rules[i];
                 const className = classNamesAll[arg.rulesOffset + i];
-                if (!className) continue;
+                if (!className) return;
                 const key = mkKey(r.selectorContext, r.property);
                 const e = byProp.get(key) ?? { conseq: '', alt: '' };
-                e.conseq = className;
+                e[side] = className;
                 byProp.set(key, e);
-            }
-            for (const i of t.alternateRuleIndexes) {
-                const r = arg.rules[i];
-                const className = classNamesAll[arg.rulesOffset + i];
-                if (!className) continue;
-                const key = mkKey(r.selectorContext, r.property);
-                const e = byProp.get(key) ?? { conseq: '', alt: '' };
-                e.alt = className;
-                byProp.set(key, e);
-            }
-
-            for (const [key, { conseq, alt }] of byProp) {
-                const expr = `(${testSrc} ? ${jsSingleQuoted(conseq)} : ${jsSingleQuoted(alt)})`;
-                entries.push(`${jsSingleQuoted(key)}: ${expr}`);
+            };
+            for (const i of t.consequentRuleIndexes) put(i, 'conseq');
+            for (const i of t.alternateRuleIndexes) put(i, 'alt');
+            for (const { conseq, alt } of byProp.values()) {
+                ternaryExprs.push(
+                    `(${testSrc} ? ${jsSingleQuoted(conseq)} : ${jsSingleQuoted(alt)})`,
+                );
             }
         }
 
-        return entries.length === 0 ? `_mkStyle({})` : `_mkStyle({ ${entries.join(', ')} })`;
+        return { staticClasses: Array.from(staticMap.values()), ternaryExprs };
     }
 
     #ensureRuntimeImport() {
         const specifiers: string[] = [];
-        if (this.#needMkStyle) specifiers.push('_mkStyle');
-        if (this.#needMergeStyles) specifiers.push('_mergeStyles');
+        if (this.#needAx) specifiers.push('_ax');
         if (this.#needResolveToken) specifiers.push('_resolveToken');
         if (this.#needIx) specifiers.push('_ix');
         if (this.#axesUsed.size > 0) {
@@ -470,7 +462,7 @@ function jsSingleQuoted(value: string) {
 }
 
 function emptyResult(source: string): TransformResult {
-    return { code: source, css: null, classes: [], errors: [] };
+    return { code: source, css: null, rules: [], classes: [], errors: [] };
 }
 
 function templateLiteralError(node: AnyProp): BuildError {

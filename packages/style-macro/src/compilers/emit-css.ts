@@ -1,5 +1,6 @@
 import { type ClassNameMode, buildClassName, dynamicVarName } from '~/models/class-name';
 import { composeSelector } from '~/models/selector';
+import { bucketOf, bucketRank, compareAtRulePath, innerRank } from '~/models/sort';
 import type { IRRule } from '~/models/types';
 
 export interface EmitOutput {
@@ -14,6 +15,9 @@ export interface EmitOutput {
 interface Emitted {
     cssRule: string;
     atRulePath: string[];
+    bucket: number;
+    inner: number;
+    order: number;
 }
 
 /**
@@ -108,7 +112,13 @@ export function emitCss(rules: IRRule[], mode: ClassNameMode = 'readable'): Emit
             const selector = leaf === 'base' ? `.${cls}` : composeSelector(`.${cls}`, leaf);
             const cssRule = `${selector} { ${rule.property}: ${finalValue} }`;
             const atRulePath = atRule ? splitAtRules(atRule).map(formatAtRule) : [];
-            emitted.push({ cssRule, atRulePath });
+            emitted.push({
+                cssRule,
+                atRulePath,
+                bucket: bucketRank(bucketOf(leaf, atRulePath.length > 0, rule.property)),
+                inner: innerRank(leaf, rule.property),
+                order: emitted.length,
+            });
 
             if (rule.kind === 'dynamic') {
                 dynamicSlots.push({
@@ -119,14 +129,6 @@ export function emitCss(rules: IRRule[], mode: ClassNameMode = 'readable'): Emit
             }
         }
         classNamesPerRule.push(cls);
-    }
-
-    const grouped = new Map<string, string[]>();
-    for (const { cssRule, atRulePath } of emitted) {
-        const key = atRulePath.join('|');
-        const arr = grouped.get(key) ?? [];
-        arr.push(cssRule);
-        grouped.set(key, arr);
     }
 
     const chunks: string[] = ['@layer vapor-utilities;', ''];
@@ -143,62 +145,46 @@ export function emitCss(rules: IRRule[], mode: ClassNameMode = 'readable'): Emit
 
     chunks.push('@layer vapor-utilities {');
 
-    // 그룹 출력 순서는 cascade 결과를 좌우한다. 같은 layer·같은 specificity 는
-    // 뒤에 등장한 규칙이 이기므로 작성자 의도와 다른 미디어 쿼리가 적용될 수 있다.
-    //  1) base 그룹(`pathKey === ''`)을 가장 먼저. 그렇지 않으면 base 가 뒤에서
-    //     at-rule override 를 덮는다.
-    //  2) at-rule 그룹끼리는 `min-width` 오름차순으로 결정적 정렬. mobile-first
-    //     가정하에서 좁은 뷰포트 규칙이 먼저 나와 넓은 뷰포트 규칙이 cascade 로
-    //     이기는 상태를 보장한다. `min-width` 가 없는 그룹은 뒤에 stable sort.
-    //  3) 결정성 보강을 위해 숫자가 같거나 min-width 가 모두 없으면 pathKey
-    //     문자열 사전식으로 tie-break.
-    //
-    // chunk(파일/CSS 조각) 간 순서는 번들러가 결정한다. 이 함수는 한 파일 내부
-    // 결정성만 책임지므로, 소비자가 여러 파일에 @media 를 흩어 두면 min-width 역순
-    // 이슈가 재현될 수 있다. mobile-first 작성과 파일 분리 최소화를 권장한다.
-    const MIN_WIDTH_RE = /\(\s*min-width\s*:\s*([\d.]+)\s*(px|em|rem)?\s*\)/i;
-    const minWidthOf = (key: string): number | null => {
-        const m = MIN_WIDTH_RE.exec(key);
-        if (!m) return null;
-        const n = Number(m[1]);
-        if (!Number.isFinite(n)) return null;
-        const unit = (m[2] ?? 'px').toLowerCase();
-        // em·rem 은 일반 base 16px 기준으로 환산. 비교에만 쓰므로 근사면 충분.
-        return unit === 'px' ? n : n * 16;
-    };
-    const entries = Array.from(grouped.entries()).sort(([a], [b]) => {
-        if (a === b) return 0;
-        if (a === '') return -1;
-        if (b === '') return 1;
-        const mwA = minWidthOf(a);
-        const mwB = minWidthOf(b);
-        if (mwA !== null && mwB !== null) {
-            if (mwA !== mwB) return mwA - mwB;
-        } else if (mwA !== null) {
-            return -1;
-        } else if (mwB !== null) {
-            return 1;
-        }
-        return a < b ? -1 : 1;
+    // Compiled 의 단일 시트 정렬. 이 함수는 (수집기를 통해) 프로젝트 전체 룰을
+    // 한 번에 받으므로 여기서 정한 순서가 곧 최종 cascade 다:
+    //  1) bucket — shorthand 깊이 < longhand < LVFHA pseudo < at-rule
+    //  2) at-rule 끼리 — 이름 → 조건 수 → min 오름 / max 내림 (mobile-first)
+    //  3) at-rule 안에서 shorthand 깊이 → pseudo → 나머지
+    //  4) 그래도 같으면 입력 순서 (안정 정렬)
+    const sorted = emitted.slice().sort((a, b) => {
+        if (a.bucket !== b.bucket) return a.bucket - b.bucket;
+        const c = compareAtRulePath(a.atRulePath, b.atRulePath);
+        if (c !== 0) return c;
+        if (a.inner !== b.inner) return a.inner - b.inner;
+        return a.order - b.order;
     });
 
-    for (const [pathKey, ruleList] of entries) {
-        if (!pathKey) {
-            for (const r of ruleList) chunks.push(`  ${r}`);
-        } else {
-            const paths = pathKey.split('|');
-            let indent = '  ';
-            for (const p of paths) {
-                chunks.push(`${indent}${p} {`);
-                indent += '  ';
-            }
-            for (const r of ruleList) chunks.push(`${indent}${r}`);
-            for (let i = 0; i < paths.length; i++) {
-                indent = indent.slice(2);
-                chunks.push(`${indent}}`);
-            }
+    // 같은 at-rule 경로는 인접하므로 연속 구간만 하나의 블록으로 묶는다.
+    const openPath: string[] = [];
+    const closeTo = (depth: number) => {
+        while (openPath.length > depth) {
+            openPath.pop();
+            chunks.push(`${'  '.repeat(openPath.length + 1)}}`);
         }
+    };
+    for (const e of sorted) {
+        let common = 0;
+        while (
+            common < openPath.length &&
+            common < e.atRulePath.length &&
+            openPath[common] === e.atRulePath[common]
+        ) {
+            common++;
+        }
+        closeTo(common);
+        while (openPath.length < e.atRulePath.length) {
+            const p = e.atRulePath[openPath.length];
+            chunks.push(`${'  '.repeat(openPath.length + 1)}${p} {`);
+            openPath.push(p);
+        }
+        chunks.push(`${'  '.repeat(openPath.length + 1)}${e.cssRule}`);
     }
+    closeTo(0);
     chunks.push('}');
 
     return { cssText: chunks.join('\n'), classNamesPerRule, dynamicSlots };

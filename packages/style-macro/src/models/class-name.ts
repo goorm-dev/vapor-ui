@@ -90,21 +90,33 @@ function stripTokenPrefix(input: string): string {
     return input.startsWith('$') ? input.slice(1) : input;
 }
 
-export function buildClassName(t: Tuple, mode: ClassNameMode = 'readable'): string {
-    // StyleX / Compiled / Panda 패턴: (property, selectorContext, value) 전체를
-    // 한 번에 해시한다. 분리 해시(propHash + valueHash) 는 각 공간이 32-bit 로
-    // 좁아져 hex 값끼리 자연 충돌한다.
-    const hash = generateArbitraryValueSelector(
-        `${t.property}|${t.selectorContext}|${t.value}`,
-    );
+/** 그룹·값 해시 각각의 고정 길이. `_ax` 가 길이로 그룹 키를 잘라낸다. */
+export const GROUP_HASH_LENGTH = 6;
+export const VALUE_HASH_LENGTH = 6;
 
-    if (mode === 'hashed') {
-        return `_${hash}`;
-    }
+/** 32-bit murmur 는 base62 6자리 안에 들어간다. 모자라면 'a'(=0) 로 왼쪽 패딩. */
+function fixedBase62(value: number, length: number): string {
+    return toBase62(value).padStart(length, 'a');
+}
+
+/**
+ * Compiled(Atlassian) 의 `_<group><value>` 포맷. group = hash(selectorContext|property),
+ * value = hash(value). 같은 group 의 class 는 같은 CSS 선언 슬롯을 두고 경쟁하므로
+ * runtime `_ax` 가 group 만 보고 뒤쪽 승자를 고를 수 있다.
+ *
+ * readable 모드는 사람이 읽을 slug 를 앞에 붙이되 끝 12자 구조는 유지한다 —
+ * prebuilt(hashed) 와 dev(readable) 산출물이 섞여도 `_ax` 키가 일치해야 한다.
+ */
+export function buildClassName(t: Tuple, mode: ClassNameMode = 'readable'): string {
+    const group = fixedBase62(murmur2(`${t.selectorContext}|${t.property}`), GROUP_HASH_LENGTH);
+    const value = fixedBase62(murmur2(t.value), VALUE_HASH_LENGTH);
+    const tail = `${group}${value}`;
+
+    if (mode === 'hashed') return `_${tail}`;
 
     const propSlug = slug(t.property);
     const valueSlug = slug(stripTokenPrefix(t.rawValue ?? t.value));
-    return `vapor_${propSlug}_${valueSlug}_${hash}`;
+    return `_${propSlug}_${valueSlug}_${tail}`;
 }
 
 /** dynamic slot 용 CSS var 이름. mode 별 접두: prod=`--_`, dev=`--vapor-_`. */

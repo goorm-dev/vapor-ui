@@ -153,6 +153,13 @@ import { css } from '@vapor-ui/style-macro';
 
 Core component implementations stay on Vanilla Extract (`componentRecipe` / `componentStyle`) — the macro is for leaf product code and consumers assembling layouts.
 
+How it is wired (see `packages/style-macro/README.md` for per-bundler setup):
+
+- `css()` returns a plain **string** (RSC-safe). Static compositions `css(a, b, {...})` merge at compile time per `selector|property` slot; when a runtime value is mixed in, the call becomes `_ax([...])` which applies the same last-wins rule and passes non-vapor classes through. Template-literal joins are a build error.
+- CSS is **not** emitted per file. The bundler adapter only rewrites JS; the CSS side scans the project and replaces the `@vapor-utilities;` at-rule in the consumer's CSS entry with one globally sorted sheet (shorthand depth → base → `:link/:visited/:focus-within/:focus/:focus-visible/:hover/:active` → at-rules, `min-width` ascending / `max-width` descending). This makes cross-file `@media` / pseudo / longhand overrides deterministic regardless of chunk order. `@vapor-utilities;` must appear exactly once.
+- Class format is `_<group6><value6>` (dev prepends a readable slug but keeps the 12-char tail), where group = hash(selector|property). `_ax` keys on the group.
+- Unexpanded shorthands (`border`, `background`, `font`, …) still do not accept tokens; `padding`/`margin`/`inset`/`borderRadius` are expanded to longhands first and do.
+
 ### `$css` prop
 
 The sprinkles-backed `$css` prop is still a supported public API. External consumers of `@vapor-ui/core` and `@vapor-ui/composites` can keep using `$css={{ padding: '150' }}` and we do not mark it with `@deprecated`.

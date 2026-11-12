@@ -142,9 +142,20 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
         const output = vaporNextPlugin({ mode: 'webpack' })<TestNextConfig>({
             webpack: userWebpack,
         });
-        const config: { plugins?: unknown[] } = {};
+        const cssRule = { test: /\.css$/, use: ['next/dist/compiled/css-loader'] };
+        const config: { plugins?: unknown[]; module: { rules: unknown[] } } = {
+            module: { rules: [{ oneOf: [cssRule] }] },
+        };
         const returned = output.webpack?.(config, {}) as { plugins?: unknown[] } | undefined;
         expect(returned?.plugins).toContainEqual({ marker: 'user-plugin' });
+        // css-loader 체인 끝에 수집 loader 가 붙는다 (webpack 은 뒤에서 앞으로 실행).
+        const last = cssRule.use[cssRule.use.length - 1] as { loader?: string };
+        expect(String(last.loader ?? last)).toMatch(/css-loader\.[cm]?js$/);
+    });
+
+    it('throws when no Next.js CSS rule can be found (pipeline changed)', () => {
+        const output = vaporNextPlugin({ mode: 'webpack' })<TestNextConfig>({});
+        expect(() => output.webpack?.({ module: { rules: [] } }, {})).toThrow(/CSS loader rules/);
     });
 
     it.skipIf(!turbopackBuilt)('merges into existing turbopack.rules without clobbering', () => {

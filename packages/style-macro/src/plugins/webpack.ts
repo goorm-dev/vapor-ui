@@ -2,9 +2,9 @@ import { createRequire } from 'node:module';
 
 import { type ColorSchemeScriptOpts, buildColorSchemeScript } from '~/helpers/fouc-script';
 
+import { warnIfNeverReplaced } from './_collect';
 import unplugin from './_factory';
-import type { VaporPluginOptions } from './_factory';
-import { resolveOptions } from './_options';
+import { type VaporPluginOptions, resolveOptions } from './_options';
 
 export type { VaporPluginOptions };
 
@@ -12,25 +12,11 @@ interface WebpackPluginShape {
     apply(compiler: unknown): void;
 }
 
-interface PluginLike {
-    apply?: (compiler: unknown) => void;
-    constructor?: { name?: string };
-}
-
-interface CompilerWithPlugins {
-    options?: { plugins?: Array<PluginLike | null | undefined> };
-}
-
-function tapVirtualModulesPlugin(compiler: unknown): void {
-    const plugins = (compiler as CompilerWithPlugins).options?.plugins;
-    const vfs = plugins?.find((p) => p?.constructor?.name === 'VirtualModulesPlugin');
-    if (vfs && typeof vfs.apply === 'function') {
-        vfs.apply(compiler);
-    }
-}
-
 interface MinimalCompiler {
-    hooks: { compilation: { tap: (name: string, fn: (c: unknown) => void) => void } };
+    hooks: {
+        compilation: { tap: (name: string, fn: (c: unknown) => void) => void };
+        done: { tap: (name: string, fn: () => void) => void };
+    };
 }
 
 interface HtmlPluginData {
@@ -81,23 +67,25 @@ function tapHtmlFouc(compiler: unknown, injectColorScheme: false | ColorSchemeSc
 }
 
 /**
- * Webpack plugin for @vapor-ui/style-macro. Also usable from
- * `next.config.js` under `webpack(config) { ... }` when opting out of the
- * `next` helper.
+ * Webpack plugin for @vapor-ui/style-macro — JS 변환 + FOUC guard.
+ * CSS 는 `@vapor-ui/style-macro/css-loader` (Next 는 자동 배선) 또는
+ * `@vapor-ui/style-macro/postcss` 가 `@vapor-utilities;` 자리에서 수집한다.
  *
  *     // webpack.config.js
  *     import vaporStyle from '@vapor-ui/style-macro/webpack';
  *     module.exports = { plugins: [vaporStyle()] };
  */
-export function vaporWebpackPlugin(opts?: VaporPluginOptions): WebpackPluginShape {
-    const resolved = resolveOptions(opts ?? {});
+export function vaporWebpackPlugin(opts: VaporPluginOptions = {}): WebpackPluginShape {
+    const resolved = resolveOptions(opts);
     const base = unplugin.webpack(opts) as WebpackPluginShape;
 
     return {
         apply(compiler) {
             base.apply(compiler);
-            tapVirtualModulesPlugin(compiler);
             tapHtmlFouc(compiler, resolved.injectColorScheme);
+            (compiler as MinimalCompiler).hooks.done?.tap(TAP_NAME, () => {
+                warnIfNeverReplaced(opts, (m) => console.warn(m));
+            });
         },
     };
 }
