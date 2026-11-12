@@ -4,7 +4,6 @@ import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
-import type { HTMLProps } from '@base-ui/react/types';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
 import { useRenderElement } from '~/hooks/use-render-element';
@@ -15,6 +14,7 @@ import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
+import { adaptStatefulCallbacks } from '~/utils/stateful-props';
 import type { VaporUIComponentProps } from '~/utils/types';
 
 import type { LinkVariants, ListVariants } from './navigation-menu.css';
@@ -134,25 +134,16 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             current,
         });
 
-        // NOTE: Base UI passes its own Link State to callbacks; map it to the custom NavigationMenuLink State.
-        const toState = (state: BaseNavigationMenu.Link.State): NavigationMenuLink.State => ({
-            ...state,
-            current: state.active,
-            disabled: !!disabled,
-        });
-        const className =
-            typeof classNameProp === 'function'
-                ? (state: BaseNavigationMenu.Link.State) => classNameProp(toState(state))
-                : classNameProp;
-        const style =
-            typeof styleProp === 'function'
-                ? (state: BaseNavigationMenu.Link.State) => styleProp(toState(state))
-                : styleProp;
-        const render =
-            typeof renderProp === 'function'
-                ? (renderProps: HTMLProps, state: BaseNavigationMenu.Link.State) =>
-                      renderProp(renderProps, toState(state))
-                : renderProp;
+        // NOTE: Base UI calls these with its own Link state; map it to the custom NavigationMenuLink state.
+        // `active` is dropped, not just omitted from the type, so it doesn't leak through the spread.
+        const { className, style, render } = adaptStatefulCallbacks(
+            { className: classNameProp, style: styleProp, render: renderProp },
+            ({ active, ...state }: BaseNavigationMenu.Link.State): NavigationMenuLink.State => ({
+                ...state,
+                current: active,
+                disabled: !!disabled,
+            }),
+        );
 
         return (
             <BaseNavigationMenu.Link

@@ -11,7 +11,7 @@
         {
             "name": "vapor-figma",
             "source": "./plugins/vapor-figma",
-            "description": "For designers: compose Figma designs from the Vapor core library without detaching instances"
+            "description": "Claude Code plugin for designers working with the Vapor UI Figma library"
         },
         {
             "name": "vapor-ui",

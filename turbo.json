@@ -20,7 +20,7 @@
             "outputs": [".next/**", "!.next/cache/**"]
         },
         "website#build": {
-            "dependsOn": ["^build", "website#docs:api"],
+            "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
             "outputs": [".next/**", "!.next/cache/**"]
         },

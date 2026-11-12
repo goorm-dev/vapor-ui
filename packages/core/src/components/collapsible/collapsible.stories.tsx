@@ -39,11 +39,11 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                 templateColumns="repeat(3, 14rem)"
             >
                 <Grid.Item
-                    $css={{ padding: '$200' }}
-                    style={{
+                    $css={{
+                        padding: '$200',
                         borderBottom: '1px solid',
                         borderRight: '1px solid',
-                        borderColor: '#e1e1e1',
+                        borderColor: '$border-normal',
                     }}
                 >
                     <Collapsible.Root open={open1} onOpenChange={setOpen1} {...args}>
@@ -76,11 +76,11 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                 </Grid.Item>
 
                 <Grid.Item
-                    $css={{ padding: '$200' }}
-                    style={{
+                    $css={{
+                        padding: '$200',
                         borderBottom: '1px solid',
                         borderRight: '1px solid',
-                        borderColor: '#e1e1e1',
+                        borderColor: '$border-normal',
                     }}
                 >
                     <Collapsible.Root
@@ -119,10 +119,10 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                 </Grid.Item>
 
                 <Grid.Item
-                    $css={{ padding: '$200' }}
-                    style={{
+                    $css={{
+                        padding: '$200',
                         borderBottom: '1px solid',
-                        borderColor: '#e1e1e1',
+                        borderColor: '$border-normal',
                     }}
                 >
                     <Collapsible.Root
@@ -169,10 +169,10 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                 </Grid.Item>
 
                 <Grid.Item
-                    $css={{ padding: '$200' }}
-                    style={{
+                    $css={{
+                        padding: '$200',
                         borderRight: '1px solid',
-                        borderColor: '#e1e1e1',
+                        borderColor: '$border-normal',
                     }}
                 >
                     <Collapsible.Root {...args}>

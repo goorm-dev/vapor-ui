@@ -49,7 +49,7 @@ function buildRoot() {
     return {
         example: figma.code`
         <Dialog.Root
-            ariaLabels={} // TODO: 닫기 버튼의 aria-label을 지정하세요.
+            ariaLabels={{ close: '' }} // TODO: 닫기 버튼의 aria-label을 지정하세요.
             trigger={<Button>...</Button>} // TODO: 트리거 요소를 입력하세요.
             ${popup.size}
             ${header.title}

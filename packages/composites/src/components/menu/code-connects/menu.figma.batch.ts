@@ -13,8 +13,7 @@ function buildRoot() {
     return {
         example: figma.code`
         <Menu.Root 
-            /* TODO: 트리거 요소를 입력하세요. */ 
-            trigger={<Button>...</Button>}
+            trigger={<Button>...</Button>} // TODO: 트리거 요소를 입력하세요.
         >
             ${children}
         </Menu.Root>

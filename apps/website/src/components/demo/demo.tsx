@@ -22,7 +22,7 @@ export const Demo = (props: DemoProps) => {
 
     return (
         <ErrorBoundary>
-            <div className="rounded-v-500 bg-v-canvas-raised">
+            <div className="rounded-v-500 bg-v-canvas-base border border-v-normal">
                 <Tabs.Root
                     value={selectedTab}
                     onValueChange={handleTabChange}

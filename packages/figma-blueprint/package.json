@@ -44,7 +44,7 @@
         "vitest": "catalog:"
     },
     "engines": {
-        "node": ">=22"
+        "node": ">=22.18"
     },
     "publishConfig": {
         "access": "public"

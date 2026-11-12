@@ -9,6 +9,8 @@ export interface FigmaNode {
     componentProperties?: Record<string, { value: string | boolean; type: string }>;
     absoluteBoundingBox?: { x: number; y: number; width: number; height: number };
     style?: { fontWeight?: number; fontSize?: number };
+    characterStyleOverrides?: number[];
+    styleOverrideTable?: Record<string, { fontWeight?: number }>;
 }
 
 export const SECTION_WHITELIST = [
@@ -34,6 +36,8 @@ export const SECTION_SLUG: Record<SectionTitle, string> = {
 export type ItemBlock =
     | { kind: 'subtitle'; text: string }
     | { kind: 'body'; text: string }
+    | { kind: 'listItem'; markdown: string }
+    | { kind: 'listGroup'; items: string[] }
     | { kind: 'docsImage'; webpRel: string; alt: string }
     | { kind: 'doCase'; webpRel: string; alt: string; caption: string }
     | { kind: 'dontCase'; webpRel: string; alt: string; caption: string }

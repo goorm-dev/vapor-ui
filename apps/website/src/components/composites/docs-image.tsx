@@ -1,5 +1,6 @@
 import { Text, VStack } from '@vapor-ui/core';
-import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+import { ImageZoom } from './image-zoom';
 
 interface DocsImageProps {
     src: string;
@@ -12,13 +13,8 @@ interface DocsImageProps {
 export const DocsImage = ({ src, alt, width = 868, height = 480, caption }: DocsImageProps) => {
     return (
         <VStack render={<figure />} className="gap-v-150">
-            <ImageZoom
-                src={src}
-                alt={alt}
-                width={width}
-                height={height}
-                className="object-cover w-full h-auto not-prose"
-            />
+            <ImageZoom src={src} alt={alt} width={width} height={height} />
+
             {caption && (
                 <Text typography="body2" foreground="secondary" className="leading-v-100">
                     {caption}

@@ -1,12 +1,12 @@
 # vapor-figma
 
-Claude Code에서 Vapor core 라이브러리(Figma 팀 라이브러리 `Vapor Design System`) 컴포넌트로 Figma 시안을 만드는 plugin입니다. 시안 속 컴포넌트를 detach하지 않고 라이브러리 원본과 연결된 instance로 유지하는 것이 목표입니다.
+Claude Code에서 Vapor UI를 사용하는 디자이너의 Figma 작업을 돕는 plugin입니다. 디자이너가 Vapor UI Figma 라이브러리를 쓰면서 겪는 반복 작업을 Claude에게 넘길 수 있도록, 작업 흐름별 스킬을 묶어 제공합니다.
 
 ## 필요한 것
 
 - Claude Code
-- Figma 공식 plugin (`figma@claude-plugins-official`) — Figma MCP 서버와 `figma-use` 스킬
-- 시안을 만들 Figma 파일에서 `Vapor Design System`, `[V2.0] [Goorm theme] Foundation` 라이브러리 사용 권한
+- 아래 "스킬" 섹션의 각 스킬이 요구하는 외부 plugin / 권한
+- Figma 파일에서 `Vapor Design System`, `[V2.0] [Goorm theme] Foundation` 라이브러리 사용 권한
 
 ## 설치
 
@@ -22,16 +22,35 @@ claude plugin marketplace update vapor-ui
 claude plugin update vapor-figma@vapor-ui
 ```
 
-## 사용
+## 스킬
 
-Figma 파일 URL과 함께 만들 화면을 말합니다.
+이 plugin에 포함된 스킬은 서로 독립적으로 동작합니다. 요청에 맞으면 Claude가 알아서 부르고, 아래 이름으로 직접 호출해도 됩니다.
+
+### `vapor-figma:vapor-figma-compose`
+
+Vapor core 라이브러리(`Vapor Design System`)의 🟢 Stable 컴포넌트로 Figma 시안을 구성합니다. 시안 속 컴포넌트를 detach하지 않고 라이브러리 원본과 연결된 instance로 유지하는 것이 목표이며, Composites·Alpha·Archive·Deprecated 컴포넌트는 다루지 않습니다.
+
+**필요한 외부 의존성**
+
+- Figma 공식 plugin (`figma@claude-plugins-official`) — Figma MCP 서버, `figma-use` 스킬
+
+**사용 예시**
 
 ```
 https://www.figma.com/design/<fileKey>/... 여기에 결제 확인 Dialog 시안 만들어줘
 ```
 
-스킬 이름은 `vapor-figma:vapor-figma-compose`입니다. 요청에 맞으면 Claude가 알아서 불러오고, 직접 호출해도 됩니다.
+### `vapor-figma:vapor-cs-report-jira`
 
-## 범위
+Vapor Figma 라이브러리를 쓰다가 발견한 결함(variant 누락, 토큰 어긋남, Auto Layout 깨짐, 인스턴스 override 이상, publish 반영 지연 등)을 Jira `VAPOR` 프로젝트에 `CS` 이슈(label=figma)로 보고합니다. 미리보기를 보여준 뒤 사용자 명시 승인이 있을 때만 발행하며, 담당자는 지정하지 않고 팀 트리아지에 맡깁니다. `@vapor-ui/*` 코드 패키지 런타임/빌드 이슈는 범위 밖이며, 그런 요청에는 별도 Slack 워크플로우 봇으로 접수하도록 안내만 하고 티켓을 만들지 않습니다.
 
-core 라이브러리의 🟢 Stable 컴포넌트만 다룹니다. Composites, Alpha, Archive, Deprecated 컴포넌트는 쓰지 않습니다.
+**필요한 외부 의존성**
+
+- Atlassian 공식 plugin (`atlassian@claude-plugins-official`) — Atlassian MCP (`createJiraIssue`, `getAccessibleAtlassianResources`)
+- goorm Atlassian 사이트의 `VAPOR` 프로젝트에 이슈 생성 권한
+
+**사용 예시**
+
+```
+이 Button hover state에 토큰이 어긋나 있어. 디자인 시스템 팀에 Jira 티켓으로 올려줘
+```
