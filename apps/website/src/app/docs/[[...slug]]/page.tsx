@@ -1,3 +1,5 @@
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+import type { MDXComponents } from 'mdx/types';
 import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
@@ -14,6 +16,9 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     if (!page) notFound();
 
     const { body: MDX, toc } = await page.data.load();
+    const markdownComponents: MDXComponents = page.data.fumadocsMarkdown
+        ? { table: defaultMdxComponents.table, pre: defaultMdxComponents.pre }
+        : {};
     return (
         <CustomDocsPage
             toc={toc}
@@ -30,7 +35,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
                 markdownUrl={`${SITE_URL}${page.url}.mdx`}
             />
             <DocsBody>
-                <MDX components={getMDXComponents({})} />
+                <MDX components={getMDXComponents(markdownComponents)} />
             </DocsBody>
         </CustomDocsPage>
     );

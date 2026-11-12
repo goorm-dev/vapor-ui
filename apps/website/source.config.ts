@@ -1,5 +1,5 @@
 import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins';
-import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
+import { defineConfig, defineDocs, frontmatterSchema } from 'fumadocs-mdx/config';
 import lastModified from 'fumadocs-mdx/plugins/last-modified';
 import { z } from 'zod';
 
@@ -9,6 +9,9 @@ export const docs = defineDocs({
     dir: 'content/docs',
     docs: {
         async: true,
+        schema: frontmatterSchema.extend({
+            fumadocsMarkdown: z.boolean().optional(),
+        }),
     },
     // Only meta.json configures the sidebar; api/{en,ko}/*.json next to a page is props data.
     meta: {
