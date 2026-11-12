@@ -859,7 +859,7 @@ importers:
         specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)(supports-color@10.2.2)
       rimraf:
-        specifier: ^6.1.3
+        specifier: ^6.1.4
         version: 6.1.4
       tsup:
         specifier: ^8.5.1
