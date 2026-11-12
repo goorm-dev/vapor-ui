@@ -5,7 +5,15 @@ description: AI Agent에서 vapor-ui 플러그인을 설치하고 Figma 시안�
 
 vapor-ui 플러그인은 AI Agent가 Vapor UI 컴포넌트를 조회하고, Figma 시안을 vapor-ui 코드로 옮기고, 그 결과를 채점하게 돕는 스킬 묶음입니다. 코드를 작성하는 개발자용입니다. Figma에서 시안을 만드는 디자이너용 플러그인은 `vapor-figma`입니다.
 
-## 설치
+**코드를 쓴 에이전트는 채점하지 않습니다.** 구현 맥락을 모르는 검증 에이전트를 새로 띄우고 그 에이전트가 코드를 직접 읽어 판정합니다.
+
+**정답은 Figma Code Connect 템플릿에서 나옵니다.** `@vapor-ui/figma-blueprint`가 시안에 놓인 라이브러리 컴포넌트를 Code Connect 템플릿으로 바꿔 정답 트리를 만듭니다. 같은 시안이면 정답은 항상 같습니다.
+
+**통과하지 못해도 숨기지 않습니다.** 관문을 통과했는지와 상관없이 개선 전후 점수와 남은 실패 항목을 항상 보고합니다.
+
+**검증된 결과라서 믿고 맡길 수 있습니다.** 남은 실패 항목은 파일과 줄 번호까지 보고하므로 어디를 다시 볼지 바로 알 수 있습니다.
+
+## 설치와 업데이트
 
 Claude Code에서는 플러그인으로 설치합니다.
 
@@ -29,17 +37,20 @@ npx skills add goorm-dev/vapor-ui
 
 이전에 설치한 `vapor-ui` 스킬은 이제 플러그인 설치 방법만 안내합니다. 플러그인을 설치한 뒤 지워도 됩니다.
 
+채점하려면 앱에 `@vapor-ui/core` 1.7.1, `@vapor-ui/icons` 1.3.3, `@vapor-ui/composites` 0.1.1, `@vapor-ui/figma-blueprint` 0.0.1 이상이 있어야 합니다. `/vapor-ui:setup`이 빠진 패키지와 정답 표가 없는 예전 버전을 찾아 설치합니다.
+
 ## 필요한 환경
 
 처음 쓰기 전에 앱 폴더에서 `/vapor-ui:setup`을 한 번 실행합니다. 아래 항목을 확인하고, 빠진 패키지는 고른 것만 설치합니다. 토큰과 Figma MCP는 준비 방법을 안내합니다.
 
-| 필요한 것                   | 쓰는 스킬                          | 준비 방법                                                                                                           |
-| --------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Figma MCP 서버              | `implement-figma`                  | Figma 공식 MCP 서버를 에이전트에 연결합니다                                                                         |
-| `@vapor-ui/figma-blueprint` | `check-components`, `visual-score` | 앱 패키지에 devDependency로 설치합니다                                                                              |
-| Code Connect 템플릿         | `check-components`                 | `@vapor-ui/core`, `@vapor-ui/icons`, `@vapor-ui/composites`를 `figma-blueprint/` 폴더가 들어 있는 버전으로 올립니다 |
-| `FIGMA_ACCESS_TOKEN`        | `check-components`, `visual-score` | 시안 파일을 읽을 수 있는 Figma 개인 토큰을 환경 변수로 둡니다                                                       |
-| Playwright                  | `visual-score`                     | 앱 패키지나 npm 전역에 설치하고 chromium을 받습니다                                                                 |
+| 필요한 것                   | 최소 버전                                 | 쓰는 스킬                          | 준비 방법                                                                                                           |
+| --------------------------- | ----------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Node.js                     | 22.18                                     | `check-components`, `visual-score` | Node 22.18 이상으로 올립니다. 낮은 버전에서는 `figma-blueprint`가 실행되지 않습니다                                 |
+| Figma MCP 서버              |                                           | `implement-figma`                  | Figma 공식 MCP 서버를 에이전트에 연결합니다                                                                         |
+| `@vapor-ui/figma-blueprint` | 0.0.1                                     | `check-components`, `visual-score` | 앱 패키지에 devDependency로 설치합니다                                                                              |
+| Code Connect 템플릿         | core 1.7.1, icons 1.3.3, composites 0.1.1 | `check-components`                 | `@vapor-ui/core`, `@vapor-ui/icons`, `@vapor-ui/composites`를 `figma-blueprint/` 폴더가 들어 있는 버전으로 올립니다 |
+| `FIGMA_ACCESS_TOKEN`        |                                           | `check-components`, `visual-score` | 시안 파일을 읽을 수 있는 Figma 개인 토큰을 환경 변수로 둡니다                                                       |
+| Playwright                  |                                           | `visual-score`                     | 앱 패키지나 npm 전역에 설치하고 chromium을 받습니다                                                                 |
 
 컴포넌트 패키지는 Code Connect 템플릿을 `figma-blueprint/` 폴더에 담아 배포합니다. figma-blueprint는 설치된 버전의 템플릿으로 정답을 만들기 때문에, 이 폴더가 없는 예전 버전의 컴포넌트는 채점하지 않습니다.
 
@@ -54,9 +65,11 @@ npx skills add goorm-dev/vapor-ui
 | `visual-score`     | 실행 중인 앱 화면을 시안과 비교해 시각 점수를 잽니다                                            |
 | `figma-to-code`    | 위 스킬을 순서대로 불러 구현부터 시각 점수까지 한 번에 진행합니다                               |
 
-플러그인으로 설치하면 스킬 이름 앞에 `vapor-ui:`가 붙습니다(`/vapor-ui:figma-to-code`). 요청에 맞는 스킬을 에이전트가 알아서 고르므로, 이름을 몰라도 Figma URL과 함께 "이 시안을 vapor-ui로 구현해줘"라고 말하면 `figma-to-code`가 구현부터 채점까지 진행합니다. 채점 없이 구현만 원하면 그렇게 말합니다.
+플러그인으로 설치하면 스킬 이름 앞에 `vapor-ui:`가 붙습니다(`/vapor-ui:figma-to-code`).
 
-`figma-to-code`는 구현한 뒤 관문 1을 돌리고, 통과하지 못하면 실패한 항목만 고쳐 최대 2번 다시 채점합니다. 마지막에 시각 점수를 잴 때 앱 URL, 화면을 감싼 요소의 selector, 로그인 상태 파일을 묻습니다. 앱은 직접 띄워 둡니다.
+스킬 이름 없이 Figma URL과 함께 "이 시안을 vapor-ui로 구현해줘"라고 요청해도 에이전트가 스킬을 고릅니다. 다만 이렇게 요청했을 때 채점하지 않는 `implement-figma`가 불린 기록이 있습니다. 구현과 채점을 함께 원하면 `/vapor-ui:figma-to-code`를 직접 호출합니다.
+
+`figma-to-code`는 구현한 뒤 관문 1을 돌리고, 통과하지 못하면 실패한 항목만 고쳐 최대 2회 다시 채점합니다. 마지막에 시각 점수를 잴 때 앱 URL, 화면을 감싼 요소의 selector, 로그인 상태 파일을 묻습니다. 앱은 직접 띄워 둡니다.
 
 ## 점수 읽는 법
 
@@ -66,7 +79,7 @@ npx skills add goorm-dev/vapor-ui
 
 `figma-blueprint`가 시안에 놓인 라이브러리 컴포넌트를 Code Connect 템플릿으로 바꿔 정답 트리를 만듭니다. 노드마다 태그, props, Figma node id가 붙고, 라이브러리 컴포넌트끼리만 중첩합니다. 같은 시안이면 정답 트리는 항상 같습니다.
 
-코드를 쓴 에이전트는 채점하지 않습니다. 구현 맥락을 모르는 검증 에이전트를 새로 띄워 정답 트리와 화면의 진입점 컴포넌트만 넘깁니다. 검증 에이전트는 진입점에서 로컬 import를 모두 따라가며 코드를 직접 읽고, 노드마다 아래 판정 하나를 내립니다. 문구와 레이아웃은 보지 않습니다.
+코드를 쓴 에이전트는 채점하지 않습니다. 구현 맥락을 모르는 검증 에이전트를 새로 띄워 정답 트리, 화면의 진입점 컴포넌트, 이번에 쓰거나 고친 파일 목록만 넘깁니다. 검증 에이전트는 진입점에서 로컬 import를 모두 따라가며 코드를 직접 읽고, 노드마다 아래 판정 하나를 내립니다. 문구와 레이아웃은 보지 않습니다.
 
 | 판정         | 뜻                                                               |
 | ------------ | ---------------------------------------------------------------- |

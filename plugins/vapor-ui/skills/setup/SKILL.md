@@ -59,6 +59,8 @@ node -e "require.resolve(require('path').join(require('child_process').execSync(
 
 메이저 버전을 넘는 업그레이드는 하지 않는다. 같은 major 안에 정답 표가 있는 버전이 없으면 안내만 한다.
 
+정답 표는 `@vapor-ui/core` 1.7.1, `@vapor-ui/icons` 1.3.3, `@vapor-ui/composites` 0.1.1부터 들어 있고, `@vapor-ui/figma-blueprint`는 0.0.1 이상이 필요하다. 설치나 업그레이드를 안내할 때 이 최소 버전을 함께 알린다. 판정은 버전 숫자가 아니라 위 정답 표 확인으로 한다.
+
 `@vapor-ui/figma-blueprint` 설치가 `404`로 실패하면 아직 npm에 배포되지 않은 것이다. 그렇게 알리고 다음 항목으로 넘어간다.
 
 아래 두 항목은 setup이 대신 하지 않는다. 방법만 안내한다.
@@ -68,4 +70,4 @@ node -e "require.resolve(require('path').join(require('child_process').execSync(
 
 ## 4. 보고
 
-설치한 항목을 다시 확인해 2의 표를 한 번 더 보여 준다. 항목마다 준비됨, 설치함, 건너뜀, 사용자가 할 일 중 하나를 적는다. 사용자가 할 일이 남았으면 무엇을 하면 되는지 한 줄씩 적는다.
+설치한 항목을 다시 확인해 2의 표를 한 번 더 보여 준다. 항목마다 준비됨, 설치함, 건너뜀, 사용자가 할 일 중 하나를 적는다. 사용자가 할 일이 남았으면 무엇을 하면 되는지 한 줄씩 적는다. 정답 표나 `@vapor-ui/figma-blueprint`가 준비되지 않은 항목에는 3의 최소 버전을 함께 적는다.
