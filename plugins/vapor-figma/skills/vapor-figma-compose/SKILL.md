@@ -1,6 +1,6 @@
 ---
 name: vapor-figma-compose
-description: Vapor core 라이브러리(Figma 팀 라이브러리 "Vapor Design System") 컴포넌트로 Figma 시안을 조립한다. instance를 detach하지 않고 원본 컴포넌트를 바라보게 유지하는 것이 목표다. 디자이너가 "vapor로 시안 만들어줘", "이 화면 Figma에 그려줘", "결제 확인 Dialog 시안", "vapor 컴포넌트로 목업", "Figma에 폼 화면 만들어줘", "compose a Figma screen with Vapor components"처럼 말하거나, Figma 파일 URL을 주며 vapor 컴포넌트로 화면·모달·폼을 만들거나 고쳐 달라고 하면 반드시 이 스킬을 쓴다. 코드 구현(Figma → React)은 vapor-ui 스킬, 토큰 검수는 token-usage-review 스킬 소관이다.
+description: Vapor core 라이브러리(Figma 팀 라이브러리 "Vapor Design System") 컴포넌트로 Figma 시안을 조립한다. instance를 detach하지 않고 원본 컴포넌트를 바라보게 유지하는 것이 목표다. 디자이너가 "vapor로 시안 만들어줘", "이 화면 Figma에 그려줘", "결제 확인 Dialog 시안", "vapor 컴포넌트로 목업", "Figma에 폼 화면 만들어줘", "compose a Figma screen with Vapor components"처럼 말하거나, Figma 파일 URL을 주며 vapor 컴포넌트로 화면·모달·폼을 만들거나 고쳐 달라고 하면 반드시 이 스킬을 쓴다. 코드 구현(Figma → React)은 vapor-ui 플러그인, 토큰 검수는 token-usage-review 스킬 소관이다.
 ---
 
 # Vapor core 컴포넌트로 Figma 시안 조립

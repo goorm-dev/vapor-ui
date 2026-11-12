@@ -13,6 +13,7 @@
         "url": "git+https://github.com/goorm-dev/vapor-ui.git",
         "directory": "packages/figma-blueprint"
     },
+    "license": "MIT",
     "main": "dist/index.mjs",
     "types": "dist/index.d.mts",
     "bin": {
