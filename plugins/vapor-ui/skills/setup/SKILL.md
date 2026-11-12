@@ -16,7 +16,7 @@ disable-model-invocation: true
 
 ## 2. 확인
 
-먼저 Node를 본다. `node -v`의 major가 22보다 작으면 figma-blueprint가 실행되지 않는다. Node 22 이상으로 올리라고 안내하고 멈춘다.
+먼저 Node를 본다. `node -v`의 major와 minor를 비교해 22.18보다 낮으면 figma-blueprint가 실행되지 않는다(`v22.17.1`은 낮고, `v22.18.0`과 `v24.1.0`은 된다). Node 22.18 이상으로 올리라고 안내하고 멈춘다.
 
 나머지는 모두 확인한 뒤 한 표로 보여 준다.
 
