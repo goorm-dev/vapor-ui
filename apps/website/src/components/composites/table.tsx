@@ -7,7 +7,7 @@ interface TableProps extends ComponentProps<'table'> {}
 const thStyle = clsx(
     '[&_th]:px-v-300 [&_th]:py-v-175 [&_th]:bg-inherit [&_th]:border-x-0',
     '[&_th]:text-base [&_th]:font-medium [&_th]:text-v-normal [&_th]:text-left [&_th]:align-middle',
-    '[&_th]:text-v-normal [&_th]:tracking-v-100 [&_th]:leading-v-75 [&_th]:text-v-75 [&_th]:font-semibold',
+    '[&_th]:text-v-normal [&_th]:tracking-v-100 [&_th]:leading-v-75 [&_th]:text-v-75 [&_th]:font-medium',
 );
 
 const tdStyle = clsx(
@@ -18,7 +18,7 @@ const tdStyle = clsx(
 
 export const Table = ({ children }: TableProps) => {
     return (
-        <div className="w-full px-v-100">
+        <div className="w-full">
             <table
                 className={clsx(
                     'border-collapse',

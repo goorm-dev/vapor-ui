@@ -53,7 +53,7 @@ function buildRoot() {
     return {
         example: figma.code`
         <AlertDialog.Root
-            trigger={<Button>...</Button>} // 트리거 요소를 입력하세요.
+            trigger={<Button>...</Button>} // TODO: 트리거 요소를 입력하세요.
             ${popup.type}
             ${header.description}
             ${header.title}
