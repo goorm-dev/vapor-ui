@@ -29,12 +29,17 @@ function Button() {
 }
 ```
 
-번들러 config. CSS 진입점에 `@vapor-utilities;` 를 **반드시** 한 번 적는다 — 그 자리에 프로젝트 전체 룰이 정렬되어 들어간다. 없으면 스타일이 방출되지 않는다 (Vite/webpack 은 빌드 끝에 경고).
+번들러 config. 프로젝트 전체 룰은 정렬된 시트 하나로 CSS 진입점에 들어간다. 삽입 지점은 둘 중 하나다.
+
+1. `@import '@vapor-ui/core/layers.css'` — 이 import 가 있는 파일 끝에 붙는다. 기본 사용법 그대로면 추가 설정이 없다.
+2. `@vapor-utilities;` — 직접 적은 자리에 치환된다. `layers.css` 를 생략하고 레이어 순서를 직접 선언할 때, 또는 PostCSS 에서 postcss-import 가 이 플러그인보다 먼저 돌 때 쓴다.
+
+둘 다 없으면 스타일이 방출되지 않는다 (Vite/webpack 은 빌드 끝에, PostCSS 는 Vapor 레이어 순서를 선언한 파일에서 경고). 마커는 번들러가 직접 받는 CSS 진입점에 적는다 — `@import` 된 partial 안에 두면 보이지 않는다. 여러 파일에 적으면 시트가 그 수만큼 중복된다.
 
 ```css
 /* src/styles.css */
+@import '@vapor-ui/core/layers.css'; /* 삽입 트리거 */
 @import '@vapor-ui/core/styles.css';
-@vapor-utilities;
 ```
 
 ```ts
@@ -62,17 +67,17 @@ export default withVapor(nextConfig);
 
 ## Entry points
 
-| Subpath                             | 용도                                                                                                                                        |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@vapor-ui/style-macro`             | 소비자용 `css()` + `buildColorSchemeScript()` + 타입                                                                                        |
-| `@vapor-ui/style-macro/vite`        | Vite plugin                                                                                                                                 |
-| `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                                                                                              |
-| `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                                                                                              |
-| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin                                                                                                                             |
-| `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                                                                                                 |
-| `@vapor-ui/style-macro/css-loader`  | webpack / Turbopack CSS loader — `@vapor-utilities;` 치환 (next plugin 이 내부 사용)                                                        |
-| `@vapor-ui/style-macro/postcss`     | PostCSS 플러그인 — 전용 어댑터 없는 번들러(rolldown, Parcel, 순수 webpack)용 `@vapor-utilities;` 치환. Next 에서는 불필요, Turbopack 비호환 |
-| `@vapor-ui/style-macro/__runtime__` | **내부용** — plugin 이 소비자 코드에 자동 inject. 직접 import 금지                                                                          |
+| Subpath                             | 용도                                                                                                                                              |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@vapor-ui/style-macro`             | 소비자용 `css()` + `buildColorSchemeScript()` + 타입                                                                                              |
+| `@vapor-ui/style-macro/vite`        | Vite plugin                                                                                                                                       |
+| `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                                                                                                    |
+| `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                                                                                                    |
+| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin. 라이브러리 빌드는 `cssFileName` 으로 시트를 함께 배포 ([라이브러리 배포](#라이브러리-배포))                                      |
+| `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                                                                                                       |
+| `@vapor-ui/style-macro/css-loader`  | webpack / Turbopack CSS loader — `@vapor-utilities;` 치환 (next plugin 이 내부 사용)                                                              |
+| `@vapor-ui/style-macro/postcss`     | PostCSS 플러그인 — 전용 어댑터 없는 번들러(rolldown, Parcel, 순수 webpack)용. postcss-import 보다 앞에 등록. Next 에서는 불필요, Turbopack 비호환 |
+| `@vapor-ui/style-macro/__runtime__` | **내부용** — plugin 이 소비자 코드에 자동 inject. 직접 import 금지                                                                                |
 
 ## Plugin 옵션
 
@@ -86,13 +91,30 @@ interface VaporPluginOptions {
 }
 ```
 
-| 옵션                | 기본값                                  | 설명                                                                                                                                                                    |
-| ------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `include`           | `[]`                                    | 추가 대상 glob (`root` 기준, picomatch). 기본 대상(`root` 하위 JS/TS, `node_modules` 제외)에 **더해진다**. prebuilt 패키지 포함 예: `['node_modules/@acme/ui/dist/**']` |
-| `exclude`           | `[]`                                    | 제외 glob (`root` 기준). `include` 보다 우선                                                                                                                            |
-| `root`              | `process.cwd()`                         | 스캔 루트 · glob 기준 경로                                                                                                                                              |
-| `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                               |
-| `injectColorScheme` | `true`                                  | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                         |
+| 옵션                | 기본값                                  | 설명                                                                                                                                                                                     |
+| ------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `include`           | `[]`                                    | 추가 대상 glob (`root` 기준, picomatch). 기본 대상(`root` 하위 JS/TS, `node_modules` 제외)에 **더해진다**. prebuilt 패키지 포함 예: `['node_modules/@acme/ui/dist/**']`                  |
+| `exclude`           | `[]`                                    | 제외 glob (`root` 기준). `include` 보다 우선                                                                                                                                             |
+| `root`              | `process.cwd()`                         | 스캔 루트 · glob 기준 경로                                                                                                                                                               |
+| `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                                                |
+| `injectColorScheme` | `true`                                  | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                          |
+
+## 라이브러리 배포
+
+`css()` 를 쓰는 라이브러리는 빌드 시점에 매크로를 컴파일해 배포한다. 소비자는 플러그인 없이 시트 하나만 import 한다.
+
+```ts
+// rolldown.config.ts
+import { vaporRolldownPlugin } from '@vapor-ui/style-macro/rolldown';
+
+export default {
+    plugins: [vaporRolldownPlugin({ hash: true, cssFileName: 'styles.css' })],
+};
+```
+
+- `cssFileName` 을 지정하면 번들에 포함된 모듈의 룰을 모아 `@layer vapor-utilities` 단일 정렬 시트 하나로 방출한다. 번들에 들어가지 않은 파일(stories, test 등)은 제외한다.
+- `hash: true` 로 고정한다. 기본값은 빌드 시점 `NODE_ENV` 를 따르므로, 고정하지 않으면 배포물의 class 이름이 빌드 환경에 따라 달라진다.
+- 출력 포맷이 여러 개(ESM + CJS)여도 룰은 같으므로 한 빌드에서만 `cssFileName` 을 준다.
 
 ## 지원하는 값
 

@@ -1,4 +1,7 @@
+import { mkdtempSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 import { vaporNextPlugin } from './next';
 import { vaporRolldownPlugin } from './rolldown';
@@ -81,10 +84,106 @@ describe('unplugin-backed adapters return a plugin object', () => {
         expect((plugin as { name?: string }).name).toBe('vapor-style-macro');
     });
 
+    it('rolldown() has no generateBundle hook unless cssFileName is set', () => {
+        const plugin = vaporRolldownPlugin() as { generateBundle?: unknown };
+        expect(plugin.generateBundle).toBeUndefined();
+    });
+
     it('webpack() returns an instance with apply()', () => {
         const plugin = vaporWebpackPlugin() as { apply?: unknown };
         expect(plugin).toBeTypeOf('object');
         expect(typeof plugin.apply).toBe('function');
+    });
+});
+
+describe('rolldown() adapter — cssFileName (library build sheet)', () => {
+    type Emitted = { type: string; fileName: string; source: string };
+    type Bundle = Record<string, { type: 'chunk'; moduleIds: string[] } | { type: 'asset' }>;
+    type GenerateBundle = (
+        this: { emitFile(file: Emitted): void },
+        options: unknown,
+        bundle: Bundle,
+    ) => void;
+
+    function project() {
+        const root = mkdtempSync(join(tmpdir(), 'vapor-rolldown-'));
+        const write = (name: string, body: string) => {
+            const file = join(root, name);
+            writeFileSync(file, `import { css } from '@vapor-ui/style-macro';\n${body}\n`);
+            return file;
+        };
+        return {
+            root,
+            a: write('a.tsx', `export const a = css({ paddingTop: '$space-100' });`),
+            b: write('b.tsx', `export const b = css({ color: '$fg-primary' });`),
+            unbundled: write('c.stories.tsx', `export const c = css({ marginTop: '$space-200' });`),
+            plain: join(root, 'plain.ts'),
+        };
+    }
+
+    function run(opts: Parameters<typeof vaporRolldownPlugin>[0], bundle: Bundle) {
+        const plugin = vaporRolldownPlugin(opts) as { generateBundle?: GenerateBundle };
+        const emitted: Emitted[] = [];
+        plugin.generateBundle?.call({ emitFile: (f) => emitted.push(f) }, {}, bundle);
+        return emitted;
+    }
+
+    it('emits one sheet from the css() rules of bundled modules only', () => {
+        const p = project();
+        writeFileSync(p.plain, 'export const x = 1;\n');
+        const emitted = run(
+            { root: p.root, hash: true, cssFileName: 'styles.css' },
+            {
+                'a.mjs': { type: 'chunk', moduleIds: [p.a, p.plain] },
+                'b.mjs': { type: 'chunk', moduleIds: [p.b, '\0virtual:x'] },
+                'x.css': { type: 'asset' },
+            },
+        );
+
+        expect(emitted).toHaveLength(1);
+        expect(emitted[0]).toMatchObject({ type: 'asset', fileName: 'styles.css' });
+        const css = emitted[0]!.source;
+        expect(css.match(/@layer vapor-utilities \{/g)).toHaveLength(1);
+        expect(css).toContain('padding-top');
+        expect(css).toContain('--vapor-color-foreground-primary');
+        expect(css).not.toContain('margin-top'); // stories file was not in the bundle
+    });
+
+    it('class names in the sheet match the JS transform output (same hash mode)', async () => {
+        const p = project();
+        const plugin = vaporRolldownPlugin({ root: p.root, hash: true, cssFileName: 's.css' }) as {
+            transform: { handler?: Function } | Function;
+        };
+        const transform =
+            typeof plugin.transform === 'function' ? plugin.transform : plugin.transform.handler!;
+        const code = (await transform.call(
+            {
+                error: (m: string) => {
+                    throw new Error(m);
+                },
+            },
+            `import { css } from '@vapor-ui/style-macro';\nexport const a = css({ paddingTop: '$space-100' });\n`,
+            p.a,
+        )) as { code: string };
+        const cls = code.code.match(/['"](_[^'"\s]+)['"]/)?.[1];
+        expect(cls).toBeDefined();
+
+        const [sheet] = run(
+            { root: p.root, hash: true, cssFileName: 's.css' },
+            { 'a.mjs': { type: 'chunk', moduleIds: [p.a] } },
+        );
+        expect(sheet!.source).toContain(`.${cls} {`);
+    });
+
+    it('still emits an (empty) sheet when no bundled module uses css()', () => {
+        const p = project();
+        writeFileSync(p.plain, 'export const x = 1;\n');
+        const emitted = run(
+            { root: p.root, cssFileName: 'styles.css' },
+            { 'a.mjs': { type: 'chunk', moduleIds: [p.plain] } },
+        );
+        expect(emitted).toHaveLength(1);
+        expect(emitted[0]!.source).not.toContain('@layer vapor-utilities {');
     });
 });
 

@@ -100,11 +100,12 @@ export function vaporNextPlugin(
         if (useWebpack) {
             const originalWebpack = (nextConfig as NextConfigMutable).webpack;
             merged.webpack = (config: AnyProp, ctx: AnyProp) => {
+                const root = unpluginOpts.root ?? (ctx?.dir as string | undefined);
                 config.plugins ??= [];
-                config.plugins.push(vaporWebpackPlugin(unpluginOpts));
+                config.plugins.push(vaporWebpackPlugin({ ...unpluginOpts, root }));
                 const matched = appendToCssRules(config.module?.rules ?? [], {
                     loader: cssLoaderPath,
-                    options: loaderOptions,
+                    options: { ...loaderOptions, ...(root ? { root } : {}) },
                 });
                 if (matched === 0) {
                     throw new Error(

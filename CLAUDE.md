@@ -18,7 +18,7 @@ An open-source React UI component library and design system maintained by goorm.
 | `@vapor-ui/color-generator` | OKLCH-based WCAG-compliant color palette generator — produces design tokens used by `css-generator`                                                                                                |
 | `@vapor-ui/css-generator`   | Generates CSS variables and themes from design tokens produced by `color-generator`                                                                                                                |
 | `@vapor-ui/codemod`         | jscodeshift-based automated code migration tools for major version upgrades                                                                                                                        |
-| `@vapor-ui/style-macro`     | Build-time `css()` macro — compiles to atomic class strings; every rule is collected into one sorted sheet at `@vapor-utilities;` (Vite / Next webpack + Turbopack / webpack / rolldown + PostCSS) |
+| `@vapor-ui/style-macro`     | Build-time `css()` macro — compiles to atomic class strings; every rule is collected into one sorted sheet in the consumer's CSS entry (Vite / Next webpack + Turbopack / webpack / rolldown + PostCSS) |
 
 **Apps** (`apps/`) — not published:
 

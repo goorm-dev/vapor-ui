@@ -13,6 +13,7 @@ interface WebpackPluginShape {
 }
 
 interface MinimalCompiler {
+    context?: string;
     hooks: {
         compilation: { tap: (name: string, fn: (c: unknown) => void) => void };
         done: { tap: (name: string, fn: () => void) => void };
@@ -69,7 +70,7 @@ function tapHtmlFouc(compiler: unknown, injectColorScheme: false | ColorSchemeSc
 /**
  * Webpack plugin for @vapor-ui/style-macro — JS 변환 + FOUC guard.
  * CSS 는 `@vapor-ui/style-macro/css-loader` (Next 는 자동 배선) 또는
- * `@vapor-ui/style-macro/postcss` 가 `@vapor-utilities;` 자리에서 수집한다.
+ * `@vapor-ui/style-macro/postcss` 가 `@vapor-utilities;` 또는 `layers.css` import 자리에서 수집한다.
  *
  *     // webpack.config.js
  *     import vaporStyle from '@vapor-ui/style-macro/webpack';
@@ -83,8 +84,9 @@ export function vaporWebpackPlugin(opts: VaporPluginOptions = {}): WebpackPlugin
         apply(compiler) {
             base.apply(compiler);
             tapHtmlFouc(compiler, resolved.injectColorScheme);
-            (compiler as MinimalCompiler).hooks.done?.tap(TAP_NAME, () => {
-                warnIfNeverReplaced(opts, (m) => console.warn(m));
+            const c = compiler as MinimalCompiler;
+            c.hooks.done?.tap(TAP_NAME, () => {
+                warnIfNeverReplaced(opts, (m) => console.warn(m), { root: c.context });
             });
         },
     };

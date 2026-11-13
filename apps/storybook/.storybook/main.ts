@@ -84,7 +84,14 @@ const config: StorybookConfig = {
             },
 
             plugins: [
-                vaporVitePlugin(),
+                vaporVitePlugin({
+                    include: [
+                        '../../../packages/core/src/**',
+                        '../../../packages/composites/src/**',
+                    ],
+                    exclude: ['**/*.test.*', '**/*.css.ts'],
+                }),
+
                 coreDistCssPassthrough,
                 vanillaExtractPlugin({
                     identifiers: ({ hash, filePath, debugId }) => {

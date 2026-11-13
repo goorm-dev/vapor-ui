@@ -1,5 +1,6 @@
 import { bundle, generateInputs } from '@repo/rolldown-config';
 import { cleanLayerDeclaration, depsExternal, dts } from '@repo/rolldown-config/plugins';
+import { vaporRolldownPlugin } from '@vapor-ui/style-macro/rolldown';
 import path from 'node:path';
 import { defineConfig } from 'rolldown';
 
@@ -21,7 +22,11 @@ export default defineConfig([
     bundle({
         input: inputs,
         resolve,
-        plugins: [depsExternal(), cleanLayerDeclaration()],
+        plugins: [
+            depsExternal(),
+            cleanLayerDeclaration(),
+            vaporRolldownPlugin({ hash: true, cssFileName: 'styles.css' }),
+        ],
         output: {
             format: 'esm',
             strict: true,
@@ -35,7 +40,7 @@ export default defineConfig([
     bundle({
         input: inputs,
         resolve,
-        plugins: [depsExternal(), cleanLayerDeclaration()],
+        plugins: [depsExternal(), cleanLayerDeclaration(), vaporRolldownPlugin({ hash: true })],
         output: {
             format: 'cjs',
             strict: true,
