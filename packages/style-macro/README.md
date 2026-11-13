@@ -88,6 +88,7 @@ interface VaporPluginOptions {
     root?: string;
     hash?: boolean;
     injectColorScheme?: boolean | ColorSchemeScriptOpts;
+    layer?: string;
 }
 ```
 
@@ -98,6 +99,7 @@ interface VaporPluginOptions {
 | `root`              | `process.cwd()`                         | 스캔 루트 · glob 기준 경로                                                                                                                                                               |
 | `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                                                |
 | `injectColorScheme` | `true`                                  | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                          |
+| `layer`             | `'vapor-utilities'`                     | `css()` 규칙을 담을 CSS cascade layer 이름 (`acme.ui` 같은 sub-layer 가능). CSS 진입점의 레이어 순서 선언에 포함돼야 한다 — 빠지면 브라우저가 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다 |
 
 ## 라이브러리 배포
 
@@ -108,11 +110,12 @@ interface VaporPluginOptions {
 import { vaporRolldownPlugin } from '@vapor-ui/style-macro/rolldown';
 
 export default {
-    plugins: [vaporRolldownPlugin({ hash: true, cssFileName: 'styles.css' })],
+    plugins: [vaporRolldownPlugin({ hash: true, cssFileName: 'styles.css', layer: 'acme-ui' })],
 };
 ```
 
-- `cssFileName` 을 지정하면 번들에 포함된 모듈의 룰을 모아 `@layer vapor-utilities` 단일 정렬 시트 하나로 방출한다. 번들에 들어가지 않은 파일(stories, test 등)은 제외한다.
+- `cssFileName` 을 지정하면 번들에 포함된 모듈의 룰을 모아 `layer` 옵션의 레이어(기본 `vapor-utilities`) 단일 정렬 시트 하나로 방출한다. 번들에 들어가지 않은 파일(stories, test 등)은 제외한다.
+- 라이브러리는 앱과 다른 `layer` 를 주는 것을 권장한다. 같은 레이어를 쓰면 소비자가 라이브러리 컴포넌트에 넘긴 `className` override 의 성패가 CSS 로드 순서에 좌우된다. 라이브러리 레이어를 앱 레이어보다 앞에 선언하면 로드 순서와 무관하게 앱이 이긴다. `@vapor-ui/composites` 는 `composites` 레이어를 쓰고, `@vapor-ui/core/layers.css` 가 이를 `vapor-components` 와 `vapor-utilities` 사이에 선언한다.
 - `hash: true` 로 고정한다. 기본값은 빌드 시점 `NODE_ENV` 를 따르므로, 고정하지 않으면 배포물의 class 이름이 빌드 환경에 따라 달라진다.
 - 출력 포맷이 여러 개(ESM + CJS)여도 룰은 같으므로 한 빌드에서만 `cssFileName` 을 준다.
 

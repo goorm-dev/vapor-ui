@@ -1,7 +1,7 @@
 import { globalLayer } from '@vanilla-extract/css';
 
-import { LAYER_ORDER } from './layers.css';
+import { CASCADE_LAYER_ORDER } from './layers.css';
 
-LAYER_ORDER.forEach((name) => {
-    globalLayer(`vapor-${name}`);
+CASCADE_LAYER_ORDER.forEach((name) => {
+    globalLayer(name);
 });

@@ -25,7 +25,7 @@ export default defineConfig([
         plugins: [
             depsExternal(),
             cleanLayerDeclaration(),
-            vaporRolldownPlugin({ hash: true, cssFileName: 'styles.css' }),
+            vaporRolldownPlugin({ hash: true, cssFileName: 'styles.css', layer: 'composites' }),
         ],
         output: {
             format: 'esm',

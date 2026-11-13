@@ -105,7 +105,7 @@ export function collectCss(
  */
 export function buildSheet(
     candidates: string[],
-    opts: Pick<ResolvedOptions, 'include' | 'hash'>,
+    opts: Pick<ResolvedOptions, 'include' | 'hash' | 'layer'>,
 ): { css: string; files: string[] } {
     const rules: IRRule[] = [];
     const files: string[] = [];
@@ -119,7 +119,9 @@ export function buildSheet(
         rules.push(...res.rules);
     }
 
-    const css = rules.length ? emitCss(rules, opts.hash ? 'hashed' : 'readable').cssText : '';
+    const css = rules.length
+        ? emitCss(rules, opts.hash ? 'hashed' : 'readable', opts.layer).cssText
+        : '';
     return { css: `/* vapor-collect: ${files.length} files */\n${css}`, files };
 }
 

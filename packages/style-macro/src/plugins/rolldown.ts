@@ -7,7 +7,7 @@ export type { VaporPluginOptions };
 export interface VaporRolldownOptions extends VaporPluginOptions {
     /**
      * 라이브러리 빌드용. 지정하면 번들에 포함된 모듈의 `css()` 룰을 모아 이 이름의
-     * CSS asset 하나로 방출한다 (`@layer vapor-utilities` 단일 정렬 시트).
+     * CSS asset 하나로 방출한다 (`layer` 옵션의 레이어, 기본 `@layer vapor-utilities` 단일 정렬 시트).
      * 소비자는 플러그인 없이 이 파일만 import 하면 된다. JS 의 class 이름과 일치하도록
      * 같은 `hash` 설정을 쓰므로, 배포물은 `hash: true` 로 고정해 빌드한다.
      */

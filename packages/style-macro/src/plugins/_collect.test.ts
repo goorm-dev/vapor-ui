@@ -35,6 +35,22 @@ describe('resolveOptions — glob resolution', () => {
         expect(o.include('/repo/node_modules/p/i.js')).toBe(false);
     });
 
+    it('layer defaults to vapor-utilities', () => {
+        expect(resolveOptions({}).layer).toBe('vapor-utilities');
+    });
+
+    it('accepts a custom layer name, including dotted sub-layers', () => {
+        expect(resolveOptions({ layer: 'composites' }).layer).toBe('composites');
+        expect(resolveOptions({ layer: 'acme.ui' }).layer).toBe('acme.ui');
+    });
+
+    it.each(['', ' ', 'my layer', '1abc', 'a{b}', 'a;b', 'a,b', 'a.', '.a'])(
+        'rejects an invalid layer name %j',
+        (layer) => {
+            expect(() => resolveOptions({ layer })).toThrow(/layer/);
+        },
+    );
+
     it('bundler-provided default root is used when the user sets none', () => {
         const o = resolveOptions({ include: ['src/**'] }, { root: '/proj' });
         expect(o.root).toBe('/proj');
@@ -49,6 +65,13 @@ describe('collectCss', () => {
         expect(out.files).toHaveLength(2);
         expect(out.css).toContain('padding-top');
         expect(out.css).toContain('--vapor-color-foreground-primary');
+    });
+
+    it('puts the collected sheet into the configured layer', () => {
+        const root = fixture();
+        const out = collectCss({ root, layer: 'composites' });
+        expect(out.css).toMatch(/@layer composites \{[\s\S]*padding-top/);
+        expect(out.css).not.toContain('vapor-utilities');
     });
 
     it('skips node_modules without an include glob', () => {
@@ -82,6 +105,13 @@ describe('injectCss', () => {
             root,
         });
         expect(out?.css.match(/@layer vapor-utilities \{/g)).toHaveLength(1);
+    });
+
+    it('the @vapor-utilities marker still triggers insertion with a custom layer', () => {
+        const root = fixture();
+        const out = injectCss(`@vapor-utilities;\n`, { root, layer: 'composites' });
+        expect(out?.css).toMatch(/@layer composites \{[\s\S]*padding-top/);
+        expect(out?.css).not.toContain('@vapor-utilities;');
     });
 
     it('returns null when neither marker nor import is present', () => {

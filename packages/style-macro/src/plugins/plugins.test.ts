@@ -175,6 +175,16 @@ describe('rolldown() adapter — cssFileName (library build sheet)', () => {
         expect(sheet!.source).toContain(`.${cls} {`);
     });
 
+    it('emits the library sheet into the configured layer', () => {
+        const p = project();
+        const [sheet] = run(
+            { root: p.root, hash: true, cssFileName: 'styles.css', layer: 'composites' },
+            { 'a.mjs': { type: 'chunk', moduleIds: [p.a] } },
+        );
+        expect(sheet!.source).toMatch(/@layer composites \{[\s\S]*padding-top/);
+        expect(sheet!.source).not.toContain('vapor-utilities');
+    });
+
     it('still emits an (empty) sheet when no bundled module uses css()', () => {
         const p = project();
         writeFileSync(p.plain, 'export const x = 1;\n');

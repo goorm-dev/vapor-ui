@@ -91,6 +91,7 @@ export function vaporNextPlugin(
             exclude: unpluginOpts.exclude,
             root: unpluginOpts.root,
             hash: unpluginOpts.hash,
+            layer: unpluginOpts.layer,
         }).filter(([, v]) => v !== undefined),
     );
 

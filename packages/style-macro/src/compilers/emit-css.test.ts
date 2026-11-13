@@ -22,6 +22,34 @@ describe('emitCss', () => {
         expect(out.classNamesPerRule).toHaveLength(1);
     });
 
+    it('emits rules inside the given layer instead of vapor-utilities', () => {
+        const out = emitCss([rule()], 'readable', 'composites');
+        expect(out.cssText).toContain('@layer composites;');
+        expect(out.cssText).toMatch(
+            /@layer composites \{[\s\S]*padding: var\(--vapor-size-space-400\)/,
+        );
+        expect(out.cssText).not.toContain('vapor-utilities');
+    });
+
+    it('keeps @property declarations outside the custom layer', () => {
+        const out = emitCss(
+            [
+                rule({
+                    kind: 'dynamic',
+                    slotId: 's0',
+                    sourceExpr: 'p',
+                    property: 'color',
+                } as Partial<IRRule>),
+            ],
+            'readable',
+            'composites',
+        );
+        const propIdx = out.cssText.indexOf('@property');
+        const blockIdx = out.cssText.indexOf('@layer composites {');
+        expect(propIdx).toBeGreaterThan(-1);
+        expect(propIdx).toBeLessThan(blockIdx);
+    });
+
     it('appends :pseudo selector for pseudo context', () => {
         const out = emitCss([rule({ selectorContext: ':hover' })]);
         const cls = out.classNamesPerRule[0];

@@ -4,7 +4,7 @@ import { bucketOf, bucketRank, compareAtRulePath, innerRank } from '~/models/sor
 import type { IRRule } from '~/models/types';
 
 export interface EmitOutput {
-    /** 방출된 CSS 전문. `@layer vapor-utilities { ... }` 블록. */
+    /** 방출된 CSS 전문. `@layer <layer> { ... }` 블록 (기본 `vapor-utilities`). */
     cssText: string;
     /** rules 와 같은 순서·길이의 className. dedupe 를 통과한 뒤 재분배. */
     classNamesPerRule: string[];
@@ -79,7 +79,13 @@ function ruleKey(r: IRRule): string {
     return `d|${r.selectorContext}|${r.property}|${r.slotId}`;
 }
 
-export function emitCss(rules: IRRule[], mode: ClassNameMode = 'readable'): EmitOutput {
+export const DEFAULT_LAYER = 'vapor-utilities';
+
+export function emitCss(
+    rules: IRRule[],
+    mode: ClassNameMode = 'readable',
+    layer: string = DEFAULT_LAYER,
+): EmitOutput {
     const classNamesPerRule: string[] = [];
     const dynamicSlots: EmitOutput['dynamicSlots'] = [];
     const seen = new Map<string, string>();
@@ -131,7 +137,7 @@ export function emitCss(rules: IRRule[], mode: ClassNameMode = 'readable'): Emit
         classNamesPerRule.push(cls);
     }
 
-    const chunks: string[] = ['@layer vapor-utilities;', ''];
+    const chunks: string[] = [`@layer ${layer};`, ''];
 
     // dynamic slot CSS var 는 기본적으로 자식에게 상속된다. 같은 class 를
     // 가진 중첩 element 라도 부모가 slot 값을 세팅하면 자식도 그대로 그려지는
@@ -143,7 +149,7 @@ export function emitCss(rules: IRRule[], mode: ClassNameMode = 'readable'): Emit
     }
     if (dynamicSlots.length > 0) chunks.push('');
 
-    chunks.push('@layer vapor-utilities {');
+    chunks.push(`@layer ${layer} {`);
 
     // Compiled 의 단일 시트 정렬. 이 함수는 (수집기를 통해) 프로젝트 전체 룰을
     // 한 번에 받으므로 여기서 정한 순서가 곧 최종 cascade 다:

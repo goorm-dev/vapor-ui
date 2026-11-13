@@ -1,6 +1,7 @@
 import { isAbsolute, resolve, sep } from 'node:path';
 import picomatch from 'picomatch';
 
+import { DEFAULT_LAYER } from '~/compilers/emit-css';
 import type { ColorSchemeScriptOpts } from '~/helpers/fouc-script';
 
 export interface VaporPluginOptions {
@@ -20,6 +21,13 @@ export interface VaporPluginOptions {
     root?: string;
     hash?: boolean;
     injectColorScheme?: boolean | ColorSchemeScriptOpts;
+    /**
+     * `css()` 가 생성한 규칙을 담을 CSS cascade layer 이름. 기본값 `vapor-utilities`.
+     * 라이브러리 빌드가 앱과 다른 레이어에 규칙을 두어 우선순위를 레이어 순서로 고정할 때 쓴다
+     * (예: `@vapor-ui/composites` 는 `composites`). 지정한 레이어는 CSS 진입점의 레이어 순서
+     * 선언에 포함돼야 한다 — 없으면 브라우저가 맨 뒤 레이어로 취급한다.
+     */
+    layer?: string;
 }
 
 export interface ResolveDefaults {
@@ -35,6 +43,20 @@ export interface ResolvedOptions {
     root: string;
     hash: boolean;
     injectColorScheme: false | ColorSchemeScriptOpts;
+    layer: string;
+}
+
+// CSS ident 점(.) 구분 — sub-layer(`acme.ui`) 허용, 공백·구두점·숫자 시작은 거부.
+const LAYER_NAME_RE = /^-?[A-Za-z_][\w-]*(?:\.-?[A-Za-z_][\w-]*)*$/;
+
+function validateLayer(layer: string): string {
+    if (!LAYER_NAME_RE.test(layer)) {
+        throw new Error(
+            `[@vapor-ui/style-macro] Invalid \`layer\` option ${JSON.stringify(layer)}: ` +
+                'expected a CSS layer name such as "vapor-utilities" or "acme.ui".',
+        );
+    }
+    return layer;
 }
 
 const SOURCE_EXT_RE = /\.(?:tsx?|jsx?|mts|mjs|cts|cjs)$/;
@@ -63,6 +85,7 @@ export function resolveOptions(
         root: rawRoot,
         hash = process.env.NODE_ENV === 'production',
         injectColorScheme = true,
+        layer = DEFAULT_LAYER,
     } = opts;
 
     const root = resolve(rawRoot ?? defaults.root ?? process.cwd());
@@ -89,5 +112,6 @@ export function resolveOptions(
                 : injectColorScheme === true
                   ? {}
                   : injectColorScheme,
+        layer: validateLayer(layer),
     };
 }
