@@ -41,6 +41,39 @@
 ## 6. 테스트
 
 - 유닛 테스트는 `vitest`와 `@testing-library/react`로 작성한다. 각 컴포넌트 폴더 안에 함께 두고, core와 동일한 셋업을 사용한다.
+- `ref` / `id` / `className` DOM API를 노출하는 컴포넌트는 `~/utils/test-utils`의 `testConformance` 유틸로 검증한다. 유틸이 `describe('DOM API conformance')` 아래 `forwards ref` · `applies id` · `applies className` 세 가지 `it`을 등록한다. 소비자는 상위 `describe` + `afterEach(cleanup)`을 래핑하고, `render` 콜백과 `refInstanceof` 옵션만 넘긴다. 공개 서브컴포넌트가 추가될 때마다 인라인 테스트를 반복 작성하지 말고 유틸을 호출한다.
+
+    ```tsx
+    import { testConformance } from '~/utils/test-utils';
+
+    describe('Dialog.Root', () => {
+        afterEach(cleanup);
+
+        testConformance<HTMLDivElement>(
+            async ({ ref, id, className }) => {
+                const rendered = render(
+                    <Dialog.Root
+                        ref={ref}
+                        id={id}
+                        className={className}
+                        title="타이틀"
+                        trigger={<button type="button">열기</button>}
+                        ariaLabels={{ close: '닫기' }}
+                    >
+                        바디
+                    </Dialog.Root>,
+                );
+                await userEvent.click(rendered.getByText('열기'));
+
+                return { node: rendered.getByRole('dialog') };
+            },
+            { refInstanceof: HTMLDivElement },
+        );
+    });
+    ```
+
+    `refInstanceof`는 Popup 계열이면 `HTMLDivElement`, Button 기반 서브(`Dialog.Action`, `AlertDialog.Cancel` 등)이면 `HTMLButtonElement`로 지정한다. 유틸은 `ref.current === node` identity와 `instanceof` 두 가지를 모두 검증한다.
+
 - 시각적 회귀 테스트는 `apps/storybook`에서 단일 Playwright 스위트로 실행한다. `apps/storybook/__tests__/regressions.test.ts`가 `name.startsWith('Test Bed')`인 모든 스토리를 캡처하며, 기준 스크린샷은 `apps/storybook/__tests__/screenshots/`에 있다. composites 스토리는 `title`을 `Composites/<Name>` 형태로 두면 자동으로 포함된다.
 
 ## 7. Storybook
@@ -52,5 +85,9 @@
 ## 8. 하지 말아야 할 것
 
 - Flat Component 설계가 확정되기 전에는 `src/components/` 아래 구현 코드를 수정하지 않는다.
+- `style` 오버라이드 prop은 추가하지 않는다. 토큰 기반 디자인 결정을 보호한다. 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md#3-스타일은-css-prop으로-작성한다)의 `$css` 규칙을 따른다.
+- `className`은 Popup DOM 노드와 공개 서브컴포넌트(`Dialog.Action`, `Menu.Item` 등)에 한해 노출한다(core 기본 클래스에 **덧붙여지는** 방식). Portal·Overlay·Positioner 등 중간 노드와 `trigger` slot에는 별도 prop을 추가하지 않는다. 자세한 규칙은 [`.claude/rules/composites.md §8`](../../.claude/rules/composites.md#8-refidclassname-기본-api).
+- `ref`·`id`는 `className`과 같은 범위(Popup + 공개 서브컴포넌트)로만 노출한다.
+- `component.figma.tsx` (Code Connect) 파일을 손으로 작성하지 않는다. codegen 파이프라인이 생성한다.
 - 명시적인 지시가 없으면 `className` / `style` 오버라이드 prop을 추가하지 않는다. 오버라이드 정책은 아직 정하지 않았다. 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md#3-스타일은-css-prop으로-작성한다)의 `$css` 규칙을 따른다.
 - Code Connect 템플릿은 서브 컴포넌트 보유 여부에 따라 batch(`<name>.figma.batch.json` + `<name>.figma.batch.ts`) 또는 단일 raw template(`<name>.figma.ts`) 중 하나로 작성한다. 상세 규칙은 [`.claude/rules/code-connect-composites.md`](../../.claude/rules/code-connect-composites.md)를 따른다.
