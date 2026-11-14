@@ -38,14 +38,14 @@
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "@types/node": "^24.13.3",
+        "@types/node": "^24.19.2",
         "eslint": "catalog:",
         "rimraf": "^6.1.4",
         "tsup": "^8.5.1",
         "vitest": "catalog:"
     },
     "engines": {
-        "node": ">=22.18"
+        "node": ">=22.23.5"
     },
     "publishConfig": {
         "access": "public"
