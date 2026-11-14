@@ -108,7 +108,7 @@ jobs:
 
             - name: Promote Deployment to Production
               if: steps.wait_for_deployment.outputs.ready_substate != 'PROMOTED'
-              run: vercel promote $DEPLOYMENT_ID --yes
+              run: vercel promote $DEPLOYMENT_ID --yes --scope $VERCEL_ORG_ID
               env:
                   DEPLOYMENT_ID: ${{ steps.wait_for_deployment.outputs.deployment_id }}
 
