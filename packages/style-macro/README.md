@@ -75,7 +75,7 @@ export default withVapor(nextConfig);
 | `@vapor-ui/style-macro/vite`        | Vite plugin                                                                                                                                       |
 | `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                                                                                                    |
 | `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                                                                                                    |
-| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin. 라이브러리 빌드는 `cssFileName` 으로 시트를 함께 배포 ([라이브러리 배포](#라이브러리-배포))                                      |
+| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin — 라이브러리 빌드. 컴포넌트별 CSS 를 배포 ([라이브러리 배포](#라이브러리-배포))                                                   |
 | `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                                                                                                       |
 | `@vapor-ui/style-macro/css-loader`  | webpack / Turbopack CSS loader — `@vapor-utilities;` 치환 (next plugin 이 내부 사용)                                                              |
 | `@vapor-ui/style-macro/postcss`     | PostCSS 플러그인 — 전용 어댑터 없는 번들러(rolldown, Parcel, 순수 webpack)용. postcss-import 보다 앞에 등록. Next 에서는 불필요, Turbopack 비호환 |
@@ -105,21 +105,32 @@ interface VaporPluginOptions {
 
 ## 라이브러리 배포
 
-`css()` 를 쓰는 라이브러리는 빌드 시점에 매크로를 컴파일해 배포한다. 소비자는 플러그인 없이 시트 하나만 import 한다.
+`css()` 를 쓰는 라이브러리는 빌드 시점에 매크로를 컴파일해 배포한다. 소비자는 플러그인도, 별도 CSS import 도 필요 없다 — 컴포넌트를 import 하면 그 컴포넌트의 CSS 가 함께 들어간다.
 
 ```ts
 // rolldown.config.ts
 import { vaporRolldownPlugin } from '@vapor-ui/style-macro/rolldown';
 
 export default {
-    plugins: [vaporRolldownPlugin({ hash: true, cssFileName: 'styles.css', layer: 'acme-ui' })],
+    input: { 'button/button': 'src/button/button.tsx' /* ... */ },
+    plugins: [vaporRolldownPlugin({ hash: true, layer: 'acme-ui' })],
+    output: { dir: 'dist', preserveModules: true, preserveModulesRoot: 'src' },
 };
 ```
 
-- `cssFileName` 을 지정하면 번들에 포함된 모듈의 룰을 모아 `layer` 옵션의 레이어(기본 `vapor-utilities`) 단일 정렬 시트 하나로 방출한다. 번들에 들어가지 않은 파일(stories, test 등)은 제외한다.
+```jsonc
+// package.json
+{ "sideEffects": ["**/*.css"] }
+```
+
+- `css()` 를 쓰는 모듈마다 `<file>.vapor.css` 를 만들고, 그 모듈의 출력 파일이 import 하게 한다 (ESM `import`, CJS `require`). Vanilla Extract rollup plugin 과 같은 구조라 `preserveModules` 출력이 필요하다.
+- 레이어 순서 선언(`@layer x;`)은 넣지 않는다. 순서는 소비자의 CSS 엔트리(`@vapor-ui/core/layers.css` 등)가 정한다.
+- class 이름 해시에는 가장 가까운 `package.json` 의 `name` 과 그 패키지 기준 상대 경로가 들어간다. 다른 패키지와 class 가 겹치지 않는다.
+- CJS 소비자는 서브패스(`acme-ui/button`)로 가져와야 컴포넌트 단위로 CSS 가 들어간다. CJS 루트 진입점은 모든 컴포넌트를 `require` 해 번들러가 걸러내지 못한다.
+- `extract: true`(또는 `{ name: 'styles.css' }`)면 모듈별 CSS 대신 모든 CSS 를 import 순서대로 합친 파일 하나(기본 `index.css`)를 내보내고, 출력 JS 의 CSS import 를 지운다. 소비자가 그 파일을 직접 import 한다. `@vanilla-extract/rollup-plugin` 의 `extract` 와 같다.
+- 각 모듈 CSS 는 external 모듈의 `meta.css` 에 실린다. 다른 rolldown 플러그인이 `this.getModuleInfo(id).meta.css` 로 읽어 후처리할 수 있다.
 - 라이브러리는 앱과 다른 `layer` 를 주는 것을 권장한다. 같은 레이어를 쓰면 소비자가 라이브러리 컴포넌트에 넘긴 `className` override 의 성패가 CSS 로드 순서에 좌우된다. 라이브러리 레이어를 앱 레이어보다 앞에 선언하면 로드 순서와 무관하게 앱이 이긴다. `@vapor-ui/composites` 는 `composites` 레이어를 쓰고, `@vapor-ui/core/layers.css` 가 이를 `vapor-components` 와 `vapor-utilities` 사이에 선언한다.
 - `hash: true` 로 고정한다. 기본값은 빌드 시점 `NODE_ENV` 를 따르므로, 고정하지 않으면 배포물의 class 이름이 빌드 환경에 따라 달라진다.
-- 출력 포맷이 여러 개(ESM + CJS)여도 룰은 같으므로 한 빌드에서만 `cssFileName` 을 준다.
 
 ## 지원하는 값
 

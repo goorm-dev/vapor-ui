@@ -99,10 +99,10 @@ export function collectCss(
 /**
  * 주어진 파일들의 모듈 CSS(`css()` 호출 단위 블록)를 경로 순서로 이어 붙인다. `include` 를
  * 통과하고 `@vapor-ui/style-macro` 를 import 하는 파일만 쓴다. 경로 정렬 후 처리하므로 입력
- * 순서와 무관하게 결과가 결정적이다. 모듈 단위 CSS 연결(3~5단계) 전까지의 임시 경로다. 프로젝트 스캔(`collectCss`)과 라이브러리 빌드
- * (rolldown `cssFileName`)가 같은 경로를 쓴다.
+ * 순서와 무관하게 결과가 결정적이다. 앱 번들러(Vite·webpack·Next·PostCSS)가 모듈 단위 CSS
+ * import 로 바뀌기 전까지 쓰는 임시 경로다.
  */
-export function buildSheet(
+function buildSheet(
     candidates: string[],
     opts: Pick<ResolvedOptions, 'include' | 'hash' | 'layer' | 'root'>,
 ): { css: string; files: string[] } {

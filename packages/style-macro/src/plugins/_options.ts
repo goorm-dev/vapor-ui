@@ -1,4 +1,5 @@
-import { isAbsolute, relative, resolve, sep } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import picomatch from 'picomatch';
 
 import { DEFAULT_LAYER } from '~/compilers/emit-css';
@@ -66,12 +67,40 @@ export function defaultInclude(id: string): boolean {
     return SOURCE_EXT_RE.test(id);
 }
 
+const packageCache = new Map<string, { dir: string; name: string } | null>();
+
+/** `dir` 에서 위로 올라가며 `name` 이 있는 첫 `package.json` 을 찾는다. */
+function owningPackage(dir: string): { dir: string; name: string } | null {
+    const cached = packageCache.get(dir);
+    if (cached !== undefined) return cached;
+    let found: { dir: string; name: string } | null = null;
+    try {
+        const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as {
+            name?: unknown;
+        };
+        if (typeof pkg.name === 'string' && pkg.name) found = { dir, name: pkg.name };
+    } catch {
+        // package.json 없음 → 상위로
+    }
+    if (!found) {
+        const parent = dirname(dir);
+        found = parent === dir ? null : owningPackage(parent);
+    }
+    packageCache.set(dir, found);
+    return found;
+}
+
 /**
- * class 이름 해시용 파일 식별자. root 기준 POSIX 상대 경로라 빌드 머신과 무관하게 같다.
- * JS 변환과 CSS 수집이 같은 값을 써야 class 이름이 일치한다.
+ * class 이름 해시용 파일 식별자: `<패키지 이름>/<패키지 기준 상대 경로>`. 빌드 머신·번들러
+ * root 와 무관하게 같고, 다른 패키지의 같은 경로와도 겹치지 않는다. 이름 있는
+ * `package.json` 이 없으면 root 기준 상대 경로. JS 변환과 CSS 생성이 같은 값을 써야
+ * class 이름이 일치한다.
  */
 export function scopeOf(root: string, file: string): string {
-    return toPosix(relative(root, file.split('?')[0]));
+    const path = file.split('?')[0]!;
+    const pkg = owningPackage(dirname(path));
+    if (!pkg) return toPosix(relative(root, path));
+    return `${pkg.name}/${toPosix(relative(pkg.dir, path))}`;
 }
 
 export function toPosix(p: string): string {

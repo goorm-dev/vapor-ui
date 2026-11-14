@@ -7,6 +7,7 @@ import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { Box, Menu as MenuPrimitives, Text, VStack } from '@vapor-ui/core';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
+import { css } from '@vapor-ui/style-macro';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -438,16 +439,19 @@ export const MenuItem = ({
     trailing,
     onClick,
 }: MenuItem.Props) => {
+    const itemLayout = getItemLayout({ hasLeading: !!leading, hasTrailing: !!trailing });
     return (
         <MenuPrimitives.Item
             disabled={isDisabled}
             onClick={onClick}
-            $css={{
-                color: variant === 'critical' ? '$fg-danger' : '$fg-normal',
-                display: 'grid',
-                ...getItemLayout({ hasLeading: !!leading, hasTrailing: !!trailing }),
-                gap: '$000',
-            }}
+            className={css(
+                {
+                    color: variant === 'critical' ? '$fg-danger' : '$fg-normal',
+                    display: 'grid',
+                    gap: '$space-000',
+                },
+                itemLayout,
+            )}
         >
             <ItemLayout
                 leading={leading}
@@ -532,10 +536,10 @@ export const MenuCheckItem = ({
                 disabled={isDisabled}
                 value={valueProp}
                 onClick={onClick}
-                $css={{ display: 'grid', gap: '$000', ...itemLayout }}
+                className={css({ display: 'grid', gap: '$space-000' }, itemLayout)}
             >
                 <MenuPrimitives.RadioItemIndicatorPrimitive
-                    $css={{ gridArea: 'marker', marginRight: '$050' }}
+                    className={css({ gridArea: 'marker', marginRight: '$space-050' })}
                 >
                     <ConfirmOutlineIcon />
                 </MenuPrimitives.RadioItemIndicatorPrimitive>
@@ -560,9 +564,11 @@ export const MenuCheckItem = ({
             checked={checked}
             onCheckedChange={handleCheckedChange}
             onClick={onClick}
-            $css={{ display: 'grid', gap: '$000', ...itemLayout }}
+            className={css({ display: 'grid', gap: '$space-000' }, itemLayout)}
         >
-            <MenuPrimitives.CheckboxItemIndicatorPrimitive $css={{ gridArea: 'marker' }} />
+            <MenuPrimitives.CheckboxItemIndicatorPrimitive
+                className={css({ gridArea: 'marker' })}
+            />
 
             <ItemLayout
                 leading={leading}
@@ -639,7 +645,7 @@ export const MenuSubmenuItem = ({
     return (
         <MenuPrimitives.SubmenuTrigger
             disabled={isDisabled}
-            $css={{ display: 'grid', gap: '$000', ...itemLayout }}
+            className={css({ display: 'grid', gap: '$space-000' }, itemLayout)}
         >
             <ItemLayout
                 leading={leading}
@@ -650,7 +656,7 @@ export const MenuSubmenuItem = ({
 
             <Box
                 render={<ChevronRightOutlineIcon />}
-                $css={{ color: '$fg-secondary', marginLeft: '$050' }}
+                className={css({ color: '$fg-secondary', marginLeft: '$space-050' })}
             />
         </MenuPrimitives.SubmenuTrigger>
     );
@@ -695,14 +701,12 @@ export namespace MenuSubmenuItem {
 const Separator = () => {
     return (
         <MenuPrimitives.Separator
-            $css={{
-                display: {
-                    default: 'block',
-                    _firstChild: 'none',
-                    _lastChild: 'none',
-                    _adjacentToSeparator: 'none',
-                },
-            }}
+            className={css({
+                display: 'block',
+                ':first-child': { display: 'none' },
+                ':last-child': { display: 'none' },
+                '& + &': { display: 'none' },
+            })}
         />
     );
 };
@@ -721,12 +725,18 @@ interface ItemLayoutProps extends ItemSlots {}
 
 const ItemLayout = ({ leading, label, description, trailing }: ItemLayoutProps) => (
     <>
-        <itemSlots.leading render={leading} $css={{ gridArea: 'leading', marginRight: '$075' }} />
-        <VStack $css={{ gridArea: 'label' }}>
+        <itemSlots.leading
+            render={leading}
+            className={css({ gridArea: 'leading', marginRight: '$space-075' })}
+        />
+        <VStack className={css({ gridArea: 'label' })}>
             <itemSlots.label render={label} />
             <itemSlots.description render={description} foreground="hint" typography="body3" />
         </VStack>
-        <itemSlots.trailing render={trailing} $css={{ gridArea: 'trailing', marginLeft: '$150' }} />
+        <itemSlots.trailing
+            render={trailing}
+            className={css({ gridArea: 'trailing', marginLeft: '$space-150' })}
+        />
     </>
 );
 
@@ -748,5 +758,5 @@ const getItemLayout = ({
     const gridTemplateAreas = `"${hasMarker ? 'marker ' : ''}${hasLeading ? 'leading ' : ''}label${hasTrailing ? ' trailing' : ''}"`;
     const gridTemplateColumns = `${hasMarker ? markerColumn : ''} ${hasLeading ? 'auto' : ''} 1fr ${hasTrailing ? 'auto' : ''} ${indicator ? 'auto' : ''}`;
 
-    return { gridTemplateAreas, gridTemplateColumns };
+    return css({ gridTemplateAreas, gridTemplateColumns });
 };

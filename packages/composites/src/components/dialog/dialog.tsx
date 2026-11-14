@@ -13,6 +13,7 @@ import {
 
 import { Button, Dialog as DialogPrimitives, IconButton, VStack } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
+import { css } from '@vapor-ui/style-macro';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -210,9 +211,13 @@ interface HeaderProps extends Pick<Dialog.Props, 'title' | 'description'> {}
 const Header = ({ title, description }: HeaderProps) => {
     return (
         <DialogPrimitives.Header
-            $css={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 28px' }}
+            className={css({
+                position: 'relative',
+                display: 'grid',
+                gridTemplateColumns: '1fr 28px',
+            })}
         >
-            <VStack $css={{ alignItems: 'flex-start', gap: '$050', flex: 1 }}>
+            <VStack className={css({ alignItems: 'flex-start', gap: '$space-050', flex: 1 })}>
                 <slots.title render={title} />
                 <slots.description render={description} />
             </VStack>
@@ -232,7 +237,7 @@ const CloseButton = () => {
         <DialogPrimitives.Close
             aria-label={closeLabel}
             render={<IconButton size="xl" colorPalette="secondary" variant="ghost" />}
-            $css={{ position: 'absolute', top: '$150', right: '$150' }}
+            className={css({ position: 'absolute', top: '$space-150', right: '$space-150' })}
         >
             <CloseOutlineIcon />
         </DialogPrimitives.Close>
@@ -254,7 +259,7 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
 
     const $css = {
         maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
-        paddingBottom: overflowed ? '$250' : '$000',
+        paddingBottom: overflowed ? '$space-250' : '$space-000',
         ...$cssProp,
     } satisfies typeof $cssProp;
 
@@ -276,17 +281,20 @@ const Footer = ({ action, assistive }: FooterProps) => {
 
     return (
         <DialogPrimitives.Footer
-            $css={{
+            className={css({
                 display: 'grid',
                 gridTemplateAreas: '"assistive action"',
-                paddingTop: renderFooter ? '$250' : '$000',
-            }}
+                paddingTop: renderFooter ? '$space-250' : '$space-000',
+            })}
         >
             <slots.assistive
                 render={assistive}
-                $css={{ gridArea: 'assistive', justifySelf: 'flex-start' }}
+                className={css({ gridArea: 'assistive', justifySelf: 'flex-start' })}
             />
-            <slots.action render={action} $css={{ gridArea: 'action', justifySelf: 'flex-end' }} />
+            <slots.action
+                render={action}
+                className={css({ gridArea: 'action', justifySelf: 'flex-end' })}
+            />
         </DialogPrimitives.Footer>
     );
 };

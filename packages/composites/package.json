@@ -43,8 +43,7 @@
                 "types": "./dist/components/*/index.d.cts",
                 "default": "./dist/components/*/index.cjs"
             }
-        },
-        "./styles.css": "./dist/styles.css"
+        }
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",

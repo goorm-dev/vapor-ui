@@ -39,6 +39,12 @@ export interface TransformOpts {
      * 하므로 플러그인은 root 기준 상대 경로를 넘긴다. 없으면 `filename`.
      */
     scope?: string;
+    /**
+     * 모듈 CSS 를 가리킬 side-effect import 경로. 지정하면 이 모듈이 CSS 를 만들 때
+     * `import '<cssImport>';` 를 마지막 import 문 뒤에 넣는다 — 이 모듈이 import 하는
+     * 라이브러리 CSS 가 먼저 쌓이고 자기 CSS 가 그 뒤에 오게 하기 위해서다.
+     */
+    cssImport?: string;
 }
 
 export function transform(opts: TransformOpts): TransformResult {
@@ -115,6 +121,8 @@ class Transformer {
 
     #bindingName: string | null = null;
     #ms: MagicString | null = null;
+    /** 마지막 import 문의 끝 위치. 없으면 directive 뒤. */
+    #lastImportEnd = -1;
     #needResolveToken = false;
     #needIx = false;
     #needCx = false;
@@ -219,6 +227,8 @@ class Transformer {
             layer: this.opts.layer ?? DEFAULT_LAYER,
         }).cssText;
 
+        if (css && this.opts.cssImport) this.#insertCssImport(this.opts.cssImport);
+
         return { code: this.#ms.toString(), css: css || null, errors: [] };
     }
 
@@ -229,6 +239,7 @@ class Transformer {
     #scanImports(program: AnyProp) {
         for (const stmt of program.body) {
             if (stmt.type !== 'ImportDeclaration') continue;
+            this.#lastImportEnd = stmt.end;
             for (const spec of stmt.specifiers ?? []) {
                 if (spec.local?.type === 'Identifier') this.#bind(spec.local.name);
                 if (stmt.source.value !== IMPORT_SOURCE) continue;
@@ -549,6 +560,12 @@ class Transformer {
         });
         this.#needCx = true;
         return `_cx([${parts.join(', ')}])`;
+    }
+
+    #insertCssImport(specifier: string) {
+        const line = `import ${jsSingleQuoted(specifier)};`;
+        if (this.#lastImportEnd >= 0) this.#ms!.appendRight(this.#lastImportEnd, `\n${line}`);
+        else this.#ms!.appendLeft(directivePrologueEnd(this.opts.source), `${line}\n`);
     }
 
     #ensureRuntimeImport() {

@@ -809,3 +809,50 @@ describe('transform — string result & composition', () => {
         expect(out.css).toBeNull();
     });
 });
+
+describe('transform — cssImport (per-module CSS import)', () => {
+    const run = (source: string) =>
+        transform({ source, filename: '/x/a.tsx', cssImport: './a.tsx.vapor.css' });
+
+    it('inserts the side-effect import after the last import statement', () => {
+        const out = run(
+            [
+                `import { css } from '@vapor-ui/style-macro';`,
+                `import { Box } from './box';`,
+                `export const a = css({ color: 'red' });`,
+            ].join('\n'),
+        );
+        const lines = out.code.split('\n');
+        expect(lines.indexOf(`import './a.tsx.vapor.css';`)).toBe(
+            lines.findIndex((l) => l.startsWith(`import { Box }`)) + 1,
+        );
+    });
+
+    it('keeps a leading directive first', () => {
+        const out = run(
+            [`'use client';`, `import { css } from '@vapor-ui/style-macro';`, `export const a = css({ color: 'red' });`].join(
+                '\n',
+            ),
+        );
+        expect(out.code.startsWith(`'use client';`)).toBe(true);
+        expect(out.code).toContain(`import './a.tsx.vapor.css';`);
+    });
+
+    it('does not insert when the module emits no CSS', () => {
+        const out = run(
+            [`import { css } from '@vapor-ui/style-macro';`, `import { b } from './b';`, `export const a = css(b);`].join(
+                '\n',
+            ),
+        );
+        expect(out.css).toBeNull();
+        expect(out.code).not.toContain('vapor.css');
+    });
+
+    it('does not insert without the option', () => {
+        const out = transform({
+            source: [`import { css } from '@vapor-ui/style-macro';`, `export const a = css({ color: 'red' });`].join('\n'),
+            filename: '/x/a.tsx',
+        });
+        expect(out.code).not.toContain('vapor.css');
+    });
+});

@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { vaporNextPlugin } from './next';
-import { vaporRolldownPlugin } from './rolldown';
+import { type VaporRolldownOptions, vaporRolldownPlugin } from './rolldown';
 import { vaporVitePlugin } from './vite';
 import { vaporWebpackPlugin } from './webpack';
 
@@ -76,17 +76,13 @@ describe('adapter subpath default exports', () => {
     });
 });
 
-describe('unplugin-backed adapters return a plugin object', () => {
-    it('rolldown() returns a descriptor with `name`', () => {
+describe('adapters return plugin objects', () => {
+    it('rolldown() returns a plugin with transform / resolveId / renderChunk', () => {
         const plugin = vaporRolldownPlugin();
-        expect(plugin).toBeTypeOf('object');
-        expect(plugin).not.toBeNull();
-        expect((plugin as { name?: string }).name).toBe('vapor-style-macro');
-    });
-
-    it('rolldown() has no generateBundle hook unless cssFileName is set', () => {
-        const plugin = vaporRolldownPlugin() as { generateBundle?: unknown };
-        expect(plugin.generateBundle).toBeUndefined();
+        expect(plugin.name).toBe('vapor-style-macro:rolldown');
+        expect(typeof plugin.transform).toBe('function');
+        expect(typeof plugin.resolveId).toBe('function');
+        expect(typeof plugin.renderChunk).toBe('function');
     });
 
     it('webpack() returns an instance with apply()', () => {
@@ -96,106 +92,258 @@ describe('unplugin-backed adapters return a plugin object', () => {
     });
 });
 
-describe('rolldown() adapter — cssFileName (library build sheet)', () => {
-    type Emitted = { type: string; fileName: string; source: string };
-    type Bundle = Record<string, { type: 'chunk'; moduleIds: string[] } | { type: 'asset' }>;
-    type GenerateBundle = (
-        this: { emitFile(file: Emitted): void },
-        options: unknown,
-        bundle: Bundle,
-    ) => void;
+describe('rolldown() adapter — per-module CSS (library build)', () => {
+    type Hook = (...args: unknown[]) => unknown;
+    type Resolved = { id: string; external: boolean; meta: { css: string } };
+    type EmittedAsset = { type: string; name: string; originalFileName: string; source: string };
 
-    function project() {
+    function setup(opts: Parameters<typeof vaporRolldownPlugin>[0] = {}) {
         const root = mkdtempSync(join(tmpdir(), 'vapor-rolldown-'));
-        const write = (name: string, body: string) => {
-            const file = join(root, name);
-            writeFileSync(file, `import { css } from '@vapor-ui/style-macro';\n${body}\n`);
-            return file;
-        };
-        return {
-            root,
-            a: write('a.tsx', `export const a = css({ paddingTop: '$space-100' });`),
-            b: write('b.tsx', `export const b = css({ color: '$fg-primary' });`),
-            unbundled: write('c.stories.tsx', `export const c = css({ marginTop: '$space-200' });`),
-            plain: join(root, 'plain.ts'),
-        };
-    }
-
-    function run(opts: Parameters<typeof vaporRolldownPlugin>[0], bundle: Bundle) {
-        const plugin = vaporRolldownPlugin(opts) as { generateBundle?: GenerateBundle };
-        const emitted: Emitted[] = [];
-        plugin.generateBundle?.call({ emitFile: (f) => emitted.push(f) }, {}, bundle);
-        return emitted;
-    }
-
-    it('emits one sheet from the css() rules of bundled modules only', () => {
-        const p = project();
-        writeFileSync(p.plain, 'export const x = 1;\n');
-        const emitted = run(
-            { root: p.root, hash: true, cssFileName: 'styles.css' },
-            {
-                'a.mjs': { type: 'chunk', moduleIds: [p.a, p.plain] },
-                'b.mjs': { type: 'chunk', moduleIds: [p.b, '\0virtual:x'] },
-                'x.css': { type: 'asset' },
+        writeFileSync(join(root, 'package.json'), JSON.stringify({ name: '@acme/ui' }));
+        const plugin = vaporRolldownPlugin({ root, hash: true, ...opts }) as unknown as Record<
+            string,
+            Hook
+        >;
+        const ctx = {
+            error: (m: string) => {
+                throw new Error(m);
             },
-        );
-
-        expect(emitted).toHaveLength(1);
-        expect(emitted[0]).toMatchObject({ type: 'asset', fileName: 'styles.css' });
-        const css = emitted[0]!.source;
-        // 레이어 순서 선언은 시트 맨 앞 한 번, 블록은 모듈마다 하나.
-        expect(css.match(/@layer vapor-utilities;/g)).toHaveLength(1);
-        expect(css.match(/@layer vapor-utilities \{/g)).toHaveLength(2);
-        expect(css).toContain('padding-top');
-        expect(css).toContain('--vapor-color-foreground-primary');
-        expect(css).not.toContain('margin-top'); // stories file was not in the bundle
-    });
-
-    it('class names in the sheet match the JS transform output (same hash mode)', async () => {
-        const p = project();
-        const plugin = vaporRolldownPlugin({ root: p.root, hash: true, cssFileName: 's.css' }) as {
-            transform: { handler?: Function } | Function;
         };
-        const transform =
-            typeof plugin.transform === 'function' ? plugin.transform : plugin.transform.handler!;
-        const code = (await transform.call(
-            {
-                error: (m: string) => {
-                    throw new Error(m);
+        const file = join(root, 'src', 'button', 'button.tsx');
+        const modules = new Map<string, Resolved>();
+        const transform = (code: string, id = file) =>
+            plugin.transform!.call(ctx, code, id) as { code: string } | null;
+        const resolveId = (source: string, importer = file) => {
+            const r = plugin.resolveId!.call(ctx, source, importer) as Resolved | null;
+            if (r) modules.set(r.id, r);
+            return r;
+        };
+        /** rolldown 이 하는 일을 흉내: 출력 chunk 의 import 를 보고 renderChunk 호출. */
+        const renderChunk = (
+            code: string,
+            chunk: { fileName: string; imports: string[] },
+            fileNameOf: (asset: EmittedAsset) => string = (a) =>
+                a.originalFileName.replace(/^src\//, ''),
+        ) => {
+            const emitted: EmittedAsset[] = [];
+            const rendered = plugin.renderChunk!.call(
+                {
+                    getModuleInfo: (id: string) => modules.get(id) ?? null,
+                    emitFile: (f: EmittedAsset) => emitted.push(f) - 1,
+                    getFileName: (ref: number) => fileNameOf(emitted[ref]!),
                 },
+                code,
+                chunk,
+            ) as { code: string } | null;
+            return { code: rendered?.code ?? code, emitted };
+        };
+        return { root, file, transform, resolveId, renderChunk };
+    }
+
+    const SRC = `import { css } from '@vapor-ui/style-macro';\nimport { Box } from './box';\nexport const cls = css({ gap: '0' });\n`;
+
+    it('imports the module CSS right after the last import', () => {
+        const { transform } = setup();
+        const out = transform(SRC)!;
+        expect(out.code).toMatch(
+            /import \{ Box \} from '\.\/box';\nimport '\.\/button\.vapor\.css';/,
+        );
+        expect(out.code).toMatch(/const cls = 'v\w+';/);
+    });
+
+    it('adds no import when the module has no css() output', () => {
+        const { transform } = setup();
+        const out = transform(
+            `import { css } from '@vapor-ui/style-macro';\nimport { b } from './b';\nexport const c = css(b);\n`,
+        );
+        expect(out?.code ?? '').not.toContain('vapor.css');
+    });
+
+    it('resolves the module CSS to an external, root-relative id carrying the CSS in meta', () => {
+        const { transform, resolveId } = setup();
+        transform(SRC);
+        const r = resolveId('./button.vapor.css')!;
+        // 절대 경로면 rolldown 이 출력 기준 경로로 바꿔 renderChunk 에서 getModuleInfo 가 null 이 된다.
+        expect(r.id).toBe('src/button/button.vapor.css');
+        expect(r.external).toBe(true);
+        expect(r.meta.css).toMatch(/\.v\w+ \{ gap: 0; \}/);
+        expect(resolveId('./other.css')).toBeNull();
+    });
+
+    it('drops the per-file layer order statement (layers.css owns the order)', () => {
+        const { transform, resolveId } = setup({ layer: 'composites' });
+        transform(SRC);
+        const { css } = resolveId('./button.vapor.css')!.meta;
+        expect(css).toMatch(/^@layer composites \{/);
+        expect(css).not.toMatch(/@layer composites;/);
+    });
+
+    it('renderChunk emits the CSS as an asset named after its source and rewrites the import', () => {
+        const { transform, resolveId, renderChunk } = setup();
+        const cls = /const cls = '(v\w+)';/.exec(transform(SRC)!.code)![1];
+        resolveId('./button.vapor.css');
+        const { code, emitted } = renderChunk(`import "src/button/button.vapor.css";\n`, {
+            fileName: 'button/button.mjs',
+            imports: ['src/button/button.vapor.css', 'react'],
+        });
+        expect(emitted).toEqual([
+            {
+                type: 'asset',
+                name: 'button.vapor.css',
+                originalFileName: 'src/button/button.vapor.css',
+                source: expect.stringContaining(`.${cls} {`),
             },
-            `import { css } from '@vapor-ui/style-macro';\nexport const a = css({ paddingTop: '$space-100' });\n`,
-            p.a,
-        )) as { code: string };
-        const cls = code.code.match(/['"](v[A-Za-z0-9]+)['"]/)?.[1];
-        expect(cls).toBeDefined();
-
-        const [sheet] = run(
-            { root: p.root, hash: true, cssFileName: 's.css' },
-            { 'a.mjs': { type: 'chunk', moduleIds: [p.a] } },
-        );
-        expect(sheet!.source).toContain(`.${cls} {`);
+        ]);
+        expect(code).toBe(`import "./button.vapor.css";\n`);
     });
 
-    it('emits the library sheet into the configured layer', () => {
-        const p = project();
-        const [sheet] = run(
-            { root: p.root, hash: true, cssFileName: 'styles.css', layer: 'composites' },
-            { 'a.mjs': { type: 'chunk', moduleIds: [p.a] } },
+    it('output location follows the asset file name rolldown picks (assetFileNames)', () => {
+        const { transform, resolveId, renderChunk } = setup();
+        transform(SRC);
+        resolveId('./button.vapor.css');
+        const { code } = renderChunk(
+            `require("src/button/button.vapor.css");\n`,
+            { fileName: 'button/button.cjs', imports: ['src/button/button.vapor.css'] },
+            () => 'assets/button.vapor-abc123.css',
         );
-        expect(sheet!.source).toMatch(/@layer composites \{[\s\S]*padding-top/);
-        expect(sheet!.source).not.toContain('vapor-utilities');
+        expect(code).toBe(`require("./../assets/button.vapor-abc123.css");\n`);
     });
 
-    it('still emits an (empty) sheet when no bundled module uses css()', () => {
-        const p = project();
-        writeFileSync(p.plain, 'export const x = 1;\n');
-        const emitted = run(
-            { root: p.root, cssFileName: 'styles.css' },
-            { 'a.mjs': { type: 'chunk', moduleIds: [p.plain] } },
-        );
+    it('leaves chunks without module CSS untouched', () => {
+        const { renderChunk } = setup();
+        const { emitted } = renderChunk(`import "react";\n`, {
+            fileName: 'a.mjs',
+            imports: ['react'],
+        });
+        expect(emitted).toEqual([]);
+    });
+
+    it('hashes the package name into class names', () => {
+        const a = setup();
+        const b = setup();
+        writeFileSync(join(b.root, 'package.json'), JSON.stringify({ name: '@other/ui' }));
+        const clsA = /'(v\w+)'/.exec(a.transform(SRC)!.code)![1];
+        const clsB = /'(v\w+)'/.exec(b.transform(SRC)!.code)![1];
+        expect(clsA).not.toBe(clsB);
+    });
+});
+
+describe('rolldown() adapter — extract (single CSS file)', () => {
+    type Hook = (...args: unknown[]) => unknown;
+    type Info = {
+        id: string;
+        isEntry: boolean;
+        importers: string[];
+        importedIds: string[];
+        meta: Record<string, unknown>;
+    };
+
+    function setup(extract: VaporRolldownOptions['extract']) {
+        const root = mkdtempSync(join(tmpdir(), 'vapor-extract-'));
+        writeFileSync(join(root, 'package.json'), JSON.stringify({ name: '@acme/ui' }));
+        const plugin = vaporRolldownPlugin({ root, hash: true, extract }) as unknown as Record<
+            string,
+            Hook
+        >;
+        const ctx = {
+            error: (m: string) => {
+                throw new Error(m);
+            },
+        };
+        const graph = new Map<string, Info>();
+        const add = (id: string, o: Partial<Info>) =>
+            graph.set(id, { id, isEntry: false, importers: [], importedIds: [], meta: {}, ...o });
+
+        // index → a, index → b. a and b each use css().
+        const src = (name: string, gap: string) =>
+            `import { css } from '@vapor-ui/style-macro';\nexport const ${name} = css({ gap: '${gap}' });\n`;
+        const files = { a: join(root, 'src', 'a.tsx'), b: join(root, 'src', 'b.tsx') };
+        const code = {
+            a: (plugin.transform!.call(ctx, src('a', '1px'), files.a) as { code: string }).code,
+            b: (plugin.transform!.call(ctx, src('b', '2px'), files.b) as { code: string }).code,
+        };
+        const cssA = plugin.resolveId!.call(ctx, './a.vapor.css', files.a) as Info;
+        const cssB = plugin.resolveId!.call(ctx, './b.vapor.css', files.b) as Info;
+        add('index', { isEntry: true, importedIds: [files.a, files.b] });
+        add(files.a, { importers: ['index'], importedIds: [cssA.id] });
+        add(files.b, { importers: ['index'], importedIds: [cssB.id] });
+        add(cssA.id, { importers: [files.a], meta: cssA.meta });
+        add(cssB.id, { importers: [files.b], meta: cssB.meta });
+
+        const emitted: Array<{ type: string; name: string; source: string }> = [];
+        const warn: string[] = [];
+        plugin.buildStart?.call({});
+        // re-run transforms after buildStart cleared state is not needed: buildStart runs first in rolldown
+        plugin.buildEnd?.call({
+            getModuleIds: () => graph.keys(),
+            getModuleInfo: (id: string) => graph.get(id) ?? null,
+            emitFile: (f: (typeof emitted)[number]) => emitted.push(f),
+            warn: (m: string) => warn.push(m),
+        });
+        const render = (chunkCode: string, imports: string[]) =>
+            plugin.renderChunk!.call(
+                {
+                    getModuleInfo: (id: string) => graph.get(id) ?? null,
+                    emitFile: () => {
+                        throw new Error('extract mode must not emit per-module assets');
+                    },
+                    getFileName: () => '',
+                },
+                chunkCode,
+                { fileName: 'a.mjs', imports },
+            ) as { code: string } | null;
+        const generate = (
+            bundle: Record<string, { type: string; code?: string; imports?: string[] }>,
+        ) => {
+            plugin.generateBundle!.call({}, {}, bundle);
+            return bundle;
+        };
+        return { code, cssA, cssB, emitted, render, generate };
+    }
+
+    it('without extract: no single CSS file', () => {
+        const plugin = vaporRolldownPlugin() as unknown as Record<string, Hook>;
+        expect(plugin.buildEnd).toBeUndefined();
+    });
+
+    it('extract: true emits one index.css with every module CSS in import order', () => {
+        const { emitted, code } = setup(true);
         expect(emitted).toHaveLength(1);
-        expect(emitted[0]!.source).not.toContain('@layer vapor-utilities {');
+        expect(emitted[0]).toMatchObject({ type: 'asset', name: 'index.css' });
+        const clsA = /'(v\w+)'/.exec(code.a)![1];
+        const clsB = /'(v\w+)'/.exec(code.b)![1];
+        const css = emitted[0]!.source;
+        expect(css.indexOf(`.${clsA}`)).toBeGreaterThan(-1);
+        expect(css.indexOf(`.${clsA}`)).toBeLessThan(css.indexOf(`.${clsB}`));
+    });
+
+    it('extract: { name } sets the file name', () => {
+        expect(setup({ name: 'styles.css' }).emitted[0]).toMatchObject({ name: 'styles.css' });
+    });
+
+    it('extract: renderChunk does not emit per-module assets', () => {
+        const { render, cssA } = setup(true);
+        expect(render(`import "${cssA.id}";\n`, [cssA.id])).toBeNull();
+    });
+
+    it('extract: strips the per-module CSS imports from the output', () => {
+        const { generate, cssA } = setup(true);
+        const bundle = generate({
+            'a.mjs': {
+                type: 'chunk',
+                code: `import "${cssA.id}";\nexport const a = 1;\n`,
+                imports: [cssA.id],
+            },
+            'a.cjs': {
+                type: 'chunk',
+                code: `require("${cssA.id}");\nexports.a = 1;\n`,
+                imports: [cssA.id],
+            },
+            'react.mjs': { type: 'chunk', code: `import "react";\n`, imports: ['react'] },
+        });
+        expect(bundle['a.mjs']!.code).toBe('export const a = 1;\n');
+        expect(bundle['a.cjs']!.code).toBe('exports.a = 1;\n');
+        expect(bundle['react.mjs']!.code).toBe('import "react";\n');
     });
 });
 

@@ -25,13 +25,14 @@ yarn add @vapor-ui/core @vapor-ui/composites
 
 ## 스타일
 
-CSS 엔트리에서 core 스타일과 함께 composites 스타일을 한 번 import한다. 번들러 플러그인은 필요 없다.
+각 컴포넌트가 자기 CSS 파일을 import하므로 composites 스타일을 따로 import하지 않는다. 사용한 컴포넌트의 CSS만 번들에 들어간다. 번들러 플러그인은 필요 없다. CSS 엔트리에는 core 스타일만 둔다.
 
 ```css
 @import '@vapor-ui/core/layers.css';
 @import '@vapor-ui/core/styles.css';
-@import '@vapor-ui/composites/styles.css';
 ```
+
+CJS(`require`)로 쓸 때는 루트(`@vapor-ui/composites`) 대신 서브패스(`@vapor-ui/composites/alert-dialog`)로 가져온다. CJS 루트 진입점은 모든 컴포넌트를 `require`하므로 쓰지 않은 컴포넌트의 CSS까지 번들에 들어간다.
 
 composites 스타일은 `@layer composites`에 들어간다. `@vapor-ui/core/layers.css`가 이 레이어를 `vapor-components`와 `vapor-utilities` 사이에 선언하므로, composites 스타일은 core 컴포넌트 스타일을 덮어쓰고 앱의 `css()` 스타일(`vapor-utilities`)과 레이어 밖 일반 `className`에는 진다. CSS 로드 순서와 무관하다.
 

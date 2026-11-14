@@ -1,5 +1,5 @@
-import { bundle, generateInputs } from '@repo/rolldown-config';
-import { cleanLayerDeclaration, depsExternal, dts } from '@repo/rolldown-config/plugins';
+import { assetFileNames, bundle, generateInputs } from '@repo/rolldown-config';
+import { depsExternal, dts } from '@repo/rolldown-config/plugins';
 import { vaporRolldownPlugin } from '@vapor-ui/style-macro/rolldown';
 import path from 'node:path';
 import { defineConfig } from 'rolldown';
@@ -12,6 +12,13 @@ const inputs = generateInputs([
     '!src/components/**/*.{figma,stories,test,spec}.*',
 ]);
 
+/**
+ * `css()` 를 class 로 바꾸고 모듈마다 `<file>.vapor.css` 를 import 하게 한다 (ESM `import`,
+ * CJS `require`). CSS 위치는 `assetFileNames` 가 소스 옆으로 정하고, `preserveModules` 출력과
+ * `sideEffects: ["**\/*.css"]` 덕분에 소비자는 import 한 컴포넌트의 CSS 만 가져간다.
+ */
+const vapor = () => vaporRolldownPlugin({ hash: true, layer: 'composites' });
+
 const resolve = {
     alias: { '~': path.resolve('./src') },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
@@ -22,17 +29,14 @@ export default defineConfig([
     bundle({
         input: inputs,
         resolve,
-        plugins: [
-            depsExternal(),
-            cleanLayerDeclaration(),
-            vaporRolldownPlugin({ hash: true, cssFileName: 'styles.css', layer: 'composites' }),
-        ],
+        plugins: [depsExternal(), vapor()],
         output: {
             format: 'esm',
             strict: true,
             exports: 'named',
 
             entryFileNames: '[name].mjs',
+            assetFileNames,
         },
     }),
 
@@ -40,13 +44,14 @@ export default defineConfig([
     bundle({
         input: inputs,
         resolve,
-        plugins: [depsExternal(), cleanLayerDeclaration(), vaporRolldownPlugin({ hash: true })],
+        plugins: [depsExternal(), vapor()],
         output: {
             format: 'cjs',
             strict: true,
             exports: 'named',
 
             entryFileNames: '[name].cjs',
+            assetFileNames,
         },
     }),
 

@@ -85,10 +85,7 @@ const config: StorybookConfig = {
 
             plugins: [
                 vaporVitePlugin({
-                    include: [
-                        '../../../packages/core/src/**',
-                        '../../../packages/composites/src/**',
-                    ],
+                    include: ['../../packages/core/src/**', '../../packages/composites/src/**'],
                     exclude: ['**/*.test.*', '**/*.css.ts'],
                 }),
 
