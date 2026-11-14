@@ -3,7 +3,7 @@ import { createUnplugin } from 'unplugin';
 import { formatBuildError } from '~/compilers/code-frame';
 import { transform } from '~/compilers/transform';
 
-import { type ResolvedOptions, type VaporPluginOptions, resolveOptions } from './_options';
+import { type ResolvedOptions, type VaporPluginOptions, resolveOptions, scopeOf } from './_options';
 
 export type { VaporPluginOptions };
 
@@ -43,7 +43,13 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
 
         transform(code, id) {
             const filename = id.split('?')[0];
-            const result = transform({ source: code, filename, hash: opts().hash });
+            const { hash, root } = opts();
+            const result = transform({
+                source: code,
+                filename,
+                hash,
+                scope: scopeOf(root, filename),
+            });
 
             if (result.errors.length) {
                 const msg = result.errors

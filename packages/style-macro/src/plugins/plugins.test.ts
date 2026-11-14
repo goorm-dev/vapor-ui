@@ -143,7 +143,9 @@ describe('rolldown() adapter — cssFileName (library build sheet)', () => {
         expect(emitted).toHaveLength(1);
         expect(emitted[0]).toMatchObject({ type: 'asset', fileName: 'styles.css' });
         const css = emitted[0]!.source;
-        expect(css.match(/@layer vapor-utilities \{/g)).toHaveLength(1);
+        // 레이어 순서 선언은 시트 맨 앞 한 번, 블록은 모듈마다 하나.
+        expect(css.match(/@layer vapor-utilities;/g)).toHaveLength(1);
+        expect(css.match(/@layer vapor-utilities \{/g)).toHaveLength(2);
         expect(css).toContain('padding-top');
         expect(css).toContain('--vapor-color-foreground-primary');
         expect(css).not.toContain('margin-top'); // stories file was not in the bundle
@@ -165,7 +167,7 @@ describe('rolldown() adapter — cssFileName (library build sheet)', () => {
             `import { css } from '@vapor-ui/style-macro';\nexport const a = css({ paddingTop: '$space-100' });\n`,
             p.a,
         )) as { code: string };
-        const cls = code.code.match(/['"](_[^'"\s]+)['"]/)?.[1];
+        const cls = code.code.match(/['"](v[A-Za-z0-9]+)['"]/)?.[1];
         expect(cls).toBeDefined();
 
         const [sheet] = run(

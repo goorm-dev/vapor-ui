@@ -1,4 +1,4 @@
-import { isAbsolute, resolve, sep } from 'node:path';
+import { isAbsolute, relative, resolve, sep } from 'node:path';
 import picomatch from 'picomatch';
 
 import { DEFAULT_LAYER } from '~/compilers/emit-css';
@@ -64,6 +64,14 @@ const SOURCE_EXT_RE = /\.(?:tsx?|jsx?|mts|mjs|cts|cjs)$/;
 export function defaultInclude(id: string): boolean {
     if (id.includes('node_modules')) return false;
     return SOURCE_EXT_RE.test(id);
+}
+
+/**
+ * class 이름 해시용 파일 식별자. root 기준 POSIX 상대 경로라 빌드 머신과 무관하게 같다.
+ * JS 변환과 CSS 수집이 같은 값을 써야 class 이름이 일치한다.
+ */
+export function scopeOf(root: string, file: string): string {
+    return toPosix(relative(root, file.split('?')[0]));
 }
 
 export function toPosix(p: string): string {

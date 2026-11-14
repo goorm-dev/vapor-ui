@@ -9,13 +9,13 @@ Vapor UI는 모든 컴포넌트 스타일을 [CSS Cascade Layer](https://develop
 
 Vapor UI는 다섯 개의 레이어를 사용합니다. 아래로 갈수록 우선순위가 높습니다.
 
-| 레이어             | 포함 스타일                                                  |
-| ------------------ | ------------------------------------------------------------ |
-| `vapor-theme`      | 테마 토큰(`--vapor-color-*` 등)과 라이트/다크 바인딩         |
-| `vapor-reset`      | `*`, `html`, `body` 등에 적용되는 전역 reset                 |
-| `vapor-components` | 각 컴포넌트의 base, variant, recipe 스타일                   |
-| `composites`       | `@vapor-ui/composites` 컴포넌트 내부 스타일                  |
-| `vapor-utilities`  | `@vapor-ui/style-macro` 의 `css()` 가 생성한 atomic 유틸리티 |
+| 레이어             | 포함 스타일                                          |
+| ------------------ | ---------------------------------------------------- |
+| `vapor-theme`      | 테마 토큰(`--vapor-color-*` 등)과 라이트/다크 바인딩 |
+| `vapor-reset`      | `*`, `html`, `body` 등에 적용되는 전역 reset         |
+| `vapor-components` | 각 컴포넌트의 base, variant, recipe 스타일           |
+| `composites`       | `@vapor-ui/composites` 컴포넌트 내부 스타일          |
+| `vapor-utilities`  | `@vapor-ui/style-macro` 의 `css()` 가 생성한 스타일  |
 
 ## 엔트리 구성
 

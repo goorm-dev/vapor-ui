@@ -225,7 +225,7 @@ padding: '12px';
 
 ## `css()` macro (consumer-facing styling)
 
-New call sites — docs, demos, product code that composes vapor components — use the `css({...})` macro from `@vapor-ui/style-macro`. It compiles to atomic classnames at build time with no runtime style dictionary. Dynamic values are hoisted to CSS vars and injected into the element's `style` prop automatically.
+New call sites — docs, demos, product code that composes vapor components — use the `css({...})` macro from `@vapor-ui/style-macro`. It compiles each call to one class + one CSS block at build time with no runtime style dictionary. Dynamic values are hoisted to CSS vars and injected into the element's `style` prop automatically.
 
 ```tsx
 import { css } from '@vapor-ui/style-macro';

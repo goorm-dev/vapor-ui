@@ -3,15 +3,14 @@ import { join } from 'node:path';
 import picomatch from 'picomatch';
 import postcss, { type AtRule, type Root } from 'postcss';
 
-import { emitCss } from '~/compilers/emit-css';
 import { transform } from '~/compilers/transform';
-import type { IRRule } from '~/models/types';
 
 import {
     type ResolveDefaults,
     type ResolvedOptions,
     type VaporPluginOptions,
     resolveOptions,
+    scopeOf,
 } from './_options';
 
 export const VAPOR_AT_RULE = 'vapor-utilities';
@@ -98,30 +97,35 @@ export function collectCss(
 }
 
 /**
- * 주어진 파일들의 `css()` 룰을 모아 단일 정렬 시트를 만든다. `include` 를 통과하고
- * `@vapor-ui/style-macro` 를 import 하는 파일만 쓴다. 경로 정렬 후 처리하므로 입력 순서와
- * 무관하게 결과가 결정적이다. 프로젝트 스캔(`collectCss`)과 라이브러리 빌드
+ * 주어진 파일들의 모듈 CSS(`css()` 호출 단위 블록)를 경로 순서로 이어 붙인다. `include` 를
+ * 통과하고 `@vapor-ui/style-macro` 를 import 하는 파일만 쓴다. 경로 정렬 후 처리하므로 입력
+ * 순서와 무관하게 결과가 결정적이다. 모듈 단위 CSS 연결(3~5단계) 전까지의 임시 경로다. 프로젝트 스캔(`collectCss`)과 라이브러리 빌드
  * (rolldown `cssFileName`)가 같은 경로를 쓴다.
  */
 export function buildSheet(
     candidates: string[],
-    opts: Pick<ResolvedOptions, 'include' | 'hash' | 'layer'>,
+    opts: Pick<ResolvedOptions, 'include' | 'hash' | 'layer' | 'root'>,
 ): { css: string; files: string[] } {
-    const rules: IRRule[] = [];
+    const modules: string[] = [];
     const files: string[] = [];
     for (const file of [...new Set(candidates)].sort()) {
         if (!opts.include(file)) continue;
         const source = readFileSync(file, 'utf8');
         if (!source.includes('@vapor-ui/style-macro')) continue;
         files.push(file);
-        const res = transform({ source, filename: file, hash: opts.hash });
-        if (res.errors.length) continue;
-        rules.push(...res.rules);
+        const res = transform({
+            source,
+            filename: file,
+            hash: opts.hash,
+            layer: opts.layer,
+            scope: scopeOf(opts.root, file),
+        });
+        if (res.errors.length || !res.css) continue;
+        // 레이어 순서 선언은 시트 맨 앞에 한 번만.
+        modules.push(res.css.replace(/^@layer [^;{]+;\n/, ''));
     }
 
-    const css = rules.length
-        ? emitCss(rules, opts.hash ? 'hashed' : 'readable', opts.layer).cssText
-        : '';
+    const css = modules.length ? [`@layer ${opts.layer};`, ...modules].join('\n') : '';
     return { css: `/* vapor-collect: ${files.length} files */\n${css}`, files };
 }
 

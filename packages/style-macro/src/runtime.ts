@@ -1,6 +1,6 @@
 export { _resolveToken } from './helpers/resolve-token';
 export { _ix } from './helpers/ix';
-export { _ax } from './helpers/ax';
+export { _cx } from './helpers/cx';
 
 export { backgroundColor } from './tokens/backgroundColor';
 export { borderColor } from './tokens/borderColor';

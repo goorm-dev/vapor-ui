@@ -1,10 +1,12 @@
 # @vapor-ui/style-macro
 
-빌드 타임에 동작하는 atomic CSS-in-JS 유틸리티. `css({...})` 호출을 아토믹 class 문자열로 치환하고, 프로젝트 전체의 룰을 모아 **단일 시트** 로 방출한다.
+빌드 타임에 동작하는 zero-runtime CSS-in-JS. `css({...})` 호출 1개를 **class 1개 + CSS 블록 1개** 로 컴파일한다 (Vanilla Extract 와 같은 모델). 현재는 프로젝트 전체 모듈의 블록을 모아 **단일 시트** 로 방출하며, 모듈 단위 CSS import 로의 전환이 진행 중이다.
 
 - 반환값은 순수 `string` — Server Component 에서 만들어 Client Component 로 넘겨도 된다.
-- cascade 는 Compiled(Atlassian) 의 단일 시트 정렬을 따른다: shorthand < longhand < `:link/:visited/:focus-within/:focus/:focus-visible/:hover/:active` < at-rule(`min-width` 오름 / `max-width` 내림). 파일·청크 순서와 무관하게 한 파일의 `:hover`/`@media`/longhand 가 다른 파일의 base 를 이긴다.
-- `css(a, b)` 합성은 `selector|property` 슬롯 단위 last-wins. 인자가 전부 정적이면 compile-time 에 끝나고, 런타임 값이 섞이면 `_ax([...])` 가 같은 규칙으로 머지한다 (외부 class 는 통과).
+- 블록 안 선언 순서는 작성 순서 그대로다. 같은 selector·property 는 뒤에 쓴 것이 이긴다. selector 그룹은 base → 중첩 selector(작성 순) → at-rule(`min-width` 오름 / `max-width` 내림) 순으로 나온다.
+- `css(a, b)` 합성:
+    - 같은 파일에서 정적으로 풀리는 인자(object 리터럴, 모듈 최상위 `const x = css(...)` 상수, 그 사이의 `&&` / `?:`)는 compile-time 에 **한 블록으로 병합**한다. 뒤 인자가 이기고, 조건부 조합은 분기마다 병합 블록을 미리 만든다(최대 16 조합).
+    - 그 밖의 인자(import, props, 함수 결과)는 `_cx([...])` 로 이어붙인다. 같은 속성을 가진 두 class 의 승패는 CSS 로드 순서(import 순서)를 따른다.
 
 ## 사용
 
@@ -246,10 +248,10 @@ export default function Root({ children }) {
 
 ## 결정론
 
-같은 입력 (`source`, `hash` 모드) → 같은 출력 (`code`, `css`, `classes`).
+같은 입력 (`source`, `scope`, `hash`, `layer`) → 같은 출력 (`code`, `css`).
 
-- Class name: `_<group6><value6>` — group = hash(selector|property), value = hash(value). dev 는 앞에 읽을 수 있는 slug 가 붙지만 끝 12자는 동일해 `_ax` 키가 일치한다.
-- CSS: bucket(shorthand 깊이 → base → LVFHA → at-rule) → at-rule 비교 → 입력 순서. 수집 모드에서는 프로젝트 전체가 한 번에 정렬된다.
+- Class name: hash = murmur2(`scope` + 블록 선언 직렬화). hashed `v<hash>`, readable `<변수·JSX 요소 이름>_<hash>`. `scope` 는 플러그인이 넘기는 root 기준 상대 경로라 빌드 머신과 무관하다. 같은 선언이라도 파일이 다르면 class 가 다르다.
+- CSS: 블록은 소스 등장 순서, 블록 안은 selector 그룹 순서(위 참고). 수집 모드에서는 파일 경로 순으로 모듈 CSS 를 이어 붙인다.
 - Shorthand: 자식 property 전개 순서 고정
 
 ## 내부 구조
@@ -258,14 +260,14 @@ export default function Root({ children }) {
 | ------------------------------ | -------------------------------------------------------------- |
 | `src/compilers/transform.ts`   | AST 파싱, call site 수집, rule emit, 코드 재작성               |
 | `src/compilers/parse-call.ts`  | 단일 `css({...})` 호출 파싱, IR rule 생성                      |
-| `src/compilers/emit-css.ts`    | IR rule → CSS 문자열 변환                                      |
+| `src/compilers/emit-css.ts`    | 블록(class + IR rule) → 모듈 CSS                               |
 | `src/compilers/jsx-inject.ts`  | Dynamic value JSX `style` prop 주입                            |
 | `src/compilers/directives.ts`  | `'use client'` directive 보존 (import 삽입 위치 결정)          |
 | `src/models/*.ts`              | class name, selector, shorthand, token, value 모델             |
 | `src/plugins/*.ts`             | 번들러 adapter (unplugin + turbopack loader)                   |
-| `src/models/sort.ts`           | cascade bucket · at-rule 정렬 (Compiled 이식)                  |
-| `src/plugins/_collect.ts`      | 소스 스캔 → 전체 IR → 단일 `emitCss`                           |
-| `src/helpers/ax.ts`            | runtime `_ax` — group 단위 class 머지 (`__runtime__`)          |
+| `src/models/sort.ts`           | 블록 안 at-rule 정렬 (Compiled 이식)                           |
+| `src/plugins/_collect.ts`      | 소스 스캔 → 파일별 모듈 CSS 를 경로 순으로 연결                |
+| `src/helpers/cx.ts`            | runtime `_cx` — class 이어붙이기·중복 제거 (`__runtime__`)     |
 | `src/helpers/resolve-token.ts` | runtime `_resolveToken` helper (`__runtime__` subpath 로 노출) |
 
 `transform(source, opts)` 는 public API 아님 — plugin 내부 전용.

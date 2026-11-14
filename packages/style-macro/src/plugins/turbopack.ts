@@ -1,7 +1,7 @@
 import { formatBuildError } from '~/compilers/code-frame';
 import { transform } from '~/compilers/transform';
 
-import { type VaporPluginOptions, resolveOptions } from './_options';
+import { type VaporPluginOptions, resolveOptions, scopeOf } from './_options';
 
 export interface TurbopackLoaderContext {
     resourcePath: string;
@@ -22,7 +22,12 @@ export default async function vaporStyleTurbopackLoader(
     if (!opts.include(this.resourcePath)) return source;
     if (!source.includes('@vapor-ui/style-macro')) return source;
 
-    const result = transform({ source, filename: this.resourcePath, hash: opts.hash });
+    const result = transform({
+        source,
+        filename: this.resourcePath,
+        hash: opts.hash,
+        scope: scopeOf(opts.root, this.resourcePath),
+    });
 
     if (result.errors.length > 0) {
         const messages = result.errors

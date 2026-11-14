@@ -97,7 +97,7 @@ describe('unplugin — JS transform only', () => {
             const out = callHook(hooks.transform, ctx, src, '/src/A.tsx');
             expect(out).not.toBeNull();
             expect(out.code).not.toMatch(/import\s+["'][^"']*\.css["']/);
-            expect(out.code).toMatch(/const cls = '_padding-top_space-400_[A-Za-z0-9]{12}/);
+            expect(out.code).toMatch(/const cls = 'cls_[A-Za-z0-9]+'/);
             expect(out.code).toContain(`import { css } from '@vapor-ui/style-macro';`);
         });
 

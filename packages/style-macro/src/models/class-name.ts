@@ -5,8 +5,6 @@
 // djb2 (Adobe S2 default) is natural-collision-prone on hex-shaped values
 // (`#1E1E1E` ↔ `#0f0f0f`, `#2B2B2B` ↔ `#1c1c1c`), which is safe for Adobe's
 // bounded design-token set but not for user-supplied CSS values.
-import type { Tuple } from './types';
-
 export type ClassNameMode = 'readable' | 'hashed';
 
 // murmur2 32-bit (little-endian), seed 0. Reference:
@@ -68,55 +66,35 @@ export function generateArbitraryValueSelector(v: string, atStart = false): stri
     return c;
 }
 
-const ESCAPE_MAP: Record<string, string> = {
-    '#': 'x',
-    '.': 'd',
-    '(': 'l',
-    ')': 'r',
-    ',': 'c',
-    ' ': '_',
-};
-const SLUG_INVALID_RE = /[^a-z0-9-]/gi;
-
-function slug(input: string): string {
-    return input
-        .replace(/[#.(),\s]/g, (ch) => ESCAPE_MAP[ch] ?? '_')
-        .replace(SLUG_INVALID_RE, '_')
-        .replace(/_+/g, '_')
-        .replace(/^[_-]|[_-]$/g, '');
+/** debugId 를 class ident 로: 영숫자·`-`·`_` 외는 `_`, 숫자 시작이면 `_` 접두. */
+function sanitizeDebugId(input: string): string {
+    const s = input.replace(/[^A-Za-z0-9_-]+/g, '_');
+    return /^[0-9-]/.test(s) ? `_${s}` : s;
 }
 
-function stripTokenPrefix(input: string): string {
-    return input.startsWith('$') ? input.slice(1) : input;
-}
-
-/** 그룹·값 해시 각각의 고정 길이. `_ax` 가 길이로 그룹 키를 잘라낸다. */
-export const GROUP_HASH_LENGTH = 6;
-export const VALUE_HASH_LENGTH = 6;
-
-/** 32-bit murmur 는 base62 6자리 안에 들어간다. 모자라면 'a'(=0) 로 왼쪽 패딩. */
-function fixedBase62(value: number, length: number): string {
-    return toBase62(value).padStart(length, 'a');
+export interface BlockClassNameInput {
+    /** 파일 식별자 (root 기준 상대 경로). 같은 선언이라도 파일이 다르면 다른 class. */
+    scope: string;
+    /** 블록 선언을 순서대로 직렬화한 문자열. 선언 순서도 정체성에 포함된다. */
+    signature: string;
+    mode: ClassNameMode;
+    /** readable 모드에서 class 앞에 붙는 사람이 읽을 이름 (변수·컴포넌트 이름). */
+    debugId?: string;
 }
 
 /**
- * Compiled(Atlassian) 의 `_<group><value>` 포맷. group = hash(selectorContext|property),
- * value = hash(value). 같은 group 의 class 는 같은 CSS 선언 슬롯을 두고 경쟁하므로
- * runtime `_ax` 가 group 만 보고 뒤쪽 승자를 고를 수 있다.
- *
- * readable 모드는 사람이 읽을 slug 를 앞에 붙이되 끝 12자 구조는 유지한다 —
- * prebuilt(hashed) 와 dev(readable) 산출물이 섞여도 `_ax` 키가 일치해야 한다.
+ * `css()` 호출 1개 = class 1개. hash 는 `scope` + `signature` 의 murmur2 base62.
+ * hashed: `v<hash>`, readable: `<debugId>_<hash>` (debugId 없으면 `css`).
  */
-export function buildClassName(t: Tuple, mode: ClassNameMode = 'readable'): string {
-    const group = fixedBase62(murmur2(`${t.selectorContext}|${t.property}`), GROUP_HASH_LENGTH);
-    const value = fixedBase62(murmur2(t.value), VALUE_HASH_LENGTH);
-    const tail = `${group}${value}`;
-
-    if (mode === 'hashed') return `_${tail}`;
-
-    const propSlug = slug(t.property);
-    const valueSlug = slug(stripTokenPrefix(t.rawValue ?? t.value));
-    return `_${propSlug}_${valueSlug}_${tail}`;
+export function buildBlockClassName({
+    scope,
+    signature,
+    mode,
+    debugId,
+}: BlockClassNameInput): string {
+    const hash = toBase62(murmur2(`${scope}\0${signature}`));
+    if (mode === 'hashed') return `v${hash}`;
+    return `${sanitizeDebugId(debugId || 'css')}_${hash}`;
 }
 
 /** dynamic slot 용 CSS var 이름. mode 별 접두: prod=`--_`, dev=`--vapor-_`. */

@@ -1,23 +1,25 @@
-import { type ClassNameMode, buildClassName, dynamicVarName } from '~/models/class-name';
+import { type ClassNameMode, dynamicVarName } from '~/models/class-name';
 import { composeSelector } from '~/models/selector';
-import { bucketOf, bucketRank, compareAtRulePath, innerRank } from '~/models/sort';
+import { compareAtRulePath } from '~/models/sort';
 import type { IRRule } from '~/models/types';
 
-export interface EmitOutput {
-    /** 방출된 CSS 전문. `@layer <layer> { ... }` 블록 (기본 `vapor-utilities`). */
-    cssText: string;
-    /** rules 와 같은 순서·길이의 className. dedupe 를 통과한 뒤 재분배. */
-    classNamesPerRule: string[];
-    /** dynamic slot 목록 (P4 에서 쓰임). */
-    dynamicSlots: Array<{ slotId: string; sourceExpr: string; property: string }>;
+export const DEFAULT_LAYER = 'vapor-utilities';
+
+/** `css()` 호출 1개(또는 삼항 분기 1개)가 만드는 class 와 그 선언. */
+export interface Block {
+    className: string;
+    rules: IRRule[];
 }
 
-interface Emitted {
-    cssRule: string;
-    atRulePath: string[];
-    bucket: number;
-    inner: number;
-    order: number;
+export interface EmitOptions {
+    mode: ClassNameMode;
+    /** 규칙을 담을 cascade layer. 기본 `vapor-utilities`. */
+    layer?: string;
+}
+
+export interface EmitOutput {
+    /** 모듈 CSS 전문. 블록이 없으면 빈 문자열. */
+    cssText: string;
 }
 
 /**
@@ -74,124 +76,131 @@ function formatAtRule(s: string): string {
     return s.replace(/@([a-zA-Z-]+)(?=\()/g, '@$1 ').replace(/([a-zA-Z-]+):(?=\S)/g, '$1: ');
 }
 
-function ruleKey(r: IRRule): string {
-    if (r.kind === 'static') return `s|${r.selectorContext}|${r.property}|${r.value}`;
-    return `d|${r.selectorContext}|${r.property}|${r.slotId}`;
+function slotKey(r: IRRule): string {
+    return `${r.selectorContext}|${r.property}`;
 }
 
-export const DEFAULT_LAYER = 'vapor-utilities';
+/**
+ * 같은 selector 컨텍스트·property 는 마지막 선언만 남기고, 그 마지막 위치로 옮긴다.
+ * 블록 안 선언 순서가 곧 cascade 순서이므로 "뒤에 쓴 것이 이긴다" 를 그대로 보존한다.
+ */
+export function normalizeRules(rules: IRRule[]): IRRule[] {
+    const seen = new Set<string>();
+    const out: IRRule[] = [];
+    for (let i = rules.length - 1; i >= 0; i--) {
+        const key = slotKey(rules[i]);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(rules[i]);
+    }
+    return out.reverse();
+}
 
-export function emitCss(
-    rules: IRRule[],
-    mode: ClassNameMode = 'readable',
-    layer: string = DEFAULT_LAYER,
-): EmitOutput {
-    const classNamesPerRule: string[] = [];
-    const dynamicSlots: EmitOutput['dynamicSlots'] = [];
-    const seen = new Map<string, string>();
-    const emitted: Emitted[] = [];
-    const hashMode: 'dev' | 'prod' = mode === 'hashed' ? 'prod' : 'dev';
+/** class 이름 해시 입력. 선언 순서·값·slot 을 모두 반영한다. */
+export function signatureOf(rules: IRRule[]): string {
+    return rules
+        .map((r) =>
+            r.kind === 'static' ? `${slotKey(r)}:${r.value}` : `${slotKey(r)}:$slot(${r.slotId})`,
+        )
+        .join(';');
+}
 
-    for (const rule of rules) {
-        const dedupKey = ruleKey(rule);
-        let cls = seen.get(dedupKey);
+interface Group {
+    atRulePath: string[];
+    selector: string;
+    decls: string[];
+    order: number;
+}
 
-        if (!cls) {
-            const finalValue =
-                rule.kind === 'static'
-                    ? rule.value
-                    : `var(${dynamicVarName(rule.slotId, hashMode)})`;
-            const rawValue = rule.kind === 'static' ? rule.rawValue : rule.sourceExpr;
-
-            cls = buildClassName(
-                {
-                    property: rule.property,
-                    value: finalValue,
-                    rawValue,
-                    selectorContext: rule.selectorContext,
-                },
-                mode,
-            );
-            seen.set(dedupKey, cls);
-
-            const { atRule, leaf } = extractAtRulePrefix(rule.selectorContext);
-            const selector = leaf === 'base' ? `.${cls}` : composeSelector(`.${cls}`, leaf);
-            const cssRule = `${selector} { ${rule.property}: ${finalValue} }`;
-            const atRulePath = atRule ? splitAtRules(atRule).map(formatAtRule) : [];
-            emitted.push({
-                cssRule,
-                atRulePath,
-                bucket: bucketRank(bucketOf(leaf, atRulePath.length > 0, rule.property)),
-                inner: innerRank(leaf, rule.property),
-                order: emitted.length,
-            });
-
-            if (rule.kind === 'dynamic') {
-                dynamicSlots.push({
-                    slotId: rule.slotId,
-                    sourceExpr: rule.sourceExpr,
-                    property: rule.property,
-                });
-            }
+function groupsOf(block: Block, hashMode: 'dev' | 'prod'): Group[] {
+    const byKey = new Map<string, Group>();
+    for (const rule of block.rules) {
+        const { atRule, leaf } = extractAtRulePrefix(rule.selectorContext);
+        const atRulePath = atRule ? splitAtRules(atRule).map(formatAtRule) : [];
+        const cls = `.${block.className}`;
+        const selector = leaf === 'base' ? cls : composeSelector(cls, leaf);
+        const key = `${atRulePath.join('\u0000')}\u0001${selector}`;
+        let g = byKey.get(key);
+        if (!g) {
+            g = { atRulePath, selector, decls: [], order: byKey.size };
+            byKey.set(key, g);
         }
-        classNamesPerRule.push(cls);
+        const value =
+            rule.kind === 'static' ? rule.value : `var(${dynamicVarName(rule.slotId, hashMode)})`;
+        g.decls.push(`${rule.property}: ${value};`);
     }
 
-    const chunks: string[] = [`@layer ${layer};`, ''];
-
-    // dynamic slot CSS var 는 기본적으로 자식에게 상속된다. 같은 class 를
-    // 가진 중첩 element 라도 부모가 slot 값을 세팅하면 자식도 그대로 그려지는
-    // 리뷰 #6c 결함을 막으려면 상속을 명시적으로 차단해야 한다. @property 를
-    // @layer 바깥에 둬 미지원 브라우저가 레이어 자체를 날려버리지 않도록 한다.
-    for (const slot of dynamicSlots) {
-        const varName = dynamicVarName(slot.slotId, hashMode);
-        chunks.push(`@property ${varName} { syntax: '*'; inherits: false; }`);
-    }
-    if (dynamicSlots.length > 0) chunks.push('');
-
-    chunks.push(`@layer ${layer} {`);
-
-    // Compiled 의 단일 시트 정렬. 이 함수는 (수집기를 통해) 프로젝트 전체 룰을
-    // 한 번에 받으므로 여기서 정한 순서가 곧 최종 cascade 다:
-    //  1) bucket — shorthand 깊이 < longhand < LVFHA pseudo < at-rule
-    //  2) at-rule 끼리 — 이름 → 조건 수 → min 오름 / max 내림 (mobile-first)
-    //  3) at-rule 안에서 shorthand 깊이 → pseudo → 나머지
-    //  4) 그래도 같으면 입력 순서 (안정 정렬)
-    const sorted = emitted.slice().sort((a, b) => {
-        if (a.bucket !== b.bucket) return a.bucket - b.bucket;
-        const c = compareAtRulePath(a.atRulePath, b.atRulePath);
-        if (c !== 0) return c;
-        if (a.inner !== b.inner) return a.inner - b.inner;
+    // base selector 그룹 → 중첩 selector 그룹 (등장 순) → at-rule 그룹 (min 오름 / max 내림).
+    const base = `.${block.className}`;
+    return [...byKey.values()].sort((a, b) => {
+        const aAt = a.atRulePath.length > 0;
+        const bAt = b.atRulePath.length > 0;
+        if (aAt !== bAt) return aAt ? 1 : -1;
+        if (aAt) {
+            const c = compareAtRulePath(a.atRulePath, b.atRulePath);
+            if (c !== 0) return c;
+        }
+        const aBase = a.selector === base;
+        const bBase = b.selector === base;
+        if (aBase !== bBase) return aBase ? -1 : 1;
         return a.order - b.order;
     });
+}
 
-    // 같은 at-rule 경로는 인접하므로 연속 구간만 하나의 블록으로 묶는다.
-    const openPath: string[] = [];
-    const closeTo = (depth: number) => {
-        while (openPath.length > depth) {
-            openPath.pop();
-            chunks.push(`${'  '.repeat(openPath.length + 1)}}`);
+/**
+ * 블록 목록을 모듈 CSS 로. 블록은 입력 순서대로 쓰고, 같은 class 가 다시 나오면 건너뛴다.
+ * dynamic slot 의 `@property` 선언은 레이어 밖, 앞에 한 번만 둔다 — 미지원 브라우저가
+ * 레이어 블록 전체를 버리지 않도록 하고, slot 값이 자식에게 상속되지 않게 한다.
+ */
+export function emitBlocks(blocks: Block[], opts: EmitOptions): EmitOutput {
+    const layer = opts.layer ?? DEFAULT_LAYER;
+    const hashMode: 'dev' | 'prod' = opts.mode === 'hashed' ? 'prod' : 'dev';
+
+    const seenClass = new Set<string>();
+    const slots = new Set<string>();
+    const body: string[] = [];
+
+    for (const block of blocks) {
+        if (seenClass.has(block.className) || block.rules.length === 0) continue;
+        seenClass.add(block.className);
+        for (const r of block.rules) if (r.kind === 'dynamic') slots.add(r.slotId);
+
+        const openPath: string[] = [];
+        const indent = () => '  '.repeat(openPath.length + 1);
+        const closeTo = (depth: number) => {
+            while (openPath.length > depth) {
+                openPath.pop();
+                body.push(`${indent()}}`);
+            }
+        };
+        for (const g of groupsOf(block, hashMode)) {
+            let common = 0;
+            while (
+                common < openPath.length &&
+                common < g.atRulePath.length &&
+                openPath[common] === g.atRulePath[common]
+            ) {
+                common++;
+            }
+            closeTo(common);
+            while (openPath.length < g.atRulePath.length) {
+                const p = g.atRulePath[openPath.length];
+                body.push(`${indent()}${p} {`);
+                openPath.push(p);
+            }
+            body.push(`${indent()}${g.selector} { ${g.decls.join(' ')} }`);
         }
-    };
-    for (const e of sorted) {
-        let common = 0;
-        while (
-            common < openPath.length &&
-            common < e.atRulePath.length &&
-            openPath[common] === e.atRulePath[common]
-        ) {
-            common++;
-        }
-        closeTo(common);
-        while (openPath.length < e.atRulePath.length) {
-            const p = e.atRulePath[openPath.length];
-            chunks.push(`${'  '.repeat(openPath.length + 1)}${p} {`);
-            openPath.push(p);
-        }
-        chunks.push(`${'  '.repeat(openPath.length + 1)}${e.cssRule}`);
+        closeTo(0);
     }
-    closeTo(0);
-    chunks.push('}');
 
-    return { cssText: chunks.join('\n'), classNamesPerRule, dynamicSlots };
+    if (body.length === 0) return { cssText: '' };
+
+    const chunks = [`@layer ${layer};`];
+    for (const slotId of slots) {
+        chunks.push(
+            `@property ${dynamicVarName(slotId, hashMode)} { syntax: '*'; inherits: false; }`,
+        );
+    }
+    chunks.push(`@layer ${layer} {`, ...body, '}');
+    return { cssText: chunks.join('\n') };
 }

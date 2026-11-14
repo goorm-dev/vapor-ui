@@ -12,10 +12,8 @@ describe('transform — static syntax', () => {
         });
         expect(out.errors).toEqual([]);
         expect(out.css).toContain('padding-top');
-        // 단일 object 호출 → 순수 string literal. 런타임 import 없음.
-        expect(out.code).toMatch(
-            /const cls = '_padding-top_space-400_[A-Za-z0-9]{12}(?: _[^']+)*';/,
-        );
+        // 단일 object 호출 → class 1개 string literal. 런타임 import 없음.
+        expect(out.code).toMatch(/const cls = 'cls_[A-Za-z0-9]+';/);
         expect(out.code).not.toContain('__runtime__');
     });
 
@@ -264,28 +262,23 @@ describe('transform — dynamic slots', () => {
 });
 
 describe('transform — ternary (entry-level)', () => {
-    it('rewrites single ternary on non-shorthand property', () => {
+    const classOf = (code: string) => /const cls = (.+);/.exec(code)![1];
+
+    it('emits one merged block per branch and picks it with the original test', () => {
         const source = src(`const cls = css({ color: cond ? '$fg-primary' : '$fg-secondary' });`);
         const out = transform({ source, filename: '/T1.tsx' });
         expect(out.errors).toEqual([]);
-        // 삼항 식이 생성 코드 안에 유지.
-        expect(out.code).toMatch(/cond\s*\?/);
-        // conseq / alt 양쪽 class 가 CSS 에 모두 emit.
+        expect(classOf(out.code)).toMatch(/^\(cond \? 'cls_\w+' : 'cls_\w+'\)$/);
         expect(out.css).toContain('--vapor-color-foreground-primary');
         expect(out.css).toContain('--vapor-color-foreground-secondary');
     });
 
-    it('(#2) handles ternary on shorthand property (padding)', () => {
-        // padding → padding-top/right/bottom/left 4 longhand 로 전개 되며,
-        // 각 longhand 가 _ax([...]) 안에서 독립 ternary 로 분기된다.
+    it('(#2) ternary on shorthand expands longhands inside each branch block', () => {
         const source = src(`const cls = css({ padding: compact ? '$space-100' : '$space-400' });`);
         const out = transform({ source, filename: '/T2.tsx' });
         expect(out.errors).toEqual([]);
-        // _ax 안에 4 개의 `(compact ? 'A' : 'B')` ternary 가 들어 있어야 함.
-        const ternaryCount = (out.code.match(/compact\s*\?/g) ?? []).length;
-        expect(ternaryCount).toBe(4);
-        expect(out.code).toMatch(/_ax\(\[/);
-        // 4 개 longhand 가 CSS 에 모두 등장.
+        expect((out.code.match(/compact\s*\?/g) ?? []).length).toBe(1);
+        expect(out.code).not.toContain('_cx');
         for (const p of ['padding-top', 'padding-right', 'padding-bottom', 'padding-left']) {
             expect(out.css).toContain(p);
         }
@@ -303,13 +296,13 @@ describe('transform — ternary (entry-level)', () => {
         ].join('\n');
         const out = transform({ source, filename: '/T3.tsx' });
         expect(out.errors).toEqual([]);
-        // dynamic 처리 통과: _resolveToken + style attr.
         expect(out.code).toContain('_resolveToken');
-        // 삼항식 유지되어야 함 — dynamic path 때문에 skip 되면 버그.
         expect(out.code).toMatch(/active\s*\?/);
+        // 두 분기 블록 모두 dynamic slot 선언을 가진다.
+        expect((out.css!.match(/color: var\(--vapor-_/g) ?? []).length).toBe(2);
     });
 
-    it('(#4) handles multiple entry-level ternaries', () => {
+    it('(#4) multiple ternaries → nested selection over every combination', () => {
         const source = src(
             `const cls = css({` +
                 `color: a ? '$fg-primary' : '$fg-secondary',` +
@@ -318,23 +311,34 @@ describe('transform — ternary (entry-level)', () => {
         );
         const out = transform({ source, filename: '/T4.tsx' });
         expect(out.errors).toEqual([]);
-        // 두 삼항 모두 유지.
-        const aCount = (out.code.match(/\ba\s*\?/g) || []).length;
-        const bCount = (out.code.match(/\bb\s*\?/g) || []).length;
-        expect(aCount).toBe(1);
-        expect(bCount).toBe(1);
+        expect((out.code.match(/\ba\s*\?/g) || []).length).toBe(1);
+        expect((out.code.match(/\bb\s*\?/g) || []).length).toBe(2);
+        expect((out.css!.match(/^\s*\.cls_\w+ \{/gm) ?? []).length).toBe(4);
     });
 
-    it('mixes static props with ternary', () => {
+    it('each branch block also carries the static declarations', () => {
         const source = src(
             `const cls = css({ display: 'flex', color: cond ? '$fg-primary' : '$fg-secondary' });`,
         );
         const out = transform({ source, filename: '/T5.tsx' });
         expect(out.errors).toEqual([]);
-        // 삼항 식 유지 + static class (display) 는 rest 에 join.
-        expect(out.code).toMatch(/cond\s*\?/);
-        // static prop 과 ternary 가 모두 같은 _ax([...]) 안에 공존.
-        expect(out.code).toMatch(/_ax\(\[\s*'_display_flex_[A-Za-z0-9]{12}'\s*,\s*\(cond\s*\?/);
+        const blocks = out.css!.match(/\.cls_\w+ \{[^}]*\}/g)!;
+        expect(blocks).toHaveLength(2);
+        for (const b of blocks) expect(b).toContain('display: flex;');
+    });
+
+    it('ternary branch overrides an earlier declaration and loses to a later one', () => {
+        const out = transform({
+            source: src(
+                `const cls = css({ color: on ? 'blue' : 'green', paddingTop: 0 }, { color: 'black' });`,
+            ),
+            filename: '/T6.tsx',
+        });
+        expect(out.errors).toEqual([]);
+        // 뒤 인자의 color 가 두 분기를 모두 이겨 분기가 사라진다.
+        expect(classOf(out.code)).toMatch(/^'cls_\w+'$/);
+        expect(out.css).toContain('color: black;');
+        expect(out.css).not.toContain('color: blue');
     });
 });
 
@@ -559,18 +563,31 @@ describe('transform — PR #752 review fixtures', () => {
     });
 });
 
-// css() 는 순수 string 을 반환한다. 정적 인자는 compile-time 에 접고,
-// 런타임 값이 섞일 때만 _ax([...]) 로 감싼다 (Compiled ax 패턴).
-describe('transform — string result & _ax composition', () => {
-    it('single css({...}) → class-list literal, no runtime import', () => {
+// css() 는 순수 string 을 반환한다. 같은 파일에서 정적으로 풀리는 인자는 compile-time 에
+// 한 블록으로 병합하고, 그 밖의 인자는 _cx([...]) 로 이어붙인다.
+describe('transform — string result & composition', () => {
+    const classOf = (code: string, name = 'cls') =>
+        new RegExp(`const ${name} = (.+);`).exec(code)![1];
+    const blocks = (css: string | null) => css!.match(/^\s*\.\w+ \{[^}]*\}/gm) ?? [];
+
+    it('single css({...}) → one class literal, no runtime import', () => {
         const source = src(`const cls = css({ padding: '$space-100' });`);
         const out = transform({ source, filename: '/A1.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.code).toMatch(/const cls = '(?:_[^' ]+ ){3}_[^' ]+';/);
+        expect(classOf(out.code)).toMatch(/^'cls_\w+'$/);
+        expect(blocks(out.css)).toHaveLength(1);
         expect(out.code).not.toContain('__runtime__');
     });
 
-    it('css(a, b) — 두 참조 머지 → _ax([a, b]) 치환 + runtime import', () => {
+    it('one call = one block holding all declarations in source order', () => {
+        const source = src(
+            `const cls = css({ color: '$fg-primary', gap: '0', ':hover': { color: '$fg-secondary' } });`,
+        );
+        const out = transform({ source, filename: '/A1b.tsx' });
+        expect(out.css).toMatch(/\.cls_\w+ \{ color: [^;]+; gap: 0; \}\s*\.cls_\w+:hover \{/);
+    });
+
+    it('css(a, b) of imported references → _cx([a, b]) + runtime import', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `import { base } from './base';`,
@@ -579,13 +596,14 @@ describe('transform — string result & _ax composition', () => {
         ].join('\n');
         const out = transform({ source, filename: '/A2.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.code).toMatch(/_ax\(\[\s*base\s*,\s*override\s*\]\)/);
+        expect(out.code).toMatch(/_cx\(\[\s*base\s*,\s*override\s*\]\)/);
         expect(out.code).toMatch(
-            /import\s*\{[^}]*\b_ax\b[^}]*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
+            /import\s*\{[^}]*\b_cx\b[^}]*\}\s*from\s*'@vapor-ui\/style-macro\/__runtime__'/,
         );
+        expect(out.css).toBeNull();
     });
 
-    it('css(style, a) — 선언 literal 이 앞, 참조가 뒤', () => {
+    it('css(style, ref) — local block keeps the argument position', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `import { base } from './base';`,
@@ -593,76 +611,182 @@ describe('transform — string result & _ax composition', () => {
         ].join('\n');
         const out = transform({ source, filename: '/A3.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.code).toMatch(
-            /_ax\(\[\s*'_padding-top_space-300_[A-Za-z0-9]{12}'\s*,\s*base\s*\]\)/,
-        );
+        expect(out.code).toMatch(/_cx\(\[\s*'cls_\w+'\s*,\s*base\s*\]\)/);
     });
 
-    it('css(style, {...}) — 정적 object 둘은 compile-time 에 group last-wins 로 접힘', () => {
+    it('css({...}, {...}) — merged into one block, later argument wins', () => {
         const source = src(
             `const cls = css({ paddingTop: '$space-100', color: '$fg-primary' }, { paddingTop: '$space-300' });`,
         );
         const out = transform({ source, filename: '/A3b.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.code).not.toContain('_ax(');
-        const m = /const cls = '([^']+)';/.exec(out.code);
-        expect(m).not.toBeNull();
-        const classes = m![1].split(' ');
-        expect(classes).toHaveLength(2);
-        expect(classes.filter((c) => c.startsWith('_padding-top_'))).toHaveLength(1);
-        expect(classes.find((c) => c.startsWith('_padding-top_'))).toContain('space-300');
+        expect(classOf(out.code)).toMatch(/^'cls_\w+'$/);
+        expect(blocks(out.css)).toHaveLength(1);
+        expect(out.css).toMatch(/color: [^;]+; padding-top: var\(--vapor-size-space-300\);/);
+        expect(out.css).not.toContain('space-100');
     });
 
-    it('className={base} — 지역 변수 참조는 그대로 유지', () => {
+    it('same-file css() constants are merged at compile time', () => {
+        const source = src(
+            [
+                `const base = css({ color: '$fg-normal', gap: '0' });`,
+                `const active = css({ color: '$fg-primary' });`,
+                `const cls = css(base, active);`,
+            ].join('\n'),
+        );
+        const out = transform({ source, filename: '/A4.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(classOf(out.code)).toMatch(/^'cls_\w+'$/);
+        const merged = out.css!.match(/\.cls_\w+ \{[^}]*\}/)![0];
+        expect(merged).toContain('gap: 0;');
+        expect(merged).toContain('var(--vapor-color-foreground-primary)');
+        expect(merged).not.toContain('normal');
+    });
+
+    it('conditional composition of same-file constants → a merged block per branch', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const active = css({ color: '$fg-primary' });`,
+            `const base = css({ color: '$fg-normal' });`,
+            `const Cmp = ({ on }) => <div className={css(base, on && active)} />;`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A5.tsx' });
+        expect(out.errors).toEqual([]);
+        // 정의 순서와 무관하게 active 를 고른 분기는 active 의 color 를 가진다.
+        const m = /className=\{\(on \? '(div_\w+)' : '(div_\w+)'\)\}/.exec(out.code);
+        expect(m).not.toBeNull();
+        const onBlock = new RegExp(`\\.${m![1]} \\{[^}]*\\}`).exec(out.css!)![0];
+        const offBlock = new RegExp(`\\.${m![2]} \\{[^}]*\\}`).exec(out.css!)![0];
+        expect(onBlock).toContain('foreground-primary');
+        expect(offBlock).toContain('foreground-normal');
+        expect(out.code).not.toContain('_cx');
+    });
+
+    it('ternary between same-file constants is resolved at compile time', () => {
+        const source = src(
+            [
+                `const a = css({ color: '$fg-primary' });`,
+                `const b = css({ color: '$fg-secondary' });`,
+                `const cls = css({ gap: '0' }, on ? a : b);`,
+            ].join('\n'),
+        );
+        const out = transform({ source, filename: '/A5b.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(classOf(out.code)).toMatch(/^\(on \? 'cls_\w+' : 'cls_\w+'\)$/);
+    });
+
+    it('mixes same-file merge with an external reference', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `import { ext } from './ext';`,
+            `const base = css({ gap: '0' });`,
+            `const cls = css(base, ext, { color: 'red' });`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A5c.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(classOf(out.code)).toMatch(/^_cx\(\['cls_\w+', ext\]\)$/);
+        const merged = out.css!.match(/\.cls_\w+ \{[^}]*\}/)![0];
+        expect(merged).toContain('gap: 0;');
+        expect(merged).toContain('color: red;');
+    });
+
+    it('does not merge a shadowed name — treats it as an external reference', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const base = css({ gap: '0' });`,
+            `const Cmp = ({ base }) => <div className={css(base, { color: 'red' })} />;`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A5d.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.code).toMatch(/_cx\(\[base, 'div_\w+'\]\)/);
+    });
+
+    it('props-driven references stay as runtime _cx', () => {
+        const source = [
+            `import { css } from '@vapor-ui/style-macro';`,
+            `const Cmp = ({ className }) => <div className={css({ gap: '0' }, className)} />;`,
+        ].join('\n');
+        const out = transform({ source, filename: '/A5e.tsx' });
+        expect(out.code).toMatch(/className=\{_cx\(\['div_\w+', className\]\)\}/);
+    });
+
+    it('rejects more than 16 branch combinations', () => {
+        const conds = Array.from({ length: 5 }, (_, i) => `c${i} && a${i}`).join(', ');
+        const consts = Array.from(
+            { length: 5 },
+            (_, i) => `const a${i} = css({ order: ${i} });`,
+        ).join('\n');
+        const out = transform({
+            source: src(`${consts}\nconst cls = css(${conds});`),
+            filename: '/A5f.tsx',
+        });
+        expect(out.errors[0]?.message).toMatch(/32 conditional style combinations/);
+    });
+
+    it('same declarations in different files get different classes', () => {
+        const source = src(`const cls = css({ gap: '0' });`);
+        const a = transform({ source, filename: '/a.tsx', hash: true });
+        const b = transform({ source, filename: '/b.tsx', hash: true });
+        expect(classOf(a.code)).not.toBe(classOf(b.code));
+    });
+
+    it('scope option replaces filename in the hash (machine-independent)', () => {
+        const source = src(`const cls = css({ gap: '0' });`);
+        const a = transform({ source, filename: '/home/a/x.tsx', scope: 'src/x.tsx', hash: true });
+        const b = transform({ source, filename: '/ci/b/x.tsx', scope: 'src/x.tsx', hash: true });
+        expect(classOf(a.code)).toBe(classOf(b.code));
+        expect(classOf(a.code)).toMatch(/^'v\w+'$/);
+    });
+
+    it('layer option wraps the module CSS', () => {
+        const out = transform({
+            source: src(`const cls = css({ gap: '0' });`),
+            filename: '/L.tsx',
+            layer: 'composites',
+        });
+        expect(out.css).toMatch(/@layer composites \{/);
+    });
+
+    it('className={base} — local reference stays as is', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `const base = css({ color: '$fg-primary' });`,
             `const Cmp = () => <div className={base} />;`,
         ].join('\n');
-        const out = transform({ source, filename: '/A4.tsx' });
+        const out = transform({ source, filename: '/A6.tsx' });
         expect(out.errors).toEqual([]);
         expect(out.code).toMatch(/className=\{\s*base\s*\}/);
     });
 
-    it('className={css({...})} 인라인 — string literal 로 치환', () => {
+    it('inline className={css({...})} → literal named after the JSX element', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
-            `const Cmp = () => <div className={css({ padding: '$space-100' })} />;`,
+            `const Cmp = () => <Box.Root className={css({ padding: '$space-100' })} />;`,
         ].join('\n');
-        const out = transform({ source, filename: '/A5.tsx' });
+        const out = transform({ source, filename: '/A7.tsx' });
         expect(out.errors).toEqual([]);
-        expect(out.code).toMatch(/className=\{\s*'_padding-top_space-100_/);
+        expect(out.code).toMatch(/className=\{\s*'Root_\w+'\s*\}/);
     });
 
-    it('단일 호출 내 property last-wins — paddingTop 이 뒤에 선언되면 그것만 남김', () => {
-        const source = src(`const cls = css({ padding: '$space-100', paddingTop: '$space-300' });`);
-        const out = transform({ source, filename: '/A6.tsx' });
-        expect(out.errors).toEqual([]);
-        const m = /const cls = '([^']+)';/.exec(out.code);
-        const tops = m![1].split(' ').filter((c) => c.startsWith('_padding-top_'));
-        expect(tops).toHaveLength(1);
-        expect(tops[0]).toContain('space-300');
-    });
-
-    it('template literal join (backtick + interpolation) — build error', () => {
+    it('template literal join of two css() results — build error', () => {
         const source = src(
             `const base = css({ padding: '$space-100' });` +
                 `const override = css({ paddingTop: '$space-300' });` +
                 `const cls = \`\${base} \${override}\`;`,
         );
-        const out = transform({ source, filename: '/A7.tsx' });
+        const out = transform({ source, filename: '/A8.tsx' });
         expect(out.errors.length).toBeGreaterThan(0);
-        expect(out.errors[0].code).toMatch(/template-literal|invalid-combine/);
+        expect(out.errors[0].code).toBe('template-literal');
     });
 
-    it('className=template-literal (2 vapor classes) — build error', () => {
+    it('className=template-literal (2 identifiers) — build error', () => {
         const source = [
             `import { css } from '@vapor-ui/style-macro';`,
             `import { base } from './base';`,
             `import { override } from './over';`,
             `const Cmp = () => <div className={\`\${base} \${override}\`} />;`,
         ].join('\n');
-        const out = transform({ source, filename: '/A8.tsx' });
+        const out = transform({ source, filename: '/A9.tsx' });
         expect(out.errors.length).toBeGreaterThan(0);
     });
 
@@ -672,7 +796,16 @@ describe('transform — string result & _ax composition', () => {
             `const cls = css({ color: '$fg-primary' });`,
             `const Cmp = ({ on }) => <div className={on ? \`\${cls} active\` : cls} />;`,
         ].join('\n');
-        const out = transform({ source, filename: '/A9.tsx' });
+        const out = transform({ source, filename: '/A10.tsx' });
         expect(out.errors).toEqual([]);
+    });
+
+    it('no css import → untouched', () => {
+        const source = `const css = (x) => x; const cls = css({ gap: '0' });`;
+        const out = transform({
+            source: `// @vapor-ui/style-macro\n${source}`,
+            filename: '/A11.tsx',
+        });
+        expect(out.css).toBeNull();
     });
 });

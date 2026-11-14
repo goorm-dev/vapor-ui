@@ -1,138 +1,69 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildClassName, generateArbitraryValueSelector } from './class-name';
-import type { Tuple } from './types';
+import { buildBlockClassName, generateArbitraryValueSelector } from './class-name';
 
-const t = (overrides: Partial<Tuple> = {}): Tuple => ({
-    property: 'padding',
-    value: 'var(--vapor-size-space-400)',
-    rawValue: '$space-400',
-    selectorContext: 'base',
-    ...overrides,
-});
-
-describe('buildClassName — readable (dev)', () => {
-    it('shape: _<propSlug>_<valueSlug>_<group6><value6>', () => {
-        expect(buildClassName(t())).toMatch(/^_padding_space-400_[0-9a-zA-Z]{12}$/);
+const block = (overrides: Partial<Parameters<typeof buildBlockClassName>[0]> = {}) =>
+    buildBlockClassName({
+        scope: 'src/button.tsx',
+        signature: 'base|padding:var(--vapor-size-space-400)',
+        mode: 'hashed',
+        ...overrides,
     });
 
-    it('same tuple → same class', () => {
-        expect(buildClassName(t())).toBe(buildClassName(t()));
+describe('buildBlockClassName — hashed (prod)', () => {
+    it('shape: v + base62', () => {
+        expect(block()).toMatch(/^v[0-9a-zA-Z]+$/);
     });
 
-    it('token-shaped rawValue strips leading $', () => {
-        const cls = buildClassName(
-            t({
-                property: 'background-color',
-                value: 'var(--vapor-color-foreground-primary)',
-                rawValue: '$fg-primary',
-            }),
-        );
-        expect(cls).toMatch(/^_background-color_fg-primary_[0-9a-zA-Z]{12}$/);
+    it('same scope + signature → same class', () => {
+        expect(block()).toBe(block());
     });
 
-    it('distinct selectorContext → distinct tail', () => {
-        const def = buildClassName(t());
-        const hover = buildClassName(t({ selectorContext: ':hover' }));
-        expect(def).not.toBe(hover);
+    it('different scope → different class (same declarations in another file)', () => {
+        expect(block({ scope: 'src/card.tsx' })).not.toBe(block());
     });
 
-    it('distinct cssValue → distinct tail', () => {
-        const a = buildClassName(t({ value: 'var(--a)' }));
-        const b = buildClassName(t({ value: 'var(--b)' }));
-        expect(a).not.toBe(b);
+    it('different signature → different class', () => {
+        expect(block({ signature: 'base|padding:var(--vapor-size-space-200)' })).not.toBe(block());
     });
 
-    it('slug escapes special chars (# → x, . → d, etc.)', () => {
-        const cls = buildClassName(t({ property: 'color', value: '#ff0000', rawValue: '#ff0000' }));
-        expect(cls).toMatch(/^_color_xff0000_[0-9a-zA-Z]{12}$/);
-    });
-});
-
-describe('buildClassName — hashed (prod)', () => {
-    it('shape: _<group6><value6> (base62, fixed 13 chars)', () => {
-        expect(buildClassName(t(), 'hashed')).toMatch(/^_[0-9a-zA-Z]{12}$/);
-    });
-
-    it('same tuple → same class', () => {
-        expect(buildClassName(t(), 'hashed')).toBe(buildClassName(t(), 'hashed'));
-    });
-
-    it('distinct property → distinct class', () => {
-        const a = buildClassName(t({ property: 'padding' }), 'hashed');
-        const b = buildClassName(t({ property: 'margin' }), 'hashed');
-        expect(a).not.toBe(b);
-    });
-
-    it('distinct selectorContext → distinct class', () => {
-        const def = buildClassName(t(), 'hashed');
-        const hover = buildClassName(t({ selectorContext: ':hover' }), 'hashed');
-        const media = buildClassName(t({ selectorContext: '@media(min-width:768px)' }), 'hashed');
-        expect(new Set([def, hover, media]).size).toBe(3);
-    });
-
-    it('distinct cssValue → distinct class', () => {
-        const a = buildClassName(t({ value: 'var(--a)' }), 'hashed');
-        const b = buildClassName(t({ value: 'var(--b)' }), 'hashed');
+    it('declaration order is part of identity', () => {
+        const a = block({ signature: 'base|color:red;base|padding:0' });
+        const b = block({ signature: 'base|padding:0;base|color:red' });
         expect(a).not.toBe(b);
     });
 
     // Regression: djb2 가 hex 값끼리 자연 충돌하던 쌍을 murmur2 는 분리한다.
-    // MaxLee-dev PR 752 리뷰에서 production hashed mode 가 두 색을 같은 class
-    // 로 묶어 스타일이 깨진다는 지적.
     it('separates djb2-natural hex collisions (#1E1E1E vs #0f0f0f)', () => {
-        const a = buildClassName(
-            t({
-                property: 'backgroundColor',
-                value: '#1E1E1E',
-                rawValue: '#1E1E1E',
-            }),
-            'hashed',
-        );
-        const b = buildClassName(
-            t({
-                property: 'backgroundColor',
-                value: '#0f0f0f',
-                rawValue: '#0f0f0f',
-            }),
-            'hashed',
-        );
+        const a = block({ signature: 'base|background-color:#1E1E1E' });
+        const b = block({ signature: 'base|background-color:#0f0f0f' });
         expect(a).not.toBe(b);
     });
 
-    it('separates djb2-natural hex collisions (#2B2B2B vs #1c1c1c)', () => {
-        const a = buildClassName(
-            t({
-                property: 'color',
-                value: '#2B2B2B',
-                rawValue: '#2B2B2B',
-            }),
-            'hashed',
-        );
-        const b = buildClassName(
-            t({
-                property: 'color',
-                value: '#1c1c1c',
-                rawValue: '#1c1c1c',
-            }),
-            'hashed',
-        );
-        expect(a).not.toBe(b);
+    it('ignores debugId', () => {
+        expect(block({ debugId: 'Header' })).toBe(block());
     });
 });
 
-describe('buildClassName — group tail', () => {
-    it('same selector+property, different value → same group, different value hash', () => {
-        const a = buildClassName(t({ value: 'var(--a)' }), 'hashed');
-        const b = buildClassName(t({ value: 'var(--b)' }), 'hashed');
-        expect(a.slice(1, 7)).toBe(b.slice(1, 7));
-        expect(a.slice(7)).not.toBe(b.slice(7));
+describe('buildBlockClassName — readable (dev)', () => {
+    it('shape: <debugId>_<hash>', () => {
+        expect(block({ mode: 'readable', debugId: 'Header' })).toMatch(/^Header_[0-9a-zA-Z]+$/);
     });
 
-    it('readable and hashed share the same 12-char tail', () => {
-        const dev = buildClassName(t());
-        const prod = buildClassName(t(), 'hashed');
-        expect(dev.slice(-12)).toBe(prod.slice(-12));
+    it('falls back to `css` without debugId', () => {
+        expect(block({ mode: 'readable' })).toMatch(/^css_[0-9a-zA-Z]+$/);
+    });
+
+    it('sanitizes debugId into a valid class ident', () => {
+        expect(block({ mode: 'readable', debugId: '1 my.name' })).toMatch(
+            /^_1_my_name_[0-9a-zA-Z]+$/,
+        );
+    });
+
+    it('readable and hashed share the hash', () => {
+        const dev = block({ mode: 'readable', debugId: 'Header' });
+        const prod = block();
+        expect(dev.slice(dev.lastIndexOf('_') + 1)).toBe(prod.slice(1));
     });
 });
 

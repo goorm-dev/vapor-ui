@@ -137,7 +137,7 @@ Always use the `vars` object from `~/styles/themes.css`. Never use hard-coded va
 
 ### `css()` macro (consumer-facing styling)
 
-User-facing composition (new components, docs examples, demo code) uses the `css()` macro from [`@vapor-ui/style-macro`](../style-macro). It compiles to atomic class names at build time with no runtime style dictionary:
+User-facing composition (new components, docs examples, demo code) uses the `css()` macro from [`@vapor-ui/style-macro`](../style-macro). It compiles each call to one class + one CSS block at build time (Vanilla Extract model) with no runtime style dictionary:
 
 ```tsx
 import { css } from '@vapor-ui/style-macro';
@@ -155,9 +155,9 @@ Core component implementations stay on Vanilla Extract (`componentRecipe` / `com
 
 How it is wired (see `packages/style-macro/README.md` for per-bundler setup):
 
-- `css()` returns a plain **string** (RSC-safe). Static compositions `css(a, b, {...})` merge at compile time per `selector|property` slot; when a runtime value is mixed in, the call becomes `_ax([...])` which applies the same last-wins rule and passes non-vapor classes through. Template-literal joins are a build error.
-- CSS is **not** emitted per file. The bundler adapter only rewrites JS; the CSS side scans the project and inserts one globally sorted sheet (shorthand depth → base → `:link/:visited/:focus-within/:focus/:focus-visible/:hover/:active` → at-rules, `min-width` ascending / `max-width` descending) into the consumer's CSS entry — appended to the file that imports `@vapor-ui/core/layers.css`, or in place of a hand-written `@vapor-utilities;`. This makes cross-file `@media` / pseudo / longhand overrides deterministic regardless of chunk order. Use exactly one insertion point; `layers.css` itself carries no marker.
-- Class format is `_<group6><value6>` (dev prepends a readable slug but keeps the 12-char tail), where group = hash(selector|property). `_ax` keys on the group.
+- `css()` returns a plain **string** (RSC-safe). Arguments resolvable in the same file (object literals, top-level `const x = css(...)`, and `&&` / `?:` between them) merge at compile time into one block — later arguments win, conditional combinations get one block per branch. Other arguments (imports, props) are joined by `_cx([...])`; which of two classes wins then follows CSS load order. Template-literal joins are a build error.
+- CSS is not yet imported per module (migration in progress). The bundler adapter rewrites JS; the CSS side scans the project and appends every module's blocks, in path order, into the consumer's CSS entry — the file that imports `@vapor-ui/core/layers.css`, or in place of a hand-written `@vapor-utilities;`. Use exactly one insertion point.
+- Class format: `v<hash>` (prod) / `<name>_<hash>` (dev), hash = murmur2(file path relative to root + block declarations).
 - Unexpanded shorthands (`border`, `background`, `font`, …) still do not accept tokens; `padding`/`margin`/`inset`/`borderRadius` are expanded to longhands first and do.
 
 ### `$css` prop
@@ -174,7 +174,7 @@ The flat `padding`/`margin`/… variant props exposed via `DeprecatedSprinkles` 
 vapor-theme → vapor-reset → vapor-components → vapor-utilities → (no layer: user className)
 ```
 
-`vapor-utilities` is where the `css()` macro emits atomic classes. User `className` without a layer always wins over component styles — no `!important` needed.
+`vapor-utilities` is where the `css()` macro emits its blocks (`@vapor-ui/composites` uses its own `composites` layer). User `className` without a layer always wins over component styles — no `!important` needed.
 
 ## Testing
 

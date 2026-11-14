@@ -1,35 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { bucketOf, bucketRank, compareAtRulePath, compareAtRuleUnit } from './sort';
-
-describe('bucketOf', () => {
-    it('shorthand depth < longhand < pseudo (LVFHA) < at-rule', () => {
-        const ranks = [
-            bucketOf('base', false, 'border'),
-            bucketOf('base', false, 'border-top'),
-            bucketOf('base', false, 'border-top-color'),
-            bucketOf(':link', false, 'color'),
-            bucketOf(':visited', false, 'color'),
-            bucketOf(':focus-within', false, 'color'),
-            bucketOf(':focus', false, 'color'),
-            bucketOf(':focus-visible', false, 'color'),
-            bucketOf(':hover', false, 'color'),
-            bucketOf(':active', false, 'color'),
-            bucketOf('base', true, 'color'),
-        ].map(bucketRank);
-        for (let i = 1; i < ranks.length; i++) expect(ranks[i]).toBeGreaterThan(ranks[i - 1]);
-    });
-
-    it('attribute / self-ref / pseudo-element selectors stay in base', () => {
-        expect(bucketOf('[data-active]', false, 'color')).toBe('base');
-        expect(bucketOf('&.on', false, 'color')).toBe('base');
-        expect(bucketOf('::before', false, 'content')).toBe('base');
-    });
-
-    it('pseudo inside at-rule goes to the at bucket', () => {
-        expect(bucketOf(':hover', true, 'color')).toBe('at');
-    });
-});
+import { compareAtRulePath, compareAtRuleUnit } from './sort';
 
 describe('compareAtRuleUnit', () => {
     const sorted = (units: string[]) => units.slice().sort(compareAtRuleUnit);

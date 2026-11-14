@@ -1,14 +1,13 @@
 import MagicString from 'magic-string';
 import { parseSync } from 'oxc-parser';
 
-import { _ax } from '~/helpers/ax';
 import { axisAliasName } from '~/models/axis-alias';
-import type { ClassNameMode } from '~/models/class-name';
+import { type ClassNameMode, buildBlockClassName } from '~/models/class-name';
 import type { AnyProp, BuildError, IRRule } from '~/models/types';
 import { propertyToTokenAxis } from '~/tokens';
 
 import { directivePrologueEnd } from './directives';
-import { emitCss } from './emit-css';
+import { type Block, DEFAULT_LAYER, emitBlocks, normalizeRules, signatureOf } from './emit-css';
 import {
     type DynamicCallSite,
     type InjectContext,
@@ -24,10 +23,8 @@ import { type ParseCallResult, parseCallArg } from './parse-call';
 
 export interface TransformResult {
     code: string;
+    /** 이 모듈의 CSS. `css()` 가 없거나 에러면 `null`. */
     css: string | null;
-    /** 이 파일의 IR. 수집기가 여러 파일 rules 를 모아 한 번에 emit 할 때 사용. */
-    rules: IRRule[];
-    classes: string[];
     errors: BuildError[];
 }
 
@@ -35,10 +32,62 @@ export interface TransformOpts {
     source: string;
     filename: string;
     hash?: boolean;
+    /** 규칙을 담을 cascade layer. 기본 `vapor-utilities`. */
+    layer?: string;
+    /**
+     * class 이름 해시에 들어가는 파일 식별자. 같은 파일이면 빌드 환경과 무관하게 같은 값이어야
+     * 하므로 플러그인은 root 기준 상대 경로를 넘긴다. 없으면 `filename`.
+     */
+    scope?: string;
 }
 
 export function transform(opts: TransformOpts): TransformResult {
     return new Transformer(opts).run();
+}
+
+// ────────────────────────────────────────────────────────────────
+// Pieces — css() 인자를 "규칙 조각 + 조건 분기" 로 펼친 모델
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * 컴파일 시점에 규칙을 알 수 있는 인자 조각.
+ * - `fixed`: 항상 붙는 규칙.
+ * - `cond`: 런타임 조건에 따라 두 분기 중 하나가 붙는다. 분기 안에 다시 조각이 올 수 있다.
+ * 조각을 순서대로 이어 붙인 규칙이 한 블록이 되고, 뒤 조각이 같은 선언 슬롯을 이긴다.
+ */
+type Piece =
+    | { kind: 'fixed'; rules: IRRule[] }
+    | { kind: 'cond'; test: string; whenTrue: Piece[]; whenFalse: Piece[] };
+
+/** 한 호출이 만들 수 있는 분기 조합 수 상한. 넘으면 빌드 에러. */
+const MAX_COMBINATIONS = 16;
+
+function countCombinations(pieces: Piece[]): number {
+    let n = 1;
+    for (const p of pieces) {
+        if (p.kind === 'cond') n *= countCombinations(p.whenTrue) + countCombinations(p.whenFalse);
+    }
+    return n;
+}
+
+function forEachRule(pieces: Piece[], fn: (r: IRRule) => void) {
+    for (const p of pieces) {
+        if (p.kind === 'fixed') p.rules.forEach(fn);
+        else {
+            forEachRule(p.whenTrue, fn);
+            forEachRule(p.whenFalse, fn);
+        }
+    }
+}
+
+/** 호출 인자 하나. 로컬로 풀리면 `pieces`, 아니면 런타임 class 문자열(`external`). */
+type ArgRecord = { kind: 'local'; pieces: Piece[] } | { kind: 'external'; node: AnyProp };
+
+interface CallRecord {
+    node: AnyProp;
+    parents: AnyProp[];
+    args: ArgRecord[];
+    debugId: string | undefined;
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -56,52 +105,32 @@ function axisForProperty(property: string): string | null {
     return axis ?? null;
 }
 
-/**
- * `css()` 호출의 한 argument 를 어떻게 처리할지. `ObjectExpression` 리터럴은
- * class 리스트 string 으로 치환하고 그 과정에서 parse-call 이 생성한 rules 가
- * CSS emit 에도 참여한다. 그 외(Identifier / MemberExpression / 등) 는 "이미
- * compile 된 class string" 으로 간주하고 소스 표현식 그대로 `_ax([...])` 안에
- * 한 인자로 넣는다.
- */
-type ArgRecord =
-    | {
-          kind: 'object';
-          node: AnyProp;
-          rules: IRRule[];
-          ternaries: ParseCallResult['ternaries'];
-          /** `#allRules` 에 기록된 base offset — emitCss 출력과 맞추기 위함. */
-          rulesOffset: number;
-      }
-    | {
-          kind: 'reference';
-          node: AnyProp;
-      };
-
-interface CallRecord {
-    node: AnyProp;
-    parents: AnyProp[];
-    args: ArgRecord[];
-}
-
 class Transformer {
     readonly #mode: ClassNameMode;
-    readonly #allRules: IRRule[] = [];
-    readonly #classes = new Set<string>();
+    readonly #scope: string;
     readonly #errors: BuildError[] = [];
-    readonly #callSites: CallRecord[] = [];
+    readonly #callNodes: Array<{ node: AnyProp; parents: AnyProp[] }> = [];
     readonly #axesUsed = new Set<string>();
+    readonly #blocks: Block[] = [];
 
     #bindingName: string | null = null;
     #ms: MagicString | null = null;
     #needResolveToken = false;
     #needIx = false;
-    #needAx = false;
-    /** `const x = css(...)` 로 선언된 지역 변수 이름. template literal 에
-     *  섞여 들어가면 build error 로 catch 하기 위해 추적한다. */
+    #needCx = false;
+
+    /** `const x = css(...)` 로 선언된 지역 변수 이름. template literal 합성 감지용. */
     readonly #vaporLocals = new Set<string>();
+    /** 모듈 최상위 `const x = css(...)` — 같은 파일 병합 대상. */
+    readonly #topLevelCss = new Map<string, AnyProp>();
+    /** 파일 안에서 각 이름이 바인딩된 횟수. 2 이상이면 shadowing 가능성 → 병합 안 함. */
+    readonly #bindingCounts = new Map<string, number>();
+    /** `parseCallArg` 결과 캐시 (같은 object 를 여러 경로에서 풀 수 있음). */
+    readonly #parsed = new Map<AnyProp, ParseCallResult>();
 
     constructor(private readonly opts: TransformOpts) {
         this.#mode = opts.hash ? 'hashed' : 'readable';
+        this.#scope = opts.scope ?? opts.filename;
     }
 
     run(): TransformResult {
@@ -113,6 +142,8 @@ class Transformer {
 
         const program = parsed.program;
         this.#scanImports(program);
+        if (!this.#bindingName) return emptyResult(source);
+        this.#scanTopLevel(program);
         this.#ms = new MagicString(source);
 
         walk(program, {
@@ -120,20 +151,30 @@ class Transformer {
             JSXAttribute: this.#onJsxAttribute,
             VariableDeclarator: this.#onVariableDeclarator,
             TemplateLiteral: this.#onTemplateLiteral,
+            Function: this.#onFunction,
+            FunctionDeclaration: this.#onFunction,
+            FunctionExpression: this.#onFunction,
+            ArrowFunctionExpression: this.#onFunction,
+            ClassDeclaration: this.#onNamedDeclaration,
+            CatchClause: this.#onCatch,
         });
 
-        if (this.#errors.length) {
-            return {
-                code: source,
-                css: null,
-                rules: [],
-                classes: [],
-                errors: this.#errors,
-            };
+        // 다른 css() 인자 안에 들어간 호출은 바깥 호출이 함께 처리한다.
+        const outer = this.#callNodes
+            .filter(
+                ({ node }) =>
+                    !this.#callNodes.some((o) => o.node !== node && contains(o.node, node)),
+            )
+            .sort((a, b) => a.node.start - b.node.start);
+
+        const calls: CallRecord[] = [];
+        for (const { node, parents } of outer) {
+            const args = this.#resolveCallArgs(node);
+            if (!args) continue;
+            calls.push({ node, parents, args, debugId: debugIdOf(parents) });
         }
 
-        const emitted = emitCss(this.#allRules, this.#mode);
-        const classNamesAll = emitted.classNamesPerRule;
+        if (this.#errors.length) return errorResult(source, this.#errors);
 
         const injectCtx: InjectContext = {
             ms: this.#ms,
@@ -141,9 +182,15 @@ class Transformer {
             pending: new Map(),
         };
 
-        for (const call of this.#callSites) {
-            // dynamic slot 수집은 모든 object-arg 의 dynamic rules 통합.
-            const dynamicSlots = this.#collectDynamicSlots(call, classNamesAll);
+        for (const call of calls) {
+            const pieces = call.args.flatMap((a) => (a.kind === 'local' ? a.pieces : []));
+            const combos = countCombinations(pieces);
+            if (combos > MAX_COMBINATIONS) {
+                this.#errors.push(tooManyBranchesError(call.node, combos));
+                continue;
+            }
+
+            const dynamicSlots = this.#collectDynamicSlots(pieces);
             if (dynamicSlots.length > 0) {
                 const site: DynamicCallSite = {
                     call: call.node,
@@ -155,45 +202,24 @@ class Transformer {
                     if (outcome.error) this.#errors.push(outcome.error);
                     continue;
                 }
-                // jsx-inject 가 slot 별로 _resolveToken / _ix 중 어느 쪽을 썼는지
-                // ctx 플래그로 알려준다. 둘 다 활성일 수 있다.
                 if (injectCtx.needResolveToken) this.#needResolveToken = true;
                 if (injectCtx.needIx) this.#needIx = true;
             }
 
-            const replacement = this.#buildCallReplacement(call, classNamesAll);
-            this.#ms.overwrite(call.node.start, call.node.end, replacement);
-
-            // emit 결과 class 전수 보고
-            for (const arg of call.args) {
-                if (arg.kind !== 'object') continue;
-                for (let i = 0; i < arg.rules.length; i++) {
-                    const c = classNamesAll[arg.rulesOffset + i];
-                    if (c) this.#classes.add(c);
-                }
-            }
+            this.#ms.overwrite(call.node.start, call.node.end, this.#buildCallReplacement(call));
         }
 
-        if (this.#errors.length) {
-            return {
-                code: source,
-                css: null,
-                rules: [],
-                classes: [],
-                errors: this.#errors,
-            };
-        }
+        if (this.#errors.length) return errorResult(source, this.#errors);
 
         flushInjects(injectCtx);
         this.#ensureRuntimeImport();
 
-        return {
-            code: this.#ms.toString(),
-            css: this.#allRules.length ? emitted.cssText : null,
-            rules: this.#allRules,
-            classes: [...this.#classes],
-            errors: [],
-        };
+        const css = emitBlocks(this.#blocks, {
+            mode: this.#mode,
+            layer: this.opts.layer ?? DEFAULT_LAYER,
+        }).cssText;
+
+        return { code: this.#ms.toString(), css: css || null, errors: [] };
     }
 
     #shouldSkip(): boolean {
@@ -203,31 +229,85 @@ class Transformer {
     #scanImports(program: AnyProp) {
         for (const stmt of program.body) {
             if (stmt.type !== 'ImportDeclaration') continue;
-            this.#scanImportDeclaration(stmt);
-        }
-    }
-
-    #scanImportDeclaration(stmt: AnyProp) {
-        const src: string = stmt.source.value;
-        if (src !== IMPORT_SOURCE) return;
-
-        for (const spec of stmt.specifiers) {
-            if (spec.type !== 'ImportSpecifier' || spec.imported?.type !== 'Identifier') continue;
-            if (spec.imported.name === IMPORT_NAME) {
-                this.#bindingName = spec.local.name;
+            for (const spec of stmt.specifiers ?? []) {
+                if (spec.local?.type === 'Identifier') this.#bind(spec.local.name);
+                if (stmt.source.value !== IMPORT_SOURCE) continue;
+                if (spec.type !== 'ImportSpecifier' || spec.imported?.type !== 'Identifier')
+                    continue;
+                if (spec.imported.name === IMPORT_NAME) this.#bindingName = spec.local.name;
             }
         }
     }
 
+    /** 모듈 최상위 `const x = css(...)` 를 기록한다 (`export const` 포함). */
+    #scanTopLevel(program: AnyProp) {
+        for (const stmt of program.body) {
+            const decl = stmt.type === 'ExportNamedDeclaration' ? stmt.declaration : stmt;
+            if (decl?.type !== 'VariableDeclaration' || decl.kind !== 'const') continue;
+            for (const d of decl.declarations) {
+                if (d.id?.type !== 'Identifier' || !this.#isCssCall(d.init)) continue;
+                this.#topLevelCss.set(d.id.name, d.init);
+            }
+        }
+    }
+
+    #isCssCall(node: AnyProp): boolean {
+        return (
+            node?.type === 'CallExpression' &&
+            node.callee?.type === 'Identifier' &&
+            node.callee.name === this.#bindingName
+        );
+    }
+
+    #bind(name: string) {
+        this.#bindingCounts.set(name, (this.#bindingCounts.get(name) ?? 0) + 1);
+    }
+
+    #bindPattern(node: AnyProp) {
+        if (!node) return;
+        switch (node.type) {
+            case 'Identifier':
+                this.#bind(node.name);
+                return;
+            case 'ObjectPattern':
+                for (const p of node.properties ?? []) {
+                    this.#bindPattern(p.type === 'RestElement' ? p.argument : p.value);
+                }
+                return;
+            case 'ArrayPattern':
+                for (const e of node.elements ?? []) this.#bindPattern(e);
+                return;
+            case 'AssignmentPattern':
+                this.#bindPattern(node.left);
+                return;
+            case 'RestElement':
+                this.#bindPattern(node.argument);
+                return;
+            case 'TSParameterProperty':
+                this.#bindPattern(node.parameter);
+                return;
+        }
+    }
+
+    #onFunction = (node: AnyProp) => {
+        if (node.id?.type === 'Identifier') this.#bind(node.id.name);
+        const params = Array.isArray(node.params) ? node.params : (node.params?.items ?? []);
+        for (const p of params) this.#bindPattern(p);
+        if (node.params?.rest) this.#bindPattern(node.params.rest);
+    };
+
+    #onNamedDeclaration = (node: AnyProp) => {
+        if (node.id?.type === 'Identifier') this.#bind(node.id.name);
+    };
+
+    #onCatch = (node: AnyProp) => {
+        this.#bindPattern(node.param);
+    };
+
     /**
-     * JSX 의 `className={...}` 자리에서 template literal 로 2개 이상의
-     * identifier 를 합치면 catch — property-aware 머지가 건너뛰어 리뷰 #1
-     * fragility 가 재발한다. identifier 1개 + static 문자열 (예:
-     * `\`\${cls} active\``) 은 흔한 "vapor + DOM class" 패턴이라 허용한다.
-     *
-     * import 로만 받은 참조는 지역 변수 추적으로 알 수 없지만, className
-     * 자리라는 context 가 분명하므로 보수적으로 catch 한다. 사용자가 두 class
-     * 를 합치는 의도라면 `css(a, b)` 로 머지해야 안전하다.
+     * JSX 의 `className={...}` 자리에서 template literal 로 2개 이상의 identifier 를 합치면
+     * 빌드 에러. 중복 제거·같은 파일 병합을 건너뛰므로 `css(a, b)` 로 합치도록 유도한다.
+     * identifier 1개 + 정적 문자열(`\`\${cls} active\``)은 흔한 패턴이라 허용한다.
      */
     #onJsxAttribute = (node: AnyProp) => {
         if (node?.name?.type !== 'JSXIdentifier' || node.name.name !== 'className') return;
@@ -241,26 +321,14 @@ class Transformer {
         if (identCount >= 2) this.#errors.push(templateLiteralError(expr));
     };
 
-    /** `const x = css(...)` 로 선언된 지역 변수 이름을 추적. */
     #onVariableDeclarator = (node: AnyProp) => {
-        if (!this.#bindingName) return;
-        if (node?.id?.type !== 'Identifier' || !node.init) return;
-        const init = node.init;
-        if (
-            init.type === 'CallExpression' &&
-            init.callee?.type === 'Identifier' &&
-            init.callee.name === this.#bindingName
-        ) {
+        this.#bindPattern(node.id);
+        if (node?.id?.type === 'Identifier' && this.#isCssCall(node.init)) {
             this.#vaporLocals.add(node.id.name);
         }
     };
 
-    /**
-     * Template literal 안에 vapor class 가 **2개 이상** 섞여 있으면 build
-     * error. 단순 string 합성은 property-aware 머지를 건너뛰어 리뷰 #1
-     * fragility 가 재발한다. 정확히 한 개면 "vapor class + 외부 DOM class"
-     * 같은 흔한 패턴 (`\`\${cls} active\``) 이므로 허용한다.
-     */
+    /** Template literal 안에 `css()` 결과가 2개 이상 섞이면 빌드 에러 (`#onJsxAttribute` 참고). */
     #onTemplateLiteral = (node: AnyProp) => {
         if (!node?.expressions?.length) return;
         let hits = 0;
@@ -274,158 +342,218 @@ class Transformer {
     };
 
     #onCallExpression = (node: AnyProp, parents: AnyProp[]) => {
-        if (!this.#bindingName) return;
-        if (node.callee?.type !== 'Identifier' || node.callee.name !== this.#bindingName) return;
-
-        const rawArgs: AnyProp[] = node.arguments ?? [];
-        if (rawArgs.length === 0) {
+        if (!this.#isCssCall(node)) return;
+        if ((node.arguments ?? []).length === 0) {
             this.#errors.push(noArgError(node));
             return;
         }
-
-        const args: ArgRecord[] = [];
-        for (const a of rawArgs) {
-            if (a.type === 'ObjectExpression') {
-                const parsed = parseCallArg(a, this.opts.source);
-                this.#errors.push(...parsed.errors);
-                if (parsed.errors.length) return;
-                args.push({
-                    kind: 'object',
-                    node: a,
-                    rules: parsed.rules,
-                    ternaries: parsed.ternaries,
-                    rulesOffset: this.#allRules.length,
-                });
-                this.#allRules.push(...parsed.rules);
-            } else {
-                args.push({ kind: 'reference', node: a });
-            }
-        }
-
-        this.#callSites.push({
-            node,
-            parents: parents.slice(),
-            args,
-        });
+        this.#callNodes.push({ node, parents: parents.slice() });
     };
 
-    /** call 안 모든 object-arg 의 dynamic rules 를 통합 slot 리스트로. */
-    #collectDynamicSlots(call: CallRecord, _classNamesAll: string[]) {
-        const bySlot = new Map<string, DynamicCallSite['slots'][number]>();
-        for (const arg of call.args) {
-            if (arg.kind !== 'object') continue;
-            for (let i = 0; i < arg.rules.length; i++) {
-                const r = arg.rules[i];
-                if (r.kind !== 'dynamic') continue;
-                if (bySlot.has(r.slotId)) continue;
-                const axis = axisForProperty(r.property);
-                if (axis) this.#axesUsed.add(axis);
-                bySlot.set(r.slotId, {
-                    slotId: r.slotId,
-                    axis,
-                    property: r.property,
-                    sourceExpr: r.sourceExpr,
+    // ── 인자 해석 ───────────────────────────────────────────────
+
+    #parseObject(node: AnyProp): ParseCallResult {
+        let res = this.#parsed.get(node);
+        if (!res) {
+            res = parseCallArg(node, this.opts.source);
+            this.#parsed.set(node, res);
+            this.#errors.push(...res.errors);
+        }
+        return res;
+    }
+
+    /** css() 호출의 인자들을 해석. 파싱 에러가 나면 `null`. */
+    #resolveCallArgs(call: AnyProp): ArgRecord[] | null {
+        const before = this.#errors.length;
+        const args: ArgRecord[] = [];
+        for (const a of call.arguments) {
+            const pieces = this.#resolve(a, new Set());
+            if (pieces) args.push({ kind: 'local', pieces });
+            else if (this.#isCssCall(a) || containsCssCall(a, this.#bindingName!)) {
+                this.#errors.push(nestedCallError(a));
+            } else args.push({ kind: 'external', node: a });
+        }
+        return this.#errors.length > before ? null : args;
+    }
+
+    /**
+     * 인자 표현식을 컴파일 시점 조각으로 푼다. 풀 수 없으면(props, import, 함수 호출 결과 등)
+     * `null` — 그 인자는 런타임 class 문자열로 이어붙인다.
+     */
+    #resolve(node: AnyProp, visiting: Set<string>): Piece[] | null {
+        if (!node) return null;
+        switch (node.type) {
+            case 'ObjectExpression':
+                return this.#objectPieces(node);
+            case 'ParenthesizedExpression':
+            case 'TSAsExpression':
+            case 'TSSatisfiesExpression':
+            case 'TSNonNullExpression':
+                return this.#resolve(node.expression, visiting);
+            case 'Literal':
+                return node.value === null || node.value === false ? [] : null;
+            case 'Identifier': {
+                if (node.name === 'undefined') return [];
+                const init = this.#topLevelCss.get(node.name);
+                if (!init || (this.#bindingCounts.get(node.name) ?? 0) !== 1) return null;
+                if (visiting.has(node.name)) return null;
+                visiting.add(node.name);
+                const pieces = this.#resolveAll(init.arguments, visiting);
+                visiting.delete(node.name);
+                return pieces;
+            }
+            case 'CallExpression':
+                return this.#isCssCall(node) ? this.#resolveAll(node.arguments, visiting) : null;
+            case 'LogicalExpression': {
+                if (node.operator !== '&&') return null;
+                const right = this.#resolve(node.right, visiting);
+                if (!right) return null;
+                return [
+                    { kind: 'cond', test: this.#src(node.left), whenTrue: right, whenFalse: [] },
+                ];
+            }
+            case 'ConditionalExpression': {
+                const whenTrue = this.#resolve(node.consequent, visiting);
+                const whenFalse = this.#resolve(node.alternate, visiting);
+                if (!whenTrue || !whenFalse) return null;
+                return [{ kind: 'cond', test: this.#src(node.test), whenTrue, whenFalse }];
+            }
+            default:
+                return null;
+        }
+    }
+
+    #resolveAll(nodes: AnyProp[], visiting: Set<string>): Piece[] | null {
+        const out: Piece[] = [];
+        for (const n of nodes ?? []) {
+            const p = this.#resolve(n, visiting);
+            if (!p) return null;
+            out.push(...p);
+        }
+        return out;
+    }
+
+    /**
+     * object 리터럴 하나를 조각으로. entry-level 삼항은 선언 위치 그대로 `cond` 조각이 되어
+     * 두 분기가 각각 나머지 선언과 합쳐진 블록을 만든다.
+     */
+    #objectPieces(node: AnyProp): Piece[] {
+        const { rules, ternaries } = this.#parseObject(node);
+        const startsAt = new Map<number, ParseCallResult['ternaries'][number]>();
+        const inTernary = new Set<number>();
+        for (const t of ternaries) {
+            const all = [...t.consequentRuleIndexes, ...t.alternateRuleIndexes];
+            if (all.length) startsAt.set(Math.min(...all), t);
+            for (const i of all) inTernary.add(i);
+        }
+
+        const pieces: Piece[] = [];
+        let fixed: IRRule[] = [];
+        const flush = () => {
+            if (fixed.length) pieces.push({ kind: 'fixed', rules: fixed });
+            fixed = [];
+        };
+        for (let i = 0; i < rules.length; i++) {
+            const t = startsAt.get(i);
+            if (t) {
+                flush();
+                pieces.push({
+                    kind: 'cond',
+                    test: this.opts.source.slice(t.testStart, t.testEnd),
+                    whenTrue: [
+                        { kind: 'fixed', rules: t.consequentRuleIndexes.map((j) => rules[j]) },
+                    ],
+                    whenFalse: [
+                        { kind: 'fixed', rules: t.alternateRuleIndexes.map((j) => rules[j]) },
+                    ],
                 });
+            } else if (!inTernary.has(i)) {
+                fixed.push(rules[i]);
             }
         }
+        flush();
+        return pieces;
+    }
+
+    #src(node: AnyProp): string {
+        return this.opts.source.slice(node.start, node.end);
+    }
+
+    // ── 출력 ───────────────────────────────────────────────────
+
+    #collectDynamicSlots(pieces: Piece[]): DynamicCallSite['slots'] {
+        const bySlot = new Map<string, DynamicCallSite['slots'][number]>();
+        forEachRule(pieces, (r) => {
+            if (r.kind !== 'dynamic' || bySlot.has(r.slotId)) return;
+            const axis = axisForProperty(r.property);
+            if (axis) this.#axesUsed.add(axis);
+            bySlot.set(r.slotId, {
+                slotId: r.slotId,
+                axis,
+                property: r.property,
+                sourceExpr: r.sourceExpr,
+            });
+        });
         return Array.from(bySlot.values());
     }
 
-    /**
-     * `css(...)` 호출 전체를 바꿀 소스 문자열 생성.
-     *
-     * 반환값은 항상 **string** 이다 (RSC 직렬화 경계를 그대로 통과).
-     * - object-arg 끼리는 compile-time 에 group(selector|property) 단위
-     *   last-wins 로 접어 하나의 class 리스트 literal 로 만든다.
-     * - reference-arg(지역 변수·props 등 런타임 값) 가 섞이면 `_ax([...])` 로
-     *   감싸 런타임에서 같은 규칙으로 머지한다. ternary 가 있는 object 도 분기
-     *   표현식을 품어야 하므로 `_ax` 경로를 탄다.
-     */
-    #buildCallReplacement(call: CallRecord, classNamesAll: string[]): string {
-        const literalParts: string[] = [];
-        const exprParts: string[] = [];
-        let needsRuntime = false;
+    /** 규칙 목록 → 블록 등록 → class 이름. 규칙이 없으면 빈 문자열. */
+    #blockClass(rules: IRRule[], debugId: string | undefined): string {
+        const normalized = normalizeRules(rules);
+        if (normalized.length === 0) return '';
+        const className = buildBlockClassName({
+            scope: this.#scope,
+            signature: signatureOf(normalized),
+            mode: this.#mode,
+            debugId,
+        });
+        this.#blocks.push({ className, rules: normalized });
+        return className;
+    }
 
-        for (const arg of call.args) {
-            if (arg.kind === 'reference') {
-                needsRuntime = true;
-                exprParts.push(this.opts.source.slice(arg.node.start, arg.node.end));
-                continue;
-            }
-            const { staticClasses, ternaryExprs } = this.#renderObjectArg(arg, classNamesAll);
-            if (ternaryExprs.length) needsRuntime = true;
-            if (needsRuntime) {
-                if (staticClasses.length) exprParts.push(jsSingleQuoted(staticClasses.join(' ')));
-                exprParts.push(...ternaryExprs);
-            } else {
-                literalParts.push(...staticClasses);
-            }
+    /** 조각 목록 → 분기마다 병합 블록을 만들고, 고르는 표현식(문자열 리터럴 또는 삼항)을 반환. */
+    #combine(pieces: Piece[], acc: IRRule[], debugId: string | undefined): string {
+        const i = pieces.findIndex((p) => p.kind === 'cond');
+        if (i === -1) {
+            const rules = [...acc];
+            for (const p of pieces) if (p.kind === 'fixed') rules.push(...p.rules);
+            return jsSingleQuoted(this.#blockClass(rules, debugId));
         }
-
-        if (!needsRuntime) {
-            return jsSingleQuoted(_ax(literalParts));
-        }
-
-        this.#needAx = true;
-        const all = literalParts.length
-            ? [jsSingleQuoted(literalParts.join(' ')), ...exprParts]
-            : exprParts;
-        return `_ax([${all.join(', ')}])`;
+        const head: IRRule[] = [...acc];
+        for (const p of pieces.slice(0, i)) if (p.kind === 'fixed') head.push(...p.rules);
+        const c = pieces[i] as Extract<Piece, { kind: 'cond' }>;
+        const rest = pieces.slice(i + 1);
+        const t = this.#combine([...c.whenTrue, ...rest], head, debugId);
+        const f = this.#combine([...c.whenFalse, ...rest], head, debugId);
+        return t === f ? t : `(${c.test} ? ${t} : ${f})`;
     }
 
     /**
-     * 하나의 object-arg 를 class 조각으로.
-     * - static rules → className 목록 (같은 selector|property 는 마지막만, 리뷰 #1)
-     * - ternary → `(test ? 'A' : 'B')` 표현식 목록. 두 branch 가 같은 group 이므로
-     *   `_ax` 가 static 쪽과 함께 last-wins 처리한다.
+     * `css(...)` 호출 전체를 바꿀 소스 문자열. 반환값은 항상 string 이다 (RSC 안전).
+     * - 로컬로 풀리는 인자(object, 같은 파일 최상위 `css()` 상수, 그 조건부 조합)는 한 블록으로
+     *   병합한다 — 뒤 인자가 같은 선언 슬롯을 이긴다.
+     * - 그 밖의 인자는 `_cx([...])` 로 이어붙인다. 승패는 CSS 로드 순서(import 순서)를 따른다.
      */
-    #renderObjectArg(
-        arg: Extract<ArgRecord, { kind: 'object' }>,
-        classNamesAll: string[],
-    ): { staticClasses: string[]; ternaryExprs: string[] } {
-        const ternaryIdxs = new Set<number>();
-        for (const t of arg.ternaries) {
-            for (const i of t.consequentRuleIndexes) ternaryIdxs.add(i);
-            for (const i of t.alternateRuleIndexes) ternaryIdxs.add(i);
-        }
+    #buildCallReplacement(call: CallRecord): string {
+        const locals = call.args.flatMap((a) => (a.kind === 'local' ? a.pieces : []));
+        const firstLocal = call.args.findIndex((a) => a.kind === 'local');
+        const localExpr = firstLocal === -1 ? null : this.#combine(locals, [], call.debugId);
 
-        const staticMap = new Map<string, string>();
-        for (let i = 0; i < arg.rules.length; i++) {
-            if (ternaryIdxs.has(i)) continue;
-            const r = arg.rules[i];
-            const className = classNamesAll[arg.rulesOffset + i];
-            if (!className) continue;
-            staticMap.set(mkKey(r.selectorContext, r.property), className);
-        }
+        const externals = call.args.filter((a) => a.kind === 'external');
+        if (externals.length === 0) return localExpr ?? "''";
 
-        const ternaryExprs: string[] = [];
-        for (const t of arg.ternaries) {
-            const testSrc = this.opts.source.slice(t.testStart, t.testEnd);
-            const byProp = new Map<string, { conseq: string; alt: string }>();
-            const put = (i: number, side: 'conseq' | 'alt') => {
-                const r = arg.rules[i];
-                const className = classNamesAll[arg.rulesOffset + i];
-                if (!className) return;
-                const key = mkKey(r.selectorContext, r.property);
-                const e = byProp.get(key) ?? { conseq: '', alt: '' };
-                e[side] = className;
-                byProp.set(key, e);
-            };
-            for (const i of t.consequentRuleIndexes) put(i, 'conseq');
-            for (const i of t.alternateRuleIndexes) put(i, 'alt');
-            for (const { conseq, alt } of byProp.values()) {
-                ternaryExprs.push(
-                    `(${testSrc} ? ${jsSingleQuoted(conseq)} : ${jsSingleQuoted(alt)})`,
-                );
-            }
-        }
-
-        return { staticClasses: Array.from(staticMap.values()), ternaryExprs };
+        const parts: string[] = [];
+        call.args.forEach((a, idx) => {
+            if (a.kind === 'external') parts.push(this.#src(a.node));
+            else if (idx === firstLocal && localExpr) parts.push(localExpr);
+        });
+        this.#needCx = true;
+        return `_cx([${parts.join(', ')}])`;
     }
 
     #ensureRuntimeImport() {
         const specifiers: string[] = [];
-        if (this.#needAx) specifiers.push('_ax');
+        if (this.#needCx) specifiers.push('_cx');
         if (this.#needResolveToken) specifiers.push('_resolveToken');
         if (this.#needIx) specifiers.push('_ix');
         if (this.#axesUsed.size > 0) {
@@ -443,10 +571,43 @@ class Transformer {
     }
 }
 
-/** 복합 key 는 property-only 로 축약 가능하지만, selector 가 다른 분기의
- *  같은 property 는 "다른 slot" 이어야 머지 로직이 꼬이지 않는다. */
-function mkKey(selectorContext: string, property: string): string {
-    return `${selectorContext}|${property}`;
+// ────────────────────────────────────────────────────────────────
+// helpers
+// ────────────────────────────────────────────────────────────────
+
+function contains(outer: AnyProp, inner: AnyProp): boolean {
+    return outer.start <= inner.start && inner.end <= outer.end;
+}
+
+function containsCssCall(node: AnyProp, binding: string): boolean {
+    let found = false;
+    walk(node, {
+        CallExpression: (n) => {
+            if (n.callee?.type === 'Identifier' && n.callee.name === binding) found = true;
+        },
+    });
+    return found;
+}
+
+/** readable 모드 class 앞에 붙일 이름: 가장 가까운 변수 → JSX 요소 → 함수 이름. */
+function debugIdOf(parents: AnyProp[]): string | undefined {
+    for (let i = parents.length - 1; i >= 0; i--) {
+        const n = parents[i];
+        if (n.type === 'VariableDeclarator' && n.id?.type === 'Identifier') return n.id.name;
+        if (n.type === 'JSXOpeningElement') return jsxName(n.name);
+        if ((n.type === 'FunctionDeclaration' || n.type === 'Function') && n.id?.name) {
+            return n.id.name;
+        }
+    }
+    return undefined;
+}
+
+function jsxName(name: AnyProp): string | undefined {
+    if (!name) return undefined;
+    if (name.type === 'JSXIdentifier') return name.name;
+    if (name.type === 'JSXMemberExpression') return jsxName(name.property);
+    if (name.type === 'JSXNamespacedName') return name.name?.name;
+    return undefined;
 }
 
 function jsSingleQuoted(value: string) {
@@ -462,19 +623,24 @@ function jsSingleQuoted(value: string) {
 }
 
 function emptyResult(source: string): TransformResult {
-    return { code: source, css: null, rules: [], classes: [], errors: [] };
+    return { code: source, css: null, errors: [] };
+}
+
+function errorResult(source: string, errors: BuildError[]): TransformResult {
+    return { code: source, css: null, errors };
+}
+
+function locOf(node: AnyProp) {
+    return { line: node?.loc?.start?.line ?? 1, column: node?.loc?.start?.column ?? 0 };
 }
 
 function templateLiteralError(node: AnyProp): BuildError {
     return {
         code: 'template-literal',
         message:
-            'Template literal join of css() results bypasses property-aware merge. ' +
-            'Use css(a, b) instead so later arguments win per CSS property.',
-        loc: {
-            line: node?.loc?.start?.line ?? 1,
-            column: node?.loc?.start?.column ?? 0,
-        },
+            'Template literal join of css() results skips merging. ' +
+            'Use css(a, b) instead so later arguments win.',
+        loc: locOf(node),
     };
 }
 
@@ -482,9 +648,26 @@ function noArgError(node: AnyProp): BuildError {
     return {
         code: 'invalid-input-shape',
         message: 'css() requires at least one argument.',
-        loc: {
-            line: node?.loc?.start?.line ?? 1,
-            column: node?.loc?.start?.column ?? 0,
-        },
+        loc: locOf(node),
+    };
+}
+
+function nestedCallError(node: AnyProp): BuildError {
+    return {
+        code: 'invalid-input-shape',
+        message:
+            'A css() call nested inside another css() call must be fully static ' +
+            '(object literals, same-file css() constants, and && / ?: between them).',
+        loc: locOf(node),
+    };
+}
+
+function tooManyBranchesError(node: AnyProp, combos: number): BuildError {
+    return {
+        code: 'invalid-input-shape',
+        message:
+            `css() call has ${combos} conditional style combinations (limit ${MAX_COMBINATIONS}). ` +
+            'Split it into several css() calls.',
+        loc: locOf(node),
     };
 }

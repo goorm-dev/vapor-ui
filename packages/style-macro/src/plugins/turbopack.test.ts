@@ -28,7 +28,7 @@ describe('turbopack', () => {
         ].join('\n');
         const out = await run(ctx, src);
         expect(out).not.toContain('data:text/css');
-        expect(out).toMatch(/const cls = '_padding-top_space-400_[A-Za-z0-9]{12}/);
+        expect(out).toMatch(/const cls = 'cls_[A-Za-z0-9]+'/);
     });
 
     it('honours include/exclude globs passed as loader options', async () => {
