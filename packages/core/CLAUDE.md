@@ -156,8 +156,8 @@ Core component implementations stay on Vanilla Extract (`componentRecipe` / `com
 How it is wired (see `packages/style-macro/README.md` for per-bundler setup):
 
 - `css()` returns a plain **string** (RSC-safe). Arguments resolvable in the same file (object literals, top-level `const x = css(...)`, and `&&` / `?:` between them) merge at compile time into one block — later arguments win, conditional combinations get one block per branch. Other arguments (imports, props) are joined by `_cx([...])`; which of two classes wins then follows CSS load order. Template-literal joins are a build error.
-- CSS is not yet imported per module (migration in progress). The bundler adapter rewrites JS; the CSS side scans the project and appends every module's blocks, in path order, into the consumer's CSS entry — the file that imports `@vapor-ui/core/layers.css`, or in place of a hand-written `@vapor-utilities;`. Use exactly one insertion point.
-- Class format: `v<hash>` (prod) / `<name>_<hash>` (dev), hash = murmur2(file path relative to root + block declarations).
+- Each module that calls `css()` imports its own CSS (Vanilla Extract model): a virtual `<file>.vapor.css` (Vite), a `module.vapor.css?vapor-src=…` request (webpack / Next webpack) or `./<file>?vapor-css` (Turbopack). Library builds (`rolldown`) emit one `<file>.vapor.css` per module. Unimported components ship no CSS. The consumer's CSS entry (`@vapor-ui/core/layers.css` first) must be imported before any `@vapor-ui/*` import so layer order registers first.
+- Class format: `v<hash>` (prod) / `<name>_<hash>` (dev), hash = murmur2(`<package name>/<path relative to that package>` + block declarations).
 - Unexpanded shorthands (`border`, `background`, `font`, …) still do not accept tokens; `padding`/`margin`/`inset`/`borderRadius` are expanded to longhands first and do.
 
 ### `$css` prop

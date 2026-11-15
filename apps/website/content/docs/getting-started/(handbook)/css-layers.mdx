@@ -59,19 +59,11 @@ import 정렬 도구를 쓴다면 side-effect import(`import './styles.css'`)를
 
 ### `@vapor-ui/style-macro` 를 사용하는 경우
 
-`css()` 매크로로 작성한 스타일은 번들러가 파일마다 방출하지 않고, 프로젝트 전체를 모아 **한 번에 정렬한 뒤** `vapor-utilities` 레이어에 넣습니다. 번들러 플러그인은 `@vapor-ui/core/layers.css` 를 import 하는 CSS 파일을 삽입 지점으로 삼으므로 기본 사용법 그대로면 추가 설정이 없습니다. `layers.css` 를 생략하고 레이어 순서를 직접 선언하는 경우에만 그 CSS 진입점에 `@vapor-utilities;` 를 한 번 직접 적습니다.
+`css()` 매크로로 작성한 스타일은 `vapor-utilities` 레이어에 들어갑니다. 번들러 플러그인은 `css()` 를 쓰는 파일마다 그 파일의 CSS 를 만들어 import 하므로, 앱이 쓰지 않는 컴포넌트의 스타일은 번들에 들어가지 않습니다. 추가로 적을 마커는 없고, 위 규칙대로 CSS 진입점(`layers.css` 또는 직접 선언한 레이어 순서)만 가장 먼저 import 하면 됩니다.
 
-```css title="global.css (레이어 순서 직접 선언 시)"
-@layer app-base, vapor-theme, vapor-reset, vapor-components, composites, vapor-utilities, app-utilities;
-@import '@vapor-ui/core/styles.css';
-
-@vapor-utilities;
-```
-
-- `layers.css` import 도, `@vapor-utilities;` 도 없으면 `css()` 스타일이 전혀 방출되지 않습니다.
-- `@vapor-utilities;` 는 번들러가 직접 읽는 CSS 진입점에 적습니다. `@import` 된 다른 CSS 파일 안에 두면 인식되지 않습니다.
-- 여러 파일에 적으면 전체 유틸리티가 그 수만큼 중복됩니다.
-- 정렬 순서(shorthand → longhand → `:hover` 등 pseudo → `@media`)는 파일·청크 순서와 무관하게 고정되므로, 다른 파일에서 전달한 `className` 의 `@media` / `:hover` override 가 항상 base 를 이깁니다.
+- 한 파일 안의 `css()` 인자 합성(`css(base, isActive && active)` 등)은 빌드 시점에 한 블록으로 합쳐지므로, 뒤에 적은 인자가 항상 이깁니다.
+- 서로 다른 파일의 `css()` 규칙끼리는 같은 레이어 안에서 CSS 로드 순서(import 순서)가 승패를 정합니다. 공용 스타일 파일에 둔 override 는 순서가 보장되지 않으므로, 덮어쓸 스타일은 그 컴포넌트를 렌더하는 파일에 둡니다.
+- `@vapor-ui/composites` 는 `composites` 레이어를 쓰므로, 앱에서 `css()` 로 만들어 composites 컴포넌트에 넘긴 `className` 은 로드 순서와 무관하게 항상 이깁니다.
 
 번들러별 설정은 [`@vapor-ui/style-macro` README](https://github.com/goorm-dev/vapor-ui/tree/main/packages/style-macro) 를 참고하세요.
 

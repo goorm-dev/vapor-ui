@@ -1,6 +1,6 @@
 # @vapor-ui/style-macro
 
-빌드 타임에 동작하는 zero-runtime CSS-in-JS. `css({...})` 호출 1개를 **class 1개 + CSS 블록 1개** 로 컴파일한다 (Vanilla Extract 와 같은 모델). 현재는 프로젝트 전체 모듈의 블록을 모아 **단일 시트** 로 방출하며, 모듈 단위 CSS import 로의 전환이 진행 중이다.
+빌드 타임에 동작하는 zero-runtime CSS-in-JS. `css({...})` 호출 1개를 **class 1개 + CSS 블록 1개** 로 컴파일한다 (Vanilla Extract 와 같은 모델). `css()` 를 쓰는 모듈은 자기 CSS 만 import 하므로, 앱이 import 하지 않는 컴포넌트의 CSS 는 번들에 들어가지 않는다.
 
 - 반환값은 순수 `string` — Server Component 에서 만들어 Client Component 로 넘겨도 된다.
 - 블록 안 선언 순서는 작성 순서 그대로다. 같은 selector·property 는 뒤에 쓴 것이 이긴다. selector 그룹은 base → 중첩 selector(작성 순) → at-rule(`min-width` 오름 / `max-width` 내림) 순으로 나온다.
@@ -31,22 +31,17 @@ function Button() {
 }
 ```
 
-번들러 config. 번들러마다 CSS 가 들어가는 방식이 다르다.
+번들러 config. 지원 번들러는 Vite·webpack·Next(webpack·Turbopack)이고, 라이브러리 빌드는 Rolldown 이다 ([라이브러리 배포](#라이브러리-배포)). 그 밖의 번들러(Parcel 등)는 지원하지 않는다.
 
 - **Vite (7·8)** — `css()` 를 쓰는 모듈마다 가상 CSS 모듈(`<file>.vapor.css`)을 만들고, 그 모듈이 자기 CSS 를 import 한다 (Vanilla Extract 와 같은 모델). import 되지 않는 모듈의 CSS 는 번들에 들어가지 않고, dev 에서는 수정한 모듈의 CSS 만 HMR 로 바뀐다. 레이어 순서를 고정하려면 앱 CSS 진입점에서 `@vapor-ui/core/layers.css` 를 **모든 `@vapor-ui/*` import 보다 먼저** import 한다.
 - **webpack 5** — 같은 모델. 모듈마다 `@vapor-ui/style-macro/module.vapor.css?vapor-src=<모듈 경로>` 를 import 하고, 플러그인이 등록한 loader 가 그 자리에 모듈 CSS 를 넣는다. 이 요청은 앱의 `.css` 규칙(css-loader + style-loader / mini-css-extract-plugin, 또는 `experiments.css`)으로 처리되므로 앱에 `.css` 규칙이 있어야 한다.
 - **Next (webpack · Turbopack)** — `vaporNextPlugin` 이 번들러를 감지해 배선한다. webpack 은 위와 같고, Turbopack 은 모듈마다 `./<file>?vapor-css` 를 import 하고 그 쿼리에 CSS loader 규칙(`as: '*.css'`)을 건다. 서버·클라이언트 컴포넌트 모두 라우트별 CSS 로 나뉘고 dev 에서 수정 즉시 반영된다. 레이어 순서는 루트 layout 이 import 하는 CSS 에서 `@vapor-ui/core/layers.css` 를 먼저 import 해 고정한다.
-- **PostCSS** — 프로젝트 전체 룰이 시트 하나로 CSS 진입점에 들어간다. 삽입 지점은 둘 중 하나다.
-    1. `@import '@vapor-ui/core/layers.css'` — 이 import 가 있는 파일 끝에 붙는다. 기본 사용법 그대로면 추가 설정이 없다.
-    2. `@vapor-utilities;` — 직접 적은 자리에 치환된다. `layers.css` 를 생략하고 레이어 순서를 직접 선언할 때, 또는 PostCSS 에서 postcss-import 가 이 플러그인보다 먼저 돌 때 쓴다.
-
-    둘 다 없으면 스타일이 방출되지 않는다 (Vapor 레이어 순서를 선언한 파일에서 경고). 마커는 번들러가 직접 받는 CSS 진입점에 적는다 — `@import` 된 partial 안에 두면 보이지 않는다. 여러 파일에 적으면 시트가 그 수만큼 중복된다.
 
 같은 레이어 안에서 서로 다른 모듈의 규칙끼리는 CSS 로드 순서가 승자를 정한다. 한 모듈 안의 `css()` 는 그 모듈이 import 한 라이브러리 CSS 뒤에 오므로 라이브러리 컴포넌트에 넘긴 override 가 이긴다. override 를 다른 모듈(공용 styles 파일, 다른 청크)에 두면 순서가 보장되지 않는다 — 라이브러리는 앱보다 앞선 레이어를 써야 한다 ([라이브러리 배포](#라이브러리-배포)).
 
 ```css
 /* src/styles.css */
-@import '@vapor-ui/core/layers.css'; /* 레이어 순서 (PostCSS 는 삽입 트리거) */
+@import '@vapor-ui/core/layers.css'; /* 레이어 순서 — 모든 @vapor-ui/* import 보다 먼저 */
 @import '@vapor-ui/core/styles.css';
 ```
 
@@ -75,17 +70,16 @@ export default withVapor(nextConfig);
 
 ## Entry points
 
-| Subpath                             | 용도                                                                                                                         |
-| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `@vapor-ui/style-macro`             | 소비자용 `css()` + `buildColorSchemeScript()` + 타입                                                                         |
-| `@vapor-ui/style-macro/vite`        | Vite plugin                                                                                                                  |
-| `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                                                                               |
-| `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                                                                               |
-| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin — 라이브러리 빌드. 컴포넌트별 CSS 를 배포 ([라이브러리 배포](#라이브러리-배포))                              |
-| `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                                                                                  |
-| `@vapor-ui/style-macro/css-loader`  | webpack / Turbopack CSS loader — 소스 모듈을 모듈 CSS 로 컴파일 (webpack·next plugin 이 내부 사용)                           |
-| `@vapor-ui/style-macro/postcss`     | PostCSS 플러그인 — 전용 어댑터 없는 번들러(Parcel 등)용. postcss-import 보다 앞에 등록. Next 에서는 불필요, Turbopack 비호환 |
-| `@vapor-ui/style-macro/__runtime__` | **내부용** — plugin 이 소비자 코드에 자동 inject. 직접 import 금지                                                           |
+| Subpath                             | 용도                                                                                               |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `@vapor-ui/style-macro`             | 소비자용 `css()` + `buildColorSchemeScript()` + 타입                                               |
+| `@vapor-ui/style-macro/vite`        | Vite plugin                                                                                        |
+| `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                                                     |
+| `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                                                     |
+| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin — 라이브러리 빌드. 컴포넌트별 CSS 를 배포 ([라이브러리 배포](#라이브러리-배포))    |
+| `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                                                        |
+| `@vapor-ui/style-macro/css-loader`  | webpack / Turbopack CSS loader — 소스 모듈을 모듈 CSS 로 컴파일 (webpack·next plugin 이 내부 사용) |
+| `@vapor-ui/style-macro/__runtime__` | **내부용** — plugin 이 소비자 코드에 자동 inject. 직접 import 금지                                 |
 
 ## Plugin 옵션
 
@@ -104,7 +98,7 @@ interface VaporPluginOptions {
 | ------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `include`           | `[]`                                    | 추가 대상 glob (`root` 기준, picomatch). 기본 대상(`root` 하위 JS/TS, `node_modules` 제외)에 **더해진다**. prebuilt 패키지 포함 예: `['node_modules/@acme/ui/dist/**']`                  |
 | `exclude`           | `[]`                                    | 제외 glob (`root` 기준). `include` 보다 우선                                                                                                                                             |
-| `root`              | `process.cwd()`                         | 스캔 루트 · glob 기준 경로                                                                                                                                                               |
+| `root`              | 번들러 프로젝트 루트                    | `include`/`exclude` glob 기준 경로                                                                                                                                                       |
 | `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                                                |
 | `injectColorScheme` | `true`                                  | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                          |
 | `layer`             | `'vapor-utilities'`                     | `css()` 규칙을 담을 CSS cascade layer 이름 (`acme.ui` 같은 sub-layer 가능). CSS 진입점의 레이어 순서 선언에 포함돼야 한다 — 빠지면 브라우저가 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다 |
@@ -268,7 +262,7 @@ export default function Root({ children }) {
 같은 입력 (`source`, `scope`, `hash`, `layer`) → 같은 출력 (`code`, `css`).
 
 - Class name: hash = murmur2(`scope` + 블록 선언 직렬화). hashed `v<hash>`, readable `<변수·JSX 요소 이름>_<hash>`. `scope` 는 플러그인이 넘기는 root 기준 상대 경로라 빌드 머신과 무관하다. 같은 선언이라도 파일이 다르면 class 가 다르다.
-- CSS: 블록은 소스 등장 순서, 블록 안은 selector 그룹 순서(위 참고). 수집 모드에서는 파일 경로 순으로 모듈 CSS 를 이어 붙인다.
+- CSS: 블록은 소스 등장 순서, 블록 안은 selector 그룹 순서(위 참고).
 - Shorthand: 자식 property 전개 순서 고정
 
 ## 내부 구조
@@ -283,7 +277,6 @@ export default function Root({ children }) {
 | `src/models/*.ts`              | class name, selector, shorthand, token, value 모델             |
 | `src/plugins/*.ts`             | 번들러 adapter (unplugin + turbopack loader)                   |
 | `src/models/sort.ts`           | 블록 안 at-rule 정렬 (Compiled 이식)                           |
-| `src/plugins/_collect.ts`      | 소스 스캔 → 파일별 모듈 CSS 를 경로 순으로 연결                |
 | `src/helpers/cx.ts`            | runtime `_cx` — class 이어붙이기·중복 제거 (`__runtime__`)     |
 | `src/helpers/resolve-token.ts` | runtime `_resolveToken` helper (`__runtime__` subpath 로 노출) |
 

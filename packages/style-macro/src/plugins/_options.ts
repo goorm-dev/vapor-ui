@@ -7,7 +7,7 @@ import type { ColorSchemeScriptOpts } from '~/helpers/fouc-script';
 
 export interface VaporPluginOptions {
     /**
-     * 추가 스캔/변환 대상 glob. 상대 경로는 `root` 기준이며 `../` 와 절대 경로도 된다.
+     * 추가 변환 대상 glob. 상대 경로는 `root` 기준이며 `../` 와 절대 경로도 된다.
      * 기본 대상(`root` 하위 JS/TS, `node_modules` 제외)에 **더해진다**.
      * `node_modules` 안의 prebuilt 라이브러리를 포함하려면 여기 명시한다.
      * 예: `['node_modules/@acme/ui/dist/**', '../shared/src/**']`
@@ -16,7 +16,7 @@ export interface VaporPluginOptions {
     /** 제외 glob (`root` 기준, `../`·절대 경로 가능). `include` 보다 우선한다. */
     exclude?: string[];
     /**
-     * 스캔 루트 · glob 기준 경로. 기본값은 번들러가 아는 프로젝트 루트
+     * `include`/`exclude` glob 기준 경로. 기본값은 번들러가 아는 프로젝트 루트
      * (Vite `root`, webpack `compiler.context`, Next 프로젝트 디렉터리), 없으면 `process.cwd()`.
      */
     root?: string;
@@ -37,10 +37,8 @@ export interface ResolveDefaults {
 }
 
 export interface ResolvedOptions {
-    /** 절대 경로를 받아 변환/수집 대상인지 판정. loader 와 수집기가 같은 함수를 쓴다. */
+    /** 절대 경로를 받아 변환 대상인지 판정. JS 변환과 CSS loader 가 같은 함수를 쓴다. */
     include: (id: string) => boolean;
-    /** 절대 경로로 정규화된 include glob. */
-    includeGlobs: string[];
     root: string;
     hash: boolean;
     injectColorScheme: false | ColorSchemeScriptOpts;
@@ -140,7 +138,6 @@ export function resolveOptions(
 
     return {
         include: includeFn,
-        includeGlobs,
         root,
         hash,
         injectColorScheme:
