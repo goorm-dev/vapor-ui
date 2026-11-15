@@ -21,6 +21,7 @@
         "(tools)/ai-skill",
         "(tools)/llms-txt",
         "(tools)/eslint",
-        "(tools)/codemod"
+        "(tools)/codemod",
+        "(tools)/style-macro"
     ]
 }
