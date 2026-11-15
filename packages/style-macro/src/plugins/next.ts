@@ -1,10 +1,8 @@
-import { createRequire } from 'node:module';
-
 import type { AnyProp } from '~/models/types';
 
 import type { VaporPluginOptions } from './_options';
 import { VAPOR_CSS_QUERY } from './turbopack';
-import { loaderOptions, resolveCssLoader, vaporWebpackPlugin } from './webpack';
+import { loaderOptions, resolveCssLoader, siblingModule, vaporWebpackPlugin } from './webpack';
 
 export type NextMode = 'auto' | 'webpack' | 'turbopack';
 
@@ -59,9 +57,6 @@ export function vaporNextPlugin(
     const useTurbo = mode === 'turbopack' || (mode === 'auto' && detectTurbopack());
     const useWebpack = mode === 'webpack' || (mode === 'auto' && !detectTurbopack());
 
-    const modulePath = typeof __filename !== 'undefined' ? __filename : import.meta.url;
-    const selfRequire = createRequire(modulePath);
-
     return <T extends object = object>(nextConfig: T = {} as T): T => {
         const merged = { ...(nextConfig as NextConfigMutable) } as NextConfigMutable;
 
@@ -78,7 +73,7 @@ export function vaporNextPlugin(
         if (useTurbo) {
             const options = loaderOptions(unpluginOpts);
             const jsLoader = {
-                loader: selfRequire.resolve('@vapor-ui/style-macro/turbopack'),
+                loader: siblingModule('turbopack'),
                 options,
             };
             const cssLoader = { loader: resolveCssLoader(), options };

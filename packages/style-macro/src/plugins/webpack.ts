@@ -1,4 +1,6 @@
 import { createRequire } from 'node:module';
+import { dirname, extname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { type ColorSchemeScriptOpts, buildColorSchemeScript } from '~/helpers/fouc-script';
 
@@ -80,9 +82,18 @@ export function loaderOptions(opts: VaporPluginOptions, root?: string): VaporPlu
     );
 }
 
+/**
+ * 이 모듈과 같은 폴더의 `name` 모듈 경로. 확장자는 실행 중인 파일을 따른다 — 배포물에서는
+ * `css-loader.mjs` / `.cjs`, 소스(테스트)에서는 `css-loader.ts`. 패키지 이름으로 찾지 않으므로
+ * 빌드(dist) 없이도 동작하고, 설치 위치와 무관하다.
+ */
+export function siblingModule(name: string): string {
+    const self = typeof __filename !== 'undefined' ? __filename : fileURLToPath(import.meta.url);
+    return join(dirname(self), `${name}${extname(self)}`);
+}
+
 export function resolveCssLoader(): string {
-    const modulePath = typeof __filename !== 'undefined' ? __filename : import.meta.url;
-    return createRequire(modulePath).resolve('@vapor-ui/style-macro/css-loader');
+    return siblingModule('css-loader');
 }
 
 /**

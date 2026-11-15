@@ -1,7 +1,7 @@
-import { mkdtempSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
+import { existsSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { vaporNextPlugin } from './next';
 import { type VaporRolldownOptions, vaporRolldownPlugin } from './rolldown';
@@ -93,6 +93,23 @@ describe('adapters return plugin objects', () => {
 });
 
 describe('webpack() adapter — module CSS rule', () => {
+    // loader 는 실행 중인 모듈 옆 파일로 찾는다 — 소스로 돌 때 dist 가 필요 없다.
+    const here = dirname(fileURLToPath(import.meta.url));
+
+    it('points the CSS loader at the sibling module (no dist needed)', () => {
+        const loader = moduleCssRule({}).use[0]!.loader;
+        expect(loader).toBe(join(here, 'css-loader.ts'));
+        expect(existsSync(loader)).toBe(true);
+    });
+
+    it('points the Turbopack JS loader at the sibling module (no dist needed)', () => {
+        const output = vaporNextPlugin({ mode: 'turbopack' })<TestNextConfig>({});
+        const [js] = Object.values(output.turbopack!.rules!)[0] as Array<{
+            loaders: Array<{ loader: string }>;
+        }>;
+        expect(js!.loaders[0]!.loader).toBe(join(here, 'turbopack.ts'));
+    });
+
     it('aliases the placeholder specifier to the real file (exports patterns would swallow the query)', () => {
         const compiler = {
             context: '/repo',
@@ -420,22 +437,7 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
         expect(output.turbopack).toBeUndefined();
     });
 
-    // Turbopack-mode assertions require the built `dist/turbopack.js` so
-    // that `require.resolve('@vapor-ui/style-macro/turbopack')` inside
-    // `next.ts` succeeds. Gate on presence of the built artefact — this
-    // smoke test stays green in a fresh checkout, and turns on once
-    // `tsup` has produced dist.
-    const turbopackBuilt = (() => {
-        try {
-            const req = createRequire(import.meta.url);
-            req.resolve('@vapor-ui/style-macro/turbopack');
-            return true;
-        } catch {
-            return false;
-        }
-    })();
-
-    it.skipIf(!turbopackBuilt)('wires turbopack in `mode: turbopack`', () => {
+    it('wires turbopack in `mode: turbopack`', () => {
         const output = vaporNextPlugin({ mode: 'turbopack' })<TestNextConfig>({});
         expect(output.webpack).toBeUndefined();
         expect(output.turbopack?.rules).toBeTypeOf('object');
@@ -460,7 +462,7 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
         expect(returned?.plugins?.length).toBe(2);
     });
 
-    it.skipIf(!turbopackBuilt)('merges into existing turbopack.rules without clobbering', () => {
+    it('merges into existing turbopack.rules without clobbering', () => {
         const output = vaporNextPlugin({ mode: 'turbopack' })<TestNextConfig>({
             turbopack: {
                 rules: {
@@ -477,7 +479,7 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
         });
     });
 
-    it.skipIf(!turbopackBuilt)('turbopack: JS loader without the query, CSS loader with it', () => {
+    it('turbopack: JS loader without the query, CSS loader with it', () => {
         const output = vaporNextPlugin({ mode: 'turbopack', layer: 'acme' })<TestNextConfig>({});
         const rules = output.turbopack?.rules?.['**/*.{tsx,jsx,ts,js,mts,mjs,cts,cjs}'] as Array<{
             condition: unknown;
@@ -487,10 +489,10 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
         expect(rules).toHaveLength(2);
         const [js, css] = rules;
         expect(js!.condition).toEqual({ not: { query: /[?&]vapor-css(?=&|$)/ } });
-        expect(js!.loaders[0]!.loader).toMatch(/turbopack\.[cm]?js$/);
+        expect(js!.loaders[0]!.loader).toMatch(/turbopack\.[cm]?[jt]s$/);
         expect(js!.as).toBeUndefined();
         expect(css!.condition).toEqual({ query: /[?&]vapor-css(?=&|$)/ });
-        expect(css!.loaders[0]!.loader).toMatch(/css-loader\.[cm]?js$/);
+        expect(css!.loaders[0]!.loader).toMatch(/css-loader\.[cm]?[jt]s$/);
         expect(css!.loaders[0]!.options).toMatchObject({ layer: 'acme' });
         expect(css!.as).toBe('*.css');
     });
@@ -498,15 +500,10 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
     it('mode: auto follows process.env.TURBOPACK', () => {
         const prev = process.env.TURBOPACK;
         try {
-            // Turbopack branch — only run the assertion body if the dist
-            // artefact exists; without it, `next()` throws on the internal
-            // `require.resolve`. Still exercise the webpack branch below.
-            if (turbopackBuilt) {
-                process.env.TURBOPACK = '1';
-                const turboOutput = vaporNextPlugin({ mode: 'auto' })<TestNextConfig>({});
-                expect(turboOutput.turbopack?.rules).toBeTypeOf('object');
-                expect(turboOutput.webpack).toBeUndefined();
-            }
+            process.env.TURBOPACK = '1';
+            const turboOutput = vaporNextPlugin({ mode: 'auto' })<TestNextConfig>({});
+            expect(turboOutput.turbopack?.rules).toBeTypeOf('object');
+            expect(turboOutput.webpack).toBeUndefined();
 
             delete process.env.TURBOPACK;
             const webpackOutput = vaporNextPlugin({ mode: 'auto' })<TestNextConfig>({});
