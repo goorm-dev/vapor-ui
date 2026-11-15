@@ -1,51 +1,48 @@
 ---
 title: CSS Layers
-description: Vapor UI의 CSS Cascade Layer를 커스터마이징하는 방법을 안내합니다.
+description: Vapor UI의 CSS Cascade Layer에 대한 전반적인 설명과, 설정 및 커스터마이징하는 방법을 안내합니다.
 ---
 
-Vapor UI는 모든 컴포넌트 스타일을 [CSS Cascade Layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) 로 감싸 priority 충돌을 예방합니다. 기본 사용 방법과 레이어 순서를 직접 지정하는 방법을 소개합니다.
+Vapor UI는 모든 컴포넌트 스타일에 [CSS Cascade Layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer)를 도입하여, 우선순위 충돌을 예방합니다. 기본 사용 방법과 레이어 순서를 직접 지정하는 방법을 소개합니다.
 
 ## 레이어 구성
 
-Vapor UI는 다섯 개의 레이어를 사용합니다. 아래로 갈수록 우선순위가 높습니다.
+Vapor UI는 총 다섯 개의 레이어로 구성됩니다. 아래로 갈수록 우선순위가 높습니다.
 
-| 레이어             | 포함 스타일                                          |
-| ------------------ | ---------------------------------------------------- |
-| `vapor-theme`      | 테마 토큰(`--vapor-color-*` 등)과 라이트/다크 바인딩 |
-| `vapor-reset`      | `*`, `html`, `body` 등에 적용되는 전역 reset         |
-| `vapor-components` | 각 컴포넌트의 base, variant, recipe 스타일           |
-| `composites`       | `@vapor-ui/composites` 컴포넌트 내부 스타일          |
-| `vapor-utilities`  | `@vapor-ui/style-macro` 의 `css()` 가 생성한 스타일  |
-
-## 엔트리 구성
-
-| 엔트리                      | 내용                                                                                                                |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `@vapor-ui/core/layers.css` | 레이어 순서 선언만 포함 — `@layer vapor-theme, vapor-reset, vapor-components, composites, vapor-utilities;` 과 동일 |
-| `@vapor-ui/core/styles.css` | `@property` 전역 변수 + 테마 토큰 + reset 스타일                                                                    |
-
-두 파일 모두 import 하는 것이 기본이며, 외부 라이브러리와 레이어 순서를 섞어야 하는 경우에만 `layers.css` 를 생략하고 최상위에서 `@layer ...;` 를 직접 선언합니다.
+| 레이어             | 포함 스타일                                                               |
+| ------------------ | ------------------------------------------------------------------------- |
+| `vapor-theme`      | 테마 토큰(`--vapor-color-*` 등)과 라이트, 다크 테마 바인딩                |
+| `vapor-reset`      | `*`, `html`, `body` 등에 적용되는 전역 Reset CSS                          |
+| `vapor-components` | `@vapor-ui/core` 컴포넌트 내부 스타일                                     |
+| `composites`       | `@vapor-ui/composites` 컴포넌트 내부 스타일                               |
+| `vapor-utilities`  | `$css`나 `@vapor-ui/style-macro` 의 `css()` 유틸리티 함수가 생성한 스타일 |
 
 ## 기본 사용
 
-애플리케이션 최상위 CSS 파일에 다음 두 줄을 추가합니다.
+프로젝트의 전역 CSS 파일에 다음 두 줄을 추가합니다.
 
-```css title="global.css"
+```css title="globals.css"
 @import '@vapor-ui/core/layers.css';
 @import '@vapor-ui/core/styles.css';
 ```
 
-`layers.css` 가 먼저 import 되어 레이어 순서를 확정한 뒤, `styles.css` 의 토큰과 reset 이 각 레이어에 올바르게 배치됩니다.
+| 엔트리                      | 내용                                                                                                 |
+| --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `@vapor-ui/core/layers.css` | 레이어 순서 지정 — `@layer vapor-theme, vapor-reset, vapor-components, composites, vapor-utilities;` |
+| `@vapor-ui/core/styles.css` | `@property` 전역 변수 + 디자인 토큰 + Reset CSS                                                      |
 
-### CSS 진입점은 가장 먼저 import 합니다
+### CSS 진입점은 가장 먼저 import 하세요
 
-브라우저는 레이어 이름이 **처음 등장한 순서**로 레이어를 등록하고, 나중의 `@layer ...;` 선언으로는 이미 등록된 순서를 바꾸지 못합니다. `@vapor-ui/core`, `@vapor-ui/composites` 컴포넌트는 자기 CSS를 함께 불러오므로, 이 컴포넌트를 CSS 진입점보다 먼저 import 하면 레이어가 의도와 다른 순서로 등록됩니다. 예를 들어 `composites` 가 `vapor-utilities` 뒤에 등록되면 `css()` 로 작성한 앱 스타일이 composites 스타일에 집니다.
+브라우저는 레이어 이름이 **등장한 순서**대로 레이어를 등록합니다. 나중에 `@layer ...;`를 선언해도 이미 등록된 순서를 바꿀 수 없습니다. `@vapor-ui/core`, `@vapor-ui/composites` 컴포넌트에는 CSS Cascade Layer 선언이 포함되어 있기 때문에, 컴포넌트를 CSS 진입점보다 먼저 import 하면 레이어가 의도와 다른 순서로 등록됩니다.
+
+예를 들어 `composites` 가 `vapor-utilities` 뒤에 등록되면 `css()` 로 작성한 앱 스타일이 composites 스타일에 오버라이드 됩니다.
 
 ```tsx title="src/main.tsx"
 // ✅ CSS 진입점이 모든 Vapor UI import 보다 먼저
 import './styles.css';
 
-import { ThemeProvider } from '@vapor-ui/core';
+import { AlertDialog } from '@vapor-ui/composites';
+import { Button, ThemeProvider } from '@vapor-ui/core';
 ```
 
 ```tsx title="src/main.tsx"
@@ -55,27 +52,17 @@ import { ThemeProvider } from '@vapor-ui/core';
 import './styles.css';
 ```
 
-import 정렬 도구를 쓴다면 side-effect import(`import './styles.css'`)를 재배치하지 않도록 설정합니다.
-
-### `@vapor-ui/style-macro` 를 사용하는 경우
-
-`css()` 매크로로 작성한 스타일은 `vapor-utilities` 레이어에 들어갑니다. 번들러 플러그인은 `css()` 를 쓰는 파일마다 그 파일의 CSS 를 만들어 import 하므로, 앱이 쓰지 않는 컴포넌트의 스타일은 번들에 들어가지 않습니다. 추가로 적을 마커는 없고, 위 규칙대로 CSS 진입점(`layers.css` 또는 직접 선언한 레이어 순서)만 가장 먼저 import 하면 됩니다.
-
-- 한 파일 안의 `css()` 인자 합성(`css(base, isActive && active)` 등)은 빌드 시점에 한 블록으로 합쳐지므로, 뒤에 적은 인자가 항상 이깁니다.
-- 서로 다른 파일의 `css()` 규칙끼리는 같은 레이어 안에서 CSS 로드 순서(import 순서)가 승패를 정합니다. 공용 스타일 파일에 둔 override 는 순서가 보장되지 않으므로, 덮어쓸 스타일은 그 컴포넌트를 렌더하는 파일에 둡니다.
-- `@vapor-ui/composites` 는 `composites` 레이어를 쓰므로, 앱에서 `css()` 로 만들어 composites 컴포넌트에 넘긴 `className` 은 로드 순서와 무관하게 항상 이깁니다.
-
-번들러별 설정은 [`@vapor-ui/style-macro` README](https://github.com/goorm-dev/vapor-ui/tree/main/packages/style-macro) 를 참고하세요.
+따라서 린터나 포매터 등을 이용하여 import 순서를 정렬하는 경우, [Side effect import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#import_a_module_for_its_side_effects_only)를 가장 먼저 배치하도록 설정하는 것을 권장합니다.
 
 ## 레이어 순서 커스터마이징
 
-외부 CSS 라이브러리(Tailwind, 자체 디자인 시스템 등)와 섞어 쓰면서 특정 레이어를 Vapor UI 위/아래에 두어야 한다면 `layers.css` 를 import 하지 않고 최상위에서 레이어 순서를 직접 선언합니다.
+외부 CSS 라이브러리(Tailwindcss, 자체 디자인 시스템 등)와 함께 사용하는 경우, `layers.css`를 import 하지 않고 레이어 순서를 직접 선언하여 세부적인 커스터마이징을 할 수 있습니다.
 
-```css title="global.css"
-/* 1. 최상위에서 레이어 우선순위 직접 선언 (layers.css 생략) */
+```css title="globals.css"
+/* 1. 최상위에서 레이어 우선순위 직접 선언 */
 @layer app-base, vapor-theme, vapor-reset, app-components, vapor-components, composites, vapor-utilities, app-utilities;
 
-/* 2. Vapor UI 토큰 + reset */
+/* 2. Vapor UI 디자인 토큰 + Reset CSS */
 @import '@vapor-ui/core/styles.css';
 
 /* 3. 외부 라이브러리 또는 자체 CSS */
@@ -83,7 +70,7 @@ import 정렬 도구를 쓴다면 side-effect import(`import './styles.css'`)를
 @import './app.css';
 ```
 
-`@layer` 선언이 최초로 등장한 순서가 cascade 우선순위를 결정하므로, 최상위 CSS 파일의 `@layer ...;` 는 `@import` 보다 먼저 와야 합니다.
+이 경우에도 마찬가지로 호출된 순서에 따라 Cascade Layer 우선순위가 지정되므로, 반드시 `@layer` 선언이 최상위에 위치해야 합니다.
 
 ## 프레임워크별 예시
 
@@ -127,25 +114,3 @@ createRoot(document.getElementById('root')!).render(
     </StrictMode>,
 );
 ```
-
-### Storybook
-
-```css title=".storybook/global.css"
-@import '@vapor-ui/core/layers.css';
-@import '@vapor-ui/core/styles.css';
-```
-
-```ts title=".storybook/preview.ts"
-import './global.css';
-```
-
-## v1 → v2 마이그레이션
-
-v1 에서는 `ThemeProvider` import 가 CSS 를 자동으로 주입했습니다. v2 부터는 자동 주입이 사라지므로, 애플리케이션 CSS 파일에 직접 import 를 추가해야 합니다.
-
-```diff title="app/globals.css"
-+ @import '@vapor-ui/core/layers.css';
-+ @import '@vapor-ui/core/styles.css';
-```
-
-이 변경 이후 컴포넌트가 스타일 없이 렌더링된다면 위 import 가 누락되지 않았는지 확인하세요.
