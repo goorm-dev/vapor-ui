@@ -1,7 +1,10 @@
-import { formatBuildError } from '~/compilers/code-frame';
-import { transform } from '~/compilers/transform';
+import { basename } from 'node:path';
 
-import { type VaporPluginOptions, resolveOptions, scopeOf } from './_options';
+import { compileModule } from './_module-css';
+import { type VaporPluginOptions, resolveOptions } from './_options';
+
+/** Turbopack 쿼리. 이 쿼리가 붙은 소스 import 는 `css-loader` 규칙(`as: '*.css'`)을 탄다. */
+export const VAPOR_CSS_QUERY = 'vapor-css';
 
 export interface TurbopackLoaderContext {
     resourcePath: string;
@@ -10,7 +13,11 @@ export interface TurbopackLoaderContext {
     getOptions?: () => VaporPluginOptions;
 }
 
-/** JS 변환 전용. CSS 는 `css-loader` 가 `@vapor-utilities;` 또는 `layers.css` import 자리에서 수집한다. */
+/**
+ * Turbopack JS loader. `css()` 를 class 로 바꾸고, CSS 를 만든 모듈에
+ * `import './a.tsx?vapor-css'` 를 넣는다 — Next 플러그인이 같은 glob 에 이 쿼리 조건으로
+ * `css-loader` + `as: '*.css'` 규칙을 등록한다.
+ */
 export default async function vaporStyleTurbopackLoader(
     this: TurbopackLoaderContext,
     source: string,
@@ -18,23 +25,11 @@ export default async function vaporStyleTurbopackLoader(
     const opts = resolveOptions(this.getOptions ? this.getOptions() : {}, {
         root: this.rootContext,
     });
-
-    if (!opts.include(this.resourcePath)) return source;
-    if (!source.includes('@vapor-ui/style-macro')) return source;
-
-    const result = transform({
+    const compiled = compileModule(
         source,
-        filename: this.resourcePath,
-        hash: opts.hash,
-        scope: scopeOf(opts.root, this.resourcePath),
-    });
-
-    if (result.errors.length > 0) {
-        const messages = result.errors
-            .map((err) => formatBuildError(err, source, this.resourcePath))
-            .join('\n\n');
-        throw new Error(messages);
-    }
-
-    return result.code;
+        this.resourcePath,
+        opts,
+        (_cssName, filename) => `./${basename(filename)}?${VAPOR_CSS_QUERY}`,
+    );
+    return compiled?.code ?? source;
 }

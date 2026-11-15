@@ -3,7 +3,8 @@ import { createRequire } from 'node:module';
 import type { AnyProp } from '~/models/types';
 
 import type { VaporPluginOptions } from './_options';
-import { vaporWebpackPlugin } from './webpack';
+import { VAPOR_CSS_QUERY } from './turbopack';
+import { loaderOptions, resolveCssLoader, vaporWebpackPlugin } from './webpack';
 
 export type NextMode = 'auto' | 'webpack' | 'turbopack';
 
@@ -36,28 +37,6 @@ function detectTurbopack(): boolean {
     return Boolean(process.env.TURBOPACK);
 }
 
-const loaderName = (u: AnyProp): string => (typeof u === 'string' ? u : (u?.loader ?? ''));
-
-/**
- * Next 가 구성한 CSS rule 체인(`css-loader` 포함 `use` 배열) 끝에 loader 를 추가한다.
- * 별도 `.css` rule 을 push 하면 Next 가 내장 CSS 지원을 비활성화하므로 기존 체인에 끼운다.
- * webpack loader 는 배열 뒤에서 앞으로 실행되므로 끝에 두면 원본 CSS 를 가장 먼저 받는다.
- */
-function appendToCssRules(rules: AnyProp[], loader: { loader: string; options: unknown }): number {
-    let matched = 0;
-    for (const rule of rules) {
-        if (!rule || typeof rule !== 'object') continue;
-        if (Array.isArray(rule.oneOf)) matched += appendToCssRules(rule.oneOf, loader);
-        if (Array.isArray(rule.rules)) matched += appendToCssRules(rule.rules, loader);
-        if (!Array.isArray(rule.use)) continue;
-        if (!rule.use.some((u: AnyProp) => loaderName(u).includes('css-loader'))) continue;
-        matched++;
-        if (rule.use.some((u: AnyProp) => loaderName(u) === loader.loader)) continue;
-        rule.use.push(loader);
-    }
-    return matched;
-}
-
 /**
  * Curried Next.js integration for the Vapor style macro.
  *
@@ -82,18 +61,6 @@ export function vaporNextPlugin(
 
     const modulePath = typeof __filename !== 'undefined' ? __filename : import.meta.url;
     const selfRequire = createRequire(modulePath);
-    const cssLoaderPath = selfRequire.resolve('@vapor-ui/style-macro/css-loader');
-
-    // Turbopack loader 옵션은 JSON 직렬화되므로 함수형 옵션(injectColorScheme 등)은 제외.
-    const loaderOptions = Object.fromEntries(
-        Object.entries({
-            include: unpluginOpts.include,
-            exclude: unpluginOpts.exclude,
-            root: unpluginOpts.root,
-            hash: unpluginOpts.hash,
-            layer: unpluginOpts.layer,
-        }).filter(([, v]) => v !== undefined),
-    );
 
     return <T extends object = object>(nextConfig: T = {} as T): T => {
         const merged = { ...(nextConfig as NextConfigMutable) } as NextConfigMutable;
@@ -104,47 +71,37 @@ export function vaporNextPlugin(
                 const root = unpluginOpts.root ?? (ctx?.dir as string | undefined);
                 config.plugins ??= [];
                 config.plugins.push(vaporWebpackPlugin({ ...unpluginOpts, root }));
-                const matched = appendToCssRules(config.module?.rules ?? [], {
-                    loader: cssLoaderPath,
-                    options: { ...loaderOptions, ...(root ? { root } : {}) },
-                });
-                if (matched === 0) {
-                    throw new Error(
-                        '[@vapor-ui/style-macro] Could not find Next.js CSS loader rules to attach to. ' +
-                            'This Next.js version may have changed its webpack CSS pipeline; ' +
-                            'please report the Next.js version.',
-                    );
-                }
                 return originalWebpack ? originalWebpack(config, ctx) : config;
             };
         }
 
         if (useTurbo) {
-            const loaderPath = selfRequire.resolve('@vapor-ui/style-macro/turbopack');
+            const options = loaderOptions(unpluginOpts);
+            const jsLoader = {
+                loader: selfRequire.resolve('@vapor-ui/style-macro/turbopack'),
+                options,
+            };
+            const cssLoader = { loader: resolveCssLoader(), options };
+            const query = new RegExp(`[?&]${VAPOR_CSS_QUERY}(?=&|$)`);
+            // 같은 glob 에 두 규칙: 쿼리 없는 import 는 JS 변환, `?vapor-css` 는 같은 소스를
+            // CSS 로 컴파일해 CSS 모듈로 처리한다.
+            const sourceRules = [
+                { condition: { not: { query } }, loaders: [jsLoader] },
+                { condition: { query }, loaders: [cssLoader], as: '*.css' },
+            ];
 
             const globs = Array.isArray(turbopackGlob) ? turbopackGlob : [turbopackGlob];
-            const sourceRule = {
-                loaders: [{ loader: loaderPath, options: loaderOptions }],
-            };
-
             const existingTurbopack = (merged.turbopack ?? {}) as {
                 rules?: Record<string, unknown>;
                 [k: string]: unknown;
             };
-            const rules: Record<string, unknown> = {
-                ...existingTurbopack.rules,
-                ...Object.fromEntries(globs.map((g) => [g, sourceRule])),
+            merged.turbopack = {
+                ...existingTurbopack,
+                rules: {
+                    ...existingTurbopack.rules,
+                    ...Object.fromEntries(globs.map((g) => [g, sourceRules])),
+                },
             };
-
-            const cssLoader = { loader: cssLoaderPath, options: loaderOptions };
-            const existingCss = rules['*.css'] as { loaders?: unknown[]; as?: string } | undefined;
-            rules['*.css'] = {
-                ...existingCss,
-                loaders: [...(existingCss?.loaders ?? []), cssLoader],
-                as: existingCss?.as ?? '*.css',
-            };
-
-            merged.turbopack = { ...existingTurbopack, rules };
         }
 
         return merged as unknown as T;

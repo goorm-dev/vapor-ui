@@ -25,7 +25,7 @@ function callHook(hook: AnyProp, ctx: AnyProp, ...args: AnyProp[]): AnyProp {
 }
 
 describe('unplugin — JS transform only', () => {
-    it('does not register virtual-module hooks (CSS is collected elsewhere)', () => {
+    it('does not register virtual-module hooks (the CSS loader compiles the source)', () => {
         const hooks = getHooks();
         expect(hooks.resolveId).toBeUndefined();
         expect(hooks.load).toBeUndefined();
@@ -87,18 +87,27 @@ describe('unplugin — JS transform only', () => {
             expect(out).toBeNull();
         });
 
-        it('rewrites css() to a string literal and emits no CSS import', () => {
-            const hooks = getHooks();
+        it('rewrites css() and imports the module CSS as a CSS file keyed by the source', () => {
+            const hooks = getHooks({ root: '/repo' });
             const ctx = makeCtx();
             const src = [
                 `import { css } from '@vapor-ui/style-macro';`,
                 `const cls = css({ padding: '$space-400' });`,
             ].join('\n');
-            const out = callHook(hooks.transform, ctx, src, '/src/A.tsx');
-            expect(out).not.toBeNull();
-            expect(out.code).not.toMatch(/import\s+["'][^"']*\.css["']/);
+            const out = callHook(hooks.transform, ctx, src, '/repo/src/A.tsx');
             expect(out.code).toMatch(/const cls = 'cls_[A-Za-z0-9]+'/);
-            expect(out.code).toContain(`import { css } from '@vapor-ui/style-macro';`);
+            // 실제 .css 리소스라 Next 의 RSC CSS 수집·앱 CSS 규칙이 그대로 인식한다.
+            expect(out.code).toMatch(
+                /import '@vapor-ui\/style-macro\/module\.vapor\.css\?vapor-src=src%2FA\.tsx\.vapor\.css';/,
+            );
+        });
+
+        it('adds no CSS import when the module emits no rules', () => {
+            const hooks = getHooks();
+            const ctx = makeCtx();
+            const src = `import { css } from '@vapor-ui/style-macro';\nimport { b } from './b';\nexport const c = css(b);\n`;
+            const out = callHook(hooks.transform, ctx, src, '/src/A.tsx');
+            expect(out?.code ?? '').not.toContain('vapor.css');
         });
 
         it('calls this.error and never returns when transform reports build errors', () => {

@@ -11,6 +11,15 @@ import { type ResolvedOptions, scopeOf } from './_options';
  */
 export const MODULE_CSS_SUFFIX = '.vapor.css';
 
+/** webpack 모듈 CSS 쿼리 키. 값은 root 기준 모듈 CSS 경로(`src/a.tsx.vapor.css`, URI 인코딩). */
+export const VAPOR_SRC_QUERY = 'vapor-src';
+
+/**
+ * webpack 모듈 CSS 자리표시 파일. 절대 경로 대신 패키지 specifier 로 넣어 빌드 캐시·출력이
+ * 설치 경로에 묶이지 않게 한다 (소스가 `@vapor-ui/style-macro` 를 import 하므로 resolve 된다).
+ */
+export const MODULE_CSS_PLACEHOLDER = '@vapor-ui/style-macro/module.vapor.css';
+
 /** 모듈 CSS 앞의 레이어 순서 선언. 순서는 `@vapor-ui/core/layers.css` 한 곳에서만 정한다. */
 const LAYER_STATEMENT_RE = /^@layer [^;{]+;\n/;
 
@@ -26,6 +35,15 @@ export function isModuleCss(id: string): boolean {
 export function sourceOfModuleCss(id: string): string {
     return id.split('?')[0]!.slice(0, -MODULE_CSS_SUFFIX.length);
 }
+
+/**
+ * 모듈 CSS 를 가리킬 import 경로. 번들러마다 다르다 — 기본은 가상 파일(`./a.tsx.vapor.css`,
+ * Vite·rolldown), webpack 은 자리표시 CSS 파일 + 소스 쿼리
+ * (`@vapor-ui/style-macro/module.vapor.css?vapor-src=src%2Fa.tsx.vapor.css`), Turbopack 은 쿼리(`./a.tsx?vapor-css`).
+ */
+export type CssImportOf = (cssName: string, filename: string) => string;
+
+const defaultCssImport: CssImportOf = (cssName) => `./${cssName}`;
 
 export interface CompiledModule {
     /** 변환된 JS. CSS 가 있으면 `import './<file>.vapor.css'` 가 마지막 import 뒤에 들어 있다. */
@@ -45,6 +63,7 @@ export function compileModule(
     code: string,
     id: string,
     opts: Pick<ResolvedOptions, 'include' | 'hash' | 'layer' | 'root'>,
+    cssImportOf: CssImportOf = defaultCssImport,
 ): CompiledModule | null {
     const filename = id.split('?')[0]!;
     if (!opts.include(filename) || !code.includes('@vapor-ui/style-macro')) return null;
@@ -56,7 +75,7 @@ export function compileModule(
         hash: opts.hash,
         layer: opts.layer,
         scope: scopeOf(opts.root, filename),
-        cssImport: `./${cssName}`,
+        cssImport: cssImportOf(cssName, filename),
     });
     if (result.errors.length) {
         throw new Error(result.errors.map((e) => formatBuildError(e, code, filename)).join('\n\n'));

@@ -20,15 +20,15 @@ describe('turbopack', () => {
         expect(out).toBe(src);
     });
 
-    it('rewrites css() to a string literal without any CSS import', async () => {
+    it('rewrites css() and imports the module CSS through the ?vapor-css query', async () => {
         const ctx = mkCtx('/src/A.tsx');
         const src = [
             `import { css } from '@vapor-ui/style-macro';`,
             `const cls = css({ padding: '$space-400' });`,
         ].join('\n');
         const out = await run(ctx, src);
-        expect(out).not.toContain('data:text/css');
         expect(out).toMatch(/const cls = 'cls_[A-Za-z0-9]+'/);
+        expect(out).toContain(`import './A.tsx?vapor-css';`);
     });
 
     it('honours include/exclude globs passed as loader options', async () => {

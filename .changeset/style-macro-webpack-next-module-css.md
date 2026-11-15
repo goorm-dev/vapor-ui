@@ -1,0 +1,5 @@
+---
+'@vapor-ui/style-macro': minor
+---
+
+**Breaking:** the webpack and Next.js (webpack and Turbopack) integrations now emit CSS per module instead of injecting one collected sheet into the CSS entry. With webpack, each module that uses `css()` imports `@vapor-ui/style-macro/module.vapor.css?vapor-src=<module>` and the plugin's pre-loader replaces it with that module's CSS, so the app's own `.css` rules (css-loader + style-loader / mini-css-extract-plugin, `experiments.css`, Next's built-in CSS) handle it. With Turbopack, each module imports `./<file>?vapor-css` and `vaporNextPlugin` adds a query-conditioned CSS rule for it; the app's `*.css` rule is no longer touched. In Next, server and client component styles are split per route and update in dev without a reload. `@import '@vapor-ui/core/layers.css'` / `@vapor-utilities;` are no longer insertion points for these bundlers; keep importing `layers.css` first so the layer order is registered first. `css-loader` now compiles a source module to its CSS.

@@ -2,8 +2,8 @@ import { createRequire } from 'node:module';
 
 import { type ColorSchemeScriptOpts, buildColorSchemeScript } from '~/helpers/fouc-script';
 
-import { warnIfNeverReplaced } from './_collect';
 import unplugin from './_factory';
+import { MODULE_CSS_PLACEHOLDER, VAPOR_SRC_QUERY } from './_module-css';
 import { type VaporPluginOptions, resolveOptions } from './_options';
 
 export type { VaporPluginOptions };
@@ -14,9 +14,9 @@ interface WebpackPluginShape {
 
 interface MinimalCompiler {
     context?: string;
+    options: { module: { rules: unknown[] }; resolve: { alias?: unknown } };
     hooks: {
         compilation: { tap: (name: string, fn: (c: unknown) => void) => void };
-        done: { tap: (name: string, fn: () => void) => void };
     };
 }
 
@@ -67,14 +67,77 @@ function tapHtmlFouc(compiler: unknown, injectColorScheme: false | ColorSchemeSc
     });
 }
 
+const MODULE_CSS_RE = /module\.vapor\.css$/;
+const MODULE_CSS_QUERY_RE = new RegExp(`${VAPOR_SRC_QUERY}=`);
+
+/** loader 에 넘길 옵션. 직렬화 가능한 값만 (Turbopack loader 와 같은 형태). */
+export function loaderOptions(opts: VaporPluginOptions, root?: string): VaporPluginOptions {
+    const { include, exclude, hash, layer } = opts;
+    return Object.fromEntries(
+        Object.entries({ include, exclude, root: opts.root ?? root, hash, layer }).filter(
+            ([, v]) => v !== undefined,
+        ),
+    );
+}
+
+export function resolveCssLoader(): string {
+    const modulePath = typeof __filename !== 'undefined' ? __filename : import.meta.url;
+    return createRequire(modulePath).resolve('@vapor-ui/style-macro/css-loader');
+}
+
 /**
- * Webpack plugin for @vapor-ui/style-macro — JS 변환 + FOUC guard.
- * CSS 는 `@vapor-ui/style-macro/css-loader` (Next 는 자동 배선) 또는
- * `@vapor-ui/style-macro/postcss` 가 `@vapor-utilities;` 또는 `layers.css` import 자리에서 수집한다.
+ * 모듈 CSS 요청(`@vapor-ui/style-macro/module.vapor.css?vapor-src=…`)에 `css-loader` 를 붙이는 규칙. 앱의
+ * `.css` 규칙도 함께 걸리고, `enforce: 'pre'` 라 이 loader 가 먼저 돌아 쿼리가 가리키는 소스의
+ * CSS 를 넘긴다. 패키지가 `sideEffects` 로 자리표시 파일을 지정하지만 규칙에도 명시한다.
+ */
+export function moduleCssRule(opts: VaporPluginOptions, root?: string) {
+    return {
+        test: MODULE_CSS_RE,
+        resourceQuery: MODULE_CSS_QUERY_RE,
+        enforce: 'pre' as const,
+        sideEffects: true,
+        use: [{ loader: resolveCssLoader(), options: loaderOptions(opts, root) }],
+    };
+}
+
+/**
+ * 모듈 CSS 규칙과 자리표시 specifier alias 를 컴파일러 설정에 넣는다.
+ *
+ * alias 가 필요한 이유: enhanced-resolve 는 `exports` 를 해석할 때 쿼리까지 subpath 로 보고
+ * `./*` 패턴에 맞춰 버린다 (`./dist/plugins/module.vapor.css?…mjs`). alias 는 exports 보다 먼저
+ * 적용되고 쿼리를 보존한다. `$` (객체) / `onlyModule` (배열)로 정확히 이 요청만 바꾼다.
+ */
+export function applyModuleCss(compiler: MinimalCompiler, opts: VaporPluginOptions): void {
+    compiler.options.module.rules.push(moduleCssRule(opts, compiler.context));
+
+    const file = resolvePlaceholder();
+    const resolveOpts = compiler.options.resolve;
+    if (Array.isArray(resolveOpts.alias)) {
+        resolveOpts.alias.push({ name: MODULE_CSS_PLACEHOLDER, alias: file, onlyModule: true });
+    } else {
+        resolveOpts.alias = {
+            ...(resolveOpts.alias as Record<string, unknown> | undefined),
+            [`${MODULE_CSS_PLACEHOLDER}$`]: file,
+        };
+    }
+}
+
+function resolvePlaceholder(): string {
+    const modulePath = typeof __filename !== 'undefined' ? __filename : import.meta.url;
+    return createRequire(modulePath).resolve(MODULE_CSS_PLACEHOLDER);
+}
+
+/**
+ * Webpack plugin for @vapor-ui/style-macro (webpack 5).
+ *
+ * `css()` 를 쓰는 모듈마다 자기 CSS 를 import 한다 (`module.vapor.css?vapor-src=…`). 이 요청은
+ * 앱의 `.css` 규칙(css-loader + style-loader / mini-css-extract-plugin)으로 처리되므로 앱에
+ * `.css` 규칙이 있어야 한다. 레이어 순서는 앱 CSS 진입점에서 `@vapor-ui/core/layers.css` 를
+ * 모든 `@vapor-ui/*` import 보다 먼저 import 해 고정한다.
  *
  *     // webpack.config.js
- *     import vaporStyle from '@vapor-ui/style-macro/webpack';
- *     module.exports = { plugins: [vaporStyle()] };
+ *     import { vaporWebpackPlugin } from '@vapor-ui/style-macro/webpack';
+ *     module.exports = { plugins: [vaporWebpackPlugin()] };
  */
 export function vaporWebpackPlugin(opts: VaporPluginOptions = {}): WebpackPluginShape {
     const resolved = resolveOptions(opts);
@@ -82,12 +145,9 @@ export function vaporWebpackPlugin(opts: VaporPluginOptions = {}): WebpackPlugin
 
     return {
         apply(compiler) {
+            applyModuleCss(compiler as MinimalCompiler, opts);
             base.apply(compiler);
             tapHtmlFouc(compiler, resolved.injectColorScheme);
-            const c = compiler as MinimalCompiler;
-            c.hooks.done?.tap(TAP_NAME, () => {
-                warnIfNeverReplaced(opts, (m) => console.warn(m), { root: c.context });
-            });
         },
     };
 }

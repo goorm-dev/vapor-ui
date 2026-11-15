@@ -3,7 +3,9 @@
     "version": "0.0.0",
     "description": "Build-time atomic CSS-in-JS macro.",
     "license": "MIT",
-    "sideEffects": false,
+    "sideEffects": [
+        "./module.vapor.css"
+    ],
     "type": "module",
     "exports": {
         ".": {
@@ -36,13 +38,15 @@
                 "default": "./dist/runtime.cjs"
             }
         },
+        "./module.vapor.css": "./module.vapor.css",
         "./package.json": "./package.json"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.cts",
     "files": [
-        "dist"
+        "dist",
+        "module.vapor.css"
     ],
     "scripts": {
         "bench": "vitest bench --run",

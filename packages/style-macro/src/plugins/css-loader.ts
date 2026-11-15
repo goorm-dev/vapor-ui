@@ -1,27 +1,42 @@
-import { type CollectOptions, injectCss } from './_collect';
+import { readFileSync } from 'node:fs';
+import { isAbsolute, relative, resolve } from 'node:path';
 
-/** webpack / Turbopack 공용 CSS loader 컨텍스트 (사용하는 멤버만). */
+import { VAPOR_SRC_QUERY, compileModule, isModuleCss, sourceOfModuleCss } from './_module-css';
+import { type VaporPluginOptions, resolveOptions } from './_options';
+
+/** webpack / Turbopack 공용 loader 컨텍스트 (사용하는 멤버만). */
 export interface CssLoaderContext {
     resourcePath: string;
+    resourceQuery?: string;
     rootContext?: string;
-    getOptions?: () => CollectOptions;
-    addDependency(file: string): void;
-    addContextDependency(dir: string): void;
+    getOptions?: () => VaporPluginOptions;
+    addDependency?(file: string): void;
 }
 
 /**
- * 수집 결과를 CSS 에 삽입하는 loader. `@tailwindcss/turbopack` 과 같은 자리
- * (`turbopack.rules['*.css']`, Next webpack CSS rule 체인)에서 동작한다.
+ * 원본 소스 모듈을 받아 그 모듈의 CSS 를 돌려주는 loader. JS 쪽 변환이 넣은 import 가
+ * 이 loader 를 거쳐 CSS 모듈이 된다.
+ * - webpack: `import '@vapor-ui/style-macro/module.vapor.css?vapor-src=src%2Fa.tsx.vapor.css'` — 자리표시 파일 대신
+ *   쿼리가 가리키는 소스(root 기준)를 읽는다. `enforce: 'pre'` 규칙이라 앱의 CSS loader 보다
+ *   먼저 실행된다.
+ * - Turbopack: `import './a.tsx?vapor-css'` — 쿼리 조건 규칙 + `as: '*.css'`.
  *
- * 삽입 지점은 `@vapor-utilities;` 또는 `@import '@vapor-ui/core/layers.css'` 가 있는 파일.
- * `layers.css` 자체에는 마커가 없으므로 import 하는 쪽 파일에서 처리한다.
+ * JS 변환과 같은 옵션·해시로 컴파일하므로 class 이름이 일치한다. 규칙이 없으면 빈 시트.
  */
-export default function vaporStyleCssLoader(this: CssLoaderContext, source: string): string {
-    const opts = this.getOptions ? this.getOptions() : {};
-    const result = injectCss(source, opts, { root: this.rootContext });
-    if (!result) return source;
+export default function vaporCssLoader(this: CssLoaderContext, source: string): string {
+    const opts = resolveOptions(this.getOptions ? this.getOptions() : {}, {
+        root: this.rootContext,
+    });
+    const src = new URLSearchParams(this.resourceQuery?.slice(1) ?? '').get(VAPOR_SRC_QUERY);
+    if (src === null) return compileModule(source, this.resourcePath, opts)?.css ?? '';
 
-    for (const file of result.files) this.addDependency(file);
-    this.addContextDependency(result.root);
-    return result.css;
+    const file = resolve(opts.root, sourceOfModuleCss(src));
+    const rel = relative(opts.root, file);
+    if (!isModuleCss(src) || isAbsolute(src) || rel.startsWith('..') || isAbsolute(rel)) {
+        throw new Error(
+            `[@vapor-ui/style-macro] Invalid ?${VAPOR_SRC_QUERY}=${src}: expected a module CSS path inside ${opts.root}.`,
+        );
+    }
+    this.addDependency?.(file);
+    return compileModule(readFileSync(file, 'utf8'), file, opts)?.css ?? '';
 }

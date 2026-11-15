@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { vaporNextPlugin } from './next';
 import { type VaporRolldownOptions, vaporRolldownPlugin } from './rolldown';
 import { vaporVitePlugin } from './vite';
-import { vaporWebpackPlugin } from './webpack';
+import { applyModuleCss, moduleCssRule, vaporWebpackPlugin } from './webpack';
 
 describe('vite adapter — FOUC plugin composition', () => {
     function foucOf(plugins: Array<{ name: string; transformIndexHtml?: unknown }>) {
@@ -89,6 +89,56 @@ describe('adapters return plugin objects', () => {
         const plugin = vaporWebpackPlugin() as { apply?: unknown };
         expect(plugin).toBeTypeOf('object');
         expect(typeof plugin.apply).toBe('function');
+    });
+});
+
+describe('webpack() adapter — module CSS rule', () => {
+    it('aliases the placeholder specifier to the real file (exports patterns would swallow the query)', () => {
+        const compiler = {
+            context: '/repo',
+            options: { module: { rules: [] as unknown[] }, resolve: {} as { alias?: unknown } },
+            hooks: { compilation: { tap: () => {} } },
+        };
+        applyModuleCss(compiler, {});
+        expect(compiler.options.resolve.alias).toEqual({
+            '@vapor-ui/style-macro/module.vapor.css$': expect.stringMatching(
+                /style-macro[\\/]module\.vapor\.css$/,
+            ),
+        });
+        expect(compiler.options.module.rules).toHaveLength(1);
+    });
+
+    it('keeps an existing array alias config', () => {
+        const compiler = {
+            context: '/repo',
+            options: {
+                module: { rules: [] as unknown[] },
+                resolve: { alias: [{ name: 'x', alias: 'y' }] as unknown },
+            },
+            hooks: { compilation: { tap: () => {} } },
+        };
+        applyModuleCss(compiler, {});
+        expect(compiler.options.resolve.alias).toEqual([
+            { name: 'x', alias: 'y' },
+            {
+                name: '@vapor-ui/style-macro/module.vapor.css',
+                alias: expect.stringMatching(/module\.vapor\.css$/),
+                onlyModule: true,
+            },
+        ]);
+    });
+
+    it('runs the CSS loader first on module CSS requests', () => {
+        const rule = moduleCssRule({ layer: 'acme', injectColorScheme: false }, '/repo');
+        expect(rule).toMatchObject({
+            enforce: 'pre',
+            test: /module\.vapor\.css$/,
+            resourceQuery: /vapor-src=/,
+            sideEffects: true,
+        });
+        expect(rule.use[0]!.loader).toMatch(/css-loader\.[cm]?[jt]s$/);
+        // loader 옵션은 직렬화 가능한 값만 (Turbopack 과 같은 형태).
+        expect(rule.use[0]!.options).toEqual({ layer: 'acme', root: '/repo' });
     });
 });
 
@@ -391,7 +441,7 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
         expect(output.turbopack?.rules).toBeTypeOf('object');
     });
 
-    it('preserves the user-supplied webpack fn', () => {
+    it('preserves the user-supplied webpack fn and adds the vapor plugin', () => {
         const userWebpack = (cfg: unknown) => {
             const c = cfg as { plugins?: unknown[] };
             c.plugins ??= [];
@@ -401,20 +451,13 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
         const output = vaporNextPlugin({ mode: 'webpack' })<TestNextConfig>({
             webpack: userWebpack,
         });
-        const cssRule = { test: /\.css$/, use: ['next/dist/compiled/css-loader'] };
         const config: { plugins?: unknown[]; module: { rules: unknown[] } } = {
-            module: { rules: [{ oneOf: [cssRule] }] },
+            module: { rules: [] },
         };
-        const returned = output.webpack?.(config, {}) as { plugins?: unknown[] } | undefined;
+        const returned = output.webpack?.(config, { dir: '/repo' }) as
+            { plugins?: unknown[] } | undefined;
         expect(returned?.plugins).toContainEqual({ marker: 'user-plugin' });
-        // css-loader 체인 끝에 수집 loader 가 붙는다 (webpack 은 뒤에서 앞으로 실행).
-        const last = cssRule.use[cssRule.use.length - 1] as { loader?: string };
-        expect(String(last.loader ?? last)).toMatch(/css-loader\.[cm]?js$/);
-    });
-
-    it('throws when no Next.js CSS rule can be found (pipeline changed)', () => {
-        const output = vaporNextPlugin({ mode: 'webpack' })<TestNextConfig>({});
-        expect(() => output.webpack?.({ module: { rules: [] } }, {})).toThrow(/CSS loader rules/);
+        expect(returned?.plugins?.length).toBe(2);
     });
 
     it.skipIf(!turbopackBuilt)('merges into existing turbopack.rules without clobbering', () => {
@@ -422,12 +465,34 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
             turbopack: {
                 rules: {
                     '*.svg': { loaders: ['svg-loader'] },
+                    '*.css': { loaders: ['@tailwindcss/turbopack'], as: '*.css' },
                 },
             },
         });
         expect(output.turbopack?.rules?.['*.svg']).toEqual({ loaders: ['svg-loader'] });
-        const ruleKeys = Object.keys(output.turbopack?.rules ?? {});
-        expect(ruleKeys.length).toBeGreaterThan(1);
+        // 앱 CSS 규칙은 건드리지 않는다 (CSS 는 소스 모듈별로 나온다).
+        expect(output.turbopack?.rules?.['*.css']).toEqual({
+            loaders: ['@tailwindcss/turbopack'],
+            as: '*.css',
+        });
+    });
+
+    it.skipIf(!turbopackBuilt)('turbopack: JS loader without the query, CSS loader with it', () => {
+        const output = vaporNextPlugin({ mode: 'turbopack', layer: 'acme' })<TestNextConfig>({});
+        const rules = output.turbopack?.rules?.['**/*.{tsx,jsx,ts,js,mts,mjs,cts,cjs}'] as Array<{
+            condition: unknown;
+            loaders: Array<{ loader: string; options: Record<string, unknown> }>;
+            as?: string;
+        }>;
+        expect(rules).toHaveLength(2);
+        const [js, css] = rules;
+        expect(js!.condition).toEqual({ not: { query: /[?&]vapor-css(?=&|$)/ } });
+        expect(js!.loaders[0]!.loader).toMatch(/turbopack\.[cm]?js$/);
+        expect(js!.as).toBeUndefined();
+        expect(css!.condition).toEqual({ query: /[?&]vapor-css(?=&|$)/ });
+        expect(css!.loaders[0]!.loader).toMatch(/css-loader\.[cm]?js$/);
+        expect(css!.loaders[0]!.options).toMatchObject({ layer: 'acme' });
+        expect(css!.as).toBe('*.css');
     });
 
     it('mode: auto follows process.env.TURBOPACK', () => {

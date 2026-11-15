@@ -1,65 +1,66 @@
+import { relative } from 'node:path';
 import { createUnplugin } from 'unplugin';
 
-import { formatBuildError } from '~/compilers/code-frame';
-import { transform } from '~/compilers/transform';
-
-import { type ResolvedOptions, type VaporPluginOptions, resolveOptions, scopeOf } from './_options';
+import {
+    MODULE_CSS_PLACEHOLDER,
+    MODULE_CSS_SUFFIX,
+    VAPOR_SRC_QUERY,
+    compileModule,
+} from './_module-css';
+import { type ResolvedOptions, type VaporPluginOptions, resolveOptions, toPosix } from './_options';
 
 export type { VaporPluginOptions };
 
 /**
- * JS 변환만 담당하는 공용 unplugin. `css()` 호출을 class string 으로 치환한다.
- * CSS 는 여기서 방출하지 않는다 — 각 번들러의 CSS 파이프라인이 `@vapor-utilities;` 자리 또는
- * `@import '@vapor-ui/core/layers.css'` 가 있는 파일에 수집 결과를 넣는다 (`_collect.ts`).
+ * webpack 용 JS 변환. `css()` 를 class 로 바꾸고, CSS 를 만든 모듈에
+ * `import '@vapor-ui/style-macro/module.vapor.css?vapor-src=src%2Fa.tsx.vapor.css'` 를 넣는다. 쿼리 값도
+ * `.css` 로 끝나야 Next dev 가 이 모듈을 CSS import 로 보고 수정 시 스타일을 갱신한다
+ * (`mod.resource` 에 `/\.css$/` 검사).
  *
- * `root` 는 번들러가 알려주는 프로젝트 루트(Vite `config.root`, webpack `compiler.context`)
- * 로 늦게 확정되므로 옵션 해석을 첫 사용 시점까지 미룬다.
+ * 리소스가 실제 `.css` 파일이라 앱의 CSS 규칙(css-loader·mini-css-extract, Next 내장 CSS)을
+ * 그대로 타고, Next 의 RSC CSS 수집도 서버 컴포넌트의 CSS 로 인식한다. 소스마다 쿼리가 달라
+ * 모듈이 따로 생기고, `vaporWebpackPlugin` 의 `enforce: 'pre'` 규칙(`css-loader`)이 쿼리가
+ * 가리키는 소스를 CSS 로 컴파일한다. 소스 경로는 root 기준 상대 경로라 빌드 머신과 무관하다.
+ *
+ * `root` 는 webpack `compiler.context` 로 늦게 확정되므로 옵션 해석을 첫 사용 시점까지 미룬다.
  */
 export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
     const raw = rawOpts ?? {};
     let resolved: ResolvedOptions | null = null;
     const opts = (): ResolvedOptions => (resolved ??= resolveOptions(raw));
-    const setRoot = (root: string | undefined) => {
-        if (resolved || !root) return;
-        resolved = resolveOptions(raw, { root });
-    };
 
     return {
         name: 'vapor-style-macro',
         enforce: 'pre',
 
-        vite: {
-            configResolved(config: { root: string }) {
-                setRoot(config.root);
-            },
-        },
         webpack(compiler: { context?: string }) {
-            setRoot(compiler.context);
+            if (!resolved && compiler.context) {
+                resolved = resolveOptions(raw, { root: compiler.context });
+            }
         },
 
         transformInclude(id) {
-            return opts().include(id.split('?')[0]);
+            return opts().include(id.split('?')[0]!);
         },
 
         transform(code, id) {
-            const filename = id.split('?')[0];
-            const { hash, root } = opts();
-            const result = transform({
-                source: code,
-                filename,
-                hash,
-                scope: scopeOf(root, filename),
-            });
-
-            if (result.errors.length) {
-                const msg = result.errors
-                    .map((e) => formatBuildError(e, code, filename))
-                    .join('\n\n');
-                this.error(msg);
+            let compiled;
+            try {
+                compiled = compileModule(
+                    code,
+                    id,
+                    opts(),
+                    (_cssName, filename) =>
+                        `${MODULE_CSS_PLACEHOLDER}?${VAPOR_SRC_QUERY}=${encodeURIComponent(
+                            toPosix(relative(opts().root, filename)),
+                        )}${MODULE_CSS_SUFFIX}`,
+                );
+            } catch (e) {
+                this.error((e as Error).message);
                 return null;
             }
-
-            return result.code === code ? null : { code: result.code, map: null };
+            if (!compiled || compiled.code === code) return null;
+            return { code: compiled.code, map: null };
         },
     };
 });

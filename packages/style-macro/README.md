@@ -34,17 +34,19 @@ function Button() {
 번들러 config. 번들러마다 CSS 가 들어가는 방식이 다르다.
 
 - **Vite (7·8)** — `css()` 를 쓰는 모듈마다 가상 CSS 모듈(`<file>.vapor.css`)을 만들고, 그 모듈이 자기 CSS 를 import 한다 (Vanilla Extract 와 같은 모델). import 되지 않는 모듈의 CSS 는 번들에 들어가지 않고, dev 에서는 수정한 모듈의 CSS 만 HMR 로 바뀐다. 레이어 순서를 고정하려면 앱 CSS 진입점에서 `@vapor-ui/core/layers.css` 를 **모든 `@vapor-ui/*` import 보다 먼저** import 한다.
-- **webpack · Next · PostCSS** — 프로젝트 전체 룰이 시트 하나로 CSS 진입점에 들어간다. 삽입 지점은 둘 중 하나다.
+- **webpack 5** — 같은 모델. 모듈마다 `@vapor-ui/style-macro/module.vapor.css?vapor-src=<모듈 경로>` 를 import 하고, 플러그인이 등록한 loader 가 그 자리에 모듈 CSS 를 넣는다. 이 요청은 앱의 `.css` 규칙(css-loader + style-loader / mini-css-extract-plugin, 또는 `experiments.css`)으로 처리되므로 앱에 `.css` 규칙이 있어야 한다.
+- **Next (webpack · Turbopack)** — `vaporNextPlugin` 이 번들러를 감지해 배선한다. webpack 은 위와 같고, Turbopack 은 모듈마다 `./<file>?vapor-css` 를 import 하고 그 쿼리에 CSS loader 규칙(`as: '*.css'`)을 건다. 서버·클라이언트 컴포넌트 모두 라우트별 CSS 로 나뉘고 dev 에서 수정 즉시 반영된다. 레이어 순서는 루트 layout 이 import 하는 CSS 에서 `@vapor-ui/core/layers.css` 를 먼저 import 해 고정한다.
+- **PostCSS** — 프로젝트 전체 룰이 시트 하나로 CSS 진입점에 들어간다. 삽입 지점은 둘 중 하나다.
     1. `@import '@vapor-ui/core/layers.css'` — 이 import 가 있는 파일 끝에 붙는다. 기본 사용법 그대로면 추가 설정이 없다.
     2. `@vapor-utilities;` — 직접 적은 자리에 치환된다. `layers.css` 를 생략하고 레이어 순서를 직접 선언할 때, 또는 PostCSS 에서 postcss-import 가 이 플러그인보다 먼저 돌 때 쓴다.
 
-    둘 다 없으면 스타일이 방출되지 않는다 (webpack 은 빌드 끝에, PostCSS 는 Vapor 레이어 순서를 선언한 파일에서 경고). 마커는 번들러가 직접 받는 CSS 진입점에 적는다 — `@import` 된 partial 안에 두면 보이지 않는다. 여러 파일에 적으면 시트가 그 수만큼 중복된다.
+    둘 다 없으면 스타일이 방출되지 않는다 (Vapor 레이어 순서를 선언한 파일에서 경고). 마커는 번들러가 직접 받는 CSS 진입점에 적는다 — `@import` 된 partial 안에 두면 보이지 않는다. 여러 파일에 적으면 시트가 그 수만큼 중복된다.
 
 같은 레이어 안에서 서로 다른 모듈의 규칙끼리는 CSS 로드 순서가 승자를 정한다. 한 모듈 안의 `css()` 는 그 모듈이 import 한 라이브러리 CSS 뒤에 오므로 라이브러리 컴포넌트에 넘긴 override 가 이긴다. override 를 다른 모듈(공용 styles 파일, 다른 청크)에 두면 순서가 보장되지 않는다 — 라이브러리는 앱보다 앞선 레이어를 써야 한다 ([라이브러리 배포](#라이브러리-배포)).
 
 ```css
 /* src/styles.css */
-@import '@vapor-ui/core/layers.css'; /* 레이어 순서 (webpack·Next·PostCSS 는 삽입 트리거) */
+@import '@vapor-ui/core/layers.css'; /* 레이어 순서 (PostCSS 는 삽입 트리거) */
 @import '@vapor-ui/core/styles.css';
 ```
 
@@ -73,17 +75,17 @@ export default withVapor(nextConfig);
 
 ## Entry points
 
-| Subpath                             | 용도                                                                                                                                              |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@vapor-ui/style-macro`             | 소비자용 `css()` + `buildColorSchemeScript()` + 타입                                                                                              |
-| `@vapor-ui/style-macro/vite`        | Vite plugin                                                                                                                                       |
-| `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                                                                                                    |
-| `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                                                                                                    |
-| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin — 라이브러리 빌드. 컴포넌트별 CSS 를 배포 ([라이브러리 배포](#라이브러리-배포))                                                   |
-| `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                                                                                                       |
-| `@vapor-ui/style-macro/css-loader`  | webpack / Turbopack CSS loader — `@vapor-utilities;` 치환 (next plugin 이 내부 사용)                                                              |
-| `@vapor-ui/style-macro/postcss`     | PostCSS 플러그인 — 전용 어댑터 없는 번들러(rolldown, Parcel, 순수 webpack)용. postcss-import 보다 앞에 등록. Next 에서는 불필요, Turbopack 비호환 |
-| `@vapor-ui/style-macro/__runtime__` | **내부용** — plugin 이 소비자 코드에 자동 inject. 직접 import 금지                                                                                |
+| Subpath                             | 용도                                                                                                                         |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `@vapor-ui/style-macro`             | 소비자용 `css()` + `buildColorSchemeScript()` + 타입                                                                         |
+| `@vapor-ui/style-macro/vite`        | Vite plugin                                                                                                                  |
+| `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                                                                               |
+| `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                                                                               |
+| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin — 라이브러리 빌드. 컴포넌트별 CSS 를 배포 ([라이브러리 배포](#라이브러리-배포))                              |
+| `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                                                                                  |
+| `@vapor-ui/style-macro/css-loader`  | webpack / Turbopack CSS loader — 소스 모듈을 모듈 CSS 로 컴파일 (webpack·next plugin 이 내부 사용)                           |
+| `@vapor-ui/style-macro/postcss`     | PostCSS 플러그인 — 전용 어댑터 없는 번들러(Parcel 등)용. postcss-import 보다 앞에 등록. Next 에서는 불필요, Turbopack 비호환 |
+| `@vapor-ui/style-macro/__runtime__` | **내부용** — plugin 이 소비자 코드에 자동 inject. 직접 import 금지                                                           |
 
 ## Plugin 옵션
 
