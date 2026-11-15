@@ -63,9 +63,8 @@ export function vaporNextPlugin(
         if (useWebpack) {
             const originalWebpack = (nextConfig as NextConfigMutable).webpack;
             merged.webpack = (config: AnyProp, ctx: AnyProp) => {
-                const root = unpluginOpts.root ?? (ctx?.dir as string | undefined);
                 config.plugins ??= [];
-                config.plugins.push(vaporWebpackPlugin({ ...unpluginOpts, root }));
+                config.plugins.push(vaporWebpackPlugin(unpluginOpts));
                 return originalWebpack ? originalWebpack(config, ctx) : config;
             };
         }

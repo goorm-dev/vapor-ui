@@ -146,7 +146,7 @@ describe('webpack() adapter — module CSS rule', () => {
     });
 
     it('runs the CSS loader first on module CSS requests', () => {
-        const rule = moduleCssRule({ layer: 'acme', injectColorScheme: false }, '/repo');
+        const rule = moduleCssRule({ layer: 'acme', injectColorScheme: false });
         expect(rule).toMatchObject({
             enforce: 'pre',
             test: /module\.vapor\.css$/,
@@ -155,7 +155,9 @@ describe('webpack() adapter — module CSS rule', () => {
         });
         expect(rule.use[0]!.loader).toMatch(/css-loader\.[cm]?[jt]s$/);
         // loader 옵션은 직렬화 가능한 값만 (Turbopack 과 같은 형태).
-        expect(rule.use[0]!.options).toEqual({ layer: 'acme', root: '/repo' });
+        // root 는 넘기지 않는다 — loader 가 번들러의 rootContext 를 쓴다 (Vanilla Extract 와 같음).
+        expect(rule.use[0]!.options).toEqual({ layer: 'acme' });
+        expect(moduleCssRule({ root: '/custom' }).use[0]!.options).toEqual({ root: '/custom' });
     });
 });
 
@@ -460,6 +462,25 @@ describe('next() adapter — curried API: vaporNextPlugin(opts)(config)', () => 
             { plugins?: unknown[] } | undefined;
         expect(returned?.plugins).toContainEqual({ marker: 'user-plugin' });
         expect(returned?.plugins?.length).toBe(2);
+    });
+
+    it('does not inject Next ctx.dir as root (webpack compiler.context is used)', () => {
+        const output = vaporNextPlugin({ mode: 'webpack' })<TestNextConfig>({});
+        const config: {
+            plugins: Array<{ apply(c: unknown): void }>;
+            module: { rules: unknown[] };
+        } = { plugins: [], module: { rules: [] } };
+        output.webpack?.(config, { dir: '/repo' });
+        const rules: Array<{ test?: unknown; use?: Array<{ options: Record<string, unknown> }> }> =
+            [];
+        config.plugins[0]!.apply({
+            context: '/repo',
+            options: { module: { rules }, resolve: {} },
+            hooks: new Proxy({}, { get: () => ({ tap: () => {}, tapAsync: () => {} }) }),
+            webpack: { version: '5.0.0' },
+        });
+        const cssRule = rules.find((r) => String(r.test).includes('vapor'));
+        expect(cssRule!.use![0]!.options).not.toHaveProperty('root');
     });
 
     it('merges into existing turbopack.rules without clobbering', () => {

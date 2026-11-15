@@ -72,13 +72,14 @@ function tapHtmlFouc(compiler: unknown, injectColorScheme: false | ColorSchemeSc
 const MODULE_CSS_RE = /module\.vapor\.css$/;
 const MODULE_CSS_QUERY_RE = new RegExp(`${VAPOR_SRC_QUERY}=`);
 
-/** loader 에 넘길 옵션. 직렬화 가능한 값만 (Turbopack loader 와 같은 형태). */
-export function loaderOptions(opts: VaporPluginOptions, root?: string): VaporPluginOptions {
-    const { include, exclude, hash, layer } = opts;
+/**
+ * loader 에 넘길 옵션. 직렬화 가능한 값만 (Turbopack loader 와 같은 형태). `root` 는 사용자가
+ * 지정했을 때만 넘긴다 — 아니면 loader 가 번들러의 `rootContext` 를 쓴다 (Vanilla Extract 와 같음).
+ */
+export function loaderOptions(opts: VaporPluginOptions): VaporPluginOptions {
+    const { include, exclude, root, hash, layer } = opts;
     return Object.fromEntries(
-        Object.entries({ include, exclude, root: opts.root ?? root, hash, layer }).filter(
-            ([, v]) => v !== undefined,
-        ),
+        Object.entries({ include, exclude, root, hash, layer }).filter(([, v]) => v !== undefined),
     );
 }
 
@@ -101,13 +102,13 @@ export function resolveCssLoader(): string {
  * `.css` 규칙도 함께 걸리고, `enforce: 'pre'` 라 이 loader 가 먼저 돌아 쿼리가 가리키는 소스의
  * CSS 를 넘긴다. 패키지가 `sideEffects` 로 자리표시 파일을 지정하지만 규칙에도 명시한다.
  */
-export function moduleCssRule(opts: VaporPluginOptions, root?: string) {
+export function moduleCssRule(opts: VaporPluginOptions) {
     return {
         test: MODULE_CSS_RE,
         resourceQuery: MODULE_CSS_QUERY_RE,
         enforce: 'pre' as const,
         sideEffects: true,
-        use: [{ loader: resolveCssLoader(), options: loaderOptions(opts, root) }],
+        use: [{ loader: resolveCssLoader(), options: loaderOptions(opts) }],
     };
 }
 
@@ -119,7 +120,7 @@ export function moduleCssRule(opts: VaporPluginOptions, root?: string) {
  * 적용되고 쿼리를 보존한다. `$` (객체) / `onlyModule` (배열)로 정확히 이 요청만 바꾼다.
  */
 export function applyModuleCss(compiler: MinimalCompiler, opts: VaporPluginOptions): void {
-    compiler.options.module.rules.push(moduleCssRule(opts, compiler.context));
+    compiler.options.module.rules.push(moduleCssRule(opts));
 
     const file = resolvePlaceholder();
     const resolveOpts = compiler.options.resolve;
