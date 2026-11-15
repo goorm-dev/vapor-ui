@@ -31,16 +31,20 @@ function Button() {
 }
 ```
 
-번들러 config. 프로젝트 전체 룰은 정렬된 시트 하나로 CSS 진입점에 들어간다. 삽입 지점은 둘 중 하나다.
+번들러 config. 번들러마다 CSS 가 들어가는 방식이 다르다.
 
-1. `@import '@vapor-ui/core/layers.css'` — 이 import 가 있는 파일 끝에 붙는다. 기본 사용법 그대로면 추가 설정이 없다.
-2. `@vapor-utilities;` — 직접 적은 자리에 치환된다. `layers.css` 를 생략하고 레이어 순서를 직접 선언할 때, 또는 PostCSS 에서 postcss-import 가 이 플러그인보다 먼저 돌 때 쓴다.
+- **Vite (7·8)** — `css()` 를 쓰는 모듈마다 가상 CSS 모듈(`<file>.vapor.css`)을 만들고, 그 모듈이 자기 CSS 를 import 한다 (Vanilla Extract 와 같은 모델). import 되지 않는 모듈의 CSS 는 번들에 들어가지 않고, dev 에서는 수정한 모듈의 CSS 만 HMR 로 바뀐다. 레이어 순서를 고정하려면 앱 CSS 진입점에서 `@vapor-ui/core/layers.css` 를 **모든 `@vapor-ui/*` import 보다 먼저** import 한다.
+- **webpack · Next · PostCSS** — 프로젝트 전체 룰이 시트 하나로 CSS 진입점에 들어간다. 삽입 지점은 둘 중 하나다.
+    1. `@import '@vapor-ui/core/layers.css'` — 이 import 가 있는 파일 끝에 붙는다. 기본 사용법 그대로면 추가 설정이 없다.
+    2. `@vapor-utilities;` — 직접 적은 자리에 치환된다. `layers.css` 를 생략하고 레이어 순서를 직접 선언할 때, 또는 PostCSS 에서 postcss-import 가 이 플러그인보다 먼저 돌 때 쓴다.
 
-둘 다 없으면 스타일이 방출되지 않는다 (Vite/webpack 은 빌드 끝에, PostCSS 는 Vapor 레이어 순서를 선언한 파일에서 경고). 마커는 번들러가 직접 받는 CSS 진입점에 적는다 — `@import` 된 partial 안에 두면 보이지 않는다. 여러 파일에 적으면 시트가 그 수만큼 중복된다.
+    둘 다 없으면 스타일이 방출되지 않는다 (webpack 은 빌드 끝에, PostCSS 는 Vapor 레이어 순서를 선언한 파일에서 경고). 마커는 번들러가 직접 받는 CSS 진입점에 적는다 — `@import` 된 partial 안에 두면 보이지 않는다. 여러 파일에 적으면 시트가 그 수만큼 중복된다.
+
+같은 레이어 안에서 서로 다른 모듈의 규칙끼리는 CSS 로드 순서가 승자를 정한다. 한 모듈 안의 `css()` 는 그 모듈이 import 한 라이브러리 CSS 뒤에 오므로 라이브러리 컴포넌트에 넘긴 override 가 이긴다. override 를 다른 모듈(공용 styles 파일, 다른 청크)에 두면 순서가 보장되지 않는다 — 라이브러리는 앱보다 앞선 레이어를 써야 한다 ([라이브러리 배포](#라이브러리-배포)).
 
 ```css
 /* src/styles.css */
-@import '@vapor-ui/core/layers.css'; /* 삽입 트리거 */
+@import '@vapor-ui/core/layers.css'; /* 레이어 순서 (webpack·Next·PostCSS 는 삽입 트리거) */
 @import '@vapor-ui/core/styles.css';
 ```
 
@@ -123,7 +127,7 @@ export default {
 { "sideEffects": ["**/*.css"] }
 ```
 
-- `css()` 를 쓰는 모듈마다 `<file>.vapor.css` 를 만들고, 그 모듈의 출력 파일이 import 하게 한다 (ESM `import`, CJS `require`). Vanilla Extract rollup plugin 과 같은 구조라 `preserveModules` 출력이 필요하다.
+- `css()` 를 쓰는 모듈마다 `<file>.vapor.css` (`<file>` 은 확장자 포함, 예: `button.tsx.vapor.css`)를 만들고, 그 모듈의 출력 파일이 import 하게 한다 (ESM `import`, CJS `require`). Vanilla Extract rollup plugin 과 같은 구조라 `preserveModules` 출력이 필요하다.
 - 레이어 순서 선언(`@layer x;`)은 넣지 않는다. 순서는 소비자의 CSS 엔트리(`@vapor-ui/core/layers.css` 등)가 정한다.
 - class 이름 해시에는 가장 가까운 `package.json` 의 `name` 과 그 패키지 기준 상대 경로가 들어간다. 다른 패키지와 class 가 겹치지 않는다.
 - CJS 소비자는 서브패스(`acme-ui/button`)로 가져와야 컴포넌트 단위로 CSS 가 들어간다. CJS 루트 진입점은 모든 컴포넌트를 `require` 해 번들러가 걸러내지 못한다.

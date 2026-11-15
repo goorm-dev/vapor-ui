@@ -13,7 +13,7 @@ const inputs = generateInputs([
 ]);
 
 /**
- * `css()` 를 class 로 바꾸고 모듈마다 `<file>.vapor.css` 를 import 하게 한다 (ESM `import`,
+ * `css()` 를 class 로 바꾸고 모듈마다 `<file>.tsx.vapor.css` 를 import 하게 한다 (ESM `import`,
  * CJS `require`). CSS 위치는 `assetFileNames` 가 소스 옆으로 정하고, `preserveModules` 출력과
  * `sideEffects: ["**\/*.css"]` 덕분에 소비자는 import 한 컴포넌트의 CSS 만 가져간다.
  */

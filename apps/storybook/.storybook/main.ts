@@ -84,9 +84,11 @@ const config: StorybookConfig = {
             },
 
             plugins: [
+                // core 는 css() 를 쓰지 않는다. composites 소스는 배포물과 같은 레이어로 컴파일한다.
                 vaporVitePlugin({
-                    include: ['../../packages/core/src/**', '../../packages/composites/src/**'],
-                    exclude: ['**/*.test.*', '**/*.css.ts'],
+                    include: ['../../packages/composites/src/**'],
+                    exclude: ['**/*.test.*'],
+                    layer: 'composites',
                 }),
 
                 coreDistCssPassthrough,

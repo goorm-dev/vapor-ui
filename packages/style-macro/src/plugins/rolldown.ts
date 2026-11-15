@@ -1,16 +1,9 @@
-import { basename, dirname, extname, posix, relative, resolve } from 'node:path';
+import { dirname, posix, relative, resolve } from 'node:path';
 
-import { formatBuildError } from '~/compilers/code-frame';
-import { transform } from '~/compilers/transform';
-
-import { type VaporPluginOptions, resolveOptions, scopeOf, toPosix } from './_options';
+import { compileModule, isModuleCss } from './_module-css';
+import { type VaporPluginOptions, resolveOptions, toPosix } from './_options';
 
 export type { VaporPluginOptions };
-
-const CSS_SUFFIX = '.vapor.css';
-
-/** 모듈 CSS 앞에 붙는 레이어 순서 선언. 순서는 `@vapor-ui/core/layers.css` 한 곳에서만 정한다. */
-const LAYER_STATEMENT_RE = /^@layer [^;{]+;\n/;
 
 interface TransformContext {
     error(message: string): never;
@@ -68,7 +61,7 @@ interface RenderChunkContext {
  * `@vanilla-extract/rollup-plugin` 과 같은 구조로, 출력 파일 구성은 rolldown 설정이 정한다.
  *
  * 1. `transform` — `css()` 를 class 로 바꾸고, CSS 를 만든 모듈에 `import './<file>.vapor.css'`
- *    를 마지막 import 뒤에 넣는다.
+ *    를 마지막 import 뒤에 넣는다 (`<file>` 은 확장자 포함: `button.tsx.vapor.css`).
  * 2. `resolveId` — 그 import 를 external 모듈로 두고 CSS 를 `meta.css` 에 싣는다. id 는 `root`
  *    기준 상대 경로다 (절대 경로면 rolldown 이 출력 기준 경로로 바꿔 3 에서 찾지 못한다).
  * 3. `renderChunk` — 출력 chunk 가 import 하는 모듈 CSS 를 에셋으로 내보내고
@@ -106,34 +99,19 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
         },
 
         transform(this: TransformContext, code: string, id: string) {
-            const filename = id.split('?')[0]!;
-            if (!resolved.include(filename) || !code.includes('@vapor-ui/style-macro')) return null;
-
-            const cssFile = `${basename(filename, extname(filename))}${CSS_SUFFIX}`;
-            const result = transform({
-                source: code,
-                filename,
-                hash: resolved.hash,
-                layer: resolved.layer,
-                scope: scopeOf(resolved.root, filename),
-                cssImport: `./${cssFile}`,
-            });
-            if (result.errors.length) {
-                this.error(
-                    result.errors.map((e) => formatBuildError(e, code, filename)).join('\n\n'),
-                );
+            let compiled;
+            try {
+                compiled = compileModule(code, id, resolved);
+            } catch (e) {
+                this.error((e as Error).message);
             }
-            if (result.css) {
-                cssByPath.set(
-                    resolve(dirname(filename), cssFile),
-                    result.css.replace(LAYER_STATEMENT_RE, ''),
-                );
-            }
-            return result.code === code ? null : { code: result.code, map: null };
+            if (!compiled) return null;
+            if (compiled.css) cssByPath.set(compiled.cssPath, compiled.css);
+            return compiled.code === code ? null : { code: compiled.code, map: null };
         },
 
         resolveId(source: string, importer: string | undefined) {
-            if (!importer || !source.endsWith(CSS_SUFFIX)) return null;
+            if (!importer || !isModuleCss(source)) return null;
             const path = resolve(dirname(importer.split('?')[0]!), source);
             const css = cssByPath.get(path);
             if (css === undefined) return null;

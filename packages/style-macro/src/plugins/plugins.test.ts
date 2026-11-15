@@ -146,7 +146,7 @@ describe('rolldown() adapter — per-module CSS (library build)', () => {
         const { transform } = setup();
         const out = transform(SRC)!;
         expect(out.code).toMatch(
-            /import \{ Box \} from '\.\/box';\nimport '\.\/button\.vapor\.css';/,
+            /import \{ Box \} from '\.\/box';\nimport '\.\/button\.tsx\.vapor\.css';/,
         );
         expect(out.code).toMatch(/const cls = 'v\w+';/);
     });
@@ -162,9 +162,9 @@ describe('rolldown() adapter — per-module CSS (library build)', () => {
     it('resolves the module CSS to an external, root-relative id carrying the CSS in meta', () => {
         const { transform, resolveId } = setup();
         transform(SRC);
-        const r = resolveId('./button.vapor.css')!;
+        const r = resolveId('./button.tsx.vapor.css')!;
         // 절대 경로면 rolldown 이 출력 기준 경로로 바꿔 renderChunk 에서 getModuleInfo 가 null 이 된다.
-        expect(r.id).toBe('src/button/button.vapor.css');
+        expect(r.id).toBe('src/button/button.tsx.vapor.css');
         expect(r.external).toBe(true);
         expect(r.meta.css).toMatch(/\.v\w+ \{ gap: 0; \}/);
         expect(resolveId('./other.css')).toBeNull();
@@ -173,7 +173,7 @@ describe('rolldown() adapter — per-module CSS (library build)', () => {
     it('drops the per-file layer order statement (layers.css owns the order)', () => {
         const { transform, resolveId } = setup({ layer: 'composites' });
         transform(SRC);
-        const { css } = resolveId('./button.vapor.css')!.meta;
+        const { css } = resolveId('./button.tsx.vapor.css')!.meta;
         expect(css).toMatch(/^@layer composites \{/);
         expect(css).not.toMatch(/@layer composites;/);
     });
@@ -181,32 +181,32 @@ describe('rolldown() adapter — per-module CSS (library build)', () => {
     it('renderChunk emits the CSS as an asset named after its source and rewrites the import', () => {
         const { transform, resolveId, renderChunk } = setup();
         const cls = /const cls = '(v\w+)';/.exec(transform(SRC)!.code)![1];
-        resolveId('./button.vapor.css');
-        const { code, emitted } = renderChunk(`import "src/button/button.vapor.css";\n`, {
+        resolveId('./button.tsx.vapor.css');
+        const { code, emitted } = renderChunk(`import "src/button/button.tsx.vapor.css";\n`, {
             fileName: 'button/button.mjs',
-            imports: ['src/button/button.vapor.css', 'react'],
+            imports: ['src/button/button.tsx.vapor.css', 'react'],
         });
         expect(emitted).toEqual([
             {
                 type: 'asset',
-                name: 'button.vapor.css',
-                originalFileName: 'src/button/button.vapor.css',
+                name: 'button.tsx.vapor.css',
+                originalFileName: 'src/button/button.tsx.vapor.css',
                 source: expect.stringContaining(`.${cls} {`),
             },
         ]);
-        expect(code).toBe(`import "./button.vapor.css";\n`);
+        expect(code).toBe(`import "./button.tsx.vapor.css";\n`);
     });
 
     it('output location follows the asset file name rolldown picks (assetFileNames)', () => {
         const { transform, resolveId, renderChunk } = setup();
         transform(SRC);
-        resolveId('./button.vapor.css');
+        resolveId('./button.tsx.vapor.css');
         const { code } = renderChunk(
-            `require("src/button/button.vapor.css");\n`,
-            { fileName: 'button/button.cjs', imports: ['src/button/button.vapor.css'] },
-            () => 'assets/button.vapor-abc123.css',
+            `require("src/button/button.tsx.vapor.css");\n`,
+            { fileName: 'button/button.cjs', imports: ['src/button/button.tsx.vapor.css'] },
+            () => 'assets/button.tsx.vapor-abc123.css',
         );
-        expect(code).toBe(`require("./../assets/button.vapor-abc123.css");\n`);
+        expect(code).toBe(`require("./../assets/button.tsx.vapor-abc123.css");\n`);
     });
 
     it('leaves chunks without module CSS untouched', () => {
@@ -262,8 +262,8 @@ describe('rolldown() adapter — extract (single CSS file)', () => {
             a: (plugin.transform!.call(ctx, src('a', '1px'), files.a) as { code: string }).code,
             b: (plugin.transform!.call(ctx, src('b', '2px'), files.b) as { code: string }).code,
         };
-        const cssA = plugin.resolveId!.call(ctx, './a.vapor.css', files.a) as Info;
-        const cssB = plugin.resolveId!.call(ctx, './b.vapor.css', files.b) as Info;
+        const cssA = plugin.resolveId!.call(ctx, './a.tsx.vapor.css', files.a) as Info;
+        const cssB = plugin.resolveId!.call(ctx, './b.tsx.vapor.css', files.b) as Info;
         add('index', { isEntry: true, importedIds: [files.a, files.b] });
         add(files.a, { importers: ['index'], importedIds: [cssA.id] });
         add(files.b, { importers: ['index'], importedIds: [cssB.id] });
