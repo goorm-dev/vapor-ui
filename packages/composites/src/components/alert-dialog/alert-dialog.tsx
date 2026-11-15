@@ -256,7 +256,7 @@ export const AlertDialogAction = ({
             size="lg"
             colorPalette={type === 'critical' ? 'danger' : 'primary'}
             onClick={handleClick}
-            className={`${css({ backgroundColor: '$bg-danger' })} ${className}`}
+            className={className}
             {...props}
         >
             {children}
