@@ -1,0 +1,15 @@
+{
+    "document": {
+        "id": "0:1",
+        "name": "Screen",
+        "type": "FRAME",
+        "children": [
+            { "id": "2:1", "name": "Broken", "type": "INSTANCE", "componentId": "1:1" },
+            { "id": "2:2", "name": "Badge", "type": "INSTANCE", "componentId": "1:2" }
+        ]
+    },
+    "components": {
+        "1:1": { "key": "K-CHIP", "name": "💙Chip" },
+        "1:2": { "key": "K-BADGE", "name": "💙Badge" }
+    }
+}

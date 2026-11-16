@@ -12,7 +12,7 @@ import type {
     TypeAliasDeclaration,
     VariableDeclaration,
 } from 'ts-morph';
-import { ModuleDeclarationKind, Node, ts } from 'ts-morph';
+import { ModuleDeclarationKind, Node, Project, ts } from 'ts-morph';
 
 function findComponentValueDeclaration(
     namespace: ModuleDeclaration,
@@ -151,7 +151,7 @@ function extractParsedComponent(
 }
 
 /** `failures` names the namespaces that threw while being read; they are not in `components`. */
-export function parseSourceFile(
+function parseSourceFile(
     sourceFile: SourceFile,
     reporter: Reporter = silentReporter,
 ): { components: ParsedComponent[]; failures: string[] } {
@@ -176,4 +176,11 @@ export function parseSourceFile(
     }
 
     return { components: parsedComponents, failures };
+}
+
+/** Reads component files against one TypeScript program; ts-morph stays inside `read/`. */
+export function createComponentReader(tsconfigPath: string) {
+    const project = new Project({ tsConfigFilePath: tsconfigPath });
+    return (filePath: string, reporter?: Reporter) =>
+        parseSourceFile(project.addSourceFileAtPath(filePath), reporter);
 }

@@ -1,0 +1,28 @@
+{
+    "k1": {
+        "name": "Button",
+        "url": "https://www.figma.com/design/F/Lib?node-id=1-1",
+        "template": "src/button.figma.ts",
+        "batch": null
+    },
+    "k2": {
+        "name": "Card",
+        "url": "https://www.figma.com/design/F/Lib?node-id=1-2",
+        "template": "src/card.figma.batch.ts",
+        "batch": {
+            "part": "root",
+            "url": "https://www.figma.com/design/F/Lib?node-id=1-2",
+            "component": "Card.Root"
+        }
+    },
+    "k4": {
+        "name": "Card.Body",
+        "url": "https://www.figma.com/design/F/Lib?node-id=1-4",
+        "template": "src/card.figma.batch.ts",
+        "batch": {
+            "part": "body",
+            "url": "https://www.figma.com/design/F/Lib?node-id=1-4",
+            "component": "Card.Content"
+        }
+    }
+}

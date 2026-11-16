@@ -12,6 +12,11 @@
             "name": "vapor-figma",
             "source": "./plugins/vapor-figma",
             "description": "Claude Code plugin for designers working with the Vapor UI Figma library"
+        },
+        {
+            "name": "vapor-ui",
+            "source": "./plugins/vapor-ui",
+            "description": "For developers: implement Figma designs as vapor-ui code and verify them against the design with @vapor-ui/figma-blueprint"
         }
     ]
 }

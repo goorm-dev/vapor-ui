@@ -1,0 +1,8 @@
+{
+    "K-ICON-BUTTON": {
+        "name": "💙IconButton",
+        "url": "https://www.figma.com/design/F/Lib?node-id=1-1",
+        "template": "src/components/icon-button/icon-button.figma.ts",
+        "batch": null
+    }
+}

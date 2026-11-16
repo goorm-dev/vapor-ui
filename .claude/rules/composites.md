@@ -17,6 +17,8 @@ paths:
 6. [서브 컴포넌트는 `index.parts.ts`로 분리한다](#6-서브-컴포넌트는-indexpartsts로-분리한다)
 7. [Preset wrapper는 primitive prop을 전체 상속한다 (§4 예외)](#7-preset-wrapper는-primitive-prop을-전체-상속한다-4-예외)
 
+> Code Connect 템플릿(`*.figma.ts`, `*.figma.batch.{json,ts}`) 작성 규칙은 [`.claude/rules/code-connect-composites.md`](./code-connect-composites.md)에서 다룬다. 해당 파일은 `code-connects/` 경로를 touch할 때 자동 로드된다.
+
 ---
 
 ## 1. 슬롯은 `createSlots`로 만든다
@@ -316,3 +318,4 @@ export namespace DialogAssistive {
 - [ ] `export namespace <Component> { export type Props = ... }` 패턴으로 타입을 노출했다.
 - [ ] 서브 컴포넌트가 있는 컴포넌트라면 `index.parts.ts`를 두고 `index.ts`에서 namespace로 재수출했다.
 - [ ] Preset wrapper라면 §7의 판정 기준 4개를 모두 만족하고, `Omit`으로 preset key를 봉인했다.
+- [ ] Code Connect 템플릿은 [`code-connect-composites.md`](./code-connect-composites.md)의 체크리스트도 통과했다.

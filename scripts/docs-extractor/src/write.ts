@@ -43,6 +43,11 @@ function toSlug(pageDir: string): string {
         .join('/');
 }
 
+/** Every page folder under `pagesDir`, relative to it. */
+function listPageDirs(pagesDir: string): string[] {
+    return globSync('**/index.mdx', { cwd: pagesDir }).map(path.dirname);
+}
+
 /**
  * The `api/` folder of the page that documents the component declared in
  * `sourceFile` (`…/components/<folder>/…`): `<pagesDir>/<page>/api`, next to the
@@ -50,10 +55,17 @@ function toSlug(pageDir: string): string {
  * group (`(components)/avatar`) but not in a real folder (`patterns/form` is not `form`).
  * `null` for a folder mapped to no page.
  *
+ * `pageDirs` defaults to walking `pagesDir`; a caller placing many docs walks it
+ * once and passes the list in.
+ *
  * Throws ExtractorError when the page doesn't exist, so a new component without
  * a page fails loudly instead of being written nowhere.
  */
-export function findApiDir(sourceFile: string, pagesDir: string): string | null {
+export function findApiDir(
+    sourceFile: string,
+    pagesDir: string,
+    pageDirs: string[] = listPageDirs(pagesDir),
+): string | null {
     const parts = path.resolve(sourceFile).split(path.sep);
     const at = parts.lastIndexOf('components');
     if (at === -1 || at + 2 >= parts.length) {
@@ -64,9 +76,7 @@ export function findApiDir(sourceFile: string, pagesDir: string): string | null 
     const page = folder in PAGE_FOR_COMPONENT ? PAGE_FOR_COMPONENT[folder] : folder;
     if (page === null) return null;
 
-    const pageDir = globSync('**/index.mdx', { cwd: pagesDir })
-        .map(path.dirname)
-        .find((dir) => toSlug(dir) === page);
+    const pageDir = pageDirs.find((dir) => toSlug(dir) === page);
 
     if (!pageDir) {
         throw new ExtractorError(
@@ -221,8 +231,9 @@ export function writeDocs(
     { removeStale = false }: { removeStale?: boolean } = {},
 ): WriteResult {
     const root = path.resolve(pagesDir);
+    const pageDirs = listPageDirs(root);
     const targets = docs.flatMap(({ doc, sourceFile }) => {
-        const apiDir = findApiDir(sourceFile, root);
+        const apiDir = findApiDir(sourceFile, root, pageDirs);
         return apiDir
             ? [{ doc, apiDir, filePath: path.join(apiDir, 'en', `${toKebabCase(doc.name)}.json`) }]
             : [];

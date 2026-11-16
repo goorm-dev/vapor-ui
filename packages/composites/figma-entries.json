@@ -1,0 +1,134 @@
+{
+    "3267b2a55a2dff9c5081fe31a824edfe95b2f40f": {
+        "name": "Cancel",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4589-26516&m=dev",
+        "template": "src/components/alert-dialog/code-connects/alert-dialog.figma.batch.ts",
+        "batch": {
+            "part": "alert-dialog-cancel",
+            "component": "AlertDialog.Cancel",
+            "source": "src/components/alert-dialog/alert-dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4589-26516&m=dev"
+        }
+    },
+    "3aa2e5b5582883e4661b673a49c5d19debfcb7f2": {
+        "name": "Action",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2328-28152&m=dev",
+        "template": "src/components/dialog/code-connects/dialog.figma.batch.ts",
+        "batch": {
+            "part": "dialog-action",
+            "component": "Dialog.Action",
+            "source": "src/components/dialog/dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2328-28152&m=dev"
+        }
+    },
+    "46f3ea0817261331332a12c6c0ad4b3b12202e68": {
+        "name": "Menu",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3199-26103&m=dev",
+        "template": "src/components/menu/code-connects/menu.figma.batch.ts",
+        "batch": {
+            "part": "menu-root",
+            "component": "Menu.Root",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3199-26103&m=dev"
+        }
+    },
+    "80d336714a8d14f3d59604298a47f83db59835d5": {
+        "name": "AlertDialog",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4606-26196",
+        "template": "src/components/alert-dialog/code-connects/alert-dialog.figma.batch.ts",
+        "batch": {
+            "part": "alert-dialog-root",
+            "component": "AlertDialog",
+            "source": "src/components/alert-dialog/alert-dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4606-26196"
+        }
+    },
+    "8245bccf879cb538ebf76cb7f2f288db1a0990f7": {
+        "name": "Item",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3375-18689&m=dev",
+        "template": "src/components/menu/code-connects/menu.figma.batch.ts",
+        "batch": {
+            "part": "menu-item",
+            "component": "Menu.Item",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3375-18689&m=dev"
+        }
+    },
+    "85f309f148c6210fe397fc9cc53e3fa5012148dd": {
+        "name": "Check group",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4754-39350&m=dev",
+        "template": "src/components/menu/code-connects/menu.figma.batch.ts",
+        "batch": {
+            "part": "menu-check-group",
+            "component": "Menu.CheckGroup",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4754-39350&m=dev"
+        }
+    },
+    "86deeb5d2dbf4225fb6b7f74e4a03bf4b81b58fd": {
+        "name": "Check item",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3375-18738&m=dev",
+        "template": "src/components/menu/code-connects/menu.figma.batch.ts",
+        "batch": {
+            "part": "menu-check-item",
+            "component": "Menu.CheckItem",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3375-18738&m=dev"
+        }
+    },
+    "87ac52a4739f0501842a50b737ec23ab36c9b9c2": {
+        "name": "Submenu item",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3658-11355&m=dev",
+        "template": "src/components/menu/code-connects/menu.figma.batch.ts",
+        "batch": {
+            "part": "menu-submenu-item",
+            "component": "Menu.SubmenuItem",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3658-11355&m=dev"
+        }
+    },
+    "90801332f8b05d2985acc202ebe5a0c49aa5e08f": {
+        "name": "Dialog",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2337-38499&m=dev",
+        "template": "src/components/dialog/code-connects/dialog.figma.batch.ts",
+        "batch": {
+            "part": "dialog-root",
+            "component": "Dialog",
+            "source": "src/components/dialog/dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2337-38499&m=dev"
+        }
+    },
+    "c84fa27df2afcbc24a6cf0e09df70d7f2ec12825": {
+        "name": "Action",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4589-26511&m=dev",
+        "template": "src/components/alert-dialog/code-connects/alert-dialog.figma.batch.ts",
+        "batch": {
+            "part": "alert-dialog-action",
+            "component": "AlertDialog.Action",
+            "source": "src/components/alert-dialog/alert-dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=4589-26511&m=dev"
+        }
+    },
+    "d54a010fa305312373cc8423fc7e7ca6af94bbcf": {
+        "name": "Item group",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3213-27184&m=dev",
+        "template": "src/components/menu/code-connects/menu.figma.batch.ts",
+        "batch": {
+            "part": "menu-group",
+            "component": "Menu.Group",
+            "source": "src/components/menu/menu.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=3213-27184&m=dev"
+        }
+    },
+    "f29b32bf10903213072fcaa5d1bef3a8761981e0": {
+        "name": "Assistive",
+        "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2328-28157&m=dev",
+        "template": "src/components/dialog/code-connects/dialog.figma.batch.ts",
+        "batch": {
+            "part": "dialog-assistive",
+            "component": "Dialog.Assistive",
+            "source": "src/components/dialog/dialog.tsx",
+            "url": "https://www.figma.com/design/he4tiAGOKGPl0Fm56ZpJsy/-Composites--Vapor-Design-System?node-id=2328-28157&m=dev"
+        }
+    }
+}
