@@ -1,0 +1,17 @@
+{
+    "templateFile": "./toast.figma.batch.ts",
+    "components": [
+        {
+            "part": "add",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=36861-26234",
+            "component": "Toast.useToastManager",
+            "source": "src/components/toast/toast.tsx"
+        },
+        {
+            "part": "close",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=47792-62955",
+            "component": "Toast.ClosePrimitive",
+            "source": "src/components/toast/toast.tsx"
+        }
+    ]
+}
