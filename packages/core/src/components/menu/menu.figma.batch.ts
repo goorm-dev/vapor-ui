@@ -1,7 +1,6 @@
 import figma from 'figma';
-import type { InstanceHandle } from 'figma';
 
-import { bool, connectedChildren, example, flags, icon, lines } from '../../utils/figma';
+import { bool, contents, example, flags, icon } from '../../utils/figma';
 
 const MENU_PART_ID = {
     root: 'menu-root',
@@ -21,13 +20,6 @@ type MenuPart = keyof typeof MENU_PART_ID;
 const instance = figma.selectedInstance;
 const part: MenuPart = figma.batch.part;
 const { component } = figma.batch;
-
-function contents(layer: InstanceHandle, indent = '') {
-    const nodes = connectedChildren(layer);
-    if (nodes.length === 0) return '{/* contents */}';
-
-    return figma.code`${lines(nodes.map(example), `${indent}    `)}\n${indent}`;
-}
 
 function itemContents() {
     const slot = instance.findInstance('🟨Menu/SlotLayer');

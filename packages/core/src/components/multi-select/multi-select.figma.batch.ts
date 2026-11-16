@@ -1,16 +1,6 @@
 import figma from 'figma';
-import type { InstanceHandle } from 'figma';
 
-import {
-    bool,
-    connectedChildren,
-    example,
-    flags,
-    icon,
-    lines,
-    pick,
-    placeholder,
-} from '../../utils/figma';
+import { bool, contents, example, flags, icon, pick, placeholder } from '../../utils/figma';
 
 const MULTI_SELECT_PART_ID = {
     root: 'multi-select-root',
@@ -30,13 +20,6 @@ const { component } = figma.batch;
 
 function child(name: MultiSelectPart) {
     return example(instance.findConnectedInstance(MULTI_SELECT_PART_ID[name]));
-}
-
-function contents(layer: InstanceHandle, indent = '') {
-    const nodes = connectedChildren(layer);
-    if (nodes.length === 0) return '{/* contents */}';
-
-    return figma.code`${lines(nodes.map(example), `${indent}    `)}\n${indent}`;
 }
 
 function rootProps() {

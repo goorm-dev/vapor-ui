@@ -79,3 +79,10 @@ export function connectedChildren(layer: InstanceHandle) {
         );
     });
 }
+
+export function contents(layer: InstanceHandle, indent = '') {
+    const nodes = connectedChildren(layer);
+    if (nodes.length === 0) return '{/* contents */}';
+
+    return figma.code`${lines(nodes.map(example), `${indent}    `)}\n${indent}`;
+}
