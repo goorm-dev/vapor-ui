@@ -1,6 +1,7 @@
 import { Text, VStack } from '@vapor-ui/core';
 import { ErrorCircleIcon } from '@vapor-ui/icons';
-import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+import { ImageZoom } from './image-zoom';
 
 interface DontImageProps {
     src: string;
@@ -14,13 +15,7 @@ export const DontImage = ({ src, alt, caption, width = 400, height = 300 }: Dont
     return (
         <VStack render={<figure />} className="gap-v-150">
             <div className="rounded-v-500 bg-v-canvas-raised flex items-center justify-center overflow-hidden">
-                <ImageZoom
-                    src={src}
-                    alt={alt}
-                    width={width}
-                    height={height}
-                    className="object-cover w-full h-auto not-prose"
-                />
+                <ImageZoom src={src} alt={alt} width={width} height={height} />
             </div>
             <figcaption className="flex gap-v-100">
                 <ErrorCircleIcon aria-hidden className="text-v-danger shrink-0 w-v-300 h-v-300" />

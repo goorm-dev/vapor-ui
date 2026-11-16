@@ -1,10 +1,9 @@
 import type { ComponentDoc } from '#model';
 import { policy } from '#policy';
-import { parseSourceFile } from '#read/component-reader';
+import { createComponentReader } from '#read/component-reader';
 import { scanComponentFiles } from '#read/scan';
 import { type Reporter, silentReporter } from '#reporter';
 import path from 'node:path';
-import { Project } from 'ts-morph';
 
 export interface ExtractOptions {
     /** Directory scanned for component `.tsx` files. */
@@ -43,7 +42,7 @@ function findMissingDocs(docs: ComponentDoc[]): string[] {
 export function extract(options: ExtractOptions): ExtractResult {
     const { reporter = silentReporter } = options;
     const files = scanComponentFiles(options.inputPath, options.component);
-    const project = new Project({ tsConfigFilePath: options.tsconfigPath });
+    const readComponentFile = createComponentReader(options.tsconfigPath);
 
     reporter.info('Parsing components...');
 
@@ -54,7 +53,7 @@ export function extract(options: ExtractOptions): ExtractResult {
 
         try {
             reporter.info(`Processing ${fileName}`);
-            const result = parseSourceFile(project.addSourceFileAtPath(filePath), reporter);
+            const result = readComponentFile(filePath, reporter);
             failures.push(...result.failures);
             sourceFiles.push(...result.components.map(() => filePath));
             return result.components;

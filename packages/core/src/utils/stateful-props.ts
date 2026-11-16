@@ -1,6 +1,7 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactElement } from 'react';
 
 import { mergeProps } from '@base-ui/react';
+import type { ComponentRenderFn, HTMLProps } from '@base-ui/react/types';
 import clsx from 'clsx';
 
 export type StyleParams<State> =
@@ -50,3 +51,28 @@ export const mergeStatefulProps = <State>(
         style,
     } as ExternalProps<State>;
 };
+
+type StatefulCallbacks<State> = {
+    className?: ClassNameParams<State>;
+    style?: StyleParams<State>;
+    render?: ReactElement | ComponentRenderFn<HTMLProps, State>;
+};
+
+/**
+ * Lets Base UI call stateful callbacks with its own state while the user still receives the part state.
+ * Pass the result straight to the Base UI part; resolving the callbacks first loses the Base state.
+ */
+export const adaptStatefulCallbacks = <BaseState, PartState>(
+    { className, style, render }: StatefulCallbacks<PartState>,
+    toPartState: (state: BaseState) => PartState,
+): StatefulCallbacks<BaseState> => ({
+    className:
+        typeof className === 'function'
+            ? (state: BaseState) => className(toPartState(state))
+            : className,
+    style: typeof style === 'function' ? (state: BaseState) => style(toPartState(state)) : style,
+    render:
+        typeof render === 'function'
+            ? (props: HTMLProps, state: BaseState) => render(props, toPartState(state))
+            : render,
+});

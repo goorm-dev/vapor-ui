@@ -24,6 +24,7 @@
         "docs:api:watch": "pnpm --filter website docs:api:watch",
         "docs:translate": "pnpm --filter website docs:translate",
         "docs-extractor": "pnpm --filter @vapor-ui/docs-extractor",
+        "figma-blueprint": "pnpm --filter @vapor-ui/figma-blueprint",
         "figma-codegen-plugin": "pnpm --filter figma-codegen-plugin",
         "figma-plugin": "pnpm --filter figma-plugin",
         "format": "pnpm format:package && prettier --write .",
@@ -60,8 +61,8 @@
         "lodash-es": "^4.18.1",
         "picocolors": "^1.1.1",
         "prettier": "^3.9.10",
-        "rimraf": "^6.1.3",
-        "semver": "^7.8.5",
+        "rimraf": "^6.1.4",
+        "semver": "^7.8.6",
         "turbo": "^2.10.12",
         "typescript": "catalog:",
         "wrangler": "^4.149.0"

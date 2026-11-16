@@ -1,0 +1,22 @@
+{
+    "extends": "@repo/typescript-config/base",
+    "compilerOptions": {
+        "moduleDetection": "force",
+        "target": "esnext",
+        "outDir": "./dist",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "types": ["node"],
+        "paths": {
+            "~/*": ["./src/*"]
+        }
+    },
+    "include": ["."],
+    "exclude": ["node_modules", "dist", "src/__fixtures__"]
+}
