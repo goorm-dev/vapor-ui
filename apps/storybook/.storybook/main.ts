@@ -88,7 +88,7 @@ const config: StorybookConfig = {
                 vaporVitePlugin({
                     include: ['../../packages/composites/src/**'],
                     exclude: ['**/*.test.*'],
-                    layer: 'composites',
+                    layer: 'vapor-composites',
                 }),
 
                 coreDistCssPassthrough,
