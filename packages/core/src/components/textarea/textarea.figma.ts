@@ -13,8 +13,7 @@ const props = flags({
     invalid: bool(instance, 'invalid'),
     readOnly: bool(instance, 'readOnly'),
 });
-// Parked (Mismatch): Figma `autoResize` shows a manual resize handle, while code `autoResize` grows
-// the height and hides the handle, so it's dropped until Figma and code agree.
+// Mismatch: Figma `autoResize` shows the resize handle, code `autoResize` grows the height, so it's dropped.
 
 const slot = instance.findInstance('🟨Textarea/SlotLayer');
 const hint = slot.type === 'INSTANCE' ? placeholder(slot) : '';

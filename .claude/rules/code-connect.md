@@ -136,6 +136,8 @@ import { bool, example, flags, icon } from '../../utils/figma';
 | `icon(layer, visible, swapName)` | The swapped icon's snippet when its visibility toggle is on                                                |
 | `lines(snippets, indent?)`       | The snippets one per line at `indent` (default four spaces)                                                |
 | `connectedChildren(layer)`       | Connected instances directly inside `layer`, looking one level into unconnected wrappers                   |
+| `body(snippets, indent?)`        | The snippets one per line inside a parent at `indent`, or `{/* contents */}` when there are none           |
+| `contents(layer, indent?)`       | `body()` of `layer`'s connected children                                                                   |
 
 A helper moves into this file once three templates repeat it verbatim. Helpers used by one or two templates stay local. Cross-package imports (e.g. `@vapor-ui/composites`' `figma-utils`) are not supported by Code Connect.
 

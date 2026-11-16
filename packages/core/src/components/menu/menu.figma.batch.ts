@@ -1,6 +1,7 @@
 import figma from 'figma';
+import type { InstanceHandle } from 'figma';
 
-import { bool, contents, example, flags, icon } from '../../utils/figma';
+import { body, bool, connectedChildren, example, flags, pick, toggle } from '../../utils/figma';
 
 const MENU_PART_ID = {
     root: 'menu-root',
@@ -21,25 +22,63 @@ const instance = figma.selectedInstance;
 const part: MenuPart = figma.batch.part;
 const { component } = figma.batch;
 
-function itemContents() {
-    const slot = instance.findInstance('🟨Menu/SlotLayer');
-    if (slot.type !== 'INSTANCE') return '{/* contents */}';
+function isRadioItem(node: InstanceHandle) {
+    return node.codeConnectId() === MENU_PART_ID.radioItem;
+}
 
-    return figma.code`${icon(slot, 'hasLeadingIcon', 'LeadingIcon')}{/* contents */}${icon(slot, 'hasTrailingIcon', 'TrailingIcon')}`;
+// Menu.RadioItem throws outside a Menu.RadioGroup, which Figma has no part for,
+// so each run of adjacent radio items gets one.
+function menuContents(layer: InstanceHandle, indent = '') {
+    const runs: InstanceHandle[][] = [];
+    for (const node of connectedChildren(layer)) {
+        const last = runs[runs.length - 1];
+        if (last && isRadioItem(node) && isRadioItem(last[0])) last.push(node);
+        else runs.push([node]);
+    }
+
+    const snippets = runs.map((run) =>
+        isRadioItem(run[0])
+            ? figma.code`<Menu.RadioGroup>${body(run.map(example), `${indent}    `)}</Menu.RadioGroup>`
+            : example(run[0]),
+    );
+
+    return body(snippets, indent);
+}
+
+// SLOT contents come through as children of the slot layer, tagged with the slot they sit in.
+function slotted(layer: InstanceHandle, slot: string) {
+    return layer.children
+        .filter(
+            (node): node is InstanceHandle =>
+                node.type === 'INSTANCE' &&
+                node.hasCodeConnect() &&
+                node.__containingSlotName__ === slot,
+        )
+        .reduce<unknown>((acc, node) => figma.code`${acc}${example(node)}`, '');
+}
+
+function itemContents() {
+    const label = instance.findInstance('🟨Menu.ItemLabel/SlotLayer');
+    if (label.type !== 'INSTANCE') return '{/* contents */}';
+
+    const leading = toggle(label, 'hasLeadingElement') ? slotted(label, 'leadingElement') : '';
+    const trailing = toggle(label, 'hasTrailingElement') ? slotted(label, 'trailingElement') : '';
+
+    return figma.code`${leading}${slotted(label, 'content') || '{/* contents */}'}${trailing}`;
 }
 
 function render() {
     if (part === 'root') {
-        const side = instance.getEnum('side', {
+        const side = pick(instance, 'side', {
             bottom: 'bottom',
             top: 'top',
             right: 'right',
             left: 'left',
         });
-        const align = instance.getEnum('align', { start: 'start', center: 'center', end: 'end' });
+        const align = pick(instance, 'align', { start: 'start', center: 'center', end: 'end' });
 
         const popup = instance.findConnectedInstance(MENU_PART_ID.popup);
-        const items = popup?.type === 'INSTANCE' ? contents(popup, '    ') : '{/* contents */}';
+        const items = popup?.type === 'INSTANCE' ? menuContents(popup, '    ') : '{/* contents */}';
 
         return figma.code`<Menu.Root>
     <Menu.Trigger>{/* trigger */}</Menu.Trigger>
@@ -48,38 +87,28 @@ function render() {
     }
 
     if (part === 'popup' || part === 'submenuPopup' || part === 'group') {
-        return figma.code`<${component}>${contents(instance)}</${component}>`;
+        return figma.code`<${component}>${menuContents(instance)}</${component}>`;
     }
+
+    if (part === 'separator') return figma.code`<Menu.Separator />`;
+    if (part === 'groupLabel')
+        return figma.code`<Menu.GroupLabel>{/* contents */}</Menu.GroupLabel>`;
 
     const disabled = flags({ disabled: bool(instance, 'disabled') });
-
-    if (part === 'item' || part === 'checkboxItem') {
-        return figma.code`<${component}${disabled}>${itemContents()}</${component}>`;
-    }
 
     if (part === 'radioItem') {
         return figma.code`<Menu.RadioItem value="..."${disabled}>${itemContents()}</Menu.RadioItem>`;
     }
 
     if (part === 'submenuTriggerItem') {
-        // `hasPopup` toggles the nested SubmenuPopup; code needs one either way.
-        const slot = instance.findInstance('🟨Menu.SubTriggerItem/SlotLayer');
-        const popup =
-            slot.type === 'INSTANCE' && slot.getBoolean('hasPopup')
-                ? example(slot.findConnectedInstance(MENU_PART_ID.submenuPopup))
-                : '';
-
+        // Figma calls this part Menu.SubTriggerItem; code exports Menu.SubmenuTriggerItem.
         return figma.code`<Menu.SubmenuRoot>
     <Menu.SubmenuTriggerItem${disabled}>${itemContents()}</Menu.SubmenuTriggerItem>
-    ${popup || '<Menu.SubmenuPopup>{/* contents */}</Menu.SubmenuPopup>'}
+    <Menu.SubmenuPopup>{/* contents */}</Menu.SubmenuPopup>
 </Menu.SubmenuRoot>`;
     }
 
-    if (part === 'separator') {
-        return figma.code`<Menu.Separator />`;
-    }
-
-    return figma.code`<${component}>{/* contents */}</${component}>`;
+    return figma.code`<${component}${disabled}>${itemContents()}</${component}>`;
 }
 
 export default {
