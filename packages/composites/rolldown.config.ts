@@ -17,7 +17,7 @@ const inputs = generateInputs([
  * CJS `require`). CSS 위치는 `assetFileNames` 가 소스 옆으로 정하고, `preserveModules` 출력과
  * `sideEffects: ["**\/*.css"]` 덕분에 소비자는 import 한 컴포넌트의 CSS 만 가져간다.
  */
-const vapor = () => vaporRolldownPlugin({ hash: true, layer: 'composites' });
+const vapor = () => vaporRolldownPlugin({ hash: true, layer: 'vapor-composites' });
 
 const resolve = {
     alias: { '~': path.resolve('./src') },

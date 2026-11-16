@@ -7,7 +7,7 @@
  *
  * - 케이스 1: 플러그인이 모듈 CSS import 를 마지막 import 뒤에 넣으므로 같은 레이어여도 앱이 이긴다.
  * - 케이스 2·3: import 그래프로는 순서를 보장할 수 없다(같은 레이어면 라이브러리가 이김).
- *   라이브러리를 앞선 레이어(`composites`)에 두고 앱 CSS 진입점이 레이어 순서를 먼저 선언하면
+ *   라이브러리를 앞선 레이어(`vapor-composites`)에 두고 앱 CSS 진입점이 레이어 순서를 먼저 선언하면
  *   로드 순서와 무관하게 앱이 이긴다.
  */
 import {
@@ -26,7 +26,7 @@ import { build } from 'vite';
 import { vaporVitePlugin } from './vite';
 
 const LAYER_ORDER =
-    '@layer vapor-theme, vapor-reset, vapor-components, composites, vapor-utilities;\n';
+    '@layer vapor-theme, vapor-reset, vapor-components, vapor-composites, vapor-utilities;\n';
 const APP_GAP = '16px';
 const LIB_GAP = '8px';
 
@@ -145,7 +145,7 @@ describe('vite adapter — cross-module CSS order (proposal 5.6.1)', () => {
             const sameLayer = await buildCase({ ...libFiles('vapor-utilities'), ...CASES[name] });
             expect(winningGap(sameLayer)).toBe(LIB_GAP);
 
-            const layered = await buildCase({ ...libFiles('composites'), ...CASES[name] });
+            const layered = await buildCase({ ...libFiles('vapor-composites'), ...CASES[name] });
             expect(winningGap(layered)).toBe(APP_GAP);
         },
     );

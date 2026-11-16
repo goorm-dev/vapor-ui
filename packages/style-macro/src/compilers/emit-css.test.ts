@@ -74,8 +74,8 @@ describe('emitBlocks', () => {
     });
 
     it('uses the given layer', () => {
-        const css = emit([rule()], 'composites');
-        expect(css).toMatch(/@layer composites \{[\s\S]*\.X \{/);
+        const css = emit([rule()], 'vapor-composites');
+        expect(css).toMatch(/@layer vapor-composites \{[\s\S]*\.X \{/);
         expect(css).not.toContain('vapor-utilities');
     });
 
@@ -158,13 +158,13 @@ describe('emitBlocks', () => {
         } as Partial<IRRule>);
         const out = emitBlocks([block([dyn], 'A'), block([dyn], 'B')], {
             mode: 'readable',
-            layer: 'composites',
+            layer: 'vapor-composites',
         }).cssText;
         expect(out).toContain('.A { color: var(--vapor-_s0); }');
         expect(
             out.match(/@property --vapor-_s0 \{ syntax: '\*'; inherits: false; \}/g),
         ).toHaveLength(1);
-        expect(pos(out, '@property')).toBeLessThan(pos(out, '@layer composites {'));
+        expect(pos(out, '@property')).toBeLessThan(pos(out, '@layer vapor-composites {'));
     });
 
     it('prod mode uses the short slot variable prefix', () => {

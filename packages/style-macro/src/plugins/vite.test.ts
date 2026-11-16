@@ -84,10 +84,10 @@ describe('vite adapter — per-module CSS (build)', () => {
                 'a.tsx': src('a', '1px'),
                 'main.ts': `import { a } from './a.tsx';\ndocument.body.className = a;\n`,
             },
-            { layer: 'composites' },
+            { layer: 'vapor-composites' },
         );
-        expect(css).toMatch(/@layer composites\s*\{/);
-        expect(css).not.toMatch(/@layer composites;/);
+        expect(css).toMatch(/@layer vapor-composites\s*\{/);
+        expect(css).not.toMatch(/@layer vapor-composites;/);
     });
 
     it('fails the build with a code frame on invalid css()', async () => {

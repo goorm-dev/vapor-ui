@@ -33,9 +33,9 @@ describe('css-loader — module CSS from the source module', () => {
     });
 
     it('uses the layer option and drops the layer order statement', () => {
-        const css = vaporCssLoader.call(ctx(file, { root, layer: 'composites' }), SRC);
-        expect(css).toMatch(/^@layer composites \{/);
-        expect(css).not.toMatch(/@layer composites;/);
+        const css = vaporCssLoader.call(ctx(file, { root, layer: 'vapor-composites' }), SRC);
+        expect(css).toMatch(/^@layer vapor-composites \{/);
+        expect(css).not.toMatch(/@layer vapor-composites;/);
     });
 
     it('returns an empty sheet for excluded files or files without rules', () => {

@@ -34,14 +34,14 @@ yarn add @vapor-ui/core @vapor-ui/composites
 
 CJS(`require`)로 쓸 때는 루트(`@vapor-ui/composites`) 대신 서브패스(`@vapor-ui/composites/alert-dialog`)로 가져온다. CJS 루트 진입점은 모든 컴포넌트를 `require`하므로 쓰지 않은 컴포넌트의 CSS까지 번들에 들어간다.
 
-composites 스타일은 `@layer composites`에 들어간다. `@vapor-ui/core/layers.css`가 이 레이어를 `vapor-components`와 `vapor-utilities` 사이에 선언하므로, composites 스타일은 core 컴포넌트 스타일을 덮어쓰고 앱의 `css()` 스타일(`vapor-utilities`)과 레이어 밖 일반 `className`에는 진다. CSS 로드 순서와 무관하다.
+composites 스타일은 `@layer vapor-composites`에 들어간다. `@vapor-ui/core/layers.css`가 이 레이어를 `vapor-components`와 `vapor-utilities` 사이에 선언하므로, composites 스타일은 core 컴포넌트 스타일을 덮어쓰고 앱의 `css()` 스타일(`vapor-utilities`)과 레이어 밖 일반 `className`에는 진다. CSS 로드 순서와 무관하다.
 
-이 CSS 엔트리는 앱 진입 파일에서 `@vapor-ui/core`, `@vapor-ui/composites` import보다 먼저 import한다. 브라우저는 레이어를 처음 등장한 순서로 등록하므로, 컴포넌트 CSS가 먼저 로드되면 `composites`가 `vapor-utilities` 뒤에 등록되어 앱 스타일을 이긴다.
+이 CSS 엔트리는 앱 진입 파일에서 `@vapor-ui/core`, `@vapor-ui/composites` import보다 먼저 import한다. 브라우저는 레이어를 처음 등장한 순서로 등록하므로, 컴포넌트 CSS가 먼저 로드되면 `vapor-composites`가 `vapor-utilities` 뒤에 등록되어 앱 스타일을 이긴다.
 
-`layers.css`를 생략하고 레이어 순서를 직접 선언한다면 `composites`를 `vapor-components`와 `vapor-utilities` 사이에 넣는다. 빠지면 브라우저가 `composites`를 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다.
+`layers.css`를 생략하고 레이어 순서를 직접 선언한다면 `vapor-composites`를 `vapor-components`와 `vapor-utilities` 사이에 넣는다. 빠지면 브라우저가 `vapor-composites`를 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다.
 
 ```css
-@layer vapor-theme, vapor-reset, vapor-components, composites, vapor-utilities;
+@layer vapor-theme, vapor-reset, vapor-components, vapor-composites, vapor-utilities;
 ```
 
 ## 라이선스

@@ -240,11 +240,11 @@ describe('rolldown() adapter — per-module CSS (library build)', () => {
     });
 
     it('drops the per-file layer order statement (layers.css owns the order)', () => {
-        const { transform, resolveId } = setup({ layer: 'composites' });
+        const { transform, resolveId } = setup({ layer: 'vapor-composites' });
         transform(SRC);
         const { css } = resolveId('./button.tsx.vapor.css')!.meta;
-        expect(css).toMatch(/^@layer composites \{/);
-        expect(css).not.toMatch(/@layer composites;/);
+        expect(css).toMatch(/^@layer vapor-composites \{/);
+        expect(css).not.toMatch(/@layer vapor-composites;/);
     });
 
     it('renderChunk emits the CSS as an asset named after its source and rewrites the import', () => {

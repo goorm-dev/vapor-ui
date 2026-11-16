@@ -25,7 +25,7 @@ export interface VaporPluginOptions {
     /**
      * `css()` 가 생성한 규칙을 담을 CSS cascade layer 이름. 기본값 `vapor-utilities`.
      * 라이브러리 빌드가 앱과 다른 레이어에 규칙을 두어 우선순위를 레이어 순서로 고정할 때 쓴다
-     * (예: `@vapor-ui/composites` 는 `composites`). 지정한 레이어는 CSS 진입점의 레이어 순서
+     * (예: `@vapor-ui/composites` 는 `vapor-composites`). 지정한 레이어는 CSS 진입점의 레이어 순서
      * 선언에 포함돼야 한다 — 없으면 브라우저가 맨 뒤 레이어로 취급한다.
      */
     layer?: string;

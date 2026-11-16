@@ -742,9 +742,9 @@ describe('transform — string result & composition', () => {
         const out = transform({
             source: src(`const cls = css({ gap: '0' });`),
             filename: '/L.tsx',
-            layer: 'composites',
+            layer: 'vapor-composites',
         });
-        expect(out.css).toMatch(/@layer composites \{/);
+        expect(out.css).toMatch(/@layer vapor-composites \{/);
     });
 
     it('className={base} — local reference stays as is', () => {

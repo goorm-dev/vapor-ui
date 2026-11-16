@@ -174,7 +174,7 @@ The flat `padding`/`margin`/… variant props exposed via `DeprecatedSprinkles` 
 vapor-theme → vapor-reset → vapor-components → vapor-utilities → (no layer: user className)
 ```
 
-`vapor-utilities` is where the `css()` macro emits its blocks (`@vapor-ui/composites` uses its own `composites` layer). User `className` without a layer always wins over component styles — no `!important` needed.
+`vapor-utilities` is where the `css()` macro emits its blocks (`@vapor-ui/composites` uses its own `vapor-composites` layer). User `className` without a layer always wins over component styles — no `!important` needed.
 
 ## Testing
 

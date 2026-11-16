@@ -4,8 +4,8 @@
 '@vapor-ui/core': minor
 ---
 
-`@vapor-ui/composites` now compiles its `css()` macro calls at build time into a dedicated `@layer composites`; no style-macro bundler plugin is required.
+`@vapor-ui/composites` now compiles its `css()` macro calls at build time into a dedicated `@layer vapor-composites`; no style-macro bundler plugin is required.
 
-`@vapor-ui/core/layers.css` now declares the `composites` layer between `vapor-components` and `vapor-utilities` (`vapor-theme, vapor-reset, vapor-components, composites, vapor-utilities`), so composites styles override core components while app `css()` styles and unlayered `className`s always override composites, regardless of CSS load order. If you declare the layer order yourself instead of importing `layers.css`, add `composites` in the same position.
+`@vapor-ui/core/layers.css` now declares the `vapor-composites` layer between `vapor-components` and `vapor-utilities` (`vapor-theme, vapor-reset, vapor-components, vapor-composites, vapor-utilities`), so composites styles override core components while app `css()` styles and unlayered `className`s always override composites, regardless of CSS load order. If you declare the layer order yourself instead of importing `layers.css`, add `vapor-composites` in the same position.
 
 `@vapor-ui/style-macro` gains a `layer` option (default `vapor-utilities`) that sets the cascade layer for the generated rules.

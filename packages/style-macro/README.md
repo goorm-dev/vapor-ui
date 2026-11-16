@@ -129,7 +129,7 @@ export default {
 - CJS 소비자는 서브패스(`acme-ui/button`)로 가져와야 컴포넌트 단위로 CSS 가 들어간다. CJS 루트 진입점은 모든 컴포넌트를 `require` 해 번들러가 걸러내지 못한다.
 - `extract: true`(또는 `{ name: 'styles.css' }`)면 모듈별 CSS 대신 모든 CSS 를 import 순서대로 합친 파일 하나(기본 `index.css`)를 내보내고, 출력 JS 의 CSS import 를 지운다. 소비자가 그 파일을 직접 import 한다. `@vanilla-extract/rollup-plugin` 의 `extract` 와 같다.
 - 각 모듈 CSS 는 external 모듈의 `meta.css` 에 실린다. 다른 rolldown 플러그인이 `this.getModuleInfo(id).meta.css` 로 읽어 후처리할 수 있다.
-- 라이브러리는 앱과 다른 `layer` 를 주는 것을 권장한다. 같은 레이어를 쓰면 소비자가 라이브러리 컴포넌트에 넘긴 `className` override 의 성패가 CSS 로드 순서에 좌우된다. 라이브러리 레이어를 앱 레이어보다 앞에 선언하면 로드 순서와 무관하게 앱이 이긴다. `@vapor-ui/composites` 는 `composites` 레이어를 쓰고, `@vapor-ui/core/layers.css` 가 이를 `vapor-components` 와 `vapor-utilities` 사이에 선언한다.
+- 라이브러리는 앱과 다른 `layer` 를 주는 것을 권장한다. 같은 레이어를 쓰면 소비자가 라이브러리 컴포넌트에 넘긴 `className` override 의 성패가 CSS 로드 순서에 좌우된다. 라이브러리 레이어를 앱 레이어보다 앞에 선언하면 로드 순서와 무관하게 앱이 이긴다. `@vapor-ui/composites` 는 `vapor-composites` 레이어를 쓰고, `@vapor-ui/core/layers.css` 가 이를 `vapor-components` 와 `vapor-utilities` 사이에 선언한다.
 - `hash: true` 로 고정한다. 기본값은 빌드 시점 `NODE_ENV` 를 따르므로, 고정하지 않으면 배포물의 class 이름이 빌드 환경에 따라 달라진다.
 
 ## 지원하는 값

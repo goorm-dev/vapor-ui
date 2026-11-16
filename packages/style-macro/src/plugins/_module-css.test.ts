@@ -43,10 +43,10 @@ describe('compileModule', () => {
     });
 
     it('drops the layer order statement (layers.css owns the order)', () => {
-        const { opts, file } = setup('composites');
+        const { opts, file } = setup('vapor-composites');
         const { css } = compileModule(SRC, file, opts)!;
-        expect(css).toMatch(/^@layer composites \{/);
-        expect(css).not.toMatch(/@layer composites;/);
+        expect(css).toMatch(/^@layer vapor-composites \{/);
+        expect(css).not.toMatch(/@layer vapor-composites;/);
     });
 
     it('returns null for files outside include or without the macro import', () => {

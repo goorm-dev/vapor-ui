@@ -152,7 +152,7 @@ export default {
 ```
 
 - `hash: true`를 권장합니다. 기본값은 빌드 환경의 `NODE_ENV`를 따르므로 고정하지 않으면 배포물의 class 이름이 빌드 환경에 따라 달라집니다.
-- 앱과 다른 `layer`를 지정하고, 그 레이어를 소비자의 레이어 선언에서 `vapor-utilities`보다 앞에 두는 것을 권장합니다. 그래야 사용자가 넘긴 `className`이 CSS 로드 순서와 무관하게 이깁니다. `@vapor-ui/composites`가 이 방식으로 `composites` 레이어를 사용합니다.
+- 앱과 다른 `layer`를 지정하고, 그 레이어를 소비자의 레이어 선언에서 `vapor-utilities`보다 앞에 두는 것을 권장합니다. 그래야 사용자가 넘긴 `className`이 CSS 로드 순서와 무관하게 이깁니다. `@vapor-ui/composites`가 이 방식으로 `vapor-composites` 레이어를 사용합니다.
 
 ## Usage
 
