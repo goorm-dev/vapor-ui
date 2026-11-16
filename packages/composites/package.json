@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/composites",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "",
     "keywords": [
         "react",
@@ -43,17 +43,19 @@
                 "types": "./dist/components/*/index.d.cts",
                 "default": "./dist/components/*/index.cjs"
             }
-        }
+        },
+        "./figma-blueprint/*": "./figma-blueprint/*"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.cts",
     "files": [
-        "dist"
+        "dist",
+        "figma-blueprint"
     ],
     "scripts": {
-        "build": "rimraf dist && rolldown -c rolldown.config.ts",
-        "clean": "rimraf dist node_modules .turbo",
+        "build": "rimraf dist figma-blueprint && rolldown -c rolldown.config.ts && figma-blueprint ship",
+        "clean": "rimraf dist figma-blueprint node_modules .turbo",
         "lint": "eslint ./src",
         "test": "vitest --run --passWithNoTests",
         "test:coverage": "vitest --coverage --passWithNoTests",
@@ -74,11 +76,12 @@
         "@testing-library/dom": "^10.4.2",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.3",
-        "@testing-library/user-event": "^14.6.8",
+        "@testing-library/user-event": "^14.6.10",
         "@types/node": "^22.19.20",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "@vapor-ui/core": "workspace:^",
+        "@vapor-ui/figma-blueprint": "workspace:*",
         "@vitest/browser": "^3.2.7",
         "@vitest/coverage-v8": "^3.2.7",
         "eslint": "catalog:",

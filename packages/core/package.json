@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/core",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "description": "An open-source component library for building high-quality, accessible web applications. Features easy customization and AI-friendly components. Maintained by @goorm-dev.",
     "keywords": [
         "react",
@@ -47,18 +47,20 @@
             }
         },
         "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
-        "./styles.css": "./dist/styles/themes.css.ts.vanilla.css"
+        "./styles.css": "./dist/styles/themes.css.ts.vanilla.css",
+        "./figma-blueprint/*": "./figma-blueprint/*"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.cts",
     "files": [
         "dist",
-        "docs"
+        "docs",
+        "figma-blueprint"
     ],
     "scripts": {
-        "build": "rimraf dist && rolldown -c rolldown.config.ts",
-        "clean": "rimraf dist node_modules .turbo",
+        "build": "rimraf dist figma-blueprint && rolldown -c rolldown.config.ts && figma-blueprint ship",
+        "clean": "rimraf dist figma-blueprint node_modules .turbo",
         "figma:check": "figma connect publish --dry-run",
         "figma:preview": "figma connect preview",
         "figma:publish": "figma connect publish",
@@ -91,12 +93,13 @@
         "@testing-library/dom": "^10.4.2",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.3",
-        "@testing-library/user-event": "^14.6.8",
+        "@testing-library/user-event": "^14.6.10",
         "@types/node": "^22.20.5",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "@vanilla-extract/rollup-plugin": "^1.5.4",
         "@vanilla-extract/vite-plugin": "^5.2.6",
+        "@vapor-ui/figma-blueprint": "workspace:*",
         "@vitest/browser": "catalog:",
         "@vitest/coverage-v8": "catalog:",
         "autoprefixer": "^10.5.4",

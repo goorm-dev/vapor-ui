@@ -6,13 +6,9 @@ import { z } from 'zod';
 import { remarkDemoSource } from './src/lib/remark-demo-source';
 
 const docsFrontmatterSchema = frontmatterSchema.extend({
-    /**
-     * `true` on a sibling `.mdx` served as an in-page tab (e.g. Properties).
-     * The LLM/source layers fold these back into the parent URL and hide them
-     * from sidebars so the parent is the one canonical entry.
-     */
     subpage: z.boolean().optional(),
     site_name: z.string().optional(),
+    fumadocs_markdown: z.boolean().optional(),
 });
 
 export const docs = defineDocs({

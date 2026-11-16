@@ -1,0 +1,24 @@
+{
+    "document": {
+        "id": "0:1",
+        "name": "Screen",
+        "type": "FRAME",
+        "children": [
+            {
+                "id": "2:1",
+                "name": "Select.Trigger",
+                "type": "INSTANCE",
+                "componentId": "1:1",
+                "children": [
+                    { "id": "2:2", "name": "Search", "type": "INSTANCE", "componentId": "1:2" },
+                    { "id": "2:3", "name": "Chevron", "type": "INSTANCE", "componentId": "1:3" }
+                ]
+            }
+        ]
+    },
+    "components": {
+        "1:1": { "key": "K-TRIGGER", "name": "💙Select.Trigger" },
+        "1:2": { "key": "K-SEARCH", "name": "💙SearchOutlineIcon" },
+        "1:3": { "key": "K-CHEVRON", "name": "💙ChevronDownOutlineIcon" }
+    }
+}

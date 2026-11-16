@@ -1,0 +1,21 @@
+{
+    "document": {
+        "id": "0:1",
+        "name": "Screen",
+        "type": "FRAME",
+        "children": [
+            {
+                "id": "2:1",
+                "name": "Pagination",
+                "type": "INSTANCE",
+                "componentId": "1:1",
+                "children": [
+                    { "id": "2:2", "name": "Title", "type": "TEXT", "characters": "Results" }
+                ]
+            }
+        ]
+    },
+    "components": {
+        "1:1": { "key": "K-PAGINATION", "name": "💙Pagination" }
+    }
+}
