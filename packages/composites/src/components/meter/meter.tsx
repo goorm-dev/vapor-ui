@@ -133,7 +133,6 @@ export interface MeterProps {
 
     /**
      * 측정값의 상태를 시각적으로 구분한다. `warning`은 임계 범위에 진입했음을 알린다.
-     * @default "default"
      */
     type: RootProps['type'];
 
