@@ -41,10 +41,14 @@ export const Default: Story = {
 export const CustomValueText: Story = {
     args: {
         label: '배터리 잔량',
+        min: 0,
+        max: 100,
         value: 45,
         size: 'md',
         type: 'default',
-        valueText: (formatted, raw, value) => `${raw} / ${value} (${formatted})`,
+        formatValue: {
+            valueText: (value) => `${value} GB`,
+        },
     },
     render: (args) => (
         <VStack $css={{ gap: '$200', width: '320px' }}>
@@ -108,7 +112,7 @@ const TestBedRender = () => {
                         value={row.value}
                         size={row.size}
                         type={row.type}
-                        valueText={row.hasValueText ? (formatted) => `${formatted}` : undefined}
+                        formatValue={row.hasValueText ? undefined : false}
                     />
                 </div>
             )}

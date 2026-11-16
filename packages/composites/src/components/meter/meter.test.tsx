@@ -9,7 +9,7 @@ describe('Meter (composite)', () => {
     afterEach(cleanup);
 
     it('should render role="meter" with the given range', () => {
-        render(<Meter label={LABEL_TEXT} value={42} min={0} max={100} />);
+        render(<Meter type="default" label={LABEL_TEXT} value={42} min={0} max={100} />);
         const meter = screen.getByRole('meter');
 
         expect(meter).toHaveAttribute('aria-valuemin', '0');
@@ -18,7 +18,7 @@ describe('Meter (composite)', () => {
     });
 
     it('should use the `label` slot as the accessible name', () => {
-        render(<Meter label={LABEL_TEXT} value={10} />);
+        render(<Meter type="default" label={LABEL_TEXT} value={10} />);
 
         expect(screen.getByRole('meter')).toHaveAccessibleName(LABEL_TEXT);
     });
@@ -26,6 +26,7 @@ describe('Meter (composite)', () => {
     it('should let `getAriaValueText` replace the generated value text', () => {
         render(
             <Meter
+                type="default"
                 label={LABEL_TEXT}
                 value={42}
                 getAriaValueText={(formatted, raw) => `${formatted} 사용 (${raw})`}
@@ -35,37 +36,45 @@ describe('Meter (composite)', () => {
         expect(screen.getByRole('meter')).toHaveAttribute('aria-valuetext', '42% 사용 (42)');
     });
 
-    it('should render `valueText` from `(formattedValue, value)` and hide it from assistive technology', () => {
+    it('should render `formattedValueText` from the formatted value and hide it from assistive technology', () => {
         render(
             <Meter
+                type="default"
                 label={LABEL_TEXT}
                 value={42}
-                valueText={(formattedValue, value) => `${formattedValue} 사용 (${value})`}
+                formatValue={{
+                    formattedValueText: (formattedValue) => `${formattedValue} 사용`,
+                }}
             />,
         );
 
-        const valueNode = screen.getByText('42% 사용 (42)');
+        const valueNode = screen.getByText('42% 사용');
         expect(valueNode).toBeInTheDocument();
         expect(valueNode).toHaveAttribute('aria-hidden', 'true');
     });
 
-    it('should expose the resolved `max` as the third argument of `valueText`', () => {
+    it('should render `valueText` and `maxValueText` with the raw value and the resolved `max`', () => {
         const VALUE = 30;
         const MAX = 150;
-        render(
+        const { container } = render(
             <Meter
+                type="default"
                 label={LABEL_TEXT}
                 value={VALUE}
                 max={MAX}
-                valueText={(_, value, max) => `${value} / ${max}`}
+                formatValue={{
+                    valueText: (value) => `${value}GB`,
+                    maxValueText: (max) => `${max}GB`,
+                }}
             />,
         );
+        const valueText = container.querySelector('[data-slots*="Meter.Value"]');
 
-        expect(screen.getByText(`${VALUE} / ${MAX}`)).toBeInTheDocument();
+        expect(valueText).toHaveTextContent(`${VALUE}GB/${MAX}GB`);
     });
 
     it('should render the default value text when `valueText` is not provided', () => {
-        const { container } = render(<Meter label={LABEL_TEXT} value={42} />);
+        const { container } = render(<Meter type="default" label={LABEL_TEXT} value={42} />);
         const valueText = container.querySelector('[data-slots*="Meter.Value"]');
 
         expect(valueText).toBeInTheDocument();
@@ -73,7 +82,7 @@ describe('Meter (composite)', () => {
     });
 
     it('should have no a11y violations', async () => {
-        const rendered = render(<Meter label={LABEL_TEXT} value={42} />);
+        const rendered = render(<Meter type="default" label={LABEL_TEXT} value={42} />);
         const result = await axe(rendered.container);
 
         expect(result).toHaveNoViolations();
@@ -86,7 +95,7 @@ describe('Meter (composite)', () => {
                 value={92}
                 type="warning"
                 size="lg"
-                valueText={(formatted) => formatted}
+                formatValue={{ formattedValueText: (formatted) => formatted }}
                 getAriaValueText={(formatted) => `${formatted} 사용 중, 경고 범위`}
             />,
         );

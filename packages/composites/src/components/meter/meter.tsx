@@ -1,6 +1,8 @@
 'use client';
 
-import { Meter as MeterPrimitives } from '@vapor-ui/core';
+import type { ReactNode } from 'react';
+
+import { Meter as MeterPrimitives, Text } from '@vapor-ui/core';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -10,6 +12,7 @@ import { createSlots } from '~/utils/create-slots';
 const slots = createSlots({
     label: MeterPrimitives.Label,
     valueText: MeterPrimitives.Value,
+    maxValueText: Text,
 });
 
 export const Meter = ({
@@ -25,10 +28,34 @@ export const Meter = ({
 
     // slots
     label,
-    valueText: valueTextProp,
+    formatValue,
 }: Meter.Props) => {
-    const valueText = (formattedValue: string, value: number, max: number) =>
-        valueTextProp ? valueTextProp(formattedValue, value, max) : formattedValue;
+    const renderValue = (formattedValue: string, value: number, max: number) => {
+        if (formatValue === false) return '';
+        if (!formatValue) return formattedValue;
+
+        const { formattedValueText, valueText, maxValueText } = formatValue;
+
+        if (formattedValueText) {
+            return typeof formattedValueText === 'function'
+                ? formattedValueText(formattedValue)
+                : formattedValueText;
+        }
+
+        return (
+            <>
+                <span>{typeof valueText === 'function' ? valueText(value) : valueText}</span>
+                {!!maxValueText && (
+                    <>
+                        <span>/</span>
+                        <span>
+                            {typeof maxValueText === 'function' ? maxValueText(max) : maxValueText}
+                        </span>
+                    </>
+                )}
+            </>
+        );
+    };
 
     return (
         <MeterPrimitives.Root
@@ -40,7 +67,10 @@ export const Meter = ({
             type={type}
         >
             <slots.label render={label} />
-            <slots.valueText render={valueText} />
+            <MeterPrimitives.Value $css={{ display: 'flex', gap: '$025', alignItems: 'center' }}>
+                {renderValue}
+            </MeterPrimitives.Value>
+
             <MeterPrimitives.TrackPrimitive>
                 <MeterPrimitives.IndicatorPrimitive />
             </MeterPrimitives.TrackPrimitive>
@@ -51,7 +81,24 @@ export const Meter = ({
 type Slots = SlotProps<typeof slots, 'label'>;
 type RootProps = MeterPrimitives.Root.Props;
 type ValueProps = MeterPrimitives.Value.Props;
-type ValueFormatter = NonNullable<ValueProps['children']>;
+
+type ValueChildrenArgs = Parameters<NonNullable<ValueProps['children']>>;
+type ValueFormatter<I extends number> = ((value: ValueChildrenArgs[I]) => ReactNode) | ReactNode;
+
+type FormattedValue = ValueFormatter<0>;
+type Value = ValueFormatter<1>;
+type MaxValue = ValueFormatter<2>;
+
+/**
+ * 값 표기 방식의 두 가지 shape.
+ * - `formattedValueText`: 단일 포맷터로 전체 텍스트를 렌더한다.
+ * - `valueText` + `maxValueText`: 현재 값과 최댓값을 분리해 각각 렌더한다.
+ *
+ * `never`로 두 그룹의 키를 서로 배제한다.
+ */
+type FormatValue =
+    | { formattedValueText: FormattedValue; valueText?: never; maxValueText?: never }
+    | { formattedValueText?: never; valueText: Value; maxValueText?: MaxValue };
 
 export interface MeterProps {
     /**
@@ -88,7 +135,7 @@ export interface MeterProps {
      * 측정값의 상태를 시각적으로 구분한다. `warning`은 임계 범위에 진입했음을 알린다.
      * @default "default"
      */
-    type?: RootProps['type'];
+    type: RootProps['type'];
 
     /**
      * 미터가 측정하는 대상의 이름. 접근성 레이블로 사용되므로 생략하지 않는다.
@@ -96,11 +143,21 @@ export interface MeterProps {
     label: Slots['label'];
 
     /**
-     * 현재 값을 숫자로 표시한다. 기본적으로 비율을 표시하며, 전달 받는 인자를 이용하여 커스텀할 수 있다.
+     * 값 표기 방식을 결정한다. 두 shape 중 하나만 허용되며 두 그룹을 동시에 지정할 수 없다.
+     * - `formattedValueText` 단독: 전체 문자열을 반환한다.
+     * - `valueText` + `maxValueText` 동시: 현재 값과 최댓값을 분리해 렌더한다.
+     *
      * @example
-     * <Meter valueText={(formattedValue, value, max) => `${value} / ${max} (${formattedValue})`} />
+     * <Meter formatValue={{ formattedValueText: (f, v, m) => `${v} / ${m}` }} />
+     * @example
+     * <Meter
+     *   formatValue={{
+     *     valueText: (v) => `${v} GB`,
+     *     maxValueText: (m) => `${m} GB`,
+     *   }}
+     * />
      */
-    valueText?: ValueFormatter;
+    formatValue?: FormatValue | false;
 }
 
 export namespace Meter {
