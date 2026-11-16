@@ -1,0 +1,35 @@
+{
+    "templateFile": "./toolbar.figma.batch.ts",
+    "components": [
+        {
+            "part": "root",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=46629-16515",
+            "component": "Toolbar.Root",
+            "source": "src/components/toolbar/toolbar.tsx"
+        },
+        {
+            "part": "button",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=46186-32930",
+            "component": "Toolbar.Button",
+            "source": "src/components/toolbar/toolbar.tsx"
+        },
+        {
+            "part": "toggleButton",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=47039-59325",
+            "component": "Toolbar.Button",
+            "source": "src/components/toolbar/toolbar.tsx"
+        },
+        {
+            "part": "input",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=46237-38744",
+            "component": "Toolbar.Input",
+            "source": "src/components/toolbar/toolbar.tsx"
+        },
+        {
+            "part": "separator",
+            "url": "https://www.figma.com/design/oxXA7DN1My1R4UFVmrm8Ep/Vapor-Design-System?node-id=46237-39322",
+            "component": "Toolbar.Separator",
+            "source": "src/components/toolbar/toolbar.tsx"
+        }
+    ]
+}
