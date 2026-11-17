@@ -153,6 +153,11 @@ class Transformer {
      * 정의 시점 값을 읽는다. 상수마다 한 번만 푼다.
      */
     readonly #resolvedTopLevel = new Map<string, Piece[]>();
+    /**
+     * 모듈 최상위 이름을 루트로 한 변경 지점 (`x.a = …`, `delete x.a`, `Object.assign(x, …)` 등).
+     * 병합된 object 상수가 여기 있으면 컴파일 결과(소스에 적힌 값)와 런타임 값이 갈라진다.
+     */
+    readonly #mutations: { name: string; node: AnyProp }[] = [];
     #captureCount = 0;
     readonly #captureNames = new Set<string>();
     /** 파일 안에서 각 이름이 바인딩된 횟수. 2 이상이면 shadowing 가능성 → 병합 안 함. */
@@ -185,7 +190,10 @@ class Transformer {
         this.#ms = new MagicString(source);
 
         walk(program, {
-            CallExpression: this.#onCallExpression,
+            CallExpression: this.#onCall,
+            AssignmentExpression: this.#onAssignment,
+            UpdateExpression: this.#onUpdate,
+            UnaryExpression: this.#onUnary,
             VariableDeclarator: this.#onVariableDeclarator,
             Function: this.#onFunction,
             FunctionDeclaration: this.#onFunction,
@@ -210,6 +218,7 @@ class Transformer {
             calls.push({ node, parents, args, debugId: debugIdOf(parents) });
         }
 
+        this.#checkMutations();
         if (this.#errors.length) return errorResult(source, this.#errors);
 
         const injectCtx: InjectContext = { ms: this.#ms, pending: new Map() };
@@ -343,6 +352,56 @@ class Transformer {
     #onVariableDeclarator = (node: AnyProp) => {
         this.#bindPattern(node.id);
     };
+
+    #onCall = (node: AnyProp, parents: AnyProp[]) => {
+        this.#onMutatingCall(node);
+        this.#onCallExpression(node, parents);
+    };
+
+    #onAssignment = (node: AnyProp) => this.#recordMutation(node.left, node);
+    #onUpdate = (node: AnyProp) => this.#recordMutation(node.argument, node);
+    #onUnary = (node: AnyProp) => {
+        if (node.operator === 'delete') this.#recordMutation(node.argument, node);
+    };
+    /** 첫 인자를 제자리에서 바꾸는 내장 함수 (`Object.assign(x, …)` 등). */
+    #onMutatingCall = (node: AnyProp) => {
+        const c = node.callee;
+        if (c?.type !== 'MemberExpression' || c.computed) return;
+        const owner = c.object?.type === 'Identifier' ? c.object.name : null;
+        const method = c.property?.name;
+        if (!owner || !MUTATING_BUILTINS[owner]?.has(method)) return;
+        const target = node.arguments?.[0];
+        const name = rootName(target, true);
+        if (name) this.#mutations.push({ name, node });
+    };
+
+    /** 멤버 접근 대상(`x.a`, `x[k].b`)의 변경만 기록한다. 이름 자체 재할당은 const 라 불가. */
+    #recordMutation(target: AnyProp, node: AnyProp) {
+        const name = rootName(target, false);
+        if (name) this.#mutations.push({ name, node });
+    }
+
+    /**
+     * 병합에 쓰인 object 상수가 변경되면 빌드 에러. 컴파일러는 소스에 적힌 값으로 병합하므로
+     * 변경은 반영되지 않는다 — 조용히 틀린 스타일을 내는 대신 알린다. 병합된 상수만 보므로
+     * 읽기·export·다른 곳에 값으로 넘기기는 영향이 없다. alias·함수 내부 변경은 잡지 않는다.
+     */
+    #checkMutations() {
+        for (const { name, node } of this.#mutations) {
+            const top = this.#topLevelStatic.get(name);
+            if (top?.init.type !== 'ObjectExpression' || !this.#resolvedTopLevel.has(name))
+                continue;
+            // 같은 이름이 여러 번 바인딩되면 병합 자체를 안 하므로 여기 오는 이름은 유일하다.
+            this.#errors.push({
+                code: 'mutated-constant',
+                message:
+                    `\`${name}\` is passed to css() and also modified here. css() compiles the value ` +
+                    `written in the source, so this change is not applied. Keep the object unchanged, ` +
+                    `or put the variant in its own object and pass both to css().`,
+                loc: locAt(this.opts.source, node.start),
+            });
+        }
+    }
 
     #onCallExpression = (node: AnyProp, parents: AnyProp[]) => {
         if (!this.#isCssCall(node)) return;
@@ -745,14 +804,42 @@ function parseError(
     source: string,
     err: { message: string; labels?: { start: number }[] },
 ): BuildError {
-    const offset = err.labels?.[0]?.start ?? 0;
-    const before = source.slice(0, offset);
-    const line = before.split('\n').length;
     return {
         code: 'parse-error',
         message: `Failed to parse file: ${err.message}`,
-        loc: { line, column: offset - (before.lastIndexOf('\n') + 1) },
+        loc: locAt(source, err.labels?.[0]?.start ?? 0),
     };
+}
+
+/** 소스 offset → 1-based line / 0-based column. */
+function locAt(source: string, offset: number) {
+    const before = source.slice(0, offset);
+    return { line: before.split('\n').length, column: offset - (before.lastIndexOf('\n') + 1) };
+}
+
+/** 첫 인자를 제자리에서 바꾸는 내장 함수. */
+const MUTATING_BUILTINS: Record<string, Set<string>> = {
+    Object: new Set(['assign', 'defineProperty', 'defineProperties', 'setPrototypeOf']),
+    Reflect: new Set(['set', 'defineProperty', 'deleteProperty', 'setPrototypeOf']),
+};
+
+/**
+ * `x`, `x.a`, `x[k].b`, `x!.a` 의 루트 식별자. `allowBare` 가 false 면 멤버 접근일 때만
+ * (이름 자체에 대한 할당은 제외) 반환한다.
+ */
+function rootName(node: AnyProp, allowBare: boolean): string | null {
+    let n = unwrapTypeOnly(node);
+    let member = false;
+    while (n?.type === 'MemberExpression' || n?.type === 'ChainExpression') {
+        if (n.type === 'MemberExpression') {
+            member = true;
+            n = unwrapTypeOnly(n.object);
+        } else {
+            n = unwrapTypeOnly(n.expression);
+        }
+    }
+    if (n?.type !== 'Identifier') return null;
+    return member || allowBare ? n.name : null;
 }
 
 function emptyResult(source: string): TransformResult {

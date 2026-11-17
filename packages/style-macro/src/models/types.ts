@@ -11,7 +11,8 @@ export interface BuildError {
         | 'dynamic-value'
         | 'computed-key'
         | 'spread'
-        | 'parse-error';
+        | 'parse-error'
+        | 'mutated-constant';
     message: string;
     loc: { line: number; column: number };
     hint?: string;

@@ -1106,3 +1106,71 @@ describe('transform — nested selectors read the element slot (PR #752 review)'
         expect(out.css).not.toContain('@property');
     });
 });
+
+describe('transform — mutation of merged object constants is a build error', () => {
+    const run = (body: string) => transform({ source: src(body), filename: '/M.tsx' });
+    const use = `export const A = () => <div className={css(base)} />;`;
+
+    it.each([
+        ['member assignment', `base.width = '96px';`],
+        ['computed member assignment', `base['width'] = '96px';`],
+        ['nested member assignment', `base[':hover'].color = 'red';`],
+        ['compound assignment', `base.width += 'x';`],
+        ['update expression', `base.count++;`],
+        ['delete', `delete base.width;`],
+        ['Object.assign target', `Object.assign(base, { width: '96px' });`],
+        [
+            'Object.defineProperty target',
+            `Object.defineProperty(base, 'width', { value: '96px' });`,
+        ],
+        ['Reflect.set target', `Reflect.set(base, 'width', '96px');`],
+        ['non-null wrapped', `base![':hover']!.color = 'red';`],
+        ['mutation after use', null],
+    ])('%s → mutated-constant error at the mutation line', (_label, stmt) => {
+        const decl = `const base = { width: '24px', ':hover': { color: 'blue' } };`;
+        const body =
+            stmt === null ? `${decl}\n${use}\nbase.width = '96px';` : `${decl}\n${stmt}\n${use}`;
+        const out = run(body);
+        expect(out.errors).toHaveLength(1);
+        expect(out.errors[0]).toMatchObject({
+            code: 'mutated-constant',
+            loc: { line: stmt === null ? 4 : 3 },
+        });
+        expect(out.errors[0]!.message).toContain('base');
+    });
+
+    it.each([
+        ['read', `console.log(base.width);`],
+        ['passed as value', `const box = <Box $css={base} />;`],
+        ['Object.assign source (not target)', `const copy = Object.assign({}, base);`],
+        ['export', null],
+        ['different object mutated', `const other = { width: 1 };\nother.width = 2;`],
+    ])('%s → no error, still merged', (_label, stmt) => {
+        const decl =
+            stmt === null
+                ? `export const base = { width: '24px' };`
+                : `const base = { width: '24px' };\n${stmt}`;
+        const out = run(`${decl}\n${use}`);
+        expect(out.errors).toEqual([]);
+        expect(out.code).toMatch(/className=\{'\w+'\}/);
+    });
+
+    it('mutating a same-named local in another scope is not reported', () => {
+        const out = run(
+            `const base = { width: '24px' };\nfunction f() { const base = { width: 1 }; base.width = 2; }\n${use}`,
+        );
+        expect(out.errors).toEqual([]);
+    });
+
+    it('mutating a constant that is not merged into css() is ignored', () => {
+        const out = run(
+            `const cfg = { width: '24px' };\ncfg.width = '96px';\n${`export const A = () => <div className={css({ color: 'red' })} />;`}`,
+        );
+        expect(out.errors).toEqual([]);
+    });
+
+    it('mutating a css() constant result is not checked (it is a string)', () => {
+        const out = run(`const base = css({ width: '24px' });\n${use}`);
+        expect(out.errors).toEqual([]);
+    });
+});
