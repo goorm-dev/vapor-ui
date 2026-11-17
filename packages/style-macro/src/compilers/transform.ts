@@ -147,6 +147,8 @@ class Transformer {
     readonly #blocks: Block[] = [];
 
     #bindingName: string | null = null;
+    /** import 바인딩을 참조하는 `css(...)` 호출 노드. */
+    readonly #macroCalls = new Set<AnyProp>();
     #ms: MagicString | null = null;
     /** 마지막 import 문의 끝 위치. 없으면 -1. */
     #lastImportEnd = -1;
@@ -203,7 +205,6 @@ class Transformer {
         this.#prologueEnd = prologueEnd(program);
         this.#scanImports(program);
         if (!this.#bindingName) return emptyResult(source);
-        this.#scanTopLevel(program);
         this.#ms = new MagicString(source);
 
         walk(program, {
@@ -212,6 +213,8 @@ class Transformer {
             UpdateExpression: this.#onUpdate,
             UnaryExpression: this.#onUnary,
         });
+        // 매크로 호출 판정(#macroCalls)이 끝난 뒤에 최상위 상수를 분류한다.
+        this.#scanTopLevel(program);
 
         // 다른 css() 인자 안에 들어간 호출은 바깥 호출이 함께 처리한다.
         const outer = this.#callNodes
@@ -327,15 +330,29 @@ class Transformer {
         }
     }
 
+    /** 매크로 호출인지 — 이름이 아니라 import 바인딩 참조 여부로 정한다 (`#onCall` 에서 판정). */
     #isCssCall(node: AnyProp): boolean {
-        return (
-            node?.type === 'CallExpression' &&
-            node.callee?.type === 'Identifier' &&
-            node.callee.name === this.#bindingName
-        );
+        return this.#macroCalls.has(node);
+    }
+
+    /** `node` 안(자신 포함)에 매크로 호출이 있는지. */
+    #containsCssCall(node: AnyProp): boolean {
+        for (const call of this.#macroCalls) if (contains(node, call)) return true;
+        return false;
     }
 
     #onCall = (node: AnyProp, parents: AnyProp[]) => {
+        // Babel macro 의 `binding.referencePaths` 와 같다: callee 가 이 위치에서 import 바인딩을
+        // 가리킬 때만 매크로다. 지역 바인딩(파라미터·지역 변수 등)에 가려진 `css` 는 사용자 함수다.
+        const binding = this.#bindingName;
+        if (
+            binding &&
+            node.callee?.type === 'Identifier' &&
+            node.callee.name === binding &&
+            !isShadowed(binding, parents)
+        ) {
+            this.#macroCalls.add(node);
+        }
         this.#onMutatingCall(node, parents);
         this.#onCallExpression(node, parents);
     };
@@ -424,7 +441,7 @@ class Transformer {
         for (const a of call.arguments) {
             const pieces = this.#resolve(a, scope, new Set());
             if (pieces) args.push({ kind: 'local', pieces });
-            else if (this.#isCssCall(a) || containsCssCall(a, this.#bindingName!)) {
+            else if (this.#containsCssCall(a)) {
                 this.#errors.push(nestedCallError(this.opts.source, a));
             } else args.push({ kind: 'external', node: a });
         }
@@ -795,16 +812,6 @@ function unwrapTypeOnly(node: AnyProp): AnyProp {
 
 function contains(outer: AnyProp, inner: AnyProp): boolean {
     return outer.start <= inner.start && inner.end <= outer.end;
-}
-
-function containsCssCall(node: AnyProp, binding: string): boolean {
-    let found = false;
-    walk(node, {
-        CallExpression: (n) => {
-            if (n.callee?.type === 'Identifier' && n.callee.name === binding) found = true;
-        },
-    });
-    return found;
 }
 
 /** readable 모드 class 앞에 붙일 이름: 가장 가까운 변수 → JSX 요소 → 함수 이름. */

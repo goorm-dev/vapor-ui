@@ -1439,6 +1439,42 @@ describe('transform — slots merge into the element final style (spreads, callb
     });
 });
 
+describe('transform — only calls that reference the imported binding are macros', () => {
+    const run = (body: string) => transform({ source: src(body), filename: '/B.tsx' });
+
+    it.each([
+        ['parameter', `export function f(css) { return css({ color: 'red' }); }`],
+        [
+            'local const',
+            `export function f() { const css = (o) => o; return css({ color: 'red' }); }`,
+        ],
+        ['destructured', `export const f = ({ css }) => css({ color: 'red' });`],
+        ['catch param', `try {} catch (css) { css({ color: 'red' }); }`],
+        ['block let', `{ let css = (o) => o; css({ color: 'red' }); }`],
+    ])('leaves a shadowed `css` untouched: %s', (_, body) => {
+        const out = run(body);
+        expect(out.errors).toEqual([]);
+        expect(out.code).toContain(`css({ color: 'red' })`);
+        expect(out.css ?? '').toBe('');
+    });
+
+    it('compiles the module binding next to a shadowed one', () => {
+        const out = run(
+            `export const a = css({ color: 'blue' });\nexport function f(css) { return css({ color: 'red' }); }`,
+        );
+        expect(out.errors).toEqual([]);
+        expect(out.code).toContain(`css({ color: 'red' })`);
+        expect(out.css).toContain('color: blue');
+        expect(out.css).not.toContain('color: red');
+    });
+
+    it('a shadowed `css` inside a macro argument is not a nested macro call', () => {
+        const out = run(`export const a = css({ color: 'red' }, pick((css) => css(y)));`);
+        expect(out.errors).toEqual([]);
+        expect(out.code).toContain('(css) => css(y)');
+    });
+});
+
 describe('transform — module constants resolve by lexical scope, not by name count', () => {
     const run = (body: string) => transform({ source: src(body), filename: '/S.tsx' });
     const use = `export const A = () => <div className={css(base, { color: 'red' })} />;`;
