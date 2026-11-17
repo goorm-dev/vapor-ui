@@ -1,5 +1,11 @@
 import { generateArbitraryValueSelector } from '~/models/class-name';
-import { ROOT_CONTEXT, type RuleContext, contextKey, nestContext } from '~/models/selector';
+import {
+    ROOT_CONTEXT,
+    type RuleContext,
+    contextKey,
+    isNestedKey,
+    nestContext,
+} from '~/models/selector';
 import { expandShorthand } from '~/models/shorthand';
 import { type TokenRef, findTokenRefs } from '~/models/token-ref';
 import { resolveToken } from '~/models/tokens';
@@ -163,7 +169,17 @@ export function createParser(source: string) {
 
         const value = prop.value;
 
-        // 중첩 객체 → selector 확장
+        // key 가 중첩 rule 인지 속성인지 정한다. 값은 그 다음에 key 종류에 맞는지 본다.
+        if (isNestedKey(name)) {
+            if (isAbsent(value)) return;
+            if (value?.type !== 'ObjectExpression') {
+                pushError(nestedRuleNotObject(locOf(value), name));
+                return;
+            }
+            handleNestedObject(name, value, context, prop);
+            return;
+        }
+        // 속성 key 에 객체 → bare selector(`div span`)로 쓴 것. 중첩 key 규칙 위반으로 알린다.
         if (value?.type === 'ObjectExpression') {
             handleNestedObject(name, value, context, prop);
             return;
@@ -418,6 +434,14 @@ const gluedToken = (
         `Token \`${token}\` in \`${cssProperty}: ${rawValue}\` must be a whole value component, ` +
         `separated by spaces, commas, slashes or parentheses (e.g. \`calc(${token} * -1)\`). ` +
         `To use a literal \`$\`, put it in a CSS string.`,
+    loc,
+});
+
+const nestedRuleNotObject = (loc: Loc, key: string): BuildError => ({
+    code: 'invalid-input-shape',
+    message:
+        `\`${JSON.stringify(key)}\` is a nested selector or at-rule, so its value must be an object literal ` +
+        `of declarations. For a conditional block, write \`cond && { ... }\` as a separate css() argument.`,
     loc,
 });
 

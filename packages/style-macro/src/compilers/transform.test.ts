@@ -85,6 +85,34 @@ describe('transform — static syntax', () => {
         expect(out.errors[0].code).toBe('invalid-selector');
     });
 
+    describe('the key, not the value, decides between a declaration and a nested rule', () => {
+        const run = (body: string) => transform({ source: src(body), filename: '/K.tsx' });
+
+        it.each([
+            [`export const f = (h) => css({ ':hover': h });`, 'h }'],
+            [`export const f = () => css({ '@media (min-width: 1px)': 'red' });`, `'red'`],
+            [`export const f = (c) => css({ '&.on': c ? 'a' : 'b' });`, 'c ?'],
+        ])('rejects a nested-rule key whose value is not an object: %s', (body, at) => {
+            const out = run(body);
+            expect(out.errors.map((e) => e.code)).toEqual(['invalid-input-shape']);
+            expect(out.errors[0]!.loc.column).toBe(src(body).split('\n')[1]!.indexOf(at));
+            expect(out.css ?? '').not.toContain(':hover:');
+        });
+
+        it('treats null / undefined under a nested-rule key as no rule', () => {
+            const out = run(
+                `export const a = css({ color: 'red', ':hover': undefined, '&.x': null });`,
+            );
+            expect(out.errors).toEqual([]);
+            expect(out.css).not.toContain(':hover');
+        });
+
+        it('still rejects an object under a property key', () => {
+            const out = run(`export const a = css({ color: { x: 1 } });`);
+            expect(out.errors.map((e) => e.code)).toEqual(['invalid-selector']);
+        });
+    });
+
     it('rejects a bare branch inside a comma list instead of leaking it', () => {
         const out = transform({
             source: src(`const cls = css({ ':hover, div': { color: 'red' } });`),

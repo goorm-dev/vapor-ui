@@ -22,6 +22,15 @@ export const ROOT_CONTEXT: RuleContext = { atRules: [], selector: '&' };
 
 const NESTED_PREFIXES = ['::', ':', '[', '&'];
 
+/**
+ * 중첩 rule key 인지 — 아니면 CSS 속성 이름이다. CSS Nesting 처럼 key 의 첫 글자로 정한다
+ * (속성 이름은 `:`·`[`·`&`·`@` 로 시작할 수 없다). 값의 모양으로 정하지 않는다.
+ */
+export const isNestedKey = (key: string): boolean => {
+    const k = key.trimStart();
+    return isAtRuleKey(k) || NESTED_PREFIXES.some((p) => k.startsWith(p));
+};
+
 /** `@` 로 시작하면 at-rule, 아니면 selector key. */
 export const isAtRuleKey = (key: string): boolean => key.startsWith('@');
 

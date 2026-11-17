@@ -228,6 +228,7 @@ css({ borderWidth: '1px', borderStyle: 'solid', borderColor: '$basic-black' });
 ### 기타 금지
 
 - Spread elements (`...rest`)
+- 중첩 selector·at-rule key 에 object 리터럴이 아닌 값 (`{ ':hover': hoverStyle }`). 조건부 블록은 `cond && { ... }` 를 별도 인자로 (`invalid-input-shape`)
 - Computed keys (`[key]`)
 - Identifier property 의 dynamic value (`animation-name`, `content` 등)
 - 삼항 분기 안 dynamic value (`cond ? var1 : '$a'` X)
