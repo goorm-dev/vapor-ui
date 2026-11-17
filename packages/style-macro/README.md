@@ -292,17 +292,16 @@ export default function Root({ children }) {
 
 ## 내부 구조
 
-| 모듈                           | 역할                                                           |
-| ------------------------------ | -------------------------------------------------------------- |
-| `src/compilers/transform.ts`   | AST 파싱, call site 수집, rule emit, 코드 재작성               |
-| `src/compilers/parse-call.ts`  | 단일 `css({...})` 호출 파싱, IR rule 생성                      |
-| `src/compilers/emit-css.ts`    | 블록(class + IR rule) → 모듈 CSS                               |
-| `src/compilers/jsx-inject.ts`  | Dynamic value JSX `style` prop 주입                            |
-| `src/compilers/directives.ts`  | `'use client'` directive 보존 (import 삽입 위치 결정)          |
-| `src/models/*.ts`              | class name, selector, shorthand, token, value 모델             |
-| `src/plugins/*.ts`             | 번들러 adapter (unplugin + turbopack loader)                   |
-| `src/models/sort.ts`           | 블록 안 at-rule 정렬 (Compiled 이식)                           |
-| `src/helpers/cx.ts`            | runtime `_cx` — class 이어붙이기·중복 제거 (`__runtime__`)     |
-| `src/helpers/resolve-token.ts` | runtime `_resolveToken` helper (`__runtime__` subpath 로 노출) |
+| 모듈                           | 역할                                                                                      |
+| ------------------------------ | ----------------------------------------------------------------------------------------- |
+| `src/compilers/transform.ts`   | AST 파싱, call site 수집, rule emit, 코드 재작성 (import 는 directive prologue 뒤에 삽입) |
+| `src/compilers/parse-call.ts`  | 단일 `css({...})` 호출 파싱, IR rule 생성                                                 |
+| `src/compilers/emit-css.ts`    | 블록(class + IR rule) → 모듈 CSS                                                          |
+| `src/compilers/jsx-inject.ts`  | Dynamic value JSX `style` prop 주입                                                       |
+| `src/models/*.ts`              | class name, selector, shorthand, token, value 모델                                        |
+| `src/plugins/*.ts`             | 번들러 adapter (unplugin + turbopack loader)                                              |
+| `src/models/sort.ts`           | 블록 안 at-rule 정렬 (Compiled 이식)                                                      |
+| `src/helpers/cx.ts`            | runtime `_cx` — class 이어붙이기·중복 제거 (`__runtime__`)                                |
+| `src/helpers/resolve-token.ts` | runtime `_resolveToken` helper (`__runtime__` subpath 로 노출)                            |
 
 `transform(source, opts)` 는 public API 아님 — plugin 내부 전용.

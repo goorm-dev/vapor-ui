@@ -7,7 +7,6 @@ import type { AnyProp, BuildError, DynamicRule, IRRule } from '~/models/types';
 import { propertyToTokenAxis } from '~/tokens';
 import { isUnitless } from '~/tokens/css-reference';
 
-import { directivePrologueEnd } from './directives';
 import { type Block, DEFAULT_LAYER, emitBlocks, normalizeRules, signatureOf } from './emit-css';
 import {
     type InjectContext,
@@ -149,8 +148,14 @@ class Transformer {
 
     #bindingName: string | null = null;
     #ms: MagicString | null = null;
-    /** 마지막 import 문의 끝 위치. 없으면 directive 뒤. */
+    /** 마지막 import 문의 끝 위치. 없으면 -1. */
     #lastImportEnd = -1;
+    /**
+     * directive prologue(`'use client'` 등) 마지막 문의 끝 위치. 없으면 0.
+     * 파서가 prologue 로 판정한 문(ESTree `ExpressionStatement.directive`)만 센다 —
+     * 주석·괄호·같은 줄 코드 처리를 파서와 똑같이 따른다.
+     */
+    #prologueEnd = 0;
     #needResolveToken = false;
     #needIx = false;
     #needCx = false;
@@ -195,6 +200,7 @@ class Transformer {
             return errorResult(source, [parseError(source, parsed.errors[0])]);
 
         const program = parsed.program;
+        this.#prologueEnd = prologueEnd(program);
         this.#scanImports(program);
         if (!this.#bindingName) return emptyResult(source);
         this.#scanTopLevel(program);
@@ -686,7 +692,7 @@ class Transformer {
     #insertCssImport(specifier: string) {
         const line = `import ${jsSingleQuoted(specifier)};`;
         if (this.#lastImportEnd >= 0) this.#ms!.appendRight(this.#lastImportEnd, `\n${line}`);
-        else this.#ms!.appendLeft(directivePrologueEnd(this.opts.source), `${line}\n`);
+        else this.#insertAtTop(line);
     }
 
     #ensureRuntimeImport() {
@@ -704,15 +710,29 @@ class Transformer {
         }
         if (specifiers.length === 0) return;
 
-        const inject = `import { ${specifiers.join(', ')} } from '${RUNTIME_IMPORT_SOURCE}';\n`;
-        const insertPos = directivePrologueEnd(this.opts.source);
-        this.#ms!.appendLeft(insertPos, inject);
+        this.#insertAtTop(`import { ${specifiers.join(', ')} } from '${RUNTIME_IMPORT_SOURCE}';`);
+    }
+
+    /** prologue 바로 뒤(없으면 파일 맨 앞)에 문 하나를 넣는다. prologue 는 첫 문으로 남는다. */
+    #insertAtTop(line: string) {
+        if (this.#prologueEnd === 0) this.#ms!.appendLeft(0, `${line}\n`);
+        else this.#ms!.appendLeft(this.#prologueEnd, `\n${line}`);
     }
 }
 
 // ────────────────────────────────────────────────────────────────
 // helpers
 // ────────────────────────────────────────────────────────────────
+
+/** directive prologue 마지막 문의 끝. prologue 가 없으면 0. */
+function prologueEnd(program: AnyProp): number {
+    let end = 0;
+    for (const stmt of program.body) {
+        if (stmt.type !== 'ExpressionStatement' || typeof stmt.directive !== 'string') break;
+        end = stmt.end;
+    }
+    return end;
+}
 
 /** 두 slot 트리가 같은 값을 만드는지. 분기가 같으면 조건을 생략한다. */
 function sameSlots(a: SlotTree, b: SlotTree): boolean {

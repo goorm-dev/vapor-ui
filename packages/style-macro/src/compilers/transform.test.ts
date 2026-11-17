@@ -1,3 +1,4 @@
+import { parseSync } from 'oxc-parser';
 import { describe, expect, it } from 'vitest';
 
 import { transform } from './transform';
@@ -130,6 +131,60 @@ describe('transform — dynamic slots', () => {
         // runtime import 가 directive 뒤에 삽입됐는지 확인.
         const firstLines = out.code.split('\n').slice(0, 4).join('\n');
         expect(firstLines).toContain('_resolveToken');
+    });
+
+    describe('directive prologue', () => {
+        // 출력을 다시 파싱해 prologue 가 그대로 첫 statement 들인지 본다 (Next SWC 와 같은 판정).
+        const prologue = (code: string) => {
+            const { body } = parseSync('/D.tsx', code, {
+                sourceType: 'module',
+                lang: 'tsx',
+            }).program;
+            const out: string[] = [];
+            for (const s of body) {
+                if (!('directive' in s) || typeof s.directive !== 'string') break;
+                out.push(s.directive);
+            }
+            return out;
+        };
+        const dynamicBody = `export const C = ({ c }) => <div className={css({ color: c })} />;`;
+
+        it.each([
+            [
+                'same-line comment',
+                `'use client'; // c\nimport { css } from '@vapor-ui/style-macro';`,
+            ],
+            ['same-line import', `'use client'; import { css } from '@vapor-ui/style-macro';`],
+            ['no semicolon', `'use client'\nimport { css } from '@vapor-ui/style-macro';`],
+            [
+                'leading comments',
+                `/** doc */\n// x\n'use client';\nimport { css } from '@vapor-ui/style-macro';`,
+            ],
+            [
+                'multiple directives',
+                `'use strict'; "use client";\nimport { css } from '@vapor-ui/style-macro';`,
+            ],
+            ['CRLF', `'use client';\r\nimport { css } from '@vapor-ui/style-macro';`],
+        ])('keeps the prologue first with a runtime import: %s', (_, head) => {
+            const source = `${head}\n${dynamicBody}`;
+            const out = transform({ source, filename: '/D.tsx' });
+            expect(out.errors).toEqual([]);
+            expect(out.code).toContain('__runtime__');
+            expect(prologue(out.code)).toEqual(prologue(source));
+        });
+
+        it('keeps the prologue first with a CSS import and no other import', () => {
+            // css 가 import 로 오지 않으면 매크로가 적용되지 않으므로, 소스 import 를 뒤에 둔다.
+            const source = `'use client'; // c\nimport { css } from '@vapor-ui/style-macro';\nexport const a = css({ color: 'red' });`;
+            const out = transform({ source, filename: '/D.tsx', cssImport: './D.tsx.vapor.css' });
+            expect(prologue(out.code)).toEqual(['use client']);
+        });
+
+        it('does not treat a parenthesized string as a directive', () => {
+            const source = `('use client');\nimport { css } from '@vapor-ui/style-macro';\n${dynamicBody}`;
+            const out = transform({ source, filename: '/D.tsx' });
+            expect(out.code.startsWith('import {')).toBe(true);
+        });
     });
 
     it('auto-imports _resolveToken from the dedicated runtime subpath', () => {
