@@ -173,8 +173,12 @@ class Transformer {
 
         // 매크로를 import 한 파일만 여기 온다 — 못 읽으면 조용히 넘기지 않고 빌드 에러.
         // 그대로 두면 css() 가 런타임 placeholder 로 남아 스타일이 통째로 빠진다.
-        const parsed = parseSync(filename, source, { sourceType: 'module', lang: langOf(filename) });
-        if (parsed.errors?.length) return errorResult(source, [parseError(source, parsed.errors[0])]);
+        const parsed = parseSync(filename, source, {
+            sourceType: 'module',
+            lang: langOf(filename),
+        });
+        if (parsed.errors?.length)
+            return errorResult(source, [parseError(source, parsed.errors[0])]);
 
         const program = parsed.program;
         this.#scanImports(program);
@@ -692,7 +696,11 @@ class Transformer {
 function sameSlots(a: SlotTree, b: SlotTree): boolean {
     if (a.kind === 'obj' && b.kind === 'obj') return a.entries.join('\0') === b.entries.join('\0');
     if (a.kind === 'cond' && b.kind === 'cond') {
-        return a.test() === b.test() && sameSlots(a.whenTrue, b.whenTrue) && sameSlots(a.whenFalse, b.whenFalse);
+        return (
+            a.test() === b.test() &&
+            sameSlots(a.whenTrue, b.whenTrue) &&
+            sameSlots(a.whenFalse, b.whenFalse)
+        );
     }
     return false;
 }
@@ -770,7 +778,10 @@ function langOf(filename: string): 'ts' | 'tsx' | 'jsx' {
     return 'jsx';
 }
 
-function parseError(source: string, err: { message: string; labels?: { start: number }[] }): BuildError {
+function parseError(
+    source: string,
+    err: { message: string; labels?: { start: number }[] },
+): BuildError {
     const offset = err.labels?.[0]?.start ?? 0;
     const before = source.slice(0, offset);
     const line = before.split('\n').length;

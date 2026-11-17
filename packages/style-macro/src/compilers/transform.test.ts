@@ -880,7 +880,9 @@ describe('transform — dynamic slots follow the className branch tree (PR #752 
             const out = run(`item && css({ backgroundColor: item.color })`);
             expect(out.errors).toEqual([]);
             expect(styleOf(out.code)).toMatch(
-                new RegExp(String.raw`^\.\.\.\(\(item\) \? \{ ${SLOT}item\.color, 'px'\) \?\? 'var\(--vapor-_\w+,\)' \} : \{\}\)$`),
+                new RegExp(
+                    String.raw`^\.\.\.\(\(item\) \? \{ ${SLOT}item\.color, 'px'\) \?\? 'var\(--vapor-_\w+,\)' \} : \{\}\)$`,
+                ),
             );
         });
 
@@ -901,22 +903,30 @@ describe('transform — dynamic slots follow the className branch tree (PR #752 
         });
 
         it('left operand of `&&` is evaluated unconditionally → no guard', () => {
-            expect(styleOf(run(`css({ color: item.c }) && a`).code)).toMatch(new RegExp(`^${SLOT}`));
+            expect(styleOf(run(`css({ color: item.c }) && a`).code)).toMatch(
+                new RegExp(`^${SLOT}`),
+            );
         });
     });
 
     describe('argument branches (inside css())', () => {
         it('`cond ? { x: item.v } : undefined` evaluates the slot only on the true branch', () => {
-            const out = run(`css({ width: 100 }, item ? { backgroundColor: item.color } : undefined)`);
+            const out = run(
+                `css({ width: 100 }, item ? { backgroundColor: item.color } : undefined)`,
+            );
             expect(out.errors).toEqual([]);
             expect(out.code).toMatch(/className=\{\(item \? '\w+' : '\w+'\)\}/);
             expect(styleOf(out.code)).toMatch(
-                new RegExp(String.raw`^\.\.\.\(item \? \{ ${SLOT}item\.color, 'px'\) .+ \} : \{\}\)$`),
+                new RegExp(
+                    String.raw`^\.\.\.\(item \? \{ ${SLOT}item\.color, 'px'\) .+ \} : \{\}\)$`,
+                ),
             );
         });
 
         it('`cond && { x: item.v }` evaluates the slot only when cond is truthy', () => {
-            const style = styleOf(run(`css({ width: 100 }, item && { backgroundColor: item.color })`).code);
+            const style = styleOf(
+                run(`css({ width: 100 }, item && { backgroundColor: item.color })`).code,
+            );
             expect(style).toMatch(/^\.\.\.\(item \? \{ .+ \} : \{\}\)$/);
         });
 
@@ -946,7 +956,10 @@ describe('transform — plain style object constants (PR #752 review)', () => {
         src(`${decl}\nexport const A = () => <div className={${use}} />;`);
 
     it('module-level `const x = { ... }` merges at compile time like a css() constant', () => {
-        const out = transform({ source: body(`const base = { padding: '$space-200' };`), filename: '/O1.tsx' });
+        const out = transform({
+            source: body(`const base = { padding: '$space-200' };`),
+            filename: '/O1.tsx',
+        });
         expect(out.errors).toEqual([]);
         expect(out.code).not.toContain('_cx');
         expect(out.code).toMatch(/className=\{'\w+'\}/);
@@ -998,7 +1011,9 @@ describe('transform — module constants capture values at definition (PR #752 r
         expect(out.errors).toEqual([]);
         const capture = /const (__vaporCapture_\d+) = \(compact\);\nconst base =/.exec(out.code);
         expect(capture).not.toBeNull();
-        expect(out.code).toMatch(new RegExp(`className=\\{\\(${capture![1]} \\? '\\w+' : '\\w+'\\)\\}`));
+        expect(out.code).toMatch(
+            new RegExp(`className=\\{\\(${capture![1]} \\? '\\w+' : '\\w+'\\)\\}`),
+        );
     });
 
     it('dynamic value of a constant is captured, not re-read in the use-site scope', () => {
@@ -1029,7 +1044,9 @@ describe('transform — module constants capture values at definition (PR #752 r
 
     it('inline arguments are not captured', () => {
         const out = transform({
-            source: src(`export const A = ({ on }) => <div className={css({ color: on ? 'red' : 'blue' })} />;`),
+            source: src(
+                `export const A = ({ on }) => <div className={css({ color: on ? 'red' : 'blue' })} />;`,
+            ),
             filename: '/S4.tsx',
         });
         expect(out.code).not.toContain('__vaporCapture_');
@@ -1060,7 +1077,11 @@ describe('transform — parse language and parse errors (PR #752 review)', () =>
 
     it('file without the macro import is still skipped untouched', () => {
         const source = `const x = ;`;
-        expect(transform({ source, filename: '/P.ts' })).toEqual({ code: source, css: null, errors: [] });
+        expect(transform({ source, filename: '/P.ts' })).toEqual({
+            code: source,
+            css: null,
+            errors: [],
+        });
     });
 });
 
