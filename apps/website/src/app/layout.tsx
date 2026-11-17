@@ -18,7 +18,9 @@ const inter = Inter({
     subsets: ['latin'],
 });
 
-const SCRIPT = buildColorSchemeScript({ defaultTheme: 'system' });
+const THEME_STORAGE_KEY = 'vapor-ui-docs';
+
+const SCRIPT = buildColorSchemeScript({ defaultTheme: 'system', storageKey: THEME_STORAGE_KEY });
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (
@@ -53,7 +55,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     }}
                     theme={{ enabled: false }}
                 >
-                    <ThemeProvider defaultTheme="system" storageKey="vapor-ui-docs">
+                    <ThemeProvider defaultTheme="system" storageKey={THEME_STORAGE_KEY}>
                         <AppToastProvider>
                             <ThemeSync />
                             {children}
