@@ -657,6 +657,53 @@ describe('transform — PR #752 review fixtures', () => {
 
 // css() 는 순수 string 을 반환한다. 같은 파일에서 정적으로 풀리는 인자는 compile-time 에
 // 한 블록으로 병합하고, 그 밖의 인자는 _cx([...]) 로 이어붙인다.
+describe('transform — a style object can never reach css() at runtime', () => {
+    const run = (body: string) => transform({ source: src(body), filename: '/R.tsx' });
+
+    it.each([
+        ['|| object', `export const f = (c) => css(c || { color: 'red' });`, `{ color: 'red' }`],
+        ['?? object', `export const f = (c) => css(c ?? { color: 'red' });`, `{ color: 'red' }`],
+        ['object ||', `export const f = (c) => css({ color: 'red' } || c);`, `{ color: 'red' }`],
+        [
+            'ternary, one runtime branch',
+            `export const f = (c, k) => css(c ? { color: 'red' } : k);`,
+            `{ color: 'red' }`,
+        ],
+        [
+            '|| object constant',
+            `const base = { color: 'red' };\nexport const f = (c) => css(c || base);`,
+            'base',
+        ],
+        [
+            'nested in && right',
+            `export const f = (c, k) => css(c && (k || { color: 'red' }));`,
+            `{ color: 'red' }`,
+        ],
+    ])('%s → build error at the object', (_, body, at) => {
+        const out = run(body);
+        expect(out.errors).toHaveLength(1);
+        expect(out.errors[0]).toMatchObject({ code: 'invalid-input-shape' });
+        const source = src(body);
+        const line = source.slice(0, source.indexOf(at, source.indexOf('css('))).split('\n').length;
+        expect(out.errors[0]!.loc.line).toBe(line);
+    });
+
+    it.each([
+        [
+            'class string ||',
+            `const a = css({ color: 'red' });\nexport const f = (c) => css(c || a);`,
+        ],
+        ['object passed to a function', `export const f = (pick) => css(pick({ color: 'red' }));`],
+        ['runtime branches only', `export const f = (c, a, b) => css(c ? a : b);`],
+        [
+            'shadowed object constant',
+            `const base = { color: 'red' };\nexport const f = (c, base) => css(c || base);`,
+        ],
+    ])('%s → stays a runtime class string', (_, body) => {
+        expect(run(body).errors).toEqual([]);
+    });
+});
+
 describe('transform — string result & composition', () => {
     const classOf = (code: string, name = 'cls') =>
         new RegExp(`const ${name} = (.+);`).exec(code)![1];

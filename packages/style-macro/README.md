@@ -7,6 +7,7 @@
 - `css(a, b)` 합성:
     - 같은 파일에서 정적으로 풀리는 인자(object 리터럴, 모듈 최상위 `const x = css(...)` / `const x = { ... }` 상수, 그 사이의 `&&` / `?:`)는 compile-time 에 **한 블록으로 병합**한다. 뒤 인자가 이기고, 조건부 조합은 분기마다 병합 블록을 미리 만든다(최대 16 조합).
     - 그 밖의 인자(import, props, 함수 결과)는 `_cx([...])` 로 이어붙인다. 같은 속성을 가진 두 class 의 승패는 CSS 로드 순서(import 순서)를 따른다.
+    - 정적으로 풀리지 않는 인자 안에 스타일 객체가 값으로 올 수 있으면(`css(c || { ... })`, 한쪽 분기만 정적인 삼항) 빌드 에러다. 런타임에는 class 문자열만 있다. `css(c, !c && { ... })` 처럼 나눠 쓴다.
 
 ## 사용
 
@@ -268,19 +269,19 @@ export default function Root({ children }) {
 
 ## Error 코드
 
-| Code                  | 상황                                                       |
-| --------------------- | ---------------------------------------------------------- |
-| `unknown-token`       | 토큰 이름이 해당 axis 에 없음                              |
-| `scope-mismatch`      | 토큰이 다른 axis 소속                                      |
-| `unknown-property`    | property 가 token scope 미지원 (shorthand 등)              |
-| `invalid-input-shape` | 입력 shape 오류 (embedded `$token`, spread, 비정상 노드)   |
-| `dynamic-value`       | 식별자 property 에 dynamic 값, 삼항 분기에 dynamic 값      |
-| `computed-key`        | computed key 사용                                          |
-| `spread`              | spread element 사용                                        |
-| `invalid-selector`    | nested selector 가 `:`/`::`/`@`/`[`/`&` 로 시작 안 함      |
-| `invalid-value`       | boolean · 정규식 · BigInt · 배열 · 함수 · 클래스 리터럴 값 |
-| `mutated-constant`    | `css()` 에 병합된 object 상수를 변경함                     |
-| `parse-error`         | 매크로를 import 한 파일의 문법 오류                        |
+| Code                  | 상황                                                                                    |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| `unknown-token`       | 토큰 이름이 해당 axis 에 없음                                                           |
+| `scope-mismatch`      | 토큰이 다른 axis 소속                                                                   |
+| `unknown-property`    | property 가 token scope 미지원 (shorthand 등)                                           |
+| `invalid-input-shape` | 입력 shape 오류 (embedded `$token`, spread, 비정상 노드, 런타임에 도달하는 스타일 객체) |
+| `dynamic-value`       | 식별자 property 에 dynamic 값, 삼항 분기에 dynamic 값                                   |
+| `computed-key`        | computed key 사용                                                                       |
+| `spread`              | spread element 사용                                                                     |
+| `invalid-selector`    | nested selector 가 `:`/`::`/`@`/`[`/`&` 로 시작 안 함                                   |
+| `invalid-value`       | boolean · 정규식 · BigInt · 배열 · 함수 · 클래스 리터럴 값                              |
+| `mutated-constant`    | `css()` 에 병합된 object 상수를 변경함                                                  |
+| `parse-error`         | 매크로를 import 한 파일의 문법 오류                                                     |
 
 ## 결정론
 

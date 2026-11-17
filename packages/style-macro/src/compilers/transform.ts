@@ -434,18 +434,68 @@ class Transformer {
         return res;
     }
 
-    /** css() 호출의 인자들을 해석. 파싱 에러가 나면 `null`. */
+    /**
+     * css() 호출의 인자들을 해석. 파싱 에러가 나면 `null`.
+     *
+     * 인자는 컴파일 시점에 다 풀리거나(`local`), 런타임에 class 문자열이어야 한다(`external`).
+     * 컴파일 시점에만 존재하는 값(스타일 객체, 다른 css() 호출)이 풀리지 않는 인자 안에 있으면
+     * 런타임에 class 문자열이 될 수 없으므로 빌드 에러다.
+     */
     #resolveCallArgs(call: AnyProp, scope: AnyProp[]): ArgRecord[] | null {
         const before = this.#errors.length;
         const args: ArgRecord[] = [];
         for (const a of call.arguments) {
             const pieces = this.#resolve(a, scope, new Set());
-            if (pieces) args.push({ kind: 'local', pieces });
-            else if (this.#containsCssCall(a)) {
+            if (pieces) {
+                args.push({ kind: 'local', pieces });
+                continue;
+            }
+            if (this.#containsCssCall(a)) {
                 this.#errors.push(nestedCallError(this.opts.source, a));
-            } else args.push({ kind: 'external', node: a });
+                continue;
+            }
+            const style = this.#styleObjectValueOf(a, scope);
+            if (style) this.#errors.push(runtimeStyleObjectError(this.opts.source, style));
+            else args.push({ kind: 'external', node: a });
         }
         return this.#errors.length > before ? null : args;
+    }
+
+    /**
+     * 인자 값이 될 수 있는 식(값 위치 — 괄호, `||`·`??` 양쪽, `&&` 오른쪽, 삼항 분기, 쉼표 식의 끝)
+     * 중 스타일 객체(object 리터럴 또는 그 리터럴로 정의된 모듈 상수)가 있으면 그 노드.
+     * 함수 인자 등 값 위치가 아닌 곳의 객체는 런타임 값이 아니므로 보지 않는다.
+     */
+    #styleObjectValueOf(node: AnyProp, scope: AnyProp[]): AnyProp | null {
+        switch (node?.type) {
+            case 'ObjectExpression':
+                return node;
+            case 'Identifier': {
+                const top = this.#topLevelStatic.get(node.name);
+                return top?.init.type === 'ObjectExpression' && !isShadowed(node.name, scope)
+                    ? node
+                    : null;
+            }
+            case 'ParenthesizedExpression':
+            case 'TSAsExpression':
+            case 'TSSatisfiesExpression':
+            case 'TSNonNullExpression':
+                return this.#styleObjectValueOf(node.expression, scope);
+            case 'LogicalExpression':
+                return (
+                    (node.operator === '&&' ? null : this.#styleObjectValueOf(node.left, scope)) ??
+                    this.#styleObjectValueOf(node.right, scope)
+                );
+            case 'ConditionalExpression':
+                return (
+                    this.#styleObjectValueOf(node.consequent, scope) ??
+                    this.#styleObjectValueOf(node.alternate, scope)
+                );
+            case 'SequenceExpression':
+                return this.#styleObjectValueOf(node.expressions.at(-1), scope);
+            default:
+                return null;
+        }
     }
 
     /**
@@ -916,6 +966,19 @@ function nestedCallError(source: string, node: AnyProp): BuildError {
         message:
             'A css() call nested inside another css() call must be fully static ' +
             '(object literals, same-file css() constants, and && / ?: between them).',
+        loc: locOfNode(source, node),
+    };
+}
+
+function runtimeStyleObjectError(source: string, node: AnyProp): BuildError {
+    return {
+        code: 'invalid-input-shape',
+        message:
+            'This style object would reach css() at runtime, where only class strings exist. ' +
+            'css() compiles a style object only when the whole argument is static ' +
+            '(object literals, same-file constants, and && / ?: between them). ' +
+            'Pass the class string and the static part as separate arguments, ' +
+            'e.g. css(cls, !cls && { ... }) instead of css(cls || { ... }).',
         loc: locOfNode(source, node),
     };
 }
