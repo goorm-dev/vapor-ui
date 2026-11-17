@@ -538,8 +538,10 @@ describe('transform — PR #752 review fixtures', () => {
         ].join('\n');
         const out = transform({ source, filename: '/R6c.tsx' });
         expect(out.errors).toEqual([]);
-        // 각 slot var 는 @property inherits:false 선언을 가져야 함.
-        expect(out.css).toMatch(/@property\s+--vapor-_[^{]+\{[^}]*inherits:\s*false/);
+        // 상속 차단은 sentinel 이 담당: 이 class 를 가진 element 는 항상 자기 slot 을
+        // inline style 로 설정하고, 값이 없으면 `var(--x,)` 자기 참조(cycle) → guaranteed-invalid.
+        expect(out.code).toMatch(/'(--vapor-_\w+)': .+ \?\? 'var\(\1,\)'/);
+        expect(out.css).not.toContain('@property');
     });
 
     it('#7 !important preserved on all expanded longhands (margin)', () => {
@@ -1059,5 +1061,21 @@ describe('transform — parse language and parse errors (PR #752 review)', () =>
     it('file without the macro import is still skipped untouched', () => {
         const source = `const x = ;`;
         expect(transform({ source, filename: '/P.ts' })).toEqual({ code: source, css: null, errors: [] });
+    });
+});
+
+describe('transform — nested selectors read the element slot (PR #752 review)', () => {
+    it.each([
+        [`{ '::before': { backgroundColor: c } }`, '::before'],
+        [`{ '& > span': { width: w } }`, '> span'],
+    ])('%s emits var() without blocking inheritance', (style, selector) => {
+        const out = transform({
+            source: src(`export const A = ({ c, w }) => <div className={css(${style})} />;`),
+            filename: '/N.tsx',
+        });
+        expect(out.errors).toEqual([]);
+        expect(out.css).toContain(selector);
+        expect(out.css).toMatch(/var\(--vapor-_\w+\)/);
+        expect(out.css).not.toContain('@property');
     });
 });

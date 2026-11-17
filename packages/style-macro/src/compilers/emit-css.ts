@@ -149,21 +149,23 @@ function groupsOf(block: Block, hashMode: 'dev' | 'prod'): Group[] {
 
 /**
  * 블록 목록을 모듈 CSS 로. 블록은 입력 순서대로 쓰고, 같은 class 가 다시 나오면 건너뛴다.
- * dynamic slot 의 `@property` 선언은 레이어 밖, 앞에 한 번만 둔다 — 미지원 브라우저가
- * 레이어 블록 전체를 버리지 않도록 하고, slot 값이 자식에게 상속되지 않게 한다.
+ *
+ * dynamic slot 변수는 등록(`@property`)하지 않아 일반 custom property 처럼 상속된다 —
+ * `::before`·`& > span` 같은 중첩 selector 가 element 에 설정된 slot 을 읽으려면 상속이
+ * 필요하다. 같은 class 가 중첩될 때 부모 값이 새지 않는 것은 inline style 쪽이 보장한다:
+ * 이 class 를 가진 element 는 항상 자기 slot 을 설정하고, 값이 없으면 `var(--x,)`
+ * 자기 참조(cycle)로 guaranteed-invalid 가 된다 (`transform.ts` `#slotEntry`).
  */
 export function emitBlocks(blocks: Block[], opts: EmitOptions): EmitOutput {
     const layer = opts.layer ?? DEFAULT_LAYER;
     const hashMode: 'dev' | 'prod' = opts.mode === 'hashed' ? 'prod' : 'dev';
 
     const seenClass = new Set<string>();
-    const slots = new Set<string>();
     const body: string[] = [];
 
     for (const block of blocks) {
         if (seenClass.has(block.className) || block.rules.length === 0) continue;
         seenClass.add(block.className);
-        for (const r of block.rules) if (r.kind === 'dynamic') slots.add(r.slotId);
 
         const openPath: string[] = [];
         const indent = () => '  '.repeat(openPath.length + 1);
@@ -195,12 +197,5 @@ export function emitBlocks(blocks: Block[], opts: EmitOptions): EmitOutput {
 
     if (body.length === 0) return { cssText: '' };
 
-    const chunks = [`@layer ${layer};`];
-    for (const slotId of slots) {
-        chunks.push(
-            `@property ${dynamicVarName(slotId, hashMode)} { syntax: '*'; inherits: false; }`,
-        );
-    }
-    chunks.push(`@layer ${layer} {`, ...body, '}');
-    return { cssText: chunks.join('\n') };
+    return { cssText: [`@layer ${layer};`, `@layer ${layer} {`, ...body, '}'].join('\n') };
 }

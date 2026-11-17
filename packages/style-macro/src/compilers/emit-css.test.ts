@@ -149,22 +149,17 @@ describe('emitBlocks', () => {
         expect(css.match(/\.A \{/g)).toHaveLength(1);
     });
 
-    it('dynamic rule → var(slot) + @property outside the layer, declared once', () => {
+    it('dynamic rule → var(slot), no @property registration', () => {
         const dyn = rule({
             kind: 'dynamic',
             property: 'color',
             slotId: 's0',
             sourceExpr: 'p',
         } as Partial<IRRule>);
-        const out = emitBlocks([block([dyn], 'A'), block([dyn], 'B')], {
-            mode: 'readable',
-            layer: 'vapor-composites',
-        }).cssText;
+        const out = emitBlocks([block([dyn], 'A')], { mode: 'readable' }).cssText;
         expect(out).toContain('.A { color: var(--vapor-_s0); }');
-        expect(
-            out.match(/@property --vapor-_s0 \{ syntax: '\*'; inherits: false; \}/g),
-        ).toHaveLength(1);
-        expect(pos(out, '@property')).toBeLessThan(pos(out, '@layer vapor-composites {'));
+        // @property inherits:false 는 ::before / 하위 selector 가 slot 을 못 읽게 만든다.
+        expect(out).not.toContain('@property');
     });
 
     it('prod mode uses the short slot variable prefix', () => {
