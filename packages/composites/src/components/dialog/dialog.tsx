@@ -246,7 +246,19 @@ const CloseButton = () => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const Body = ({ children, ...props }: DialogPrimitives.Body.Props) => {
+const overflowedStyle = css({
+    maskImage: 'linear-gradient(to top, transparent 0, black 20px)',
+    paddingBottom: '$space-250',
+});
+
+const containedStyle = css({
+    maskImage: 'none',
+    paddingBottom: '$space-000',
+});
+
+interface BodyProps extends Pick<DialogPrimitives.Body.Props, 'children'> {}
+
+const Body = ({ children }: BodyProps) => {
     const bodyRef = useRef<HTMLDivElement>(null);
     const [overflowed, setOverflowed] = useState(false);
 
@@ -262,11 +274,7 @@ const Body = ({ children, ...props }: DialogPrimitives.Body.Props) => {
     return (
         <DialogPrimitives.Body
             ref={bodyRef}
-            className={css({
-                maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
-                paddingBottom: overflowed ? '$space-250' : '$space-000',
-            })}
-            {...props}
+            className={css(overflowed ? overflowedStyle : containedStyle)}
         >
             {children}
         </DialogPrimitives.Body>
