@@ -9,7 +9,6 @@ import {
     flags,
     pick,
     placeholder,
-    swap,
 } from '../../utils/figma';
 import type { Snippet } from '../../utils/figma';
 
@@ -26,34 +25,12 @@ type ToolbarPart = keyof typeof TOOLBAR_PART_ID;
 const instance = figma.selectedInstance;
 const part: ToolbarPart = figma.batch.part;
 
-function slotIcon(layer: InstanceHandle, slotName: string, swapName: string) {
-    const slot = layer.findInstance(slotName);
-    return slot.type === 'INSTANCE' ? swap(slot, swapName) : '';
-}
+// The inner Toggle or IconButton is connected, so its own template writes it. Writing it here too would put it in the
+// figma-blueprint answer sheet twice.
+function toolbarButton(inner: InstanceHandle) {
+    const disabled = flags({ disabled: bool(inner, 'disabled') });
 
-function toggleButton(toggle: InstanceHandle) {
-    const variant = pick(toggle, 'variant', { default: 'default', accent: 'accent' });
-    const disabled = flags({ disabled: bool(toggle, 'disabled') });
-    const icon = slotIcon(toggle, '🟨Toggle/SlotLayer', 'icon');
-
-    return figma.code`<Toolbar.Button render={<Toggle variant="${variant}" aria-label="..." />}${disabled}>${icon}</Toolbar.Button>`;
-}
-
-function iconButton(button: InstanceHandle) {
-    const colorPalette = pick(button, 'colorPalette', {
-        primary: 'primary',
-        secondary: 'secondary',
-        success: 'success',
-        warning: 'warning',
-        danger: 'danger',
-        contrast: 'contrast',
-    });
-    const variant = pick(button, 'variant', { fill: 'fill', outline: 'outline', ghost: 'ghost' });
-    const shape = pick(button, 'shape', { square: 'square', circle: 'circle' });
-    const disabled = flags({ disabled: bool(button, 'disabled') });
-    const icon = slotIcon(button, '🟨IconButton/SlotLayer', 'Icon');
-
-    return figma.code`<Toolbar.Button render={<IconButton colorPalette="${colorPalette}" variant="${variant}" shape="${shape}" aria-label="..." />}${disabled}>${icon}</Toolbar.Button>`;
+    return figma.code`<Toolbar.Button render={${example(inner)}}${disabled} />`;
 }
 
 function selectButton(trigger: InstanceHandle) {
@@ -114,12 +91,12 @@ function render() {
         });
 
         if (type === 'select') return selectButton(layer(renderLayer, '💙Select.Trigger'));
-        if (type === 'iconButton') return iconButton(layer(renderLayer, '💙IconButton'));
-        return toggleButton(layer(renderLayer, '💙Toggle'));
+        if (type === 'iconButton') return toolbarButton(layer(renderLayer, '💙IconButton'));
+        return toolbarButton(layer(renderLayer, '💙Toggle'));
     }
 
     if (part === 'toggleButton') {
-        return toggleButton(layer(layer(instance, '🟩Toolbar/Toggle/RenderLayer'), '💙Toggle'));
+        return toolbarButton(layer(layer(instance, '🟩Toolbar/Toggle/RenderLayer'), '💙Toggle'));
     }
 
     if (part === 'input') {
@@ -139,9 +116,9 @@ function render() {
 }
 
 const IMPORTS: Record<ToolbarPart, string> = {
-    root: 'import { Toggle, ToggleGroup, Toolbar } from "@vapor-ui/core"',
-    button: 'import { IconButton, Select, Toggle, Toolbar } from "@vapor-ui/core"',
-    toggleButton: 'import { Toggle, Toolbar } from "@vapor-ui/core"',
+    root: 'import { ToggleGroup, Toolbar } from "@vapor-ui/core"',
+    button: 'import { Select, Toolbar } from "@vapor-ui/core"',
+    toggleButton: 'import { Toolbar } from "@vapor-ui/core"',
     input: 'import { TextInput, Toolbar } from "@vapor-ui/core"',
     separator: 'import { Toolbar } from "@vapor-ui/core"',
 };
