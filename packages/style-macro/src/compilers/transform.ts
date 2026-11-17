@@ -171,8 +171,10 @@ class Transformer {
         const { source, filename } = this.opts;
         if (this.#shouldSkip()) return emptyResult(source);
 
-        const parsed = parseSync(filename, source, { sourceType: 'module', lang: 'tsx' });
-        if (parsed.errors?.length) return emptyResult(source);
+        // 매크로를 import 한 파일만 여기 온다 — 못 읽으면 조용히 넘기지 않고 빌드 에러.
+        // 그대로 두면 css() 가 런타임 placeholder 로 남아 스타일이 통째로 빠진다.
+        const parsed = parseSync(filename, source, { sourceType: 'module', lang: langOf(filename) });
+        if (parsed.errors?.length) return errorResult(source, [parseError(source, parsed.errors[0])]);
 
         const program = parsed.program;
         this.#scanImports(program);
@@ -755,6 +757,28 @@ function jsSingleQuoted(value: string) {
             .replace(/\r/g, '\\r') +
         "'"
     );
+}
+
+/**
+ * 확장자별 파서 언어. TS 와 TSX 는 서로 호환되지 않는 문법(`<T>x` 캐스트 vs JSX)이 있어
+ * 반드시 구분한다. JS 계열은 JSX 를 허용하는 상위 집합(`jsx`)으로 읽는다 — Next.js 등은
+ * `.js` 안 JSX 를 허용하고, JS 에는 JSX 와 충돌하는 문법이 없다.
+ */
+function langOf(filename: string): 'ts' | 'tsx' | 'jsx' {
+    if (/\.[cm]?ts$/.test(filename)) return 'ts';
+    if (filename.endsWith('.tsx')) return 'tsx';
+    return 'jsx';
+}
+
+function parseError(source: string, err: { message: string; labels?: { start: number }[] }): BuildError {
+    const offset = err.labels?.[0]?.start ?? 0;
+    const before = source.slice(0, offset);
+    const line = before.split('\n').length;
+    return {
+        code: 'parse-error',
+        message: `Failed to parse file: ${err.message}`,
+        loc: { line, column: offset - (before.lastIndexOf('\n') + 1) },
+    };
 }
 
 function emptyResult(source: string): TransformResult {

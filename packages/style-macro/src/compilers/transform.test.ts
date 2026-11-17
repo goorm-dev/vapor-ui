@@ -1033,3 +1033,31 @@ describe('transform — module constants capture values at definition (PR #752 r
         expect(out.code).not.toContain('__vaporCapture_');
     });
 });
+
+describe('transform — parse language and parse errors (PR #752 review)', () => {
+    const body = `export const cls = css({ padding: '$space-200' });`;
+
+    it.each([
+        ['/P.ts', `const id = <T,>(v: T) => v;\nconst n = <number>id(1);\n${body}`],
+        ['/P.mts', `const id = <T,>(v: T) => v;\n${body}`],
+        ['/P.tsx', `const id = <T,>(v: T) => v;\nconst e = <div />;\n${body}`],
+        ['/P.jsx', `const e = <div />;\n${body}`],
+        ['/P.js', `const e = <div />;\n${body}`],
+    ])('parses %s with its own language and compiles css()', (filename, code) => {
+        const out = transform({ source: src(code), filename });
+        expect(out.errors).toEqual([]);
+        expect(out.css).toContain('padding-top');
+        expect(out.code).not.toContain('css({');
+    });
+
+    it('syntax error in a file that imports the macro is a build error with location', () => {
+        const out = transform({ source: src(`const x = ;\n${body}`), filename: '/P.ts' });
+        expect(out.errors).toHaveLength(1);
+        expect(out.errors[0]).toMatchObject({ code: 'parse-error', loc: { line: 2 } });
+    });
+
+    it('file without the macro import is still skipped untouched', () => {
+        const source = `const x = ;`;
+        expect(transform({ source, filename: '/P.ts' })).toEqual({ code: source, css: null, errors: [] });
+    });
+});
