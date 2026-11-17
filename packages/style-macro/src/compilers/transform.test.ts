@@ -770,26 +770,32 @@ describe('transform — string result & composition', () => {
         expect(out.code).toMatch(/className=\{\s*'Root_\w+'\s*\}/);
     });
 
-    it('template literal join of two css() results — build error', () => {
+    it('template literal join of two css() results — allowed, joins classes without merging', () => {
         const source = src(
             `const base = css({ padding: '$space-100' });` +
                 `const override = css({ paddingTop: '$space-300' });` +
                 `const cls = \`\${base} \${override}\`;`,
         );
         const out = transform({ source, filename: '/A8.tsx' });
-        expect(out.errors.length).toBeGreaterThan(0);
-        expect(out.errors[0].code).toBe('template-literal');
+        expect(out.errors).toEqual([]);
+        expect(out.code).toMatch(/const cls = `\$\{base\} \$\{override\}`;/);
     });
 
-    it('className=template-literal (2 identifiers) — build error', () => {
-        const source = [
-            `import { css } from '@vapor-ui/style-macro';`,
-            `import { base } from './base';`,
-            `import { override } from './over';`,
-            `const Cmp = () => <div className={\`\${base} \${override}\`} />;`,
-        ].join('\n');
-        const out = transform({ source, filename: '/A9.tsx' });
-        expect(out.errors.length).toBeGreaterThan(0);
+    it.each([
+        [
+            'imported classes',
+            `import { base } from './base';\nconst Cmp = () => <div className={\`\${base} \${other}\`} />;`,
+        ],
+        [
+            'unrelated props',
+            `const Cmp = ({ variant, className }) => <div className={\`\${variant} \${className}\`} />;\nexport const x = css({ gap: 0 });`,
+        ],
+        [
+            'props shadowing css() constants',
+            `const a = css({ color: 'red' });\nconst b = css({ color: 'blue' });\nconst Cmp = ({ a, b }) => <span title={\`\${a}-\${b}\`} />;`,
+        ],
+    ])('className template literal with %s — no build error', (_label, body) => {
+        expect(transform({ source: src(body), filename: '/A9.tsx' }).errors).toEqual([]);
     });
 
     it('className template with 1 vapor identifier + plain string — allowed', () => {

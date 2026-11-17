@@ -145,8 +145,6 @@ class Transformer {
     #needIx = false;
     #needCx = false;
 
-    /** `const x = css(...)` 로 선언된 지역 변수 이름. template literal 합성 감지용. */
-    readonly #vaporLocals = new Set<string>();
     /** 모듈 최상위 `const x = css(...)` / `const x = { ... }` — 같은 파일 병합 대상. */
     readonly #topLevelStatic = new Map<string, { init: AnyProp; stmtStart: number }>();
     /**
@@ -188,9 +186,7 @@ class Transformer {
 
         walk(program, {
             CallExpression: this.#onCallExpression,
-            JSXAttribute: this.#onJsxAttribute,
             VariableDeclarator: this.#onVariableDeclarator,
-            TemplateLiteral: this.#onTemplateLiteral,
             Function: this.#onFunction,
             FunctionDeclaration: this.#onFunction,
             FunctionExpression: this.#onFunction,
@@ -344,41 +340,8 @@ class Transformer {
         this.#bindPattern(node.param);
     };
 
-    /**
-     * JSX 의 `className={...}` 자리에서 template literal 로 2개 이상의 identifier 를 합치면
-     * 빌드 에러. 중복 제거·같은 파일 병합을 건너뛰므로 `css(a, b)` 로 합치도록 유도한다.
-     * identifier 1개 + 정적 문자열(`\`\${cls} active\``)은 흔한 패턴이라 허용한다.
-     */
-    #onJsxAttribute = (node: AnyProp) => {
-        if (node?.name?.type !== 'JSXIdentifier' || node.name.name !== 'className') return;
-        const v = node.value;
-        if (v?.type !== 'JSXExpressionContainer') return;
-        const expr = v.expression;
-        if (expr?.type !== 'TemplateLiteral') return;
-        const identCount = (expr.expressions ?? []).filter(
-            (e: AnyProp) => e?.type === 'Identifier',
-        ).length;
-        if (identCount >= 2) this.#errors.push(templateLiteralError(expr));
-    };
-
     #onVariableDeclarator = (node: AnyProp) => {
         this.#bindPattern(node.id);
-        if (node?.id?.type === 'Identifier' && this.#isCssCall(node.init)) {
-            this.#vaporLocals.add(node.id.name);
-        }
-    };
-
-    /** Template literal 안에 `css()` 결과가 2개 이상 섞이면 빌드 에러 (`#onJsxAttribute` 참고). */
-    #onTemplateLiteral = (node: AnyProp) => {
-        if (!node?.expressions?.length) return;
-        let hits = 0;
-        for (const expr of node.expressions) {
-            if (expr?.type === 'Identifier' && this.#vaporLocals.has(expr.name)) hits++;
-            if (hits >= 2) {
-                this.#errors.push(templateLiteralError(node));
-                return;
-            }
-        }
     };
 
     #onCallExpression = (node: AnyProp, parents: AnyProp[]) => {
@@ -802,16 +765,6 @@ function errorResult(source: string, errors: BuildError[]): TransformResult {
 
 function locOf(node: AnyProp) {
     return { line: node?.loc?.start?.line ?? 1, column: node?.loc?.start?.column ?? 0 };
-}
-
-function templateLiteralError(node: AnyProp): BuildError {
-    return {
-        code: 'template-literal',
-        message:
-            'Template literal join of css() results skips merging. ' +
-            'Use css(a, b) instead so later arguments win.',
-        loc: locOf(node),
-    };
 }
 
 function noArgError(node: AnyProp): BuildError {
