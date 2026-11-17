@@ -1174,3 +1174,59 @@ describe('transform — mutation of merged object constants is a build error', (
         expect(out.errors).toEqual([]);
     });
 });
+
+describe('transform — captured expressions are evaluated once (moved, not copied)', () => {
+    const run = (body: string) => transform({ source: src(body), filename: '/E.tsx' });
+    const count = (code: string, needle: string) => code.split(needle).length - 1;
+
+    it('css() constant: definition and every use read the one capture', () => {
+        const out = run(
+            `const base = css({ color: tick() ? 'red' : 'blue' });\n` +
+                `export const A = () => <div className={css(base)} />;\n` +
+                `export const B = () => <div className={css(base, { width: 1 })} />;`,
+        );
+        expect(out.errors).toEqual([]);
+        expect(count(out.code, 'tick()')).toBe(1);
+        expect(out.code).toMatch(
+            /const __vaporCapture_0 = \(tick\(\)\);\nconst base = \(__vaporCapture_0 \? '\w+' : '\w+'\);/,
+        );
+    });
+
+    it('object constant: the literal keeps its shape but reads the capture', () => {
+        const out = run(
+            `const base = { color: tick() ? 'red' : 'blue', width: theme.w };\n` +
+                `export const A = () => <div className={css(base)} />;\nconsole.log(base.width);`,
+        );
+        expect(out.errors).toEqual([]);
+        expect(count(out.code, 'tick()')).toBe(1);
+        expect(count(out.code, 'theme.w')).toBe(1);
+        expect(out.code).toMatch(
+            /const base = \{ color: __vaporCapture_\d+ \? 'red' : 'blue', width: __vaporCapture_\d+ \};/,
+        );
+    });
+
+    it('nested constants: each expression is hoisted once before its own definition', () => {
+        const out = run(
+            `const a = css({ color: x() ? 'red' : 'blue' });\nconst b = css(a, { width: 1 });\n` +
+                `export const A = () => <div className={css(b)} />;\nexport const B = () => <div className={css(a)} />;`,
+        );
+        expect(out.errors).toEqual([]);
+        expect(count(out.code, 'x()')).toBe(1);
+        expect(out.code.indexOf('= (x());')).toBeLessThan(out.code.indexOf('const a ='));
+    });
+
+    it('object constant referenced by a css() constant', () => {
+        const out = run(
+            `const o = { color: x() ? 'red' : 'blue' };\nconst c = css(o, { width: 1 });\n` +
+                `export const A = () => <div className={css(c)} />;`,
+        );
+        expect(out.errors).toEqual([]);
+        expect(count(out.code, 'x()')).toBe(1);
+    });
+
+    it('constant never merged locally keeps its source and adds no capture', () => {
+        const out = run(`export const base = css({ color: tick() ? 'red' : 'blue' });`);
+        expect(count(out.code, 'tick()')).toBe(1);
+        expect(out.code).not.toContain('__vaporCapture_');
+    });
+});

@@ -65,7 +65,15 @@ export function transform(opts: TransformOpts): TransformResult {
  */
 type Piece =
     | { kind: 'fixed'; rules: IRRule[] }
-    | { kind: 'cond'; test: string; whenTrue: Piece[]; whenFalse: Piece[] };
+    | {
+          kind: 'cond';
+          test: string;
+          /** `test` 의 원본 소스 위치. */
+          start: number;
+          end: number;
+          whenTrue: Piece[];
+          whenFalse: Piece[];
+      };
 
 /** 한 호출이 만들 수 있는 분기 조합 수 상한. 넘으면 빌드 에러. */
 const MAX_COMBINATIONS = 16;
@@ -159,7 +167,8 @@ class Transformer {
      */
     readonly #mutations: { name: string; node: AnyProp }[] = [];
     #captureCount = 0;
-    readonly #captureNames = new Set<string>();
+    /** `start:end` → 그 위치에서 옮겨진 식의 캡처 이름. */
+    readonly #captureAt = new Map<string, string>();
     /** 파일 안에서 각 이름이 바인딩된 횟수. 2 이상이면 shadowing 가능성 → 병합 안 함. */
     readonly #bindingCounts = new Map<string, number>();
     /** `parseCallArg` 결과 캐시 (같은 object 를 여러 경로에서 풀 수 있음). */
@@ -216,6 +225,12 @@ class Transformer {
             const args = this.#resolveCallArgs(node);
             if (!args) continue;
             calls.push({ node, parents, args, debugId: debugIdOf(parents) });
+        }
+
+        // css() 상수 정의도 캡처된 식을 읽어야 한다 (식이 정의와 캡처 두 곳에서 평가되지 않게).
+        for (const call of calls) {
+            const captured = this.#capturedDefinitionOf(call.node);
+            if (captured) call.args = [{ kind: 'local', pieces: captured }];
         }
 
         this.#checkMutations();
@@ -386,6 +401,14 @@ class Transformer {
      * 변경은 반영되지 않는다 — 조용히 틀린 스타일을 내는 대신 알린다. 병합된 상수만 보므로
      * 읽기·export·다른 곳에 값으로 넘기기는 영향이 없다. alias·함수 내부 변경은 잡지 않는다.
      */
+    /** 이 호출이 캡처된 최상위 `css()` 상수의 정의라면 그 캡처 조각. */
+    #capturedDefinitionOf(node: AnyProp): Piece[] | null {
+        for (const [name, top] of this.#topLevelStatic) {
+            if (top.init === node) return this.#resolvedTopLevel.get(name) ?? null;
+        }
+        return null;
+    }
+
     #checkMutations() {
         for (const { name, node } of this.#mutations) {
             const top = this.#topLevelStatic.get(name);
@@ -465,7 +488,7 @@ class Transformer {
                 const pieces = this.#resolve(top.init, visiting);
                 visiting.delete(node.name);
                 if (!pieces) return null;
-                const captured = this.#capture(pieces, top.stmtStart);
+                const captured = this.#capture(pieces, top);
                 this.#resolvedTopLevel.set(node.name, captured);
                 return captured;
             }
@@ -475,15 +498,13 @@ class Transformer {
                 if (node.operator !== '&&') return null;
                 const right = this.#resolve(node.right, visiting);
                 if (!right) return null;
-                return [
-                    { kind: 'cond', test: this.#src(node.left), whenTrue: right, whenFalse: [] },
-                ];
+                return [{ ...this.#condTest(node.left), whenTrue: right, whenFalse: [] }];
             }
             case 'ConditionalExpression': {
                 const whenTrue = this.#resolve(node.consequent, visiting);
                 const whenFalse = this.#resolve(node.alternate, visiting);
                 if (!whenTrue || !whenFalse) return null;
-                return [{ kind: 'cond', test: this.#src(node.test), whenTrue, whenFalse }];
+                return [{ ...this.#condTest(node.test), whenTrue, whenFalse }];
             }
             default:
                 return null;
@@ -491,17 +512,28 @@ class Transformer {
     }
 
     /**
-     * 최상위 상수의 조각에서 런타임 식(분기 조건, dynamic 값)을 정의 문장 바로 앞의
-     * `const __vaporCapture_N = (<expr>);` 로 옮기고 그 이름으로 바꾼다. 식은 원래도 모듈
-     * 평가 시점에 한 번 평가되므로 의미가 같다. 중첩 상수에서 온 조각은 이미 캡처 이름이라
-     * 다시 캡처하지 않는다.
+     * 최상위 상수의 런타임 식(분기 조건, dynamic 값)을 정의 문장 바로 앞
+     * `const __vaporCapture_N = (<expr>);` 로 **옮긴다**. 식이 평가되는 곳은 이 한 곳뿐이고,
+     * 정의와 모든 사용처는 이름을 읽는다 — 사용처 스코프의 같은 이름에 가려지지 않고, 부작용도
+     * 원본처럼 모듈 평가 시 한 번만 일어난다.
+     *
+     * - object 상수: 리터럴은 그대로 남아 다른 곳에서 읽히므로 식 자리를 이름으로 바꾼다.
+     * - css() 상수: 호출 전체가 class 선택식으로 치환되므로, 그 치환이 이 조각을 쓴다
+     *   (`run` 에서 정의 호출의 인자를 캐시된 조각으로 교체).
+     * 같은 위치의 식(shorthand 분해 등)은 한 번만 옮긴다. 중첩 상수에서 온 식은 이미 옮겨져
+     * 위치가 그 상수의 정의 안이므로 다시 옮기지 않는다.
      */
-    #capture(pieces: Piece[], stmtStart: number): Piece[] {
-        const take = (expr: string): string => {
-            if (this.#captureNames.has(expr)) return expr;
+    #capture(pieces: Piece[], top: { init: AnyProp; stmtStart: number }): Piece[] {
+        const inPlace = top.init.type === 'ObjectExpression';
+        const take = (expr: string, start: number, end: number): string => {
+            if (start < top.init.start || end > top.init.end) return expr;
+            const key = `${start}:${end}`;
+            const existing = this.#captureAt.get(key);
+            if (existing) return existing;
             const name = `__vaporCapture_${this.#captureCount++}`;
-            this.#captureNames.add(name);
-            this.#ms!.appendLeft(stmtStart, `const ${name} = (${expr});\n`);
+            this.#captureAt.set(key, name);
+            this.#ms!.appendLeft(top.stmtStart, `const ${name} = (${expr});\n`);
+            if (inPlace) this.#ms!.overwrite(start, end, name);
             return name;
         };
         const walkPieces = (ps: Piece[]): Piece[] =>
@@ -510,12 +542,14 @@ class Transformer {
                     ? {
                           kind: 'fixed',
                           rules: p.rules.map((r) =>
-                              r.kind === 'dynamic' ? { ...r, sourceExpr: take(r.sourceExpr) } : r,
+                              r.kind === 'dynamic'
+                                  ? { ...r, sourceExpr: take(r.sourceExpr, r.start, r.end) }
+                                  : r,
                           ),
                       }
                     : {
-                          kind: 'cond',
-                          test: take(p.test),
+                          ...p,
+                          test: take(p.test, p.start, p.end),
                           whenTrue: walkPieces(p.whenTrue),
                           whenFalse: walkPieces(p.whenFalse),
                       },
@@ -560,6 +594,8 @@ class Transformer {
                 pieces.push({
                     kind: 'cond',
                     test: this.opts.source.slice(t.testStart, t.testEnd),
+                    start: t.testStart,
+                    end: t.testEnd,
                     whenTrue: [
                         { kind: 'fixed', rules: t.consequentRuleIndexes.map((j) => rules[j]) },
                     ],
@@ -577,6 +613,10 @@ class Transformer {
 
     #src(node: AnyProp): string {
         return this.opts.source.slice(node.start, node.end);
+    }
+
+    #condTest(node: AnyProp) {
+        return { kind: 'cond' as const, test: this.#src(node), start: node.start, end: node.end };
     }
 
     // ── 출력 ───────────────────────────────────────────────────

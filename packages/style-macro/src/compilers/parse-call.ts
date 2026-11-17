@@ -215,6 +215,8 @@ export function createParser(source: string) {
             slotId,
             selectorContext,
             sourceExpr,
+            start: value.start,
+            end: value.end,
         });
     }
 

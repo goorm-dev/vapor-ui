@@ -38,6 +38,9 @@ export interface DynamicRule {
     slotId: string;
     selectorContext: string;
     sourceExpr: string;
+    /** `sourceExpr` 의 원본 소스 위치. 캡처가 식을 정의 위치에서 이름으로 옮길 때 쓴다. */
+    start: number;
+    end: number;
 }
 
 export type IRRule = StaticRule | DynamicRule;
