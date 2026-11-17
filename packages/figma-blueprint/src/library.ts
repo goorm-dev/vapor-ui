@@ -1,10 +1,14 @@
+// `figma-blueprint library`, the weekly check that every component Figma publishes is linked or has a reason in
+// packages/<pkg>/figma-exceptions.json, and that no entry or exception is stale. checkLibrary is the pure part.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { Pkg, StoredEntry } from '~/entries/entries-file';
-import { readEntries } from '~/entries/entries-file';
-import type { Published } from '~/entries/write-entries';
-import { fetchLibraryFile, parseFigmaUrl } from '~/entries/write-entries';
+import { readEntries } from '~/entries';
+import type { StoredEntry } from '~/entries';
+import { fetchLibraryFile, figmaToken, parseFigmaUrl } from '~/figma';
+import type { Published } from '~/figma';
+import { isCoreComponent } from '~/packages';
+import type { Pkg } from '~/packages';
 
 export interface LibraryItem {
     key: string;
@@ -19,7 +23,7 @@ export interface Exceptions {
 
 // Packages whose library file is checked, and which of its top-level items must be linked.
 const TARGETS: Partial<Record<Pkg, (item: LibraryItem) => boolean>> = {
-    core: (item) => item.name.includes('💙'),
+    core: (item) => isCoreComponent(item.name),
     composites: () => true,
 };
 
@@ -66,7 +70,7 @@ export function readExceptions(pkgDir: string): Exceptions {
 
 // Fetches each checked package's library file, found through the entries' own URLs, and checks it.
 // names labels every key a list can hold: a gone key only has its entry's name, a stale one its entry or item.
-export async function checkPackages(root: string, token: string) {
+async function checkPackages(root: string, token: string) {
     const results = [];
     for (const [pkg, isTarget] of Object.entries(TARGETS) as [Pkg, (i: LibraryItem) => boolean][]) {
         const dir = join(root, 'packages', pkg);
@@ -88,4 +92,32 @@ export async function checkPackages(root: string, token: string) {
         results.push({ pkg, lists, names });
     }
     return results;
+}
+
+// `figma-blueprint library`: one section per non-empty list, exit 1 when any list has a row.
+export async function libraryCommand(root: string): Promise<number> {
+    const token = figmaToken('the library files the Code Connect URLs point to');
+    let failed = false;
+    for (const { pkg, lists, names } of await checkPackages(root, token)) {
+        const line = (key: string, name = names.get(key), page = '') =>
+            `  ${key}  ${JSON.stringify(name ?? '')}${page && `  @${page}`}`;
+        const sections = [
+            ['entry no longer published in Figma', lists.gone.map((k) => line(k))],
+            [
+                'published in Figma, not in entries and not in figma-exceptions.json',
+                lists.unconnected.map((i) => line(i.key, i.name, i.page)),
+            ],
+            [
+                'stale exception (now linked or no longer published)',
+                lists.stale.map((k) => line(k)),
+            ],
+        ] as const;
+        for (const [title, rows] of sections) {
+            if (!rows.length) continue;
+            failed = true;
+            console.log(`${pkg}: ${title} (${rows.length})\n${rows.join('\n')}`);
+        }
+    }
+    if (!failed) console.log('every library component is linked or has a reason');
+    return failed ? 1 : 0;
 }

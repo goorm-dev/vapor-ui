@@ -2,8 +2,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import ts from 'typescript';
 
-import { codeConnectFiles } from '~/entries/code-connect';
-import type { Pkg } from '~/entries/entries-file';
+import { connectedComponents } from '~/code-connect/files';
+import type { Pkg } from '~/packages';
 
 export interface Tables {
     // core part → icons it draws itself (Select.Trigger's chevron)
@@ -194,19 +194,7 @@ function libraryComponents(core: string) {
         throw new Error(
             `composites' internalParts needs core's Code Connect files, and ${core} has no figma.config.json`,
         );
-    const names = new Set<string>();
-    for (const f of codeConnectFiles(core)) {
-        const text = readFileSync(join(core, f), 'utf8');
-        if (f.endsWith('.json'))
-            for (const c of (JSON.parse(text) as { components: { component: string }[] })
-                .components)
-                names.add(c.component);
-        else {
-            const name = text.match(/^\/\/ component=(.+)$/m)?.[1].trim();
-            if (name) names.add(name);
-        }
-    }
-    return names;
+    return connectedComponents(core);
 }
 
 type Component = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration;

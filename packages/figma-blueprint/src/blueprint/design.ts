@@ -1,5 +1,5 @@
 // texts: every visible TEXT line, library internals included, for visual scoring's Block-Match and Position.
-import type { FigmaNode, Rect } from './figma-mock';
+import type { FigmaNode, Rect } from '~/figma';
 
 // Relative to the graded frame's top-left.
 export type Box = { x: number; y: number; w: number; h: number };

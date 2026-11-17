@@ -5,12 +5,12 @@ import { fileURLToPath } from 'node:url';
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { blueprint } from '~/blueprint/blueprint';
-import type { BlueprintNode, FigmaTree } from '~/blueprint/blueprint';
-import type { Pkg } from '~/entries/entries-file';
-import { buildPackage } from '~/ship/ship';
-import { extractTables } from '~/ship/tables';
+import type { BlueprintNode } from '~/blueprint/output';
+import type { FigmaTree } from '~/figma';
+import type { Pkg } from '~/packages';
 
-import { fromInstalled } from './catalog';
+import { buildPackage, fromInstalled } from './catalog';
+import { extractTables } from './tables';
 
 const root = fileURLToPath(new URL('../__fixtures__/repo', import.meta.url));
 

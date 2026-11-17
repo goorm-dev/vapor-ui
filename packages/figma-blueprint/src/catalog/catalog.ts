@@ -1,18 +1,24 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+// The Catalog: the templates and tables a blueprint runs on, keyed by Figma component (set) key.
+// `figma-blueprint ship` writes one package's share as that package's figma-blueprint/ folder; fromInstalled reads the
+// folders back from a consumer's node_modules; fromRepo builds the same from the repo's source. This file is the only
+// one that knows the folder's layout, which is published inside @vapor-ui/core and icons.
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
 
-import type { Batch } from '~/entries/code-connect';
-import { PACKAGES, readEntries } from '~/entries/entries-file';
-import type { Pkg } from '~/entries/entries-file';
-import type { Shipped } from '~/ship/ship';
-import { templatesOf } from '~/ship/ship';
-import { extractTables } from '~/ship/tables';
-import type { Tables } from '~/ship/tables';
-import { writeTemplates } from '~/ship/templates';
-import type { TemplateFn } from '~/ship/templates';
+import { importTemplate, writeTemplates } from '~/code-connect/compile';
+import type { Batch } from '~/code-connect/files';
+import type { TemplateFn } from '~/code-connect/stand-in';
+import { readEntries } from '~/entries';
+import type { StoredEntry } from '~/entries';
+import { PACKAGES } from '~/packages';
+import type { Pkg } from '~/packages';
+
+import { TABLES_OF, extractTables } from './tables';
+import type { Tables } from './tables';
+
+export type { Tables };
 
 // One Code Connect template (one row of it for a batch template), keyed in `entries` by Figma component (set) key.
 // template is relative to the package directory.
@@ -29,25 +35,51 @@ export interface Catalog {
     runTemplate(entry: Entry): TemplateFn;
 }
 
-// A package's entries, with their templates written (wrapped) under dir/templates, `ext` in place of `.ts`.
+// <package>/figma-blueprint/tables.json: the package's entries and its share of the tables, those built from its own
+// source (core: internalIcons and defaults, composites: presets and internalParts). The templates and their helpers
+// sit next to it under templates/, at their path in the package.
+const SHIPPED = 'figma-blueprint';
+const TABLES_JSON = 'tables.json';
+const TEMPLATES = 'templates';
+type Shipped = { entries: Record<string, Omit<StoredEntry, 'url'>> } & Partial<Tables>;
+
+const templatesOf = (entries: Shipped['entries']) => Object.values(entries).map((e) => e.template);
+
+// `figma-blueprint ship`, run in packages/core, composites or icons. Rewrites outDir from scratch, so a rerun on the
+// same source writes the same bytes.
+export function buildPackage(pkgDir: string, outDir = join(pkgDir, SHIPPED)) {
+    const { name } = JSON.parse(readFileSync(join(pkgDir, 'package.json'), 'utf8')) as {
+        name: string;
+    };
+    const pkg = PACKAGES.find((p) => name === `@vapor-ui/${p}`);
+    if (!pkg) throw new Error(`runs in @vapor-ui/{${PACKAGES.join(',')}}, not in ${name}`);
+    const entries: Shipped['entries'] = {};
+    for (const [key, e] of Object.entries(readEntries(pkgDir)))
+        entries[key] = { name: e.name, template: e.template, batch: e.batch };
+    rmSync(outDir, { recursive: true, force: true });
+    mkdirSync(outDir, { recursive: true });
+    writeTemplates(pkgDir, templatesOf(entries), join(outDir, TEMPLATES), true);
+    const shipped: Shipped = { entries, ...TABLES_OF[pkg](pkgDir) };
+    writeFileSync(join(outDir, TABLES_JSON), `${JSON.stringify(shipped)}\n`);
+}
+
+// A package's entries, with their templates written (wrapped) under dir/templates, as JS or as TypeScript.
 interface Templates {
     pkg: Pkg;
     entries: Shipped['entries'];
     dir: string;
-    ext: string;
+    js: boolean;
 }
 
 async function load(packages: Templates[], tables: Tables): Promise<Catalog> {
     const entries: Record<string, Entry> = {};
     const runs = new Map<string, TemplateFn>();
-    for (const { pkg, entries: own, dir, ext } of packages)
+    for (const { pkg, entries: own, dir, js } of packages)
         for (const [key, { name, template, batch }] of Object.entries(own)) {
             entries[key] = { name, pkg, template, batch };
             const id = `${pkg}/${template}`;
             if (runs.has(id)) continue;
-            const file = join(dir, 'templates', template.replace(/\.ts$/, ext));
-            const mod = (await import(pathToFileURL(file).href)) as { default: TemplateFn };
-            runs.set(id, mod.default);
+            runs.set(id, await importTemplate(join(dir, TEMPLATES), template, js));
         }
     return {
         entries,
@@ -69,8 +101,8 @@ export async function fromRepo(root: string): Promise<Catalog> {
             const pkgDir = join(root, 'packages', pkg);
             const entries = readEntries(pkgDir);
             const dir = join(tmp, pkg);
-            writeTemplates(pkgDir, templatesOf(entries), join(dir, 'templates'), false);
-            return { pkg, entries, dir, ext: '.mts' };
+            writeTemplates(pkgDir, templatesOf(entries), join(dir, TEMPLATES), false);
+            return { pkg, entries, dir, js: false };
         });
         return await load(packages, extractTables(root));
     } finally {
@@ -87,7 +119,7 @@ export async function fromInstalled(cwd: string): Promise<Catalog> {
     for (const pkg of PACKAGES) {
         let file;
         try {
-            file = require.resolve(`@vapor-ui/${pkg}/figma-blueprint/tables.json`);
+            file = require.resolve(`@vapor-ui/${pkg}/${SHIPPED}/${TABLES_JSON}`);
         } catch (e) {
             const why =
                 (e as NodeJS.ErrnoException).code === 'ERR_PACKAGE_PATH_NOT_EXPORTED'
@@ -98,7 +130,7 @@ export async function fromInstalled(cwd: string): Promise<Catalog> {
         }
         const { entries, ...share } = JSON.parse(readFileSync(file, 'utf8')) as Shipped;
         Object.assign(tables, share);
-        packages.push({ pkg, entries, dir: dirname(file), ext: '.mjs' });
+        packages.push({ pkg, entries, dir: dirname(file), js: true });
     }
     return load(packages, tables);
 }

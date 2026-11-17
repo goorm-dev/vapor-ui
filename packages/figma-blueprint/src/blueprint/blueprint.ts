@@ -1,78 +1,20 @@
 // Blueprint of a Figma frame: the tree of elements the code must contain, library instances only.
-// Each visible Code Connect instance runs its own template against the REST node (figma-mock.ts) and contributes
-// the elements its snippet draws itself. A connected instance inside another one counts only when the outer template
-// renders it (executeTemplate marker) or it sits in a SLOT; otherwise the part draws it itself (Select.Trigger's chevron).
+// Each visible Code Connect instance runs its own template against the REST node (code-connect/stand-in.ts) and
+// contributes the elements its snippet draws itself. A connected instance inside another one counts only when the outer
+// template renders it (NESTED_TAG marker) or it sits in a SLOT; otherwise the part draws it itself (Select.Trigger's
+// chevron).
 // Prop rules: literal props only, no "false", no placeholder, no "..." example, aria-label → "*". A node sits under
 // the library element it is in; layout frames do not count.
 import ts from 'typescript';
 
 import type { Catalog, Entry } from '~/catalog/catalog';
-import type { Pkg } from '~/entries/entries-file';
+import { NESTED_TAG, templateId, templateRunner } from '~/code-connect/stand-in';
+import type { FigmaNode, FigmaTree } from '~/figma';
+import { isCompositesKey, marked } from '~/packages';
+import type { Pkg } from '~/packages';
 
-import compositesEntries from '../../../composites/figma-entries.json';
-import type { Box, TextLine } from './design';
 import { boxesIn, textsIn } from './design';
-import type { FigmaNode } from './figma-mock';
-import { makeHandles, render, withContext } from './figma-mock';
-
-export type { Box, TextLine };
-
-export interface FigmaTree {
-    document: FigmaNode;
-    // remote: false for a component defined in the design file itself, not a library.
-    components?: Record<
-        string,
-        { key: string; name: string; componentSetId?: string; remote?: boolean }
-    >;
-    componentSets?: Record<string, { key: string; name: string }>;
-}
-
-// id: the Figma instance whose template wrote the node; the second and later elements one template writes are
-// "<id>#1", "<id>#2"... in snippet order.
-// pkg: the package whose template wrote the node, so a composites Dialog.Root is not met by core's.
-// anyParent: Figma's nesting is not the code's here (inside a self-closing part), so the node sits under its owner's
-// root for reading and its position must not be judged.
-// box: the instance's, shared by every element its template writes.
-export interface BlueprintNode {
-    id: string;
-    tag: string;
-    props: string[];
-    pkg: Pkg;
-    anyParent?: true;
-    children: BlueprintNode[];
-    box?: Box;
-}
-
-// A library instance the design draws that is not a node, and why. One inside an excluded instance shares its reason;
-// one inside an unscorable instance is inside-unscorable.
-// box: the code still draws it, so visual scoring still measures it.
-export interface Excluded {
-    node: string;
-    name: string;
-    reason:
-        'part-draws-icon' | 'part-draws-itself' | 'inside-self-closing-part' | 'inside-unscorable';
-    box?: Box;
-}
-
-// A library instance that could not be read, so the design cannot be graded.
-// not-installed: a composites component while composites is not installed; message says so.
-export interface Unscorable {
-    node: string;
-    name: string;
-    cause: 'no-template' | 'template-error' | 'not-installed';
-    message?: string;
-    box?: Box;
-}
-
-// size: the graded frame's, which boxes are relative to.
-export interface Blueprint {
-    version: 4;
-    size?: { w: number; h: number };
-    nodes: BlueprintNode[];
-    excluded: Excluded[];
-    unscorable: Unscorable[];
-    texts: TextLine[];
-}
+import type { Blueprint, BlueprintNode, Excluded, Unscorable } from './output';
 
 interface Element {
     tag: string;
@@ -99,42 +41,13 @@ interface Owner {
     root: Kept | undefined;
 }
 
-// Template id without a real instance: every getter answers with its first option, every search finds nothing.
-const dummy: object = {
-    type: 'INSTANCE',
-    children: [],
-    properties: {},
-    getEnum: (_: string, o: Record<string, unknown>) => Object.values(o)[0],
-    getBoolean: (_: string, o?: Record<string, unknown>) => (o ? Object.values(o)[0] : false),
-    getString: () => '',
-    getInstanceSwap: () => undefined,
-    findInstance: () => dummy,
-    findText: () => ({ type: 'TEXT', textContent: '' }),
-    findConnectedInstance: () => null,
-    findConnectedInstances: () => [],
-    findLayers: () => [],
-    codeConnectId: () => null,
-    hasCodeConnect: () => false,
-    executeTemplate: () => ({ example: [] }),
-};
-// A composites component's Figma name carries no marker, so without composites installed only its key tells it from
-// another library's. ponytail: keys as of this build; a component composites publishes later goes unseen until rebuilt.
-const compositesKeys = new Set<string | undefined>(Object.keys(compositesEntries));
 const ids = new WeakMap<Entry, string | null>();
 const idOf = (catalog: Catalog, entry: Entry) => {
-    if (!ids.has(entry)) {
-        let id: string | null = null;
-        try {
-            id =
-                withContext(
-                    { handle: dummy, batch: entry.batch, texts: new Set() },
-                    catalog.runTemplate(entry),
-                ).id ?? null;
-        } catch {
-            // a template that cannot run without a real instance has no id
-        }
-        ids.set(entry, id);
-    }
+    if (!ids.has(entry))
+        ids.set(
+            entry,
+            templateId(() => catalog.runTemplate(entry), entry.batch),
+        );
     return ids.get(entry) ?? null;
 };
 
@@ -176,7 +89,7 @@ function parse(code: string, texts: Set<unknown>) {
     (function visit(n: ts.Node, at: Pick<Element, 'children' | 'nested'>) {
         if (ts.isJsxElement(n) || ts.isJsxSelfClosingElement(n)) {
             const tag = open(n).tagName.getText();
-            if (tag === '__nested') {
+            if (tag === NESTED_TAG) {
                 at.nested.push(attrsOf(n, texts)[0].slice(4, -1));
                 return;
             }
@@ -239,7 +152,7 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     };
     const fromComposites = (n: FigmaNode) => {
         const { c, set } = componentOf(n);
-        return compositesKeys.has(set?.key) || compositesKeys.has(c?.key);
+        return isCompositesKey(set?.key) || isCompositesKey(c?.key);
     };
     const hasComposites = Object.values(entries).some((e) => e.pkg === 'composites');
     const entryOf = (n: FigmaNode) => {
@@ -255,14 +168,13 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
         const e = n.type === 'INSTANCE' && entryOf(n);
         return e ? { id: idOf(catalog, e), entry: e } : null;
     };
-    const handle = makeHandles({ connected });
+    const templates = templateRunner(connected);
     // One node per instance, so three identical Buttons in the design need three in the code.
     const nodes: BlueprintNode[] = [];
     const excluded: Excluded[] = [];
     const unscorable: Unscorable[] = [];
     // A library instance is one the entries connect, a composites component, or one named like a library component that
-    // nothing installed connects: 💙 core, ❤️ icons, and 🩵 on a composites part's layer ("Dialog/🩵Action").
-    const marked = (s: string) => /(^|\/)(💙|❤️|🩵)/u.test(s);
+    // nothing installed connects (packages.ts marked).
     const isLib = (n: FigmaNode) =>
         n.type === 'INSTANCE' &&
         (connected(n) !== null || fromComposites(n) || marked(nameOf(n)) || marked(n.name));
@@ -353,13 +265,13 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
             const kept: Kept[] = [];
             let top: BlueprintNode[];
             try {
-                const texts = new Set<unknown>();
-                const { example } = withContext(
-                    { handle: handle(n), batch: c.entry.batch, texts },
+                const { code, texts } = templates.run(
+                    n,
                     catalog.runTemplate(c.entry),
+                    c.entry.batch,
                 );
                 const parts = drawn(n);
-                top = parse(render(example), texts).children.flatMap((el) =>
+                top = parse(code, texts).children.flatMap((el) =>
                     keep(el, parts, c.entry.pkg, kept),
                 );
             } catch (e) {

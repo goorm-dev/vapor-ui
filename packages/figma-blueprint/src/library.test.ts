@@ -3,9 +3,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import type { StoredEntry } from '~/entries/entries-file';
+import type { StoredEntry } from '~/entries';
 
-import { checkLibrary, libraryItems, readExceptions } from './check-library';
+import { checkLibrary, libraryItems, readExceptions } from './library';
 
 const entry = (name: string) => ({ name, url: '', template: '', batch: null }) as StoredEntry;
 const set = (key: string, name: string) => ({ key, name, node_id: key });

@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { FigmaTree } from '~/blueprint/blueprint';
+import type { FigmaTree } from '~/figma';
 
 import { main } from './cli';
 

@@ -78,24 +78,26 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 | `figma-blueprint library`                           | 토큰으로 발행된 Figma 라이브러리를 `entries`·예외 목록과 대조한다 |
 | JS API `blueprint`, `fromInstalled`, `fromRepo`     | 플러그인 스킬과 비공개 벤치가 import해서 쓴다                     |
 
-빌드는 `@vapor-ui/codemod`처럼 tsup으로 합니다. `src`는 데이터가 흐르는 순서대로 `entries/ → ship/ → catalog/ → blueprint/` 네 단계로 나눕니다. 각 단계는 자기가 만드는 산출물의 형식을 가지고, 뒤 단계는 앞 단계를 import할 수 있지만 거꾸로는 하지 않습니다. `library/`는 이 흐름에 속하지 않는 주간 검사로, `entries/`만 import합니다.
+빌드는 `@vapor-ui/codemod`처럼 tsup으로 합니다. `src`는 바뀔 수 있는 결정 하나를 모듈 하나가 맡도록 나눕니다. 바깥 시스템(Figma REST API, Code Connect, `@vapor-ui` 패키지)마다 모듈이 하나 있고, 흐름이 만드는 산출물(`figma-entries.json`, `figma-blueprint/` 폴더와 `Catalog`, 정답 트리, 라이브러리 점검)마다 모듈이 하나 있습니다. 한 형식을 쓰는 쪽과 읽는 쪽은 같은 모듈에 둡니다. import는 아래 표에서 위쪽 잎 모듈(`figma.ts`, `packages.ts`, `code-connect/files.ts`) 방향으로만 향하고, `eslint.config.mjs`의 zone 규칙이 이 방향을 강제합니다.
 
-| 파일                       | 만드는 것                                                                         |
-| -------------------------- | --------------------------------------------------------------------------------- |
-| `entries/code-connect.ts`  | 패키지의 Code Connect 파일과 거기서 읽은 연결(URL, 템플릿, batch 행)              |
-| `entries/entries-file.ts`  | `figma-entries.json`의 형식과 읽기, 빠진 항목 검사                                |
-| `entries/write-entries.ts` | `figma-blueprint entries`. Figma에 컴포넌트 키를 물어 `figma-entries.json`을 쓴다 |
-| `ship/templates.ts`        | 함수로 감싼 템플릿과 헬퍼                                                         |
-| `ship/tables.ts`           | 소스에서 추출한 표                                                                |
-| `ship/ship.ts`             | `figma-blueprint ship`. 패키지의 `figma-blueprint/` 폴더                          |
-| `catalog/catalog.ts`       | 템플릿과 표를 공급하는 `Catalog` 포트와 어댑터 두 개                              |
-| `blueprint/figma-mock.ts`  | 템플릿이 import하는 `figma` 모듈의 대역                                           |
-| `blueprint/blueprint.ts`   | REST 트리 → 정답 트리                                                             |
-| `blueprint/design.ts`      | REST 트리 → 텍스트 줄과 박스                                                      |
-| `cli.ts`                   | 명령 진입점                                                                       |
-| `index.ts`                 | JS API                                                                            |
+| 모듈                       | 맡는 결정                                                                                       |
+| -------------------------- | ----------------------------------------------------------------------------------------------- |
+| `figma.ts`                 | Figma REST API. 노드 트리 타입, URL 해석, `FIGMA_ACCESS_TOKEN`, 요청. `fetch`는 여기서만 부른다 |
+| `packages.ts`              | `@vapor-ui` 패키지 목록, 라이브러리 표시(💙 ❤️ 🩵), 빌드할 때 담는 composites 키                |
+| `code-connect/files.ts`    | Code Connect 파일 형식. `figma.config.json` 범위, `// url=`·`// component=` 헤더, batch 행      |
+| `code-connect/compile.ts`  | 템플릿을 실행할 수 있는 모듈로 쓰고(ship은 `.mjs`, `fromRepo`는 `.mts`) 다시 import한다         |
+| `code-connect/stand-in.ts` | 템플릿이 import하는 `figma` 모듈의 대역, `FIGMA_KEY`, 템플릿 id 읽기                            |
+| `entries.ts`               | `figma-entries.json`의 형식과 읽기, 빠진 항목 검사, `figma-blueprint entries`                   |
+| `catalog/catalog.ts`       | `figma-blueprint/` 폴더 구성, `figma-blueprint ship`, `Catalog` 포트와 어댑터 두 개             |
+| `catalog/tables.ts`        | 소스에서 추출한 표                                                                              |
+| `blueprint/blueprint.ts`   | REST 트리 → 정답 트리                                                                           |
+| `blueprint/design.ts`      | REST 트리 → 텍스트 줄과 박스                                                                    |
+| `blueprint/output.ts`      | 정답 트리 타입(`--json` 형식)과 텍스트 출력                                                     |
+| `library.ts`               | `figma-blueprint library`와 `figma-exceptions.json`                                             |
+| `cli.ts`                   | 명령 진입점                                                                                     |
+| `index.ts`                 | JS API                                                                                          |
 
-`figma-mock`, `blueprint`, `design`은 데이터만 받습니다. REST 트리는 객체로 받습니다.
+`code-connect/stand-in.ts`와 `blueprint/`는 데이터만 받습니다. REST 트리는 객체로 받고, I/O를 하는 모듈에서는 타입만 가져옵니다.
 
 템플릿과 표는 `Catalog` 포트 `{ entries, tables, runTemplate }` 하나로 받습니다. 어댑터는 두 개입니다. `fromRepo`는 레포 소스에서 표를 추출하고 템플릿을 그 자리에서 변환해 실행합니다. `fromInstalled`는 `node_modules`에 설치된 컴포넌트 패키지의 `figma-blueprint/` 폴더를 읽습니다. 두 어댑터는 같은 변환 함수를 씁니다.
 
