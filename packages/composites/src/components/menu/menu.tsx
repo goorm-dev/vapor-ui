@@ -2,6 +2,7 @@ import { createContext, forwardRef, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 
 import { useControlled } from '@base-ui/utils/useControlled';
+import { useId } from '@base-ui/utils/useId';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { Box, Menu as MenuPrimitives, Text, VStack } from '@vapor-ui/core';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
@@ -57,7 +58,7 @@ const ParentMenu = forwardRef<HTMLDivElement, ParentMenuProps>((props, ref) => {
         container,
 
         // DOM
-        id,
+        id: idProp,
         className,
 
         // variants
@@ -68,6 +69,8 @@ const ParentMenu = forwardRef<HTMLDivElement, ParentMenuProps>((props, ref) => {
         trigger,
         children,
     } = props;
+
+    const id = useId(idProp);
 
     return (
         <MenuPrimitives.Root
@@ -102,7 +105,7 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
         container,
 
         // DOM
-        id,
+        id: idProp,
         className,
 
         // variants
@@ -114,6 +117,8 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
         children,
     } = props;
 
+    const id = useId(idProp);
+
     return (
         <MenuPrimitives.SubmenuRoot
             open={open}
@@ -121,7 +126,7 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
             onOpenChange={onOpenChange}
             actionsRef={actionsRef}
         >
-            <submenuSlots.trigger render={trigger} />
+            <submenuSlots.trigger openOnHover render={trigger} />
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} sideOffset={8} align={align}>
@@ -230,7 +235,9 @@ const groupSlots = createSlots({
 });
 
 export const MenuGroup = forwardRef<HTMLDivElement, MenuGroup.Props>((props, ref) => {
-    const { label, id, className, children } = props;
+    const { label, id: idProp, className, children } = props;
+
+    const id = useId(idProp);
 
     return (
         <>
@@ -317,7 +324,17 @@ export const MenuCheckGroup = forwardRef<HTMLDivElement, MenuCheckGroup.Props>((
 MenuCheckGroup.displayName = 'Menu.CheckGroup';
 
 const SingleCheckGroup = forwardRef<HTMLDivElement, MenuSingleCheckGroupProps>((props, ref) => {
-    const { value: valueProp, defaultValue, onValueChange, label, id, className, children } = props;
+    const {
+        value: valueProp,
+        defaultValue,
+        onValueChange,
+        label,
+        id: idProp,
+        className,
+        children,
+    } = props;
+
+    const id = useId(idProp);
 
     const [value, setValueState] = useControlled<string | undefined>({
         name: 'MenuCheckGroup',
@@ -358,7 +375,17 @@ const SingleCheckGroup = forwardRef<HTMLDivElement, MenuSingleCheckGroupProps>((
 });
 
 const MultipleCheckGroup = forwardRef<HTMLDivElement, MenuMultipleCheckGroupProps>((props, ref) => {
-    const { value: valueProp, defaultValue, onValueChange, label, id, className, children } = props;
+    const {
+        value: valueProp,
+        defaultValue,
+        onValueChange,
+        label,
+        id: idProp,
+        className,
+        children,
+    } = props;
+
+    const id = useId(idProp);
 
     const [value, setValueState] = useControlled<string[]>({
         name: 'MenuCheckGroup',
@@ -498,8 +525,19 @@ export namespace MenuCheckGroup {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) => {
-    const { isDisabled, variant, label, description, leading, trailing, onClick, id, className } =
-        props;
+    const {
+        isDisabled,
+        variant,
+        label,
+        description,
+        leading,
+        trailing,
+        onClick,
+        id: idProp,
+        className,
+    } = props;
+
+    const id = useId(idProp);
 
     return (
         <MenuPrimitives.Item
@@ -594,9 +632,11 @@ export const MenuCheckItem = forwardRef<HTMLDivElement, MenuCheckItem.Props>((pr
         label,
         description,
         trailing,
-        id,
+        id: idProp,
         className,
     } = props;
+
+    const id = useId(idProp);
 
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
@@ -722,7 +762,9 @@ export namespace MenuCheckItem {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const MenuSubmenuItem = forwardRef<HTMLDivElement, MenuSubmenuItem.Props>((props, ref) => {
-    const { isDisabled, leading, description, label, trailing, id, className } = props;
+    const { isDisabled, leading, description, label, trailing, id: idProp, className } = props;
+
+    const id = useId(idProp);
 
     const itemLayout = getItemLayout({
         hasLeading: !!leading,

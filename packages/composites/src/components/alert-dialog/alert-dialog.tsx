@@ -1,6 +1,7 @@
 import { createContext, forwardRef, useCallback, useContext, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 
+import { useId } from '@base-ui/utils/useId';
 import { AlertDialog as AlertDialogPrimitives, Button, VStack } from '@vapor-ui/core';
 
 import type { SlotProps } from '~/utils/create-slots';
@@ -44,7 +45,7 @@ export const AlertDialogRoot = forwardRef<HTMLDivElement, AlertDialogRoot.Props>
         keepMounted,
 
         // DOM
-        id,
+        id: idProp,
         className,
 
         // variants
@@ -52,13 +53,14 @@ export const AlertDialogRoot = forwardRef<HTMLDivElement, AlertDialogRoot.Props>
 
         // slots
         trigger,
-
         title,
         description,
         cancel,
         action,
         children,
     } = props;
+
+    const id = useId(idProp);
 
     const fallbackActionsRef = useRef<AlertDialogPrimitives.Root.Actions>(null);
     const actionsRef = actionsRefProp ?? fallbackActionsRef;
@@ -254,7 +256,9 @@ const Footer = ({ action, cancel }: FooterProps) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const AlertDialogAction = forwardRef<HTMLElement, AlertDialogAction.Props>((props, ref) => {
-    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
+    const { id: idProp, isDisabled, closeOnClick = true, className, onClick, children } = props;
+
+    const id = useId(idProp);
 
     const { close, type } = useAlertDialogContext();
     const handleClick = (event: Parameters<NonNullable<ButtonProps['onClick']>>[0]) => {
@@ -324,7 +328,9 @@ export namespace AlertDialogAction {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const AlertDialogCancel = forwardRef<HTMLElement, AlertDialogCancel.Props>((props, ref) => {
-    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
+    const { id: idProp, isDisabled, closeOnClick = true, className, onClick, children } = props;
+
+    const id = useId(idProp);
 
     const { close } = useAlertDialogContext();
     const handleClick = useCallback(
