@@ -69,20 +69,45 @@ describe('css-loader — module CSS from the source module', () => {
         expect(deps).toEqual([file]);
     });
 
+    it('webpack: compiles an included source outside root (monorepo sibling package)', () => {
+        const mono = mkdtempSync(join(tmpdir(), 'vapor-css-loader-mono-'));
+        const appRoot = join(mono, 'apps', 'web');
+        const shared = join(mono, 'packages', 'shared', 'src', 'card.tsx');
+        mkdirSync(appRoot, { recursive: true });
+        mkdirSync(join(mono, 'packages', 'shared', 'src'), { recursive: true });
+        writeFileSync(shared, SRC);
+        const deps: string[] = [];
+        const css = vaporCssLoader.call(
+            {
+                resourcePath: '/pkg/module.vapor.css',
+                resourceQuery: `?vapor-src=${encodeURIComponent('../../packages/shared/src/card.tsx.vapor.css')}`,
+                getOptions: () => ({ root: appRoot, include: ['../../packages/shared/src/**'] }),
+                addDependency: (f: string) => deps.push(f),
+            },
+            '',
+        );
+        expect(css).toContain('gap: 0');
+        expect(deps).toEqual([shared]);
+    });
+
     it.each([
-        ['outside root', '..%2Fsecret.tsx.vapor.css'],
-        ['absolute', encodeURIComponent('/etc/a.tsx.vapor.css')],
-        ['missing suffix', 'src%2Fa.tsx'],
-    ])('webpack: rejects a ?vapor-src that is %s', (_label, value) => {
+        ['in node_modules', encodeURIComponent('../node_modules/x/a.tsx.vapor.css'), {}],
+        ['excluded', 'src%2Fa.tsx.vapor.css', { exclude: ['src/**'] }],
+        ['absolute', encodeURIComponent('/etc/a.tsx.vapor.css'), {}],
+        ['missing suffix', 'src%2Fa.tsx', {}],
+    ])('webpack: rejects a ?vapor-src that is %s', (_label, value, extra) => {
+        const deps: string[] = [];
         expect(() =>
             vaporCssLoader.call(
                 {
                     resourcePath: '/pkg/module.vapor.css',
                     resourceQuery: `?vapor-src=${value}`,
-                    getOptions: () => ({ root }),
+                    getOptions: () => ({ root, ...extra }),
+                    addDependency: (f: string) => deps.push(f),
                 },
                 '',
             ),
         ).toThrow(/vapor-src/);
+        expect(deps).toEqual([]);
     });
 });

@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { isAbsolute, relative, resolve } from 'node:path';
+import { isAbsolute, resolve } from 'node:path';
 
 import { VAPOR_SRC_QUERY, compileModule, isModuleCss, sourceOfModuleCss } from './_module-css';
 import { type VaporPluginOptions, resolveOptions } from './_options';
@@ -30,11 +30,13 @@ export default function vaporCssLoader(this: CssLoaderContext, source: string): 
     const src = new URLSearchParams(this.resourceQuery?.slice(1) ?? '').get(VAPOR_SRC_QUERY);
     if (src === null) return compileModule(source, this.resourcePath, opts)?.css ?? '';
 
-    const file = resolve(opts.root, sourceOfModuleCss(src));
-    const rel = relative(opts.root, file);
-    if (!isModuleCss(src) || isAbsolute(src) || rel.startsWith('..') || isAbsolute(rel)) {
+    // 신뢰 경계는 JS 변환과 같은 `include` 필터다. JS 쪽이 이 import 를 넣은 파일이면 root 밖
+    // (모노레포 형제 패키지)이어도 읽고, 아니면 파일을 열기 전에 거부한다.
+    const file =
+        isModuleCss(src) && !isAbsolute(src) ? resolve(opts.root, sourceOfModuleCss(src)) : null;
+    if (!file || !opts.include(file)) {
         throw new Error(
-            `[@vapor-ui/style-macro] Invalid ?${VAPOR_SRC_QUERY}=${src}: expected a module CSS path inside ${opts.root}.`,
+            `[@vapor-ui/style-macro] Invalid ?${VAPOR_SRC_QUERY}=${src}: expected a module CSS path, relative to ${opts.root}, of a file matched by include/exclude.`,
         );
     }
     this.addDependency?.(file);
