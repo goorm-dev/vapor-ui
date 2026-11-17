@@ -75,6 +75,7 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 | `figma-blueprint <tree.json \| Figma URL> [--json]` | 정답 트리와 텍스트 줄을 출력한다                                  |
 | `figma-blueprint ship`                              | 컴포넌트 패키지 빌드에서 템플릿과 표를 컴파일한다                 |
 | `figma-blueprint entries`                           | 토큰으로 `entries` 표를 생성한다. 사람이 실행하고 결과를 커밋한다 |
+| `figma-blueprint library`                           | 토큰으로 발행된 Figma 라이브러리를 `entries`·예외 목록과 대조한다 |
 | JS API `blueprint`, `fromInstalled`, `fromRepo`     | 플러그인 스킬과 비공개 벤치가 import해서 쓴다                     |
 
 빌드는 `@vapor-ui/codemod`처럼 tsup으로 합니다. `src`는 데이터가 흐르는 순서대로 `entries/ → ship/ → catalog/ → blueprint/` 네 단계로 나눕니다. 각 단계는 자기가 만드는 산출물의 형식을 가지고, 뒤 단계는 앞 단계를 import할 수 있지만 거꾸로는 하지 않습니다.
@@ -112,11 +113,12 @@ core, composites, icons는 빌드할 때 `figma-blueprint ship`으로 자기 Cod
 | `presets`       | composites wrapper → 렌더링하는 core 요소와 고정 props (`Dialog.Action` = `<Button size="lg" colorPalette="primary">`) | composites 소스         | 검증 에이전트(치환)        |
 | `defaults`      | core 파트 → recipe `defaultVariants` (`Button`의 `variant="fill"`)                                                     | core 소스               | 검증 에이전트(생략값 보충) |
 
-`entries`만 Figma에 물어야 만들 수 있습니다. 컴포넌트 키는 라이브러리를 발행할 때 Figma가 붙이는 값이라 레포에 없습니다. 키는 라이브러리를 다시 발행할 때만 바뀌므로, `figma-blueprint entries`로 생성한 결과를 각 패키지에 커밋합니다. 빌드와 CI에는 토큰이 필요 없습니다. 나머지 네 표는 빌드할 때 소스에서 만듭니다.
+`entries`만 Figma에 물어야 만들 수 있습니다. 컴포넌트 키는 라이브러리를 발행할 때 Figma가 붙이는 값이라 레포에 없습니다. 키는 라이브러리를 다시 발행할 때만 바뀌므로, `figma-blueprint entries`로 생성한 결과를 각 패키지에 커밋합니다. 빌드와 PR CI에는 토큰이 필요 없습니다. 토큰은 main에서 매주 도는 job만 씁니다(아래 "검증" 참고). 나머지 네 표는 빌드할 때 소스에서 만듭니다.
 
 core, composites, icons는 각각 아래처럼 바뀝니다.
 
 - 패키지 루트의 `figma.config.json` 옆에 `figma-entries.json`을 커밋합니다. `figma-blueprint entries`가 생성합니다.
+- 일부러 Code Connect를 연결하지 않는 라이브러리 컴포넌트는 `figma-exceptions.json`에 Figma 키와 사유로 적습니다. 사유가 비어 있으면 `library`가 실패합니다. 검사 대상은 core에서는 이름에 💙가 붙은 컴포넌트, composites에서는 전부이고, icons는 검사하지 않습니다.
 - 빌드 산출물 `figma-blueprint/` 폴더를 `dist`와 나란히 둡니다. git에는 넣지 않고 `files`와 `clean` 스크립트에 추가합니다.
 - `figma-blueprint/tables.json`에는 자기 패키지 몫의 `entries`와 나머지 네 표가 들어갑니다. core는 `internalIcons`와 `defaults`, composites는 `presets`와 `internalParts`를 가집니다.
 - `figma-blueprint/templates/` 아래에 템플릿과 헬퍼를 소스 경로 그대로 컴파일합니다.
@@ -222,7 +224,7 @@ core, composites, icons는 각각 아래처럼 바뀝니다.
 
 공개 레포에는 실제 시안 픽스처를 두지 않습니다. 픽스처와 에이전트 실행 결과는 비공개 벤치 데이터입니다.
 
-- **vapor-ui CI**: 규칙마다 손으로 만든 작은 REST 트리로 단위 테스트를 둡니다(슬롯 밖 인스턴스 제외, node id, `anyParent` 위치 등). 레포의 모든 Code Connect URL이 `entries`에 있는지도 토큰 없이 검사합니다.
+- **vapor-ui CI**: 규칙마다 손으로 만든 작은 REST 트리로 단위 테스트를 둡니다(슬롯 밖 인스턴스 제외, node id, `anyParent` 위치 등). 레포의 모든 Code Connect URL이 `entries`에 있는지도 토큰 없이 검사합니다. 매주 main에서 도는 job은 토큰으로 `entries`를 다시 생성해 바뀐 게 있으면 PR을 열고, `figma-blueprint library`로 Figma에서 사라진 `entries` 키, 연결도 예외 사유도 없는 컴포넌트, 이미 연결됐거나 사라진 예외를 잡아 실패합니다.
 - **비공개 벤치**: figma-blueprint를 버전 고정해 씁니다. 처음 설계의 정적 대조 스크립트는 벤치로 옮기고, 같은 run을 그 스크립트와 검증 에이전트로 모두 채점해 일치율을 잽니다.
 
 완료 조건은 정답 트리의 **오류 0**입니다. 벤치의 픽스처 25개에서 채점 불가가 없어야 하고, 사람이 코드를 읽고 판정해 둔 에이전트 실행 12개를 이 트리로 채점했을 때 FP 0, FN 0이어야 합니다. 다만 Dialog 닫기 버튼을 빼는 `internalParts` 추출이 `createSlots()`만 제외하는 임시 규칙이라, 위의 조건 기준으로 바꿉니다.
@@ -239,7 +241,7 @@ PoC를 RFC의 종료 코드 규칙으로 돌리면 픽스처 25개 중 17개가 
 - core, composites, icons의 배포 산출물이 커지고 세 패키지의 빌드가 figma-blueprint에 의존합니다. 앱 번들에는 들어가지 않습니다.
 - figma 대역은 Figma의 템플릿 API를 다시 구현한 것입니다. Code Connect에 새 API가 생기거나 템플릿이 대역에 없는 API를 쓰면, 대역을 고칠 때까지 그 인스턴스는 채점 불가가 됩니다.
 - 판정은 에이전트가 내리므로 결정적이지 않습니다. 판정이 흔들리는 정도는 벤치 일치율로 보고, 그때 검증자를 늘릴지 정합니다.
-- `entries`는 라이브러리를 다시 발행할 때 사람이 토큰으로 다시 생성해야 합니다. CI 검사는 빠진 항목만 잡고 키가 바뀐 경우는 잡지 못합니다.
+- `entries`가 Figma 재발행을 따라가는 데 최대 일주일이 걸립니다. 그 사이 PR CI는 빠진 항목만 잡고 키가 바뀐 경우는 잡지 못합니다. 주간 job이 연 재생성 PR은 사람이 머지해야 합니다.
 - 실제 시안 회귀는 비공개 벤치에서만 돌아갑니다. 외부 기여자는 공개 단위 테스트까지만 확인할 수 있습니다.
 - figma-blueprint는 빌드할 때의 composites 키만 압니다. composites가 컴포넌트를 새로 발행하면, figma-blueprint를 다시 배포하기 전까지 composites가 설치되지 않은 소비자에서는 그 컴포넌트를 알아보지 못합니다.
 
@@ -251,7 +253,7 @@ PoC를 RFC의 종료 코드 규칙으로 돌리면 픽스처 25개 중 17개가 
 - **템플릿을 figma-blueprint 안에 번들하고 버전이 다르면 경고**: 패키지 하나만 바뀌지만 소비자의 core 버전과 정답 트리가 어긋날 수 있습니다. 문서를 core에 함께 배포하게 된 이유도 같은 버전 drift였습니다.
 - **어느 `entries`에도 없는 라이브러리 인스턴스를 모두 채점 불가로**: composites 키를 담지 않아도 되지만, 다른 라이브러리의 컴포넌트(사이드바, 아바타)와 컴포넌트 내부 인스턴스(`🔶InteractionLayer`, 슬롯 레이어)까지 채점 불가가 됩니다. 벤치 시안 25개 모두에 그런 인스턴스가 있어서, 모든 패키지가 설치된 소비자에서도 지금 채점되는 시안 4개까지 채점 불가가 됩니다.
 - **MCP 오라클을 정답 기준으로**: 오라클에도 잡음이 있습니다. 같은 IconButton의 `aria-label`이 응답마다 있다 없다 하고(14줄), 코드가 낼 수 없는 Dialog 닫기 버튼을 정답으로 봅니다. 오라클은 비공개 벤치의 참고 신호로만 씁니다.
-- **릴리스 CI가 토큰으로 `entries`를 매번 생성**: 항상 최신이지만 Figma API 장애가 릴리스를 막고 fork PR의 CI에서는 secret을 쓸 수 없습니다.
+- **릴리스 CI가 토큰으로 `entries`를 매번 생성**: 항상 최신이지만 Figma API 장애가 릴리스를 막고 fork PR의 CI에서는 secret을 쓸 수 없습니다. 대신 main에서 주간 job으로 돌립니다. 릴리스와 PR을 거치지 않으므로 두 문제가 생기지 않습니다.
 - **시안이 바인딩한 Figma 변수를 함께 내서 스타일을 검사하는 관문 2**: 디자이너가 직접 그린 레이어의 바인딩 변수와 absolute 여부를 내고, 코드의 하드코딩 값과 `absolute`를 잡는 방식입니다. 플러그인 스킬을 개선한 뒤 벤치 run 103개 중 관문 2 때문에만 떨어진 run이 없어서 두지 않았고, 다시 넣더라도 시안과 비교하지 않고 코드만 보는 ESLint 규칙으로 하기로 했습니다(VAPOR-325).
 
 ## Unresolved Questions
