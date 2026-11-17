@@ -1308,3 +1308,49 @@ describe('transform — slots merge into the element final style (spreads, callb
         expect(out.errors[0]?.code).toBe('dynamic-value');
     });
 });
+
+describe('transform — module constants resolve by lexical scope, not by name count', () => {
+    const run = (body: string) => transform({ source: src(body), filename: '/S.tsx' });
+    const use = `export const A = () => <div className={css(base, { color: 'red' })} />;`;
+
+    it.each([
+        ['object constant', `const base = { width: '24px' };`],
+        ['css() constant', `const base = css({ width: '24px' });`],
+    ])('%s merges although another function declares the same name', (_label, decl) => {
+        const out = run(`${decl}\nfunction other() { const base = 1; return base; }\n${use}`);
+        expect(out.errors).toEqual([]);
+        expect(out.code).not.toContain('_cx');
+        expect(out.code).toMatch(/className=\{'\w+'\}/);
+    });
+
+    it('still a runtime part where the name is shadowed at the call site', () => {
+        const out = run(
+            `const base = { width: '24px' };\nexport const A = ({ base }) => <div className={css(base, { color: 'red' })} />;`,
+        );
+        expect(out.code).toContain('_cx([base,');
+    });
+
+    it('the same constant merges in one component and stays runtime in another', () => {
+        const out = run(
+            `const base = { width: '24px' };\n${use}\nexport const B = ({ base }) => <div className={css(base)} />;`,
+        );
+        expect(out.errors).toEqual([]);
+        expect(out.code).toMatch(/const A = \(\) => <div className=\{'\w+'\} \/>/);
+        expect(out.code).toContain('className={_cx([base])}');
+    });
+
+    it('mutating a same-named local elsewhere is not reported', () => {
+        const out = run(
+            `const base = { width: '24px' };\nfunction f() { const base = { width: 1 }; base.width = 2; Object.assign(base, {}); }\n${use}`,
+        );
+        expect(out.errors).toEqual([]);
+        expect(out.code).not.toContain('_cx');
+    });
+
+    it('mutating the module constant from inside a function is reported', () => {
+        const out = run(
+            `const base = { width: '24px' };\nfunction f() { base.width = '96px'; }\n${use}`,
+        );
+        expect(out.errors[0]).toMatchObject({ code: 'mutated-constant', loc: { line: 3 } });
+    });
+});

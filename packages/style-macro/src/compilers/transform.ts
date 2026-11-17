@@ -18,6 +18,7 @@ import {
 } from './jsx-inject';
 import { walk } from './oxc-walk';
 import { type ParseCallResult, parseCallArg } from './parse-call';
+import { isShadowed } from './scope';
 
 // ────────────────────────────────────────────────────────────────
 // Public API
@@ -165,14 +166,12 @@ class Transformer {
      * 모듈 최상위 이름을 루트로 한 변경 지점 (`x.a = …`, `delete x.a`, `Object.assign(x, …)` 등).
      * 병합된 object 상수가 여기 있으면 컴파일 결과(소스에 적힌 값)와 런타임 값이 갈라진다.
      */
-    readonly #mutations: { name: string; node: AnyProp }[] = [];
+    readonly #mutations: { name: string; node: AnyProp; parents: AnyProp[] }[] = [];
     #captureCount = 0;
     /** `start:end` → 그 위치에서 옮겨진 식의 캡처 이름. */
     readonly #captureAt = new Map<string, string>();
     /** style 병합에 쓴 runtime helper (`_mergeStyle`, `_withStyle`). */
     readonly #helpers = new Set<string>();
-    /** 파일 안에서 각 이름이 바인딩된 횟수. 2 이상이면 shadowing 가능성 → 병합 안 함. */
-    readonly #bindingCounts = new Map<string, number>();
     /** `parseCallArg` 결과 캐시 (같은 object 를 여러 경로에서 풀 수 있음). */
     readonly #parsed = new Map<AnyProp, ParseCallResult>();
 
@@ -205,13 +204,6 @@ class Transformer {
             AssignmentExpression: this.#onAssignment,
             UpdateExpression: this.#onUpdate,
             UnaryExpression: this.#onUnary,
-            VariableDeclarator: this.#onVariableDeclarator,
-            Function: this.#onFunction,
-            FunctionDeclaration: this.#onFunction,
-            FunctionExpression: this.#onFunction,
-            ArrowFunctionExpression: this.#onFunction,
-            ClassDeclaration: this.#onNamedDeclaration,
-            CatchClause: this.#onCatch,
         });
 
         // 다른 css() 인자 안에 들어간 호출은 바깥 호출이 함께 처리한다.
@@ -224,7 +216,7 @@ class Transformer {
 
         const calls: CallRecord[] = [];
         for (const { node, parents } of outer) {
-            const args = this.#resolveCallArgs(node);
+            const args = this.#resolveCallArgs(node, parents);
             if (!args) continue;
             calls.push({ node, parents, args, debugId: debugIdOf(parents) });
         }
@@ -294,7 +286,6 @@ class Transformer {
             if (stmt.type !== 'ImportDeclaration') continue;
             this.#lastImportEnd = stmt.end;
             for (const spec of stmt.specifiers ?? []) {
-                if (spec.local?.type === 'Identifier') this.#bind(spec.local.name);
                 if (stmt.source.value !== IMPORT_SOURCE) continue;
                 if (spec.type !== 'ImportSpecifier' || spec.imported?.type !== 'Identifier')
                     continue;
@@ -328,67 +319,20 @@ class Transformer {
         );
     }
 
-    #bind(name: string) {
-        this.#bindingCounts.set(name, (this.#bindingCounts.get(name) ?? 0) + 1);
-    }
-
-    #bindPattern(node: AnyProp) {
-        if (!node) return;
-        switch (node.type) {
-            case 'Identifier':
-                this.#bind(node.name);
-                return;
-            case 'ObjectPattern':
-                for (const p of node.properties ?? []) {
-                    this.#bindPattern(p.type === 'RestElement' ? p.argument : p.value);
-                }
-                return;
-            case 'ArrayPattern':
-                for (const e of node.elements ?? []) this.#bindPattern(e);
-                return;
-            case 'AssignmentPattern':
-                this.#bindPattern(node.left);
-                return;
-            case 'RestElement':
-                this.#bindPattern(node.argument);
-                return;
-            case 'TSParameterProperty':
-                this.#bindPattern(node.parameter);
-                return;
-        }
-    }
-
-    #onFunction = (node: AnyProp) => {
-        if (node.id?.type === 'Identifier') this.#bind(node.id.name);
-        const params = Array.isArray(node.params) ? node.params : (node.params?.items ?? []);
-        for (const p of params) this.#bindPattern(p);
-        if (node.params?.rest) this.#bindPattern(node.params.rest);
-    };
-
-    #onNamedDeclaration = (node: AnyProp) => {
-        if (node.id?.type === 'Identifier') this.#bind(node.id.name);
-    };
-
-    #onCatch = (node: AnyProp) => {
-        this.#bindPattern(node.param);
-    };
-
-    #onVariableDeclarator = (node: AnyProp) => {
-        this.#bindPattern(node.id);
-    };
-
     #onCall = (node: AnyProp, parents: AnyProp[]) => {
-        this.#onMutatingCall(node);
+        this.#onMutatingCall(node, parents);
         this.#onCallExpression(node, parents);
     };
 
-    #onAssignment = (node: AnyProp) => this.#recordMutation(node.left, node);
-    #onUpdate = (node: AnyProp) => this.#recordMutation(node.argument, node);
-    #onUnary = (node: AnyProp) => {
-        if (node.operator === 'delete') this.#recordMutation(node.argument, node);
+    #onAssignment = (node: AnyProp, parents: AnyProp[]) =>
+        this.#recordMutation(node.left, node, parents);
+    #onUpdate = (node: AnyProp, parents: AnyProp[]) =>
+        this.#recordMutation(node.argument, node, parents);
+    #onUnary = (node: AnyProp, parents: AnyProp[]) => {
+        if (node.operator === 'delete') this.#recordMutation(node.argument, node, parents);
     };
     /** 첫 인자를 제자리에서 바꾸는 내장 함수 (`Object.assign(x, …)` 등). */
-    #onMutatingCall = (node: AnyProp) => {
+    #onMutatingCall = (node: AnyProp, parents: AnyProp[]) => {
         const c = node.callee;
         if (c?.type !== 'MemberExpression' || c.computed) return;
         const owner = c.object?.type === 'Identifier' ? c.object.name : null;
@@ -396,13 +340,13 @@ class Transformer {
         if (!owner || !MUTATING_BUILTINS[owner]?.has(method)) return;
         const target = node.arguments?.[0];
         const name = rootName(target, true);
-        if (name) this.#mutations.push({ name, node });
+        if (name) this.#mutations.push({ name, node, parents: parents.slice() });
     };
 
     /** 멤버 접근 대상(`x.a`, `x[k].b`)의 변경만 기록한다. 이름 자체 재할당은 const 라 불가. */
-    #recordMutation(target: AnyProp, node: AnyProp) {
+    #recordMutation(target: AnyProp, node: AnyProp, parents: AnyProp[]) {
         const name = rootName(target, false);
-        if (name) this.#mutations.push({ name, node });
+        if (name) this.#mutations.push({ name, node, parents: parents.slice() });
     }
 
     /**
@@ -419,11 +363,12 @@ class Transformer {
     }
 
     #checkMutations() {
-        for (const { name, node } of this.#mutations) {
+        for (const { name, node, parents } of this.#mutations) {
             const top = this.#topLevelStatic.get(name);
             if (top?.init.type !== 'ObjectExpression' || !this.#resolvedTopLevel.has(name))
                 continue;
-            // 같은 이름이 여러 번 바인딩되면 병합 자체를 안 하므로 여기 오는 이름은 유일하다.
+            // 변경 위치에서 이 이름이 지역 바인딩을 가리키면 모듈 상수와 무관하다.
+            if (isShadowed(name, parents)) continue;
             this.#errors.push({
                 code: 'mutated-constant',
                 message:
@@ -457,11 +402,11 @@ class Transformer {
     }
 
     /** css() 호출의 인자들을 해석. 파싱 에러가 나면 `null`. */
-    #resolveCallArgs(call: AnyProp): ArgRecord[] | null {
+    #resolveCallArgs(call: AnyProp, scope: AnyProp[]): ArgRecord[] | null {
         const before = this.#errors.length;
         const args: ArgRecord[] = [];
         for (const a of call.arguments) {
-            const pieces = this.#resolve(a, new Set());
+            const pieces = this.#resolve(a, scope, new Set());
             if (pieces) args.push({ kind: 'local', pieces });
             else if (this.#isCssCall(a) || containsCssCall(a, this.#bindingName!)) {
                 this.#errors.push(nestedCallError(a));
@@ -474,7 +419,7 @@ class Transformer {
      * 인자 표현식을 컴파일 시점 조각으로 푼다. 풀 수 없으면(props, import, 함수 호출 결과 등)
      * `null` — 그 인자는 런타임 class 문자열로 이어붙인다.
      */
-    #resolve(node: AnyProp, visiting: Set<string>): Piece[] | null {
+    #resolve(node: AnyProp, scope: AnyProp[], visiting: Set<string>): Piece[] | null {
         if (!node) return null;
         switch (node.type) {
             case 'ObjectExpression':
@@ -483,18 +428,20 @@ class Transformer {
             case 'TSAsExpression':
             case 'TSSatisfiesExpression':
             case 'TSNonNullExpression':
-                return this.#resolve(node.expression, visiting);
+                return this.#resolve(node.expression, scope, visiting);
             case 'Literal':
                 return node.value === null || node.value === false ? [] : null;
             case 'Identifier': {
                 if (node.name === 'undefined') return [];
+                // 이 위치에서 이름이 지역 바인딩(prop, 지역 변수 등)을 가리키면 모듈 상수가 아니다.
                 const top = this.#topLevelStatic.get(node.name);
-                if (!top || (this.#bindingCounts.get(node.name) ?? 0) !== 1) return null;
+                if (!top || isShadowed(node.name, scope)) return null;
                 const cached = this.#resolvedTopLevel.get(node.name);
                 if (cached) return cached;
                 if (visiting.has(node.name)) return null;
                 visiting.add(node.name);
-                const pieces = this.#resolve(top.init, visiting);
+                // 상수 정의는 모듈 스코프에서 평가된다.
+                const pieces = this.#resolve(top.init, [], visiting);
                 visiting.delete(node.name);
                 if (!pieces) return null;
                 const captured = this.#capture(pieces, top);
@@ -502,16 +449,18 @@ class Transformer {
                 return captured;
             }
             case 'CallExpression':
-                return this.#isCssCall(node) ? this.#resolveAll(node.arguments, visiting) : null;
+                return this.#isCssCall(node)
+                    ? this.#resolveAll(node.arguments, scope, visiting)
+                    : null;
             case 'LogicalExpression': {
                 if (node.operator !== '&&') return null;
-                const right = this.#resolve(node.right, visiting);
+                const right = this.#resolve(node.right, scope, visiting);
                 if (!right) return null;
                 return [{ ...this.#condTest(node.left), whenTrue: right, whenFalse: [] }];
             }
             case 'ConditionalExpression': {
-                const whenTrue = this.#resolve(node.consequent, visiting);
-                const whenFalse = this.#resolve(node.alternate, visiting);
+                const whenTrue = this.#resolve(node.consequent, scope, visiting);
+                const whenFalse = this.#resolve(node.alternate, scope, visiting);
                 if (!whenTrue || !whenFalse) return null;
                 return [{ ...this.#condTest(node.test), whenTrue, whenFalse }];
             }
@@ -566,10 +515,10 @@ class Transformer {
         return walkPieces(pieces);
     }
 
-    #resolveAll(nodes: AnyProp[], visiting: Set<string>): Piece[] | null {
+    #resolveAll(nodes: AnyProp[], scope: AnyProp[], visiting: Set<string>): Piece[] | null {
         const out: Piece[] = [];
         for (const n of nodes ?? []) {
-            const p = this.#resolve(n, visiting);
+            const p = this.#resolve(n, scope, visiting);
             if (!p) return null;
             out.push(...p);
         }
