@@ -161,7 +161,7 @@ class Transformer {
     #needCx = false;
 
     /** 모듈 최상위 `const x = css(...)` / `const x = { ... }` — 같은 파일 병합 대상. */
-    readonly #topLevelStatic = new Map<string, { init: AnyProp; stmtStart: number }>();
+    readonly #topLevelStatic = new Map<string, TopLevelConst>();
     /**
      * 최상위 상수를 푼 조각. 조건·dynamic 값 원문은 정의 위치에서 `__vaporCapture_N` 으로
      * 캡처한 이름으로 바뀌어 있다 — 사용처 스코프에서 같은 이름이 다른 바인딩을 가리켜도
@@ -309,12 +309,21 @@ class Transformer {
         for (const stmt of program.body) {
             const decl = stmt.type === 'ExportNamedDeclaration' ? stmt.declaration : stmt;
             if (decl?.type !== 'VariableDeclaration' || decl.kind !== 'const') continue;
-            for (const d of decl.declarations) {
-                if (d.id?.type !== 'Identifier') continue;
+            const keyword = `${stmt === decl ? '' : 'export '}${decl.kind}`;
+            decl.declarations.forEach((d: AnyProp, i: number) => {
+                if (d.id?.type !== 'Identifier') return;
                 const init = unwrapTypeOnly(d.init);
-                if (!this.#isCssCall(init) && init?.type !== 'ObjectExpression') continue;
-                this.#topLevelStatic.set(d.id.name, { init, stmtStart: stmt.start });
-            }
+                if (!this.#isCssCall(init) && init?.type !== 'ObjectExpression') return;
+                // 첫 선언자는 문장 앞이 곧 선언자 앞. 그 뒤 선언자는 앞 선언자와의 경계에서 문장을 나눠야
+                // 캡처를 그 사이에 둘 수 있다.
+                const split =
+                    i === 0 ? null : { from: decl.declarations[i - 1].end, to: d.start, keyword };
+                this.#topLevelStatic.set(d.id.name, {
+                    init,
+                    insertAt: i === 0 ? stmt.start : d.start,
+                    split,
+                });
+            });
         }
     }
 
@@ -477,10 +486,15 @@ class Transformer {
     }
 
     /**
-     * 최상위 상수의 런타임 식(분기 조건, dynamic 값)을 정의 문장 바로 앞
+     * 최상위 상수의 런타임 식(분기 조건, dynamic 값)을 그 상수의 선언자 바로 앞
      * `const __vaporCapture_N = (<expr>);` 로 **옮긴다**. 식이 평가되는 곳은 이 한 곳뿐이고,
      * 정의와 모든 사용처는 이름을 읽는다 — 사용처 스코프의 같은 이름에 가려지지 않고, 부작용도
      * 원본처럼 모듈 평가 시 한 번만 일어난다.
+     *
+     * 평가 순서는 원본과 같아야 한다: `const w = f(), base = { width: w }` 에서 `w` 는 `base`
+     * 선언자 직전에야 초기화된다. 그래서 선언자가 둘째 이후면 문장을 그 경계에서 나눈다
+     * (`const w = f();` / 캡처 / `const base = …`). `export` 는 각 선언자에 그대로 남고
+     * 캡처 이름은 export 되지 않는다.
      *
      * - object 상수: 리터럴은 그대로 남아 다른 곳에서 읽히므로 식 자리를 이름으로 바꾼다.
      * - css() 상수: 호출 전체가 class 선택식으로 치환되므로, 그 치환이 이 조각을 쓴다
@@ -488,7 +502,7 @@ class Transformer {
      * 같은 위치의 식(shorthand 분해 등)은 한 번만 옮긴다. 중첩 상수에서 온 식은 이미 옮겨져
      * 위치가 그 상수의 정의 안이므로 다시 옮기지 않는다.
      */
-    #capture(pieces: Piece[], top: { init: AnyProp; stmtStart: number }): Piece[] {
+    #capture(pieces: Piece[], top: TopLevelConst): Piece[] {
         const inPlace = top.init.type === 'ObjectExpression';
         const take = (expr: string, start: number, end: number): string => {
             if (start < top.init.start || end > top.init.end) return expr;
@@ -497,7 +511,12 @@ class Transformer {
             if (existing) return existing;
             const name = `__vaporCapture_${this.#captureCount++}`;
             this.#captureAt.set(key, name);
-            this.#ms!.appendLeft(top.stmtStart, `const ${name} = (${expr});\n`);
+            if (top.split) {
+                this.#ms!.overwrite(top.split.from, top.split.to, `;\n`);
+                this.#ms!.appendRight(top.insertAt, `${top.split.keyword} `);
+                top.split = null;
+            }
+            this.#ms!.appendLeft(top.insertAt, `const ${name} = (${expr});\n`);
             if (inPlace) this.#ms!.overwrite(start, end, name);
             return name;
         };
@@ -723,6 +742,18 @@ class Transformer {
 // ────────────────────────────────────────────────────────────────
 // helpers
 // ────────────────────────────────────────────────────────────────
+
+/** 모듈 최상위 `const` 선언자 중 css() 병합 대상. */
+interface TopLevelConst {
+    init: AnyProp;
+    /** 캡처 문을 넣을 위치 — 이 선언자 바로 앞(첫 선언자면 문장 앞). */
+    insertAt: number;
+    /**
+     * 둘째 이후 선언자가 처음 캡처될 때 앞 선언자와의 경계(`, `)를 `;\n` + `keyword` 로 바꿔
+     * 문장을 나눈다. 한 번 나누면 `null`.
+     */
+    split: { from: number; to: number; keyword: string } | null;
+}
 
 /** directive prologue 마지막 문의 끝. prologue 가 없으면 0. */
 function prologueEnd(program: AnyProp): number {

@@ -1138,6 +1138,44 @@ describe('transform — module constants capture values at definition (PR #752 r
         expect(out.code.match(/= \(x\);/g)).toHaveLength(1);
     });
 
+    describe('capture sits right before its declarator (same evaluation order)', () => {
+        const run = (decl: string) => {
+            const out = transform({
+                source: src(`${decl}\nexport const A = () => <div className={css(base)} />;`),
+                filename: '/S5.tsx',
+            });
+            expect(out.errors).toEqual([]);
+            return out.code;
+        };
+        const exportedNames = (code: string) =>
+            parseSync('/o.tsx', code, {
+                sourceType: 'module',
+                lang: 'tsx',
+            }).module.staticExports.flatMap((e) => e.entries.map((x) => x.exportName.name));
+
+        it('splits the declaration so earlier declarators are initialized first', () => {
+            const code = run(`const w = getW(), base = { width: w, height: h ? '1px' : '2px' };`);
+            expect(code).toMatch(
+                /const w = getW\(\);\nconst __vaporCapture_0 = \(w\);\nconst __vaporCapture_1 = \(h\);\nconst base = \{ width: __vaporCapture_0/,
+            );
+        });
+
+        it('keeps `export` on each split declarator and does not export the capture', () => {
+            const code = run(`export const w = getW(), base = { width: w };`);
+            expect(code).toMatch(
+                /export const w = getW\(\);\nconst __vaporCapture_0 = \(w\);\nexport const base = /,
+            );
+            expect(exportedNames(code).sort()).toEqual(['A', 'base', 'w']);
+        });
+
+        it('does not split when the constant is the first declarator', () => {
+            const code = run(`const base = { width: w }, other = 1;`);
+            expect(code).toMatch(
+                /const __vaporCapture_0 = \(w\);\nconst base = \{ width: __vaporCapture_0 \}, other = 1;/,
+            );
+        });
+    });
+
     it('inline arguments are not captured', () => {
         const out = transform({
             source: src(
