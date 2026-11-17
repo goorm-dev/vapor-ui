@@ -938,3 +938,48 @@ describe('transform — dynamic slots follow the className branch tree (PR #752 
         });
     });
 });
+
+describe('transform — plain style object constants (PR #752 review)', () => {
+    const body = (decl: string, use = `css(base, { color: 'red' })`) =>
+        src(`${decl}\nexport const A = () => <div className={${use}} />;`);
+
+    it('module-level `const x = { ... }` merges at compile time like a css() constant', () => {
+        const out = transform({ source: body(`const base = { padding: '$space-200' };`), filename: '/O1.tsx' });
+        expect(out.errors).toEqual([]);
+        expect(out.code).not.toContain('_cx');
+        expect(out.code).toMatch(/className=\{'\w+'\}/);
+        expect(out.css).toContain('padding-top: var(--vapor-size-space-200)');
+        expect(out.css).toContain('color: red');
+    });
+
+    it('accepts `export const`, `as const` and `satisfies` wrappers', () => {
+        for (const decl of [
+            `export const base = { padding: '$space-200' };`,
+            `const base = { padding: '$space-200' } as const;`,
+            `const base = { padding: '$space-200' } satisfies Record<string, string>;`,
+        ]) {
+            const out = transform({ source: body(decl), filename: '/O2.tsx' });
+            expect(out.errors).toEqual([]);
+            expect(out.css).toContain('padding-top');
+        }
+    });
+
+    it('later argument wins over the constant', () => {
+        const out = transform({
+            source: body(`const base = { color: 'blue' };`, `css(base, { color: 'red' })`),
+            filename: '/O3.tsx',
+        });
+        expect(out.css).toContain('color: red');
+        expect(out.css).not.toContain('color: blue');
+    });
+
+    it('shadowed name stays a runtime part', () => {
+        const out = transform({
+            source: src(
+                `const base = { color: 'blue' };\nexport const A = ({ base }) => <div className={css(base, { color: 'red' })} />;`,
+            ),
+            filename: '/O4.tsx',
+        });
+        expect(out.code).toContain('_cx([base,');
+    });
+});

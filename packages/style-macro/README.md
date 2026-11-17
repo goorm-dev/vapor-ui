@@ -5,7 +5,7 @@
 - 반환값은 순수 `string` — Server Component 에서 만들어 Client Component 로 넘겨도 된다.
 - 블록 안 선언 순서는 작성 순서 그대로다. 같은 selector·property 는 뒤에 쓴 것이 이긴다. selector 그룹은 base → 중첩 selector(작성 순) → at-rule(`min-width` 오름 / `max-width` 내림) 순으로 나온다.
 - `css(a, b)` 합성:
-    - 같은 파일에서 정적으로 풀리는 인자(object 리터럴, 모듈 최상위 `const x = css(...)` 상수, 그 사이의 `&&` / `?:`)는 compile-time 에 **한 블록으로 병합**한다. 뒤 인자가 이기고, 조건부 조합은 분기마다 병합 블록을 미리 만든다(최대 16 조합).
+    - 같은 파일에서 정적으로 풀리는 인자(object 리터럴, 모듈 최상위 `const x = css(...)` / `const x = { ... }` 상수, 그 사이의 `&&` / `?:`)는 compile-time 에 **한 블록으로 병합**한다. 뒤 인자가 이기고, 조건부 조합은 분기마다 병합 블록을 미리 만든다(최대 16 조합).
     - 그 밖의 인자(import, props, 함수 결과)는 `_cx([...])` 로 이어붙인다. 같은 속성을 가진 두 class 의 승패는 CSS 로드 순서(import 순서)를 따른다.
 
 ## 사용

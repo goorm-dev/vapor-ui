@@ -147,8 +147,8 @@ class Transformer {
 
     /** `const x = css(...)` 로 선언된 지역 변수 이름. template literal 합성 감지용. */
     readonly #vaporLocals = new Set<string>();
-    /** 모듈 최상위 `const x = css(...)` — 같은 파일 병합 대상. */
-    readonly #topLevelCss = new Map<string, AnyProp>();
+    /** 모듈 최상위 `const x = css(...)` / `const x = { ... }` — 같은 파일 병합 대상. */
+    readonly #topLevelStatic = new Map<string, AnyProp>();
     /** 파일 안에서 각 이름이 바인딩된 횟수. 2 이상이면 shadowing 가능성 → 병합 안 함. */
     readonly #bindingCounts = new Map<string, number>();
     /** `parseCallArg` 결과 캐시 (같은 object 를 여러 경로에서 풀 수 있음). */
@@ -260,14 +260,19 @@ class Transformer {
         }
     }
 
-    /** 모듈 최상위 `const x = css(...)` 를 기록한다 (`export const` 포함). */
+    /**
+     * 모듈 최상위 `const x = css(...)` / `const x = { ... }` 를 기록한다 (`export const` 포함).
+     * 둘 다 같은 파일에서 정적으로 풀리는 값이라 인자로 오면 한 블록으로 병합한다.
+     */
     #scanTopLevel(program: AnyProp) {
         for (const stmt of program.body) {
             const decl = stmt.type === 'ExportNamedDeclaration' ? stmt.declaration : stmt;
             if (decl?.type !== 'VariableDeclaration' || decl.kind !== 'const') continue;
             for (const d of decl.declarations) {
-                if (d.id?.type !== 'Identifier' || !this.#isCssCall(d.init)) continue;
-                this.#topLevelCss.set(d.id.name, d.init);
+                if (d.id?.type !== 'Identifier') continue;
+                const init = unwrapTypeOnly(d.init);
+                if (!this.#isCssCall(init) && init?.type !== 'ObjectExpression') continue;
+                this.#topLevelStatic.set(d.id.name, init);
             }
         }
     }
@@ -415,11 +420,11 @@ class Transformer {
                 return node.value === null || node.value === false ? [] : null;
             case 'Identifier': {
                 if (node.name === 'undefined') return [];
-                const init = this.#topLevelCss.get(node.name);
+                const init = this.#topLevelStatic.get(node.name);
                 if (!init || (this.#bindingCounts.get(node.name) ?? 0) !== 1) return null;
                 if (visiting.has(node.name)) return null;
                 visiting.add(node.name);
-                const pieces = this.#resolveAll(init.arguments, visiting);
+                const pieces = this.#resolve(init, visiting);
                 visiting.delete(node.name);
                 return pieces;
             }
@@ -642,6 +647,21 @@ function sameSlots(a: SlotTree, b: SlotTree): boolean {
         return a.test() === b.test() && sameSlots(a.whenTrue, b.whenTrue) && sameSlots(a.whenFalse, b.whenFalse);
     }
     return false;
+}
+
+/** 값에 영향 없는 TS 래퍼(`as`, `satisfies`, `!`, 괄호)를 벗긴다. */
+function unwrapTypeOnly(node: AnyProp): AnyProp {
+    let n = node;
+    while (
+        n &&
+        (n.type === 'TSAsExpression' ||
+            n.type === 'TSSatisfiesExpression' ||
+            n.type === 'TSNonNullExpression' ||
+            n.type === 'ParenthesizedExpression')
+    ) {
+        n = n.expression;
+    }
+    return n;
 }
 
 function contains(outer: AnyProp, inner: AnyProp): boolean {

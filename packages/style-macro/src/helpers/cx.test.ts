@@ -23,4 +23,9 @@ describe('_cx', () => {
         expect(_cx([])).toBe('');
         expect(_cx([false, ''])).toBe('');
     });
+
+    it('throws a descriptive error when a style object reaches runtime', () => {
+        const parts = ['a', { padding: '$space-200' }] as unknown as string[];
+        expect(() => _cx(parts)).toThrow(/style object.*same file/s);
+    });
 });
