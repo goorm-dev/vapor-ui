@@ -38,17 +38,38 @@ jobs:
             - name: Build figma-blueprint
               run: pnpm --filter @vapor-ui/figma-blueprint build
 
+            # Before the regeneration, so "entry no longer published" can still fire.
+            - name: Check the library against entries
+              id: library
+              continue-on-error: true
+              run: |
+                  { echo '## Figma library check'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+                  code=0
+                  node packages/figma-blueprint/bin/figma-blueprint.mjs library --repo . 2>&1 | tee -a "$GITHUB_STEP_SUMMARY" || code=$?
+                  echo '```' >> "$GITHUB_STEP_SUMMARY"
+                  exit "$code"
+
             - name: Regenerate entries
-              run: node packages/figma-blueprint/bin/figma-blueprint.mjs entries --repo .
+              id: entries
+              continue-on-error: true
+              run: |
+                  { echo '## Entries regeneration'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+                  code=0
+                  node packages/figma-blueprint/bin/figma-blueprint.mjs entries --repo . 2>&1 | tee -a "$GITHUB_STEP_SUMMARY" || code=$?
+                  echo '```' >> "$GITHUB_STEP_SUMMARY"
+                  exit "$code"
 
             - name: Open, update or close the entries pull request
+              if: always()
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  ENTRIES_OUTCOME: ${{ steps.entries.outcome }}
               run: |
-                  EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // empty')
+                  EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository | not)][0].number // empty')
 
                   if [[ -z $(git status --porcelain packages/*/figma-entries.json) ]]; then
-                      if [[ -n "$EXISTING_PR" ]]; then
+                      # A failed regeneration leaves the tree clean, which says nothing about drift.
+                      if [[ -n "$EXISTING_PR" && "$ENTRIES_OUTCOME" == success ]]; then
                           gh pr close "$EXISTING_PR" --comment "Closing: main's figma-entries.json already matches Figma."
                       fi
                       exit 0
@@ -73,6 +94,8 @@ jobs:
                           --body "$BODY" --base main --head "$BRANCH_NAME"
                   fi
 
-            # Last, so a failure still fails the job after the pull request step ran.
-            - name: Check the library against entries
-              run: node packages/figma-blueprint/bin/figma-blueprint.mjs library --repo .
+            - name: Fail the job if a check failed
+              if: always()
+              run: |
+                  echo "library: ${{ steps.library.outcome }}, entries: ${{ steps.entries.outcome }}"
+                  [[ "${{ steps.library.outcome }}" != failure && "${{ steps.entries.outcome }}" != failure ]]
