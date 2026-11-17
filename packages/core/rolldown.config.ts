@@ -12,7 +12,6 @@ import { defineConfig } from 'rolldown';
 
 const inputs = generateInputs([
     'src/index.ts',
-    'src/styles/create-layers.css.ts',
     'src/styles/tailwind-preset.css.ts',
     'src/components/**/*.{ts,tsx}',
     '!src/components/**/*.{figma,stories,test,spec}.*',

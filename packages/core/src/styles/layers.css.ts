@@ -1,9 +1,6 @@
-import type { globalLayer } from '@vanilla-extract/css';
+import { globalLayer } from '@vanilla-extract/css';
 
 export const LAYER_ORDER = ['theme', 'reset', 'components', 'composites', 'utilities'] as const;
-
-/** `layers.css` 로 배포되는 전체 레이어 순서. 앞쪽일수록 우선순위가 낮다. */
-export const CASCADE_LAYER_ORDER = LAYER_ORDER.flatMap((name) => `vapor-${name}`);
 
 export const layerName = Object.fromEntries(
     LAYER_ORDER.map((name) => [name, `vapor-${name}`]),
@@ -13,7 +10,7 @@ const createLayersInOrder = () => {
     const layerInstances: Record<string, ReturnType<typeof globalLayer>> = {};
 
     LAYER_ORDER.forEach((name) => {
-        layerInstances[name] = `vapor-${name}`;
+        layerInstances[name] = globalLayer(`vapor-${name}`);
     });
 
     return layerInstances;
