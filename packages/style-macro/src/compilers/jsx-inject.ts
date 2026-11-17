@@ -30,7 +30,6 @@ export interface DynamicCallSite {
 
 interface PendingInject {
     openingEl: AnyProp;
-    attribute: AnyProp | null;
     trees: SlotTree[];
 }
 
@@ -38,6 +37,10 @@ export interface InjectContext {
     ms: MagicString;
     /** openingEl.start → 해당 element 로 모인 slot 트리. flushInjects 가 소비. */
     pending: Map<number, PendingInject>;
+    /** flush 가 쓴 runtime helper 이름 (`_mergeStyle`, `_withStyle`). */
+    helpers: Set<string>;
+    /** flush 중 발견한 빌드 에러. */
+    errors: BuildError[];
 }
 
 export interface InjectOutcome {
@@ -70,11 +73,12 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
     const found = findJsxAttribute(site.call, site.parents);
     if ('error' in found) return { success: false, error: found.error };
 
-    const { openingEl, attribute, guards } = found;
+    const { openingEl, guards } = found;
 
-    // 기존 style attribute 가 머지 가능한 형태인지 확인.
-    if (attribute) {
-        const v = attribute.value;
+    // 문자열 style(`style="…"`)은 React 에서도 유효하지 않고 합칠 수 없다.
+    for (const a of openingEl.attributes as AnyProp[]) {
+        if (!isStyleAttr(a)) continue;
+        const v = a.value;
         if (v && !(v.type === 'JSXExpressionContainer' && v.expression)) {
             return { success: false, error: mkErr(site.call, 'style-unmergeable') };
         }
@@ -96,7 +100,7 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
     if (existing) {
         existing.trees.push(tree);
     } else {
-        ctx.pending.set(key, { openingEl, attribute, trees: [tree] });
+        ctx.pending.set(key, { openingEl, trees: [tree] });
     }
     return { success: true };
 }
@@ -115,40 +119,98 @@ function renderEntries(trees: SlotTree[]): string[] {
 }
 
 /**
- * pending 버킷을 MagicString 에 반영. opening element 당 한 번만 삽입/머지.
+ * pending 버킷을 MagicString 에 반영. opening element 당 한 번.
+ *
+ * slot 은 element 가 **최종적으로 받는** `style` 과 합쳐야 한다. JSX 는 뒤 속성이 이기고
+ * spread 도 `style` 을 실어 올 수 있으며, 값이 함수(stateful callback)일 수도 있다. 그래서
+ * 최종 값을 어디서 읽을지만 문법으로 정하고, 합치기는 런타임 helper 가 값으로 한다.
+ * - style 출처가 없음: 합칠 대상이 없으니 `style={slots}` 를 붙인다.
+ * - 명시 `style` 하나뿐: 그 값이 최종이다 → `style={_mergeStyle(slots, (값))}`.
+ * - spread 가 있음(또는 style 이 여러 번): 최종 값은 런타임에만 정해진다 → 속성 전체를 원래
+ *   순서 그대로 한 객체로 모아 `{..._withStyle(slots, { … })}` 로 바꾼다. 각 식은 한 번만
+ *   평가된다. `key` 는 spread 에 넣으면 React 가 경고하므로 명시 속성으로 앞에 둔다.
  */
 export function flushInjects(ctx: InjectContext): void {
     for (const p of ctx.pending.values()) {
         const entries = renderEntries(p.trees);
         if (entries.length === 0) continue;
         const slotObj = `{ ${entries.join(', ')} }`;
-        const attr = p.attribute;
+        const attrs = p.openingEl.attributes as AnyProp[];
+        const sources = attrs.filter((a) => isStyleAttr(a) || a.type === 'JSXSpreadAttribute');
 
-        if (!attr) {
-            const insertPos = findAttributeInsertPos(p.openingEl);
-            ctx.ms.appendLeft(insertPos, ` style={${slotObj}}`);
+        if (sources.length === 0) {
+            ctx.ms.appendLeft(findAttributeInsertPos(p.openingEl), ` style={${slotObj}}`);
             continue;
         }
 
-        const attrValue = attr.value;
-        if (!attrValue) {
-            ctx.ms.overwrite(attr.start, attr.end, `style={${slotObj}}`);
+        if (sources.length === 1 && isStyleAttr(sources[0])) {
+            const value = sources[0].value;
+            const user = value
+                ? `(${ctx.ms.slice(value.expression.start, value.expression.end)})`
+                : 'true';
+            ctx.helpers.add('_mergeStyle');
+            if (value)
+                ctx.ms.overwrite(
+                    value.expression.start,
+                    value.expression.end,
+                    `_mergeStyle(${slotObj}, ${user})`,
+                );
+            else ctx.ms.appendLeft(sources[0].end, `={_mergeStyle(${slotObj}, undefined)}`);
             continue;
         }
 
-        // JSXExpressionContainer 안 표현식 → spread 로 병합.
-        // slot 을 먼저, 사용자 style 을 뒤로 둔다. React 는 spread object 를
-        // 뒤에 오는 쪽이 이기는 순서로 머지하므로, 사용자가 명시적으로 style 로
-        // 넘긴 값(slot CSS var 포함)은 항상 slot 기본값을 override 한다.
-        // 리뷰 #6b 결함(주입 style 이 {...rest} 로 넘어온 style 을 덮음)을 해결.
-        if (attrValue.type === 'JSXExpressionContainer' && attrValue.expression) {
-            const inner = attrValue.expression;
-            const existing = ctx.ms.original.slice(inner.start, inner.end);
-            const merged = `{ ...${slotObj}, ...(${existing}) }`;
-            ctx.ms.overwrite(inner.start, inner.end, merged);
+        // 최종 style 이 갈리는 구간은 첫 style 출처부터 마지막 출처까지다. 그 앞뒤 속성은 style 을
+        // 바꿀 수 없으므로 JSX 속성 그대로 두고, 구간만 같은 위치의 spread 하나로 바꾼다.
+        const from = attrs.indexOf(sources[0]);
+        const to = attrs.indexOf(sources[sources.length - 1]);
+        const region = attrs.slice(from, to + 1);
+        const keyAttr = region.find((a) => a.type === 'JSXAttribute' && attrName(a) === 'key');
+        const props: string[] = [];
+        for (const a of region) {
+            if (a === keyAttr) continue;
+            const entry = propEntry(a, ctx.ms);
+            if (entry === null) return void ctx.errors.push(mkErr(a, 'entity-in-spread-region'));
+            props.push(entry);
         }
-        // 다른 형태(StringLiteral 등) 는 injectJsxStyleForCall 가 미리 error 로 거른다.
+        const key = keyAttr ? `${ctx.ms.slice(keyAttr.start, keyAttr.end)} ` : '';
+        ctx.helpers.add('_withStyle');
+        ctx.ms.overwrite(
+            region[0].start,
+            region[region.length - 1].end,
+            `${key}{..._withStyle(${slotObj}, { ${props.join(', ')} })}`,
+        );
     }
+}
+
+function isStyleAttr(a: AnyProp): boolean {
+    return a?.type === 'JSXAttribute' && attrName(a) === 'style';
+}
+
+function attrName(a: AnyProp): string {
+    const n = a.name;
+    if (n?.type === 'JSXNamespacedName') return `${n.namespace.name}:${n.name.name}`;
+    return n?.name;
+}
+
+/**
+ * JSX 속성 하나 → 같은 값을 만드는 object 항목. 값 원문은 다른 css() 치환이 반영된 것을 읽는다.
+ * JSX 문자열은 HTML entity 를 해석하는데 파서는 해석 전 값만 준다 — entity 가 든 문자열은
+ * JS 문자열로 옮기면 값이 바뀌므로 `null`(호출 측이 빌드 에러로 알림).
+ */
+function propEntry(a: AnyProp, ms: MagicString): string | null {
+    if (a.type === 'JSXSpreadAttribute') {
+        return `...${ms.slice(a.argument.start, a.argument.end)}`;
+    }
+    const key = JSON.stringify(attrName(a));
+    const v = a.value;
+    if (!v) return `${key}: true`;
+    if (v.type === 'Literal' || v.type === 'StringLiteral') {
+        return v.value.includes('&') ? null : `${key}: ${JSON.stringify(v.value)}`;
+    }
+    if (v.type === 'JSXExpressionContainer') {
+        return `${key}: ${ms.slice(v.expression.start, v.expression.end)}`;
+    }
+    return `${key}: ${ms.slice(v.start, v.end)}`;
 }
 
 /**
@@ -186,7 +248,6 @@ function guardOf(parent: AnyProp, child: AnyProp): Guard | null {
 
 interface FoundJsx {
     openingEl: AnyProp;
-    attribute: AnyProp | null;
     /** 바깥 → 안쪽. */
     guards: Guard[];
 }
@@ -214,15 +275,7 @@ function findJsxAttribute(_call: AnyProp, parents: AnyProp[]): FoundJsx | { erro
             if (!openingEl || openingEl.type !== 'JSXOpeningElement') {
                 return { error: mkErr(_call, 'no-opening') };
             }
-            // 동일 opening element 안 다른 style attribute 검색.
-            const styleAttr =
-                (openingEl.attributes as AnyProp[]).find(
-                    (a: AnyProp) =>
-                        a?.type === 'JSXAttribute' &&
-                        a.name?.type === 'JSXIdentifier' &&
-                        a.name.name === 'style',
-                ) ?? null;
-            return { openingEl, attribute: styleAttr, guards: guards.reverse() };
+            return { openingEl, guards: guards.reverse() };
         }
         if (!WRAPPER_TYPES.has(n.type)) {
             return { error: mkErr(_call, `unwrap:${n.type}`) };
@@ -248,6 +301,16 @@ function findAttributeInsertPos(openingEl: AnyProp): number {
 }
 
 function mkErr(call: AnyProp, tag: string): BuildError {
+    if (tag === 'entity-in-spread-region') {
+        return {
+            code: 'dynamic-value',
+            message:
+                'This element has dynamic css() values and spread props, so its attributes between the ' +
+                'spreads are rewritten as JavaScript, where HTML entities in a JSX string are not decoded. ' +
+                "Write the value as an expression instead, e.g. title={'a & b'}.",
+            loc: { line: call.loc?.start.line ?? 1, column: call.loc?.start.column ?? 0 },
+        };
+    }
     return {
         code: 'dynamic-value',
         message: `Dynamic css() call must sit in a JSX className={...} position (detail: ${tag}).`,

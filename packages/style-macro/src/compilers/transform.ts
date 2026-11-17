@@ -169,6 +169,8 @@ class Transformer {
     #captureCount = 0;
     /** `start:end` → 그 위치에서 옮겨진 식의 캡처 이름. */
     readonly #captureAt = new Map<string, string>();
+    /** style 병합에 쓴 runtime helper (`_mergeStyle`, `_withStyle`). */
+    readonly #helpers = new Set<string>();
     /** 파일 안에서 각 이름이 바인딩된 횟수. 2 이상이면 shadowing 가능성 → 병합 안 함. */
     readonly #bindingCounts = new Map<string, number>();
     /** `parseCallArg` 결과 캐시 (같은 object 를 여러 경로에서 풀 수 있음). */
@@ -236,7 +238,12 @@ class Transformer {
         this.#checkMutations();
         if (this.#errors.length) return errorResult(source, this.#errors);
 
-        const injectCtx: InjectContext = { ms: this.#ms, pending: new Map() };
+        const injectCtx: InjectContext = {
+            ms: this.#ms,
+            pending: new Map(),
+            helpers: new Set(),
+            errors: [],
+        };
 
         for (const call of calls) {
             const pieces = call.args.flatMap((a) => (a.kind === 'local' ? a.pieces : []));
@@ -264,6 +271,8 @@ class Transformer {
         if (this.#errors.length) return errorResult(source, this.#errors);
 
         flushInjects(injectCtx);
+        if (injectCtx.errors.length) return errorResult(source, injectCtx.errors);
+        for (const h of injectCtx.helpers) this.#helpers.add(h);
         this.#ensureRuntimeImport();
 
         const css = emitBlocks(this.#blocks, {
@@ -735,6 +744,7 @@ class Transformer {
         if (this.#needCx) specifiers.push('_cx');
         if (this.#needResolveToken) specifiers.push('_resolveToken');
         if (this.#needIx) specifiers.push('_ix');
+        specifiers.push(...Array.from(this.#helpers).sort());
         if (this.#axesUsed.size > 0) {
             specifiers.push(
                 ...Array.from(this.#axesUsed)

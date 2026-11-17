@@ -253,11 +253,9 @@ describe('transform — dynamic slots', () => {
         ].join('\n');
         const out = transform({ source, filename: '/L.tsx' });
         expect(out.errors).toEqual([]);
-        // slot object 를 먼저, 사용자 `style` 을 뒤로 spread — 사용자 값이 slot
-        // 기본값을 override 할 수 있어야 하기 때문 (리뷰 #6b).
-        expect(out.code).toMatch(/\{\s*\.\.\.\{[^}]*--vapor[^}]*\}\s*,\s*\.\.\.\(myStyle\)\s*\}/);
-        // helper import 는 `_resolveToken` 만 — `_mergeStyle` 은 inline spread 로 처리.
-        expect(out.code).not.toContain('_mergeStyle');
+        // slot 을 먼저, 사용자 `style` 을 뒤로 — 사용자 값이 slot 기본값을 이긴다 (리뷰 #6b).
+        // 함수형 style(stateful callback)도 처리하도록 `_mergeStyle` 을 거친다.
+        expect(out.code).toMatch(/style=\{_mergeStyle\(\{[^}]*--vapor[^}]*\}, \(myStyle\)\)\}/);
     });
 });
 
@@ -526,7 +524,7 @@ describe('transform — PR #752 review fixtures', () => {
         const out = transform({ source, filename: '/R6b.tsx' });
         expect(out.errors).toEqual([]);
         // slot 변수 먼저, 사용자 style 이 뒤에 — 사용자가 이김.
-        expect(out.code).toMatch(/\{\s*\.\.\.\{[^}]*--vapor[^}]*\}\s*,\s*\.\.\.\(myStyle\)\s*\}/);
+        expect(out.code).toMatch(/style=\{_mergeStyle\(\{[^}]*--vapor[^}]*\}, \(myStyle\)\)\}/);
     });
 
     it('#6c CSS variable does not inherit to nested same-class element', () => {
@@ -1228,5 +1226,85 @@ describe('transform — captured expressions are evaluated once (moved, not copi
         const out = run(`export const base = css({ color: tick() ? 'red' : 'blue' });`);
         expect(count(out.code, 'tick()')).toBe(1);
         expect(out.code).not.toContain('__vaporCapture_');
+    });
+});
+
+describe('transform — slots merge into the element final style (spreads, callbacks)', () => {
+    const run = (jsx: string) =>
+        transform({
+            source: src(`export const A = ({ c, s, k, rest, other }) => ${jsx};`),
+            filename: '/T3.tsx',
+        });
+
+    it('no user style source → plain style attribute', () => {
+        const out = run(`<div className={css({ color: c })} />`);
+        expect(out.code).toMatch(/className=\{'\w+'\} style=\{\{ '--vapor-_\w+': .+ \}\} \/>/);
+        expect(out.code).not.toContain('_mergeStyle');
+    });
+
+    it('single explicit style attribute → merged in place through _mergeStyle', () => {
+        const out = run(`<div style={s} className={css({ color: c })} />`);
+        expect(out.errors).toEqual([]);
+        expect(out.code).toMatch(
+            /style=\{_mergeStyle\(\{ '--vapor-_\w+': .+ \}, \(s\)\)\} className=/,
+        );
+        expect(out.code).toMatch(
+            /import \{[^}]*\b_mergeStyle\b[^}]*\} from '@vapor-ui\/style-macro\/__runtime__'/,
+        );
+    });
+
+    it.each([
+        [
+            'spread after className',
+            `<div className={css({ color: c })} {...rest} />`,
+            /<div className=\{'\w+'\} \{\.\.\._withStyle\(\{ '--vapor-_\w+': .+ \}, \{ \.\.\.rest \}\)\} \/>/,
+        ],
+        [
+            'style before spread',
+            `<div className={css({ color: c })} style={s} {...rest} />`,
+            /<div className=\{'\w+'\} \{\.\.\._withStyle\(\{ .+ \}, \{ "style": s, \.\.\.rest \}\)\} \/>/,
+        ],
+        [
+            'two spreads around className',
+            `<div {...rest} className={css({ color: c })} {...other} />`,
+            /<div \{\.\.\._withStyle\(\{ .+ \}, \{ \.\.\.rest, "className": '\w+', \.\.\.other \}\)\} \/>/,
+        ],
+    ])(
+        '%s → only the style-deciding region becomes one _withStyle spread',
+        (_label, jsx, shape) => {
+            const out = run(jsx);
+            expect(out.errors).toEqual([]);
+            expect(out.code).toMatch(shape);
+            expect(out.code).not.toMatch(/ style=/);
+        },
+    );
+
+    it('attributes outside the region stay JSX; inside keep order and value kinds', () => {
+        const out = run(
+            `<div id="x" title="a &amp; b" {...rest} disabled aria-label={k} data-v="y" {...other} onClick={() => 1} className={css({ color: c })} />`,
+        );
+        expect(out.errors).toEqual([]);
+        expect(out.code).toContain(`<div id="x" title="a &amp; b" {..._withStyle(`);
+        expect(out.code).toContain(
+            `{ ...rest, "disabled": true, "aria-label": k, "data-v": "y", ...other })} onClick={() => 1} className=`,
+        );
+    });
+
+    it('HTML entity in a string between spreads is a build error', () => {
+        const out = run(
+            `<div {...rest} title="a &amp; b" {...other} className={css({ color: c })} />`,
+        );
+        expect(out.errors[0]?.message).toContain('HTML entities');
+    });
+
+    it('key inside the region stays an explicit attribute in front', () => {
+        const out = run(`<div {...rest} key={k} {...other} className={css({ color: c })} />`);
+        expect(out.code).toMatch(/<div key=\{k\} \{\.\.\._withStyle\(/);
+        expect(out.code).not.toContain('"key"');
+    });
+
+    it('string style attribute is still a build error', () => {
+        const out = run(`<div style="color: red" className={css({ color: c })} />`);
+        expect(out.errors[0]?.code).toBe('dynamic-value');
     });
 });
